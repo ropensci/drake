@@ -1,3 +1,3 @@
-- caching api (make current)
-- makefiles
+- caching api (copy over)
+- makefiles (copy over)
 - all tests
