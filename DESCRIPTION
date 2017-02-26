@@ -1,0 +1,34 @@
+Package: skipit
+Title: Skip Redundant Code
+Version: 0.0.0
+Date: 2017-02-24
+Authors@R: person(given = c("William", "Michael"), family = "Landau",
+    email = "will.landau@gmail.com", role = c("aut", "cre"))
+Description: Reproducible build system that understands the
+    dependency structure of your workflow, builds out-of-date
+    targets, skips up-to-date targets, and supports distributed
+    computing via Makefiles.
+License: GPL (>=3)
+Depends:
+    R (>= 3.0.0)
+Imports:
+    assertthat,
+    codetools,
+    eply,
+    digest,
+    igraph,
+    magrittr,
+    parallel,
+    plyr,
+    storr,
+    stringi,
+    stringr,
+    tools
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+URL: https://github.com/wlandau/skipthat
+BugReports: https://github.com/wlandau/skipthat/issues
+RoxygenNote: 5.0.1
