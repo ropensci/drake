@@ -2,13 +2,15 @@ Package: skipit
 Title: Skip Redundant Code
 Version: 0.0.0
 Date: 2017-02-24
-Authors@R: person(given = c("William", "Michael"), family = "Landau",
-    email = "will.landau@gmail.com", role = c("aut", "cre"))
+Authors@R: c(
+  person(family = "Landau", given = c("William", "Michael"),
+    email = "will.landau@lilly.com", role = c("aut", "cre")),
+  person(family = "Eli Lilly and Company", role = "cph"))
 Description: Reproducible build system that understands the
     dependency structure of your workflow, builds out-of-date
     targets, skips up-to-date targets, and supports distributed
     computing via Makefiles.
-License: GPL (>=3)
+License: GPL-3
 Depends:
     R (>= 3.0.0)
 Imports:
