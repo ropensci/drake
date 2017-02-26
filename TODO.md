@@ -1,3 +1,5 @@
 - caching api (copy over)
+- clean and prune (copy over)
+- console and colors (copy over)
 - makefiles (copy over)
 - all tests
