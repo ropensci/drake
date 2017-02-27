@@ -41,4 +41,4 @@ prune_envir = function(envir, next_targets, entire_graph, workflow, cache){
   lapply(load_these, loadd, envir = envir) # REMEMBER TO SET ENVIRONMENT OF FUNCTION IN LOADS
 }
 
-cachepath = ".skipit"
+cachepath = ".drake"

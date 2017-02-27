@@ -25,5 +25,5 @@ dclean = function(envir = parent.frame()){
   rm(list = c("a", "b", "d", "f", "g", "h", "i", "j"), envir = envir)
   unlink("input.rds")
   unlink("intermediatefile.rds")
-  unlink(".skipit", recursive = TRUE)
+  unlink(".drake", recursive = TRUE)
 }
