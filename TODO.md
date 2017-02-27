@@ -1,2 +1,2 @@
-- store a "session" object with common data like the graph, etc
+- store a "ref" object with common data: plan, envir, cache, graph
 - all cleanup and tests
