@@ -21,7 +21,7 @@ makefile_head = function(args){
 
 makefile_rules = function(args){
   for(x in args$plan$target){
-    deps = graphical_dependencies(x, args) %>%
+    deps = dependencies(x, args) %>%
       intersect(y = args$plan$target) %>% timestamp
     breaker = ifelse(length(deps), " \\\n", "\n")
     cat("\n", timestamp(x), ":", breaker, sep = "")

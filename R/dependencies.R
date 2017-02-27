@@ -1,4 +1,9 @@
-dependencies = function(x){
+dependencies = function(targets, args){
+  adjacent_vertices(graph = args$graph, v = targets, mode = "in") %>%
+    lapply(FUN = names) %>% unlist %>% unique %>% unname
+}
+
+code_dependencies = function(x){
   if(length(x) != 1) return()
   if(is.character(x) | is.factor(x)) out = command_dependencies(x)
   else if(is.function(x)) out = function_dependencies(x)

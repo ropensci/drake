@@ -18,7 +18,7 @@ hashes = function(target, args){
 
 dependency_hash = function(target, args){
   command = get_command(target = target, args = args)
-  graphical_dependencies(target, args) %>% 
+  dependencies(target, args) %>% 
     self_hash(args = args) %>%
     c(command) %>% digest(algo = "md5")
 }

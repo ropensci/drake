@@ -18,7 +18,8 @@ build_graph = function(plan, targets, envir){
   if(length(duplicates))
     stop("duplicate targets: ", paste(duplicates, collapse = " ")) 
   values = c(imports, plan$command)
-  dependency_list = lapply(values, dependencies) %>% setNames(nm = keys)
+  dependency_list = lapply(values, code_dependencies) %>% 
+    setNames(nm = keys)
   vertices = c(keys, unlist(dependency_list)) %>% unique
   graph = make_empty_graph() + vertices(vertices)
   for(key in keys)
@@ -31,9 +32,4 @@ build_graph = function(plan, targets, envir){
   if(!is_dag(graph)) 
     stop("Workflow is circular (chicken and egg dilemma).")
   graph
-}
-
-graphical_dependencies = function(targets, args){
-  adjacent_vertices(graph = args$graph, v = targets, mode = "in") %>%
-    lapply(FUN = names) %>% unlist %>% unique %>% unname
 }

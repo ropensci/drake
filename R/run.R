@@ -13,7 +13,7 @@
 #' @param command command to call the Makefile
 #' @param args command line arguments to the Makefile
 run = function(plan, targets = plan$target, envir = parent.frame(), 
-  verbose = TRUE, parallelism = c("mclapply", "Makefile"), jobs = 1, 
+  verbose = TRUE, parallelism = c("light", "aggressive"), jobs = 1, 
   packages = character(0), prework = character(0),
   prepend = character(0), command = "make", args = character(0)){
   force(envir)
@@ -23,9 +23,9 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
   args = arglist(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, jobs = jobs, prework = prework,
     command = command, args = args)
-  if(parallelism == "mclapply") 
+  if(parallelism == "light") 
     run_mclapply(args)
-  else if(parallelism == "Makefile")
+  else if(parallelism == "aggressive")
     run_makefile(args)
 }
 
@@ -65,7 +65,7 @@ parallel_stage = function(next_graph, args){
 }
 
 prune_envir = function(next_targets, args){
-  load_these = graphical_dependencies(targets = next_targets, args = args) %>% 
+  load_these = dependencies(targets = next_targets, args = args) %>% 
     Filter(f = is_not_file) %>% intersect(y = args$plan$target)
   unload_these = intersect(args$plan$target, ls(args$envir)) %>% setdiff(y = load_these)
   rm(list = unload_these, envir = args$envir)
