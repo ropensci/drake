@@ -1,16 +1,16 @@
-is_current = function(target, dependency_hash, file_hash, cache){
+is_current = function(target, dependency_hash, filehash, cache){
   if(!file_is_current(target = target, 
-    file_hash = file_hash, cache = cache)) 
+    filehash = filehash, cache = cache)) 
     return(FALSE)
   identical(cache$get_hash(target, namespace = "depends"), 
     dependency_hash)
 }
 
-file_is_current = function(target, file_hash, cache){
+file_is_current = function(target, filehash, cache){
   if(!is_file(target)) return(TRUE)
-  if(is.na(file_hash)) return(FALSE)
+  if(is.na(filehash)) return(FALSE)
   if(!(target %in% cache$list())) return(FALSE)
-  if(file_hash != cache$get(target)$value) return(FALSE)
+  if(filehash != cache$get(target)$value) return(FALSE)
 }
 
 dependency_hash = function(target, plan, graph, cache){
@@ -20,7 +20,7 @@ dependency_hash = function(target, plan, graph, cache){
     c(command) %>% digest(algo = "md5")
 }
 
-file_hash = function(target, cache){
+filehash = function(target, cache){
   if(is_not_file(target)) return(as.character(NA))
   filename = unquote(target)
   if(!file.exists(filename)) return(as.character(NA))
