@@ -1,5 +1,5 @@
 run_makefile = function(args){
-  x$cache$set("args", args, namespace = "makefile")
+  args$cache$set("args", args, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
   makefile_head(args)
