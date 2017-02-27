@@ -1,22 +1,22 @@
-#' @title Function \command{evaluate}
-#' @description Evaluates the wildcard placeholders of a data frame of \command{drake} instructions.
-#' @details If \command{wildcard} and \command{values} are not \command{NULL}, the members of 
-#' \command{values} will replace \command{wildcard} in the \command{command}
-#' column of \command{x}. If the \command{rules} list is not \command{NULL}, \command{rules} readds precedence
-#' over \command{wildcard} and \command{values}. In this case, the names of \command{rules}
-#' act as wildcards, and each corresponding element of \command{rules} acts as a 
-#' \command{values} argument in a recursive call to \command{evaluate}.
+#' @title Function \code{evaluate}
+#' @description Evaluates the wildcard placeholders of a data frame of \code{drake} instructions.
+#' @details If \code{wildcard} and \code{values} are not \code{NULL}, the members of 
+#' \code{values} will replace \code{wildcard} in the \code{command}
+#' column of \code{x}. If the \code{rules} list is not \code{NULL}, \code{rules} readds precedence
+#' over \code{wildcard} and \code{values}. In this case, the names of \code{rules}
+#' act as wildcards, and each corresponding element of \code{rules} acts as a 
+#' \code{values} argument in a recursive call to \code{evaluate}.
 #' @export 
 #' @return an evaluated data frame
 #' @param x argument data frame
 #' @param rules Named list with wildcards as names and vectors of replacements
 #' as values. This is a way to evaluate multiple wildcards at once.
-#' @param wildcard character string to replace with elements of \command{values}.
+#' @param wildcard character string to replace with elements of \code{values}.
 #' @param values values to replace the wildcard in the drake instructions. Must be
-#' the same length as \command{x$command} if \command{expand} is \command{TRUE}.
-#' @param expand If \command{TRUE}, loop over \command{values} when evaluating the wildcard,
+#' the same length as \code{x$command} if \code{expand} is \code{TRUE}.
+#' @param expand If \code{TRUE}, loop over \code{values} when evaluating the wildcard,
 #' creating more rows in the target data frame. Otherwise, each occurance of the wildcard
-#' is replaced with the next entry in the \command{values} vector, and the values are recycled.
+#' is replaced with the next entry in the \code{values} vector, and the values are recycled.
 evaluate = function(x, rules = NULL, wildcard = NULL, values = NULL, expand = TRUE){
   if(!is.null(rules)) return(evaluations(x = x, rules = rules, expand = expand))
   if(is.null(wildcard) | is.null(values)) return(x)
@@ -47,7 +47,7 @@ evaluations = function(x, rules = NULL, expand = TRUE){
   x
 }
 
-#' @title Function \command{expand}
+#' @title Function \code{expand}
 #' @description Expands a dataframe of drake instructions by duplicating rows.
 #' @export 
 #' @return an expanded data frame
@@ -63,10 +63,10 @@ expand = function(x, values = NULL){
   x
 }
 
-#' @title Function \command{gather}
+#' @title Function \code{gather}
 #' @description Aggregate/gather the targets of a previous set of drake instructions.
 #' @export 
-#' @return data frame with a command to gather the targets in \command{x}
+#' @return data frame with a command to gather the targets in \code{x}
 #' @param x argument data frame
 #' @param target name of aggregated target object
 #' @param gather function used to gather the targets
@@ -77,11 +77,11 @@ gather = function(x = NULL, target = "target", gather = "list"){
   data.frame(target = target, command = command, stringsAsFactors = F)
 }
 
-#' @title Function \command{analyses}
-#' @description Generate a portion of a \command{drake} plan for
+#' @title Function \code{analyses}
+#' @description Generate a portion of a \code{drake} plan for
 #' analyzing multiple datasets with multiple methods.
-#' @seealso \command{\link{summaries}},
-#'  \command{\link{run}}, \command{\link{plan}}
+#' @seealso \code{\link{summaries}},
+#'  \code{\link{run}}, \code{\link{plan}}
 #' @export 
 #' @return data frame of instructions for analyses (wildcards unevaluated)
 #' @param plan data frame with unevaluated wildcards
@@ -90,19 +90,19 @@ analyses = function(plan, datasets){
   evaluate(plan, wildcard = "..dataset..", values = datasets$target)
 }
 
-#' @title Function \command{summaries}
-#' @description Generate a portion of a \command{drake} plan
+#' @title Function \code{summaries}
+#' @description Generate a portion of a \code{drake} plan
 #' for summarizing multiple anlayses of multiple datasets in multiple ways.
-#' @seealso \command{\link{analyses}},
-#'  \command{\link{run}}, \command{\link{plan}}
+#' @seealso \code{\link{analyses}},
+#'  \code{\link{run}}, \code{\link{plan}}
 #' @export 
-#' @return portion of a \command{drake} plan for summarizing multiple
+#' @return portion of a \code{drake} plan for summarizing multiple
 #' analyses of multiple datasets in multiple ways
 #' @param plan data frame of instructions for summaries (wildcards unevaluated)
 #' @param analyses data frame of analysis instructions
 #' @param datasets data frame of dataset instructions
 #' @param gather Character vector, names of functions to gather the summaries.
-#' If not \command{NULL}, length must be the number of rows in the \command{plan}
+#' If not \code{NULL}, length must be the number of rows in the \code{plan}
 #' argument.
 summaries = function(plan, analyses, datasets, gather = rep("list", dim(plan)[1])){
   out = plan

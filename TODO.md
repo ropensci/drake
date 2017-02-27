@@ -1,2 +1,3 @@
-- uncache_imports: need to store list(type, value, imported)
-- all cleanup and tests
+- clean everything: docs and code
+- vignettes
+- all tests

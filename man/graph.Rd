@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{graph}
 \alias{graph}
-\title{Function \command{graph}}
+\title{Function \code{graph}}
 \usage{
 graph(plan, targets = plan$target, envir = parent.frame())
 }

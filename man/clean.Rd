@@ -2,27 +2,27 @@
 % Please edit documentation in R/clean.R
 \name{clean}
 \alias{clean}
-\title{Function \command{clean}}
+\title{Function \code{clean}}
 \usage{
 clean(destroy = FALSE)
 }
 \arguments{
 \item{destroy}{logical, whether to totally remove the drake cache. 
-If \command{destroy} is \command{FALSE}, only the targets 
-from \command{run}()
-are removed. If \command{TRUE}, the whole cache is removed, including
+If \code{destroy} is \code{FALSE}, only the targets 
+from \code{run}()
+are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata.}
 }
 \description{
-Cleans up all work done by \command{\link{run}}. 
-Your working directory (\command{\link{getwd}()}) must be the 
+Cleans up all work done by \code{\link{run}}. 
+Your working directory (\code{\link{getwd}()}) must be the 
 root directory of your drake project.
 WARNING:
-This deletes ALL \command{\link{run}} target, which includes 
-file targets as well as the entire drake cache. Only use \command{clean}
+This deletes ALL \code{\link{run}} target, which includes 
+file targets as well as the entire drake cache. Only use \code{clean}
 if you're sure you won't lose any important work.
 }
 \seealso{
-\command{\link{prune}}, \command{\link{run}},
+\code{\link{prune}}, \code{\link{run}},
 }
 

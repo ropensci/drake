@@ -2,22 +2,22 @@
 % Please edit documentation in R/clean.R
 \name{prune}
 \alias{prune}
-\title{Function \command{prune}}
+\title{Function \code{prune}}
 \usage{
 prune(plan)
 }
 \arguments{
-\item{plan}{data frame, plan as generated with \command{\link{plan}}.}
+\item{plan}{data frame, plan as generated with \code{\link{plan}}.}
 }
 \description{
 Removes any cached target objects and generated 
-files not listed in \command{plan$target$}. 
-Your working directory (\command{\link{getwd}()}) must be the
+files not listed in \code{plan$target$}. 
+Your working directory (\code{\link{getwd}()}) must be the
 root directory of your project.
 WARNING: this removes files.
 Only do this if you're sure you won't lose any important work.
 }
 \seealso{
-\command{\link{clean}}, \command{\link{run}}
+\code{\link{clean}}, \code{\link{run}}
 }
 

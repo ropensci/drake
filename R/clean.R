@@ -1,17 +1,17 @@
-#' @title Function \command{clean}
-#' @description Cleans up all work done by \command{\link{run}}. 
-#' Your working directory (\command{\link{getwd}()}) must be the 
+#' @title Function \code{clean}
+#' @description Cleans up all work done by \code{\link{run}}. 
+#' Your working directory (\code{\link{getwd}()}) must be the 
 #' root directory of your drake project.
 #' WARNING:
-#' This deletes ALL \command{\link{run}} target, which includes 
-#' file targets as well as the entire drake cache. Only use \command{clean}
+#' This deletes ALL \code{\link{run}} target, which includes 
+#' file targets as well as the entire drake cache. Only use \code{clean}
 #' if you're sure you won't lose any important work.
-#' @seealso \command{\link{prune}}, \command{\link{run}}, 
+#' @seealso \code{\link{prune}}, \code{\link{run}}, 
 #' @export
 #' @param destroy logical, whether to totally remove the drake cache. 
-#' If \command{destroy} is \command{FALSE}, only the targets 
-#' from \command{run}()
-#' are removed. If \command{TRUE}, the whole cache is removed, including
+#' If \code{destroy} is \code{FALSE}, only the targets 
+#' from \code{run}()
+#' are removed. If \code{TRUE}, the whole cache is removed, including
 #' session metadata. 
 clean = function(destroy = FALSE){
   if(!file.exists(cachepath)) return(invisible())
@@ -23,16 +23,16 @@ clean = function(destroy = FALSE){
   invisible()
 }
 
-#' @title Function \command{prune}
+#' @title Function \code{prune}
 #' @description Removes any cached target objects and generated 
-#' files not listed in \command{plan$target$}. 
-#' Your working directory (\command{\link{getwd}()}) must be the
+#' files not listed in \code{plan$target$}. 
+#' Your working directory (\code{\link{getwd}()}) must be the
 #' root directory of your project.
 #' WARNING: this removes files.
 #' Only do this if you're sure you won't lose any important work.
-#' @seealso \command{\link{clean}}, \command{\link{run}}
+#' @seealso \code{\link{clean}}, \code{\link{run}}
 #' @export
-#' @param plan data frame, plan as generated with \command{\link{plan}}. 
+#' @param plan data frame, plan as generated with \code{\link{plan}}. 
 prune = function(plan){
   if(!file.exists(cachepath)) return(invisible())
   cache = storr_rds(cachepath, mangle_key = TRUE)

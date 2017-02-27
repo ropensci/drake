@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{evaluate}
 \alias{evaluate}
-\title{Function \command{evaluate}}
+\title{Function \code{evaluate}}
 \usage{
 evaluate(x, rules = NULL, wildcard = NULL, values = NULL, expand = TRUE)
 }
@@ -12,27 +12,27 @@ evaluate(x, rules = NULL, wildcard = NULL, values = NULL, expand = TRUE)
 \item{rules}{Named list with wildcards as names and vectors of replacements
 as values. This is a way to evaluate multiple wildcards at once.}
 
-\item{wildcard}{character string to replace with elements of \command{values}.}
+\item{wildcard}{character string to replace with elements of \code{values}.}
 
 \item{values}{values to replace the wildcard in the drake instructions. Must be
-the same length as \command{x$command} if \command{expand} is \command{TRUE}.}
+the same length as \code{x$command} if \code{expand} is \code{TRUE}.}
 
-\item{expand}{If \command{TRUE}, loop over \command{values} when evaluating the wildcard,
+\item{expand}{If \code{TRUE}, loop over \code{values} when evaluating the wildcard,
 creating more rows in the target data frame. Otherwise, each occurance of the wildcard
-is replaced with the next entry in the \command{values} vector, and the values are recycled.}
+is replaced with the next entry in the \code{values} vector, and the values are recycled.}
 }
 \value{
 an evaluated data frame
 }
 \description{
-Evaluates the wildcard placeholders of a data frame of \command{drake} instructions.
+Evaluates the wildcard placeholders of a data frame of \code{drake} instructions.
 }
 \details{
-If \command{wildcard} and \command{values} are not \command{NULL}, the members of 
-\command{values} will replace \command{wildcard} in the \command{command}
-column of \command{x}. If the \command{rules} list is not \command{NULL}, \command{rules} readds precedence
-over \command{wildcard} and \command{values}. In this case, the names of \command{rules}
-act as wildcards, and each corresponding element of \command{rules} acts as a 
-\command{values} argument in a recursive call to \command{evaluate}.
+If \code{wildcard} and \code{values} are not \code{NULL}, the members of 
+\code{values} will replace \code{wildcard} in the \code{command}
+column of \code{x}. If the \code{rules} list is not \code{NULL}, \code{rules} readds precedence
+over \code{wildcard} and \code{values}. In this case, the names of \code{rules}
+act as wildcards, and each corresponding element of \code{rules} acts as a 
+\code{values} argument in a recursive call to \code{evaluate}.
 }
 

@@ -1,4 +1,4 @@
-#' @title Function \command{run}
+#' @title Function \code{run}
 #' @description Run your project.
 #' @export
 #' @param plan workflow plan data frame

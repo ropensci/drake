@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{summaries}
 \alias{summaries}
-\title{Function \command{summaries}}
+\title{Function \code{summaries}}
 \usage{
 summaries(plan, analyses, datasets, gather = rep("list", dim(plan)[1]))
 }
@@ -14,19 +14,19 @@ summaries(plan, analyses, datasets, gather = rep("list", dim(plan)[1]))
 \item{datasets}{data frame of dataset instructions}
 
 \item{gather}{Character vector, names of functions to gather the summaries.
-If not \command{NULL}, length must be the number of rows in the \command{plan}
+If not \code{NULL}, length must be the number of rows in the \code{plan}
 argument.}
 }
 \value{
-portion of a \command{drake} plan for summarizing multiple
+portion of a \code{drake} plan for summarizing multiple
 analyses of multiple datasets in multiple ways
 }
 \description{
-Generate a portion of a \command{drake} plan
+Generate a portion of a \code{drake} plan
 for summarizing multiple anlayses of multiple datasets in multiple ways.
 }
 \seealso{
-\command{\link{analyses}},
- \command{\link{run}}, \command{\link{plan}}
+\code{\link{analyses}},
+ \code{\link{run}}, \code{\link{plan}}
 }
 

@@ -1,4 +1,4 @@
-#' @title Function \command{graph}
+#' @title Function \code{graph}
 #' @description Graph the dependency structure of your workflow
 #' @export
 #' @param plan workflow plan data frame

@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{gather}
 \alias{gather}
-\title{Function \command{gather}}
+\title{Function \code{gather}}
 \usage{
 gather(x = NULL, target = "target", gather = "list")
 }
@@ -14,7 +14,7 @@ gather(x = NULL, target = "target", gather = "list")
 \item{gather}{function used to gather the targets}
 }
 \value{
-data frame with a command to gather the targets in \command{x}
+data frame with a command to gather the targets in \code{x}
 }
 \description{
 Aggregate/gather the targets of a previous set of drake instructions.

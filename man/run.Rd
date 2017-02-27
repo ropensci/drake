@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.R
 \name{run}
 \alias{run}
-\title{Function \command{run}}
+\title{Function \code{run}}
 \usage{
 run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
   parallelism = c("mclapply", "Makefile"), jobs = 1,

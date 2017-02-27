@@ -2,7 +2,7 @@
 % Please edit documentation in R/plan.R
 \name{as_file}
 \alias{as_file}
-\title{Function \command{as_file}}
+\title{Function \code{as_file}}
 \usage{
 as_file(x)
 }
@@ -18,6 +18,6 @@ understandable by drake.
 \description{
 Converts an ordinary character string
 into a filename understandable by drake. In other words,
-\command{as_file(x)} just wraps single quotes around \command{x}
+\code{as_file(x)} just wraps single quotes around \code{x}
 }
 

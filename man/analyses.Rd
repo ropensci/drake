@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{analyses}
 \alias{analyses}
-\title{Function \command{analyses}}
+\title{Function \code{analyses}}
 \usage{
 analyses(plan, datasets)
 }
@@ -15,11 +15,11 @@ analyses(plan, datasets)
 data frame of instructions for analyses (wildcards unevaluated)
 }
 \description{
-Generate a portion of a \command{drake} plan for
+Generate a portion of a \code{drake} plan for
 analyzing multiple datasets with multiple methods.
 }
 \seealso{
-\command{\link{summaries}},
- \command{\link{run}}, \command{\link{plan}}
+\code{\link{summaries}},
+ \code{\link{run}}, \code{\link{plan}}
 }
 

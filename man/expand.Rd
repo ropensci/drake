@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{expand}
 \alias{expand}
-\title{Function \command{expand}}
+\title{Function \code{expand}}
 \usage{
 expand(x, values = NULL)
 }
