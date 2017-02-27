@@ -146,11 +146,11 @@ loadd = function(..., list = character(0),
 #' @param path starting path for search back for the cache.
 #' Should be a subdirectory of the drake project.
 find_cache = function(path = getwd()){
-  while (!(cache_path %in% list.files(path = path, all.files = TRUE))){
+  while (!(cachepath %in% list.files(path = path, all.files = TRUE))){
     path = dirname(path)
     if (path == dirname(path)) return(NULL)
   }
-  path = file.path(path, cache_path)
+  path = file.path(path, cachepath)
   if(!file.exists(path)) return(NULL)
   path
 }
@@ -221,7 +221,7 @@ status = function(path = getwd(), search = FALSE){
 
 get_cache = function(path = getwd(), search = FALSE){
   if(search) path = find_cache(path = path)
-  else path = file.path(path, cache_path)
+  else path = file.path(path, cachepath)
   if(is.null(path)) return(NULL)
   if(!file.exists(path)) return(NULL)
   storr_rds(path, mangle_key = TRUE)

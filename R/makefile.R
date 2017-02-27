@@ -10,7 +10,7 @@ makefile = function(plan, output, verbose, envir, command, args,
   x$cache$set("packages", packages, namespace = "makefile")
   x$cache$set("global", global, namespace = "makefile")
   x$cache$set("plan", plan, namespace = "makefile")
-  makefile = file.path(cache_path, "Makefile")
+  makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
   plan = x$plan[complete.cases(x$plan),]
   makefile_head(prepend = prepend, targets = plan$output)
@@ -85,7 +85,7 @@ initialize = function(x){
 #' @param verbose logical, same as in \code{link{make}()}
 #' @param force_rehash logical, same as with \code{\link{make}()}
 build = function(output, verbose, force_rehash){
-  cache = storr_rds(cache_path, mangle_key = TRUE)
+  cache = storr_rds(cachepath, mangle_key = TRUE)
   plan = cache$get("plan", namespace = "makefile")
   imported = imported() %>% Filter(f = is_not_file)
   imports = lapply(imported, readd, character_only = TRUE) 
