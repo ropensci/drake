@@ -225,10 +225,13 @@ get_cache = function(path = getwd(), search = FALSE){
 }
 
 is_imported = function(x, path = getwd(), search = F){
-  cs = get_cache(path = path, search = search)
-  if(is.null(cs)) return(FALSE)
-  if(!(x %in% cs$list())) return(FALSE)
-  cs$get(x, namespace = "depends")$command == hash_command(as.character(NA))
+
+# NEEDS TO BE CLEANED UP
+
+#  cs = get_cache(path = path, search = search)
+#  if(is.null(cs)) return(FALSE)
+#  if(!(x %in% cs$list())) return(FALSE)
+#  cs$get(x, namespace = "depends")$command == hash_command(as.character(NA))
 }
 
 # from base::remove()

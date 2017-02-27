@@ -16,6 +16,7 @@ Depends:
 Imports:
     assertthat,
     codetools,
+    crayon,
     eply,
     digest,
     igraph,

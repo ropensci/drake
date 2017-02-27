@@ -1,9 +1,12 @@
 is_current = function(target, dependency_hash, file_hash, cache){
-  if(!file_is_current(target = target, file_hash = file_hash)) return(FALSE)
-  identical(cache$get_hash(target, namespace = "depends"), dependency_hash)
+  if(!file_is_current(target = target, 
+    file_hash = file_hash, cache = cache)) 
+    return(FALSE)
+  identical(cache$get_hash(target, namespace = "depends"), 
+    dependency_hash)
 }
 
-file_is_current = function(target, file_hash){
+file_is_current = function(target, file_hash, cache){
   if(!is_file(target)) return(TRUE)
   if(is.na(file_hash)) return(FALSE)
   if(!(target %in% cache$list())) return(FALSE)
@@ -12,7 +15,8 @@ file_is_current = function(target, file_hash){
 
 dependency_hash = function(target, plan, graph, cache){
   command = plan$command[plan$target == target] %>% tidy
-  graphical_dependencies(target, graph) %>% sapply(FUN = cache$get_hash) %>% 
+  graphical_dependencies(target, graph) %>% 
+    sapply(FUN = cache$get_hash) %>% 
     c(command) %>% digest(algo = "md5")
 }
 

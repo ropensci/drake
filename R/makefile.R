@@ -1,3 +1,4 @@
+if(F){
 makefile = function(plan, target, verbose, envir, command, args,
     run, prepend, packages, global, force_rehash){
   force(envir)
@@ -20,6 +21,7 @@ makefile = function(plan, target, verbose, envir, command, args,
   initialize(x)
   if(run) system2(command = command, args = args)
   invisible()
+}
 }
 
 #' @title Function \command{as_file}
@@ -44,6 +46,7 @@ makefile_head = function(prepend, targets){
   cat("all: ", timestamp(targets), "\n")
 }
 
+if(F){
 makefile_rules = function(plan, verbose, force_rehash){
   y = Make$new(plan, envir = new.env(), target = plan$target)
   for(x in plan$target){
@@ -58,6 +61,7 @@ makefile_rules = function(plan, verbose, force_rehash){
       ")'\n", sep = "")
   }
 }
+}
 
 initialize = function(x){
   packages = x$cache$get("packages", namespace = "makefile")
@@ -71,35 +75,5 @@ initialize = function(x){
   uncache_imported(x$cache)
   for(i in imports) x$update(i)
   timestamps(x)
-  invisible()
-}
-
-#' @title Internal function \command{build}
-#' @description Builds an individual target 
-#' inside the \command{Makefiles} created by 
-#' \command{\link{run}(..., makefile = TRUE)}.  
-#' Not meant to be called by the user.
-#' @export
-#' @param target name of target to make
-#' @param verbose logical, same as in \command{link{run}()}
-#' @param force_rehash logical, same as with \command{\link{run}()}
-build = function(target, verbose, force_rehash){
-  cache = storr_rds(cachepath, mangle_key = TRUE)
-  plan = cache$get("plan", namespace = "makefile")
-  imported = imported() %>% Filter(f = is_not_file)
-  imports = lapply(imported, readd, character_only = TRUE) 
-  names(imports) = imported
-  envir = list2env(imports, parent = globalenv())
-  x = Make$new(plan = plan, verbose = verbose, envir = envir,
-    target = target, force_rehash = force_rehash)
-  packages = x$cache$get("packages", namespace = "makefile")
-  for(package in packages) 
-    if(!isPackageLoaded(package))
-      suppressPackageStartupMessages(
-        require(package, character.only = TRUE))
-  x$cache$get("global", namespace = "makefile") %>%
-    eply::evals(.with = globalenv())
-  x$make(clear_status = FALSE)
-  file_overwrite(timestamp(target))
   invisible()
 }

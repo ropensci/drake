@@ -11,31 +11,34 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
   force(envir)
   parallelism = match.arg(parallelism)
   targets = intersect(targets, plan$target)
-  graph = graph(worflow, targets, envir)
+  graph = graph(plan, targets, envir)
   cache = storr_rds(cachepath, mangle_key = TRUE)
   cache$clear(namespace = "status")
   if(jobs < 2) 
     run_mclapply(plan = plan, targets = targets, 
       envir = envir, graph = graph, jobs = jobs, cache = cache)
-  else if(parallelism == "Makefile")
-    run_makefile(plan = plan, targets = targets, envir = envir, graph = graph, 
-      jobs = jobs)
+#  else if(parallelism == "Makefile")
+#    run_makefile(plan = plan, targets = targets, envir = envir, 
+#      graph = graph, 
+#      jobs = jobs)
 }
 
 run_mclapply = function(plan, targets, envir, graph, jobs, cache){
   next_graph = entire_graph = graph
   while(length(V(graph))) 
-    next_graph = parallel_stage(plan = plan, targets = targets, envir = envir, next_graph = next_graph, 
+    next_graph = parallel_stage(plan = plan, targets = targets, 
+      envir = envir, next_graph = next_graph, 
       entire_graph = entire_graph, jobs = jobs, cache = cache)
 }
 
-parallel_stage = function(plan, targets, envir, next_graph, entire_graph, processes, cache){
+parallel_stage = function(plan, targets, envir, next_graph, 
+  entire_graph, processes, jobs, cache){
   number_dependencies = sapply(V(next_graph), 
     function(x) length(adjacent_vertices(next_graph, x, mode = "in")))
   next_targets = which(!number_dependencies)
   prune_envir(envir = envir, next_targets = next_targets, 
     entire_graph = entire_graph, plan = plan, cache = cache)
-  mclapply(next_targets, build, mc.cores = processes, plan = plan, envir = envir,
+  mclapply(next_targets, build, mc.cores = jobs, plan = plan, envir = envir,
     cache = cache)
   delete_vertices(graph, v = next_targets)
 }

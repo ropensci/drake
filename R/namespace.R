@@ -1,5 +1,6 @@
 #' @importFrom assertthat assert_that
 #' @importFrom codetools findGlobals
+#' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom eply quotes strings unquote
 #' @importFrom igraph adjacent_vertices delete_vertices edge is_dag make_empty_graph subcomponent topological.sort V vertices
