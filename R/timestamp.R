@@ -1,4 +1,4 @@
-timestampdir = file.path(cachepath,  "timestamps")
+timestampdir = file.path(cachepath,  "ts")
 
 timestamp = function(x){
   file.path(timestampdir, x)
