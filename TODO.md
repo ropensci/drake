@@ -1,6 +1,2 @@
-- caching api (copy over)
-- clean and prune (copy over)
-- borrow plan, clean, generate, etc from drake
-- console and colors (copy over)
-- makefiles (copy over)
-- all tests
+- store a "session" object with common data like the graph, etc
+- all cleanup and tests
