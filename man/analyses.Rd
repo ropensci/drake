@@ -2,19 +2,24 @@
 % Please edit documentation in R/generate.R
 \name{analyses}
 \alias{analyses}
-\title{Function \code{analyses}}
+\title{Function \command{analyses}}
 \usage{
-analyses(commands, datasets)
+analyses(plan, datasets)
 }
 \arguments{
-\item{commands}{output of the \code{\link{workflow}} function.}
+\item{plan}{data frame with unevaluated wildcards}
 
-\item{datasets}{Data frame of commands to generate datasets}
+\item{datasets}{dataframe with the drake plan for datasets}
 }
 \value{
-Preprocessed data frame of \code{skipthat} analysis commands
+data frame of instructions for analyses (wildcards unevaluated)
 }
 \description{
-Produces a data frame of \code{skipthat} analysis commands.
+Generate a portion of a \command{drake} plan for
+analyzing multiple datasets with multiple methods.
+}
+\seealso{
+\command{\link{summaries}},
+ \command{\link{run}}, \command{\link{plan}}
 }
 

@@ -2,21 +2,21 @@
 % Please edit documentation in R/generate.R
 \name{gather}
 \alias{gather}
-\title{Function \code{gather}}
+\title{Function \command{gather}}
 \usage{
-gather(x, target = "target", gather = "list")
+gather(x = NULL, target = "target", gather = "list")
 }
 \arguments{
 \item{x}{argument data frame}
 
-\item{target}{name of aggregated output object}
+\item{target}{name of aggregated target object}
 
 \item{gather}{function used to gather the targets}
 }
 \value{
-data frame with a command to gather the targets in \code{x}
+data frame with a command to gather the targets in \command{x}
 }
 \description{
-Aggregate/gather the targets of a previous set of skipthat commands.
+Aggregate/gather the targets of a previous set of drake instructions.
 }
 

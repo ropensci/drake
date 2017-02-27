@@ -6,9 +6,9 @@ timestamp = function(x){
 
 timestamps = function(x){
   plan = x$plan
-  output = plan$output[!is.na(plan$code)]
+  target = plan$target[!is.na(plan$command)]
   dir_empty(timestampdir)
-  lapply(output, function(name){
+  lapply(target, function(name){
     depends_stamp = x$depends_stamp(name)
     if(!x$should_update_target(name, depends_stamp))
       file_overwrite(timestamp(name))

@@ -1,8 +1,8 @@
-graph = function(workflow, targets, envir){
+graph = function(plan, targets, envir){
   force(envir)
   imports = as.list(envir)
-  keys = c(names(imports), workflow$target)
-  values = c(imports, workflow$command)
+  keys = c(names(imports), plan$target)
+  values = c(imports, plan$command)
   dependency_list = lapply(values, dependencies) %>% setNames(nm = keys)
   vertices = c(keys, unlist(dependency_list)) %>% unique
   graph = make_empty_graph() + vertices(vertices)

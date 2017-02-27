@@ -1,9 +1,9 @@
-makefile = function(plan, output, verbose, envir, command, args,
+makefile = function(plan, target, verbose, envir, command, args,
     run, prepend, packages, global, force_rehash){
   force(envir)
-  if("all" %in% plan$output)
-    stop("\"all\" cannot be in plan$output.")  
-  x = setup(plan = plan, output = output, verbose = verbose,
+  if("all" %in% plan$target)
+    stop("\"all\" cannot be in plan$target.")  
+  x = setup(plan = plan, target = target, verbose = verbose,
     envir = envir, force_rehash = force_rehash,
     run = run, prepend = prepend, global = global,
     command = command)
@@ -13,7 +13,7 @@ makefile = function(plan, output, verbose, envir, command, args,
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
   plan = x$plan[complete.cases(x$plan),]
-  makefile_head(prepend = prepend, targets = plan$output)
+  makefile_head(prepend = prepend, targets = plan$target)
   makefile_rules(plan, 
     verbose = verbose, force_rehash = force_rehash)
   sink()
@@ -22,10 +22,10 @@ makefile = function(plan, output, verbose, envir, command, args,
   invisible()
 }
 
-#' @title Function \code{as_file}
+#' @title Function \command{as_file}
 #' @description Converts an ordinary character string
 #' into a filename understandable by drake. In other words,
-#' \code{as_file(x)} just wraps single quotes around \code{x}
+#' \command{as_file(x)} just wraps single quotes around \command{x}
 #' @export
 #' @return a single-quoted character string: i.e., a filename
 #' understandable by drake.
@@ -45,10 +45,10 @@ makefile_head = function(prepend, targets){
 }
 
 makefile_rules = function(plan, verbose, force_rehash){
-  y = Make$new(plan, envir = new.env(), output = plan$output)
-  for(x in plan$output){
+  y = Make$new(plan, envir = new.env(), target = plan$target)
+  for(x in plan$target){
     cat("\n", timestamp(x), ": ", sep = "")
-    deps = intersect(y$deps(x), plan$output) %>% timestamp
+    deps = intersect(y$deps(x), plan$target) %>% timestamp
     cat(deps, "\n")
     if(is_file(x)) 
       x = paste0("drake::as_file(\"", eply::unquote(x), "\")")
@@ -66,7 +66,7 @@ initialize = function(x){
       require(package, character.only = TRUE)
   x$cache$get("global", namespace = "makefile") %>%
     eply::evals(.with = globalenv())
-  imports = x$plan$output[is.na(x$plan$code)]
+  imports = x$plan$target[is.na(x$plan$command)]
   x$cache$clear(namespace = "status")
   uncache_imported(x$cache)
   for(i in imports) x$update(i)
@@ -74,17 +74,16 @@ initialize = function(x){
   invisible()
 }
 
-#' @title Internal function \code{build}
-#' @description Builds an individual output 
-#' inside the \code{Makefiles} created by 
-#' \code{\link{make}(..., makefile = TRUE)}.  
+#' @title Internal function \command{build}
+#' @description Builds an individual target 
+#' inside the \command{Makefiles} created by 
+#' \command{\link{run}(..., makefile = TRUE)}.  
 #' Not meant to be called by the user.
-#' @seealso \code{link{help_drake}}
 #' @export
-#' @param output name of output to make
-#' @param verbose logical, same as in \code{link{make}()}
-#' @param force_rehash logical, same as with \code{\link{make}()}
-build = function(output, verbose, force_rehash){
+#' @param target name of target to make
+#' @param verbose logical, same as in \command{link{run}()}
+#' @param force_rehash logical, same as with \command{\link{run}()}
+build = function(target, verbose, force_rehash){
   cache = storr_rds(cachepath, mangle_key = TRUE)
   plan = cache$get("plan", namespace = "makefile")
   imported = imported() %>% Filter(f = is_not_file)
@@ -92,7 +91,7 @@ build = function(output, verbose, force_rehash){
   names(imports) = imported
   envir = list2env(imports, parent = globalenv())
   x = Make$new(plan = plan, verbose = verbose, envir = envir,
-    output = output, force_rehash = force_rehash)
+    target = target, force_rehash = force_rehash)
   packages = x$cache$get("packages", namespace = "makefile")
   for(package in packages) 
     if(!isPackageLoaded(package))
@@ -101,6 +100,6 @@ build = function(output, verbose, force_rehash){
   x$cache$get("global", namespace = "makefile") %>%
     eply::evals(.with = globalenv())
   x$make(clear_status = FALSE)
-  file_overwrite(timestamp(output))
+  file_overwrite(timestamp(target))
   invisible()
 }

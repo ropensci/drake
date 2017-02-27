@@ -1,6 +1,6 @@
 Package: drake
 Title: Skip Redundant Code
-Version: 0.0.0
+Version: 2.0.0
 Date: 2017-02-24
 Authors@R: c(
   person(family = "Landau", given = c("William", "Michael"),
@@ -25,12 +25,13 @@ Imports:
     storr,
     stringi,
     stringr,
-    tools
+    tools,
+    R.utils
 Suggests:
     knitr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-URL: https://github.com/wlandau/skipthat
-BugReports: https://github.com/wlandau/skipthat/issues
+URL: https://github.com/wlandau-lilly/drake
+BugReports: https://github.com/wlandau-lilly/drake/issues
 RoxygenNote: 5.0.1

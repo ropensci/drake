@@ -1,4 +1,4 @@
 library(testthat)
-library(skipthat)
+library(drake)
 
-test_check("skipthat")
+test_check("drake")

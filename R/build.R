@@ -1,11 +1,11 @@
-build = function(target, workflow, envir, cache){
+build = function(target, plan, envir, cache){
   dependency_hash = dependency_hash(target = target, 
-    workflow = workflow, envir = envir, cache = cache)
+    plan = plan, envir = envir, cache = cache)
   file_hash = file_hash(target = target, cache = cache)
   if(is_current(target = target, dependency_hash = dependency_hash, 
     file_hash = file_hash, cache = cache)) return()
   cache$set(key = target, value = "in progress", namespace = "status")
-  if(target %in% workflow$target) build_target(target)
+  if(target %in% plan$target) build_target(target)
   else import_target(target = target, file_hash = file_hash)
   cache$set(key = target, value = dependency_hash, namespace = "depends")
   cache$set(key = target, value = "finished", namespace = "status")
@@ -13,7 +13,7 @@ build = function(target, workflow, envir, cache){
 
 build_target = function(target){
   console("build", target)
-  value = eval(parse(text = workflow$command), envir = envir)
+  value = eval(parse(text = plan$command), envir = envir)
   if(is_file(target)) store_file(target, hash = NULL)
   else if(is.function(value)) 
     store_function(target = target, value = value)
@@ -42,6 +42,6 @@ store_file = function(target, hash){
 }
 
 store_function = function(target, value){
-  code = deparse(value)
-  cache$set(key = target, value = list(type = "function", value = code))
+  command = deparse(value)
+  cache$set(key = target, value = list(type = "function", value = command))
 }

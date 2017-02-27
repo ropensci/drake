@@ -10,8 +10,8 @@ file_is_current = function(target, file_hash){
   if(file_hash != cache$get(target)$value) return(FALSE)
 }
 
-dependency_hash = function(target, workflow, graph, cache){
-  command = workflow$command[workflow$target == target] %>% tidy
+dependency_hash = function(target, plan, graph, cache){
+  command = plan$command[plan$target == target] %>% tidy
   graphical_dependencies(target, graph) %>% sapply(FUN = cache$get_hash) %>% 
     c(command) %>% digest(algo = "md5")
 }

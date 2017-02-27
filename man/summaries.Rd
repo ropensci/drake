@@ -2,26 +2,31 @@
 % Please edit documentation in R/generate.R
 \name{summaries}
 \alias{summaries}
-\title{Function \code{summaries}}
+\title{Function \command{summaries}}
 \usage{
-summaries(commands, analyses, datasets, gather = rep("list",
-  dim(commands)[1]))
+summaries(plan, analyses, datasets, gather = rep("list", dim(plan)[1]))
 }
 \arguments{
-\item{commands}{Data frame output of the \code{\link{workflow}} function.}
+\item{plan}{data frame of instructions for summaries (wildcards unevaluated)}
 
-\item{analyses}{Data frame of \code{skipthat} commands to generate analyses.}
+\item{analyses}{data frame of analysis instructions}
 
-\item{datasets}{Data frame of \code{skipthat} commands to generate datasets.}
+\item{datasets}{data frame of dataset instructions}
 
 \item{gather}{Character vector, names of functions to gather the summaries.
-If not \code{NULL}, length must be the number of rows in the \code{workflow}
+If not \command{NULL}, length must be the number of rows in the \command{plan}
 argument.}
 }
 \value{
-preprocessed data frame of \code{skipthat} summary commands
+portion of a \command{drake} plan for summarizing multiple
+analyses of multiple datasets in multiple ways
 }
 \description{
-Produces a data frame of \code{skipthat} summary commands.
+Generate a portion of a \command{drake} plan
+for summarizing multiple anlayses of multiple datasets in multiple ways.
+}
+\seealso{
+\command{\link{analyses}},
+ \command{\link{run}}, \command{\link{plan}}
 }
 

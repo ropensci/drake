@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{expand}
 \alias{expand}
-\title{Function \code{expand}}
+\title{Function \command{expand}}
 \usage{
 expand(x, values = NULL)
 }
@@ -15,6 +15,6 @@ expand(x, values = NULL)
 an expanded data frame
 }
 \description{
-Expands a dataframe of skipthat commands by duplicating rows.
+Expands a dataframe of drake instructions by duplicating rows.
 }
 

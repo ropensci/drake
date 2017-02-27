@@ -1,15 +1,15 @@
-#' @title Function \code{cached}
+#' @title Function \command{cached}
 #' @description See the cached items stored by drake.
-#' Load an item with \code{\link{readd}}.
-#' @seealso \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{help_drake}}, 
-#' \code{\link{plan}}, \code{\link{make}}
+#' Load an item with \command{\link{readd}}.
+#' @seealso \command{\link{built}}, \command{\link{imported}},
+#' \command{\link{readd}}
+#' \command{\link{plan}}, \command{\link{run}}
 #' @export
 #' @return character vector of cached items
 #' @param path Root directory of the drake project, 
-#' or if \code{search} is \code{TRUE}, either the 
+#' or if \command{search} is \command{TRUE}, either the 
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 cached = function(path = getwd(), search = FALSE){
@@ -18,17 +18,17 @@ cached = function(path = getwd(), search = FALSE){
   x$list()
 }
 
-#' @title Function \code{built}
+#' @title Function \command{built}
 #' @description List all the built (non-imported) objects in the drake
 #' cache.
-#' @seealso \code{\link{cached}}, \code{\link{loadd}},
-#' \code{link{imported}}
+#' @seealso \command{\link{cached}}, \command{\link{loadd}},
+#' \command{link{imported}}
 #' @export
 #' @return list of imported objects in the cache
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if \command{search} is \command{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 built = function(path = getwd(), search = FALSE){
@@ -36,16 +36,16 @@ built = function(path = getwd(), search = FALSE){
           imported(path = path, search = search))
 }
 
-#' @title Function \code{imported}
+#' @title Function \command{imported}
 #' @description List all the imported objects in the drake cache
-#' @seealso \code{\link{cached}}, \code{\link{loadd}},
-#' \code{link{built}}
+#' @seealso \command{\link{cached}}, \command{\link{loadd}},
+#' \command{link{built}}
 #' @export
 #' @return list of imported objects in the cache
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if \command{search} is \command{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 imported = function(path = getwd(), search = FALSE){
@@ -55,25 +55,25 @@ imported = function(path = getwd(), search = FALSE){
   x[y]
 }
 
-#' @title Function \code{readd}
-#' @description Read a drake output object from the cache.
+#' @title Function \command{readd}
+#' @description Read a drake target object from the cache.
 #' Does not delete the item from the cache.
-#' @seealso \code{\link{loadd}}, \code{\link{cached}}, 
-#' \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
-#' \code{\link{make}}, \code{\link{help_drake}}
+#' @seealso \command{\link{loadd}}, \command{\link{cached}}, 
+#' \command{\link{built}}, \command{link{imported}}, \command{\link{plan}}, 
+#' \command{\link{run}}
 #' @export
-#' @return drake output item from the cache
-#' @param x If \code{character_only} is \code{TRUE}, 
-#' \code{x} is a character variable storing the name of the item to get 
-#' from the cache. Otherwise, \code{x} is a symbol with the literal 
+#' @return drake target item from the cache
+#' @param x If \command{character_only} is \command{TRUE}, 
+#' \command{x} is a character variable storing the name of the item to get 
+#' from the cache. Otherwise, \command{x} is a symbol with the literal 
 #' object name.
-#' @param character_only \code{TRUE}/\code{FALSE}, whether \code{x} 
+#' @param character_only \command{TRUE}/\command{FALSE}, whether \command{x} 
 #' can be assumed to be a character string 
-#' (just as in \code{\link{library}()}).
+#' (just as in \command{\link{library}()}).
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if \command{search} is \command{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param envir environment of imported functions (for lexical scoping)
@@ -91,27 +91,26 @@ readd = function(x, character_only = FALSE, path = getwd(), search = FALSE,
   out
 }
 
-#' @title Function \code{loadd}
+#' @title Function \command{loadd}
 #' @description Load object(s) from the drake cache into the calling 
-#' (or other environment if you set the \code{envir} arg). Defaults
-#' to loading the whole cache if arguments \code{...} and \code{list}
+#' (or other environment if you set the \command{envir} arg). Defaults
+#' to loading the whole cache if arguments \command{...} and \command{list}
 #' are not set (or all the imported objects if in addition 
-#' imported_only is \code{TRUE}).
-#' @seealso \code{\link{cached}}, \code{\link{built}}, 
-#' \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
-#' \code{\link{help_drake}}
+#' imported_only is \command{TRUE}).
+#' @seealso \command{\link{cached}}, \command{\link{built}}, 
+#' \command{\link{imported}}, \command{\link{plan}}, \command{\link{run}},
 #' @export
 #' @param ... objects to load from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to \code{...} in
-#' \code{\link{remove}(...)}.
+#' or character strings (quoted). Similar to \command{...} in
+#' \command{\link{remove}(...)}.
 #' @param list character vector naming objects to be loaded from the
-#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#' cache. Similar to the \command{list} argument of \command{\link{remove}()}.
 #' @param imported_only logical, indicates whether only imported objects
-#' should be loaded rather than everything in \code{x}
+#' should be loaded rather than everything in \command{x}
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if \command{search} is \command{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param envir environment to load the cache into. Defaults to the
@@ -135,13 +134,12 @@ loadd = function(..., list = character(0),
   invisible()
 }
 
-#' @title Function \code{find_cache}
+#' @title Function \command{find_cache}
 #' @description Return the file path of the nearest drake
 #' cache (searching upwards for directories containing a drake cache).
-#' @seealso \code{\link{plan}}, \code{\link{make}},
-#' \code{\link{help_drake}}
+#' @seealso \command{\link{plan}}, \command{\link{run}},
 #' @export
-#' @return File path of the nearest drake cache or \code{NULL}
+#' @return File path of the nearest drake cache or \command{NULL}
 #' if no cache is found.
 #' @param path starting path for search back for the cache.
 #' Should be a subdirectory of the drake project.
@@ -155,14 +153,13 @@ find_cache = function(path = getwd()){
   path
 }
 
-#' @title Function \code{find_project}
+#' @title Function \command{find_project}
 #' @description Return the file path of the nearest drake
 #' project (searching upwards for directories
 #' containing a drake cache).
 #' @export
-#' @seealso \code{\link{plan}}, \code{\link{make}},
-#' \code{\link{help_drake}}
-#' @return File path of the nearest drake project or \code{NULL}
+#' @seealso \command{\link{plan}}, \command{\link{run}}
+#' @return File path of the nearest drake project or \command{NULL}
 #' if no drake project is found.
 #' @param path starting path for search back for the project.
 #' Should be a subdirectory of the drake project.
@@ -172,19 +169,19 @@ find_project = function(path = getwd()){
   dirname(x)
 }
 
-#' @title Function \code{session}
-#' @description Load the \code{\link{sessionInfo}()}
-#' of the last call to \code{\link{make}()}.
-#' @seealso \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{help_drake}},
-#' \code{\link{plan}}, \code{\link{make}}
+#' @title Function \command{session}
+#' @description Load the \command{\link{sessionInfo}()}
+#' of the last call to \command{\link{run}()}.
+#' @seealso \command{\link{built}}, \command{\link{imported}},
+#' \command{\link{readd}}, 
+#' \command{\link{plan}}, \command{\link{run}}
 #' @export
-#' @return \code{\link{sessionInfo}()} of the last
-#' call to \code{\link{make}()}
+#' @return \command{\link{sessionInfo}()} of the last
+#' call to \command{\link{run}()}
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if \command{search} is \command{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 session = function(path = getwd(), search = FALSE){
@@ -193,30 +190,30 @@ session = function(path = getwd(), search = FALSE){
   x$get("session", namespace = "session")
 }
 
-#' @title Function \code{status}
+#' @title Function \command{status}
 #' @description Get the build status of the last call to 
-#' \code{\link{make}()}: which objects were skipped, built,
+#' \command{\link{run}()}: which objects were skipped, built,
 #' and imported.
-#' @seealso \code{\link{session}},
-#' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{help_drake}},
-#' \code{\link{plan}}, \code{\link{make}}
+#' @seealso \command{\link{session}},
+#' \command{\link{built}}, \command{\link{imported}},
+#' \command{\link{readd}}, 
+#' \command{\link{plan}}, \command{\link{run}}
 #' @export
 #' @return data frame containing the build status
 #' of the last session
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if \command{search} is \command{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If \command{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 status = function(path = getwd(), search = FALSE){
   x = get_cache(path = path, search = search)
   if(is.null(x)) stop("No drake::make() session detected.")
-  output = x$list(namespace = "status")
-  status = sapply(output, x$get, namespace = "status",
+  target = x$list(namespace = "status")
+  status = sapply(target, x$get, namespace = "status",
                   USE.NAMES = FALSE)
-  data.frame(output = output, status = status, stringsAsFactors = FALSE)
+  data.frame(target = target, status = status, stringsAsFactors = FALSE)
 }
 
 get_cache = function(path = getwd(), search = FALSE){
@@ -231,7 +228,7 @@ is_imported = function(x, path = getwd(), search = F){
   cs = get_cache(path = path, search = search)
   if(is.null(cs)) return(FALSE)
   if(!(x %in% cs$list())) return(FALSE)
-  cs$get(x, namespace = "depends")$code == hash_code(as.character(NA))
+  cs$get(x, namespace = "depends")$command == hash_command(as.character(NA))
 }
 
 # from base::remove()
