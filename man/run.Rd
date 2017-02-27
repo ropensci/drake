@@ -6,7 +6,8 @@
 \usage{
 run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
   parallelism = c("mclapply", "Makefile"), jobs = 1,
-  prepend = character(0), packages = character(0), prework = character(0))
+  packages = character(0), prework = character(0), prepend = character(0),
+  command = "make", args = character(0))
 }
 \arguments{
 \item{plan}{workflow plan data frame}
@@ -21,9 +22,13 @@ run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
 
 \item{jobs}{number of parallel processes or jobs}
 
+\item{packages}{packages to load}
+
 \item{prepend}{lines to prepend to the Makefile}
 
-\item{packages}{packages to load}
+\item{command}{command to call the Makefile}
+
+\item{args}{command line arguments to the Makefile}
 
 \item{prepwork}{prework to do before running the workflow}
 }

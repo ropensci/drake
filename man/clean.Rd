@@ -8,7 +8,8 @@ clean(destroy = FALSE)
 }
 \arguments{
 \item{destroy}{logical, whether to totally remove the drake cache. 
-If \command{destroy} is \command{FALSE}, only the targets from \command{run}()
+If \command{destroy} is \command{FALSE}, only the targets 
+from \command{run}()
 are removed. If \command{TRUE}, the whole cache is removed, including
 session metadata.}
 }

@@ -9,7 +9,8 @@
 #' @seealso \command{\link{prune}}, \command{\link{run}}, 
 #' @export
 #' @param destroy logical, whether to totally remove the drake cache. 
-#' If \command{destroy} is \command{FALSE}, only the targets from \command{run}()
+#' If \command{destroy} is \command{FALSE}, only the targets 
+#' from \command{run}()
 #' are removed. If \command{TRUE}, the whole cache is removed, including
 #' session metadata. 
 clean = function(destroy = FALSE){
@@ -17,12 +18,8 @@ clean = function(destroy = FALSE){
   cache = storr_rds(cachepath, mangle_key = TRUE)
   files = cached() %>% Filter(f = is_file) 
   remove_target_files(files, cache)
-  if(destroy){
-    unlink(cachepath, recursive = TRUE)
-  } else {
-    cache$clear()
-    cache$clear(namespace = "depends")
-  }
+  if(destroy) unlink(cachepath, recursive = TRUE)
+  else uncache(cached())
   invisible()
 }
 
@@ -42,10 +39,7 @@ prune = function(plan){
   remove = setdiff(cached(), plan$target)
   files = Filter(remove, f = is_file)
   remove_target_files(files, cache)
-  lapply(remove, function(x){
-    cache$del(x)
-    cache$del(x, namespace = "depends")
-  })
+  uncache(remove)
   invisible()
 }
 

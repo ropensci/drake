@@ -23,8 +23,6 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
   args = arglist(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, jobs = jobs, prework = prework,
     command = command, args = args)
-  args$graph = build_graph(plan = args$plan, targets = args$targets, 
-    envir = args$envir)
   if(parallelism == "mclapply") 
     run_mclapply(args)
   else if(parallelism == "Makefile")
@@ -42,9 +40,12 @@ arglist = function(plan, targets, envir, jobs, verbose, prework,
   targets = intersect(targets, plan$target)
   cache = storr_rds(cachepath, mangle_key = TRUE)
   cache$clear(namespace = "status")
+  graph = build_graph(plan = plan, targets = targets,
+    envir = envir)
+  order = topological.sort(graph)$name
   list(plan = plan, targets = targets, envir = envir, cache = cache, 
     jobs = jobs, verbose = verbose, prework = prework,
-    command = command, args = args)
+    command = command, args = args, graph = graph, order = order)
 }
 
 run_mclapply = function(args){

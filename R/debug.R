@@ -21,9 +21,7 @@ dbug = function(){
   ))
   args = arglist(plan, targets = plan$target, envir = envir, jobs = 1,
     verbose = TRUE, prework = character(0), command = "make", 
-    args = character(0)) 
-  args$graph = build_graph(plan = args$plan, targets = args$targets, 
-    envir = args$envir)
+    args = character(0))
   args
 }
 

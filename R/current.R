@@ -1,5 +1,6 @@
 is_current = function(target, dependency_hash, file_hash, args){
-  cached = intersect(args$cache$list(), args$cache$list(namespace = "depends"))
+  cached = intersect(args$cache$list(), 
+    args$cache$list(namespace = "depends"))
   if(!(target %in% cached)) return(FALSE)
   if(!file_is_current(target = target, 
     file_hash = file_hash, args = args)) 
@@ -16,10 +17,15 @@ file_is_current = function(target, file_hash, args){
   TRUE
 }
 
+get_hash = Vectorize(function(target, args){
+  if(target %in% args$cache$list()) args$cache$get_hash(target)
+  else as.character(NA)
+}, "target")
+
 dependency_hash = function(target, args){
   command = get_command(target = target, args = args)
   graphical_dependencies(target, args) %>% 
-    sapply(FUN = args$cache$get_hash) %>% 
+    sapply(FUN = get_hash, args = args) %>% 
     c(command) %>% digest(algo = "md5")
 }
 

@@ -4,14 +4,17 @@ timestamp = function(x){
   file.path(timestampdir, x)
 }
 
-timestamps = function(x){
-  plan = x$plan
-  target = plan$target[!is.na(plan$command)]
+timestamps = function(args){
   dir_empty(timestampdir)
-  lapply(target, function(name){
-    depends_stamp = x$depends_stamp(name)
-    if(!x$should_update_target(name, depends_stamp))
-      file_overwrite(timestamp(name))
+  targets = intersect(args$order, args$plan$target)
+  lapply(targets, function(target){
+    dependency_hash = dependency_hash(target, args)
+    file_hash = file_hash(target, args)
+    current = is_current(target = target, 
+      dependency_hash = dependency_hash, 
+      file_hash = file_hash, args = args)
+    if(current)
+      file_overwrite(timestamp(target))
   })
   invisible()
 }

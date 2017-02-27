@@ -25,7 +25,8 @@ build_graph = function(plan, targets, envir){
     subcomponent(graph = graph, v = vertex, mode = "in")$name
   ) %>% unlist %>% unique %>% setdiff(x = vertices)
   graph = delete_vertices(graph, v = ignore)
-  if(!is_dag(graph)) stop("Workflow is circular (chicken and egg dilemma).")
+  if(!is_dag(graph)) 
+    stop("Workflow is circular (chicken and egg dilemma).")
   graph
 }
 
