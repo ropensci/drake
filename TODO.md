@@ -1,2 +1,2 @@
-- store a "ref" object with common data: plan, envir, cache, graph
+- uncache_imports: need to store list(type, value, imported)
 - all cleanup and tests

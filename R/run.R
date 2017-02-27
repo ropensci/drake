@@ -21,7 +21,8 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
   prework = add_packages_to_prework(packages = packages, 
     prework = prework)
   args = arglist(plan = plan, targets = targets, envir = envir, 
-    verbose = verbose, jobs = jobs, prework = prework, args = args)
+    verbose = verbose, jobs = jobs, prework = prework,
+    command = command, args = args)
   args$graph = build_graph(plan = args$plan, targets = args$targets, 
     envir = args$envir)
   if(parallelism == "mclapply") 
@@ -36,12 +37,14 @@ add_packages_to_prework = function(packages, prework){
   c(packages, prework)
 }
 
-arglist = function(plan, targets = plan$target, envir = parent.frame(),
-  jobs = 1){
+arglist = function(plan, targets, envir, jobs, verbose, prework,
+  command, args){
   targets = intersect(targets, plan$target)
   cache = storr_rds(cachepath, mangle_key = TRUE)
   cache$clear(namespace = "status")
-  list(plan = plan, targets = targets, envir = envir, cache = cache, jobs = jobs)
+  list(plan = plan, targets = targets, envir = envir, cache = cache, 
+    jobs = jobs, verbose = verbose, prework = prework,
+    command = command, args = args)
 }
 
 run_mclapply = function(args){

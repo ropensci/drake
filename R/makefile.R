@@ -6,36 +6,40 @@ run_makefile = function(args){
   makefile_rules(args)
   sink()
   initialize(args)
-  make_args = paste0("--jobs=", args$jobs)
-  if(!args$verbose) make_args = paste(make_args, "--silent")
-  system2(command = args$make, args = c(args$args, make_args))
+  if(!length(args$args)){
+    args$args = paste0("--jobs=", args$jobs)
+    if(!args$verbose) args$args = c(args$args, "--silent")
+  }
+  system2(command = args$make, args = args$args)
   invisible()
 }
 
 makefile_head = function(args){
   if(length(args$prepend)) cat(args$prepend, "\n", sep = "\n")
-  cat("all: ", timestamp(args$targets), "\n", sep = "\n")
+  cat("all: ", timestamp(args$targets), sep = " \\\n")
 }
 
 makefile_rules = function(args){
   for(x in args$plan$target){
-    cat("\n", timestamp(x), ": ", sep = "")
-    deps = graphical_dependencies(x, args$graph) %>%
+    deps = graphical_dependencies(x, args) %>%
       intersect(y = args$plan$target) %>% timestamp
-    cat(deps, "\n", sep = "\n")
+    breaker = ifelse(length(deps), " \\\n", "\n")
+    cat("\n", timestamp(x), ":", breaker, sep = "")
+    if(length(deps)) cat(deps, sep = breaker)
     if(is_file(x)) 
       x = paste0("drake::as_file(\"", eply::unquote(x), "\")")
     else x = quotes(unquote(x), single = FALSE)
-    cat("\tRscript -e 'drake::mk(", x, "\n")
+    cat("\tRscript -e 'drake::mk(", x, ")\n", sep = "")
   }
 }
 
 initialize = function(args){ 
   args$cache$clear(namespace = "status")
-  uncache_imported(x$cache)
   evals(args$prework, .with = args$envir)
-  imports = setdiff(V(args$graph)$name, args$plan$target)
-  for(import in imports) build(import, args)
+  uncache_imported(args)
+  import_graph = delete_vertices(args$graph, args$plan$target) %>%
+    topological.sort
+  for(import in import_graph$name) build(import, args)
   timestamps(x)
   invisible()
 }

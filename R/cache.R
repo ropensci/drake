@@ -77,8 +77,8 @@ imported = function(path = getwd(), search = FALSE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param envir environment of imported functions (for lexical scoping)
-readd = function(x, character_only = FALSE, path = getwd(), search = FALSE,
-                 envir = parent.frame()){
+readd = function(x, character_only = FALSE, path = getwd(), 
+  search = FALSE, envir = parent.frame()){
   force(envir)
   y = get_cache(path = path, search = search)
   if(is.null(y)) stop("cannot find drake cache.")
@@ -224,30 +224,13 @@ get_cache = function(path = getwd(), search = FALSE){
   storr_rds(path, mangle_key = TRUE)
 }
 
-is_imported = function(x, path = getwd(), search = F){
-
-# NEEDS TO BE CLEANED UP
-
-#  cs = get_cache(path = path, search = search)
-#  if(is.null(cs)) return(FALSE)
-#  if(!(x %in% cs$list())) return(FALSE)
-#  cs$get(x, namespace = "depends")$command == hash_command(as.character(NA))
-}
-
 # from base::remove()
 parse_dots = function(dots, list){
   if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
-                                  is.character(x), NA, USE.NAMES = FALSE)))
+    is.character(x), NA, USE.NAMES = FALSE)))
     stop("... must contain names or character strings")
   names = vapply(dots, as.character, "")
   if (length(names) == 0L) names = character()
   .Primitive("c")(list, names)
 }
 
-uncache_imported = function(cache = get_cache()){
-  if(is.null(cache)) return()
-  lapply(imported(), function(x){
-    cache$del(x)
-    cache$del(x, namespace = "depends")
-  })
-}

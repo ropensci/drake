@@ -11,15 +11,19 @@ dbug = function(){
   eval(parse(text = "d <- 25"), envir = envir)
   saveRDS(1:10, "input.rds")
   plan = plan(list = c(
-    "'intermediatefile.rds'" = "saveRDS(combined, \"intermediatefile.rds\")",
+    "'intermediatefile.rds'" = 
+      "saveRDS(combined, \"intermediatefile.rds\")",
     yourinput = "f(1+1)",
     nextone = "myinput + g(7)",
     combined = "nextone + yourinput",
     myinput = "readRDS('input.rds')",
     final = "readRDS('intermediatefile.rds')"
   ))
-  args = arglist(plan, targets = plan$target, envir = envir, jobs = 1) 
-  args$graph = build_graph(plan = args$plan, targets = args$targets, envir = args$envir)
+  args = arglist(plan, targets = plan$target, envir = envir, jobs = 1,
+    verbose = TRUE, prework = character(0), command = "make", 
+    args = character(0)) 
+  args$graph = build_graph(plan = args$plan, targets = args$targets, 
+    envir = args$envir)
   args
 }
 
