@@ -4,8 +4,9 @@
 \alias{run}
 \title{Function \command{run}}
 \usage{
-run(plan, targets = plan$target, envir = parent.frame(),
-  parallelism = c("mclapply", "Makefile"), jobs = 1)
+run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
+  parallelism = c("mclapply", "Makefile"), jobs = 1,
+  prepend = character(0), packages = character(0), prework = character(0))
 }
 \arguments{
 \item{plan}{workflow plan data frame}
@@ -14,9 +15,17 @@ run(plan, targets = plan$target, envir = parent.frame(),
 
 \item{envir}{environment to use}
 
+\item{verbose}{logical, whether to print output to the console}
+
 \item{parallelism}{character, type of parallelism to use}
 
 \item{jobs}{number of parallel processes or jobs}
+
+\item{prepend}{lines to prepend to the Makefile}
+
+\item{packages}{packages to load}
+
+\item{prepwork}{prework to do before running the workflow}
 }
 \description{
 Run your project.

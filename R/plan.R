@@ -47,3 +47,18 @@ plan = function(..., list = character(0), file_targets = FALSE,
     out$command[i] = gsub("\"", "'", out$command[i])
   out
 }
+
+#' @title Function \command{as_file}
+#' @description Converts an ordinary character string
+#' into a filename understandable by drake. In other words,
+#' \command{as_file(x)} just wraps single quotes around \command{x}
+#' @export
+#' @return a single-quoted character string: i.e., a filename
+#' understandable by drake.
+#' @param x character string to be turned into a filename
+#' understandable by drake (i.e., a string with literal
+#' single quotes on both ends).
+as_file = function(x){
+  quotes(x, single = TRUE)
+}
+

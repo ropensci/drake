@@ -13,7 +13,7 @@ build = function(target, args){
 }
 
 build_target = function(target, args){
-  console("build", target)
+  console("build", target, args)
   command = get_command(target = target, args = args)
   value = eval(parse(text = command), envir = args$envir)
   if(is_file(target)) store_file(target, file_hash = NULL, args = args)
@@ -23,7 +23,7 @@ build_target = function(target, args){
 }
 
 import_target = function(target, file_hash, args){
-  console("import", target)
+  console("import", target, args)
   if(is_file(target)){
     store_file(target = target, file_hash = file_hash, args = args)
     return()

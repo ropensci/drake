@@ -4,19 +4,36 @@
 #' @param plan workflow plan data frame
 #' @param targets targets to bulid
 #' @param envir environment to use
+#' @param verbose logical, whether to print output to the console
 #' @param parallelism character, type of parallelism to use
 #' @param jobs number of parallel processes or jobs
+#' @param packages packages to load
+#' @param prepwork prework to do before running the workflow
+#' @param prepend lines to prepend to the Makefile
+#' @param command command to call the Makefile
+#' @param args command line arguments to the Makefile
 run = function(plan, targets = plan$target, envir = parent.frame(), 
-  parallelism = c("mclapply", "Makefile"), jobs = 1){
+  verbose = TRUE, parallelism = c("mclapply", "Makefile"), jobs = 1, 
+  packages = character(0), prework = character(0),
+  prepend = character(0), command = "make", args = character(0)){
   force(envir)
   parallelism = match.arg(parallelism)
-  args = arglist(plan = plan, targets = targets, envir = envir,
-    jobs = jobs)
-  args$graph = build_graph(plan = args$plan, targets = args$targets, envir = args$envir)
+  prework = add_packages_to_prework(packages = packages, 
+    prework = prework)
+  args = arglist(plan = plan, targets = targets, envir = envir, 
+    verbose = verbose, jobs = jobs, prework = prework, args = args)
+  args$graph = build_graph(plan = args$plan, targets = args$targets, 
+    envir = args$envir)
   if(parallelism == "mclapply") 
     run_mclapply(args)
-#  else if(parallelism == "Makefile")
-#    run_makefile(args)
+  else if(parallelism == "Makefile")
+    run_makefile(args)
+}
+
+add_packages_to_prework = function(packages, prework){
+  if(!length(packages)) return(prework)
+  package_commands = paste0("libary(", packages, ")")
+  c(packages, prework)
 }
 
 arglist = function(plan, targets = plan$target, envir = parent.frame(),
@@ -28,6 +45,7 @@ arglist = function(plan, targets = plan$target, envir = parent.frame(),
 }
 
 run_mclapply = function(args){
+  evals(args$prework, .with = args$envir)
   next_graph = args$graph
   while(length(V(next_graph))) 
     next_graph = parallel_stage(next_graph = next_graph, args = args)

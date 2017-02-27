@@ -1,4 +1,5 @@
-console = function(action = c("build", "import"), target){
+console = function(action = c("build", "import"), target, args){
+  if(!args$verbose) return()
   action = match.arg(action)
   action = ifelse(action == "build", 
     color(action, "forestgreen"), color(action, "dodgerblue3"))

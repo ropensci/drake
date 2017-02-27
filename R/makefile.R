@@ -1,79 +1,52 @@
-if(F){
-makefile = function(plan, target, verbose, envir, command, args,
-    run, prepend, packages, global, force_rehash){
-  force(envir)
-  if("all" %in% plan$target)
-    stop("\"all\" cannot be in plan$target.")  
-  x = setup(plan = plan, target = target, verbose = verbose,
-    envir = envir, force_rehash = force_rehash,
-    run = run, prepend = prepend, global = global,
-    command = command)
-  x$cache$set("packages", packages, namespace = "makefile")
-  x$cache$set("global", global, namespace = "makefile")
-  x$cache$set("plan", plan, namespace = "makefile")
+run_makefile = function(args){
+  x$cache$set("args", args, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
-  plan = x$plan[complete.cases(x$plan),]
-  makefile_head(prepend = prepend, targets = plan$target)
-  makefile_rules(plan, 
-    verbose = verbose, force_rehash = force_rehash)
+  makefile_head(args)
+  makefile_rules(args)
   sink()
-  initialize(x)
-  if(run) system2(command = command, args = args)
+  initialize(args)
+  make_args = paste0("--jobs=", args$jobs)
+  if(!args$verbose) make_args = paste(make_args, "--silent")
+  system2(command = args$make, args = c(args$args, make_args))
   invisible()
 }
+
+makefile_head = function(args){
+  if(length(args$prepend)) cat(args$prepend, "\n", sep = "\n")
+  cat("all: ", timestamp(args$targets), "\n", sep = "\n")
 }
 
-#' @title Function \command{as_file}
-#' @description Converts an ordinary character string
-#' into a filename understandable by drake. In other words,
-#' \command{as_file(x)} just wraps single quotes around \command{x}
-#' @export
-#' @return a single-quoted character string: i.e., a filename
-#' understandable by drake.
-#' @param x character string to be turned into a filename
-#' understandable by drake (i.e., a string with literal
-#' single quotes on both ends).
-as_file = function(x){
-  eply::quotes(x, single = TRUE)
-}
-
-makefile_head = function(prepend, targets){
-  if(length(prepend)){
-    cat(prepend, sep = "\n")
-    cat("\n")
-  }
-  cat("all: ", timestamp(targets), "\n")
-}
-
-if(F){
-makefile_rules = function(plan, verbose, force_rehash){
-  y = Make$new(plan, envir = new.env(), target = plan$target)
-  for(x in plan$target){
+makefile_rules = function(args){
+  for(x in args$plan$target){
     cat("\n", timestamp(x), ": ", sep = "")
-    deps = intersect(y$deps(x), plan$target) %>% timestamp
-    cat(deps, "\n")
+    deps = graphical_dependencies(x, args$graph) %>%
+      intersect(y = args$plan$target) %>% timestamp
+    cat(deps, "\n", sep = "\n")
     if(is_file(x)) 
       x = paste0("drake::as_file(\"", eply::unquote(x), "\")")
     else x = quotes(unquote(x), single = FALSE)
-    cat("\tRscript -e 'drake::build(", x, 
-      ", verbose = ", verbose, ", force_rehash = ", force_rehash, 
-      ")'\n", sep = "")
+    cat("\tRscript -e 'drake::mk(", x, "\n")
   }
 }
-}
 
-initialize = function(x){
-  packages = x$cache$get("packages", namespace = "makefile")
-  for(package in packages) 
-    if(!isPackageLoaded(package))
-      require(package, character.only = TRUE)
-  x$cache$get("global", namespace = "makefile") %>%
-    eply::evals(.with = globalenv())
-  imports = x$plan$target[is.na(x$plan$command)]
-  x$cache$clear(namespace = "status")
+initialize = function(args){ 
+  args$cache$clear(namespace = "status")
   uncache_imported(x$cache)
-  for(i in imports) x$update(i)
+  evals(args$prework, .with = args$envir)
+  imports = setdiff(V(args$graph)$name, args$plan$target)
+  for(import in imports) build(import, args)
   timestamps(x)
   invisible()
+}
+
+#' @title Function \code{mk}
+#' @description Internal drake function to be called 
+#' inside Makefiles only. Makes a single target.
+#' Users, do not invoke directly.
+#' export
+#' @param target name of target to make
+mk = function(target){
+  args = get_cache()$get("args", namespace = "makefile")
+  build(target = target, args = args)
 }
