@@ -1,4 +1,16 @@
-graph = function(plan, targets, envir){
+#' @title Function \command{graph}
+#' @description Graph the dependency structure of your workflow
+#' @export
+#' @param plan workflow plan data frame
+#' @param targets targets to bulid
+#' @param envir environment to use
+graph = function(plan, targets = plan$target, envir = parent.frame()){
+  force(envir)
+  build_graph(plan = plan, targets = targets, envir = envir) %>%
+    plot.igraph
+}
+
+build_graph = function(plan, targets, envir){
   force(envir)
   imports = as.list(envir)
   keys = c(names(imports), plan$target)
@@ -17,7 +29,7 @@ graph = function(plan, targets, envir){
   graph
 }
 
-graphical_dependencies = function(targets, graph){
-  adjacent_vertices(graph = graph, v = targets, mode = "in") %>%
+graphical_dependencies = function(targets, args){
+  adjacent_vertices(graph = args$graph, v = targets, mode = "in") %>%
     lapply(FUN = names) %>% unlist %>% unique %>% unname
 }

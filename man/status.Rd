@@ -2,16 +2,16 @@
 % Please edit documentation in R/cache.R
 \name{status}
 \alias{status}
-\title{Function \command{status}}
+\title{Function \code{status}}
 \usage{
 status(path = getwd(), search = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
-or if \command{search} is \command{TRUE}, either the
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
@@ -21,13 +21,13 @@ of the last session
 }
 \description{
 Get the build status of the last call to 
-\command{\link{run}()}: which objects were skipped, built,
+\code{\link{run}()}: which objects were skipped, built,
 and imported.
 }
 \seealso{
-\command{\link{session}},
-\command{\link{built}}, \command{\link{imported}},
-\command{\link{readd}}, 
-\command{\link{plan}}, \command{\link{run}}
+\code{\link{session}},
+\code{\link{built}}, \code{\link{imported}},
+\code{\link{readd}}, 
+\code{\link{plan}}, \code{\link{run}}
 }
 

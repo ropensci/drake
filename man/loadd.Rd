@@ -2,27 +2,27 @@
 % Please edit documentation in R/cache.R
 \name{loadd}
 \alias{loadd}
-\title{Function \command{loadd}}
+\title{Function \code{loadd}}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = FALSE, envir = parent.frame())
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
-or character strings (quoted). Similar to \command{...} in
-\command{\link{remove}(...)}.}
+or character strings (quoted). Similar to \code{...} in
+\code{\link{remove}(...)}.}
 
 \item{list}{character vector naming objects to be loaded from the
-cache. Similar to the \command{list} argument of \command{\link{remove}()}.}
+cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
 \item{imported_only}{logical, indicates whether only imported objects
-should be loaded rather than everything in \command{x}}
+should be loaded rather than everything in \code{x}}
 
 \item{path}{Root directory of the drake project,
-or if \command{search} is \command{TRUE}, either the
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
@@ -31,13 +31,13 @@ calling environment.}
 }
 \description{
 Load object(s) from the drake cache into the calling 
-(or other environment if you set the \command{envir} arg). Defaults
-to loading the whole cache if arguments \command{...} and \command{list}
+(or other environment if you set the \code{envir} arg). Defaults
+to loading the whole cache if arguments \code{...} and \code{list}
 are not set (or all the imported objects if in addition 
-imported_only is \command{TRUE}).
+imported_only is \code{TRUE}).
 }
 \seealso{
-\command{\link{cached}}, \command{\link{built}}, 
-\command{\link{imported}}, \command{\link{plan}}, \command{\link{run}},
+\code{\link{cached}}, \code{\link{built}}, 
+\code{\link{imported}}, \code{\link{plan}}, \code{\link{run}},
 }
 

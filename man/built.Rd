@@ -2,16 +2,16 @@
 % Please edit documentation in R/cache.R
 \name{built}
 \alias{built}
-\title{Function \command{built}}
+\title{Function \code{built}}
 \usage{
 built(path = getwd(), search = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
-or if \command{search} is \command{TRUE}, either the
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
@@ -23,7 +23,7 @@ List all the built (non-imported) objects in the drake
 cache.
 }
 \seealso{
-\command{\link{cached}}, \command{\link{loadd}},
-\command{link{imported}}
+\code{\link{cached}}, \code{\link{loadd}},
+\code{link{imported}}
 }
 

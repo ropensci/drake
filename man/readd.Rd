@@ -2,26 +2,26 @@
 % Please edit documentation in R/cache.R
 \name{readd}
 \alias{readd}
-\title{Function \command{readd}}
+\title{Function \code{readd}}
 \usage{
 readd(x, character_only = FALSE, path = getwd(), search = FALSE,
   envir = parent.frame())
 }
 \arguments{
-\item{x}{If \command{character_only} is \command{TRUE}, 
-\command{x} is a character variable storing the name of the item to get 
-from the cache. Otherwise, \command{x} is a symbol with the literal 
+\item{x}{If \code{character_only} is \code{TRUE}, 
+\code{x} is a character variable storing the name of the item to get 
+from the cache. Otherwise, \code{x} is a symbol with the literal 
 object name.}
 
-\item{character_only}{\command{TRUE}/\command{FALSE}, whether \command{x} 
+\item{character_only}{\code{TRUE}/\code{FALSE}, whether \code{x} 
 can be assumed to be a character string 
-(just as in \command{\link{library}()}).}
+(just as in \code{\link{library}()}).}
 
 \item{path}{Root directory of the drake project,
-or if \command{search} is \command{TRUE}, either the
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
@@ -35,8 +35,8 @@ Read a drake target object from the cache.
 Does not delete the item from the cache.
 }
 \seealso{
-\command{\link{loadd}}, \command{\link{cached}}, 
-\command{\link{built}}, \command{link{imported}}, \command{\link{plan}}, 
-\command{\link{run}}
+\code{\link{loadd}}, \code{\link{cached}}, 
+\code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
+\code{\link{run}}
 }
 

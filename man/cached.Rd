@@ -2,16 +2,16 @@
 % Please edit documentation in R/cache.R
 \name{cached}
 \alias{cached}
-\title{Function \command{cached}}
+\title{Function \code{cached}}
 \usage{
 cached(path = getwd(), search = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project, 
-or if \command{search} is \command{TRUE}, either the 
+or if \code{search} is \code{TRUE}, either the 
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
@@ -20,11 +20,11 @@ character vector of cached items
 }
 \description{
 See the cached items stored by drake.
-Load an item with \command{\link{readd}}.
+Load an item with \code{\link{readd}}.
 }
 \seealso{
-\command{\link{built}}, \command{\link{imported}},
-\command{\link{readd}}
-\command{\link{plan}}, \command{\link{run}}
+\code{\link{built}}, \code{\link{imported}},
+\code{\link{readd}}
+\code{\link{plan}}, \code{\link{run}}
 }
 

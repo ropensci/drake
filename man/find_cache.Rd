@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{find_cache}
 \alias{find_cache}
-\title{Function \command{find_cache}}
+\title{Function \code{find_cache}}
 \usage{
 find_cache(path = getwd())
 }
@@ -11,7 +11,7 @@ find_cache(path = getwd())
 Should be a subdirectory of the drake project.}
 }
 \value{
-File path of the nearest drake cache or \command{NULL}
+File path of the nearest drake cache or \code{NULL}
 if no cache is found.
 }
 \description{
@@ -19,6 +19,6 @@ Return the file path of the nearest drake
 cache (searching upwards for directories containing a drake cache).
 }
 \seealso{
-\command{\link{plan}}, \command{\link{run}},
+\code{\link{plan}}, \code{\link{run}},
 }
 

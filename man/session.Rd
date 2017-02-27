@@ -2,30 +2,30 @@
 % Please edit documentation in R/cache.R
 \name{session}
 \alias{session}
-\title{Function \command{session}}
+\title{Function \code{session}}
 \usage{
 session(path = getwd(), search = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
-or if \command{search} is \command{TRUE}, either the
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
 \value{
-\command{\link{sessionInfo}()} of the last
-call to \command{\link{run}()}
+\code{\link{sessionInfo}()} of the last
+call to \code{\link{run}()}
 }
 \description{
-Load the \command{\link{sessionInfo}()}
-of the last call to \command{\link{run}()}.
+Load the \code{\link{sessionInfo}()}
+of the last call to \code{\link{run}()}.
 }
 \seealso{
-\command{\link{built}}, \command{\link{imported}},
-\command{\link{readd}}, 
-\command{\link{plan}}, \command{\link{run}}
+\code{\link{built}}, \code{\link{imported}},
+\code{\link{readd}}, 
+\code{\link{plan}}, \code{\link{run}}
 }
 

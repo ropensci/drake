@@ -2,16 +2,16 @@
 % Please edit documentation in R/cache.R
 \name{imported}
 \alias{imported}
-\title{Function \command{imported}}
+\title{Function \code{imported}}
 \usage{
 imported(path = getwd(), search = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
-or if \command{search} is \command{TRUE}, either the
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \command{TRUE}, search parent directories
+\item{search}{If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
@@ -22,7 +22,7 @@ list of imported objects in the cache
 List all the imported objects in the drake cache
 }
 \seealso{
-\command{\link{cached}}, \command{\link{loadd}},
-\command{link{built}}
+\code{\link{cached}}, \code{\link{loadd}},
+\code{link{built}}
 }
 

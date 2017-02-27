@@ -1,5 +1,6 @@
-dbug = function(envir = parent.frame()){
-  force(envir)
+dbug = function(){
+  dclean()
+  envir = new.env(parent = globalenv())
   eval(parse(text = "f <- function(x) {g(x) + a}"), envir = envir)
   eval(parse(text = "g <- function(y) {h(y) + b}"), envir = envir)
   eval(parse(text = "h <- function(y) {i(y) + j(y)}"), envir = envir)
@@ -9,20 +10,20 @@ dbug = function(envir = parent.frame()){
   eval(parse(text = "b <- 20"), envir = envir)
   eval(parse(text = "d <- 25"), envir = envir)
   saveRDS(1:10, "input.rds")
-  out = plan(
+  plan = plan(list = c(
     "'intermediatefile.rds'" = "saveRDS(combined, \"intermediatefile.rds\")",
     yourinput = "f(1+1)",
     nextone = "myinput + g(7)",
     combined = "nextone + yourinput",
     myinput = "readRDS('input.rds')",
     final = "readRDS('intermediatefile.rds')"
-  )
-  out
+  ))
+  args = arglist(plan, targets = plan$target, envir = envir, jobs = 1) 
+  args$graph = build_graph(plan = args$plan, targets = args$targets, envir = args$envir)
+  args
 }
 
-dclean = function(envir = parent.frame()){
-  force(envir)
-  rm(list = c("a", "b", "d", "f", "g", "h", "i", "j"), envir = envir)
+dclean = function(){
   unlink("input.rds")
   unlink("intermediatefile.rds")
   unlink(".drake", recursive = TRUE)
