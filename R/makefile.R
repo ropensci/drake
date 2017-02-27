@@ -36,15 +36,10 @@ makefile_rules = function(args){
 initialize = function(args){ 
   args$cache$clear(namespace = "status")
   evals(args$prework, .with = args$envir)
-  uncache_imported()
   imports = setdiff(args$order, args$plan$target)
-  for(import in imports) build(import, args)
+  lapply(imports, build, args = args)
   timestamps(args)
   invisible()
-}
-
-uncache_imported = function(){
-  imports = cached() %>% Filter(f = is_imported) %>% uncache
 }
 
 #' @title Function \code{mk}

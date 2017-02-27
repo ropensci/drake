@@ -15,7 +15,7 @@
 cached = function(path = getwd(), search = FALSE){
   x = get_cache(path = path, search = search)
   if(is.null(x)) return(character(0))
-  x$list()
+  intersect(x$list(), x$list(namespace = "depends"))
 }
 
 #' @title Function \code{built}

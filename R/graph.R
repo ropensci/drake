@@ -14,6 +14,9 @@ build_graph = function(plan, targets, envir){
   force(envir)
   imports = as.list(envir)
   keys = c(names(imports), plan$target)
+  duplicates = which(table(keys) > 1) %>% names
+  if(length(duplicates))
+    stop("duplicate targets: ", paste(duplicates, collapse = " ")) 
   values = c(imports, plan$command)
   dependency_list = lapply(values, dependencies) %>% setNames(nm = keys)
   vertices = c(keys, unlist(dependency_list)) %>% unique

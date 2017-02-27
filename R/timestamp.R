@@ -8,13 +8,9 @@ timestamps = function(args){
   dir_empty(timestampdir)
   targets = intersect(args$order, args$plan$target)
   lapply(targets, function(target){
-    dependency_hash = dependency_hash(target, args)
-    file_hash = file_hash(target, args)
-    current = is_current(target = target, 
-      dependency_hash = dependency_hash, 
-      file_hash = file_hash, args = args)
-    if(current)
-      file_overwrite(timestamp(target))
+    hashes = hashes(target, args)
+    current = is_current(target = target, hashes = hashes, args = args) 
+    if(current) file_overwrite(timestamp(target))
   })
   invisible()
 }
