@@ -1,29 +1,32 @@
 build = function(target, workflow, envir, cache){
-  dependency_hash = dependency_hash(target, workflow, envir, cache)
-  file_hash = file_hash(target, workflow, cache)
-  if(is_current(target, dependency_hash, cache)) return()
+  dependency_hash = dependency_hash(target = target, 
+    workflow = workflow, envir = envir, cache = cache)
+  file_hash = file_hash(target = target, cache = cache)
+  if(is_current(target = target, dependency_hash = dependency_hash, 
+    file_hash = file_hash, cache = cache)) return()
   cache$set(key = target, value = "in progress", namespace = "status")
   if(target %in% workflow$target) build_target(target)
-  else import_target(target, file_hash)
+  else import_target(target = target, file_hash = file_hash)
   cache$set(key = target, value = dependency_hash, namespace = "depends")
-  cache$set(key = target, value = "done", namespace = "status")
+  cache$set(key = target, value = "finished", namespace = "status")
 }
 
 build_target = function(target){
   console("build", target)
   value = eval(parse(text = workflow$command), envir = envir)
   if(is_file(target)) store_file(target, hash = NULL)
-  else if(is.function(value)) store_function(target, value)
-  else store_object(target, value)
+  else if(is.function(value)) 
+    store_function(target = target, value = value)
+  else store_object(target = target, value = value)
 }
 
 import_target = function(target, file_hash){
   console("import", target)
-  if(is_file(target)) store_file(target, hash = file_hash)
+  if(is_file(target)) store_file(target = target, hash = file_hash)
   if(target %in% ls(envir)) value = envir[[target]]
   else if(target %in% ls(globalenv())) value = globalenv()[[target]]
   else stop("Could not find ", target, " to import.")
-  if(is.function(value)) store_function(target, value)
+  if(is.function(value)) store_function(target = target, value = value)
   else store_object(target, value)
 }
 

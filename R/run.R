@@ -38,7 +38,7 @@ prune_envir = function(envir, next_targets, entire_graph, workflow, cache){
     Filter(f = is_not_file) %>% intersect(y = workflow$target)
   unload_these = intersect(workflow$target, ls(envir)) %>% setdiff(y = load_these)
   rm(list = unload_these, envir = envir)
-  lapply(load_these, loadsk, envir = envir) # REMEMBER TO SET ENVIRONMENT OF FUNCTION IN LOADS
+  lapply(load_these, loadd, envir = envir) # REMEMBER TO SET ENVIRONMENT OF FUNCTION IN LOADS
 }
 
 cachepath = ".skipit"

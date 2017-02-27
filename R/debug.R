@@ -9,7 +9,7 @@ dbug = function(envir = parent.frame()){
   eval(parse(text = "b <- 20"), envir = envir)
   eval(parse(text = "d <- 25"), envir = envir)
   saveRDS(1:10, "input.rds")
-  out = workflow_string(
+  out = plan(
     "'intermediatefile.rds'" = "saveRDS(combined, \"intermediatefile.rds\")",
     yourinput = "f(1+1)",
     nextone = "myinput + g(7)",

@@ -1,5 +1,5 @@
 is_current = function(target, dependency_hash, file_hash, cache){
-  if(!file_is_current(target, file_hash)) return(FALSE)
+  if(!file_is_current(target = target, file_hash = file_hash)) return(FALSE)
   identical(cache$get_hash(target, namespace = "depends"), dependency_hash)
 }
 
@@ -12,11 +12,11 @@ file_is_current = function(target, file_hash){
 
 dependency_hash = function(target, workflow, graph, cache){
   command = workflow$command[workflow$target == target] %>% tidy
-  graph_dependencies(target, graph) %>% sapply(FUN = cache$get_hash) %>% 
+  graphical_dependencies(target, graph) %>% sapply(FUN = cache$get_hash) %>% 
     c(command) %>% digest(algo = "md5")
 }
 
-file_hash = function(target, workflow, cache){
+file_hash = function(target, cache){
   if(is_not_file(target)) return(as.character(NA))
   filename = unquote(target)
   if(!file.exists(filename)) return(as.character(NA))
@@ -24,7 +24,7 @@ file_hash = function(target, workflow, cache){
     cache$get(key = target, namespace = "filemtime"), -Inf)
   new_mtime = file.mtime(filename)
   do_rehash = file.size(filename) < 1e5 | new_mtime > old_mtime
-  if(do_rehash) md5sum(filename)
+  if(do_rehash) md5sum(filename) %>% unname
   else cache$get(target)
 }
 

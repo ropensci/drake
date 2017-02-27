@@ -17,7 +17,7 @@ graph = function(workflow, targets, envir){
   graph
 }
 
-graphical_dependencies = function(targets, graph)
+graphical_dependencies = function(targets, graph){
   adjacent_vertices(graph = graph, v = targets, mode = "in") %>%
-    sapply(FUN = names) %>% unlist %>% unique %>% unname
+    lapply(FUN = names) %>% unlist %>% unique %>% unname
 }
