@@ -7,26 +7,30 @@
 summaries(plan, analyses, datasets, gather = rep("list", dim(plan)[1]))
 }
 \arguments{
-\item{plan}{data frame of instructions for summaries (wildcards unevaluated)}
+\item{analyses}{workflow plan data frame of analysis instructions}
 
-\item{analyses}{data frame of analysis instructions}
+\item{datasets}{workflow plan data frame with instructions to make
+or import the datasets.}
 
-\item{datasets}{data frame of dataset instructions}
+\item{gather}{Character vector, names of functions to gather the 
+summaries. If not \code{NULL}, the length must be the number of 
+rows in the \code{plan}. See the \code{\link{gather}()} function
+for more.}
 
-\item{gather}{Character vector, names of functions to gather the summaries.
-If not \code{NULL}, length must be the number of rows in the \code{plan}
-argument.}
+\item{workflow}{plan data frame with commands for the summaries.
+Use the \code{..analysis..} and \code{..dataset..} wildcards 
+just like the \code{..dataset..} wildcard in \code{\link{analyses}()}.}
 }
 \value{
-portion of a \code{drake} plan for summarizing multiple
-analyses of multiple datasets in multiple ways
+an evaluated workflow plan data frame of instructions
+for computing summaries of analyses and datasets.
+analyses of multiple datasets in multiple ways.
 }
 \description{
-Generate a portion of a \code{drake} plan
-for summarizing multiple anlayses of multiple datasets in multiple ways.
+Generate a worklfow plan data frame for summarizing
+multiple analyses of multiple datasets multiple ways.
 }
 \seealso{
-\code{\link{analyses}},
- \code{\link{run}}, \code{\link{plan}}
+\code{\link{analyses}}, \code{\link{run}}, \code{\link{plan}}
 }
 

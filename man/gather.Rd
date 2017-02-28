@@ -7,16 +7,20 @@
 gather(x = NULL, target = "target", gather = "list")
 }
 \arguments{
-\item{x}{argument data frame}
+\item{x}{workflow plan data frame of prespecified targets}
 
-\item{target}{name of aggregated target object}
+\item{target}{name of the new aggregated target}
 
-\item{gather}{function used to gather the targets}
+\item{gather}{function used to gather the targets. Should be 
+one of \code{\link{list}(...)}, \code{\link{c}(...)},
+\code{\link{rbind}(...)}, or similar.}
 }
 \value{
-data frame with a command to gather the targets in \code{x}
+workflow plan data frame for aggregating prespecified targets
 }
 \description{
-Aggregate/gather the targets of a previous set of drake instructions.
+Create a new workflow plan data frame with a single new 
+target. This new target is a list, vector, or other aggregate of
+a collection of existing targets in another workflow plan data frame.
 }
 

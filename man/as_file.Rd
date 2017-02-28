@@ -18,6 +18,6 @@ understandable by drake.
 \description{
 Converts an ordinary character string
 into a filename understandable by drake. In other words,
-\code{as_file(x)} just wraps single quotes around \code{x}
+\code{as_file(x)} just wraps single quotes around \code{x}.
 }
 

@@ -7,14 +7,16 @@
 expand(x, values = NULL)
 }
 \arguments{
-\item{x}{argument data frame}
+\item{x}{workflow plan data frame}
 
-\item{values}{values to expand over}
+\item{values}{values to expand over. These will be appended to
+the names of the new targets.}
 }
 \value{
-an expanded data frame
+an expanded workflow plan data frame
 }
 \description{
-Expands a dataframe of drake instructions by duplicating rows.
+Expands a workflow plan data frame by duplicating rows.
+This generates multiple replicates of targets with the same commands.
 }
 

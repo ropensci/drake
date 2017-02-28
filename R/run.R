@@ -13,7 +13,7 @@
 #' @param command command to call the Makefile
 #' @param args command line arguments to the Makefile
 run = function(plan, targets = plan$target, envir = parent.frame(), 
-  verbose = TRUE, parallelism = c("light", "aggressive"), jobs = 1, 
+  verbose = TRUE, parallelism = c("single-session", "distributed"), jobs = 1, 
   packages = character(0), prework = character(0),
   prepend = character(0), command = "make", args = character(0)){
   force(envir)
@@ -23,9 +23,9 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
   args = arglist(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, jobs = jobs, prework = prework,
     command = command, args = args)
-  if(parallelism == "light") 
+  if(parallelism == "single-session") 
     run_mclapply(args)
-  else if(parallelism == "aggressive")
+  else if(parallelism == "distributed")
     run_makefile(args)
 }
 

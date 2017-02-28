@@ -8,7 +8,7 @@ plan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{pieces of command named according to their respective targets.
+\item{...}{commands named according to their respective targets.
 Recall that drake uses single quotes to denote external files
 and double-quoted strings as ordinary strings.
 Use the \code{strings_in_dots} argument to control the
@@ -36,7 +36,7 @@ data frame of targets and command
 }
 \description{
 Turns a named collection of command/target pairs into 
-a plan plan data frame for \code{\link{run}} and 
+a workflow plan data frame for \code{\link{run}} and 
 \code{\link{check}}.
 }
 \details{

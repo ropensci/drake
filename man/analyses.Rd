@@ -7,16 +7,22 @@
 analyses(plan, datasets)
 }
 \arguments{
-\item{plan}{data frame with unevaluated wildcards}
+\item{plan}{workflow plan data frame of analysis methods. 
+The commands in the \code{command} column must
+have the \code{..dataset..} wildcard where the datasets go.
+For example, one command could be \code{lm(..dataset..)}. Then,
+the commands in the output will include \code{lm(your_dataset_1)},
+\code{lm(your_dataset_2)}, etc.}
 
-\item{datasets}{dataframe with the drake plan for datasets}
+\item{datasets}{workflow plan data frame with instructions 
+to make the datasets.}
 }
 \value{
-data frame of instructions for analyses (wildcards unevaluated)
+an evaluated workflow plan data frame of analysis instructions
 }
 \description{
-Generate a portion of a \code{drake} plan for
-analyzing multiple datasets with multiple methods.
+Generate a workflow plan data frame to 
+analyze multiple datasets using multiple methods of analysis.
 }
 \seealso{
 \code{\link{summaries}},

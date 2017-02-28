@@ -1,6 +1,6 @@
 #' @title Function \code{plan}
 #' @description Turns a named collection of command/target pairs into 
-#' a plan plan data frame for \code{\link{run}} and 
+#' a workflow plan data frame for \code{\link{run}} and 
 #' \code{\link{check}}.
 #' @details Drake uses single quotes to denote external files
 #' and double-quoted strings as ordinary strings. 
@@ -11,7 +11,7 @@
 #' @seealso \code{link{check}}, \code{\link{run}}, 
 #' @export
 #' @return data frame of targets and command
-#' @param ... pieces of command named according to their respective targets.
+#' @param ... commands named according to their respective targets.
 #' Recall that drake uses single quotes to denote external files
 #' and double-quoted strings as ordinary strings.
 #' Use the \code{strings_in_dots} argument to control the
@@ -51,7 +51,7 @@ plan = function(..., list = character(0), file_targets = FALSE,
 #' @title Function \code{as_file}
 #' @description Converts an ordinary character string
 #' into a filename understandable by drake. In other words,
-#' \code{as_file(x)} just wraps single quotes around \code{x}
+#' \code{as_file(x)} just wraps single quotes around \code{x}.
 #' @export
 #' @return a single-quoted character string: i.e., a filename
 #' understandable by drake.
@@ -61,4 +61,3 @@ plan = function(..., list = character(0), file_targets = FALSE,
 as_file = function(x){
   quotes(x, single = TRUE)
 }
-

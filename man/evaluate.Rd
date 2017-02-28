@@ -7,32 +7,46 @@
 evaluate(x, rules = NULL, wildcard = NULL, values = NULL, expand = TRUE)
 }
 \arguments{
-\item{x}{argument data frame}
+\item{x}{workflow plan data frame, similar to one produced by 
+\code{link{plan}}}
 
-\item{rules}{Named list with wildcards as names and vectors of replacements
-as values. This is a way to evaluate multiple wildcards at once.}
+\item{rules}{Named list with wildcards as names and vectors of 
+replacements
+as values. This is a way to evaluate multiple wildcards at once.
+When not \code{NULL}, \code{rules} overrules \code{wildcard} and 
+\code{values} if
+not \code{NULL}.}
 
-\item{wildcard}{character string to replace with elements of \code{values}.}
+\item{wildcard}{character scalar denoting a wildcard placeholder}
 
-\item{values}{values to replace the wildcard in the drake instructions. Must be
-the same length as \code{x$command} if \code{expand} is \code{TRUE}.}
+\item{values}{vector of values to replace the wildcard 
+in the drake instructions. Will be treated as a character vector.
+Must be the same length as \code{x$command} if \code{expand} is 
+\code{TRUE}.}
 
-\item{expand}{If \code{TRUE}, loop over \code{values} when evaluating the wildcard,
-creating more rows in the target data frame. Otherwise, each occurance of the wildcard
-is replaced with the next entry in the \code{values} vector, and the values are recycled.}
+\item{expand}{If \code{TRUE}, create a new rows in the workflow plan 
+data frame
+if multiple values are assigned to a single wildcard.
+If \code{FALSE}, each occurence of the wildcard
+is replaced with the next entry in the \code{values} vector, 
+and the values are recycled.}
 }
 \value{
-an evaluated data frame
+a workflow plan data frame with the wildcards evaluated
 }
 \description{
-Evaluates the wildcard placeholders of a data frame of \code{drake} instructions.
+The commands in workflow plan data frames can have 
+wildcard symbols that can stand for datasets, parameters, function 
+arguments, etc. These wildcards can be evaluated over a set of 
+possible values using \code{evaluate}.
 }
 \details{
-If \code{wildcard} and \code{values} are not \code{NULL}, the members of 
-\code{values} will replace \code{wildcard} in the \code{command}
-column of \code{x}. If the \code{rules} list is not \code{NULL}, \code{rules} readds precedence
-over \code{wildcard} and \code{values}. In this case, the names of \code{rules}
-act as wildcards, and each corresponding element of \code{rules} acts as a 
-\code{values} argument in a recursive call to \code{evaluate}.
+Specify a single wildcard with the \code{wildcard}
+and \code{values} arguments. In each command, the text in 
+\code{wildcard} will be replaced by each value in \code{values}
+in turn. Specify multiple wildcards ith the \code{rules} argument,
+which overrules \code{wildcard} and \code{values} if 
+not \code{NULL}. Here, \code{rules} should be a list with wildcards
+as names and vectors of possible values as list elements.
 }
 
