@@ -8,11 +8,11 @@ Authors@R: c(
   person(family = "Eli Lilly and Company", role = "cph"))
 Description: Reproducible build system for any project. Understands
     the dependency structure of your workflow, builds out-of-date
-    targets, skips up-to-date targets, and makes multiple
-    forms of parallel computing accessible.
+    targets, skips up-to-date targets, and offers two forms of
+    parallel computing.
 License: GPL-3
 Depends:
-    R (>= 3.0.0)
+    R (>= 3.2.0)
 Imports:
     assertthat,
     codetools,

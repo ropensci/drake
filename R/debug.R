@@ -19,7 +19,7 @@ dbug = function(){
     myinput = "readRDS('input.rds')",
     final = "readRDS('intermediatefile.rds')"
   ))
-  args = arglist(plan, targets = plan$target, envir = envir, jobs = 1,
+  args = setup(plan, targets = plan$target, envir = envir, jobs = 1,
     verbose = TRUE, prework = character(0), command = "make", 
     args = character(0))
   args

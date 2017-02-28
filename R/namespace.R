@@ -1,4 +1,3 @@
-#' @importFrom assertthat assert_that
 #' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest
@@ -9,10 +8,9 @@
 #' @importFrom magrittr %>%
 #' @importFrom parallel mclapply
 #' @importFrom plyr ddply
-#' @importFrom R.utils isPackageLoaded
 #' @importFrom stats complete.cases setNames
 #' @importFrom storr storr_rds
-#' @importFrom stringi stri_rand_strings
+#' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_trim
 #' @importFrom tools md5sum
 NULL

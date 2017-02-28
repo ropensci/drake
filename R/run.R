@@ -20,9 +20,10 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
   parallelism = match.arg(parallelism)
   prework = add_packages_to_prework(packages = packages, 
     prework = prework)
-  args = arglist(plan = plan, targets = targets, envir = envir, 
+  args = setup(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, jobs = jobs, prework = prework,
     command = command, args = args)
+  check_args(args)
   if(parallelism == "single-session") 
     run_mclapply(args)
   else if(parallelism == "distributed")
@@ -35,8 +36,9 @@ add_packages_to_prework = function(packages, prework){
   c(packages, prework)
 }
 
-arglist = function(plan, targets, envir, jobs, verbose, prework,
+setup = function(plan, targets, envir, jobs, verbose, prework,
   command, args){
+  plan = fix_deprecated_plan_names(plan)
   targets = intersect(targets, plan$target)
   cache = storr_rds(cachepath, mangle_key = TRUE)
   cache$clear(namespace = "status")
