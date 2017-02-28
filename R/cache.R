@@ -234,13 +234,13 @@ parse_dots = function(dots, list){
   .Primitive("c")(list, names)
 }
 
-is_imported = Vectorize(function(target){
+is_imported = Vectorize(function(target, path, search){
   if(!(target %in% cached())) return(FALSE)
-  get_cache()$get(target)$imported
+  get_cache(path = path, search = search)$get(target)$imported
 }, "target")
 
-uncache = Vectorize(function(x){
-  cache = get_cache()
+uncache = Vectorize(function(x, path = getwd(), search = FALSE){
+  cache = get_cache(path = path, search = search)
   cache$del(x)
   cache$del(x, namespace = "depends")
 }, "x")

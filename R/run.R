@@ -8,7 +8,7 @@
 #' @param parallelism character, type of parallelism to use
 #' @param jobs number of parallel processes or jobs
 #' @param packages packages to load
-#' @param prepwork prework to do before running the workflow
+#' @param prework prework to do before running the workflow
 #' @param prepend lines to prepend to the Makefile
 #' @param command command to call the Makefile
 #' @param args command line arguments to the Makefile

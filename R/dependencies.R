@@ -3,14 +3,13 @@ dependencies = function(targets, args){
     lapply(FUN = names) %>% unlist %>% unique %>% unname
 }
 
-code_dependencies = function(x){
-  if(length(x) != 1) return()
+code_dependencies = Vectorize(function(x){
   if(is.character(x) | is.factor(x)) out = command_dependencies(x)
   else if(is.function(x)) out = function_dependencies(x)
   else return()
   if(length(out$files)) out$files = quotes(out$files, single = TRUE)
   unlist(out) %>% unname
-}
+}, "x", SIMPLIFY = FALSE, USE.NAMES = FALSE)
 
 command_dependencies = function(x){
   if(!length(x)) return()

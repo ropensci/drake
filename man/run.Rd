@@ -24,13 +24,13 @@ run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
 
 \item{packages}{packages to load}
 
+\item{prework}{prework to do before running the workflow}
+
 \item{prepend}{lines to prepend to the Makefile}
 
 \item{command}{command to call the Makefile}
 
 \item{args}{command line arguments to the Makefile}
-
-\item{prepwork}{prework to do before running the workflow}
 }
 \description{
 Run your project.

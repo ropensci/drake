@@ -2,7 +2,7 @@
 #' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest
-#' @importFrom eply quotes strings unquote
+#' @importFrom eply evals quotes strings unquote
 #' @importFrom igraph adjacent_vertices delete_vertices edge 
 #' is_dag make_empty_graph plot.igraph subcomponent 
 #' topological.sort V vertices
