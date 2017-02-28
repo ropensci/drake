@@ -59,7 +59,7 @@ store_file = function(target, hashes, import, args){
     namespace = "filemtime")
 }
 
-store_function = function(target, value, import, hashes, args){
+store_function = function(target, value, hashes, import, args){
   string = deparse(value)
   args$cache$set(key = target,
     value = list(type = "function", value = string, import = import,
