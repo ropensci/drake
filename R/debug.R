@@ -31,9 +31,3 @@ dclean = function(){
   unlink(".drake", recursive = TRUE)
 }
 
-# for testthat only. confuses file timestamps.
-readymade = function(){
-  file.copy(file.path("readymade", ".drake"), getwd(), recursive = TRUE)
-  file.copy(file.path("readymade", "input.rds"), getwd())
-  file.copy(file.path("readymade", "intermediatefile.rds"), getwd())
-}

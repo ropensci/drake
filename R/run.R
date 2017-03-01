@@ -163,13 +163,16 @@ run_mclapply = function(args){
     next_graph = parallel_stage(next_graph = next_graph, args = args)
 }
 
-parallel_stage = function(next_graph, args){
+next_targets = function(next_graph){
   number_dependencies = sapply(V(next_graph), 
     function(x) 
       adjacent_vertices(next_graph, x, mode = "in") %>% 
-      unlist %>% length)
-  next_targets = which(!number_dependencies) %>% names
-  prune_envir(next_targets = next_targets, args = args)
+        unlist %>% length)
+  which(!number_dependencies) %>% names
+}
+
+parallel_stage = function(next_graph, args){
+  next_targets(next_graph) %>% prune_envir(args = args)
   mclapply(next_targets, build, mc.cores = args$jobs, args = args)
   delete_vertices(next_graph, v = next_targets)
 }

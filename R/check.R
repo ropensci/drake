@@ -14,6 +14,7 @@ check = function(plan, targets = plan$target, envir = parent.frame()){
     verbose = TRUE, jobs = 1, prework = character(0),
     command = character(0), args = character(0))
   check_args(args)
+  assert_input_files_exist(args)
 }
 
 check_args = function(args){
@@ -52,4 +53,11 @@ check_strings = function(plan){
     cat("\ntarget:", names(x)[i], "\n")
     cat("strings in command:", paste0("\"", x[[i]], "\""), "\n")
   }
+}
+
+assert_input_files_exist = function(args){
+  missing_files = next_targets(args$graph) %>% Filter(f = is_file) %>% 
+    unquote %>% Filter(f = function(x) !file.exists(x))
+  if(length(missing_files))
+    stop("missing input files:\n", paste(missing_files, collapse = "\n"))
 }

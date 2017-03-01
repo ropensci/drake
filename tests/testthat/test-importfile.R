@@ -1,5 +1,17 @@
+# library(testthat); library(devtools); load_all()
 context("importfile")
 
-test_that("response to import files", {
-
+test_that("imported file is modified but not changed", {
+  dclean()
+  args = dbug()
+  run(args$plan, envir = args$envir, verbose = F)
+  expect_true(nrow(status()) > 0)
+  run(args$plan, envir = args$envir, verbose = F)
+  expect_false(nrow(status()) > 0)
+  unlink("input.rds")
+  suppressWarnings(expect_error(run(args$plan, envir = args$envir, verbose = F)))
+  suppressWarnings(expect_error(check(args$plan, envir = args$envir)))
+  saveRDS(1:10, "input.rds")
+  run(args$plan, envir = args$envir, verbose = F)
+  expect_false(nrow(status()) > 0)
 })

@@ -1,6 +1,4 @@
 - build (1 process, 2 process, Makefiles)
-  - run(): everything built first time 
-  - rerun builds nothing
   - imported file changes
   - imported file missing: make(), check()
   - command changes trivially
@@ -17,7 +15,6 @@
   - plan(): all arguments used as expected
   - analyses, summaries, gather (rbind, NULL), expand
 - misc normal functionality
-  - calling envir is unaffected by run()
   - console(): short output for long targets
   - check(): check_strings(), etc.
   - examples are written
