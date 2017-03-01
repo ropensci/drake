@@ -1,21 +1,22 @@
 #' @title Function \code{cached}
 #' @description See the cached items stored by drake.
-#' Load an item with \code{\link{readd}}.
+#' Read/load an item with \code{\link{readd}()} or 
+#' c\code{\link{loadd}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}
+#' \code{\link{readd}}, \code{\link{loadd}},
 #' \code{\link{plan}}, \code{\link{run}}
 #' @export
 #' @return character vector of cached items
 #' @param path Root directory of the drake project, 
 #' or if \code{search} is \code{TRUE}, either the 
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 cached = function(path = getwd(), search = FALSE){
-  x = get_cache(path = path, search = search)
-  if(is.null(x)) return(character(0))
-  intersect(x$list(), x$list(namespace = "depends"))
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) return(character(0))
+  intersect(cache$list(), cache$list(namespace = "depends"))
 }
 
 #' @title Function \code{built}
@@ -28,31 +29,31 @@ cached = function(path = getwd(), search = FALSE){
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 built = function(path = getwd(), search = FALSE){
   setdiff(cached(path = path, search = search), 
-          imported(path = path, search = search))
+    imported(path = path, search = search))
 }
 
 #' @title Function \code{imported}
 #' @description List all the imported objects in the drake cache
 #' @seealso \code{\link{cached}}, \code{\link{loadd}},
-#' \code{link{built}}
+#' \code{\link{built}}
 #' @export
-#' @return list of imported objects in the cache
+#' @return character vector naming the imported objects in the cache
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 imported = function(path = getwd(), search = FALSE){
-  x = cached(path = path, search = search) 
-  y = sapply(x, is_imported, path = path, search = search)
-  if(!length(y)) return(character(0))
-  x[y]
+  targets = cached(path = path, search = search) 
+  select = is_imported(targets, path = path, search = search)
+  if(!length(select)) return(character(0))
+  targets[select]
 }
 
 #' @title Function \code{readd}
@@ -63,28 +64,27 @@ imported = function(path = getwd(), search = FALSE){
 #' \code{\link{run}}
 #' @export
 #' @return drake target item from the cache
-#' @param x If \code{character_only} is \code{TRUE}, 
-#' \code{x} is a character variable storing the name of the item to get 
-#' from the cache. Otherwise, \code{x} is a symbol with the literal 
-#' object name.
-#' @param character_only \code{TRUE}/\code{FALSE}, whether \code{x} 
-#' can be assumed to be a character string 
-#' (just as in \code{\link{library}()}).
+#' @param name If \code{character_only} is \code{TRUE}, 
+#' \code{name} is a character string naming the object to read.
+#' Otherwise, \code{name} is an unquoted symbol with the name of the object.
+#' @param character_only logical, whether \code{name} should be treated
+#' as a character or a symbol
+#' (just like \code{character.only} in \code{\link{library}()}).
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param envir environment of imported functions (for lexical scoping)
-readd = function(x, character_only = FALSE, path = getwd(), 
+readd = function(name, character_only = FALSE, path = getwd(), 
   search = FALSE, envir = parent.frame()){
   force(envir)
-  y = get_cache(path = path, search = search)
-  if(is.null(y)) stop("cannot find drake cache.")
-  if(!character_only) x = as.character(substitute(x))
-  out = y$get(x)
-  value = out$value
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) stop("cannot find drake cache.")
+  if(!character_only) name = as.character(substitute(name))
+  store = cache$get(name)
+  value = store$value
   if(out$type == "function"){
     value = eval(parse(text = value))
     environment(value) = envir
@@ -93,10 +93,11 @@ readd = function(x, character_only = FALSE, path = getwd(),
 }
 
 #' @title Function \code{loadd}
-#' @description Load object(s) from the drake cache into the calling 
-#' (or other environment if you set the \code{envir} arg). Defaults
-#' to loading the whole cache if arguments \code{...} and \code{list}
-#' are not set (or all the imported objects if in addition 
+#' @description Load object(s) from the drake cache into the  
+#' current workspace (or \code{envir} if given). Defaults
+#' to loading the whole cache if arguments \code{...} 
+#' and \code{list} are not set 
+#' (or all the imported objects if in addition 
 #' imported_only is \code{TRUE}).
 #' @seealso \code{\link{cached}}, \code{\link{built}}, 
 #' \code{\link{imported}}, \code{\link{plan}}, \code{\link{run}},
@@ -106,16 +107,16 @@ readd = function(x, character_only = FALSE, path = getwd(),
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
-#' @param imported_only logical, indicates whether only imported objects
-#' should be loaded rather than everything in \code{x}
+#' @param imported_only logical, whether only imported objects
+#' should be loaded.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-#' @param envir environment to load the cache into. Defaults to the
-#' calling environment.
+#' @param envir environment to load objects into. Defaults to the
+#' calling environment (current workspace).
 loadd = function(..., list = character(0),
   imported_only = FALSE, path = getwd(), 
   search = FALSE, envir = parent.frame()){
@@ -164,17 +165,16 @@ find_cache = function(path = getwd()){
 #' @param path starting path for search back for the project.
 #' Should be a subdirectory of the drake project.
 find_project = function(path = getwd()){
-  x = find_cache(path = path)
-  if(is.null(x)) return()
-  dirname(x)
+  cache = find_cache(path = path)
+  if(is.null(cache)) return()
+  dirname(cache)
 }
 
 #' @title Function \code{session}
 #' @description Load the \code{\link{sessionInfo}()}
 #' of the last call to \code{\link{run}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, 
-#' \code{\link{plan}}, \code{\link{run}}
+#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
 #' @export
 #' @return \code{\link{sessionInfo}()} of the last
 #' call to \code{\link{run}()}
@@ -185,19 +185,19 @@ find_project = function(path = getwd()){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 session = function(path = getwd(), search = FALSE){
-  x = get_cache(path = path, search = search)
-  if(is.null(x)) stop("No drake::make() session detected.")
-  x$get("session", namespace = "session")
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) stop("No drake::make() session detected.")
+  cache$get("session", namespace = "session")
 }
 
 #' @title Function \code{status}
 #' @description Get the build status of the last call to 
-#' \code{\link{run}()}: which objects were skipped, built,
-#' and imported.
+#' \code{\link{run}()}. Objects that drake imported, built, or attempted
+#' to build are listed as \code{"finished"} or \code{"in progress"}. 
+#' Skipped objects are not listed.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, 
-#' \code{\link{plan}}, \code{\link{run}}
+#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
 #' @export
 #' @return data frame containing the build status
 #' of the last session
@@ -208,10 +208,10 @@ session = function(path = getwd(), search = FALSE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 status = function(path = getwd(), search = FALSE){
-  x = get_cache(path = path, search = search)
-  if(is.null(x)) stop("No drake::make() session detected.")
-  target = x$list(namespace = "status")
-  status = sapply(target, x$get, namespace = "status",
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) stop("No drake::make() session detected.")
+  target = cache$list(namespace = "status")
+  status = sapply(target, cache$get, namespace = "status",
                   USE.NAMES = FALSE)
   data.frame(target = target, status = status, stringsAsFactors = FALSE)
 }
@@ -239,8 +239,8 @@ is_imported = Vectorize(function(target, path, search){
   get_cache(path = path, search = search)$get(target)$imported
 }, "target")
 
-uncache = Vectorize(function(x, path = getwd(), search = FALSE){
+uncache = Vectorize(function(target, path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)
-  cache$del(x)
-  cache$del(x, namespace = "depends")
-}, "x")
+  cache$del(target)
+  cache$del(target, namespace = "depends")
+}, "target")

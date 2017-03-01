@@ -6,12 +6,14 @@ run_makefile = function(args){
   makefile_rules(args)
   sink()
   initialize(args)
-  if(!length(args$args)){
-    args$args = paste0("--jobs=", args$jobs)
-    if(!args$verbose) args$args = c(args$args, "--silent")
-  }
   system2(command = args$command, args = args$args)
   invisible()
+}
+
+default_system2_args = function(jobs, verbose){
+  out = paste0("--jobs=", jobs)
+  if(verbose) out = c(out, "--silent")
+  out
 }
 
 makefile_head = function(args){
@@ -50,6 +52,7 @@ initialize = function(args){
 #' @param target name of target to make
 mk = function(target){
   args = get_cache()$get("args", namespace = "makefile")
+  evals(args$prework, .with = args$envir)
   prune_envir(target, args)
   build(target = target, args = args)
 }
