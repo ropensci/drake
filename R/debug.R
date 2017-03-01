@@ -1,5 +1,5 @@
-dbug = function(){
-  dclean()
+dbug = function(clean = TRUE){
+  if(clean) dclean()
   envir = new.env(parent = globalenv())
   eval(parse(text = "f <- function(x) {g(x) + a}"), envir = envir)
   eval(parse(text = "g <- function(y) {h(y) + b}"), envir = envir)
@@ -29,4 +29,11 @@ dclean = function(){
   unlink("input.rds")
   unlink("intermediatefile.rds")
   unlink(".drake", recursive = TRUE)
+}
+
+# for testthat only. confuses file timestamps.
+readymade = function(){
+  file.copy(file.path("readymade", ".drake"), getwd(), recursive = TRUE)
+  file.copy(file.path("readymade", "input.rds"), getwd())
+  file.copy(file.path("readymade", "intermediatefile.rds"), getwd())
 }
