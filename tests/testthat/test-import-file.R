@@ -16,6 +16,7 @@ test_that("responses to imported file", {
   # check missing and then replace file exactly as before
   unlink("input.rds")
   expect_error(check(plan = args$plan, envir = args$envir))
+  expect_error(testrun(args))
   saveRDS(1:10, "input.rds")
   testrun(args)
   nobuild(args)

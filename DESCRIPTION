@@ -31,7 +31,8 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    utils
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues

@@ -26,7 +26,6 @@ check_args = function(args){
       "must include 'target' and 'command'.")
   stopifnot(nrow(args$plan) > 0)
   stopifnot(length(args$targets) > 0)
-  stopifnot(is.environment(args$envir))
 }
 
 find_files = function(args){

@@ -3,7 +3,7 @@ console = function(action = c("build", "import"), target, args){
   action = match.arg(action)
   action = ifelse(action == "build", 
     color(action, "forestgreen"), color(action, "dodgerblue3"))
-  if(nchar(target) >= 50) target = paste0(substr(target, 1, 47), "...")
+  if(nchar(target) > 50) target = paste0(substr(target, 1, 47), "...")
   cat(action, " ", target, "\n", sep = "")
 }
 

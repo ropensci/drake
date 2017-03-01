@@ -101,7 +101,8 @@
 #' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
-run = function(plan, targets = plan$target, envir = parent.frame(), 
+run = function(plan, targets = c(as.character(plan$target), as.character(plan$output)), 
+  envir = parent.frame(), 
   verbose = TRUE, parallelism = c("single-session", "distributed"), 
   jobs = 1, packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
@@ -114,6 +115,7 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
     verbose = verbose, jobs = jobs, prework = prework,
     command = command, args = args)
   check_args(args)
+  assert_input_files_exist(args)
   args$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
   if(parallelism == "single-session")

@@ -5,8 +5,9 @@
 #' @param ... arguments to \code{\link{run}()}
 make = function(...){
   .Deprecated("run", package = "drake", old = "make", 
-    msg = "See help(\"run\") for details.")
-  do.call(run, as.list(...))
+    msg = paste("Function 'make()' is deprecated. Use 'run()' instead.",
+      "See help(\"run\") for details.")
+  run(...)
 }
 
 fix_deprecated_plan_names = function(plan){

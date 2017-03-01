@@ -1,12 +1,6 @@
 - generators: code changed: do aggressive tests of all functions & args & opts
   - plan(): all arguments used as expected
   - analyses, summaries, gather (rbind, NULL), expand
-- misc normal functionality
-  - console(): short output for long targets
-  - check(): bad input args
-  - examples are written
-  - partial collections of targets can be made
-  - rehashing happens as expected
 - cache functions
   - cached()
   - built()
@@ -19,10 +13,8 @@
 - test edge cases
   - add new target that conflicts with a previous import
   - add new target that conflicts with a current import
-- deprecated
-  - deprecated make(): deprecation + it still works
-  - old output/code names are corrected and then still work in both check() and make()
 - on my own
-  - same build tests for differnet jobs, parallelisms, file sizes, and platforms
+  - same build tests for differnet jobs, parallelisms, file sizes (for rehashing), and platforms
   - included example(s) in inst/ (basic)
   - jady: be sure to test packages/prework
+  - rehashing speeds for larger files
