@@ -4,22 +4,22 @@
 \alias{example_drake}
 \title{Function \code{example_drake}}
 \usage{
-example_drake(example = examples_drake(), out = getwd())
+example_drake(example = examples_drake(), destination = getwd())
 }
 \arguments{
 \item{example}{name of the example. 
 To see all the available example names, 
 run \code{\link{examples_drake}}.}
 
-\item{out}{name of the folder to put the example}
+\item{destination}{character scalar, file path, where
+to write the folder containing the code files for the example.}
 }
 \description{
-Copies the files for a drake example 
-to your working directory (or \code{out}). Afterwards, you can
-step through the code in the example to start learning drake.
+Copy a folder of code files for a 
+drake example to the current working directory.
 To see the names of all the examples, run \code{\link{examples_drake}}.
 }
 \seealso{
-\code{\link{examples_drake}}, \code{\link{run}}
+\code{\link{examples_drake}}, \code{\link{make}}
 }
 

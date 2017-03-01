@@ -23,16 +23,16 @@ Imports:
     magrittr,
     parallel,
     plyr,
+    R.utils,
     storr,
     stringi,
     stringr,
     tools,
-    R.utils
+    utils
 Suggests:
     knitr,
     rmarkdown,
-    testthat,
-    utils
+    testthat
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues

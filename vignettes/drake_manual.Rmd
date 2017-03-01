@@ -1,58 +1,57 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "drake"
+subtitle: "data frames in R for Make"
+author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{drake}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+<h1 align="center">
+  <img width="200" src="../inst/logo.png" alt="" style = "border: none">
+</h1>
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+clean(T)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+Drake is a workflow manager for R. When it runs a project, it automatically builds missing and outdated results while skipping over all the up-to-date output. This automation and reproducibility is important for data analysis workflows, especially large projects under heavy development.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+# Acknowledgements and history
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh, minimalist reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. Relative to [remake](https://github.com/richfitz/remake), some of drake's most prominent distinguishing features at the time of writing this document are
 
-## More Examples
+- a more convenient, R-focused, [YAML](http://yaml.org/)-free user interface.
+- smoother user-side handling of external files and nested commands.
+- **seamless** integration with [Makefiles](http://kbroman.org/minimal_make/) for built-in high-performance computing.
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+# Rtools for Windows users
+
+Windows users need [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/) to run `make(..., makefile = TRUE)` (`system2("make")` needs to be possible).
+
+# Help and troubleshooting
+
+Use the `help_drake()` function to obtain a collection of helpful links. For troubleshooting, please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
+
+
+# Quickstart examples
+
+Drake has small self-contained built-in examples. To see the names of the available examples, use
+
+```{r}
+examples_drake()
 ```
 
-Also a quote using `>`:
+Then use `example_drake()` to write the files for the example to your working directory.
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r, eval = FALSE}
+example_drake("basic")
+```
+
+Step through the code files to get started.

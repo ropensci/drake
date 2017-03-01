@@ -14,4 +14,5 @@
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_trim
 #' @importFrom tools md5sum
+#' @importFrom utils sessionInfo
 NULL
