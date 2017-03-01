@@ -240,7 +240,7 @@ parse_dots = function(dots, list){
 is_imported = Vectorize(function(target, path, search){
   if(!(target %in% cached())) return(FALSE)
   get_cache(path = path, search = search)$get(target)$imported
-}, "target")
+}, "target", SIMPLIFY = TRUE)
 
 uncache = Vectorize(function(target, path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)

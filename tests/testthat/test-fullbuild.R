@@ -1,5 +1,6 @@
 # library(testthat); library(devtools); load_all()
 context("fullbuild")
+source("utils.R")
 
 test_that("scratch build with contained envir.", {
   dclean()
@@ -14,7 +15,7 @@ test_that("scratch build with contained envir.", {
   expect_true(is.list(session()))
   expect_true(all(session()$target %in% args$plan$target))
   run(args$plan, envir = args$envir, verbose = FALSE)
-  expect_equal(nrow(status()), 0)
+  nobuild(args)
   dclean()
 })
 

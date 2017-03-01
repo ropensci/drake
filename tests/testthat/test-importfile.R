@@ -1,5 +1,6 @@
 # library(testthat); library(devtools); load_all()
 context("importfile")
+source("utils.R")
 
 test_that("responses to imported file", {
   dclean()
@@ -10,16 +11,16 @@ test_that("responses to imported file", {
   run(args$plan, envir = args$envir, verbose = F)
   expect_true(nrow(status()) > 0)
   run(args$plan, envir = args$envir, verbose = F)
-  expect_false(nrow(status()) > 0)
+  nobuild(args)
   unlink("input.rds")
   expect_error(check(plan = args$plan, envir = args$envir))
   saveRDS(1:10, "input.rds")
   run(args$plan, envir = args$envir, verbose = F)
-  expect_false(nrow(status()) > 0)
+  nobuild(args)
   final0 = readd(final)
   saveRDS(2:10, "input.rds")
   run(args$plan, envir = args$envir, verbose = F)
-  expect_equal(sort(status()$target), c("'input.rds'", "'intermediatefile.rds'",
+  expect_equal(justbuilt(), c("'intermediatefile.rds'",
     "combined", "final", "myinput", "nextone"))
   expect_false(length(final0) == length(readd(final)))
   dclean()

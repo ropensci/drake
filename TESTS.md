@@ -1,7 +1,4 @@
 - build (1 process, 2 process, Makefiles)
-  - command changes trivially
-  - command changes but gives the same answer
-  - command changes and gives a different answer
   - nested imported function changes trivially
   - nested imported function changes but gives the same answer
   - nested imported function changes and gives a different answer
