@@ -8,18 +8,22 @@ test_that("responses to imported file", {
   expect_output(check(plan = args$plan, envir = args$envir))
   expect_error(check(plan = args$plan[-1,], envir = args$envir))
   expect_silent(check(plan = args$plan[c(-1, -6),], envir = args$envir))
-  run(args$plan, envir = args$envir, verbose = F)
-  expect_true(nrow(status()) > 0)
-  run(args$plan, envir = args$envir, verbose = F)
+  testrun(args)
+  expect_true(length(justbuilt()) > 0)
+  testrun(args)
   nobuild(args)
+  
+  # check missing and then replace file exactly as before
   unlink("input.rds")
   expect_error(check(plan = args$plan, envir = args$envir))
   saveRDS(1:10, "input.rds")
-  run(args$plan, envir = args$envir, verbose = F)
+  testrun(args)
   nobuild(args)
   final0 = readd(final)
+  
+  # actually change file
   saveRDS(2:10, "input.rds")
-  run(args$plan, envir = args$envir, verbose = F)
+  testrun(args)
   expect_equal(justbuilt(), c("'intermediatefile.rds'",
     "combined", "final", "myinput", "nextone"))
   expect_false(length(final0) == length(readd(final)))

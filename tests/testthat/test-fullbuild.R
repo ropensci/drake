@@ -8,13 +8,15 @@ test_that("scratch build with contained envir.", {
   expect_error(session())
   expect_equal(nrow(status()), 0)
   expect_equal(cached(), character(0))
-  run(args$plan, envir = args$envir, verbose = FALSE)
+  testrun(args)
   expect_true(is.numeric(readd(final)))
   expect_true(length(cached()) > 2)
   expect_false(any(c("f", "final") %in% ls()))
   expect_true(is.list(session()))
   expect_true(all(session()$target %in% args$plan$target))
-  run(args$plan, envir = args$envir, verbose = FALSE)
+  
+  # changed nothing
+  testrun(args)
   nobuild(args)
   dclean()
 })
