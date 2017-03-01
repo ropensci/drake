@@ -1,8 +1,4 @@
 - build (1 process, 2 process, Makefiles)
-  - nested imported function changes trivially
-  - nested imported function changes but gives the same answer
-  - nested imported function changes and gives a different answer
-  - nested imported object changes
   - intermediate file rewritten but not changed
   - intermediate file rewritten and changed
   - intermediate file deleted
