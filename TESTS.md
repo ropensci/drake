@@ -10,9 +10,6 @@
   - get_cache, find_project, session(): path, search
   - clean: destroy = TRUE, FALSE. check that uncache removes target from all relevant namespaces (objects, depends, maybe more. check all the namespaces i have, including with makefiles).
   - prune, just in debug plan. then check if intermediate file is removed too.
-- test edge cases
-  - add new target that conflicts with a previous import
-  - add new target that conflicts with a current import
 - on my own
   - same build tests for differnet jobs, parallelisms, file sizes (for rehashing), and platforms
   - included example(s) in inst/ (basic)
