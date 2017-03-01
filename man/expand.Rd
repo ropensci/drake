@@ -4,10 +4,10 @@
 \alias{expand}
 \title{Function \code{expand}}
 \usage{
-expand(x, values = NULL)
+expand(plan, values = NULL)
 }
 \arguments{
-\item{x}{workflow plan data frame}
+\item{plan}{workflow plan data frame}
 
 \item{values}{values to expand over. These will be appended to
 the names of the new targets.}

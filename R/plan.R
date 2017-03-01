@@ -41,8 +41,9 @@ plan = function(..., list = character(0), file_targets = FALSE,
   dots = match.call(expand.dots = FALSE)$...
   commands_dots = lapply(dots, deparse)
   names(commands_dots) = names(dots)
-  commands = c(commands_dots, list) %>% as.character
+  commands = c(commands_dots, list)
   targets = names(commands)
+  commands = as.character(commands)
   if(!length(commands)) return(data.frame(target = character(0),
     command = character(0)))
   plan = data.frame(target = targets, command = commands, 

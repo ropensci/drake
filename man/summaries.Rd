@@ -7,6 +7,10 @@
 summaries(plan, analyses, datasets, gather = rep("list", dim(plan)[1]))
 }
 \arguments{
+\item{plan}{workflow plan data frame with commands for the summaries.
+Use the \code{..analysis..} and \code{..dataset..} wildcards 
+just like the \code{..dataset..} wildcard in \code{\link{analyses}()}.}
+
 \item{analyses}{workflow plan data frame of analysis instructions}
 
 \item{datasets}{workflow plan data frame with instructions to make
@@ -16,10 +20,6 @@ or import the datasets.}
 summaries. If not \code{NULL}, the length must be the number of 
 rows in the \code{plan}. See the \code{\link{gather}()} function
 for more.}
-
-\item{workflow}{plan data frame with commands for the summaries.
-Use the \code{..analysis..} and \code{..dataset..} wildcards 
-just like the \code{..dataset..} wildcard in \code{\link{analyses}()}.}
 }
 \value{
 an evaluated workflow plan data frame of instructions

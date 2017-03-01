@@ -7,7 +7,8 @@
 example_drake(example = examples_drake(), out = getwd())
 }
 \arguments{
-\item{example}{name of the example. To see all the available example names, 
+\item{example}{name of the example. 
+To see all the available example names, 
 run \code{\link{examples_drake}}.}
 
 \item{out}{name of the folder to put the example}

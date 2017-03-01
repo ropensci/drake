@@ -4,12 +4,13 @@
 \alias{check}
 \title{Function \code{check}}
 \usage{
-check(plan, target = plan$target, envir = parent.frame())
+check(plan, targets = plan$target, envir = parent.frame())
 }
 \arguments{
-\item{plan}{workflow plan data frame, possibly from \code{\link{plan}()}.}
+\item{plan}{workflow plan data frame, possibly from 
+\code{\link{plan}()}.}
 
-\item{target}{character vector of targets to make}
+\item{targets}{character vector of targets to make}
 
 \item{envir}{environment containing user-defined functions}
 }

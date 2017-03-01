@@ -64,9 +64,10 @@ imported = function(path = getwd(), search = FALSE){
 #' \code{\link{run}}
 #' @export
 #' @return drake target item from the cache
-#' @param name If \code{character_only} is \code{TRUE}, 
-#' \code{name} is a character string naming the object to read.
-#' Otherwise, \code{name} is an unquoted symbol with the name of the object.
+#' @param target If \code{character_only} is \code{TRUE}, 
+#' \code{target} is a character string naming the object to read.
+#' Otherwise, \code{target} is an unquoted symbol with the name of the 
+#' object. Note: \code{target} could be the name of an imported object.
 #' @param character_only logical, whether \code{name} should be treated
 #' as a character or a symbol
 #' (just like \code{character.only} in \code{\link{library}()}).
@@ -77,15 +78,15 @@ imported = function(path = getwd(), search = FALSE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param envir environment of imported functions (for lexical scoping)
-readd = function(name, character_only = FALSE, path = getwd(), 
+readd = function(target, character_only = FALSE, path = getwd(), 
   search = FALSE, envir = parent.frame()){
   force(envir)
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("cannot find drake cache.")
-  if(!character_only) name = as.character(substitute(name))
-  store = cache$get(name)
+  if(!character_only) target = as.character(substitute(target))
+  store = cache$get(target)
   value = store$value
-  if(out$type == "function"){
+  if(store$type == "function"){
     value = eval(parse(text = value))
     environment(value) = envir
   }
@@ -122,15 +123,17 @@ loadd = function(..., list = character(0),
   search = FALSE, envir = parent.frame()){
   force(envir)
   dots = match.call(expand.dots = FALSE)$...
-  x = parse_dots(dots, list)
-  if(!length(x)) x = cached(path = path, search = search)
-  if(imported_only) x = Filter(x, 
-                               f = function(y) is_imported(y, path = path, search = search))
-  if(!length(x)) 
+  targets = parse_dots(dots, list)
+  if(!length(targets)) targets = cached(path = path, search = search)
+  if(imported_only) 
+    targets = Filter(targets, 
+      f = function(target) is_imported(target, 
+        path = path, search = search))
+  if(!length(targets)) 
     stop("nothing to load. Either objects not cached or cache not found.")
-  lapply(x, function(x)
-    assign(x = x,
-      value = readd(x, character_only = TRUE, path = path, 
+  lapply(targets, function(target)
+    assign(x = target,
+      value = readd(target, character_only = TRUE, path = path, 
         search = search, envir = envir), envir = envir))
   invisible()
 }
@@ -244,3 +247,5 @@ uncache = Vectorize(function(target, path = getwd(), search = FALSE){
   cache$del(target)
   cache$del(target, namespace = "depends")
 }, "target")
+
+cachepath = ".drake"

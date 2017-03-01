@@ -9,7 +9,8 @@ timestamps = function(args){
   targets = intersect(args$order, args$plan$target)
   lapply(targets, function(target){
     hashes = hashes(target, args)
-    current = is_current(target = target, hashes = hashes, args = args) 
+    current = is_current(target = target, 
+      hashes = hashes, args = args) 
     if(current) file_overwrite(timestamp(target))
   })
   invisible()

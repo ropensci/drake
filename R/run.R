@@ -57,7 +57,8 @@
 #' \code{\link{attachNamespace}()} to load any libraries beforehand.
 #' Just list your packages in the \code{packages} argument in the order
 #' you want them to be loaded.
-#' If \code{parallelism} is \code{"single-session"}, the necessary packages
+#' If \code{parallelism} is \code{"single-session"}, 
+#' the necessary packages
 #' are loaded once before any targets are built. If \code{parallelism} is 
 #' \code{"distributed"}, the necessary packages are loaded once on 
 #' initialization and then once again for each target right 
@@ -69,12 +70,13 @@
 #' \code{packages} argument are loaded before any prework is done.
 #' If \code{parallelism} is \code{"single-session"}, the \code{prework}
 #' is run once before any targets are built. If \code{parallelism} is 
-#' \code{"distributed"}, the prework is run once on initialization and then
-#' once again for each target right before that target is built.
+#' \code{"distributed"}, the prework is run once on initialization 
+#' and then once again for each target right before that target is built.
 #' 
 #' @param prepend lines to prepend to the Makefile if \code{parallelism}
-#' is \code{"distributed"}. See the vignettes (\code{vignette("drake_manual")},
-#' \code{vignette("drake_example")}) to learn how to use \code{prepend}
+#' is \code{"distributed"}. See the vignettes 
+#' (\code{vignette("drake_manual")}, \code{vignette("drake_example")}) 
+#' to learn how to use \code{prepend}
 #' to take advantage of multiple nodes of a supercomputer.
 #' 
 #' @param command character scalar, command to call the Makefile 
@@ -161,7 +163,9 @@ run_mclapply = function(args){
 
 parallel_stage = function(next_graph, args){
   number_dependencies = sapply(V(next_graph), 
-    function(x) length(adjacent_vertices(next_graph, x, mode = "in")[[1]]))
+    function(x) 
+      adjacent_vertices(next_graph, x, mode = "in") %>% 
+      unlist %>% length)
   next_targets = which(!number_dependencies) %>% names
   prune_envir(next_targets = next_targets, args = args)
   mclapply(next_targets, build, mc.cores = args$jobs, args = args)
@@ -171,10 +175,9 @@ parallel_stage = function(next_graph, args){
 prune_envir = function(next_targets, args){
   load_these = dependencies(targets = next_targets, args = args) %>% 
     Filter(f = is_not_file) %>% intersect(y = args$plan$target)
-  unload_these = intersect(args$plan$target, ls(args$envir)) %>% setdiff(y = load_these)
+  unload_these = intersect(args$plan$target, ls(args$envir)) %>% 
+    setdiff(y = load_these)
   rm(list = unload_these, envir = args$envir)
   if(length(load_these)) loadd(list = load_these, envir = args$envir)
   invisible()
 }
-
-cachepath = ".drake"

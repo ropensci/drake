@@ -12,7 +12,7 @@
 #' as names and vectors of possible values as list elements.
 #' @export 
 #' @return a workflow plan data frame with the wildcards evaluated
-#' @param x workflow plan data frame, similar to one produced by 
+#' @param plan workflow plan data frame, similar to one produced by 
 #' \code{link{plan}}
 #' @param rules Named list with wildcards as names and vectors of 
 #' replacements
@@ -23,7 +23,7 @@
 #' @param wildcard character scalar denoting a wildcard placeholder
 #' @param values vector of values to replace the wildcard 
 #' in the drake instructions. Will be treated as a character vector.
-#' Must be the same length as \code{x$command} if \code{expand} is 
+#' Must be the same length as \code{plan$command} if \code{expand} is 
 #' \code{TRUE}.
 #' @param expand If \code{TRUE}, create a new rows in the workflow plan 
 #' data frame
@@ -31,37 +31,38 @@
 #' If \code{FALSE}, each occurence of the wildcard
 #' is replaced with the next entry in the \code{values} vector, 
 #' and the values are recycled.
-evaluate = function(x, rules = NULL, wildcard = NULL, values = NULL, 
+evaluate = function(plan, rules = NULL, wildcard = NULL, values = NULL, 
   expand = TRUE){
   if(!is.null(rules)) 
-    return(evaluations(x = x, rules = rules, expand = expand))
-  if(is.null(wildcard) | is.null(values)) return(x)
-  matches = grepl(wildcard, x$command, fixed = TRUE)
-  if(!any(matches)) return(x)
-  major = unique_random_string(colnames(x))
-  minor = unique_random_string(c(colnames(x), major))
-  x[[major]] = x[[minor]] = 1:nrow(x)
-  y = x[matches,]
-  if(expand) y = expand(y, values)
-  values = rep(values, length.out = dim(y)[1])
-  y$command = Vectorize(function(value, command) 
-    gsub(wildcard, value, command, fixed = TRUE))(values, y$command)
-  rownames(x) = rownames(y) = NULL
-  y[[minor]] = 1:nrow(y)
-  out = rbind(y, x[!matches,])
+    return(evaluations(plan = plan, rules = rules, expand = expand))
+  if(is.null(wildcard) | is.null(values)) return(plan)
+  matches = grepl(wildcard, plan$command, fixed = TRUE)
+  if(!any(matches)) return(plan)
+  major = unique_random_string(colnames(plan))
+  minor = unique_random_string(c(colnames(plan), major))
+  plan[[major]] = plan[[minor]] = seq_len(nrow(plan))
+  matching = plan[matches,]
+  if(expand) matching = expand(matching, values)
+  values = rep(values, length.out = nrow(matching))
+  matching$command = Vectorize(function(value, command) 
+    gsub(wildcard, value, command, 
+      fixed = TRUE))(values, matching$command)
+  rownames(plan) = rownames(matching) = NULL
+  matching[[minor]] = seq_len(nrow(matching))
+  out = rbind(matching, plan[!matches,])
   out = out[order(out[[major]], out[[minor]]),]
   out[[major]] = out[[minor]] = NULL
   rownames(out) = NULL
   out
 }
 
-evaluations = function(x, rules = NULL, expand = TRUE){
-  if(is.null(rules)) return(x)
+evaluations = function(plan, rules = NULL, expand = TRUE){
+  if(is.null(rules)) return(plan)
   stopifnot(is.list(rules))
-  for(i in 1:length(rules))
-    x = evaluate(x, wildcard = names(rules)[i], values = rules[[i]], 
-      expand = expand)
-  x
+  for(index in seq_len(length(rules)))
+    plan = evaluate(plan, wildcard = names(rules)[index], 
+      values = rules[[index]], expand = expand)
+  plan
 }
 
 #' @title Function \code{expand}
@@ -69,17 +70,18 @@ evaluations = function(x, rules = NULL, expand = TRUE){
 #' This generates multiple replicates of targets with the same commands.
 #' @export 
 #' @return an expanded workflow plan data frame
-#' @param x workflow plan data frame
+#' @param plan workflow plan data frame
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
-expand = function(x, values = NULL){
-  if(!length(values)) return(x)
-  d1 = each = dim(x)[1]
-  x = x[rep(1:dim(x)[1], each = length(values)),]
-  values = rep(values, times = d1)
-  x$target = paste(x$target, values, sep = "_")
-  row.names(x) = NULL
-  x
+expand = function(plan, values = NULL){
+  if(!length(values)) return(plan)
+  nrows = nrow(plan)
+  repeat_targets = rep(seq_len(nrows), each = length(values))
+  plan = plan[repeat_targets,]
+  values = rep(values, times = nrows)
+  plan$target = paste(plan$target, values, sep = "_")
+  rownames(plan) = NULL
+  plan
 }
 
 #' @title Function \code{gather}
@@ -88,13 +90,13 @@ expand = function(x, values = NULL){
 #' a collection of existing targets in another workflow plan data frame.
 #' @export 
 #' @return workflow plan data frame for aggregating prespecified targets
-#' @param x workflow plan data frame of prespecified targets
+#' @param plan workflow plan data frame of prespecified targets
 #' @param target name of the new aggregated target
 #' @param gather function used to gather the targets. Should be 
 #' one of \code{\link{list}(...)}, \code{\link{c}(...)},
 #' \code{\link{rbind}(...)}, or similar.
-gather = function(x = NULL, target = "target", gather = "list"){
-  command = paste(x$target, "=", x$target)
+gather = function(plan = NULL, target = "target", gather = "list"){
+  command = paste(plan$target, "=", plan$target)
   command = paste(command, collapse = ", ")
   command = paste0(gather, "(", command, ")")
   data.frame(target = target, command = command, stringsAsFactors = F)
@@ -127,7 +129,7 @@ analyses = function(plan, datasets){
 #' @return an evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.
 #' analyses of multiple datasets in multiple ways.
-#' @param workflow plan data frame with commands for the summaries.
+#' @param plan workflow plan data frame with commands for the summaries.
 #' Use the \code{..analysis..} and \code{..dataset..} wildcards 
 #' just like the \code{..dataset..} wildcard in \code{\link{analyses}()}. 
 #' @param analyses workflow plan data frame of analysis instructions
@@ -146,12 +148,13 @@ summaries = function(plan, analyses, datasets,
   out = evaluate(out, wildcard = "..dataset..", values = datasets$target,
     expand = FALSE)
   if(is.null(gather)) return(out[setdiff(names(out), group)])
-  top = ddply(out, group, function(x){
-    y = x[[group]][1]
-    gather(x, target = y, gather = gather[which(y == plan$target)])
+  gathered = ddply(out, group, function(summary_group){
+    summary_type = summary_group[[group]][1]
+    gather(summary_group, target = summary_type, 
+      gather = gather[which(summary_type == plan$target)])
   })
-  out[[group]] = top[[group]] = NULL
-  rbind(top, out)
+  out[[group]] = gathered[[group]] = NULL
+  rbind(gathered, out)
 }
 
 unique_random_string = function(exclude = NULL, n = 30){

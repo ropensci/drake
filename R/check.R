@@ -4,10 +4,11 @@
 #' missing input files.
 #' @seealso \code{link{plan}}, \code{\link{make}}
 #' @export
-#' @param plan workflow plan data frame, possibly from \code{\link{plan}()}.
-#' @param target character vector of targets to make
+#' @param plan workflow plan data frame, possibly from 
+#' \code{\link{plan}()}.
+#' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
-check = function(plan, target = plan$target, envir = parent.frame()){
+check = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
   args = setup(plan = plan, targets = targets, envir = envir, 
     verbose = TRUE, jobs = 1, prework = character(0),

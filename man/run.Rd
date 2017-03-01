@@ -67,7 +67,8 @@ or \code{\link{require}()} or \code{\link{loadNamespace}()} or
 \code{\link{attachNamespace}()} to load any libraries beforehand.
 Just list your packages in the \code{packages} argument in the order
 you want them to be loaded.
-If \code{parallelism} is \code{"single-session"}, the necessary packages
+If \code{parallelism} is \code{"single-session"}, 
+the necessary packages
 are loaded once before any targets are built. If \code{parallelism} is 
 \code{"distributed"}, the necessary packages are loaded once on 
 initialization and then once again for each target right 
@@ -79,12 +80,13 @@ load packages, set options, etc., although the packages in the
 \code{packages} argument are loaded before any prework is done.
 If \code{parallelism} is \code{"single-session"}, the \code{prework}
 is run once before any targets are built. If \code{parallelism} is 
-\code{"distributed"}, the prework is run once on initialization and then
-once again for each target right before that target is built.}
+\code{"distributed"}, the prework is run once on initialization 
+and then once again for each target right before that target is built.}
 
 \item{prepend}{lines to prepend to the Makefile if \code{parallelism}
-is \code{"distributed"}. See the vignettes (\code{vignette("drake_manual")},
-\code{vignette("drake_example")}) to learn how to use \code{prepend}
+is \code{"distributed"}. See the vignettes 
+(\code{vignette("drake_manual")}, \code{vignette("drake_example")}) 
+to learn how to use \code{prepend}
 to take advantage of multiple nodes of a supercomputer.}
 
 \item{command}{character scalar, command to call the Makefile 

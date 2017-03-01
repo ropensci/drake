@@ -4,13 +4,14 @@
 \alias{readd}
 \title{Function \code{readd}}
 \usage{
-readd(name, character_only = FALSE, path = getwd(), search = FALSE,
+readd(target, character_only = FALSE, path = getwd(), search = FALSE,
   envir = parent.frame())
 }
 \arguments{
-\item{name}{If \code{character_only} is \code{TRUE}, 
-\code{name} is a character string naming the object to read.
-Otherwise, \code{name} is an unquoted symbol with the name of the object.}
+\item{target}{If \code{character_only} is \code{TRUE}, 
+\code{target} is a character string naming the object to read.
+Otherwise, \code{target} is an unquoted symbol with the name of the 
+object. Note: \code{target} could be the name of an imported object.}
 
 \item{character_only}{logical, whether \code{name} should be treated
 as a character or a symbol

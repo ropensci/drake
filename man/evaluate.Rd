@@ -4,10 +4,11 @@
 \alias{evaluate}
 \title{Function \code{evaluate}}
 \usage{
-evaluate(x, rules = NULL, wildcard = NULL, values = NULL, expand = TRUE)
+evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
+  expand = TRUE)
 }
 \arguments{
-\item{x}{workflow plan data frame, similar to one produced by 
+\item{plan}{workflow plan data frame, similar to one produced by 
 \code{link{plan}}}
 
 \item{rules}{Named list with wildcards as names and vectors of 
@@ -21,7 +22,7 @@ not \code{NULL}.}
 
 \item{values}{vector of values to replace the wildcard 
 in the drake instructions. Will be treated as a character vector.
-Must be the same length as \code{x$command} if \code{expand} is 
+Must be the same length as \code{plan$command} if \code{expand} is 
 \code{TRUE}.}
 
 \item{expand}{If \code{TRUE}, create a new rows in the workflow plan 

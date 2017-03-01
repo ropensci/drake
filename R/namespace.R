@@ -8,6 +8,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom parallel mclapply
 #' @importFrom plyr ddply
+#' @importFrom R.utils isPackageLoaded
 #' @importFrom stats complete.cases setNames
 #' @importFrom storr storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings

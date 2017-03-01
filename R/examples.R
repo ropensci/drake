@@ -5,7 +5,8 @@
 #' To see the names of all the examples, run \code{\link{examples_drake}}.
 #' @seealso \code{\link{examples_drake}}, \code{\link{run}}
 #' @export
-#' @param example name of the example. To see all the available example names, 
+#' @param example name of the example. 
+#' To see all the available example names, 
 #' run \code{\link{examples_drake}}.
 #' @param out name of the folder to put the example
 example_drake = function(example = examples_drake(), out = getwd()){
@@ -13,7 +14,8 @@ example_drake = function(example = examples_drake(), out = getwd()){
   dir = system.file(file.path("examples", example), 
     package = "drake", mustWork = TRUE)
   if(file.exists(example)) 
-    stop("There is already a file or folder named ", example, ".", sep = "")
+    stop("There is already a file or folder named ", 
+      example, ".", sep = "")
   file.copy(from = dir, to = out, recursive = TRUE)
   invisible()
 }
@@ -24,6 +26,6 @@ example_drake = function(example = examples_drake(), out = getwd()){
 #' @export
 #' @return names of all the drake examples.
 examples_drake = function(){
-  list.dirs(system.file("examples", package = "drake", mustWork = TRUE), 
-    full.names = FALSE, recursive = FALSE)
+  list.dirs(system.file("examples", package = "drake", 
+    mustWork = TRUE), full.names = FALSE, recursive = FALSE)
 }

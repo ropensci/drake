@@ -1,6 +1,6 @@
-#' @title Deprecated function \code{make}. Use \code{link{run}()} instead.
-#' @description Deprecated function \code{make}. Use \code{link{run}()} instead.
-#' @seealso \code{\link{run}()}
+#' @title Deprecated function \code{make}.
+#' @description Use \code{link{run}()} instead.
+#' @seealso \code{\link{run}}
 #' @export
 #' @param ... arguments to \code{\link{run}()}
 make = function(...){

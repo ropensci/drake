@@ -4,10 +4,10 @@
 \alias{gather}
 \title{Function \code{gather}}
 \usage{
-gather(x = NULL, target = "target", gather = "list")
+gather(plan = NULL, target = "target", gather = "list")
 }
 \arguments{
-\item{x}{workflow plan data frame of prespecified targets}
+\item{plan}{workflow plan data frame of prespecified targets}
 
 \item{target}{name of the new aggregated target}
 

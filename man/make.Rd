@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{make}
 \alias{make}
-\title{Deprecated function \code{make}. Use \code{link{run}()} instead.}
+\title{Deprecated function \code{make}.}
 \usage{
 make(...)
 }
@@ -10,9 +10,9 @@ make(...)
 \item{...}{arguments to \code{\link{run}()}}
 }
 \description{
-Deprecated function \code{make}. Use \code{link{run}()} instead.
+Use \code{link{run}()} instead.
 }
 \seealso{
-\code{\link{run}()}
+\code{\link{run}}
 }
 
