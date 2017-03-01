@@ -114,6 +114,8 @@ run = function(plan, targets = plan$target, envir = parent.frame(),
     verbose = verbose, jobs = jobs, prework = prework,
     command = command, args = args)
   check_args(args)
+  args$cache$set(key = "sessionInfo", value = sessionInfo(), 
+    namespace = "session")
   if(parallelism == "single-session")
     run_mclapply(args)
   else if(parallelism == "distributed")

@@ -190,7 +190,7 @@ find_project = function(path = getwd()){
 session = function(path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("No drake::make() session detected.")
-  cache$get("session", namespace = "session")
+  cache$get("sessionInfo", namespace = "session")
 }
 
 #' @title Function \code{status}

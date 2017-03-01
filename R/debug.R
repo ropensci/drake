@@ -5,10 +5,10 @@ dbug = function(clean = TRUE){
   eval(parse(text = "g <- function(y) {h(y) + b}"), envir = envir)
   eval(parse(text = "h <- function(y) {i(y) + j(y)}"), envir = envir)
   eval(parse(text = "i <- function(x) {x+1}"), envir = envir)
-  eval(parse(text = "j <- function(x) {x+2 + d}"), envir = envir)
+  eval(parse(text = "j <- function(x) {x+2 + c}"), envir = envir)
   eval(parse(text = "a <- 15"), envir = envir)
   eval(parse(text = "b <- 20"), envir = envir)
-  eval(parse(text = "d <- 25"), envir = envir)
+  eval(parse(text = "c <- 25"), envir = envir)
   saveRDS(1:10, "input.rds")
   plan = plan(list = c(
     "'intermediatefile.rds'" = 

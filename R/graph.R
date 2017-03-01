@@ -13,10 +13,11 @@ graph = function(plan, targets = plan$target, envir = parent.frame()){
 build_graph = function(plan, targets, envir){
   force(envir)
   imports = as.list(envir)
-  keys = c(plan$target, names(imports))
-  values = c(plan$command, imports)
-  dependency_list = code_dependencies(values) %>% 
-    setNames(nm = keys)
+  import_deps = lapply(imports, import_dependencies)
+  command_deps = lapply(plan$command, command_dependencies)
+  names(command_deps) = plan$target
+  dependency_list = c(command_deps, import_deps)
+  keys = names(dependency_list)
   vertices = c(keys, unlist(dependency_list)) %>% unique
   graph = make_empty_graph() + vertices(vertices)
   for(key in keys)

@@ -3,28 +3,29 @@ dependencies = function(targets, args){
     lapply(FUN = names) %>% unlist %>% unique %>% unname
 }
 
-code_dependencies = Vectorize(function(x){
-  if(is.character(x) | is.factor(x)) out = command_dependencies(x)
-  else if(is.function(x)) out = function_dependencies(x)
-  else return()
-  if(length(out$files)) out$files = quotes(out$files, single = TRUE)
-  unlist(out) %>% unname
-}, "x", SIMPLIFY = FALSE, USE.NAMES = FALSE)
-
-command_dependencies = function(x){
-  if(!length(x)) return()
-  x = as.character(x)
+command_dependencies = function(command){
+  if(!length(command)) return()
+  if(is.na(command)) return()
+  command = as.character(command)
   fun = function(){}
-  body(fun) = parse(text = x)
-  dep1 = function_dependencies(fun) 
-  body(fun) = parse(text = expose_file_dependencies(x))
-  dep2 = function_dependencies(fun)
-  dep1$files = setdiff(dep2$variables, dep1$variables)
-  dep1
+  body(fun) = parse(text = command)
+  non_files = function_dependencies(fun) %>% unlist 
+  body(fun) = parse(text = expose_filenames(command))
+  with_files = function_dependencies(fun) %>% unlist
+  files = setdiff(with_files, non_files)
+  if(length(files)) files = quotes(files, single = TRUE)
+  c(non_files, files) %>% unique %>% unname
 }
 
-function_dependencies = function(x){
-  findGlobals(x, merge = FALSE) %>% parsable_list
+import_dependencies = function(object){
+  if(is.function(object)) 
+    function_dependencies(object) %>% unlist %>% unname
+  else
+    character(0)
+}
+
+function_dependencies = function(funct){
+  findGlobals(funct, merge = FALSE) %>% parsable_list 
 }
 
 parsable_list = function(x){
@@ -35,7 +36,7 @@ is_parsable = Vectorize(function(x){
   tryCatch({parse(text = x); TRUE}, error = function(e) FALSE)
 }, "x")
 
-expose_file_dependencies = Vectorize(function(x){
+expose_filenames = Vectorize(function(x){
   gsub("'", "", x)
 }, "x")
 

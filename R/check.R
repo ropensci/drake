@@ -18,11 +18,11 @@ check = function(plan, targets = plan$target, envir = parent.frame()){
 
 check_args = function(args){
   stopifnot(is.data.frame(args$plan))
-  if(!all(c("target", "command") %in% colnames(plan)))
+  if(!all(c("target", "command") %in% colnames(args$plan)))
     stop("The columns of your workflow plan data frame ",
       "must include 'target' and 'command'.")
-  stopifnot(nrow(plan) > 0)
-  stopifnot(length(args$targets))
+  stopifnot(nrow(args$plan) > 0)
+  stopifnot(length(args$targets) > 0)
   stopifnot(is.environment(args$envir))
 }
 
