@@ -25,7 +25,7 @@ test_that("calling environment is unaffected in scratch build.", {
   dclean()
   args = dbug()
   for(x in ls(args$envir)) assign(x, args$envir[[x]], environment())
-  rm(obj)
+  if("obj" %in% ls()) rm(obj)
   obj = ls()
   expect_equal(cached(), character(0))
   run(args$plan, verbose = FALSE)

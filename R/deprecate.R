@@ -5,8 +5,7 @@
 #' @param ... arguments to \code{\link{run}()}
 make = function(...){
   .Deprecated("run", package = "drake", old = "make", 
-    msg = paste("Function 'make()' is deprecated. Use 'run()' instead.",
-      "See help(\"run\") for details.")
+     msg = "Function 'make()' is deprecated. Use 'run()' instead.")
   run(...)
 }
 

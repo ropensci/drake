@@ -4,7 +4,8 @@
 \alias{run}
 \title{Function \code{run}}
 \usage{
-run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
+run(plan, targets = c(as.character(plan$target), as.character(plan$output)),
+  envir = parent.frame(), verbose = TRUE,
   parallelism = c("single-session", "distributed"), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
