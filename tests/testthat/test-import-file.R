@@ -1,5 +1,5 @@
 # library(testthat); library(devtools); load_all()
-context("importfile")
+context("import-file")
 source("utils.R")
 
 test_that("responses to imported file", {

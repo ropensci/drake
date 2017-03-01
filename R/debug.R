@@ -9,7 +9,10 @@ dbug = function(clean = TRUE){
   eval(parse(text = "a <- 15"), envir = envir)
   eval(parse(text = "b <- 20"), envir = envir)
   eval(parse(text = "c <- 25"), envir = envir)
+
   saveRDS(1:10, "input.rds")
+  # set.seed(0); saveRDS(rnorm(100000), "input.rds") # test rehashing
+
   plan = plan(list = c(
     "'intermediatefile.rds'" = 
       "saveRDS(combined, \"intermediatefile.rds\")",

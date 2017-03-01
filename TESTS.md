@@ -1,7 +1,3 @@
-- build (1 process, 2 process, Makefiles)
-  - intermediate file rewritten but not changed
-  - intermediate file rewritten and changed
-  - intermediate file deleted
 - generators: code changed: do aggressive tests of all functions & args & opts
   - plan(): all arguments used as expected
   - analyses, summaries, gather (rbind, NULL), expand
@@ -27,6 +23,6 @@
   - deprecated make(): deprecation + it still works
   - old output/code names are corrected and then still work in both check() and make()
 - on my own
+  - same build tests for differnet jobs, parallelisms, file sizes, and platforms
   - included example(s) in inst/ (basic)
-  - makefiles: tests/makefiles
   - jady: be sure to test packages/prework
