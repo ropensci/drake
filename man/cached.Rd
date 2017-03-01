@@ -11,7 +11,7 @@ cached(path = getwd(), search = FALSE)
 or if \code{search} is \code{TRUE}, either the 
 project root or a subdirectory of the project.}
 
-\item{search}{If \code{TRUE}, search parent directories
+\item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
@@ -20,11 +20,12 @@ character vector of cached items
 }
 \description{
 See the cached items stored by drake.
-Load an item with \code{\link{readd}}.
+Read/load an item with \code{\link{readd}()} or 
+c\code{\link{loadd}()}.
 }
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}
+\code{\link{readd}}, \code{\link{loadd}},
 \code{\link{plan}}, \code{\link{run}}
 }
 

@@ -21,13 +21,13 @@ of the last session
 }
 \description{
 Get the build status of the last call to 
-\code{\link{run}()}: which objects were skipped, built,
-and imported.
+\code{\link{run}()}. Objects that drake imported, built, or attempted
+to build are listed as \code{"finished"} or \code{"in progress"}. 
+Skipped objects are not listed.
 }
 \seealso{
 \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, 
-\code{\link{plan}}, \code{\link{run}}
+\code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
 }
 

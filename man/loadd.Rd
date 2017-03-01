@@ -15,25 +15,26 @@ or character strings (quoted). Similar to \code{...} in
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
-\item{imported_only}{logical, indicates whether only imported objects
-should be loaded rather than everything in \code{x}}
+\item{imported_only}{logical, whether only imported objects
+should be loaded.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \code{TRUE}, search parent directories
+\item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
-\item{envir}{environment to load the cache into. Defaults to the
-calling environment.}
+\item{envir}{environment to load objects into. Defaults to the
+calling environment (current workspace).}
 }
 \description{
-Load object(s) from the drake cache into the calling 
-(or other environment if you set the \code{envir} arg). Defaults
-to loading the whole cache if arguments \code{...} and \code{list}
-are not set (or all the imported objects if in addition 
+Load object(s) from the drake cache into the  
+current workspace (or \code{envir} if given). Defaults
+to loading the whole cache if arguments \code{...} 
+and \code{list} are not set 
+(or all the imported objects if in addition 
 imported_only is \code{TRUE}).
 }
 \seealso{

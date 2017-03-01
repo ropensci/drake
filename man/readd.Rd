@@ -4,24 +4,23 @@
 \alias{readd}
 \title{Function \code{readd}}
 \usage{
-readd(x, character_only = FALSE, path = getwd(), search = FALSE,
+readd(name, character_only = FALSE, path = getwd(), search = FALSE,
   envir = parent.frame())
 }
 \arguments{
-\item{x}{If \code{character_only} is \code{TRUE}, 
-\code{x} is a character variable storing the name of the item to get 
-from the cache. Otherwise, \code{x} is a symbol with the literal 
-object name.}
+\item{name}{If \code{character_only} is \code{TRUE}, 
+\code{name} is a character string naming the object to read.
+Otherwise, \code{name} is an unquoted symbol with the name of the object.}
 
-\item{character_only}{\code{TRUE}/\code{FALSE}, whether \code{x} 
-can be assumed to be a character string 
-(just as in \code{\link{library}()}).}
+\item{character_only}{logical, whether \code{name} should be treated
+as a character or a symbol
+(just like \code{character.only} in \code{\link{library}()}).}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \code{TRUE}, search parent directories
+\item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 

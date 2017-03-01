@@ -25,7 +25,6 @@ of the last call to \code{\link{run}()}.
 }
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, 
-\code{\link{plan}}, \code{\link{run}}
+\code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
 }
 

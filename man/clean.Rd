@@ -11,16 +11,16 @@ clean(destroy = FALSE)
 If \code{destroy} is \code{FALSE}, only the targets 
 from \code{run}()
 are removed. If \code{TRUE}, the whole cache is removed, including
-session metadata.}
+session metadata, etc.}
 }
 \description{
-Cleans up all work done by \code{\link{run}}. 
+Cleans up all work done by \code{\link{run}()}. 
 Your working directory (\code{\link{getwd}()}) must be the 
 root directory of your drake project.
 WARNING:
-This deletes ALL \code{\link{run}} target, which includes 
-file targets as well as the entire drake cache. Only use \code{clean}
-if you're sure you won't lose any important work.
+This deletes ALL work done with \code{\link{run}()}, which includes 
+file targets as well as the entire drake cache. Only use \code{clean()}
+if you're sure you won't lose anything important.
 }
 \seealso{
 \code{\link{prune}}, \code{\link{run}},

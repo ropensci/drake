@@ -6,31 +6,109 @@
 \usage{
 run(plan, targets = plan$target, envir = parent.frame(), verbose = TRUE,
   parallelism = c("single-session", "distributed"), jobs = 1,
-  packages = character(0), prework = character(0), prepend = character(0),
-  command = "make", args = character(0))
+  packages = (.packages()), prework = character(0),
+  prepend = character(0), command = "make",
+  args = default_system2_args(jobs = jobs, verbose = verbose))
 }
 \arguments{
-\item{plan}{workflow plan data frame}
+\item{plan}{workflow plan data frame. 
+A workflow plan data frame is a data frame
+with a \code{target} column and a \code{command} column.
+Targets are the objects and files that drake generates,
+and commands are the pieces of R code that produce them.
+Use the function \code{\link{plan}()} to generate workflow plan
+data frames easily, and see functions \code{\link{analyses}()},
+\code{\link{summaries}()}, \code{\link{evaluate}()},  
+\code{\link{expand}()}, and \code{\link{gather}()} for 
+easy ways to generate large workflow plan data frames.}
 
-\item{targets}{targets to bulid}
+\item{targets}{character string, names of targets to build.
+Dependencies are built too.}
 
-\item{envir}{environment to use}
+\item{envir}{environment to use. Defaults to the current
+workspace, so you should not need to worry about this
+most of the time. A deep copy of \code{envir} is made, 
+so you don't need to worry about your workspace being modified
+by \code{run}. The deep copy inherits from the global environment.
+Wherever necessary, objects and functions are imported
+from \code{envir} and the global environment and
+then reproducibly tracked as dependencies.}
 
-\item{verbose}{logical, whether to print output to the console}
+\item{verbose}{logical, whether to print progress to the console.
+Skipped objects are not printed.}
 
-\item{parallelism}{character, type of parallelism to use}
+\item{parallelism}{character, type of parallelism to use. To 
+use parallelism at all, be sure that \code{jobs >= 2}. If 
+\code{parallelism} is \code{"single-session"}, drake will use 
+\code{parallel::\link{mclapply}()} to distribute targets across
+parallel processes wherever possible. (This is not possible on
+Windows.) If \code{"distributed"}, drake will write
+and execute a Makefile to distribute targets across separate
+R sessions. The vignettes (\code{vignette("drake_manual")},
+\code{vignette("drake_example")}) show how to turn those R
+sessions into separate jobs on a cluster. Read the vignettes
+to learn how to take advantage of multiple nodes on a 
+supercomputer.}
 
-\item{jobs}{number of parallel processes or jobs}
+\item{jobs}{number of parallel processes or jobs to run.
+Windows users should not set \code{jobs > 1} if 
+\code{parallelism} is \code{"single-session"} because
+single-session parallelism is based on 
+\code{parallel::\link{mclapply}()}}
 
-\item{packages}{packages to load}
+\item{packages}{character vector packages to load, in the order
+they should be loaded. Defaults to \code{(.packages())}, so you
+shouldn't usually need to set this manually. Just call
+\code{\link{library}()} to load your packages before \code{run()}.
+However, sometimes packages need to be strictly forced to load
+in a certian order, especially if \code{parallelism} is 
+\code{"distributed"}. To do this, do not use \code{\link{library}()}
+or \code{\link{require}()} or \code{\link{loadNamespace}()} or
+\code{\link{attachNamespace}()} to load any libraries beforehand.
+Just list your packages in the \code{packages} argument in the order
+you want them to be loaded.
+If \code{parallelism} is \code{"single-session"}, the necessary packages
+are loaded once before any targets are built. If \code{parallelism} is 
+\code{"distributed"}, the necessary packages are loaded once on 
+initialization and then once again for each target right 
+before that target is built.}
 
-\item{prework}{prework to do before running the workflow}
+\item{prework}{character vector of lines of code to run 
+before build time. This code can be used to 
+load packages, set options, etc., although the packages in the
+\code{packages} argument are loaded before any prework is done.
+If \code{parallelism} is \code{"single-session"}, the \code{prework}
+is run once before any targets are built. If \code{parallelism} is 
+\code{"distributed"}, the prework is run once on initialization and then
+once again for each target right before that target is built.}
 
-\item{prepend}{lines to prepend to the Makefile}
+\item{prepend}{lines to prepend to the Makefile if \code{parallelism}
+is \code{"distributed"}. See the vignettes (\code{vignette("drake_manual")},
+\code{vignette("drake_example")}) to learn how to use \code{prepend}
+to take advantage of multiple nodes of a supercomputer.}
 
-\item{command}{command to call the Makefile}
+\item{command}{character scalar, command to call the Makefile 
+generated for distributed computing. 
+Only applies when \code{parallelism} is \code{"distributed"}. 
+Defaults to the usual \code{"make"}, but it could also be 
+\code{"lsmake"} on supporting systems, for example. 
+\code{command} and \code{args} are executed via 
+\code{\link{system2}(command, args)} to run the Makefile.
+If \code{args} has something like \code{"--jobs=2"}, or if 
+\code{jobs >= 2} and \code{args} is left alone, targets
+will be distributed over independent parallel R sessions
+wherever possible.}
 
-\item{args}{command line arguments to the Makefile}
+\item{args}{command line arguments to call the Makefile for
+distributed computing. For advanced users only. If set,
+\code{jobs} and \code{verbose} are overwritten as they apply to the 
+Makefile.
+\code{command} and \code{args} are executed via 
+\code{\link{system2}(command, args)} to run the Makefile.
+If \code{args} has something like \code{"--jobs=2"}, or if 
+\code{jobs >= 2} and \code{args} is left alone, targets
+will be distributed over independent parallel R sessions
+wherever possible.}
 }
 \description{
 Run your project.

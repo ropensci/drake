@@ -11,7 +11,7 @@ built(path = getwd(), search = FALSE)
 or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
-\item{search}{If \code{TRUE}, search parent directories
+\item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }

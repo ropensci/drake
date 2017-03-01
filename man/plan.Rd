@@ -8,28 +8,26 @@ plan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{commands named according to their respective targets.
+\item{...}{commands named by the targets they generate.
 Recall that drake uses single quotes to denote external files
 and double-quoted strings as ordinary strings.
 Use the \code{strings_in_dots} argument to control the
 quoting in \code{...}.}
 
-\item{list}{named character vector of pieces of command named
-according to their respective targets}
+\item{list}{character vector of commands named
+by the targets they generate.}
 
 \item{file_targets}{logical. If \code{TRUE}, targets are single-quoted
-to tell drake that these are external files that should be generated
-in the next call to \code{\link{run}()}.}
+to tell drake that these are external files that should be expected 
+as output in the next call to \code{\link{run}()}.}
 
 \item{strings_in_dots}{character scalar. If \code{"filenames"},
 all character strings in \code{...} will be treated as names of file
 dependencies (single-quoted). If \code{"literals"}, all
 character strings in \code{...} will be treated as ordinary
 strings, not dependencies of any sort (double-quoted). 
-(This does not affect the names of free-form arguments passed to 
-\code{...}). Because of R's
-automatic parsing/deparsing behavior, strings in \code{...}
-cannot simply be left alone.}
+Because of R's automatic parsing/deparsing behavior, 
+strings in \code{...} cannot simply be left alone.}
 }
 \value{
 data frame of targets and command
@@ -40,8 +38,15 @@ a workflow plan data frame for \code{\link{run}} and
 \code{\link{check}}.
 }
 \details{
-Drake uses single quotes to denote external files
-and double-quoted strings as ordinary strings. 
+A workflow plan data frame is a data frame
+with a \code{target} column and a \code{command} column.
+Targets are the objects and files that drake generates,
+and commands are the pieces of R code that produce them.
+
+For file inputs and targets, drake uses single quotes.
+Double quotes are reserved for ordinary strings. 
+The distinction is important because drake thinks about
+how files, objects, targets, etc. depend on each other.
 Quotes in the \code{list} argument are left alone,
 but R messes with quotes when it parses the freeform 
 arguments in \code{...}, so use the \code{strings_in_dots}
