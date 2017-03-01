@@ -5,6 +5,8 @@ test_that("responses to imported file", {
   dclean()
   args = dbug()
   expect_output(check(plan = args$plan, envir = args$envir))
+  expect_error(check(plan = args$plan[-1,], envir = args$envir))
+  expect_silent(check(plan = args$plan[c(-1, -6),], envir = args$envir))
   run(args$plan, envir = args$envir, verbose = F)
   expect_true(nrow(status()) > 0)
   run(args$plan, envir = args$envir, verbose = F)

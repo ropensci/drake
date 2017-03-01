@@ -16,6 +16,7 @@ check = function(plan, targets = plan$target, envir = parent.frame()){
   check_args(args)
   assert_input_files_exist(args)
   check_strings(args$plan)
+  invisible()
 }
 
 check_args = function(args){

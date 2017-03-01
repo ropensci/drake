@@ -1,6 +1,4 @@
 - build (1 process, 2 process, Makefiles)
-  - imported file changes
-  - imported file missing: make(), check()
   - command changes trivially
   - command changes but gives the same answer
   - command changes and gives a different answer
@@ -16,7 +14,7 @@
   - analyses, summaries, gather (rbind, NULL), expand
 - misc normal functionality
   - console(): short output for long targets
-  - check(): check_strings(), etc.
+  - check(): bad input args
   - examples are written
   - partial collections of targets can be made
   - rehashing happens as expected
