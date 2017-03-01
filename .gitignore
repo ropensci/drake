@@ -12,7 +12,7 @@
 *.toc
 *.vrb
 .DS_Store
-.remake
+tests/testthat/.drake
 .Rapp.history
 .Rhistory
 Makefile
