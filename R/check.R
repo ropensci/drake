@@ -15,6 +15,7 @@ check = function(plan, targets = plan$target, envir = parent.frame()){
     command = character(0), args = character(0))
   check_args(args)
   assert_input_files_exist(args)
+  check_strings(args$plan)
 }
 
 check_args = function(args){
@@ -46,18 +47,21 @@ check_strings = function(plan){
   })
   cat("Double-quoted strings were found in plan$command.",
     "Should these be single-quoted instead?",
-    "Remember: single-quoted strings are file dependencies/targets", 
+    "Remember: single-quoted strings are file target dependencies", 
     "and double-quoted strings are just ordinary strings.",
     sep = "\n")
-  for(i in 1:length(x)){
-    cat("\ntarget:", names(x)[i], "\n")
-    cat("strings in command:", paste0("\"", x[[i]], "\""), "\n")
+  for(target in seq_len(length(x))){
+    cat("\ntarget:", names(x)[target], "\n")
+    strings = paste0("  \"", x[[target]], "\"") %>% paste(collapse = "\n")
+    cat("strings in command:\n", strings, "\n", sep = "")
   }
 }
 
 assert_input_files_exist = function(args){
   missing_files = next_targets(args$graph) %>% Filter(f = is_file) %>% 
     unquote %>% Filter(f = function(x) !file.exists(x))
-  if(length(missing_files))
-    stop("missing input files:\n", paste(missing_files, collapse = "\n"))
+  if(length(missing_files)){
+    msg = paste0("  ", missing_files) %>% paste(collapse = "\n")
+    stop("missing input files:\n", msg)
+  }
 }

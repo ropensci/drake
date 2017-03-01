@@ -172,7 +172,8 @@ next_targets = function(next_graph){
 }
 
 parallel_stage = function(next_graph, args){
-  next_targets(next_graph) %>% prune_envir(args = args)
+  next_targets = next_targets(next_graph) 
+  prune_envir(next_targets = next_targets, args = args)
   mclapply(next_targets, build, mc.cores = args$jobs, args = args)
   delete_vertices(next_graph, v = next_targets)
 }

@@ -1,17 +1,24 @@
 # library(testthat); library(devtools); load_all()
 context("importfile")
 
-test_that("imported file is modified but not changed", {
+test_that("responses to imported file", {
   dclean()
   args = dbug()
+  expect_output(check(plan = args$plan, envir = args$envir))
   run(args$plan, envir = args$envir, verbose = F)
   expect_true(nrow(status()) > 0)
   run(args$plan, envir = args$envir, verbose = F)
   expect_false(nrow(status()) > 0)
   unlink("input.rds")
-  suppressWarnings(expect_error(run(args$plan, envir = args$envir, verbose = F)))
-  suppressWarnings(expect_error(check(args$plan, envir = args$envir)))
+  expect_error(check(plan = args$plan, envir = args$envir))
   saveRDS(1:10, "input.rds")
   run(args$plan, envir = args$envir, verbose = F)
   expect_false(nrow(status()) > 0)
+  final0 = readd(final)
+  saveRDS(2:10, "input.rds")
+  run(args$plan, envir = args$envir, verbose = F)
+  expect_equal(sort(status()$target), c("'input.rds'", "'intermediatefile.rds'",
+    "combined", "final", "myinput", "nextone"))
+  expect_false(length(final0) == length(readd(final)))
+  dclean()
 })
