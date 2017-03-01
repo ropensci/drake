@@ -215,7 +215,7 @@ status = function(path = getwd(), search = FALSE){
   if(is.null(cache)) stop("No drake::make() session detected.")
   target = cache$list(namespace = "status")
   status = sapply(target, cache$get, namespace = "status",
-                  USE.NAMES = FALSE)
+    USE.NAMES = FALSE)
   data.frame(target = target, status = status, stringsAsFactors = FALSE)
 }
 
