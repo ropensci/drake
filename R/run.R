@@ -34,8 +34,8 @@
 #' parallel processes wherever possible. (This is not possible on
 #' Windows.) If \code{"distributed"}, drake will write
 #' and execute a Makefile to distribute targets across separate
-#' R sessions. The vignettes (\code{vignette("drake_manual")},
-#' \code{vignette("drake_example")}) show how to turn those R
+#' R sessions. The vignettes (\code{vignette(package = "drake")})
+#' show how to turn those R
 #' sessions into separate jobs on a cluster. Read the vignettes
 #' to learn how to take advantage of multiple nodes on a 
 #' supercomputer.
@@ -75,7 +75,7 @@
 #' 
 #' @param prepend lines to prepend to the Makefile if \code{parallelism}
 #' is \code{"distributed"}. See the vignettes 
-#' (\code{vignette("drake_manual")}, \code{vignette("drake_example")}) 
+#' (\code{vignette(package = "drake")})
 #' to learn how to use \code{prepend}
 #' to take advantage of multiple nodes of a supercomputer.
 #' 
