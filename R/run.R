@@ -122,6 +122,23 @@ run = function(plan, targets = c(as.character(plan$target), as.character(plan$ou
     run_makefile(args)
 }
 
+#' @title Function \code{make}
+#' @description Same as \code{\link{run}}. 
+#' Type \code{?\link{run}} for more.
+#' @export
+#' @param plan same as in function \code{\link{run}()}
+#' @param targets same as in function \code{\link{run}()}
+#' @param envir same as in function \code{\link{run}()}
+#' @param verbose same as in function \code{\link{run}()}
+#' @param parallelism same as in function \code{\link{run}()}
+#' @param jobs same as in function \code{\link{run}()}
+#' @param packages same as in function \code{\link{run}()}
+#' @param prework same as in function \code{\link{run}()}
+#' @param prepend same as in function \code{\link{run}()}
+#' @param command same as in function \code{\link{run}()}
+#' @param args same as in function \code{\link{run}()}
+make = run
+
 add_packages_to_prework = function(packages, prework){
   if(!length(packages)) return(prework)
   package_list = deparse(packages) %>% paste(collapse = "\n")
