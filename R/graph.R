@@ -1,15 +1,32 @@
-#' @title Function \code{graph}
-#' @description Graph the dependency structure of your workflow
+#' @title Function \code{plot_graph}
+#' @description Plot the dependency structure of your workflow
 #' @export
-#' @param plan workflow plan data frame
-#' @param targets targets to bulid
-#' @param envir environment to use
-graph = function(plan, targets = plan$target, envir = parent.frame()){
+#' @param plan workflow plan data frame, same as for function 
+#' \code{\link{run}()}.
+#' @param targets names of targets to bulid, same as for function
+#' \code{\link{run}()}.
+#' @param envir environment to import from, same as for function
+#' \code{\link{run}()}.
+plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
   build_graph(plan = plan, targets = targets, envir = envir) %>%
     plot.igraph
 }
 
+#' @title Function \code{plot_graph}
+#' @description Make a graph of the dependency structure of your workflow.
+#' @details This function returns an igraph object representing how
+#' the targets in your workflow depend on each other. 
+#' (\code{help(package = "igraph")}). To plot the graph, call
+#' to \code{\link{plot.igraph}()} on your graph, or just use 
+#' \code{\link{plot_graph}()} from the start.
+#' @export
+#' @param plan workflow plan data frame, same as for function
+#' \code{\link{run}()}.
+#' @param targets names of targets to bulid, same as for function
+#' \code{\link{run}()}.
+#' @param envir environment to import from, same as for function
+#' \code{\link{run}()}.
 build_graph = function(plan, targets, envir){
   force(envir)
   imports = as.list(envir)
