@@ -30,7 +30,9 @@ Imports:
     tools,
     utils
 Suggests:
+    abind,
     knitr,
+    MASS,
     rmarkdown,
     testthat
 VignetteBuilder: knitr

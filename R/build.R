@@ -27,7 +27,7 @@ imported_target = function(target, hashes, args){
   if(is_file(target)) return(hashes$file)
   else if(target %in% ls(args$envir)) value = args$envir[[target]]
   else tryCatch(value <- get(target), error = function(e)
-    stop("Could not find ", target, " to imported."))
+    stop("could not import ", target))
   value
 }
 

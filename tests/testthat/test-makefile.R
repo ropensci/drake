@@ -26,15 +26,44 @@ test_that("packages are loaded in prework", {
   options(testdrake = "unset")
   expect_equal(getOption("testdrake"), "unset")
   args = dbug()
-  args$packages = c("eply", "digest")
+  if(R.utils::isPackageLoaded("abind"))
+    detach("package:abind")
+  if(R.utils::isPackageLoaded("MASS"))
+    detach("package:MASS")
+  expect_error(abind(1))
+  expect_error(deparse(body(lda)))
+  
+  # Load packages with the 'packages' argument
+  args$packages = c("abind", "MASS")
   args$prework = "options(testdrake = 'set')"
-  args$plan = plan(x = quotes(getOption("testdrake"), single = TRUE),
-    y = c(digest("option"), x), strings_in_dots = "literals")
+  args$plan = plan(x = getOption("testdrake"),
+    y = c(abind("option"), deparse(body(lda)), x), strings_in_dots = "literals")
   args$targets = args$plan$target
   expect_false(any(c("x", "y") %in% cached()))
   testrun(args)
   expect_true(all(c("x", "y") %in% cached()))
-  expect_equal(readd(x), "'set'")
+  expect_equal(readd(x), "set")
+  expect_true(length(readd(y)) > 0)
+  options(testdrake = original)
+  clean()
+  
+  # load packages the usual way
+  options(testdrake = "unset")
+  expect_equal(getOption("testdrake"), "unset")
+  if(R.utils::isPackageLoaded("abind"))
+    detach("package:abind")
+  if(R.utils::isPackageLoaded("MASS"))
+    detach("package:MASS")
+  expect_error(abind(1))
+  expect_error(deparse(body(lda)))
+  library(abind)
+  library(MASS)
+  args$packages = NULL
+  expect_false(any(c("x", "y") %in% cached()))
+  testrun(args)
+  expect_true(all(c("x", "y") %in% cached()))
+  expect_equal(readd(x), "set")
+  expect_true(length(readd(y)) > 0)
   options(testdrake = original)
   dclean()
 })
