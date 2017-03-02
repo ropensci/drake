@@ -3,8 +3,11 @@ testrun = function(args){
   parallelism = "single-session"
                 #"distributed"
   run(plan = args$plan, targets = args$targets,
-    envir = args$envir, jobs = args$jobs, 
-    parallelism = parallelism, verbose = FALSE)
+    envir = args$envir, verbose = FALSE,
+    parallelism = parallelism, jobs = args$jobs, 
+    packages = args$packages, prework = args$prework,
+    prepend = args$prepend, command = args$command,
+    arg = args$args)
 }
 
 justbuilt = function(args){

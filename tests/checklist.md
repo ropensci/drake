@@ -1,0 +1,11 @@
+- Do for each of Windows and Linux:
+- testthat unit tests
+- In testthat/utils.R, make a change and then repeat unit tests.
+  - change jobs to 2
+  - change jobs to 8
+  - change parallelism to "distributed"
+  - change jobs back to 2
+  - for parallelism == "single-session", increase file size in R/debug.R. 
+- Run through example in inst/examples/basic.
+- Speed tests for big files, making sure rehashing isn't done too much.
+- Real project.

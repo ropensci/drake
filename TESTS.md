@@ -1,8 +1,0 @@
-- on my own
-  - same build tests for differnet jobs, parallelisms, file sizes (for rehashing), and platforms
-  - included example(s) in inst/ (basic)
-  - jady: be sure to test packages/prework
-  - rehashing speeds for larger files
-- packages and prework: regular and makefiles
-- timestamps.R
-- makefile.R

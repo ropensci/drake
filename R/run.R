@@ -109,11 +109,9 @@ run = function(plan, targets = c(as.character(plan$target), as.character(plan$ou
   args = default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(parallelism)
-  prework = add_packages_to_prework(packages = packages, 
-    prework = prework)
   args = setup(plan = plan, targets = targets, envir = envir, 
-    verbose = verbose, jobs = jobs, prework = prework,
-    command = command, args = args)
+    verbose = verbose, jobs = jobs, packages = packages,
+    prework = prework, command = command, args = args)
   check_args(args)
   assert_input_files_exist(args)
   args$cache$set(key = "sessionInfo", value = sessionInfo(), 
@@ -139,14 +137,16 @@ add_packages_to_prework = function(packages, prework){
 load_if_missing = function(packages){
   Filter(packages, f = isPackageLoaded) %>%
     setdiff(x = packages) %>% 
-    lapply(FUN = require, character.only = TRUE) %>%
+    lapply(FUN = library, character.only = TRUE) %>%
     invisible
 }
 
-setup = function(plan, targets, envir, jobs, verbose, prework,
-  command, args){
+setup = function(plan, targets, envir, jobs, verbose, packages,
+  prework, command, args){
   plan = fix_deprecated_plan_names(plan)
   targets = intersect(targets, plan$target)
+  prework = add_packages_to_prework(packages = packages, 
+    prework = prework)
   cache = storr_rds(cachepath, mangle_key = TRUE)
   cache$clear(namespace = "status")
   envir = envir %>% as.list %>% list2env(parent = globalenv())
