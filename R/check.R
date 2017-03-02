@@ -16,6 +16,7 @@ check = function(plan, targets = plan$target, envir = parent.frame()){
   check_args(args)
   assert_input_files_exist(args)
   check_strings(args$plan)
+  find_files(args)
   invisible()
 }
 
@@ -29,10 +30,12 @@ check_args = function(args){
 }
 
 find_files = function(args){
-  files = args$order %>% Filter(is_file)
+  files = next_targets(args$graph) %>% Filter(f = is_file) %>%
+    unquote
   if(!all(file.exists(files))){
+    files = paste0("  ", files)
     msg = paste(files, collapse = "\n")
-    stop("Missing input files:\n", msg)
+    stop("missing input files:\n", msg)
   }
 }
 
