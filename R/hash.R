@@ -33,8 +33,12 @@ rehash_file = function(target){
 }
 
 tidy = function(x){
-  out = parse(text = x) %>% as.character %>% paste(collapse = "\n")
-  paste("{\n", out, "\n}")
+  parse(text = x) %>% as.character %>% 
+    paste(collapse = "\n") %>% braces
+}
+
+braces = function(x){
+  paste("{\n", x, "\n}")
 }
 
 get_command = function(target, args){

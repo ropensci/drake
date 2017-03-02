@@ -6,7 +6,7 @@ dependencies = function(targets, args){
 command_dependencies = function(command){
   if(!length(command)) return()
   if(is.na(command)) return()
-  command = as.character(command)
+  command = as.character(command) %>% braces
   fun = function(){}
   body(fun) = parse(text = command)
   non_files = function_dependencies(fun) %>% unlist 

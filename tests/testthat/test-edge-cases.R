@@ -26,3 +26,13 @@ test_that("target conflicts with previous import", {
     "final", "yourinput"))
   dclean()
 })
+
+test_that("can use semicolons and multi-line commands", {
+  dclean()
+  plan = plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
+  run(plan, verbose = FALSE)
+  expect_false(any(c("a", "b") %in% ls()))
+  expect_true(all(cached(x, y)))
+  expect_equal(cached(), c("x", "y"))
+  dclean()
+})
