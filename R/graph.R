@@ -27,7 +27,7 @@ plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
 #' \code{\link{run}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{run}()}.
-build_graph = function(plan, targets, envir){
+build_graph = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
   imports = as.list(envir)
   import_deps = lapply(imports, import_dependencies)

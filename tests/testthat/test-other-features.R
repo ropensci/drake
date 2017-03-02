@@ -12,9 +12,10 @@ test_that(".onLoad() warns correctly", {
   unlink(f)
 })
 
-test_that("graph function empty runthrough throws no errors", {
+test_that("graph functions work", {
   dclean()
   args = dbug()
+  expect_equal(class(build_graph(args$plan)), "igraph")
   pdf(NULL)
   expect_silent(plot_graph(plan = args$plan, envir = args$envir))
   dev.off()

@@ -1,22 +1,39 @@
 #' @title Function \code{cached}
-#' @description See the cached items stored by drake.
-#' Read/load an item with \code{\link{readd}()} or 
-#' c\code{\link{loadd}()}.
+#' @description Check whether targets are in the cache.
+#' If no targets are specified with \code{...} or \code{list}, 
+#' then \code{cached()} lists 
+#' all the items in the drake cache.
+#' Read/load a cached item with \code{\link{readd}()} or 
+#' \code{\link{loadd}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{loadd}},
 #' \code{\link{plan}}, \code{\link{run}}
 #' @export
-#' @return character vector of cached items
+#' @return Either a named logical indicating whether the given
+#' targets or cached or a character vector listing all cached
+#' items, depending on whether any targets are specified
+#' @param ... objects to load from the cache, as names (unquoted)
+#' or character strings (quoted). Similar to \code{...} in
+#' \code{\link{remove}(...)}.
+#' @param list character vector naming objects to be loaded from the
+#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
 #' @param path Root directory of the drake project, 
 #' or if \code{search} is \code{TRUE}, either the 
 #' project root or a subdirectory of the project.
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-cached = function(path = getwd(), search = FALSE){
+cached = function(..., list = character(0), 
+  path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(character(0))
-  intersect(cache$list(), cache$list(namespace = "depends"))
+  dots = match.call(expand.dots = FALSE)$...
+  targets = targets_from_dots(dots, list)
+  all_cached = intersect(cache$list(), cache$list(namespace = "depends"))
+  if(!length(targets)) return(all_cached)
+  presence = targets %in% all_cached
+  names(presence) = targets
+  presence
 }
 
 #' @title Function \code{built}
@@ -123,14 +140,14 @@ loadd = function(..., list = character(0),
   search = FALSE, envir = parent.frame()){
   force(envir)
   dots = match.call(expand.dots = FALSE)$...
-  targets = parse_dots(dots, list)
+  targets = targets_from_dots(dots, list)
   if(!length(targets)) targets = cached(path = path, search = search)
   if(imported_only) 
     targets = Filter(targets, 
       f = function(target) is_imported(target, 
         path = path, search = search))
   if(!length(targets)) 
-    stop("nothing to load. Either objects not cached or cache not found.")
+    stop("no targets specified or Either objects not cached or cache not found.")
   lapply(targets, function(target)
     assign(x = target,
       value = readd(target, character_only = TRUE, path = path, 
@@ -228,13 +245,13 @@ get_cache = function(path = getwd(), search = FALSE){
 }
 
 # from base::remove()
-parse_dots = function(dots, list){
+targets_from_dots = function(dots, list){
   if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
     is.character(x), NA, USE.NAMES = FALSE)))
     stop("... must contain names or character strings")
   names = vapply(dots, as.character, "")
   if (length(names) == 0L) names = character()
-  .Primitive("c")(list, names)
+  .Primitive("c")(names, list) %>% unique
 }
 
 is_imported = Vectorize(function(target, path, search){

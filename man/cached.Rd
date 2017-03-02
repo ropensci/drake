@@ -4,9 +4,16 @@
 \alias{cached}
 \title{Function \code{cached}}
 \usage{
-cached(path = getwd(), search = FALSE)
+cached(..., list = character(0), path = getwd(), search = FALSE)
 }
 \arguments{
+\item{...}{objects to load from the cache, as names (unquoted)
+or character strings (quoted). Similar to \code{...} in
+\code{\link{remove}(...)}.}
+
+\item{list}{character vector naming objects to be loaded from the
+cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
+
 \item{path}{Root directory of the drake project, 
 or if \code{search} is \code{TRUE}, either the 
 project root or a subdirectory of the project.}
@@ -16,12 +23,17 @@ to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
 \value{
-character vector of cached items
+Either a named logical indicating whether the given
+targets or cached or a character vector listing all cached
+items, depending on whether any targets are specified
 }
 \description{
-See the cached items stored by drake.
-Read/load an item with \code{\link{readd}()} or 
-c\code{\link{loadd}()}.
+Check whether targets are in the cache.
+If no targets are specified with \code{...} or \code{list}, 
+then \code{cached()} lists 
+all the items in the drake cache.
+Read/load a cached item with \code{\link{readd}()} or 
+\code{\link{loadd}()}.
 }
 \seealso{
 \code{\link{built}}, \code{\link{imported}},

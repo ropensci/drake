@@ -22,16 +22,17 @@ makefile_head = function(args){
 }
 
 makefile_rules = function(args){
-  for(x in args$plan$target){
-    deps = dependencies(x, args) %>%
+  targets = intersect(args$plan$target, args$order)
+  for(target in targets){
+    deps = dependencies(target, args) %>%
       intersect(y = args$plan$target) %>% timestamp
     breaker = ifelse(length(deps), " \\\n", "\n")
-    cat("\n", timestamp(x), ":", breaker, sep = "")
+    cat("\n", timestamp(target), ":", breaker, sep = "")
     if(length(deps)) cat(deps, sep = breaker)
-    if(is_file(x)) 
-      x = paste0("drake::as_file(\"", eply::unquote(x), "\")")
-    else x = quotes(unquote(x), single = FALSE)
-    cat("\tRscript -e 'drake::mk(", x, ")'\n", sep = "")
+    if(is_file(target)) 
+      target = paste0("drake::as_file(\"", eply::unquote(target), "\")")
+    else target = quotes(unquote(target), single = FALSE)
+    cat("\tRscript -e 'drake::mk(", target, ")'\n", sep = "")
   }
 }
 

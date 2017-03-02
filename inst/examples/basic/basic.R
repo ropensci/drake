@@ -98,7 +98,7 @@ load_in_report = plan(
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
   report.html = my_render('report.md', report_dependencies),
-  file_outputs = TRUE, strings_in_dots = "file_deps")
+  file_outputs = TRUE, strings_in_dots = "filenames")
 
 # Row order doesn't matter in the workflow plan.
 plan = rbind(report, datasets, load_in_report, analyses, results)

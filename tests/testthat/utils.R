@@ -1,5 +1,5 @@
 testopts = function(){list(
-  jobs = 2, # needs to be 1 for shipped unit tests
+  jobs = 1, # needs to be 1 for shipped unit tests
   parallelism = "single-session")
  # parallelism = "distributed") # can't use for shipped unit tests
 }

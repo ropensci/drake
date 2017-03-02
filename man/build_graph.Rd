@@ -4,7 +4,7 @@
 \alias{build_graph}
 \title{Function \code{plot_graph}}
 \usage{
-build_graph(plan, targets, envir)
+build_graph(plan, targets = plan$target, envir = parent.frame())
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
