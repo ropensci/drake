@@ -4,7 +4,7 @@
 \alias{summaries}
 \title{Function \code{summaries}}
 \usage{
-summaries(plan, analyses, datasets, gather = rep("list", dim(plan)[1]))
+summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 }
 \arguments{
 \item{plan}{workflow plan data frame with commands for the summaries.
