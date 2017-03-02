@@ -162,7 +162,7 @@ setup = function(plan, targets, envir, jobs, verbose, packages,
 }
 
 run_mclapply = function(args){
-  evals(args$prework, .with = args$envir)
+  for(code in args$prework) eval(parse(text = code), envir = args$envir)
   next_graph = args$graph
   while(length(V(next_graph))) 
     next_graph = parallel_stage(next_graph = next_graph, args = args)

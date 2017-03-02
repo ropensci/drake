@@ -4,7 +4,7 @@ run_makefile = function(args, debug = FALSE){
   sink("Makefile")
   makefile_head(args)
   makefile_rules(args)
-  sink()
+  sink() 
   initialize(args)
   if(!debug) system2(command = args$command, args = args$args)
   invisible()
@@ -37,7 +37,7 @@ makefile_rules = function(args){
 
 initialize = function(args){ 
   args$cache$clear(namespace = "status")
-  evals(args$prework, .with = args$envir)
+  for(code in args$prework) eval(parse(text = code), envir = args$envir)
   imports = setdiff(args$order, args$plan$target)
   lapply(imports, build, args = args)
   timestamps(args)
@@ -52,7 +52,7 @@ initialize = function(args){
 #' @param target name of target to make
 mk = function(target){
   args = get_cache()$get("args", namespace = "makefile")
-  evals(args$prework, .with = args$envir)
+  for(code in args$prework) eval(parse(text = code), envir = args$envir)
   prune_envir(target, args)
   build(target = target, args = args)
 }

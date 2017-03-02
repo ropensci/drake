@@ -87,7 +87,7 @@ readd = function(target, character_only = FALSE, path = getwd(),
   store = cache$get(target)
   value = store$value
   if(store$type == "function"){
-    value = eval(parse(text = value))
+    value = eval(parse(text = value), envir = envir)
     environment(value) = envir
   }
   value
