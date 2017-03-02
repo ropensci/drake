@@ -9,10 +9,10 @@ test_that("changes to commands are handled well", {
   args$plan$command[2] = "f(1+ 1) # nothing should rebuild"
   testrun(args)
   nobuild(args)
-  args$plan$command[2] = "f(1+ 1 -2 + 2) -1 + 1 # only this target should rebuild"
+  args$plan$command[2] = "f(1+ 1 -2 + 2) -1 + 1 # only yourinput changed"
   testrun(args)
   expect_equal(justbuilt(), "yourinput")
-  args$plan$command[2] = "f(1+2) # now, everything downstream should rebuild"
+  args$plan$command[2] = "f(1+2) # now downstream should rebuild"
   testrun(args)
   expect_equal(justbuilt(), 
     c("'intermediatefile.rds'", "combined", "final", "yourinput"))

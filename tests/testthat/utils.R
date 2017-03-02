@@ -1,7 +1,7 @@
 testopts = function(){list(
-  jobs = 1,
+  jobs = 2, # needs to be 1 for shipped unit tests
   parallelism = "single-session")
-  #parallelism = "distributed")
+ # parallelism = "distributed") # can't use for shipped unit tests
 }
 
 testrun = function(args){
@@ -10,18 +10,16 @@ testrun = function(args){
     envir = args$envir, verbose = FALSE,
     parallelism = o$parallelism, jobs = o$jobs, 
     packages = args$packages, prework = args$prework,
-    prepend = args$prepend, command = args$command,
-    arg = args$args)
+    prepend = args$prepend, command = args$command)
 }
 
-testrun_packages = function(args){
+testrun_automatic_packages = function(args){
   o = testopts()
   run(plan = args$plan, targets = args$targets,
       envir = args$envir, verbose = FALSE,
       parallelism = o$parallelism, jobs = o$jobs, 
       prework = args$prework,
-      prepend = args$prepend, command = args$command,
-      arg = args$args)
+      prepend = args$prepend, command = args$command)
 }
 
 justbuilt = function(args){

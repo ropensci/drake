@@ -1,4 +1,4 @@
-run_makefile = function(args, debug = FALSE){
+run_makefile = function(args, run = TRUE){
   args$cache$set("args", args, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
@@ -6,13 +6,13 @@ run_makefile = function(args, debug = FALSE){
   makefile_rules(args)
   sink() 
   initialize(args)
-  if(!debug) system2(command = args$command, args = args$args)
+  if(run) system2(command = args$command, args = args$args)
   invisible()
 }
 
 default_system2_args = function(jobs, verbose){
   out = paste0("--jobs=", jobs)
-  if(verbose) out = c(out, "--silent")
+  if(!verbose) out = c(out, "--silent")
   out
 }
 
@@ -52,7 +52,11 @@ initialize = function(args){
 #' @param target name of target to make
 mk = function(target){
   args = get_cache()$get("args", namespace = "makefile")
-  for(code in args$prework) eval(parse(text = code), envir = args$envir)
+  for(code in args$prework)
+    suppressPackageStartupMessages(
+      eval(parse(text = code), envir = args$envir))
   prune_envir(target, args)
   build(target = target, args = args)
+  file_overwrite(timestamp(target))
+  invisible()
 }

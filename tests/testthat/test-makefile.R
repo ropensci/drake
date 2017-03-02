@@ -8,7 +8,7 @@ test_that("basic makefile stuff works", {
   run(args$plan, targets = "combined", 
     envir = args$envir, verbose = FALSE)
   args$verbose = FALSE
-  run_makefile(args, T)
+  run_makefile(args, run = FALSE)
   expect_true(file.exists("Makefile"))
   stamps = list.files(file.path(timestampdir))
   expect_equal(stamps, c("combined", "myinput", "nextone", 
@@ -37,7 +37,8 @@ test_that("packages are loaded in prework", {
   args$packages = c("abind", "MASS")
   args$prework = "options(testdrake = 'set')"
   args$plan = plan(x = getOption("testdrake"),
-    y = c(abind("option"), deparse(body(lda)), x), strings_in_dots = "literals")
+    y = c(abind("option"), deparse(body(lda)), x), 
+    strings_in_dots = "literals")
   args$targets = args$plan$target
   expect_false(any(c("x", "y") %in% cached()))
   testrun(args)
@@ -60,7 +61,7 @@ test_that("packages are loaded in prework", {
   library(MASS)
   args$packages = NULL
   expect_false(any(c("x", "y") %in% cached()))
-  testrun(args)
+  testrun_automatic_packages(args)
   expect_true(all(c("x", "y") %in% cached()))
   expect_equal(readd(x), "set")
   expect_true(length(readd(y)) > 0)

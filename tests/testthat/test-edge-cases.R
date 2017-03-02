@@ -6,7 +6,11 @@ test_that("target conflicts with current import", {
   dclean()
   args = dbug()
   args$plan = rbind(args$plan, data.frame(target = "f", command = "1+1"))
-  expect_error(testrun(args)) # f is a function, and it's not found
+  suppressWarnings( # for jobs > 1, mclapply gives a warning too. 
+    tryCatch(testrun(args), # desired error doesn't go to R with Makefiles
+      error = function(e){}))
+  expect_true("final" %in% args$targets)
+  expect_false("final" %in% cached()) # this should be enough
   dclean()
 })
 
