@@ -15,7 +15,9 @@ test_that(".onLoad() warns correctly", {
 test_that("graph function empty runthrough throws no errors", {
   dclean()
   args = dbug()
+  pdf(NULL)
   expect_silent(graph(plan = args$plan, envir = args$envir))
+  dev.off()
   unlink("Rplots.pdf")
   dclean()
 })

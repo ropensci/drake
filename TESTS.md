@@ -1,6 +1,3 @@
-- generators: code changed: do aggressive tests of all functions & args & opts
-  - plan(): all arguments used as expected
-  - analyses, summaries, gather (rbind, NULL), expand
 - on my own
   - same build tests for differnet jobs, parallelisms, file sizes (for rehashing), and platforms
   - included example(s) in inst/ (basic)

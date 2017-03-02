@@ -140,14 +140,19 @@ analyses = function(plan, datasets){
 #' rows in the \code{plan}. See the \code{\link{gather}()} function
 #' for more.
 summaries = function(plan, analyses, datasets, 
-  gather = rep("list", dim(plan)[1])){
+  gather = rep("list", nrow(plan))){
   out = plan
   group = paste(colnames(out), collapse = "_")
   out[[group]] = out$target
+  if(!any(grepl("..analysis..", out$command, fixed = TRUE)))
+    stop("no '..analysis..' wildcard found in plan$command. ",
+         "Use analyses() instead.")
   out = evaluate(out, wildcard = "..analysis..", values = analyses$target)
   out = evaluate(out, wildcard = "..dataset..", values = datasets$target,
     expand = FALSE)
-  if(is.null(gather)) return(out[setdiff(names(out), group)])
+  if(!length(gather)) return(out[setdiff(names(out), group)])
+  if(!(length(gather) == dim(plan)[1]))
+    stop("gather must be NULL or have length nrow(plan)")
   gathered = ddply(out, group, function(summary_group){
     summary_type = summary_group[[group]][1]
     gather(summary_group, target = summary_type, 
