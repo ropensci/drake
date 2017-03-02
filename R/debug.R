@@ -29,8 +29,9 @@ dbug = function(clean = TRUE){
 }
 
 dclean = function(){
+  unlink(".drake", recursive = TRUE)
   unlink("input.rds")
   unlink("intermediatefile.rds")
-  unlink(".drake", recursive = TRUE)
+  unlink("Makefile")
 }
 

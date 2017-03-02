@@ -1,4 +1,4 @@
-run_makefile = function(args){
+run_makefile = function(args, debug = FALSE){
   args$cache$set("args", args, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
@@ -6,7 +6,7 @@ run_makefile = function(args){
   makefile_rules(args)
   sink()
   initialize(args)
-  system2(command = args$command, args = args$args)
+  if(!debug) system2(command = args$command, args = args$args)
   invisible()
 }
 

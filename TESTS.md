@@ -6,6 +6,3 @@
 - packages and prework: regular and makefiles
 - timestamps.R
 - makefile.R
-- generate.R
-- plan.R (with more opts, etc.)
-

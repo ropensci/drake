@@ -1,6 +1,6 @@
 dependencies = function(targets, args){
   adjacent_vertices(graph = args$graph, v = targets, mode = "in") %>%
-    lapply(FUN = names) %>% unlist %>% unique %>% unname
+    lapply(FUN = names) %>% clean_dependency_list
 }
 
 command_dependencies = function(command){
@@ -14,14 +14,18 @@ command_dependencies = function(command){
   with_files = function_dependencies(fun) %>% unlist
   files = setdiff(with_files, non_files)
   if(length(files)) files = quotes(files, single = TRUE)
-  c(non_files, files) %>% unique %>% unname
+  c(non_files, files) %>% clean_dependency_list
 }
 
 import_dependencies = function(object){
   if(is.function(object)) 
-    function_dependencies(object) %>% unlist %>% unname
+    function_dependencies(object) %>% clean_dependency_list
   else
     character(0)
+}
+
+clean_dependency_list = function(x){
+  x %>% unlist %>% unname %>% unique %>% sort
 }
 
 function_dependencies = function(funct){
