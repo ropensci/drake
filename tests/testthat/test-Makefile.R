@@ -2,6 +2,17 @@
 context("Makefile")
 source("utils.R")
 
+test_that("prepend arg works", {
+  dclean()
+  args = dbug()
+  args$verbose = FALSE
+  args$prepend = "# add"
+  run_Makefile(args, run = FALSE)
+  lines = readLines("Makefile")
+  expect_true(grepl("# add", lines[1]))
+  dclean()
+})
+
 test_that("basic Makefile stuff works", {
   dclean()
   args = dbug()
