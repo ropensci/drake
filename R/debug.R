@@ -10,8 +10,8 @@ dbug = function(clean = TRUE){
   eval(parse(text = "b <- 20"), envir = envir)
   eval(parse(text = "c <- 25"), envir = envir)
 
-  saveRDS(1:10, "input.rds")
-  # set.seed(0); saveRDS(rnorm(100000), "input.rds") # test rehashing
+#  saveRDS(1:10, "input.rds")
+  set.seed(0); saveRDS(rnorm(100000), "input.rds") # test rehash logic for files
 
   plan = plan(list = c(
     "'intermediatefile.rds'" = 

@@ -25,7 +25,7 @@ file_hash = function(target, args){
   new_mtime = file.mtime(filename)
   do_rehash = file.size(filename) < 1e5 | new_mtime > old_mtime
   if(do_rehash) rehash_file(target)
-  else args$cache$get(target)
+  else args$cache$get(target)$value
 }
 
 rehash_file = function(target){
