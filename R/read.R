@@ -45,10 +45,10 @@ readd = function(target, character_only = FALSE, path = getwd(),
 #' @seealso \code{\link{cached}}, \code{\link{built}}, 
 #' \code{\link{imported}}, \code{\link{plan}}, \code{\link{run}},
 #' @export
-#' @param ... objects to load from the cache, as names (unquoted)
+#' @param ... targets to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
-#' @param list character vector naming objects to be loaded from the
+#' @param list character vector naming targets to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
 #' @param imported_only logical, whether only imported objects
 #' should be loaded.
@@ -69,8 +69,8 @@ loadd = function(..., list = character(0),
   if(!length(targets)) targets = cached(path = path, search = search)
   if(imported_only) 
     targets = Filter(targets, 
-                     f = function(target) is_imported(target, 
-                                                      path = path, search = search))
+      f = function(target) is_imported(target, 
+        path = path, search = search))
   if(!length(targets)) 
     stop("no targets specified or Either objects not cached or cache not found.")
   lapply(targets, function(target)

@@ -8,11 +8,11 @@ loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = FALSE, envir = parent.frame())
 }
 \arguments{
-\item{...}{objects to load from the cache, as names (unquoted)
+\item{...}{targets to load from the cache, as names (unquoted)
 or character strings (quoted). Similar to \code{...} in
 \code{\link{remove}(...)}.}
 
-\item{list}{character vector naming objects to be loaded from the
+\item{list}{character vector naming targets to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
 \item{imported_only}{logical, whether only imported objects

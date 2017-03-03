@@ -40,5 +40,21 @@ test_that("responses to imported objects and functions", {
   }
   testrun(config)
   expect_true("final" %in% justbuilt(config))
+  
+  expect_false("k" %in% ls())
+  config$plan$command[2] = "f(1+1) + k"
+  expect_error(testrun(config))
+  config$envir$k = 5
+  testrun(config)
+  final0 = readd(final)
+  builds = c("'intermediatefile.rds'", "combined", "final", "yourinput")
+  expect_equal(justbuilt(config), builds)
+  testrun(config)
+  nobuild(config)
+  expect_true(identical(final0, readd(final)))
+  config$envir$k = 10
+  testrun(config)
+  expect_equal(justbuilt(config), builds)
+  expect_false(identical(final0, readd(final)))
   dclean()
 })

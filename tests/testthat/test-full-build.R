@@ -28,20 +28,34 @@ test_that("scratch build with contained envir.", {
   expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_true(file.exists(cachepath))
-  clean(x = "final")
-  expect_equal(config$cache$list(), setdiff(all, "final"))
+  
+  # prune
+  expect_warning(prune(config$plan[config$plan$target != "final",]))
   expect_true(file.exists("intermediatefile.rds"))
-  prune(config$plan[config$plan$target == "myinput",])
+  expect_true(file.exists("input.rds"))
+  expect_equal(config$cache$list(), setdiff(all, "final"))
+  
+  # clean specific targets
+  clean(b, c, list = c("'intermediatefile.rds'", "nextone"))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
-  expect_equal(config$cache$list(), 
-    c("'input.rds'", "myinput", "readRDS"))
-  clean()
+  expect_equal(config$cache$list(), setdiff(all, 
+    c("b", "c", "'intermediatefile.rds'", "nextone", "final")))
+  
+  # clean does not remove imported files
+  expect_true(file.exists("input.rds"))
+  expect_true("'input.rds'" %in% config$cache$list())
+  clean("'input.rds'")
+  expect_true(file.exists("input.rds"))
+  expect_false("'input.rds'" %in% config$cache$list())  
+  
+  clean(destroy = FALSE)
   expect_equal(config$cache$list(), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_true(file.exists(cachepath))
   expect_equal(config$cache$list("filemtime"), character(0))
+  
   clean(destroy = TRUE)
   expect_false(file.exists(cachepath))
   dclean()
