@@ -51,7 +51,7 @@ cached = function(..., list = character(0),
 #' current working directory only.
 built = function(path = getwd(), search = FALSE){
   setdiff(cached(path = path, search = search), 
-    imported(path = path, search = search))
+    imported(files_only = FALSE, path = path, search = search))
 }
 
 #' @title Function \code{imported}
