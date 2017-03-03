@@ -1,11 +1,11 @@
 #' @title Function \code{session}
 #' @description Load the \code{\link{sessionInfo}()}
-#' of the last call to \code{\link{run}()}.
+#' of the last call to \code{\link{make}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
+#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 #' @export
 #' @return \code{\link{sessionInfo}()} of the last
-#' call to \code{\link{run}()}
+#' call to \code{\link{make}()}
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -21,16 +21,16 @@ session = function(path = getwd(), search = FALSE){
 #' @title Function \code{status}
 #' @description Get the build status (overall or individual targets)
 #' of the last call to 
-#' \code{\link{run}()} or \code{\link{make}()}. 
+#' \code{\link{make}()} or \code{\link{make}()}. 
 #' Objects that drake imported, built, or attempted
 #' to build are listed as \code{"finished"} or \code{"in progress"}. 
 #' Skipped objects are not listed.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
+#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 #' @export
 #' @return Either the build status of each target given (from the last
-#' call to \code{\link{run}()} or \code{\link{make}()}), or if no 
+#' call to \code{\link{make}()} or \code{\link{make}()}), or if no 
 #' targets are specified, a data frame containing the build status
 #' of the last session. In the latter case, only finished targets are listed.
 #' #' @return Either a named logical indicating whether the given

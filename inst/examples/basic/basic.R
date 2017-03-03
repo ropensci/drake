@@ -110,21 +110,21 @@ plan = rbind(report, datasets, load_in_report, analyses, results)
 # Start off with a clean workspace (optional).
 clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 
-# Use run() or make() to execute your workflow. 
+# Use make() to execute your workflow. 
 # These functions are exactly the same.
-run(plan) # build everything from scratch
+make(plan) # build everything from scratch
 # Now, open and read report.html in a browser.
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Everything is up to date.
-run(plan)
+make(plan)
 
 # Change to a cubic term and rerun.
 reg2 = function(d){
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
-run(plan) # Drake only runs targets that depend on reg2().
+make(plan) # Drake only runs targets that depend on reg2().
 
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
@@ -142,7 +142,7 @@ additions = plan(
 
 # Add the new work
 plan = rbind(plan, additions)
-run(plan) # Only the new work is run.
+make(plan) # Only the new work is run.
 
 # Clean up and start over next time.
 clean() # report.html and report.md are removed, but report.Rmd stays.
@@ -152,11 +152,11 @@ clean() # report.html and report.md are removed, but report.Rmd stays.
 ###############################################
 
 # Does not work on Windows.
-run(plan, parallelism = "mclapply", jobs = 2) # "mclapply" is default.
+make(plan, parallelism = "mclapply", jobs = 2) # "mclapply" is default.
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # All up to date.
-run(plan, jobs = 2)
+make(plan, jobs = 2)
 clean() # Start over next time.
 
 ######################################################
@@ -165,11 +165,11 @@ clean() # Start over next time.
 
 # Write a Makefile and execute it to spawn up to two
 # R sessions at a time.
-run(plan, parallelism = "Makefile", jobs = 2) # build everything
+make(plan, parallelism = "Makefile", jobs = 2) # build everything
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Drake tells the Makefile what is already up to date.
-run(plan, parallelism = "Makefile", jobs = 2)
+make(plan, parallelism = "Makefile", jobs = 2)
 clean() # Start over next time.
 
 ######################################################
@@ -196,7 +196,7 @@ system("chmod +x shell.sh") # permission to execute
 # Run up to four parallel jobs on the cluster or supercomputer,
 # depending on what is needed. These jobs could go to multiple 
 # nodes for true distributed computing.
-run(plan, parallelism = "Makefile", jobs = 4, # build
+make(plan, parallelism = "Makefile", jobs = 4, # build
   prepend = "SHELL=./shell.sh")
 readd(coef_regression2_large) # see also: loadd(), cached()
 
@@ -205,7 +205,7 @@ readd(coef_regression2_large) # see also: loadd(), cached()
 # sync the nodes on the cluster with your working directory.
 # In that case, drake might not see the most up-to-date 
 # information in its cache and it may submit unnecessary jobs.
-run(plan, parallelism = "Makefile", jobs = 4, 
+make(plan, parallelism = "Makefile", jobs = 4, 
   prepend = "SHELL=./shell.sh")
 
 ###########################

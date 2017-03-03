@@ -29,7 +29,7 @@ Dependencies are built too.}
 workspace, so you should not need to worry about this
 most of the time. A deep copy of \code{envir} is made, 
 so you don't need to worry about your workspace being modified
-by \code{run}. The deep copy inherits from the global environment.
+by \code{make}. The deep copy inherits from the global environment.
 Wherever necessary, objects and functions are imported
 from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
@@ -52,7 +52,7 @@ show how to turn those R
 sessions into separate jobs on a cluster. Read the vignettes
 to learn how to take advantage of multiple nodes on a 
 supercomputer. WARNING: the Makefile is NOT standalone.
-Do not run outside of \code{\link{run}()} or \code{\link{make}()}.
+Do not run outside of \code{\link{make}()} or \code{\link{make}()}.
 For \code{parallelism == "Makefile"}, Windows users will need
 to download and install Rtools.}
 

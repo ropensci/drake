@@ -1,7 +1,7 @@
 #' @title Function \code{find_cache}
 #' @description Return the file path of the nearest drake
 #' cache (searching upwards for directories containing a drake cache).
-#' @seealso \code{\link{plan}}, \code{\link{run}},
+#' @seealso \code{\link{plan}}, \code{\link{make}},
 #' @export
 #' @return File path of the nearest drake cache or \code{NULL}
 #' if no cache is found.
@@ -22,7 +22,7 @@ find_cache = function(path = getwd()){
 #' project (searching upwards for directories
 #' containing a drake cache).
 #' @export
-#' @seealso \code{\link{plan}}, \code{\link{run}}
+#' @seealso \code{\link{plan}}, \code{\link{make}}
 #' @return File path of the nearest drake project or \code{NULL}
 #' if no drake project is found.
 #' @param path starting path for search back for the project.

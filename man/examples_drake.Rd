@@ -13,6 +13,6 @@ names of all the drake examples.
 List the names of all the drake examples.
 }
 \seealso{
-\code{\link{example_drake}}, \code{\link{run}}
+\code{\link{example_drake}}, \code{\link{make}}
 }
 

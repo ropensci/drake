@@ -16,18 +16,18 @@ cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
 \item{destroy}{logical, whether to totally remove the drake cache. 
 If \code{destroy} is \code{FALSE}, only the targets 
-from \code{run}()
+from \code{make}()
 are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
 }
 \description{
-Cleans up all work done by \code{\link{run}()}. 
+Cleans up all work done by \code{\link{make}()}. 
 You must be in your project's working directory.
-WARNING: This deletes ALL work done with \code{\link{run}()}, which includes 
+WARNING: This deletes ALL work done with \code{\link{make}()}, which includes 
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.
 }
 \seealso{
-\code{\link{prune}}, \code{\link{run}},
+\code{\link{prune}}, \code{\link{make}},
 }
 

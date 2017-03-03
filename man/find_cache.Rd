@@ -19,6 +19,6 @@ Return the file path of the nearest drake
 cache (searching upwards for directories containing a drake cache).
 }
 \seealso{
-\code{\link{plan}}, \code{\link{run}},
+\code{\link{plan}}, \code{\link{make}},
 }
 

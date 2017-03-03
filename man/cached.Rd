@@ -49,6 +49,6 @@ Read/load a cached item with \code{\link{readd}()} or
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{loadd}},
-\code{\link{plan}}, \code{\link{run}}
+\code{\link{plan}}, \code{\link{make}}
 }
 

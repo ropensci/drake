@@ -19,7 +19,7 @@ by the targets they generate.}
 
 \item{file_targets}{logical. If \code{TRUE}, targets are single-quoted
 to tell drake that these are external files that should be expected 
-as output in the next call to \code{\link{run}()}.}
+as output in the next call to \code{\link{make}()}.}
 
 \item{strings_in_dots}{character scalar. If \code{"filenames"},
 all character strings in \code{...} will be treated as names of file
@@ -34,7 +34,7 @@ data frame of targets and command
 }
 \description{
 Turns a named collection of command/target pairs into 
-a workflow plan data frame for \code{\link{run}} and 
+a workflow plan data frame for \code{\link{make}} and 
 \code{\link{check}}.
 }
 \details{
@@ -53,6 +53,6 @@ arguments in \code{...}, so use the \code{strings_in_dots}
 argument to control the quoting in \code{...}.
 }
 \seealso{
-\code{link{check}}, \code{\link{run}},
+\code{link{check}}, \code{\link{make}},
 }
 
