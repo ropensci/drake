@@ -4,31 +4,31 @@ testopts = function(){list(
  # parallelism = "Makefile") # can't use for shipped unit tests
 } # drake has to already be installed for the Makefile stuff
 
-testrun = function(args){
+testrun = function(config){
   opts = testopts()
-  run(plan = args$plan, targets = args$targets,
-    envir = args$envir, verbose = FALSE,
+  run(plan = config$plan, targets = config$targets,
+    envir = config$envir, verbose = FALSE,
     parallelism = opts$parallelism, jobs = opts$jobs, 
-    packages = args$packages, prework = args$prework,
-    prepend = args$prepend, command = args$command)
+    packages = config$packages, prework = config$prework,
+    prepend = config$prepend, command = config$command)
 }
 
-testrun_automatic_packages = function(args){
+testrun_automatic_packages = function(config){
   opts = testopts()
-  run(plan = args$plan, targets = args$targets,
-      envir = args$envir, verbose = FALSE,
+  run(plan = config$plan, targets = config$targets,
+      envir = config$envir, verbose = FALSE,
       parallelism = opts$parallelism, jobs = opts$jobs, 
-      prework = args$prework,
-      prepend = args$prepend, command = args$command)
+      prework = config$prework,
+      prepend = config$prepend, command = config$command)
 }
 
-justbuilt = function(args){
+justbuilt = function(config){
   setdiff(status()$target, imported())
 }
 
-nobuild = function(args){
+nobuild = function(config){
   built = status()$target
-  targets = args$plan$target
+  targets = config$plan$target
   both = intersect(built, targets)
   expect_equal(both, character(0))
 }

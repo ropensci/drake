@@ -4,10 +4,10 @@ source("utils.R")
 
 test_that("prepend arg works", {
   dclean()
-  args = dbug()
-  args$verbose = FALSE
-  args$prepend = "# add"
-  run_Makefile(args, run = FALSE)
+  config = dbug()
+  config$verbose = FALSE
+  config$prepend = "# add"
+  run_Makefile(config, run = FALSE)
   lines = readLines("Makefile")
   expect_true(grepl("# add", lines[1]))
   dclean()
@@ -15,11 +15,11 @@ test_that("prepend arg works", {
 
 test_that("basic Makefile stuff works", {
   dclean()
-  args = dbug()
-  run(args$plan, targets = "combined", 
-    envir = args$envir, verbose = FALSE)
-  args$verbose = FALSE
-  run_Makefile(args, run = FALSE)
+  config = dbug()
+  run(config$plan, targets = "combined", 
+    envir = config$envir, verbose = FALSE)
+  config$verbose = FALSE
+  run_Makefile(config, run = FALSE)
   expect_true(file.exists("Makefile"))
   stamps = list.files(file.path(timestampdir))
   expect_equal(stamps, c("combined", "myinput", "nextone", 
@@ -36,7 +36,7 @@ test_that("packages are loaded in prework", {
   original = getOption("testdrake")
   options(testdrake = "unset")
   expect_equal(getOption("testdrake"), "unset")
-  args = dbug()
+  config = dbug()
   if(R.utils::isPackageLoaded("abind"))
     detach("package:abind")
   if(R.utils::isPackageLoaded("MASS"))
@@ -45,14 +45,14 @@ test_that("packages are loaded in prework", {
   expect_error(deparse(body(lda)))
   
   # Load packages with the 'packages' argument
-  args$packages = c("abind", "MASS")
-  args$prework = "options(testdrake = 'set')"
-  args$plan = plan(x = getOption("testdrake"),
+  config$packages = c("abind", "MASS")
+  config$prework = "options(testdrake = 'set')"
+  config$plan = plan(x = getOption("testdrake"),
     y = c(abind("option"), deparse(body(lda)), x), 
     strings_in_dots = "literals")
-  args$targets = args$plan$target
+  config$targets = config$plan$target
   expect_false(any(c("x", "y") %in% cached()))
-  testrun(args)
+  testrun(config)
   expect_true(all(c("x", "y") %in% cached()))
   expect_equal(readd(x), "set")
   expect_true(length(readd(y)) > 0)
@@ -70,9 +70,9 @@ test_that("packages are loaded in prework", {
   expect_error(deparse(body(lda)))
   library(abind)
   library(MASS)
-  args$packages = NULL
+  config$packages = NULL
   expect_false(any(c("x", "y") %in% cached()))
-  testrun_automatic_packages(args)
+  testrun_automatic_packages(config)
   expect_true(all(c("x", "y") %in% cached()))
   expect_equal(readd(x), "set")
   expect_true(length(readd(y)) > 0)

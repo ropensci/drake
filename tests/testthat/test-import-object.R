@@ -4,41 +4,41 @@ source("utils.R")
 
 test_that("responses to imported objects and functions", {
   dclean()
-  args = dbug()
-  testrun(args)
+  config = dbug()
+  testrun(config)
   
   # change imported object
-  args$envir$c = args$envir$c + 1
-  testrun(args)
-  expect_equal(justbuilt(), setdiff(sort(args$plan$target), "myinput"))
+  config$envir$c = config$envir$c + 1
+  testrun(config)
+  expect_equal(justbuilt(), setdiff(sort(config$plan$target), "myinput"))
 
   # change nested function trivially
-  args$envir$g = function(y){
+  config$envir$g = function(y){
     
     h(  y)+b # comment
   }
-  testrun(args)
-  nobuild(args)
+  testrun(config)
+  nobuild(config)
   
   # change nested function so that it gives the same answer
-  args$envir$g = function(y){
+  config$envir$g = function(y){
     h(y)+b + 1-1 - 0
   }
-  testrun(args)
+  testrun(config)
   expect_equal(justbuilt(), c("nextone", "yourinput"))
   
   # nested function gives different answer
-  args$envir$g = function(y){
+  config$envir$g = function(y){
     h(y)+b + 16
   }
-  testrun(args)
+  testrun(config)
   expect_true("final" %in% justbuilt())
 
   # test a deeper nested function
-  args$envir$i = function(x){
+  config$envir$i = function(x){
     2*x + sqrt(13)
   }
-  testrun(args)
+  testrun(config)
   expect_true("final" %in% justbuilt())
   dclean()
 })

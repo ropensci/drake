@@ -10,29 +10,29 @@
 #' @param envir environment containing user-defined functions
 check = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
-  args = setup(plan = plan, targets = targets, envir = envir, 
+  config = config(plan = plan, targets = targets, envir = envir, 
     verbose = TRUE, parallelism = "mclapply", 
     jobs = 1, packages = character(0), prepend = character(0),
     prework = character(0), command = character(0), 
     args = character(0))
-  check_args(args)
-  assert_input_files_exist(args)
-  check_strings(args$plan)
-  find_files(args)
+  check_config(config)
+  assert_input_files_exist(config)
+  check_strings(config$plan)
+  find_files(config)
   invisible()
 }
 
-check_args = function(args){
-  stopifnot(is.data.frame(args$plan))
-  if(!all(c("target", "command") %in% colnames(args$plan)))
+check_config = function(config){
+  stopifnot(is.data.frame(config$plan))
+  if(!all(c("target", "command") %in% colnames(config$plan)))
     stop("The columns of your workflow plan data frame ",
       "must include 'target' and 'command'.")
-  stopifnot(nrow(args$plan) > 0)
-  stopifnot(length(args$targets) > 0)
+  stopifnot(nrow(config$plan) > 0)
+  stopifnot(length(config$targets) > 0)
 }
 
-find_files = function(args){
-  files = next_targets(args$graph) %>% Filter(f = is_file) %>%
+find_files = function(config){
+  files = next_targets(config$graph) %>% Filter(f = is_file) %>%
     unquote
   if(!all(file.exists(files))){
     files = paste0("  ", files)
@@ -62,8 +62,8 @@ check_strings = function(plan){
   }
 }
 
-assert_input_files_exist = function(args){
-  missing_files = next_targets(args$graph) %>% Filter(f = is_file) %>% 
+assert_input_files_exist = function(config){
+  missing_files = next_targets(config$graph) %>% Filter(f = is_file) %>% 
     unquote %>% Filter(f = function(x) !file.exists(x))
   if(length(missing_files)){
     msg = paste0("  ", missing_files) %>% paste(collapse = "\n")

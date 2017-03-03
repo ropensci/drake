@@ -22,11 +22,11 @@ dbug = function(clean = TRUE){
     myinput = "readRDS('input.rds')",
     final = "readRDS('intermediatefile.rds')"
   ))
-  args = setup(plan, targets = plan$target, envir = envir, 
+  config = config(plan, targets = plan$target, envir = envir, 
     parallelism = "mclapply", jobs = 1, prepend = character(0),
     verbose = TRUE, packages = character(0), prework = character(0), 
     command = "make", args = character(0))
-  args
+  config
 }
 
 dclean = function(){

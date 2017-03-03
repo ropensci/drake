@@ -4,13 +4,13 @@ timestamp = function(x){
   file.path(timestampdir, x)
 }
 
-timestamps = function(args){
+timestamps = function(config){
   dir_empty(timestampdir)
-  targets = intersect(args$order, args$plan$target)
+  targets = intersect(config$order, config$plan$target)
   lapply(targets, function(target){
-    hashes = hashes(target, args)
+    hashes = hashes(target, config)
     current = target_current(target = target, 
-      hashes = hashes, args = args) 
+      hashes = hashes, config = config) 
     if(current) file_overwrite(timestamp(target))
   })
   invisible()

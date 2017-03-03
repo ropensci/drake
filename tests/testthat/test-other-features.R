@@ -14,10 +14,10 @@ test_that(".onLoad() warns correctly", {
 
 test_that("graph functions work", {
   dclean()
-  args = dbug()
-  expect_equal(class(build_graph(args$plan)), "igraph")
+  config = dbug()
+  expect_equal(class(build_graph(config$plan)), "igraph")
   pdf(NULL)
-  expect_silent(plot_graph(plan = args$plan, envir = args$envir))
+  expect_silent(plot_graph(plan = config$plan, envir = config$envir))
   dev.off()
   unlink("Rplots.pdf")
   dclean()
@@ -25,15 +25,15 @@ test_that("graph functions work", {
 
 test_that("console", {
   dclean()
-  args = dbug()
+  config = dbug()
   expect_output(console(imported = FALSE, 
-    target = "myinput", args = args))
+    target = "myinput", config = config))
   x50 = paste(rep(0:9, 5), collapse = "")
   x51 = paste0(x50, 0)
   o1 = capture.output(console(imported = FALSE, 
-    target = x50, args = args))
+    target = x50, config = config))
   o2 = capture.output(console(imported = FALSE, 
-    target = x51, args = args))
+    target = x51, config = config))
   expect_equal(nchar(o1), nchar(o2), 50)
   dots = "\\.\\.\\.$"
   expect_false(grepl(dots, o1))
@@ -41,29 +41,29 @@ test_that("console", {
   dclean()
 })
 
-test_that("check_args() via check() and run()", {
+test_that("check_config() via check() and run()", {
   dclean()
-  args = dbug()
+  config = dbug()
   y = data.frame(x = 1, y = 2)
-  expect_error(check(y, envir = args$envir))
-  expect_error(run(y, envir = args$envir))
+  expect_error(check(y, envir = config$envir))
+  expect_error(run(y, envir = config$envir))
   y = data.frame(target = character(0), command = character(0))
-  expect_error(check(y, envir = args$envir))
-  expect_error(run(y, envir = args$envir))
-  expect_error(check(args$plan, targets = character(0),
-    envir = args$envir))
-  expect_error(run(args$plan, targets = character(0), envir = args$envir))
+  expect_error(check(y, envir = config$envir))
+  expect_error(run(y, envir = config$envir))
+  expect_error(check(config$plan, targets = character(0),
+    envir = config$envir))
+  expect_error(run(config$plan, targets = character(0), envir = config$envir))
   dclean()
 })
 
 test_that("missing files via check()", {
   dclean()
-  args = dbug()
-  expect_output(check(args$plan, envir = args$envir))
-  expect_silent(find_files(args))
+  config = dbug()
+  expect_output(check(config$plan, envir = config$envir))
+  expect_silent(find_files(config))
   unlink("input.rds")
-  expect_error(check(args$plan, envir = args$envir))
-  expect_error(find_files(args))
+  expect_error(check(config$plan, envir = config$envir))
+  expect_error(find_files(config))
   dclean()
 })
 
@@ -93,13 +93,13 @@ test_that("examples are listed and written", {
 
 test_that("targets can be partially specified", {
   dclean()
-  args = dbug()
-  args$targets = "'intermediatefile.rds'"
-  testrun(args)
+  config = dbug()
+  config$targets = "'intermediatefile.rds'"
+  testrun(config)
   expect_true(file.exists("intermediatefile.rds"))
   expect_error(readd(final))
-  args$targets = "final"
-  testrun(args)
+  config$targets = "final"
+  testrun(config)
   expect_true(is.numeric(readd(final)))
   dclean()
 })

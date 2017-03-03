@@ -1,5 +1,5 @@
-console = function(imported, target, args){
-  if(!args$verbose | (imported & !is_file(target))) return()
+console = function(imported, target, config){
+  if(!config$verbose | (imported & !is_file(target))) return()
   if(imported)
     action = color("import file", "dodgerblue3")
   else

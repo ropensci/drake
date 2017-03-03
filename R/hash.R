@@ -1,31 +1,31 @@
-hashes = function(target, args){
-  list(depends = dependency_hash(target, args),
-    file = file_hash(target, args))
+hashes = function(target, config){
+  list(depends = dependency_hash(target, config),
+    file = file_hash(target, config))
 }
 
-dependency_hash = function(target, args){
-  command = get_command(target = target, args = args)
+dependency_hash = function(target, config){
+  command = get_command(target = target, config = config)
   stopifnot(length(command) == 1)
-  dependencies(target, args) %>% 
-    self_hash(args = args) %>%
+  dependencies(target, config) %>% 
+    self_hash(config = config) %>%
     c(command) %>% digest(algo = "md5")
 }
 
-self_hash = Vectorize(function(target, args){
-  if(target %in% cached()) args$cache$get_hash(target)
+self_hash = Vectorize(function(target, config){
+  if(target %in% cached()) config$cache$get_hash(target)
   else as.character(NA)
 }, "target", USE.NAMES = FALSE)
 
-file_hash = function(target, args){
+file_hash = function(target, config){
   if(is_not_file(target)) return(as.character(NA))
   filename = unquote(target)
   if(!file.exists(filename)) return(as.character(NA))
-  old_mtime = ifelse(target %in% args$cache$list(namespace = "filemtime"),
-    args$cache$get(key = target, namespace = "filemtime"), -Inf)
+  old_mtime = ifelse(target %in% config$cache$list(namespace = "filemtime"),
+    config$cache$get(key = target, namespace = "filemtime"), -Inf)
   new_mtime = file.mtime(filename)
   do_rehash = file.size(filename) < 1e5 | new_mtime > old_mtime
   if(do_rehash) rehash_file(target)
-  else args$cache$get(target)$value
+  else config$cache$get(target)$value
 }
 
 rehash_file = function(target){
@@ -41,6 +41,6 @@ braces = function(x){
   paste("{\n", x, "\n}")
 }
 
-get_command = function(target, args){
-  args$plan$command[args$plan$target == target] %>% tidy
+get_command = function(target, config){
+  config$plan$command[config$plan$target == target] %>% tidy
 }

@@ -1,5 +1,5 @@
-dependencies = function(targets, args){
-  adjacent_vertices(graph = args$graph, v = targets, mode = "in") %>%
+dependencies = function(targets, config){
+  adjacent_vertices(graph = config$graph, v = targets, mode = "in") %>%
     lapply(FUN = names) %>% clean_dependency_list
 }
 

@@ -4,20 +4,20 @@ source("utils.R")
 
 test_that("scratch build with contained envir.", {
   dclean()
-  args = dbug()
+  config = dbug()
   expect_error(session())
   expect_equal(nrow(status()), 0)
   expect_equal(cached(), character(0))
-  testrun(args)
+  testrun(config)
   expect_true(is.numeric(readd(final)))
   expect_true(length(cached()) > 2)
   expect_false(any(c("f", "final") %in% ls()))
   expect_true(is.list(session()))
-  expect_true(all(session()$target %in% args$plan$target))
+  expect_true(all(session()$target %in% config$plan$target))
   
   # changed nothing
-  testrun(args)
-  nobuild(args)
+  testrun(config)
+  nobuild(config)
   
   # take this opportunity to test prune
   all = c("'input.rds'", "'intermediatefile.rds'", "a",
@@ -28,8 +28,8 @@ test_that("scratch build with contained envir.", {
   expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_true(file.exists(cachepath))
-  prune(plan = args$plan, targets = "nextone", 
-    envir = args$envir)
+  prune(plan = config$plan, targets = "nextone", 
+    envir = config$envir)
   pruned = c("'input.rds'", "b", "c", "g", "h", "i",
     "j", "myinput", "nextone", "readRDS")
   expect_equal(cached(), pruned)
@@ -40,12 +40,12 @@ test_that("scratch build with contained envir.", {
 
 test_that("calling environment is unaffected in scratch build.", {
   dclean()
-  args = dbug()
-  for(x in ls(args$envir)) assign(x, args$envir[[x]], environment())
+  config = dbug()
+  for(x in ls(config$envir)) assign(x, config$envir[[x]], environment())
   if("obj" %in% ls()) rm(obj)
   obj = ls()
   expect_equal(cached(), character(0))
-  run(args$plan, verbose = FALSE)
+  run(config$plan, verbose = FALSE)
   expect_equal(sort(c(obj, "obj")), ls())
   expect_true(length(cached()) > 0)
   
@@ -55,7 +55,7 @@ test_that("calling environment is unaffected in scratch build.", {
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_true(file.exists(cachepath))
-  expect_equal(args$cache$list("filemtime"), character(0))
+  expect_equal(config$cache$list("filemtime"), character(0))
   
   # destroy the cache
   clean(destroy = TRUE)

@@ -91,21 +91,21 @@
 #' Only applies when \code{parallelism} is \code{"Makefile"}. 
 #' Defaults to the usual \code{"make"}, but it could also be 
 #' \code{"lsmake"} on supporting systems, for example. 
-#' \code{command} and \code{args} are executed via 
-#' \code{\link{system2}(command, args)} to run the Makefile.
-#' If \code{args} has something like \code{"--jobs=2"}, or if 
-#' \code{jobs >= 2} and \code{args} is left alone, targets
+#' \code{command} and \code{config} are executed via 
+#' \code{\link{system2}(command, config)} to run the Makefile.
+#' If \code{config} has something like \code{"--jobs=2"}, or if 
+#' \code{jobs >= 2} and \code{config} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
 #' 
-#' @param args command line arguments to call the Makefile for
+#' @param config command line arguments to call the Makefile for
 #' distributed computing. For advanced users only. If set,
 #' \code{jobs} and \code{verbose} are overwritten as they apply to the 
 #' Makefile.
-#' \code{command} and \code{args} are executed via 
-#' \code{\link{system2}(command, args)} to run the Makefile.
-#' If \code{args} has something like \code{"--jobs=2"}, or if 
-#' \code{jobs >= 2} and \code{args} is left alone, targets
+#' \code{command} and \code{config} are executed via 
+#' \code{\link{system2}(command, config)} to run the Makefile.
+#' If \code{config} has something like \code{"--jobs=2"}, or if 
+#' \code{jobs >= 2} and \code{config} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
 run = function(plan, targets = possible_targets(plan),
@@ -113,18 +113,18 @@ run = function(plan, targets = possible_targets(plan),
   parallelism = parallelism_choices(), jobs = 1, 
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
-  args = default_system2_args(jobs = jobs, verbose = verbose)){
+  config = default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(parallelism)
-  args = setup(plan = plan, targets = targets, envir = envir, 
+  config = config(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, parallelism = parallelism,
     jobs = jobs, packages = packages, prework = prework, 
     prepend = prepend, command = command, args = args)
-  check_args(args)
-  assert_input_files_exist(args)
-  args$cache$set(key = "sessionInfo", value = sessionInfo(), 
+  check_config(config)
+  assert_input_files_exist(config)
+  config$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
-  get(paste0("run_", parallelism))(args)
+  get(paste0("run_", parallelism))(config)
 }
 
 #' @title Function \code{make}
@@ -141,7 +141,7 @@ run = function(plan, targets = possible_targets(plan),
 #' @param prework same as in function \code{\link{run}()}
 #' @param prepend same as in function \code{\link{run}()}
 #' @param command same as in function \code{\link{run}()}
-#' @param args same as in function \code{\link{run}()}
+#' @param config same as in function \code{\link{run}()}
 make = run
 
 next_targets = function(graph_remaining_targets){
@@ -152,12 +152,12 @@ next_targets = function(graph_remaining_targets){
   which(!number_dependencies) %>% names
 }
 
-prune_envir = function(next_targets, args){
-  load_these = dependencies(targets = next_targets, args = args) %>% 
-    Filter(f = is_not_file) %>% intersect(y = args$plan$target)
-  unload_these = intersect(args$plan$target, ls(args$envir)) %>% 
+prune_envir = function(next_targets, config){
+  load_these = dependencies(targets = next_targets, config = config) %>% 
+    Filter(f = is_not_file) %>% intersect(y = config$plan$target)
+  unload_these = intersect(config$plan$target, ls(config$envir)) %>% 
     setdiff(y = load_these)
-  rm(list = unload_these, envir = args$envir)
-  if(length(load_these)) loadd(list = load_these, envir = args$envir)
+  rm(list = unload_these, envir = config$envir)
+  if(length(load_these)) loadd(list = load_these, envir = config$envir)
   invisible()
 }

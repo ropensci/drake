@@ -4,24 +4,24 @@ source("utils.R")
 
 test_that("target conflicts with current import", {
   dclean()
-  args = dbug()
-  args$plan = rbind(args$plan, data.frame(target = "f", command = "1+1"))
+  config = dbug()
+  config$plan = rbind(config$plan, data.frame(target = "f", command = "1+1"))
   suppressWarnings( # for jobs > 1, mclapply gives a warning too. 
-    tryCatch(testrun(args), # desired error doesn't go to R with Makefiles
+    tryCatch(testrun(config), # desired error doesn't go to R with Makefiles
       error = function(e){}))
-  expect_true("final" %in% args$targets)
+  expect_true("final" %in% config$targets)
   expect_false("final" %in% cached()) # this should be enough
   dclean()
 })
 
 test_that("target conflicts with previous import", {
   dclean()
-  args = dbug()
-  testrun(args)
-  args$plan$command[2] = "g(1+1)"
-  args$plan = rbind(args$plan, data.frame(target = "f", command = "1+1"))
-  args$targets = args$plan$target
-  testrun(args)
+  config = dbug()
+  testrun(config)
+  config$plan$command[2] = "g(1+1)"
+  config$plan = rbind(config$plan, data.frame(target = "f", command = "1+1"))
+  config$targets = config$plan$target
+  testrun(config)
   expect_equal(justbuilt(), c("'intermediatefile.rds'", "combined", "f",
     "final", "yourinput"))
   dclean()

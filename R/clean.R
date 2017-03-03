@@ -42,13 +42,13 @@ clean = function(destroy = FALSE){
 #' Use \code{help("run")} for details.
 prune = function(plan, targets = plan$targets, envir = parent.frame()){
   force(envir)
-  args = setup(plan = plan, targets = targets, envir = envir, 
+  config = config(plan = plan, targets = targets, envir = envir, 
     verbose = FALSE, parallelism = "mclapply", 
     jobs = 1, packages = character(0), prepend = character(0),
     prework = character(0), command = character(0), 
     args = character(0))
-  check_args(args)
-  keep = args$order
+  check_config(config)
+  keep = config$order
   remove = setdiff(cached(), keep)
   files = Filter(remove, f = is_file)
   remove_target_files(files)

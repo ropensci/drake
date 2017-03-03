@@ -1,12 +1,12 @@
-run_Makefile = function(args, run = TRUE){
-  args$cache$set("args", args, namespace = "makefile")
+run_Makefile = function(config, run = TRUE){
+  config$cache$set("config", config, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
-  makefile_head(args)
-  makefile_rules(args)
+  makefile_head(config)
+  makefile_rules(config)
   sink() 
-  initialize(args)
-  if(run) system2(command = args$command, args = args$args)
+  initialize(config)
+  if(run) system2(command = config$command, args = config$args)
   invisible()
 }
 
@@ -16,16 +16,16 @@ default_system2_args = function(jobs, verbose){
   out
 }
 
-makefile_head = function(args){
-  if(length(args$prepend)) cat(args$prepend, "\n", sep = "\n")
-  cat("all: ", timestamp(args$targets), sep = " \\\n")
+makefile_head = function(config){
+  if(length(config$prepend)) cat(config$prepend, "\n", sep = "\n")
+  cat("all: ", timestamp(config$targets), sep = " \\\n")
 }
 
-makefile_rules = function(args){
-  targets = intersect(args$plan$target, args$order)
+makefile_rules = function(config){
+  targets = intersect(config$plan$target, config$order)
   for(target in targets){
-    deps = dependencies(target, args) %>%
-      intersect(y = args$plan$target) %>% timestamp
+    deps = dependencies(target, config) %>%
+      intersect(y = config$plan$target) %>% timestamp
     breaker = ifelse(length(deps), " \\\n", "\n")
     cat("\n", timestamp(target), ":", breaker, sep = "")
     if(length(deps)) cat(deps, sep = breaker)
@@ -36,12 +36,12 @@ makefile_rules = function(args){
   }
 }
 
-initialize = function(args){ 
-  args$cache$clear(namespace = "status")
-  for(code in args$prework) eval(parse(text = code), envir = args$envir)
-  imports = setdiff(args$order, args$plan$target)
-  lapply(imports, build, args = args)
-  timestamps(args)
+initialize = function(config){ 
+  config$cache$clear(namespace = "status")
+  for(code in config$prework) eval(parse(text = code), envir = config$envir)
+  imports = setdiff(config$order, config$plan$target)
+  lapply(imports, build, config = config)
+  timestamps(config)
   invisible()
 }
 
@@ -52,12 +52,12 @@ initialize = function(args){
 #' @export
 #' @param target name of target to make
 mk = function(target){
-  args = get_cache()$get("args", namespace = "makefile")
-  for(code in args$prework)
+  config = get_cache()$get("config", namespace = "makefile")
+  for(code in config$prework)
     suppressPackageStartupMessages(
-      eval(parse(text = code), envir = args$envir))
-  prune_envir(target, args)
-  build(target = target, args = args)
+      eval(parse(text = code), envir = config$envir))
+  prune_envir(target, config)
+  build(target = target, config = config)
   file_overwrite(timestamp(target))
   invisible()
 }

@@ -1,67 +1,67 @@
-build = function(target, args){
-  hashes = hashes(target = target, args = args)
-  imported = !(target %in% args$plan$target)
+build = function(target, config){
+  hashes = hashes(target = target, config = config)
+  imported = !(target %in% config$plan$target)
   target_current = target_current(target = target, 
-    hashes = hashes, args = args)
+    hashes = hashes, config = config)
   do_build = imported | !target_current
   if(!do_build) return(invisible())
-  args$cache$set(key = target, value = "in progress", 
+  config$cache$set(key = target, value = "in progress", 
     namespace = "status")
-  console(imported = imported, target = target, args = args)
+  console(imported = imported, target = target, config = config)
   if(imported)
-    value = imported_target(target = target, hashes = hashes, args = args)
+    value = imported_target(target = target, hashes = hashes, config = config)
   else if(!target_current)
-    value = build_target(target = target, hashes = hashes, args = args)
+    value = build_target(target = target, hashes = hashes, config = config)
   store_target(target = target, value = value, hashes = hashes,
-    imported = imported, args = args)
-  args$cache$set(key = target, value = hashes$depends,
+    imported = imported, config = config)
+  config$cache$set(key = target, value = hashes$depends,
     namespace = "depends")
-  args$cache$set(key = target, value = "finished", namespace = "status")
+  config$cache$set(key = target, value = "finished", namespace = "status")
 }
 
-build_target = function(target, hashes, args){
-  command = get_command(target = target, args = args)
-  eval(parse(text = command), envir = args$envir)
+build_target = function(target, hashes, config){
+  command = get_command(target = target, config = config)
+  eval(parse(text = command), envir = config$envir)
 }
 
-imported_target = function(target, hashes, args){
+imported_target = function(target, hashes, config){
   if(is_file(target)) return(hashes$file)
-  else if(target %in% ls(args$envir)) value = args$envir[[target]]
+  else if(target %in% ls(config$envir)) value = config$envir[[target]]
   else value = tryCatch(get(target), error = function(e){NA})
   value
 }
 
-store_target = function(target, value, hashes, imported, args){
+store_target = function(target, value, hashes, imported, config){
   if(is_file(target))
     store_file(target, hashes = hashes,
-      imported = imported, args = args)
+      imported = imported, config = config)
   else if(is.function(value))
     store_function(target = target, value = value, imported = imported,
-      hashes = hashes, args = args)
+      hashes = hashes, config = config)
   else
     store_object(target = target, value = value, imported = imported,
-      args = args)
-  args$cache$set(key = target, value = hashes$depends,
+      config = config)
+  config$cache$set(key = target, value = hashes$depends,
     namespace = "depends")
 }
 
 
-store_object = function(target, value, imported, args){
-  args$cache$set(key = target, 
+store_object = function(target, value, imported, config){
+  config$cache$set(key = target, 
     value = list(type = "object", value = value, imported = imported))
 }
 
-store_file = function(target, hashes, imported, args){
+store_file = function(target, hashes, imported, config){
   hash = ifelse(imported, hashes$file, rehash_file(target))
-  args$cache$set(key = target, 
+  config$cache$set(key = target, 
     value = list(type = "file", value = hash, imported = imported))
-  args$cache$set(key = target, value = file.mtime(unquote(target)), 
+  config$cache$set(key = target, value = file.mtime(unquote(target)), 
     namespace = "filemtime")
 }
 
-store_function = function(target, value, hashes, imported, args){
+store_function = function(target, value, hashes, imported, config){
   string = deparse(value)
-  args$cache$set(key = target,
+  config$cache$set(key = target,
     value = list(type = "function", value = string, imported = imported,
       depends = hashes$depends)) # for nested functions
 }

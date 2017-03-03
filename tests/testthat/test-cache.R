@@ -4,8 +4,8 @@ source("utils.R")
 
 test_that("cache functions work", {
   dclean()
-  args = dbug()
-  testrun(args)
+  config = dbug()
+  testrun(config)
   
   # find in current directory
   all = c("'input.rds'", "'intermediatefile.rds'", "a",
