@@ -1,5 +1,5 @@
-#' @title Function \code{run}
-#' @description Run your project.
+#' @title Function \code{make}
+#' @description Run your project (build the targets).
 #' @export
 #' @param plan workflow plan data frame. 
 #' A workflow plan data frame is a data frame
@@ -56,7 +56,7 @@
 #' @param packages character vector packages to load, in the order
 #' they should be loaded. Defaults to \code{(.packages())}, so you
 #' shouldn't usually need to set this manually. Just call
-#' \code{\link{library}()} to load your packages before \code{run()}.
+#' \code{\link{library}()} to load your packages before \code{make()}.
 #' However, sometimes packages need to be strictly forced to load
 #' in a certian order, especially if \code{parallelism} is 
 #' \code{"Makefile"}. To do this, do not use \code{\link{library}()}
@@ -108,7 +108,7 @@
 #' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
-run = function(plan, targets = possible_targets(plan),
+make = function(plan, targets = possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, 
   parallelism = parallelism_choices(), jobs = 1, 
   packages = (.packages()), prework = character(0),
@@ -126,23 +126,6 @@ run = function(plan, targets = possible_targets(plan),
     namespace = "session")
   get(paste0("run_", parallelism))(config)
 }
-
-#' @title Function \code{make}
-#' @description Same as \code{\link{run}}. 
-#' Type \code{?\link{run}} for more.
-#' @export
-#' @param plan same as in function \code{\link{run}()}
-#' @param targets same as in function \code{\link{run}()}
-#' @param envir same as in function \code{\link{run}()}
-#' @param verbose same as in function \code{\link{run}()}
-#' @param parallelism same as in function \code{\link{run}()}
-#' @param jobs same as in function \code{\link{run}()}
-#' @param packages same as in function \code{\link{run}()}
-#' @param prework same as in function \code{\link{run}()}
-#' @param prepend same as in function \code{\link{run}()}
-#' @param command same as in function \code{\link{run}()}
-#' @param args same as in function \code{\link{run}()}
-make = run
 
 next_targets = function(graph_remaining_targets){
   number_dependencies = sapply(V(graph_remaining_targets), 

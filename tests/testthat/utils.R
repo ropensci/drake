@@ -6,7 +6,7 @@ testopts = function(){list(
 
 testrun = function(config){
   opts = testopts()
-  run(plan = config$plan, targets = config$targets,
+  make(plan = config$plan, targets = config$targets,
     envir = config$envir, verbose = FALSE,
     parallelism = opts$parallelism, jobs = opts$jobs, 
     packages = config$packages, prework = config$prework,
@@ -15,7 +15,7 @@ testrun = function(config){
 
 testrun_automatic_packages = function(config){
   opts = testopts()
-  run(plan = config$plan, targets = config$targets,
+  make(plan = config$plan, targets = config$targets,
       envir = config$envir, verbose = FALSE,
       parallelism = opts$parallelism, jobs = opts$jobs, 
       prework = config$prework,

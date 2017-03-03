@@ -14,9 +14,8 @@ computing supported.
 List the types of supported parallel computing.
 }
 \details{
-Run \code{run(..., parallelism = x, jobs = n)} or
-\code{make(..., parallelism = x, jobs = n)} for any of the
-following values of \code{x} to distribute targets over parallel
+Run \code{make(..., parallelism = x, jobs = n)} for any of
+the following values of \code{x} to distribute targets over parallel
 units of execution.
 \describe{
  \item{"mclapply"}{uses multiple processes in a single R session. 

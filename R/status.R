@@ -59,7 +59,7 @@ session = function(path = getwd(), search = FALSE){
 status = function(..., list = character(0), 
                   imported_files_only = FALSE, path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("No drake::run() session detected.")
+  if(is.null(cache)) stop("No drake::make() session detected.")
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
   if(!length(targets)) return(list_status(

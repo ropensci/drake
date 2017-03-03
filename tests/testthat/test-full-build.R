@@ -45,7 +45,7 @@ test_that("calling environment is unaffected in scratch build.", {
   if("obj" %in% ls()) rm(obj)
   obj = ls()
   expect_equal(cached(), character(0))
-  run(config$plan, verbose = FALSE)
+  make(config$plan, verbose = FALSE)
   expect_equal(sort(c(obj, "obj")), ls())
   expect_true(length(cached()) > 0)
   

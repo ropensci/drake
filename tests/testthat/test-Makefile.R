@@ -16,7 +16,7 @@ test_that("prepend arg works", {
 test_that("basic Makefile stuff works", {
   dclean()
   config = dbug()
-  run(config$plan, targets = "combined", 
+  make(config$plan, targets = "combined", 
     envir = config$envir, verbose = FALSE)
   config$verbose = FALSE
   run_Makefile(config, run = FALSE)

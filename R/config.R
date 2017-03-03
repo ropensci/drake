@@ -45,9 +45,8 @@ load_if_missing = function(packages){
 #' @export
 #' @return Character vector listing the types of parallel
 #' computing supported.
-#' @details Run \code{run(..., parallelism = x, jobs = n)} or
-#' \code{make(..., parallelism = x, jobs = n)} for any of the
-#' following values of \code{x} to distribute targets over parallel
+#' @details Run \code{make(..., parallelism = x, jobs = n)} for any of
+#' the following values of \code{x} to distribute targets over parallel
 #' units of execution.
 #' \describe{
 #'  \item{"mclapply"}{uses multiple processes in a single R session. 

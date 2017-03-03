@@ -41,18 +41,18 @@ test_that("console", {
   dclean()
 })
 
-test_that("check_config() via check() and run()", {
+test_that("check_config() via check() and make()", {
   dclean()
   config = dbug()
   y = data.frame(x = 1, y = 2)
   expect_error(check(y, envir = config$envir))
-  expect_error(run(y, envir = config$envir))
+  expect_error(make(y, envir = config$envir))
   y = data.frame(target = character(0), command = character(0))
   expect_error(check(y, envir = config$envir))
-  expect_error(run(y, envir = config$envir))
+  expect_error(make(y, envir = config$envir))
   expect_error(check(config$plan, targets = character(0),
     envir = config$envir))
-  expect_error(run(config$plan, targets = character(0), envir = config$envir))
+  expect_error(make(config$plan, targets = character(0), envir = config$envir))
   dclean()
 })
 
@@ -70,7 +70,7 @@ test_that("missing files via check()", {
 test_that("deprecation", {
   dclean()
   plan = data.frame(code = 1, output = "x")
-  expect_warning(run(plan, verbose = FALSE))
+  expect_warning(make(plan, verbose = FALSE))
   dclean()
   expect_warning(make(plan, verbose = FALSE))
   expect_true(is.numeric(readd(x)))
