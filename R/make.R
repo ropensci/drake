@@ -122,6 +122,7 @@ make = function(plan, targets = possible_targets(plan),
     prepend = prepend, command = command, args = args)
   check_config(config)
   assert_input_files_exist(config)
+  store_config(config)
   config$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
   get(paste0("run_", parallelism))(config)

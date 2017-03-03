@@ -5,8 +5,8 @@ source("utils.R")
 test_that("cache functions work", {
   dclean()
   expect_equal(character(0), cached(), imported(), built())
-  expect_error(status())
-  expect_error(readd())
+  expect_error(status(search = FALSE))
+  expect_error(readd(search = FALSE))
   config = dbug()
   testrun(config)
 
@@ -22,38 +22,53 @@ test_that("cache functions work", {
   
   # find stuff in current directory
   # session, status
-  expect_true(is.list(session()))
-  expect_true(all(status() == "finished"))
-  expect_equal(names(status()), all)
-  expect_equal(names(status(imported_files_only = TRUE)), 
+  expect_true(is.list(session(search = FALSE)))
+  expect_true(all(status(search = FALSE) == "finished"))
+  expect_equal(names(status(search = FALSE)), all)
+  expect_equal(names(status(search = FALSE, imported_files_only = TRUE)), 
     c("'input.rds'", builds))
-  expect_equal(status(bla, f, list = c("h", "final")), 
+  expect_equal(status(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
   
+  # config
+  newconfig = read_config(search = FALSE)
+  expect_true(is.list(newconfig) & length(newconfig) > 1)
+  expect_equal(read_plan(search = FALSE), config$plan)
+  expect_equal(class(read_graph(plot = FALSE, 
+    search = FALSE)), "igraph")
+  pdf(NULL)
+  read_graph(plot = TRUE, search = FALSE)
+  dev.off()
+  unlink("Rplots.pdf")
+  
   # imported , built, cached
-  expect_equal(imported(files_only = FALSE), imports)
-  expect_equal(imported(files_only = TRUE), "'input.rds'")
-  expect_equal(built(), sort(config$plan$target))
-  twopiece = sort(c(built(), imported(files_only = FALSE)))
-  expect_equal(cached(), all, twopiece)
-  expect_equal(cached(imported_files_only = TRUE), c("'input.rds'", builds))
-  expect_true(all(cached(list = all)))
-  expect_equal(length(cached(i, list = imported(files_only = FALSE))), 
+  expect_equal(imported(files_only = FALSE, search = FALSE), imports)
+  expect_equal(imported(files_only = TRUE, search = FALSE), "'input.rds'")
+  expect_equal(built(search = FALSE), sort(config$plan$target))
+  twopiece = sort(c(built(search = FALSE), 
+    imported(search = FALSE, files_only = FALSE)))
+  expect_equal(cached(search = FALSE), all, twopiece)
+  expect_equal(cached(search = FALSE, imported_files_only = TRUE), 
+    c("'input.rds'", builds))
+  expect_true(all(cached(search = FALSE, list = all)))
+  expect_equal(length(cached(search = FALSE, i, 
+    list = imported(files_only = FALSE))), 
     length(imported(files_only = FALSE)))
-  expect_equal(cached(i, bla, list = c("final", "run")), 
+  expect_equal(cached(i, bla, list = c("final", "run"), search = FALSE), 
     c(i = TRUE, bla = FALSE, final = TRUE, run = FALSE))
   
   # find your project
   expect_equal(find_project(), getwd())
   expect_equal(find_cache(), file.path(getwd(), cachepath))
-  expect_true(is.numeric(readd(a)))
+  expect_true(is.numeric(readd(a, search = FALSE)))
   expect_error(h(1))
   
   # load and read stuff
-  expect_true(is.numeric(readd(final)))
-  expect_error(loadd(yourinput, myinput, imported_only = TRUE))
-  loadd(h, i, j, c)
+  expect_true(is.numeric(readd(final, search = FALSE)))
+  expect_error(loadd(yourinput, myinput, 
+    search = FALSE, imported_only = TRUE))
+  loadd(h, i, j, c, search = FALSE)
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c)
   expect_error(h(1))
@@ -90,6 +105,17 @@ test_that("cache functions work", {
   expect_equal(find_project(path = s), "testthat")
   expect_equal(find_cache(path = s), 
     file.path("testthat", cachepath))
+  
+  # config
+  newconfig = read_config(search = TRUE, path = s)
+  expect_true(is.list(newconfig) & length(newconfig) > 1)
+  expect_equal(read_plan(search = TRUE, path = s), config$plan)
+  expect_equal(class(read_graph(plot = FALSE, 
+    search = TRUE, path = s)), "igraph")
+  pdf(NULL)
+  read_graph(plot = TRUE, search = TRUE, path = s)
+  dev.off()
+  unlink("Rplots.pdf")
   
   # load and read stuff
   expect_true(is.numeric(readd(a, path = s, search = T)))

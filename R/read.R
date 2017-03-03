@@ -79,3 +79,62 @@ loadd = function(..., list = character(0),
                          search = search, envir = envir), envir = envir))
   invisible()
 }
+
+#' @title Function \code{read_config}
+#' @description Read all the configuration parameters 
+#' from your last attempted call to \code{\link{make}()}.
+#' These include the workflow plan
+#' @seealso \code{\link{make}}
+#' @export
+#' @return a named list of configuration items
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search logical. If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+read_config = function(path = getwd(), search = FALSE){
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) stop("cannot find drake cache.")
+  sapply(cache$list(namespace = "config"), function(item)
+    cache$get(key = item, namespace = "config"),
+      simplify = FALSE, USE.NAMES = TRUE)
+}
+
+#' @title Function \code{read_plan}
+#' @description Read the workflow plan
+#' from your last attempted call to \code{\link{make}()}.
+#' @seealso \code{\link{read_config}}
+#' @export
+#' @return a workflow plan data frame
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search logical. If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+read_plan = function(path = getwd(), search = FALSE){
+  read_config(path = path, search = search)$plan
+}
+
+#' @title Function \code{read_graph}
+#' @description Read the dependency graph of your targets
+#' from your last attempted call to \code{\link{make}()}.
+#' @seealso \code{\link{read_config}}
+#' @export
+#' @return either a plot or an igraph object, depending
+#' on \code{plot}
+#' @param plot logical, whether to plot the graph or 
+#' simply return the graph as an igraph object.
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search logical. If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+read_graph = function(plot = TRUE, path = getwd(), search = FALSE){
+  graph = read_config(path = path, search = search)$graph
+  if(plot) plot.igraph(graph)
+  else graph
+}
+

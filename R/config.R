@@ -70,3 +70,10 @@ possible_targets = function(plan){c(
   as.character(plan$output),
   as.character(plan$target)
 )}
+
+store_config = function(config){
+  save_these = setdiff(names(config), "envir") # Environments could get massive.
+  lapply(save_these, function(item)
+    config$cache$set(key = item, value = config[[item]], 
+      namespace = "config"))
+}
