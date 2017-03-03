@@ -3,7 +3,7 @@
 #' Does not delete the item from the cache.
 #' @seealso \code{\link{loadd}}, \code{\link{cached}}, 
 #' \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
-#' \code{\link{run}}
+#' \code{\link{make}}
 #' @export
 #' @return drake target item from the cache
 #' @param target If \code{character_only} is \code{TRUE}, 
@@ -43,7 +43,7 @@ readd = function(target, character_only = FALSE, path = getwd(),
 #' (or all the imported objects if in addition 
 #' imported_only is \code{TRUE}).
 #' @seealso \code{\link{cached}}, \code{\link{built}}, 
-#' \code{\link{imported}}, \code{\link{plan}}, \code{\link{run}},
+#' \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
 #' @export
 #' @param ... targets to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in

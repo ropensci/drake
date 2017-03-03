@@ -31,6 +31,6 @@ Generate a worklfow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.
 }
 \seealso{
-\code{\link{analyses}}, \code{\link{run}}, \code{\link{plan}}
+\code{\link{analyses}}, \code{\link{make}}, \code{\link{plan}}
 }
 

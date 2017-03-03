@@ -1,6 +1,6 @@
 #' @title Function \code{plan}
 #' @description Turns a named collection of command/target pairs into 
-#' a workflow plan data frame for \code{\link{run}} and 
+#' a workflow plan data frame for \code{\link{make}} and 
 #' \code{\link{check}}.
 #' @details A workflow plan data frame is a data frame
 #' with a \code{target} column and a \code{command} column.
@@ -15,7 +15,7 @@
 #' but R messes with quotes when it parses the freeform 
 #' arguments in \code{...}, so use the \code{strings_in_dots}
 #' argument to control the quoting in \code{...}.
-#' @seealso \code{link{check}}, \code{\link{run}}, 
+#' @seealso \code{link{check}}, \code{\link{make}}, 
 #' @export
 #' @return data frame of targets and command
 #' @param ... commands named by the targets they generate.
@@ -27,7 +27,7 @@
 #' by the targets they generate.
 #' @param file_targets logical. If \code{TRUE}, targets are single-quoted
 #' to tell drake that these are external files that should be expected 
-#' as output in the next call to \code{\link{run}()}.
+#' as output in the next call to \code{\link{make}()}.
 #' @param strings_in_dots character scalar. If \code{"filenames"},
 #' all character strings in \code{...} will be treated as names of file
 #' dependencies (single-quoted). If \code{"literals"}, all

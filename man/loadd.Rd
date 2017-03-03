@@ -39,6 +39,6 @@ imported_only is \code{TRUE}).
 }
 \seealso{
 \code{\link{cached}}, \code{\link{built}}, 
-\code{\link{imported}}, \code{\link{plan}}, \code{\link{run}},
+\code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
 }
 

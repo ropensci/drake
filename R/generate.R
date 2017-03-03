@@ -106,7 +106,7 @@ gather = function(plan = NULL, target = "target", gather = "list"){
 #' @description Generate a workflow plan data frame to 
 #' analyze multiple datasets using multiple methods of analysis.
 #' @seealso \code{\link{summaries}},
-#'  \code{\link{run}}, \code{\link{plan}}
+#'  \code{\link{make}}, \code{\link{plan}}
 #' @export 
 #' @return an evaluated workflow plan data frame of analysis instructions
 #' @param plan workflow plan data frame of analysis methods. 
@@ -124,7 +124,7 @@ analyses = function(plan, datasets){
 #' @title Function \code{summaries}
 #' @description Generate a worklfow plan data frame for summarizing
 #' multiple analyses of multiple datasets multiple ways.
-#' @seealso \code{\link{analyses}}, \code{\link{run}}, \code{\link{plan}}
+#' @seealso \code{\link{analyses}}, \code{\link{make}}, \code{\link{plan}}
 #' @export 
 #' @return an evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.

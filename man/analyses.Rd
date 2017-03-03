@@ -26,6 +26,6 @@ analyze multiple datasets using multiple methods of analysis.
 }
 \seealso{
 \code{\link{summaries}},
- \code{\link{run}}, \code{\link{plan}}
+ \code{\link{make}}, \code{\link{plan}}
 }
 

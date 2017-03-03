@@ -16,7 +16,7 @@ vignette: >
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
-clean(T)
+clean(destroy = TRUE)
 ```
 
 Drake is a workflow manager for R. When it runs a project, it automatically builds missing and outdated results while skipping over all the up-to-date output. This automation and reproducibility is important for data analysis workflows, especially large projects under heavy development.

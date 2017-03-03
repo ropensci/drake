@@ -8,13 +8,13 @@ plot_graph(plan, targets = plan$target, envir = parent.frame())
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
-\code{\link{run}()}.}
+\code{\link{make}()}.}
 
 \item{targets}{names of targets to bulid, same as for function
-\code{\link{run}()}.}
+\code{\link{make}()}.}
 
 \item{envir}{environment to import from, same as for function
-\code{\link{run}()}.}
+\code{\link{make}()}.}
 }
 \description{
 Plot the dependency structure of your workflow

@@ -2,11 +2,11 @@
 #' @description Plot the dependency structure of your workflow
 #' @export
 #' @param plan workflow plan data frame, same as for function 
-#' \code{\link{run}()}.
+#' \code{\link{make}()}.
 #' @param targets names of targets to bulid, same as for function
-#' \code{\link{run}()}.
+#' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
-#' \code{\link{run}()}.
+#' \code{\link{make}()}.
 plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
   build_graph(plan = plan, targets = targets, envir = envir) %>%
@@ -22,11 +22,11 @@ plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
 #' \code{\link{plot_graph}()} from the start.
 #' @export
 #' @param plan workflow plan data frame, same as for function
-#' \code{\link{run}()}.
+#' \code{\link{make}()}.
 #' @param targets names of targets to bulid, same as for function
-#' \code{\link{run}()}.
+#' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
-#' \code{\link{run}()}.
+#' \code{\link{make}()}.
 build_graph = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
   imports = as.list(envir)

@@ -35,7 +35,7 @@ current working directory only.}
 }
 \value{
 Either the build status of each target given (from the last
-call to \code{\link{run}()} or \code{\link{make}()}), or if no 
+call to \code{\link{make}()} or \code{\link{make}()}), or if no 
 targets are specified, a data frame containing the build status
 of the last session. In the latter case, only finished targets are listed.
 #' @return Either a named logical indicating whether the given
@@ -45,7 +45,7 @@ items, depending on whether any targets are specified
 \description{
 Get the build status (overall or individual targets)
 of the last call to 
-\code{\link{run}()} or \code{\link{make}()}. 
+\code{\link{make}()} or \code{\link{make}()}. 
 Objects that drake imported, built, or attempted
 to build are listed as \code{"finished"} or \code{"in progress"}. 
 Skipped objects are not listed.
@@ -53,6 +53,6 @@ Skipped objects are not listed.
 \seealso{
 \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
+\code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 }
 

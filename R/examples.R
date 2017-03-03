@@ -24,7 +24,7 @@ example_drake = function(example = examples_drake(),
 #' @title Function \code{examples_drake}
 #' @description List the names of all the drake examples.
 #' @export
-#' @seealso \code{\link{example_drake}}, \code{\link{run}}
+#' @seealso \code{\link{example_drake}}, \code{\link{make}}
 #' @return names of all the drake examples.
 examples_drake = function(){
   list.dirs(system.file("examples", package = "drake", 

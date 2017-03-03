@@ -17,14 +17,14 @@ current working directory only.}
 }
 \value{
 \code{\link{sessionInfo}()} of the last
-call to \code{\link{run}()}
+call to \code{\link{make}()}
 }
 \description{
 Load the \code{\link{sessionInfo}()}
-of the last call to \code{\link{run}()}.
+of the last call to \code{\link{make}()}.
 }
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
+\code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 }
 

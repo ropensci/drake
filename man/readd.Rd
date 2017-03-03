@@ -37,6 +37,6 @@ Does not delete the item from the cache.
 \seealso{
 \code{\link{loadd}}, \code{\link{cached}}, 
 \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
-\code{\link{run}}
+\code{\link{make}}
 }
 
