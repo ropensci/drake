@@ -6,7 +6,7 @@ test_that("scratch build with contained envir.", {
   dclean()
   config = dbug()
   expect_error(session())
-  expect_equal(nrow(status()), 0)
+  expect_error(status())
   expect_equal(cached(), character(0))
   testrun(config)
   expect_true(is.numeric(readd(final)))

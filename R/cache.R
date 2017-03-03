@@ -17,23 +17,42 @@
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#' @param imported_files_only logical, applies only when 
+#' no targets are specified and a list of cached targets is returned.
+#' If \code{imported_files_only} is \code{TRUE} and no targets are
+#' specified in \code{...} or \code{list}, then \code{cached()} 
+#' shows built targets (with commands) plus imported files,
+#' ignoring imported objects. Otherwise, the full collection of 
+#' all cached objects will be listed. Since all your functions and 
+#' all their global variables are imported, the full list of
+#' imported objects could get really cumbersome.
 #' @param path Root directory of the drake project, 
 #' or if \code{search} is \code{TRUE}, either the 
 #' project root or a subdirectory of the project.
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-cached = function(..., list = character(0), 
+cached = function(..., list = character(0), imported_files_only = FALSE,
   path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(character(0))
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
+  if(!length(targets)) return(list_cached(
+    imported_files_only = imported_files_only, cache = cache,
+    path = path, search = search))
   all_cached = intersect(cache$list(), cache$list(namespace = "depends"))
-  if(!length(targets)) return(all_cached)
   presence = targets %in% all_cached
   names(presence) = targets
   presence
+}
+
+list_cached = function(imported_files_only, cache, path, search){
+  all_cached = intersect(cache$list(), cache$list(namespace = "depends"))
+  abridged_cached = Filter(all_cached, f = function(target)
+    is_built_or_imported_file(target = target, path = path, search = search))
+  if(imported_files_only) return(abridged_cached) 
+  else return(all_cached)
 }
 
 #' @title Function \code{built}
@@ -70,13 +89,12 @@ built = function(path = getwd(), search = FALSE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-imported = function(files_only = TRUE, path = getwd(), search = FALSE){
-  targets = cached(path = path, search = search) 
+imported = function(files_only = FALSE, path = getwd(), search = FALSE){
+  targets = cached(imported_files_only = files_only, 
+    path = path, search = search) 
   select = is_imported(targets, path = path, search = search)
   if(!length(select)) return(character(0))
-  targets = targets[select]
-  if(files_only) targets = Filter(targets, f = is_file)
-  targets
+  targets[select]
 }
 
 #' @title Function \code{readd}
@@ -217,30 +235,71 @@ session = function(path = getwd(), search = FALSE){
 }
 
 #' @title Function \code{status}
-#' @description Get the build status of the last call to 
-#' \code{\link{run}()}. Objects that drake imported, built, or attempted
+#' @description Get the build status (overall or individual targets)
+#' of the last call to 
+#' \code{\link{run}()} or \code{\link{make}()}. 
+#' Objects that drake imported, built, or attempted
 #' to build are listed as \code{"finished"} or \code{"in progress"}. 
 #' Skipped objects are not listed.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{plan}}, \code{\link{run}}
 #' @export
-#' @return data frame containing the build status
-#' of the last session
+#' @return Either the build status of each target given (from the last
+#' call to \code{\link{run}()} or \code{\link{make}()}), or if no 
+#' targets are specified, a data frame containing the build status
+#' of the last session. In the latter case, only finished targets are listed.
+#' #' @return Either a named logical indicating whether the given
+#' targets or cached or a character vector listing all cached
+#' items, depending on whether any targets are specified
+#' @param ... objects to load from the cache, as names (unquoted)
+#' or character strings (quoted). Similar to \code{...} in
+#' \code{\link{remove}(...)}.
+#' @param list character vector naming objects to be loaded from the
+#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#' @param imported_files_only logical, applies only when 
+#' no targets are specified and the statuses of cached targets are returned.
+#' If \code{imported_files_only} is \code{TRUE} and no targets are
+#' specified in \code{...} or \code{list}, then \code{status()} 
+#' shows the build status of targets (with commands) plus imported files,
+#' ignoring imported objects. Otherwise, the full collection of statuses for 
+#' all cached objects will be listed. Since all your functions and 
+#' all their global variables are imported, the full list of
+#' imported objects could get really cumbersome.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-status = function(path = getwd(), search = FALSE){
+status = function(..., list = character(0), 
+  imported_files_only = FALSE, path = getwd(), search = FALSE){
   cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("No drake::make() session detected.")
-  target = cache$list(namespace = "status")
-  status = sapply(target, cache$get, namespace = "status",
-    USE.NAMES = FALSE)
-  data.frame(target = target, status = status, stringsAsFactors = FALSE)
+  if(is.null(cache)) stop("No drake::run() session detected.")
+  dots = match.call(expand.dots = FALSE)$...
+  targets = targets_from_dots(dots, list)
+  if(!length(targets)) return(list_status(
+    imported_files_only = imported_files_only, cache = cache,
+    path = path, search = search))
+  get_status(targets, cache)
 }
+
+list_status = function(imported_files_only, cache, path, search){
+  all_marked = cache$list(namespace = "status")
+  all_status = get_status(target = all_marked, cache = cache)
+  abridged_marked = Filter(all_marked, f = function(target)
+    is_built_or_imported_file(target = target, path = path, search = search))
+  abridged_status = all_status[abridged_marked]
+  if(imported_files_only) return(abridged_status) 
+  else return(all_status) 
+}
+
+get_status = Vectorize(function(target, cache){
+  if(target %in% cache$list("status")) 
+    cache$get(key = target, namespace = "status")
+  else
+    "not built or imported"
+}, "target", SIMPLIFY = TRUE, USE.NAMES = TRUE)
 
 get_cache = function(path = getwd(), search = FALSE){
   if(search) path = find_cache(path = path)
@@ -261,8 +320,15 @@ targets_from_dots = function(dots, list){
 }
 
 is_imported = Vectorize(function(target, path, search){
-  if(!(target %in% cached(path = path, search = search))) return(FALSE)
-  get_cache(path = path, search = search)$get(target)$imported
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) return(FALSE)
+  if(!(target %in% cache$list())) return(FALSE)
+  cache$get(target)$imported
+}, "target", SIMPLIFY = TRUE)
+
+is_built_or_imported_file = Vectorize(function(target, path, search){
+  imported = is_imported(target = target, path = path, search = search)
+  !imported | (imported & is_file(target))
 }, "target", SIMPLIFY = TRUE)
 
 uncache = Vectorize(function(target, path = getwd(), search = FALSE){

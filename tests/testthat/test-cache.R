@@ -4,6 +4,8 @@ source("utils.R")
 
 test_that("cache functions work", {
   dclean()
+  expect_equal(character(0), cached(), imported(), built())
+  expect_error(status())
   config = dbug()
   testrun(config)
   
@@ -15,13 +17,21 @@ test_that("cache functions work", {
   imports = c("'input.rds'",  "a",
           "b", "c", "f", "g", "h", "i",
           "j", "readRDS", "saveRDS")
+  builds = setdiff(all, imports)
   expect_true(is.list(session()))
-  expect_true(nrow(status()) > 0)
+  expect_true(all(status() == "finished"))
+  expect_equal(names(status()), all)
+  expect_equal(names(status(imported_files_only = TRUE)), 
+    c("'input.rds'", builds))
+  expect_equal(status(bla, f, list = c("h", "final")), 
+    c(bla = "not built or imported", f = "finished", 
+      h = "finished", final = "finished"))
   expect_equal(imported(files_only = FALSE), imports)
   expect_equal(imported(files_only = TRUE), "'input.rds'")
   expect_equal(built(), sort(config$plan$target))
   twopiece = sort(c(built(), imported(files_only = FALSE)))
   expect_equal(cached(), all, twopiece)
+  expect_equal(cached(imported_files_only = TRUE), c("'input.rds'", builds))
   expect_true(all(cached(list = all)))
   expect_equal(length(cached(i, list = imported(files_only = FALSE))), 
     length(imported(files_only = FALSE)))
@@ -44,14 +54,21 @@ test_that("cache functions work", {
   setwd("..")
   s = file.path("testthat", "searchfrom", "here")
   expect_true(is.list(session(search = T, path = s)))
-  expect_true(nrow(status(search = T, path = s)) > 0)
   expect_equal(imported(files_only = FALSE, search = T, path = s), imports)
   expect_equal(imported(files_only = T, search = T, path = s), "'input.rds'")
   expect_equal(built(search = T, path = s), sort(config$plan$target))
   twopiece = sort(c(built(path = s, search = T), 
     imported(files_only = FALSE, path = s, search = T)))
   expect_equal(cached(path = s, search = T), all, twopiece)
+  expect_equal(cached(imported_files_only = TRUE,
+    path = s, search = T), c("'input.rds'", builds))
   expect_true(all(cached(list = all, path = s, search = T)))
+  expect_equal(names(status(search = T, path = s)), all)
+  expect_equal(names(status(imported_files_only = TRUE, 
+    search = T, path = s)), c("'input.rds'", builds))
+  expect_equal(status(search = T, path = s, bla, f, list = c("h", "final")), 
+    c(bla = "not built or imported", f = "finished", 
+      h = "finished", final = "finished"))
   expect_equal(find_project(path = s), "testthat")
   expect_equal(find_cache(path = s), 
     file.path("testthat", cachepath))
