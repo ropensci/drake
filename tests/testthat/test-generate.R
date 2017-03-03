@@ -127,5 +127,10 @@ test_that("analyses and summaries", {
   
   results = summaries(summary_types, analyses, datasets)
   expect_true(all(grepl("^list\\(", results$command[1:2])))
+  
+  newtypes = rbind(summary_types, plan(other = myother(..dataset..)))
+  expect_warning(s <- summaries(newtypes, analyses, datasets, gather = NULL))
+  expect_equal(nrow(s), 8)
+  
   dclean()
 })

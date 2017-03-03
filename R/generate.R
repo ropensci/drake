@@ -141,6 +141,7 @@ analyses = function(plan, datasets){
 #' for more.
 summaries = function(plan, analyses, datasets, 
   gather = rep("list", nrow(plan))){
+  plan = with_analyses_only(plan)
   out = plan
   group = paste(colnames(out), collapse = "_")
   out[[group]] = out$target
@@ -160,6 +161,15 @@ summaries = function(plan, analyses, datasets,
   })
   out[[group]] = gathered[[group]] = NULL
   rbind(gathered, out)
+}
+
+with_analyses_only = function(plan){
+  has_analysis = grepl("..analysis..", plan$command, fixed = TRUE)
+  if(any(!has_analysis))
+    warning("removing ", sum(has_analyses), 
+      " rows with no ..analysis.. wildcard in the command.",
+      "Use analyses() for these.")
+  plan[has_analysis,]
 }
 
 unique_random_string = function(exclude = NULL, n = 30){
