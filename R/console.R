@@ -1,7 +1,11 @@
 console = function(imported, target, args){
   if(!args$verbose) return()
-  action = ifelse(imported, color("import", "dodgerblue3"),
-    color("build", "forestgreen"))
+  if(is.na(imported))
+    action = color("could not find", "darkorchid3")
+  else if(imported)
+    action = color("import", "dodgerblue3")
+  else
+    action = color("build", "forestgreen")
   if(nchar(target) > 50) target = paste0(substr(target, 1, 47), "...")
   cat(action, " ", target, "\n", sep = "")
 }

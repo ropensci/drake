@@ -26,11 +26,14 @@ test_that("graph functions work", {
 test_that("console", {
   dclean()
   args = dbug()
-  expect_output(console("build", "myinput", args))
+  expect_output(console(imported = FALSE, 
+    target = "myinput", args = args))
   x50 = paste(rep(0:9, 5), collapse = "")
   x51 = paste0(x50, 0)
-  o1 = capture.output(console("build", x50, args))
-  o2 = capture.output(console("build", x51, args))
+  o1 = capture.output(console(imported = FALSE, 
+    target = x50, args = args))
+  o2 = capture.output(console(imported = FALSE, 
+    target = x51, args = args))
   expect_equal(nchar(o1), nchar(o2), 50)
   dots = "\\.\\.\\.$"
   expect_false(grepl(dots, o1))
