@@ -1,5 +1,5 @@
 target_current = function(target, hashes, config){
-  if(!(target %in% cached())) return(FALSE)
+  if(!(target %in% config$cache$list())) return(FALSE)
   if(!file_current(target, hashes, config)) return(FALSE)
   identical(config$cache$get(target, namespace = "depends"),
     hashes$depends)

@@ -12,7 +12,7 @@ dependency_hash = function(target, config){
 }
 
 self_hash = Vectorize(function(target, config){
-  if(target %in% cached()) config$cache$get_hash(target)
+  if(target %in% config$cache$list()) config$cache$get_hash(target)
   else as.character(NA)
 }, "target", USE.NAMES = FALSE)
 

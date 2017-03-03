@@ -16,10 +16,11 @@
 clean = function(destroy = FALSE){
   if(!file.exists(cachepath)) return(invisible())
   cache = storr_rds(cachepath, mangle_key = TRUE)
-  files = cached() %>% Filter(f = is_file) 
+  cached = cache$list()
+  files = cached %>% Filter(f = is_file) 
   remove_target_files(files)
   if(destroy) unlink(cachepath, recursive = TRUE)
-  else uncache(cached())
+  else uncache(cached)
   invisible()
 }
 

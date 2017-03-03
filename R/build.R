@@ -7,7 +7,7 @@ build = function(target, config){
   if(!do_build) return(invisible())
   config$cache$set(key = target, value = "in progress", 
     namespace = "status")
-  console(imported = imported, target = target, config = config)
+  console(imported = imported, target = target, config = config) 
   if(imported)
     value = imported_target(target = target, hashes = hashes, config = config)
   else if(!target_current)
