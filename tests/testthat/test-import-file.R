@@ -9,7 +9,7 @@ test_that("responses to imported file", {
   expect_error(check(plan = config$plan[-1,], envir = config$envir))
   expect_silent(check(plan = config$plan[c(-1, -6),], envir = config$envir))
   testrun(config)
-  expect_true(length(justbuilt()) > 0)
+  expect_true(length(justbuilt(config)) > 0)
   testrun(config)
   nobuild(config)
   
@@ -26,7 +26,7 @@ test_that("responses to imported file", {
   # actually change file
   saveRDS(2:10, "input.rds")
   testrun(config)
-  expect_equal(justbuilt(), c("'intermediatefile.rds'",
+  expect_equal(justbuilt(config), c("'intermediatefile.rds'",
     "combined", "final", "myinput", "nextone"))
   expect_false(length(final0) == length(readd(final)))
   dclean()

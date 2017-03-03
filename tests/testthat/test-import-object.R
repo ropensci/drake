@@ -10,7 +10,7 @@ test_that("responses to imported objects and functions", {
   # change imported object
   config$envir$c = config$envir$c + 1
   testrun(config)
-  expect_equal(justbuilt(), setdiff(sort(config$plan$target), "myinput"))
+  expect_equal(justbuilt(config), setdiff(sort(config$plan$target), "myinput"))
 
   # change nested function trivially
   config$envir$g = function(y){
@@ -25,20 +25,20 @@ test_that("responses to imported objects and functions", {
     h(y)+b + 1-1 - 0
   }
   testrun(config)
-  expect_equal(justbuilt(), c("nextone", "yourinput"))
+  expect_equal(justbuilt(config), c("nextone", "yourinput"))
   
   # nested function gives different answer
   config$envir$g = function(y){
     h(y)+b + 16
   }
   testrun(config)
-  expect_true("final" %in% justbuilt())
+  expect_true("final" %in% justbuilt(config))
 
   # test a deeper nested function
   config$envir$i = function(x){
     2*x + sqrt(13)
   }
   testrun(config)
-  expect_true("final" %in% justbuilt())
+  expect_true("final" %in% justbuilt(config))
   dclean()
 })

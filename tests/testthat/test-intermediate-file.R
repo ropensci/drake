@@ -19,13 +19,13 @@ test_that("responses to intermediate file", {
   # actually change file
   saveRDS(val + 1, "intermediatefile.rds")
   testrun(config)
-  expect_equal(justbuilt(), "'intermediatefile.rds'")
+  expect_equal(justbuilt(config), "'intermediatefile.rds'")
   expect_equal(final0, readd(final))
   
   # break the intermediate file
   unlink("intermediatefile.rds")
   testrun(config)
-  expect_equal(justbuilt(), "'intermediatefile.rds'")
+  expect_equal(justbuilt(config), "'intermediatefile.rds'")
   expect_equal(final0, readd(final))
   dclean()
 })

@@ -22,7 +22,7 @@ test_that("target conflicts with previous import", {
   config$plan = rbind(config$plan, data.frame(target = "f", command = "1+1"))
   config$targets = config$plan$target
   testrun(config)
-  expect_equal(justbuilt(), c("'intermediatefile.rds'", "combined", "f",
+  expect_equal(justbuilt(config), c("'intermediatefile.rds'", "combined", "f",
     "final", "yourinput"))
   dclean()
 })

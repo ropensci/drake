@@ -23,14 +23,12 @@ testrun_automatic_packages = function(config){
 }
 
 justbuilt = function(config){
-  status(imported_files_only = TRUE) %>%
+  sapply(config$cache$list(namespace = "status"), 
+    function(target) config$cache$get(key = target, namespace = "status")) %>%
     Filter(f = function(x) x == "finished") %>% names %>%
-    setdiff(y = imported(files_only = FALSE))
+    intersect(y = config$plan$target)
 }
 
 nobuild = function(config){
-  if(!file.exists(cachepath)) return(invisible())
-  builds = status(imported_files_only = TRUE) %>% names %>%
-    intersect(y = built())
-  expect_true(length(builds) < 1)
+  expect_true(length(justbuilt(config)) < 1)
 }
