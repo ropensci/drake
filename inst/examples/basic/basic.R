@@ -200,7 +200,11 @@ run(plan, parallelism = "Makefile", jobs = 4, # build
   prepend = "SHELL=./shell.sh")
 readd(coef_regression2_large) # see also: loadd(), cached()
 
-# Everything is up to date, so no jobs are submitted.
+# Everything is up to date, so no jobs should be submitted... 
+# that is, unless your file system is slow to 
+# sync the nodes on the cluster with your working directory.
+# In that case, drake might not see the most up-to-date 
+# information in its cache and it may submit unnecessary jobs.
 run(plan, parallelism = "Makefile", jobs = 4, 
   prepend = "SHELL=./shell.sh")
 
