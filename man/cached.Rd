@@ -4,7 +4,8 @@
 \alias{cached}
 \title{Function \code{cached}}
 \usage{
-cached(..., list = character(0), path = getwd(), search = FALSE)
+cached(..., list = character(0), imported_files_only = FALSE,
+  path = getwd(), search = FALSE)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -13,6 +14,16 @@ or character strings (quoted). Similar to \code{...} in
 
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
+
+\item{imported_files_only}{logical, applies only when 
+no targets are specified and a list of cached targets is returned.
+If \code{imported_files_only} is \code{TRUE} and no targets are
+specified in \code{...} or \code{list}, then \code{cached()} 
+shows built targets (with commands) plus imported files,
+ignoring imported objects. Otherwise, the full collection of 
+all cached objects will be listed. Since all your functions and 
+all their global variables are imported, the full list of
+imported objects could get really cumbersome.}
 
 \item{path}{Root directory of the drake project, 
 or if \code{search} is \code{TRUE}, either the 
