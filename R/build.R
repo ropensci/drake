@@ -1,11 +1,14 @@
 build = function(target, args){
   hashes = hashes(target = target, args = args)
   imported = !(target %in% args$plan$target)
-  target_current = target_current(target = target, hashes = hashes, args = args)
+  target_current = target_current(target = target, 
+    hashes = hashes, args = args)
   do_build = imported | !target_current
   if(!do_build) return(invisible())
-  args$cache$set(key = target, value = "in progress", namespace = "status")
-  if(imported) 
+  args$cache$set(key = target, value = "in progress", 
+    namespace = "status")
+  console(imported = imported, target = target, args = args)
+  if(imported)
     value = imported_target(target = target, hashes = hashes, args = args)
   else if(!target_current)
     value = build_target(target = target, hashes = hashes, args = args)
@@ -17,13 +20,11 @@ build = function(target, args){
 }
 
 build_target = function(target, hashes, args){
-  console("build", target, args)
   command = get_command(target = target, args = args)
   eval(parse(text = command), envir = args$envir)
 }
 
 imported_target = function(target, hashes, args){
-  console("import", target, args)
   if(is_file(target)) return(hashes$file)
   else if(target %in% ls(args$envir)) value = args$envir[[target]]
   else tryCatch(value <- get(target), error = function(e)

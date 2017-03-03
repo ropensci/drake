@@ -9,9 +9,9 @@
 ### LOAD PACKAGES AND FUNCTIONS ###
 ###################################
 
-library(drake)
 library(knitr)
 library(rmarkdown)
+library(drake)
 
 clean() # remove previous drake output
 
@@ -98,7 +98,7 @@ load_in_report = plan(
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
   report.html = my_render('report.md', report_dependencies),
-  file_outputs = TRUE, strings_in_dots = "filenames")
+  file_targets = TRUE, strings_in_dots = "filenames")
 
 # Row order doesn't matter in the workflow plan.
 plan = rbind(report, datasets, load_in_report, analyses, results)
@@ -107,38 +107,74 @@ plan = rbind(report, datasets, load_in_report, analyses, results)
 ### SINGLE-PROCESS EXECUTION ###
 ################################
 
+# Start off with a clean workspace (optional).
+clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
+
+# Use run() or make() to execute your workflow. 
+# These functions are exactly the same.
 run(plan) # build everything from scratch
 # Now, open and read report.html in a browser.
 readd(coef_regression2_large) # see also: loadd(), cached()
-run(plan) # everything is up to date
-reg2 = function(d){ # change to cubic term
+
+# Everything is up to date.
+run(plan)
+
+# Change to a cubic term and rerun.
+reg2 = function(d){
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
-run(plan) # drake regenerates the affected results only
-clean() # Start over next time: report.html is gone, but report.Rmd stays.
+run(plan) # Drake only runs targets that depend on reg2().
+
+#########################################
+### NEED TO ADD MORE WORK ON THE FLY? ###
+#########################################
+
+# Just write more functions and add rows to your workflow plan.
+new_simulation = function(n){
+  data.frame(x = rnorm(n), y = rnorm(n))
+}
+
+# Any R expression can be a command 
+# except for formulas and function definitions.
+additions = plan(
+  new_data = new_simulation(36) + sqrt(10))  
+
+# Add the new work
+plan = rbind(plan, additions)
+run(plan) # Only the new work is run.
+
+# Clean up and start over next time.
+clean() # report.html and report.md are removed, but report.Rmd stays.
 
 ###############################################
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################
 
-run(plan, parallelism = "single-session", jobs = 2) # does not work on Windows
+# Does not work on Windows.
+run(plan, parallelism = "mclapply", jobs = 2) # "mclapply" is default.
 readd(coef_regression2_large) # see also: loadd(), cached()
-run(plan, parallelism = "single-session", jobs = 2) # all up to date
-clean() # start over next time
 
-####################################################
-### DISTRIBUTED COMPUTING: 2 PARALLEL R SESSIONS ###
-####################################################
+# All up to date.
+run(plan, jobs = 2)
+clean() # Start over next time.
 
-run(plan, parallelism = "distributed", jobs = 2) # build
+######################################################
+### DISTRIBUTED COMPUTING: TWO PARALLEL R SESSIONS ###
+######################################################
+
+# Write a Makefile and execute it to spawn up to two
+# R sessions at a time.
+run(plan, parallelism = "Makefile", jobs = 2) # build everything
 readd(coef_regression2_large) # see also: loadd(), cached()
-run(plan, parallelism = "distributed", jobs = 2) # all up to date
-clean() # start over next time
 
-###################################################
-### DISTRIBUTED COMPUTING: 4 NODES ON A CLUSTER ###
-###################################################
+# Drake tells the Makefile what is already up to date.
+run(plan, parallelism = "Makefile", jobs = 2)
+clean() # Start over next time.
+
+######################################################
+### DISTRIBUTED COMPUTING: FOUR NODES ON A CLUSTER ###
+######################################################
 
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
 # You could write this file by hand if you wanted.
@@ -153,19 +189,25 @@ writeLines(c(
 
 system("chmod +x shell.sh") # permission to execute
 
-# put inside my_script.R and run:
-#   nohup nice -19 R CMD BATCH my_script.R &
-run(plan, parallelism = "distributed", jobs = 4, # build
+# In reality, you would put all your code in an R script
+# and then run it in the Linux/Mac terminal with
+# nohup nice -19 R CMD BATCH my_script.R &
+
+# Run up to four parallel jobs on the cluster or supercomputer,
+# depending on what is needed. These jobs could go to multiple 
+# nodes for true distributed computing.
+run(plan, parallelism = "Makefile", jobs = 4, # build
   prepend = "SHELL=./shell.sh")
 readd(coef_regression2_large) # see also: loadd(), cached()
-# all up to date
-run(plan, parallelism = "distributed", jobs = 4, 
+
+# Everything is up to date, so no jobs are submitted.
+run(plan, parallelism = "Makefile", jobs = 4, 
   prepend = "SHELL=./shell.sh")
 
 ###########################
 ### CLEAN UP ALL OUTPUT ###
 ###########################
 
-clean(destroy = TRUE) # totally remove the '.drake/' cache
-unlink(c("Makefile", "report.Rmd", "shell.sh")) # clean up other files
+clean(destroy = TRUE) # Totally remove the hidden .drake/ cache.
+unlink(c("Makefile", "report.Rmd", "shell.sh")) # Clean up other files.
 system("rm -f STDIN.o*")

@@ -1,8 +1,7 @@
-console = function(action = c("build", "import"), target, args){
+console = function(imported, target, args){
   if(!args$verbose) return()
-  action = match.arg(action)
-  action = ifelse(action == "build", 
-    color(action, "forestgreen"), color(action, "dodgerblue3"))
+  action = ifelse(imported, color("import", "dodgerblue3"),
+    color("build", "forestgreen"))
   if(nchar(target) > 50) target = paste0(substr(target, 1, 47), "...")
   cat(action, " ", target, "\n", sep = "")
 }

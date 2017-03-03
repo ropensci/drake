@@ -118,13 +118,14 @@ run = function(plan, targets = possible_targets(plan),
   parallelism = match.arg(parallelism)
   args = setup(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, parallelism = parallelism,
-     jobs = jobs, packages = packages,
-    prework = prework, command = command, args = args)
+    jobs = jobs, packages = packages, prework = prework, 
+    prepend = prepend, command = command, args = args)
   check_args(args)
   assert_input_files_exist(args)
   args$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
   get(paste0("run_", parallelism))(args)
+  if(verbose) cat("Workflow now up to date.\n")
 }
 
 #' @title Function \code{make}

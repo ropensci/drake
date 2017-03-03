@@ -1,6 +1,6 @@
 setup = function(plan, targets, envir, jobs,
   parallelism = parallelism_choices(), verbose, packages,
-  prework, command, args){
+  prework, prepend, command, args){
   parallelism = match.arg(parallelism)
   plan = fix_deprecated_plan_names(plan)
   targets = intersect(targets, plan$target)
@@ -17,7 +17,7 @@ setup = function(plan, targets, envir, jobs,
   order = topological.sort(graph)$name
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
-    prework = prework, command = command, args = args,
+    prepend = prepend, prework = prework, command = command, args = args,
     graph = graph, order = order)
 }
 
