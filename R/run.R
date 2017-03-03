@@ -141,7 +141,7 @@ run = function(plan, targets = possible_targets(plan),
 #' @param prework same as in function \code{\link{run}()}
 #' @param prepend same as in function \code{\link{run}()}
 #' @param command same as in function \code{\link{run}()}
-#' @param config same as in function \code{\link{run}()}
+#' @param args same as in function \code{\link{run}()}
 make = run
 
 next_targets = function(graph_remaining_targets){
