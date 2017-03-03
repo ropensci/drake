@@ -12,14 +12,19 @@ test_that("cache functions work", {
         "b", "c", "combined", "f", "final", "g", "h", "i",
         "j", "myinput", "nextone", "readRDS", "saveRDS",
         "yourinput")
+  imports = c("'input.rds'",  "a",
+          "b", "c", "f", "g", "h", "i",
+          "j", "readRDS", "saveRDS")
   expect_true(is.list(session()))
   expect_true(nrow(status()) > 0)
+  expect_equal(imported(files_only = FALSE), imports)
+  expect_equal(imported(files_only = TRUE), "'input.rds'")
+  expect_equal(built(), sort(config$plan$target))
   twopiece = sort(c(built(), imported(files_only = FALSE)))
   expect_equal(cached(), all, twopiece)
   expect_true(all(cached(list = all)))
   expect_equal(length(cached(i, list = imported(files_only = FALSE))), 
     length(imported(files_only = FALSE)))
-  expect_equal(imported(files_only = TRUE), "'input.rds'")
   expect_equal(cached(i, bla, list = c("final", "run")), 
     c(i = TRUE, bla = FALSE, final = TRUE, run = FALSE))
   expect_equal(find_project(), getwd())
@@ -40,6 +45,9 @@ test_that("cache functions work", {
   s = file.path("testthat", "searchfrom", "here")
   expect_true(is.list(session(search = T, path = s)))
   expect_true(nrow(status(search = T, path = s)) > 0)
+  expect_equal(imported(files_only = FALSE, search = T, path = s), imports)
+  expect_equal(imported(files_only = T, search = T, path = s), "'input.rds'")
+  expect_equal(built(search = T, path = s), sort(config$plan$target))
   twopiece = sort(c(built(path = s, search = T), 
     imported(files_only = FALSE, path = s, search = T)))
   expect_equal(cached(path = s, search = T), all, twopiece)

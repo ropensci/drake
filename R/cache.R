@@ -261,7 +261,7 @@ targets_from_dots = function(dots, list){
 }
 
 is_imported = Vectorize(function(target, path, search){
-  if(!(target %in% cached())) return(FALSE)
+  if(!(target %in% cached(path = path, search = search))) return(FALSE)
   get_cache(path = path, search = search)$get(target)$imported
 }, "target", SIMPLIFY = TRUE)
 
