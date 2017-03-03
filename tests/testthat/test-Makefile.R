@@ -1,14 +1,14 @@
 # library(testthat); library(devtools); load_all()
-context("makefile")
+context("Makefile")
 source("utils.R")
 
-test_that("basic makefile stuff works", {
+test_that("basic Makefile stuff works", {
   dclean()
   args = dbug()
   run(args$plan, targets = "combined", 
     envir = args$envir, verbose = FALSE)
   args$verbose = FALSE
-  run_makefile(args, run = FALSE)
+  run_Makefile(args, run = FALSE)
   expect_true(file.exists("Makefile"))
   stamps = list.files(file.path(timestampdir))
   expect_equal(stamps, c("combined", "myinput", "nextone", 

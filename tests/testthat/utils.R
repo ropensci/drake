@@ -1,8 +1,8 @@
 testopts = function(){list(
   jobs = 1, # needs to be 1 for shipped unit tests
-  parallelism = "single-session")
- # parallelism = "distributed") # can't use for shipped unit tests
-}
+  parallelism = "mclapply")
+ # parallelism = "Makefile") # can't use for shipped unit tests
+} # drake has to already be installed for the Makefile stuff
 
 testrun = function(args){
   opts = testopts()

@@ -27,24 +27,31 @@
 #' @param verbose logical, whether to print progress to the console.
 #' Skipped objects are not printed.
 #' 
-#' @param parallelism character, type of parallelism to use. To 
-#' use parallelism at all, be sure that \code{jobs >= 2}. If 
-#' \code{parallelism} is \code{"single-session"}, drake will use 
+#' @param parallelism character, type of parallelism to use. 
+#' See \code{\link{parallelism_choices}()} for the choices
+#' for this argument, and run \code{?parallelism_choices} 
+#' for an explanation of each. 
+#' To use parallelism at all, be sure that \code{jobs >= 2}. If 
+#' \code{parallelism} is \code{"mclapply"}, drake will use 
 #' \code{parallel::\link{mclapply}()} to distribute targets across
 #' parallel processes wherever possible. (This is not possible on
-#' Windows.) If \code{"distributed"}, drake will write
+#' Windows.) If \code{"Makefile"}, drake will write
 #' and execute a Makefile to distribute targets across separate
 #' R sessions. The vignettes (\code{vignette(package = "drake")})
 #' show how to turn those R
 #' sessions into separate jobs on a cluster. Read the vignettes
 #' to learn how to take advantage of multiple nodes on a 
-#' supercomputer.
+#' supercomputer. WARNING: the Makefile is NOT standalone.
+#' Do not run outside of \code{\link{run}()} or \code{\link{make}()}.
+#' For \code{parallelism == "Makefile"}, Windows users will need
+#' to download and install Rtools.
 #' 
 #' @param jobs number of parallel processes or jobs to run.
 #' Windows users should not set \code{jobs > 1} if 
-#' \code{parallelism} is \code{"single-session"} because
-#' single-session parallelism is based on 
-#' \code{parallel::\link{mclapply}()}
+#' \code{parallelism} is \code{"mclapply"} because
+#' \code{\link{mclapply}()} is based on forking. Windows users
+#' who use \code{parallelism == "Makefile"} will need to 
+#' download and install Rtools.
 #' 
 #' @param packages character vector packages to load, in the order
 #' they should be loaded. Defaults to \code{(.packages())}, so you
@@ -52,15 +59,15 @@
 #' \code{\link{library}()} to load your packages before \code{run()}.
 #' However, sometimes packages need to be strictly forced to load
 #' in a certian order, especially if \code{parallelism} is 
-#' \code{"distributed"}. To do this, do not use \code{\link{library}()}
+#' \code{"Makefile"}. To do this, do not use \code{\link{library}()}
 #' or \code{\link{require}()} or \code{\link{loadNamespace}()} or
 #' \code{\link{attachNamespace}()} to load any libraries beforehand.
 #' Just list your packages in the \code{packages} argument in the order
 #' you want them to be loaded.
-#' If \code{parallelism} is \code{"single-session"}, 
+#' If \code{parallelism} is \code{"mclapply"}, 
 #' the necessary packages
 #' are loaded once before any targets are built. If \code{parallelism} is 
-#' \code{"distributed"}, the necessary packages are loaded once on 
+#' \code{"Makefile"}, the necessary packages are loaded once on 
 #' initialization and then once again for each target right 
 #' before that target is built.
 #' 
@@ -68,20 +75,20 @@
 #' before build time. This code can be used to 
 #' load packages, set options, etc., although the packages in the
 #' \code{packages} argument are loaded before any prework is done.
-#' If \code{parallelism} is \code{"single-session"}, the \code{prework}
+#' If \code{parallelism} is \code{"mclapply"}, the \code{prework}
 #' is run once before any targets are built. If \code{parallelism} is 
-#' \code{"distributed"}, the prework is run once on initialization 
+#' \code{"Makefile"}, the prework is run once on initialization 
 #' and then once again for each target right before that target is built.
 #' 
 #' @param prepend lines to prepend to the Makefile if \code{parallelism}
-#' is \code{"distributed"}. See the vignettes 
+#' is \code{"Makefile"}. See the vignettes 
 #' (\code{vignette(package = "drake")})
 #' to learn how to use \code{prepend}
 #' to take advantage of multiple nodes of a supercomputer.
 #' 
 #' @param command character scalar, command to call the Makefile 
 #' generated for distributed computing. 
-#' Only applies when \code{parallelism} is \code{"distributed"}. 
+#' Only applies when \code{parallelism} is \code{"Makefile"}. 
 #' Defaults to the usual \code{"make"}, but it could also be 
 #' \code{"lsmake"} on supporting systems, for example. 
 #' \code{command} and \code{args} are executed via 
@@ -101,25 +108,23 @@
 #' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
-run = function(plan, targets = c(as.character(plan$target), as.character(plan$output)), 
-  envir = parent.frame(), 
-  verbose = TRUE, parallelism = c("single-session", "distributed"), 
-  jobs = 1, packages = (.packages()), prework = character(0),
+run = function(plan, targets = possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, 
+  parallelism = parallelism_choices(), jobs = 1, 
+  packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
   args = default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(parallelism)
   args = setup(plan = plan, targets = targets, envir = envir, 
-    verbose = verbose, jobs = jobs, packages = packages,
+    verbose = verbose, parallelism = parallelism,
+     jobs = jobs, packages = packages,
     prework = prework, command = command, args = args)
   check_args(args)
   assert_input_files_exist(args)
   args$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
-  if(parallelism == "single-session")
-    run_mclapply(args)
-  else if(parallelism == "distributed")
-    run_makefile(args)
+  get(paste0("run_", parallelism))(args)
 }
 
 #' @title Function \code{make}
@@ -139,65 +144,12 @@ run = function(plan, targets = c(as.character(plan$target), as.character(plan$ou
 #' @param args same as in function \code{\link{run}()}
 make = run
 
-add_packages_to_prework = function(packages, prework){
-  if(!length(packages)) return(prework)
-  package_list = deparse(packages) %>% paste(collapse = "\n")
-  paste0("drake::load_if_missing(", package_list, ")") %>%
-    c(prework)
-}
-
-#' @title Function \code{load_if_missing}
-#' @description loads and attaches packages 
-#' if they are not already loaded.
-#' @export
-#' @param packages character vector of package names.
-load_if_missing = function(packages){
-  Filter(packages, f = isPackageLoaded) %>%
-    setdiff(x = packages) %>% 
-    lapply(FUN = library, character.only = TRUE) %>%
-    invisible
-}
-
-setup = function(plan, targets, envir, jobs, verbose, packages,
-  prework, command, args){
-  plan = fix_deprecated_plan_names(plan)
-  targets = intersect(targets, plan$target)
-  prework = add_packages_to_prework(packages = packages, 
-    prework = prework)
-  cache = storr_rds(cachepath, mangle_key = TRUE)
-  cache$clear(namespace = "status")
-  envir = envir %>% as.list %>% list2env(parent = globalenv())
-  lapply(ls(envir), function(target)
-    if(is.function(envir[[target]]))
-      environment(envir[[target]]) = envir)
-  graph = build_graph(plan = plan, targets = targets,
-    envir = envir)
-  order = topological.sort(graph)$name
-  list(plan = plan, targets = targets, envir = envir, cache = cache, 
-    jobs = jobs, verbose = verbose, prework = prework,
-    command = command, args = args, graph = graph, order = order)
-}
-
-run_mclapply = function(args){
-  for(code in args$prework) eval(parse(text = code), envir = args$envir)
-  next_graph = args$graph
-  while(length(V(next_graph))) 
-    next_graph = parallel_stage(next_graph = next_graph, args = args)
-}
-
-next_targets = function(next_graph){
-  number_dependencies = sapply(V(next_graph), 
+next_targets = function(graph_remaining_targets){
+  number_dependencies = sapply(V(graph_remaining_targets), 
     function(x) 
-      adjacent_vertices(next_graph, x, mode = "in") %>% 
+      adjacent_vertices(graph_remaining_targets, x, mode = "in") %>% 
         unlist %>% length)
   which(!number_dependencies) %>% names
-}
-
-parallel_stage = function(next_graph, args){
-  next_targets = next_targets(next_graph) 
-  prune_envir(next_targets = next_targets, args = args)
-  mclapply(next_targets, build, mc.cores = args$jobs, args = args)
-  delete_vertices(next_graph, v = next_targets)
 }
 
 prune_envir = function(next_targets, args){

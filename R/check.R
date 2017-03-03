@@ -11,7 +11,8 @@
 check = function(plan, targets = plan$target, envir = parent.frame()){
   force(envir)
   args = setup(plan = plan, targets = targets, envir = envir, 
-    verbose = TRUE, jobs = 1, packages = character(0), 
+    verbose = TRUE, parallelism = "mclapply", 
+    jobs = 1, packages = character(0), 
     prework = character(0), command = character(0), 
     args = character(0))
   check_args(args)

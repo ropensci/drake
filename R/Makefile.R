@@ -1,4 +1,4 @@
-run_makefile = function(args, run = TRUE){
+run_Makefile = function(args, run = TRUE){
   args$cache$set("args", args, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")

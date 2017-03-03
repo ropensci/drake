@@ -4,9 +4,8 @@
 \alias{make}
 \title{Function \code{make}}
 \usage{
-make(plan, targets = c(as.character(plan$target), as.character(plan$output)),
-  envir = parent.frame(), verbose = TRUE,
-  parallelism = c("single-session", "distributed"), jobs = 1,
+make(plan, targets = possible_targets(plan), envir = parent.frame(),
+  verbose = TRUE, parallelism = parallelism_choices(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = default_system2_args(jobs = jobs, verbose = verbose))

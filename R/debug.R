@@ -10,8 +10,8 @@ dbug = function(clean = TRUE){
   eval(parse(text = "b <- 20"), envir = envir)
   eval(parse(text = "c <- 25"), envir = envir)
 
-#  saveRDS(1:10, "input.rds")
-  set.seed(0); saveRDS(rnorm(100000), "input.rds") # test rehash logic for files
+#  saveRDS(1:10, "input.rds") # small files are always rehashed
+  set.seed(0); saveRDS(rnorm(100000), "input.rds") # test file rehashing
 
   plan = plan(list = c(
     "'intermediatefile.rds'" = 
@@ -22,9 +22,10 @@ dbug = function(clean = TRUE){
     myinput = "readRDS('input.rds')",
     final = "readRDS('intermediatefile.rds')"
   ))
-  args = setup(plan, targets = plan$target, envir = envir, jobs = 1,
-    verbose = TRUE, packages = character(0), prework = character(0), command = "make", 
-    args = character(0))
+  args = setup(plan, targets = plan$target, envir = envir, 
+    parallelism = "mclapply", jobs = 1,
+    verbose = TRUE, packages = character(0), prework = character(0), 
+    command = "make", args = character(0))
   args
 }
 

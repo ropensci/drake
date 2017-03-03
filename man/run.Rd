@@ -4,9 +4,8 @@
 \alias{run}
 \title{Function \code{run}}
 \usage{
-run(plan, targets = c(as.character(plan$target), as.character(plan$output)),
-  envir = parent.frame(), verbose = TRUE,
-  parallelism = c("single-session", "distributed"), jobs = 1,
+run(plan, targets = possible_targets(plan), envir = parent.frame(),
+  verbose = TRUE, parallelism = parallelism_choices(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = default_system2_args(jobs = jobs, verbose = verbose))
@@ -38,24 +37,31 @@ then reproducibly tracked as dependencies.}
 \item{verbose}{logical, whether to print progress to the console.
 Skipped objects are not printed.}
 
-\item{parallelism}{character, type of parallelism to use. To 
-use parallelism at all, be sure that \code{jobs >= 2}. If 
-\code{parallelism} is \code{"single-session"}, drake will use 
+\item{parallelism}{character, type of parallelism to use. 
+See \code{\link{parallelism_choices}()} for the choices
+for this argument, and run \code{?parallelism_choices} 
+for an explanation of each. 
+To use parallelism at all, be sure that \code{jobs >= 2}. If 
+\code{parallelism} is \code{"mclapply"}, drake will use 
 \code{parallel::\link{mclapply}()} to distribute targets across
 parallel processes wherever possible. (This is not possible on
-Windows.) If \code{"distributed"}, drake will write
+Windows.) If \code{"Makefile"}, drake will write
 and execute a Makefile to distribute targets across separate
 R sessions. The vignettes (\code{vignette(package = "drake")})
 show how to turn those R
 sessions into separate jobs on a cluster. Read the vignettes
 to learn how to take advantage of multiple nodes on a 
-supercomputer.}
+supercomputer. WARNING: the Makefile is NOT standalone.
+Do not run outside of \code{\link{run}()} or \code{\link{make}()}.
+For \code{parallelism == "Makefile"}, Windows users will need
+to download and install Rtools.}
 
 \item{jobs}{number of parallel processes or jobs to run.
 Windows users should not set \code{jobs > 1} if 
-\code{parallelism} is \code{"single-session"} because
-single-session parallelism is based on 
-\code{parallel::\link{mclapply}()}}
+\code{parallelism} is \code{"mclapply"} because
+\code{\link{mclapply}()} is based on forking. Windows users
+who use \code{parallelism == "Makefile"} will need to 
+download and install Rtools.}
 
 \item{packages}{character vector packages to load, in the order
 they should be loaded. Defaults to \code{(.packages())}, so you
@@ -63,15 +69,15 @@ shouldn't usually need to set this manually. Just call
 \code{\link{library}()} to load your packages before \code{run()}.
 However, sometimes packages need to be strictly forced to load
 in a certian order, especially if \code{parallelism} is 
-\code{"distributed"}. To do this, do not use \code{\link{library}()}
+\code{"Makefile"}. To do this, do not use \code{\link{library}()}
 or \code{\link{require}()} or \code{\link{loadNamespace}()} or
 \code{\link{attachNamespace}()} to load any libraries beforehand.
 Just list your packages in the \code{packages} argument in the order
 you want them to be loaded.
-If \code{parallelism} is \code{"single-session"}, 
+If \code{parallelism} is \code{"mclapply"}, 
 the necessary packages
 are loaded once before any targets are built. If \code{parallelism} is 
-\code{"distributed"}, the necessary packages are loaded once on 
+\code{"Makefile"}, the necessary packages are loaded once on 
 initialization and then once again for each target right 
 before that target is built.}
 
@@ -79,20 +85,20 @@ before that target is built.}
 before build time. This code can be used to 
 load packages, set options, etc., although the packages in the
 \code{packages} argument are loaded before any prework is done.
-If \code{parallelism} is \code{"single-session"}, the \code{prework}
+If \code{parallelism} is \code{"mclapply"}, the \code{prework}
 is run once before any targets are built. If \code{parallelism} is 
-\code{"distributed"}, the prework is run once on initialization 
+\code{"Makefile"}, the prework is run once on initialization 
 and then once again for each target right before that target is built.}
 
 \item{prepend}{lines to prepend to the Makefile if \code{parallelism}
-is \code{"distributed"}. See the vignettes 
+is \code{"Makefile"}. See the vignettes 
 (\code{vignette(package = "drake")})
 to learn how to use \code{prepend}
 to take advantage of multiple nodes of a supercomputer.}
 
 \item{command}{character scalar, command to call the Makefile 
 generated for distributed computing. 
-Only applies when \code{parallelism} is \code{"distributed"}. 
+Only applies when \code{parallelism} is \code{"Makefile"}. 
 Defaults to the usual \code{"make"}, but it could also be 
 \code{"lsmake"} on supporting systems, for example. 
 \code{command} and \code{args} are executed via 
