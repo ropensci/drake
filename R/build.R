@@ -27,8 +27,7 @@ build_target = function(target, hashes, args){
 imported_target = function(target, hashes, args){
   if(is_file(target)) return(hashes$file)
   else if(target %in% ls(args$envir)) value = args$envir[[target]]
-  else value = tryCatch(get(target), error = function(e)
-    console(imported = NA, target = target, args = args))
+  else value = tryCatch(get(target), error = function(e){NA})
   value
 }
 

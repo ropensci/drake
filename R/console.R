@@ -1,9 +1,7 @@
 console = function(imported, target, args){
-  if(!args$verbose) return()
-  if(is.na(imported))
-    action = color("could not find", "darkorchid3")
-  else if(imported)
-    action = color("import", "dodgerblue3")
+  if(!args$verbose | (imported & !is_file(target))) return()
+  if(imported)
+    action = color("import file", "dodgerblue3")
   else
     action = color("build", "forestgreen")
   if(nchar(target) > 50) target = paste0(substr(target, 1, 47), "...")
