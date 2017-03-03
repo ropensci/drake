@@ -166,7 +166,7 @@ summaries = function(plan, analyses, datasets,
 with_analyses_only = function(plan){
   has_analysis = grepl("..analysis..", plan$command, fixed = TRUE)
   if(any(!has_analysis))
-    warning("removing ", sum(has_analyses), 
+    warning("removing ", sum(has_analysis), 
       " rows with no ..analysis.. wildcard in the command.",
       "Use analyses() for these.")
   plan[has_analysis,]

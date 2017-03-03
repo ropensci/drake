@@ -90,7 +90,7 @@ test_that("analyses and summaries", {
 
   no_analyses = plan(summ = summary(..dataset..),
                        coef = coef(..dataset..))
-  expect_error(summaries(no_analyses, analyses, datasets))
+  suppressWarnings(expect_error(summaries(no_analyses, analyses, datasets)))
   
   summary_types = plan(summ = summary(..analysis..),
                        coef = coef(..analysis..))
