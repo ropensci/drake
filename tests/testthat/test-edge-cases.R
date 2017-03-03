@@ -10,7 +10,7 @@ test_that("target conflicts with current import", {
     tryCatch(testrun(config), # desired error doesn't go to R with Makefiles
       error = function(e){}))
   expect_true("final" %in% config$targets)
-  expect_false("final" %in% cached()) # this should be enough
+  expect_false("final" %in% config$cache$list()) # this should be enough
   dclean()
 })
 

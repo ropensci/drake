@@ -4,9 +4,36 @@
 \alias{clean}
 \title{Function \code{clean}}
 \usage{
-clean(destroy = FALSE)
+clean(x = NULL, envir = parent.frame(), action = c("remove", "keep"),
+  destroy = FALSE)
 }
 \arguments{
+\item{x}{If \code{x} is \code{NULL}, everything in the cache is removed,
+and all drake-generated files are deleted. 
+Otherwise, \code{x} is either a workflow plan data frame or a character vector
+of targets. First suppose \code{action} is \code{"remove"}. If \code{x}  
+is a character vector, the specified targets will be removed from the cache
+(and the associated drake-generated external files will be deleted), 
+and the dependencies will be left alone. 
+If \code{x} is a workflow plan data frame,
+ the targets in the \code{target} column
+and their dependencies will be removed (including drake-generated 
+external files). If \code{action} is \code{"keep"}, the complement of this 
+scenario is true. Everything except targets \code{x} will be removed if 
+\code{x} is a character vector, and everything except the targets and 
+dependencies will be removed if \code{x} is a workflow plan data frame.}
+
+\item{envir}{environment, same as in \code{\link{make}()}. If \code{x}
+is a workflow plan data frame, this is needed in order to find the 
+dependencies of the targets and remove them. Most of the time, this
+will just be your current workspace, so you usually should not need
+to set this manually.}
+
+\item{action}{If \code{"remove"}, the targets and their dependencies will
+be removed from the cache, and any associated external files will be removed.
+If \code{action} is \code{"keep"}, the targets and their dependencies 
+will be kept, but everything else will be removed from the cache.}
+
 \item{destroy}{logical, whether to totally remove the drake cache. 
 If \code{destroy} is \code{FALSE}, only the targets 
 from \code{run}()
@@ -15,10 +42,8 @@ session metadata, etc.}
 }
 \description{
 Cleans up all work done by \code{\link{run}()}. 
-Your working directory (\code{\link{getwd}()}) must be the 
-root directory of your drake project.
-WARNING:
-This deletes ALL work done with \code{\link{run}()}, which includes 
+You must be in your project's working directory.
+WARNING: This deletes ALL work done with \code{\link{run}()}, which includes 
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.
 }

@@ -51,9 +51,9 @@ test_that("packages are loaded in prework", {
     y = c(abind("option"), deparse(body(lda)), x), 
     strings_in_dots = "literals")
   config$targets = config$plan$target
-  expect_false(any(c("x", "y") %in% cached()))
+  expect_false(any(c("x", "y") %in% config$cache$list()))
   testrun(config)
-  expect_true(all(c("x", "y") %in% cached()))
+  expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x), "set")
   expect_true(length(readd(y)) > 0)
   options(testdrake = original)
@@ -71,9 +71,9 @@ test_that("packages are loaded in prework", {
   library(abind)
   library(MASS)
   config$packages = NULL
-  expect_false(any(c("x", "y") %in% cached()))
+  expect_false(any(c("x", "y") %in% config$cache$list()))
   testrun_automatic_packages(config)
-  expect_true(all(c("x", "y") %in% cached()))
+  expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x), "set")
   expect_true(length(readd(y)) > 0)
   options(testdrake = original)

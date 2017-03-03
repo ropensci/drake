@@ -127,11 +127,4 @@ is_built_or_imported_file = Vectorize(function(target, path, search){
   !imported | (imported & is_file(target))
 }, "target", SIMPLIFY = TRUE)
 
-uncache = Vectorize(function(target, path = getwd(), search = FALSE){
-  cache = get_cache(path = path, search = search)
-  for(space in c("objects", "depends", "filemtime"))
-    if(target %in% cache$list(namespace = space))
-      cache$del(target, namespace = space)
-}, "target")
-
 cachepath = ".drake"
