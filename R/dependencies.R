@@ -10,9 +10,7 @@ command_dependencies = function(command){
   fun = function(){}
   body(fun) = parse(text = command)
   non_files = function_dependencies(fun) %>% unlist 
-  body(fun) = parse(text = expose_filenames(command))
-  with_files = function_dependencies(fun) %>% unlist
-  files = setdiff(with_files, non_files)
+  files = extract_filenames(command)
   if(length(files)) files = quotes(files, single = TRUE)
   c(non_files, files) %>% clean_dependency_list
 }
@@ -24,12 +22,12 @@ import_dependencies = function(object){
     character(0)
 }
 
-clean_dependency_list = function(x){
-  x %>% unlist %>% unname %>% unique %>% sort
+function_dependencies = function(funct){
+  findGlobals(funct, merge = FALSE) %>% parsable_list
 }
 
-function_dependencies = function(funct){
-  findGlobals(funct, merge = FALSE) %>% parsable_list 
+clean_dependency_list = function(x){
+  x %>% unlist %>% unname %>% unique %>% sort
 }
 
 parsable_list = function(x){
@@ -40,9 +38,15 @@ is_parsable = Vectorize(function(x){
   tryCatch({parse(text = x); TRUE}, error = function(e) FALSE)
 }, "x")
 
-expose_filenames = Vectorize(function(x){
-  gsub("'", "", x)
-}, "x")
+extract_filenames = function(command){
+  if(!safe_grepl("'", command)) return(character(0))
+  splits = str_split(command, "'")[[1]]
+  splits[seq(from = 2, to = length(splits), by = 2)]
+}
+
+safe_grepl = function(pattern, x){
+  tryCatch(grepl(pattern, x), error = function(e) FALSE)
+}
 
 is_file = function(x){
   grepl("^'", x) & grepl("'$", x)
