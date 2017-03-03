@@ -125,7 +125,6 @@ run = function(plan, targets = possible_targets(plan),
   args$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
   get(paste0("run_", parallelism))(args)
-  if(verbose) cat("Workflow now up to date.\n")
 }
 
 #' @title Function \code{make}
