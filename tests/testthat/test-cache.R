@@ -14,10 +14,12 @@ test_that("cache functions work", {
         "yourinput")
   expect_true(is.list(session()))
   expect_true(nrow(status()) > 0)
-  twopiece = sort(c(built(), imported()))
+  twopiece = sort(c(built(), imported(files_only = FALSE)))
   expect_equal(cached(), all, twopiece)
   expect_true(all(cached(list = all)))
-  expect_equal(length(cached(i, list = imported())), length(imported()))
+  expect_equal(length(cached(i, list = imported(files_only = FALSE))), 
+    length(imported(files_only = FALSE)))
+  expect_equal(imported(files_only = TRUE), "'input.rds'")
   expect_equal(cached(i, bla, list = c("final", "run")), 
     c(i = TRUE, bla = FALSE, final = TRUE, run = FALSE))
   expect_equal(find_project(), getwd())
@@ -39,7 +41,7 @@ test_that("cache functions work", {
   expect_true(is.list(session(search = T, path = s)))
   expect_true(nrow(status(search = T, path = s)) > 0)
   twopiece = sort(c(built(path = s, search = T), 
-                  imported(path = s, search = T)))
+    imported(files_only = FALSE, path = s, search = T)))
   expect_equal(cached(path = s, search = T), all, twopiece)
   expect_true(all(cached(list = all, path = s, search = T)))
   expect_equal(find_project(path = s), "testthat")

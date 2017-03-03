@@ -4,9 +4,14 @@
 \alias{imported}
 \title{Function \code{imported}}
 \usage{
-imported(path = getwd(), search = FALSE)
+imported(files_only = TRUE, path = getwd(), search = FALSE)
 }
 \arguments{
+\item{files_only}{logical, whether to show imported files only 
+and ignore imported objects. Since all your functions and 
+all their global variables are imported, the full list of
+imported objects could get really cumbersome.}
+
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}

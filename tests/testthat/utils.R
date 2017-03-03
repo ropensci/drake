@@ -23,7 +23,7 @@ testrun_automatic_packages = function(config){
 }
 
 justbuilt = function(config){
-  setdiff(status()$target, imported())
+  setdiff(status()$target, imported(files_only = FALSE))
 }
 
 nobuild = function(config){

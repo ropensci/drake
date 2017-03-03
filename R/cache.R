@@ -60,17 +60,23 @@ built = function(path = getwd(), search = FALSE){
 #' \code{\link{built}}
 #' @export
 #' @return character vector naming the imported objects in the cache
+#' @param files_only logical, whether to show imported files only 
+#' and ignore imported objects. Since all your functions and 
+#' all their global variables are imported, the full list of
+#' imported objects could get really cumbersome.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-imported = function(path = getwd(), search = FALSE){
+imported = function(files_only = TRUE, path = getwd(), search = FALSE){
   targets = cached(path = path, search = search) 
   select = is_imported(targets, path = path, search = search)
   if(!length(select)) return(character(0))
-  targets[select]
+  targets = targets[select]
+  if(files_only) targets = Filter(targets, f = is_file)
+  targets
 }
 
 #' @title Function \code{readd}
