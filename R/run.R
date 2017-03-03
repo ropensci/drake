@@ -91,21 +91,21 @@
 #' Only applies when \code{parallelism} is \code{"Makefile"}. 
 #' Defaults to the usual \code{"make"}, but it could also be 
 #' \code{"lsmake"} on supporting systems, for example. 
-#' \code{command} and \code{config} are executed via 
-#' \code{\link{system2}(command, config)} to run the Makefile.
-#' If \code{config} has something like \code{"--jobs=2"}, or if 
-#' \code{jobs >= 2} and \code{config} is left alone, targets
+#' \code{command} and \code{args} are executed via 
+#' \code{\link{system2}(command, args)} to run the Makefile.
+#' If \code{args} has something like \code{"--jobs=2"}, or if 
+#' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
 #' 
-#' @param config command line arguments to call the Makefile for
+#' @param args command line arguments to call the Makefile for
 #' distributed computing. For advanced users only. If set,
 #' \code{jobs} and \code{verbose} are overwritten as they apply to the 
 #' Makefile.
-#' \code{command} and \code{config} are executed via 
-#' \code{\link{system2}(command, config)} to run the Makefile.
-#' If \code{config} has something like \code{"--jobs=2"}, or if 
-#' \code{jobs >= 2} and \code{config} is left alone, targets
+#' \code{command} and \code{args} are executed via 
+#' \code{\link{system2}(command, args)} to run the Makefile.
+#' If \code{args} has something like \code{"--jobs=2"}, or if 
+#' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
 run = function(plan, targets = possible_targets(plan),
@@ -113,7 +113,7 @@ run = function(plan, targets = possible_targets(plan),
   parallelism = parallelism_choices(), jobs = 1, 
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
-  config = default_system2_args(jobs = jobs, verbose = verbose)){
+  args = default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(parallelism)
   config = config(plan = plan, targets = targets, envir = envir, 
