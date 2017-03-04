@@ -50,7 +50,7 @@ initialize = function(config){
     eval(parse(text = code), envir = config$envir)
   imports = setdiff(config$order, config$plan$target)
   for(import in imports){ # Strict order needed. Might parallelize later.
-    hash_list = hash_list(targets = imports, config = config)
+    hash_list = hash_list(targets = import, config = config)
     build(target = import, hash_list = hash_list, config = config)
   }
   time_stamps(config)
