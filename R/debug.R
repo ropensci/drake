@@ -1,14 +1,17 @@
 dbug = function(clean = TRUE){
   if(clean) dclean()
   envir = new.env(parent = globalenv())
-  eval(parse(text = "f <- function(x) {g(x) + a}"), envir = envir)
-  eval(parse(text = "g <- function(y) {h(y) + b}"), envir = envir)
-  eval(parse(text = "h <- function(y) {i(y) + j(y)}"), envir = envir)
-  eval(parse(text = "i <- function(x) {x+1}"), envir = envir)
-  eval(parse(text = "j <- function(x) {x+2 + c}"), envir = envir)
-  eval(parse(text = "a <- 15"), envir = envir)
-  eval(parse(text = "b <- 20"), envir = envir)
-  eval(parse(text = "c <- 25"), envir = envir)
+  imports = c(
+    "f <- function(x) {g(x) + a}",
+    "g <- function(y) {h(y) + b}",
+    "h <- function(y) {i(y) + j(y)}",
+    "i <- function(x) {x+1}",
+    "j <- function(x) {x+2 + c}",
+    "a <- 15",
+    "b <- 20",
+    "c <- 25")
+  for(import in imports)
+    eval(parse(text = import), envir = envir)
 
 #  saveRDS(1:10, "input.rds") # small files are always rehashed
   set.seed(0); saveRDS(rnorm(100000), "input.rds") # test file rehashing

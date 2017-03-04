@@ -57,7 +57,7 @@ session = function(path = getwd(), search = TRUE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 status = function(..., list = character(0), 
-                  imported_files_only = FALSE, path = getwd(), search = TRUE){
+  imported_files_only = FALSE, path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("No drake::make() session detected.")
   dots = match.call(expand.dots = FALSE)$...
