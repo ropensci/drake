@@ -57,7 +57,7 @@ test_that("packages are loaded in prework", {
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
   options(testdrake = original)
-  clean()
+  clean(search = FALSE)
   
   # load packages the usual way
   options(testdrake = "unset")

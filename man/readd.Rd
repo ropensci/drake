@@ -4,7 +4,7 @@
 \alias{readd}
 \title{Function \code{readd}}
 \usage{
-readd(target, character_only = FALSE, path = getwd(), search = FALSE,
+readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   envir = parent.frame())
 }
 \arguments{

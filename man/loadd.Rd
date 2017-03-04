@@ -5,7 +5,7 @@
 \title{Function \code{loadd}}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
-  search = FALSE, envir = parent.frame())
+  search = TRUE, envir = parent.frame())
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)

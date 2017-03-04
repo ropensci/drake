@@ -4,7 +4,8 @@
 \alias{clean}
 \title{Function \code{clean}}
 \usage{
-clean(..., list = character(0), destroy = FALSE)
+clean(..., list = character(0), destroy = FALSE, path = getwd(),
+  search = TRUE)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
@@ -19,10 +20,23 @@ If \code{destroy} is \code{FALSE}, only the targets
 from \code{make}()
 are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
+
+\item{path}{Root directory of the drake project,
+or if \code{search} is \code{TRUE}, either the
+project root or a subdirectory of the project.}
+
+\item{search}{logical. If \code{TRUE}, search parent directories
+to find the nearest drake cache. Otherwise, look in the
+current working directory only.}
 }
 \description{
-Cleans up all work done by \code{\link{make}()}. 
-You must be in your project's working directory.
+Cleans up all work done by \code{\link{make}()}.
+}
+\details{
+You must be in your project's working directory or a subdirectory of it.
+\code{clean(search = TRUE)} searches upwards in your folder structure
+for the drake cache and acts on the first one it sees. Use 
+\code{search == FALSE} to look within the current working directory only.
 WARNING: This deletes ALL work done with \code{\link{make}()}, which includes 
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.

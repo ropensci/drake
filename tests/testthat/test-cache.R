@@ -75,6 +75,13 @@ test_that("cache functions work", {
   rm(h, i, j, c)
   expect_error(h(1))
   
+  # test loadd imported_only and loadd() everything
+  loadd(imported_only = TRUE)
+  expect_true(all(imported(search = FALSE) %in% ls()))
+  loadd(search = FALSE)
+  expect_true(all(config$cache$list() %in% ls()))
+  rm(list = intersect(all, ls()))
+  
   # search from a different directory
   if(!file.exists("searchfrom")){
     dir.create("searchfrom")
@@ -127,13 +134,21 @@ test_that("cache functions work", {
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c)
   expect_error(h(1))
-  setwd("testthat")
   
-  # test loadd imported_only and loadd() everything
-  loadd(imported_only = TRUE)
-  expect_true(all(imported(search = FALSE) %in% ls()))
-  loadd(search = FALSE)
-  expect_true(all(config$cache$list() %in% ls()))
+  # clean using search = TRUE or FALSE
+  expect_true(all(all %in% cached(path = s, search = T)))
+  clean(final, path = s, search = TRUE)
+  expect_true(all(setdiff(all, "final") %in% cached(path = s, search = T)))
+  clean(path = s, search = TRUE)
+  expect_equal(cached(path = s, search = T), character(0))
+  where = file.path("testthat", cachepath)
+  expect_true(file.exists(where))
+  clean(path = s, search = FALSE, destroy = TRUE)
+  expect_true(file.exists(where))
+  clean(path = s, search = TRUE, destroy = TRUE)
+  expect_false(file.exists(where))
+  
+  setwd("testthat")
   unlink("searchfrom", recursive = TRUE)
   dclean()
 })

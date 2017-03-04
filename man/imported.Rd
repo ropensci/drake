@@ -4,7 +4,7 @@
 \alias{imported}
 \title{Function \code{imported}}
 \usage{
-imported(files_only = FALSE, path = getwd(), search = FALSE)
+imported(files_only = FALSE, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only 

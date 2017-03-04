@@ -5,7 +5,7 @@
 \title{Function \code{cached}}
 \usage{
 cached(..., list = character(0), imported_files_only = FALSE,
-  path = getwd(), search = FALSE)
+  path = getwd(), search = TRUE)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
