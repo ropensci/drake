@@ -72,7 +72,7 @@ possible_targets = function(plan){c(
 )}
 
 store_config = function(config){
-  save_these = setdiff(names(config), "envir") # Environments could get massive.
+  save_these = setdiff(names(config), "envir") # envir could get massive.
   lapply(save_these, function(item)
     config$cache$set(key = item, value = config[[item]], 
       namespace = "config"))

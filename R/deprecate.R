@@ -16,6 +16,6 @@ fix_deprecated_plan_names = function(plan){
 #' \code{\link{plan}}. 
 prune = function(plan){
   .Deprecated("clean", package = "drake",
-    msg = "prune() is deprecated. Use clean(x = plan, action = 'keep', ...).")
+    msg = "prune() is deprecated. Use clean() instead.")
   clean(list = setdiff(built(), plan$target))
 }

@@ -16,11 +16,13 @@ or character strings (quoted). Similar to \code{...} in
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
 \item{imported_files_only}{logical, applies only when 
-no targets are specified and the statuses of cached targets are returned.
+no targets are specified and the statuses of cached targets are 
+returned.
 If \code{imported_files_only} is \code{TRUE} and no targets are
 specified in \code{...} or \code{list}, then \code{status()} 
 shows the build status of targets (with commands) plus imported files,
-ignoring imported objects. Otherwise, the full collection of statuses for 
+ignoring imported objects. Otherwise, the full collection of 
+statuses for 
 all cached objects will be listed. Since all your functions and 
 all their global variables are imported, the full list of
 imported objects could get really cumbersome.}
@@ -37,8 +39,10 @@ current working directory only.}
 Either the build status of each target given (from the last
 call to \code{\link{make}()} or \code{\link{make}()}), or if no 
 targets are specified, a data frame containing the build status
-of the last session. In the latter case, only finished targets are listed.
-#' @return Either a named logical indicating whether the given
+of the last session. 
+In the latter case, only finished targets are listed.
+
+Either a named logical indicating whether the given
 targets or cached or a character vector listing all cached
 items, depending on whether any targets are specified
 }

@@ -1,10 +1,13 @@
 #' @title Function \code{clean}
 #' @description Cleans up all work done by \code{\link{make}()}. 
-#' @details You must be in your project's working directory or a subdirectory of it.
+#' @details You must be in your project's working directory 
+#' or a subdirectory of it.
 #' \code{clean(search = TRUE)} searches upwards in your folder structure
 #' for the drake cache and acts on the first one it sees. Use 
-#' \code{search == FALSE} to look within the current working directory only.
-#' WARNING: This deletes ALL work done with \code{\link{make}()}, which includes 
+#' \code{search == FALSE} to look within the current working 
+#' directory only.
+#' WARNING: This deletes ALL work done with \code{\link{make}()}, 
+#' which includes 
 #' file targets as well as the entire drake cache. Only use \code{clean()}
 #' if you're sure you won't lose anything important.
 #' @seealso \code{\link{prune}}, \code{\link{make}}, 

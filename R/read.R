@@ -141,4 +141,3 @@ read_graph = function(plot = TRUE, path = getwd(), search = TRUE){
   if(plot) plot.igraph(graph)
   else graph
 }
-

@@ -1,5 +1,6 @@
 run_mclapply = function(config){
-  for(code in config$prework) eval(parse(text = code), envir = config$envir)
+  for(code in config$prework) 
+    eval(parse(text = code), envir = config$envir)
   graph_remaining_targets = config$graph
   while(length(V(graph_remaining_targets)))
     graph_remaining_targets = parallel_stage_mclapply(
