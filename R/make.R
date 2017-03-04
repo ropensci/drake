@@ -110,10 +110,10 @@
 #' wherever possible.
 make = function(plan, targets = possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, 
-  parallelism = parallelism_choices(), jobs = 1, 
+  parallelism = drake::parallelism_choices(), jobs = 1, 
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
-  args = default_system2_args(jobs = jobs, verbose = verbose)){
+  args = drake::default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(parallelism)
   config = config(plan = plan, targets = targets, envir = envir, 

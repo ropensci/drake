@@ -1,5 +1,5 @@
 config = function(plan, targets, envir, jobs,
-  parallelism = parallelism_choices(), verbose, packages,
+  parallelism = drake::parallelism_choices(), verbose, packages,
   prework, prepend, command, args){
   parallelism = match.arg(parallelism)
   plan = fix_deprecated_plan_names(plan)

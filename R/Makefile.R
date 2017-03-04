@@ -10,6 +10,14 @@ run_Makefile = function(config, run = TRUE){
   invisible()
 }
 
+#' @title Internal function \code{default_system2_args}
+#' @description Internal function to configure 
+#' arguments to \code{\link{system2}()} to run Makefiles.
+#' Not a user-side function.
+#' @export
+#' @return \code{args} for \code{\link{system2}(command, args)}
+#' @param jobs number of jobs
+#' @param logical, whether to be verbose
 default_system2_args = function(jobs, verbose){
   out = paste0("--jobs=", jobs)
   if(!verbose) out = c(out, "--silent")
