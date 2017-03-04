@@ -213,5 +213,4 @@ make(plan, parallelism = "Makefile", jobs = 4,
 ###########################
 
 clean(destroy = TRUE) # Totally remove the hidden .drake/ cache.
-unlink(c("Makefile", "report.Rmd", "shell.sh")) # Clean up other files.
-system("rm -f STDIN.o*")
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*")) # Clean up other files.

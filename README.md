@@ -15,11 +15,15 @@ Drake is a workflow manager for R. When it runs a project, it automatically buil
 
 # Acknowledgements and history
 
-The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh, minimalist reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. Relative to [remake](https://github.com/richfitz/remake), some of drake's most prominent distinguishing features at the time of writing this document are
+The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. Relative to [remake](https://github.com/richfitz/remake), some of drake's most prominent distinguishing features at the time of writing this document are
 
 - a more convenient, R-focused, [YAML](http://yaml.org/)-free user interface.
-- smoother user-side handling of external files and nested commands.
-- built-in support for two kinds of high-performance computing.
+- generative templating to plan large workflows without much typing.
+- smoother, safer user-side handling of external files and nested commands.
+- distributed computing though **seamless** integration with [Makefiles](http://kbroman.org/minimal_make/).
+- single-session multiprocess parallel computing via [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html).
+- robust detection of dependencies from users' packages.
+- a wholehearted embrace of [igraph](http://igraph.org/r/) to drive the backend.
 
 Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
 
