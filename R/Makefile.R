@@ -49,8 +49,10 @@ initialize = function(config){
   for(code in config$prework) 
     eval(parse(text = code), envir = config$envir)
   imports = setdiff(config$order, config$plan$target)
-  hash_list = hash_list(targets = imports, config = config)
-  lapply(imports, build, hash_list = hash_list, config = config)
+  for(import in imports){ # Strict order needed. Might parallelize later.
+    hash_list = hash_list(targets = imports, config = config)
+    build(target = import, hash_list = hash_list, config = config)
+  }
   timestamps(config)
   invisible()
 }

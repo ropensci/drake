@@ -10,10 +10,7 @@ timestamps = function(config){
   lapply(targets, function(target){
     hashes = hashes(target, config)
     current = target_current(target = target, 
-      hashes = hashes, config = config) 
-
-cat(target, current, "\n")
-
+      hashes = hashes, config = config)
     if(current) file_overwrite(timestamp(target))
   })
   invisible()
