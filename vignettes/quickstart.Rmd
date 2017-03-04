@@ -1,0 +1,283 @@
+---
+title: "Quickstart"
+subtitle: "quickstart example for drake"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{quickstart}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<h1 align="center">
+  <img width="200" src="../inst/logo.png" alt="" style = "border: none">
+</h1>
+
+```{r, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+clean(destroy = TRUE)
+```
+
+# Quickstart examples
+
+Drake has small self-contained built-in examples. To see the names of the available examples, use
+
+```{r example}
+examples_drake()
+```
+
+Then use `example_drake()` to write the files for the example to your working directory. This vignette walks through the `"basic"` example, for which you can get the code with
+
+```{r basic, eval = FALSE}
+example_drake("basic")
+```
+
+
+# Setting up the basic example
+
+Load your libraries first. Drake will detect loaded packages and reload them on all your compute nodes, if applicable.
+
+```{r libs}
+library(knitr)
+library(rmarkdown)
+library(drake)
+```
+
+This example is a simulation study, and we're using a function to simulate random datasets. Enter your simulation function and drake will import it automatically.
+
+```{r sim}
+simulate = function(n){
+  data.frame(
+    x = rnorm(n),
+    y = rpois(n, 1)
+  )
+}
+```
+
+For each dataset we simulate, we'll apply a bunch of methods of analysis.
+
+```{r reg}
+reg1 = function(d){
+  lm(y ~ + x, data = d)
+}
+
+reg2 = function(d){
+  d$x2 = d$x^2
+  lm(y ~ x2, data = d)
+}
+```
+
+After we're done, we'll want to knit a dynamic [R Markdown](http://rmarkdown.rstudio.com/) report with a bunch of results.
+
+```{r knit}
+my_knit = function(file, ...){
+  knit(file) # drake knows you loaded the knitr package
+}
+
+my_render = function(file, ...){
+  render(file) # drake knows you loaded the rmarkdown package
+}
+```
+
+The example provides an example `report.Rmd`, which uses `readd()` and `loadd()` to load objects we'll generate with drake.
+
+```{r file}
+# Write the R Markdown source for a dynamic knitr report
+lines = c(
+  "---",
+  "title: Example Report",
+  "author: You",
+  "output: html_document",
+  "---",
+  "",
+  "Look how I read outputs from the drake cache.",
+  "",
+  "```{r example_chunk}",
+  "library(drake)",
+  "readd(small)",
+  "readd(coef_regression2_small)",
+  "loadd(large)",
+  "head(large)",
+  "```"
+)
+
+writeLines(lines, "report.Rmd")
+```
+
+# The workflow plan
+
+In drake, your workflow plan is organized into a data frame. Each row represents a target, which is either a variable or a file that will be produced with a single command. Here is the part of the plan that generates our datasets.
+
+```{r datasets}
+datasets = plan(
+  small = simulate(5),
+  large = simulate(50))
+datasets
+```
+
+Commands need not be function calls. They can be any kind R expression except for formulas with `~` and function definitions. If I want multiple replicates, I can just use `expand`, but let's just stick to our two datasets here.
+
+```{r expand}
+expand(datasets, values = c("rep1", "rep2"))
+```
+
+To plan my analyses, we first declare the methods we will use.
+
+```{r methods}
+methods = plan(
+  regression1 = reg1(..dataset..),
+  regression2 = reg2(..dataset..))
+methods
+```
+
+The wildcard placeholder `..dataset..` says to substitute the names of our datasets one at a time in our actual analysis plan.
+
+```{r analyses}
+analyses = analyses(methods, data = datasets)
+analyses
+```
+
+Now, we should summarize each analysis of each dataset a few different ways. 
+
+```{r summaries}
+summary_types = plan(summ = summary(..analysis..),
+                     coef = coef(..analysis..))
+summary_types
+
+results = summaries(summary_types, analyses, datasets, 
+  gather = NULL)
+results
+```
+
+The `gather` argument of `summaries` is used to group summaries together by type, and I am skipping it here to make the workflow plan data frames more readable. The `..analysis..` wildcard acts similarly to the `..dataset..` wildcard. Functions `analyses()` and `summaries()` make use of `evaluate()` and `gather()` behind the scenes, which you can use them directly for added flexibility.
+
+For the dynamic report, we have to tell drake which targets will be loaded into the embedded R chunks. That way, when the targets change, the report will automatically rebuild.
+
+```{r reportdeps}
+load_in_report = plan(
+  report_dependencies = c(small, large, coef_regression2_small))
+load_in_report
+```
+
+In the commands to render the report, use single quotes for all generated external files and file dependencies.
+
+```{r reportplan}
+report = plan(
+  report.md = my_knit('report.Rmd', report_dependencies),
+  report.html = my_render('report.md', report_dependencies),
+  file_targets = TRUE, strings_in_dots = "filenames")
+report
+```
+
+To finish planning your full workflow, use `rbind()` to piece all your commands together. Row order does not matter here. Drake knows which commands to run first.
+
+```{r wholeplan}
+plan = rbind(report, datasets, load_in_report, analyses, results)
+plan
+```
+
+# Run the workflow in a single process
+
+Use `make(plan)` to run your workflow.
+
+```{r firstmake}
+make(plan)
+```
+
+Use `readd()` and `loadd()` to see the targets you generated. (They are stored in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
+
+```{r cache}
+readd(coef_regression2_large)
+loadd(small)
+head(small)
+cached(small, large)
+cached()
+head(read_plan())
+head(status()) # last call to make()
+status(large)
+```
+
+The next time you run `make(plan)`, nothing will be built because drake knows everything is up to date.
+
+```{r uptodate}
+make(plan)
+```
+
+But if you change one of your functions, commands, or other dependencies, drake will update the affected parts of the workflow. Let's say we want to change the quadratic term to a cubic term in our `reg2()` function.
+
+
+```{r changereg2}
+reg2 = function(d){
+  d$x3 = d$x^3
+  lm(y ~ x3, data = d)
+}
+```
+
+Voila! Targets depending on `reg2()` are updated, and those depending only on `reg1()` are left alone.
+```{r partialupdate}
+make(plan)
+```
+
+# Need to add new work on the fly?
+
+Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.
+
+```{r newstuff}
+new_simulation = function(n){
+  data.frame(x = rnorm(n), y = rnorm(n))
+}
+
+additions = plan(
+  new_data = new_simulation(36) + sqrt(10))  
+additions
+
+plan = rbind(plan, additions)
+plan
+
+make(plan)
+```
+
+To clean up, use `clean()`. Any targets removed from the cache will have to be rebuilt on the next call to `make()`, so only clean if you are sure you will not lose anything important.
+
+```{r cleanup}
+clean(small, reg1) # uncaches individual targets and imported objects
+clean() # cleans all targets out of the cache
+clean(destroy = TRUE) # removes the cache entirely
+```
+
+# High-performance parallel computing
+
+Within a single R session and a single compute node, you can spread your work over multiple parallel processes. Note: this does not work on Windows because drake uses [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html) in the backend
+
+```r
+make(plan, parallelism = "mclapply", jobs = 2) # "mclapply" is default.
+readd(coef_regression2_large)
+```
+
+Alternatively, set `parallelism = "Makefile"` to spread targets over multiple parallel R sessions. This gets into true distributed computing. Windows users will need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). The following are equivalent.
+
+```r
+make(plan, parallelism = "Makefile", jobs = 4, verbose = FALSE)
+make(plan, parallelism = "Makefile", command = "make", args = "--jobs=4 --silent") 
+```
+
+To distribute those [Makefile](http://kbroman.org/minimal_make/) jobs over multiple nodes on a cluster or supercomputer, you may need a `shell.sh` file like the following
+
+```r
+#!/bin/bash
+shift
+echo "module load R/3.3.2; $*" | qsub -sync y -cwd -j y
+```
+
+Note that you may need to replace `R/3.3.2` with your version of R. Next, put your main code, including your call to `make(plan, ...)`, inside an R script such as `script.R`. To run your workflow on the cluster, use the [Linux terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) to enter the following.
+
+```r
+nohup nice -19 R CMD BATCH script.R &
+```
+
+Even after you log out, a background process will remain on the login node to submit new jobs through [Make](http://kbroman.org/minimal_make/) as new targets become ready.
+
+# A warning about the Makefile
+
+The [Makefile](http://kbroman.org/minimal_make/) generated by `make(plan, parallelism = "Makefile")` is not standalone. Do not run it outside of `drake::make()`. Drake uses dummy timestamp files to tell the [Makefile](http://kbroman.org/minimal_make/) what to do, and running `make` in the [terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) will most likely give incorrect results.

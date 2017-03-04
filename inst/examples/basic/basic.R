@@ -68,20 +68,18 @@ writeLines(lines, "report.Rmd")
 
 datasets = plan(
   small = simulate(5),
-  large = simulate(50)
-)
+  large = simulate(50))
 
 # Optionally, get replicates with expand(datasets,
 #   values = c("rep1", "rep2")).
 
 methods = plan(
   regression1 = reg1(..dataset..),
-  regression2 = reg2(..dataset..)
-)
+  regression2 = reg2(..dataset..))
 
 # same as evaluate(plan, wildcard = "..dataset..",
 #   values = datasets$output)
-analyses = analyses(methods, data = datasets)
+analyses = analyses(methods, datasets = datasets)
 
 summary_types = plan(summ = summary(..analysis..),
                      coef = coef(..analysis..))
@@ -89,7 +87,7 @@ summary_types = plan(summ = summary(..analysis..),
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
 results = summaries(summary_types, analyses, datasets, 
-  gather = NULL) # for now, skip 'gather' so the `plan` is more readable
+  gather = NULL) # skip 'gather' (workflow plan is more readable)
 
 load_in_report = plan(
   report_dependencies = c(small, large, coef_regression2_small))
@@ -189,7 +187,7 @@ writeLines(c(
   "echo \"module load R/3.3.2; $*\" | qsub -sync y -cwd -j y"
 ), "shell.sh")
 
-system("chmod +x shell.sh") # permission to execute
+system2("chmod", args = c("+x", "shell.sh")) # permission to execute
 
 # In reality, you would put all your code in an R script
 # and then run it in the Linux/Mac terminal with
