@@ -104,6 +104,22 @@ test_that("targets can be partially specified", {
   dclean()
 })
 
+test_that("prune_envir works as promised", {
+  dclean()
+  config = dbug()
+  imports = ls(envir = config$envir)
+  make(config$plan, targets = "myinput", 
+    envir = config$envir, verbose = FALSE)
+  prune_envir(next_targets = c("yourinput", "nextone"), config = config)
+  expect_equal(ls(config$envir), c(imports, "myinput"))
+  make(config$plan, targets = c("yourinput", "nextone"), 
+    envir = config$envir, verbose = FALSE)
+  expect_equal(ls(config$envir), c(imports, "myinput"))
+  prune_envir(next_targets = "combined", config = config)
+  expect_equal(ls(config$envir), c(imports, c("nextone", "yourinput")))
+  dclean()
+})
+
 test_that("misc stuff", {
   expect_equal(as_file("x"), "'x'")
 })
