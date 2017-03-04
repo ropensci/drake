@@ -26,16 +26,16 @@ default_system2_args = function(jobs, verbose){
 
 makefile_head = function(config){
   if(length(config$prepend)) cat(config$prepend, "\n", sep = "\n")
-  cat("all: ", timestamp(config$targets), sep = " \\\n")
+  cat("all: ", time_stamp(config$targets), sep = " \\\n")
 }
 
 makefile_rules = function(config){
   targets = intersect(config$plan$target, config$order)
   for(target in targets){
     deps = dependencies(target, config) %>%
-      intersect(y = config$plan$target) %>% timestamp
+      intersect(y = config$plan$target) %>% time_stamp
     breaker = ifelse(length(deps), " \\\n", "\n")
-    cat("\n", timestamp(target), ":", breaker, sep = "")
+    cat("\n", time_stamp(target), ":", breaker, sep = "")
     if(length(deps)) cat(deps, sep = breaker)
     if(is_file(target)) 
       target = paste0("drake::as_file(\"", eply::unquote(target), "\")")
@@ -53,7 +53,7 @@ initialize = function(config){
     hash_list = hash_list(targets = imports, config = config)
     build(target = import, hash_list = hash_list, config = config)
   }
-  timestamps(config)
+  time_stamps(config)
   invisible()
 }
 
@@ -78,6 +78,6 @@ mk = function(target){
     hash_list = hash_list, config = config)
   new_hash = self_hash(target = target, config = config)
   if(!identical(old_hash, new_hash))
-    file_overwrite(timestamp(target))
+    file_overwrite(time_stamp(target))
   invisible()
 }

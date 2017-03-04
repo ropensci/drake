@@ -21,7 +21,7 @@ test_that("basic Makefile stuff works", {
   config$verbose = FALSE
   run_Makefile(config, run = FALSE)
   expect_true(file.exists("Makefile"))
-  stamps = list.files(file.path(timestampdir))
+  stamps = list.files(file.path(time_stamp_dir))
   expect_equal(stamps, c("combined", "myinput", "nextone", 
     "yourinput"))
   expect_false(file.exists("intermediatefile.rds"))
