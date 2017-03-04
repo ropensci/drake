@@ -9,7 +9,7 @@ default_system2_args(jobs, verbose)
 \arguments{
 \item{jobs}{number of jobs}
 
-\item{logical, }{whether to be verbose}
+\item{verbose}{logical, whether to be verbose}
 }
 \value{
 \code{args} for \code{\link{system2}(command, args)}
