@@ -37,13 +37,24 @@ clean = function(..., list = character(0), destroy = FALSE,
 }
 
 clean_everything = function(destroy, path, search){
-  if(destroy){
-    where = ifelse(search, find_cache(path = path), cachepath)
-    unlink(where, recursive = TRUE)
-  } else {
-    uncache(cached(path = path, search = search), 
-      path = path, search = search)
+  if(destroy) destroy(path, search)
+  else empty(path, search)
+  invisible()
+}
+
+destroy = function(path, search){
+  where = cachepath
+  if(search){
+    where = find_cache(path = path)
+    if(!length(where)) return()
   }
+  unlink(where, recursive = TRUE)
+  invisible()
+}
+
+empty = function(path, search){
+  uncache(cached(path = path, search = search),
+    path = path, search = search)
   invisible()
 }
 

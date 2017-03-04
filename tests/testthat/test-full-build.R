@@ -58,6 +58,8 @@ test_that("scratch build with contained envir.", {
   
   clean(destroy = TRUE, search = FALSE)
   expect_false(file.exists(cachepath))
+  clean(destroy = TRUE, search = FALSE)
+  clean(destroy = FALSE, search = FALSE)
   dclean()
 })
 
