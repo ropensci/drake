@@ -46,7 +46,8 @@ makefile_rules = function(config){
 
 initialize = function(config){ 
   config$cache$clear(namespace = "status")
-  for(code in config$prework) eval(parse(text = code), envir = config$envir)
+  for(code in config$prework) 
+    eval(parse(text = code), envir = config$envir)
   imports = setdiff(config$order, config$plan$target)
   hash_list = hash_list(targets = imports, config = config)
   lapply(imports, build, hash_list = hash_list, config = config)

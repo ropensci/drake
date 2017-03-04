@@ -1,5 +1,5 @@
 assign_to_envir = Vectorize(function(target, value, config){
-  if(!(target %in% config$plan$target)) return()
+  if(is_file(target) | !(target %in% config$plan$target)) return()
   assign(x = target, value = value, envir = config$envir)
   if(is.function(value)) 
     environment(config$envir[[target]]) = config$envir
@@ -13,7 +13,7 @@ prune_envir = function(targets, config){
     intersect(y = config$plan$target)
   load_these = 
     nonfile_target_dependencies(targets = targets, config = config) %>%
-    setdiff(y = already_loaded)
+    setdiff(y = c(targets, already_loaded))
   keep_these = 
     nonfile_target_dependencies(targets = downstream, config = config)
   discard_these = setdiff(x = config$plan$target, y = keep_these) %>%

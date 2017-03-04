@@ -11,6 +11,9 @@ timestamps = function(config){
     hashes = hashes(target, config)
     current = target_current(target = target, 
       hashes = hashes, config = config) 
+
+cat(target, current, "\n")
+
     if(current) file_overwrite(timestamp(target))
   })
   invisible()

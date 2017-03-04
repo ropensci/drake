@@ -5,9 +5,11 @@ build = function(target, hash_list, config){
   imported = !(target %in% config$plan$target)
   console(imported = imported, target = target, config = config) 
   if(imported)
-    value = imported_target(target = target, hashes = hashes, config = config)
+    value = imported_target(target = target, hashes = hashes, 
+      config = config)
   else
-    value = build_target(target = target, hashes = hashes, config = config)
+    value = build_target(target = target, hashes = hashes, 
+    config = config)
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
   config$cache$set(key = target, value = hashes$depends,
