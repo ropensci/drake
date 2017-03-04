@@ -62,17 +62,17 @@ status = function(..., list = character(0),
   if(is.null(cache)) stop("No drake::make() session detected.")
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
-  if(!length(targets)) return(list_status(
-    imported_files_only = imported_files_only, cache = cache,
-    path = path, search = search))
+  if(!length(targets)) 
+    return(list_status(imported_files_only = imported_files_only, 
+      cache = cache))
   get_status(targets, cache)
 }
 
-list_status = function(imported_files_only, cache, path, search){
+list_status = function(imported_files_only, cache){
   all_marked = cache$list(namespace = "status")
   all_status = get_status(target = all_marked, cache = cache)
   abridged_marked = Filter(all_marked, f = function(target)
-    is_built_or_imported_file(target = target, path = path, search = search))
+    is_built_or_imported_file(target = target, cache = cache))
   abridged_status = all_status[abridged_marked]
   if(imported_files_only) return(abridged_status) 
   else return(all_status) 

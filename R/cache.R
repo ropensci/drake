@@ -17,10 +17,9 @@
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
-#' @param imported_files_only logical, applies only when 
+#' @param no_imported_objects logical, applies only when 
 #' no targets are specified and a list of cached targets is returned.
-#' If \code{imported_files_only} is \code{TRUE} and no targets are
-#' specified in \code{...} or \code{list}, then \code{cached()} 
+#' If \code{no_imported_objects} is \code{TRUE}, then \code{cached()} 
 #' shows built targets (with commands) plus imported files,
 #' ignoring imported objects. Otherwise, the full collection of 
 #' all cached objects will be listed. Since all your functions and 
@@ -32,27 +31,32 @@
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-cached = function(..., list = character(0), imported_files_only = FALSE,
+cached = function(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(character(0))
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
-  if(!length(targets)) return(list_cached(
-    imported_files_only = imported_files_only, cache = cache,
-    path = path, search = search))
-  all_cached = intersect(cache$list(), cache$list(namespace = "depends"))
-  presence = targets %in% all_cached
-  names(presence) = targets
-  presence
+  if(!length(targets)) 
+    list_cache(no_imported_objects = no_imported_objects, cache = cache)
+  else
+    is_cached(targets = targets, 
+      no_imported_objects = no_imported_objects, cache = cache)
 }
 
-list_cached = function(imported_files_only, cache, path, search){
-  all_cached = intersect(cache$list(), cache$list(namespace = "depends"))
-  abridged_cached = Filter(all_cached, f = function(target)
-    is_built_or_imported_file(target = target, path = path, search = search))
-  if(imported_files_only) return(abridged_cached) 
-  else return(all_cached)
+is_cached = function(targets, no_imported_objects, cache){
+  if(no_imported_objects) 
+    targets = no_imported_objects(targets = targets, cache = cache)
+  inclusion = targets %in% cache$list()
+  names(inclusion) = targets
+  inclusion
+}
+
+list_cache = function(no_imported_objects, cache){
+  targets = cache$list()
+  if(no_imported_objects) 
+    targets = no_imported_objects(targets = targets, cache = cache)
+  targets
 }
 
 #' @title Function \code{built}
@@ -69,8 +73,10 @@ list_cached = function(imported_files_only, cache, path, search){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 built = function(path = getwd(), search = TRUE){
-  setdiff(cached(path = path, search = search), 
-    imported(files_only = FALSE, path = path, search = search))
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) return(character(0))
+  cache$list() %>% Filter(f = function(target)
+    !is_imported(target = target, cache = cache))
 }
 
 #' @title Function \code{imported}
@@ -90,11 +96,12 @@ built = function(path = getwd(), search = TRUE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 imported = function(files_only = FALSE, path = getwd(), search = TRUE){
-  targets = cached(imported_files_only = files_only, 
-    path = path, search = search) 
-  select = is_imported(targets, path = path, search = search)
-  if(!length(select)) return(character(0))
-  targets[select]
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) return(character(0))
+  targets = cache$list() %>% Filter(f = function(target)
+    is_imported(target = target, cache = cache))
+  if(files_only) targets = Filter(targets, f = is_file)
+  targets
 }
 
 get_cache = function(path = getwd(), search = TRUE){
@@ -115,15 +122,23 @@ targets_from_dots = function(dots, list){
   .Primitive("c")(names, list) %>% unique
 }
 
-is_imported = Vectorize(function(target, path, search){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) return(FALSE)
+imported_only = function(targets, cache){
+  Filter(targets, f = function(target) 
+    is_imported(target = target, cache = cache))
+}
+
+no_imported_objects = function(targets, cache){
+  Filter(targets, f = function(target) 
+    is_built_or_imported_file(target = target, cache = cache))
+}
+
+is_imported = Vectorize(function(target, cache){
   if(!(target %in% cache$list())) return(FALSE)
   cache$get(target)$imported
 }, "target", SIMPLIFY = TRUE)
 
-is_built_or_imported_file = Vectorize(function(target, path, search){
-  imported = is_imported(target = target, path = path, search = search)
+is_built_or_imported_file = Vectorize(function(target, cache){
+  imported = is_imported(target = target, cache = cache)
   !imported | (imported & is_file(target))
 }, "target", SIMPLIFY = TRUE)
 

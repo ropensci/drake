@@ -4,7 +4,7 @@
 \alias{cached}
 \title{Function \code{cached}}
 \usage{
-cached(..., list = character(0), imported_files_only = FALSE,
+cached(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE)
 }
 \arguments{
@@ -15,10 +15,9 @@ or character strings (quoted). Similar to \code{...} in
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
-\item{imported_files_only}{logical, applies only when 
+\item{no_imported_objects}{logical, applies only when 
 no targets are specified and a list of cached targets is returned.
-If \code{imported_files_only} is \code{TRUE} and no targets are
-specified in \code{...} or \code{list}, then \code{cached()} 
+If \code{no_imported_objects} is \code{TRUE}, then \code{cached()} 
 shows built targets (with commands) plus imported files,
 ignoring imported objects. Otherwise, the full collection of 
 all cached objects will be listed. Since all your functions and 

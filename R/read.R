@@ -20,10 +20,11 @@
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param envir environment of imported functions (for lexical scoping)
+#' @param cache a storr cache. Mainly for internal use.
 readd = function(target, character_only = FALSE, path = getwd(), 
-                 search = TRUE, envir = parent.frame()){
+                 search = TRUE, envir = parent.frame(), cache = NULL){
   force(envir)
-  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("cannot find drake cache.")
   if(!character_only) target = as.character(substitute(target))
   store = cache$get(target)
@@ -63,22 +64,25 @@ readd = function(target, character_only = FALSE, path = getwd(),
 loadd = function(..., list = character(0),
                  imported_only = FALSE, path = getwd(), 
                  search = TRUE, envir = parent.frame()){
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) stop("cannot find drake cache.")
   force(envir)
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
-  if(!length(targets)) targets = cached(path = path, search = search)
+  if(!length(targets)) targets = cache$list()
   if(imported_only) 
-    targets = Filter(targets, 
-      f = function(target) is_imported(target, 
-        path = path, search = search))
+    targets = imported_only(targets = targets, cache = cache)
   if(!length(targets)) 
-    stop("no targets specified or Either objects not cached or cache not found.")
-  lapply(targets, function(target)
-    assign(x = target,
-           value = readd(target, character_only = TRUE, path = path, 
-                         search = search, envir = envir), envir = envir))
+    stop("no targets to load.")
+  load_target(target = targets, cache = cache, envir = envir)
   invisible()
 }
+
+load_target = Vectorize(function(target, cache, envir){
+  value = readd(target, character_only = TRUE, 
+    cache = cache, envir = envir)
+  assign(x = target, value = value, envir = envir)
+}, "target")
 
 #' @title Function \code{read_config}
 #' @description Read all the configuration parameters 

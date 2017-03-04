@@ -51,7 +51,7 @@ test_that("cache functions work", {
   twopiece = sort(c(built(search = FALSE), 
     imported(search = FALSE, files_only = FALSE)))
   expect_equal(cached(search = FALSE), all, twopiece)
-  expect_equal(cached(search = FALSE, imported_files_only = TRUE), 
+  expect_equal(cached(search = FALSE, no_imported_objects = TRUE), 
     c("'input.rds'", builds))
   expect_true(all(cached(search = FALSE, list = all)))
   expect_equal(length(cached(search = FALSE, i, 
@@ -106,7 +106,7 @@ test_that("cache functions work", {
   twopiece = sort(c(built(path = s, search = T), 
     imported(files_only = FALSE, path = s, search = T)))
   expect_equal(cached(path = s, search = T), all, twopiece)
-  expect_equal(cached(imported_files_only = TRUE,
+  expect_equal(cached(no_imported_objects = TRUE,
     path = s, search = T), c("'input.rds'", builds))
   expect_true(all(cached(list = all, path = s, search = T)))
   

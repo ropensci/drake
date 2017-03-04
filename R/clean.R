@@ -59,11 +59,11 @@ empty = function(path, search){
 }
 
 uncache = Vectorize(function(target, path, search){
-  if(is_file(target) & !is_imported(target = target, 
-    path = path, search = search))
-    unquote(target) %>% unlink(recursive = TRUE)
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(invisible())
+  if(is_file(target) & !is_imported(target = target, 
+    cache = cache))
+    unquote(target) %>% unlink(recursive = TRUE)
   for(space in c("objects", "depends", "filemtime"))
     if(target %in% cache$list(namespace = space))
       cache$del(target, namespace = space)
