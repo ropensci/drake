@@ -145,6 +145,8 @@ plan = rbind(plan, additions)
 make(plan) # Only the new work is run.
 
 # Clean up and start over next time.
+# Use clean(small), clean(list = "large"), etc. 
+# to remove individual targets.
 clean() # report.html and report.md are removed, but report.Rmd stays.
 
 ###############################################

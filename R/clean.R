@@ -37,8 +37,8 @@ clean = function(..., list = character(0), destroy = FALSE,
 }
 
 clean_everything = function(destroy, path, search){
+  empty(path, search)
   if(destroy) destroy(path, search)
-  else empty(path, search)
   invisible()
 }
 
