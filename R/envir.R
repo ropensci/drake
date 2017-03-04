@@ -1,10 +1,18 @@
-load_dependencies = function(targets, config){
+prune_envir = function(targets, config){
+  downstream = lapply(targets, function(vertex)
+    subcomponent(config$graph, v = vertex, mode = "out")$name) %>%
+    unlist %>% unique
   already_loaded = ls(envir = config$envir) %>%
     intersect(y = config$plan$target)
   load_these = 
-    nonfile_target_dependencies(targets = targets, 
-      config = config) %>%
+    nonfile_target_dependencies(targets = targets, config = config) %>%
     setdiff(y = already_loaded)
+  keep_these = 
+    nonfile_target_dependencies(targets = downstream, config = config)
+  discard_these = setdiff(x = config$plan$target, y = keep_these) %>%
+    Filter(f = is_not_file) %>% 
+    intersect(y = already_loaded)
+  rm(list = discard_these, envir = config$envir)
   if(length(load_these)) 
     loadd(list = load_these, envir = config$envir)
   invisible()

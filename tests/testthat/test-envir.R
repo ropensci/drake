@@ -1,16 +1,12 @@
 # library(testthat); library(devtools); load_all()
-context("conserve-memory")
+context("envir")
 source("utils.R")
 
-
-# This is a sketch of a test I might do when 
-# I want to discard targets that are no longer needed.
-
-test_that("load_dependencies in full build", {
+test_that("prune_envir in full build", {
   dclean()
   
   # workflow with lots of nested deps
-  # This will fail if load_dependencies() doesn't work.
+  # This will fail if prune_envir() doesn't work.
   datasets = plan(x = 1, y = 2, z = 3)
   methods = plan(a = ..dataset.., b = ..dataset.., c = ..dataset..)
   analyses = analyses(methods, datasets)
@@ -24,7 +20,7 @@ test_that("load_dependencies in full build", {
     waitformetoo = c(waitforme, y))
   plan = rbind(datasets, analyses, summaries, output)
   
-  # set up a workspace to test load_dependencies()
+  # set up a workspace to test prune_envir()
   config = config(plan, targets = plan$target, 
     envir = new.env(parent = globalenv()), 
     parallelism = "mclapply", jobs = 1, prepend = character(0),
@@ -36,13 +32,14 @@ test_that("load_dependencies in full build", {
   testrun(config)
   expect_true(all(plan$target %in% cached()))
   
-  # Check that the right things are loaded and kept
+  # Check that the right things are loaded 
+  # and the right things are discarded
   expect_equal(ls(config$envir), character(0))
-  load_dependencies(datasets$target, config)
+  prune_envir(datasets$target, config)
   expect_equal(ls(config$envir), character(0))
-  load_dependencies(analyses$target, config)
+  prune_envir(analyses$target, config)
   expect_equal(ls(config$envir), c("x", "y", "z"))
-  load_dependencies("waitforme", config)
+  prune_envir("waitforme", config)
   
   # keep y around for waitformetoo
   expect_equal(ls(config$envir),

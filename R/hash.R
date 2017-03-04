@@ -1,3 +1,8 @@
+hash_list = function(targets, config){
+  sapply(targets, hashes, config = config,
+    simplify = FALSE, USE.NAMES = TRUE)
+}
+
 hashes = function(target, config){
   list(depends = dependency_hash(target, config),
     file = file_hash(target, config))

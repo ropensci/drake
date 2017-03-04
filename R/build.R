@@ -1,16 +1,12 @@
-build = function(target, config){
-  hashes = hashes(target = target, config = config)
-  imported = !(target %in% config$plan$target)
-  target_current = target_current(target = target, 
-    hashes = hashes, config = config)
-  do_build = imported | !target_current
-  if(!do_build) return(invisible())
+build = function(target, hash_list, config){
+  hashes = hash_list[[target]]
   config$cache$set(key = target, value = "in progress", 
     namespace = "status")
+  imported = !(target %in% config$plan$target)
   console(imported = imported, target = target, config = config) 
   if(imported)
     value = imported_target(target = target, hashes = hashes, config = config)
-  else if(!target_current)
+  else
     value = build_target(target = target, hashes = hashes, config = config)
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
@@ -20,7 +16,6 @@ build = function(target, config){
 }
 
 build_target = function(target, hashes, config){
-  load_dependencies(targets = target, config = config)
   command = get_command(target = target, config = config)
   eval(parse(text = command), envir = config$envir)
 }

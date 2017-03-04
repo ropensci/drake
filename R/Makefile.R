@@ -48,7 +48,8 @@ initialize = function(config){
   config$cache$clear(namespace = "status")
   for(code in config$prework) eval(parse(text = code), envir = config$envir)
   imports = setdiff(config$order, config$plan$target)
-  lapply(imports, build, config = config)
+  hash_list = hash_list(targets = imports, config = config)
+  lapply(imports, build, hash_list = hash_list, config = config)
   timestamps(config)
   invisible()
 }
@@ -64,8 +65,10 @@ mk = function(target){
   for(code in config$prework)
     suppressPackageStartupMessages(
       eval(parse(text = code), envir = config$envir))
-  load_dependencies(targets = target, config = config)
-  build(target = target, config = config)
+  prune_envir(targets = target, config = config)
+  hash_list = hash_list(targets = target, config = config)
+  build(target = target, 
+    hash_list = hash_list, config = config)
   file_overwrite(timestamp(target))
   invisible()
 }
