@@ -1,3 +1,9 @@
+assign_to_envir = Vectorize(function(target, value, config){
+  if(!(target %in% config$plan)) return()
+  assign(x = target, value = value, envir = config$envir)
+  if(is.function(value)) config$envir[[target]] = config$envir
+}, c("target", "value"))
+
 prune_envir = function(targets, config){
   downstream = lapply(targets, function(vertex)
     subcomponent(config$graph, v = vertex, mode = "out")$name) %>%

@@ -2,7 +2,8 @@ run_mclapply = function(config){
   for(code in config$prework) eval(parse(text = code), envir = config$envir)
   graph_remaining_targets = config$graph
   while(length(V(graph_remaining_targets)))
-    graph_remaining_targets = parallel_stage_mclapply(graph_remaining_targets = graph_remaining_targets,
+    graph_remaining_targets = parallel_stage_mclapply(
+      graph_remaining_targets = graph_remaining_targets,
       config = config)
 }
 
@@ -15,8 +16,10 @@ parallel_stage_mclapply = function(graph_remaining_targets, config){
   hash_list = hash_list[build_these]
   if(length(build_these)){
     prune_envir(targets = build_these, config = config)
-    mclapply(build_these, build, hash_list = hash_list, 
+    values = mclapply(build_these, build, hash_list = hash_list, 
       config = config, mc.cores = config$jobs)
+    assign_to_envir(target = build_these, value = values,
+      config = config)
   }
   delete_vertices(graph_remaining_targets, v = candidates)
 }

@@ -13,6 +13,7 @@ build = function(target, hash_list, config){
   config$cache$set(key = target, value = hashes$depends,
     namespace = "depends")
   config$cache$set(key = target, value = "finished", namespace = "status")
+  value
 }
 
 build_target = function(target, hashes, config){
@@ -44,8 +45,6 @@ store_target = function(target, value, hashes, imported, config){
 store_object = function(target, value, imported, config){
   config$cache$set(key = target, 
     value = list(type = "object", value = value, imported = imported))
-  if(!imported)
-    assign(x = target, value = value, envir = config$envir)
 }
 
 store_file = function(target, hashes, imported, config){
@@ -61,8 +60,4 @@ store_function = function(target, value, hashes, imported, config){
   config$cache$set(key = target,
     value = list(type = "function", value = string, imported = imported,
       depends = hashes$depends)) # for nested functions
-  if(!imported){
-    assign(x = target, value = value, envir = config$envir)
-    environment(config$envir[[target]]) = config$envir
-  }
 }
