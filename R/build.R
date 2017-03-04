@@ -20,6 +20,7 @@ build = function(target, config){
 }
 
 build_target = function(target, hashes, config){
+  load_dependencies(targets = target, config = config)
   command = get_command(target = target, config = config)
   eval(parse(text = command), envir = config$envir)
 }

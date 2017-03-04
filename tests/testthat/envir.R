@@ -2,11 +2,15 @@
 context("conserve-memory")
 source("utils.R")
 
-test_that("conserve_memory in full build", {
+
+# This is a sketch of a test I might do when 
+# I want to discard targets that are no longer needed.
+
+test_that("load_dependencies in full build", {
   dclean()
   
   # workflow with lots of nested deps
-  # This will fail if conserve_memory() doesn't work.
+  # This will fail if load_dependencies() doesn't work.
   datasets = plan(x = 1, y = 2, z = 3)
   methods = plan(a = ..dataset.., b = ..dataset.., c = ..dataset..)
   analyses = analyses(methods, datasets)
@@ -20,7 +24,7 @@ test_that("conserve_memory in full build", {
     waitformetoo = c(waitforme, y))
   plan = rbind(datasets, analyses, summaries, output)
   
-  # set up a workspace to test conserve_memory()
+  # set up a workspace to test load_dependencies()
   config = config(plan, targets = plan$target, 
     envir = new.env(parent = globalenv()), 
     parallelism = "mclapply", jobs = 1, prepend = character(0),
@@ -34,11 +38,11 @@ test_that("conserve_memory in full build", {
   
   # Check that the right things are loaded and kept
   expect_equal(ls(config$envir), character(0))
-  conserve_memory(datasets$target, config)
+  load_dependencies(datasets$target, config)
   expect_equal(ls(config$envir), character(0))
-  conserve_memory(analyses$target, config)
+  load_dependencies(analyses$target, config)
   expect_equal(ls(config$envir), c("x", "y", "z"))
-  conserve_memory("waitforme", config)
+  load_dependencies("waitforme", config)
   
   # keep y around for waitformetoo
   expect_equal(ls(config$envir),

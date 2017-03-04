@@ -8,7 +8,6 @@ run_mclapply = function(config){
 
 parallel_stage_mclapply = function(graph_remaining_targets, config){
   next_targets = next_targets(graph_remaining_targets)
-  conserve_memory(next_targets = next_targets, config = config)
   mclapply(next_targets, build, mc.cores = config$jobs, config = config)
   delete_vertices(graph_remaining_targets, v = next_targets)
 }

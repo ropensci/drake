@@ -64,7 +64,7 @@ mk = function(target){
   for(code in config$prework)
     suppressPackageStartupMessages(
       eval(parse(text = code), envir = config$envir))
-  conserve_memory(next_targets = target, config = config)
+  load_dependencies(targets = target, config = config)
   build(target = target, config = config)
   file_overwrite(timestamp(target))
   invisible()
