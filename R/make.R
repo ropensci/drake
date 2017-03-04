@@ -135,13 +135,3 @@ next_targets = function(graph_remaining_targets){
         unlist %>% length)
   which(!number_dependencies) %>% names
 }
-
-prune_envir = function(next_targets, config){
-  load_these = dependencies(targets = next_targets, config = config) %>% 
-    Filter(f = is_not_file) %>% intersect(y = config$plan$target)
-  unload_these = intersect(config$plan$target, ls(config$envir)) %>% 
-    setdiff(y = load_these)
-  rm(list = unload_these, envir = config$envir)
-  if(length(load_these)) loadd(list = load_these, envir = config$envir)
-  invisible()
-}

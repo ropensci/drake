@@ -1,4 +1,4 @@
- # library(testthat); library(devtools); load_all()
+# library(testthat); library(devtools); load_all()
 context("import-object")
 source("utils.R")
 
@@ -42,7 +42,7 @@ test_that("responses to imported objects and functions", {
   expect_true("final" %in% justbuilt(config))
   
   # command depends on imported object k
-  expect_false("k" %in% ls())
+  expect_false("k" %in% ls(config$envir))
   config$plan$command[2] = "f(1+1) + k"
   expect_error(testrun(config))
   

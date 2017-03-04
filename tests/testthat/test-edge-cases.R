@@ -36,3 +36,17 @@ test_that("can use semicolons and multi-line commands", {
   expect_equal(cached(search = FALSE), c("x", "y"))
   dclean()
 })
+
+test_that("true targets can be functions", {
+  dclean()
+  generator = function()
+    return(function(x){x+1})
+  plan = plan(myfunction = generator(), output = myfunction(1))
+  make(plan, verbose = FALSE)
+  expect_equal(readd(output), 2)
+  cache = storr::storr_rds(cachepath)
+  expect_true(is.list(cache$get("myfunction")))
+  myfunction = readd(myfunction)
+  expect_equal(myfunction(4), 5)
+  dclean()
+})
