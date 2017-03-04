@@ -59,3 +59,15 @@ example_drake("basic")
 ```
 
 Step through the code files to get started.
+
+# Tutorials
+
+The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple tutorials and vignettes. With drake installed, you can load any of the vignettes 
+in an R session.
+
+```r
+vignette(package = "drake") # List the vignettes.
+vignette("drake") # High-level intro.
+vignette("quickstart") # Walk through a simple example.
+```
+

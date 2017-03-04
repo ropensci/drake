@@ -53,12 +53,12 @@ Drake uses `mclapply()` for parallel computing within a single R session. Unfort
 
 # Tutorials
 
-The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple tutorials and vignettes. You can load any of them in an R session.
+The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple tutorials and vignettes. With drake installed, you can load any of the vignettes in an R session.
 
 ```r
 vignette(package = "drake") # List the vignettes.
-vignette("drake_example") # Walk through a practical example.
-vignette("drake_manual") # Go through all the features in gory detail.
+vignette("drake") # High-level intro.
+vignette("quickstart") # Walk through a simple example.
 ```
 
 # Quickstart examples

@@ -5,6 +5,9 @@
 # Show how to use drake to reproducibly manage 
 # and accelerate a data analysis workflow.
 #
+# Enter vignette("quickstart") for a walkthrough
+# of this code.
+#
 ###################################
 ### LOAD PACKAGES AND FUNCTIONS ###
 ###################################
