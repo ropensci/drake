@@ -70,8 +70,14 @@ mk = function(target){
       eval(parse(text = code), envir = config$envir))
   prune_envir(targets = target, config = config)
   hash_list = hash_list(targets = target, config = config)
+  old_hash = self_hash(target = target, config = config)
+  current = target_current(target = target, 
+    hashes = hash_list[[target]], config = config)
+  if(current) return(invisible())
   build(target = target, 
     hash_list = hash_list, config = config)
-  file_overwrite(timestamp(target))
+  new_hash = self_hash(target = target, config = config)
+  if(!identical(old_hash, new_hash))
+    file_overwrite(timestamp(target))
   invisible()
 }

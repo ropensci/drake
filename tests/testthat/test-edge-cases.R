@@ -2,16 +2,16 @@
 context("edge-cases")
 source("utils.R")
 
-test_that("target conflicts with current import", {
+# Target/import conflicts are unpredictable. A warning should be enough.
+test_that("target conflicts with current import or another target", {
   dclean()
   config = dbug()
-  config$plan = rbind(config$plan, data.frame(target = "f", command = "1+1"))
-  suppressWarnings( # for jobs > 1, mclapply gives a warning too. 
-    tryCatch(testrun(config), # desired error doesn't go to R with Makefiles
-      error = function(e){}))
-  expect_true("final" %in% config$targets)
-  expect_false("final" %in% config$cache$list()) # this should be enough
-  dclean()
+  config$plan = rbind(config$plan, data.frame(target = "f", 
+    command = "1+1"))
+  expect_warning(tmp <- capture.output(
+    check(plan = config$plan, envir = config$envir)))
+  config$plan$target = "repeated"
+  expect_error(check(plan = config$plan))
 })
 
 test_that("target conflicts with previous import", {
@@ -19,11 +19,13 @@ test_that("target conflicts with previous import", {
   config = dbug()
   testrun(config)
   config$plan$command[2] = "g(1+1)"
-  config$plan = rbind(config$plan, data.frame(target = "f", command = "1+1"))
+  config$plan = rbind(config$plan, 
+    data.frame(target = "f", command = "1+1"))
   config$targets = config$plan$target
-  testrun(config)
-  expect_equal(justbuilt(config), c("'intermediatefile.rds'", "combined", "f",
-    "final", "yourinput"))
+  expect_warning(testrun(config))
+  expect_equal(justbuilt(config), 
+    c("'intermediatefile.rds'", "combined", "f",
+      "final", "yourinput"))
   dclean()
 })
 

@@ -52,7 +52,8 @@ test_that("check_config() via check() and make()", {
   expect_error(make(y, envir = config$envir))
   expect_error(check(config$plan, targets = character(0),
     envir = config$envir))
-  expect_error(make(config$plan, targets = character(0), envir = config$envir))
+  expect_error(make(config$plan, targets = character(0), 
+    envir = config$envir))
   dclean()
 })
 
@@ -107,4 +108,3 @@ test_that("targets can be partially specified", {
 test_that("misc stuff", {
   expect_equal(as_file("x"), "'x'")
 })
-

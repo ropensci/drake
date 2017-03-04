@@ -27,9 +27,11 @@ plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-build_graph = function(plan, targets = plan$target, envir = parent.frame()){
+build_graph = function(plan, targets = plan$target, 
+  envir = parent.frame()){
   force(envir)
   imports = as.list(envir)
+  assert_unique_names(imports = names(imports), targets = plan$target)
   import_deps = lapply(imports, import_dependencies)
   command_deps = lapply(plan$command, command_dependencies)
   names(command_deps) = plan$target
@@ -47,4 +49,19 @@ build_graph = function(plan, targets = plan$target, envir = parent.frame()){
   if(!is_dag(graph)) 
     stop("Workflow is circular (chicken and egg dilemma).")
   graph
+}
+
+assert_unique_names = function(imports, targets){
+  if(anyDuplicated(targets)){
+    duplicated = which(table(targets) > 1) %>% names
+    stop("duplicate targets in workflow plan:\n", 
+      multiline_message(duplicated))
+  } 
+  common = intersect(imports, targets)
+  if(length(common))
+    warning(paste("There are targets in your workflow plan that share",
+      "names with imported objects from your environment/workspace.",
+      "Behavior may be unpredictable.",
+      "Duplicates found:\n"),
+      multiline_message(common))
 }

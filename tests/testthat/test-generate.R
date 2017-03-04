@@ -29,7 +29,8 @@ test_that("evaluate, expand, and gather", {
     stringsAsFactors = FALSE)
   expect_equal(x2, y)
   
-  x3 = evaluate(x2, wildcard = "SIGMA", values = letters[1:2], expand = FALSE)
+  x3 = evaluate(x2, wildcard = "SIGMA", values = letters[1:2], 
+    expand = FALSE)
   y = data.frame(
     target = c("data_rep1_1", "data_rep1_2", 
                "data_rep2_1", "data_rep2_2"),
@@ -40,7 +41,8 @@ test_that("evaluate, expand, and gather", {
     stringsAsFactors = FALSE)
   expect_equal(x3, y)
   
-  x4 = evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)), expand = FALSE)
+  x4 = evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)), 
+    expand = FALSE)
   y = data.frame(
     target = c("data_rep1", "data_rep2"),
     command = c("simulate(center = 1, scale = 0.1)", 
@@ -60,8 +62,8 @@ test_that("evaluate, expand, and gather", {
   
   x7 = gather(x, target = "my_summaries", gather = "rbind")
   y = data.frame(target = "my_summaries", 
-                 command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)",
-                 stringsAsFactors = F)
+    command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)",
+    stringsAsFactors = F)
   expect_equal(x7, y)
   dclean()
 })

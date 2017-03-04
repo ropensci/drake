@@ -94,14 +94,17 @@ test_that("cache functions work", {
   expect_true(is.list(session(search = T, path = s)))
   expect_equal(names(status(search = T, path = s)), all)
   expect_equal(names(status(imported_files_only = TRUE, 
-                            search = T, path = s)), c("'input.rds'", builds))
-  expect_equal(status(search = T, path = s, bla, f, list = c("h", "final")), 
-               c(bla = "not built or imported", f = "finished", 
-                 h = "finished", final = "finished"))
+    search = T, path = s)), c("'input.rds'", builds))
+  expect_equal(status(search = T, path = s, bla, f, 
+    list = c("h", "final")), 
+    c(bla = "not built or imported", f = "finished", 
+    h = "finished", final = "finished"))
   
   # imported, built, cached
-  expect_equal(imported(files_only = FALSE, search = T, path = s), imports)
-  expect_equal(imported(files_only = T, search = T, path = s), "'input.rds'")
+  expect_equal(imported(files_only = FALSE, search = T, path = s),
+    imports)
+  expect_equal(imported(files_only = T, search = T, path = s), 
+    "'input.rds'")
   expect_equal(built(search = T, path = s), sort(config$plan$target))
   twopiece = sort(c(built(path = s, search = T), 
     imported(files_only = FALSE, path = s, search = T)))
@@ -138,7 +141,8 @@ test_that("cache functions work", {
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
   clean(final, path = s, search = TRUE)
-  expect_true(all(setdiff(all, "final") %in% cached(path = s, search = T)))
+  expect_true(all(setdiff(all, "final") %in% 
+    cached(path = s, search = T)))
   clean(path = s, search = TRUE)
   expect_equal(cached(path = s, search = T), character(0))
   where = file.path("testthat", cachepath)

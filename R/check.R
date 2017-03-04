@@ -33,12 +33,9 @@ check_config = function(config){
 
 find_files = function(config){
   files = next_targets(config$graph) %>% Filter(f = is_file) %>%
-    unquote
-  if(!all(file.exists(files))){
-    files = paste0("  ", files)
-    msg = paste(files, collapse = "\n")
-    stop("missing input files:\n", msg)
-  }
+    unquote %>% Filter(f = function(filename) !file.exists(filename))
+  if(length(files))
+    stop("missing input files:\n", multiline_message(files))
 }
 
 check_strings = function(plan){
@@ -57,16 +54,19 @@ check_strings = function(plan){
     sep = "\n")
   for(target in seq_len(length(x))){
     cat("\ntarget:", names(x)[target], "\n")
-    strings = paste0("  \"", x[[target]], "\"") %>% paste(collapse = "\n")
-    cat("strings in command:\n", strings, "\n", sep = "")
+    cat("strings in command:\n", 
+      multiline_message(quotes(x[[target]], single = FALSE)), 
+        "\n", sep = "")
   }
 }
 
 assert_input_files_exist = function(config){
   missing_files = next_targets(config$graph) %>% Filter(f = is_file) %>% 
     unquote %>% Filter(f = function(x) !file.exists(x))
-  if(length(missing_files)){
-    msg = paste0("  ", missing_files) %>% paste(collapse = "\n")
-    stop("missing input files:\n", msg)
-  }
+  if(length(missing_files))
+    stop("missing input files:\n", multiline_message(missing_files))
+}
+
+multiline_message = function(x){
+  paste0("  ", x) %>% paste(collapse = "\n")
 }

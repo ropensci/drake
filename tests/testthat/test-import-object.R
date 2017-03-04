@@ -10,7 +10,8 @@ test_that("responses to imported objects and functions", {
   # change imported object
   config$envir$c = config$envir$c + 1
   testrun(config)
-  expect_equal(justbuilt(config), setdiff(sort(config$plan$target), "myinput"))
+  expect_equal(justbuilt(config), setdiff(sort(config$plan$target), 
+    "myinput"))
 
   # change nested function trivially
   config$envir$g = function(y){
@@ -42,11 +43,7 @@ test_that("responses to imported objects and functions", {
   expect_true("final" %in% justbuilt(config))
   
   # command depends on imported object k
-  expect_false("k" %in% ls(config$envir))
   config$plan$command[2] = "f(1+1) + k"
-  expect_error(testrun(config))
-  
-  # set k
   config$envir$k = 5
   testrun(config)
   final0 = readd(final, search = FALSE)

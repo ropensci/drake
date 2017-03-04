@@ -31,7 +31,7 @@ test_that("plan", {
                  command = c("c", "'c'", "d", "readRDS('e')"), 
                  stringsAsFactors = F)
   expect_equal(x, y)
-  
   expect_error(check(x))
+
   dclean()
 })

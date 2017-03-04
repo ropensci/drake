@@ -36,7 +36,8 @@ test_that("scratch build with contained envir.", {
   expect_equal(config$cache$list(), setdiff(all, "final"))
   
   # clean specific targets
-  clean(b, c, list = c("'intermediatefile.rds'", "nextone"), search = FALSE)
+  clean(b, c, list = c("'intermediatefile.rds'", "nextone"), 
+    search = FALSE)
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_equal(config$cache$list(), setdiff(all, 
