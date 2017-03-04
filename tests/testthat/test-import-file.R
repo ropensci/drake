@@ -21,13 +21,13 @@ test_that("responses to imported file", {
   saveRDS(contents, "input.rds")
   testrun(config)
   nobuild(config)
-  final0 = readd(final)
+  final0 = readd(final, search = FALSE)
   
   # actually change file
   saveRDS(2:10, "input.rds")
   testrun(config)
   expect_equal(justbuilt(config), c("'intermediatefile.rds'",
     "combined", "final", "myinput", "nextone"))
-  expect_false(length(final0) == length(readd(final)))
+  expect_false(length(final0) == length(readd(final, search = FALSE)))
   dclean()
 })

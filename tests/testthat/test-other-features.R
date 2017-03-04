@@ -73,7 +73,7 @@ test_that("deprecation", {
   expect_warning(make(plan, verbose = FALSE))
   dclean()
   expect_warning(make(plan, verbose = FALSE))
-  expect_true(is.numeric(readd(x)))
+  expect_true(is.numeric(readd(x, search = FALSE)))
   dclean()
 })
 
@@ -97,10 +97,10 @@ test_that("targets can be partially specified", {
   config$targets = "'intermediatefile.rds'"
   testrun(config)
   expect_true(file.exists("intermediatefile.rds"))
-  expect_error(readd(final))
+  expect_error(readd(final, search = FALSE))
   config$targets = "final"
   testrun(config)
-  expect_true(is.numeric(readd(final)))
+  expect_true(is.numeric(readd(final, search = FALSE)))
   dclean()
 })
 

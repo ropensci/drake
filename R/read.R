@@ -21,7 +21,7 @@
 #' current working directory only.
 #' @param envir environment of imported functions (for lexical scoping)
 readd = function(target, character_only = FALSE, path = getwd(), 
-                 search = FALSE, envir = parent.frame()){
+                 search = TRUE, envir = parent.frame()){
   force(envir)
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("cannot find drake cache.")
@@ -62,7 +62,7 @@ readd = function(target, character_only = FALSE, path = getwd(),
 #' calling environment (current workspace).
 loadd = function(..., list = character(0),
                  imported_only = FALSE, path = getwd(), 
-                 search = FALSE, envir = parent.frame()){
+                 search = TRUE, envir = parent.frame()){
   force(envir)
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
@@ -93,7 +93,7 @@ loadd = function(..., list = character(0),
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-read_config = function(path = getwd(), search = FALSE){
+read_config = function(path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("cannot find drake cache.")
   sapply(cache$list(namespace = "config"), function(item)
@@ -113,7 +113,7 @@ read_config = function(path = getwd(), search = FALSE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-read_plan = function(path = getwd(), search = FALSE){
+read_plan = function(path = getwd(), search = TRUE){
   read_config(path = path, search = search)$plan
 }
 
@@ -132,7 +132,7 @@ read_plan = function(path = getwd(), search = FALSE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-read_graph = function(plot = TRUE, path = getwd(), search = FALSE){
+read_graph = function(plot = TRUE, path = getwd(), search = TRUE){
   graph = read_config(path = path, search = search)$graph
   if(plot) plot.igraph(graph)
   else graph

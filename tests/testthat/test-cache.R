@@ -4,7 +4,9 @@ source("utils.R")
 
 test_that("cache functions work", {
   dclean()
-  expect_equal(character(0), cached(), imported(), built())
+  expect_equal(character(0), 
+    cached(search = FALSE), imported(search = FALSE), 
+    built(search = FALSE))
   expect_error(status(search = FALSE))
   expect_error(readd(search = FALSE))
   config = dbug()
@@ -129,8 +131,8 @@ test_that("cache functions work", {
   
   # test loadd imported_only and loadd() everything
   loadd(imported_only = TRUE)
-  expect_true(all(imported() %in% ls()))
-  loadd()
+  expect_true(all(imported(search = FALSE) %in% ls()))
+  loadd(search = FALSE)
   expect_true(all(config$cache$list() %in% ls()))
   unlink("searchfrom", recursive = TRUE)
   dclean()

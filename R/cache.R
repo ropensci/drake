@@ -33,7 +33,7 @@
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 cached = function(..., list = character(0), imported_files_only = FALSE,
-  path = getwd(), search = FALSE){
+  path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(character(0))
   dots = match.call(expand.dots = FALSE)$...
@@ -68,7 +68,7 @@ list_cached = function(imported_files_only, cache, path, search){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-built = function(path = getwd(), search = FALSE){
+built = function(path = getwd(), search = TRUE){
   setdiff(cached(path = path, search = search), 
     imported(files_only = FALSE, path = path, search = search))
 }
@@ -89,7 +89,7 @@ built = function(path = getwd(), search = FALSE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-imported = function(files_only = FALSE, path = getwd(), search = FALSE){
+imported = function(files_only = FALSE, path = getwd(), search = TRUE){
   targets = cached(imported_files_only = files_only, 
     path = path, search = search) 
   select = is_imported(targets, path = path, search = search)
@@ -97,7 +97,7 @@ imported = function(files_only = FALSE, path = getwd(), search = FALSE){
   targets[select]
 }
 
-get_cache = function(path = getwd(), search = FALSE){
+get_cache = function(path = getwd(), search = TRUE){
   if(search) path = find_cache(path = path)
   else path = file.path(path, cachepath)
   if(is.null(path)) return(NULL)

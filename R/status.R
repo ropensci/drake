@@ -12,7 +12,7 @@
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-session = function(path = getwd(), search = FALSE){
+session = function(path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("No drake::make() session detected.")
   cache$get("sessionInfo", namespace = "session")
@@ -57,7 +57,7 @@ session = function(path = getwd(), search = FALSE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 status = function(..., list = character(0), 
-                  imported_files_only = FALSE, path = getwd(), search = FALSE){
+                  imported_files_only = FALSE, path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("No drake::make() session detected.")
   dots = match.call(expand.dots = FALSE)$...
