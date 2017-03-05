@@ -26,14 +26,14 @@ Imports:
     storr,
     stringi,
     stringr,
+    testthat,
     tools,
     utils
 Suggests:
     abind,
     knitr,
     MASS,
-    rmarkdown,
-    testthat
+    rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues

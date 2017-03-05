@@ -13,6 +13,7 @@
 #' @importFrom storr storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
+#' @importFrom testthat expect_true
 #' @importFrom tools md5sum
 #' @importFrom utils sessionInfo unzip
 NULL
