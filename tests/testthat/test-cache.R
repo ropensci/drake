@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("cache")
-source("utils.R")
 
 test_that("cache functions work", {
   dclean()

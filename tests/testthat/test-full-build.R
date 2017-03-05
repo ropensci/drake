@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("full-build")
-source("utils.R")
 
 test_that("scratch build with contained envir.", {
   dclean()

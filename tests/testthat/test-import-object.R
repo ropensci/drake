@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("import-object")
-source("utils.R")
 
 test_that("responses to imported objects and functions", {
   dclean()

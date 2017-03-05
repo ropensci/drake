@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("plan")
-source("utils.R")
 
 test_that("plan", {
   dclean()

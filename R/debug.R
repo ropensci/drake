@@ -38,4 +38,3 @@ dclean = function(){
   unlink("intermediatefile.rds")
   unlink("Makefile")
 }
-

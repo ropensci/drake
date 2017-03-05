@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
-source("utils.R")
 
 test_that(".onLoad() warns correctly", {
   f = ".RData"

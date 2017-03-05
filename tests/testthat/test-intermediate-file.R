@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("intermediate-file")
-source("utils.R")
 
 test_that("responses to intermediate file", {
   dclean()

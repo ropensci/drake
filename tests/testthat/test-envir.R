@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("envir")
-source("utils.R")
 
 test_that("prune_envir in full build", {
   dclean()

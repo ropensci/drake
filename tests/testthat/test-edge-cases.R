@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("edge-cases")
-source("utils.R")
 
 # Target/import conflicts are unpredictable. A warning should be enough.
 test_that("target conflicts with current import or another target", {

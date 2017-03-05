@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("generate")
-source("utils.R")
 
 test_that("evaluate, expand, and gather", {
   dclean()

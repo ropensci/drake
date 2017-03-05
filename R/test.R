@@ -12,7 +12,7 @@ testrun = function(config){
   opts = testopts()
   make(plan = config$plan, targets = config$targets,
     envir = config$envir, verbose = FALSE,
-    parallelism = opts$parallelism, jobs = opts$jobs, 
+    parallelism = opts$parallelism, jobs = opts$jobs,
     packages = config$packages, prework = config$prework,
     prepend = config$prepend, command = config$command)
 }
@@ -21,14 +21,14 @@ testrun_automatic_packages = function(config){
   opts = testopts()
   make(plan = config$plan, targets = config$targets,
       envir = config$envir, verbose = FALSE,
-      parallelism = opts$parallelism, jobs = opts$jobs, 
+      parallelism = opts$parallelism, jobs = opts$jobs,
       prework = config$prework,
       prepend = config$prepend, command = config$command)
 }
 
 justbuilt = function(config){
-  sapply(config$cache$list(namespace = "status"), 
-    function(target) 
+  sapply(config$cache$list(namespace = "status"),
+    function(target)
       config$cache$get(key = target, namespace = "status")) %>%
     Filter(f = function(x) x == "finished") %>% names %>%
     intersect(y = config$plan$target)

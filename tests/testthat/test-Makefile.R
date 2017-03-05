@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("Makefile")
-source("utils.R")
 
 test_that("prepend arg works", {
   dclean()

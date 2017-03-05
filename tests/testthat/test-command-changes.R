@@ -1,6 +1,5 @@
 # library(testthat); library(devtools); load_all()
 context("command-changes")
-source("utils.R")
 
 test_that("changes to commands are handled well", {
   dclean()
