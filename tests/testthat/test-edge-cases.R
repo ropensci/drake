@@ -1,6 +1,13 @@
 # library(testthat); library(devtools); load_all()
 context("edge-cases")
 
+test_that("circular non-DAG workflows quit in error", {
+  p = plan(a = b, b = c, c = a)
+  expect_error(check(p))
+  expect_error(make(p))
+})
+
+
 # Target/import conflicts are unpredictable. A warning should be enough.
 test_that("target conflicts with current import or another target", {
   dclean()
