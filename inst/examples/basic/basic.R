@@ -16,7 +16,7 @@ library(knitr)
 library(rmarkdown)
 library(drake)
 
-clean() # remove previous drake output
+clean() # remove any previous drake output
 
 # User-defined functions
 simulate = function(n){
@@ -95,7 +95,8 @@ results = summaries(summary_types, analyses, datasets,
 load_in_report = plan(
   report_dependencies = c(small, large, coef_regression2_small))
 
-# External file dependencies should be single-quoted.
+# External file targets and dependencies should be single-quoted.
+# Use double quotes to remove any special meaning from character strings.
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
   report.html = my_render('report.md', report_dependencies),
@@ -103,6 +104,9 @@ report = plan(
 
 # Row order doesn't matter in the workflow plan.
 plan = rbind(report, datasets, load_in_report, analyses, results)
+
+# Check the plan for obvious errors and pitfalls.
+check(plan)
 
 ################################
 ### SINGLE-PROCESS EXECUTION ###
@@ -115,7 +119,9 @@ clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 # These functions are exactly the same.
 make(plan) # build everything from scratch
 # Now, open and read report.html in a browser.
-readd(coef_regression2_large) # see also: loadd(), cached()
+
+# see also: loadd(), cached(), imported(), and built()
+readd(coef_regression2_large) 
 
 # Everything is up to date.
 make(plan)

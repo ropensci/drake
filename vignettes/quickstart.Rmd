@@ -160,7 +160,7 @@ load_in_report = plan(
 load_in_report
 ```
 
-In the commands to render the report, use single quotes for all generated external files and file dependencies.
+In the commands to render the report, keep in mind the rule for working with files: use single quotes to declare external file targets and dependencies, and use double quotes to remove any special meaning from character strings.
 
 ```{r reportplan}
 report = plan(
@@ -175,6 +175,11 @@ To finish planning your full workflow, use `rbind()` to piece all your commands 
 ```{r wholeplan}
 plan = rbind(report, datasets, load_in_report, analyses, results)
 plan
+```
+
+Optionally, check your workflow plan for obvious errors and pitfalls.
+```{r check}
+check(plan)
 ```
 
 # Run the workflow in a single process
@@ -193,6 +198,8 @@ loadd(small)
 head(small)
 cached(small, large)
 cached()
+built()
+imported()
 head(read_plan())
 # plot_graph() # plots the tree structure of your workflow plan
 head(status()) # last call to make()
