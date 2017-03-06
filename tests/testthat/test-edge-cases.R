@@ -7,7 +7,6 @@ test_that("circular non-DAG workflows quit in error", {
   expect_error(make(p))
 })
 
-
 # Target/import conflicts are unpredictable. A warning should be enough.
 test_that("target conflicts with current import or another target", {
   dclean()
