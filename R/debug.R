@@ -13,8 +13,8 @@ dbug = function(clean = TRUE){
   for(import in imports)
     eval(parse(text = import), envir = envir)
 
-#  saveRDS(1:10, "input.rds") # small files are always rehashed
-  set.seed(0); saveRDS(rnorm(100000), "input.rds") # test file rehashing
+  saveRDS(1:10, "input.rds") # small files are always rehashed
+#  set.seed(0); saveRDS(rnorm(100000), "input.rds") # test file rehashing
 
   plan = plan(list = c(
     "'intermediatefile.rds'" = 
