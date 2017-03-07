@@ -49,7 +49,7 @@ safe_grepl = function(pattern, x){
 }
 
 is_file = function(x){
-  grepl("^'", x) & grepl("'$", x)
+  safe_grepl("^'", x) & safe_grepl("'$", x)
 }
 
 is_not_file = function(x){
