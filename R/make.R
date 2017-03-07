@@ -42,7 +42,7 @@
 #' sessions into separate jobs on a cluster. Read the vignettes
 #' to learn how to take advantage of multiple nodes on a 
 #' supercomputer. WARNING: the Makefile is NOT standalone.
-#' Do not run outside of \code{\link{make}()} or \code{\link{make}()}.
+#' Do not run outside of \code{\link{make}()}.
 #' For \code{parallelism == "Makefile"}, Windows users will need
 #' to download and install Rtools.
 #' 
