@@ -99,7 +99,7 @@ load_in_report = plan(
 # Use double quotes to remove any special meaning from character strings.
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
-  report.html = my_render('report.md', report_dependencies),
+#  report.html = my_render('report.md', report_dependencies), Requires pandoc
   file_targets = TRUE, strings_in_dots = "filenames")
 
 # Row order doesn't matter in the workflow plan.
