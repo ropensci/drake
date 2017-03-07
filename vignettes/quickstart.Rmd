@@ -165,7 +165,7 @@ In the commands to render the report, keep in mind the rule for working with fil
 ```{r reportplan}
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
-#  report.html = my_render('report.md', report_dependencies), # requires pandoc
+## report.html = my_render('report.md', report_dependencies), # Requires pandoc, commented out.
   file_targets = TRUE, strings_in_dots = "filenames")
 report
 ```
