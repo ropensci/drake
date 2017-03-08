@@ -21,6 +21,7 @@ TESTS.md
 TODO.md
 TROUBLESHOOTING.md
 vignettes/.*\.html
+vignettes/.*\.md
 vignettes/.*\.log
 ^.*\.css$
 ^.*\.js$
