@@ -16,7 +16,7 @@ test_that("responses to intermediate file", {
   expect_equal(final0, readd(final, search = FALSE))
   
   # actually change file
-  saveRDS(val + 1, "intermediatefile.rds")
+  saveRDS(sum(val) + 1, "intermediatefile.rds")
   testrun(config)
   expect_equal(justbuilt(config), "'intermediatefile.rds'")
   expect_equal(final0, readd(final, search = FALSE))
