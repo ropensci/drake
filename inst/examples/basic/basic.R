@@ -99,7 +99,8 @@ load_in_report = plan(
 # Use double quotes to remove any special meaning from character strings.
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
-## report.html = my_render('report.md', report_dependencies), # Requires pandoc, commented out.
+## The html report requires pandoc. Commented out.
+## report.html = my_render('report.md', report_dependencies), 
   file_targets = TRUE, strings_in_dots = "filenames")
 
 # Row order doesn't matter in the workflow plan.
@@ -121,7 +122,7 @@ make(plan) # build everything from scratch
 # Now, open and read report.html in a browser.
 
 # see also: loadd(), cached(), imported(), and built()
-readd(coef_regression2_large) 
+readd(coef_regression2_large) # Read target from the cache.
 
 # Everything is up to date.
 make(plan)
@@ -131,7 +132,17 @@ reg2 = function(d){
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
+
 make(plan) # Drake only runs targets that depend on reg2().
+
+# For functions and plan$command, 
+# trivial changes like comments and whitespace are ignored.
+reg2 = function(d){
+  d$x3 = d$x^3
+    lm(y ~ x3, data = d) # I indented here.
+}
+
+make(plan) # Nothing substantial changed. Everything up to date.
 
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
