@@ -26,7 +26,7 @@ default_system2_args = function(jobs, verbose){
 
 makefile_head = function(config){
   if(length(config$prepend)) cat(config$prepend, "\n", sep = "\n")
-  cat("all:", time_stamp(config$targets), sep = " \\\n")
+  cat("all:", time_stamp(config$targets), sep = " \\\n  ")
 }
 
 makefile_rules = function(config){
@@ -34,7 +34,7 @@ makefile_rules = function(config){
   for(target in targets){
     deps = dependencies(target, config) %>%
       intersect(y = config$plan$target) %>% time_stamp
-    breaker = ifelse(length(deps), " \\\n", "\n")
+    breaker = ifelse(length(deps), " \\\n  ", "\n")
     cat("\n", time_stamp(target), ":", breaker, sep = "")
     if(length(deps)) cat(deps, sep = breaker)
     if(is_file(target)) 
