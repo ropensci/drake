@@ -13,4 +13,3 @@ load_if_missing(packages)
 loads and attaches packages
 if they are not already loaded.
 }
-

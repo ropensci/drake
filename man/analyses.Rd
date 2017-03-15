@@ -28,4 +28,3 @@ analyze multiple datasets using multiple methods of analysis.
 \code{\link{summaries}},
  \code{\link{make}}, \code{\link{plan}}
 }
-

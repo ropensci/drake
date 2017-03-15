@@ -22,4 +22,3 @@ containing a drake cache).
 \seealso{
 \code{\link{plan}}, \code{\link{make}}
 }
-

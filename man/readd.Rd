@@ -41,4 +41,3 @@ Does not delete the item from the cache.
 \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
 \code{\link{make}}
 }
-

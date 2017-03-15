@@ -33,4 +33,3 @@ multiple analyses of multiple datasets multiple ways.
 \seealso{
 \code{\link{analyses}}, \code{\link{make}}, \code{\link{plan}}
 }
-

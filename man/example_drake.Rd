@@ -22,4 +22,3 @@ To see the names of all the examples, run \code{\link{examples_drake}}.
 \seealso{
 \code{\link{examples_drake}}, \code{\link{make}}
 }
-

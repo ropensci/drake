@@ -35,7 +35,10 @@
 #' \code{parallelism} is \code{"mclapply"}, drake will use 
 #' \code{parallel::\link{mclapply}()} to distribute targets across
 #' parallel processes wherever possible. (This is not possible on
-#' Windows.) If \code{"Makefile"}, drake will write
+#' Windows.) Setting \code{parallelism} to \code{"parLapply"}
+#' is similar, except that it uses \code{parallel::\link{parLapply}()}.
+#' It works on Windows, but it requires more overhead.
+#' If \code{"Makefile"}, drake will write
 #' and execute a Makefile to distribute targets across separate
 #' R sessions. The vignettes (\code{vignette(package = "drake")})
 #' show how to turn those R
@@ -125,7 +128,7 @@ make = function(plan, targets = possible_targets(plan),
   store_config(config)
   config$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
-  get(paste0("run_", parallelism))(config)
+  get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
 }
 
 next_targets = function(graph_remaining_targets){

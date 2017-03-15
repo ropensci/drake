@@ -26,4 +26,3 @@ cache.
 \code{\link{cached}}, \code{\link{loadd}},
 \code{link{imported}}
 }
-

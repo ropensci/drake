@@ -59,4 +59,3 @@ Skipped objects are not listed.
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 }
-

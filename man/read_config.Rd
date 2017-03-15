@@ -26,4 +26,3 @@ These include the workflow plan
 \seealso{
 \code{\link{make}}
 }
-

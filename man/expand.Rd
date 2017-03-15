@@ -19,4 +19,3 @@ an expanded workflow plan data frame
 Expands a workflow plan data frame by duplicating rows.
 This generates multiple replicates of targets with the same commands.
 }
-

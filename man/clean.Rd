@@ -47,4 +47,3 @@ if you're sure you won't lose anything important.
 \seealso{
 \code{\link{prune}}, \code{\link{make}},
 }
-

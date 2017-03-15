@@ -26,4 +26,3 @@ the targets in your workflow depend on each other.
 to \code{\link{plot.igraph}()} on your graph, or just use 
 \code{\link{plot_graph}()} from the start.
 }
-

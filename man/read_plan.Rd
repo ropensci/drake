@@ -25,4 +25,3 @@ from your last attempted call to \code{\link{make}()}.
 \seealso{
 \code{\link{read_config}}
 }
-

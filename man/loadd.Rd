@@ -41,4 +41,3 @@ imported_only is \code{TRUE}).
 \code{\link{cached}}, \code{\link{built}}, 
 \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
 }
-

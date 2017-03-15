@@ -19,4 +19,3 @@ Internal function to configure
 arguments to \code{\link{system2}()} to run Makefiles.
 Not a user-side function.
 }
-

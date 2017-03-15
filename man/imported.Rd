@@ -30,4 +30,3 @@ List all the imported objects in the drake cache
 \code{\link{cached}}, \code{\link{loadd}},
 \code{\link{built}}
 }
-

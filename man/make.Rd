@@ -45,7 +45,10 @@ To use parallelism at all, be sure that \code{jobs >= 2}. If
 \code{parallelism} is \code{"mclapply"}, drake will use 
 \code{parallel::\link{mclapply}()} to distribute targets across
 parallel processes wherever possible. (This is not possible on
-Windows.) If \code{"Makefile"}, drake will write
+Windows.) Setting \code{parallelism} to \code{"parLapply"}
+is similar, except that it uses \code{parallel::\link{parLapply}()}.
+It works on Windows, but it requires more overhead.
+If \code{"Makefile"}, drake will write
 and execute a Makefile to distribute targets across separate
 R sessions. The vignettes (\code{vignette(package = "drake")})
 show how to turn those R
@@ -122,4 +125,3 @@ wherever possible.}
 \description{
 Run your project (build the targets).
 }
-

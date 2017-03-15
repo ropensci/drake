@@ -50,4 +50,3 @@ which overrules \code{wildcard} and \code{values} if
 not \code{NULL}. Here, \code{rules} should be a list with wildcards
 as names and vectors of possible values as list elements.
 }
-

@@ -15,4 +15,3 @@ List the names of all the drake examples.
 \seealso{
 \code{\link{example_drake}}, \code{\link{make}}
 }
-

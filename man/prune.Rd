@@ -16,4 +16,3 @@ Use \code{\link{clean}()} instead
 \seealso{
 \code{\link{clean}}, \code{\link{make}}
 }
-

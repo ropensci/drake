@@ -19,4 +19,3 @@ plot_graph(plan, targets = plan$target, envir = parent.frame())
 \description{
 Plot the dependency structure of your workflow
 }
-

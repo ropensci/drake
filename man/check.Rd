@@ -22,4 +22,3 @@ missing input files.
 \seealso{
 \code{link{plan}}, \code{\link{make}}
 }
-

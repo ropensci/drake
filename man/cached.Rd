@@ -50,4 +50,3 @@ Read/load a cached item with \code{\link{readd}()} or
 \code{\link{readd}}, \code{\link{loadd}},
 \code{\link{plan}}, \code{\link{make}}
 }
-

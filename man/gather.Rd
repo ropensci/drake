@@ -23,4 +23,3 @@ Create a new workflow plan data frame with a single new
 target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame.
 }
-

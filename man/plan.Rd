@@ -55,4 +55,3 @@ argument to control the quoting in \code{...}.
 \seealso{
 \code{link{check}}, \code{\link{make}},
 }
-
