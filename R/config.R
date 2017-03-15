@@ -28,6 +28,11 @@ add_packages_to_prework = function(packages, prework){
     c(prework)
 }
 
+do_prework = function(config){
+  for(code in config$prework)
+    eval(parse(text = code), envir = config$envir)
+}
+
 #' @title Function \code{load_if_missing}
 #' @description loads and attaches packages
 #' if they are not already loaded.

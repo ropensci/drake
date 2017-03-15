@@ -46,8 +46,7 @@ makefile_rules = function(config){
 
 initialize = function(config){ 
   config$cache$clear(namespace = "status")
-  for(code in config$prework) 
-    eval(parse(text = code), envir = config$envir)
+  do_prework(config = config)
   imports = setdiff(config$order, config$plan$target)
   for(import in imports){ # Strict order needed. Might parallelize later.
     hash_list = hash_list(targets = import, config = config)
@@ -65,9 +64,7 @@ initialize = function(config){
 #' @param target name of target to make
 mk = function(target){
   config = get_cache()$get("config", namespace = "makefile")
-  for(code in config$prework)
-    suppressPackageStartupMessages(
-      eval(parse(text = code), envir = config$envir))
+  suppressPackageStartupMessages(do_prework(config = config))
   prune_envir(targets = target, config = config)
   hash_list = hash_list(targets = target, config = config)
   old_hash = self_hash(target = target, config = config)
