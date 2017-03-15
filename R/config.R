@@ -28,9 +28,10 @@ add_packages_to_prework = function(packages, prework){
     c(prework)
 }
 
-do_prework = function(config){
+do_prework = function(config, verbosePackages){
+  wrapper = ifelse(verbosePackages, I, suppressPackageStartupMessages)
   for(code in config$prework)
-    eval(parse(text = code), envir = config$envir)
+    wrapper(eval(parse(text = code), envir = config$envir))
 }
 
 #' @title Function \code{load_if_missing}

@@ -1,11 +1,12 @@
 run_parLapply = function(config){
-  capture.output(config$cluster <- 
-    makePSOCKcluster(config$jobs, outfile = ""))
+  if(config$verbose)
+    config$cluster = makePSOCKcluster(config$jobs, outfile = "")
+  else
+    config$cluster = makePSOCKcluster(config$jobs)
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
-  capture.output(
-    clusterCall(cl = config$cluster, fun = do_prework, 
-      config = config))
+  clusterCall(cl = config$cluster, fun = do_prework, 
+    config = config, verbosePackages = FALSE)
   run_parallel(config = config, worker = worker_parLapply)
   stopCluster(cl = config$cluster)
 }
