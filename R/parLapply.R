@@ -1,8 +1,6 @@
 run_parLapply = function(config){
-  if(config$verbose)
-    config$cluster = makePSOCKcluster(config$jobs, outfile = "")
-  else
-    config$cluster = makePSOCKcluster(config$jobs)
+  outfile = ifelse(config$verbose, "", "/dev/null")
+  config$cluster = makePSOCKcluster(config$jobs, outfile = outfile)
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
   clusterCall(cl = config$cluster, fun = do_prework, 
