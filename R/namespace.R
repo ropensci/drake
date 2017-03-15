@@ -6,7 +6,7 @@
 #' is_dag make_empty_graph plot.igraph subcomponent 
 #' topological.sort V vertices
 #' @importFrom magrittr %>%
-#' @importFrom parallel mclapply parLapply
+#' @importFrom parallel clusterExport makePSOCKcluster mclapply parLapply
 #' @importFrom plyr ddply
 #' @importFrom R.utils isPackageLoaded
 #' @importFrom stats complete.cases rnorm setNames
