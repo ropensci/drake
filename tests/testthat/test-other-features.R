@@ -1,6 +1,15 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("mclapply", {
+  dclean()
+  config = dbug()
+  make(plan = config$plan, envir = config$envir, verbose = FALSE,
+    parallelism = "mclapply", jobs = 1)
+  expect_true(is.numeric(readd(final)))
+  dclean()
+})
+
 test_that(".onLoad() warns correctly", {
   f = ".RData"
   expect_false(file.exists(f))
