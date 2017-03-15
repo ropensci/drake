@@ -30,7 +30,6 @@ parallelism_choices = function(){
 }
 
 run_parallel = function(config, worker){
-  do_prework(config = config)
   graph_remaining_targets = config$graph
   while(length(V(graph_remaining_targets)))
     graph_remaining_targets = parallel_stage(

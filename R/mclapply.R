@@ -1,4 +1,5 @@
 run_mclapply = function(config){
+  do_prework(config = config)
   run_parallel(config = config, worker = worker_mclapply)
 }
 
