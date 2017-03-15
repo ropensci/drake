@@ -3,9 +3,9 @@
 # numbers of jobs and mclapply vs Makefiles.
 
 testopts = function(){list(
-  jobs = 1, # needs to be 1 for mclapply on Windows
-  parallelism = "mclapply")
- # parallelism = "Makefile") # can't use for shipped unit tests
+  jobs = 16, # needs to be 1 for mclapply on Windows
+ # parallelism = "mclapply")
+  parallelism = "Makefile") # can't use for shipped unit tests
 } # drake has to already be installed for the Makefile stuff
 
 testrun = function(config){
