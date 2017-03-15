@@ -1,19 +1,18 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
-test_that("mclapply", {
+test_that("mclapply and lapply", {
   dclean()
   config = dbug()
   config$jobs = 1
   config$parallelism = "mclapply"
+  config$verbose = FALSE
   testrun(config)
   expect_true(is.numeric(readd(final)))
-  targets = config$plan$target
-  hash_list = lapply(targets, hashes, config = config)
-  expect_output(
-    out <- worker_mclapply(targets = "myinput", hash_list = hash_list,
-      config = config))
-  expect_true(length(out[[1]]) > 0)
+  clean()
+  config$parallelism = "parLapply"
+  testrun(config) # runs run_lapply since jobs == 1
+  expect_true(is.numeric(readd(final)))
   dclean()
 })
 

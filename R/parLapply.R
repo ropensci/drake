@@ -1,4 +1,8 @@
 run_parLapply = function(config){
+  if(config$jobs < 2){
+    run_lapply(config = config)
+    return(invisible())
+  }
   outfile = ifelse(config$verbose, "", "/dev/null")
   config$cluster = makePSOCKcluster(config$jobs, outfile = outfile)
   clusterExport(cl = config$cluster, varlist = "config",

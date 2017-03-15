@@ -30,7 +30,6 @@ parallelism_choices = function(){
 }
 
 run_parallel = function(config, worker){
-  if(config$jobs < 2) worker = worker_lapply
   graph_remaining_targets = config$graph
   while(length(V(graph_remaining_targets)))
     graph_remaining_targets = parallel_stage(
@@ -54,6 +53,10 @@ parallel_stage = function(graph_remaining_targets, worker,
       config = config)
   }
   delete_vertices(graph_remaining_targets, v = candidates)
+}
+
+run_lapply = function(config){
+  run_parallel(config = config, worker = worker_lapply)
 }
 
 worker_lapply = function(targets, hash_list, config){
