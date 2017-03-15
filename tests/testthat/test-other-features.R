@@ -4,14 +4,12 @@ context("other-features")
 test_that("mclapply and lapply", {
   dclean()
   config = dbug()
-  config$jobs = 1
-  config$parallelism = "mclapply"
-  config$verbose = FALSE
-  testrun(config)
+  make(plan = config$plan, envir = config$envir,
+    verbose = FALSE, jobs = 1, parallelism = "mclapply")  
   expect_true(is.numeric(readd(final)))
   clean()
-  config$parallelism = "parLapply"
-  testrun(config) # runs run_lapply since jobs == 1
+  make(plan = config$plan, envir = config$envir,
+    verbose = FALSE, jobs = 1, parallelism = "parLapply")
   expect_true(is.numeric(readd(final)))
   dclean()
 })
