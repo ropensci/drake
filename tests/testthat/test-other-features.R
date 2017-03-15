@@ -4,9 +4,16 @@ context("other-features")
 test_that("mclapply", {
   dclean()
   config = dbug()
-  make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    parallelism = "mclapply", jobs = 1)
+  config$jobs = 1
+  config$parallelism = "mclapply"
+  testrun(config)
   expect_true(is.numeric(readd(final)))
+  targets = config$plan$target
+  hash_list = lapply(targets, hashes, config = config)
+  expect_output(
+    out <- worker_mclapply(targets = "myinput", hash_list = hash_list,
+      config = config))
+  expect_true(length(out[[1]]) > 0)
   dclean()
 })
 
