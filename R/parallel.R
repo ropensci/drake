@@ -19,12 +19,12 @@
 #'  As explained in the vignettes, you can use the \code{prepend}
 #'  to \code{\link{make}()} or \code{\link{make}()} to distribute
 #'  targets over multiple nodes of a supercomputer. Use this
-#'  approach for true distributed computing.}}
+#'  approach for true distributed computing.}
 #'  \item{"parLapply"}{launches multiple processes in a single R session
 #'  using \code{parallel::\link{parLapply}()}.
 #'  This is single-node, (potentially) multicore computing.
 #'  It requires more overhead than the \code{"mclapply"} option,
-#'  but it works on Windows.}
+#'  but it works on Windows.}}
 parallelism_choices = function(){
   c("parLapply", "mclapply", "Makefile")
 }
