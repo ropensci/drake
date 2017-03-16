@@ -268,10 +268,11 @@ clean(destroy = TRUE) # removes the cache entirely
 
 # High-performance parallel computing
 
-Within a single R session and a single compute node, you can spread your work over multiple parallel processes. Note: this does not work on Windows because drake uses [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html) in the backend
+Within a single R session and a single compute node, you can spread your work over multiple parallel processes. Select the type of parallel computing with the `parallelism` argument to `make()`, and select the maximum number of parallel tasks with the `jobs` argument. Set `parallelism = "parLapply"` (default) to use `parallel::parLapply()` in the backend. This approach works on most (if not all) platforms, but setting up the local cluster at the beginning takes extra time. Users with non-Windows platforms can set `parallelism = "mclapply"` to use `parallel::mclapply()` on the backend, which requires less overhead.
 
 ```r
-make(plan, parallelism = "mclapply", jobs = 2) # "mclapply" is default.
+make(plan, jobs = 2) # parallelism == "parLapply" by default.
+make(plan, parallelism = "mclapply", jobs = 2) # not for Windows
 readd(coef_regression2_large)
 ```
 
@@ -287,10 +288,12 @@ To distribute those [Makefile](http://kbroman.org/minimal_make/) jobs over multi
 ```r
 #!/bin/bash
 shift
-echo "module load R/3.3.2; $*" | qsub -sync y -cwd -j y
+echo "module load R; $*" | qsub -sync y -cwd -j y
 ```
 
-Note that you may need to replace `R/3.3.2` with your version of R. Next, put your main code, including your call to `make(plan, ...)`, inside an R script such as `script.R`. To run your workflow on the cluster, use the [Linux terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) to enter the following.
+You may need to replace `module load R` with a command to load a specific version of R. Next, put your main code, including your call to `make(plan, ...)`, inside an R script such as `script.R`. 
+
+To run your workflow on the cluster, use the [Linux terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) to enter the following.
 
 ```r
 nohup nice -19 R CMD BATCH script.R &

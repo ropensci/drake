@@ -171,8 +171,8 @@ clean() # report.html and report.md are removed, but report.Rmd stays.
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################
 
-# Does not work on Windows.
-make(plan, parallelism = "mclapply", jobs = 2) # "mclapply" is default.
+make(plan, jobs = 2) # parallelism == "parLapply" by default
+# make(plan, parallelism = "mclapply", jobs = 2) # Not for Windows
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # All up to date.
@@ -198,13 +198,13 @@ clean() # Start over next time.
 
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
 # You could write this file by hand if you wanted.
-# You may have to change 'module load R/3.3.2' to another 
-# version of R that has your packages.
+# You may have to change 'module load R' to a command that
+# loads a specific version of R.
 
 writeLines(c(
   "#!/bin/bash",
   "shift",
-  "echo \"module load R/3.3.2; $*\" | qsub -sync y -cwd -j y"
+  "echo \"module load R; $*\" | qsub -sync y -cwd -j y"
 ), "shell.sh")
 
 system2("chmod", args = c("+x", "shell.sh")) # permission to execute
