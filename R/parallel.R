@@ -54,12 +54,3 @@ parallel_stage = function(graph_remaining_targets, worker,
   }
   delete_vertices(graph_remaining_targets, v = candidates)
 }
-
-run_lapply = function(config){
-  run_parallel(config = config, worker = worker_lapply)
-}
-
-worker_lapply = function(targets, hash_list, config){
-  lapply(X = targets, FUN = build,
-    hash_list = hash_list, config = config)
-}
