@@ -7,7 +7,7 @@ Authors@R: c(
     email = "will.landau@lilly.com", role = c("aut", "cre")),
   person(family = "Eli Lilly and Company", role = "cph"))
 Description: Reproducible build system for any project. Understands
-    the dependency structure of your workflow, builds out-of-date
+    the dependency structure of your project, builds out-of-date
     targets, skips up-to-date targets, and offers two forms of
     parallel computing.
 License: GPL-3
