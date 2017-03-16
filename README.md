@@ -21,7 +21,7 @@ The original idea of a time-saving reproducible build system extends back decade
 - generative templating to plan large workflows without much typing.
 - smoother, safer user-side handling of external files and nested commands.
 - distributed computing though **seamless** integration with [Makefiles](http://kbroman.org/minimal_make/).
-- single-session multiprocess parallel computing via [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html).
+- single-session multiprocess parallel computing via [parallel::parLapply](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/clusterApply.html) and [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html). (The user can choose either.)
 - robust detection of dependencies from users' packages.
 - a wholehearted embrace of [igraph](http://igraph.org/r/) to drive the backend.
 
@@ -49,7 +49,7 @@ devtools::install_github("wlandau-lilly/drake@v2.0.0", build = TRUE)
 
 # Windows
 
-Drake uses `mclapply()` for parallel computing within a single R session. Unfortunately, `mclapply()` cannot run parallel workflows on Windows, so only distributed parallelism is supported for Windows users. For distributed parallel computing over multiple R sessions, Windows users need [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). This is because drake runs [Makefiles](http://kbroman.org/minimal_make/) with `system2("make", ...)`.
+Drake presents `mclapply()` as one of two single-session parallel computing backends. Unfortunately, `mclapply()` cannot run multiple parallel jobs on Windows, so Windows users should use set `parallelism = "parLapply"` rather than `parallelism = "mclapply"` inside `make()`. For true distributed parallel computing over multiple R sessions, Windows users need [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). This is because drake runs [Makefiles](http://kbroman.org/minimal_make/) with `system2("make", ...)`.
 
 # Tutorials
 

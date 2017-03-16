@@ -29,15 +29,15 @@ The original idea of a time-saving reproducible build system extends back decade
 - generative templating to plan large workflows without much typing.
 - smoother, safer user-side handling of external files and nested commands.
 - distributed computing though **seamless** integration with [Makefiles](http://kbroman.org/minimal_make/).
-- single-session multiprocess parallel computing via [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html).
+- single-session multiprocess parallel computing via [parallel::parLapply](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/clusterApply.html) and [parallel::mclapply()](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html). (The user can choose either.)
 - robust detection of dependencies from users' packages.
 - a wholehearted embrace of [igraph](http://igraph.org/r/) to drive the backend.
 
 Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
 
-# Rtools for Windows users
+# Windows
 
-Windows users need [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/) to run `make(..., parallelism = "Makefile")` (`system2("make")` needs to be possible).
+Drake presents `mclapply()` as one of two single-session parallel computing backends. Unfortunately, `mclapply()` cannot run multiple parallel jobs on Windows, so Windows users should use set `parallelism = "parLapply"` rather than `parallelism = "mclapply"` inside `make()`. For true distributed parallel computing over multiple R sessions, Windows users need [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). This is because drake runs [Makefiles](http://kbroman.org/minimal_make/) with `system2("make", ...)`.
 
 # Help and troubleshooting
 
