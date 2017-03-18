@@ -59,6 +59,7 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple tuto
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
+vignette("caution") # Drake is not perfect. Read this to be safe.
 ```
 
 # Quickstart examples
@@ -76,6 +77,10 @@ example_drake("basic")
 ```
 
 Step through the code files to get started.
+
+# Words of caution
+
+Drake tries to reproducibly track everything, but there are limitations. It is possible in some cases to trick drake into ignoring dependencies. Please read the "caution" vignette (`vignette("caution")`) to use drake safely.
 
 # Help and troubleshooting
 

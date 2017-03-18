@@ -1,0 +1,40 @@
+---
+title: "Caution"
+subtitle: "Cautionary notes for drake"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{drake}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<h1 align="center">
+  <img width="200" src="../inst/logo.png" alt="" style = "border: none">
+</h1>
+
+```{r, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+clean(destroy = TRUE)
+```
+
+Drake tries to reproducibly track everything correctly, but there are limitations. For the most up-to-date information on unhandled edge cases, please visit the [issues tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Here, I will try to address some of the main issues to keep in mindo for writing reproducible workflows safely.
+
+# Drake overlooks dependencies in some edge cases.
+
+Drake uses [codetools::findGlobals()](https://cran.r-project.org/web/packages/codetools/index.html) in the backend to look for dependencies, which can be fooled. For example, suppose you have a custom function `f` in your workspace.
+
+```r
+f <- function(){
+  assign("a", 1)
+  b = get("x", envir = globalenv())
+  digest::digest(readLines('my_file.txt'))
+}
+```
+
+When drake looks for the dependencies of `f`, it will fail to recognize the objects `a` and `x`, the function `digest()`, and the file `'my_file.txt'`. Objects `a` and `x` are referenced with quoted strings, not symbols, which tricks drake. The function `digest()` is referenced with the scoping rule `::`, so [codetools::findGlobals()](https://cran.r-project.org/web/packages/codetools/index.html) does not detect it. Lastly, because `'my_file.txt'` is inside a function and not a command in your workflow plan data frame, drake will not reproducibly track it.
+
+When it comes to commands in your workflow plan data frame, there are similar issues. It is possible to use double-quoted strings and the scoping operator `::` to trick drake into overlooking objects, functions, and files that should be dependencies. Use the `check()` function to scan the workflow plan for double-quoted strings and print out messages telling you where they occur.
+
+If you are ever unsure about which targets and dependencies in your project are reporducibly tracked, please look at the dependency tree/graph of your worklflow plan. Use `build_graph()` to obtain an [igraph](http://igraph.org/) object of the dependency structure of your workflow, and use `plot_graph()` to make a plot of the graph.
