@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{build_graph}
 \alias{build_graph}
-\title{Function \code{plot_graph}}
+\title{Function \code{build_graph}}
 \usage{
 build_graph(plan, targets = plan$target, envir = parent.frame())
 }

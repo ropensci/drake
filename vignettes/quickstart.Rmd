@@ -178,7 +178,14 @@ plan = rbind(report, datasets, load_in_report, analyses, results)
 plan
 ```
 
-Optionally, check your workflow plan for obvious errors and pitfalls.
+Use the `tracked()` function to list which objects, functions, files, targets, etc. are reporducibly tracked. Drake is not perfect, and it can miss dependencies in some edge cases.
+
+```{r tracked}
+tracked(plan)
+tracked(plan, targets = "small")
+```
+
+Check your workflow plan for other errors and pitfalls, such as circularities and possibly missed file dependencies.
 ```{r check}
 check(plan)
 ```

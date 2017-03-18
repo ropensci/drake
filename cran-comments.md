@@ -1,6 +1,6 @@
 # Version 2.1.0
 
-This version fixes a vignette build error on Solaris, touches up the logo, and adds parLapply() to the arsenal of parallel computing options.
+This version fixes a vignette build error on Solaris, touches up the logo, and adds parLapply() to the arsenal of parallel computing options (now the default). I also added the `tracked()` function to list which objects, functions, files, targets, etc. are reproducibly tracked. Lastly, there is an important new "caution" vignette. It tells users about the edge cases that can trick drake into overlooking dependencies, as well as ways to verify which objects are being reproducibly tracked.
 
 # Version 2.0.0
 

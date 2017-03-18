@@ -1,6 +1,21 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("tracked() works", {
+  dclean()
+  config = dbug()
+  x = tracked(plan = config$plan, envir = config$envir)
+  y = c("'intermediatefile.rds'", "yourinput", "nextone", "combined",
+    "myinput", "final", "j", "i", "h", "g", "f", "c", "b", "a", "saveRDS",
+    "'input.rds'", "readRDS")
+  expect_equal(x, y)
+  x = tracked(plan = config$plan, targets = "myinput", 
+    envir = config$envir)
+  y = c("myinput", "'input.rds'", "readRDS")
+  expect_equal(x, y)
+  dclean()
+})
+
 test_that("mclapply and lapply", {
   dclean()
   config = dbug()

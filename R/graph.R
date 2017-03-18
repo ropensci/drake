@@ -13,7 +13,7 @@ plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
     plot.igraph
 }
 
-#' @title Function \code{plot_graph}
+#' @title Function \code{build_graph}
 #' @description Make a graph of the dependency structure of your workflow.
 #' @details This function returns an igraph object representing how
 #' the targets in your workflow depend on each other. 
@@ -49,6 +49,22 @@ build_graph = function(plan, targets = plan$target,
   if(!is_dag(graph)) 
     stop("Workflow is circular (chicken and egg dilemma).")
   graph
+}
+
+#' @title Function \code{tracked}
+#' @description Print out which objects, functions, files, targets, etc.
+#' are reproducibly tracked.
+#' @export
+#' @param plan workflow plan data frame, same as for function
+#' \code{\link{make}()}.
+#' @param targets names of targets to bulid, same as for function
+#' \code{\link{make}()}.
+#' @param envir environment to import from, same as for function
+#' \code{\link{make}()}.
+tracked = function(plan, targets = plan$target, envir = parent.frame()){
+  force(envir)
+  graph = build_graph(plan = plan, targets = targets, envir = envir)
+  V(graph)$name
 }
 
 assert_unique_names = function(imports, targets){
