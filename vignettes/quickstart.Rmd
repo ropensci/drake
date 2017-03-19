@@ -178,11 +178,12 @@ plan = rbind(report, datasets, load_in_report, analyses, results)
 plan
 ```
 
-Use the `tracked()` function to list which objects, functions, files, targets, etc. are reporducibly tracked. Drake is not perfect, and it can miss dependencies in some edge cases.
+Use the `tracked()` function to list which objects, functions, files, targets, etc. that drake tries to reporducibly track. (I say "tries" because if you mention a symbol in a command or function but drake cannot find it, drake will skip it, and if verbose is `TRUE`, you will be notified.) Drake is not perfect, and it can miss dependencies in some edge cases, so you should inspect the output of `tracked()`. (See also `build_graph()` and `plot_graph()` to inspect the dependency tree of your project.)
 
 ```{r tracked}
-tracked(plan)
+"small" %in% tracked(plan)
 tracked(plan, targets = "small")
+tracked(plan)
 ```
 
 Check your workflow plan for other errors and pitfalls, such as circularities and possibly missed file dependencies.

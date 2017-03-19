@@ -106,6 +106,14 @@ report = plan(
 # Row order doesn't matter in the workflow plan.
 plan = rbind(report, datasets, load_in_report, analyses, results)
 
+# Use tracked() to verify the objects, functions, targets, et. 
+# that drake tries to reproducibly track. It is wise to verify this
+# for yourself because drake can be tricked in some edge cases. 
+# See vignette("caution").
+"small" %in% tracked(plan)
+tracked(plan, targets = "small")
+tracked(plan)
+
 # Check the plan for obvious errors and pitfalls.
 check(plan)
 
