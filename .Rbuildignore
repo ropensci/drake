@@ -7,6 +7,7 @@
 ^_site$
 .DS_Store
 \.git$
+\.github$
 \.gitignore$
 \.Rapp.history$
 \.Rbuildignore$

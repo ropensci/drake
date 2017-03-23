@@ -97,6 +97,9 @@ load_in_report = plan(
 
 # External file targets and dependencies should be single-quoted.
 # Use double quotes to remove any special meaning from character strings.
+# Single quotes inside imported functions are ignored, so this mechanism
+# only works inside the workflow plan data frame.
+# WARNING: drake cannot track entire directories (folders).
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
 ## The html report requires pandoc. Commented out.

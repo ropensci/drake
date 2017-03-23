@@ -160,7 +160,7 @@ load_in_report = plan(
 load_in_report
 ```
 
-In the commands to render the report, keep in mind the rule for working with files: use single quotes to declare external file targets and dependencies, and use double quotes to remove any special meaning from character strings.
+In the commands to render the report, keep in mind the rule for working with files: use single quotes to declare external file targets and dependencies, and use double quotes to remove any special meaning from character strings. Single quotes inside any custom functions are ignored, so this mechanism only works for your workflow plan data frame. Also, please be aware that drake cannot track entire directories (folders).
 
 ```{r reportplan}
 report = plan(
