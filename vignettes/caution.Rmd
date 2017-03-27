@@ -21,6 +21,21 @@ clean(destroy = TRUE)
 
 Drake tries to reproducibly track everything correctly, but there are limitations. For the most up-to-date information on unhandled edge cases, please visit the [issues tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Here, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
+## Minimize the side effects of your commands.
+
+Consider the workflow plan data frame below.
+
+```{r, echo = FALSE}
+library(drake)
+```
+
+```{r}
+plan(list = c(a = "x <- 1; return(x)"))
+```
+
+Here, `x` is a mere side effect of the command, and it will not be reproducibly tracked. And if you add to the workflow to include a proper target called `x`, the results of your analysis may not be correct. Side effects of commands can be unpredictable, so please try to minimize them.
+
+
 ## Do not change your working directory.
 
 During the execution workflow of a drake project, please do not change your working directory (with `setwd()`, for example). At the very least, if you do change your working directory during a command in your workflow plan, please return to the original working directory before the command is completed. Drake relies on a hidden cache (the `.drake/` folder) at the root of your project, so navigating to a different folder will confuse drake.
