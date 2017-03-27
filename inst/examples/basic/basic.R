@@ -182,7 +182,7 @@ clean() # report.html and report.md are removed, but report.Rmd stays.
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################
 
-make(plan, jobs = 2) # parallelism == "parLapply" by default
+make(plan, jobs = 2) # parallelism == "parLapply" for Windows
 # make(plan, parallelism = "mclapply", jobs = 2) # Not for Windows
 readd(coef_regression2_large) # see also: loadd(), cached()
 

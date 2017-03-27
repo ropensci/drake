@@ -211,7 +211,7 @@ cached()
 built()
 imported()
 head(read_plan())
-# plot_graph() # plots the tree structure of your workflow plan
+# read_graph() # reads/plots the tree structure of your workflow plan
 head(status()) # last call to make()
 status(large)
 ```
@@ -276,7 +276,7 @@ clean(destroy = TRUE) # removes the cache entirely
 
 # High-performance parallel computing
 
-Within a single R session and a single compute node, you can spread your work over multiple parallel processes. Select the type of parallel computing with the `parallelism` argument to `make()`, and select the maximum number of parallel tasks with the `jobs` argument. Set `parallelism = "parLapply"` (default) to use `parallel::parLapply()` in the backend. This approach works on most (if not all) platforms, but setting up the local cluster at the beginning takes extra time. Users with non-Windows platforms can set `parallelism = "mclapply"` to use `parallel::mclapply()` on the backend, which requires less overhead.
+Within a single R session and a single compute node, you can spread your work over multiple parallel processes. Select the type of parallel computing with the `parallelism` argument to `make()`, and select the maximum number of parallel tasks with the `jobs` argument. Set `parallelism = "parLapply"` (default for Windows) to use `parallel::parLapply()` in the backend. This approach works on most (if not all) platforms, but setting up the local cluster at the beginning takes extra time. Users with non-Windows platforms can set `parallelism = "mclapply"` (non-Windows default) to use `parallel::mclapply()` on the backend, which requires less overhead.
 
 ```r
 make(plan, jobs = 2) # parallelism == "parLapply" by default.
