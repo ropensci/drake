@@ -31,6 +31,17 @@ parallelism_choices = function(){
   c("parLapply", "mclapply", "Makefile")
 }
 
+#' @title Function \code{default_parallelism}
+#' @description Default parallelism for \code{\link{make}()}:
+#' \code{"parLapply"} for Windows machines and \code{"mclapply"}
+#' for other platforms.
+#' @export
+#' @return default parallelism option for the current platform
+default_parallelism = function(){
+  ifelse(Sys.info()['sysname'] == "Windows", "parLapply", "mclapply") %>%
+    unname
+}
+
 run_parallel = function(config, worker){
   graph_remaining_targets = config$graph
   while(length(V(graph_remaining_targets)))
