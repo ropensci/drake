@@ -18,6 +18,13 @@ Run \code{make(..., parallelism = x, jobs = n)} for any of
 the following values of \code{x} to distribute targets over parallel
 units of execution.
 \describe{
+ \item{"parLapply"}{launches multiple processes in a single R session
+ using \code{parallel::\link{parLapply}()}.
+ This is single-node, (potentially) multicore computing.
+ It requires more overhead than the \code{"mclapply"} option,
+ but it works on Windows. If \code{jobs} is \code{1} in 
+ \code{\link{make}()}, then no "cluster" is created and 
+ no parallelism is used.}
  \item{"mclapply"}{uses multiple processes in a single R session.
  This is single-node, (potentially) multicore computing.
  Does not work on Windows for \code{jobs > 1}
@@ -30,10 +37,5 @@ units of execution.
  As explained in the vignettes, you can use the \code{prepend}
  to \code{\link{make}()} or \code{\link{make}()} to distribute
  targets over multiple nodes of a supercomputer. Use this
- approach for true distributed computing.}
- \item{"parLapply"}{launches multiple processes in a single R session
- using \code{parallel::\link{parLapply}()}.
- This is single-node, (potentially) multicore computing.
- It requires more overhead than the \code{"mclapply"} option,
- but it works on Windows.}}
+ approach for true distributed computing.}}
 }

@@ -37,7 +37,8 @@
 #' parallel processes wherever possible. (This is not possible on
 #' Windows.) Setting \code{parallelism} to \code{"parLapply"}
 #' is similar, except that it uses \code{parallel::\link{parLapply}()}.
-#' It works on Windows, but it requires more overhead.
+#' It works on Windows, but it requires more overhead (except
+#' if \code{jobs == 1}, in which case no "cluster" is created).
 #' If \code{"Makefile"}, drake will write
 #' and execute a Makefile to distribute targets across separate
 #' R sessions. The vignettes (\code{vignette(package = "drake")})
