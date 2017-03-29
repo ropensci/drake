@@ -30,7 +30,7 @@ add_packages_to_prework = function(packages, prework){
 }
 
 do_prework = function(config, verbosePackages){
-  wrapper = ifelse(verbosePackages, I, suppressPackageStartupMessages)
+  wrapper = ifelse(verbosePackages, function(...){}, suppressPackageStartupMessages)
   for(code in config$prework)
     wrapper(eval(parse(text = code), envir = config$envir))
 }
