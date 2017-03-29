@@ -21,6 +21,17 @@ clean(destroy = TRUE)
 
 Drake tries to reproducibly track everything correctly, but there are limitations. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Here, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
+## Commands are not perfectly flexible.
+
+In your workflow plan data frame (produced by `plan()` and accepted by `make()`), your commands can usually be flexible R expressions.
+
+```{r}
+plan(target1 = 1 + 1 - sqrt(sqrt(3)), 
+     target2 = my_function(web_scraped_data) %>% my_tidy)
+```
+
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but this is likely to cause problems in general. Rather than using commands for this, is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` for more control.)
+
 ## Minimize the side effects of your commands.
 
 Consider the workflow plan data frame below.

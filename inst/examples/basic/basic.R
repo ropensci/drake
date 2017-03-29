@@ -205,6 +205,7 @@ clean() # Start over next time.
 
 ######################################################
 ### DISTRIBUTED COMPUTING: FOUR NODES ON A CLUSTER ###
+### ONLY ATTEMPT ON A PROPER COMPUTING CLUSTER     ###
 ######################################################
 
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
@@ -224,6 +225,8 @@ system2("chmod", args = c("+x", "shell.sh")) # permission to execute
 # and then run it in the Linux/Mac terminal with
 # nohup nice -19 R CMD BATCH my_script.R &
 
+if(FALSE){ # Only attempt this part on a proper computing cluster.
+
 # Run up to four parallel jobs on the cluster or supercomputer,
 # depending on what is needed. These jobs could go to multiple 
 # nodes for true distributed computing.
@@ -234,6 +237,8 @@ readd(coef_regression2_large) # see also: loadd(), cached()
 # Everything is up to date, so no jobs should be submitted.
 make(plan, parallelism = "Makefile", jobs = 4, 
   prepend = "SHELL=./shell.sh")
+
+} # if(FALSE)
 
 ###########################
 ### CLEAN UP ALL OUTPUT ###
