@@ -24,7 +24,8 @@ config = function(plan, targets, envir, jobs,
 add_packages_to_prework = function(packages, prework){
   if(!length(packages)) return(prework)
   package_list = deparse(packages) %>% paste(collapse = "\n")
-  paste0("load_if_missing(", package_list, ")") %>%
+  paste0("if(!R.utils::isPackageLoaded(\"", packages, "\")) library(",
+    packages, ")", sep = "") %>%
     c(prework)
 }
 
@@ -32,25 +33,6 @@ do_prework = function(config, verbosePackages){
   wrapper = ifelse(verbosePackages, I, suppressPackageStartupMessages)
   for(code in config$prework)
     wrapper(eval(parse(text = code), envir = config$envir))
-}
-
-#' @title Function \code{load_if_missing}
-#' @description loads and attaches packages
-#' if they are not already loaded.
-#' @export
-#' @param packages character vector of package names.
-load_if_missing = function(packages){
-  Filter(packages, f = R.utils::isPackageLoaded) %>%
-    setdiff(x = packages) %>%
-    lapply(FUN = safe_library) %>%
-    invisible
-}
-
-safe_library = function(package){
-  tryCatch(library(package, character.only = TRUE),
-    error = function(e){
-      warning("could not load package ", package)
-    })
 }
 
 possible_targets = function(plan){c(
