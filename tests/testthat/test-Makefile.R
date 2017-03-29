@@ -71,7 +71,8 @@ test_that("packages are loaded in prework", {
   library(MASS)
   config$packages = NULL
   expect_false(any(c("x", "y") %in% config$cache$list()))
-  testrun_automatic_packages(config)
+  suppressWarnings( # drake may be loaded but not installed.
+    testrun_automatic_packages(config))
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)

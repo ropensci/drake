@@ -24,7 +24,7 @@ config = function(plan, targets, envir, jobs,
 add_packages_to_prework = function(packages, prework){
   if(!length(packages)) return(prework)
   package_list = deparse(packages) %>% paste(collapse = "\n")
-  paste0("drake::load_if_missing(", package_list, ")") %>%
+  paste0("load_if_missing(", package_list, ")") %>%
     c(prework)
 }
 
@@ -40,10 +40,17 @@ do_prework = function(config, verbosePackages){
 #' @export
 #' @param packages character vector of package names.
 load_if_missing = function(packages){
-  Filter(packages, f = isPackageLoaded) %>%
+  Filter(packages, f = R.utils::isPackageLoaded) %>%
     setdiff(x = packages) %>%
-    lapply(FUN = library, character.only = TRUE) %>%
+    lapply(FUN = safe_library) %>%
     invisible
+}
+
+safe_library = function(package){
+  tryCatch(library(package, character.only = TRUE),
+    error = function(e){
+      warning("could not load package ", package)
+    })
 }
 
 possible_targets = function(plan){c(

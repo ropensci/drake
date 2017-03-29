@@ -23,7 +23,7 @@ self_hash = Vectorize(function(target, config){
 
 file_hash = function(target, config){
   if(is_not_file(target)) return(as.character(NA))
-  filename = unquote(target)
+  filename = eply::unquote(target)
   if(!file.exists(filename)) return(as.character(NA))
   old_mtime = ifelse(target %in% 
     config$cache$list(namespace = "filemtime"),
@@ -35,7 +35,7 @@ file_hash = function(target, config){
 }
 
 rehash_file = function(target){
-  unquote(target) %>% md5sum %>% unname
+  eply::unquote(target) %>% tools::md5sum() %>% unname
 }
 
 tidy = function(x){

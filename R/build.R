@@ -54,7 +54,7 @@ store_file = function(target, hashes, imported, config){
   hash = ifelse(imported, hashes$file, rehash_file(target))
   config$cache$set(key = target, 
     value = list(type = "file", value = hash, imported = imported))
-  config$cache$set(key = target, value = file.mtime(unquote(target)), 
+  config$cache$set(key = target, value = file.mtime(eply::unquote(target)), 
     namespace = "filemtime")
 }
 

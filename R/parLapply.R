@@ -5,7 +5,8 @@ run_parLapply = function(config){
   }
   outfile = ifelse(config$verbose, "", "/dev/null")
   config$cluster = makePSOCKcluster(config$jobs, outfile = outfile)
-  clusterExport(cl = config$cluster, varlist = "config",
+  clusterExport(cl = config$cluster, 
+    varlist = c("config", "%>%", ls("package:drake")),
     envir = environment())
   clusterCall(cl = config$cluster, fun = do_prework, 
     config = config, verbosePackages = FALSE)
