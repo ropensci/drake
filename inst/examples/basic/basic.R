@@ -208,6 +208,8 @@ clean() # Start over next time.
 ### ONLY ATTEMPT ON A PROPER COMPUTING CLUSTER     ###
 ######################################################
 
+if(FALSE){ # Only attempt this part on a proper computing cluster.
+
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
 # You could write this file by hand if you wanted.
 # You may have to change 'module load R' to a command that
@@ -224,8 +226,6 @@ system2("chmod", args = c("+x", "shell.sh")) # permission to execute
 # In reality, you would put all your code in an R script
 # and then run it in the Linux/Mac terminal with
 # nohup nice -19 R CMD BATCH my_script.R &
-
-if(FALSE){ # Only attempt this part on a proper computing cluster.
 
 # Run up to four parallel jobs on the cluster or supercomputer,
 # depending on what is needed. These jobs could go to multiple 
