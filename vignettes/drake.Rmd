@@ -11,7 +11,7 @@ vignette: >
 ---
 
 <h1 align="center">
-  <img width="200" src="../inst/logo.png" alt="" style = "border: none">
+  <img width="200" src="logo.png" alt="" style = "border: none">
 </h1>
 
 ```{r, echo = F}
