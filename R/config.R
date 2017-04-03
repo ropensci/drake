@@ -23,7 +23,7 @@ config = function(plan, targets, envir, jobs,
 
 add_packages_to_prework = function(packages, prework){
   if(!length(packages)) return(prework)
-  package_list = deparse(packages) %>% paste(collapse = "\n")
+  package_list = wide_deparse(packages) %>% paste(collapse = "\n")
   paste0("if(!R.utils::isPackageLoaded(\"", packages, "\")) library(",
     packages, ")", sep = "") %>%
     c(prework)

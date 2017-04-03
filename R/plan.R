@@ -39,7 +39,7 @@ plan = function(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals")) {
   strings_in_dots = match.arg(strings_in_dots)
   dots = match.call(expand.dots = FALSE)$...
-  commands_dots = lapply(dots, deparse)
+  commands_dots = lapply(dots, wide_deparse)
   names(commands_dots) = names(dots)
   commands = c(commands_dots, list)
   targets = names(commands)
@@ -67,4 +67,8 @@ plan = function(..., list = character(0), file_targets = FALSE,
 #' single quotes on both ends).
 as_file = function(x){
   quotes(x, single = TRUE)
+}
+
+wide_deparse = function(x){
+  deparse(x, width.cutoff = 500)
 }

@@ -59,7 +59,7 @@ store_file = function(target, hashes, imported, config){
 }
 
 store_function = function(target, value, hashes, imported, config){
-  string = deparse(value)
+  string = wide_deparse(value)
   config$cache$set(key = target,
     value = list(type = "function", value = string, imported = imported,
       depends = hashes$depends)) # for nested functions
