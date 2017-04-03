@@ -70,5 +70,5 @@ as_file = function(x){
 }
 
 wide_deparse = function(x){
-  deparse(x, width.cutoff = 500)
+  paste(deparse(x), collapse = " ")
 }
