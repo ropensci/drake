@@ -30,7 +30,7 @@ plan(target1 = 1 + 1 - sqrt(sqrt(3)),
      target2 = my_function(web_scraped_data) %>% my_tidy)
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful, this could cause problems in general. Rather than using commands for this, is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` for more control.)
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful, this could cause problems in general. Rather than using commands for this, is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` for more control.) Use the `check()` function to help screen and quality-control your workflow plan data frame.
 
 ## Minimize the side effects of your commands.
 
@@ -57,7 +57,7 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 
 ## Dependencies are not tracked in some edge cases.
 
-First of all, if you are ever unsure about what exactly is reproducibly tracked, use the `tracked()` function to list the names of all reproducibly tracked objects, functions, targets, files, etc. Alternatively, use `build_graph()` to obtain an [igraph](http://igraph.org/) object of the dependency structure of your workflow, and use `plot_graph()` to make a plot of the graph. 
+First of all, if you are ever unsure about what exactly is reproducibly tracked, use the `tracked()` function to list the names of all reproducibly tracked objects, functions, targets, files, etc. Alternatively, use `build_graph()` to obtain an [igraph](http://igraph.org/) object of the dependency structure of your workflow, and use `plot_graph()` to make a plot of the graph. And again, use the `check()` function to help screen and quality-control your project.
 
 Drake uses [codetools::findGlobals()](https://cran.r-project.org/package=codetools) in the backend to look for dependencies, which can be fooled. For example, suppose you have a custom function `f` in your workspace.
 
