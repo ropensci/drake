@@ -64,6 +64,7 @@ initialize = function(config){
 #' @param target name of target to make
 mk = function(target){
   config = get_cache()$get("config", namespace = "makefile")
+  config = inventory(config)
   do_prework(config = config, verbosePackages = FALSE)
   prune_envir(targets = target, config = config)
   hash_list = hash_list(targets = target, config = config)

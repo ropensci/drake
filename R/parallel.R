@@ -52,6 +52,7 @@ run_parallel = function(config, worker){
 
 parallel_stage = function(graph_remaining_targets, worker, 
   config){
+  config = inventory(config)
   candidates = next_targets(graph_remaining_targets)
   hash_list = hash_list(targets = candidates, config = config)
   build_these = Filter(candidates, f = function(target)

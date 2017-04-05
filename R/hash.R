@@ -17,7 +17,7 @@ dependency_hash = function(target, config){
 }
 
 self_hash = Vectorize(function(target, config){
-  if(target %in% config$cache$list()) config$cache$get_hash(target)
+  if(target %in% config$inventory) config$cache$get_hash(target)
   else as.character(NA)
 }, "target", USE.NAMES = FALSE)
 
@@ -26,7 +26,7 @@ file_hash = function(target, config){
   filename = eply::unquote(target)
   if(!file.exists(filename)) return(as.character(NA))
   old_mtime = ifelse(target %in% 
-    config$cache$list(namespace = "filemtime"),
+    config$inventory_filemtime,
     config$cache$get(key = target, namespace = "filemtime"), -Inf)
   new_mtime = file.mtime(filename)
   do_rehash = file.size(filename) < 1e5 | new_mtime > old_mtime

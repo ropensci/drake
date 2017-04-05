@@ -18,7 +18,8 @@ config = function(plan, targets, envir, jobs,
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command, args = args,
-    graph = graph, order = order)
+    graph = graph, order = order, inventory = cache$list(),
+    inventory_filemtime = cache$list(namespace = "filemtime"))
 }
 
 add_packages_to_prework = function(packages, prework){
@@ -31,9 +32,16 @@ add_packages_to_prework = function(packages, prework){
 }
 
 do_prework = function(config, verbosePackages){
-  wrapper = ifelse(verbosePackages, invisible, suppressPackageStartupMessages)
+  wrapper = ifelse(verbosePackages, invisible, 
+    suppressPackageStartupMessages)
   for(code in config$prework)
     wrapper(eval(parse(text = code), envir = config$envir))
+}
+
+inventory = function(config){
+  config$inventory = config$cache$list()
+  config$inventory_filemtime = config$cache$list(namespace = "filemtime")
+  config
 }
 
 possible_targets = function(plan){c(

@@ -5,7 +5,7 @@ should_build = function(target, hash_list, config){
 }
 
 target_current = function(target, hashes, config){
-  if(!(target %in% config$cache$list())) return(FALSE)
+  if(!(target %in% config$inventory)) return(FALSE)
   if(!file_current(target = target, hashes = hashes, config = config)) 
     return(FALSE)
   identical(config$cache$get(target, namespace = "depends"),
