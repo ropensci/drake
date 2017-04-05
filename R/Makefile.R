@@ -45,11 +45,11 @@ makefile_rules = function(config){
 }
 
 initialize = function(config){ 
-  config = inventory(config)
   config$cache$clear(namespace = "status")
   do_prework(config = config, verbosePackages = TRUE)
   imports = setdiff(config$order, config$plan$target)
   for(import in imports){ # Strict order needed. Might parallelize later.
+    config = inventory(config)
     hash_list = hash_list(targets = import, config = config)
     build(target = import, hash_list = hash_list, config = config)
   }
@@ -75,8 +75,10 @@ mk = function(target){
   if(current) return(invisible())
   build(target = target, 
     hash_list = hash_list, config = config)
+  config = inventory(config)
   new_hash = self_hash(target = target, config = config)
-  if(!identical(old_hash, new_hash))
+  if(!identical(old_hash, new_hash)){
     file_overwrite(time_stamp(target))
+  }
   invisible()
 }
