@@ -11,7 +11,7 @@
 #' @importFrom plyr ddply
 #' @importFrom R.utils isPackageLoaded
 #' @importFrom stats complete.cases rnorm setNames
-#' @importFrom storr storr_rds
+#' @importFrom storr decode64 encode64 storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat expect_true

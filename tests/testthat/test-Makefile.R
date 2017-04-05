@@ -12,6 +12,26 @@ test_that("prepend arg works", {
   dclean()
 })
 
+test_that("files inside directories can be timestamped", {
+  dclean()
+  plan = plan(list = c("'t1/t2'" = 
+    'dir.create("t1"); saveRDS(1, file.path("t1", "t2"))'))
+  plan$target[1] = file = eply::quotes(file.path("t1", "t2"), 
+    single = TRUE)
+  config = drake::config(plan = plan, targets = plan$target[1],
+    parallelism = "parLapply", verbose = FALSE, packages = character(0),
+    prework = character(0), prepend = character(0),
+    command = character(0), args = character(0), envir = new.env(),
+    jobs = 1)
+  run_Makefile(config, run = FALSE)
+  expect_silent(mk(config$plan$target[1]))
+  expect_true(file.exists("t1"))
+  expect_true(file.exists(unquote(file)))
+  unlink("t1", recursive = TRUE)
+  expect_false(file.exists("t1"))
+  dclean()
+})
+
 test_that("basic Makefile stuff works", {
   dclean()
   config = dbug()
@@ -21,8 +41,8 @@ test_that("basic Makefile stuff works", {
   run_Makefile(config, run = FALSE)
   expect_true(file.exists("Makefile"))
   stamps = list.files(file.path(time_stamp_dir))
-  expect_equal(stamps, c("combined", "myinput", "nextone", 
-    "yourinput"))
+  expect_equal(stamps, sort(storr::encode64(c("combined", "myinput", 
+    "nextone", "yourinput"))))
   expect_false(file.exists("intermediatefile.rds"))
   mk("'intermediatefile.rds'")
   expect_true(file.exists("intermediatefile.rds"))

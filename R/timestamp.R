@@ -12,7 +12,8 @@ time_stamps = function(config){
 }
 
 time_stamp = function(x){
-  file.path(time_stamp_dir, x)
+  key = encode64(x)
+  file.path(time_stamp_dir, key)
 }
 
 write_time_stamp = function(target){
