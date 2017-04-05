@@ -45,6 +45,7 @@ makefile_rules = function(config){
 }
 
 initialize = function(config){ 
+  config = inventory(config)
   config$cache$clear(namespace = "status")
   do_prework(config = config, verbosePackages = TRUE)
   imports = setdiff(config$order, config$plan$target)
