@@ -12,7 +12,7 @@ time_stamps = function(config){
 }
 
 time_stamp = function(x){
-  key = encode64(x)
+  key = encode64(x) %>% gsub(pattern = "=", replacement = "_")
   file.path(time_stamp_dir, key)
 }
 
