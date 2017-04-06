@@ -30,6 +30,12 @@ test_that("files inside directories can be timestamped", {
   unlink("t1", recursive = TRUE)
   expect_false(file.exists("t1"))
   dclean()
+  expect_silent(make(config$plan, verbose = FALSE))
+  expect_true(file.exists("t1"))
+  expect_true(file.exists(unquote(file)))
+  unlink("t1", recursive = TRUE)
+  expect_false(file.exists("t1"))
+  dclean()
 })
 
 test_that("basic Makefile stuff works", {
