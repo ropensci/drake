@@ -46,9 +46,10 @@ test_that("basic Makefile stuff works", {
   config$verbose = FALSE
   run_Makefile(config, run = FALSE)
   expect_true(file.exists("Makefile"))
-  stamps = list.files(file.path(time_stamp_dir))
-  expect_equal(stamps, sort(storr::encode64(c("combined", "myinput", 
-    "nextone", "yourinput"))))
+  stamps = sort(list.files(file.path(time_stamp_dir), full.names = TRUE))
+  stamps2 = sort(time_stamp(c("combined", "myinput", "nextone", 
+    "yourinput")))
+  expect_equal(stamps, stamps2)
   expect_false(file.exists("intermediatefile.rds"))
   mk("'intermediatefile.rds'")
   expect_true(file.exists("intermediatefile.rds"))
