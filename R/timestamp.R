@@ -12,9 +12,9 @@ time_stamps = function(config){
 }
 
 time_stamp = function(x){
-  key = base64_urlencode(x)
-  file = paste0("t", key)
-  file.path(time_stamp_dir, file)
+  key = base64_urlencode(x) %>%
+    gsub(pattern = "^-", replacement = "t-")
+  file.path(time_stamp_dir, key)
 }
 
 write_time_stamp = function(target){
