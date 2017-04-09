@@ -12,8 +12,9 @@ time_stamps = function(config){
 }
 
 time_stamp = function(x){
-  key = paste0("a", base64url::base64_urlencode(x))
-  file.path(time_stamp_dir, key)
+  key = base64_urlencode(x)
+  file = paste0("t", key)
+  file.path(time_stamp_dir, file)
 }
 
 write_time_stamp = function(target){
