@@ -1,3 +1,4 @@
+#' @importFrom base64url base64_urlencode
 #' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest

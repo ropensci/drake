@@ -12,8 +12,7 @@ time_stamps = function(config){
 }
 
 time_stamp = function(x){
-  key = encode64(x) %>% gsub(pattern = "=", replacement = "_", 
-    fixed = TRUE)
+  key = paste0("a", base64url::base64_urlencode(x))
   file.path(time_stamp_dir, key)
 }
 
