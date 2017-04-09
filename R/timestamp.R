@@ -12,8 +12,8 @@ time_stamps = function(config){
 }
 
 time_stamp = function(x){
-  key = base64_urlencode(x) %>%
-    gsub(pattern = "^-", replacement = "t-")
+  if(!length(x)) return(character(0))
+  key = paste0("t", base64_urlencode(x)) # must begin with alphanumeric
   file.path(time_stamp_dir, key)
 }
 
