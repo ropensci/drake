@@ -4,6 +4,7 @@
 #' missing input files.
 #' @seealso \code{link{plan}}, \code{\link{make}}
 #' @export
+#' @return invisibly return \code{plan}
 #' @param plan workflow plan data frame, possibly from 
 #' \code{\link{plan}()}.
 #' @param targets character vector of targets to make
@@ -19,7 +20,7 @@ check = function(plan, targets = plan$target, envir = parent.frame()){
   assert_input_files_exist(config)
   check_strings(config$plan)
   find_files(config)
-  invisible()
+  invisible(plan)
 }
 
 check_config = function(config){

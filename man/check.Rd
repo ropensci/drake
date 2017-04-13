@@ -14,6 +14,9 @@ check(plan, targets = plan$target, envir = parent.frame())
 
 \item{envir}{environment containing user-defined functions}
 }
+\value{
+invisibly return \code{plan}
+}
 \description{
 Check a workflow plan, etc. for obvious 
 errors such as circular dependencies and 
