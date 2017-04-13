@@ -2,7 +2,7 @@ config = function(plan, targets, envir, jobs,
   parallelism = drake::parallelism_choices(), verbose, packages,
   prework, prepend, command, args){
   parallelism = match.arg(parallelism)
-  plan = fix_deprecated_plan_names(plan)
+  plan = as.data.frame(plan) %>% fix_deprecated_plan_names
   targets = intersect(targets, plan$target)
   prework = add_packages_to_prework(packages = packages,
     prework = prework)
@@ -44,10 +44,10 @@ inventory = function(config){
   config
 }
 
-possible_targets = function(plan){c(
-  as.character(plan$output),
-  as.character(plan$target)
-)}
+possible_targets = function(plan){
+  plan = as.data.frame(plan)
+  c(as.character(plan$output), as.character(plan$target))
+}
 
 store_config = function(config){
   save_these = setdiff(names(config), "envir") # envir could get massive.

@@ -117,7 +117,7 @@ make = function(plan, targets = possible_targets(plan),
   parallelism = default_parallelism(), jobs = 1, 
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
-  args = drake::default_system2_args(jobs = jobs, verbose = verbose)){
+  args = default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(arg = parallelism, 
     choices = parallelism_choices())
