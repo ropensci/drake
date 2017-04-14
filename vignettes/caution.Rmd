@@ -10,9 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<h1 align="center">
-  <img width="200" src="logo.png" alt="" style = "border: none">
-</h1>
+![](logo-small.png)
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
