@@ -26,7 +26,7 @@ add_packages_to_prework = function(packages, prework){
   packages = c("methods", packages) %>% unique
   if(!length(packages)) return(prework)
   package_list = deparse(packages) %>% paste(collapse = "\n")
-  paste0("if(!R.utils::isPackageLoaded(\"", packages, "\")) library(",
+  paste0("if(!R.utils::isPackageLoaded(\"", packages, "\")) require(",
     packages, ")", sep = "") %>%
     c(prework)
 }
