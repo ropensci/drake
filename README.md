@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="200" src="./vignettes/logo.png" alt="">
+  <img width="200" src="./inst/logo-small.png" alt="">
 </h1>
 
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
