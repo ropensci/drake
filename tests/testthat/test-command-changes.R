@@ -14,7 +14,7 @@ test_that("changes to commands are handled well", {
   config$plan$command[2] = "f(1+2) # now downstream should rebuild"
   testrun(config)
   expect_equal(justbuilt(config), 
-    c("'intermediatefile.rds'", "combined", "final", "yourinput"))
+    sort(c("'intermediatefile.rds'", "combined", "final", "yourinput")))
   testrun(config)
   nobuild(config)
   
@@ -22,6 +22,7 @@ test_that("changes to commands are handled well", {
   config$plan$command[1] = 
     "saveRDS(combined + 1, \"intermediatefile.rds\")"
   testrun(config)
-  expect_equal(justbuilt(config), c("'intermediatefile.rds'", "final"))
+  expect_equal(justbuilt(config), 
+    sort(c("'intermediatefile.rds'", "final")))
   dclean()
 })

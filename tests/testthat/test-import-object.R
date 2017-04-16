@@ -25,7 +25,7 @@ test_that("responses to imported objects and functions", {
     h(y)+b + 1-1 - 0
   }
   testrun(config)
-  expect_equal(justbuilt(config), c("nextone", "yourinput"))
+  expect_equal(justbuilt(config), sort(c("nextone", "yourinput")))
   
   # nested function gives different answer
   config$envir$g = function(y){
@@ -46,7 +46,8 @@ test_that("responses to imported objects and functions", {
   config$envir$k = 5
   testrun(config)
   final0 = readd(final, search = FALSE)
-  builds = c("'intermediatefile.rds'", "combined", "final", "yourinput")
+  builds = sort(c("'intermediatefile.rds'", "combined", "final", 
+    "yourinput"))
   expect_equal(justbuilt(config), builds)
 
   # nothing to do

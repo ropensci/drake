@@ -29,8 +29,8 @@ test_that("target conflicts with previous import", {
   config$targets = config$plan$target
   expect_warning(testrun(config))
   expect_equal(justbuilt(config), 
-    c("'intermediatefile.rds'", "combined", "f",
-      "final", "yourinput"))
+    sort(c("'intermediatefile.rds'", "combined", "f",
+      "final", "yourinput")))
   dclean()
 })
 

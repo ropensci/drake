@@ -4,14 +4,14 @@ context("other-features")
 test_that("tracked() works", {
   dclean()
   config = dbug()
-  x = tracked(plan = config$plan, envir = config$envir)
-  y = c("'intermediatefile.rds'", "yourinput", "nextone", "combined",
+  x = sort(tracked(plan = config$plan, envir = config$envir))
+  y = sort(c("'intermediatefile.rds'", "yourinput", "nextone", "combined",
     "myinput", "final", "j", "i", "h", "g", "f", "c", "b", "a", "saveRDS",
-    "'input.rds'", "readRDS")
+    "'input.rds'", "readRDS"))
   expect_equal(x, y)
-  x = tracked(plan = config$plan, targets = "myinput", 
-    envir = config$envir)
-  y = c("myinput", "'input.rds'", "readRDS")
+  x = sort(tracked(plan = config$plan, targets = "myinput", 
+    envir = config$envir))
+  y = sort(c("myinput", "'input.rds'", "readRDS"))
   expect_equal(x, y)
   dclean()
 })

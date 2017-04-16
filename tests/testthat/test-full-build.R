@@ -19,10 +19,10 @@ test_that("scratch build with contained envir.", {
   nobuild(config)
   
   # take this opportunity to test clean() and prune()
-  all = c("'input.rds'", "'intermediatefile.rds'", "a",
+  all = sort(c("'input.rds'", "'intermediatefile.rds'", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i",
     "j", "myinput", "nextone", "readRDS", "saveRDS",
-    "yourinput")
+    "yourinput"))
   expect_equal(config$cache$list(), all)
   expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
@@ -71,7 +71,7 @@ test_that("calling environment is unaffected in scratch build.", {
   obj = ls()
   expect_equal(config$cache$list(), character(0))
   make(config$plan, verbose = FALSE)
-  expect_equal(sort(c(obj, "obj")), ls())
+  expect_equal(sort(c(obj, "obj")), sort(ls()))
   expect_true(length(config$cache$list()) > 0)
   
   # Take this opportunity to test clean() some more.

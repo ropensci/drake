@@ -32,7 +32,7 @@ justbuilt = function(config){
     function(target)
       config$cache$get(key = target, namespace = "status")) %>%
     Filter(f = function(x) x == "finished") %>% names %>%
-    intersect(y = config$plan$target)
+    intersect(y = config$plan$target) %>% sort
 }
 
 nobuild = function(config){

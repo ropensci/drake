@@ -12,22 +12,22 @@ test_that("cache functions work", {
   testrun(config)
 
   # targets
-  all = c("'input.rds'", "'intermediatefile.rds'", "a",
+  all = sort(c("'input.rds'", "'intermediatefile.rds'", "a",
         "b", "c", "combined", "f", "final", "g", "h", "i",
         "j", "myinput", "nextone", "readRDS", "saveRDS",
-        "yourinput")
-  imports = c("'input.rds'",  "a",
+        "yourinput"))
+  imports = sort(c("'input.rds'",  "a",
           "b", "c", "f", "g", "h", "i",
-          "j", "readRDS", "saveRDS")
+          "j", "readRDS", "saveRDS"))
   builds = setdiff(all, imports)
   
   # find stuff in current directory
   # session, status
   expect_true(is.list(session(search = FALSE)))
   expect_true(all(status(search = FALSE) == "finished"))
-  expect_equal(names(status(search = FALSE)), all)
-  expect_equal(names(status(search = FALSE, imported_files_only = TRUE)), 
-    c("'input.rds'", builds))
+  expect_equal(sort(names(status(search = FALSE))), all)
+  expect_equal(sort(names(status(search = FALSE, 
+    imported_files_only = TRUE))), sort(c("'input.rds'", builds)))
   expect_equal(status(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
@@ -46,18 +46,19 @@ test_that("cache functions work", {
   # imported , built, cached
   expect_equal(imported(files_only = FALSE, search = FALSE), imports)
   expect_equal(imported(files_only = TRUE, search = FALSE), "'input.rds'")
-  expect_equal(built(search = FALSE), sort(config$plan$target))
+  expect_equal(sort(built(search = FALSE)), sort(config$plan$target))
   twopiece = sort(c(built(search = FALSE), 
     imported(search = FALSE, files_only = FALSE)))
-  expect_equal(cached(search = FALSE), all, twopiece)
-  expect_equal(cached(search = FALSE, no_imported_objects = TRUE), 
-    c("'input.rds'", builds))
+  expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
+  expect_equal(sort(cached(search = FALSE, no_imported_objects = TRUE)), 
+    sort(c("'input.rds'", builds)))
   expect_true(all(cached(search = FALSE, list = all)))
   expect_equal(length(cached(search = FALSE, i, 
     list = imported(files_only = FALSE))), 
     length(imported(files_only = FALSE)))
-  expect_equal(cached(i, bla, list = c("final", "run"), search = FALSE), 
-    c(i = TRUE, bla = FALSE, final = TRUE, run = FALSE))
+  expect_equal(sort(cached(i, bla, list = c("final", "run"), 
+    search = FALSE)),
+    sort(c(i = TRUE, bla = FALSE, final = TRUE, run = FALSE)))
   
   # find your project
   expect_equal(find_project(), getwd())
@@ -91,25 +92,26 @@ test_that("cache functions work", {
   
   # status, session 
   expect_true(is.list(session(search = T, path = s)))
-  expect_equal(names(status(search = T, path = s)), all)
-  expect_equal(names(status(imported_files_only = TRUE, 
-    search = T, path = s)), c("'input.rds'", builds))
-  expect_equal(status(search = T, path = s, bla, f, 
-    list = c("h", "final")), 
-    c(bla = "not built or imported", f = "finished", 
-    h = "finished", final = "finished"))
+  expect_equal(sort(names(status(search = T, path = s))), sort(all))
+  expect_equal(sort(names(status(imported_files_only = TRUE, 
+    search = T, path = s))), sort(c("'input.rds'", builds)))
+  expect_equal(sort(status(search = T, path = s, bla, f, 
+    list = c("h", "final"))), 
+    sort(c(bla = "not built or imported", f = "finished", 
+    h = "finished", final = "finished")))
   
   # imported, built, cached
-  expect_equal(imported(files_only = FALSE, search = T, path = s),
-    imports)
+  expect_equal(sort(imported(files_only = FALSE, search = T, path = s)),
+    sort(imports))
   expect_equal(imported(files_only = T, search = T, path = s), 
     "'input.rds'")
-  expect_equal(built(search = T, path = s), sort(config$plan$target))
+  expect_equal(sort(built(search = T, path = s)), 
+    sort(config$plan$target))
   twopiece = sort(c(built(path = s, search = T), 
     imported(files_only = FALSE, path = s, search = T)))
-  expect_equal(cached(path = s, search = T), all, twopiece)
-  expect_equal(cached(no_imported_objects = TRUE,
-    path = s, search = T), c("'input.rds'", builds))
+  expect_equal(sort(cached(path = s, search = T)), sort(all), twopiece)
+  expect_equal(sort(cached(no_imported_objects = TRUE,
+    path = s, search = T)), sort(c("'input.rds'", builds)))
   expect_true(all(cached(list = all, path = s, search = T)))
   
   # find your project
