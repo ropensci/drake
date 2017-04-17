@@ -2,7 +2,7 @@ config = function(plan, targets, envir, jobs,
   parallelism = drake::parallelism_choices(), verbose, packages,
   prework, prepend, command, args){
   parallelism = match.arg(parallelism)
-  plan = as.data.frame(plan) %>% fix_deprecated_plan_names
+  plan = fix_deprecated_plan_names(plan)
   targets = intersect(targets, plan$target)
   prework = add_packages_to_prework(packages = packages,
     prework = prework)

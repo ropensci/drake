@@ -5,7 +5,7 @@ fix_deprecated_plan_names = function(plan){
       "and \"command\" instead.")
   colnames(plan) = gsub("^output$", "target", colnames(plan)) %>%
     gsub(pattern = "^code$", replacement = "command")
-  plan
+  as.data.frame(plan, stringsAsFactors = FALSE)
 }
 
 #' @title Deprecated function \code{prune}

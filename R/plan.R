@@ -52,7 +52,7 @@ plan = function(..., list = character(0), file_targets = FALSE,
   if(file_targets) plan$target = quotes(plan$target, single = T)
   if(strings_in_dots == "filenames") 
     plan$command[from_dots] = gsub("\"", "'", plan$command[from_dots])
-  plan
+  sanitize_plan(plan)
 }
 
 #' @title Function \code{as_file}
@@ -71,4 +71,12 @@ as_file = function(x){
 
 wide_deparse = function(x){
   paste(deparse(x), collapse = "")
+}
+
+sanitize_plan = function(plan){
+  for(field in c("target", "output"))
+    if(!is.null(plan[[field]])) plan[[field]] = 
+      str_trim(plan[[field]], side = "both")
+  as.data.frame(plan, stringsAsFactors = FALSE) %>%
+    fix_deprecated_plan_names
 }

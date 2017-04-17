@@ -11,9 +11,13 @@ time_stamps = function(config){
   invisible()
 }
 
+safe_encode = function(x){
+  paste0("t", base64_urlencode(x))
+}
+
 time_stamp = function(x){
   if(!length(x)) return(character(0))
-  key = paste0("t", base64_urlencode(x)) # must begin with alphanumeric
+  key = safe_encode(x) # must begin with alphanumeric
   file.path(time_stamp_dir, key)
 }
 

@@ -34,7 +34,8 @@ Suggests:
     abind,
     knitr,
     MASS,
-    rmarkdown
+    rmarkdown,
+    tibble
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues

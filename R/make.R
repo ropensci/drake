@@ -119,6 +119,7 @@ make = function(plan, targets = possible_targets(plan),
   prepend = character(0), command = "make", 
   args = default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
+  plan = sanitize_plan(plan)
   parallelism = match.arg(arg = parallelism, 
     choices = parallelism_choices())
   config = config(plan = plan, targets = targets, envir = envir, 
