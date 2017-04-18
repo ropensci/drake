@@ -4,7 +4,8 @@
 \alias{build_graph}
 \title{Function \code{build_graph}}
 \usage{
-build_graph(plan, targets = plan$target, envir = parent.frame())
+build_graph(plan, targets = drake::possible_targets(plan),
+  envir = parent.frame())
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

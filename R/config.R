@@ -2,8 +2,7 @@ config = function(plan, targets, envir, jobs,
   parallelism = parallelism_choices(), verbose, packages,
   prework, prepend, command, args){
   plan = sanitize_plan(plan)
-  targets = str_trim(targets, side = "both") %>%
-    intersect(y = plan$target)
+  targets = sanitize_targets(plan, targets)
   parallelism = match.arg(parallelism)
   prework = add_packages_to_prework(packages = packages,
     prework = prework)

@@ -9,7 +9,7 @@
 #' run \code{\link{examples_drake}}.
 #' @param destination character scalar, file path, where
 #' to write the folder containing the code files for the example.
-example_drake = function(example = examples_drake(), 
+example_drake = function(example = drake::examples_drake(), 
   destination = getwd()){
   example = match.arg(example)
   dir = system.file(file.path("examples", example), 

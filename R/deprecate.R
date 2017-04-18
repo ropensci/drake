@@ -17,5 +17,5 @@ fix_deprecated_plan_names = function(plan){
 prune = function(plan){
   .Deprecated("clean", package = "drake",
     msg = "prune() is deprecated. Use clean() instead.")
-  clean(list = setdiff(built(), plan$target))
+  clean(list = setdiff(built(), possible_targets(plan)))
 }

@@ -4,7 +4,7 @@
 \alias{tracked}
 \title{Function \code{tracked}}
 \usage{
-tracked(plan, targets = plan$target, envir = parent.frame())
+tracked(plan, targets = possible_targets(plan), envir = parent.frame())
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

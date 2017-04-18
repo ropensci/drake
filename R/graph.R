@@ -7,7 +7,8 @@
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
+plot_graph = function(plan, targets = drake::possible_targets(plan), 
+  envir = parent.frame()){
   force(envir)
   build_graph(plan = plan, targets = targets, envir = envir) %>%
     plot.igraph
@@ -27,9 +28,11 @@ plot_graph = function(plan, targets = plan$target, envir = parent.frame()){
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-build_graph = function(plan, targets = plan$target, 
+build_graph = function(plan, targets = drake::possible_targets(plan), 
   envir = parent.frame()){
   force(envir)
+  plan = sanitize_plan(plan)
+  targets = sanitize_targets(plan, targets)
   imports = as.list(envir)
   assert_unique_names(imports = names(imports), targets = plan$target)
   import_deps = lapply(imports, import_dependencies)
@@ -61,7 +64,8 @@ build_graph = function(plan, targets = plan$target,
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-tracked = function(plan, targets = plan$target, envir = parent.frame()){
+tracked = function(plan, targets = possible_targets(plan), 
+  envir = parent.frame()){
   force(envir)
   graph = build_graph(plan = plan, targets = targets, envir = envir)
   V(graph)$name

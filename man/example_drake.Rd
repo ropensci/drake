@@ -4,7 +4,7 @@
 \alias{example_drake}
 \title{Function \code{example_drake}}
 \usage{
-example_drake(example = examples_drake(), destination = getwd())
+example_drake(example = drake::examples_drake(), destination = getwd())
 }
 \arguments{
 \item{example}{name of the example. 

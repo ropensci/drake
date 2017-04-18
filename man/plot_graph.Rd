@@ -4,7 +4,8 @@
 \alias{plot_graph}
 \title{Function \code{plot_graph}}
 \usage{
-plot_graph(plan, targets = plan$target, envir = parent.frame())
+plot_graph(plan, targets = drake::possible_targets(plan),
+  envir = parent.frame())
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
