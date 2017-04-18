@@ -112,12 +112,12 @@
 #' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
-make = function(plan, targets = possible_targets(plan),
+make = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, 
-  parallelism = default_parallelism(), jobs = 1, 
+  parallelism = drake::default_parallelism(), jobs = 1, 
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
-  args = default_system2_args(jobs = jobs, verbose = verbose)){
+  args = drake::default_system2_args(jobs = jobs, verbose = verbose)){
   force(envir)
   parallelism = match.arg(arg = parallelism, 
     choices = parallelism_choices())

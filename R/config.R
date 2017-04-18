@@ -45,8 +45,16 @@ inventory = function(config){
   config
 }
 
+#' @title Function \code{possible_targets}
+#' @description internal function, returns the list of 
+#' possible targets that you can select with the \code{targets}
+#' argument to \code{\link{make}()}.
+#' @seealso \code{\link{make}}
+#' @export
+#' @return character vector of possible targets
+#' @param plan workflow plan data frame
 possible_targets = function(plan){
-  plan = as.data.frame(plan)
+  plan = sanitize_plan(plan)
   c(as.character(plan$output), as.character(plan$target))
 }
 

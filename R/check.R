@@ -9,7 +9,8 @@
 #' \code{\link{plan}()}.
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
-check = function(plan, targets = plan$target, envir = parent.frame()){
+check = function(plan, targets = drake::possible_targets(plan), 
+  envir = parent.frame()){
   force(envir)
   config = config(plan = plan, targets = targets, envir = envir, 
     verbose = TRUE, parallelism = "mclapply", 

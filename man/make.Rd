@@ -4,11 +4,11 @@
 \alias{make}
 \title{Function \code{make}}
 \usage{
-make(plan, targets = possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, parallelism = default_parallelism(), jobs = 1,
+make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
+  verbose = TRUE, parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
-  args = default_system2_args(jobs = jobs, verbose = verbose))
+  args = drake::default_system2_args(jobs = jobs, verbose = verbose))
 }
 \arguments{
 \item{plan}{workflow plan data frame. 
