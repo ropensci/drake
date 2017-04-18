@@ -1,9 +1,10 @@
 config = function(plan, targets, envir, jobs,
-  parallelism = drake::parallelism_choices(), verbose, packages,
+  parallelism = parallelism_choices(), verbose, packages,
   prework, prepend, command, args){
+  plan = sanitize_plan(plan)
+  targets = str_trim(targets, side = "both") %>%
+    intersect(y = plan$target)
   parallelism = match.arg(parallelism)
-  plan = fix_deprecated_plan_names(plan)
-  targets = intersect(targets, plan$target)
   prework = add_packages_to_prework(packages = packages,
     prework = prework)
   cache = storr_rds(cachepath, mangle_key = TRUE)

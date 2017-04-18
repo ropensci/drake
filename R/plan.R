@@ -74,9 +74,9 @@ wide_deparse = function(x){
 }
 
 sanitize_plan = function(plan){
-  for(field in c("target", "output"))
+  for(field in c("code", "command", "output", "target"))
     if(!is.null(plan[[field]])) plan[[field]] = 
       str_trim(plan[[field]], side = "both")
-  as.data.frame(plan, stringsAsFactors = FALSE) %>%
+  as.data.frame(plan, stringsAsFactors = FALSE) %>% 
     fix_deprecated_plan_names
 }

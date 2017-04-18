@@ -47,13 +47,19 @@ test_that("plan() trims outer whitespace in target names", {
   expect_equal(x$target, y$output, z$target)
 })
 
-test_that("make() trims outer whitespace in target names", {
+test_that("make() and check() trim outer whitespace in target names", {
   dclean()
   x = data.frame(target = c("a\n", "  b", "c ", "\t  d   "), command = 1)
-  make(x, verbose = FALSE)
+  expect_silent(make(x, verbose = FALSE))
   expect_equal(sort(cached()), letters[1:4])
   stat = c(a = "finished", b = "finished", c = "finished", d = "finished")
   expect_equal(status(), stat)
+  dclean()
+  expect_silent(make(x, verbose = FALSE, 
+    targets = c("a", "nobody_home")))
+  dclean()
+  x = data.frame(target = c("a", " a"), command = 1)
+  expect_error(check(x))
   dclean()
 })
 
