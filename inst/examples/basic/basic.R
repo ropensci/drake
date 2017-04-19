@@ -208,7 +208,7 @@ clean() # Start over next time.
 ### ONLY ATTEMPT ON A PROPER COMPUTING CLUSTER     ###
 ######################################################
 
-if(T){ # Only attempt this part on a proper computing cluster.
+if(FALSE){ # Only attempt this part on a proper computing cluster.
 
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
 # You could write this file by hand if you wanted.
