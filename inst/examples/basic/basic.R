@@ -13,7 +13,7 @@
 ###################################
 
 library(knitr)
-library(rmarkdown)
+# library(rmarkdown) # platform-dependent: render() requires pandoc
 library(drake)
 
 clean() # remove any previous drake output
@@ -208,7 +208,7 @@ clean() # Start over next time.
 ### ONLY ATTEMPT ON A PROPER COMPUTING CLUSTER     ###
 ######################################################
 
-if(FALSE){ # Only attempt this part on a proper computing cluster.
+if(T){ # Only attempt this part on a proper computing cluster.
 
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
 # You could write this file by hand if you wanted.
