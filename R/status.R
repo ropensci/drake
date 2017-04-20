@@ -45,14 +45,10 @@ session = function(path = getwd(), search = TRUE){
 #' @param imported_files_only logical, applies only when 
 #' no targets are specified and the statuses of cached targets are 
 #' returned.
-#' If \code{imported_files_only} is \code{TRUE} and no targets are
-#' specified in \code{...} or \code{list}, then \code{status()} 
-#' shows the build status of targets (with commands) plus imported files,
-#' ignoring imported objects. Otherwise, the full collection of 
-#' statuses for 
-#' all cached objects will be listed. Since all your functions and 
-#' all their global variables are imported, the full list of
-#' imported objects could get really cumbersome.
+#' If \code{imported_files_only} logical, whether to ignore 
+#' imported objects that are not files. If \code{TRUE}, all
+#' targets (with commands in the workflow plan data frame) and
+#' imported files will be listed. Otherwise, everything will be listed.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
