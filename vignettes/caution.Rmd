@@ -28,7 +28,7 @@ plan(target1 = 1 + 1 - sqrt(sqrt(3)),
      target2 = my_function(web_scraped_data) %>% my_tidy)
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful, this could cause problems in general. Rather than using commands for this, is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` for more control.) Use the `check()` function to help screen and quality-control your workflow plan data frame.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` for more control.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()`, and `build_graph()` to see the dependency structure of your project.
 
 ## Minimize the side effects of your commands.
 
@@ -42,32 +42,59 @@ library(drake)
 plan(list = c(a = "x <- 1; return(x)"))
 ```
 
-Here, `x` is a mere side effect of the command, and it will not be reproducibly tracked. And if you add to the workflow to include a proper target called `x`, the results of your analysis may not be correct. Side effects of commands can be unpredictable, so please try to minimize them.
-
+Here, `x` is a mere side effect of the command, and it will not be reproducibly tracked. And if you add a proper target called `x` to the workflow plan data frame, the results of your analysis may not be correct. Side effects of commands can be unpredictable, so please try to minimize them. It is a good practice to write your commands as function calls. Nested function calls are okay.
 
 ## Do not change your working directory.
 
-During the execution workflow of a drake project, please do not change your working directory (with `setwd()`, for example). At the very least, if you do change your working directory during a command in your workflow plan, please return to the original working directory before the command is completed. Drake relies on a hidden cache (the `.drake/` folder) at the root of your project, so navigating to a different folder will confuse drake.
+During the execution workflow of a drake project, please do not change your working directory (with `setwd()`, for example). At the very least, if you do change your working directory during a command in your workflow plan, please return to the original working directory before the command is completed. Drake relies on a hidden cache (the `.drake/` folder) at the root of your project, so navigating to a different folder may confuse drake.
 
 ## Directories (folders) are not reproducibly tracked.
 
-Yes, you can declare a file target or input file by enclosing it in single quotes in your workflow plan data frame. But entire directories (i.e. folders) cannot yet be tracked this way. This is a trickier problem to solve, and lots of individual edge cases need to be ironed out before I can deliver a clean, reliable implementation. Please see [issue 12](https://github.com/wlandau-lilly/drake/issues/12) for updates and a discussion.
+Yes, you can declare a file target or input file by enclosing it in single quotes in your workflow plan data frame. But entire directories (i.e. folders) cannot yet be tracked this way. Tracking directories is a tricky problem, and lots of individual edge cases need to be ironed out before I can deliver a clean, reliable solution. Please see [issue 12](https://github.com/wlandau-lilly/drake/issues/12) for updates and a discussion.
+
+## Dependencies of imported functions
+
+Suppose you import a function `myfun()` into your project
+
+```r
+globalvar = 1
+
+g = function(x) {
+  print(x)
+}
+
+myfun = function(x, y){
+  g(globalvar)
+  print(readLines('my_file.txt'))
+  return(target_in_my_plan + x + y)
+}
+
+myplan = plan(
+  a = 1,
+  b = 2,
+  target_in_my_plan = sqrt(5),
+  result = myfun(a, b))
+  
+make(myplan)
+```
+
+The objects `globalvar`, `g()`, `myfun()`, `a`, `b`, `target_in_my_plan`, `sqrt()`, and `result` are reproducibly tracked. Additionally, `drake` knows that `myfun()` depends on `g()` and `globalvar`, `target_in_my_plan` depends on `sqrt()`, and `result` depends on `a` and `b`. However, the file `'my_file.txt'` is not reproducibly tracked or treated as a dependency of `myfun()`. To be tracked and treated as a dependency, `'my_file.txt'` must be mentioned in a formal command in `myplan`. In addition, `drake` does not know that `target_in_my_plan` is a dependency of `myfun()`. Formal targets declared in `myplan` must appear in other commands to be treated as dependencies, so the appearance of `target_in_my_plan` inside the body of `myfun()` is ignored.
 
 ## Dependencies are not tracked in some edge cases.
 
 First of all, if you are ever unsure about what exactly is reproducibly tracked, use the `tracked()` function to list the names of all reproducibly tracked objects, functions, targets, files, etc. Alternatively, use `build_graph()` to obtain an [igraph](http://igraph.org/) object of the dependency structure of your workflow, and use `plot_graph()` to make a plot of the graph. And again, use the `check()` function to help screen and quality-control your project.
 
-Drake uses [codetools::findGlobals()](https://cran.r-project.org/package=codetools) in the backend to look for dependencies, which can be fooled. For example, suppose you have a custom function `f` in your workspace.
+Drake uses [codetools::findGlobals()](https://cran.r-project.org/package=codetools) in the backend to look for dependencies, which can be fooled. For example, suppose you define a custom function `f` in your workspace.
 
 ```r
 f <- function(){
   assign("a", 1)
   b = get("x", envir = globalenv())
-  digest::digest(readLines('my_file.txt'))
+  digest::digest(1234)
 }
 ```
 
-When drake looks for the dependencies of `f`, it will fail to recognize the objects `a` and `x`, the function `digest()`, and the file `'my_file.txt'`. Objects `a` and `x` are referenced with quoted strings, not symbols, which tricks drake. The function `digest()` is referenced with the scoping rule `::`, so [codetools::findGlobals()](https://cran.r-project.org/package=codetools) does not detect it. Lastly, because `'my_file.txt'` is inside a function and not a command in your workflow plan data frame, drake will not reproducibly track it.
+When drake looks for the dependencies of `f`, it will fail to recognize the objects `a` and `x`, along with the function `digest()`. Objects `a` and `x` are referenced with quoted strings, not symbols, which tricks drake. The function `digest()` is referenced with the scoping rule `::`, so [codetools::findGlobals()](https://cran.r-project.org/package=codetools) does not detect it.
 
 When it comes to commands in your workflow plan data frame, there are similar issues. It is possible to use double-quoted strings and the scoping operator `::` to trick drake into overlooking objects, functions, and files that should be dependencies. Use the `check()` function to scan the workflow plan for double-quoted strings and print out messages telling you where they occur.
 
