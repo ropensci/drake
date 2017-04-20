@@ -198,6 +198,9 @@ clean() # Start over next time.
 
 # Write a Makefile and execute it to spawn up to two
 # R sessions at a time.
+# Windows users need Rtools (https://cran.r-project.org/bin/windows/Rtools)
+# Everyone else just needs Make (https://www.gnu.org/software/make) 
+# or an equivalent program.
 make(plan, parallelism = "Makefile", jobs = 2) # build everything
 readd(coef_regression2_large) # see also: loadd(), cached()
 

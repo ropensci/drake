@@ -283,7 +283,7 @@ make(plan, parallelism = "mclapply", jobs = 2) # not for Windows
 readd(coef_regression2_large)
 ```
 
-Alternatively, set `parallelism = "Makefile"` to spread targets over multiple parallel R sessions. This gets into true distributed computing. Windows users will need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). The following are equivalent.
+Alternatively, set `parallelism = "Makefile"` to spread targets over multiple parallel R sessions. This gets into true distributed computing. Windows users will need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/), and everyone else just needs to make sure that [Make](https://www.gnu.org/software/make/) or an equivalent program is installed. The following calls to `drake::make()` are equivalent.
 
 ```r
 make(plan, parallelism = "Makefile", jobs = 4, verbose = FALSE)
