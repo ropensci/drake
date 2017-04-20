@@ -131,6 +131,8 @@ clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 # These functions are exactly the same.
 make(plan) # build everything from scratch
 # Now, open and read report.html in a browser.
+status() # What did you build? Did it finish?
+# session() # get the sessionInfo() of the last call to make()
 
 # see also: loadd(), cached(), imported(), and built()
 readd(coef_regression2_large) # Read target from the cache.
