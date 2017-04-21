@@ -64,7 +64,7 @@ build_graph = function(plan, targets = drake::possible_targets(plan),
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-tracked = function(plan, targets = possible_targets(plan), 
+tracked = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame()){
   force(envir)
   graph = build_graph(plan = plan, targets = targets, envir = envir)

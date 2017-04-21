@@ -1,5 +1,5 @@
 config = function(plan, targets, envir, jobs,
-  parallelism = parallelism_choices(), verbose, packages,
+  parallelism = drake::parallelism_choices(), verbose, packages,
   prework, prepend, command, args){
   plan = sanitize_plan(plan)
   targets = sanitize_targets(plan, targets)
