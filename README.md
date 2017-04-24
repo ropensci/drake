@@ -14,23 +14,27 @@
 Drake is an R package for high-performance computing and reproducible data analysis. It helps you skip the work you already did, accelerate the rest with parallel processing, stay organized, and confirm that your results are up to date with your code. Drake stands on the shoulders of tools like 
 GNU Make and [Rich FitzJohn](http://richfitz.github.io/)'s [remake](https://github.com/richfitz/remake) package, and it offers improvements in reproducibility, parallelism, and convenience.
 
-# Acknowledgements, history, and niche
+# Acknowledgements and history
 
-The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. Relative to [remake](https://github.com/richfitz/remake), some of drake's most prominent distinguishing features at the time of writing this document are
-
-1. A little more reproducibility. Drake can
-    - import and track arbitrary variables.
-    - track functions from packages.
-2. A little more safety.
-    - If you manually break an output file target, drake will fix it.
-3. Parallel computing
-    - Switch on the `mclapply()` or `parLapply()` backend for light parallelism within a single R session.
-    - Activate the `Makefile` to parallelize over multiple R sessions, which you can distribute across several nodes of a computing cluster or a supercomputer.
-4. Convenience
-    - No YAML files!
-    - With functions like `plan()`, `datasets()`, `analyses()`, `evaluate()`, `expand()`, and `gather()`, you can minimize typing when you set up a project.
+The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. 
 
 Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
+
+# Advantages of drake
+
+Some advantages of drake, especially relative to [remake](https://github.com/richfitz/remake) at the time of writing, are
+
+1. reproducibility. Drake can
+    - import and track arbitrary variables from your workspace.
+    - track functions from packages.
+2. safety.
+    - If you manually break an output file target, drake will fix it.
+3. parallel computing. Auto-magically run multiple targets simultaneously.
+    - Switch on the `mclapply()` or `parLapply()` backend for light parallelism within a single R session.
+    - Switch on a `Makefile` to parallelize over multiple R sessions, which you can distribute across several nodes of a computing cluster or a supercomputer.
+4. convenience.
+    - No YAML files!
+    - With functions like `plan()`, `datasets()`, `analyses()`, `evaluate()`, `expand()`, and `gather()`, you can minimize typing when you set up a project.
 
 # Installation
 
