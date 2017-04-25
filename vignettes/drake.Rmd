@@ -19,7 +19,7 @@ clean(destroy = TRUE)
 ```
 
 Drake is an R package for high-performance computing and reproducible data analysis. It helps you skip the work you already did, accelerate the rest with parallel processing, stay organized, and confirm that your results are up to date with your code. Drake stands on the shoulders of tools like 
-GNU Make and [Rich FitzJohn](http://richfitz.github.io/)'s [remake](https://github.com/richfitz/remake) package, and it offers improvements in reproducibility, parallel computing, and convenience.
+GNU Make and [Rich FitzJohn](http://richfitz.github.io/)'s [remake](https://github.com/richfitz/remake) package, and it offers improvements in reproducibility, scalability, and convenience.
 
 # Acknowledgements and history
 
