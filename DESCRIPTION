@@ -6,7 +6,7 @@ Authors@R: c(
   person(family = "Landau", given = c("William", "Michael"),
     email = "will.landau@lilly.com", role = c("aut", "cre")),
   person(family = "Eli Lilly and Company", role = "cph"))
-Description: A scalable solution for reproducibility and 
+Description: A solution for reproducible code and 
     high-performance computing.
 License: GPL-3
 Depends:
