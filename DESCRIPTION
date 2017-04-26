@@ -6,10 +6,8 @@ Authors@R: c(
   person(family = "Landau", given = c("William", "Michael"),
     email = "will.landau@lilly.com", role = c("aut", "cre")),
   person(family = "Eli Lilly and Company", role = "cph"))
-Description: Reproducible build system for any project. Understands
-    the dependency structure of your project, builds out-of-date
-    targets, skips up-to-date targets, and offers two forms of
-    parallel computing.
+Description: A scalable solution for reproducibility and 
+    high-performance computing.
 License: GPL-3
 Depends:
     R (>= 3.2.0)
