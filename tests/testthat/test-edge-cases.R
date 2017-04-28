@@ -1,10 +1,23 @@
 # library(testthat); library(devtools); load_all()
 context("edge-cases")
 
+test_that("stringsAsFactors can be TRUE", {
+  dclean()
+  f = function(x){return(x)}
+  myplan = data.frame(target = "a", command = 'f("helloworld")')
+  expect_true(is.factor(myplan$target))
+  expect_true(is.factor(myplan$command))
+  make(myplan, verbose = FALSE)
+  expect_equal(readd(a), "helloworld")
+  dclean()
+})
+
 test_that("circular non-DAG workflows quit in error", {
+  dclean()
   p = plan(a = b, b = c, c = a)
   expect_error(check(p))
   expect_error(make(p))
+  dclean()
 })
 
 # Target/import conflicts are unpredictable. A warning should be enough.
