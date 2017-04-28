@@ -4,7 +4,8 @@ context("edge-cases")
 test_that("stringsAsFactors can be TRUE", {
   dclean()
   f = function(x){return(x)}
-  myplan = data.frame(target = "a", command = 'f("helloworld")')
+  myplan = data.frame(target = "a", command = 'f("helloworld")',
+    stringsAsFactors = TRUE)
   expect_true(is.factor(myplan$target))
   expect_true(is.factor(myplan$command))
   make(myplan, verbose = FALSE)
