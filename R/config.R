@@ -8,10 +8,11 @@ config = function(plan, targets, envir, jobs,
     prework = prework)
   cache = storr_rds(cachepath, mangle_key = TRUE)
   cache$clear(namespace = "status")
-  envir = envir %>% as.list %>% list2env(parent = globalenv())
-  lapply(ls(envir), function(target)
-    if(is.function(envir[[target]]))
-      environment(envir[[target]]) = envir)
+# Was creating scoping issues. May add back later.
+#  envir = envir %>% as.list %>% list2env(parent = globalenv())
+#  lapply(ls(envir), function(target)
+#    if(is.function(envir[[target]]))
+#      environment(envir[[target]]) = envir)
   graph = build_graph(plan = plan, targets = targets,
     envir = envir)
   order = topological.sort(graph)$name

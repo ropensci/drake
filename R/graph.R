@@ -78,10 +78,12 @@ assert_unique_names = function(imports, targets){
       multiline_message(duplicated))
   } 
   common = intersect(imports, targets)
-  if(length(common))
-    warning(paste("There are targets in your workflow plan that share",
-      "names with imported objects from your environment/workspace.",
-      "Behavior may be unpredictable.",
-      "Duplicates found:\n"),
-      multiline_message(common))
+# Drake works in the user's environment directly now, so 
+# duplicates are normal.
+#  if(length(common))
+#    warning(paste("There are targets in your workflow plan that share",
+#      "names with imported objects from your environment/workspace.",
+#      "Behavior may be unpredictable.",
+#      "Duplicates found:\n"),
+#      multiline_message(common))
 }

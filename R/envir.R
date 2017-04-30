@@ -1,8 +1,6 @@
 assign_to_envir = Vectorize(function(target, value, config){
   if(is_file(target) | !(target %in% config$plan$target)) return()
   assign(x = target, value = value, envir = config$envir)
-  if(is.function(value)) 
-    environment(config$envir[[target]]) = config$envir
 }, c("target", "value"))
 
 prune_envir = function(targets, config){
