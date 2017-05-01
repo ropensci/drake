@@ -3,7 +3,7 @@
 # numbers of jobs and mclapply vs Makefiles.
 
 testopts = function(){list(
-  jobs = 2, # needs to be 1 for mclapply on Windows
+  jobs = 1, # needs to be 1 for mclapply on Windows
   parallelism = "parLapply") # use for shipped tests
  # parallelism = "mclapply")
  # parallelism = "Makefile")
