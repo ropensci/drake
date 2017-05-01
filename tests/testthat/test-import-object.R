@@ -13,31 +13,31 @@ test_that("responses to imported objects and functions", {
     "myinput"))
 
   # change nested function trivially
-  config$envir$g = function(y){
-    
+  eval(parse(text = "g <- function(y){
+
     h(  y)+b # comment
-  }
+  }"), envir = config$envir)
   testrun(config)
   nobuild(config)
   
   # change nested function so that it gives the same answer
-  config$envir$g = function(y){
+  eval(parse(text="g <- function(y){
     h(y)+b + 1-1 - 0
-  }
+  }"), envir = config$envir)
   testrun(config)
   expect_equal(justbuilt(config), sort(c("nextone", "yourinput")))
   
   # nested function gives different answer
-  config$envir$g = function(y){
+  eval(parse(text="g <- function(y){
     h(y)+b + 16
-  }
+  }"), envir = config$envir)
   testrun(config)
   expect_true("final" %in% justbuilt(config))
 
   # test a deeper nested function
-  config$envir$i = function(x){
+  eval(parse(text="i <- function(x){
     2*x + sqrt(13)
-  }
+  }"), envir = config$envir)
   testrun(config)
   expect_true("final" %in% justbuilt(config))
   

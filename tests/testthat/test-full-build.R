@@ -63,18 +63,10 @@ test_that("scratch build with contained envir.", {
   dclean()
 })
 
-test_that("calling environment is unaffected in scratch build.", {
+test_that("clean in full build.", {
   dclean()
   config = dbug()
-  for(x in ls(config$envir)) assign(x, config$envir[[x]], environment())
-  if("obj" %in% ls()) rm(obj)
-  obj = ls()
-  expect_equal(config$cache$list(), character(0))
-  make(config$plan, verbose = FALSE)
-  expect_equal(sort(c(obj, "obj")), sort(ls()))
-  expect_true(length(config$cache$list()) > 0)
-  
-  # Take this opportunity to test clean() some more.
+  make(config$plan, envir = config$envir, verbose = FALSE)
   expect_true("final" %in% config$cache$list())
   clean(final, search = TRUE)
   expect_false("final" %in% config$cache$list())
@@ -83,7 +75,6 @@ test_that("calling environment is unaffected in scratch build.", {
   expect_true(file.exists(cachepath))
   clean(search = TRUE, destroy = TRUE)
   expect_false(file.exists(cachepath))
-  
   dclean()
   expect_false(file.exists("input.rds"))
 })

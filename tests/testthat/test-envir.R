@@ -33,6 +33,7 @@ test_that("prune_envir in full build", {
   
   # Check that the right things are loaded 
   # and the right things are discarded
+  remove(list = ls(config$envir), envir = config$envir)
   expect_equal(ls(config$envir), character(0))
   prune_envir(datasets$target, config)
   expect_equal(ls(config$envir), character(0))
