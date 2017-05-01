@@ -136,7 +136,8 @@ status() # What did you build? Did it finish?
 
 # see also: loadd(), cached(), imported(), and built()
 readd(coef_regression2_large) # Read target from the cache.
-# The non-file dependencies of your last target are already loaded.
+# The non-file dependencies of your last target are already loaded
+# in your workspace.
 "report_dependencies" %in% ls() # Should be TRUE.
 
 # Everything is up to date.

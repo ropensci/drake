@@ -197,7 +197,13 @@ Use `make(plan)` to run your workflow.
 make(plan)
 ```
 
-Use `readd()` and `loadd()` to see the targets you generated. (They are stored in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
+The non-file dependencies of your last target are already loaded in your workspace.
+
+```{r autoload}
+"report_dependencies" %in% ls() # Should be TRUE.
+```
+
+Use `readd()` and `loadd()` to load more targets. (They are stored in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
 
 ```{r cache}
 readd(coef_regression2_large)
