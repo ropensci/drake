@@ -136,6 +136,8 @@ status() # What did you build? Did it finish?
 
 # see also: loadd(), cached(), imported(), and built()
 readd(coef_regression2_large) # Read target from the cache.
+# The non-file dependencies of your last target are already loaded.
+"report_dependencies" %in% ls() # Should be TRUE.
 
 # Everything is up to date.
 make(plan)
@@ -213,7 +215,8 @@ clean() # Start over next time.
 ### ONLY ATTEMPT ON A PROPER COMPUTING CLUSTER     ###
 ######################################################
 
-if(FALSE){ # Only attempt this part on a proper computing cluster.
+if(FALSE){ # Use FALSE on regular local machines.
+# if(TRUE){ # Only attempt this part on a proper computing cluster.
 
 # The file shell.sh tells the Makefile to submit jobs on a cluster.
 # You could write this file by hand if you wanted.
