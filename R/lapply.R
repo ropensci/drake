@@ -4,6 +4,8 @@ run_lapply = function(config){
 }
 
 worker_lapply = function(targets, hash_list, config){
+  prune_envir(targets = targets, config = config)
   lapply(X = targets, FUN = build,
     hash_list = hash_list, config = config)
+  assign_to_envir(target = target, value = value, config = config)
 }
