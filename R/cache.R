@@ -143,3 +143,4 @@ is_built_or_imported_file = Vectorize(function(target, cache){
 }, "target", SIMPLIFY = TRUE)
 
 cachepath = ".drake"
+globalenvpath = file.path(cachepath, "globalenv.RData")

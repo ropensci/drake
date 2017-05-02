@@ -1,5 +1,7 @@
 run_Makefile = function(config, run = TRUE){
-  config$envir = as.list(config$envir)
+  if(identical(globalenv(), config$envir))
+    save(list = ls(config$envir), envir = config$envir,
+      file = globalenvpath)
   config$cache$set("config", config, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
   sink("Makefile")
@@ -66,7 +68,8 @@ initialize = function(config){
 #' @param target name of target to make
 mk = function(target){
   config = get_cache()$get("config", namespace = "makefile")
-  config$envir = list2env(config$envir, parent = globalenv())
+  if(identical(globalenv(), config$envir))
+    load(file = globalenvpath, envir = config$envir)
   config = inventory(config)
   do_prework(config = config, verbosePackages = FALSE)
   prune_envir(targets = target, config = config)
