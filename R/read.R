@@ -77,7 +77,7 @@ loadd = function(..., list = character(0),
 
 load_target = Vectorize(function(target, cache, envir){
   value = readd(target, character_only = TRUE, 
-    cache = cache, envir = envir)
+    cache = cache)
   assign(x = target, value = value, envir = envir)
 }, "target")
 
