@@ -48,9 +48,19 @@ test_that("scratch build with contained envir.", {
   clean("'input.rds'", search = FALSE)
   expect_true(file.exists("input.rds"))
   expect_false("'input.rds'" %in% config$cache$list())  
-  
+
+  # clean removes imported functions and cleans up "functions" namespace
+  expect_true(cached(f))
+  for(n in c("objects", "depends", "functions"))
+    expect_true("f" %in% config$cache$list(namespace = n))
+  clean(f)
+  for(n in c("objects", "depends", "functions"))
+    expect_false("f" %in% config$cache$list(namespace = n))
+
   clean(destroy = FALSE, search = FALSE)
   expect_equal(config$cache$list(), character(0))
+  expect_equal(config$cache$list("depends"), character(0))
+  expect_equal(config$cache$list("functions"), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_true(file.exists(cachepath))
