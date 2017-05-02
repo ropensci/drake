@@ -19,11 +19,9 @@
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-#' @param envir environment of imported functions (for lexical scoping)
 #' @param cache a storr cache. Mainly for internal use.
 readd = function(target, character_only = FALSE, path = getwd(), 
-  search = TRUE, envir = parent.frame(), cache = NULL){
-  force(envir)
+  search = TRUE, cache = NULL){
   if(is.null(cache)) cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("cannot find drake cache.")
   if(!character_only) target = as.character(substitute(target))

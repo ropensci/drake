@@ -5,7 +5,7 @@
 \title{Function \code{readd}}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
-  envir = parent.frame(), cache = NULL)
+  cache = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, 
@@ -24,8 +24,6 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
-
-\item{envir}{environment of imported functions (for lexical scoping)}
 
 \item{cache}{a storr cache. Mainly for internal use.}
 }
