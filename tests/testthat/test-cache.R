@@ -40,7 +40,7 @@ test_that("cache functions work", {
     search = FALSE)), "igraph")
   pdf(NULL)
   read_graph(plot = TRUE, search = FALSE)
-  dev.off()
+  tmp = capture.output(dev.off())
   unlink("Rplots.pdf")
   
   # imported , built, cached

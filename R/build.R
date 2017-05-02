@@ -53,12 +53,13 @@ store_object = function(target, value, imported, config){
 store_file = function(target, hashes, imported, config){
   hash = ifelse(imported, hashes$file, rehash_file(target))
   config$cache$set(key = target, 
+    value = file.mtime(eply::unquote(target)), namespace = "filemtime")
+  config$cache$set(key = target,
     value = list(type = "file", value = hash, imported = imported))
-  config$cache$set(key = target, value = file.mtime(eply::unquote(target)), 
-    namespace = "filemtime")
 }
 
 store_function = function(target, value, hashes, imported, config){
+  config$cache$set(key = target, value = value, namespace = "functions")
   string = deparse(value)
   config$cache$set(key = target,
     value = list(type = "function", value = string, imported = imported,

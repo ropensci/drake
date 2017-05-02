@@ -12,6 +12,8 @@ test_that("vectorized nested functions work", {
   config$targets = "a"
   testrun(config)
   expect_equal(readd(a), 2:11)
+  k = readd(f)
+  expect_equal(k(2:5), 3:6)
   dclean()
 })
 

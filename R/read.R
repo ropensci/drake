@@ -28,11 +28,10 @@ readd = function(target, character_only = FALSE, path = getwd(),
   if(is.null(cache)) stop("cannot find drake cache.")
   if(!character_only) target = as.character(substitute(target))
   store = cache$get(target)
-  value = store$value
-  if(store$type == "function"){
-    value = eval(parse(text = value), envir = envir)
-    environment(value) = envir
-  }
+  if(store$type == "function")
+    value = cache$get(key = target, namespace = "functions")
+  else
+    value = store$value
   value
 }
 
