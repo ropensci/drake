@@ -10,6 +10,7 @@ run_Makefile = function(config, run = TRUE){
   sink()
   initialize(config)
   if(run) system2(command = config$command, args = config$args)
+  unlink(globalenvpath)
   invisible()
 }
 
