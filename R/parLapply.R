@@ -21,7 +21,7 @@ worker_parLapply = function(targets, hash_list, config){
   prune_envir_parLapply(targets = targets, config = config)
   values = parLapply(cl = config$cluster, X = targets, fun = build,
     hash_list = hash_list, config = config)
-  assign_to_envir(target = targets, value = values,
+  assign_to_envir_parLapply(target = targets, value = values,
       config = config)
 }
 

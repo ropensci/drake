@@ -1,6 +1,9 @@
 dbug = function(clean = TRUE){
   if(clean) dclean()
-  envir = new.env(parent = globalenv())
+
+  envir = new.env(parent = globalenv()) # for shipped unit tests
+#  envir = globalenv() # needs to work here too
+
   imports = c(
     "f <- function(x) {g(x) + a}",
     "g <- function(y) {h(y) + b}",
