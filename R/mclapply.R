@@ -4,7 +4,7 @@ run_mclapply = function(config){
 }
 
 worker_mclapply = function(targets, hash_list, config){
-  prune_envir(target = targets, config = config)
+  prune_envir(targets = targets, config = config)
   values = mclapply(targets, build, hash_list = hash_list,
     config = config, mc.cores = config$jobs)
   assign_to_envir(target = targets, value = values, config = config)
