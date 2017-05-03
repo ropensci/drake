@@ -1,3 +1,9 @@
+# Version 3.0.0
+
+This major version update contains crucial bug fixes and documentation updates. It improves the way environments are managed so the behavior of `make()` is more predictable. The interface is completely back-compatible, but the behavior of the internals is somewhat different, which is why I bumped to a new major version rather than a new minor version or patch.
+
+The biggest changes are that `config()` does not create a deep copy of the `envir` argument of `make()` and that the enclosing environments of imported functions are left alone. The upshot for most projects is that the user's workspace is modified, but behavior is more predictable and more consistent with execution in an R session outside of drake.
+
 # Version 2.1.0
 
 This version fixes a vignette build error on Solaris, touches up the logo, and adds parLapply() to the arsenal of parallel computing options (now the default). I also added the `tracked()` function to list which objects, functions, files, targets, etc. are reproducibly tracked. Lastly, there is an important new "caution" vignette. It tells users about the edge cases that can trick drake into overlooking dependencies, as well as ways to verify which objects are being reproducibly tracked.
