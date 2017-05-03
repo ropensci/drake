@@ -64,15 +64,17 @@ test_that("cache functions work", {
   expect_equal(find_project(), getwd())
   expect_equal(find_cache(), file.path(getwd(), cachepath))
   expect_true(is.numeric(readd(a, search = FALSE)))
-  expect_error(h(1))
-  
+
   # load and read stuff
+  list = intersect(c(imported(), built()), ls(envir = config$envir))
+  rm(list = list, envir = config$envir)
+  expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
   expect_error(loadd(yourinput, myinput, 
     search = FALSE, imported_only = TRUE))
-  loadd(h, i, j, c, search = FALSE)
+  loadd(h, i, j, c, search = FALSE, envir = config$envir)
   expect_true(is.numeric(h(1)))
-  rm(h, i, j, c)
+  rm(h, i, j, c, envir = config$envir)
   expect_error(h(1))
   
   # test loadd imported_only and loadd() everything
@@ -134,9 +136,9 @@ test_that("cache functions work", {
   expect_true(is.numeric(readd(a, path = s, search = T)))
   expect_error(h(1))
   expect_error(j(1))
-  loadd(h, i, j, c, path = s, search = T)
+  loadd(h, i, j, c, path = s, search = T, envir = config$envir)
   expect_true(is.numeric(h(1)))
-  rm(h, i, j, c)
+  rm(h, i, j, c, envir = config$envir)
   expect_error(h(1))
   
   # clean using search = TRUE or FALSE

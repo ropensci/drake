@@ -1,4 +1,4 @@
-run_Makefile = function(config, run = TRUE){
+run_Makefile = function(config, run = TRUE, debug = FALSE){
   if(identical(globalenv(), config$envir))
     save(list = ls(config$envir), envir = config$envir,
       file = globalenvpath)
@@ -10,7 +10,7 @@ run_Makefile = function(config, run = TRUE){
   sink()
   initialize(config)
   if(run) system2(command = config$command, args = config$args)
-  unlink(globalenvpath)
+  if(!debug) unlink(globalenvpath)
   invisible()
 }
 

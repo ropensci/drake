@@ -30,7 +30,7 @@ dbug = function(clean = TRUE){
   ))
   config = config(plan, targets = plan$target, envir = envir, 
     parallelism = "mclapply", jobs = 1, prepend = character(0),
-    verbose = TRUE, packages = character(0), prework = character(0), 
+    verbose = FALSE, packages = character(0), prework = character(0), 
     command = "make", args = character(0))
   config
 }

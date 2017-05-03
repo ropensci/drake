@@ -7,11 +7,12 @@
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
+#' @param verbose logical, whether to output messages to the console.
 plot_graph = function(plan, targets = drake::possible_targets(plan), 
-  envir = parent.frame()){
+  envir = parent.frame(), verbose = TRUE){
   force(envir)
-  build_graph(plan = plan, targets = targets, envir = envir) %>%
-    plot.igraph
+  build_graph(plan = plan, targets = targets, envir = envir,
+    verbose = verbose) %>% plot.igraph
 }
 
 #' @title Function \code{build_graph}
@@ -28,7 +29,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-#' @param verbose, whether to output messages to the console.
+#' @param verbose logical, whether to output messages to the console.
 build_graph = function(plan, targets = drake::possible_targets(plan), 
   envir = parent.frame(), verbose = TRUE){
   force(envir)

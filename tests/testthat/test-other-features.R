@@ -53,6 +53,7 @@ test_that("graph functions work", {
 test_that("console", {
   dclean()
   config = dbug()
+  config$verbose = TRUE
   expect_output(console(imported = FALSE, 
     target = "myinput", config = config))
   x50 = paste(rep(0:9, 5), collapse = "")

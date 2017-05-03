@@ -17,7 +17,7 @@ build_graph(plan, targets = drake::possible_targets(plan),
 \item{envir}{environment to import from, same as for function
 \code{\link{make}()}.}
 
-\item{verbose, }{whether to output messages to the console.}
+\item{verbose}{logical, whether to output messages to the console.}
 }
 \description{
 Make a graph of the dependency structure of your workflow.

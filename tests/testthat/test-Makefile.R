@@ -44,7 +44,8 @@ test_that("basic Makefile stuff works", {
   make(config$plan, targets = "combined", 
     envir = config$envir, verbose = FALSE)
   config$verbose = FALSE
-  run_Makefile(config, run = FALSE)
+  run_Makefile(config, run = FALSE, debug = TRUE)
+  expect_true(file.exists(globalenvpath))
   expect_true(file.exists("Makefile"))
   stamps = sort(list.files(file.path(time_stamp_dir), full.names = TRUE))
   stamps2 = sort(time_stamp(c("combined", "myinput", "nextone", 
@@ -53,6 +54,8 @@ test_that("basic Makefile stuff works", {
   expect_false(file.exists("intermediatefile.rds"))
   mk("'intermediatefile.rds'")
   expect_true(file.exists("intermediatefile.rds"))
+  run_Makefile(config, run = FALSE)
+  expect_false(file.exists(globalenvpath))
   dclean()
   expect_false(file.exists("Makefile"))
 })
