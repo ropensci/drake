@@ -11,6 +11,7 @@ run_parLapply = function(config){
   if(identical(config$envir, globalenv()))
     clusterExport(cl = config$cluster,
       varlist = ls(globalenv(), all.names = TRUE), envir = globalenv())
+  clusterCall(cl = config$cluster, fun = load_packages_parLapply)
   clusterCall(cl = config$cluster, fun = do_prework,
     config = config, verbosePackages = FALSE)
   run_parallel(config = config, worker = worker_parLapply)
@@ -37,4 +38,13 @@ assign_to_envir_parLapply = function(target, value, config){
   if(identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = assign_to_envir,
       target = target, value = value, config = config)
+}
+
+load_packages_parLapply = function(){
+  packages = c( # not ideal, but necessary
+    "base64url", "codetools", "crayon", "eply", "digest", "igraph",
+    "magrittr", "parallel", "plyr", "R.utils", "storr", "stringi", 
+    "stringr", "testthat", "tools", "utils")
+  for(package in packages)
+    suppressPackageStartupMessages(require(package, character.only = TRUE))
 }
