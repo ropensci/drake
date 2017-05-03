@@ -9,6 +9,11 @@ test_that("cache functions work", {
   expect_error(status(search = FALSE))
   expect_error(readd(search = FALSE))
   config = dbug()
+  using_global = identical(config$envir, globalenv())
+  if(using_global)
+    envir = globalenv()
+  else
+    envir = environment()
   testrun(config)
 
   # targets
@@ -66,15 +71,15 @@ test_that("cache functions work", {
   expect_true(is.numeric(readd(a, search = FALSE)))
 
   # load and read stuff
-  list = intersect(c(imported(), built()), ls(envir = config$envir))
-  rm(list = list, envir = config$envir)
+  list = intersect(c(imported(), built()), ls(envir = envir))
+  rm(list = list, envir = envir)
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
   expect_error(loadd(yourinput, myinput, 
     search = FALSE, imported_only = TRUE))
-  loadd(h, i, j, c, search = FALSE, envir = config$envir)
+  loadd(h, i, j, c, search = FALSE, envir = envir)
   expect_true(is.numeric(h(1)))
-  rm(h, i, j, c, envir = config$envir)
+  rm(h, i, j, c, envir = envir)
   expect_error(h(1))
   
   # test loadd imported_only and loadd() everything
@@ -136,9 +141,9 @@ test_that("cache functions work", {
   expect_true(is.numeric(readd(a, path = s, search = T)))
   expect_error(h(1))
   expect_error(j(1))
-  loadd(h, i, j, c, path = s, search = T, envir = config$envir)
+  loadd(h, i, j, c, path = s, search = T, envir = envir)
   expect_true(is.numeric(h(1)))
-  rm(h, i, j, c, envir = config$envir)
+  rm(h, i, j, c, envir = envir)
   expect_error(h(1))
   
   # clean using search = TRUE or FALSE

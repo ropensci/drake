@@ -1,6 +1,9 @@
 # Use testopts() to run all the unit tests
 # for different modes of parallel computing: different
 # numbers of jobs and mclapply vs Makefiles.
+# For a really thorough test session, 
+# be sure to also toggle the environment (global vs custom)
+# at the top of debug.R.
 
 testopts = function(){list(
   jobs = 2, # needs to be 1 for mclapply on Windows

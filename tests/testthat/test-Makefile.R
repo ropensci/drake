@@ -45,7 +45,8 @@ test_that("basic Makefile stuff works", {
     envir = config$envir, verbose = FALSE)
   config$verbose = FALSE
   run_Makefile(config, run = FALSE, debug = TRUE)
-  expect_true(file.exists(globalenvpath))
+  using_global = identical(config$envir, globalenv())
+  if(using_global) expect_true(file.exists(globalenvpath))
   expect_true(file.exists("Makefile"))
   stamps = sort(list.files(file.path(time_stamp_dir), full.names = TRUE))
   stamps2 = sort(time_stamp(c("combined", "myinput", "nextone", 
