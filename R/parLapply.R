@@ -6,7 +6,7 @@ run_parLapply = function(config){
   outfile = ifelse(config$verbose, "", "/dev/null")
   config$cluster = makePSOCKcluster(config$jobs, outfile = outfile)
   clusterExport(cl = config$cluster,
-    varlist = c("config", "%>%", ls("package:drake")),
+    varlist = c("config", ls("package:drake")),
     envir = environment())
   if(identical(config$envir, globalenv()))
     clusterExport(cl = config$cluster,
