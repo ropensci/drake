@@ -53,7 +53,7 @@ devtools::install_github("wlandau-lilly/drake", build = TRUE)
 If you specify a tag, you can install a GitHub release.
 
 ```r
-devtools::install_github("wlandau-lilly/drake@v2.0.0", build = TRUE)
+devtools::install_github("wlandau-lilly/drake@v3.0.0", build = TRUE)
 ```
 
 # Windows
