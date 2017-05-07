@@ -19,7 +19,8 @@ build = function(target, hash_list, config){
 }
 
 build_target = function(target, hashes, config){
-  command = get_command(target = target, config = config)
+  command = get_command(target = target, config = config) %>%
+    functionize
   eval(parse(text = command), envir = config$envir)
 }
 
@@ -64,4 +65,10 @@ store_function = function(target, value, hashes, imported, config){
   config$cache$set(key = target,
     value = list(type = "function", value = string, imported = imported,
       depends = hashes$depends)) # for nested functions
+}
+
+# bugfix: turn a command into an anonymous function call 
+# to avoid side effects that can interfere with parallelism
+functionize = function(command){
+  paste0("(function(){\n", command, "\n})()")
 }

@@ -68,7 +68,7 @@ test_that("can use semicolons and multi-line commands", {
   dclean()
   plan = plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
   make(plan, verbose = FALSE)
-  expect_true(all(c("a", "b") %in% ls()))
+  expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(cached(x, y, search = FALSE)))
   expect_equal(cached(search = FALSE), c("x", "y"))
   dclean()
