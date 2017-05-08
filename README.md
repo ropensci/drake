@@ -11,8 +11,7 @@
 
 # drake - data frames in R for [Make](http://kbroman.org/minimal_make/)
 
-Drake is an R package for high-performance computing and reproducible data analysis. It helps you skip the work you already did, accelerate the rest with parallel processing, stay organized, and confirm that your results are up to date with your code. Drake stands on the shoulders of tools like 
-[GNU Make](https://www.gnu.org/software/make) and [Rich FitzJohn](http://richfitz.github.io/)'s [remake](https://github.com/richfitz/remake) package, and it offers improvements in reproducibility, scalability, and convenience.
+The issue of reproducibility is at the forefront of the R and Statistics community buzz, but there are glaring holes in the conversation and the landscape. Most current talks and tools focus on scientific replicability, code annotation, and version control, and they miss the true meaning of reproducible data analysis. If you claim that an analysis is reproducible, you are promising that others can rerun the code and get new results that agree with the old ones. Drake helps you keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that you can switch on auto-magically, drake is one of the most convenient and powerful high-performance computing solutions available. Thus, drake aims to decisively boost the correctness and speed of data analysis in R.
 
 # Acknowledgements and history
 
