@@ -11,7 +11,7 @@
 
 # drake - data frames in R for [Make](http://kbroman.org/minimal_make/)
 
-The issue of reproducibility is at the forefront of the R and Statistics community buzz, but there are glaring holes in the conversation and the landscape. Most current talks and tools focus on scientific replicability, code annotation, and version control, and they miss the true meaning of reproducible data analysis. To claim reproducibility is to promise that others can rerun the code and produce output that agrees with the old results. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is one of the most convenient and powerful high-performance computing solutions available. Thus, drake aims to decisively boost the correctness and speed of data analysis in R.
+The issue of reproducibility is at the forefront of the R and Statistics community buzz, but there are glaring holes in the conversation and the landscape. Most current talks and tools focus on scientific replicability, code annotation, and version control, and they miss the true meaning of reproducible data analysis. To claim reproducibility is to promise that others can rerun the code and produce output that agrees with the old results. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is also a convenient and powerful high-performance computing solution.
 
 # Acknowledgements and history
 
