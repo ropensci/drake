@@ -1,6 +1,6 @@
 run_Makefile = function(config, run = TRUE, debug = FALSE){
   if(identical(globalenv(), config$envir))
-    save(list = ls(config$envir), envir = config$envir,
+    save(list = ls(config$envir, all.names = TRUE), envir = config$envir,
       file = globalenvpath)
   config$cache$set("config", config, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")

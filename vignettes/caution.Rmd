@@ -111,13 +111,12 @@ To look for dependencies, `drake` uses [codetools::findGlobals()](https://cran.r
 
 ```r
 f <- function(){
-  assign("a", 1)
   b = get("x", envir = globalenv())
   digest::digest(1234)
 }
 ```
 
-When drake looks for the dependencies of `f`, it will fail to recognize the objects `a` and `x`, along with the function `digest()`. Objects `a` and `x` are referenced with quoted strings, not symbols, which tricks drake. The function `digest()` is referenced with the scoping rule `::`, so [codetools::findGlobals()](https://cran.r-project.org/package=codetools) does not detect it.
+When drake looks for the dependencies of `f`, it will fail to recognize the object `x` and the function `digest()`. Object `x` is referenced with quoted strings, not symbols, which tricks drake. The function `digest()` is referenced with the scoping rule `::`, so [codetools::findGlobals()](https://cran.r-project.org/package=codetools) does not detect it.
 
 When it comes to commands in your workflow plan data frame, there are similar issues. It is possible to use double-quoted strings and the scoping operator `::` to trick drake into overlooking objects, functions, and files that should be dependencies. Use the `check()` function to scan the workflow plan for double-quoted strings and print out messages telling you where they occur.
 

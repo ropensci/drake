@@ -9,7 +9,7 @@ build = function(target, hash_list, config){
       config = config)
   else
     value = build_target(target = target, hashes = hashes, 
-    config = config)
+      config = config)
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
   config$cache$set(key = target, value = hashes$depends,
@@ -26,7 +26,8 @@ build_target = function(target, hashes, config){
 
 imported_target = function(target, hashes, config){
   if(is_file(target)) return(hashes$file)
-  else if(target %in% ls(config$envir)) value = config$envir[[target]]
+  else if(target %in% ls(config$envir, all.names = TRUE)) 
+    value = config$envir[[target]]
   else value = tryCatch(get(target), error = function(e)
     console(imported = NA, target = target, config = config))
   value

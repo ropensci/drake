@@ -7,7 +7,7 @@ prune_envir = function(targets, config){
   downstream = lapply(targets, function(vertex)
     subcomponent(config$graph, v = vertex, mode = "out")$name) %>%
     unlist %>% unique
-  already_loaded = ls(envir = config$envir) %>%
+  already_loaded = ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
   load_these = 
     nonfile_target_dependencies(targets = targets, config = config) %>%
