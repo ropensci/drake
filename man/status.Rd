@@ -4,8 +4,8 @@
 \alias{status}
 \title{Function \code{status}}
 \usage{
-status(..., list = character(0), imported_files_only = FALSE,
-  path = getwd(), search = TRUE)
+status(..., list = character(0), no_imported_objects = FALSE,
+  imported_files_only = logical(0), path = getwd(), search = TRUE)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -15,13 +15,12 @@ or character strings (quoted). Similar to \code{...} in
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
-\item{imported_files_only}{logical, applies only when 
-no targets are specified and the statuses of cached targets are 
-returned.
-If \code{imported_files_only} logical, whether to ignore 
-imported objects that are not files. If \code{TRUE}, all
-targets (with commands in the workflow plan data frame) and
-imported files will be listed. Otherwise, everything will be listed.}
+\item{no_imported_objects}{logical, whether to only return information
+about imported files and targets with commands (i.e. whether to ignore 
+imported objects that are not files).}
+
+\item{imported_files_only}{logical, deprecated. Same as \code{no_imported_objects}.
+Use the \code{no_imported_objects} argument instead.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the

@@ -42,38 +42,42 @@ session = function(path = getwd(), search = TRUE){
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
-#' @param imported_files_only logical, applies only when 
-#' no targets are specified and the statuses of cached targets are 
-#' returned.
-#' If \code{imported_files_only} logical, whether to ignore 
-#' imported objects that are not files. If \code{TRUE}, all
-#' targets (with commands in the workflow plan data frame) and
-#' imported files will be listed. Otherwise, everything will be listed.
+#' @param no_imported_objects logical, whether to only return information
+#' about imported files and targets with commands (i.e. whether to ignore 
+#' imported objects that are not files).
+#' @param imported_files_only logical, deprecated. Same as \code{no_imported_objects}.
+#' Use the \code{no_imported_objects} argument instead.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-status = function(..., list = character(0), 
-  imported_files_only = FALSE, path = getwd(), search = TRUE){
+status = function(..., list = character(0), no_imported_objects = FALSE, 
+  imported_files_only = logical(0), path = getwd(), search = TRUE){
+  if(length(imported_files_only)){ # deprecate imported_files_only
+    warning("The imported_files_only argument to status() is deprecated ",
+      "and will be removed the next major release. ",
+      "Use the no_imported_objects argument instead.")
+    no_imported_objects = imported_files_only
+  }
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("No drake::make() session detected.")
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
   if(!length(targets)) 
-    return(list_status(imported_files_only = imported_files_only, 
+    return(list_status(no_imported_objects = no_imported_objects, 
       cache = cache))
   get_status(targets, cache)
 }
 
-list_status = function(imported_files_only, cache){
+list_status = function(no_imported_objects, cache){
   all_marked = cache$list(namespace = "status")
   all_status = get_status(target = all_marked, cache = cache)
   abridged_marked = Filter(all_marked, f = function(target)
     is_built_or_imported_file(target = target, cache = cache))
   abridged_status = all_status[abridged_marked]
-  if(imported_files_only) return(abridged_status) 
+  if(no_imported_objects) return(abridged_status) 
   else return(all_status) 
 }
 

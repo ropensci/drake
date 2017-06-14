@@ -30,9 +30,10 @@ test_that("cache functions work", {
   # session, status
   expect_true(is.list(session(search = FALSE)))
   expect_true(all(status(search = FALSE) == "finished"))
+  expect_warning(tmp <- status(imported_files_only = TRUE)) # deprecated argument
   expect_equal(sort(names(status(search = FALSE))), all)
   expect_equal(sort(names(status(search = FALSE, 
-    imported_files_only = TRUE))), sort(c("'input.rds'", builds)))
+    no_imported_objects = TRUE))), sort(c("'input.rds'", builds)))
   expect_equal(status(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
@@ -100,7 +101,7 @@ test_that("cache functions work", {
   # status, session 
   expect_true(is.list(session(search = T, path = s)))
   expect_equal(sort(names(status(search = T, path = s))), sort(all))
-  expect_equal(sort(names(status(imported_files_only = TRUE, 
+  expect_equal(sort(names(status(no_imported_objects = TRUE, 
     search = T, path = s))), sort(c("'input.rds'", builds)))
   expect_equal(sort(status(search = T, path = s, bla, f, 
     list = c("h", "final"))), 
