@@ -12,7 +12,9 @@ time_stamps = function(config){
 }
 
 safe_encode = function(x){
-  paste0("t", base64_urlencode(x))
+  base32_encode(x)
+  # Collisions may occur for base 64 encoding on case-insensitive file systems.
+  # paste0("t", base64_urlencode(x))
 }
 
 time_stamp = function(x){

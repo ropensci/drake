@@ -1,7 +1,7 @@
 Package: drake
 Title: Data Frames in R for Make
 Version: 3.0.1
-Date: 2017-06-09
+Date: 2017-06-15
 Authors@R: c(
   person(family = "Landau", given = c("William", "Michael"),
     email = "will.landau@lilly.com", role = c("aut", "cre")),
