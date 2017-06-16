@@ -241,6 +241,12 @@ system2("chmod", args = c("+x", "shell.sh")) # permission to execute
 # nodes for true distributed computing.
 make(plan, parallelism = "Makefile", jobs = 4, # build
   prepend = "SHELL=./shell.sh")
+
+# Alternatively, users of SLURM (https://slurm.schedmd.com/) 
+# can just point to `srun` and dispense with `shell.sh` altogether.
+# make(some_plan, parallelism = "Makefile", jobs = 4,
+#   prepend = "SHELL=srun")
+
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Everything is up to date, so no jobs should be submitted.
