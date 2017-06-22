@@ -18,29 +18,16 @@ suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE)
 ```
 
-The issue of reproducibility is at the forefront of the R and Statistics community buzz, but there are glaring holes in the conversation and the landscape. Most current talks and tools focus on scientific replicability, code annotation, and version control, and they miss the most crucial part of reproducible data analysis: the promise that the alleged results really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is also a convenient and powerful high-performance computing solution.
+There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is also a convenient and powerful high-performance computing solution.
 
-# Acknowledgements and history
+# Landscape and context
 
-The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. 
+The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows.
 
 Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
 
-# Advantages of drake
+In the sphere of reproducibility, drake and [remake](https://github.com/richfitz/remake) are examples of non-literate programming tools (as opposed to literate programming tools such as [knitr](https://CRAN.R-project.org/package=knitr)). Counterparts include [R.cache](https://CRAN.R-project.org/package=R.cache), [archivist](https://CRAN.R-project.org/package=archivist), [trackr](https://github.com/gmbecker/recordr), and [memoise](https://CRAN.R-project.org/package=memoise). See the [reporducible research CRAN task view](https://CRAN.R-project.org/view=ReproducibleResearch) for a more comprehensive list. Drake differentiates itself from these tools with its ability to track the relationships among cached objects and its extensive high-performance computing functionality.
 
-Some advantages of drake, especially relative to [remake](https://github.com/richfitz/remake) at the time of writing, are
-
-1. reproducibility. Drake can
-    - import and track arbitrary variables from your workspace.
-    - track functions from packages.
-2. safety.
-    - If you manually break an output file target, drake can fix it with another call to `make()`.
-3. parallel computing. Auto-magically run multiple targets simultaneously.
-    - Switch on the `mclapply()` or `parLapply()` backend for light parallelism within a single R session.
-    - Switch on a `Makefile` to parallelize over multiple R sessions, which you can distribute across several nodes of a computing cluster or a supercomputer.
-4. convenience.
-    - No YAML files!
-    - With functions like `plan()`, `datasets()`, `analyses()`, `evaluate()`, `expand()`, and `gather()`, you can minimize typing when you set up a project.
 
 # Windows
 
