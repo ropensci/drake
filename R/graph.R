@@ -1,20 +1,3 @@
-#' @title Function \code{plot_graph}
-#' @description Plot the dependency structure of your workflow
-#' @export
-#' @param plan workflow plan data frame, same as for function 
-#' \code{\link{make}()}.
-#' @param targets names of targets to bulid, same as for function
-#' \code{\link{make}()}.
-#' @param envir environment to import from, same as for function
-#' \code{\link{make}()}.
-#' @param verbose logical, whether to output messages to the console.
-plot_graph = function(plan, targets = drake::possible_targets(plan), 
-  envir = parent.frame(), verbose = TRUE){
-  force(envir)
-  build_graph(plan = plan, targets = targets, envir = envir,
-    verbose = verbose) %>% plot.igraph
-}
-
 #' @title Function \code{build_graph}
 #' @description Make a graph of the dependency structure of your workflow.
 #' @details This function returns an igraph object representing how
@@ -22,6 +5,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' (\code{help(package = "igraph")}). To plot the graph, call
 #' to \code{\link{plot.igraph}()} on your graph, or just use 
 #' \code{\link{plot_graph}()} from the start.
+#' @seealso \code{\link{plot_graph}}
 #' @export
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
@@ -38,6 +22,8 @@ build_graph = function(plan, targets = drake::possible_targets(plan),
   imports = as.list(envir)
   assert_unique_names(imports = names(imports), targets = plan$target,
     envir = envir, verbose = verbose)
+  true_import_names = setdiff(names(imports), targets)
+  imports = imports[true_import_names]
   import_deps = lapply(imports, import_dependencies)
   command_deps = lapply(plan$command, command_dependencies)
   names(command_deps) = plan$target

@@ -10,11 +10,13 @@ config = function(plan, targets, envir, jobs,
   cache$clear(namespace = "status")
   graph = build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
+  graphplot = plot_graph(plan = plan, targets = targets, 
+    envir = envir, verbose = verbose, graph = graph)
   order = topological.sort(graph)$name
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command, args = args,
-    graph = graph, order = order, inventory = cache$list(),
+    graph = graph, graphplot = graphplot, order = order, inventory = cache$list(),
     inventory_filemtime = cache$list(namespace = "filemtime"))
 }
 

@@ -134,7 +134,9 @@ read_plan = function(path = getwd(), search = TRUE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 read_graph = function(plot = TRUE, path = getwd(), search = TRUE){
-  graph = read_config(path = path, search = search)$graph
-  if(plot) plot.igraph(graph)
-  else graph
+  config = read_config(path = path, search = search)
+  if(plot & is.null(config[["graphplot"]]))
+    return(plot.igraph(config[["graph"]]))
+  key = ifelse(plot, "graphplot", "graph")
+  config[[key]]
 }

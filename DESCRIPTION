@@ -27,7 +27,8 @@ Imports:
     stringr,
     testthat,
     tools,
-    utils
+    utils,
+    visNetwork
 Suggests:
     abind,
     knitr,
