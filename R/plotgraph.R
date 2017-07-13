@@ -31,7 +31,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 
   network_data = toVisNetworkData(graph)
   nodes = network_data$nodes
-  nodes = resolve_levels(nodes, graph)
+  edges = network_data$edges
+  if(!nrow(nodes)) return(null_network())
 
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(f = function(x) is.function(envir[[x]]), x = imports)
@@ -41,6 +42,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
                       !is_file(x) & 
                       tryCatch({tmp = get(x); FALSE}, error = function(e) TRUE))
 
+  nodes = resolve_levels(nodes, graph)
   nodes$font.size = font_size
   nodes$color = import_color
   nodes[notfound, "color"] = notfound_color
@@ -50,10 +52,11 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   nodes[is_file(nodes$id), "shape"] = file_shape
   nodes[functions, "shape"] = function_shape
 
-  edges = network_data$edges
-  edges$arrows = "to"
-  edges$color = "black"
-
+  if(nrow(edges)){
+    edges$arrows = "to"
+    edges$color = "black"
+  }
+  
   legend_nodes = data.frame(
     label = c("Target to build", "Item to import", "Cannot import", 
               "Generic object", "Function", "External file"),
@@ -68,8 +71,13 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
     visHierarchicalLayout(direction = "LR")
 }
 
+null_graph = function(){
+  nodes = data.frame(id = 1, label = "Nothing to plot.")
+  visNetwork(nodes = nodes, edges = data.frame(from = NA, to = NA))
+}
+
 resolve_levels = function(nodes, graph){
-  stopifnot(is.dag(graph))
+  stopifnot(is_dag(graph))
   level = 1
   nodes$level = NA
   graph_remaining_targets = graph
