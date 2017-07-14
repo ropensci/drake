@@ -5,7 +5,7 @@
 #' @importFrom eply quotes strings unquote
 #' @importFrom igraph adjacent_vertices delete_vertices edge 
 #' is_dag make_empty_graph plot.igraph subcomponent 
-#' topological.sort V vertices
+#' topological.sort V vertex
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster 
 #' mclapply parLapply stopCluster

@@ -36,10 +36,10 @@ build_graph = function(plan, targets = drake::possible_targets(plan),
   dependency_list = c(command_deps, import_deps)
   keys = names(dependency_list)
   vertices = c(keys, unlist(dependency_list)) %>% unique
-  graph = make_empty_graph() + vertices(vertices)
-  for(key in keys)
-    for(dependency in dependency_list[[key]])
-      graph = graph + edge(dependency, key)
+  from = unlist(dependency_list) %>% unname
+  to = rep(keys, times = sapply(dependency_list, length))
+  edges = rbind(from, to) %>% as.character
+  graph = make_empty_graph() + vertex(vertices) + edge(edges)
   ignore = lapply(targets, function(vertex)
     subcomponent(graph = graph, v = vertex, mode = "in")$name
   ) %>% unlist %>% unique %>% setdiff(x = vertices)
