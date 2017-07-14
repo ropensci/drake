@@ -25,7 +25,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   if(is.null(graph))
     graph = build_graph(plan = plan, targets = targets, 
       envir = envir, verbose = verbose)
-
+  
   generic_color = "gray"
   import_color = "#1874cd"
   target_color = "#228b22"
@@ -37,7 +37,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   network_data = toVisNetworkData(graph)
   nodes = network_data$nodes
   edges = network_data$edges
-  if(!nrow(nodes)) return(null_network())
+  if(!nrow(nodes)) return(null_graph())
 
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(f = function(x) is.function(envir[[x]]), x = imports)
