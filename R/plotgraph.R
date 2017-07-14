@@ -52,10 +52,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   nodes[is_file(nodes$id), "shape"] = file_shape
   nodes[functions, "shape"] = function_shape
 
-  if(nrow(edges)){
-    edges$arrows = "to"
-    edges$color = "black"
-  }
+  if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
     label = c("Target to build", "Item to import", "Cannot import", 
