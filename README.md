@@ -13,7 +13,7 @@
 library(drake)
 load_basic_example()
 plot_graph(my_plan)
-# make(my_plan)
+make(my_plan)
 ```
 
 ![](drakegraph.gif)
