@@ -9,12 +9,6 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
-```r
-library(drake)
-load_basic_example()
-make(my_plan)
-plot_graph(my_plan)
-```
 
 ![](drake.gif)
 
