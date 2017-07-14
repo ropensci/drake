@@ -16,7 +16,7 @@ make(my_plan)
 plot_graph(my_plan)
 ```
 
-![](drakegraph.gif)
+![](drake.gif)
 
 
 
