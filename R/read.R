@@ -20,6 +20,15 @@
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param cache a storr cache. Mainly for internal use.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' readd(reg1)
+#' readd(small)
+#' readd("large", character_only = TRUE)
+#' readd("'report.md'") # just a fingerprint of the file (md5 sum)
+#' }
 readd = function(target, character_only = FALSE, path = getwd(), 
   search = TRUE, cache = NULL){
   if(is.null(cache)) cache = get_cache(path = path, search = search)
@@ -58,6 +67,16 @@ readd = function(target, character_only = FALSE, path = getwd(),
 #' current working directory only.
 #' @param envir environment to load objects into. Defaults to the
 #' calling environment (current workspace).
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' loadd(reg1)
+#' loadd(small)
+#' loadd(list = c("small", "large"))
+#' loadd(imported_only = TRUE) # load all imported objects and functions
+#' loadd() # load everything, including built targets
+#' }
 loadd = function(..., list = character(0),
   imported_only = FALSE, path = getwd(), 
   search = TRUE, envir = parent.frame()){
@@ -94,6 +113,12 @@ load_target = Vectorize(function(target, cache, envir){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' read_config()
+#' }
 read_config = function(path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("cannot find drake cache.")
@@ -114,6 +139,12 @@ read_config = function(path = getwd(), search = TRUE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' read_plan()
+#' }
 read_plan = function(path = getwd(), search = TRUE){
   read_config(path = path, search = search)$plan
 }
@@ -133,6 +164,14 @@ read_plan = function(path = getwd(), search = TRUE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' g <- read_graph(plot = FALSE)
+#' class(g)
+#' read_graph() # Actually plot the graph as an interactive visNetwork widget.
+#' }
 read_graph = function(plot = TRUE, path = getwd(), search = TRUE){
   config = read_config(path = path, search = search)
   if(plot & is.null(config[["graphplot"]]))

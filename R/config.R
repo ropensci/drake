@@ -50,6 +50,11 @@ inventory = function(config){
 #' @export
 #' @return character vector of possible targets
 #' @param plan workflow plan data frame
+#' @examples 
+#' \dontrun{
+#' load_basic_example()
+#' possible_targets(my_plan)
+#' }
 possible_targets = function(plan){
   plan = sanitize_plan(plan)
   c(as.character(plan$output), as.character(plan$target))

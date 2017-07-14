@@ -18,6 +18,13 @@ if no cache is found.
 Return the file path of the nearest drake
 cache (searching upwards for directories containing a drake cache).
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+find_cache()
+}
+}
 \seealso{
 \code{\link{plan}}, \code{\link{make}},
 }

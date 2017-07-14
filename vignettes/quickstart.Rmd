@@ -19,7 +19,16 @@ clean(destroy = TRUE)
 
 # Quickstart examples
 
-Drake has small self-contained built-in examples. To see the names of the available examples, use
+Drake has small self-contained built-in examples. Load and play around with the basic one.
+
+```{r loadbasic}
+library(drake)
+load_basic_example()
+plot_graph(my_plan)
+# make(my_plan)
+```
+
+To see the names of the available examples, use
 
 ```{r example}
 examples_drake()
@@ -34,15 +43,14 @@ example_drake("basic")
 
 # Setting up the basic example
 
-Load your libraries first. Drake will detect loaded packages and reload them on all your compute nodes, if applicable.
+Let's establish the building blocks of a data analysis workflow.
 
 ```{r libs}
 library(knitr)
-library(rmarkdown)
 library(drake)
 ```
 
-This example is a simulation study, and we're using a function to simulate random datasets. Enter your simulation function and drake will import it automatically.
+First, we will generate a few datasets.
 
 ```{r sim}
 simulate = function(n){
@@ -53,7 +61,7 @@ simulate = function(n){
 }
 ```
 
-For each dataset we simulate, we'll apply a bunch of methods of analysis.
+Then, we will analyze each dataset with multiple analysis methods.
 
 ```{r reg}
 reg1 = function(d){
@@ -66,22 +74,17 @@ reg2 = function(d){
 }
 ```
 
-After we're done, we'll want to knit a dynamic [R Markdown](http://rmarkdown.rstudio.com/) report with a bunch of results.
+Finally, we will generate a [dynamic report](http://rmarkdown.rstudio.com/) to display results.
 
 ```{r knit}
 my_knit = function(file, ...){
-  knit(file) # drake knows you loaded the knitr package
-}
-
-my_render = function(file, ...){
-  render(file) # drake knows you loaded the rmarkdown package
+  knit(file)
 }
 ```
 
-The example provides an example `report.Rmd`, which uses `readd()` and `loadd()` to load objects we'll generate with drake.
+We need the source file `report.Rmd`.
 
 ```{r file}
-# Write the R Markdown source for a dynamic knitr report
 lines = c(
   "---",
   "title: Example Report",
@@ -94,16 +97,16 @@ lines = c(
   "```{r example_chunk}",
   "library(drake)",
   "readd(small)",
-  "readd(coef_regression2_small)",
-  "loadd(large)",
+  "readd(coef_regression2_small)", # Return an object from the drake cache.
+  "loadd(large)", # Load an object from the drake cache into your workspace.
   "head(large)",
-  "```"
-)
-
+  "```")
 writeLines(lines, "report.Rmd")
 ```
 
 # The workflow plan
+
+The workflow plan lists the intermediate steps of your project. Each step is a row in a data frame.
 
 In drake, your workflow plan is organized into a data frame. Each row represents a target, which is either a variable or a file that will be produced with a single command. Here is the part of the plan that generates our datasets.
 
@@ -163,8 +166,6 @@ In the commands to render the report, keep in mind the rule for working with fil
 ```{r reportplan}
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
-## The html report requires pandoc. Commented out.
-## report.html = my_render('report.md', report_dependencies),
   file_targets = TRUE, strings_in_dots = "filenames")
 report
 ```

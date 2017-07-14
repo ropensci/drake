@@ -22,6 +22,13 @@ a workflow plan data frame
 Read the workflow plan
 from your last attempted call to \code{\link{make}()}.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+read_plan()
+}
+}
 \seealso{
 \code{\link{read_config}}
 }

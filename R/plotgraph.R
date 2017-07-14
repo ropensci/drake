@@ -13,6 +13,11 @@
 #' @param graph an igraph object if one has already been built with 
 #' \code{\link{build_graph}()}. 
 #' @param ... arguments passed to \code{visNetwork::visNetwork()} to plot the graph.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' plot_graph(my_plan)
+#' }
 plot_graph = function(plan, targets = drake::possible_targets(plan), 
                       envir = parent.frame(), verbose = TRUE, 
                       font_size = 20, graph = NULL, ...){

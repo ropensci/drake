@@ -12,6 +12,9 @@ names of all the drake examples.
 \description{
 List the names of all the drake examples.
 }
+\examples{
+examples_drake()
+}
 \seealso{
 \code{\link{example_drake}}, \code{\link{make}}
 }

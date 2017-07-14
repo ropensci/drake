@@ -29,6 +29,13 @@ the targets in your workflow depend on each other.
 to \code{\link{plot.igraph}()} on your graph, or just use 
 \code{\link{plot_graph}()} from the start.
 }
+\examples{
+\dontrun{
+load_basic_example()
+g <- build_graph(my_plan)
+class(g)
+}
+}
 \seealso{
 \code{\link{plot_graph}}
 }

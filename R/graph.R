@@ -14,6 +14,12 @@
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' g <- build_graph(my_plan)
+#' class(g)
+#' }
 build_graph = function(plan, targets = drake::possible_targets(plan), 
   envir = parent.frame(), verbose = TRUE){
   force(envir)
@@ -53,6 +59,11 @@ build_graph = function(plan, targets = drake::possible_targets(plan),
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' tracked(my_plan)
+#' }
 tracked = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame()){
   force(envir)

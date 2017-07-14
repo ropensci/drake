@@ -37,6 +37,17 @@ and \code{list} are not set
 (or all the imported objects if in addition 
 imported_only is \code{TRUE}).
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+loadd(reg1)
+loadd(small)
+loadd(list = c("small", "large"))
+loadd(imported_only = TRUE) # load all imported objects and functions
+loadd() # load everything, including built targets
+}
+}
 \seealso{
 \code{\link{cached}}, \code{\link{built}}, 
 \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},

@@ -26,6 +26,15 @@ on \code{plot}
 Read the dependency graph of your targets
 from your last attempted call to \code{\link{make}()}.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+g <- read_graph(plot = FALSE)
+class(g)
+read_graph() # Actually plot the graph as an interactive visNetwork widget.
+}
+}
 \seealso{
 \code{\link{read_config}}
 }

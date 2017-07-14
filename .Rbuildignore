@@ -25,6 +25,7 @@ vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
 ^.*\.css$
+^.*\.gif$
 ^.*\.js$
 ^.*\.log$
 ^.*\.Rproj$

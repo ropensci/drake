@@ -112,6 +112,12 @@
 #' \code{jobs >= 2} and \code{args} is left alone, targets
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
+#' 
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' }
 make = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, 
   parallelism = drake::default_parallelism(), jobs = 1, 

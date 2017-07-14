@@ -49,6 +49,16 @@ Objects that drake imported, built, or attempted
 to build are listed as \code{"finished"} or \code{"in progress"}. 
 Skipped objects are not listed.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+status()
+status(small, large)
+status(list = c("small", "large"))
+status(no_imported_objects = TRUE)
+}
+}
 \seealso{
 \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},

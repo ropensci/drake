@@ -28,6 +28,17 @@
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' cached(no_imported_objects = TRUE)
+#' clean(summ_regression1_large, small)
+#' cached(no_imported_objects = TRUE)
+#' make(my_plan)
+#' clean()
+#' clean(destroy = TRUE)
+#' }
 clean = function(..., list = character(0), destroy = FALSE,
   path = getwd(), search = TRUE){
   dots = match.call(expand.dots = FALSE)$...

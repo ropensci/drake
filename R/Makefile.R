@@ -22,6 +22,9 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
 #' @return \code{args} for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
+#' @examples
+#' default_system2_args(jobs = 2, verbose = FALSE)
+#' default_system2_args(jobs = 4, verbose = TRUE)
 default_system2_args = function(jobs, verbose){
   out = paste0("--jobs=", jobs)
   if(!verbose) out = c(out, "--silent")

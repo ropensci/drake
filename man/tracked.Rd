@@ -21,3 +21,9 @@ tracked(plan, targets = drake::possible_targets(plan),
 Print out which objects, functions, files, targets, etc.
 are reproducibly tracked.
 }
+\examples{
+\dontrun{
+load_basic_example()
+tracked(my_plan)
+}
+}

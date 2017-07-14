@@ -9,6 +9,13 @@
 #' \code{\link{plan}()}.
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' check(my_plan)
+#' unlink("report.Rmd")
+#' check(my_plan)
+#' }
 check = function(plan, targets = drake::possible_targets(plan), 
   envir = parent.frame()){
   force(envir)

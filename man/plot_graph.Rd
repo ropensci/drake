@@ -30,6 +30,12 @@ plot_graph(plan, targets = drake::possible_targets(plan),
 \description{
 Plot the dependency structure of your workflow
 }
+\examples{
+\dontrun{
+load_basic_example()
+plot_graph(my_plan)
+}
+}
 \seealso{
 \code{\link{build_graph}}
 }

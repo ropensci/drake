@@ -44,6 +44,18 @@ which includes
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+cached(no_imported_objects = TRUE)
+clean(summ_regression1_large, small)
+cached(no_imported_objects = TRUE)
+make(my_plan)
+clean()
+clean(destroy = TRUE)
+}
+}
 \seealso{
 \code{\link{prune}}, \code{\link{make}},
 }

@@ -80,7 +80,7 @@ methods = plan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 
-# same as evaluate(plan, wildcard = "..dataset..",
+# same as evaluate(my_plan, wildcard = "..dataset..",
 #   values = datasets$output)
 analyses = analyses(methods, datasets = datasets)
 
@@ -90,7 +90,7 @@ summary_types = plan(summ = summary(..analysis..),
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
 results = summaries(summary_types, analyses, datasets, 
-  gather = NULL) # skip 'gather' (workflow plan is more readable)
+  gather = NULL) # skip 'gather' (workflow my_plan is more readable)
 
 load_in_report = plan(
   report_dependencies = c(small, large, coef_regression2_small))
@@ -98,7 +98,7 @@ load_in_report = plan(
 # External file targets and dependencies should be single-quoted.
 # Use double quotes to remove any special meaning from character strings.
 # Single quotes inside imported functions are ignored, so this mechanism
-# only works inside the workflow plan data frame.
+# only works inside the workflow my_plan data frame.
 # WARNING: drake cannot track entire directories (folders).
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
@@ -106,19 +106,19 @@ report = plan(
 ## report.html = my_render('report.md', report_dependencies), 
   file_targets = TRUE, strings_in_dots = "filenames")
 
-# Row order doesn't matter in the workflow plan.
-plan = rbind(report, datasets, load_in_report, analyses, results)
+# Row order doesn't matter in the workflow my_plan.
+my_plan = rbind(report, datasets, load_in_report, analyses, results)
 
 # Use tracked() to verify the objects, functions, targets, et. 
 # that drake tries to reproducibly track. It is wise to verify this
 # for yourself because drake can be tricked in some edge cases. 
 # See vignette("caution").
-"small" %in% tracked(plan)
-tracked(plan, targets = "small")
-tracked(plan)
+"small" %in% tracked(my_plan)
+tracked(my_plan, targets = "small")
+tracked(my_plan)
 
-# Check the plan for obvious errors and pitfalls.
-check(plan)
+# Check the my_plan for obvious errors and pitfalls.
+check(my_plan)
 
 ################################
 ### SINGLE-PROCESS EXECUTION ###
@@ -129,7 +129,7 @@ clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 
 # Use make() to execute your workflow. 
 # These functions are exactly the same.
-make(plan) # build everything from scratch
+make(my_plan) # build everything from scratch
 # Now, open and read report.html in a browser.
 status() # What did you build? Did it finish?
 # session() # get the sessionInfo() of the last call to make()
@@ -141,7 +141,7 @@ readd(coef_regression2_large) # Read target from the cache.
 "report_dependencies" %in% ls() # Should be TRUE.
 
 # Everything is up to date.
-make(plan)
+make(my_plan)
 
 # Change to a cubic term and rerun.
 reg2 = function(d){
@@ -149,16 +149,16 @@ reg2 = function(d){
   lm(y ~ x3, data = d)
 }
 
-make(plan) # Drake only runs targets that depend on reg2().
+make(my_plan) # Drake only runs targets that depend on reg2().
 
-# For functions and plan$command, 
+# For functions and my_plan$command, 
 # trivial changes like comments and whitespace are ignored.
 reg2 = function(d){
   d$x3 = d$x^3
     lm(y ~ x3, data = d) # I indented here.
 }
 
-make(plan) # Nothing substantial changed. Everything up to date.
+make(my_plan) # Nothing substantial changed. Everything up to date.
 
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
@@ -175,8 +175,8 @@ additions = plan(
   new_data = new_simulation(36) + sqrt(10))  
 
 # Add the new work
-plan = rbind(plan, additions)
-make(plan) # Only the new work is run.
+my_plan = rbind(my_plan, additions)
+make(my_plan) # Only the new work is run.
 
 # Clean up and start over next time.
 # Use clean(small), clean(list = "large"), etc. 
@@ -187,12 +187,12 @@ clean() # report.html and report.md are removed, but report.Rmd stays.
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################
 
-make(plan, jobs = 2) # parallelism == "parLapply" for Windows
-# make(plan, parallelism = "mclapply", jobs = 2) # Not for Windows
+make(my_plan, jobs = 2) # parallelism == "parLapply" for Windows
+# make(my_plan, parallelism = "mclapply", jobs = 2) # Not for Windows
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # All up to date.
-make(plan, jobs = 2)
+make(my_plan, jobs = 2)
 clean() # Start over next time.
 
 ######################################################
@@ -204,11 +204,11 @@ clean() # Start over next time.
 # Windows users need Rtools (https://cran.r-project.org/bin/windows/Rtools)
 # Everyone else just needs Make (https://www.gnu.org/software/make) 
 # or an equivalent program.
-make(plan, parallelism = "Makefile", jobs = 2) # build everything
+make(my_plan, parallelism = "Makefile", jobs = 2) # build everything
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Drake tells the Makefile what is already up to date.
-make(plan, parallelism = "Makefile", jobs = 2)
+make(my_plan, parallelism = "Makefile", jobs = 2)
 clean() # Start over next time.
 
 ######################################################
@@ -239,18 +239,18 @@ system2("chmod", args = c("+x", "shell.sh")) # permission to execute
 # Run up to four parallel jobs on the cluster or supercomputer,
 # depending on what is needed. These jobs could go to multiple 
 # nodes for true distributed computing.
-make(plan, parallelism = "Makefile", jobs = 4, # build
+make(my_plan, parallelism = "Makefile", jobs = 4, # build
   prepend = "SHELL=./shell.sh")
 
 # Alternatively, users of SLURM (https://slurm.schedmd.com/) 
 # can just point to `srun` and dispense with `shell.sh` altogether.
-# make(some_plan, parallelism = "Makefile", jobs = 4,
+# make(some_my_plan, parallelism = "Makefile", jobs = 4,
 #   prepend = "SHELL=srun")
 
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Everything is up to date, so no jobs should be submitted.
-make(plan, parallelism = "Makefile", jobs = 4, 
+make(my_plan, parallelism = "Makefile", jobs = 4, 
   prepend = "SHELL=./shell.sh")
 
 } # if(FALSE)

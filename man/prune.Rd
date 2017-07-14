@@ -13,6 +13,17 @@ prune(plan)
 \description{
 Use \code{\link{clean}()} instead
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+cached()
+prune(my_plan[1:3,])
+cached()
+make(my_plan)
+clean(destroy = TRUE)
+}
+}
 \seealso{
 \code{\link{clean}}, \code{\link{make}}
 }

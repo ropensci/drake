@@ -17,6 +17,12 @@ internal function, returns the list of
 possible targets that you can select with the \code{targets}
 argument to \code{\link{make}()}.
 }
+\examples{
+\dontrun{
+load_basic_example()
+possible_targets(my_plan)
+}
+}
 \seealso{
 \code{\link{make}}
 }

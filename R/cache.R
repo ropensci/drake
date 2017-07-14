@@ -31,6 +31,14 @@
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' cached(list = "reg1")
+#' cached(no_imported_objects = TRUE)
+#' cached()
+#' }
 cached = function(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
@@ -72,6 +80,12 @@ list_cache = function(no_imported_objects, cache){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' built()
+#' }
 built = function(path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(character(0))
@@ -95,6 +109,12 @@ built = function(path = getwd(), search = TRUE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' imported()
+#' }
 imported = function(files_only = FALSE, path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(character(0))

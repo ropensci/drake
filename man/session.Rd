@@ -23,6 +23,13 @@ call to \code{\link{make}()}
 Load the \code{\link{sessionInfo}()}
 of the last call to \code{\link{make}()}.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+session()
+}
+}
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}

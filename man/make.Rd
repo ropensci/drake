@@ -126,3 +126,9 @@ wherever possible.}
 \description{
 Run your project (build the targets).
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+}
+}

@@ -12,6 +12,12 @@
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' session()
+#' }
 session = function(path = getwd(), search = TRUE){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) stop("No drake::make() session detected.")
@@ -53,6 +59,15 @@ session = function(path = getwd(), search = TRUE){
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' status()
+#' status(small, large)
+#' status(list = c("small", "large"))
+#' status(no_imported_objects = TRUE)
+#' }
 status = function(..., list = character(0), no_imported_objects = FALSE, 
   imported_files_only = logical(0), path = getwd(), search = TRUE){
   if(length(imported_files_only)){ # deprecate imported_files_only

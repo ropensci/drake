@@ -19,6 +19,11 @@ Copy a folder of code files for a
 drake example to the current working directory.
 To see the names of all the examples, run \code{\link{examples_drake}}.
 }
+\examples{
+\dontrun{
+example_drake("basic")
+}
+}
 \seealso{
 \code{\link{examples_drake}}, \code{\link{make}}
 }

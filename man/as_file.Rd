@@ -9,7 +9,8 @@ as_file(x)
 \arguments{
 \item{x}{character string to be turned into a filename
 understandable by drake (i.e., a string with literal
-single quotes on both ends).}
+single quotes on both ends).
+as_file("my_file.rds")}
 }
 \value{
 a single-quoted character string: i.e., a filename
