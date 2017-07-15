@@ -15,8 +15,8 @@
 
 Drake is a workflow manager and build system for
 
-1. [Reproducibility](#Reproducibility).
-2. [High-performance computing](#High-performance-computing).
+1. [Reproducibility](#rpd).
+2. [High-performance computing](#hpc).
 
 # Installation
 
@@ -60,7 +60,7 @@ vignette("caution") # Avoid common pitfalls.
 
 Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
 
-# Reproducibility 
+# Reproducibility {#rpd}
 
 There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. 
 
@@ -76,7 +76,7 @@ reg2 = function(d){ # Change one of your functions.
 make(my_plan) # Only the pieces depending on reg2() get rebuilt.
 ```
 
-# High-performance computing
+# High-performance computing {#hpc}
 
 Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the intermediate steps of your workflow in a network (see `plot_graph()`). That way,  you can run independent steps in parallel. Choose from multiple built-in backends.
 
