@@ -1,3 +1,7 @@
+<h1 align="center">
+  <img width="200" src="./inst/logo.png" alt="">
+</h1>
+
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
 [![codecov.io](https://codecov.io/github/wlandau-lilly/drake/coverage.svg?branch=master)](https://codecov.io/github/wlandau-lilly/drake?branch=master)
@@ -8,10 +12,6 @@
 ![](drake.gif)
 
 # drake - data frames in R for [Make](http://kbroman.org/minimal_make/)
-
-<h1 align="center">
-  <img width="200" src="./inst/logo.png" alt="">
-</h1>
 
 Drake is a workflow manager and build system for
 
