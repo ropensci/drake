@@ -61,8 +61,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
-    label = c("Target to build", "Item to import", "Cannot import", 
-              "Generic object", "Function", "External file"),
+    label = c("Target", "Imported", "Missing", 
+              "Object", "Function", "File"),
     color = c(target_color, import_color, notfound_color, generic_color, generic_color, generic_color),
     shape = c(generic_shape, generic_shape, generic_shape, generic_shape, function_shape, file_shape),
     font.color = "black",

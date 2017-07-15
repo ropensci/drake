@@ -89,7 +89,7 @@ load_basic_example = function(envir = parent.frame()){
     "",
     "Look how I read outputs from the drake cache.",
     "",
-    "```{r}",
+    "```{r example_chunk}",
     "library(drake)",
     "readd(small)",
     "readd(coef_regression2_small)",

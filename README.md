@@ -21,16 +21,14 @@ Drake is a workflow manager and build system for
 # Installation
 
 ```r
-install.packages("drake") # latest CRAN version
+install.packages("drake") # latest CRAN release
 devtools::install_github("wlandau-lilly/drake@v3.1.0", build = TRUE) # latest GitHub release
 devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
 ```
 
-For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
-
 # Quickstart
 
-```{r}
+```r
 library(drake)
 load_basic_example() # into your workspace.
 plot_graph(my_plan) # Graph the workflow.
@@ -80,22 +78,11 @@ make(my_plan) # Only the pieces depending on reg2() get rebuilt.
 
 Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the intermediate steps of your workflow in a network (see `plot_graph()`). That way,  you can run independent steps in parallel. Choose from multiple built-in backends.
 
-1. **mclapply**: `drake::make(..., parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood, distributing the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
-2. **parLapply**: `drake::make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
-3. **Makefile**:
-- `drake::make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions.
-- `drake::make(..., parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")` is similar, but it uses a helper file `shell.sh` to distribute the R sessions over different cluster jobs on a cluster. Use it for true distributed computing on a super computer. Your `shell.sh` file should look like this.
+1. **mclapply**: low-overhead, light-weight. `make(..., parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood and distributes the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
+2. **parLapply**: medium-overhead, light-weight. `make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
+3. **Makefile**: high-overhead, heavy-duty. `make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions. With custom settings, you can distribute the R sessions over different jobs/nodes on a cluster. See the [quickstart vignette](https://cran.r-project.org/package=drake/vignettes/quickstart.html) for more details.
 
-```r
-#!/bin/bash
-shift
-echo "module load R; $*" | qsub -sync y -cwd -j y
-```
-
-[SLURM](https://slurm.schedmd.com/) users can dispense with `shell.sh` entirely and just set `prepend = "srun"` in `make()`.
-
-
-# Standing on the shoulders of giants
+# Acknowledgements and related work
 
 The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. 
 

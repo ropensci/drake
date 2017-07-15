@@ -57,7 +57,7 @@ lines = c(
   "",
   "Look how I read outputs from the drake cache.",
   "",
-  "```{r}",
+  "```{r example_chunk}",
   "library(drake)",
   "readd(small)",
   "readd(coef_regression2_small)",
@@ -120,12 +120,12 @@ my_plan = rbind(report, my_datasets, load_in_report, my_analyses, results)
 ### CHECK AND DEBUG WORKFLOW PLAN ###
 #####################################
 
-# Check for circularities, missing input files, etc.
-check(my_plan)
-
 # Graph the dependency structure of your workflow
 # plot_graph(my_plan) # plots an interactive web app via visNetwork.
 workflow_graph = build_graph(my_plan) # igraph object
+
+# Check for circularities, missing input files, etc.
+check(my_plan)
 
 # List objects that are reproducibly tracked. 
 "small" %in% tracked(my_plan)
