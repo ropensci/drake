@@ -11,7 +11,7 @@
 #' mclapply parLapply stopCluster
 #' @importFrom plyr ddply
 #' @importFrom R.utils isPackageLoaded
-#' @importFrom stats complete.cases rnorm setNames
+#' @importFrom stats coef complete.cases lm rnorm rpois setNames
 #' @importFrom storr encode64 storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim

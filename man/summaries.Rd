@@ -42,8 +42,9 @@ summary_types <- plan(
   summ = summary(..analysis..),
   coef = coef(..analysis..))
 summaries(summary_types, analyses, datasets, gather = NULL) 
-summaries(summary_types, analyses, datasets, gather = "list") 
-summaries(summary_types, analyses, datasets) 
+summaries(summary_types, analyses, datasets)
+summaries(summary_types, analyses, datasets, gather = "list")
+summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
 }
 \seealso{
 \code{\link{analyses}}, \code{\link{make}}, \code{\link{plan}}

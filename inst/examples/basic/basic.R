@@ -75,11 +75,11 @@ writeLines(lines, "report.Rmd")
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
 # call load_basic_example().
 
-datasets = plan(
+my_datasets = plan(
   small = simulate(5),
   large = simulate(50))
 
-# Optionally, get replicates with expand(datasets,
+# Optionally, get replicates with expand(my_datasets,
 #   values = c("rep1", "rep2")).
 
 methods = plan(
@@ -87,15 +87,15 @@ methods = plan(
   regression2 = reg2(..dataset..))
 
 # same as evaluate(methods, wildcard = "..dataset..",
-#   values = datasets$output)
-analyses = analyses(methods, datasets = datasets)
+#   values = my_datasets$target)
+my_analyses = analyses(methods, datasets = my_datasets)
 
 summary_types = plan(summ = summary(..analysis..),
                      coef = coef(..analysis..))
 
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
-results = summaries(summary_types, analyses, datasets, 
+results = summaries(summary_types, my_analyses, my_datasets, 
   gather = NULL) # skip 'gather' (workflow my_plan is more readable)
 
 load_in_report = plan(
@@ -113,7 +113,7 @@ report = plan(
   file_targets = TRUE, strings_in_dots = "filenames")
 
 # Row order doesn't matter in the workflow my_plan.
-my_plan = rbind(report, datasets, load_in_report, analyses, results)
+my_plan = rbind(report, my_datasets, load_in_report, my_analyses, results)
 
 
 #####################################

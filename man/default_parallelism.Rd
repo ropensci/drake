@@ -14,3 +14,6 @@ Default parallelism for \code{\link{make}()}:
 \code{"parLapply"} for Windows machines and \code{"mclapply"}
 for other platforms.
 }
+\examples{
+default_parallelism()
+}

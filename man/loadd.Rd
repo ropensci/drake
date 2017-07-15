@@ -41,8 +41,10 @@ imported_only is \code{TRUE}).
 \dontrun{
 load_basic_example()
 make(my_plan)
-loadd(reg1)
+loadd(reg1) # now check ls()
+reg1
 loadd(small)
+small
 loadd(list = c("small", "large"))
 loadd(imported_only = TRUE) # load all imported objects and functions
 loadd() # load everything, including built targets

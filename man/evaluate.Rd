@@ -57,8 +57,8 @@ datasets <- plan(
 methods <- plan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
-evaluate(my_plan, wildcard = "..dataset..",
-  values = datasets$output)
+evaluate(methods, wildcard = "..dataset..",
+  values = datasets$target)
 x = plan(draws = rnorm(mean = Mean, sd = Sd))
 evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 }

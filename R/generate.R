@@ -38,8 +38,8 @@
 #' methods <- plan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
-#' evaluate(my_plan, wildcard = "..dataset..",
-#'   values = datasets$output)
+#' evaluate(methods, wildcard = "..dataset..",
+#'   values = datasets$target)
 #' x = plan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate = function(plan, rules = NULL, wildcard = NULL, values = NULL, 
@@ -85,7 +85,7 @@ evaluations = function(plan, rules = NULL, expand = TRUE){
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
 #' @examples 
-#' datasets = plan(
+#' datasets <- plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' expand(datasets, values = c("rep1", "rep2", "rep3"))
@@ -112,7 +112,7 @@ expand = function(plan, values = NULL){
 #' one of \code{\link{list}(...)}, \code{\link{c}(...)},
 #' \code{\link{rbind}(...)}, or similar.
 #' @examples
-#' datasets = plan(
+#' datasets <- plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' gather(datasets, target = "my_datasets")
@@ -181,8 +181,9 @@ analyses = function(plan, datasets){
 #'   summ = summary(..analysis..),
 #'   coef = coef(..analysis..))
 #' summaries(summary_types, analyses, datasets, gather = NULL) 
-#' summaries(summary_types, analyses, datasets, gather = "list") 
-#' summaries(summary_types, analyses, datasets) 
+#' summaries(summary_types, analyses, datasets)
+#' summaries(summary_types, analyses, datasets, gather = "list")
+#' summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
 summaries = function(plan, analyses, datasets, 
   gather = rep("list", nrow(plan))){
   plan = with_analyses_only(plan)
@@ -196,8 +197,9 @@ summaries = function(plan, analyses, datasets,
   out = evaluate(out, wildcard = "..dataset..", values = datasets$target,
     expand = FALSE)
   if(!length(gather)) return(out[setdiff(names(out), group)])
+  if(length(gather) == 1) gather = rep(gather, dim(plan)[1])
   if(!(length(gather) == dim(plan)[1]))
-    stop("gather must be NULL or have length nrow(plan)")
+    stop("gather must be NULL or have length 1 or nrow(plan)")
   gathered = ddply(out, group, function(summary_group){
     summary_type = summary_group[[group]][1]
     gather(summary_group, target = summary_type, 

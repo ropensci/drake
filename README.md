@@ -1,7 +1,3 @@
-<h1 align="center">
-  <img width="200" src="./inst/logo.png" alt="">
-</h1>
-
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
 [![codecov.io](https://codecov.io/github/wlandau-lilly/drake/coverage.svg?branch=master)](https://codecov.io/github/wlandau-lilly/drake?branch=master)
@@ -9,16 +5,39 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
-
 ![](drake.gif)
-
-
 
 # drake - data frames in R for [Make](http://kbroman.org/minimal_make/)
 
-There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is also a convenient and powerful high-performance computing solution.
+<h1 align="center">
+  <img width="200" src="./inst/logo.png" alt="">
+</h1>
+
+Drake is a scalable user-friendly solution for 
+
+1. Reproducibility
+2. High-performance computing
+
+# Quickstart
+
+```{r}
+library(drake)
+load_basic_example() # into your workspace
+plot_graph(my_plan) # graph the workflow
+make(my_plan) # run the workflow
+make(my_plan) # check that everything is already up to date
+```
+
+Dive deeper into the built-in examples.
+
+```r
+example_drake("basic") # Write the files 
+examples_drake() # list e other examples
+```
 
 # Landscape and context
+
+There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is also a convenient and powerful high-performance computing solution.
 
 The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. 
 
@@ -61,21 +80,7 @@ vignette("quickstart") # Walk through a simple example.
 vignette("caution") # Drake is not perfect. Read this to be safe.
 ```
 
-# Quickstart examples
 
-Drake has small self-contained built-in examples. To see the names of the available examples, use
-
-```{r}
-examples_drake()
-```
-
-Then use `example_drake()` to write the files for the example to your working directory.
-
-```{r}
-example_drake("basic")
-```
-
-Step through the code files to get started.
 
 # Words of caution
 

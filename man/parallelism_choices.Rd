@@ -39,3 +39,6 @@ units of execution.
  targets over multiple nodes of a supercomputer. Use this
  approach for true distributed computing.}}
 }
+\examples{
+parallelism_choices()
+}

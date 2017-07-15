@@ -54,7 +54,7 @@ examples_drake = function(){
 #' unlink("report.Rmd")
 #' }
 load_basic_example = function(envir = parent.frame()){
-  require(knitr, quietly = TRUE)
+  eval(parse(text = "require(knitr, quietly = TRUE)"))
   require(drake, quietly = TRUE)
   
   # User-defined functions
@@ -102,10 +102,13 @@ load_basic_example = function(envir = parent.frame()){
 
   # construct workflow plan
   
+  # remove "undefinded globals" errors in R CMD check
+  large = small = ..dataset.. = ..analysis.. = simulate = knit = my_knit =
+    report_dependencies = reg1 = reg2 = coef_regression2_small = NULL
+    
   datasets = plan(
     small = simulate(5),
     large = simulate(50))
-
 
   methods = plan(
     regression1 = reg1(..dataset..),

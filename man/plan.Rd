@@ -54,7 +54,7 @@ argument to control the quoting in \code{...}.
 }
 \examples{
 plan(small = simulate(5), large = simulate(50))
-plan(list = c(x = 1 + 1, y = sqrt(x)))
+plan(list = c(x = "1 + 1", y = "sqrt(x)"))
 plan(data = readRDS("my_data.rds"))
 plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
   strings_in_dots = "literals")

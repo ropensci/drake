@@ -27,6 +27,8 @@
 #'  to \code{\link{make}()} or \code{\link{make}()} to distribute
 #'  targets over multiple nodes of a supercomputer. Use this
 #'  approach for true distributed computing.}}
+#' @examples
+#' parallelism_choices()
 parallelism_choices = function(){
   c("parLapply", "mclapply", "Makefile")
 }
@@ -37,6 +39,8 @@ parallelism_choices = function(){
 #' for other platforms.
 #' @export
 #' @return default parallelism option for the current platform
+#' @examples
+#' default_parallelism()
 default_parallelism = function(){
   ifelse(Sys.info()['sysname'] == "Windows", "parLapply", "mclapply") %>%
     unname
