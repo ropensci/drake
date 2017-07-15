@@ -76,7 +76,7 @@ load_basic_example = function(envir = parent.frame()){
   
   # Knit and render a dynamic knitr report
   envir$my_knit = function(file, ...){
-    knit(file) # drake knows you loaded the knitr package
+    knit(file, quiet = TRUE) # drake knows you loaded the knitr package
   }
   
   # Write the R Markdown source for a dynamic knitr report
@@ -111,7 +111,7 @@ load_basic_example = function(envir = parent.frame()){
     regression1 = reg1(..dataset..),
     regression2 = reg2(..dataset..))
 
-  # same as evaluate(my_plan, wildcard = "..dataset..",
+  # same as evaluate(methods, wildcard = "..dataset..",
   #   values = datasets$output)
   analyses = analyses(methods, datasets = datasets)
 
@@ -138,5 +138,5 @@ load_basic_example = function(envir = parent.frame()){
 
   # Row order doesn't matter in the workflow my_plan.
   envir$my_plan = rbind(report, datasets, load_in_report, analyses, results)
-  invisible(my_plan)
+  invisible(envir$my_plan)
 }

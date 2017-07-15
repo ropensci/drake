@@ -12,6 +12,9 @@
 ### LOAD PACKAGES AND FUNCTIONS ###
 ###################################
 
+# To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
+# call load_basic_example().
+
 library(knitr)
 # library(rmarkdown) # platform-dependent: render() requires pandoc
 library(drake)
@@ -69,6 +72,9 @@ writeLines(lines, "report.Rmd")
 ### CONSTRUCT WORKFLOW PLAN ###
 ###############################
 
+# To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
+# call load_basic_example().
+
 datasets = plan(
   small = simulate(5),
   large = simulate(50))
@@ -80,7 +86,7 @@ methods = plan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 
-# same as evaluate(my_plan, wildcard = "..dataset..",
+# same as evaluate(methods, wildcard = "..dataset..",
 #   values = datasets$output)
 analyses = analyses(methods, datasets = datasets)
 
@@ -109,16 +115,27 @@ report = plan(
 # Row order doesn't matter in the workflow my_plan.
 my_plan = rbind(report, datasets, load_in_report, analyses, results)
 
-# Use tracked() to verify the objects, functions, targets, et. 
-# that drake tries to reproducibly track. It is wise to verify this
-# for yourself because drake can be tricked in some edge cases. 
-# See vignette("caution").
+
+#####################################
+### CHECK AND DEBUG WORKFLOW PLAN ###
+#####################################
+
+# Check for circularities, missing input files, etc.
+check(my_plan)
+
+# List objects that are reproducibly tracked. 
 "small" %in% tracked(my_plan)
 tracked(my_plan, targets = "small")
 tracked(my_plan)
 
-# Check the my_plan for obvious errors and pitfalls.
-check(my_plan)
+# Check the dependencies of individual functions and commands.
+deps(reg1)
+deps(my_knit)
+deps(my_plan$command[1])
+deps(my_plan$command[16])
+
+# See vignette("caution") for more a deeper dive into possible pitfalls.
+
 
 ################################
 ### SINGLE-PROCESS EXECUTION ###

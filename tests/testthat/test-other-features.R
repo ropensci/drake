@@ -1,6 +1,24 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("deps() correctly reports dependencies of functions and commands", {
+  f <- function(x, y){
+    out <- x + y + g(x)
+    saveRDS(out, 'out.rds')
+  }
+  expect_equal(deps(f), c("g", "saveRDS"))
+  my_plan <- plan(
+    x = 1 + some_object,
+    my_target = x + readRDS('tracked_input_file.rds'),
+    return_value = f(x, y, g(z + w))
+  )
+  expect_equal(deps(my_plan$command[1]), "some_object")
+  expect_equal(deps(my_plan$command[2]), 
+               c("'tracked_input_file.rds'", "readRDS", "x"))
+  expect_equal(deps(my_plan$command[3]),
+               c("f", "g", "w", "x", "y", "z"))
+})
+
 test_that("tracked() works", {
   dclean()
   config = dbug()
@@ -103,20 +121,6 @@ test_that("deprecation", {
   dclean()
   expect_warning(make(plan, verbose = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
-  dclean()
-})
-
-test_that("examples are listed and written", {
-  dclean()
-  x = examples_drake()
-  expect_true(is.character(x) & length(x) > 0)
-  for(i in x){
-    expect_false(file.exists(i))
-    example_drake(i)
-    expect_true(file.exists(i))
-    expect_true(file.info(i)$isdir)
-    unlink(i, recursive = TRUE)
-  }
   dclean()
 })
 
