@@ -40,7 +40,7 @@ reg2 = function(d){
 
 # Knit and render a dynamic knitr report
 my_knit = function(file, ...){
-  knit(file) # drake knows you loaded the knitr package
+  knit(file, quiet = TRUE) # drake knows you loaded the knitr package
 }
 
 my_render = function(file, ...){
@@ -122,6 +122,10 @@ my_plan = rbind(report, datasets, load_in_report, analyses, results)
 
 # Check for circularities, missing input files, etc.
 check(my_plan)
+
+# Graph the dependency structure of your workflow
+# plot_graph(my_plan) # plots an interactive web app via visNetwork.
+workflow_graph = build_graph(my_plan) # igraph object
 
 # List objects that are reproducibly tracked. 
 "small" %in% tracked(my_plan)
