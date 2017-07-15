@@ -38,7 +38,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   nodes = network_data$nodes
   edges = network_data$edges
   if(!nrow(nodes)) return(null_graph())
-
+  
+  targets = intersect(nodes$id, plan$target)
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(f = function(x) is.function(envir[[x]]), x = imports)
   notfound = Filter(x = imports,
@@ -51,7 +52,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   nodes$font.size = font_size
   nodes$color = import_color
   nodes[notfound, "color"] = notfound_color
-  nodes[plan$target, "color"] = target_color
+  nodes[targets, "color"] = target_color
   
   nodes$shape = generic_shape
   nodes[is_file(nodes$id), "shape"] = file_shape
