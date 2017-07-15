@@ -84,7 +84,7 @@ Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the inte
 2. **parLapply**: `drake::make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
 3. **Makefile**:
 - `drake::make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions.
-- `drake::make(..., parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")` is similar, but it uses a helper file `shell.sh` to distribute the R sessions over different jobs on a cluster. Here, you can make use of true distributed computing on a supercomputer. Your `shell.sh` file should look like this.
+- `drake::make(..., parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")` is similar, but it uses a helper file `shell.sh` to distribute the R sessions over different cluster jobs on a cluster. Use it for true distributed computing on a super computer. Your `shell.sh` file should look like this.
 
 ```r
 #!/bin/bash
