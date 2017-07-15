@@ -15,8 +15,8 @@
 
 Drake is a workflow manager and build system for
 
-1. [Reproducibility](https://CRAN.R-project.org/view=ReproducibleResearch).
-2. [High-performance computing](https://CRAN.R-project.org/view=HighPerformanceComputing).
+1. [Reproducibility](#Reproducibility).
+2. [High-performance computing](#High-performance-computing).
 
 # Installation
 
