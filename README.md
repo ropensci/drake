@@ -76,6 +76,8 @@ make(my_plan) # Only the pieces depending on reg2() get rebuilt.
 
 # High-performance computing
 
+Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the intermediate steps of your workflow in a dependency web. This network is the key to drake's parallel computing. For example, consider the network graph of the basic example.
+
 ```{r basicgraph}
 library(drake)
 load_basic_example()

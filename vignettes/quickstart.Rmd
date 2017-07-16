@@ -309,7 +309,7 @@ clean(destroy = TRUE) # removes the cache entirely
 
 # High-performance computing
 
-Your targets are arranged in an interconnected network, so you can run independent steps in parallel. To see how, have another look at the network graph of the workflow plan.
+The network graph is the key to drake's parallel computing.
 
 ```{r plotgraph}
 plot_graph(my_plan, width = "100%", height = "500px") # Click, drag, and zoom to explore.
