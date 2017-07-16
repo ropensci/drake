@@ -91,7 +91,7 @@ load_basic_example()
 plot_graph(my_plan)
 ```
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence. Within each column, the targets/objects are independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel workers. As for how the parallelism is implemented, you can choose from multiple built-in backends.
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel workers. As for how the parallelism is implemented, you can choose from multiple built-in backends.
 
 ```{r rmfile, echo = FALSE}
 unlink("report.Rmd")

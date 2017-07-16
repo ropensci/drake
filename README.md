@@ -86,7 +86,7 @@ plot_graph(my_plan)
 
 ![](graph.png)
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence. Within each column, the targets/objects are independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel workers. As for how the parallelism is implemented, you can choose from multiple built-in backends.
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel workers. As for how the parallelism is implemented, you can choose from multiple built-in backends.
 
 1. **mclapply**: low-overhead, light-weight. `make(..., parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood and distributes the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
 2. **parLapply**: medium-overhead, light-weight. `make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
