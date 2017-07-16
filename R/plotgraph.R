@@ -42,11 +42,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   targets = intersect(nodes$id, plan$target)
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(f = function(x) is.function(envir[[x]]), x = imports)
-  notfound = Filter(x = imports,
-                    f = function(x) 
-                      is.null(envir[[x]]) & 
-                      !is_file(x) & 
-                      tryCatch({tmp = get(x); FALSE}, error = function(e) TRUE))
+  notfound = Filter(x = imports, f = function(x) not_found(x, envir = envir))
 
   nodes = resolve_levels(nodes, graph)
   nodes$font.size = font_size
@@ -61,7 +57,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
-    label = c("Target", "Imported", "Missing", 
+    label = c("Target", "Import", "Missing", 
               "Object", "Function", "File"),
     color = c(target_color, import_color, notfound_color, generic_color, generic_color, generic_color),
     shape = c(generic_shape, generic_shape, generic_shape, generic_shape, function_shape, file_shape),
@@ -77,6 +73,14 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 null_graph = function(){
   nodes = data.frame(id = 1, label = "Nothing to plot.")
   visNetwork(nodes = nodes, edges = data.frame(from = NA, to = NA))
+}
+
+not_found = function(x, envir){
+  missing_object = !is_file(x) & 
+    is.null(envir[[x]]) & 
+    tryCatch({tmp = get(x); FALSE}, error = function(e) TRUE)
+  missing_file = is_file(x) & !file.exists(unquote(x))
+  missing_object | missing_file
 }
 
 resolve_levels = function(nodes, graph){

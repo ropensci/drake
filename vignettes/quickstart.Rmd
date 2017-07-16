@@ -309,7 +309,13 @@ clean(destroy = TRUE) # removes the cache entirely
 
 # High-performance computing
 
-Your targets are arranged in an interconnected network, so you can run independent steps in parallel. Choose from multiple built-in backends.
+Your targets are arranged in an interconnected network, so you can run independent steps in parallel. To see how, have another look at the network graph of the workflow plan.
+
+```{r plotgraph}
+plot_graph(my_plan, width = "100%", height = "500px") # Click, drag, and zoom to explore.
+```
+
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence. Within each column, the targets/objects are independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel workers. As for how the parallelism is implemented, you can choose from multiple built-in backends.
 
 1. **mclapply**: low-overhead, light-weight. `drake::make(my_plan, parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood, distributing the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
 2. **parLapply**: medium-overhead, light-weight. `make(my_plan, parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
