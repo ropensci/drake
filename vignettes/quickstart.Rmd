@@ -172,8 +172,9 @@ my_analyses
 Next, we summarize each analysis of each dataset using summary statistics and regression coefficients. 
 
 ```{r summaries}
-summary_types = plan(summ = summary(..analysis..),
-                     coef = coef(..analysis..))
+summary_types = plan(
+  summ = suppressWarnings(summary(..analysis..)), # Occasionally there is a perfect regression fit.
+  coef = coef(..analysis..))
 summary_types
 
 results = summaries(summary_types, analyses = my_analyses, 

@@ -90,8 +90,9 @@ methods = plan(
 #   values = my_datasets$target)
 my_analyses = analyses(methods, datasets = my_datasets)
 
-summary_types = plan(summ = summary(..analysis..),
-                     coef = coef(..analysis..))
+summary_types = plan(
+  summ = suppressWarnings(summary(..analysis..)), # Occasionally there is a perfect regression fit.
+  coef = coef(..analysis..))
 
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE

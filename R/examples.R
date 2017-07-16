@@ -119,7 +119,7 @@ load_basic_example = function(envir = parent.frame()){
   analyses = analyses(methods, datasets = datasets)
 
   summary_types = plan(
-    summ = summary(..analysis..),
+    summ = suppressWarnings(summary(..analysis..)), # Occasionally there is a perfect regression fit
     coef = coef(..analysis..))
 
   # summaries() also uses evaluate(): once with expand = TRUE,
