@@ -6,7 +6,7 @@ test_that("cache functions work", {
   expect_equal(character(0), 
     cached(search = FALSE), imported(search = FALSE), 
     built(search = FALSE))
-  expect_error(status(search = FALSE))
+  expect_error(progress(search = FALSE))
   expect_error(readd(search = FALSE))
   config = dbug()
   using_global = identical(config$envir, globalenv())
@@ -27,14 +27,14 @@ test_that("cache functions work", {
   builds = setdiff(all, imports)
   
   # find stuff in current directory
-  # session, status
+  # session, progress
   expect_true(is.list(session(search = FALSE)))
-  expect_true(all(status(search = FALSE) == "finished"))
-  expect_warning(tmp <- status(imported_files_only = TRUE)) # deprecated argument
-  expect_equal(sort(names(status(search = FALSE))), all)
-  expect_equal(sort(names(status(search = FALSE, 
+  expect_true(all(progress(search = FALSE) == "finished"))
+  expect_warning(tmp <- progress(imported_files_only = TRUE)) # deprecated argument
+  expect_equal(sort(names(progress(search = FALSE))), all)
+  expect_equal(sort(names(progress(search = FALSE, 
     no_imported_objects = TRUE))), sort(c("'input.rds'", builds)))
-  expect_equal(status(bla, f, list = c("h", "final"), search = FALSE), 
+  expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
   
@@ -98,12 +98,12 @@ test_that("cache functions work", {
   setwd("..")
   s = file.path("testthat", "searchfrom", "here")
   
-  # status, session 
+  # progress, session 
   expect_true(is.list(session(search = T, path = s)))
-  expect_equal(sort(names(status(search = T, path = s))), sort(all))
-  expect_equal(sort(names(status(no_imported_objects = TRUE, 
+  expect_equal(sort(names(progress(search = T, path = s))), sort(all))
+  expect_equal(sort(names(progress(no_imported_objects = TRUE, 
     search = T, path = s))), sort(c("'input.rds'", builds)))
-  expect_equal(sort(status(search = T, path = s, bla, f, 
+  expect_equal(sort(progress(search = T, path = s, bla, f, 
     list = c("h", "final"))), 
     sort(c(bla = "not built or imported", f = "finished", 
     h = "finished", final = "finished")))

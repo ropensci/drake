@@ -252,9 +252,9 @@ built()
 imported()
 head(read_plan())
 # read_graph() # Plots the graph of the workflow you just ran.
-head(status()) # What did you last build? Did it finish?
+head(progress()) # What did you last build? Did it finish?
 # session(): sessionInfo() of the last call to make()
-status(large)
+progress(large)
 ```
 
 The next time you run `make(my_plan)`, nothing will be built because drake knows everything is up to date.

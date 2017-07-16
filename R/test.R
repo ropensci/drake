@@ -31,9 +31,9 @@ testrun_automatic_packages = function(config){
 }
 
 justbuilt = function(config){
-  sapply(config$cache$list(namespace = "status"),
+  sapply(config$cache$list(namespace = "progress"),
     function(target)
-      config$cache$get(key = target, namespace = "status")) %>%
+      config$cache$get(key = target, namespace = "progress")) %>%
     Filter(f = function(x) x == "finished") %>% names %>%
     intersect(y = config$plan$target) %>% sort
 }

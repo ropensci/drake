@@ -52,7 +52,7 @@ makefile_rules = function(config){
 }
 
 initialize = function(config){
-  config$cache$clear(namespace = "status")
+  config$cache$clear(namespace = "progress")
   do_prework(config = config, verbosePackages = TRUE)
   imports = setdiff(config$order, config$plan$target)
   for(import in imports){ # Strict order needed. Might parallelize later.

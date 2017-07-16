@@ -7,7 +7,7 @@ config = function(plan, targets, envir, jobs,
   prework = add_packages_to_prework(packages = packages,
     prework = prework)
   cache = storr_rds(cachepath, mangle_key = TRUE)
-  cache$clear(namespace = "status")
+  cache$clear(namespace = "progress")
   graph = build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
   graphplot = plot_graph(plan = plan, targets = targets, 

@@ -24,10 +24,9 @@ session = function(path = getwd(), search = TRUE){
   cache$get("sessionInfo", namespace = "session")
 }
 
-#' @title Function \code{status}
-#' @description Get the build status (overall or individual targets)
-#' of the last call to 
-#' \code{\link{make}()} or \code{\link{make}()}. 
+#' @title Function \code{progress}
+#' @description Get the build progress (overall or individual targets)
+#' of the last call to \code{\link{make}()}. 
 #' Objects that drake imported, built, or attempted
 #' to build are listed as \code{"finished"} or \code{"in progress"}. 
 #' Skipped objects are not listed.
@@ -35,9 +34,9 @@ session = function(path = getwd(), search = TRUE){
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 #' @export
-#' @return Either the build status of each target given (from the last
+#' @return Either the build progress of each target given (from the last
 #' call to \code{\link{make}()} or \code{\link{make}()}), or if no 
-#' targets are specified, a data frame containing the build status
+#' targets are specified, a data frame containing the build progress
 #' of the last session. 
 #' In the latter case, only finished targets are listed.
 #' @return Either a named logical indicating whether the given
@@ -63,15 +62,15 @@ session = function(path = getwd(), search = TRUE){
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan)
-#' status()
-#' status(small, large)
-#' status(list = c("small", "large"))
-#' status(no_imported_objects = TRUE)
+#' progress()
+#' progress(small, large)
+#' progress(list = c("small", "large"))
+#' progress(no_imported_objects = TRUE)
 #' }
-status = function(..., list = character(0), no_imported_objects = FALSE, 
+progress = function(..., list = character(0), no_imported_objects = FALSE, 
   imported_files_only = logical(0), path = getwd(), search = TRUE){
   if(length(imported_files_only)){ # deprecate imported_files_only
-    warning("The imported_files_only argument to status() is deprecated ",
+    warning("The imported_files_only argument to progress() is deprecated ",
       "and will be removed the next major release. ",
       "Use the no_imported_objects argument instead.")
     no_imported_objects = imported_files_only
@@ -81,24 +80,24 @@ status = function(..., list = character(0), no_imported_objects = FALSE,
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
   if(!length(targets)) 
-    return(list_status(no_imported_objects = no_imported_objects, 
+    return(list_progress(no_imported_objects = no_imported_objects, 
       cache = cache))
-  get_status(targets, cache)
+  get_progress(targets, cache)
 }
 
-list_status = function(no_imported_objects, cache){
-  all_marked = cache$list(namespace = "status")
-  all_status = get_status(target = all_marked, cache = cache)
+list_progress = function(no_imported_objects, cache){
+  all_marked = cache$list(namespace = "progress")
+  all_progress = get_progress(target = all_marked, cache = cache)
   abridged_marked = Filter(all_marked, f = function(target)
     is_built_or_imported_file(target = target, cache = cache))
-  abridged_status = all_status[abridged_marked]
-  if(no_imported_objects) return(abridged_status) 
-  else return(all_status) 
+  abridged_progress = all_progress[abridged_marked]
+  if(no_imported_objects) return(abridged_progress) 
+  else return(all_progress) 
 }
 
-get_status = Vectorize(function(target, cache){
-  if(target %in% cache$list("status")) 
-    cache$get(key = target, namespace = "status")
+get_progress = Vectorize(function(target, cache){
+  if(target %in% cache$list("progress")) 
+    cache$get(key = target, namespace = "progress")
   else
     "not built or imported"
 }, "target", SIMPLIFY = TRUE, USE.NAMES = TRUE)

@@ -1,7 +1,7 @@
 build = function(target, hash_list, config){
   hashes = hash_list[[target]]
   config$cache$set(key = target, value = "in progress", 
-    namespace = "status")
+    namespace = "progress")
   imported = !(target %in% config$plan$target)
   console(imported = imported, target = target, config = config) 
   if(imported)
@@ -14,7 +14,7 @@ build = function(target, hash_list, config){
     imported = imported, config = config)
   config$cache$set(key = target, value = hashes$depends,
     namespace = "depends")
-  config$cache$set(key = target, value = "finished", namespace = "status")
+  config$cache$set(key = target, value = "finished", namespace = "progress")
   value
 }
 
