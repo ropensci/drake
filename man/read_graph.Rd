@@ -4,7 +4,7 @@
 \alias{read_graph}
 \title{Function \code{read_graph}}
 \usage{
-read_graph(plot = TRUE, path = getwd(), search = TRUE)
+read_graph(plot = TRUE, path = getwd(), search = TRUE, ...)
 }
 \arguments{
 \item{plot}{logical, whether to plot the graph or 
@@ -17,6 +17,8 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{...}{arguments to \code{visNetwork()} via \code{\link{plot_graph}()}}
 }
 \value{
 either a plot or an igraph object, depending

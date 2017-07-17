@@ -19,7 +19,7 @@
 #' plot_graph(my_plan)
 #' }
 plot_graph = function(plan, targets = drake::possible_targets(plan), 
-                      envir = parent.frame(), verbose = TRUE, 
+                      envir = parent.frame(), verbose = FALSE, 
                       font_size = 20, graph = NULL, ...){
   force(envir)
   if(is.null(graph))
@@ -27,9 +27,10 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
       envir = envir, verbose = verbose)
   
   generic_color = "gray"
-  import_color = "#1874cd"
-  target_color = "#228b22"
-  notfound_color = "#9a32cd"
+  import_color = "#36367B"
+  up_to_date_color = "#228b22"
+  outdated_color = "#AF923C"
+  missing_color = "#AF3C3C"
   generic_shape = "dot"
   file_shape = "square"
   function_shape = "triangle"
@@ -42,13 +43,17 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   targets = intersect(nodes$id, plan$target)
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(f = function(x) is.function(envir[[x]]), x = imports)
-  notfound = Filter(x = imports, f = function(x) not_found(x, envir = envir))
-
+  missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
+  
   nodes = resolve_levels(nodes, graph)
   nodes$font.size = font_size
   nodes$color = import_color
-  nodes[notfound, "color"] = notfound_color
-  nodes[targets, "color"] = target_color
+  nodes[missing, "color"] = missing_color
+  
+  outdated = outdated(plan = plan, targets = targets, envir = envir, 
+                  verbose = verbose)
+  nodes[targets, "color"] = up_to_date_color
+  nodes[outdated, "color"] = outdated_color
   
   nodes$shape = generic_shape
   nodes[is_file(nodes$id), "shape"] = file_shape
@@ -57,10 +62,12 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
-    label = c("Target", "Import", "Missing", 
+    label = c("Up to date", "Outdated", "Imported", "Missing", 
               "Object", "Function", "File"),
-    color = c(target_color, import_color, notfound_color, generic_color, generic_color, generic_color),
-    shape = c(generic_shape, generic_shape, generic_shape, generic_shape, function_shape, file_shape),
+    color = c(up_to_date_color, outdated_color, import_color, missing_color, 
+              generic_color, generic_color, generic_color),
+    shape = c(generic_shape, generic_shape, generic_shape, generic_shape, generic_shape, 
+              function_shape, file_shape),
     font.color = "black",
     font.size = font_size)
   legend_nodes$id = seq_len(nrow(legend_nodes))
@@ -75,7 +82,7 @@ null_graph = function(){
   visNetwork(nodes = nodes, edges = data.frame(from = NA, to = NA))
 }
 
-not_found = function(x, envir){
+missing_import = function(x, envir){
   missing_object = !is_file(x) & 
     is.null(envir[[x]]) & 
     tryCatch({tmp = get(x); FALSE}, error = function(e) TRUE)

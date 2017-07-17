@@ -166,6 +166,7 @@ read_plan = function(path = getwd(), search = TRUE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param ... arguments to \code{visNetwork()} via \code{\link{plot_graph}()}
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -174,10 +175,9 @@ read_plan = function(path = getwd(), search = TRUE){
 #' class(g)
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
-read_graph = function(plot = TRUE, path = getwd(), search = TRUE){
+read_graph = function(plot = TRUE, path = getwd(), search = TRUE, ...){
   config = read_config(path = path, search = search)
-  if(plot & is.null(config[["graphplot"]]))
-    return(plot.igraph(config[["graph"]]))
-  key = ifelse(plot, "graphplot", "graph")
-  config[[key]]
+  if(!plot) return(config$graph)
+  else plot_graph(plan = config$plan, targets = drake::possible_targets(plan), 
+                  font_size = 20, graph = config$graph, ...)
 }

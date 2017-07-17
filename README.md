@@ -32,8 +32,10 @@ devtools::install_github("wlandau-lilly/drake", build = TRUE) # development vers
 library(drake)
 load_basic_example() # into your workspace.
 plot_graph(my_plan) # Graph the workflow.
+outdated(my_plan) # Which targets need to be (re)built?
 make(my_plan) # Run the workflow.
-make(my_plan) # Check that everything is already up to date.
+outdated(my_plan) # Everything is up to date.
+plot_graph(my_plan) # The graph also shows what is up to date.
 ```
 
 Dive deeper into the built-in examples.
@@ -65,13 +67,18 @@ There is room to improve the conversation and the landscape of reproducibility i
 ```r
 library(drake)
 load_basic_example()
-make(my_plan) # Build everything.
-make(my_plan) # Nothing is done because everything is already up to date.
+outdated(my_plan) # Which targets need to be (re)built?
+make(my_plan) # Build what needs to be built.
+outdated(my_plan) # Everything is up to date.
 reg2 = function(d){ # Change one of your functions.
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
-make(my_plan) # Only the pieces depending on reg2() get rebuilt.
+outdated(my_plan) # Some targets depend on reg2().
+plot_graph(my_plan) # See how they fit in using an interactive graph.
+make(my_plan) # Rebuild just the outdated targets.
+outdated(my_plan) # Everything is up to date again.
+plot_graph(my_plan) # The colors changed in the graph.
 ```
 
 # High-performance computing

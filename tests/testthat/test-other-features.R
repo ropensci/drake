@@ -120,6 +120,7 @@ test_that("deprecation", {
   expect_warning(make(plan, verbose = FALSE))
   dclean()
   expect_warning(make(plan, verbose = FALSE))
+  expect_warning(status())
   expect_true(is.numeric(readd(x, search = FALSE)))
   dclean()
 })

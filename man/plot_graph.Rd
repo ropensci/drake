@@ -5,7 +5,7 @@
 \title{Function \code{plot_graph}}
 \usage{
 plot_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, font_size = 20, graph = NULL,
+  envir = parent.frame(), verbose = FALSE, font_size = 20, graph = NULL,
   ...)
 }
 \arguments{
