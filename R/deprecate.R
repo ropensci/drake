@@ -78,18 +78,6 @@ status = function(..., list = character(0), no_imported_objects = FALSE,
                     imported_files_only = logical(0), path = getwd(), search = TRUE){
   .Deprecated("progress", package = "drake",
               msg = "status() is deprecated. Use progress() instead.")  
-  if(length(imported_files_only)){ # deprecate imported_files_only
-    warning("The imported_files_only argument to status() is deprecated ",
-            "and will be removed the next major release. ",
-            "Use the no_imported_objects argument instead.")
-    no_imported_objects = imported_files_only
-  }
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("No drake::make() session detected.")
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) 
-    return(list_progress(no_imported_objects = no_imported_objects, 
-                         cache = cache))
-  get_progress(targets, cache)
+  progress(..., list = list, no_imported_objects = no_imported_objects,
+    imported_files_only = imported_files_only, path = path, search = search)
 }
