@@ -75,7 +75,7 @@ reg2 = function(d){ # Change one of your functions.
   lm(y ~ x3, data = d)
 }
 outdated(my_plan) # Some targets depend on reg2().
-plot_graph(my_plan) # See how they fit in using an interactive graph.
+plot_graph(my_plan) # See how they fit in an interactive graph.
 make(my_plan) # Rebuild just the outdated targets.
 outdated(my_plan) # Everything is up to date again.
 plot_graph(my_plan) # The colors changed in the graph.
