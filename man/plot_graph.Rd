@@ -28,11 +28,14 @@ plot_graph(plan, targets = drake::possible_targets(plan),
 \item{...}{arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
 }
 \description{
-Plot the dependency structure of your workflow
+Plot the dependency structure of your workflow.
+IMPORTANT: you must be in the root directory of your project.
 }
 \examples{
 \dontrun{
 load_basic_example()
+plot_graph(my_plan)
+make(my_plan)
 plot_graph(my_plan)
 }
 }

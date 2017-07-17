@@ -1,5 +1,6 @@
 #' @title Function \code{plot_graph}
-#' @description Plot the dependency structure of your workflow
+#' @description Plot the dependency structure of your workflow.
+#' IMPORTANT: you must be in the root directory of your project.
 #' @export
 #' @seealso \code{\link{build_graph}}
 #' @param plan workflow plan data frame, same as for function 
@@ -16,6 +17,8 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example()
+#' plot_graph(my_plan)
+#' make(my_plan)
 #' plot_graph(my_plan)
 #' }
 plot_graph = function(plan, targets = drake::possible_targets(plan), 

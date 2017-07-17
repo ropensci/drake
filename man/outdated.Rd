@@ -21,6 +21,7 @@ as they are imported. (Objects need to be imported to check the status.)}
 }
 \description{
 Check which targets are out of date and need to be rebuilt.
+IMPORTANT: you must be in the root directory of your project.
 }
 \examples{
 \dontrun{

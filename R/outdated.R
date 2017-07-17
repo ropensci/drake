@@ -1,5 +1,6 @@
 #' @title Function outdated
 #' @description Check which targets are out of date and need to be rebuilt.
+#' IMPORTANT: you must be in the root directory of your project.
 #' @export
 #' @seealso \code{\link{plan}}, \code{\link{make}}, \code{\link{plot_graph}}
 #' @param plan Workflow plan data frame: that is, a data frame with a "target"
