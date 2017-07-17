@@ -30,6 +30,7 @@ test_that("cache functions work", {
   # session, progress
   expect_true(is.list(session(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
+  expect_warning(tmp <- status(search = FALSE))
   expect_warning(tmp <- progress(imported_files_only = TRUE)) # deprecated argument
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(sort(names(progress(search = FALSE, 
@@ -97,6 +98,7 @@ test_that("cache functions work", {
   # progress, session 
   expect_true(is.list(session(search = T, path = s)))
   expect_equal(sort(names(progress(search = T, path = s))), sort(all))
+  expect_warning(status(search = T, path = s))
   expect_equal(sort(names(progress(no_imported_objects = TRUE, 
     search = T, path = s))), sort(c("'input.rds'", builds)))
   expect_equal(sort(progress(search = T, path = s, bla, f, 
@@ -147,6 +149,10 @@ test_that("cache functions work", {
   setwd("testthat")
   pdf(NULL)
   read_graph(plot = TRUE, search = FALSE)
+  tmp = capture.output(dev.off())
+  unlink("Rplots.pdf")
+  pdf(NULL)
+  null_graph()
   tmp = capture.output(dev.off())
   unlink("Rplots.pdf")
   setwd("..")
