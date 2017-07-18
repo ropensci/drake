@@ -21,7 +21,7 @@ clean(destroy = TRUE)
 
 ```{r noeval1, eval = FALSE}
 library(drake)
-load_basic_example() # into your workspace.
+load_basic_example() # into your workspace. Also writes report.Rmd.
 plot_graph(my_plan) # Graph the workflow.
 make(my_plan) # Run the workflow.
 make(my_plan) # Check that everything is already up to date.
@@ -34,8 +34,49 @@ example_drake("basic") # Write the code files.
 examples_drake() # List the other examples.
 ```
 
+# Useful functions
 
-# Setup
+Besides `make()`, here are some useful functions to set up your workflow plan,
+
+```r
+plan()
+analyses()
+summaries()
+evaluate()
+expand()
+gather()
+```
+
+explore the dependency network,
+```r
+outdated()
+plot_graph()
+read_graph()
+deps()
+tracked()
+```
+
+interact with the cache,
+```r
+clean()
+cached()
+imported()
+built()
+readd()
+loadd()
+find_project()
+find_cache()
+```
+
+and debug your work. 
+```r
+check()
+session()
+progress()
+read_config()
+```
+
+# Setting up the basic example
 
 Let's establish the building blocks of a data analysis workflow.
 

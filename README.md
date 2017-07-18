@@ -30,7 +30,7 @@ devtools::install_github("wlandau-lilly/drake", build = TRUE) # development vers
 
 ```r
 library(drake)
-load_basic_example() # into your workspace.
+load_basic_example() # into your workspace. Also writes report.Rmd.
 plot_graph(my_plan) # Graph the workflow.
 outdated(my_plan) # Which targets need to be (re)built?
 make(my_plan) # Run the workflow.
@@ -43,6 +43,48 @@ Dive deeper into the built-in examples.
 ```r
 example_drake("basic") # Write the code files.
 examples_drake() # List the other examples.
+```
+
+# Useful functions
+
+Besides `make()`, here are some useful functions to set up your workflow plan,
+
+```r
+plan()
+analyses()
+summaries()
+evaluate()
+expand()
+gather()
+```
+
+explore the dependency network,
+```r
+outdated()
+plot_graph()
+read_graph()
+deps()
+tracked()
+```
+
+interact with the cache,
+```r
+clean()
+cached()
+imported()
+built()
+readd()
+loadd()
+find_project()
+find_cache()
+```
+
+and debug your work. 
+```r
+check()
+session()
+progress()
+read_config()
 ```
 
 # Documentation

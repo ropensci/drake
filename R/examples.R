@@ -39,6 +39,7 @@ examples_drake = function(){
 
 #' @title Function \code{load_basic_example}
 #' @description Load the basic example into your workspace (or the environment you specify).
+#' Also writes/overwrites the file \code{report.Rmd}.
 #' @export
 #' @param envir The environment to load the example into. Defaults to your workspace.
 #' For an insulated workspace, set \code{envir = new.env(parent = globalenv())}.

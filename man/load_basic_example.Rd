@@ -12,6 +12,7 @@ For an insulated workspace, set \code{envir = new.env(parent = globalenv())}.}
 }
 \description{
 Load the basic example into your workspace (or the environment you specify).
+Also writes/overwrites the file \code{report.Rmd}.
 }
 \examples{
 \dontrun{
