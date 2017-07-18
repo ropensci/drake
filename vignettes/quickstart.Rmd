@@ -21,7 +21,7 @@ clean(destroy = TRUE)
 
 ```{r noeval1, eval = FALSE}
 library(drake)
-load_basic_example() # into your workspace. Also writes report.Rmd.
+load_basic_example() # into your workspace. Also writes/overwrites file report.Rmd.
 plot_graph(my_plan) # Graph the workflow.
 make(my_plan) # Run the workflow.
 make(my_plan) # Check that everything is already up to date.

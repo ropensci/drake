@@ -30,7 +30,7 @@ devtools::install_github("wlandau-lilly/drake", build = TRUE) # development vers
 
 ```r
 library(drake)
-load_basic_example() # into your workspace. Also writes report.Rmd.
+load_basic_example() # into your workspace. Also writes/overwrites file report.Rmd.
 plot_graph(my_plan) # Graph the workflow.
 outdated(my_plan) # Which targets need to be (re)built?
 make(my_plan) # Run the workflow.
