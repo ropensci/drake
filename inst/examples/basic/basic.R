@@ -266,7 +266,7 @@ make(my_plan, parallelism = "Makefile", jobs = 4, # build
 
 # Alternatively, users of SLURM (https://slurm.schedmd.com/) 
 # can just point to `srun` and dispense with `shell.sh` altogether.
-# make(some_my_plan, parallelism = "Makefile", jobs = 4,
+# make(my_plan, parallelism = "Makefile", jobs = 4,
 #   prepend = "SHELL=srun")
 
 readd(coef_regression2_large) # see also: loadd(), cached()
