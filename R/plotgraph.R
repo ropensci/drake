@@ -32,10 +32,10 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
       envir = envir, verbose = verbose)
   
   generic_color = "gray"
-  import_color = "#36367B"
+  import_color = "#1874cd"
   up_to_date_color = "#228b22"
-  outdated_color = "#AF923C"
-  missing_color = "#AF3C3C"
+  outdated_color = "#aa0000"
+  missing_color = "#9a32cd"
   generic_shape = "dot"
   file_shape = "square"
   function_shape = "triangle"
