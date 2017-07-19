@@ -6,7 +6,7 @@
 \usage{
 plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = FALSE, font_size = 20, graph = NULL,
-  ...)
+  navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -25,7 +25,10 @@ plot_graph(plan, targets = drake::possible_targets(plan),
 \item{graph}{an igraph object if one has already been built with 
 \code{\link{build_graph}()}.}
 
-\item{...}{arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
+\item{navigationButtons}{logical, whether to add navigation buttons with 
+\code{visNetwork::visInteraction(navigationButtons = TRUE)}}
+
+\item{...}{other arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
 }
 \description{
 Plot the dependency structure of your workflow.
@@ -34,9 +37,9 @@ IMPORTANT: you must be in the root directory of your project.
 \examples{
 \dontrun{
 load_basic_example()
-plot_graph(my_plan)
+plot_graph(my_plan, width = "100\%") # width is passed to visNetwork
 make(my_plan)
-plot_graph(my_plan)
+plot_graph(my_plan, width = "80\%")
 }
 }
 \seealso{
