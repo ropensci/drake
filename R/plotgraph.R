@@ -79,7 +79,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 
   out = visNetwork(nodes = nodes, edges = edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = legend_nodes) %>% 
-    visHierarchicalLayout(direction = "LR")
+    visHierarchicalLayout(direction = "LR") %>%
+    visIgraphLayout() # to increase performance
   if(navigationButtons)
     out = visInteraction(out, navigationButtons = TRUE)
   out

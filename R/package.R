@@ -49,5 +49,5 @@
 #' @importFrom tools md5sum
 #' @importFrom utils sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visHierarchicalLayout 
-#' visInteraction visLegend visNetwork
+#' visIgraphLayout visInteraction visLegend visNetwork
 NULL
