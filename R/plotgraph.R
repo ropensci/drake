@@ -47,7 +47,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   
   targets = intersect(nodes$id, plan$target)
   imports = setdiff(nodes$id, plan$target)
-  functions = Filter(f = function(x) is.function(envir[[x]]), x = imports)
+  functions = Filter(x = imports, f = function(x) 
+      is.function(envir[[x]]) | can_get_function(x))
   missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
   
   nodes = resolve_levels(nodes, graph)
@@ -84,6 +85,12 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   if(navigationButtons)
     out = visInteraction(out, navigationButtons = TRUE)
   out
+}
+
+can_get_function = function(x){
+  tryCatch({
+    is.function(get(x))
+  }, error = function(e) FALSE)
 }
 
 null_graph = function(){
