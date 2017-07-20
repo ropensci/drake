@@ -55,6 +55,7 @@ test_that(".onLoad() warns correctly and .onAttach() works", {
   expect_true(file.exists(f))
   expect_warning(drake:::.onLoad())
   unlink(f)
+  set.seed(0)
   for(i in 1:1000) # Expect no errors or warnings.
     expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
