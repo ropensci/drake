@@ -11,7 +11,7 @@
 
 ![](demo.gif)
 
-# drake - data frames in R for [Make](http://kbroman.org/minimal_make/)
+# Data frames in R for [Make](http://kbroman.org/minimal_make/)
 
 Drake is a workflow manager and build system for
 
