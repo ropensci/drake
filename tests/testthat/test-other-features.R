@@ -47,7 +47,7 @@ test_that("mclapply and lapply", {
   dclean()
 })
 
-test_that(".onLoad() warns correctly", {
+test_that(".onLoad() warns correctly and .onAttach() works", {
   f = ".RData"
   expect_false(file.exists(f))
   expect_silent(drake:::.onLoad())
@@ -55,6 +55,8 @@ test_that(".onLoad() warns correctly", {
   expect_true(file.exists(f))
   expect_warning(drake:::.onLoad())
   unlink(f)
+  for(i in 1:1000) # Expect no errors or warnings.
+    expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
 test_that("graph functions work", {
