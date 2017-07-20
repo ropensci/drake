@@ -15,3 +15,7 @@ drake_tip = function(){
   tip = sample(tips, 1)
   paste(strwrap(tip), collapse = "\n")
 }
+
+drake_message = function(){
+  packageStartupMessage(drake_tip())
+}

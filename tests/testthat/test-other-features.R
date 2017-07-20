@@ -56,10 +56,8 @@ test_that(".onLoad() warns correctly and .onAttach() works", {
   expect_warning(drake:::.onLoad())
   unlink(f)
   set.seed(0)
-  for(i in 1:100)
-    expect_true(is.character(drake_tip()))
-  for(i in 1:1000) # Expect no errors or warnings.
-    expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
+  expect_true(is.character(drake_tip()))
+  expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
 test_that("graph functions work", {
