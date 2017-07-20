@@ -73,13 +73,23 @@ plot_graph(my_plan) # The graph also shows what is up to date.
 Dive deeper into the built-in examples.
 
 ```r
-example_drake("basic") # Write the code files.
+example_drake("basic") # Write the code files of the canonical tutorial.
 examples_drake() # List the other examples.
+vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
 # Useful functions
 
-Besides `make()`, here are some useful functions to set up your workflow plan,
+Besides `make()`, here are some useful functions to learn about drake,
+
+```r
+load_basic_example()
+drake_tip()
+examples_drake()
+example_drake()
+```
+
+set up your workflow plan,
 
 ```r
 plan()

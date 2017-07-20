@@ -3,6 +3,7 @@
 #' @export
 #' @examples
 #' drake_tip()
+#' cat(drake_tip())
 drake_tip = function(){
   tips = c(
     "New in drake 3.1.0: load_basic_example(), deps(), and a much improved plot_graph().",

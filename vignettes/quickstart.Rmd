@@ -32,11 +32,21 @@ Dive deeper into the built-in examples.
 ```{r noeval2, eval = FALSE}
 example_drake("basic") # Write the code files.
 examples_drake() # List the other examples.
+vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
 # Useful functions
 
-Besides `make()`, here are some useful functions to set up your workflow plan,
+Besides `make()`, here are some useful functions to learn about drake,
+
+```r
+load_basic_example()
+drake_tip()
+examples_drake()
+example_drake()
+```
+
+set up your workflow plan,
 
 ```r
 plan()

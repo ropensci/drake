@@ -1,5 +1,5 @@
 .onAttach <- function(libname, pkgname){
-  if (interactive() & runif(1) < 1) packageStartupMessage(drake_tip())
+  if (interactive() & runif(1) < 0.1) packageStartupMessage(drake_tip())
   invisible()
 }
 

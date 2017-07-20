@@ -11,4 +11,5 @@ Output a random tip about drake.
 }
 \examples{
 drake_tip()
+cat(drake_tip())
 }
