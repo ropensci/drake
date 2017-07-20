@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img width="200" src="./inst/logo.png" alt="">
+  <img width="200" src="./logo.png" alt="">
 </h1>
 
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
@@ -9,7 +9,7 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
-![](drake.gif)
+![](demo.gif)
 
 # drake - data frames in R for [Make](http://kbroman.org/minimal_make/)
 
