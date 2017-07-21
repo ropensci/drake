@@ -1,12 +1,16 @@
 # library(testthat); devtools::load_all()
 
+context("parallel")
+
 test_that("max_useful_jobs() gives correct answers", {
   dclean()
   e = new.env(parent = globalenv())
   load_basic_example(envir = e)
+  my_plan = e$my_plan
   tmp = plot_graph(my_plan, envir = e)
   tmp = dataframes_graph(my_plan, envir = e)
   expect_true(all(sapply(tmp, is.data.frame)))
+
   expect_equal(max_useful_jobs(my_plan, envir = e), 8)
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "files"), 8)
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "all"), 10)
