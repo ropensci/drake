@@ -37,5 +37,5 @@ dbug = function(clean = TRUE){
 
 dclean = function(){
   unlink(c(".drake", "intermediatefile.rds", "input.rds", 
-    "Makefile", "report.Rmd"), recursive = TRUE)
+    "Makefile", "report.md", "report.Rmd"), recursive = TRUE)
 }
