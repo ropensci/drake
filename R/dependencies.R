@@ -54,6 +54,7 @@ import_dependencies = function(object){
 }
 
 function_dependencies = function(funct){
+  if(typeof(funct) != "closure") funct = function(){}
   findGlobals(funct, merge = FALSE) %>% parsable_list
 }
 
