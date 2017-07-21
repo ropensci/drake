@@ -39,7 +39,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster 
 #' mclapply parLapply stopCluster
-#' @importFrom plyr ddply
+#' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_rds

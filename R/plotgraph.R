@@ -19,13 +19,59 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' plot_graph(my_plan, width = "100%") # width is passed to visNetwork
+#' plot_graph(my_plan, width = "100%") # The width is passed to visNetwork().
 #' make(my_plan)
-#' plot_graph(my_plan, width = "80%")
+#' plot_graph(my_plan) # The red nodes from before are now green.
 #' }
 plot_graph = function(plan, targets = drake::possible_targets(plan), 
-                      envir = parent.frame(), verbose = FALSE, 
-                      font_size = 20, graph = NULL, navigationButtons = TRUE, ...){
+  envir = parent.frame(), verbose = FALSE, font_size = 20, graph = NULL, 
+  navigationButtons = TRUE, ...){
+  
+  force(envir)
+  raw_graph = dataframes_graph(plan = plan, targets = targets, 
+     envir = envir, verbose = verbose, font_size = font_size, graph = graph)
+  
+  out = visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges, ...) %>%
+    visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) %>% 
+    visHierarchicalLayout(direction = "LR") %>%
+    visIgraphLayout() # increases performance
+  if(navigationButtons)
+    out = visInteraction(out, navigationButtons = TRUE)
+  out
+}
+
+#' @title Function \code{dataframes_graph}
+#' @description Get the information about nodes, edges, and the legend/key
+#' so you can plot your own custom \code{visNetwork}.
+#' IMPORTANT: you must be in the root directory of your project.
+#' @export
+#' @return a list of three data frames: one for nodes, one for edges, and one for
+#' the legend/key nodes.
+#' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}}
+#' @param plan workflow plan data frame, same as for function 
+#' \code{\link{make}()}.
+#' @param targets names of targets to bulid, same as for function
+#' \code{\link{make}()}.
+#' @param envir environment to import from, same as for function
+#' \code{\link{make}()}.
+#' @param verbose logical, whether to output messages to the console.
+#' @param font_size numeric, font size of the node labels in the graph
+#' @param graph an igraph object if one has already been built with 
+#' \code{\link{build_graph}()}. 
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' raw_graph = dataframes_graph(my_plan)
+#' str(raw_graph)
+#' # Plot your own custom visNetwork graph
+#' library(magrittr)
+#' library(visNetwork)
+#' visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) %>%
+#'   visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) %>% 
+#'   visHierarchicalLayout(direction = "LR")
+#' }
+dataframes_graph = function(plan, targets = drake::possible_targets(plan), 
+   envir = parent.frame(), verbose = FALSE, font_size = 20, graph = NULL){
   force(envir)
   if(is.null(graph))
     graph = build_graph(plan = plan, targets = targets, 
@@ -39,7 +85,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   generic_shape = "dot"
   file_shape = "square"
   function_shape = "triangle"
-
+  
   network_data = toVisNetworkData(graph)
   nodes = network_data$nodes
   edges = network_data$edges
@@ -48,23 +94,27 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   targets = intersect(nodes$id, plan$target)
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(x = imports, f = function(x) 
-      is.function(envir[[x]]) | can_get_function(x))
+    is.function(envir[[x]]) | can_get_function(x))
   missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
   
   nodes = resolve_levels(nodes, graph)
   nodes$font.size = font_size
+  nodes$status = "import"
   nodes$color = import_color
+  nodes[missing, "status"] = "missing"
   nodes[missing, "color"] = missing_color
   
   outdated = outdated(plan = plan, targets = targets, envir = envir, 
-                  verbose = verbose)
+                      verbose = verbose)
+  nodes[targets, "status"] = "up-to-date"
   nodes[targets, "color"] = up_to_date_color
+  nodes[outdated, "status"] = "outdated"
   nodes[outdated, "color"] = outdated_color
   
   nodes$shape = generic_shape
   nodes[is_file(nodes$id), "shape"] = file_shape
   nodes[functions, "shape"] = function_shape
-
+  
   if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
@@ -77,14 +127,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
     font.color = "black",
     font.size = font_size)
   legend_nodes$id = seq_len(nrow(legend_nodes))
-
-  out = visNetwork(nodes = nodes, edges = edges, ...) %>%
-    visLegend(useGroups = FALSE, addNodes = legend_nodes) %>% 
-    visHierarchicalLayout(direction = "LR") %>%
-    visIgraphLayout() # to increase performance
-  if(navigationButtons)
-    out = visInteraction(out, navigationButtons = TRUE)
-  out
+  
+  list(nodes = nodes, edges = edges, legend_nodes = legend_nodes) 
 }
 
 can_get_function = function(x){

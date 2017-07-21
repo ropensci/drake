@@ -37,9 +37,9 @@ IMPORTANT: you must be in the root directory of your project.
 \examples{
 \dontrun{
 load_basic_example()
-plot_graph(my_plan, width = "100\%") # width is passed to visNetwork
+plot_graph(my_plan, width = "100\%") # The width is passed to visNetwork().
 make(my_plan)
-plot_graph(my_plan, width = "80\%")
+plot_graph(my_plan) # The red nodes from before are now green.
 }
 }
 \seealso{

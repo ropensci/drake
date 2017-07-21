@@ -61,6 +61,8 @@ For \code{parallelism == "Makefile"}, Windows users will need
 to download and install Rtools.}
 
 \item{jobs}{number of parallel processes or jobs to run.
+See \code{\link{max_useful_jobs}()} or \code{\link{plot_graph}()}
+to help figure out what the number of jobs should be.
 Windows users should not set \code{jobs > 1} if 
 \code{parallelism} is \code{"mclapply"} because
 \code{\link{mclapply}()} is based on forking. Windows users
@@ -129,6 +131,22 @@ Run your project (build the targets).
 \examples{
 \dontrun{
 load_basic_example()
-make(my_plan)
+outdated(my_plan) # Which targets need to be (re)built?
+my_jobs = max_useful_jobs(my_plan) # Depends on what is up to date.
+make(my_plan, jobs = my_jobs) # Build what needs to be built.
+outdated(my_plan) # Everything is up to date.
+reg2 = function(d){ # Change one of your functions.
+ d$x3 = d$x^3
+  lm(y ~ x3, data = d)
 }
+outdated(my_plan) # Some targets depend on reg2().
+plot_graph(my_plan) # See how they fit in an interactive graph.
+make(my_plan) # Rebuild just the outdated targets.
+outdated(my_plan) # Everything is up to date again.
+plot_graph(my_plan) # The colors changed in the graph.
+}
+}
+\seealso{
+\code{\link{plan}}, \code{\link{plot_graph}},
+\code{\link{max_useful_jobs}}
 }

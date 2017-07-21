@@ -78,12 +78,20 @@ find_project()
 find_cache()
 ```
 
-and debug your work. 
+debug your work,
 ```r
 check()
 session()
 progress()
 read_config()
+```
+
+and speed up your project with parallel computing.
+
+```r
+make() # with jobs > 2
+max_useful_jobs()
+parallelism_choices()
 ```
 
 # Setting up the basic example
@@ -386,7 +394,38 @@ reg2 = function(d){ # Change a dependency.
 plot_graph(my_plan, width = "100%", height = "500px") # Click, drag, and zoom to explore.
 ```
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. 
+
+See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date. Try out the following in a fresh R session.
+
+```r
+library(drake)
+load_basic_example()
+plot_graph(my_plan) # Look at the graph to make sense of the output.
+max_useful_jobs(my_plan) # 8
+max_useful_jobs(my_plan, imports = "files") # 8
+max_useful_jobs(my_plan, imports = "all") # 10
+max_useful_jobs(my_plan, imports = "none") # 8
+make(my_plan)
+plot_graph(my_plan)
+# Ignore the targets already built.
+max_useful_jobs(my_plan) # 1
+max_useful_jobs(my_plan, imports = "files") # 1
+max_useful_jobs(my_plan, imports = "all") # 10
+max_useful_jobs(my_plan, imports = "none") # 0
+# Change a function so some targets are now out of date.
+reg2 = function(d){
+  d$x3 = d$x^3
+  lm(y ~ x3, data = d)
+}
+plot_graph(my_plan)
+max_useful_jobs(my_plan) # 4
+max_useful_jobs(my_plan, imports = "files") # 4
+max_useful_jobs(my_plan, imports = "all") # 10
+max_useful_jobs(my_plan, imports = "none") # 4
+```
+
+
 
 As for how the parallelism is implemented, you can choose from multiple built-in backends.
 

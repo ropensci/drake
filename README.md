@@ -114,12 +114,20 @@ find_project()
 find_cache()
 ```
 
-and debug your work. 
+debug your work,
 ```r
 check()
 session()
 progress()
 read_config()
+```
+
+and speed up your project with parallel computing.
+
+```r
+make() # with jobs > 2
+max_useful_jobs()
+parallelism_choices()
 ```
 
 # Documentation
@@ -165,7 +173,7 @@ Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the inte
 ```{r basicgraph}
 library(drake)
 load_basic_example()
-make(my_plan, jobs = 2) # Parallelize over 2 jobs.
+make(my_plan, jobs = 2) # See also max_useful_jobs(my_plan).
 reg2 = function(d){ # Change a dependency.
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
@@ -175,7 +183,7 @@ plot_graph(my_plan, width = "100%")
 
 ![](graph.png)
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
 
 As for how the parallelism is implemented, you can choose from multiple built-in backends.
 
