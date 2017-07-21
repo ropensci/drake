@@ -137,6 +137,7 @@ and speed up your project with parallel computing.
 make() # with jobs > 2
 max_useful_jobs()
 parallelism_choices()
+shell_file()
 ```
 
 # Documentation

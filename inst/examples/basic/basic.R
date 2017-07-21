@@ -245,14 +245,7 @@ if(FALSE){ # Use FALSE on regular local machines.
 # You could write this file by hand if you wanted.
 # You may have to change 'module load R' to a command that
 # loads a specific version of R.
-
-writeLines(c(
-  "#!/bin/bash",
-  "shift",
-  "echo \"module load R; $*\" | qsub -sync y -cwd -j y"
-), "shell.sh")
-
-system2("chmod", args = c("+x", "shell.sh")) # permission to execute
+shell_file() # Writes an example shell.sh and does a `chmod +x` so drake can execute it.
 
 # In reality, you would put all your code in an R script
 # and then run it in the Linux/Mac terminal with

@@ -1,7 +1,23 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("shell_file() writes correctly", {
+  expect_false(file.exists("shell.sh"))
+  shell_file()
+  expect_true(file.exists("shell.sh"))
+  unlink("shell.sh")
+  d = "exdir"
+  dir.create(d)
+  p = file.path(d, "script.txt")
+  expect_false(file.exists(p))
+  shell_file(p)
+  expect_true(file.exists(p))
+  unlink(d, recursive = TRUE)
+})
+
 test_that("deps() correctly reports dependencies of functions and commands", {
+  expect_equal(deps(c), character(0))
+  expect_equal(deps(list), character(0))
   f <- function(x, y){
     out <- x + y + g(x)
     saveRDS(out, 'out.rds')
