@@ -21,7 +21,6 @@ Imports:
     magrittr,
     parallel,
     plyr,
-    rlang,
     R.utils,
     storr,
     stringi,
