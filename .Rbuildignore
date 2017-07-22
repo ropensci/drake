@@ -1,11 +1,7 @@
 Thumbs.db
 ^build_site.R$
-^index.html$
-^authors.html$
-^articles$
-^news$
+^raster$
 ^reference$
-^_site$
 .DS_Store
 \.git$
 \.github$
@@ -17,8 +13,6 @@ Thumbs.db
 cran-comments.md
 cran-comments.html
 LICENSE
-logo.png
-graph.png
 NEWS.md
 README.md
 TESTS.md
@@ -28,7 +22,6 @@ vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
 ^.*\.css$
-^.*\.gif$
 ^.*\.js$
 ^.*\.log$
 ^.*\.Rproj$

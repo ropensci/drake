@@ -238,6 +238,7 @@ Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falste
 In the sphere of reproducibility, drake and [remake](https://github.com/richfitz/remake) are examples of non-literate programming tools (as opposed to literate programming tools such as [knitr](https://CRAN.R-project.org/package=knitr)). Counterparts include [R.cache](https://CRAN.R-project.org/package=R.cache), [archivist](https://CRAN.R-project.org/package=archivist), [trackr](https://github.com/gmbecker/recordr), and [memoise](https://CRAN.R-project.org/package=memoise). See the [reporducible research CRAN task view](https://CRAN.R-project.org/view=ReproducibleResearch) for a more comprehensive list. Drake differentiates itself from these tools with its ability to track the relationships among cached objects and its extensive high-performance computing functionality.
 
 ```{r rmfile, echo = FALSE}
-unlink("report.Rmd")
+clean(destroy = TRUE)
+unlink(c("report.Rmd", "Thumbs.db"))
 ```
 

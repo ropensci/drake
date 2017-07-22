@@ -13,7 +13,7 @@ Thumbs.db
 *.toc
 *.vrb
 .DS_Store
-tests/testthat/.drake
+.drake
 .Rapp.history
 .Rhistory
 Makefile
