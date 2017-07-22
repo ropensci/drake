@@ -50,7 +50,8 @@
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg6" />
+     inkscape:current-layer="svg6"
+     inkscape:lockguides="true" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -248,15 +249,15 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.91036415px;line-height:1.25;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.57275909"
-     x="30.115683"
-     y="85.837074"
+     x="32.2654"
+     y="86.201454"
      id="text6295"
      transform="scale(0.96552981,1.0357008)"><tspan
        sodipodi:role="line"
        id="tspan6293"
-       x="30.115683"
-       y="85.837074"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.74621868px;font-family:Helvetica;-inkscape-font-specification:'Helvetica Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.57275909">rstats</tspan></text>
+       x="32.2654"
+       y="86.201454"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.74621868px;font-family:arial;-inkscape-font-specification:arial;fill:#ffffff;fill-opacity:1;stroke-width:0.57275909">rstats</tspan></text>
   <ellipse
      style="fill:#3d508a;fill-opacity:1;fill-rule:nonzero;stroke:#228b22;stroke-width:1.7166028;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
      id="path6900"
@@ -304,15 +305,15 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20.89428902px;line-height:1.25;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.52235723"
-     x="44.329094"
-     y="57.296486"
+     x="46.532291"
+     y="57.684338"
      id="text6291"
      transform="scale(1.0277373,0.97301129)"><tspan
        sodipodi:role="line"
        id="tspan6289"
-       x="44.329094"
-       y="57.296486"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:helvetica;-inkscape-font-specification:'helvetica Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.52235723">drake</tspan></text>
+       x="46.532291"
+       y="57.684338"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:arial;-inkscape-font-specification:arial;fill:#ffffff;fill-opacity:1;stroke-width:0.52235723">drake</tspan></text>
   <rect
      style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#228b22;stroke-width:0.75715292;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
      id="rect6995-4"
