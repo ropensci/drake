@@ -1,5 +1,5 @@
 <div style="text-align:center">
-![](raster/logo-medium.png)
+  <img src="./raster/logo-medium.png" alt="">
 </div>
 
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
