@@ -1,4 +1,5 @@
-[![](vignettes/logo.svg)]]
+![](raster/logo.png)
+
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
 [![codecov.io](https://codecov.io/github/wlandau-lilly/drake/coverage.svg?branch=master)](https://codecov.io/github/wlandau-lilly/drake?branch=master)
@@ -6,7 +7,7 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
-![](demo.gif)
+![](raster/demo.gif)
 
 # Data frames in R for [Make](http://kbroman.org/minimal_make/)
 
@@ -180,7 +181,7 @@ reg2 = function(d){ # Change a dependency.
 plot_graph(my_plan, width = "100%")
 ```
 
-![](graph.png)
+![](raster/graph.png)
 
 When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
 
