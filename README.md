@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<h1 align="center">
   <img src="./raster/logo-medium.png" alt="">
-</div>
+</h1>
 
 [![Travis-CI Build Status](https://travis-ci.org/wlandau-lilly/drake.svg?branch=master)](https://travis-ci.org/wlandau-lilly/drake)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
