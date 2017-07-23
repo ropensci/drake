@@ -151,7 +151,8 @@ make = function(plan, targets = drake::possible_targets(plan),
   config$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
   if(imports_only){
-     config$graph = delete_vertices(config$graph, config$plan$target)
+     delete_these = intersect(config$plan$target, V(config$graph)$name)
+     config$graph = delete_vertices(config$graph, v = delete_these)
      if(parallelism == "Makefile") parallelism = default_parallelism()
   }
   get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
