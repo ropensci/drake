@@ -91,7 +91,7 @@ methods = plan(
 my_analyses = analyses(methods, datasets = my_datasets)
 
 summary_types = plan(
-  summ = suppressWarnings(summary(..analysis..)), # Occasionally there is a perfect regression fit.
+  summ = suppressWarnings(summary(..analysis..)), # Perfect regression fits can happen.
   coef = coef(..analysis..))
 
 # summaries() also uses evaluate(): once with expand = TRUE,
@@ -128,16 +128,16 @@ workflow_graph = build_graph(my_plan) # igraph object
 # Check for circularities, missing input files, etc.
 check(my_plan)
 
-# List objects that are reproducibly tracked. 
-"small" %in% tracked(my_plan)
-tracked(my_plan, targets = "small")
-tracked(my_plan)
-
 # Check the dependencies of individual functions and commands.
 deps(reg1)
 deps(my_knit)
 deps(my_plan$command[1])
 deps(my_plan$command[16])
+
+# List objects that are reproducibly tracked. 
+"small" %in% tracked(my_plan)
+tracked(my_plan, targets = "small")
+tracked(my_plan)
 
 # See vignette("caution") for more a deeper dive into possible pitfalls.
 
@@ -149,18 +149,21 @@ deps(my_plan$command[16])
 # Start off with a clean workspace (optional).
 clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 
-# Use make() to execute your workflow. 
-# These functions are exactly the same.
-make(my_plan) # build everything from scratch
-# Now, open and read report.html in a browser.
-progress() # What did you build? Did it finish?
+# All the targets in the plan are "outdated" because we have not made them yet.
+outdated(my_plan, verbose = FALSE)
+# plot_graph(my_plan) # Show how the pieces of your workflow are connected
+
+make(my_plan) # Run your project.
+# The non-file dependencies of your last target are already loaded
+# in your workspace.
+"report_dependencies" %in% ls() # Should be TRUE.
+progress() # Check the progress while or after make() runs.
+outdated(my_plan, verbose = FALSE) # Everything is up to date
+# plot_graph(my_plan) # The red nodes from before turned green.
 # session() # get the sessionInfo() of the last call to make()
 
 # see also: loadd(), cached(), imported(), and built()
 readd(coef_regression2_large) # Read target from the cache.
-# The non-file dependencies of your last target are already loaded
-# in your workspace.
-"report_dependencies" %in% ls() # Should be TRUE.
 
 # Everything is up to date.
 make(my_plan)
@@ -170,6 +173,8 @@ reg2 = function(d){
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
+outdated(my_plan) # The targets depending on reg2() are now out of date...
+# plot_graph(my_plan) # ...which is indicated in the graph.
 
 make(my_plan) # Drake only runs targets that depend on reg2().
 
@@ -179,8 +184,7 @@ reg2 = function(d){
   d$x3 = d$x^3
     lm(y ~ x3, data = d) # I indented here.
 }
-
-make(my_plan) # Nothing substantial changed. Everything up to date.
+outdated(my_plan) # Everything is still up to date.
 
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
@@ -208,6 +212,10 @@ clean() # report.html and report.md are removed, but report.Rmd stays.
 ###############################################
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################
+
+# How many parallel jobs might be useful?
+# At what point would it be ridiculous to add more jobs?
+max_useful_jobs(my_plan)
 
 make(my_plan, jobs = 2) # parallelism == "parLapply" for Windows
 # make(my_plan, parallelism = "mclapply", jobs = 2) # Not for Windows
