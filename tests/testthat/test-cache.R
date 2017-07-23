@@ -143,9 +143,11 @@ test_that("cache functions work", {
   
   # Read the graph
   pdf(NULL)
+  tmp = dbug()
   read_graph(plot = TRUE, search = TRUE, path = s)
   tmp = capture.output(dev.off())
   unlink("Rplots.pdf")
+  dclean()
   setwd("testthat")
   pdf(NULL)
   read_graph(plot = TRUE, search = FALSE)
