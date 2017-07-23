@@ -10,7 +10,8 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
   sink()
   out = outdated(plan = config$plan, targets = config$targets,
     envir = config$envir, verbose = config$verbose, jobs = config$jobs,
-    parallelism = config$parallelism)
+    parallelism = config$parallelism, packages = config$packages,
+    prework = config$prework)
   time_stamps(config, outdated = out)
   if(run) system2(command = config$command, args = config$args)
   if(!debug) unlink(globalenvpath)
