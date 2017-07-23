@@ -70,7 +70,7 @@ load_basic_example = function(envir = parent.frame()){
   # User-defined functions
   envir$simulate = function(n){
     data.frame(
-      x = rnorm(n),
+      x = stats::rnorm(n), # Drake tracks calls like `pkg::fn()` (namespaced functions).
       y = rpois(n, 1)
     )
   }
@@ -129,7 +129,8 @@ load_basic_example = function(envir = parent.frame()){
   analyses = analyses(methods, datasets = datasets)
 
   summary_types = plan(
-    summ = suppressWarnings(summary(..analysis..)), # Occasionally there is a perfect regression fit
+    summ = suppressWarnings( # Occasionally there is a perfect regression fit.
+      summary(..analysis..)), 
     coef = coef(..analysis..))
 
   # summaries() also uses evaluate(): once with expand = TRUE,

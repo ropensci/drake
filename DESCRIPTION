@@ -1,7 +1,7 @@
 Package: drake
 Title: Data Frames in R for Make
-Version: 3.1.0
-Date: 2017-07-20
+Version: 4.0.0
+Date: 2017-07-23
 Authors@R: c(
   person(family = "Landau", given = c("William", "Michael"),
     email = "will.landau@lilly.com", role = c("aut", "cre")),
@@ -22,6 +22,7 @@ Imports:
     parallel,
     plyr,
     R.utils,
+    stats,
     storr,
     stringi,
     stringr,

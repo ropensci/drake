@@ -53,9 +53,25 @@ import_dependencies = function(object){
     character(0)
 }
 
+# Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.
+find_namespaced_functions = function(f, found = character(0)){
+  if(is.function(f)){
+    return(find_namespaced_functions(body(f), found))
+  } else if (is.call(f) && deparse(f[[1]]) %in% c("::", ":::")){
+    found = c(found, deparse(f))
+  } else if (is.recursive(f)){
+    v = lapply(as.list(f), find_namespaced_functions, found)
+    found = unique( c(found, unlist(v) ))        
+  }
+  found
+}
+
 function_dependencies = function(funct){
   if(typeof(funct) != "closure") funct = function(){}
-  findGlobals(funct, merge = FALSE) %>% parsable_list
+  out = findGlobals(funct, merge = FALSE)
+  namespaced = find_namespaced_functions(funct)
+  out$functions = c(out$functions, namespaced) %>% sort
+  parsable_list(out)
 }
 
 clean_dependency_list = function(x){

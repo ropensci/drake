@@ -166,7 +166,7 @@ null_graph = function(){
 missing_import = function(x, envir){
   missing_object = !is_file(x) & 
     is.null(envir[[x]]) & 
-    tryCatch({tmp = get(x); FALSE}, error = function(e) TRUE)
+    tryCatch({tmp = flexible_get(x); FALSE}, error = function(e) TRUE)
   missing_file = is_file(x) & !file.exists(unquote(x))
   missing_object | missing_file
 }

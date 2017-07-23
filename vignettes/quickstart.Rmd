@@ -110,7 +110,7 @@ First, we will generate a few datasets.
 ```{r sim}
 simulate = function(n){
   data.frame(
-    x = rnorm(n),
+    x = stats::rnorm(n), # Drake tracks calls like `pkg::fn()` (namespaced functions).
     y = rpois(n, 1)
   )
 }

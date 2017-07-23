@@ -15,7 +15,7 @@
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
 # call load_basic_example().
 
-library(knitr)
+library(knitr) # Drake knows you loaded knitr.
 # library(rmarkdown) # platform-dependent: render() requires pandoc
 library(drake)
 
@@ -24,7 +24,7 @@ clean() # remove any previous drake output
 # User-defined functions
 simulate = function(n){
   data.frame(
-    x = rnorm(n),
+    x = stats::rnorm(n), # Drake tracks calls like `pkg::fn()` (namespaced functions).
     y = rpois(n, 1)
   )
 }
@@ -38,13 +38,13 @@ reg2 = function(d){
   lm(y ~ x2, data = d)
 }
 
-# Knit and render a dynamic knitr report
+# Knit and possibly render a dynamic R Markdown report.
 my_knit = function(file, ...){
-  knit(file, quiet = TRUE) # drake knows you loaded the knitr package
+  knit(file, quiet = TRUE) # Drake knows you loaded knitr.
 }
 
 my_render = function(file, ...){
-  render(file) # drake knows you loaded the rmarkdown package
+  render(file) # Drake will know if you load rmarkdown.
 }
 
 # Write the R Markdown source for a dynamic knitr report

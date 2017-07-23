@@ -28,9 +28,21 @@ imported_target = function(target, hashes, config){
   if(is_file(target)) return(hashes$file)
   else if(target %in% ls(config$envir, all.names = TRUE)) 
     value = config$envir[[target]]
-  else value = tryCatch(get(target), error = function(e)
+  else value = tryCatch(flexible_get(target), error = function(e)
     console(imported = NA, target = target, config = config))
   value
+}
+
+flexible_get = function(target){
+  stopifnot(length(target) == 1)
+  parsed = parse(text = target) %>% as.call %>% as.list
+  lang = parsed[[1]]
+  is_namespaced = length(lang) > 1
+  if(!is_namespaced) return(get(target))
+  stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
+  pkg = deparse(lang[[2]])
+  fun = deparse(lang[[3]])
+  get(fun, envir = getNamespace(pkg))
 }
 
 store_target = function(target, value, hashes, imported, config){
