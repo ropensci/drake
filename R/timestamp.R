@@ -1,13 +1,9 @@
-time_stamps = function(config){
+time_stamps = function(config, outdated){
   dir_empty(time_stamp_dir)
   write_time_stamp_template()
-  targets = intersect(config$order, config$plan$target)
-  lapply(targets, function(target){
-    hashes = hashes(target, config)
-    current = target_current(target = target, 
-      hashes = hashes, config = config)
-    if(current) write_time_stamp(target)
-  })
+  targets = intersect(V(config$graph)$name, config$plan$target)
+  stamp_these = setdiff(targets, outdated)
+  lapply(stamp_these, write_time_stamp)
   invisible()
 }
 

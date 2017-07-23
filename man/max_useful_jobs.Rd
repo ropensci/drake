@@ -5,7 +5,8 @@
 \title{Function \code{max_useful_jobs}}
 \usage{
 max_useful_jobs(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = FALSE, graph = NULL,
+  envir = parent.frame(), verbose = FALSE, jobs = 1,
+  parallelism = drake::default_parallelism(), graph = NULL,
   imports = c("files", "all", "none"))
 }
 \arguments{
@@ -19,6 +20,17 @@ max_useful_jobs(plan, targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
+
+\item{jobs}{The \code{outdated()} function is called internally, 
+and it needs to import objects and examine your 
+input files to see what has been updated. This could take some time,
+and parallel computing may be needed
+to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to use for faster computation.}
+
+\item{parallelism}{Choice of parallel backend to speed up the computation.
+See \code{?parallelism_choices} for details. The Makefile option is not available
+here. Drake will try to pick the best option for your system by default.}
 
 \item{graph}{an igraph object if one has already been built with 
 \code{\link{build_graph}()}.}

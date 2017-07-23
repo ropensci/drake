@@ -5,19 +5,26 @@
 \title{Function outdated}
 \usage{
 outdated(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = FALSE)
+  envir = parent.frame(), verbose = TRUE,
+  parallelism = drake::default_parallelism(), jobs = 1,
+  packages = (.packages()), prework = character(0))
 }
 \arguments{
-\item{plan}{Workflow plan data frame: that is, a data frame with a "target"
-column and a "command" column. See \code{\link{plan}()}.}
+\item{plan}{same as for \code{\link{make}}}
 
-\item{targets}{Character vector of targets. status() shows the status
-of all the dependencies of the targets listed.}
+\item{targets}{same as for \code{\link{make}}}
 
-\item{envir}{environment with your imported objects. Defaults to your workspace.}
+\item{envir}{same as for \code{\link{make}}}
 
-\item{verbose}{logical, whether be verbose. If \code{TRUE}, objects are listed
-as they are imported. (Objects need to be imported to check the status.)}
+\item{verbose}{same as for \code{\link{make}}}
+
+\item{parallelism}{same as for \code{\link{make}}}
+
+\item{jobs}{same as for \code{\link{make}}}
+
+\item{packages}{same as for \code{\link{make}}}
+
+\item{prework}{same as for \code{\link{make}}}
 }
 \description{
 Check which targets are out of date and need to be rebuilt.

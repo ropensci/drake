@@ -8,7 +8,10 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
   makefile_head(config)
   makefile_rules(config)
   sink()
-  initialize(config)
+  out = outdated(plan = config$plan, targets = config$targets,
+    envir = config$envir, verbose = config$verbose, jobs = config$jobs,
+    parallelism = config$parallelism)
+  time_stamps(config, outdated = out)
   if(run) system2(command = config$command, args = config$args)
   if(!debug) unlink(globalenvpath)
   invisible()
@@ -37,7 +40,7 @@ makefile_head = function(config){
 }
 
 makefile_rules = function(config){
-  targets = intersect(config$plan$target, config$order)
+  targets = intersect(config$plan$target, V(config$graph)$name)
   for(target in targets){
     deps = dependencies(target, config) %>%
       intersect(y = config$plan$target) %>% time_stamp
@@ -49,19 +52,6 @@ makefile_rules = function(config){
     else target = quotes(unquote(target), single = FALSE)
     cat("\tRscript -e 'drake::mk(", target, ")'\n", sep = "")
   }
-}
-
-initialize = function(config){
-  config$cache$clear(namespace = "progress")
-  do_prework(config = config, verbosePackages = TRUE)
-  imports = setdiff(config$order, config$plan$target)
-  for(import in imports){ # Strict order needed. Might parallelize later.
-    config = inventory(config)
-    hash_list = hash_list(targets = import, config = config)
-    build(target = import, hash_list = hash_list, config = config)
-  }
-  time_stamps(config)
-  invisible()
 }
 
 #' @title Function \code{mk}

@@ -29,6 +29,9 @@
 #' @param verbose logical, whether to print progress to the console.
 #' Skipped objects are not printed.
 #' 
+#' @param imports_only logical, whether to skip building the targets
+#' in \code{plan} and just import objects and files.
+#' 
 #' @param parallelism character, type of parallelism to use. 
 #' To list the options, call \code{\link{parallelism_choices}()}. 
 #' For detailed explanations, see \code{?\link{parallelism_choices}}, 
@@ -43,6 +46,14 @@
 #' \code{\link{mclapply}()} is based on forking. Windows users
 #' who use \code{parallelism == "Makefile"} will need to 
 #' download and install Rtools.
+#' 
+#' If \code{parallelism} is \code{"Makefile"},  Makefile-level parallelism 
+#' is only used for targets in your workflow plan data frame, not imports. 
+#' To process imported objects and files, drake selects the best parallel
+#' backend for your system and uses the number of jobs you give to the \code{jobs}
+#' argument to \code{\link{make}()}. To use at most 2 jobs for imports and at most 4 jobs
+#' for targets, run
+#' \code{make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")}
 #' 
 #' @param packages character vector packages to load, in the order
 #' they should be loaded. Defaults to \code{(.packages())}, so you
@@ -100,6 +111,9 @@
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
 #' 
+#' @param return_config logical, whether to return the internal list
+#' of runtime configuration parameters used by \code{make()}
+#' 
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -118,11 +132,12 @@
 #' plot_graph(my_plan) # The colors changed in the graph.
 #' }
 make = function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, 
+  envir = parent.frame(), verbose = TRUE, imports_only = FALSE,
   parallelism = drake::default_parallelism(), jobs = 1, 
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
-  args = drake::default_system2_args(jobs = jobs, verbose = verbose)){
+  args = drake::default_system2_args(jobs = jobs, verbose = verbose),
+  return_config = FALSE){
   force(envir)
   parallelism = match.arg(arg = parallelism, 
     choices = parallelism_choices())
@@ -135,7 +150,13 @@ make = function(plan, targets = drake::possible_targets(plan),
   store_config(config)
   config$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")
+  if(imports_only){
+     config$graph = delete_vertices(config$graph, config$plan$target)
+     if(parallelism == "Makefile") parallelism = default_parallelism()
+  }
   get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
+  if(return_config) return(config)
+  else invisible()
 }
 
 next_targets = function(graph_remaining_targets){

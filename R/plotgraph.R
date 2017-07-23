@@ -10,6 +10,15 @@
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
+#' @param jobs The \code{outdated()} function is called internally, 
+#' and it needs to import objects and examine your 
+#' input files to see what has been updated. This could take some time,
+#' and parallel computing may be needed
+#' to speed up the process. The \code{jobs} argument is number of parallel jobs 
+#' to use for faster computation.
+#' @param parallelism Choice of parallel backend to speed up the computation.
+#' See \code{?parallelism_choices} for details. The Makefile option is not available
+#' here. Drake will try to pick the best option for your system by default.
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param graph an igraph object if one has already been built with 
 #' \code{\link{build_graph}()}. 
@@ -24,12 +33,14 @@
 #' plot_graph(my_plan) # The red nodes from before are now green.
 #' }
 plot_graph = function(plan, targets = drake::possible_targets(plan), 
-  envir = parent.frame(), verbose = FALSE, font_size = 20, graph = NULL, 
+  envir = parent.frame(), verbose = FALSE, jobs = 1, 
+  parallelism = drake::default_parallelism(), font_size = 20, graph = NULL, 
   navigationButtons = TRUE, ...){
   
   force(envir)
   raw_graph = dataframes_graph(plan = plan, targets = targets, 
-     envir = envir, verbose = verbose, font_size = font_size, graph = graph)
+     envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
+     font_size = font_size, graph = graph)
   
   out = visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) %>% 
@@ -55,6 +66,15 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
+#' @param jobs The \code{outdated()} function is called internally, 
+#' and it needs to import objects and examine your 
+#' input files to see what has been updated. This could take some time,
+#' and parallel computing may be needed
+#' to speed up the process. The \code{jobs} argument is number of parallel jobs 
+#' to use for faster computation.
+#' @param parallelism Choice of parallel backend to speed up the computation.
+#' See \code{?parallelism_choices} for details. The Makefile option is not available
+#' here. Drake will try to pick the best option for your system by default.
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param graph an igraph object if one has already been built with 
 #' \code{\link{build_graph}()}. 
@@ -71,7 +91,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #'   visHierarchicalLayout(direction = "LR")
 #' }
 dataframes_graph = function(plan, targets = drake::possible_targets(plan), 
-   envir = parent.frame(), verbose = FALSE, font_size = 20, graph = NULL){
+   envir = parent.frame(), verbose = FALSE, jobs = jobs, 
+   parallelism = drake::default_parallelism(), font_size = 20, graph = NULL){
   force(envir)
   if(is.null(graph))
     graph = build_graph(plan = plan, targets = targets, 
@@ -105,7 +126,7 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   nodes[missing, "color"] = missing_color
   
   outdated = outdated(plan = plan, targets = targets, envir = envir, 
-                      verbose = verbose)
+    verbose = verbose, jobs = jobs, parallelism = parallelism)
   nodes[targets, "status"] = "up-to-date"
   nodes[targets, "color"] = up_to_date_color
   nodes[outdated, "status"] = "outdated"
