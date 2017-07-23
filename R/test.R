@@ -6,7 +6,7 @@
 # at the top of debug.R.
 
 testopts = function(){list(
-  jobs = 1, # needs to be 1 for mclapply on Windows
+  jobs = 2, # needs to be 1 for mclapply on Windows
   parallelism = "parLapply") # use for shipped tests
  # parallelism = "mclapply")
  # parallelism = "Makefile")
