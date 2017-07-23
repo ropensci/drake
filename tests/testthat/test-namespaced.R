@@ -39,6 +39,8 @@ test_that("namespaced workflow works", {
     verbose = FALSE)
   fromcache = readd("base::list", character_only = TRUE)
   expect_equal(fromcache(1, "a"), list(1, "a"))
+  fromcache2 = readd("base:::c", character_only = TRUE)
+  expect_equal(fromcache2(1, 2), c(1, 2))
   ns = sort(c("base:::c", "base::list", "digest::digest"))
   expect_true(all(cached(list = ns)))
   expect_true(all(ns %in% imported()))
