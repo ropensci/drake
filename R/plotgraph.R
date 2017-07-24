@@ -74,7 +74,8 @@ render_graph = function(graph, navigationButtons = TRUE, ...){
   out = visNetwork(nodes = graph$nodes, edges = graph$edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
     visHierarchicalLayout(direction = "LR") %>%
-    visIgraphLayout(physics = FALSE, randomSeed = 2017) # increases performance
+    visIgraphLayout(physics = FALSE, randomSeed = 2017, # increases performance
+      layout = "layout_as_tree") 
   if(navigationButtons)
     out = visInteraction(out, navigationButtons = TRUE)
 out
