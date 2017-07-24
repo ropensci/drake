@@ -27,7 +27,7 @@ outdated(plan, targets = drake::possible_targets(plan),
 \item{prework}{same as for \code{\link{make}}}
 
 \item{config}{option internal runtime parameter list of 
-\code{\link{make}(..., return_config = TRUE)},
+\code{\link{make}(...)},
 produced with \code{\link{get_config}()}.
 Computing this
 in advance could save time if you plan multiple calls to 

@@ -90,8 +90,8 @@ default_parallelism = function(){
 #' here. Drake will try to pick the best option for your system by default.
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
-#' \code{\link{make}(..., return_config = TRUE)},
-#' produced with \code{\link{get_config}()}.
+#' @param config internal configuration list of \code{\link{make}(...)},
+#' produced also with \code{\link{get_config}()}.
 #' Computing this
 #' in advance could save time if you plan multiple calls to 
 #' \code{dataframes_graph()}.
