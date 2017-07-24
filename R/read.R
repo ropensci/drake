@@ -179,5 +179,5 @@ read_graph = function(plot = TRUE, path = getwd(), search = TRUE, ...){
   config = read_config(path = path, search = search)
   if(!plot) return(config$graph)
   else plot_graph(plan = config$plan, targets = drake::possible_targets(plan), 
-                  font_size = 20, graph = config$graph, ...)
+                  font_size = 20, graph = config$graph, config = config, ...)
 }

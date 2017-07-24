@@ -99,6 +99,8 @@ explore the dependency network,
 ```r
 outdated()
 plot_graph()
+dataframes_graph()
+render_graph()
 read_graph()
 deps()
 tracked()
@@ -121,6 +123,7 @@ debug your work,
 check()
 session()
 progress()
+get_config()
 read_config()
 ```
 
