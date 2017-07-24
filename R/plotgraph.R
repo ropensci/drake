@@ -91,7 +91,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #'   visHierarchicalLayout(direction = "LR")
 #' }
 dataframes_graph = function(plan, targets = drake::possible_targets(plan), 
-   envir = parent.frame(), verbose = FALSE, jobs = jobs, 
+   envir = parent.frame(), verbose = FALSE, jobs = 1, 
    parallelism = drake::default_parallelism(), font_size = 20, graph = NULL){
   force(envir)
   if(is.null(graph))

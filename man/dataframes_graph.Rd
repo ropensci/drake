@@ -5,7 +5,7 @@
 \title{Function \code{dataframes_graph}}
 \usage{
 dataframes_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = FALSE, jobs = jobs,
+  envir = parent.frame(), verbose = FALSE, jobs = 1,
   parallelism = drake::default_parallelism(), font_size = 20,
   graph = NULL)
 }
