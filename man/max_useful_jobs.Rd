@@ -5,9 +5,10 @@
 \title{Function \code{max_useful_jobs}}
 \usage{
 max_useful_jobs(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = FALSE, jobs = 1,
-  parallelism = drake::default_parallelism(), graph = NULL,
-  imports = c("files", "all", "none"))
+  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), config = NULL, imports = c("files", "all",
+  "none"))
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -32,8 +33,14 @@ to use for faster computation.}
 See \code{?parallelism_choices} for details. The Makefile option is not available
 here. Drake will try to pick the best option for your system by default.}
 
-\item{graph}{an igraph object if one has already been built with 
-\code{\link{build_graph}()}.}
+\item{packages}{same as for \code{\link{make}}}
+
+\item{prework}{same as for \code{\link{make}}
+\code{\link{make}(..., return_config = TRUE)},
+produced with \code{\link{get_config}()}.
+Computing this
+in advance could save time if you plan multiple calls to 
+\code{dataframes_graph()}.}
 
 \item{imports}{Set the \code{imports} argument to change your assumptions about 
 how fast objects/files are imported. Possible values:

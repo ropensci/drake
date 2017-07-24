@@ -88,8 +88,13 @@ default_parallelism = function(){
 #' @param parallelism Choice of parallel backend to speed up the computation.
 #' See \code{?parallelism_choices} for details. The Makefile option is not available
 #' here. Drake will try to pick the best option for your system by default.
-#' @param graph an igraph object if one has already been built with 
-#' \code{\link{build_graph}()}. 
+#' @param packages same as for \code{\link{make}}
+#' @param prework same as for \code{\link{make}}
+#' \code{\link{make}(..., return_config = TRUE)},
+#' produced with \code{\link{get_config}()}.
+#' Computing this
+#' in advance could save time if you plan multiple calls to 
+#' \code{dataframes_graph()}.
 #' @param imports Set the \code{imports} argument to change your assumptions about 
 #' how fast objects/files are imported. Possible values:
 #' \itemize{
@@ -129,13 +134,14 @@ default_parallelism = function(){
 #' max_useful_jobs(my_plan, imports = "none") # 4
 #' }
 max_useful_jobs = function(plan, targets = drake::possible_targets(plan), 
-  envir = parent.frame(), verbose = FALSE, jobs = 1, 
-  parallelism = drake::default_parallelism(), graph = NULL,
+  envir = parent.frame(), verbose = TRUE, jobs = 1, 
+  parallelism = drake::default_parallelism(), 
+  packages = (.packages()), prework = character(0), config = NULL,
   imports = c("files", "all", "none")){
   force(envir)
   nodes = dataframes_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
-    graph = graph)$nodes
+    packages = packages, prework = prework, config = config)$nodes
   imports = match.arg(imports)
   just_targets = intersect(nodes$id, plan$target)
   just_files = Filter(x = nodes$id, f = is_file)

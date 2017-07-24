@@ -5,9 +5,9 @@
 \title{Function \code{dataframes_graph}}
 \usage{
 dataframes_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = FALSE, jobs = 1,
-  parallelism = drake::default_parallelism(), font_size = 20,
-  graph = NULL)
+  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), font_size = 20, config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -32,10 +32,18 @@ to use for faster computation.}
 See \code{?parallelism_choices} for details. The Makefile option is not available
 here. Drake will try to pick the best option for your system by default.}
 
+\item{packages}{same as for \code{\link{make}}}
+
+\item{prework}{same as for \code{\link{make}}}
+
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{graph}{an igraph object if one has already been built with 
-\code{\link{build_graph}()}.}
+\item{config}{option internal runtime parameter list of 
+\code{\link{make}(..., return_config = TRUE)},
+produced with \code{\link{get_config}()}.
+Computing this
+in advance could save time if you plan multiple calls to 
+\code{dataframes_graph()}.}
 }
 \value{
 a list of three data frames: one for nodes, one for edges, and one for

@@ -1,3 +1,41 @@
+#' @title Function get_config
+#' @description Compute the internal runtime parameter list of 
+#' \code{\link{make}()}. This could save time if you are planning
+#' multiple function calls of functions like \code{\link{outdated}()}
+#' or \code{\link{plot_graph}()}.
+#' @export
+#' @seealso \code{\link{plan}}, \code{\link{make}}, \code{\link{plot_graph}}
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config = get_config(my_plan)
+#' outdated(my_plan, config = config)
+#' max_useful_jobs(my_plan, config = config)
+#' plot_graph(my_plan, config = config)
+#' dataframes_graph(my_plan, config = config)
+#' }
+#' @param plan same as for \code{\link{make}}
+#' @param targets same as for \code{\link{make}}
+#' @param envir same as for \code{\link{make}}
+#' @param verbose same as for \code{\link{make}}
+#' @param parallelism same as for \code{\link{make}}
+#' @param jobs same as for \code{\link{make}}
+#' @param packages same as for \code{\link{make}}
+#' @param prework same as for \code{\link{make}}
+get_config = function(plan, targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, 
+  parallelism = drake::default_parallelism(), jobs = 1,
+  packages = (.packages()), prework = character(0)){
+  force(envir)
+  config = make(imports_only = TRUE, return_config = TRUE,
+      plan = plan, targets = targets, envir = envir,
+      verbose = verbose, parallelism = parallelism, jobs = jobs,
+      packages = packages, prework = prework)
+  config$graph = build_graph(plan = plan, targets = targets, envir = envir,
+                             verbose = verbose)
+  config
+}
+
 config = function(plan, targets, envir, jobs,
   parallelism = drake::parallelism_choices(), verbose, packages,
   prework, prepend, command, args){

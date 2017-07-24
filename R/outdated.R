@@ -18,17 +18,21 @@
 #' @param jobs same as for \code{\link{make}}
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
+#' @param config option internal runtime parameter list of 
+#' \code{\link{make}(..., return_config = TRUE)},
+#' produced with \code{\link{get_config}()}.
+#' Computing this
+#' in advance could save time if you plan multiple calls to 
+#' \code{outdated()}.
 outdated =  function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, 
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0)){
+  packages = (.packages()), prework = character(0), config = NULL){
   force(envir)
-  config = make(imports_only = TRUE, return_config = TRUE,
-    plan = plan, targets = targets, envir = envir,
-    verbose = verbose, parallelism = parallelism, jobs = jobs,
-    packages = packages, prework = prework)
-  config$graph = build_graph(plan = plan, targets = targets, envir = envir,
-    verbose = verbose)
+  if(is.null(config))
+    config = get_config(plan = plan, targets = targets, envir = envir,
+      verbose = verbose, parallelism = parallelism, jobs = jobs,
+      packages = packages, prework = prework)
 
   all_targets = intersect(V(config$graph)$name, config$plan$target)
   rebuild = Filter(x = all_targets, f = function(target){

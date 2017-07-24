@@ -5,9 +5,10 @@
 \title{Function \code{plot_graph}}
 \usage{
 plot_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = FALSE, jobs = 1,
-  parallelism = drake::default_parallelism(), font_size = 20,
-  graph = NULL, navigationButtons = TRUE, ...)
+  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), config = NULL, font_size = 20,
+  navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -32,10 +33,18 @@ to use for faster computation.}
 See \code{?parallelism_choices} for details. The Makefile option is not available
 here. Drake will try to pick the best option for your system by default.}
 
-\item{font_size}{numeric, font size of the node labels in the graph}
+\item{packages}{same as for \code{\link{make}()}.}
 
-\item{graph}{an igraph object if one has already been built with 
-\code{\link{build_graph}()}.}
+\item{prework}{same as for \code{\link{make}()}.}
+
+\item{config}{option internal runtime parameter list of 
+\code{\link{make}(..., return_config = TRUE)},
+produced with \code{\link{get_config}()}.
+Computing this
+in advance could save time if you plan multiple calls to 
+\code{outdated()}.}
+
+\item{font_size}{numeric, font size of the node labels in the graph}
 
 \item{navigationButtons}{logical, whether to add navigation buttons with 
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
@@ -45,6 +54,8 @@ here. Drake will try to pick the best option for your system by default.}
 \description{
 Plot the dependency structure of your workflow.
 IMPORTANT: you must be in the root directory of your project.
+To save time for repeated plotting, this function is divided into
+\code{\link{dataframes_graph}()} and \code{\link{render_graph}()}.
 }
 \examples{
 \dontrun{
