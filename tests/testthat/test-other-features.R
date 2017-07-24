@@ -81,7 +81,7 @@ test_that("graph functions work", {
   config = dbug()
   expect_equal(class(build_graph(config$plan)), "igraph")
   pdf(NULL)
-  expect_silent(plot_graph(plan = config$plan, envir = config$envir))
+  expect_silent(plot_graph(plan = config$plan, envir = config$envir, verbose = FALSE))
   dev.off()
   unlink("Rplots.pdf")
   dclean()
