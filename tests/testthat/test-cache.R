@@ -43,8 +43,7 @@ test_that("cache functions work", {
   newconfig = read_config(search = FALSE)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = FALSE), config$plan)
-  expect_equal(class(read_graph(plot = FALSE, 
-    search = FALSE)), "igraph")
+  expect_equal(class(read_graph(search = FALSE)), "igraph")
   
   # imported , built, cached
   expect_equal(imported(files_only = FALSE, search = FALSE), imports)
@@ -129,8 +128,7 @@ test_that("cache functions work", {
   newconfig = read_config(search = TRUE, path = s)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = TRUE, path = s), config$plan)
-  expect_equal(class(read_graph(plot = FALSE, 
-    search = TRUE, path = s)), "igraph")
+  expect_equal(class(read_graph(search = TRUE, path = s)), "igraph")
   
   # load and read stuff
   expect_true(is.numeric(readd(a, path = s, search = T)))
@@ -144,13 +142,13 @@ test_that("cache functions work", {
   # Read the graph
   pdf(NULL)
   tmp = dbug()
-  read_graph(plot = TRUE, search = TRUE, path = s)
+  read_graph(search = TRUE, path = s)
   tmp = capture.output(dev.off())
   unlink("Rplots.pdf")
   dclean()
   setwd("testthat")
   pdf(NULL)
-  read_graph(plot = TRUE, search = FALSE)
+  read_graph(search = FALSE)
   tmp = capture.output(dev.off())
   unlink("Rplots.pdf")
   pdf(NULL)
