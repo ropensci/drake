@@ -8,7 +8,7 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), config = NULL, font_size = 20,
-  navigationButtons = TRUE, ...)
+  layout = "layout_as_tree", navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -45,6 +45,9 @@ in advance could save time if you plan multiple calls to
 \code{outdated()}.}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
+
+\item{layout}{name of an igraph layout to use, such as "layout_with_sugiyama"
+or "layout_as_tree"}
 
 \item{navigationButtons}{logical, whether to add navigation buttons with 
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
