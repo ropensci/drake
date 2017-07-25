@@ -26,6 +26,10 @@
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param layout name of an igraph layout to use, such as "layout_with_sugiyama"
 #' or "layout_as_tree"
+#' @param direction an argument to \code{visNetwork::visHierarchicalLayout()}
+#' indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
+#' At the time of writing this, the letters must be capitalized, 
+#' but this may not always be the case ;) in the future.
 #' @param navigationButtons logical, whether to add navigation buttons with 
 #' \code{visNetwork::visInteraction(navigationButtons = TRUE)}
 #' @param config option internal runtime parameter list of 
@@ -46,14 +50,16 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1, 
   parallelism = drake::default_parallelism(), 
   packages = (.packages()), prework = character(0), config = NULL,
-  font_size = 20, layout = "layout_as_tree", navigationButtons = TRUE, ...){
+  font_size = 20, layout = "layout_as_tree", direction = "LR",
+  navigationButtons = TRUE, ...){
   
   force(envir)
   raw_graph = dataframes_graph(plan = plan, targets = targets, 
      envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
      packages = packages, prework = prework, config = config,
      font_size = font_size)
-  render_graph(raw_graph, layout = layout, navigationButtons = navigationButtons, ...)
+  render_graph(raw_graph, layout = layout, direction = direction,
+               navigationButtons = navigationButtons, ...)
 }
 
 #' @title Function \code{render_graph}
@@ -65,6 +71,10 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' and \code{legend_nodes}.
 #' @param layout name of an igraph layout to use, such as "layout_with_sugiyama"
 #' or "layout_as_tree"
+#' @param direction an argument to \code{visNetwork::visHierarchicalLayout()}
+#' indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
+#' At the time of writing this, the letters must be capitalized, 
+#' but this may not always be the case ;) in the future.
 #' @param navigationButtons logical, whether to add navigation buttons with 
 #' \code{visNetwork::visInteraction(navigationButtons = TRUE)}
 #' @param ... arguments passed to \code{visNetwork()}.
@@ -74,11 +84,11 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' graph = dataframes_graph(my_plan)
 #' render_graph(graph, width = "100%") # The width is passed to visNetwork().
 #' }
-render_graph = function(graph, layout = "layout_as_tree", 
+render_graph = function(graph, layout = "layout_as_tree", direction = "LR",
   navigationButtons = TRUE, ...){
   out = visNetwork(nodes = graph$nodes, edges = graph$edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
-    visHierarchicalLayout(direction = "LR") %>%
+    visHierarchicalLayout(direction = direction) %>%
     visIgraphLayout(physics = FALSE, randomSeed = 2017, # increases performance
       layout = layout) 
   if(navigationButtons)

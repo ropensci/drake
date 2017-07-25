@@ -8,7 +8,8 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), config = NULL, font_size = 20,
-  layout = "layout_as_tree", navigationButtons = TRUE, ...)
+  layout = "layout_as_tree", direction = "LR", navigationButtons = TRUE,
+  ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -48,6 +49,11 @@ in advance could save time if you plan multiple calls to
 
 \item{layout}{name of an igraph layout to use, such as "layout_with_sugiyama"
 or "layout_as_tree"}
+
+\item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
+indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
+At the time of writing this, the letters must be capitalized, 
+but this may not always be the case ;) in the future.}
 
 \item{navigationButtons}{logical, whether to add navigation buttons with 
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
