@@ -418,7 +418,7 @@ max_useful_jobs(my_plan) # 8
 max_useful_jobs(my_plan, imports = "files") # 8
 max_useful_jobs(my_plan, imports = "all") # 10
 max_useful_jobs(my_plan, imports = "none") # 8
-make(my_plan)
+make(my_plan, jobs = 4)
 plot_graph(my_plan)
 # Ignore the targets already built.
 max_useful_jobs(my_plan) # 1
