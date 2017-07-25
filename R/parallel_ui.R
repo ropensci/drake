@@ -91,7 +91,7 @@ default_parallelism = function(){
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
 #' @param config internal configuration list of \code{\link{make}(...)},
-#' produced also with \code{\link{get_config}()}.
+#' produced also with \code{\link{config}()}.
 #' Computing this
 #' in advance could save time if you plan multiple calls to 
 #' \code{dataframes_graph()}.

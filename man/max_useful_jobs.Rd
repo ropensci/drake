@@ -38,7 +38,7 @@ here. Drake will try to pick the best option for your system by default.}
 \item{prework}{same as for \code{\link{make}}}
 
 \item{config}{internal configuration list of \code{\link{make}(...)},
-produced also with \code{\link{get_config}()}.
+produced also with \code{\link{config}()}.
 Computing this
 in advance could save time if you plan multiple calls to 
 \code{dataframes_graph()}.}

@@ -141,7 +141,7 @@ make = function(plan, targets = drake::possible_targets(plan),
   force(envir)
   parallelism = match.arg(arg = parallelism, 
     choices = parallelism_choices())
-  config = config(plan = plan, targets = targets, envir = envir, 
+  config = build_config(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, parallelism = parallelism,
     jobs = jobs, packages = packages, prework = prework, 
     prepend = prepend, command = command, args = args)

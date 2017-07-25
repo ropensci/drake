@@ -28,7 +28,7 @@ outdated(plan, targets = drake::possible_targets(plan),
 
 \item{config}{option internal runtime parameter list of 
 \code{\link{make}(...)},
-produced with \code{\link{get_config}()}.
+produced with \code{\link{config}()}.
 Computing this
 in advance could save time if you plan multiple calls to 
 \code{outdated()}.}

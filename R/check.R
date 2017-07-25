@@ -19,7 +19,7 @@
 check = function(plan, targets = drake::possible_targets(plan), 
   envir = parent.frame()){
   force(envir)
-  config = config(plan = plan, targets = targets, envir = envir, 
+  config = build_config(plan = plan, targets = targets, envir = envir, 
     verbose = TRUE, parallelism = "mclapply", 
     jobs = 1, packages = character(0), prepend = character(0),
     prework = character(0), command = character(0), 

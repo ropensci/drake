@@ -123,7 +123,7 @@ debug your work,
 check()
 session()
 progress()
-get_config()
+config()
 read_config()
 ```
 

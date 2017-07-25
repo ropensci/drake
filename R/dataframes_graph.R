@@ -27,7 +27,7 @@
 #' @param prework same as for \code{\link{make}}
 #' @param config option internal runtime parameter list of 
 #' \code{\link{make}(...)},
-#' produced with \code{\link{get_config}()}.
+#' produced with \code{\link{config}()}.
 #' Computing this
 #' in advance could save time if you plan multiple calls to 
 #' \code{dataframes_graph()}.
@@ -51,7 +51,7 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   
   force(envir)
   if(is.null(config))
-    config = get_config(plan = plan, targets = targets, envir = envir,
+    config = config(plan = plan, targets = targets, envir = envir,
                         verbose = verbose, parallelism = parallelism, jobs = jobs,
                         packages = packages, prework = prework)
   graph = config$graph
