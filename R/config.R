@@ -2,9 +2,12 @@
 #' @description Compute the internal runtime parameter list of 
 #' \code{\link{make}()}. This could save time if you are planning
 #' multiple function calls of functions like \code{\link{outdated}()}
-#' or \code{\link{plot_graph}()}.
-#' The result differs from \code{\link{make}(..., return_config = TRUE)}
-#' because the graph includes both the targets and the imports,
+#' or \code{\link{plot_graph}()}. Drake needs to import and cache files 
+#' and objects to compute the configuration list, which in turn 
+#' supports user-side functions to help with visualization and parallelism.
+#' The result differs from 
+#' \code{\link{make}(..., imports_only = TRUE, return_config = TRUE)}
+#' in that the graph includes both the targets and the imports,
 #' not just the imports.
 #' @export
 #' @seealso \code{\link{plan}}, \code{\link{make}}, \code{\link{plot_graph}}
