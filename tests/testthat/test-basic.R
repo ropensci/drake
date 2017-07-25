@@ -11,7 +11,7 @@ test_that("basic example works", {
 
   load_basic_example(envir = e)
   my_plan = e$my_plan
-  config = get_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   tmp = plot_graph(my_plan, envir = e, config = config)
   expect_false(file.exists("Makefile"))
@@ -34,7 +34,7 @@ test_that("basic example works", {
 
   make(my_plan, envir = e, verbose = FALSE,
     jobs = jobs, parallelism = parallelism)
-  config = get_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
   expect_equal(outdated(my_plan, envir = e, jobs = jobs,
@@ -51,7 +51,7 @@ test_that("basic example works", {
     d$x3 = d$x^3
     lm(y ~ x3, data = d)
   }
-  config = get_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, jobs = jobs, config = config)),
     sort(c("'report.md'", "coef_regression2_large", "coef_regression2_small",
@@ -67,7 +67,7 @@ test_that("basic example works", {
 
   make(my_plan, envir = e, verbose = FALSE,
     jobs = jobs, parallelism = parallelism)
-  config = get_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, config = config)), character(0))
   tmp = NULL
