@@ -46,5 +46,6 @@ outdated(my_plan)
 }
 }
 \seealso{
-\code{\link{plan}}, \code{\link{make}}, \code{\link{plot_graph}}
+\code{\link{missed}}, \code{\link{plan}}, 
+\code{\link{make}}, \code{\link{plot_graph}}
 }

@@ -60,6 +60,7 @@ gather()
 explore the dependency network,
 ```r
 outdated()
+missed()
 plot_graph()
 dataframes_graph()
 render_graph()

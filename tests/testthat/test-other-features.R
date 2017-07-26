@@ -1,6 +1,16 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("missed() works", {
+  dclean()
+  o = dbug()
+  expect_equal(character(0), missed(o$plan, envir = o$envir, verbose = F))
+  rm(list = c("f", "g"), envir = o$envir)
+  expect_equal(sort(c("f", "g")), 
+               sort(missed(o$plan, envir = o$envir, verbose = F)))
+  dclean()
+})
+
 test_that("shell_file() writes correctly", {
   expect_false(file.exists("shell.sh"))
   shell_file()

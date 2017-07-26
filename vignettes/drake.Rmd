@@ -67,6 +67,8 @@ library(drake)
 load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
 plot_graph(my_plan) # Graph the workflow.
 outdated(my_plan) # Which targets need to be (re)built?
+missed(my_plan) # Are you missing anything from your workspace?
+check(my_plan) # Are you missing files? Is your workflow plan okay?
 make(my_plan) # Run the workflow.
 outdated(my_plan) # Everything is up to date.
 plot_graph(my_plan) # The graph also shows what is up to date.
@@ -105,6 +107,7 @@ gather()
 explore the dependency network,
 ```r
 outdated()
+missed()
 plot_graph()
 dataframes_graph()
 render_graph()
