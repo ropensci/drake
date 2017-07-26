@@ -13,7 +13,8 @@ test_that("basic example works", {
   my_plan = e$my_plan
   config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  tmp = plot_graph(my_plan, envir = e, config = config)
+  # Just check for errors in plotting. There may be visNetwork/plot window issues in R-devel.
+  suppressWarnings(tmp <- plot_graph(my_plan, envir = e, config = config))
   expect_false(file.exists("Makefile"))
   tmp = dataframes_graph(my_plan, envir = e, config = config)
   expect_false(file.exists("Makefile"))
@@ -71,8 +72,9 @@ test_that("basic example works", {
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, config = config)), character(0))
   tmp = NULL
-  tmp = plot_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+  # Just check for errors in plotting. There may be visNetwork/plot window issues in R-devel.
+  suppressWarnings(tmp <- plot_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = FALSE))
   tmp = dataframes_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_true(all(sapply(tmp, is.data.frame)))
