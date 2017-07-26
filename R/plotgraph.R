@@ -93,5 +93,5 @@ render_graph = function(graph, layout = "layout_as_tree", direction = "LR",
       layout = layout) 
   if(navigationButtons)
     out = visInteraction(out, navigationButtons = TRUE)
-out
+  out
 }
