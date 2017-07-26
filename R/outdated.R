@@ -76,7 +76,7 @@ outdated =  function(plan, targets = drake::possible_targets(plan),
 #' produced with \code{\link{config}()}.
 #' Computing this
 #' in advance could save time if you plan multiple calls to 
-#' \code{dataframes_graph()}.
+#' \code{missed()}.
 #' @examples
 #' \dontrun{
 #' load_basic_example()

@@ -43,7 +43,7 @@ here. Drake will try to pick the best option for your system by default.}
 produced with \code{\link{config}()}.
 Computing this
 in advance could save time if you plan multiple calls to 
-\code{dataframes_graph()}.}
+\code{missed()}.}
 }
 \description{
 Report any import objects required by your workflow
