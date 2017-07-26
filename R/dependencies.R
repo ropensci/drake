@@ -66,8 +66,17 @@ find_namespaced_functions = function(f, found = character(0)){
   found
 }
 
+is_vectorized = function(funct){
+  if(!is.function(funct)) return(FALSE)
+  vectorized_names = "FUN" # Chose not to include other names.
+  if(!all(vectorized_names %in% ls(environment(funct)))) return(FALSE)
+  f = environment(funct)[["FUN"]]
+  is.function(f)
+}
+
 function_dependencies = function(funct){
   if(typeof(funct) != "closure") funct = function(){}
+  if(is_vectorized(funct)) funct = environment(funct)[["FUN"]]
   out = findGlobals(funct, merge = FALSE)
   namespaced = find_namespaced_functions(funct)
   out$functions = c(out$functions, namespaced) %>% sort

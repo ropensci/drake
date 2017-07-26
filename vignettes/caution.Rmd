@@ -128,6 +128,23 @@ command = "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
 deps(command)
 ```
 
+With functions produced by `Vectorize()`, detecting dependencies is especially hard because the body of every such a function is 
+
+```r
+{
+    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
+    names <- if (is.null(names(args))) 
+        character(length(args))
+    else names(args)
+    dovec <- names %in% vectorize.args
+    do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
+        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+}
+```
+
+Thus, If `f <- Vectorize(g, ...)` is such a function, drake searches `g()` for dependencies, not `f()`. Specifically, if drake sees that `environment(f)[["FUN"]]` exists and is a function, then `environment(f)[["FUN"]]` will be searched instead of `f()`.
+
+
 ## Compiled code is not reproducibly tracked.
 
 Some R functions use `.Call()` to run compiled code in the backend. The R code in these functions is tracked, but not the compiled code called with `.Call()`.
