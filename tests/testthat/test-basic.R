@@ -17,6 +17,7 @@ test_that("basic example works", {
   suppressWarnings(tmp <- plot_graph(my_plan, envir = e, config = config))
   expect_false(file.exists("Makefile"))
   tmp = dataframes_graph(my_plan, envir = e, config = config)
+  tmp = dataframes_graph(my_plan, envir = e, config = config, targets_only = TRUE)
   expect_false(file.exists("Makefile"))
   expect_true(all(sapply(tmp, is.data.frame)))
   expect_equal(sort(outdated(my_plan, envir = e, config = config)),

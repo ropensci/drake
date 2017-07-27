@@ -23,6 +23,8 @@
 #' here. Drake will try to pick the best option for your system by default.
 #' @param packages same as for \code{\link{make}()}.
 #' @param prework same as for \code{\link{make}()}.
+#' @param targets_only logical, whether to skip the imports and only show the 
+#' targets in the workflow plan.
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param layout name of an igraph layout to use, such as "layout_with_sugiyama"
 #' or "layout_as_tree"
@@ -49,15 +51,15 @@
 plot_graph = function(plan, targets = drake::possible_targets(plan), 
   envir = parent.frame(), verbose = TRUE, jobs = 1, 
   parallelism = drake::default_parallelism(), 
-  packages = (.packages()), prework = character(0), config = NULL,
+  packages = (.packages()), prework = character(0), targets_only = FALSE, config = NULL,
   font_size = 20, layout = "layout_as_tree", direction = "LR",
   navigationButtons = TRUE, ...){
   
   force(envir)
   raw_graph = dataframes_graph(plan = plan, targets = targets, 
      envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
-     packages = packages, prework = prework, config = config,
-     font_size = font_size)
+     packages = packages, prework = prework, targets_only = targets_only,
+     config = config, font_size = font_size)
   render_graph(raw_graph, layout = layout, direction = direction,
                navigationButtons = navigationButtons, ...)
 }

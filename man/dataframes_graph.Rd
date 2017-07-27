@@ -7,7 +7,8 @@
 dataframes_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), font_size = 20, config = NULL)
+  prework = character(0), targets_only = FALSE, font_size = 20,
+  config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -35,6 +36,9 @@ here. Drake will try to pick the best option for your system by default.}
 \item{packages}{same as for \code{\link{make}}}
 
 \item{prework}{same as for \code{\link{make}}}
+
+\item{targets_only}{logical, whether to skip the imports and only include the 
+targets in the workflow plan.}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 

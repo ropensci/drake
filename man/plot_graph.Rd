@@ -7,9 +7,9 @@
 plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), config = NULL, font_size = 20,
-  layout = "layout_as_tree", direction = "LR", navigationButtons = TRUE,
-  ...)
+  prework = character(0), targets_only = FALSE, config = NULL,
+  font_size = 20, layout = "layout_as_tree", direction = "LR",
+  navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -37,6 +37,9 @@ here. Drake will try to pick the best option for your system by default.}
 \item{packages}{same as for \code{\link{make}()}.}
 
 \item{prework}{same as for \code{\link{make}()}.}
+
+\item{targets_only}{logical, whether to skip the imports and only show the 
+targets in the workflow plan.}
 
 \item{config}{option internal runtime parameter list of 
 \code{\link{make}(...)},

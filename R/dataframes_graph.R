@@ -25,6 +25,8 @@
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
+#' @param targets_only logical, whether to skip the imports and only include the 
+#' targets in the workflow plan.
 #' @param config option internal runtime parameter list of 
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -47,7 +49,7 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
                             envir = parent.frame(), verbose = TRUE, jobs = 1, 
                             parallelism = drake::default_parallelism(), 
                             packages = (.packages()), prework = character(0),
-                            font_size = 20, config = NULL){
+                            targets_only = FALSE, font_size = 20, config = NULL){
   
   force(envir)
   if(is.null(config))
@@ -108,6 +110,10 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
     font.size = font_size)
   legend_nodes$id = seq_len(nrow(legend_nodes))
   
+  if(targets_only){
+    nodes = nodes[targets,]
+    edges = edges[edges$from %in% targets & edges$to %in% targets,]
+  }
   list(nodes = nodes, edges = edges, legend_nodes = legend_nodes) 
 }
 
