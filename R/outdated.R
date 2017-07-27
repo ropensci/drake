@@ -96,15 +96,7 @@ missed = function(plan, targets = drake::possible_targets(plan),
                     verbose = verbose, parallelism = parallelism, jobs = jobs,
                     packages = packages, prework = prework)
   graph = config$graph
-  
-  network_data = toVisNetworkData(graph)
-  nodes = network_data$nodes
-  edges = network_data$edges
-  if(!nrow(nodes)) return(invisible(character(0)))
-  
-  imports = setdiff(nodes$id, plan$target)
-  functions = Filter(x = imports, f = function(x) 
-    is.function(envir[[x]]) | can_get_function(x))
+  imports = setdiff(V(graph)$name, plan$target)
   missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
   if(!length(missing)) return(invisible(character(0)))
   missing

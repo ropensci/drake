@@ -41,11 +41,12 @@ not just the imports.
 \examples{
 \dontrun{
 load_basic_example()
-config = config(my_plan)
-outdated(my_plan, config = config)
-max_useful_jobs(my_plan, config = config)
-plot_graph(my_plan, config = config)
-dataframes_graph(my_plan, config = config)
+con = config(my_plan)
+outdated(my_plan, config = con)
+missed(my_plan, config = con)
+max_useful_jobs(my_plan, config = con)
+plot_graph(my_plan, config = con)
+dataframes_graph(my_plan, config = con)
 }
 }
 \seealso{
