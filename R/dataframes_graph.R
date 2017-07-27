@@ -69,6 +69,7 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   
   network_data = toVisNetworkData(graph)
   nodes = network_data$nodes
+  rownames(nodes) = nodes$label
   edges = network_data$edges
   if(!nrow(nodes)) return(null_graph())
   
