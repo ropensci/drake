@@ -297,6 +297,7 @@ Just `make(my_plan)`.
 
 ```{r firstmake}
 outdated(my_plan) # These are the targets that need to be (re)built.
+missed(my_plan) # Make sure nothing is missing from your workspace.
 make(my_plan)
 ```
 

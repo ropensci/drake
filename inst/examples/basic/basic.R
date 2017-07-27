@@ -152,6 +152,7 @@ clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 # All the targets in the plan are "outdated" because we have not made them yet.
 outdated(my_plan, verbose = FALSE)
 # plot_graph(my_plan) # Show how the pieces of your workflow are connected
+missed(my_plan) # Nothing should be missing from your workspace.
 
 make(my_plan) # Run your project.
 # The non-file dependencies of your last target are already loaded
