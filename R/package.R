@@ -47,6 +47,6 @@
 #' @importFrom testthat expect_true
 #' @importFrom tools md5sum
 #' @importFrom utils sessionInfo unzip
-#' @importFrom visNetwork toVisNetworkData visHierarchicalLayout 
+#' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout 
 #' visIgraphLayout visInteraction visLegend visNetwork
 NULL
