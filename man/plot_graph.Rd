@@ -9,7 +9,7 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), targets_only = FALSE, config = NULL,
   font_size = 20, layout = "layout_as_tree", direction = "LR",
-  navigationButtons = TRUE, ...)
+  navigationButtons = TRUE, hover = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -60,6 +60,10 @@ but this may not always be the case ;) in the future.}
 
 \item{navigationButtons}{logical, whether to add navigation buttons with 
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
+
+\item{hover}{logical, whether to show the command that generated the target
+when you hover over a node with the mouse. For imports, the label does not
+change with hovering.}
 
 \item{...}{other arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
 }

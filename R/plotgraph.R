@@ -34,6 +34,9 @@
 #' but this may not always be the case ;) in the future.
 #' @param navigationButtons logical, whether to add navigation buttons with 
 #' \code{visNetwork::visInteraction(navigationButtons = TRUE)}
+#' @param hover logical, whether to show the command that generated the target
+#' when you hover over a node with the mouse. For imports, the label does not
+#' change with hovering.
 #' @param config option internal runtime parameter list of 
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -53,7 +56,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), 
   packages = (.packages()), prework = character(0), targets_only = FALSE, config = NULL,
   font_size = 20, layout = "layout_as_tree", direction = "LR",
-  navigationButtons = TRUE, ...){
+  navigationButtons = TRUE, hover = TRUE, ...){
   
   force(envir)
   raw_graph = dataframes_graph(plan = plan, targets = targets, 
@@ -61,7 +64,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
      packages = packages, prework = prework, targets_only = targets_only,
      config = config, font_size = font_size)
   render_graph(raw_graph, layout = layout, direction = direction,
-               navigationButtons = navigationButtons, ...)
+               navigationButtons = navigationButtons, hover = hover, ...)
 }
 
 #' @title Function \code{render_graph}
@@ -79,6 +82,9 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' but this may not always be the case ;) in the future.
 #' @param navigationButtons logical, whether to add navigation buttons with 
 #' \code{visNetwork::visInteraction(navigationButtons = TRUE)}
+#' @param hover logical, whether to show the command that generated the target
+#' when you hover over a node with the mouse. For imports, the label does not
+#' change with hovering.
 #' @param ... arguments passed to \code{visNetwork()}.
 #' @examples
 #' \dontrun{
@@ -87,7 +93,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' render_graph(graph, width = "100%") # The width is passed to visNetwork().
 #' }
 render_graph = function(graph, layout = "layout_as_tree", direction = "LR",
-  navigationButtons = TRUE, ...){
+  navigationButtons = TRUE, hover = TRUE, ...){
   out = visNetwork(nodes = graph$nodes, edges = graph$edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
     visHierarchicalLayout(direction = direction) %>%
@@ -95,5 +101,31 @@ render_graph = function(graph, layout = "layout_as_tree", direction = "LR",
       layout = layout) 
   if(navigationButtons)
     out = visInteraction(out, navigationButtons = TRUE)
+  if(hover)
+    out = with_hover(out)
   out
+}
+
+with_hover = function(x){
+  visInteraction(x, hover = T) %>%
+    visEvents(hoverNode  = "function(e){
+              var label_info = this.body.data.nodes.get({
+              fields: ['label', 'hover_label'],
+              filter: function (item) {
+              return item.id === e.node
+              },
+              returnType :'Array'
+              });
+              this.body.data.nodes.update({id: e.node, label : label_info[0].hover_label, hover_label : label_info[0].label});
+  }") %>% 
+  visEvents(blurNode  = "function(e){
+            var label_info = this.body.data.nodes.get({
+            fields: ['label', 'hover_label'],
+            filter: function (item) {
+            return item.id === e.node
+            },
+            returnType :'Array'
+            });
+            this.body.data.nodes.update({id: e.node, label : label_info[0].hover_label, hover_label : label_info[0].label});
+  }")
 }

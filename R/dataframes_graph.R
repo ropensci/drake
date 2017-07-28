@@ -98,6 +98,10 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   nodes[is_file(nodes$id), "shape"] = file_shape
   nodes[functions, "shape"] = function_shape
   
+  nodes$hover_label = nodes$id
+  rownames(plan) = plan$target
+  nodes[targets, "hover_label"] = plan[targets, "command"]
+  
   if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
