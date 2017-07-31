@@ -91,8 +91,7 @@ test_that("graph functions work", {
   config = dbug()
   expect_equal(class(build_graph(config$plan)), "igraph")
   pdf(NULL)
-  # Just check for errors in plotting. There may be visNetwork/plot window issues in R-devel.
-  suppressWarnings(tmp <- plot_graph(plan = config$plan, envir = config$envir, verbose = FALSE))
+  tmp = plot_graph(plan = config$plan, envir = config$envir, verbose = FALSE)
   dev.off()
   unlink("Rplots.pdf")
   dclean()
