@@ -8,7 +8,7 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), targets_only = FALSE, config = NULL,
-  font_size = 20, layout = "layout_as_tree", direction = "LR",
+  font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, ...)
 }
 \arguments{
@@ -51,7 +51,8 @@ in advance could save time if you plan multiple calls to
 \item{font_size}{numeric, font size of the node labels in the graph}
 
 \item{layout}{name of an igraph layout to use, such as "layout_with_sugiyama"
-or "layout_as_tree"}
+or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
+acyclic graph, but not necessarily a tree.}
 
 \item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
 indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".

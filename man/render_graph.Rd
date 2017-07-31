@@ -4,7 +4,7 @@
 \alias{render_graph}
 \title{Function \code{render_graph}}
 \usage{
-render_graph(graph, layout = "layout_as_tree", direction = "LR",
+render_graph(graph, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, ...)
 }
 \arguments{
@@ -13,7 +13,8 @@ There should be 3 data frames: \code{nodes}, \code{edges},
 and \code{legend_nodes}.}
 
 \item{layout}{name of an igraph layout to use, such as "layout_with_sugiyama"
-or "layout_as_tree"}
+or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
+acyclic graph, but not necessarily a tree.}
 
 \item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
 indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".

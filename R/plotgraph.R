@@ -27,7 +27,8 @@
 #' targets in the workflow plan.
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param layout name of an igraph layout to use, such as "layout_with_sugiyama"
-#' or "layout_as_tree"
+#' or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
+#' acyclic graph, but not necessarily a tree.
 #' @param direction an argument to \code{visNetwork::visHierarchicalLayout()}
 #' indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
 #' At the time of writing this, the letters must be capitalized, 
@@ -55,7 +56,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1, 
   parallelism = drake::default_parallelism(), 
   packages = (.packages()), prework = character(0), targets_only = FALSE, config = NULL,
-  font_size = 20, layout = "layout_as_tree", direction = "LR",
+  font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, ...){
   
   force(envir)
@@ -75,7 +76,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' There should be 3 data frames: \code{nodes}, \code{edges}, 
 #' and \code{legend_nodes}.
 #' @param layout name of an igraph layout to use, such as "layout_with_sugiyama"
-#' or "layout_as_tree"
+#' or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
+#' acyclic graph, but not necessarily a tree.
 #' @param direction an argument to \code{visNetwork::visHierarchicalLayout()}
 #' indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
 #' At the time of writing this, the letters must be capitalized, 
@@ -92,7 +94,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' graph = dataframes_graph(my_plan)
 #' render_graph(graph, width = "100%") # The width is passed to visNetwork().
 #' }
-render_graph = function(graph, layout = "layout_as_tree", direction = "LR",
+render_graph = function(graph, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, ...){
   out = visNetwork(nodes = graph$nodes, edges = graph$edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
