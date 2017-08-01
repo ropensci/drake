@@ -76,7 +76,7 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   targets = intersect(nodes$id, plan$target)
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(x = imports, f = function(x) 
-    is.function(envir[[x]]) | can_get_function(x))
+    can_get_function(x, envir = envir))
   missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
   
   nodes = resolve_levels(nodes, graph)
@@ -122,9 +122,9 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   list(nodes = nodes, edges = edges, legend_nodes = legend_nodes) 
 }
 
-can_get_function = function(x){
+can_get_function = function(x, envir){
   tryCatch({
-    is.function(get(x))
+    is.function(eval(parse(text = x), envir = envir))
   }, error = function(e) FALSE)
 }
 
