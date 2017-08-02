@@ -7,9 +7,9 @@
 plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), targets_only = FALSE, config = NULL,
-  font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE, ...)
+  prework = character(0), file = character(0), targets_only = FALSE,
+  config = NULL, font_size = 20, layout = "layout_with_sugiyama",
+  direction = "LR", navigationButtons = TRUE, hover = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -37,6 +37,9 @@ here. Drake will try to pick the best option for your system by default.}
 \item{packages}{same as for \code{\link{make}()}.}
 
 \item{prework}{same as for \code{\link{make}()}.}
+
+\item{file}{Name of HTML file to save the graph. If \code{NULL} or \code{character(0)},
+no file is saved and the graph is rendered and displayed within R.}
 
 \item{targets_only}{logical, whether to skip the imports and only show the 
 targets in the workflow plan.}
