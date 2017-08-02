@@ -62,6 +62,7 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   import_color = "#1874cd"
   up_to_date_color = "#228b22"
   outdated_color = "#aa0000"
+  in_progress_color = "#ff7221"
   missing_color = "#9a32cd"
   generic_shape = "dot"
   file_shape = "square"
@@ -94,6 +95,10 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   nodes[outdated, "status"] = "outdated"
   nodes[outdated, "color"] = outdated_color
   
+  in_prog = in_progress()
+  nodes[in_prog, "status"] = "in progress"
+  nodes[in_prog, "color"] = in_progress_color
+  
   nodes$shape = generic_shape
   nodes[is_file(nodes$id), "shape"] = file_shape
   nodes[functions, "shape"] = function_shape
@@ -105,12 +110,12 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   if(nrow(edges)) edges$arrows = "to"
   
   legend_nodes = data.frame(
-    label = c("Up to date", "Outdated", "Imported", "Missing", 
-              "Object", "Function", "File"),
-    color = c(up_to_date_color, outdated_color, import_color, missing_color, 
-              generic_color, generic_color, generic_color),
+    label = c("Up to date", "In progress", "Outdated", "Imported", "Missing", 
+      "Object", "Function", "File"),
+    color = c(up_to_date_color, in_progress_color, outdated_color, import_color, 
+      missing_color, generic_color, generic_color, generic_color),
     shape = c(generic_shape, generic_shape, generic_shape, generic_shape, generic_shape, 
-              function_shape, file_shape),
+      generic_shape, function_shape, file_shape),
     font.color = "black",
     font.size = font_size)
   legend_nodes$id = seq_len(nrow(legend_nodes))

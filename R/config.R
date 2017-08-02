@@ -34,7 +34,7 @@ config = function(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0)){
   force(envir)
-  config = make(imports_only = TRUE, return_config = TRUE,
+  config = make(imports_only = TRUE, return_config = TRUE, clear_progress = FALSE,
       plan = plan, targets = targets, envir = envir,
       verbose = verbose, parallelism = parallelism, jobs = jobs,
       packages = packages, prework = prework)
@@ -45,14 +45,14 @@ config = function(plan, targets = drake::possible_targets(plan),
 
 build_config = function(plan, targets, envir, jobs,
   parallelism = drake::parallelism_choices(), verbose, packages,
-  prework, prepend, command, args){
+  prework, prepend, command, args, clear_progress = TRUE){
   plan = sanitize_plan(plan)
   targets = sanitize_targets(plan, targets)
   parallelism = match.arg(parallelism)
   prework = add_packages_to_prework(packages = packages,
     prework = prework)
   cache = storr_rds(cachepath, mangle_key = TRUE)
-  cache$clear(namespace = "progress")
+  if(clear_progress) cache$clear(namespace = "progress")
   graph = build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
   list(plan = plan, targets = targets, envir = envir, cache = cache,

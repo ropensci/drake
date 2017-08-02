@@ -114,6 +114,10 @@
 #' @param return_config logical, whether to return the internal list
 #' of runtime configuration parameters used by \code{make()}
 #' 
+#' @param clear_progress logical, whether to clear the saved record of 
+#' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
+#' before anything is imported or built.
+#' 
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -137,14 +141,15 @@ make = function(plan, targets = drake::possible_targets(plan),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make", 
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE){
+  return_config = FALSE, clear_progress = TRUE){
   force(envir)
   parallelism = match.arg(arg = parallelism, 
     choices = parallelism_choices())
   config = build_config(plan = plan, targets = targets, envir = envir, 
     verbose = verbose, parallelism = parallelism,
     jobs = jobs, packages = packages, prework = prework, 
-    prepend = prepend, command = command, args = args)
+    prepend = prepend, command = command, args = args, 
+    clear_progress = clear_progress)
   check_config(config)
   assert_input_files_exist(config)
   store_config(config)

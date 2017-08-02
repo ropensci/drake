@@ -10,7 +10,7 @@ make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE)
+  return_config = FALSE, clear_progress = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame. 
@@ -123,6 +123,10 @@ wherever possible.}
 
 \item{return_config}{logical, whether to return the internal list
 of runtime configuration parameters used by \code{make()}}
+
+\item{clear_progress}{logical, whether to clear the saved record of 
+progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
+before anything is imported or built.}
 }
 \description{
 Run your project (build the targets).
