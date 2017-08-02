@@ -124,6 +124,7 @@ debug your work,
 ```r
 check()
 session()
+in_progress()
 progress()
 config()
 read_config()

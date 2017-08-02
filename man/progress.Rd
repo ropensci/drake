@@ -31,15 +31,7 @@ to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 }
 \value{
-Either the build progress of each target given (from the last
-call to \code{\link{make}()} or \code{\link{make}()}), or if no 
-targets are specified, a data frame containing the build progress
-of the last session. 
-In the latter case, only finished targets are listed.
-
-Either a named logical indicating whether the given
-targets or cached or a character vector listing all cached
-items, depending on whether any targets are specified
+Statuses of targets
 }
 \description{
 Get the build progress (overall or individual targets)

@@ -24,6 +24,35 @@ session = function(path = getwd(), search = TRUE){
   cache$get("sessionInfo", namespace = "session")
 }
 
+#' @title Function \code{in_progress}
+#' @description List the targets that either
+#' (1) are currently being built if \code{\link{make}()} is running, or
+#' (2) were in the process of being built if the previous call to 
+#' \code{\link{make}()} quit unexpectedly. 
+#' @seealso \code{\link{session}},
+#' \code{\link{built}}, \code{\link{imported}},
+#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+#' @export
+#' @return A character vector of target names
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' in_progress() # nothing
+#' bad_plan = plan(x = function_doesnt_exist())
+#' make(bad_plan) # error
+#' in_progress() # "x"
+#' }
+in_progress = function(path = getwd(), search = TRUE){
+  which(progress() == "in progress") %>% names %>% as.character
+}
+
 #' @title Function \code{progress}
 #' @description Get the build progress (overall or individual targets)
 #' of the last call to \code{\link{make}()}. 
@@ -34,14 +63,7 @@ session = function(path = getwd(), search = TRUE){
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
 #' @export
-#' @return Either the build progress of each target given (from the last
-#' call to \code{\link{make}()} or \code{\link{make}()}), or if no 
-#' targets are specified, a data frame containing the build progress
-#' of the last session. 
-#' In the latter case, only finished targets are listed.
-#' @return Either a named logical indicating whether the given
-#' targets or cached or a character vector listing all cached
-#' items, depending on whether any targets are specified
+#' @return Statuses of targets
 #' @param ... objects to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
@@ -76,7 +98,7 @@ progress = function(..., list = character(0), no_imported_objects = FALSE,
     no_imported_objects = imported_files_only
   }
   cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("No drake::make() session detected.")
+  if(is.null(cache)) return(character(0))
   dots = match.call(expand.dots = FALSE)$...
   targets = targets_from_dots(dots, list)
   if(!length(targets)) 
@@ -91,8 +113,10 @@ list_progress = function(no_imported_objects, cache){
   abridged_marked = Filter(all_marked, f = function(target)
     is_built_or_imported_file(target = target, cache = cache))
   abridged_progress = all_progress[abridged_marked]
-  if(no_imported_objects) return(abridged_progress) 
-  else return(all_progress) 
+  if(no_imported_objects) out = abridged_progress
+  else out = all_progress 
+  if(!length(out)) out = as.character(out)
+  out
 }
 
 get_progress = Vectorize(function(target, cache){

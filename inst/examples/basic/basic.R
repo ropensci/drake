@@ -158,7 +158,7 @@ make(my_plan) # Run your project.
 # The non-file dependencies of your last target are already loaded
 # in your workspace.
 "report_dependencies" %in% ls() # Should be TRUE.
-progress() # Check the progress while or after make() runs.
+progress() # See also in_progress()
 outdated(my_plan, verbose = FALSE) # Everything is up to date
 # plot_graph(my_plan) # The red nodes from before turned green.
 # session() # get the sessionInfo() of the last call to make()

@@ -6,7 +6,8 @@ test_that("cache functions work", {
   expect_equal(character(0), 
     cached(search = FALSE), imported(search = FALSE), 
     built(search = FALSE))
-  expect_error(progress(search = FALSE))
+  expect_equal(progress(search = FALSE), character(0))
+  expect_equal(in_progress(search = FALSE), character(0))
   expect_error(readd(search = FALSE))
   config = dbug()
   using_global = identical(config$envir, globalenv())
@@ -30,6 +31,7 @@ test_that("cache functions work", {
   # session, progress
   expect_true(is.list(session(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
+  expect_equal(in_progress(search = FALSE), character(0))
   expect_warning(tmp <- status(search = FALSE))
   expect_warning(tmp <- progress(imported_files_only = TRUE)) # deprecated argument
   expect_equal(sort(names(progress(search = FALSE))), all)
@@ -104,7 +106,8 @@ test_that("cache functions work", {
     list = c("h", "final"))), 
     sort(c(bla = "not built or imported", f = "finished", 
     h = "finished", final = "finished")))
-  
+  expect_equal(in_progress(search = TRUE, path = s), character(0))
+
   # imported, built, cached
   expect_equal(sort(imported(files_only = FALSE, search = T, path = s)),
     sort(imports))

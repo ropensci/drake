@@ -1,6 +1,15 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("in_progress() works", {
+  dclean()
+  expect_equal(in_progress(), character(0))
+  bad_plan = plan(x = function_doesnt_exist())
+  expect_error(make(bad_plan, verbose = FALSE))
+  expect_equal(in_progress(), "x")
+  dclean()
+})
+
 test_that("missed() works", {
   dclean()
   o = dbug()

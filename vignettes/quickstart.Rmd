@@ -85,6 +85,7 @@ debug your work,
 ```r
 check()
 session()
+in_progress()
 progress()
 config()
 read_config()
@@ -326,7 +327,7 @@ built()
 imported()
 head(read_plan())
 # read_graph() # Plots the graph of the workflow you just ran.
-head(progress()) # What did you last build? Did it finish?
+head(progress()) # See also in_progress()
 # session(): sessionInfo() of the last call to make()
 progress(large)
 ```
