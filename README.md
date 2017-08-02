@@ -57,7 +57,7 @@ devtools::install_github("wlandau-lilly/drake", build = TRUE) # development vers
 ```r
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-plot_graph(my_plan) # Click, drag, pan, hover. Set targets_only to TRUE for smaller graphs.
+plot_graph(my_plan) # Click, drag, pan, hover. Try file = "graph.html" and targets_only = TRUE.
 outdated(my_plan) # Which targets need to be (re)built?
 missed(my_plan) # Are you missing anything from your workspace?
 check(my_plan) # Are you missing files? Is your workflow plan okay?
