@@ -48,7 +48,7 @@ Organize your work in a data frame. Then `make()` it.
 
 ```r
 install.packages("drake") # latest CRAN release
-devtools::install_github("wlandau-lilly/drake@v3.1.0", build = TRUE) # latest GitHub release
+devtools::install_github("wlandau-lilly/drake@v4.0.0", build = TRUE) # latest GitHub release
 devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
 ```
 
