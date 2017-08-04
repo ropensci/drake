@@ -27,27 +27,27 @@ Drake is a workflow manager and build system for
 Organize your work in a data frame. Then `make()` it.
 
 ```r
-> library(drake)
-> load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-> my_plan
-                   target                                      command
-1             'report.md'   my_knit('report.Rmd', report_dependencies)
-2                   small                                  simulate(5)
-3                   large                                 simulate(50)
-4     report_dependencies      c(small, large, coef_regression2_small)
-5       regression1_small                                  reg1(small)
-6       regression1_large                                  reg1(large)
-7       regression2_small                                  reg2(small)
-8       regression2_large                                  reg2(large)
-9  summ_regression1_small suppressWarnings(summary(regression1_small))
-10 summ_regression1_large suppressWarnings(summary(regression1_large))
-11 summ_regression2_small suppressWarnings(summary(regression2_small))
-12 summ_regression2_large suppressWarnings(summary(regression2_large))
-13 coef_regression1_small                      coef(regression1_small)
-14 coef_regression1_large                      coef(regression1_large)
-15 coef_regression2_small                      coef(regression2_small)
-16 coef_regression2_large                      coef(regression2_large)
-> make(my_plan)
+library(drake)
+load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
+my_plan
+##                    target                                      command
+## 1             'report.md'   my_knit('report.Rmd', report_dependencies)
+## 2                   small                                  simulate(5)
+## 3                   large                                 simulate(50)
+## 4     report_dependencies      c(small, large, coef_regression2_small)
+## 5       regression1_small                                  reg1(small)
+## 6       regression1_large                                  reg1(large)
+## 7       regression2_small                                  reg2(small)
+## 8       regression2_large                                  reg2(large)
+## 9  summ_regression1_small suppressWarnings(summary(regression1_small))
+## 10 summ_regression1_large suppressWarnings(summary(regression1_large))
+## 11 summ_regression2_small suppressWarnings(summary(regression2_small))
+## 12 summ_regression2_large suppressWarnings(summary(regression2_large))
+## 13 coef_regression1_small                      coef(regression1_small)
+## 14 coef_regression1_large                      coef(regression1_large)
+## 15 coef_regression2_small                      coef(regression2_small)
+## 16 coef_regression2_large                      coef(regression2_large)
+make(my_plan)
 ```
 
 # Installation
