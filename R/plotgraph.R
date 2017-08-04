@@ -23,8 +23,13 @@
 #' here. Drake will try to pick the best option for your system by default.
 #' @param packages same as for \code{\link{make}()}.
 #' @param prework same as for \code{\link{make}()}.
-#' @param file Name of HTML file to save the graph. If \code{NULL} or \code{character(0)},
+#' @param file Name of HTML file to save the graph.
+#' If \code{NULL} or \code{character(0)},
 #' no file is saved and the graph is rendered and displayed within R.
+#' @param selfcontained logical, whether to save the \code{file} as a self-contained
+#' HTML file (with external resources base64 encoded) or a file with
+#' external resources placed in an adjacent directory. If \code{TRUE},
+#' pandoc is required.
 #' @param targets_only logical, whether to skip the imports and only show the 
 #' targets in the workflow plan.
 #' @param font_size numeric, font size of the node labels in the graph
@@ -58,7 +63,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1, 
   parallelism = drake::default_parallelism(), 
   packages = (.packages()), prework = character(0),
-  file = character(0), targets_only = FALSE, config = NULL,
+  file = character(0), selfcontained = FALSE, targets_only = FALSE, config = NULL,
   font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, ...){
   
@@ -67,8 +72,9 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
      envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
      packages = packages, prework = prework,targets_only = targets_only,
      config = config, font_size = font_size)
-  render_graph(raw_graph, file = file, layout = layout, direction = direction,
-               navigationButtons = navigationButtons, hover = hover, ...)
+  render_graph(raw_graph, file = file, selfcontained = selfcontained,
+     layout = layout, direction = direction,
+     navigationButtons = navigationButtons, hover = hover, ...)
 }
 
 #' @title Function \code{render_graph}
@@ -83,6 +89,10 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' @param layout name of an igraph layout to use, such as "layout_with_sugiyama"
 #' or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
 #' acyclic graph, but not necessarily a tree.
+#' @param selfcontained logical, whether to save the \code{file} as a self-contained
+#' HTML file (with external resources base64 encoded) or a file with
+#' external resources placed in an adjacent directory. If \code{TRUE},
+#' pandoc is required.
 #' @param direction an argument to \code{visNetwork::visHierarchicalLayout()}
 #' indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
 #' At the time of writing this, the letters must be capitalized, 
@@ -100,7 +110,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' render_graph(graph, width = "100%") # The width is passed to visNetwork().
 #' }
 render_graph = function(graph, file = character(0), layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE, ...){
+  navigationButtons = TRUE, hover = TRUE, selfcontained = FALSE, ...){
   out = visNetwork(nodes = graph$nodes, edges = graph$edges, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
     visHierarchicalLayout(direction = direction) %>%
@@ -111,7 +121,7 @@ render_graph = function(graph, file = character(0), layout = "layout_with_sugiya
   if(hover)
     out = with_hover(out)
   if(length(file)){
-    visSave(graph = out, file = file)
+    visSave(graph = out, file = file, selfcontained = selfcontained)
     return(invisible())
   }
   out

@@ -29,6 +29,7 @@ test_that("basic example works", {
   plot_graph(my_plan, envir = e, config = config, file = file)
   expect_true(file.exists(file))
   unlink(file)
+  unlink("graph_files", recursive = TRUE)
   expect_false(file.exists(file))
 
   expect_equal(max_useful_jobs(my_plan, envir = e, 
