@@ -177,13 +177,13 @@ Each row is an intermediate step, and each **command** generates a **target**. A
 ```{r plotgraph2}
 # Skip the file argument to just plot.
 # Hover, click, drag, zoom, pan.
-plot_graph(my_plan, width = "100%", height = "400px", 
+plot_graph(my_plan, width = "100%", height = "500px", 
   file = "quickstart_graph1.html") 
 # See also dataframes_graph(), render_graph().
 # Speed up regraphing with config().
 ```
 
-<iframe src="quickstart_graph1.html" width = "100%" height = "500px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
+<iframe src="quickstart_graph1.html" width = "100%" height = "600px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
 
 
 You can also check the dependencies of individual targets.
@@ -316,12 +316,12 @@ The non-file dependencies of your last target are already loaded in your workspa
 
 ```{r plotgraphfirstmake}
 outdated(my_plan) # Everything is up to date.
-plot_graph(my_plan, width = "100%", height = "400px",
+plot_graph(my_plan, width = "100%", height = "500px",
   file = "quickstart_graph2.html") # The red nodes from before turned green.
 # dataframes_graph(my_plan) # Get visNetwork nodes and edges so you can make your own plot.
 ```
 
-<iframe src="quickstart_graph2.html" width = "100%" height = "500px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
+<iframe src="quickstart_graph2.html" width = "100%" height = "600px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
 
 Use `readd()` and `loadd()` to load more targets. (They are cached in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
 
@@ -360,11 +360,11 @@ The targets depending on `reg2()` need to be rebuilt and everything else is left
 
 ```{r plotwithreg2}
 outdated(my_plan)
-plot_graph(my_plan, width = "100%", height = "400px",
+plot_graph(my_plan, width = "100%", height = "500px",
   file = "quickstart_graph3.html")
 ```
 
-<iframe src="quickstart_graph3.html" width = "100%" height = "500px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
+<iframe src="quickstart_graph3.html" width = "100%" height = "600px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
 
 ```{r remakewithreg2}
 make(my_plan)
@@ -417,11 +417,11 @@ reg2 = function(d){ # Change a dependency.
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
-plot_graph(my_plan, width = "100%", height = "400px",
+plot_graph(my_plan, width = "100%", height = "500px",
   file = "quickstart_graph4.html") # Click, drag, and zoom to explore.
 ```
 
-<iframe src="quickstart_graph4.html" width = "100%" height = "500px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
+<iframe src="quickstart_graph4.html" width = "100%" height = "600px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
 
 When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. 
 
