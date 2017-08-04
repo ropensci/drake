@@ -22,4 +22,5 @@ Rbuildignore/local/
 .Rproj.user
 vignettes/*.html
 vignettes/*.md
+vignettes/*_files
 inst/doc

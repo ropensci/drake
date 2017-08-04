@@ -21,6 +21,7 @@ TROUBLESHOOTING.md
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
+vignettes/.*_files
 ^.*\.css$
 ^.*\.js$
 ^.*\.log$
