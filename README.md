@@ -48,7 +48,7 @@ make(my_plan)
 
 ```r
 install.packages("drake") # latest CRAN release
-devtools::install_github("wlandau-lilly/drake@v4.0.0", build = TRUE) # latest GitHub release
+devtools::install_github("wlandau-lilly/drake@v4.0.1", build = TRUE) # choose a GitHub tag/release
 devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
 ```
 
