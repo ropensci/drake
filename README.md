@@ -187,6 +187,8 @@ reg2 = function(d){ # Change a dependency.
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
+# Run plot_graph() yourself for interactivity.
+# Then hover, click, drag, pan, and zoom.
 plot_graph(my_plan, width = "100%")
 ```
 
