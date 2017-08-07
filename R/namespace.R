@@ -18,4 +18,5 @@
 #' @importFrom testthat expect_true
 #' @importFrom tools md5sum
 #' @importFrom utils sessionInfo unzip
+#' @importFrom lubridate dseconds
 NULL

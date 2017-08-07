@@ -79,6 +79,41 @@ built = function(path = getwd(), search = TRUE){
     !is_imported(target = target, cache = cache))
 }
 
+#' @title Function \code{times}
+#' @description List all the build times. This doesn't include the amount of time 
+#' spent loading and saving objects!
+#' @seealso \code{\link{built}}
+#' @export
+#' @return data.frame of times from \code{\link{system.time}}
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search logical. If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+#' @param digits How many digits to round the times to. 
+times = function(path = getwd(), search = TRUE, digits = 0){
+  cache = get_cache(path = path, search = search)
+  if(is.null(cache)) return(character(0))
+  cache$list() %>%
+    Map(f = function(target) {
+      # Try to get times if they are saved
+      try({time = cache$get(key = target, namespace = "time")}, silent = T)
+      if (class(time) == "proc_time") {
+        data.frame(
+          target = target,
+          user = time[['user.self']] %>% round(digits) %>% dseconds,
+          system = time[['sys.self']] %>% round(digits) %>% dseconds,
+          elapsed = time[['elapsed']] %>% round(digits) %>% dseconds
+        )
+      }
+    }) %>%
+    # Filter out NULLs
+    lapply(Filter, f = Negate(is.null)) %>%
+    # Merge to data.frame
+    Reduce(f = function(x, y) rbind(x, y))
+}
+
 #' @title Function \code{imported}
 #' @description List all the imported objects in the drake cache
 #' @seealso \code{\link{cached}}, \code{\link{loadd}},
