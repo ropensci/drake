@@ -1,10 +1,7 @@
+Thumbs.db
 ^build_site.R$
-^index.html$
-^authors.html$
-^articles$
-^news$
+^raster$
 ^reference$
-^_site$
 .DS_Store
 \.git$
 \.github$
@@ -24,6 +21,7 @@ TROUBLESHOOTING.md
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
+vignettes/.*_files
 ^.*\.css$
 ^.*\.js$
 ^.*\.log$

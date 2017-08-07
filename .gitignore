@@ -1,3 +1,4 @@
+Thumbs.db
 *~
 *.aux
 *.bbl
@@ -12,7 +13,7 @@
 *.toc
 *.vrb
 .DS_Store
-tests/testthat/.drake
+.drake
 .Rapp.history
 .Rhistory
 Makefile
@@ -21,4 +22,5 @@ Rbuildignore/local/
 .Rproj.user
 vignettes/*.html
 vignettes/*.md
+vignettes/*_files
 inst/doc

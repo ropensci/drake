@@ -10,74 +10,251 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-![](logo-small.png)
-
+![](logo-vignettes.png)
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE)
 ```
 
-The issue of reproducibility is at the forefront of the R and Statistics community buzz, but there are glaring holes in the conversation and the landscape. Most current talks and tools focus on scientific replicability, code annotation, and version control, and they miss the most crucial part of reproducible data analysis: the promise that the alleged results really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. And with multiple parallel computing options that switch on auto-magically, drake is also a convenient and powerful high-performance computing solution.
+# Data frames in R for [Make](http://kbroman.org/minimal_make/)
 
-# Acknowledgements and history
+Drake is a workflow manager and build system for
 
-The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. 
+1. [Reproducibility](https://CRAN.R-project.org/view=ReproducibleResearch).
+2. [High-performance computing](https://CRAN.R-project.org/view=HighPerformanceComputing).
 
-Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
+Organize your work in a data frame. Then `make()` it.
 
-# Advantages of drake
+```r
+library(drake)
+load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
+my_plan
+##                    target                                      command
+## 1             'report.md'   my_knit('report.Rmd', report_dependencies)
+## 2                   small                                  simulate(5)
+## 3                   large                                 simulate(50)
+## 4     report_dependencies      c(small, large, coef_regression2_small)
+## 5       regression1_small                                  reg1(small)
+## 6       regression1_large                                  reg1(large)
+## 7       regression2_small                                  reg2(small)
+## 8       regression2_large                                  reg2(large)
+## 9  summ_regression1_small suppressWarnings(summary(regression1_small))
+## 10 summ_regression1_large suppressWarnings(summary(regression1_large))
+## 11 summ_regression2_small suppressWarnings(summary(regression2_small))
+## 12 summ_regression2_large suppressWarnings(summary(regression2_large))
+## 13 coef_regression1_small                      coef(regression1_small)
+## 14 coef_regression1_large                      coef(regression1_large)
+## 15 coef_regression2_small                      coef(regression2_small)
+## 16 coef_regression2_large                      coef(regression2_large)
+make(my_plan)
+```
 
-Some advantages of drake, especially relative to [remake](https://github.com/richfitz/remake) at the time of writing, are
+# Installation
 
-1. reproducibility. Drake can
-    - import and track arbitrary variables from your workspace.
-    - track functions from packages.
-2. safety.
-    - If you manually break an output file target, drake can fix it with another call to `make()`.
-3. parallel computing. Auto-magically run multiple targets simultaneously.
-    - Switch on the `mclapply()` or `parLapply()` backend for light parallelism within a single R session.
-    - Switch on a `Makefile` to parallelize over multiple R sessions, which you can distribute across several nodes of a computing cluster or a supercomputer.
-4. convenience.
-    - No YAML files!
-    - With functions like `plan()`, `datasets()`, `analyses()`, `evaluate()`, `expand()`, and `gather()`, you can minimize typing when you set up a project.
+```r
+install.packages("drake") # latest CRAN release
+devtools::install_github("wlandau-lilly/drake@v3.1.0", build = TRUE) # latest GitHub release
+devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
+```
 
-# Windows
+For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 
-Drake presents `mclapply()` as one of two single-session parallel computing backends. Unfortunately, `mclapply()` cannot run multiple parallel jobs on Windows, so Windows users should use set `parallelism = "parLapply"` rather than `parallelism = "mclapply"` inside `make()` (already the Windows default). For true distributed parallel computing over multiple R sessions, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). This is because drake runs [Makefiles](http://kbroman.org/minimal_make/) with `system2("make", ...)`.
+# Quickstart
 
-# Tutorials
+```r
+library(drake)
+load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
+plot_graph(my_plan) # Hover, click, drag, zoom, pan. Try file = "graph.html" and targets_only = TRUE.
+outdated(my_plan) # Which targets need to be (re)built?
+missed(my_plan) # Are you missing anything from your workspace?
+check(my_plan) # Are you missing files? Is your workflow plan okay?
+make(my_plan) # Run the workflow.
+outdated(my_plan) # Everything is up to date.
+plot_graph(my_plan) # The graph also shows what is up to date.
+```
 
-The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple tutorials and vignettes. With drake installed, you can load any of the vignettes 
-in an R session.
+Dive deeper into the built-in examples.
+
+```r
+example_drake("basic") # Write the code files of the canonical tutorial.
+examples_drake() # List the other examples.
+vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
+```
+
+# Useful functions
+
+Besides `make()`, here are some useful functions to learn about drake,
+
+```r
+load_basic_example()
+drake_tip()
+examples_drake()
+example_drake()
+```
+
+set up your workflow plan,
+
+```r
+plan()
+analyses()
+summaries()
+evaluate()
+expand()
+gather()
+```
+
+explore the dependency network,
+```r
+outdated()
+missed()
+plot_graph()
+dataframes_graph()
+render_graph()
+read_graph()
+deps()
+tracked()
+```
+
+interact with the cache,
+```r
+clean()
+cached()
+imported()
+built()
+readd()
+loadd()
+find_project()
+find_cache()
+```
+
+debug your work,
+```r
+check()
+session()
+in_progress()
+progress()
+config()
+read_config()
+```
+
+and speed up your project with parallel computing.
+
+```r
+make() # with jobs > 2
+max_useful_jobs()
+parallelism_choices()
+shell_file()
+```
+
+# Documentation
+
+The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
 
 ```r
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
-vignette("caution") # Drake is not perfect. Read this to be safe.
+vignette("caution") # Avoid common pitfalls.
 ```
-
-# Quickstart examples
-
-Drake has small self-contained built-in examples. To see the names of the available examples, use
-
-```{r}
-examples_drake()
-```
-
-Then use `example_drake()` to write the files for the example to your working directory.
-
-```{r, eval = FALSE}
-example_drake("basic")
-```
-
-Step through the code files to get started.
-
-# Words of caution
-
-Drake tries to reproducibly track everything and make other obviously good decisions, but there are limitations. For example, in some edge cases, it is possible to trick drake into ignoring dependencies. Please read the "caution" vignette to use drake safely (`vignette("caution")`, also linked from the [CRAN page](https://CRAN.R-project.org/package=drake) under "vignettes").
 
 # Help and troubleshooting
 
-For troubleshooting, please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
+Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
+
+# Reproducibility 
+
+There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. 
+
+```r
+library(drake)
+load_basic_example()
+outdated(my_plan) # Which targets need to be (re)built?
+make(my_plan) # Build what needs to be built.
+outdated(my_plan) # Everything is up to date.
+reg2 = function(d){ # Change one of your functions.
+  d$x3 = d$x^3
+  lm(y ~ x3, data = d)
+}
+outdated(my_plan) # Some targets depend on reg2().
+plot_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
+make(my_plan) # Rebuild just the outdated targets.
+outdated(my_plan) # Everything is up to date again.
+plot_graph(my_plan) # The colors changed in the graph.
+```
+
+# High-performance computing
+
+Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the intermediate steps of your workflow in a dependency web. This network is the key to drake's parallel computing. For example, consider the network graph of the basic example.
+
+```{r basicgraph}
+library(drake)
+load_basic_example()
+make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
+reg2 = function(d){ # Change a dependency.
+  d$x3 = d$x^3
+  lm(y ~ x3, data = d)
+}
+```
+
+```r
+# Run plot_graph() yourself for interactivity.
+# Then hover, click, drag, zoom, pan.
+plot_graph(my_plan, width = "100%", height = "500px") 
+```
+
+![](reg2.png)
+
+
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. 
+
+See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date. Try out the following in a fresh R session.
+
+```r
+library(drake)
+load_basic_example()
+plot_graph(my_plan) # Look at the graph to make sense of the output.
+max_useful_jobs(my_plan) # 8
+max_useful_jobs(my_plan, imports = "files") # 8
+max_useful_jobs(my_plan, imports = "all") # 10
+max_useful_jobs(my_plan, imports = "none") # 8
+make(my_plan)
+plot_graph(my_plan)
+# Ignore the targets already built.
+max_useful_jobs(my_plan) # 1
+max_useful_jobs(my_plan, imports = "files") # 1
+max_useful_jobs(my_plan, imports = "all") # 10
+max_useful_jobs(my_plan, imports = "none") # 0
+# Change a function so some targets are now out of date.
+reg2 = function(d){
+  d$x3 = d$x^3
+  lm(y ~ x3, data = d)
+}
+plot_graph(my_plan)
+max_useful_jobs(my_plan) # 4
+max_useful_jobs(my_plan, imports = "files") # 4
+max_useful_jobs(my_plan, imports = "all") # 10
+max_useful_jobs(my_plan, imports = "none") # 4
+```
+
+As for how the parallelism is implemented, you can choose from multiple built-in backends.
+
+1. **mclapply**: low-overhead, light-weight. `make(..., parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood and distributes the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
+2. **parLapply**: medium-overhead, light-weight. `make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
+3. **Makefile**: high-overhead, heavy-duty. `make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions. With custom settings, you can distribute the R sessions over different jobs/nodes on a cluster. See the [quickstart vignette](https://cran.r-project.org/package=drake/vignettes/quickstart.html) for more details.
+
+# Acknowledgements and related work
+
+The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. 
+
+Thanks also to [Kirill M&uuml;ller](http://krlmlr.github.io/) and [Daniel Falster](http://danielfalster.com/). They contributed code patches and enhancement ideas to my [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator) packages, which I have now subsumed into drake.
+
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
+
+In the sphere of reproducibility, drake and [remake](https://github.com/richfitz/remake) are examples of non-literate programming tools (as opposed to literate programming tools such as [knitr](https://CRAN.R-project.org/package=knitr)). Counterparts include [R.cache](https://CRAN.R-project.org/package=R.cache), [archivist](https://CRAN.R-project.org/package=archivist), [trackr](https://github.com/gmbecker/recordr), and [memoise](https://CRAN.R-project.org/package=memoise). See the [reporducible research CRAN task view](https://CRAN.R-project.org/view=ReproducibleResearch) for a more comprehensive list. Drake differentiates itself from these tools with its ability to track the relationships among cached objects and its extensive high-performance computing functionality.
+
+```{r rmfile, echo = FALSE}
+clean(destroy = TRUE)
+unlink(c("report.Rmd", "Thumbs.db"))
+```
+

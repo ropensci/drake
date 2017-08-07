@@ -26,6 +26,13 @@ character vector naming the imported objects in the cache
 \description{
 List all the imported objects in the drake cache
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+imported()
+}
+}
 \seealso{
 \code{\link{cached}}, \code{\link{loadd}},
 \code{\link{built}}

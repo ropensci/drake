@@ -17,7 +17,14 @@ to write the folder containing the code files for the example.}
 \description{
 Copy a folder of code files for a 
 drake example to the current working directory.
+Call \code{example_drake("basic")} to generate the code files from the
+quickstart vignette: \code{vignette("quickstart")}.
 To see the names of all the examples, run \code{\link{examples_drake}}.
+}
+\examples{
+\dontrun{
+example_drake("basic") # Walkthrough: vignette("quickstart")
+}
 }
 \seealso{
 \code{\link{examples_drake}}, \code{\link{make}}

@@ -1,19 +1,27 @@
 # library(testthat); library(devtools); load_all()
 context("edge-cases")
 
-test_that("vectorized nested functions work", {
+test_that("Vectorized nested functions work", {
   dclean()
   e = new.env(parent = globalenv())
   eval(parse(text='f <- Vectorize(function(x) g(x), "x")'), envir = e)
-  eval(parse(text='g <- function(x) x + 1'), envir = e)
+  eval(parse(text='g <- function(x) x + y'), envir = e)
+  e$y = 7
   config = dbug()
   config$envir = e
   config$plan = plan(a = f(1:10))
   config$targets = "a"
+  expect_equal(deps(e$f), "g")
+  expect_equal(deps(e$g), "y")
   testrun(config)
-  expect_equal(readd(a), 2:11)
+  expect_equal(readd(a), 8:17)
   k = readd(f)
-  expect_equal(k(2:5), 3:6)
+  expect_equal(k(2:5), 9:12)
+  expect_equal(character(0), outdated(config$plan, envir = config$envir, verbose = FALSE))
+  config$envir$y = 8
+  expect_equal("a", outdated(config$plan, envir = config$envir, verbose = FALSE))
+  testrun(config)
+  expect_equal(character(0), outdated(config$plan, envir = config$envir, verbose = FALSE))
   dclean()
 })
 

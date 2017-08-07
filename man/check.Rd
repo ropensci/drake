@@ -22,6 +22,14 @@ Check a workflow plan, etc. for obvious
 errors such as circular dependencies and 
 missing input files.
 }
+\examples{
+\dontrun{
+load_basic_example()
+check(my_plan)
+unlink("report.Rmd")
+check(my_plan)
+}
+}
 \seealso{
 \code{link{plan}}, \code{\link{make}}
 }

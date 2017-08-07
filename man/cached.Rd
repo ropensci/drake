@@ -45,6 +45,15 @@ all the items in the drake cache.
 Read/load a cached item with \code{\link{readd}()} or 
 \code{\link{loadd}()}.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+cached(list = "reg1")
+cached(no_imported_objects = TRUE)
+cached()
+}
+}
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{loadd}},

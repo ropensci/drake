@@ -22,6 +22,13 @@ list of imported objects in the cache
 List all the built (non-imported) objects in the drake
 cache.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+built()
+}
+}
 \seealso{
 \code{\link{cached}}, \code{\link{loadd}},
 \code{link{imported}}

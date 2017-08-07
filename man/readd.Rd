@@ -34,6 +34,16 @@ drake target item from the cache
 Read a drake target object from the cache.
 Does not delete the item from the cache.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+readd(reg1)
+readd(small)
+readd("large", character_only = TRUE)
+readd("'report.md'") # just a fingerprint of the file (md5 sum)
+}
+}
 \seealso{
 \code{\link{loadd}}, \code{\link{cached}}, 
 \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 

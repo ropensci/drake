@@ -19,6 +19,13 @@ Return the file path of the nearest drake
 project (searching upwards for directories
 containing a drake cache).
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+find_project()
+}
+}
 \seealso{
 \code{\link{plan}}, \code{\link{make}}
 }

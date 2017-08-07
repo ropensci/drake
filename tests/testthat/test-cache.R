@@ -6,7 +6,8 @@ test_that("cache functions work", {
   expect_equal(character(0), 
     cached(search = FALSE), imported(search = FALSE), 
     built(search = FALSE))
-  expect_error(status(search = FALSE))
+  expect_equal(progress(search = FALSE), character(0))
+  expect_equal(in_progress(search = FALSE), character(0))
   expect_error(readd(search = FALSE))
   config = dbug()
   using_global = identical(config$envir, globalenv())
@@ -27,13 +28,16 @@ test_that("cache functions work", {
   builds = setdiff(all, imports)
   
   # find stuff in current directory
-  # session, status
+  # session, progress
   expect_true(is.list(session(search = FALSE)))
-  expect_true(all(status(search = FALSE) == "finished"))
-  expect_equal(sort(names(status(search = FALSE))), all)
-  expect_equal(sort(names(status(search = FALSE, 
-    imported_files_only = TRUE))), sort(c("'input.rds'", builds)))
-  expect_equal(status(bla, f, list = c("h", "final"), search = FALSE), 
+  expect_true(all(progress(search = FALSE) == "finished"))
+  expect_equal(in_progress(search = FALSE), character(0))
+  expect_warning(tmp <- status(search = FALSE))
+  expect_warning(tmp <- progress(imported_files_only = TRUE)) # deprecated argument
+  expect_equal(sort(names(progress(search = FALSE))), all)
+  expect_equal(sort(names(progress(search = FALSE, 
+    no_imported_objects = TRUE))), sort(c("'input.rds'", builds)))
+  expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
   
@@ -41,12 +45,7 @@ test_that("cache functions work", {
   newconfig = read_config(search = FALSE)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = FALSE), config$plan)
-  expect_equal(class(read_graph(plot = FALSE, 
-    search = FALSE)), "igraph")
-  pdf(NULL)
-  read_graph(plot = TRUE, search = FALSE)
-  tmp = capture.output(dev.off())
-  unlink("Rplots.pdf")
+  expect_equal(class(read_graph(search = FALSE)), "igraph")
   
   # imported , built, cached
   expect_equal(imported(files_only = FALSE, search = FALSE), imports)
@@ -97,16 +96,18 @@ test_that("cache functions work", {
   setwd("..")
   s = file.path("testthat", "searchfrom", "here")
   
-  # status, session 
+  # progress, session 
   expect_true(is.list(session(search = T, path = s)))
-  expect_equal(sort(names(status(search = T, path = s))), sort(all))
-  expect_equal(sort(names(status(imported_files_only = TRUE, 
+  expect_equal(sort(names(progress(search = T, path = s))), sort(all))
+  expect_warning(status(search = T, path = s))
+  expect_equal(sort(names(progress(no_imported_objects = TRUE, 
     search = T, path = s))), sort(c("'input.rds'", builds)))
-  expect_equal(sort(status(search = T, path = s, bla, f, 
+  expect_equal(sort(progress(search = T, path = s, bla, f, 
     list = c("h", "final"))), 
     sort(c(bla = "not built or imported", f = "finished", 
     h = "finished", final = "finished")))
-  
+  expect_equal(in_progress(search = TRUE, path = s), character(0))
+
   # imported, built, cached
   expect_equal(sort(imported(files_only = FALSE, search = T, path = s)),
     sort(imports))
@@ -130,12 +131,7 @@ test_that("cache functions work", {
   newconfig = read_config(search = TRUE, path = s)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = TRUE, path = s), config$plan)
-  expect_equal(class(read_graph(plot = FALSE, 
-    search = TRUE, path = s)), "igraph")
-  pdf(NULL)
-  read_graph(plot = TRUE, search = TRUE, path = s)
-  dev.off()
-  unlink("Rplots.pdf")
+  expect_equal(class(read_graph(search = TRUE, path = s)), "igraph")
   
   # load and read stuff
   expect_true(is.numeric(readd(a, path = s, search = T)))
@@ -145,6 +141,24 @@ test_that("cache functions work", {
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
+  
+  # Read the graph
+  pdf(NULL)
+  tmp = dbug()
+  read_graph(search = TRUE, path = s)
+  tmp = capture.output(dev.off())
+  unlink("Rplots.pdf")
+  dclean()
+  setwd("testthat")
+  pdf(NULL)
+  read_graph(search = FALSE)
+  tmp = capture.output(dev.off())
+  unlink("Rplots.pdf")
+  pdf(NULL)
+  null_graph()
+  tmp = capture.output(dev.off())
+  unlink("Rplots.pdf")
+  setwd("..")
   
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))

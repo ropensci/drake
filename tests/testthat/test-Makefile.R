@@ -18,7 +18,7 @@ test_that("files inside directories can be timestamped", {
     'dir.create("t1"); saveRDS(1, file.path("t1", "t2"))'))
   plan$target[1] = file = eply::quotes(file.path("t1", "t2"), 
     single = TRUE)
-  config = config(plan = plan, targets = plan$target[1],
+  config = build_config(plan = plan, targets = plan$target[1],
     parallelism = "parLapply", verbose = FALSE, packages = character(0),
     prework = character(0), prepend = character(0),
     command = character(0), args = character(0), envir = new.env(),

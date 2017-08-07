@@ -1,18 +1,16 @@
-time_stamps = function(config){
+time_stamps = function(config, outdated){
   dir_empty(time_stamp_dir)
   write_time_stamp_template()
-  targets = intersect(config$order, config$plan$target)
-  lapply(targets, function(target){
-    hashes = hashes(target, config)
-    current = target_current(target = target, 
-      hashes = hashes, config = config)
-    if(current) write_time_stamp(target)
-  })
+  targets = intersect(V(config$graph)$name, config$plan$target)
+  stamp_these = setdiff(targets, outdated)
+  lapply(stamp_these, write_time_stamp)
   invisible()
 }
 
 safe_encode = function(x){
-  paste0("t", base64_urlencode(x))
+  base32_encode(x)
+  # Collisions may occur for base 64 encoding on case-insensitive file systems.
+  # paste0("t", base64_urlencode(x))
 }
 
 time_stamp = function(x){

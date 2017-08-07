@@ -30,6 +30,22 @@ analyses of multiple datasets in multiple ways.
 Generate a worklfow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.
 }
+\examples{
+datasets <- plan(
+  small = simulate(5),
+  large = simulate(50))
+methods <- plan(
+  regression1 = reg1(..dataset..),
+  regression2 = reg2(..dataset..))
+analyses <- analyses(methods, datasets = datasets)
+summary_types <- plan(
+  summ = summary(..analysis..),
+  coef = coef(..analysis..))
+summaries(summary_types, analyses, datasets, gather = NULL) 
+summaries(summary_types, analyses, datasets)
+summaries(summary_types, analyses, datasets, gather = "list")
+summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
+}
 \seealso{
 \code{\link{analyses}}, \code{\link{make}}, \code{\link{plan}}
 }

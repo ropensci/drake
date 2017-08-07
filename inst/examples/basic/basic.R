@@ -12,7 +12,10 @@
 ### LOAD PACKAGES AND FUNCTIONS ###
 ###################################
 
-library(knitr)
+# To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
+# call load_basic_example().
+
+library(knitr) # Drake knows you loaded knitr.
 # library(rmarkdown) # platform-dependent: render() requires pandoc
 library(drake)
 
@@ -21,7 +24,7 @@ clean() # remove any previous drake output
 # User-defined functions
 simulate = function(n){
   data.frame(
-    x = rnorm(n),
+    x = stats::rnorm(n), # Drake tracks calls like `pkg::fn()` (namespaced functions).
     y = rpois(n, 1)
   )
 }
@@ -35,13 +38,13 @@ reg2 = function(d){
   lm(y ~ x2, data = d)
 }
 
-# Knit and render a dynamic knitr report
+# Knit and possibly render a dynamic R Markdown report.
 my_knit = function(file, ...){
-  knit(file) # drake knows you loaded the knitr package
+  knit(file, quiet = TRUE) # Drake knows you loaded knitr.
 }
 
 my_render = function(file, ...){
-  render(file) # drake knows you loaded the rmarkdown package
+  render(file) # Drake will know if you load rmarkdown.
 }
 
 # Write the R Markdown source for a dynamic knitr report
@@ -54,7 +57,7 @@ lines = c(
   "",
   "Look how I read outputs from the drake cache.",
   "",
-  "```{r}",
+  "```{r example_chunk}",
   "library(drake)",
   "readd(small)",
   "readd(coef_regression2_small)",
@@ -69,28 +72,32 @@ writeLines(lines, "report.Rmd")
 ### CONSTRUCT WORKFLOW PLAN ###
 ###############################
 
-datasets = plan(
+# To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
+# call load_basic_example().
+
+my_datasets = plan(
   small = simulate(5),
   large = simulate(50))
 
-# Optionally, get replicates with expand(datasets,
+# Optionally, get replicates with expand(my_datasets,
 #   values = c("rep1", "rep2")).
 
 methods = plan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 
-# same as evaluate(plan, wildcard = "..dataset..",
-#   values = datasets$output)
-analyses = analyses(methods, datasets = datasets)
+# same as evaluate(methods, wildcard = "..dataset..",
+#   values = my_datasets$target)
+my_analyses = analyses(methods, datasets = my_datasets)
 
-summary_types = plan(summ = summary(..analysis..),
-                     coef = coef(..analysis..))
+summary_types = plan(
+  summ = suppressWarnings(summary(..analysis..)), # Perfect regression fits can happen.
+  coef = coef(..analysis..))
 
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
-results = summaries(summary_types, analyses, datasets, 
-  gather = NULL) # skip 'gather' (workflow plan is more readable)
+results = summaries(summary_types, my_analyses, my_datasets, 
+  gather = NULL) # skip 'gather' (workflow my_plan is more readable)
 
 load_in_report = plan(
   report_dependencies = c(small, large, coef_regression2_small))
@@ -98,7 +105,7 @@ load_in_report = plan(
 # External file targets and dependencies should be single-quoted.
 # Use double quotes to remove any special meaning from character strings.
 # Single quotes inside imported functions are ignored, so this mechanism
-# only works inside the workflow plan data frame.
+# only works inside the workflow my_plan data frame.
 # WARNING: drake cannot track entire directories (folders).
 report = plan(
   report.md = my_knit('report.Rmd', report_dependencies),
@@ -106,19 +113,34 @@ report = plan(
 ## report.html = my_render('report.md', report_dependencies), 
   file_targets = TRUE, strings_in_dots = "filenames")
 
-# Row order doesn't matter in the workflow plan.
-plan = rbind(report, datasets, load_in_report, analyses, results)
+# Row order doesn't matter in the workflow my_plan.
+my_plan = rbind(report, my_datasets, load_in_report, my_analyses, results)
 
-# Use tracked() to verify the objects, functions, targets, et. 
-# that drake tries to reproducibly track. It is wise to verify this
-# for yourself because drake can be tricked in some edge cases. 
-# See vignette("caution").
-"small" %in% tracked(plan)
-tracked(plan, targets = "small")
-tracked(plan)
 
-# Check the plan for obvious errors and pitfalls.
-check(plan)
+#####################################
+### CHECK AND DEBUG WORKFLOW PLAN ###
+#####################################
+
+# Graph the dependency structure of your workflow
+# plot_graph(my_plan) # plots an interactive web app via visNetwork.
+workflow_graph = build_graph(my_plan) # igraph object
+
+# Check for circularities, missing input files, etc.
+check(my_plan)
+
+# Check the dependencies of individual functions and commands.
+deps(reg1)
+deps(my_knit)
+deps(my_plan$command[1])
+deps(my_plan$command[16])
+
+# List objects that are reproducibly tracked. 
+"small" %in% tracked(my_plan)
+tracked(my_plan, targets = "small")
+tracked(my_plan)
+
+# See vignette("caution") for more a deeper dive into possible pitfalls.
+
 
 ################################
 ### SINGLE-PROCESS EXECUTION ###
@@ -127,38 +149,43 @@ check(plan)
 # Start off with a clean workspace (optional).
 clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 
-# Use make() to execute your workflow. 
-# These functions are exactly the same.
-make(plan) # build everything from scratch
-# Now, open and read report.html in a browser.
-status() # What did you build? Did it finish?
+# All the targets in the plan are "outdated" because we have not made them yet.
+outdated(my_plan, verbose = FALSE)
+# plot_graph(my_plan) # Show how the pieces of your workflow are connected
+missed(my_plan) # Nothing should be missing from your workspace.
+
+make(my_plan) # Run your project.
+# The non-file dependencies of your last target are already loaded
+# in your workspace.
+"report_dependencies" %in% ls() # Should be TRUE.
+progress() # See also in_progress()
+outdated(my_plan, verbose = FALSE) # Everything is up to date
+# plot_graph(my_plan) # The red nodes from before turned green.
 # session() # get the sessionInfo() of the last call to make()
 
 # see also: loadd(), cached(), imported(), and built()
 readd(coef_regression2_large) # Read target from the cache.
-# The non-file dependencies of your last target are already loaded
-# in your workspace.
-"report_dependencies" %in% ls() # Should be TRUE.
 
 # Everything is up to date.
-make(plan)
+make(my_plan)
 
 # Change to a cubic term and rerun.
 reg2 = function(d){
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
+outdated(my_plan) # The targets depending on reg2() are now out of date...
+# plot_graph(my_plan) # ...which is indicated in the graph.
 
-make(plan) # Drake only runs targets that depend on reg2().
+make(my_plan) # Drake only runs targets that depend on reg2().
 
-# For functions and plan$command, 
+# For functions and my_plan$command, 
 # trivial changes like comments and whitespace are ignored.
 reg2 = function(d){
   d$x3 = d$x^3
     lm(y ~ x3, data = d) # I indented here.
 }
-
-make(plan) # Nothing substantial changed. Everything up to date.
+outdated(my_plan) # Everything is still up to date.
 
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
@@ -175,8 +202,8 @@ additions = plan(
   new_data = new_simulation(36) + sqrt(10))  
 
 # Add the new work
-plan = rbind(plan, additions)
-make(plan) # Only the new work is run.
+my_plan = rbind(my_plan, additions)
+make(my_plan) # Only the new work is run.
 
 # Clean up and start over next time.
 # Use clean(small), clean(list = "large"), etc. 
@@ -187,12 +214,16 @@ clean() # report.html and report.md are removed, but report.Rmd stays.
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################
 
-make(plan, jobs = 2) # parallelism == "parLapply" for Windows
-# make(plan, parallelism = "mclapply", jobs = 2) # Not for Windows
+# How many parallel jobs might be useful?
+# At what point would it be ridiculous to add more jobs?
+max_useful_jobs(my_plan)
+
+make(my_plan, jobs = 2) # parallelism == "parLapply" for Windows
+# make(my_plan, parallelism = "mclapply", jobs = 2) # Not for Windows
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # All up to date.
-make(plan, jobs = 2)
+make(my_plan, jobs = 2)
 clean() # Start over next time.
 
 ######################################################
@@ -204,11 +235,11 @@ clean() # Start over next time.
 # Windows users need Rtools (https://cran.r-project.org/bin/windows/Rtools)
 # Everyone else just needs Make (https://www.gnu.org/software/make) 
 # or an equivalent program.
-make(plan, parallelism = "Makefile", jobs = 2) # build everything
+make(my_plan, parallelism = "Makefile", jobs = 2) # build everything
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Drake tells the Makefile what is already up to date.
-make(plan, parallelism = "Makefile", jobs = 2)
+make(my_plan, parallelism = "Makefile", jobs = 2)
 clean() # Start over next time.
 
 ######################################################
@@ -223,14 +254,7 @@ if(FALSE){ # Use FALSE on regular local machines.
 # You could write this file by hand if you wanted.
 # You may have to change 'module load R' to a command that
 # loads a specific version of R.
-
-writeLines(c(
-  "#!/bin/bash",
-  "shift",
-  "echo \"module load R; $*\" | qsub -sync y -cwd -j y"
-), "shell.sh")
-
-system2("chmod", args = c("+x", "shell.sh")) # permission to execute
+shell_file() # Writes an example shell.sh and does a `chmod +x` so drake can execute it.
 
 # In reality, you would put all your code in an R script
 # and then run it in the Linux/Mac terminal with
@@ -239,12 +263,18 @@ system2("chmod", args = c("+x", "shell.sh")) # permission to execute
 # Run up to four parallel jobs on the cluster or supercomputer,
 # depending on what is needed. These jobs could go to multiple 
 # nodes for true distributed computing.
-make(plan, parallelism = "Makefile", jobs = 4, # build
+make(my_plan, parallelism = "Makefile", jobs = 4, # build
   prepend = "SHELL=./shell.sh")
+
+# Alternatively, users of SLURM (https://slurm.schedmd.com/) 
+# can just point to `srun` and dispense with `shell.sh` altogether.
+# make(my_plan, parallelism = "Makefile", jobs = 4,
+#   prepend = "SHELL=srun")
+
 readd(coef_regression2_large) # see also: loadd(), cached()
 
 # Everything is up to date, so no jobs should be submitted.
-make(plan, parallelism = "Makefile", jobs = 4, 
+make(my_plan, parallelism = "Makefile", jobs = 4, 
   prepend = "SHELL=./shell.sh")
 
 } # if(FALSE)

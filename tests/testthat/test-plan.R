@@ -53,7 +53,7 @@ test_that("make() and check() trim outer whitespace in target names", {
   expect_silent(make(x, verbose = FALSE))
   expect_equal(sort(cached()), letters[1:4])
   stat = c(a = "finished", b = "finished", c = "finished", d = "finished")
-  expect_equal(status(), stat)
+  expect_equal(progress(), stat)
   dclean()
   expect_silent(make(x, verbose = FALSE, 
     targets = c("a", "nobody_home")))

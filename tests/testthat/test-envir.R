@@ -20,7 +20,7 @@ test_that("prune_envir in full build", {
   plan = rbind(datasets, analyses, summaries, output)
   
   # set up a workspace to test prune_envir()
-  config = config(plan, targets = plan$target, 
+  config = build_config(plan, targets = plan$target, 
     envir = new.env(parent = globalenv()), 
     parallelism = "mclapply", jobs = 1, prepend = character(0),
     verbose = TRUE, packages = character(0), 

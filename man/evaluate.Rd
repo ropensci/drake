@@ -50,3 +50,15 @@ which overrules \code{wildcard} and \code{values} if
 not \code{NULL}. Here, \code{rules} should be a list with wildcards
 as names and vectors of possible values as list elements.
 }
+\examples{
+datasets <- plan(
+  small = simulate(5),
+  large = simulate(50))
+methods <- plan(
+  regression1 = reg1(..dataset..),
+  regression2 = reg2(..dataset..))
+evaluate(methods, wildcard = "..dataset..",
+  values = datasets$target)
+x = plan(draws = rnorm(mean = Mean, sd = Sd))
+evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
+}

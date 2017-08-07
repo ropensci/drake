@@ -1,3 +1,34 @@
+#' @title Function deps
+#' @description List the dependencies of a function or workflow plan command. 
+#' @export
+#' @param x Either a function or a string.  
+#' Strings are commands from your workflow plan data frame.
+#' @return names of dependencies. Files wrapped in single quotes.
+#' The other names listed are functions or generic objects.
+#' @examples
+#' f <- function(x, y){
+#'   out <- x + y + g(x)
+#'   saveRDS(out, 'out.rds')
+#' }
+#' deps(f)
+#' my_plan <- plan(
+#'   x = 1 + some_object,
+#'   my_target = x + readRDS('tracked_input_file.rds'),
+#'   return_value = f(x, y, g(z + w))
+#' )
+#' deps(my_plan$command[1])
+#' deps(my_plan$command[2])
+#' deps(my_plan$command[3])
+deps = function(x){
+  if(is.function(x))
+    out = function_dependencies(x)
+  else if(is.character(x))
+    out = command_dependencies(x)
+  else
+    stop("x must be a character scalar or function.")
+  clean_dependency_list(out)
+}
+
 dependencies = function(targets, config){
   adjacent_vertices(graph = config$graph, v = targets, mode = "in") %>%
     lapply(FUN = names) %>% clean_dependency_list
@@ -22,8 +53,34 @@ import_dependencies = function(object){
     character(0)
 }
 
+# Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.
+find_namespaced_functions = function(f, found = character(0)){
+  if(is.function(f)){
+    return(find_namespaced_functions(body(f), found))
+  } else if (is.call(f) && deparse(f[[1]]) %in% c("::", ":::")){
+    found = c(found, deparse(f))
+  } else if (is.recursive(f)){
+    v = lapply(as.list(f), find_namespaced_functions, found)
+    found = unique( c(found, unlist(v) ))        
+  }
+  found
+}
+
+is_vectorized = function(funct){
+  if(!is.function(funct)) return(FALSE)
+  vectorized_names = "FUN" # Chose not to include other names.
+  if(!all(vectorized_names %in% ls(environment(funct)))) return(FALSE)
+  f = environment(funct)[["FUN"]]
+  is.function(f)
+}
+
 function_dependencies = function(funct){
-  findGlobals(funct, merge = FALSE) %>% parsable_list
+  if(typeof(funct) != "closure") funct = function(){}
+  if(is_vectorized(funct)) funct = environment(funct)[["FUN"]]
+  out = findGlobals(funct, merge = FALSE)
+  namespaced = find_namespaced_functions(funct)
+  out$functions = c(out$functions, namespaced) %>% sort
+  parsable_list(out)
 }
 
 clean_dependency_list = function(x){

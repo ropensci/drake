@@ -23,6 +23,13 @@ Read all the configuration parameters
 from your last attempted call to \code{\link{make}()}.
 These include the workflow plan
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+read_config()
+}
+}
 \seealso{
 \code{\link{make}}
 }

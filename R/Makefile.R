@@ -1,6 +1,6 @@
 run_Makefile = function(config, run = TRUE, debug = FALSE){
   if(identical(globalenv(), config$envir))
-    save(list = ls(config$envir), envir = config$envir,
+    save(list = ls(config$envir, all.names = TRUE), envir = config$envir,
       file = globalenvpath)
   config$cache$set("config", config, namespace = "makefile")
   makefile = file.path(cachepath, "Makefile")
@@ -8,7 +8,11 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
   makefile_head(config)
   makefile_rules(config)
   sink()
-  initialize(config)
+  out = outdated(plan = config$plan, targets = config$targets,
+    envir = config$envir, verbose = config$verbose, jobs = config$jobs,
+    parallelism = config$parallelism, packages = config$packages,
+    prework = config$prework)
+  time_stamps(config, outdated = out)
   if(run) system2(command = config$command, args = config$args)
   if(!debug) unlink(globalenvpath)
   invisible()
@@ -22,6 +26,9 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
 #' @return \code{args} for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
+#' @examples
+#' default_system2_args(jobs = 2, verbose = FALSE)
+#' default_system2_args(jobs = 4, verbose = TRUE)
 default_system2_args = function(jobs, verbose){
   out = paste0("--jobs=", jobs)
   if(!verbose) out = c(out, "--silent")
@@ -34,7 +41,7 @@ makefile_head = function(config){
 }
 
 makefile_rules = function(config){
-  targets = intersect(config$plan$target, config$order)
+  targets = intersect(config$plan$target, V(config$graph)$name)
   for(target in targets){
     deps = dependencies(target, config) %>%
       intersect(y = config$plan$target) %>% time_stamp
@@ -46,19 +53,6 @@ makefile_rules = function(config){
     else target = quotes(unquote(target), single = FALSE)
     cat("\tRscript -e 'drake::mk(", target, ")'\n", sep = "")
   }
-}
-
-initialize = function(config){
-  config$cache$clear(namespace = "status")
-  do_prework(config = config, verbosePackages = TRUE)
-  imports = setdiff(config$order, config$plan$target)
-  for(import in imports){ # Strict order needed. Might parallelize later.
-    config = inventory(config)
-    hash_list = hash_list(targets = import, config = config)
-    build(target = import, hash_list = hash_list, config = config)
-  }
-  time_stamps(config)
-  invisible()
 }
 
 #' @title Function \code{mk}

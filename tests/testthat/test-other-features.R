@@ -1,6 +1,59 @@
 # library(testthat); library(devtools); load_all()
 context("other-features")
 
+test_that("in_progress() works", {
+  dclean()
+  expect_equal(in_progress(), character(0))
+  bad_plan = plan(x = function_doesnt_exist())
+  expect_error(make(bad_plan, verbose = FALSE))
+  expect_equal(in_progress(), "x")
+  dclean()
+})
+
+test_that("missed() works", {
+  dclean()
+  o = dbug()
+  expect_equal(character(0), missed(o$plan, envir = o$envir, verbose = F))
+  rm(list = c("f", "g"), envir = o$envir)
+  expect_equal(sort(c("f", "g")), 
+               sort(missed(o$plan, envir = o$envir, verbose = F)))
+  dclean()
+})
+
+test_that("shell_file() writes correctly", {
+  expect_false(file.exists("shell.sh"))
+  shell_file()
+  expect_true(file.exists("shell.sh"))
+  unlink("shell.sh")
+  d = "exdir"
+  dir.create(d)
+  p = file.path(d, "script.txt")
+  expect_false(file.exists(p))
+  shell_file(p)
+  expect_true(file.exists(p))
+  unlink(d, recursive = TRUE)
+})
+
+test_that("deps() correctly reports dependencies of functions and commands", {
+  expect_equal(deps(c), character(0))
+  expect_equal(deps(list), character(0))
+  f <- function(x, y){
+    out <- x + y + g(x)
+    saveRDS(out, 'out.rds')
+  }
+  expect_equal(deps(f), c("g", "saveRDS"))
+  my_plan <- plan(
+    x = 1 + some_object,
+    my_target = x + readRDS('tracked_input_file.rds'),
+    return_value = f(x, y, g(z + w))
+  )
+  expect_equal(deps(my_plan$command[1]), "some_object")
+  expect_equal(deps(my_plan$command[2]), 
+               c("'tracked_input_file.rds'", "readRDS", "x"))
+  expect_equal(deps(my_plan$command[3]),
+               c("f", "g", "w", "x", "y", "z"))
+})
+
 test_that("tracked() works", {
   dclean()
   config = dbug()
@@ -29,7 +82,7 @@ test_that("mclapply and lapply", {
   dclean()
 })
 
-test_that(".onLoad() warns correctly", {
+test_that(".onLoad() warns correctly and .onAttach() works", {
   f = ".RData"
   expect_false(file.exists(f))
   expect_silent(drake:::.onLoad())
@@ -37,6 +90,9 @@ test_that(".onLoad() warns correctly", {
   expect_true(file.exists(f))
   expect_warning(drake:::.onLoad())
   unlink(f)
+  set.seed(0)
+  expect_true(is.character(drake_tip()))
+  expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
 test_that("graph functions work", {
@@ -44,7 +100,7 @@ test_that("graph functions work", {
   config = dbug()
   expect_equal(class(build_graph(config$plan)), "igraph")
   pdf(NULL)
-  expect_silent(plot_graph(plan = config$plan, envir = config$envir))
+  tmp = plot_graph(plan = config$plan, envir = config$envir, verbose = FALSE)
   dev.off()
   unlink("Rplots.pdf")
   dclean()
@@ -102,21 +158,8 @@ test_that("deprecation", {
   expect_warning(make(plan, verbose = FALSE))
   dclean()
   expect_warning(make(plan, verbose = FALSE))
+  expect_warning(status())
   expect_true(is.numeric(readd(x, search = FALSE)))
-  dclean()
-})
-
-test_that("examples are listed and written", {
-  dclean()
-  x = examples_drake()
-  expect_true(is.character(x) & length(x) > 0)
-  for(i in x){
-    expect_false(file.exists(i))
-    example_drake(i)
-    expect_true(file.exists(i))
-    expect_true(file.info(i)$isdir)
-    unlink(i, recursive = TRUE)
-  }
   dclean()
 })
 

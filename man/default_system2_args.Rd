@@ -19,3 +19,7 @@ Internal function to configure
 arguments to \code{\link{system2}()} to run Makefiles.
 Not a user-side function.
 }
+\examples{
+default_system2_args(jobs = 2, verbose = FALSE)
+default_system2_args(jobs = 4, verbose = TRUE)
+}

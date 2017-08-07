@@ -31,6 +31,17 @@
 #' If \code{FALSE}, each occurence of the wildcard
 #' is replaced with the next entry in the \code{values} vector, 
 #' and the values are recycled.
+#' @examples
+#' datasets <- plan(
+#'   small = simulate(5),
+#'   large = simulate(50))
+#' methods <- plan(
+#'   regression1 = reg1(..dataset..),
+#'   regression2 = reg2(..dataset..))
+#' evaluate(methods, wildcard = "..dataset..",
+#'   values = datasets$target)
+#' x = plan(draws = rnorm(mean = Mean, sd = Sd))
+#' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate = function(plan, rules = NULL, wildcard = NULL, values = NULL, 
   expand = TRUE){
   if(!is.null(rules)) 
@@ -73,6 +84,11 @@ evaluations = function(plan, rules = NULL, expand = TRUE){
 #' @param plan workflow plan data frame
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
+#' @examples 
+#' datasets <- plan(
+#'   small = simulate(5),
+#'   large = simulate(50))
+#' expand(datasets, values = c("rep1", "rep2", "rep3"))
 expand = function(plan, values = NULL){
   if(!length(values)) return(plan)
   nrows = nrow(plan)
@@ -95,6 +111,12 @@ expand = function(plan, values = NULL){
 #' @param gather function used to gather the targets. Should be 
 #' one of \code{\link{list}(...)}, \code{\link{c}(...)},
 #' \code{\link{rbind}(...)}, or similar.
+#' @examples
+#' datasets <- plan(
+#'   small = simulate(5),
+#'   large = simulate(50))
+#' gather(datasets, target = "my_datasets")
+#' gather(datasets, target = "aggregated_data", gather = "rbind")
 gather = function(plan = NULL, target = "target", gather = "list"){
   command = paste(plan$target, "=", plan$target)
   command = paste(command, collapse = ", ")
@@ -117,6 +139,14 @@ gather = function(plan = NULL, target = "target", gather = "list"){
 #' \code{lm(your_dataset_2)}, etc. 
 #' @param datasets workflow plan data frame with instructions 
 #' to make the datasets.
+#' @examples
+#' datasets <- plan(
+#'   small = simulate(5),
+#'   large = simulate(50))
+#' methods <- plan(
+#'   regression1 = reg1(..dataset..),
+#'   regression2 = reg2(..dataset..))
+#' analyses(methods, datasets = datasets)
 analyses = function(plan, datasets){
   evaluate(plan, wildcard = "..dataset..", values = datasets$target)
 }
@@ -139,6 +169,21 @@ analyses = function(plan, datasets){
 #' summaries. If not \code{NULL}, the length must be the number of 
 #' rows in the \code{plan}. See the \code{\link{gather}()} function
 #' for more.
+#' @examples
+#' datasets <- plan(
+#'   small = simulate(5),
+#'   large = simulate(50))
+#' methods <- plan(
+#'   regression1 = reg1(..dataset..),
+#'   regression2 = reg2(..dataset..))
+#' analyses <- analyses(methods, datasets = datasets)
+#' summary_types <- plan(
+#'   summ = summary(..analysis..),
+#'   coef = coef(..analysis..))
+#' summaries(summary_types, analyses, datasets, gather = NULL) 
+#' summaries(summary_types, analyses, datasets)
+#' summaries(summary_types, analyses, datasets, gather = "list")
+#' summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
 summaries = function(plan, analyses, datasets, 
   gather = rep("list", nrow(plan))){
   plan = with_analyses_only(plan)
@@ -152,8 +197,9 @@ summaries = function(plan, analyses, datasets,
   out = evaluate(out, wildcard = "..dataset..", values = datasets$target,
     expand = FALSE)
   if(!length(gather)) return(out[setdiff(names(out), group)])
+  if(length(gather) == 1) gather = rep(gather, dim(plan)[1])
   if(!(length(gather) == dim(plan)[1]))
-    stop("gather must be NULL or have length nrow(plan)")
+    stop("gather must be NULL or have length 1 or nrow(plan)")
   gathered = ddply(out, group, function(summary_group){
     summary_type = summary_group[[group]][1]
     gather(summary_group, target = summary_type, 

@@ -7,6 +7,12 @@
 #' if no cache is found.
 #' @param path starting path for search back for the cache.
 #' Should be a subdirectory of the drake project.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' find_cache()
+#' }
 find_cache = function(path = getwd()){
   while (!(cachepath %in% list.files(path = path, all.files = TRUE))){
     path = dirname(path)
@@ -27,6 +33,12 @@ find_cache = function(path = getwd()){
 #' if no drake project is found.
 #' @param path starting path for search back for the project.
 #' Should be a subdirectory of the drake project.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' find_project()
+#' }
 find_project = function(path = getwd()){
   cache = find_cache(path = path)
   if(is.null(cache)) return()

@@ -28,7 +28,7 @@ dbug = function(clean = TRUE){
     myinput = "readRDS('input.rds')",
     final = "readRDS('intermediatefile.rds')"
   ))
-  config = config(plan, targets = plan$target, envir = envir, 
+  config = build_config(plan, targets = plan$target, envir = envir, 
     parallelism = "mclapply", jobs = 1, prepend = character(0),
     verbose = FALSE, packages = character(0), prework = character(0), 
     command = "make", args = character(0))
@@ -36,8 +36,6 @@ dbug = function(clean = TRUE){
 }
 
 dclean = function(){
-  unlink(".drake", recursive = TRUE)
-  unlink("input.rds")
-  unlink("intermediatefile.rds")
-  unlink("Makefile")
+  unlink(c(".drake", "intermediatefile.rds", "input.rds", 
+    "Makefile", "report.md", "report.Rmd"), recursive = TRUE)
 }

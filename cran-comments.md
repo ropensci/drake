@@ -1,3 +1,9 @@
+# Version 4.0.0
+
+This major release is almost back-compatible. It now reproducibly tracks namespaced functions of the form `package::function()` and `package:::function()`. Adding this behavior was the right thing to do, but some projects from <= 3.0.0 might not be back-compatible. 
+
+This release also includes a round of bugfixes, better parallel computing, completely rewritten documentation, and new functionality to enhance the user experience. `plot_graph()` now uses `visNetwork` in the backend, and the interactive visualization helps users understand the state of thier workflows. New functions also include `load_basic_example()`, `dataframes_graph()`, `max_useful_jobs()`, `deps()`, `outdated()`, and `shell_file()`.
+
 # Version 3.0.0
 
 This major version update contains crucial bug fixes and documentation updates. It improves the way environments are managed so the behavior of `make()` is more predictable. The interface is completely back-compatible, but the behavior of the internals is somewhat different, which is why I bumped to a new major version rather than a new minor version or patch.

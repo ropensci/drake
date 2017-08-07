@@ -11,6 +11,11 @@ names of all the drake examples.
 }
 \description{
 List the names of all the drake examples.
+The \code{"basic"} example is the one from the
+quickstart vignette: \code{vignette("quickstart")}.
+}
+\examples{
+examples_drake()
 }
 \seealso{
 \code{\link{example_drake}}, \code{\link{make}}
