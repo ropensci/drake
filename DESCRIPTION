@@ -29,7 +29,8 @@ Imports:
     testthat,
     tools,
     utils,
-    visNetwork
+    visNetwork,
+    lubridate
 Suggests:
     abind,
     knitr,
