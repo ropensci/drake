@@ -6,6 +6,7 @@ test_that("cache functions work", {
   expect_equal(character(0), 
     cached(search = FALSE), imported(search = FALSE), 
     built(search = FALSE))
+  expect_equal(build_times(search = FALSE), NULL)
   expect_equal(progress(search = FALSE), character(0))
   expect_equal(in_progress(search = FALSE), character(0))
   expect_error(readd(search = FALSE))
@@ -40,6 +41,10 @@ test_that("cache functions work", {
   expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
+  
+  # build_times
+  expect_equal(sort(build_times(search = FALSE)$target), builds)
+  expect_length(build_times(), 4) # 4 columns
   
   # config
   newconfig = read_config(search = FALSE)
