@@ -1,6 +1,6 @@
 Package: drake
 Title: Data Frames in R for Make
-Version: 4.0.1
+Version: 4.1.0
 Date: 2017-08-11
 Authors@R: c(
   person(family = "Landau", given = c("William", "Michael"),
@@ -20,6 +20,7 @@ Imports:
     eply,
     digest,
     igraph,
+    lubridate,
     magrittr,
     parallel,
     plyr,
@@ -31,8 +32,7 @@ Imports:
     testthat,
     tools,
     utils,
-    visNetwork,
-    lubridate
+    visNetwork
 Suggests:
     abind,
     knitr,
