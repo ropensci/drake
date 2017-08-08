@@ -105,7 +105,13 @@ built = function(path = getwd(), search = TRUE){
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-#' @param digits How many digits to round the times to. 
+#' @param digits How many digits to round the times to.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' build_times()
+#' }
 build_times = function(path = getwd(), search = TRUE, digits = 0){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(NULL)

@@ -24,6 +24,13 @@ data.frame of times from \code{\link{system.time}}
 List all the build times. This doesn't include the amount of time 
 spent loading and saving objects!
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+build_times()
+}
+}
 \seealso{
 \code{\link{built}}
 }

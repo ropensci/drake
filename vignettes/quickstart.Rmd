@@ -75,6 +75,7 @@ clean()
 cached()
 imported()
 built()
+build_times()
 readd()
 loadd()
 find_project()
@@ -320,12 +321,14 @@ The non-file dependencies of your last target are already loaded in your workspa
 
 ```{r plotgraphfirstmake}
 outdated(my_plan, verbose = FALSE) # Everything is up to date.
+build_times(digits = 4) # How long did it take to make each target?
 ```
 
 ```r
 # Run plot_graph() yourself for interactivity.
 plot_graph(my_plan, width = "100%", height = "500px") # The red nodes from before turned green.
-# dataframes_graph(my_plan) # Get visNetwork nodes and edges so you can make your own plot with visNetwork or render_graph().
+# dataframes_graph(my_plan) # Get visNetwork nodes and edges so you can
+                            # make your own plot with visNetwork or render_graph().
 ```
 
 ![](built.png)
