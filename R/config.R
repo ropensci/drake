@@ -51,7 +51,7 @@ build_config = function(plan, targets, envir, jobs,
   parallelism = match.arg(parallelism)
   prework = add_packages_to_prework(packages = packages,
     prework = prework)
-  cache = storr_rds(cachepath, mangle_key = TRUE)
+  cache = storr_rds(cachepath, mangle_key = TRUE, hash_algorithm = hash_algorithm())
   if(clear_progress) cache$clear(namespace = "progress")
   graph = build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)

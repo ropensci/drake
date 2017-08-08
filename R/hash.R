@@ -1,3 +1,5 @@
+hash_algorithm = function() "md5"
+
 hash_list = function(targets, config){
   sapply(targets, hashes, config = config,
     simplify = FALSE, USE.NAMES = TRUE)
@@ -13,7 +15,7 @@ dependency_hash = function(target, config){
   stopifnot(length(command) == 1)
   dependencies(target, config) %>% 
     self_hash(config = config) %>%
-    c(command) %>% digest(algo = "md5")
+    c(command) %>% digest(algo = hash_algorithm())
 }
 
 self_hash = Vectorize(function(target, config){
