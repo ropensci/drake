@@ -49,4 +49,5 @@
 #' @importFrom utils sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout 
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
+#' @importFrom lubridate dseconds
 NULL
