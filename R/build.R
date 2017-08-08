@@ -2,7 +2,6 @@ build = function(target, hash_list, config){
   hashes = hash_list[[target]]
   config$cache$set(key = target, value = "in progress", 
     namespace = "progress")
-  config$cache$del(key = target, namespace = "build_times")
   imported = !(target %in% config$plan$target)
   console(imported = imported, target = target, config = config) 
   if(imported)
