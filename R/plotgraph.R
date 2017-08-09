@@ -54,6 +54,7 @@
 #' Computing this
 #' in advance could save time if you plan multiple calls to 
 #' \code{outdated()}.
+#' @param main title of the graph
 #' @param ... other arguments passed to \code{visNetwork::visNetwork()} to plot the graph.
 #' @examples
 #' \dontrun{
@@ -68,7 +69,9 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   packages = (.packages()), prework = character(0),
   file = character(0), selfcontained = FALSE, targets_only = FALSE, config = NULL,
   font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE, ...){
+  navigationButtons = TRUE, hover = TRUE, 
+  main = paste("Workflow graph for", parallelism, "parallelism"),
+  ...){
   
   force(envir)
   raw_graph = dataframes_graph(plan = plan, targets = targets, 
@@ -77,7 +80,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
      config = config, font_size = font_size)
   render_graph(raw_graph, file = file, selfcontained = selfcontained,
      layout = layout, direction = direction,
-     navigationButtons = navigationButtons, hover = hover, ...)
+     navigationButtons = navigationButtons, hover = hover, main = main, ...)
 }
 
 #' @title Function \code{render_graph}
@@ -105,6 +108,7 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' @param hover logical, whether to show the command that generated the target
 #' when you hover over a node with the mouse. For imports, the label does not
 #' change with hovering.
+#' @param main title of the graph
 #' @param ... arguments passed to \code{visNetwork()}.
 #' @examples
 #' \dontrun{
@@ -113,8 +117,9 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' render_graph(graph, width = "100%") # The width is passed to visNetwork().
 #' }
 render_graph = function(graph, file = character(0), layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE, selfcontained = FALSE, ...){
-  main = paste("Workflow graph for", graph$parallelism, "parallelism")
+  navigationButtons = TRUE, hover = TRUE, selfcontained = FALSE, 
+  main = paste("Workflow graph for", graph$parallelism, "parallelism"),
+  ...){
   out = visNetwork(nodes = graph$nodes, edges = graph$edges, main = main, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
     visHierarchicalLayout(direction = direction) %>%

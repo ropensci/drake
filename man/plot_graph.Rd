@@ -10,7 +10,8 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   prework = character(0), file = character(0), selfcontained = FALSE,
   targets_only = FALSE, config = NULL, font_size = 20,
   layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE, ...)
+  navigationButtons = TRUE, hover = TRUE,
+  main = paste("Workflow graph for", parallelism, "parallelism"), ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -78,6 +79,8 @@ but this may not always be the case ;) in the future.}
 \item{hover}{logical, whether to show the command that generated the target
 when you hover over a node with the mouse. For imports, the label does not
 change with hovering.}
+
+\item{main}{title of the graph}
 
 \item{...}{other arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
 }
