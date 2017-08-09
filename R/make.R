@@ -160,7 +160,9 @@ make = function(plan, targets = drake::possible_targets(plan),
      config$graph = delete_vertices(config$graph, v = delete_these)
      if(parallelism == "Makefile") parallelism = default_parallelism()
   }
-  get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
+  withr::with_preserve_seed(
+    get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
+    )
   if(return_config) return(config)
   else invisible()
 }
