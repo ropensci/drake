@@ -194,7 +194,7 @@ reg2 = function(d){ # Change a dependency.
 plot_graph(my_plan, width = "100%")
 ```
 
-<iframe src="images/reg2.html" width = "100%" height = "600px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
+![](./images/graph.png)
 
 When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
 
