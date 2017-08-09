@@ -1,4 +1,4 @@
-context("reproducible")
+context("reproducible random numbers")
 
 test_that("Objects are reproducible", {
   dclean()
@@ -8,14 +8,14 @@ test_that("Objects are reproducible", {
     y = runif(20),
     z = rnorm(20)
     )
-  make(data)
+  make(data, verbose = FALSE)
   old_x <- x
   old_y <- y
   old_z <- z
 
   # Oh no, I've accidentally deleted some data that needs to be reproducible
   clean(x, y, z)
-  make(data)
+  make(data, verbose = FALSE)
   expect_identical(x, old_x)
   expect_identical(y, old_y)
   expect_identical(z, old_z)
@@ -30,7 +30,7 @@ test_that("Objects are distinct", {
     x = runif(20)
     )
   data_exp <- expand(data, values = c("a", "b"))
-  make(data_exp)
+  make(data_exp, verbose = FALSE)
 
   expect_false(identical(x_a, x_b))
 
@@ -51,7 +51,7 @@ test_that("Sequential objects reproduce correctly", {
     methods,
     data = first_stage
     )
-  make(rbind(first_stage, second_stage))
+  make(rbind(first_stage, second_stage), verbose = FALSE)
   old_x <- x
   old_xbax_x <- xbar_x
   old_y_y <- y_x
@@ -59,7 +59,7 @@ test_that("Sequential objects reproduce correctly", {
   # How do I keep deleting my data like this? So clumsy.
   clean(x, xbar_x, y_x)
 
-  make(rbind(first_stage, second_stage))
+  make(rbind(first_stage, second_stage), verbose = FALSE)
   expect_identical(old_x, x)
   expect_identical(old_xbax_x, xbar_x)
   expect_identical(old_y_y, y_x)
