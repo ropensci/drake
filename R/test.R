@@ -7,8 +7,8 @@
 
 testopts = function(){list(
   jobs = 2, # needs to be 1 for mclapply on Windows
-#  parallelism = "parLapply") # use for shipped tests
-  parallelism = "mclapply")
+  parallelism = "parLapply") # use for shipped tests
+ # parallelism = "mclapply")
  # parallelism = "Makefile")
 } # drake has to already be installed for the Makefile stuff
 

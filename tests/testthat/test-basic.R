@@ -19,7 +19,7 @@ test_that("basic example works", {
   tmp = dataframes_graph(my_plan, envir = e, config = config)
   tmp = dataframes_graph(my_plan, envir = e, config = config, targets_only = TRUE)
   expect_false(file.exists("Makefile"))
-  expect_true(all(sapply(tmp, is.data.frame)))
+  expect_true(is.data.frame(tmp$nodes))
   expect_equal(sort(outdated(my_plan, envir = e, config = config)),
     sort(c(my_plan$target)))
   expect_false(file.exists("Makefile"))
@@ -84,6 +84,6 @@ test_that("basic example works", {
     verbose = FALSE)
   tmp = dataframes_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  expect_true(all(sapply(tmp, is.data.frame)))
+  expect_true(is.data.frame(tmp$nodes))
   dclean()
 })

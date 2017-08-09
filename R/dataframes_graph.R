@@ -20,8 +20,11 @@
 #' to speed up the process. The \code{jobs} argument is number of parallel jobs 
 #' to use for faster computation.
 #' @param parallelism Choice of parallel backend to speed up the computation.
-#' See \code{?parallelism_choices} for details. The Makefile option is not available
-#' here. Drake will try to pick the best option for your system by default.
+#' Execution order in \code{\link{make}()} is slightly different when 
+#' \code{parallelism} equals \code{"Makefile"}
+#' because in that case, all the imports are imported before any target is built. 
+#' Thus, the arrangement in the graph is different for Makefile parallelism.
+#' See \code{?parallelism_choices} for details.
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
@@ -80,7 +83,12 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
     can_get_function(x, envir = envir))
   missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
   
-  nodes = resolve_levels(nodes, graph)
+  if(parallelism == "Makefile") # Imports and targets are parallelized separately.
+    nodes = resolve_levels_Makefile(nodes = nodes, graph = graph, 
+      imports = imports, targets = targets)
+  else # Imports and targets are parallelized all together.
+    nodes = resolve_levels(nodes = nodes, graph = graph)
+  
   nodes$font.size = font_size
   nodes$status = "import"
   nodes$color = import_color
@@ -88,8 +96,8 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   nodes[missing, "color"] = missing_color
   
   outdated = outdated(plan = plan, targets = targets, envir = envir, 
-                      verbose = verbose, jobs = jobs, parallelism = parallelism,
-                      packages = packages, prework = prework, config = config)
+     verbose = verbose, jobs = jobs, parallelism = parallelism,
+     packages = packages, prework = prework, config = config)
   nodes[targets, "status"] = "up-to-date"
   nodes[targets, "color"] = up_to_date_color
   nodes[outdated, "status"] = "outdated"
@@ -124,7 +132,8 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
     nodes = nodes[targets,]
     edges = edges[edges$from %in% targets & edges$to %in% targets,]
   }
-  list(nodes = nodes, edges = edges, legend_nodes = legend_nodes) 
+  list(nodes = nodes, edges = edges, legend_nodes = legend_nodes, 
+    parallelism = parallelism) 
 }
 
 can_get_function = function(x, envir){
@@ -159,4 +168,15 @@ resolve_levels = function(nodes, graph){
   }
   stopifnot(all(!is.na(nodes$level)))
   nodes
+}
+
+resolve_levels_Makefile = function(nodes, graph, imports, targets){
+  graph_imports = delete_vertices(graph, v = targets)
+  graph_targets = delete_vertices(graph, v = imports)
+  nodes_imports = nodes[nodes$id %in% imports,]
+  nodes_targets = nodes[nodes$id %in% targets,]
+  nodes_imports = resolve_levels(nodes = nodes_imports, graph = graph_imports)
+  nodes_targets = resolve_levels(nodes = nodes_targets, graph = graph_targets)
+  nodes_imports$level = nodes_imports$level - max(nodes_imports$level)
+  rbind(nodes_imports, nodes_targets)
 }

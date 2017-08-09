@@ -1,6 +1,21 @@
 # library(testthat); library(devtools); load_all()
 context("edge-cases")
 
+test_that("different graphical arrangements for Makefile parallelism", {
+  dclean()
+  e = new.env()
+  x = plan(a = 1, b = f(2))
+  e$f = function(x) x
+  con = config(x, envir = e, verbose = FALSE)
+  expect_equal(1, max_useful_jobs(x, envir = e, config = con,
+    parallelism = "mclapply", jobs = 1))
+  expect_equal(1, max_useful_jobs(x, envir = e, config = con,
+    parallelism = "parLapply", jobs = 1))
+  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
+    parallelism = "Makefile", jobs = 1))
+  dclean()
+})
+
 test_that("Vectorized nested functions work", {
   dclean()
   e = new.env(parent = globalenv())

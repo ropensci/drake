@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./raster/logo-readme.png" alt="">
+  <img src="./images/logo-readme.png" alt="">
 </p>
 <br/>
 
@@ -10,7 +10,7 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
-![](raster/demo.gif)
+![](images/demo.gif)
 
 # Data frames in R for [Make](http://kbroman.org/minimal_make/)
 
@@ -194,7 +194,7 @@ reg2 = function(d){ # Change a dependency.
 plot_graph(my_plan, width = "100%")
 ```
 
-![](raster/graph.png)
+<iframe src="images/reg2.html" width = "100%" height = "600px" allowtransparency="true" style="border: none; box-shadow: none"></iframe>
 
 When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
 
@@ -202,7 +202,7 @@ As for how the parallelism is implemented, you can choose from multiple built-in
 
 1. **mclapply**: low-overhead, light-weight. `make(..., parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood and distributes the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
 2. **parLapply**: medium-overhead, light-weight. `make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
-3. **Makefile**: high-overhead, heavy-duty. `make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions. With custom settings, you can distribute the R sessions over different jobs/nodes on a cluster. See the [quickstart vignette](https://cran.r-project.org/package=drake/vignettes/quickstart.html) for more details.
+3. **Makefile**: high-overhead, heavy-duty. `make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions. With custom settings, you can distribute the R sessions over different jobs/nodes on a cluster. The build order may be different here because all the imports are imported before any of the targets are built with the [Makefile](https://www.gnu.org/software/make/). That means `plot_graph()`, `dataframes_graph()`, and `max_useful_jobs()` behave differently for \code{parallelism = "Makefile"}. For more details, see the [quickstart vignette](https://cran.r-project.org/package=drake/vignettes/quickstart.html).
 
 # Acknowledgements and related work
 

@@ -30,8 +30,11 @@ to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
-See \code{?parallelism_choices} for details. The Makefile option is not available
-here. Drake will try to pick the best option for your system by default.}
+Execution order in \code{\link{make}()} is slightly different 
+when \code{parallelism} equals \code{"Makefile"}
+because in that case, all the imports are imported before any target is built.
+Thus, \code{max_useful_jobs()} may give a different answer for Makefile parallelism.
+See \code{?parallelism_choices} for details.}
 
 \item{packages}{same as for \code{\link{make}}}
 

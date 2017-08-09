@@ -19,8 +19,11 @@
 #' to speed up the process. The \code{jobs} argument is number of parallel jobs 
 #' to use for faster computation.
 #' @param parallelism Choice of parallel backend to speed up the computation.
-#' See \code{?parallelism_choices} for details. The Makefile option is not available
-#' here. Drake will try to pick the best option for your system by default.
+#' Execution order in \code{\link{make}()} is slightly different when 
+#' \code{parallelism} equals \code{"Makefile"}
+#' because in that case, all the imports are imported before any target is built. 
+#' Thus, the arrangement in the graph is different for Makefile parallelism.
+#' See \code{?parallelism_choices} for details. 
 #' @param packages same as for \code{\link{make}()}.
 #' @param prework same as for \code{\link{make}()}.
 #' @param file Name of HTML file to save the graph.
@@ -111,7 +114,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
 #' }
 render_graph = function(graph, file = character(0), layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, selfcontained = FALSE, ...){
-  out = visNetwork(nodes = graph$nodes, edges = graph$edges, ...) %>%
+  main = paste("Workflow graph for", graph$parallelism, "parallelism")
+  out = visNetwork(nodes = graph$nodes, edges = graph$edges, main = main, ...) %>%
     visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>% 
     visHierarchicalLayout(direction = direction) %>%
     visIgraphLayout(physics = FALSE, randomSeed = 2017, # increases performance
