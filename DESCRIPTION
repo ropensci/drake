@@ -32,7 +32,8 @@ Imports:
     testthat,
     tools,
     utils,
-    visNetwork
+    visNetwork,
+    withr
 Suggests:
     abind,
     knitr,
