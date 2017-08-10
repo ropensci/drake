@@ -7,7 +7,9 @@ for (config_outer in test_configs()){
 context(paste("basic -", config_outer[["label"]]))
 
 test_that("basic make", {
+  skip_tests(config_outer)
   dclean()
+
   load_basic_example(envir = envir)
   my_plan <- envir$my_plan
 
