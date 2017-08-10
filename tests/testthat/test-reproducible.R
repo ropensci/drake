@@ -8,14 +8,26 @@ test_that("Objects are reproducible", {
     y = runif(20),
     z = rnorm(20)
     )
-  make(data, verbose = FALSE)
-  old_x <- x
+  make(
+    data,
+    envir = dbug()$envir,
+    parallelism = testopts()$parallelism,
+    jobs = testopts()$jobs,
+    verbose = FALSE
+    )
+  old_x <- envir$x
   old_y <- y
   old_z <- z
 
   # Oh no, I've accidentally deleted some data that needs to be reproducible
   clean(x, y, z)
-  make(data, verbose = FALSE)
+  make(
+    data,
+    envir = dbug()$envir,
+    parallelism = testopts()$parallelism,
+    jobs = testopts()$jobs,
+    verbose = FALSE
+    )
   expect_identical(x, old_x)
   expect_identical(y, old_y)
   expect_identical(z, old_z)
@@ -30,7 +42,13 @@ test_that("Objects are distinct", {
     x = runif(20)
     )
   data_exp <- expand(data, values = c("a", "b"))
-  make(data_exp, verbose = FALSE)
+  make(
+    data_exp,
+    envir = dbug()$envir,
+    parallelism = testopts()$parallelism,
+    jobs = testopts()$jobs,
+    verbose = FALSE
+    )
 
   expect_false(identical(x_a, x_b))
 
@@ -51,7 +69,13 @@ test_that("Sequential objects reproduce correctly", {
     methods,
     data = first_stage
     )
-  make(rbind(first_stage, second_stage), verbose = FALSE)
+  make(
+    rbind(first_stage, second_stage),
+    envir = dbug()$envir,
+    parallelism = testopts()$parallelism,
+    jobs = testopts()$jobs,
+    verbose = FALSE
+    )
   old_x <- x
   old_xbax_x <- xbar_x
   old_y_y <- y_x
@@ -59,7 +83,13 @@ test_that("Sequential objects reproduce correctly", {
   # How do I keep deleting my data like this? So clumsy.
   clean(x, xbar_x, y_x)
 
-  make(rbind(first_stage, second_stage), verbose = FALSE)
+  make(
+    rbind(first_stage, second_stage),
+    envir = dbug()$envir,
+    parallelism = testopts()$parallelism,
+    jobs = testopts()$jobs,
+    verbose = FALSE
+    )
   expect_identical(old_x, x)
   expect_identical(old_xbax_x, xbar_x)
   expect_identical(old_y_y, y_x)
