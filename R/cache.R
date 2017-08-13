@@ -174,7 +174,10 @@ get_cache = function(path = getwd(), search = TRUE){
   else path = file.path(path, cachepath)
   if(is.null(path)) return(NULL)
   if(!file.exists(path)) return(NULL)
-  storr_rds(path, mangle_key = TRUE, hash_algorithm = hash_algorithm())
+  cache = storr_rds(path, mangle_key = TRUE, 
+    hash_algorithm = hash_algorithm)
+  cache$driver$path = normalizePath(cache$driver$path)
+  cache
 }
 
 # from base::remove()

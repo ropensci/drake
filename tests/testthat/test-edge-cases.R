@@ -104,7 +104,7 @@ test_that("true targets can be functions", {
   plan = plan(myfunction = generator(), output = myfunction(1))
   make(plan, verbose = FALSE)
   expect_equal(readd(output), 2)
-  cache = storr::storr_rds(cachepath, hash_algorithm = hash_algorithm())
+  cache = storr::storr_rds(cachepath, hash_algorithm = hash_algorithm)
   expect_true(is.list(cache$get("myfunction")))
   myfunction = readd(myfunction)
   expect_equal(myfunction(4), 5)
