@@ -41,7 +41,8 @@ assign_to_envir_parLapply = function(target, value, config){
 }
 
 load_packages_parLapply = function(){
-  packages = c( # not ideal, but necessary
+  # Not ideal, but necessary.
+  packages = c(
     "base64url", "codetools", "crayon", "eply", "digest", "igraph",
     "magrittr", "parallel", "plyr", "R.utils", "storr", "stringi", 
     "stringr", "testthat", "tools", "utils")

@@ -38,6 +38,7 @@ check_config = function(config){
       "must include 'target' and 'command'.")
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
+  warn_bad_symbols(config$plan$target)
 }
 
 find_files = function(config){
@@ -45,6 +46,14 @@ find_files = function(config){
     unquote %>% Filter(f = function(filename) !file.exists(filename))
   if(length(files))
     stop("missing input files:\n", multiline_message(files))
+}
+
+warn_bad_symbols = function(x){
+  x = unquote(x)
+  bad = which(!is_parsable(x)) %>% names
+  if(!length(bad)) return(invisible())
+  warning("Possibly bad target names:\n", multiline_message(bad))
+  invisible()
 }
 
 check_strings = function(plan){

@@ -70,3 +70,12 @@ test_that("make() plays nicely with tibbles", {
   expect_silent(make(x, verbose = FALSE))
   dclean()
 })
+
+test_that("check() finds bad symbols", {
+  x = data.frame(target = c("a", "b", "\"targs\"", "a'x'", "b'x'"), 
+    command = 1)
+  expect_warning(o <- check(x))
+  x = data.frame(target = c("a", "b", "\"targs\""),
+    command = 1)
+  expect_silent(o <- check(x))
+})
