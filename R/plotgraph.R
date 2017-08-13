@@ -33,6 +33,8 @@
 #' HTML file (with external resources base64 encoded) or a file with
 #' external resources placed in an adjacent directory. If \code{TRUE},
 #' pandoc is required.
+#' @param build_times logical, whether to print the \code{\link{build_times}()}
+#' in the graph.
 #' @param targets_only logical, whether to skip the imports and only show the 
 #' targets in the workflow plan.
 #' @param font_size numeric, font size of the node labels in the graph
@@ -67,7 +69,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1, 
   parallelism = drake::default_parallelism(), 
   packages = (.packages()), prework = character(0),
-  file = character(0), selfcontained = FALSE, targets_only = FALSE, config = NULL,
+  file = character(0), selfcontained = FALSE, build_times = TRUE,
+  targets_only = FALSE, config = NULL,
   font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE, 
   main = paste("Workflow graph for", parallelism, "parallelism"),
@@ -76,7 +79,8 @@ plot_graph = function(plan, targets = drake::possible_targets(plan),
   force(envir)
   raw_graph = dataframes_graph(plan = plan, targets = targets, 
      envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
-     packages = packages, prework = prework,targets_only = targets_only,
+     packages = packages, prework = prework, build_times = build_times,
+     targets_only = targets_only,
      config = config, font_size = font_size)
   render_graph(raw_graph, file = file, selfcontained = selfcontained,
      layout = layout, direction = direction,

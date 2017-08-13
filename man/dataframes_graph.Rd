@@ -7,8 +7,8 @@
 dataframes_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), targets_only = FALSE, font_size = 20,
-  config = NULL)
+  prework = character(0), build_times = TRUE, targets_only = FALSE,
+  font_size = 20, config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -39,6 +39,9 @@ See \code{?parallelism_choices} for details.}
 \item{packages}{same as for \code{\link{make}}}
 
 \item{prework}{same as for \code{\link{make}}}
+
+\item{build_times}{logical, whether to show the \code{\link{build_times}()}
+of the targets, if available.}
 
 \item{targets_only}{logical, whether to skip the imports and only include the 
 targets in the workflow plan.}

@@ -28,6 +28,8 @@
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
+#' @param build_times logical, whether to show the \code{\link{build_times}()}
+#' of the targets, if available.
 #' @param targets_only logical, whether to skip the imports and only include the 
 #' targets in the workflow plan.
 #' @param config option internal runtime parameter list of 
@@ -52,7 +54,8 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
                             envir = parent.frame(), verbose = TRUE, jobs = 1, 
                             parallelism = drake::default_parallelism(), 
                             packages = (.packages()), prework = character(0),
-                            targets_only = FALSE, font_size = 20, config = NULL){
+                            build_times = TRUE, targets_only = FALSE, 
+                            font_size = 20, config = NULL){
   
   force(envir)
   if(is.null(config))
@@ -106,7 +109,10 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   in_prog = in_progress()
   nodes[in_prog, "status"] = "in progress"
   nodes[in_prog, "color"] = in_progress_color
-  
+
+  if(build_times) 
+    nodes = append_build_times(nodes, cache = config$cache)
+    
   nodes$shape = generic_shape
   nodes[is_file(nodes$id), "shape"] = file_shape
   nodes[functions, "shape"] = function_shape
@@ -134,6 +140,16 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   }
   list(nodes = nodes, edges = edges, legend_nodes = legend_nodes, 
     parallelism = parallelism) 
+}
+
+append_build_times = function(nodes, cache){
+  x = build_times(cache = cache)
+  bt = as.character(x$user + x$system)
+  names(bt) = x$target
+  if(!any(x$target %in% nodes$id)) return(nodes)
+  nodes[x$target, "label"] = paste(nodes[x$target, "label"],
+    bt, sep = "\n")
+  nodes
 }
 
 can_get_function = function(x, envir){

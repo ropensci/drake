@@ -64,8 +64,8 @@ examples_drake = function(){
 #' unlink("report.Rmd")
 #' }
 load_basic_example = function(envir = parent.frame()){
+  eval(parse(text = "require(drake, quietly = TRUE)"))
   eval(parse(text = "require(knitr, quietly = TRUE)"))
-  require("drake", quietly = TRUE)
   
   # User-defined functions
   envir$simulate = function(n){

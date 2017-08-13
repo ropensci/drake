@@ -47,5 +47,5 @@ load_packages_parLapply = function(){
     "magrittr", "parallel", "plyr", "R.utils", "storr", "stringi", 
     "stringr", "testthat", "tools", "utils")
   for(package in packages)
-    suppressPackageStartupMessages(require(package, character.only = TRUE))
+    suppressPackageStartupMessages(requireNamespace(package, character.only = TRUE))
 }

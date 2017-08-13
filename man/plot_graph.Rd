@@ -8,8 +8,8 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), file = character(0), selfcontained = FALSE,
-  targets_only = FALSE, config = NULL, font_size = 20,
-  layout = "layout_with_sugiyama", direction = "LR",
+  build_times = TRUE, targets_only = FALSE, config = NULL,
+  font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
   navigationButtons = TRUE, hover = TRUE,
   main = paste("Workflow graph for", parallelism, "parallelism"), ...)
 }
@@ -51,6 +51,9 @@ no file is saved and the graph is rendered and displayed within R.}
 HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
+
+\item{build_times}{logical, whether to print the \code{\link{build_times}()}
+in the graph.}
 
 \item{targets_only}{logical, whether to skip the imports and only show the 
 targets in the workflow plan.}

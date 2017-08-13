@@ -106,16 +106,17 @@ built = function(path = getwd(), search = TRUE){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param digits How many digits to round the times to.
+#' @param cache storr cache for drake
 #' @examples
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan)
 #' build_times()
 #' }
-build_times = function(path = getwd(), search = TRUE, digits = 0){
-  cache = get_cache(path = path, search = search)
+build_times = function(path = getwd(), search = TRUE, digits = 0,
+  cache = drake::get_cache(path = path, search = search)){
   if(is.null(cache)) return(NULL)
-  require("methods", quietly = TRUE) # needed for dseconds
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for dseconds
   times = cache$list(namespace = "build_times") %>%
     Map(f = function(target) {
       # Try to get times if they are saved
@@ -169,6 +170,20 @@ imported = function(files_only = FALSE, path = getwd(), search = TRUE){
   targets
 }
 
+#' @title Function get_cache
+#' @description get the drake cache
+#' @seealso \code{\link{config}}
+#' @export
+#' @param path path to the cache
+#' @param search logical, whether to search back in the file system
+#' for the cache.
+#' @examples
+#' \dontrun{
+#' get_cache()
+#' load_basic_example()
+#' make(my_plan)
+#' get_cache()
+#' }
 get_cache = function(path = getwd(), search = TRUE){
   if(search) path = find_cache(path = path)
   else path = file.path(path, cachepath)
