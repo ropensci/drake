@@ -4,16 +4,17 @@ build = function(target, hash_list, config){
     namespace = "progress")
   imported = !(target %in% config$plan$target)
   console(imported = imported, target = target, config = config) 
-  if(imported)
+  if(imported){
     value = imported_target(target = target, hashes = hashes, 
       config = config)
-  else
+  } else {
     time = system.time({
       value = build_target(target = target, hashes = hashes, 
                            config = config)
     })
     config$cache$set(key = target, value = time,
                      namespace = "build_times")
+  }
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
   config$cache$set(key = target, value = hashes$depends,

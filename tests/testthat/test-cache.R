@@ -27,6 +27,13 @@ test_that("cache functions work", {
           "b", "c", "f", "g", "h", "i",
           "j", "readRDS", "saveRDS"))
   builds = setdiff(all, imports)
+
+  # build_times
+  x = storr_rds(cachepath, mangle_key = TRUE,
+    hash_algorithm = hash_algorithm())
+  expect_equal(sort(x$list(namespace = "build_times")), sort(built()))
+  expect_equal(sort(build_times(search = FALSE)$target), builds)
+  expect_length(build_times(), 4) # 4 columns
   
   # find stuff in current directory
   # session, progress
@@ -41,11 +48,7 @@ test_that("cache functions work", {
   expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE), 
     c(bla = "not built or imported", f = "finished", 
       h = "finished", final = "finished"))
-  
-  # build_times
-  expect_equal(sort(build_times(search = FALSE)$target), builds)
-  expect_length(build_times(), 4) # 4 columns
-  
+    
   # config
   newconfig = read_config(search = FALSE)
   expect_true(is.list(newconfig) & length(newconfig) > 1)

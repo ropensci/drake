@@ -115,6 +115,7 @@ built = function(path = getwd(), search = TRUE){
 build_times = function(path = getwd(), search = TRUE, digits = 0){
   cache = get_cache(path = path, search = search)
   if(is.null(cache)) return(NULL)
+  require("methods", quietly = TRUE) # needed for dseconds
   times = cache$list(namespace = "build_times") %>%
     Map(f = function(target) {
       # Try to get times if they are saved

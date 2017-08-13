@@ -37,6 +37,7 @@ Suggests:
     abind,
     knitr,
     MASS,
+    methods,
     rmarkdown,
     tibble
 VignetteBuilder: knitr

@@ -65,7 +65,7 @@ examples_drake = function(){
 #' }
 load_basic_example = function(envir = parent.frame()){
   eval(parse(text = "require(knitr, quietly = TRUE)"))
-  require(drake, quietly = TRUE)
+  require("drake", quietly = TRUE)
   
   # User-defined functions
   envir$simulate = function(n){
