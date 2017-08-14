@@ -3,6 +3,8 @@ context("cache")
 
 test_that("cache functions work", {
   dclean()
+  owd = getwd()
+  on.exit(setwd(owd))
   expect_equal(character(0), 
     cached(search = FALSE), imported(search = FALSE), 
     built(search = FALSE))
