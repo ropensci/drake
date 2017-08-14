@@ -101,12 +101,14 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   outdated = outdated(plan = plan, targets = targets, envir = envir, 
      verbose = verbose, jobs = jobs, parallelism = parallelism,
      packages = packages, prework = prework, config = config)
+  outdated = intersect(outdated, nodes$id)
   nodes[targets, "status"] = "up-to-date"
   nodes[targets, "color"] = up_to_date_color
   nodes[outdated, "status"] = "outdated"
   nodes[outdated, "color"] = outdated_color
   
   in_prog = in_progress()
+  in_prog = intersect(in_prog, nodes$id)
   nodes[in_prog, "status"] = "in progress"
   nodes[in_prog, "color"] = in_progress_color
 
@@ -144,12 +146,12 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
 
 append_build_times = function(nodes, cache){
   x = build_times(cache = cache)
-  bt = as.character(x$user + x$system)
-  names(bt) = x$target
   timed = intersect(x$target, nodes$id)
   if(!length(timed)) return(nodes)
-  nodes[timed, "label"] = paste(nodes[timed, "label"],
-    bt, sep = "\n")
+  bt = as.character(x$user + x$system)
+  names(bt) = x$target
+  bt = bt[timed]
+  nodes[timed, "label"] = paste(nodes[timed, "label"], bt, sep = "\n")
   nodes
 }
 
