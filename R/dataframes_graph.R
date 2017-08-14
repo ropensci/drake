@@ -146,8 +146,9 @@ append_build_times = function(nodes, cache){
   x = build_times(cache = cache)
   bt = as.character(x$user + x$system)
   names(bt) = x$target
-  if(!any(x$target %in% nodes$id)) return(nodes)
-  nodes[x$target, "label"] = paste(nodes[x$target, "label"],
+  timed = intersect(x$target, nodes$id)
+  if(!length(timed)) return(nodes)
+  nodes[timed, "label"] = paste(nodes[timed, "label"],
     bt, sep = "\n")
   nodes
 }
