@@ -84,8 +84,10 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   imports = setdiff(nodes$id, plan$target)
   functions = Filter(x = imports, f = function(x) 
     can_get_function(x, envir = envir))
+  functions = intersect(nodes$id, functions)
   missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
-  
+  missing = intersect(nodes$id, missing)  
+
   if(parallelism == "Makefile") # Imports and targets are parallelized separately.
     nodes = resolve_levels_Makefile(nodes = nodes, graph = graph, 
       imports = imports, targets = targets)
