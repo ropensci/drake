@@ -59,9 +59,15 @@ clean <- function(
   invisible()
 }
 
-clean_everything = function(destroy, path, search){
+clean_everything <- function(
+  destroy,
+  path,
+  search
+  ){
   empty(path, search)
-  if(destroy) destroy(path, search)
+  if(destroy) {
+    destroy(path, search)
+  }
   invisible()
 }
 
