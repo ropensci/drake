@@ -65,17 +65,20 @@ clean_everything <- function(
   search
   ){
   empty(path, search)
-  if(destroy) {
+  if (destroy) {
     destroy(path, search)
   }
   invisible()
 }
 
-destroy = function(path, search){
-  where = cachepath
-  if(search){
-    where = find_cache(path = path)
-    if(!length(where)) return()
+destroy <- function(
+  path,
+  search
+  ){
+  where <- cachepath
+  if (search){
+    where <- find_cache(path = path)
+    if (!length(where)) return()
   }
   unlink(where, recursive = TRUE)
   invisible()
