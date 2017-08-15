@@ -39,13 +39,22 @@
 #' clean()
 #' clean(destroy = TRUE)
 #' }
-clean = function(..., list = character(0), destroy = FALSE,
-  path = getwd(), search = TRUE){
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) 
-    return(clean_everything(destroy = destroy, 
-      path = path, search = search))
+clean <- function(
+  ...,
+  list = character(0),
+  destroy = FALSE,
+  path = getwd(),
+  search = TRUE
+  ){
+  dots <- match.call(expand.dots = FALSE)$...
+  targets <- targets_from_dots(dots, list)
+  if (!length(targets)) {
+    return(clean_everything(
+        destroy = destroy,
+        path = path,
+        search = search
+        ))
+  }
   uncache(targets, path = path, search = search)
   invisible()
 }
