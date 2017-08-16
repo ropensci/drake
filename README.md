@@ -95,6 +95,7 @@ summaries()
 evaluate()
 expand()
 gather()
+wildcard() # from the wildcard package
 ```
 
 explore the dependency network,
