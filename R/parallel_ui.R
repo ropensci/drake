@@ -153,7 +153,7 @@ max_useful_jobs = function(plan, targets = drake::possible_targets(plan),
     nodes = nodes[just_targets,]
   else if(imports == "files")
     nodes = nodes[targets_and_files,]
-  nodes = nodes[nodes$status != "up-to-date",]
+  nodes = nodes[nodes$status != "up to date",]
   if(!nrow(nodes)) return(0)
   dlply(nodes, "level", nrow) %>% unlist %>% max
 }
