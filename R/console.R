@@ -1,3 +1,9 @@
+crop_text = Vectorize(function(x, length = 50){
+  if(nchar(x) > length) 
+    x = paste0(substr(x, 1, length - 3), "...")
+  x
+}, "x", USE.NAMES = FALSE)
+
 console = function(imported, target, config){
   if(!config$verbose) return()
   if(is.na(imported))
@@ -6,7 +12,7 @@ console = function(imported, target, config){
     action = color("import", "dodgerblue3")
   else
     action = color("build", "forestgreen")
-  if(nchar(target) > 50) target = paste0(substr(target, 1, 47), "...")
+  target = crop_text(target, length = 50)
   cat(action, " ", target, "\n", sep = "")
 }
 

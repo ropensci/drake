@@ -123,7 +123,8 @@ dataframes_graph = function(plan, targets = drake::possible_targets(plan),
   
   nodes$hover_label = nodes$id
   rownames(plan) = plan$target
-  nodes[targets, "hover_label"] = wraptext(plan[targets, "command"])
+  nodes[targets, "hover_label"] = wrap_text(plan[targets, "command"]) %>% 
+    crop_text(length = 250)
   
   if(nrow(edges)) edges$arrows = "to"
   
