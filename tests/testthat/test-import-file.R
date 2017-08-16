@@ -5,7 +5,7 @@ test_that("responses to imported file", {
   dclean()
   config = dbug()
   expect_output(check(plan = config$plan, envir = config$envir))
-  expect_error(check(plan = config$plan[-1,], envir = config$envir))
+  expect_warning(check(plan = config$plan[-1,], envir = config$envir))
   expect_silent(check(plan = config$plan[c(-1, -6),], 
     envir = config$envir))
   testrun(config)
@@ -16,8 +16,8 @@ test_that("responses to imported file", {
   # check missing and then replace file exactly as before
   contents = readRDS("input.rds")
   unlink("input.rds")
-  expect_error(check(plan = config$plan, envir = config$envir))
-  expect_error(testrun(config))
+  expect_warning(tmp <- capture.output(
+    check(plan = config$plan, envir = config$envir)))
   saveRDS(contents, "input.rds")
   testrun(config)
   nobuild(config)

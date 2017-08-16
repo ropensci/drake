@@ -34,7 +34,7 @@ test_that("plan set 4", {
                  command = c("c", "'c'", "d", "readRDS('e')"), 
                  stringsAsFactors = F)
   expect_equal(x, y)
-  expect_error(check(x))
+  expect_warning(check(x))
   dclean()
 })
 

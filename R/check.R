@@ -25,9 +25,7 @@ check = function(plan, targets = drake::possible_targets(plan),
     prework = character(0), command = character(0), 
     args = character(0))
   check_config(config)
-  assert_input_files_exist(config)
   check_strings(config$plan)
-  find_files(config)
   invisible(plan)
 }
 
@@ -38,14 +36,16 @@ check_config = function(config){
       "must include 'target' and 'command'.")
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
+  missing_input_files(config)
   warn_bad_symbols(config$plan$target)
 }
 
-find_files = function(config){
-  files = next_targets(config$graph) %>% Filter(f = is_file) %>%
-    unquote %>% Filter(f = function(filename) !file.exists(filename))
-  if(length(files))
-    stop("missing input files:\n", multiline_message(files))
+missing_input_files = function(config){
+  missing_files = next_targets(config$graph) %>% Filter(f = is_file) %>% 
+    unquote %>% Filter(f = function(x) !file.exists(x))
+  if(length(missing_files))
+    warning("missing input files:\n", multiline_message(missing_files))
+  invisible(missing_files)
 }
 
 warn_bad_symbols = function(x){
@@ -76,13 +76,6 @@ check_strings = function(plan){
       multiline_message(quotes(x[[target]], single = FALSE)), 
         "\n", sep = "")
   }
-}
-
-assert_input_files_exist = function(config){
-  missing_files = next_targets(config$graph) %>% Filter(f = is_file) %>% 
-    unquote %>% Filter(f = function(x) !file.exists(x))
-  if(length(missing_files))
-    stop("missing input files:\n", multiline_message(missing_files))
 }
 
 multiline_message = function(x){

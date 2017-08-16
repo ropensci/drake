@@ -145,10 +145,11 @@ test_that("missing files via check()", {
   dclean()
   config = dbug()
   expect_output(check(config$plan, envir = config$envir))
-  expect_silent(find_files(config))
+  expect_silent(tmp <- missing_input_files(config))
   unlink("input.rds")
-  expect_error(check(config$plan, envir = config$envir))
-  expect_error(find_files(config))
+  expect_warning(tmp <- capture.output(
+    check(config$plan, envir = config$envir)))
+  expect_warning(tmp <- missing_input_files(config))
   dclean()
 })
 
