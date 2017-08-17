@@ -95,8 +95,8 @@ test_opts <-
       parallelism = "parLapply",
       jobs = 2
       ), #
-    new_mcl_2 = list(
-      envir = "new.env()",
+    global_mcl_1 = list(
+      envir = "globalenv()",
       parallelism = "mclapply",
       jobs = 1
       ), #
