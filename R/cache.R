@@ -35,35 +35,37 @@
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan)
-#' cached(list = "reg1")
+#' cached(list = 'reg1')
 #' cached(no_imported_objects = TRUE)
 #' cached()
 #' }
-cached = function(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) return(character(0))
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) 
-    list_cache(no_imported_objects = no_imported_objects, cache = cache)
+cached <- function(..., list = character(0), no_imported_objects = FALSE,
+  path = getwd(), search = TRUE) {
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache))
+    return(character(0))
+  dots <- match.call(expand.dots = FALSE)$...
+  targets <- targets_from_dots(dots, list)
+  if (!length(targets))
+    list_cache(no_imported_objects = no_imported_objects,
+      cache = cache)
   else
-    is_cached(targets = targets, 
-      no_imported_objects = no_imported_objects, cache = cache)
+    is_cached(targets = targets, no_imported_objects = no_imported_objects,
+      cache = cache)
 }
 
-is_cached = function(targets, no_imported_objects, cache){
-  if(no_imported_objects) 
-    targets = no_imported_objects(targets = targets, cache = cache)
-  inclusion = targets %in% cache$list()
-  names(inclusion) = targets
+is_cached <- function(targets, no_imported_objects, cache) {
+  if (no_imported_objects)
+    targets <- no_imported_objects(targets = targets, cache = cache)
+  inclusion <- targets %in% cache$list()
+  names(inclusion) <- targets
   inclusion
 }
 
-list_cache = function(no_imported_objects, cache){
-  targets = cache$list()
-  if(no_imported_objects) 
-    targets = no_imported_objects(targets = targets, cache = cache)
+list_cache <- function(no_imported_objects, cache) {
+  targets <- cache$list()
+  if (no_imported_objects)
+    targets <- no_imported_objects(targets = targets, cache = cache)
   targets
 }
 
@@ -86,11 +88,12 @@ list_cache = function(no_imported_objects, cache){
 #' make(my_plan)
 #' built()
 #' }
-built = function(path = getwd(), search = TRUE){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) return(character(0))
-  cache$list() %>% Filter(f = function(target)
-    !is_imported(target = target, cache = cache))
+built <- function(path = getwd(), search = TRUE) {
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache))
+    return(character(0))
+  cache$list() %>% Filter(f = function(target) !is_imported(target = target,
+    cache = cache))
 }
 
 #' @title Function \code{build_times}
@@ -113,29 +116,25 @@ built = function(path = getwd(), search = TRUE){
 #' make(my_plan)
 #' build_times()
 #' }
-build_times = function(path = getwd(), search = TRUE, digits = 0,
-  cache = drake::get_cache(path = path, search = search)){
-  if(is.null(cache)) return(NULL)
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for dseconds
-  times = cache$list(namespace = "build_times") %>%
-    Map(f = function(target) {
-      # Try to get times if they are saved
-      time = cache$get(key = target, namespace = "build_times")
-      if (class(time) == "proc_time") {
-        data.frame(
-          target = target,
-          user = time[['user.self']] %>% round(digits) %>% dseconds,
-          system = time[['sys.self']] %>% round(digits) %>% dseconds,
-          elapsed = time[['elapsed']] %>% round(digits) %>% dseconds
-        )
-      }
-    }) %>%
-    # Filter out NULLs
-    lapply(Filter, f = Negate(is.null)) %>%
-    # Merge to data.frame
-    Reduce(f = function(x, y) rbind(x, y))
-  
-  times$target = times$target %>% as.character()
+build_times <- function(path = getwd(), search = TRUE, digits = 0,
+  cache = drake::get_cache(path = path, search = search)) {
+  if (is.null(cache))
+    return(NULL)
+  eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
+  times <- cache$list(namespace = "build_times") %>% Map(f = function(target) {
+    # Try to get times if they are saved
+    time <- cache$get(key = target, namespace = "build_times")
+    if (class(time) == "proc_time") {
+      data.frame(target = target, user = time[["user.self"]] %>%
+        round(digits) %>% dseconds, system = time[["sys.self"]] %>%
+        round(digits) %>% dseconds, elapsed = time[["elapsed"]] %>%
+        round(digits) %>% dseconds)
+    }
+  }) %>% # Filter out NULLs
+  lapply(Filter, f = Negate(is.null)) %>% # Merge to data.frame
+  Reduce(f = function(x, y) rbind(x, y))
+
+  times$target <- times$target %>% as.character()
   times
 }
 
@@ -161,12 +160,14 @@ build_times = function(path = getwd(), search = TRUE, digits = 0,
 #' make(my_plan)
 #' imported()
 #' }
-imported = function(files_only = FALSE, path = getwd(), search = TRUE){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) return(character(0))
-  targets = cache$list() %>% Filter(f = function(target)
-    is_imported(target = target, cache = cache))
-  if(files_only) targets = Filter(targets, f = is_file)
+imported <- function(files_only = FALSE, path = getwd(), search = TRUE) {
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache))
+    return(character(0))
+  targets <- cache$list() %>%
+    Filter(f = function(target) is_imported(target = target, cache = cache))
+  if (files_only)
+    targets <- Filter(targets, f = is_file)
   targets
 }
 
@@ -184,46 +185,52 @@ imported = function(files_only = FALSE, path = getwd(), search = TRUE){
 #' make(my_plan)
 #' get_cache()
 #' }
-get_cache = function(path = getwd(), search = TRUE){
-  if(search) path = find_cache(path = path)
-  else path = file.path(path, cachepath)
-  if(is.null(path)) return(NULL)
-  if(!file.exists(path)) return(NULL)
-  cache = storr_rds(path, mangle_key = TRUE, 
-    hash_algorithm = hash_algorithm)
-  cache$driver$path = normalizePath(cache$driver$path)
+get_cache <- function(path = getwd(), search = TRUE) {
+  if (search)
+    path <- find_cache(path = path) else path <- file.path(path, cachepath)
+  if (is.null(path))
+    return(NULL)
+  if (!file.exists(path))
+    return(NULL)
+  cache <- storr_rds(path, mangle_key = TRUE, hash_algorithm = hash_algorithm)
+  cache$driver$path <- normalizePath(cache$driver$path)
   cache
 }
 
 # from base::remove()
-targets_from_dots = function(dots, list){
+targets_from_dots <- function(dots, list) {
   if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
     is.character(x), NA, USE.NAMES = FALSE)))
     stop("... must contain names or character strings")
-  names = vapply(dots, as.character, "")
-  if (length(names) == 0L) names = character()
+  names <- vapply(dots, as.character, "")
+  if (length(names) == 0L)
+    names <- character()
   .Primitive("c")(names, list) %>% unique
 }
 
-imported_only = function(targets, cache){
-  Filter(targets, f = function(target) 
-    is_imported(target = target, cache = cache))
+imported_only <- function(targets, cache) {
+  Filter(targets, f = function(target) is_imported(target = target,
+    cache = cache))
 }
 
-no_imported_objects = function(targets, cache){
-  Filter(targets, f = function(target) 
-    is_built_or_imported_file(target = target, cache = cache))
+no_imported_objects <- function(targets, cache) {
+  Filter(targets,
+    f = function(target) is_built_or_imported_file(target = target,
+      cache = cache))
 }
 
-is_imported = Vectorize(function(target, cache){
-  if(!(target %in% cache$list())) return(FALSE)
+is_imported <- Vectorize(function(target, cache) {
+  if (!(target %in% cache$list()))
+    return(FALSE)
   cache$get(target)$imported
-}, "target", SIMPLIFY = TRUE)
+},
+"target", SIMPLIFY = TRUE)
 
-is_built_or_imported_file = Vectorize(function(target, cache){
-  imported = is_imported(target = target, cache = cache)
+is_built_or_imported_file <- Vectorize(function(target, cache) {
+  imported <- is_imported(target = target, cache = cache)
   !imported | (imported & is_file(target))
-}, "target", SIMPLIFY = TRUE)
+},
+"target", SIMPLIFY = TRUE)
 
-cachepath = ".drake"
-globalenvpath = file.path(cachepath, "globalenv.RData")
+cachepath <- ".drake"
+globalenvpath <- file.path(cachepath, "globalenv.RData")
