@@ -7,10 +7,18 @@ dbug = function(clean = TRUE){
   dbug_files()
   plan <- dbug_plan()
 
-  build_config(plan, targets = plan$target, envir = envir,
-    parallelism = opt$parallelism, jobs = opt$job, prepend = character(0),
-    verbose = FALSE, packages = character(0), prework = character(0),
-    command = "make", args = character(0))
+  build_config(
+    plan = plan, 
+    targets = plan$target, 
+    envir = envir,
+    parallelism = opt$parallelism, 
+    jobs = opt$jobs, 
+    prepend = character(0),
+    verbose = FALSE, 
+    packages = character(0), 
+    prework = character(0),
+    command = "make", 
+    args = character(0))
 }
 
 dclean = function(){

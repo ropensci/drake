@@ -11,9 +11,17 @@ nobuild = function(config){
 }
 
 testrun = function(config){
-  config$verbose = FALSE
-  get(paste0("run_", config$parallelism),
-    envir = getNamespace("drake"))(config)
+  make(
+    plan = config$plan, 
+    targets = config$targets,
+    envir = config$envir, 
+    verbose = FALSE,
+    parallelism = config$parallelism, 
+    jobs = config$jobs,
+    packages = config$packages, 
+    prework = config$prework,
+    prepend = config$prepend, 
+    command = config$command)
 }
 
 set_test_opt <- function(opt){
