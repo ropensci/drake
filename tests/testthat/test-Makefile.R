@@ -102,7 +102,7 @@ test_that("packages are loaded in prework", {
   library(MASS)
   config$packages = NULL
   expect_false(any(c("x", "y") %in% config$cache$list()))
-  opts = test_opt()
+  opt = test_opt()
   suppressWarnings( # drake may be loaded but not installed.
     make(plan = config$plan, targets = config$targets,
       envir = config$envir, verbose = FALSE,
