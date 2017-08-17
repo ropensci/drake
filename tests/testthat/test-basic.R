@@ -5,8 +5,8 @@ context("basic")
 test_that("basic example works", {
   dclean()
   e = dbug()$envir
-  jobs = testopts()$jobs
-  parallelism = testopts()$parallelism
+  jobs = test_opt()$jobs
+  parallelism = test_opt()$parallelism
   dclean()
 
   load_basic_example(envir = e)

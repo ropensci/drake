@@ -1,35 +1,3 @@
-# Use testopts() to run all the unit tests
-# for different modes of parallel computing: different
-# numbers of jobs and mclapply vs Makefiles.
-# For a really thorough test session, 
-# be sure to also toggle the environment (global vs custom)
-# at the top of debug.R.
-
-testopts = function(){list(
-  jobs = 2, # needs to be 1 for mclapply on Windows
-  parallelism = "parLapply") # use for shipped tests
- # parallelism = "mclapply")
- # parallelism = "Makefile")
-} # drake has to already be installed for the Makefile stuff
-
-testrun = function(config){
-  opt = test_opt()
-  make(plan = config$plan, targets = config$targets,
-    envir = config$envir, verbose = FALSE,
-    parallelism = opt$parallelism, jobs = opt$jobs,
-    packages = config$packages, prework = config$prework,
-    prepend = config$prepend, command = config$command)
-}
-
-testrun_automatic_packages = function(config){
-  opts = test_opt()
-  make(plan = config$plan, targets = config$targets,
-      envir = config$envir, verbose = FALSE,
-      parallelism = opt$parallelism, jobs = opt$jobs,
-      prework = config$prework,
-      prepend = config$prepend, command = config$command)
-}
-
 justbuilt = function(config){
   sapply(config$cache$list(namespace = "progress"),
     function(target)
@@ -40,6 +8,15 @@ justbuilt = function(config){
 
 nobuild = function(config){
   expect_true(length(justbuilt(config)) < 1)
+}
+
+testrun = function(config){
+  opt = test_opt()
+  make(plan = config$plan, targets = config$targets,
+    envir = config$envir, verbose = FALSE,
+    parallelism = opt$parallelism, jobs = opt$jobs,
+    packages = config$packages, prework = config$prework,
+    prepend = config$prepend, command = config$command)
 }
 
 set_test_opt <- function(opt){

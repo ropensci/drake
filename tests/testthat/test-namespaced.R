@@ -27,7 +27,7 @@ test_that("function_dependencies() works on :: and :::", {
 
 test_that("namespaced workflow works", {
   dclean()
-  opts = testopts()
+  opts = test_opt()
   envir = dbug()$envir
   rm(list = ls(envir), envir = envir)
   envir$f = function(x){
