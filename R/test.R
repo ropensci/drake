@@ -11,6 +11,10 @@ nobuild = function(config){
 }
 
 testrun = function(config){
+  print(config$envir)
+  print(config$parallelism)
+  print(config$jobs)
+
   make(
     plan = config$plan, 
     targets = config$targets,
