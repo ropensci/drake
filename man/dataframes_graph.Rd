@@ -31,7 +31,7 @@ to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
 Execution order in \code{\link{make}()} is slightly different when 
-\code{parallelism} equals \code{"Makefile"}
+\code{parallelism} equals \code{'Makefile'}
 because in that case, all the imports are imported before any target is built. 
 Thus, the arrangement in the graph is different for Makefile parallelism.
 See \code{?parallelism_choices} for details.}
@@ -67,14 +67,14 @@ IMPORTANT: you must be in the root directory of your project.
 \examples{
 \dontrun{
 load_basic_example()
-raw_graph = dataframes_graph(my_plan)
+raw_graph <- dataframes_graph(my_plan)
 str(raw_graph)
 # Plot your own custom visNetwork graph
 library(magrittr)
 library(visNetwork)
 visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
   visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) \%>\% 
-  visHierarchicalLayout(direction = "LR")
+  visHierarchicalLayout(direction = 'LR')
 }
 }
 \seealso{

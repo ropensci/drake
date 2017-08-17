@@ -21,7 +21,7 @@
 #' to use for faster computation.
 #' @param parallelism Choice of parallel backend to speed up the computation.
 #' Execution order in \code{\link{make}()} is slightly different when 
-#' \code{parallelism} equals \code{"Makefile"}
+#' \code{parallelism} equals \code{'Makefile'}
 #' because in that case, all the imports are imported before any target is built. 
 #' Thus, the arrangement in the graph is different for Makefile parallelism.
 #' See \code{?parallelism_choices} for details.
@@ -41,57 +41,62 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' raw_graph = dataframes_graph(my_plan)
+#' raw_graph <- dataframes_graph(my_plan)
 #' str(raw_graph)
 #' # Plot your own custom visNetwork graph
 #' library(magrittr)
 #' library(visNetwork)
 #' visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) %>%
 #'   visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) %>% 
-#'   visHierarchicalLayout(direction = "LR")
+#'   visHierarchicalLayout(direction = 'LR')
 #' }
-dataframes_graph = function(plan, targets = drake::possible_targets(plan), 
-                            envir = parent.frame(), verbose = TRUE, jobs = 1, 
-                            parallelism = drake::default_parallelism(), 
-                            packages = (.packages()), prework = character(0),
-                            build_times = TRUE, targets_only = FALSE, 
-                            font_size = 20, config = NULL){
+dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), build_times = TRUE, targets_only = FALSE,
+  font_size = 20, config = NULL) {
   force(envir)
-  if(is.null(config))
-    config = config(plan = plan, targets = targets, envir = envir,
-                    verbose = verbose, parallelism = parallelism, jobs = jobs,
-                    packages = packages, prework = prework)
-  
-  network_data = toVisNetworkData(config$graph)
-  nodes = network_data$nodes
-  rownames(nodes) = nodes$label
-  if(!nrow(nodes)) return(null_graph())
-  
-  imports = setdiff(nodes$id, plan$target)
-  in_progress = in_progress()
-  outdated = outdated(plan = plan, targets = targets, envir = envir, 
-                      verbose = verbose, jobs = jobs, parallelism = parallelism,
-                      packages = packages, prework = prework, config = config)
-  functions = Filter(x = imports, f = function(x) 
-    can_get_function(x, envir = envir))
-  missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
-  
-  nodes = configure_nodes(nodes = nodes, plan = plan, envir = envir, 
-                          graph = config$graph, cache = config$cache,
-                          parallelism = parallelism,
-                          functions = functions, imports = imports,
-                          in_progress = in_progress, missing = missing,
-                          outdated = outdated, targets = targets,
-                          font_size = font_size, build_times = build_times)
-  
-  edges = network_data$edges
-  if(nrow(edges)) edges$arrows = "to"
-  if(targets_only){
-    nodes = nodes[targets,]
-    edges = edges[edges$from %in% targets & edges$to %in% targets,]
+  if (is.null(config))
+    config <- config(plan = plan, targets = targets,
+      envir = envir, verbose = verbose,
+      parallelism = parallelism, jobs = jobs,
+      packages = packages, prework = prework)
+
+  network_data <- visNetwork::toVisNetworkData(config$graph)
+  nodes <- network_data$nodes
+  rownames(nodes) <- nodes$label
+  if (!nrow(nodes))
+    return(null_graph())
+
+  imports <- setdiff(nodes$id, plan$target)
+  in_progress <- in_progress()
+  outdated <- outdated(plan = plan, targets = targets,
+    envir = envir, verbose = verbose,
+    jobs = jobs, parallelism = parallelism,
+    packages = packages, prework = prework,
+    config = config)
+  functions <- Filter(x = imports,
+    f = function(x) can_get_function(x, envir = envir))
+  missing <- Filter(x = imports,
+    f = function(x) missing_import(x, envir = envir))
+
+  nodes <- configure_nodes(nodes = nodes, plan = plan, envir = envir,
+    graph = config$graph, cache = config$cache, parallelism = parallelism,
+    functions = functions, imports = imports,
+    in_progress = in_progress, missing = missing,
+    outdated = outdated, targets = targets,
+    font_size = font_size, build_times = build_times)
+
+  edges <- network_data$edges
+  if (nrow(edges))
+    edges$arrows <- "to"
+  if (targets_only) {
+    nodes <- nodes[targets, ]
+    edges <-
+      edges[edges$from %in% targets & edges$to %in% targets, ]
   }
-  
-  list(nodes = nodes, edges = edges, 
-       legend_nodes = legend_nodes(font_size = font_size), 
-       parallelism = parallelism) 
+
+  list(nodes = nodes, edges = edges,
+    legend_nodes = legend_nodes(font_size = font_size),
+    parallelism = parallelism)
 }
