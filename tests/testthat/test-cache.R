@@ -31,7 +31,7 @@ test_that("cache functions work", {
   builds = setdiff(all, imports)
 
   # build_times
-  x = storr_rds(cachepath, mangle_key = TRUE,
+  x = storr::storr_rds(cachepath, mangle_key = TRUE,
     hash_algorithm = hash_algorithm)
   expect_equal(sort(x$list(namespace = "build_times")), sort(built()))
   expect_equal(sort(build_times(search = FALSE)$target), builds)

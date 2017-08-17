@@ -1,8 +1,8 @@
 dbug = function(clean = TRUE){
   if(clean) dclean()
 
-  envir = new.env(parent = globalenv()) # for shipped unit tests
-#  envir = globalenv() # needs to work here too
+  opt <- test_opt()
+  envir <- eval(parse(text = opt$envir))
 
   imports = c(
     "f <- function(x) {g(x) + a}",
