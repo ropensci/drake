@@ -35,8 +35,8 @@ test_that("shell_file() writes correctly", {
 })
 
 test_that("deps() correctly reports dependencies of functions and commands", {
-  expect_equal(deps(c), character(0))
-  expect_equal(deps(list), character(0))
+  expect_equal(deps(base::c), character(0))
+  expect_equal(deps(base::list), character(0))
   f <- function(x, y){
     out <- x + y + g(x)
     saveRDS(out, 'out.rds')
