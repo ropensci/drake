@@ -21,8 +21,8 @@ dbug = function(clean = TRUE){
     args = character(0))
 
   print(config$envir)
-  print(config$parallelism)
-  print(config$jobs)
+  cat("_", config$parallelism, "_", sep = "")
+  cat("_", config$jobs, "_", sep = "")
 
   config
 }
