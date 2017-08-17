@@ -47,7 +47,7 @@
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat expect_true
 #' @importFrom tools md5sum
-#' @importFrom utils sessionInfo unzip
+#' @importFrom utils capture.output sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout 
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
 NULL
