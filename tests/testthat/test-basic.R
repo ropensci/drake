@@ -4,9 +4,10 @@ context("basic")
 
 test_that("basic example works", {
   dclean()
-  e = dbug_envir()
-  jobs = test_opt()$jobs
-  parallelism = test_opt()$parallelism
+  opt <- test_opt()
+  e = eval(parse(text = opt$envir))
+  jobs = opt$jobs
+  parallelism = opt$parallelism
   dclean()
 
   load_basic_example(envir = e)

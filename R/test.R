@@ -12,7 +12,7 @@ nobuild = function(config){
 
 testrun = function(config){
   config$verbose = FALSE
-  get(paste0("run_", config$$parallelism),
+  get(paste0("run_", config$parallelism),
     envir = getNamespace("drake"))(config)
 }
 

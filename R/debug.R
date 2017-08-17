@@ -31,6 +31,7 @@ dbug_envir <- function(envir){
     "c <- 25")
   for(import in imports)
     eval(parse(text = import), envir = envir)
+  envir
 }
 
 dbug_plan <- function(){
