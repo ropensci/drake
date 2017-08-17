@@ -8,6 +8,7 @@ Thumbs.db
 *.nav
 *.out
 *.snm
+*.Rout
 *.rds
 *.synctex.gz
 *.toc
