@@ -10,11 +10,14 @@ nobuild = function(config){
   expect_true(length(justbuilt(config)) < 1)
 }
 
-testrun = function(config){
-  print(config$envir)
-  cat("_", config$parallelism, "_", sep = "")
+show_config_opts = function(config){
+  capture.output(print(config$envir)) %>% cat
+  cat("_", config$parallelism, sep = "")
   cat("_", config$jobs, "_", sep = "")
+}
 
+testrun = function(config){
+  show_config_opts(config)
   make(
     plan = config$plan, 
     targets = config$targets,

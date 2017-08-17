@@ -20,10 +20,7 @@ dbug = function(clean = TRUE){
     command = "make", 
     args = character(0))
 
-  print(config$envir)
-  cat("_", config$parallelism, "_", sep = "")
-  cat("_", config$jobs, "_", sep = "")
-
+  show_config_opts(config)
   config
 }
 
