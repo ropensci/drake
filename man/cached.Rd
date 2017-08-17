@@ -49,7 +49,7 @@ Read/load a cached item with \code{\link{readd}()} or
 \dontrun{
 load_basic_example()
 make(my_plan)
-cached(list = "reg1")
+cached(list = 'reg1')
 cached(no_imported_objects = TRUE)
 cached()
 }
