@@ -16,6 +16,7 @@ Thumbs.db
 .DS_Store
 .drake
 .Rapp.history
+.RData
 .Rhistory
 Makefile
 Rbuildignore/*.pdf
