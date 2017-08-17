@@ -9,6 +9,7 @@ library(testthat)
 devtools::load_all()
 
 os <- Sys.info()['sysname'] %>% tolower %>% unname
+setwd("..")
 
 system.time(
   for(opt_name in names(test_opts)){
@@ -20,6 +21,6 @@ system.time(
         cat("  Skipping.\n")
         next
       }
-    test_dir("../testthat")
+    test_dir("testthat")
   }
 )
