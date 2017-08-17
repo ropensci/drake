@@ -22,8 +22,10 @@
 #'  \item{'Makefile'}{uses multiple R sessions
 #'  by creating and running a Makefile.
 #'  For distributed computing on a cluster or supercomputer, 
-#'  try \code{\link{make}(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}.
-#'  You need an auxiliary \code{shell.sh} file for this, and \code{\link{shell_file}()}
+#'  try \code{\link{make}(..., parallelism = 'Makefile', 
+#'  prepend = 'SHELL=./shell.sh')}.
+#'  You need an auxiliary \code{shell.sh} file for this, 
+#'  and \code{\link{shell_file}()}
 #'  writes an example.
 #' 
 #'  Here, Makefile-level parallelism is only used for targets in your workflow plan
