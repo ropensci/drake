@@ -78,7 +78,7 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
 
 file_hover_text <- Vectorize(function(file_name, envir){
   file_name <- unquote(file_name)
-  if (!file.exists(file_name)) return()
+  if (!file.exists(file_name)) return(file_name)
   readLines(file_name, n = 10) %>%
     paste(collapse = "\n") %>%
     crop_text(length = hover_text_length)
@@ -86,7 +86,9 @@ file_hover_text <- Vectorize(function(file_name, envir){
 "file_name")
 
 function_hover_text <- Vectorize(function(function_name, envir){
-  eval(parse(text = function_name), envir = envir) %>%
+  tryCatch(
+    eval(parse(text = function_name), envir = envir),
+    error = function(e) function_name) %>%
     deparse %>% paste(collapse = "\n") %>%
     crop_text(length = hover_text_length)
 },
