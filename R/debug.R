@@ -7,7 +7,7 @@ dbug = function(clean = TRUE){
   dbug_files()
   plan <- dbug_plan()
 
-  out <- build_config(
+  config <- build_config(
     plan = plan, 
     targets = plan$target, 
     envir = envir,
@@ -24,7 +24,7 @@ dbug = function(clean = TRUE){
   print(config$parallelism)
   print(config$jobs)
 
-  out
+  config
 }
 
 dclean = function(){
