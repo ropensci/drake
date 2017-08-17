@@ -1,5 +1,5 @@
 run_mclapply = function(config){
-  do_prework(config = config, verbosePackages = TRUE)
+  do_prework(config = config, verbose_packages = TRUE)
   run_parallel(config = config, worker = worker_mclapply)
 }
 

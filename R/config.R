@@ -14,7 +14,7 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' con = config(my_plan)
+#' con <- config(my_plan)
 #' outdated(my_plan, config = con)
 #' missed(my_plan, config = con)
 #' max_useful_jobs(my_plan, config = con)
@@ -29,60 +29,61 @@
 #' @param jobs same as for \code{\link{make}}
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
-config = function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, 
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0)){
+config <- function(plan, targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE,
+  parallelism = drake::default_parallelism(),
+  jobs = 1, packages = (.packages()), prework = character(0)) {
   force(envir)
-  config = make(imports_only = TRUE, return_config = TRUE, clear_progress = FALSE,
-      plan = plan, targets = targets, envir = envir,
-      verbose = verbose, parallelism = parallelism, jobs = jobs,
-      packages = packages, prework = prework)
-  config$graph = build_graph(plan = plan, targets = targets, envir = envir,
-                             verbose = verbose)
+  config <- make(imports_only = TRUE, return_config = TRUE,
+    clear_progress = FALSE, plan = plan, targets = targets,
+    envir = envir, verbose = verbose, parallelism = parallelism,
+    jobs = jobs, packages = packages, prework = prework)
+  config$graph <- build_graph(plan = plan, targets = targets,
+    envir = envir, verbose = verbose)
   config
 }
 
-build_config = function(plan, targets, envir, jobs,
-  parallelism = drake::parallelism_choices(), verbose, packages,
-  prework, prepend, command, args, clear_progress = TRUE){
-  plan = sanitize_plan(plan)
-  targets = sanitize_targets(plan, targets)
-  parallelism = match.arg(parallelism)
-  prework = add_packages_to_prework(packages = packages,
+build_config <- function(plan, targets, envir, jobs,
+  parallelism = drake::parallelism_choices(),
+  verbose, packages, prework, prepend, command,
+  args, clear_progress = TRUE) {
+  plan <- sanitize_plan(plan)
+  targets <- sanitize_targets(plan, targets)
+  parallelism <- match.arg(parallelism)
+  prework <- add_packages_to_prework(packages = packages,
     prework = prework)
-  cache = storr_rds(cachepath, mangle_key = TRUE, 
+  cache <- storr_rds(cachepath, mangle_key = TRUE,
     hash_algorithm = hash_algorithm)
-  cache$driver$path = normalizePath(cache$driver$path)
-  if(clear_progress) cache$clear(namespace = "progress")
-  graph = build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose)
+  cache$driver$path <- normalizePath(cache$driver$path)
+  if (clear_progress)
+    cache$clear(namespace = "progress")
+  graph <- build_graph(plan = plan,
+    targets = targets, envir = envir, verbose = verbose)
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
-    prepend = prepend, prework = prework, command = command, args = args,
-    graph = graph, inventory = cache$list(),
+    prepend = prepend, prework = prework, command = command,
+    args = args, graph = graph, inventory = cache$list(),
     inventory_filemtime = cache$list(namespace = "filemtime"))
 }
 
-add_packages_to_prework = function(packages, prework){
-  packages = c("methods", packages) %>% unique
-  if(!length(packages)) return(prework)
-  package_list = deparse(packages) %>% paste(collapse = "\n")
+add_packages_to_prework <- function(packages, prework) {
+  packages <- c("methods", packages) %>% unique
+  if (!length(packages))
+    return(prework)
   paste0("if(!R.utils::isPackageLoaded(\"", packages, "\")) require(",
-    packages, ")", sep = "") %>%
-    c(prework)
+    packages, ")", sep = "") %>% c(prework)
 }
 
-do_prework = function(config, verbosePackages){
-  wrapper = ifelse(verbosePackages, invisible, 
-    suppressPackageStartupMessages)
-  for(code in config$prework)
-    wrapper(eval(parse(text = code), envir = config$envir))
+do_prework <- function(config, verbose_packages) {
+  wrapper <- ifelse(verbose_packages, invisible,
+    base::suppressPackageStartupMessages)
+  for (code in config$prework) wrapper(eval(parse(text = code),
+    envir = config$envir))
 }
 
-inventory = function(config){
-  config$inventory = config$cache$list()
-  config$inventory_filemtime = config$cache$list(namespace = "filemtime")
+inventory <- function(config) {
+  config$inventory <- config$cache$list()
+  config$inventory_filemtime <- config$cache$list(namespace = "filemtime")
   config
 }
 
@@ -99,14 +100,13 @@ inventory = function(config){
 #' load_basic_example()
 #' possible_targets(my_plan)
 #' }
-possible_targets = function(plan){
-  plan = sanitize_plan(plan)
+possible_targets <- function(plan) {
+  plan <- sanitize_plan(plan)
   c(as.character(plan$output), as.character(plan$target))
 }
 
-store_config = function(config){
-  save_these = setdiff(names(config), "envir") # envir could get massive.
-  lapply(save_these, function(item)
-    config$cache$set(key = item, value = config[[item]], 
-      namespace = "config"))
+store_config <- function(config) {
+  save_these <- setdiff(names(config), "envir")  # envir could get massive.
+  lapply(save_these, function(item) config$cache$set(key = item,
+    value = config[[item]], namespace = "config"))
 }

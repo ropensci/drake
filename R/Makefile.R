@@ -66,7 +66,7 @@ mk = function(target){
   if(identical(globalenv(), config$envir))
     load(file = globalenvpath, envir = config$envir)
   config = inventory(config)
-  do_prework(config = config, verbosePackages = FALSE)
+  do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
   hash_list = hash_list(targets = target, config = config)
   old_hash = self_hash(target = target, config = config)
