@@ -1,3 +1,6 @@
+# For hover text
+hover_text_length <- 250
+
 # colors in graphs
 generic_color <- "gray"
 import_color <- "#1874cd"
@@ -52,7 +55,7 @@ categorize_nodes <- function(nodes, functions, imports,
 }
 
 configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
-  functions, imports, in_progress, missing, outdated, targets,
+  files, functions, imports, in_progress, missing, outdated, targets,
   font_size, build_times) {
   force(envir)
   functions <- intersect(nodes$id, functions)
@@ -69,14 +72,35 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
   nodes <- style_nodes(nodes, font_size = font_size)
   if (build_times)
     nodes <- append_build_times(nodes = nodes, cache = cache)
-  hover_text(nodes = nodes, plan = plan, targets = targets)
+  hover_text(nodes = nodes, plan = plan, envir = envir,
+    files = files, functions = functions, targets = targets)
 }
 
-hover_text <- function(nodes, plan, targets) {
+file_hover_text <- Vectorize(function(file_name, envir){
+  file_name <- unquote(file_name)
+  if (!file.exists(file_name)) return()
+  readLines(file_name, n = 10) %>%
+    paste(collapse = "\n") %>%
+    crop_text(length = hover_text_length)
+},
+"file_name")
+
+function_hover_text <- Vectorize(function(function_name, envir){
+  eval(parse(text = function_name), envir = envir) %>%
+    deparse %>% paste(collapse = "\n") %>%
+    crop_text(length = hover_text_length)
+},
+"function_name")
+
+hover_text <- function(nodes, plan, targets, files, functions, envir) {
   nodes$hover_label <- nodes$id
   nodes[targets, "hover_label"] <-
     plan[plan$target %in% targets, "command"] %>%
-    wrap_text %>% crop_text(length = 250)
+    wrap_text %>% crop_text(length = hover_text_length)
+  nodes[files, "hover_label"] <-
+    file_hover_text(files, envir)
+  nodes[functions, "hover_label"] <-
+    function_hover_text(functions, envir)
   nodes
 }
 
