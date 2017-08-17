@@ -4,7 +4,7 @@ context("basic")
 
 test_that("basic example works", {
   dclean()
-  e = dbug()$envir
+  e = dbug_envir()
   jobs = test_opt()$jobs
   parallelism = test_opt()$parallelism
   dclean()
@@ -42,8 +42,7 @@ test_that("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 8)
 
-  make(my_plan, envir = e, verbose = FALSE,
-    jobs = jobs, parallelism = parallelism)
+  testrun(config)
   config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
@@ -75,8 +74,7 @@ test_that("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 4)
 
-  make(my_plan, envir = e, verbose = FALSE,
-    jobs = jobs, parallelism = parallelism)
+  testrun(config)
   config = config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, config = config)), character(0))
