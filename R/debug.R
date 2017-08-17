@@ -20,7 +20,7 @@ dbug = function(clean = TRUE){
     command = "make", 
     args = character(0))
 
-  show_config_opts(config)
+#  show_config_opts(config)
   config
 }
 

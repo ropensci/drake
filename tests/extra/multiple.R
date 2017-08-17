@@ -8,11 +8,12 @@ library(magrittr)
 library(testthat)
 devtools::load_all()
 
-os <- Sys.info()['sysname'] %>% tolower %>% unname
 setwd("..")
+run_these = names(test_opts)[11:12]
 
 system.time(
-  for(opt_name in names(test_opts)){
+  for(opt_name in run_these){
+    os <- Sys.info()['sysname'] %>% tolower %>% unname
     set_test_opt(opt_name)
     cat(opt_name, "\n")
     opt <- test_opt()

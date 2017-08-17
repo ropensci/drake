@@ -17,7 +17,7 @@ show_config_opts = function(config){
 }
 
 testrun = function(config){
-  show_config_opts(config)
+#  show_config_opts(config)
   make(
     plan = config$plan, 
     targets = config$targets,
