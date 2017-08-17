@@ -9,7 +9,7 @@ os <- Sys.info()['sysname'] %>% tolower %>% unname
 setwd("..")
 
 system.time({
-  opt_name <- "parent_mcl_8"
+  opt_name <- "local_mcl_8"
   set_test_opt(opt_name)
   cat(opt_name, "\n")
   test_dir("testthat")
