@@ -26,14 +26,16 @@ max_useful_jobs(plan, targets = drake::possible_targets(plan),
 and it needs to import objects and examine your 
 input files to see what has been updated. This could take some time,
 and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
 Execution order in \code{\link{make}()} is slightly different 
-when \code{parallelism} equals \code{"Makefile"}
-because in that case, all the imports are imported before any target is built.
-Thus, \code{max_useful_jobs()} may give a different answer for Makefile parallelism.
+when \code{parallelism} equals \code{'Makefile'}
+because in that case, all the imports are 
+imported before any target is built.
+Thus, \code{max_useful_jobs()} may give a
+different answer for Makefile parallelism.
 See \code{?parallelism_choices} for details.}
 
 \item{packages}{same as for \code{\link{make}}}
@@ -46,22 +48,24 @@ Computing this
 in advance could save time if you plan multiple calls to 
 \code{dataframes_graph()}.}
 
-\item{imports}{Set the \code{imports} argument to change your assumptions about 
-how fast objects/files are imported. Possible values:
+\item{imports}{Set the \code{imports} argument to change your
+assumptions about how fast objects/files are imported. 
+Possible values:
 \itemize{
- \item{"all"}{: Factor all imported files/objects into calculating the max useful
-   number of jobs. Note: this is not appropriate for 
-   \code{make(.., parallelism = "Makefile")} because imports 
+ \item{'all'}{: Factor all imported files/objects into 
+   calculating the max useful number of jobs. 
+   Note: this is not appropriate for 
+   \code{make(.., parallelism = 'Makefile')} because imports 
    are processed sequentially for the Makefile option.}
- \item{"files"}{: Factor all imported files into the calculation, but ignore
-   all the other imports.}
- \item{"none"}{: Ignore all the imports and just focus on the max number
+ \item{'files'}{: Factor all imported files into the calculation,
+   but ignore all the other imports.}
+ \item{'none'}{: Ignore all the imports and just focus on the max number
    of useful jobs for parallelizing targets.}
 }}
 }
 \value{
-a list of three data frames: one for nodes, one for edges, and one for
-the legend/key nodes.
+a list of three data frames: one for nodes, one for edges, 
+and one for the legend/key nodes.
 }
 \description{
 Get the maximum number of useful jobs in the next call 
@@ -70,7 +74,7 @@ to \code{make(..., jobs = YOUR_CHOICE)}.
 \details{
 Any additional jobs more than \code{max_useful_jobs(...)}
 will be superfluous, and could even slow you down for
-\code{make(..., parallelism = "parLapply")}. Set 
+\code{make(..., parallelism = 'parLapply')}. Set 
 Set the \code{imports} argument to change your assumptions about 
 how fast objects/files are imported.
 IMPORTANT: you must be in the root directory of your project.
@@ -80,16 +84,16 @@ IMPORTANT: you must be in the root directory of your project.
 load_basic_example()
 plot_graph(my_plan) # Look at the graph to make sense of the output.
 max_useful_jobs(my_plan) # 8
-max_useful_jobs(my_plan, imports = "files") # 8
-max_useful_jobs(my_plan, imports = "all") # 10
-max_useful_jobs(my_plan, imports = "none") # 8
+max_useful_jobs(my_plan, imports = 'files') # 8
+max_useful_jobs(my_plan, imports = 'all') # 10
+max_useful_jobs(my_plan, imports = 'none') # 8
 make(my_plan)
 plot_graph(my_plan)
 # Ignore the targets already built.
 max_useful_jobs(my_plan) # 1
-max_useful_jobs(my_plan, imports = "files") # 1
-max_useful_jobs(my_plan, imports = "all") # 10
-max_useful_jobs(my_plan, imports = "none") # 0
+max_useful_jobs(my_plan, imports = 'files') # 1
+max_useful_jobs(my_plan, imports = 'all') # 10
+max_useful_jobs(my_plan, imports = 'none') # 0
 # Change a function so some targets are now out of date.
 reg2 = function(d){
   d$x3 = d$x^3
@@ -97,11 +101,12 @@ reg2 = function(d){
 }
 plot_graph(my_plan)
 max_useful_jobs(my_plan) # 4
-max_useful_jobs(my_plan, imports = "files") # 4
-max_useful_jobs(my_plan, imports = "all") # 10
-max_useful_jobs(my_plan, imports = "none") # 4
+max_useful_jobs(my_plan, imports = 'files') # 4
+max_useful_jobs(my_plan, imports = 'all') # 10
+max_useful_jobs(my_plan, imports = 'none') # 4
 }
 }
 \seealso{
-\code{\link{plot_graph}}, \code{\link{build_graph}}, \code{\link{shell_file}}
+\code{\link{plot_graph}}, \code{\link{build_graph}}, 
+\code{\link{shell_file}}
 }

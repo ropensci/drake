@@ -11,7 +11,7 @@ default parallelism option for the current platform
 }
 \description{
 Default parallelism for \code{\link{make}()}:
-\code{"parLapply"} for Windows machines and \code{"mclapply"}
+\code{'parLapply'} for Windows machines and \code{'mclapply'}
 for other platforms.
 }
 \examples{

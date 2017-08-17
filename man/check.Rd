@@ -26,7 +26,7 @@ missing input files.
 \dontrun{
 load_basic_example()
 check(my_plan)
-unlink("report.Rmd")
+unlink('report.Rmd')
 check(my_plan)
 }
 }

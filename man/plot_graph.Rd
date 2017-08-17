@@ -34,7 +34,7 @@ to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
 Execution order in \code{\link{make}()} is slightly different when 
-\code{parallelism} equals \code{"Makefile"}
+\code{parallelism} equals \code{'Makefile'}
 because in that case, all the imports are imported before any target is built. 
 Thus, the arrangement in the graph is different for Makefile parallelism.
 See \code{?parallelism_choices} for details.}
@@ -47,7 +47,8 @@ See \code{?parallelism_choices} for details.}
 If \code{NULL} or \code{character(0)},
 no file is saved and the graph is rendered and displayed within R.}
 
-\item{selfcontained}{logical, whether to save the \code{file} as a self-contained
+\item{selfcontained}{logical, whether to save 
+the \code{file} as a self-contained
 HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
@@ -67,12 +68,16 @@ in advance could save time if you plan multiple calls to
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{layout}{name of an igraph layout to use, such as "layout_with_sugiyama"
-or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
+\item{layout}{name of an igraph layout 
+to use, such as 'layout_with_sugiyama'
+or 'layout_as_tree'. Be careful with 
+'layout_as_tree': the graph is a directed 
 acyclic graph, but not necessarily a tree.}
 
-\item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
-indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
+\item{direction}{an argument to 
+\code{visNetwork::visHierarchicalLayout()}
+indicating the direction of the graph. 
+Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized, 
 but this may not always be the case ;) in the future.}
 
@@ -85,7 +90,8 @@ change with hovering.}
 
 \item{main}{title of the graph}
 
-\item{...}{other arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
+\item{...}{other arguments passed to 
+\code{visNetwork::visNetwork()} to plot the graph.}
 }
 \description{
 Plot the dependency structure of your workflow.
@@ -96,7 +102,7 @@ To save time for repeated plotting, this function is divided into
 \examples{
 \dontrun{
 load_basic_example()
-plot_graph(my_plan, width = "100\%") # The width is passed to visNetwork().
+plot_graph(my_plan, width = '100\%') # The width is passed to visNetwork
 make(my_plan)
 plot_graph(my_plan) # The red nodes from before are now green.
 }

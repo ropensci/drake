@@ -41,7 +41,7 @@ not just the imports.
 \examples{
 \dontrun{
 load_basic_example()
-con = config(my_plan)
+con <- config(my_plan)
 outdated(my_plan, config = con)
 missed(my_plan, config = con)
 max_useful_jobs(my_plan, config = con)
