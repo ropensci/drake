@@ -112,6 +112,8 @@ test_that("console", {
   config$verbose <- TRUE
   expect_output(console(imported = FALSE, target = "myinput",
     config = config))
+  expect_output(
+    console_parallel_stage(targets = letters, config = config))
   x50 <- paste(rep(0:9, 5), collapse = "")
   x51 <- paste0(x50, 0)
   o1 <- capture.output(console(imported = FALSE, target = x50,

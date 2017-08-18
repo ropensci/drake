@@ -11,12 +11,11 @@ console <- function(imported, target, config) {
   cat(action, " ", target, "\n", sep = "")
 }
 
-console_parallel_stage <- function(candidates, remaining_targets, config){
+console_parallel_stage <- function(targets, config){
   if (!config$verbose) return()
-  cat(color("check", "slateblue2"), " ",
-    length(candidates), " item",
-    ifelse(length(candidates) == 1, "", "s"),
-    "\n", sep = "")
+  n <- length(targets)
+  cat(color("check", "slateblue2"), " ", n, " item",
+    ifelse(n == 1, "", "s"), "\n", sep = "")
 }
 
 color <- function(x, color) {

@@ -11,7 +11,7 @@ parallel_stage <- function(graph_remaining_targets, worker, config) {
   remaining_targets <- V(graph_remaining_targets) %>%
     names %>% intersect(config$targets)
   candidates <- next_targets(graph_remaining_targets)
-  console_parallel_stage(candidates, remaining_targets, config)
+  console_parallel_stage(targets = candidates, config = config)
   hash_list <- hash_list(targets = candidates, config = config)
   build_these <- Filter(candidates,
     f = function(target)
