@@ -5,6 +5,8 @@ should_build = function(target, hash_list, config){
 }
 
 target_current = function(target, hashes, config){
+  #print(paste("comparing hash for", target))
+  cat(paste("comparing hash for", target), "\n") #" \r") 
   if(!(target %in% config$inventory)) return(FALSE)
   if(!file_current(target = target, hashes = hashes, config = config)) 
     return(FALSE)
