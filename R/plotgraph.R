@@ -77,8 +77,9 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   packages = (.packages()), prework = character(0), file = character(0),
   selfcontained = FALSE, build_times = TRUE, targets_only = FALSE,
   config = NULL, font_size = 20, layout = "layout_with_sugiyama",
-  direction = "LR", navigationButtons = TRUE, hover = TRUE,
   main = paste("Workflow graph for", parallelism, "parallelism"),
+  direction = "LR", hover = TRUE,
+  navigationButtons = TRUE, # nolint
   ...) {
 
   force(envir)
@@ -88,7 +89,7 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
     targets_only = targets_only, config = config, font_size = font_size)
   render_graph(raw_graph, file = file, selfcontained = selfcontained,
     layout = layout, direction = direction,
-    navigationButtons = navigationButtons,
+    navigationButtons = navigationButtons, # nolint
     hover = hover, main = main, ...)
 }
 
@@ -131,52 +132,61 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
 #' render_graph(graph, width = '100%') # The width is passed to visNetwork
 #' }
 render_graph <- function(graph, file = character(0),
-  layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE,
-  selfcontained = FALSE, main = paste("Workflow graph for",
-    graph$parallelism, "parallelism"), ...) {
-  out <- visNetwork(nodes = graph$nodes, edges = graph$edges,
+  layout = "layout_with_sugiyama", direction = "LR", hover = TRUE,
+  main = paste("Workflow graph for", graph$parallelism, "parallelism"),
+  navigationButtons = TRUE, # nolint
+  selfcontained = FALSE, ...) {
+  out <- visNetwork::visNetwork(nodes = graph$nodes, edges = graph$edges,
     main = main, ...) %>%
-    visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>%
-    visHierarchicalLayout(direction = direction) %>%
-    visIgraphLayout(physics = FALSE,
+    visNetwork::visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>%
+    visNetwork::visHierarchicalLayout(direction = direction) %>%
+    visNetwork::visIgraphLayout(physics = FALSE,
     randomSeed = 2017, layout = layout)
-  if (navigationButtons)
-    out <- visInteraction(out, navigationButtons = TRUE)
+  if (navigationButtons) # nolint
+    out <- visNetwork::visInteraction(out,
+      navigationButtons = TRUE) # nolint
   if (hover)
     out <- with_hover(out)
   if (length(file)) {
-    visSave(graph = out, file = file, selfcontained = selfcontained)
+    visNetwork::visSave(graph = out, file = file,
+      selfcontained = selfcontained)
     return(invisible())
   }
   out
 }
 
 with_hover <- function(x) {
-  visInteraction(x, hover = T) %>% visEvents(hoverNode = "function(e){
+  visNetwork::visInteraction(x, hover = T) %>%
+    visNetwork::visEvents(hoverNode =
+      "function(e){
         var label_info = this.body.data.nodes.get({
-        fields: ['label', 'hover_label'],
-        filter: function (item) {
-        return item.id === e.node
-        },
-        returnType :'Array'
+          fields: ['label', 'hover_label'],
+          filter: function (item) {
+            return item.id === e.node
+          },
+          returnType :'Array'
         });
         this.body.data.nodes.update({
           id: e.node,
           label : label_info[0].hover_label,
-          hover_label : label_info[0].label});
-  }") %>%
-    visEvents(blurNode = "function(e){
-      var label_info = this.body.data.nodes.get({
-      fields: ['label', 'hover_label'],
-      filter: function (item) {
-      return item.id === e.node
-      },
-      returnType :'Array'
-      });
-      this.body.data.nodes.update({
-        id: e.node,
-        label : label_info[0].hover_label,
-        hover_label : label_info[0].label});
-  }")
+          hover_label : label_info[0].label
+        });
+      }"
+    ) %>%
+    visNetwork::visEvents(blurNode =
+      "function(e){
+        var label_info = this.body.data.nodes.get({
+          fields: ['label', 'hover_label'],
+          filter: function (item) {
+            return item.id === e.node
+          },
+          returnType :'Array'
+        });
+        this.body.data.nodes.update({
+          id: e.node,
+          label : label_info[0].hover_label,
+          hover_label : label_info[0].label
+        });
+      }"
+    )
 }
