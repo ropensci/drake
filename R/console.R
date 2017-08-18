@@ -1,10 +1,3 @@
-crop_text <- Vectorize(function(x, length = 50) {
-  if (nchar(x) > length)
-    x <- paste0(substr(x, 1, length - 3), "...")
-  x
-},
-"x", USE.NAMES = FALSE)
-
 console <- function(imported, target, config) {
   if (!config$verbose)
     return()
@@ -18,7 +11,23 @@ console <- function(imported, target, config) {
   cat(action, " ", target, "\n", sep = "")
 }
 
+console_parallel_stage <- function(candidates, remaining_targets, config){
+  if(!config$verbose) return()
+  cat(color("check", "slateblue2"), " ",
+    length(candidates), " target",
+    ifelse(length(candidates) == 1, "", "s"),
+    "\n", sep = "")
+}
+
 color <- function(x, color) {
   if (is.null(color))
     x else make_style(color)(x)
 }
+
+crop_text <- Vectorize(function(x, length = 50) {
+  if (nchar(x) > length)
+    x <- paste0(substr(x, 1, length - 3), "...")
+  x
+},
+"x", USE.NAMES = FALSE)
+
