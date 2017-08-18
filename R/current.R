@@ -5,7 +5,10 @@ should_build = function(target, hash_list, config){
 }
 
 target_current = function(target, hashes, config){
-  cat(paste("comparing hash for", target), "\r") 
+  # When overwriting console lines with \r, longer target names that precede
+  # shorter target names won't be overwritten. So we pad with spaces with
+  # sprintf to clear our these spaces.
+  cat("comparing hash for", sprintf("%-50.50s", target), "\r") 
   if(!(target %in% config$inventory)) return(FALSE)
   if(!file_current(target = target, hashes = hashes, config = config)) 
     return(FALSE)
