@@ -14,7 +14,7 @@ console <- function(imported, target, config) {
 console_parallel_stage <- function(candidates, remaining_targets, config){
   if (!config$verbose) return()
   cat(color("check", "slateblue2"), " ",
-    length(candidates), " target",
+    length(candidates), " item",
     ifelse(length(candidates) == 1, "", "s"),
     "\n", sep = "")
 }
