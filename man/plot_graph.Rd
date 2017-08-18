@@ -9,9 +9,9 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), file = character(0), selfcontained = FALSE,
   build_times = TRUE, targets_only = FALSE, config = NULL,
-  font_size = 20, layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE,
-  main = paste("Workflow graph for", parallelism, "parallelism"), ...)
+  font_size = 20, layout = "layout_with_sugiyama",
+  main = paste("Workflow graph for", parallelism, "parallelism"),
+  direction = "LR", hover = TRUE, navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function 
@@ -74,6 +74,8 @@ or 'layout_as_tree'. Be careful with
 'layout_as_tree': the graph is a directed 
 acyclic graph, but not necessarily a tree.}
 
+\item{main}{title of the graph}
+
 \item{direction}{an argument to 
 \code{visNetwork::visHierarchicalLayout()}
 indicating the direction of the graph. 
@@ -81,14 +83,12 @@ Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized, 
 but this may not always be the case ;) in the future.}
 
-\item{navigationButtons}{logical, whether to add navigation buttons with 
-\code{visNetwork::visInteraction(navigationButtons = TRUE)}}
-
 \item{hover}{logical, whether to show the command that generated the target
 when you hover over a node with the mouse. For imports, the label does not
 change with hovering.}
 
-\item{main}{title of the graph}
+\item{navigationButtons}{logical, whether to add navigation buttons with 
+\code{visNetwork::visInteraction(navigationButtons = TRUE)}}
 
 \item{...}{other arguments passed to 
 \code{visNetwork::visNetwork()} to plot the graph.}
