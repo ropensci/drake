@@ -76,14 +76,20 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
     files = files, functions = functions, targets = targets)
 }
 
-file_hover_text <- Vectorize(function(file_name, envir){
-  file_name <- unquote(file_name)
-  if (!file.exists(file_name)) return(file_name)
-  readLines(file_name, n = 10, warn = FALSE) %>%
-    paste(collapse = "\n") %>%
-    crop_text(length = hover_text_length)
+file_hover_text <- Vectorize(function(quoted_file, targets){
+  unquoted_file <- unquote(quoted_file)
+  if (quoted_file %in% targets | !file.exists(unquoted_file))
+    return(quoted_file)
+  tryCatch({
+    readLines(unquoted_file, n = 10, warn = FALSE) %>%
+      paste(collapse = "\n") %>%
+      crop_text(length = hover_text_length)
+    },
+    error = function(e) quoted_file,
+    warning = function(w) quoted_file
+  )
 },
-"file_name")
+"quoted_file")
 
 function_hover_text <- Vectorize(function(function_name, envir){
   tryCatch(
@@ -100,9 +106,9 @@ hover_text <- function(nodes, plan, targets, files, functions, envir) {
     plan[plan$target %in% targets, "command"] %>%
     wrap_text %>% crop_text(length = hover_text_length)
   nodes[files, "hover_label"] <-
-    file_hover_text(files, envir)
+    file_hover_text(quoted_file = files, targets = targets)
   nodes[functions, "hover_label"] <-
-    function_hover_text(functions, envir)
+    function_hover_text(function_name = functions, envir = envir)
   nodes
 }
 

@@ -1,5 +1,14 @@
 context("edge-cases")
 
+test_that("graph does not fail if input file is binary", {
+  dclean()
+  x <- plan(y = readRDS("input.rds"))
+  saveRDS(as.list(mtcars), "input.rds")
+  expect_silent(out <- plot_graph(x, verbose = FALSE))
+  unlink("input.rds")
+  dclean()
+})
+
 test_that("different graphical arrangements for Makefile parallelism", {
   dclean()
   e <- new.env()
