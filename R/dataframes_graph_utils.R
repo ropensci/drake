@@ -102,13 +102,14 @@ function_hover_text <- Vectorize(function(function_name, envir){
 
 hover_text <- function(nodes, plan, targets, files, functions, envir) {
   nodes$hover_label <- nodes$id
+  import_files <- setdiff(files, targets)
+  nodes[import_files, "hover_label"] <-
+    file_hover_text(quoted_file = import_files, targets = targets)
+  nodes[functions, "hover_label"] <-
+    function_hover_text(function_name = functions, envir = envir)
   nodes[targets, "hover_label"] <-
     plan[plan$target %in% targets, "command"] %>%
     wrap_text %>% crop_text(length = hover_text_length)
-  nodes[files, "hover_label"] <-
-    file_hover_text(quoted_file = files, targets = targets)
-  nodes[functions, "hover_label"] <-
-    function_hover_text(function_name = functions, envir = envir)
   nodes
 }
 
