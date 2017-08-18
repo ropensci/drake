@@ -3,8 +3,8 @@ run_parLapply <- function(config) {
     run_lapply(config = config)
     return(invisible())
   }
-  null_path <- base::normalizePath(file.path("/", "dev", "null"))
-  outfile <- ifelse(config$verbose, "", null_path)
+  outfile <- ifelse(config$verbose, "",
+    "/dev/null") # nolint
   config$cluster <- makePSOCKcluster(config$jobs, outfile = outfile)
   clusterExport(cl = config$cluster, varlist = c("config",
     ls("package:drake", all.names = TRUE)), envir = environment())
