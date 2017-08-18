@@ -12,7 +12,7 @@ console <- function(imported, target, config) {
 }
 
 console_parallel_stage <- function(candidates, remaining_targets, config){
-  if(!config$verbose) return()
+  if (!config$verbose) return()
   cat(color("check", "slateblue2"), " ",
     length(candidates), " target",
     ifelse(length(candidates) == 1, "", "s"),
@@ -30,4 +30,3 @@ crop_text <- Vectorize(function(x, length = 50) {
   x
 },
 "x", USE.NAMES = FALSE)
-
