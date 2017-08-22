@@ -6,7 +6,7 @@ console <- function(imported, target, config) {
   else if (imported)
     action <- color("import", "dodgerblue3")
   else
-    action <- color("build", "forestgreen")
+    action <- color("target", "forestgreen")
   target <- crop_text(target, length = 50)
   cat(action, " ", target, "\n", sep = "")
 }
