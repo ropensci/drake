@@ -61,11 +61,12 @@ command_dependencies <- function(command){
     clean_dependency_list()
 }
 
-import_dependencies = function(object){
-  if(is.function(object)) 
+import_dependencies <- function(object){
+  if (is.function(object)){
     function_dependencies(object) %>% clean_dependency_list
-  else
+  } else{
     character(0)
+  }
 }
 
 # Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.
