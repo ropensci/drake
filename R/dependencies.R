@@ -137,14 +137,14 @@ extract_filenames <- function(command){
   splits[seq(from = 2, to = length(splits), by = 2)]
 }
 
-safe_grepl = function(pattern, x){
+safe_grepl <- function(pattern, x){
   tryCatch(grepl(pattern, x), error = function(e) FALSE)
 }
 
-is_file = function(x){
+is_file <- function(x){
   safe_grepl("^'", x) & safe_grepl("'$", x)
 }
 
-is_not_file = function(x){
+is_not_file <- function(x){
   !is_file(x)
 }
