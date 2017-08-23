@@ -1,7 +1,12 @@
-assign_to_envir = Vectorize(function(target, value, config){
-  if(is_file(target) | !(target %in% config$plan$target)) return()
-  assign(x = target, value = value, envir = config$envir)
-}, c("target", "value"))
+assign_to_envir <- Vectorize(
+  function(target, value, config){
+    if (is_file(target) | !(target %in% config$plan$target)){
+      return()
+    }
+    assign(x = target, value = value, envir = config$envir)
+  },
+  c("target", "value")
+  )
 
 prune_envir = function(targets, config){
   downstream = lapply(targets, function(vertex)
