@@ -20,8 +20,12 @@ target_current <- function(target, hashes, config){
     )
 }
 
-file_current = function(target, hashes, config){
-  if(!is_file(target)) return(TRUE)
-  if(!file.exists(unquote(target))) return(FALSE)
+file_current <- function(target, hashes, config){
+  if (!is_file(target)){
+    return(TRUE)
+  }
+  if (!file.exists(unquote(target))){
+    return(FALSE)
+  }
   identical(config$cache$get(target)$value, hashes$file)
 }
