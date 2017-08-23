@@ -15,7 +15,10 @@ console <- function(imported, target, config){
   cat(action, " ", target, "\n", sep = "")
 }
 
-color = function(x, color){
-  if(is.null(color)) x
-  else make_style(color)(x)
+color <- function(x, color){
+  if (is.null(color)){
+    x
+  } else{
+    make_style(color)(x)
+  }
 }
