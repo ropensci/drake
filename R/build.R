@@ -27,7 +27,19 @@ build <- function(target, hash_list, config) {
 build_target <- function(target, hashes, config) {
   command <- get_command(target = target, config = config) %>%
     functionize
-  eval(parse(text = command), envir = config$envir)
+  value <- eval(parse(text = command), envir = config$envir)
+  check_built_file(target)
+  value
+}
+
+check_built_file <- function(target){
+  if (!is_file(target)){
+    return()
+  }
+  if (!file.exists(unquote(target))){
+    warning("File target ", target, " was built,\n",
+      "but the file itself does not exist.")
+  }
 }
 
 imported_target <- function(target, hashes, config) {

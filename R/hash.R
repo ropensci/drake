@@ -34,8 +34,14 @@ file_hash <- function(target, config) {
     -Inf)
   new_mtime <- file.mtime(filename)
   do_rehash <- file.size(filename) < 1e+05 | new_mtime > old_mtime
-  if (do_rehash)
-    rehash_file(target) else config$cache$get(target)$value
+  if (is.na(do_rehash)){
+    do_rehash <- TRUE
+  }
+  if (do_rehash){
+    rehash_file(target)
+  } else {
+    config$cache$get(target)$value
+  }
 }
 
 rehash_file <- function(target) {
