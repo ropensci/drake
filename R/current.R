@@ -7,12 +7,17 @@ should_build <- function(target, hash_list, config){
     )
 }
 
-target_current = function(target, hashes, config){
-  if(!(target %in% config$inventory)) return(FALSE)
-  if(!file_current(target = target, hashes = hashes, config = config)) 
+target_current <- function(target, hashes, config){
+  if (!(target %in% config$inventory)){
     return(FALSE)
-  identical(config$cache$get(target, namespace = "depends"),
-    hashes$depends)
+  }
+  if (!file_current(target = target, hashes = hashes, config = config)){
+    return(FALSE)
+  }
+  identical(
+    config$cache$get(target, namespace = "depends"),
+    hashes$depends
+    )
 }
 
 file_current = function(target, hashes, config){
