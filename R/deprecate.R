@@ -78,10 +78,25 @@ prune <- function(plan){
 #' status(list = c("small", "large"))
 #' status(no_imported_objects = TRUE)
 #' }
-status = function(..., list = character(0), no_imported_objects = FALSE, 
-                    imported_files_only = logical(0), path = getwd(), search = TRUE){
-  .Deprecated("progress", package = "drake",
-              msg = "status() is deprecated. Use progress() instead.")  
-  progress(..., list = list, no_imported_objects = no_imported_objects,
-    imported_files_only = imported_files_only, path = path, search = search)
+status <- function(
+  ...,
+  list = character(0),
+  no_imported_objects = FALSE,
+  imported_files_only = logical(0),
+  path = getwd(),
+  search = TRUE
+  ){
+  .Deprecated(
+    "progress",
+    package = "drake",
+    msg = "status() is deprecated. Use progress() instead."
+    )
+  progress(
+    ...,
+    list = list,
+    no_imported_objects = no_imported_objects,
+    imported_files_only = imported_files_only,
+    path = path,
+    search = search
+    )
 }
