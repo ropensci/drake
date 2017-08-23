@@ -84,9 +84,15 @@ destroy <- function(
   invisible()
 }
 
-empty = function(path, search){
-  uncache(cached(path = path, search = search),
-    path = path, search = search)
+empty <- function(path, search){
+  uncache(
+    cached(
+      path = path,
+      search = search
+      ),
+    path = path,
+    search = search
+    )
   invisible()
 }
 
