@@ -30,9 +30,14 @@ deps <- function(x){
   clean_dependency_list(out)
 }
 
-dependencies = function(targets, config){
-  adjacent_vertices(graph = config$graph, v = targets, mode = "in") %>%
-    lapply(FUN = names) %>% clean_dependency_list
+dependencies <- function(targets, config){
+  adjacent_vertices(
+    graph = config$graph,
+    v = targets,
+    mode = "in"
+    ) %>%
+  lapply(FUN = names) %>%
+  clean_dependency_list
 }
 
 command_dependencies = function(command){
