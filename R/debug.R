@@ -50,7 +50,15 @@ dbug <- function(clean = TRUE){
   config
 }
 
-dclean = function(){
-  unlink(c(".drake", "intermediatefile.rds", "input.rds", 
-    "Makefile", "report.md", "report.Rmd"), recursive = TRUE)
+dclean <- function(){
+  unlink(
+    c(
+      ".drake",
+      "intermediatefile.rds",
+      "input.rds",
+      "Makefile",
+      "report.md",
+      "report.Rmd"
+      ),
+    recursive = TRUE)
 }
