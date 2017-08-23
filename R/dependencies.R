@@ -19,13 +19,14 @@
 #' deps(my_plan$command[1])
 #' deps(my_plan$command[2])
 #' deps(my_plan$command[3])
-deps = function(x){
-  if(is.function(x))
-    out = function_dependencies(x)
-  else if(is.character(x))
-    out = command_dependencies(x)
-  else
+deps <- function(x){
+  if (is.function(x)){
+    out <- function_dependencies(x)
+  } else if (is.character(x)){
+    out <- command_dependencies(x)
+  } else{
     stop("x must be a character scalar or function.")
+  }
   clean_dependency_list(out)
 }
 
