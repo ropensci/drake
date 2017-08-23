@@ -38,8 +38,8 @@ prune_envir <- function(targets, config){
   invisible()
 }
 
-nonfile_target_dependencies = function(targets, config){
-  dependencies(targets = targets, config = config) %>% 
-    Filter(f = is_not_file) %>% 
+nonfile_target_dependencies <- function(targets, config){
+  dependencies(targets = targets, config = config) %>%
+    Filter(f = is_not_file) %>%
     intersect(y = config$plan$target)
 }
