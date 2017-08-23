@@ -25,9 +25,12 @@ fix_deprecated_plan_names <- function(plan){
 #' make(my_plan)
 #' clean(destroy = TRUE)
 #' }
-prune = function(plan){
-  .Deprecated("clean", package = "drake",
-    msg = "prune() is deprecated. Use clean() instead.")
+prune <- function(plan){
+  .Deprecated(
+    "clean",
+    package = "drake",
+    msg = "prune() is deprecated. Use clean() instead."
+    )
   clean(list = setdiff(built(), possible_targets(plan)))
 }
 
