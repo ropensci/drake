@@ -70,14 +70,14 @@ import_dependencies <- function(object){
 }
 
 # Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.
-find_namespaced_functions = function(f, found = character(0)){
-  if(is.function(f)){
+find_namespaced_functions <- function(f, found = character(0)){
+  if (is.function(f)){
     return(find_namespaced_functions(body(f), found))
   } else if (is.call(f) && deparse(f[[1]]) %in% c("::", ":::")){
-    found = c(found, deparse(f))
+    found <- c(found, deparse(f))
   } else if (is.recursive(f)){
-    v = lapply(as.list(f), find_namespaced_functions, found)
-    found = unique( c(found, unlist(v) ))        
+    v <- lapply(as.list(f), find_namespaced_functions, found)
+    found <- unique(c(found, unlist(v)))
   }
   found
 }
