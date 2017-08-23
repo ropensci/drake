@@ -7,6 +7,8 @@ Authors@R: c(
     email = "will.landau@lilly.com", role = c("aut", "cre")),
   person(family = "Clarkberg", given = "Jasper",
     email = "jasper@clarkberg.org", role = c("ctb")),
+  person(family = "Axthelm", given = "Alex",
+    email = "aaxthelm@che.IN.gov", role = c("ctb")),
   person(family = "Eli Lilly and Company", role = "cph"))
 Description: A solution for reproducible code and 
     high-performance computing.

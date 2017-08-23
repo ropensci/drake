@@ -1,9 +1,10 @@
-fix_deprecated_plan_names = function(plan){
-  if(any(colnames(plan) %in% c("output", "code")))
+fix_deprecated_plan_names <- function(plan){
+  if (any(colnames(plan) %in% c("output", "code"))){
     warning("Drake is no longer using \"output\" or \"code\" ",
       "for column names in workflow plan data frames. Use \"target\" ",
       "and \"command\" instead.")
-  colnames(plan) = gsub("^output$", "target", colnames(plan)) %>%
+  }
+  colnames(plan) <- gsub("^output$", "target", colnames(plan)) %>%
     gsub(pattern = "^code$", replacement = "command")
   as.data.frame(plan, stringsAsFactors = FALSE)
 }
@@ -24,9 +25,12 @@ fix_deprecated_plan_names = function(plan){
 #' make(my_plan)
 #' clean(destroy = TRUE)
 #' }
-prune = function(plan){
-  .Deprecated("clean", package = "drake",
-    msg = "prune() is deprecated. Use clean() instead.")
+prune <- function(plan){
+  .Deprecated(
+    "clean",
+    package = "drake",
+    msg = "prune() is deprecated. Use clean() instead."
+    )
   clean(list = setdiff(built(), possible_targets(plan)))
 }
 
@@ -74,10 +78,25 @@ prune = function(plan){
 #' status(list = c("small", "large"))
 #' status(no_imported_objects = TRUE)
 #' }
-status = function(..., list = character(0), no_imported_objects = FALSE, 
-                    imported_files_only = logical(0), path = getwd(), search = TRUE){
-  .Deprecated("progress", package = "drake",
-              msg = "status() is deprecated. Use progress() instead.")  
-  progress(..., list = list, no_imported_objects = no_imported_objects,
-    imported_files_only = imported_files_only, path = path, search = search)
+status <- function(
+  ...,
+  list = character(0),
+  no_imported_objects = FALSE,
+  imported_files_only = logical(0),
+  path = getwd(),
+  search = TRUE
+  ){
+  .Deprecated(
+    "progress",
+    package = "drake",
+    msg = "status() is deprecated. Use progress() instead."
+    )
+  progress(
+    ...,
+    list = list,
+    no_imported_objects = no_imported_objects,
+    imported_files_only = imported_files_only,
+    path = path,
+    search = search
+    )
 }
