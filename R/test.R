@@ -41,3 +41,98 @@ justbuilt = function(config){
 nobuild = function(config){
   expect_true(length(justbuilt(config)) < 1)
 }
+
+test_configs <- function(){
+  list(
+    list(
+      label = "parent_parL_1",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "parLapply",
+      jobs = 1
+      ), # Uses lapply() instead of parLapply() when jobs = 1.
+    list(
+      label = "parent_parL_2",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "parLapply",
+      jobs = 2,
+      cran = TRUE
+      ), # For CRAN, Travis, and Appveyor, only use this configuration.
+    list(
+      label = "parent_mcl_1",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "mclapply",
+      jobs = 1
+      ), #
+    list(
+      label = "parent_mcl_8",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "mclapply",
+      jobs = 8,
+      skip_os = c("windows")
+      ), # Skip on Windows.
+    list(
+      label = "parent_Make_1",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "Makefile",
+      jobs = 1
+      ), #
+    # Makefiles are different, so I want to test with a low and a
+    # high jobs value.
+    list(
+      label = "parent_Make_2",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "Makefile",
+      jobs = 2
+      ),
+    list(
+      label = "parent_Make_16",
+      envir = "new.env(parent = globalenv())",
+      parallelism = "Makefile",
+      jobs = 16
+      ), #
+    # For the global environment, I do not think all scenarios need to be
+    # repeated.
+    list(
+      label = "global_parL_1",
+      envir = "globalenv()",
+      parallelism = "parLapply",
+      jobs = 1
+      ),
+    list(
+      label = "global_parL_2",
+      envir = "globalenv()",
+      parallelism = "parLapply",
+      jobs = 2
+      ), #
+    list(
+      label = "new_mcl_2",
+      envir = "new.env()",
+      parallelism = "mclapply",
+      jobs = 1
+      ), #
+    list(
+      label = "global_mcl_8",
+      envir = "globalenv()",
+      parallelism = "mclapply",
+      jobs = 8,
+      skip_os = c("windows")
+      ), # Skip on Windows.
+    list(
+      label = "global_Make_16",
+      envir = "globalenv()",
+      parallelism = "Makefile",
+      jobs = 16
+      ) #
+  )
+}
+
+skip_tests <- function(config){
+  if (!(length(config[["CRAN"]]) && config[["CRAN"]])){
+    testthat::skip_on_cran()
+    testthat::skip_on_travis()
+    testthat::skip_on_appveyor()
+  }
+  if (length(config[["skip_os"]])){
+    testthat::skip_on_os(config[["skip_os"]])
+  }
+}
