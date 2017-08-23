@@ -23,6 +23,15 @@ self_hash <- Vectorize(function(target, config) {
 },
 "target", USE.NAMES = FALSE)
 
+should_rehash_file <- function(filename, new_mtime, old_mtime,
+  size_cutoff = 1e5){
+  do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
+  if (is.na(do_rehash)){
+    do_rehash <- TRUE
+  }
+  do_rehash
+}
+
 file_hash <- function(target, config) {
   if (is_not_file(target))
     return(as.character(NA))
@@ -33,10 +42,10 @@ file_hash <- function(target, config) {
     config$cache$get(key = target, namespace = "filemtime"),
     -Inf)
   new_mtime <- file.mtime(filename)
-  do_rehash <- file.size(filename) < 1e+05 | new_mtime > old_mtime
-  if (is.na(do_rehash)){
-    do_rehash <- TRUE
-  }
+  do_rehash <- should_rehash_file(
+    filename = filename,
+    new_mtime = new_mtime,
+    old_mtime = old_mtime)
   if (do_rehash){
     rehash_file(target)
   } else {
