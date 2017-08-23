@@ -37,19 +37,28 @@ dependencies <- function(targets, config){
     mode = "in"
     ) %>%
   lapply(FUN = names) %>%
-  clean_dependency_list
+  clean_dependency_list()
 }
 
-command_dependencies = function(command){
-  if(!length(command)) return()
-  if(is.na(command)) return()
-  command = as.character(command) %>% braces
-  fun = function(){}
-  body(fun) = parse(text = command)
-  non_files = function_dependencies(fun) %>% unlist 
-  files = extract_filenames(command)
-  if(length(files)) files = quotes(files, single = TRUE)
-  c(non_files, files) %>% clean_dependency_list
+command_dependencies <- function(command){
+  if (!length(command)){
+    return()
+  }
+  if (is.na(command)){
+    return()
+  }
+  command <- as.character(command) %>%
+    braces()
+  fun <- function(){} # nolint: I'm still not sure why these braces need to be here.
+  body(fun) <- parse(text = command)
+  non_files <- function_dependencies(fun) %>%
+    unlist()
+  files <- extract_filenames(command)
+  if (length(files)){
+    files <- quotes(files, single = TRUE)
+  }
+  c(non_files, files) %>%
+    clean_dependency_list()
 }
 
 import_dependencies = function(object){
