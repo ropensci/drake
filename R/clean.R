@@ -116,5 +116,6 @@ uncache <- Vectorize(function(target, path, search){
       cache$del(target, namespace = space)
     }
   invisible()
-},
-"target")
+    },
+  "target"
+  )
