@@ -1,6 +1,5 @@
-#' A scalable solution for reproducibility and high-performance computing
-#'
-#' Drake is a workflow manager and build system. 
+#' Drake is a workflow manager and build system, 
+#' a scalable solution for reproducibility and high-performance computing.
 #' @docType package
 #' @name drake-package
 #' @aliases drake

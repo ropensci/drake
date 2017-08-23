@@ -4,9 +4,11 @@
 \name{drake-package}
 \alias{drake-package}
 \alias{drake}
-\title{A scalable solution for reproducibility and high-performance computing}
+\title{Drake is a workflow manager and build system, 
+a scalable solution for reproducibility and high-performance computing.}
 \description{
-Drake is a workflow manager and build system.
+Drake is a workflow manager and build system, 
+a scalable solution for reproducibility and high-performance computing.
 }
 \examples{
 \dontrun{
