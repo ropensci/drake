@@ -11,6 +11,7 @@ Thumbs.db
 \.Rbuildignore$
 \.Rhistory$
 \.drake$
+\.lintr$
 cran-comments.md
 cran-comments.html
 LICENSE
