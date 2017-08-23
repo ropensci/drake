@@ -1,5 +1,11 @@
 context("cache")
 
+test_that("clean() works if there is no cache already", {
+  dclean()
+  clean(list = "no_cache")
+  dclean()
+})
+
 test_that("cache functions work", {
   dclean()
   owd <- getwd()

@@ -35,12 +35,19 @@ test_that("shell_file() writes correctly", {
 })
 
 test_that("deps() correctly reports dependencies of functions and commands", {
+  expect_equal(deps(""), character(0))
+  expect_equal(length(command_dependencies(NA)), 0)
+  expect_equal(length(command_dependencies(NULL)), 0)
+  expect_equal(length(command_dependencies(character(0))), 0)
   expect_equal(deps(base::c), character(0))
   expect_equal(deps(base::list), character(0))
+  expect_error(deps(NA))
   f <- function(x, y) {
     out <- x + y + g(x)
     saveRDS(out, "out.rds")
   }
+  expect_false(is_vectorized(f))
+  expect_false(is_vectorized("char"))
   expect_equal(deps(f), c("g", "saveRDS"))
   my_plan <- plan(
     x = 1 + some_object,
@@ -181,4 +188,10 @@ test_that("targets can be partially specified", {
 
 test_that("misc stuff", {
   expect_equal(as_file("x"), "'x'")
+})
+
+test_that("misc empty/NULL cases", {
+  dclean()
+  clean(list = "no_cache")
+  dclean()
 })
