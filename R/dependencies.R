@@ -82,11 +82,15 @@ find_namespaced_functions <- function(f, found = character(0)){
   found
 }
 
-is_vectorized = function(funct){
-  if(!is.function(funct)) return(FALSE)
-  vectorized_names = "FUN" # Chose not to include other names.
-  if(!all(vectorized_names %in% ls(environment(funct)))) return(FALSE)
-  f = environment(funct)[["FUN"]]
+is_vectorized <- function(funct){
+  if (!is.function(funct)){
+    return(FALSE)
+  }
+  vectorized_names <- "FUN" # Chose not to include other names.
+  if (!all(vectorized_names %in% ls(environment(funct)))){
+    return(FALSE)
+  }
+  f <- environment(funct)[["FUN"]]
   is.function(f)
 }
 
