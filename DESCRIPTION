@@ -3,43 +3,56 @@ Title: Data Frames in R for Make
 Version: 4.1.0
 Date: 2017-08-17
 Authors@R: c(
-  person(family = "Landau", given = c("William", "Michael"),
-    email = "will.landau@lilly.com", role = c("aut", "cre")),
-  person(family = "Clarkberg", given = "Jasper",
-    email = "jasper@clarkberg.org", role = c("ctb")),
-  person(family = "Eli Lilly and Company", role = "cph"))
+  person(
+    family = "Landau",
+    given = c("William", "Michael"),
+    email = "will.landau@lilly.com",
+    role = c("aut", "cre")),
+  person(
+    family = "Axthelm",
+    given = "Alex",
+    email = "aaxthelm@che.IN.gov",
+    role = "ctb"),
+  person(
+    family = "Clarkberg",
+    given = "Jasper",
+    email = "jasper@clarkberg.org",
+    role = "ctb"),
+  person(
+    family = "Eli Lilly and Company",
+    role = "cph"))
 Description: A solution for reproducible code and 
-    high-performance computing.
+  high-performance computing.
 License: GPL-3
 Depends:
-    R (>= 3.2.0)
+  R (>= 3.2.0)
 Imports:
-    base64url,
-    codetools,
-    crayon,
-    eply,
-    digest,
-    igraph,
-    lubridate,
-    magrittr,
-    parallel,
-    plyr,
-    R.utils,
-    stats,
-    storr,
-    stringi,
-    stringr,
-    testthat,
-    tools,
-    utils,
-    visNetwork
+  base64url,
+  codetools,
+  crayon,
+  eply,
+  digest,
+  igraph,
+  lubridate,
+  magrittr,
+  parallel,
+  plyr,
+  R.utils,
+  stats,
+  storr,
+  stringi,
+  stringr,
+  testthat,
+  tools,
+  utils,
+  visNetwork
 Suggests:
-    abind,
-    knitr,
-    MASS,
-    methods,
-    rmarkdown,
-    tibble
+  abind,
+  knitr,
+  MASS,
+  methods,
+  rmarkdown,
+  tibble
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues

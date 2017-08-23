@@ -39,47 +39,83 @@
 #' clean()
 #' clean(destroy = TRUE)
 #' }
-clean = function(..., list = character(0), destroy = FALSE,
-  path = getwd(), search = TRUE){
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) 
-    return(clean_everything(destroy = destroy, 
-      path = path, search = search))
+clean <- function(
+  ...,
+  list = character(0),
+  destroy = FALSE,
+  path = getwd(),
+  search = TRUE
+  ){
+  dots <- match.call(expand.dots = FALSE)$...
+  targets <- targets_from_dots(dots, list)
+  if (!length(targets)) {
+    return(clean_everything(
+        destroy = destroy,
+        path = path,
+        search = search
+        ))
+  }
   uncache(targets, path = path, search = search)
   invisible()
 }
 
-clean_everything = function(destroy, path, search){
+clean_everything <- function(
+  destroy,
+  path,
+  search
+  ){
   empty(path, search)
-  if(destroy) destroy(path, search)
+  if (destroy) {
+    destroy(path, search)
+  }
   invisible()
 }
 
-destroy = function(path, search){
-  where = cachepath
-  if(search){
-    where = find_cache(path = path)
-    if(!length(where)) return()
+destroy <- function(
+  path,
+  search
+  ){
+  where <- cachepath
+  if (search){
+    where <- find_cache(path = path)
+    if (!length(where)) return()
   }
   unlink(where, recursive = TRUE)
   invisible()
 }
 
-empty = function(path, search){
-  uncache(cached(path = path, search = search),
-    path = path, search = search)
+empty <- function(path, search){
+  uncache(
+    cached(
+      path = path,
+      search = search
+      ),
+    path = path,
+    search = search
+    )
   invisible()
 }
 
-uncache = Vectorize(function(target, path, search){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) return(invisible())
-  if(is_file(target) & !is_imported(target = target, 
-    cache = cache))
-    unquote(target) %>% unlink(recursive = TRUE)
-  for(space in c("objects", "depends", "filemtime", "functions"))
-    if(target %in% cache$list(namespace = space))
+uncache <- Vectorize(function(target, path, search){
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    return(invisible())
+  }
+  if (
+    is_file(target) &
+      !is_imported(
+        target = target,
+        cache = cache
+        )
+    ){
+    unquote(target) %>%
+      unlink(recursive = TRUE)
+  }
+  for (space in c("objects", "depends", "filemtime", "functions"))
+    if (target %in% cache$list(namespace = space)){
       cache$del(target, namespace = space)
+    }
   invisible()
-}, "target")
+    },
+  "target"
+  )
