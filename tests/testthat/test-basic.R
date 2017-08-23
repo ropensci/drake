@@ -43,7 +43,12 @@ test_that("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 8)
 
-  testrun(config)
+  con <- testrun(config)
+
+  # quick check: old file hash used if up to date
+  expect_true(is.character(file_hash(
+    target = "'report.md'", config = con, size_cutoff = -1)))
+
   config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))

@@ -21,7 +21,8 @@ testrun <- function(config) {
   make(plan = config$plan, targets = config$targets, envir = config$envir,
     verbose = FALSE, parallelism = config$parallelism, jobs = config$jobs,
     packages = config$packages, prework = config$prework,
-    prepend = config$prepend, command = config$command)
+    prepend = config$prepend, command = config$command,
+    return_config = TRUE)
 }
 
 set_test_opt <- function(opt) {

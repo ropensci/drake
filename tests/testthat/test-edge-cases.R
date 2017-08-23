@@ -132,24 +132,35 @@ test_that("warn when file target names do not match actual filenames", {
   dclean()
 })
 
-test_that("stress test decide_rehash", {
+test_that("stress test hashing decisions", {
   dclean()
   file <- "input.rds"
-  expect_true(should_rehash_file(file = file, new_mtime = 1, old_mtime = 0))
+  expect_true(should_rehash_file(
+    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
+  expect_true(should_rehash_file(
+    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
+  expect_true(should_rehash_file(
+    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
+  expect_true(should_rehash_file(
+    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
+  expect_true(should_rehash_file(
+    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
+  expect_true(should_rehash_file(
+    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
   saveRDS(1, file = file)
   expect_true(file.exists(file))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0))
+    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1))
+    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0))
+    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = 0))
+    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
   expect_false(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = 0))
+    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
   expect_false(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = 0))
+    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
   unlink(file)
   dclean()
 })
