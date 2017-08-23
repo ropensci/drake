@@ -108,8 +108,12 @@ function_dependencies <- function(funct){
   parsable_list(out)
 }
 
-clean_dependency_list = function(x){
-  x %>% unlist %>% unname %>% unique %>% sort
+clean_dependency_list <- function(x){
+  x %>%
+    unlist() %>%
+    unname() %>%
+    unique() %>%
+    sort()
 }
 
 parsable_list = function(x){
