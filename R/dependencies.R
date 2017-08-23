@@ -94,12 +94,17 @@ is_vectorized <- function(funct){
   is.function(f)
 }
 
-function_dependencies = function(funct){
-  if(typeof(funct) != "closure") funct = function(){}
-  if(is_vectorized(funct)) funct = environment(funct)[["FUN"]]
-  out = findGlobals(funct, merge = FALSE)
-  namespaced = find_namespaced_functions(funct)
-  out$functions = c(out$functions, namespaced) %>% sort
+function_dependencies <- function(funct){
+  if (typeof(funct) != "closure"){
+    funct <- function(){} # nolint: curly braces are necessary
+  }
+  if (is_vectorized(funct)){
+    funct <- environment(funct)[["FUN"]]
+  }
+  out <- findGlobals(funct, merge = FALSE)
+  namespaced <- find_namespaced_functions(funct)
+  out$functions <- c(out$functions, namespaced) %>%
+    sort()
   parsable_list(out)
 }
 
