@@ -1,7 +1,10 @@
-should_build = function(target, hash_list, config){
+should_build <- function(target, hash_list, config){
   !(target %in% config$plan$target) |
-  !target_current(target = target, 
-     hashes = hash_list[[target]], config = config)
+  !target_current(
+    target = target,
+    hashes = hash_list[[target]],
+    config = config
+    )
 }
 
 target_current = function(target, hashes, config){
