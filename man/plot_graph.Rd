@@ -8,8 +8,8 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), file = character(0), selfcontained = FALSE,
-  build_times = TRUE, targets_only = FALSE, config = NULL,
-  font_size = 20, layout = "layout_with_sugiyama",
+  build_times = TRUE, targets_only = FALSE, split_columns = FALSE,
+  config = NULL, font_size = 20, layout = "layout_with_sugiyama",
   main = paste("Workflow graph for", parallelism, "parallelism"),
   direction = "LR", hover = TRUE, navigationButtons = TRUE, ...)
 }
@@ -58,6 +58,15 @@ in the graph.}
 
 \item{targets_only}{logical, whether to skip the imports and only show the 
 targets in the workflow plan.}
+
+\item{split_columns}{logical, whether to break up the 
+columns of nodes to make the aspect ratio of the rendered
+graph closer to 1:1. This improves the viewing experience,
+but the columns no longer strictly represent parallelizable
+stages of build items. (Although the targets/imports 
+in each column are still conditionally independent,
+there may be more conditional independence than the graph
+indicates.)}
 
 \item{config}{option internal runtime parameter list of 
 \code{\link{make}(...)},
