@@ -104,13 +104,13 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
     edges <-
       edges[edges$from %in% targets & edges$to %in% targets, ]
   }
-  
+
   # Cannot split columns until imports are removed,
   # if applicable.
-  if(split_columns){
+  if (split_columns){
     nodes <- split_node_columns(nodes = nodes)
   }
-  
+
   list(nodes = nodes, edges = edges,
     legend_nodes = legend_nodes(font_size = font_size),
     parallelism = parallelism)

@@ -175,22 +175,32 @@ resolve_levels_Makefile <- function(nodes, graph, imports, targets) {
   rbind(nodes_imports, nodes_targets)
 }
 
+# https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r
+split_levels <- function(old_levels, max_reps){
+  n_nodes <- length(old_levels)
+  n_levels <- floor(n_nodes / max_reps) + (n_nodes %% max_reps > 0)
+  index <- seq_along(old_levels)
+  new_levels <- split(index, sort(index %% n_levels)) %>%
+    lapply(FUN = function(substage){
+      rep(max(substage), length(substage))
+    }) %>%
+    unlist %>%
+    unname
+  new_levels <- new_levels - min(new_levels)
+  new_levels / (max(new_levels) + 1) + min(old_levels)
+}
+
 split_node_columns <- function(nodes){
-  cutoff <- nrow(nodes) %>%
+  max_reps <- nrow(nodes) %>%
     sqrt %>%
     ceiling
-  ddply(nodes, "level", function(stage){
-    
-    stage <- stage[, c("id", "level")]
-    new_levels <- seq(
-      from = min(stage$level),
-      to = max(stage$level),
-      length.out = )
-    
-    
-    browser()
-    
+  out <- ddply(nodes, "level", function(stage){
+    stage$level <- split_levels(
+      old_levels = stage$level, max_reps = max_reps)
+    stage
   })
+  out$level <- as.integer(as.factor(out$level))
+  out
 }
 
 style_nodes <- function(nodes, font_size) {

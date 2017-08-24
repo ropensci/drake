@@ -16,9 +16,19 @@ test_that("basic example works", {
 
   tmp <- plot_graph(my_plan, envir = e, config = config)
   expect_false(file.exists("Makefile"))
+
+  # Different graph configurations should be checked manually.
   tmp <- dataframes_graph(my_plan, envir = e, config = config)
-  tmp <- dataframes_graph(my_plan, envir = e, config = config,
+  tmp2 <- dataframes_graph(my_plan, envir = e, config = config,
     targets_only = TRUE)
+  tmp3 <- dataframes_graph(my_plan, envir = e, config = config,
+    split_columns = TRUE)
+  tmp4 <- dataframes_graph(my_plan, envir = e, config = config,
+    targets_only = TRUE, split_columns = TRUE)
+  expect_false(identical(tmp$nodes, tmp2$nodes))
+  expect_false(identical(tmp$nodes, tmp3$nodes))
+  expect_false(identical(tmp$nodes, tmp4$nodes))
+
   expect_false(file.exists("Makefile"))
   expect_true(is.data.frame(tmp$nodes))
   expect_equal(sort(outdated(my_plan, envir = e, config = config)),
