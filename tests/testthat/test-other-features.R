@@ -48,16 +48,16 @@ test_that("deps() correctly reports dependencies of functions and commands", {
   }
   expect_false(is_vectorized(f))
   expect_false(is_vectorized("char"))
-  expect_equal(deps(f), c("g", "saveRDS"))
+  expect_equal(sort(deps(f)), sort(c("g", "saveRDS")))
   my_plan <- plan(
     x = 1 + some_object,
     my_target = x + readRDS("tracked_input_file.rds"),
     return_value = f(x, y, g(z + w)))
   expect_equal(deps(my_plan$command[1]), "some_object")
-  expect_equal(deps(my_plan$command[2]), c("'tracked_input_file.rds'",
-    "readRDS", "x"))
-  expect_equal(deps(my_plan$command[3]), c("f", "g", "w",
-    "x", "y", "z"))
+  expect_equal(sort(deps(my_plan$command[2])),
+    sort(c("'tracked_input_file.rds'", "readRDS", "x")))
+  expect_equal(sort(deps(my_plan$command[3])), sort(c("f", "g", "w",
+    "x", "y", "z")))
 })
 
 test_that("tracked() works", {
