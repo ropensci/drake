@@ -45,9 +45,10 @@ test_that("basic example works", {
 
   con <- testrun(config)
 
-  # quick check: old file hash used if up to date
+  # Check that file is not rehashed.
+  # Code coverage should cover every line of file_hash().
   expect_true(is.character(file_hash(
-    target = "'report.md'", config = con, size_cutoff = -1)))
+    target = "'report.Rmd'", config = con, size_cutoff = -1)))
 
   config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
