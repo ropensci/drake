@@ -175,6 +175,24 @@ resolve_levels_Makefile <- function(nodes, graph, imports, targets) {
   rbind(nodes_imports, nodes_targets)
 }
 
+split_node_columns <- function(nodes){
+  cutoff <- nrow(nodes) %>%
+    sqrt %>%
+    ceiling
+  ddply(nodes, "level", function(stage){
+    
+    stage <- stage[, c("id", "level")]
+    new_levels <- seq(
+      from = min(stage$level),
+      to = max(stage$level),
+      length.out = )
+    
+    
+    browser()
+    
+  })
+}
+
 style_nodes <- function(nodes, font_size) {
   nodes$font.size <- font_size
   nodes[nodes$status == "imported", "color"] <- import_color

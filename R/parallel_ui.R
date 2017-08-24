@@ -151,7 +151,8 @@ max_useful_jobs <- function(plan, targets = drake::possible_targets(plan),
   force(envir)
   nodes <- dataframes_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
-    packages = packages, prework = prework, config = config)$nodes
+    packages = packages, prework = prework, config = config,
+    split_columns = FALSE)$nodes
   imports <- match.arg(imports)
   just_targets <- intersect(nodes$id, plan$target)
   just_files <- Filter(x = nodes$id, f = is_file)

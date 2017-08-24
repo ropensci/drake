@@ -38,6 +38,14 @@
 #' in the graph.
 #' @param targets_only logical, whether to skip the imports and only show the 
 #' targets in the workflow plan.
+#' @param split_columns logical, whether to break up the 
+#' columns of nodes to make the aspect ratio of the rendered
+#' graph closer to 1:1. This improves the viewing experience,
+#' but the columns no longer strictly represent parallelizable
+#' stages of build items. (Although the targets/imports 
+#' in each column are still conditionally independent,
+#' there may be more conditional independence than the graph
+#' indicates.)
 #' @param font_size numeric, font size of the node labels in the graph
 #' @param layout name of an igraph layout 
 #' to use, such as 'layout_with_sugiyama'
@@ -76,6 +84,7 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), file = character(0),
   selfcontained = FALSE, build_times = TRUE, targets_only = FALSE,
+  split_columns = FALSE,
   config = NULL, font_size = 20, layout = "layout_with_sugiyama",
   main = paste("Workflow graph for", parallelism, "parallelism"),
   direction = "LR", hover = TRUE,
@@ -86,7 +95,8 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   raw_graph <- dataframes_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework, build_times = build_times,
-    targets_only = targets_only, config = config, font_size = font_size)
+    targets_only = targets_only, split_columns = split_columns,
+    config = config, font_size = font_size)
   render_graph(raw_graph, file = file, selfcontained = selfcontained,
     layout = layout, direction = direction,
     navigationButtons = navigationButtons, # nolint
