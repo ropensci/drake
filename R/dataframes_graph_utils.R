@@ -76,6 +76,28 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
     files = files, functions = functions, targets = targets)
 }
 
+#' @title Function default_graph_title
+#' @description Default title of the graph from
+#' \code{\link{plot_graph}()}.
+#' @export
+#' @seealso \code{\link{dataframes_graph}}, \code{\link{plot_graph}}
+#' @param parallelism Mode of parallelism intended for the workflow.
+#' See \code{\link{parallellism_choices}()}.
+#' @param split_columns logical, whether the columns were split
+#' in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
+#' with the \code{split_columns} argument. 
+default_graph_title <- function(
+  parallelism = drake::parallelism_choices(),
+  split_columns = c(FALSE, TRUE)){
+  parallelism <- match.arg(parallelism)
+  split_columns <- match.arg(split_columns)
+  out <- paste("Workflow graph:", parallelism, "parallelism")
+  if (split_columns){
+    out <- paste(out, "with split columns")
+  }
+  out
+}
+
 file_hover_text <- Vectorize(function(quoted_file, targets){
   unquoted_file <- unquote(quoted_file)
   if (quoted_file %in% targets | !file.exists(unquoted_file))

@@ -84,9 +84,10 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), file = character(0),
   selfcontained = FALSE, build_times = TRUE, targets_only = FALSE,
-  split_columns = FALSE,
-  config = NULL, font_size = 20, layout = "layout_with_sugiyama",
-  main = paste("Workflow graph for", parallelism, "parallelism"),
+  split_columns = FALSE, config = NULL, font_size = 20,
+  layout = "layout_with_sugiyama",
+  main = drake::default_graph_title(
+    parallelism = parallelism, split_columns = split_columns),
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
   ...) {
@@ -143,7 +144,7 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
 #' }
 render_graph <- function(graph, file = character(0),
   layout = "layout_with_sugiyama", direction = "LR", hover = TRUE,
-  main = paste("Workflow graph for", graph$parallelism, "parallelism"),
+  main = graph$default_title,
   navigationButtons = TRUE, # nolint
   selfcontained = FALSE, ...) {
   out <- visNetwork::visNetwork(nodes = graph$nodes, edges = graph$edges,
