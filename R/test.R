@@ -18,7 +18,7 @@ show_config_opts <- function(config) {
 
 test_with_dir <- function(desc, code){
   root <- "workspaces"
-  if(!file.exists(root)){
+  if (!file.exists(root)){
     dir.create(root)
   }
   dir <- file.path(root, base32_encode(desc))
