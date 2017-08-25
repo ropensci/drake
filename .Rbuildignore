@@ -29,6 +29,7 @@ tests/testthat/workspaces/
 ^.*\.js$
 ^.*\.log$
 ^.*\.Rproj$
+^.*\.sh$
 ^.*\.svg$
 ^\.Rproj\.user$
 ^.*\.yml$
