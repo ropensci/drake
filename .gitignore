@@ -27,4 +27,4 @@ vignettes/*.html
 vignettes/*.md
 vignettes/*_files
 inst/doc
-tests/testthat/workspaces/
+tests/workspaces/

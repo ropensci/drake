@@ -24,7 +24,7 @@ vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
 vignettes/.*_files
-tests/testthat/workspaces/
+tests/workspaces/
 ^.*\.css$
 ^.*\.js$
 ^.*\.log$

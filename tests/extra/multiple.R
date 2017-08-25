@@ -23,13 +23,6 @@ system.time(
         cat("  Skipping.\n")
         next
       }
-
-    dir <- file.path("testthat", "workspaces")
-    unlink(dir, recursive = TRUE, force = TRUE)
-
     test_dir("testthat")
-
-    dir <- file.path("testthat", "workspaces")
-    unlink(dir, recursive = TRUE, force = TRUE)
   }
 )
