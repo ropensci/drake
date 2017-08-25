@@ -21,7 +21,9 @@ test_with_dir <- function(desc, code){
   if (!file.exists(root)){
     dir.create(root)
   }
-  dir <- file.path(root, base32_encode(desc))
+  relative_dir <- base32_encode(desc) %>%
+    digest(algo = hash_algorithm)
+  dir <- file.path(root, relative_dir)
   dir_empty(dir)
   dir <- normalizePath(dir)
   with_dir(dir, test_that(desc = desc, code = code))
