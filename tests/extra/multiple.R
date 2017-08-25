@@ -10,17 +10,18 @@ devtools::load_all()
 setwd("..")
 
 system.time(
-  for(opt_name in names(test_opts)){
-    os <- Sys.info()['sysname'] %>% tolower %>% unname
+  for (opt_name in names(test_opts)){
+    os <- Sys.info()["sysname"] %>%
+      tolower %>%
+      unname
     set_test_opt(opt_name)
     cat(opt_name, "\n")
     opt <- test_opt()
-    if(length(opt$skip_os))
-      if(os %in% opt$skip_os){
+    if (length(opt$skip_os))
+      if (os %in% opt$skip_os){
         cat("  Skipping.\n")
         next
       }
     test_dir("testthat")
-    unlink("testthat/workspaces", recursive = TRUE)
   }
 )

@@ -5,7 +5,6 @@ library(magrittr)
 library(testthat)
 devtools::load_all()
 
-os <- Sys.info()['sysname'] %>% tolower %>% unname
 setwd("..")
 
 system.time({
