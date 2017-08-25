@@ -80,7 +80,7 @@ destroy <- function(
     where <- find_cache(path = path)
     if (!length(where)) return()
   }
-  unlink(where, recursive = TRUE)
+  unlink(where, recursive = TRUE, force = TRUE)
   invisible()
 }
 
@@ -109,7 +109,7 @@ uncache <- Vectorize(function(target, path, search){
         )
     ){
     unquote(target) %>%
-      unlink(recursive = TRUE)
+      unlink(recursive = TRUE, force = TRUE)
   }
   for (space in c("objects", "depends", "filemtime", "functions"))
     if (target %in% cache$list(namespace = space)){

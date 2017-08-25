@@ -28,7 +28,7 @@ test_with_dir <- function(desc, code){
   dir_empty(dir)
   dir <- normalizePath(dir)
   with_dir(dir, test_that(desc = desc, code = code))
-  unlink(dir, recursive = TRUE)
+  unlink(dir, recursive = TRUE, force = TRUE)
 }
 
 testrun <- function(config) {

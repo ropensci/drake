@@ -19,7 +19,7 @@ dbug <- function(clean = TRUE) {
 
 dclean <- function() {
   unlink(c(".drake", "intermediatefile.rds", "input.rds", "Makefile",
-    "report.md", "report.Rmd"), recursive = TRUE)
+    "report.md", "report.Rmd"), recursive = TRUE, force = TRUE)
 }
 
 dbug_envir <- function(envir) {
