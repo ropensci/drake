@@ -8,7 +8,7 @@ default_graph_title(parallelism = drake::parallelism_choices(), split_columns)
 }
 \arguments{
 \item{parallelism}{Mode of parallelism intended for the workflow.
-See \code{\link{parallellism_choices}()}.}
+See \code{\link{parallelism_choices}()}.}
 
 \item{split_columns}{logical, whether the columns were split
 in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
