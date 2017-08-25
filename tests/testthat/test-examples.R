@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("examples")
 
-test_that("examples are listed and written", {
+test_with_dir("examples are listed and written", {
   dclean()
   x = examples_drake()
   expect_true(is.character(x) & length(x) > 0)

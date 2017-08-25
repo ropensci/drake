@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("intermediate-file")
 
-test_that("responses to intermediate file", {
+test_with_dir("responses to intermediate file", {
   dclean()
   config = dbug()
   testrun(config)

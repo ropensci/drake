@@ -2,7 +2,7 @@
 
 context("namespaced")
 
-test_that("function_dependencies() works on :: and :::", {
+test_with_dir("function_dependencies() works on :: and :::", {
   expect_false("g" %in% ls())
   crazy = function(x, y){
     z = g(x) + y
@@ -25,7 +25,7 @@ test_that("function_dependencies() works on :: and :::", {
   expect_equal(d, sort(c("digest::digest", "runif", "stats::rnorm", "stats::rpois")))
 })
 
-test_that("namespaced workflow works", {
+test_with_dir("namespaced workflow works", {
   dclean()
   opts = test_opt()
   envir = dbug()$envir

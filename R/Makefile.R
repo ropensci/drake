@@ -3,7 +3,7 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
     save(list = ls(config$envir, all.names = TRUE), envir = config$envir,
       file = globalenvpath)
   config$cache$set("config", config, namespace = "makefile")
-  makefile = file.path(cachepath, "Makefile")
+  makefile = file.path(cache_dir, "Makefile")
   sink("Makefile")
   makefile_head(config)
   makefile_rules(config)

@@ -187,7 +187,7 @@ imported <- function(files_only = FALSE, path = getwd(), search = TRUE) {
 #' }
 get_cache <- function(path = getwd(), search = TRUE) {
   if (search)
-    path <- find_cache(path = path) else path <- file.path(path, cachepath)
+    path <- find_cache(path = path) else path <- file.path(path, cache_dir)
   if (is.null(path))
     return(NULL)
   if (!file.exists(path))
@@ -232,5 +232,5 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 },
 "target", SIMPLIFY = TRUE)
 
-cachepath <- ".drake"
-globalenvpath <- file.path(cachepath, "globalenv.RData")
+cache_dir <- ".drake"
+globalenvpath <- file.path(cache_dir, "globalenv.RData")

@@ -1,6 +1,6 @@
 context("other-features")
 
-test_that("in_progress() works", {
+test_with_dir("in_progress() works", {
   dclean()
   expect_equal(in_progress(), character(0))
   bad_plan <- plan(x = function_doesnt_exist())
@@ -9,7 +9,7 @@ test_that("in_progress() works", {
   dclean()
 })
 
-test_that("missed() works", {
+test_with_dir("missed() works", {
   dclean()
   o <- dbug()
   expect_equal(character(0), missed(o$plan, envir = o$envir,
@@ -20,7 +20,7 @@ test_that("missed() works", {
   dclean()
 })
 
-test_that("shell_file() writes correctly", {
+test_with_dir("shell_file() writes correctly", {
   expect_false(file.exists("shell.sh"))
   shell_file()
   expect_true(file.exists("shell.sh"))
@@ -34,7 +34,7 @@ test_that("shell_file() writes correctly", {
   unlink(d, recursive = TRUE)
 })
 
-test_that("deps() correctly reports dependencies of functions and commands", {
+test_with_dir("deps() correctly reports dependencies of functions and commands", {
   expect_equal(deps(""), character(0))
   expect_equal(length(command_dependencies(NA)), 0)
   expect_equal(length(command_dependencies(NULL)), 0)
@@ -60,7 +60,7 @@ test_that("deps() correctly reports dependencies of functions and commands", {
     "x", "y", "z")))
 })
 
-test_that("tracked() works", {
+test_with_dir("tracked() works", {
   dclean()
   config <- dbug()
   x <- sort(tracked(plan = config$plan, envir = config$envir))
@@ -75,7 +75,7 @@ test_that("tracked() works", {
   dclean()
 })
 
-test_that("mclapply and lapply", {
+test_with_dir("mclapply and lapply", {
   dclean()
   config <- dbug()
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
@@ -88,7 +88,7 @@ test_that("mclapply and lapply", {
   dclean()
 })
 
-test_that(".onLoad() warns correctly and .onAttach() works", {
+test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   f <- ".RData"
   expect_false(file.exists(f))
   expect_silent(drake:::.onLoad())
@@ -101,7 +101,7 @@ test_that(".onLoad() warns correctly and .onAttach() works", {
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_that("graph functions work", {
+test_with_dir("graph functions work", {
   dclean()
   config <- dbug()
   expect_equal(class(build_graph(config$plan)), "igraph")
@@ -117,7 +117,7 @@ test_that("graph functions work", {
   dclean()
 })
 
-test_that("console", {
+test_with_dir("console", {
   dclean()
   config <- dbug()
   config$verbose <- TRUE
@@ -138,7 +138,7 @@ test_that("console", {
   dclean()
 })
 
-test_that("check_config() via check() and make()", {
+test_with_dir("check_config() via check() and make()", {
   dclean()
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
@@ -154,7 +154,7 @@ test_that("check_config() via check() and make()", {
   dclean()
 })
 
-test_that("missing files via check()", {
+test_with_dir("missing files via check()", {
   dclean()
   config <- dbug()
   expect_output(check(config$plan, envir = config$envir))
@@ -166,7 +166,7 @@ test_that("missing files via check()", {
   dclean()
 })
 
-test_that("deprecation", {
+test_with_dir("deprecation", {
   dclean()
   plan <- data.frame(code = 1, output = "x")
   expect_warning(make(plan, verbose = FALSE))
@@ -177,7 +177,7 @@ test_that("deprecation", {
   dclean()
 })
 
-test_that("targets can be partially specified", {
+test_with_dir("targets can be partially specified", {
   dclean()
   config <- dbug()
   config$targets <- "'intermediatefile.rds'"
@@ -190,11 +190,11 @@ test_that("targets can be partially specified", {
   dclean()
 })
 
-test_that("misc stuff", {
+test_with_dir("misc stuff", {
   expect_equal(as_file("x"), "'x'")
 })
 
-test_that("misc empty/NULL cases", {
+test_with_dir("misc empty/NULL cases", {
   dclean()
   clean(list = "no_cache")
   dclean()

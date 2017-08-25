@@ -16,13 +16,21 @@ show_config_opts <- function(config) {
   cat("_", config$jobs, "_", sep = "")
 }
 
+test_with_dir <- function(desc, code, dir = tempdir()){
+  if (!file.exists(dir)){
+    dir.create(dir)
+  }
+  with_dir(dir, test_that(desc = desc, code = code))
+  unlink(dir, recursive = TRUE)
+}
+
 testrun <- function(config) {
-  # Maybe show config opts here
-  make(plan = config$plan, targets = config$targets, envir = config$envir,
-    verbose = FALSE, parallelism = config$parallelism, jobs = config$jobs,
-    packages = config$packages, prework = config$prework,
-    prepend = config$prepend, command = config$command,
-    return_config = TRUE)
+  invisible(
+    make(plan = config$plan, targets = config$targets, envir = config$envir,
+      verbose = FALSE, parallelism = config$parallelism, jobs = config$jobs,
+      packages = config$packages, prework = config$prework,
+      prepend = config$prepend, command = config$command,
+      return_config = TRUE))
 }
 
 set_test_opt <- function(opt) {

@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("import-object")
 
-test_that("responses to imported objects and functions", {
+test_with_dir("responses to imported objects and functions", {
   dclean()
   config = dbug()
   testrun(config)

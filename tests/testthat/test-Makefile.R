@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("Makefile")
 
-test_that("prepend arg works", {
+test_with_dir("prepend arg works", {
   dclean()
   config = dbug()
   config$verbose = FALSE
@@ -12,7 +12,7 @@ test_that("prepend arg works", {
   dclean()
 })
 
-test_that("files inside directories can be timestamped", {
+test_with_dir("files inside directories can be timestamped", {
   dclean()
   plan = plan(list = c("'t1/t2'" = 
     'dir.create("t1"); saveRDS(1, file.path("t1", "t2"))'))
@@ -38,7 +38,7 @@ test_that("files inside directories can be timestamped", {
   dclean()
 })
 
-test_that("basic Makefile stuff works", {
+test_with_dir("basic Makefile stuff works", {
   dclean()
   config = dbug()
   make(config$plan, targets = "combined", 
@@ -61,7 +61,7 @@ test_that("basic Makefile stuff works", {
   expect_false(file.exists("Makefile"))
 })
 
-test_that("packages are loaded in prework", {
+test_with_dir("packages are loaded in prework", {
   dclean()
   original = getOption("testdrake")
   options(testdrake = "unset")

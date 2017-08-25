@@ -1,6 +1,6 @@
 context("edge-cases")
 
-test_that("graph does not fail if input file is binary", {
+test_with_dir("graph does not fail if input file is binary", {
   dclean()
   x <- plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
@@ -9,7 +9,7 @@ test_that("graph does not fail if input file is binary", {
   dclean()
 })
 
-test_that("different graphical arrangements for Makefile parallelism", {
+test_with_dir("different graphical arrangements for Makefile parallelism", {
   dclean()
   e <- new.env()
   x <- plan(a = 1, b = f(2))
@@ -24,7 +24,7 @@ test_that("different graphical arrangements for Makefile parallelism", {
   dclean()
 })
 
-test_that("Vectorized nested functions work", {
+test_with_dir("Vectorized nested functions work", {
   dclean()
   e <- new.env(parent = globalenv())
   eval(parse(text = "f <- Vectorize(function(x) g(x), \"x\")"),
@@ -38,6 +38,7 @@ test_that("Vectorized nested functions work", {
   expect_equal(deps(e$f), "g")
   expect_equal(deps(e$g), "y")
   testrun(config)
+  rm(a, envir = config$envir)
   expect_equal(readd(a), 8:17)
   k <- readd(f)
   expect_equal(k(2:5), 9:12)
@@ -52,7 +53,7 @@ test_that("Vectorized nested functions work", {
   dclean()
 })
 
-test_that("stringsAsFactors can be TRUE", {
+test_with_dir("stringsAsFactors can be TRUE", {
   dclean()
   f <- function(x) {
     return(x)
@@ -66,17 +67,17 @@ test_that("stringsAsFactors can be TRUE", {
   dclean()
 })
 
-test_that("circular non-DAG workflows quit in error", {
+test_with_dir("circular non-DAG workflows quit in error", {
   dclean()
   p <- plan(a = b, b = c, c = a)
-  expect_error(check(p))
-  expect_error(make(p))
+  expect_error(tmp <- capture.output(check(p)))
+  expect_error(make(p, verbose = FALSE))
   dclean()
 })
 
 # Target/import conflicts are unpredictable. A warning should
 # be enough.
-test_that("target conflicts with current import or another target", {
+test_with_dir("target conflicts with current import or another target", {
   dclean()
   config <- dbug()
   config$plan <- rbind(config$plan, data.frame(target = "f",
@@ -87,7 +88,7 @@ test_that("target conflicts with current import or another target", {
   expect_error(check(plan = config$plan))
 })
 
-test_that("target conflicts with previous import", {
+test_with_dir("target conflicts with previous import", {
   dclean()
   config <- dbug()
   testrun(config)
@@ -101,7 +102,7 @@ test_that("target conflicts with previous import", {
   dclean()
 })
 
-test_that("can use semicolons and multi-line commands", {
+test_with_dir("can use semicolons and multi-line commands", {
   dclean()
   plan <- plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
   make(plan, verbose = FALSE)
@@ -111,7 +112,7 @@ test_that("can use semicolons and multi-line commands", {
   dclean()
 })
 
-test_that("true targets can be functions", {
+test_with_dir("true targets can be functions", {
   dclean()
   generator <- function() return(function(x) {
     x + 1
@@ -125,14 +126,14 @@ test_that("true targets can be functions", {
   dclean()
 })
 
-test_that("warn when file target names do not match actual filenames", {
+test_with_dir("warn when file target names do not match actual filenames", {
   dclean()
   x <- plan(y = 1, file_targets = TRUE)
   expect_warning(con <- make(x, verbose = FALSE, return_config = TRUE))
   dclean()
 })
 
-test_that("stress test hashing decisions", {
+test_with_dir("stress test hashing decisions", {
   dclean()
   file <- "input.rds"
   expect_true(should_rehash_file(

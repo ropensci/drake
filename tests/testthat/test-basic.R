@@ -1,6 +1,6 @@
 context("basic")
 
-test_that("basic example works", {
+test_with_dir("basic example works", {
   dclean()
   opt <- test_opt()
   e <- eval(parse(text = opt$envir))

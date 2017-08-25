@@ -1,6 +1,6 @@
 context("plan")
 
-test_that("plan set 1", {
+test_with_dir("plan set 1", {
   x <- plan(
     a = c,
     b = "c",
@@ -13,7 +13,7 @@ test_that("plan set 1", {
   expect_equal(x, y)
 })
 
-test_that("plan set 2", {
+test_with_dir("plan set 2", {
   x <- plan(a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"),
@@ -25,7 +25,7 @@ test_that("plan set 2", {
   expect_equal(x, y)
 })
 
-test_that("plan set 3", {
+test_with_dir("plan set 3", {
   x <- plan(
     a = c,
     b = "c",
@@ -38,7 +38,7 @@ test_that("plan set 3", {
   expect_equal(x, y)
 })
 
-test_that("plan set 4", {
+test_with_dir("plan set 4", {
   x <- plan(
     a = c,
     b = "c",
@@ -52,7 +52,7 @@ test_that("plan set 4", {
   dclean()
 })
 
-test_that("plan() trims outer whitespace in target names", {
+test_with_dir("plan() trims outer whitespace in target names", {
   x <- plan(list = c(` a` = 1, `b \t\n` = 2))
   y <- x
   y$output <- y$target
@@ -61,7 +61,7 @@ test_that("plan() trims outer whitespace in target names", {
   expect_equal(x$target, y$output, z$target)
 })
 
-test_that("make() and check() trim outer whitespace in target names", {
+test_with_dir("make() and check() trim outer whitespace in target names", {
   dclean()
   x <- data.frame(target = c("a\n", "  b", "c ", "\t  d   "),
     command = 1)
@@ -79,21 +79,21 @@ test_that("make() and check() trim outer whitespace in target names", {
   dclean()
 })
 
-test_that("make() plays nicely with tibbles", {
+test_with_dir("make() plays nicely with tibbles", {
   dclean()
-  x <- tibble::tribble(~target, ~command, "a", 1)
+  x <- tibble::tribble(~target, ~command, "nothing", 1)
   expect_silent(check(x))
   expect_silent(make(x, verbose = FALSE))
   dclean()
 })
 
-test_that("check() finds bad symbols", {
+test_with_dir("check() finds bad symbols", {
   x <- data.frame(
-    target = c("a", "b", "\"targs\"", "a'x'", "b'x'"),
+    target = c("gotcha", "b", "\"targs\"", "a'x'", "b'x'"),
     command = 1)
   expect_warning(o <- check(x))
   x <- data.frame(
-    target = c("a", "b", "\"targs\""),
+    target = c("gotcha", "b", "\"targs\""),
     command = 1)
   expect_silent(o <- check(x))
 })

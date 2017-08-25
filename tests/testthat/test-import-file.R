@@ -1,6 +1,6 @@
 context("import-file")
 
-test_that("responses to imported file", {
+test_with_dir("responses to imported file", {
   dclean()
   config <- dbug()
   expect_output(check(plan = config$plan, envir = config$envir))

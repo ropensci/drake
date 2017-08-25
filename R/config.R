@@ -52,7 +52,7 @@ build_config <- function(plan, targets, envir, jobs,
   parallelism <- match.arg(parallelism)
   prework <- add_packages_to_prework(packages = packages,
     prework = prework)
-  cache <- storr_rds(cachepath, mangle_key = TRUE,
+  cache <- storr_rds(cache_dir, mangle_key = TRUE,
     hash_algorithm = hash_algorithm)
   cache$driver$path <- normalizePath(cache$driver$path)
   if (clear_progress)

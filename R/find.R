@@ -14,11 +14,11 @@
 #' find_cache()
 #' }
 find_cache = function(path = getwd()){
-  while (!(cachepath %in% list.files(path = path, all.files = TRUE))){
+  while (!(cache_dir %in% list.files(path = path, all.files = TRUE))){
     path = dirname(path)
     if (path == dirname(path)) return(NULL)
   }
-  path = file.path(path, cachepath)
+  path = file.path(path, cache_dir)
   if(!file.exists(path)) return(NULL)
   path
 }

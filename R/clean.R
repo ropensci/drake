@@ -75,7 +75,7 @@ destroy <- function(
   path,
   search
   ){
-  where <- cachepath
+  where <- cache_dir
   if (search){
     where <- find_cache(path = path)
     if (!length(where)) return()

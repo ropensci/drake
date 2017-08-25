@@ -1,15 +1,20 @@
 context("cache")
 
-test_that("clean() works if there is no cache already", {
+test_with_dir("clean() works if there is no cache already", {
   dclean()
   clean(list = "no_cache")
   dclean()
 })
 
-test_that("cache functions work", {
+test_with_dir("cache functions work", {
   dclean()
+  first_wd <- getwd()
+  scratch <- file.path(first_wd, "scratch")
+  if (!file.exists(scratch)){
+    dir.create(scratch) # Will move up a level later.
+  }
+  setwd(scratch)
   owd <- getwd()
-  on.exit(setwd(owd))
   expect_equal(character(0), cached(search = FALSE), imported(search = FALSE),
     built(search = FALSE))
   expect_equal(build_times(search = FALSE), NULL)
@@ -77,7 +82,7 @@ test_that("cache functions work", {
 
   # find your project
   expect_equal(find_project(), getwd())
-  expect_equal(find_cache(), file.path(getwd(), cachepath))
+  expect_equal(find_cache(), file.path(getwd(), cache_dir))
   expect_true(is.numeric(readd(a, search = FALSE)))
 
   # load and read stuff
@@ -104,7 +109,8 @@ test_that("cache functions work", {
     dir.create(file.path("searchfrom", "here"))
   }
   setwd("..")
-  s <- file.path("testthat", "searchfrom", "here")
+  expect_equal(getwd(), first_wd)
+  s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
   # progress, session
   expect_true(is.list(session(search = T, path = s)))
@@ -133,9 +139,9 @@ test_that("cache functions work", {
   expect_true(all(cached(list = all, path = s, search = T)))
 
   # find your project
-  expect_equal(find_project(path = s), "testthat")
-  expect_equal(find_cache(path = s), file.path("testthat",
-    cachepath))
+  expect_equal(find_project(path = s), file.path(scratch))
+  expect_equal(find_cache(path = s),
+    file.path(scratch, cache_dir))
 
   # config
   newconfig <- read_config(search = TRUE, path = s)
@@ -160,7 +166,7 @@ test_that("cache functions work", {
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf")
   dclean()
-  setwd("testthat")
+  setwd(scratch)
   pdf(NULL)
   read_graph(search = FALSE)
   tmp <- capture.output(dev.off())
@@ -178,14 +184,14 @@ test_that("cache functions work", {
     search = T)))
   clean(path = s, search = TRUE)
   expect_equal(cached(path = s, search = T), character(0))
-  where <- file.path("testthat", cachepath)
+  where <- file.path(scratch, cache_dir)
   expect_true(file.exists(where))
   clean(path = s, search = FALSE, destroy = TRUE)
   expect_true(file.exists(where))
   clean(path = s, search = TRUE, destroy = TRUE)
   expect_false(file.exists(where))
 
-  setwd("testthat")
+  setwd(scratch)
   unlink("searchfrom", recursive = TRUE)
   dclean()
 })
