@@ -4,3 +4,4 @@ library(testthat)
 library(drake)
 
 test_check("drake")
+unlink("testthat/workspaces", recursive = TRUE)

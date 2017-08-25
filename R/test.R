@@ -16,10 +16,14 @@ show_config_opts <- function(config) {
   cat("_", config$jobs, "_", sep = "")
 }
 
-test_with_dir <- function(desc, code, dir = tempdir()){
-  if (!file.exists(dir)){
-    dir.create(dir)
+test_with_dir <- function(desc, code){
+  root <- "workspaces"
+  if(!file.exists(root)){
+    dir.create(root)
   }
+  dir <- file.path(root, base32_encode(desc))
+  dir_empty(dir)
+  dir <- normalizePath(dir)
   with_dir(dir, test_that(desc = desc, code = code))
   unlink(dir, recursive = TRUE)
 }

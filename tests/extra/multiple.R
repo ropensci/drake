@@ -21,5 +21,6 @@ system.time(
         next
       }
     test_dir("testthat")
+    unlink("testthat/workspaces", recursive = TRUE)
   }
 )
