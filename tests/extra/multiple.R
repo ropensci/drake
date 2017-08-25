@@ -7,6 +7,8 @@
 library(magrittr)
 library(testthat)
 devtools::load_all()
+
+dir <- file.path("testthat", "workspaces")
 setwd("..")
 
 system.time(
@@ -22,6 +24,8 @@ system.time(
         cat("  Skipping.\n")
         next
       }
+    unlink(dir, recursive = TRUE, force = TRUE)
     test_dir("testthat")
+    unlink(dir, recursive = TRUE, force = TRUE)
   }
 )

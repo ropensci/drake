@@ -3,8 +3,7 @@ Sys.setenv("R_TESTS" = "")
 library(testthat)
 library(drake)
 
-unlink(
-  file.path("testthat", "workspaces"),
-  recursive = TRUE,
-  force = TRUE)
+dir <- file.path("testthat", "workspaces")
+unlink(dir, recursive = TRUE, force = TRUE)
 test_check("drake")
+unlink(dir, recursive = TRUE, force = TRUE)

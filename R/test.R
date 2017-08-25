@@ -22,13 +22,11 @@ test_with_dir <- function(desc, code){
     dir.create(root)
   }
   relative_dir <- base32_encode(desc) %>%
-    paste(as.character(rnorm(1))) %>%
     digest(algo = hash_algorithm)
   dir <- file.path(root, relative_dir)
   dir_empty(dir)
   dir <- normalizePath(dir)
   with_dir(dir, test_that(desc = desc, code = code))
-  unlink(dir, recursive = TRUE, force = TRUE)
 }
 
 testrun <- function(config) {
