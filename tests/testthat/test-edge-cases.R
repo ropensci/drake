@@ -38,7 +38,9 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(deps(e$f), "g")
   expect_equal(deps(e$g), "y")
   testrun(config)
-  rm(a, envir = config$envir)
+  if ("a" %in% ls(config$envir)){
+    rm(a, envir = config$envir)
+  }
   expect_equal(readd(a), 8:17)
   k <- readd(f)
   expect_equal(k(2:5), 9:12)
