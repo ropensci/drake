@@ -17,7 +17,7 @@ show_config_opts <- function(config) {
 }
 
 test_with_dir <- function(desc, code){
-  root <- file.path("..", "workspaces") # drake/tests/workspaces/
+  root <- tempdir()
   stopifnot(file.exists(root))
   relative_dir <- base32_encode(desc) %>%
     digest(algo = hash_algorithm)
