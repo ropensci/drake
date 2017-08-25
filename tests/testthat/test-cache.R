@@ -164,17 +164,17 @@ test_with_dir("cache functions work", {
   tmp <- dbug()
   read_graph(search = TRUE, path = s)
   tmp <- capture.output(dev.off())
-  unlink("Rplots.pdf")
+  unlink("Rplots.pdf", force = TRUE)
   dclean()
   setwd(scratch)
   pdf(NULL)
   read_graph(search = FALSE)
   tmp <- capture.output(dev.off())
-  unlink("Rplots.pdf")
+  unlink("Rplots.pdf", force = TRUE)
   pdf(NULL)
   null_graph()
   tmp <- capture.output(dev.off())
-  unlink("Rplots.pdf")
+  unlink("Rplots.pdf", force = TRUE)
   setwd("..")
 
   # clean using search = TRUE or FALSE
@@ -192,6 +192,6 @@ test_with_dir("cache functions work", {
   expect_false(file.exists(where))
 
   setwd(scratch)
-  unlink("searchfrom", recursive = TRUE)
+  unlink("searchfrom", recursive = TRUE, force = TRUE)
   dclean()
 })

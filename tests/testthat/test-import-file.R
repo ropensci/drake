@@ -13,7 +13,7 @@ test_with_dir("responses to imported file", {
 
   # check missing and then replace file exactly as before
   contents <- readRDS("input.rds")
-  unlink("input.rds")
+  unlink("input.rds", force = TRUE)
   expect_warning(tmp <- capture.output(check(plan = config$plan,
     envir = config$envir)))
   saveRDS(contents, "input.rds")

@@ -10,7 +10,7 @@ test_with_dir("examples are listed and written", {
     example_drake(i)
     expect_true(file.exists(i))
     expect_true(file.info(i)$isdir)
-    unlink(i, recursive = TRUE)
+    unlink(i, recursive = TRUE, force = TRUE)
   }
   dclean()
 })

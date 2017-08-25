@@ -5,7 +5,7 @@ test_with_dir("graph does not fail if input file is binary", {
   x <- plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
   expect_silent(out <- plot_graph(x, verbose = FALSE))
-  unlink("input.rds")
+  unlink("input.rds", force = TRUE)
   dclean()
 })
 
@@ -164,6 +164,6 @@ test_with_dir("stress test hashing decisions", {
     file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
   expect_false(should_rehash_file(
     file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
-  unlink(file)
+  unlink(file, force = TRUE)
   dclean()
 })

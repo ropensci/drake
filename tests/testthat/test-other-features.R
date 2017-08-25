@@ -24,14 +24,14 @@ test_with_dir("shell_file() writes correctly", {
   expect_false(file.exists("shell.sh"))
   shell_file()
   expect_true(file.exists("shell.sh"))
-  unlink("shell.sh")
+  unlink("shell.sh", force = TRUE)
   d <- "exdir"
   dir.create(d)
   p <- file.path(d, "script.txt")
   expect_false(file.exists(p))
   shell_file(p)
   expect_true(file.exists(p))
-  unlink(d, recursive = TRUE)
+  unlink(d, recursive = TRUE, force = TRUE)
 })
 
 test_with_dir("deps() correctly reports dependencies of functions and commands", {
@@ -95,7 +95,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   save.image()
   expect_true(file.exists(f))
   expect_warning(drake:::.onLoad())
-  unlink(f)
+  unlink(f, force = TRUE)
   set.seed(0)
   expect_true(is.character(drake_tip()))
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
@@ -109,7 +109,7 @@ test_with_dir("graph functions work", {
   tmp <- plot_graph(plan = config$plan, envir = config$envir,
     verbose = FALSE)
   dev.off()
-  unlink("Rplots.pdf")
+  unlink("Rplots.pdf", force = TRUE)
   expect_true(is.character(default_graph_title(
     parallelism = parallelism_choices()[1], split_columns = FALSE)))
   expect_true(is.character(default_graph_title(
@@ -159,7 +159,7 @@ test_with_dir("missing files via check()", {
   config <- dbug()
   expect_output(check(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
-  unlink("input.rds")
+  unlink("input.rds", force = TRUE)
   expect_warning(
     tmp <- capture.output(check(config$plan, envir = config$envir)))
   expect_warning(tmp <- missing_input_files(config))
