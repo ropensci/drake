@@ -110,6 +110,10 @@ test_that("graph functions work", {
     verbose = FALSE)
   dev.off()
   unlink("Rplots.pdf")
+  expect_true(is.character(default_graph_title(
+    parallelism = parallelism_choices()[1], split_columns = FALSE)))
+  expect_true(is.character(default_graph_title(
+    parallelism = parallelism_choices()[1], split_columns = TRUE)))
   dclean()
 })
 
