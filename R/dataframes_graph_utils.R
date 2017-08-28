@@ -19,7 +19,7 @@ append_build_times <- function(nodes, cache) {
   timed <- intersect(time_data$target, nodes$id)
   if (!length(timed))
     return(nodes)
-  time_labels <- as.character(time_data$user + time_data$system)
+  time_labels <- as.character(time_data$elapsed)
   names(time_labels) <- time_data$target
   time_labels <- time_labels[timed]
   nodes[timed, "label"] <-
