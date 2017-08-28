@@ -13,8 +13,10 @@ hashes <- function(target, config) {
 dependency_hash <- function(target, config) {
   command <- get_command(target = target, config = config)
   stopifnot(length(command) == 1)
-  dependencies(target, config) %>% self_hash(config = config) %>%
-    c(command) %>% digest(algo = hash_algorithm)
+  dependencies(target, config) %>%
+    self_hash(config = config) %>%
+    c(command) %>%
+    digest(algo = hash_algorithm)
 }
 
 self_hash <- Vectorize(function(target, config) {
@@ -55,12 +57,16 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
 }
 
 rehash_file <- function(target) {
-  eply::unquote(target) %>% tools::md5sum() %>% unname
+  eply::unquote(target) %>%
+    tools::md5sum() %>%
+    unname
 }
 
 tidy <- function(x) {
-  parse(text = x) %>% as.character %>%
-    paste(collapse = "\n") %>% braces
+  parse(text = x) %>%
+    as.character %>%
+    paste(collapse = "\n") %>%
+    braces
 }
 
 braces <- function(x) {

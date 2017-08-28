@@ -7,15 +7,15 @@
 example_drake(example = drake::examples_drake(), destination = getwd())
 }
 \arguments{
-\item{example}{name of the example. 
-To see all the available example names, 
+\item{example}{name of the example.
+To see all the available example names,
 run \code{\link{examples_drake}}.}
 
 \item{destination}{character scalar, file path, where
 to write the folder containing the code files for the example.}
 }
 \description{
-Copy a folder of code files for a 
+Copy a folder of code files for a
 drake example to the current working directory.
 Call \code{example_drake('basic')} to generate the code files from the
 quickstart vignette: \code{vignette('quickstart')}.

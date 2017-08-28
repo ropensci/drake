@@ -7,8 +7,8 @@
 imported(files_only = FALSE, path = getwd(), search = TRUE)
 }
 \arguments{
-\item{files_only}{logical, whether to show imported files only 
-and ignore imported objects. Since all your functions and 
+\item{files_only}{logical, whether to show imported files only
+and ignore imported objects. Since all your functions and
 all their global variables are imported, the full list of
 imported objects could get really cumbersome.}
 

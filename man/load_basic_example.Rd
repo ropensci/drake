@@ -7,11 +7,13 @@
 load_basic_example(envir = parent.frame())
 }
 \arguments{
-\item{envir}{The environment to load the example into. Defaults to your workspace.
-For an insulated workspace, set \code{envir = new.env(parent = globalenv())}.}
+\item{envir}{The environment to load the example into.
+Defaults to your workspace.
+For an insulated workspace,
+set \code{envir = new.env(parent = globalenv())}.}
 }
 \description{
-Loads the basic example into your workspace 
+Loads the basic example into your workspace
 (or the environment you specify).
 Also writes/overwrites the file \code{report.Rmd}.
 For a thorough walkthrough of how to set up this example, see the

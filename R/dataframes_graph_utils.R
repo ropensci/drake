@@ -85,7 +85,7 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
 #' See \code{\link{parallelism_choices}()}.
 #' @param split_columns logical, whether the columns were split
 #' in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
-#' with the \code{split_columns} argument. 
+#' with the \code{split_columns} argument.
 default_graph_title <- function(
   parallelism = drake::parallelism_choices(),
   split_columns){
@@ -115,9 +115,10 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
 function_hover_text <- Vectorize(function(function_name, envir){
   tryCatch(
     eval(parse(text = function_name), envir = envir),
-    error = function(e) function_name) %>%
-    deparse %>% paste(collapse = "\n") %>%
-    crop_text(length = hover_text_length)
+      error = function(e) function_name) %>%
+        deparse %>%
+        paste(collapse = "\n") %>%
+        crop_text(length = hover_text_length)
 },
 "function_name")
 
@@ -183,7 +184,7 @@ resolve_levels <- function(nodes, graph) {
   nodes
 }
 
-resolve_levels_Makefile <- function(nodes, graph, imports, targets) {
+resolve_levels_Makefile <- function(nodes, graph, imports, targets) { # nolint
   graph_imports <- delete_vertices(graph, v = targets)
   graph_targets <- delete_vertices(graph, v = imports)
   nodes_imports <- nodes[nodes$id %in% imports, ]
@@ -225,7 +226,7 @@ split_node_columns <- function(nodes){
 }
 
 style_nodes <- function(nodes, font_size) {
-  nodes$font.size <- font_size
+  nodes$font.size <- font_size # nolint
   nodes[nodes$status == "imported", "color"] <- import_color
   nodes[nodes$status == "in progress", "color"] <- in_progress_color
   nodes[nodes$status == "missing", "color"] <- missing_color

@@ -1,11 +1,11 @@
 #' @title Function \code{check}
-#' @description Check a workflow plan, etc. for obvious 
-#' errors such as circular dependencies and 
+#' @description Check a workflow plan, etc. for obvious
+#' errors such as circular dependencies and
 #' missing input files.
 #' @seealso \code{link{plan}}, \code{\link{make}}
 #' @export
 #' @return invisibly return \code{plan}
-#' @param plan workflow plan data frame, possibly from 
+#' @param plan workflow plan data frame, possibly from
 #' \code{\link{plan}()}.
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
@@ -41,8 +41,10 @@ check_config <- function(config) {
 }
 
 missing_input_files <- function(config) {
-  missing_files <- next_targets(config$graph) %>% Filter(f = is_file) %>%
-    unquote %>% Filter(f = function(x) !file.exists(x))
+  missing_files <- next_targets(config$graph) %>%
+    Filter(f = is_file) %>%
+    unquote %>%
+    Filter(f = function(x) !file.exists(x))
   if (length(missing_files))
     warning("missing input files:\n", multiline_message(missing_files))
   invisible(missing_files)

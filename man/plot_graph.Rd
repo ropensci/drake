@@ -15,7 +15,7 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   navigationButtons = TRUE, ...)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function 
+\item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
 \item{targets}{names of targets to bulid, same as for function
@@ -26,17 +26,17 @@ plot_graph(plan, targets = drake::possible_targets(plan),
 
 \item{verbose}{logical, whether to output messages to the console.}
 
-\item{jobs}{The \code{outdated()} function is called internally, 
-and it needs to import objects and examine your 
+\item{jobs}{The \code{outdated()} function is called internally,
+and it needs to import objects and examine your
 input files to see what has been updated. This could take some time,
 and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
-Execution order in \code{\link{make}()} is slightly different when 
-\code{parallelism} equals \code{'Makefile'}
-because in that case, all the imports are imported before any target is built. 
+Execution order in \code{\link{make}()} is slightly different when
+\code{parallelism} equals \code{'Makefile'} because in that case,
+all the imports are imported before any target is built.
 Thus, the arrangement in the graph is different for Makefile parallelism.
 See \code{?parallelism_choices} for details.}
 
@@ -48,7 +48,7 @@ See \code{?parallelism_choices} for details.}
 If \code{NULL} or \code{character(0)},
 no file is saved and the graph is rendered and displayed within R.}
 
-\item{selfcontained}{logical, whether to save 
+\item{selfcontained}{logical, whether to save
 the \code{file} as a self-contained
 HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
@@ -57,50 +57,50 @@ pandoc is required.}
 \item{build_times}{logical, whether to print the \code{\link{build_times}()}
 in the graph.}
 
-\item{targets_only}{logical, whether to skip the imports and only show the 
+\item{targets_only}{logical, whether to skip the imports and only show the
 targets in the workflow plan.}
 
-\item{split_columns}{logical, whether to break up the 
+\item{split_columns}{logical, whether to break up the
 columns of nodes to make the aspect ratio of the rendered
 graph closer to 1:1. This improves the viewing experience,
 but the columns no longer strictly represent parallelizable
-stages of build items. (Although the targets/imports 
+stages of build items. (Although the targets/imports
 in each column are still conditionally independent,
 there may be more conditional independence than the graph
 indicates.)}
 
-\item{config}{option internal runtime parameter list of 
+\item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 Computing this
-in advance could save time if you plan multiple calls to 
+in advance could save time if you plan multiple calls to
 \code{outdated()}.}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{layout}{name of an igraph layout 
+\item{layout}{name of an igraph layout
 to use, such as 'layout_with_sugiyama'
-or 'layout_as_tree'. Be careful with 
-'layout_as_tree': the graph is a directed 
+or 'layout_as_tree'. Be careful with
+'layout_as_tree': the graph is a directed
 acyclic graph, but not necessarily a tree.}
 
 \item{main}{title of the graph}
 
-\item{direction}{an argument to 
+\item{direction}{an argument to
 \code{visNetwork::visHierarchicalLayout()}
-indicating the direction of the graph. 
+indicating the direction of the graph.
 Options include 'LR', 'RL', 'DU', and 'UD'.
-At the time of writing this, the letters must be capitalized, 
+At the time of writing this, the letters must be capitalized,
 but this may not always be the case ;) in the future.}
 
 \item{hover}{logical, whether to show the command that generated the target
 when you hover over a node with the mouse. For imports, the label does not
 change with hovering.}
 
-\item{navigationButtons}{logical, whether to add navigation buttons with 
+\item{navigationButtons}{logical, whether to add navigation buttons with
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
 
-\item{...}{other arguments passed to 
+\item{...}{other arguments passed to
 \code{visNetwork::visNetwork()} to plot the graph.}
 }
 \description{

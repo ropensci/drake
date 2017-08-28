@@ -3,7 +3,9 @@ justbuilt <- function(config) {
     function(target)
       config$cache$get(key = target, namespace = "progress")) %>%
       Filter(f = function(x) x == "finished") %>%
-      names %>% intersect(y = config$plan$target) %>% sort
+      names %>%
+      intersect(y = config$plan$target) %>%
+      sort
 }
 
 nobuild <- function(config) {

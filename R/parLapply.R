@@ -1,4 +1,4 @@
-run_parLapply <- function(config) {
+run_parLapply <- function(config) { # nolint
   if (config$jobs < 2) {
     run_lapply(config = config)
     return(invisible())
@@ -18,7 +18,7 @@ run_parLapply <- function(config) {
   stopCluster(cl = config$cluster)
 }
 
-worker_parLapply <- function(targets, hash_list, config) {
+worker_parLapply <- function(targets, hash_list, config) { # nolint
   prune_envir_parLapply(targets = targets, config = config)
   values <- parLapply(cl = config$cluster, X = targets, fun = build,
     hash_list = hash_list, config = config)
@@ -26,21 +26,23 @@ worker_parLapply <- function(targets, hash_list, config) {
     config = config)
 }
 
-prune_envir_parLapply <- function(targets = targets, config = config) {
+prune_envir_parLapply <- # nolint
+  function(targets = targets, config = config) {
   prune_envir(targets = targets, config = config)
   if (identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = prune_envir, targets = targets,
       config = config)
 }
 
-assign_to_envir_parLapply <- function(target, value, config) {
+assign_to_envir_parLapply <- # nolint
+  function(target, value, config) {
   assign_to_envir(target = target, value = value, config = config)
   if (identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = assign_to_envir,
       target = target, value = value, config = config)
 }
 
-load_packages_parLapply <- function() {
+load_packages_parLapply <- function() { # nolint
   # Not ideal, but necessary.
   packages <- c("base64url", "codetools", "crayon", "eply",
     "digest", "igraph", "magrittr", "parallel", "plyr", "R.utils",

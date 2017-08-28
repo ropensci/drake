@@ -1,7 +1,7 @@
 #' @title Function deps
-#' @description List the dependencies of a function or workflow plan command. 
+#' @description List the dependencies of a function or workflow plan command.
 #' @export
-#' @param x Either a function or a string.  
+#' @param x Either a function or a string.
 #' Strings are commands from your workflow plan data frame.
 #' @return names of dependencies. Files wrapped in single quotes.
 #' The other names listed are functions or generic objects.

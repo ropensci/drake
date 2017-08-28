@@ -11,7 +11,7 @@ dataframes_graph(plan, targets = drake::possible_targets(plan),
   split_columns = FALSE, font_size = 20, config = NULL)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function 
+\item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
 \item{targets}{names of targets to bulid, same as for function
@@ -22,17 +22,18 @@ dataframes_graph(plan, targets = drake::possible_targets(plan),
 
 \item{verbose}{logical, whether to output messages to the console.}
 
-\item{jobs}{The \code{outdated()} function is called internally, 
-and it needs to import objects and examine your 
+\item{jobs}{The \code{outdated()} function is called internally,
+and it needs to import objects and examine your
 input files to see what has been updated. This could take some time,
 and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
-Execution order in \code{\link{make}()} is slightly different when 
+Execution order in \code{\link{make}()} is slightly different when
 \code{parallelism} equals \code{'Makefile'}
-because in that case, all the imports are imported before any target is built. 
+because in that case, all the imports are imported
+before any target is built.
 Thus, the arrangement in the graph is different for Makefile parallelism.
 See \code{?parallelism_choices} for details.}
 
@@ -43,30 +44,33 @@ See \code{?parallelism_choices} for details.}
 \item{build_times}{logical, whether to show the \code{\link{build_times}()}
 of the targets, if available.}
 
-\item{targets_only}{logical, whether to skip the imports and only include the 
+\item{targets_only}{logical,
+whether to skip the imports and only include the
 targets in the workflow plan.}
 
-\item{split_columns}{logical, whether to break up the 
+\item{split_columns}{logical, whether to break up the
 columns of nodes to make the aspect ratio of the rendered
 graph closer to 1:1. This improves the viewing experience,
 but the columns no longer strictly represent parallelizable
-stages of build items. (Although the targets/imports 
+stages of build items. (Although the targets/imports
 in each column are still conditionally independent,
 there may be more conditional independence than the graph
 indicates.)}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{config}{option internal runtime parameter list of 
+\item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 Computing this
-in advance could save time if you plan multiple calls to 
+in advance could save time if you plan multiple calls to
 \code{dataframes_graph()}.}
 }
 \value{
-a list of three data frames: one for nodes, one for edges, and one for
-the legend/key nodes.
+a list of three data frames: one for nodes,
+one for edges, and one for
+the legend/key nodes. The list also contains the
+default title of the graph.
 }
 \description{
 Get the information about nodes, edges, and the legend/key
@@ -82,7 +86,7 @@ str(raw_graph)
 library(magrittr)
 library(visNetwork)
 visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
-  visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) \%>\% 
+  visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) \%>\%
   visHierarchicalLayout(direction = 'LR')
 }
 }

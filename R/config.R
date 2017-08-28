@@ -1,11 +1,11 @@
 #' @title Function config
-#' @description Compute the internal runtime parameter list of 
+#' @description Compute the internal runtime parameter list of
 #' \code{\link{make}()}. This could save time if you are planning
 #' multiple function calls of functions like \code{\link{outdated}()}
-#' or \code{\link{plot_graph}()}. Drake needs to import and cache files 
-#' and objects to compute the configuration list, which in turn 
+#' or \code{\link{plot_graph}()}. Drake needs to import and cache files
+#' and objects to compute the configuration list, which in turn
 #' supports user-side functions to help with visualization and parallelism.
-#' The result differs from 
+#' The result differs from
 #' \code{\link{make}(..., imports_only = TRUE, return_config = TRUE)}
 #' in that the graph includes both the targets and the imports,
 #' not just the imports.
@@ -88,14 +88,14 @@ inventory <- function(config) {
 }
 
 #' @title Function \code{possible_targets}
-#' @description internal function, returns the list of 
+#' @description internal function, returns the list of
 #' possible targets that you can select with the \code{targets}
 #' argument to \code{\link{make}()}.
 #' @seealso \code{\link{make}}
 #' @export
 #' @return character vector of possible targets
 #' @param plan workflow plan data frame
-#' @examples 
+#' @examples
 #' \dontrun{
 #' load_basic_example()
 #' possible_targets(my_plan)

@@ -4,10 +4,10 @@
 \name{drake-package}
 \alias{drake-package}
 \alias{drake}
-\title{Drake is a workflow manager and build system, 
+\title{Drake is a workflow manager and build system,
 a scalable solution for reproducibility and high-performance computing.}
 \description{
-Drake is a workflow manager and build system, 
+Drake is a workflow manager and build system,
 a scalable solution for reproducibility and high-performance computing.
 }
 \examples{
@@ -27,7 +27,7 @@ head(large)
 clean() # Restart from scratch
 make(my_plan, jobs = 2) # Distribute over 2 parallel jobs.
 clean()
-make(my_plan, jobs = 4, parallelism = "Makefile") # Distribute over 4 parallel R sessions.
+make(my_plan, jobs = 4, parallelism = "Makefile") # 4 parallel R sessions.
 make(my_plan, jobs = 4, parallelism = "Makefile") # Everything up to date.
 clean(destroy = TRUE) # Totally remove the cache.
 unlink(c("Makefile", "report.Rmd"))

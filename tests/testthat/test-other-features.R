@@ -34,7 +34,8 @@ test_with_dir("shell_file() writes correctly", {
   unlink(d, recursive = TRUE, force = TRUE)
 })
 
-test_with_dir("deps() correctly reports dependencies of functions and commands", {
+test_with_dir(
+  "deps() correctly reports dependencies of functions and commands", {
   expect_equal(deps(""), character(0))
   expect_equal(length(command_dependencies(NA)), 0)
   expect_equal(length(command_dependencies(NULL)), 0)

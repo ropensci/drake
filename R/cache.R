@@ -1,9 +1,9 @@
 #' @title Function \code{cached}
 #' @description Check whether targets are in the cache.
-#' If no targets are specified with \code{...} or \code{list}, 
-#' then \code{cached()} lists 
+#' If no targets are specified with \code{...} or \code{list},
+#' then \code{cached()} lists
 #' all the items in the drake cache.
-#' Read/load a cached item with \code{\link{readd}()} or 
+#' Read/load a cached item with \code{\link{readd}()} or
 #' \code{\link{loadd}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{loadd}},
@@ -17,16 +17,16 @@
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
-#' @param no_imported_objects logical, applies only when 
+#' @param no_imported_objects logical, applies only when
 #' no targets are specified and a list of cached targets is returned.
-#' If \code{no_imported_objects} is \code{TRUE}, then \code{cached()} 
+#' If \code{no_imported_objects} is \code{TRUE}, then \code{cached()}
 #' shows built targets (with commands) plus imported files,
-#' ignoring imported objects. Otherwise, the full collection of 
-#' all cached objects will be listed. Since all your functions and 
+#' ignoring imported objects. Otherwise, the full collection of
+#' all cached objects will be listed. Since all your functions and
 #' all their global variables are imported, the full list of
 #' imported objects could get really cumbersome.
-#' @param path Root directory of the drake project, 
-#' or if \code{search} is \code{TRUE}, either the 
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
@@ -97,7 +97,8 @@ built <- function(path = getwd(), search = TRUE) {
 }
 
 #' @title Function \code{build_times}
-#' @description List all the build times. This doesn't include the amount of time 
+#' @description List all the build times.
+#' This doesn't include the amount of time
 #' spent loading and saving objects!
 #' @seealso \code{\link{built}}
 #' @export
@@ -125,10 +126,18 @@ build_times <- function(path = getwd(), search = TRUE, digits = 0,
     # Try to get times if they are saved
     time <- cache$get(key = target, namespace = "build_times")
     if (class(time) == "proc_time") {
-      data.frame(target = target, user = time[["user.self"]] %>%
-        round(digits) %>% dseconds, system = time[["sys.self"]] %>%
-        round(digits) %>% dseconds, elapsed = time[["elapsed"]] %>%
-        round(digits) %>% dseconds)
+      data.frame(
+        target = target,
+        user = time[["user.self"]] %>%
+          round(digits) %>%
+          dseconds,
+        system = time[["sys.self"]] %>%
+          round(digits) %>%
+          dseconds,
+        elapsed = time[["elapsed"]] %>%
+          round(digits) %>%
+          dseconds
+      )
     }
   }) %>% # Filter out NULLs
   lapply(Filter, f = Negate(is.null)) %>% # Merge to data.frame
@@ -144,8 +153,8 @@ build_times <- function(path = getwd(), search = TRUE, digits = 0,
 #' \code{\link{built}}
 #' @export
 #' @return character vector naming the imported objects in the cache
-#' @param files_only logical, whether to show imported files only 
-#' and ignore imported objects. Since all your functions and 
+#' @param files_only logical, whether to show imported files only
+#' and ignore imported objects. Since all your functions and
 #' all their global variables are imported, the full list of
 #' imported objects could get really cumbersome.
 #' @param path Root directory of the drake project,

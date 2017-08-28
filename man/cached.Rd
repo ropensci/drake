@@ -15,17 +15,17 @@ or character strings (quoted). Similar to \code{...} in
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
-\item{no_imported_objects}{logical, applies only when 
+\item{no_imported_objects}{logical, applies only when
 no targets are specified and a list of cached targets is returned.
-If \code{no_imported_objects} is \code{TRUE}, then \code{cached()} 
+If \code{no_imported_objects} is \code{TRUE}, then \code{cached()}
 shows built targets (with commands) plus imported files,
-ignoring imported objects. Otherwise, the full collection of 
-all cached objects will be listed. Since all your functions and 
+ignoring imported objects. Otherwise, the full collection of
+all cached objects will be listed. Since all your functions and
 all their global variables are imported, the full list of
 imported objects could get really cumbersome.}
 
-\item{path}{Root directory of the drake project, 
-or if \code{search} is \code{TRUE}, either the 
+\item{path}{Root directory of the drake project,
+or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
 
 \item{search}{logical. If \code{TRUE}, search parent directories
@@ -39,10 +39,10 @@ items, depending on whether any targets are specified
 }
 \description{
 Check whether targets are in the cache.
-If no targets are specified with \code{...} or \code{list}, 
-then \code{cached()} lists 
+If no targets are specified with \code{...} or \code{list},
+then \code{cached()} lists
 all the items in the drake cache.
-Read/load a cached item with \code{\link{readd}()} or 
+Read/load a cached item with \code{\link{readd}()} or
 \code{\link{loadd}()}.
 }
 \examples{

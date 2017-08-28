@@ -1,13 +1,13 @@
 #' @title Function \code{example_drake}
-#' @description Copy a folder of code files for a 
+#' @description Copy a folder of code files for a
 #' drake example to the current working directory.
 #' Call \code{example_drake('basic')} to generate the code files from the
 #' quickstart vignette: \code{vignette('quickstart')}.
 #' To see the names of all the examples, run \code{\link{examples_drake}}.
 #' @seealso \code{\link{examples_drake}}, \code{\link{make}}
 #' @export
-#' @param example name of the example. 
-#' To see all the available example names, 
+#' @param example name of the example.
+#' To see all the available example names,
 #' run \code{\link{examples_drake}}.
 #' @param destination character scalar, file path, where
 #' to write the folder containing the code files for the example.
@@ -42,7 +42,7 @@ examples_drake <- function() {
 }
 
 #' @title Function \code{load_basic_example}
-#' @description Loads the basic example into your workspace 
+#' @description Loads the basic example into your workspace
 #' (or the environment you specify).
 #' Also writes/overwrites the file \code{report.Rmd}.
 #' For a thorough walkthrough of how to set up this example, see the
@@ -50,8 +50,10 @@ examples_drake <- function() {
 #' call \code{\link{example_drake}('basic')} to generate an R script
 #' that builds up this example step by step.
 #' @export
-#' @param envir The environment to load the example into. Defaults to your workspace.
-#' For an insulated workspace, set \code{envir = new.env(parent = globalenv())}.
+#' @param envir The environment to load the example into.
+#' Defaults to your workspace.
+#' For an insulated workspace,
+#' set \code{envir = new.env(parent = globalenv())}.
 #' @examples
 #' \dontrun{
 #' load_basic_example()

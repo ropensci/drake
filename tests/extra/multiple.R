@@ -1,5 +1,5 @@
-# Run this file to test drake on many different 
-# combinations of parallelism, jobs, and 
+# Run this file to test drake on many different
+# combinations of parallelism, jobs, and
 # execution environment.
 # For the Makefile parallelism to work, drake needs
 # to be properly installed first.
