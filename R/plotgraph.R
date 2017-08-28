@@ -35,7 +35,7 @@
 #' external resources placed in an adjacent directory. If \code{TRUE},
 #' pandoc is required.
 #' @param build_times logical, whether to print the \code{\link{build_times}()}
-#' in the graph.
+#' in the graph. These are just elapsed times from \code{system.time()}.
 #' @param targets_only logical, whether to skip the imports and only show the
 #' targets in the workflow plan.
 #' @param split_columns logical, whether to break up the

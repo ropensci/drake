@@ -42,7 +42,8 @@ See \code{?parallelism_choices} for details.}
 \item{prework}{same as for \code{\link{make}}}
 
 \item{build_times}{logical, whether to show the \code{\link{build_times}()}
-of the targets, if available.}
+of the targets, if available.
+These are just elapsed times from \code{system.time()}.}
 
 \item{targets_only}{logical,
 whether to skip the imports and only include the
