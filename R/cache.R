@@ -133,6 +133,8 @@ build_times = function(path = getwd(), search = TRUE, digits = 0){
     # Merge to data.frame
     Reduce(f = function(x, y) rbind(x, y))
   
+  if(!length(times)) return(NULL)
+  
   times$target = times$target %>% as.character()
   times
 }
