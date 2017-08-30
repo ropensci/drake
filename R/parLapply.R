@@ -51,5 +51,5 @@ load_packages_parLapply <- function() { # nolint
     base::suppressPackageStartupMessages(
       eval(parse(
         text = paste0(
-          "base::require(", package, ", character.only = TRUE)"))))
+          "base::require(", package, ")"))))
 }
