@@ -110,20 +110,41 @@ outdated <-  function(
 #' rm(reg1)
 #' missed(my_plan)
 #' }
-missed = function(plan, targets = drake::possible_targets(plan), 
-                            envir = parent.frame(), verbose = TRUE, jobs = 1, 
-                            parallelism = drake::default_parallelism(), 
-                            packages = (.packages()), prework = character(0),
-                            font_size = 20, config = NULL){
-  
+missed <- function(
+  plan,
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  verbose = TRUE,
+  jobs = 1,
+  parallelism = drake::default_parallelism(),
+  packages = (.packages()),
+  prework = character(0),
+  font_size = 20,
+  config = NULL
+  ){
   force(envir)
-  if(is.null(config))
-    config = config(plan = plan, targets = targets, envir = envir,
-                    verbose = verbose, parallelism = parallelism, jobs = jobs,
-                    packages = packages, prework = prework)
-  graph = config$graph
-  imports = setdiff(V(graph)$name, plan$target)
-  missing = Filter(x = imports, f = function(x) missing_import(x, envir = envir))
-  if(!length(missing)) return(invisible(character(0)))
-  missing
+  if (is.null(config)){
+    config <- config(
+      plan = plan,
+      targets = targets,
+      envir = envir,
+      verbose = verbose,
+      parallelism = parallelism,
+      jobs = jobs,
+      packages = packages,
+      prework = prework
+      )
+  }
+  graph <- config$graph
+  imports <- setdiff(V(graph)$name, plan$target)
+  missing <- Filter(
+    x = imports,
+    f = function(x){
+      missing_import(x, envir = envir)
+    }
+    )
+  if (!length(missing)){
+    return(invisible(character(0)))
+  }
+  return(missing)
 }
