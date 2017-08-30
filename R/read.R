@@ -188,7 +188,7 @@ read_config <- function(path = getwd(), search = TRUE){
 #' make(my_plan)
 #' read_plan()
 #' }
-read_plan = function(path = getwd(), search = TRUE){
+read_plan <- function(path = getwd(), search = TRUE){
   read_config(path = path, search = search)$plan
 }
 
