@@ -183,8 +183,12 @@ gather <- function(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' analyses(methods, datasets = datasets)
-analyses = function(plan, datasets){
-  evaluate(plan, wildcard = "..dataset..", values = datasets$target)
+analyses <- function(plan, datasets){
+  evaluate(
+    plan,
+    wildcard = "..dataset..",
+    values = datasets$target
+    )
 }
 
 #' @title Function \code{summaries}
