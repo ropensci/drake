@@ -93,15 +93,21 @@ tracked <- function(
   V(graph)$name
 }
 
-assert_unique_names = function(imports, targets, envir, verbose){
-  if(anyDuplicated(targets)){
-    duplicated = which(table(targets) > 1) %>% names
-    stop("Duplicate targets in workflow plan:\n", 
-      multiline_message(duplicated))
+assert_unique_names <- function(imports, targets, envir, verbose){
+  if (anyDuplicated(targets)){
+    duplicated <- which(table(targets) > 1) %>%
+      names()
+    stop(
+      "Duplicate targets in workflow plan:\n",
+      multiline_message(duplicated)
+      )
   }
-  common = intersect(imports, targets)
-  if(verbose & length(common))
-    cat("Unloading targets from environment:\n",
-     multiline_message(common), "\n", sep = "")
+  common <- intersect(imports, targets)
+  if (verbose & length(common)){
+    cat(
+      "Unloading targets from environment:\n",
+      multiline_message(common), "\n", sep = ""
+      )
+  }
   remove(list = common, envir = envir)
 }
