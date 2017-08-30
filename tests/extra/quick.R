@@ -9,6 +9,6 @@ dir <- file.path("testthat", "workspaces")
 setwd("..")
 
 system.time({
-  set_test_opt("local_mcl_8")
+  set_test_opt("local_mcl_1")
   test_dir("testthat")
 })

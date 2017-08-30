@@ -37,6 +37,7 @@ test_with_dir("Vectorized nested functions work", {
   config$targets <- "a"
   expect_equal(deps(e$f), "g")
   expect_equal(deps(e$g), "y")
+
   testrun(config)
   if ("a" %in% ls(config$envir)){
     rm(a, envir = config$envir)
@@ -49,9 +50,19 @@ test_with_dir("Vectorized nested functions work", {
   config$envir$y <- 8
   expect_equal("a", outdated(config$plan, envir = config$envir,
     verbose = FALSE))
+
+  # Target "a" should react.
   testrun(config)
   expect_equal(character(0), outdated(config$plan, envir = config$envir,
     verbose = FALSE))
+  expect_equal(readd(a), 9:18)
+
+  # Change a vectorized function and see target "a" react.
+  eval(parse(text = "f <- Vectorize(function(x){g(x) + 3}, \"x\")"),
+    envir = e)
+  testrun(config)
+  expect_equal(justbuilt(config), "a")
+  expect_equal(readd(a), 12:21)
   dclean()
 })
 
