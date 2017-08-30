@@ -6,7 +6,7 @@ predict_runtime <- function(plan, from_scratch = FALSE, config = NULL, ...){
   times = build_times()
   graph_remaining_targets = config$graph
   i = 1
-  total_time = 0
+  total_time = duration(0)
   
   while(length(V(graph_remaining_targets))) {
     

@@ -16,6 +16,11 @@ test_that("cache functions work", {
     envir = globalenv()
   else
     envir = environment()
+  # Because no build times are cached yet
+  sink(tempfile())
+  expect_equal(predict_runtime(config$plan, envir = envir), duration(0))
+  sink()
+  
   testrun(config)
 
   # targets
@@ -45,6 +50,11 @@ test_that("cache functions work", {
   # build_times
   expect_equal(sort(build_times(search = FALSE)$target), builds)
   expect_length(build_times(), 4) # 4 columns
+  
+  # runtime prediction
+  sink(tempfile())
+  expect_equivalent(predict_runtime(config$plan, envir = envir) %>% class, "Duration")
+  sink()
   
   # config
   newconfig = read_config(search = FALSE)
