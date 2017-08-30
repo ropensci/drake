@@ -83,10 +83,13 @@ return(graph)
 #' load_basic_example()
 #' tracked(my_plan)
 #' }
-tracked = function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame()){
+tracked <- function(
+  plan,
+  targets = drake::possible_targets(plan),
+  envir = parent.frame()
+  ){
   force(envir)
-  graph = build_graph(plan = plan, targets = targets, envir = envir)
+  graph <- build_graph(plan = plan, targets = targets, envir = envir)
   V(graph)$name
 }
 
