@@ -42,29 +42,46 @@
 #'   values = datasets$target)
 #' x = plan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
-evaluate = function(plan, rules = NULL, wildcard = NULL, values = NULL, 
-  expand = TRUE){
-  if(!is.null(rules)) 
+evaluate <- function(
+  plan,
+  rules = NULL,
+  wildcard = NULL,
+  values = NULL,
+  expand = TRUE
+  ){
+  if (!is.null(rules)){
     return(evaluations(plan = plan, rules = rules, expand = expand))
-  if(is.null(wildcard) | is.null(values)) return(plan)
-  matches = grepl(wildcard, plan$command, fixed = TRUE)
-  if(!any(matches)) return(plan)
-  major = unique_random_string(colnames(plan))
-  minor = unique_random_string(c(colnames(plan), major))
-  plan[[major]] = plan[[minor]] = seq_len(nrow(plan))
-  matching = plan[matches,]
-  if(expand) matching = expand(matching, values)
-  values = rep(values, length.out = nrow(matching))
-  matching$command = Vectorize(function(value, command) 
-    gsub(wildcard, value, command, 
-      fixed = TRUE))(values, matching$command)
-  rownames(plan) = rownames(matching) = NULL
-  matching[[minor]] = seq_len(nrow(matching))
-  out = rbind(matching, plan[!matches,])
-  out = out[order(out[[major]], out[[minor]]),]
-  out[[major]] = out[[minor]] = NULL
-  rownames(out) = NULL
-  out
+  }
+  if (is.null(wildcard) | is.null(values)){
+    return(plan)
+  }
+  matches <- grepl(wildcard, plan$command, fixed = TRUE)
+  if (!any(matches)){
+    return(plan)
+  }
+  major <- unique_random_string(colnames(plan))
+  minor <- unique_random_string(c(colnames(plan), major))
+  plan[[minor]] <- seq_len(nrow(plan))
+  plan[[major]] <- plan[[minor]]
+  matching <- plan[matches, ]
+  if (expand){
+    matching <- expand(matching, values)
+  }
+  values <- rep(values, length.out = nrow(matching))
+  matching$command <- Vectorize(
+    function(value, command){
+      gsub(wildcard, value, command, fixed = TRUE)
+    }
+    )(values, matching$command)
+  rownames(matching) <- NULL
+  rownames(plan) <- rownames(matching)
+  matching[[minor]] <- seq_len(nrow(matching))
+  out <- rbind(matching, plan[!matches, ])
+  out <- out[order(out[[major]], out[[minor]]), ]
+  out[[minor]] <- NULL
+  out[[major]] <- out[[minor]]
+  rownames(out) <- NULL
+  return(out)
 }
 
 evaluations = function(plan, rules = NULL, expand = TRUE){
