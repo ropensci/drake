@@ -93,22 +93,36 @@ in_progress <- function(path = getwd(), search = TRUE){
 #' progress(list = c("small", "large"))
 #' progress(no_imported_objects = TRUE)
 #' }
-progress = function(..., list = character(0), no_imported_objects = FALSE, 
-  imported_files_only = logical(0), path = getwd(), search = TRUE){
-  if(length(imported_files_only)){ # deprecate imported_files_only
-    warning("The imported_files_only argument to progress() is deprecated ",
+progress <- function(
+  ...,
+  list = character(0),
+  no_imported_objects = FALSE,
+  imported_files_only = logical(0),
+  path = getwd(),
+  search = TRUE
+  ){
+  # deprecate imported_files_only
+  if (length(imported_files_only)){
+    warning(
+      "The imported_files_only argument to progress() is deprecated ",
       "and will be removed the next major release. ",
-      "Use the no_imported_objects argument instead.")
-    no_imported_objects = imported_files_only
+      "Use the no_imported_objects argument instead."
+      )
+    no_imported_objects <- imported_files_only
   }
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) return(character(0))
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) 
-    return(list_progress(no_imported_objects = no_imported_objects, 
-      cache = cache))
-  get_progress(targets, cache)
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    return(character(0))
+  }
+  dots <- match.call(expand.dots = FALSE)$...
+  targets <- targets_from_dots(dots, list)
+  if (!length(targets)){
+    return(list_progress(
+        no_imported_objects = no_imported_objects,
+        cache = cache
+        ))
+  }
+  return(get_progress(targets, cache))
 }
 
 list_progress = function(no_imported_objects, cache){
