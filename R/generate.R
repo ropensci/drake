@@ -74,12 +74,12 @@ evaluate <- function(
     }
     )(values, matching$command)
   rownames(matching) <- NULL
-  rownames(plan) <- rownames(matching)
+  rownames(plan) <- NULL
   matching[[minor]] <- seq_len(nrow(matching))
   out <- rbind(matching, plan[!matches, ])
   out <- out[order(out[[major]], out[[minor]]), ]
   out[[minor]] <- NULL
-  out[[major]] <- out[[minor]]
+  out[[major]] <- NULL
   rownames(out) <- NULL
   return(out)
 }
