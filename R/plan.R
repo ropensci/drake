@@ -87,7 +87,7 @@ plan <- function(
 #' single quotes on both ends).
 #' @examples
 #' as_file("my_file.rds")
-as_file = function(x){
+as_file <- function(x){
   quotes(x, single = TRUE)
 }
 
