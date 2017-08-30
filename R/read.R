@@ -120,11 +120,21 @@ loadd <- function(
   invisible()
 }
 
-load_target = Vectorize(function(target, cache, envir){
-  value = readd(target, character_only = TRUE, 
-    cache = cache)
-  assign(x = target, value = value, envir = envir)
-}, "target")
+load_target <- Vectorize(
+  function(target, cache, envir){
+    value <- readd(
+      target,
+      character_only = TRUE,
+      cache = cache
+      )
+    assign(
+      x = target,
+      value = value,
+      envir = envir
+      )
+  },
+  "target"
+  )
 
 #' @title Function \code{read_config}
 #' @description Read all the configuration parameters 
