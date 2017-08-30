@@ -34,7 +34,7 @@
 #' @importFrom eply quotes strings unquote
 #' @importFrom igraph adjacent_vertices delete_vertices edge
 #' is_dag make_empty_graph plot.igraph subcomponent V vertex
-#' @importFrom lubridate dseconds
+#' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster

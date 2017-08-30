@@ -24,9 +24,9 @@ build_times <- function(path = getwd(), search = TRUE, digits = 0,
 
   empty_times <- data.frame(
     target = character(0),
-    user = numeric(0),
-    system = numeric(0),
-    elapsed = numeric(0)
+    user = duration(numeric(0)),
+    system = duration(numeric(0)),
+    elapsed = duration(numeric(0))
   )
 
   if (is.null(cache)){
