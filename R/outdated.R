@@ -25,25 +25,51 @@
 #' Computing this
 #' in advance could save time if you plan multiple calls to 
 #' \code{outdated()}.
-outdated =  function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, 
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0), config = NULL){
+outdated <-  function(
+  plan,
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  verbose = TRUE,
+  parallelism = drake::default_parallelism(),
+  jobs = 1,
+  packages = (.packages()),
+  prework = character(0),
+  config = NULL
+  ){
   force(envir)
-  if(is.null(config))
-    config = config(plan = plan, targets = targets, envir = envir,
-      verbose = verbose, parallelism = parallelism, jobs = jobs,
-      packages = packages, prework = prework)
-
-  all_targets = intersect(V(config$graph)$name, config$plan$target)
-  rebuild = Filter(x = all_targets, f = function(target){
-    hashes = hashes(target, config)
-    !target_current(target = target, hashes = hashes, config = config)
-  })
-  if(!length(rebuild)) return(invisible(character(0)))
-  else lapply(rebuild, function(vertex)
-    subcomponent(config$graph, v = vertex, mode = "out")$name) %>%
-    unlist %>% unique %>% sort
+  if (is.null(config)){
+    config <- config(
+      plan = plan,
+      targets = targets,
+      envir = envir,
+      verbose = verbose,
+      parallelism = parallelism,
+      jobs = jobs,
+      packages = packages,
+      prework = prework
+      )
+  }
+  all_targets <- intersect(V(config$graph)$name, config$plan$target)
+  rebuild <- Filter(
+    x = all_targets,
+    f = function(target){
+      hashes <- hashes(target, config)
+      !target_current(target = target, hashes = hashes, config = config)
+    }
+    )
+  if (!length(rebuild)){
+    return(invisible(character(0)))
+  } else{
+    lapply(
+      rebuild,
+      function(vertex){
+        subcomponent(config$graph, v = vertex, mode = "out")$name
+      }
+      ) %>%
+    unlist() %>%
+    unique() %>%
+    sort()
+  }
 }
 
 #' @title Function \code{missed}
