@@ -125,16 +125,25 @@ progress <- function(
   return(get_progress(targets, cache))
 }
 
-list_progress = function(no_imported_objects, cache){
-  all_marked = cache$list(namespace = "progress")
-  all_progress = get_progress(target = all_marked, cache = cache)
-  abridged_marked = Filter(all_marked, f = function(target)
-    is_built_or_imported_file(target = target, cache = cache))
-  abridged_progress = all_progress[abridged_marked]
-  if(no_imported_objects) out = abridged_progress
-  else out = all_progress 
-  if(!length(out)) out = as.character(out)
-  out
+list_progress <- function(no_imported_objects, cache){
+  all_marked <- cache$list(namespace = "progress")
+  all_progress <- get_progress(target = all_marked, cache = cache)
+  abridged_marked <- Filter(
+    all_marked,
+    f = function(target){
+      is_built_or_imported_file(target = target, cache = cache)
+    }
+    )
+  abridged_progress <- all_progress[abridged_marked]
+  if (no_imported_objects){
+    out <- abridged_progress
+  } else{
+    out <- all_progress
+  }
+  if (!length(out)){
+    out <- as.character(out)
+  }
+  return(out)
 }
 
 get_progress = Vectorize(function(target, cache){
