@@ -1,3 +1,5 @@
+#' @importFrom lubridate duration as.duration
+#' @export
 predict_runtime <- function(plan, from_scratch = FALSE, config = NULL, ...){
   
   if (missing(config))
