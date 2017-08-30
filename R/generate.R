@@ -224,29 +224,52 @@ analyses <- function(plan, datasets){
 #' summaries(summary_types, analyses, datasets)
 #' summaries(summary_types, analyses, datasets, gather = "list")
 #' summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
-summaries = function(plan, analyses, datasets, 
-  gather = rep("list", nrow(plan))){
-  plan = with_analyses_only(plan)
-  out = plan
-  group = paste(colnames(out), collapse = "_")
-  out[[group]] = out$target
-  if(!any(grepl("..analysis..", out$command, fixed = TRUE)))
-    stop("no '..analysis..' wildcard found in plan$command. ",
-         "Use analyses() instead.")
-  out = evaluate(out, wildcard = "..analysis..", values = analyses$target)
-  out = evaluate(out, wildcard = "..dataset..", values = datasets$target,
-    expand = FALSE)
-  if(!length(gather)) return(out[setdiff(names(out), group)])
-  if(length(gather) == 1) gather = rep(gather, dim(plan)[1])
-  if(!(length(gather) == dim(plan)[1]))
+summaries <- function(
+  plan,
+  analyses,
+  datasets,
+  gather = rep("list", nrow(plan))
+  ){
+  plan <- with_analyses_only(plan)
+  out <- plan
+  group <- paste(colnames(out), collapse = "_")
+  out[[group]] <- out$target
+  if (!any(grepl("..analysis..", out$command, fixed = TRUE))){
+    stop(
+      "no '..analysis..' wildcard found in plan$command. ",
+      "Use analyses() instead."
+      )
+  }
+  out <- evaluate(out, wildcard = "..analysis..", values = analyses$target)
+  out <- evaluate(
+    out,
+    wildcard = "..dataset..",
+    values = datasets$target,
+    expand = FALSE
+    )
+  if (!length(gather)){
+    return(out[setdiff(names(out), group)])
+  }
+  if (length(gather) == 1){
+    gather <- rep(gather, dim(plan)[1])
+  }
+  if (!(length(gather) == dim(plan)[1])){
     stop("gather must be NULL or have length 1 or nrow(plan)")
-  gathered = ddply(out, group, function(summary_group){
-    summary_type = summary_group[[group]][1]
-    gather(summary_group, target = summary_type, 
-      gather = gather[which(summary_type == plan$target)])
-  })
-  out[[group]] = gathered[[group]] = NULL
-  rbind(gathered, out)
+  }
+  gathered <- ddply(
+    out,
+    group,
+    function(summary_group){
+      summary_type <- summary_group[[group]][1]
+      gather(
+        summary_group,
+        target = summary_type,
+        gather = gather[which(summary_type == plan$target)])
+    }
+    )
+  out[[group]] <- NULL
+  gathered[[group]] <- NULL
+  return(rbind(gathered, out))
 }
 
 with_analyses_only = function(plan){
