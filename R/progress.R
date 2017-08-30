@@ -18,10 +18,12 @@
 #' make(my_plan)
 #' session()
 #' }
-session = function(path = getwd(), search = TRUE){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("No drake::make() session detected.")
-  cache$get("sessionInfo", namespace = "session")
+session <- function(path = getwd(), search = TRUE){
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    stop("No drake::make() session detected.")
+  }
+  return(cache$get("sessionInfo", namespace = "session"))
 }
 
 #' @title Function \code{in_progress}
