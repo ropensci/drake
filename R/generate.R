@@ -117,15 +117,17 @@ evaluations <- function(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' expand(datasets, values = c("rep1", "rep2", "rep3"))
-expand = function(plan, values = NULL){
-  if(!length(values)) return(plan)
-  nrows = nrow(plan)
-  repeat_targets = rep(seq_len(nrows), each = length(values))
-  plan = plan[repeat_targets,]
-  values = rep(values, times = nrows)
-  plan$target = paste(plan$target, values, sep = "_")
-  rownames(plan) = NULL
-  plan
+expand <- function(plan, values = NULL){
+  if (!length(values)){
+    return(plan)
+  }
+  nrows <- nrow(plan)
+  repeat_targets <- rep(seq_len(nrows), each = length(values))
+  plan <- plan[repeat_targets, ]
+  values <- rep(values, times = nrows)
+  plan$target <- paste(plan$target, values, sep = "_")
+  rownames(plan) <- NULL
+  return(plan)
 }
 
 #' @title Function \code{gather}
