@@ -272,16 +272,22 @@ summaries <- function(
   return(rbind(gathered, out))
 }
 
-with_analyses_only = function(plan){
-  has_analysis = grepl("..analysis..", plan$command, fixed = TRUE)
-  if(any(!has_analysis))
-    warning("removing ", sum(has_analysis), 
+with_analyses_only <- function(plan){
+  has_analysis <- grepl("..analysis..", plan$command, fixed = TRUE)
+  if (any(!has_analysis)){
+    warning(
+      "removing ",
+      sum(has_analysis),
       " rows with no ..analysis.. wildcard in the command.",
-      "Use analyses() for these.")
-  plan[has_analysis,]
+      "Use analyses() for these."
+      )
+  }
+  return(plan[has_analysis, ])
 }
 
-unique_random_string = function(exclude = NULL, n = 30){
-  while((out <- stri_rand_strings(1, n)) %in% exclude) next
-  out
+unique_random_string <- function(exclude = NULL, n = 30){
+  while ( (out <- stri_rand_strings(1, n)) %in% exclude){
+    next
+  }
+  return(out)
 }
