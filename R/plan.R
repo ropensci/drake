@@ -95,12 +95,14 @@ wide_deparse <- function(x){
   paste(deparse(x), collapse = "")
 }
 
-sanitize_plan = function(plan){
-  for(field in c("code", "command", "output", "target"))
-    if(!is.null(plan[[field]])) plan[[field]] = 
-      str_trim(plan[[field]], side = "both")
-  as.data.frame(plan, stringsAsFactors = FALSE) %>% 
-    fix_deprecated_plan_names
+sanitize_plan <- function(plan){
+  for (field in c("code", "command", "output", "target")){
+    if (!is.null(plan[[field]])){
+      plan[[field]] <- str_trim(plan[[field]], side = "both")
+    }
+  }
+  as.data.frame(plan, stringsAsFactors = FALSE) %>%
+    fix_deprecated_plan_names()
 }
 
 sanitize_targets = function(plan, targets){
