@@ -91,7 +91,7 @@ as_file <- function(x){
   quotes(x, single = TRUE)
 }
 
-wide_deparse = function(x){
+wide_deparse <- function(x){
   paste(deparse(x), collapse = "")
 }
 
