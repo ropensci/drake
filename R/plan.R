@@ -105,8 +105,8 @@ sanitize_plan <- function(plan){
     fix_deprecated_plan_names()
 }
 
-sanitize_targets = function(plan, targets){
-  plan = sanitize_plan(plan)
+sanitize_targets <- function(plan, targets){
+  plan <- sanitize_plan(plan)
   str_trim(targets, side = "both") %>%
     intersect(y = plan$target)
 }
