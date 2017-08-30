@@ -146,9 +146,15 @@ list_progress <- function(no_imported_objects, cache){
   return(out)
 }
 
-get_progress = Vectorize(function(target, cache){
-  if(target %in% cache$list("progress")) 
-    cache$get(key = target, namespace = "progress")
-  else
-    "not built or imported"
-}, "target", SIMPLIFY = TRUE, USE.NAMES = TRUE)
+get_progress <- Vectorize(
+  function(target, cache){
+    if (target %in% cache$list("progress")){
+      cache$get(key = target, namespace = "progress")
+    } else{
+      "not built or imported"
+    }
+  },
+  "target",
+  SIMPLIFY = TRUE,
+  USE.NAMES = TRUE
+  )
