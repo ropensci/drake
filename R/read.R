@@ -155,12 +155,19 @@ load_target <- Vectorize(
 #' make(my_plan)
 #' read_config()
 #' }
-read_config = function(path = getwd(), search = TRUE){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("cannot find drake cache.")
-  sapply(cache$list(namespace = "config"), function(item)
-    cache$get(key = item, namespace = "config"),
-      simplify = FALSE, USE.NAMES = TRUE)
+read_config <- function(path = getwd(), search = TRUE){
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  sapply(
+    cache$list(namespace = "config"),
+    function(item){
+      cache$get(key = item, namespace = "config")
+    },
+    simplify = FALSE,
+    USE.NAMES = TRUE
+    )
 }
 
 #' @title Function \code{read_plan}
