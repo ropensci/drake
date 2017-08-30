@@ -41,23 +41,37 @@
 #' plan(data = readRDS("my_data.rds"))
 #' plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
 #'   strings_in_dots = "literals")
-plan = function(..., list = character(0), file_targets = FALSE,
-  strings_in_dots = c("filenames", "literals")) {
-  strings_in_dots = match.arg(strings_in_dots)
-  dots = match.call(expand.dots = FALSE)$...
-  commands_dots = lapply(dots, wide_deparse)
-  names(commands_dots) = names(dots)
-  commands = c(commands_dots, list)
-  targets = names(commands)
-  commands = as.character(commands)
-  if(!length(commands)) return(data.frame(target = character(0),
-    command = character(0)))
-  plan = data.frame(target = targets, command = commands, 
-    stringsAsFactors = FALSE)
-  from_dots = plan$target %in% names(commands_dots)
-  if(file_targets) plan$target = quotes(plan$target, single = T)
-  if(strings_in_dots == "filenames") 
-    plan$command[from_dots] = gsub("\"", "'", plan$command[from_dots])
+plan <- function(
+  ...,
+  list = character(0),
+  file_targets = FALSE,
+  strings_in_dots = c("filenames", "literals")
+  ){
+  strings_in_dots <- match.arg(strings_in_dots)
+  dots <- match.call(expand.dots = FALSE)$...
+  commands_dots <- lapply(dots, wide_deparse)
+  names(commands_dots) <- names(dots)
+  commands <- c(commands_dots, list)
+  targets <- names(commands)
+  commands <- as.character(commands)
+  if (!length(commands)){
+    return(data.frame(
+        target = character(0),
+        command = character(0)
+        ))
+  }
+  plan <- data.frame(
+    target = targets,
+    command = commands,
+    stringsAsFactors = FALSE
+    )
+  from_dots <- plan$target %in% names(commands_dots)
+  if (file_targets){
+    plan$target <- quotes(plan$target, single = T)
+  }
+  if (strings_in_dots == "filenames"){
+    plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
+  }
   sanitize_plan(plan)
 }
 
