@@ -12,8 +12,11 @@ console <- function(imported, target, config) {
 }
 
 console_parallel_stage <- function(targets, config){
-  if (!config$verbose) return()
+  if (!config$verbose) return(invisible())
   n <- length(targets)
+  if (n < 1){
+    return(invisible())
+  }
   cat(color("check", "slateblue2"), " ", n, " item",
     ifelse(n == 1, "", "s"), "\n", sep = "")
 }

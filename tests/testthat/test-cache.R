@@ -6,6 +6,13 @@ test_with_dir("clean() works if there is no cache already", {
   dclean()
 })
 
+test_with_dir("build times works if no targets are built", {
+  expect_equal(nrow(build_times(search = FALSE)), 0)
+  my_plan <- plan(x = 1)
+  make(my_plan, verbose = FALSE, imports_only = TRUE)
+  expect_equal(nrow(build_times(search = FALSE)), 0)
+})
+
 test_with_dir("cache functions work", {
   dclean()
   first_wd <- getwd()
@@ -17,7 +24,7 @@ test_with_dir("cache functions work", {
   owd <- getwd()
   expect_equal(character(0), cached(search = FALSE), imported(search = FALSE),
     built(search = FALSE))
-  expect_equal(build_times(search = FALSE), NULL)
+  expect_equal(nrow(build_times(search = FALSE)), 0)
   expect_equal(progress(search = FALSE), character(0))
   expect_equal(in_progress(search = FALSE), character(0))
   expect_error(readd(search = FALSE))
