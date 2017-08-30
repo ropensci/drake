@@ -92,19 +92,30 @@ readd <- function(
 #' loadd(imported_only = TRUE) # load all imported objects and functions
 #' loadd() # load everything, including built targets
 #' }
-loadd = function(..., list = character(0),
-  imported_only = FALSE, path = getwd(), 
-  search = TRUE, envir = parent.frame()){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("cannot find drake cache.")
+loadd <- function(
+  ...,
+  list = character(0),
+  imported_only = FALSE,
+  path = getwd(),
+  search = TRUE,
+  envir = parent.frame()
+  ){
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
   force(envir)
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) targets = cache$list()
-  if(imported_only) 
-    targets = imported_only(targets = targets, cache = cache)
-  if(!length(targets)) 
+  dots <- match.call(expand.dots = FALSE)$...
+  targets <- targets_from_dots(dots, list)
+  if (!length(targets)){
+    targets <- cache$list()
+  }
+  if (imported_only){
+    targets <- imported_only(targets = targets, cache = cache)
+  }
+  if (!length(targets)){
     stop("no targets to load.")
+  }
   load_target(target = targets, cache = cache, envir = envir)
   invisible()
 }
