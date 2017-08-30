@@ -216,7 +216,7 @@ read_plan <- function(path = getwd(), search = TRUE){
 #' class(g)
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
-read_graph = function(path = getwd(), search = TRUE, ...){
-  config = read_config(path = path, search = search)
+read_graph <- function(path = getwd(), search = TRUE, ...){
+  config <- read_config(path = path, search = search)
   return(config$graph)
 }
