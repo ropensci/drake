@@ -84,13 +84,24 @@ evaluate <- function(
   return(out)
 }
 
-evaluations = function(plan, rules = NULL, expand = TRUE){
-  if(is.null(rules)) return(plan)
+evaluations <- function(
+  plan,
+  rules = NULL,
+  expand = TRUE
+  ){
+  if (is.null(rules)){
+    return(plan)
+  }
   stopifnot(is.list(rules))
-  for(index in seq_len(length(rules)))
-    plan = evaluate(plan, wildcard = names(rules)[index], 
-      values = rules[[index]], expand = expand)
-  plan
+  for (index in seq_len(length(rules))){
+    plan <- evaluate(
+      plan,
+      wildcard = names(rules)[index],
+      values = rules[[index]],
+      expand = expand
+      )
+  }
+  return(plan)
 }
 
 #' @title Function \code{expand}
