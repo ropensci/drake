@@ -147,11 +147,17 @@ expand <- function(plan, values = NULL){
 #'   large = simulate(50))
 #' gather(datasets, target = "my_datasets")
 #' gather(datasets, target = "aggregated_data", gather = "rbind")
-gather = function(plan = NULL, target = "target", gather = "list"){
-  command = paste(plan$target, "=", plan$target)
-  command = paste(command, collapse = ", ")
-  command = paste0(gather, "(", command, ")")
-  data.frame(target = target, command = command, stringsAsFactors = F)
+gather <- function(
+  plan = NULL,
+  target = "target",
+  gather = "list"
+  ){
+  command <- paste(plan$target, "=", plan$target)
+  command <- paste(command, collapse = ", ")
+  command <- paste0(gather, "(", command, ")")
+  return(
+    data.frame(target = target, command = command, stringsAsFactors = F)
+    )
 }
 
 #' @title Function \code{analyses}
