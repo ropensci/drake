@@ -51,8 +51,10 @@ session <- function(path = getwd(), search = TRUE){
 #' make(bad_plan) # error
 #' in_progress() # "x"
 #' }
-in_progress = function(path = getwd(), search = TRUE){
-  which(progress() == "in progress") %>% names %>% as.character
+in_progress <- function(path = getwd(), search = TRUE){
+  which(progress() == "in progress") %>%
+    names() %>%
+    as.character()
 }
 
 #' @title Function \code{progress}
