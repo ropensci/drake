@@ -49,5 +49,7 @@ load_packages_parLapply <- function() { # nolint
     "storr", "stringi", "stringr", "testthat", "tools", "utils")
   for (package in packages)
     base::suppressPackageStartupMessages(
-      base::requireNamespace(package, character.only = TRUE))
+      eval(parse(
+        text = paste0(
+          "base::require(", package, ", character.only = TRUE)"))))
 }
