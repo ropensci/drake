@@ -1,8 +1,6 @@
 drake_split <- function(
   .data,
-  out_target,
   # this is here so you can use the expected rows, if data does not yet exist
-  data_rows = nrow(.data),
   splits = ceiling(nrow(.data) / 1e6)
   ){
   name <- deparse(substitute(.data))
@@ -13,11 +11,12 @@ drake_split <- function(
   # Ensure that splits is an integer:
   splits <- ceiling(splits)
   digits <- ceiling(log10(splits))
+  splits_vec <- stringr::str_pad(seq(splits), pad = "0", side = "left", width = digits)
   # deparse target names (pre-application)
   slice_targets <- paste(
-    "slice",
+    "split",
     name,
-    stringr::str_pad(seq(splits), pad = "0", side = "left", width = digits),
+    splits_vec,
     sep = "_")
   # determine the number of rows in each split (also an integer)
   split_rows <- ceiling(data_rows / splits)
@@ -36,6 +35,8 @@ drake_split <- function(
         )
       )
   } else {
+    #TODO: UNIFY grouped/ungrouped commands into one.
+    #TODO: add a separate plan frame for making split_list
     split_seq_low <- seq(
       from = 1L,
       by = split_rows,
@@ -56,26 +57,32 @@ drake_split <- function(
   return(slice_plan)
 }
 
-group_list <- function(
+split_list <- function(
   .data,
   splits
   ){
-  # determine the size of each group
-  data_groups <- dplyr::group_size(.data)
-  names(data_groups) <- seq_along(data_groups)
   # ensure split_rows is an integer
-  split_rows <- ceiling(sum(data_groups) / splits)
-  group_list <- vector("list", length = splits)
-  for (i in data_groups){
-    push_to <- which.min(lapply(group_list, sum))
-    push_value <- data_groups[which.max(data_groups)]
-    group_list[[push_to]] <- c(group_list[[push_to]], push_value)
-    data_groups[which.max(data_groups)] <- NA
+  split_rows <- ceiling(nrow(.data) / splits)
+  # Initialize split_list
+  split_list <- vector("list", length = splits)
+  if (is_grouped_df(.data)){
+    # determine the size of each group
+    data_groups <- dplyr::group_indices(.data)
+    n_groups <- max(data_groups)
+    for (i in seq(from =1, to = n_groups)){
+      push_to <- which.min(lapply(split_list, sum))
+    push_group <- which.max(table(data_groups))
+    push_indices <- which(data_groups == push_group)
+    split_list[[push_to]] <- c(split_list[[push_to]], push_indices)
+    # remove those indices from consideration
+    data_groups[push_indices] <- NA
+    }
+  } else{
+# TODO: deal with ungrouped frames.
   }
-  # Extract just the names, since those are the actual values we want.
-  group_list <- lapply(group_list, names)
-  group_list <- lapply(group_list, as.numeric)
-  return(group_list)
+  # ensure it's a numeric vector in each list element
+  split_list <- lapply(split_list, as.numeric)
+  return(split_list)
 }
 
 drake_unsplit <- function(
