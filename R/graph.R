@@ -20,33 +20,52 @@
 #' g <- build_graph(my_plan)
 #' class(g)
 #' }
-build_graph = function(plan, targets = drake::possible_targets(plan), 
-  envir = parent.frame(), verbose = TRUE){
+build_graph <- function(
+  plan,
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  verbose = TRUE
+  ){
   force(envir)
-  plan = sanitize_plan(plan)
-  targets = sanitize_targets(plan, targets)
-  imports = as.list(envir)
-  assert_unique_names(imports = names(imports), targets = plan$target,
-    envir = envir, verbose = verbose)
-  true_import_names = setdiff(names(imports), targets)
-  imports = imports[true_import_names]
-  import_deps = lapply(imports, import_dependencies)
-  command_deps = lapply(plan$command, command_dependencies)
-  names(command_deps) = plan$target
-  dependency_list = c(command_deps, import_deps)
-  keys = names(dependency_list)
-  vertices = c(keys, unlist(dependency_list)) %>% unique
-  from = unlist(dependency_list) %>% unname
-  to = rep(keys, times = sapply(dependency_list, length))
-  edges = rbind(from, to) %>% as.character
-  graph = make_empty_graph() + vertex(vertices) + edge(edges)
-  ignore = lapply(targets, function(vertex)
-    subcomponent(graph = graph, v = vertex, mode = "in")$name
-  ) %>% unlist %>% unique %>% setdiff(x = vertices)
-  graph = delete_vertices(graph, v = ignore)
-  if(!is_dag(graph)) 
-    stop("Workflow is circular (chicken and egg dilemma).")
-  graph
+  plan <- sanitize_plan(plan)
+  targets <- sanitize_targets(plan, targets)
+  imports <- as.list(envir)
+  assert_unique_names(
+    imports = names(imports),
+    targets = plan$target,
+    envir = envir,
+    verbose = verbose
+    )
+  true_import_names <- setdiff(names(imports), targets)
+  imports <- imports[true_import_names]
+  import_deps <- lapply(imports, import_dependencies)
+  command_deps <- lapply(plan$command, command_dependencies)
+  names(command_deps) <- plan$target
+  dependency_list <- c(command_deps, import_deps)
+  keys <- names(dependency_list)
+  vertices <- c(keys, unlist(dependency_list)) %>% unique
+  from <- unlist(dependency_list) %>%
+    unname()
+  to <- rep(keys, times = sapply(dependency_list, length))
+  edges <- rbind(from, to) %>%
+    as.character()
+  graph <- make_empty_graph() +
+    vertex(vertices) +
+    edge(edges)
+  ignore <- lapply(
+    targets,
+    function(vertex){
+      subcomponent(graph = graph, v = vertex, mode = "in")$name
+    }
+    ) %>%
+  unlist() %>%
+  unique() %>%
+  setdiff(x = vertices)
+graph <- delete_vertices(graph, v = ignore)
+if (!is_dag(graph)){
+  stop("Workflow is circular (chicken and egg dilemma).")
+}
+return(graph)
 }
 
 #' @title Function \code{tracked}
