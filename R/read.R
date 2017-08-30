@@ -29,17 +29,30 @@
 #' readd("large", character_only = TRUE)
 #' readd("'report.md'") # just a fingerprint of the file (md5 sum)
 #' }
-readd = function(target, character_only = FALSE, path = getwd(), 
-  search = TRUE, cache = NULL){
-  if(is.null(cache)) cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("cannot find drake cache.")
-  if(!character_only) target = as.character(substitute(target))
-  store = cache$get(target)
-  if(store$type == "function")
-    value = cache$get(key = target, namespace = "functions")
-  else
-    value = store$value
-  value
+readd <- function(
+  target,
+  character_only = FALSE,
+  path = getwd(),
+  search = TRUE,
+  cache = NULL
+  ){
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
+  # if the cache is null after trying get_cache:
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
+  store <- cache$get(target)
+  if (store$type == "function"){
+    value <- cache$get(key = target, namespace = "functions")
+  } else{
+    value <- store$value
+  }
+  return(value)
 }
 
 #' @title Function \code{loadd}
