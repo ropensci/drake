@@ -24,21 +24,21 @@ write_time_stamp = function(target){
     overwrite = TRUE, copy.date = TRUE)
 }
 
-time_stamp_dir = file.path(cachepath,  "ts")
-time_stamp_template = file.path(cachepath, "timestamp")
+time_stamp_dir = file.path(cache_dir,  "ts")
+time_stamp_template = file.path(cache_dir, "timestamp")
 
 dir_empty = function(x){
-  unlink(x, recursive = TRUE)
+  unlink(x, recursive = TRUE, force = TRUE)
   dir.create(x)
 }
 
 file_overwrite = function(x){
-  unlink(x)
+  unlink(x, force = TRUE)
   file.create(x)
 }
 
 write_time_stamp_template = function(){
   zip = system.file("timestamp.zip", 
     package = "drake", mustWork = TRUE)
-  unzip(zip, exdir = cachepath, setTimes = TRUE)
+  unzip(zip, exdir = cache_dir, setTimes = TRUE)
 }

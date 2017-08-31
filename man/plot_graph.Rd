@@ -8,12 +8,14 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), file = character(0), selfcontained = FALSE,
-  targets_only = FALSE, config = NULL, font_size = 20,
-  layout = "layout_with_sugiyama", direction = "LR",
-  navigationButtons = TRUE, hover = TRUE, ...)
+  build_times = TRUE, targets_only = FALSE, split_columns = FALSE,
+  config = NULL, font_size = 20, layout = "layout_with_sugiyama",
+  main = drake::default_graph_title(parallelism = parallelism, split_columns =
+  split_columns), direction = "LR", hover = TRUE,
+  navigationButtons = TRUE, ...)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function 
+\item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
 \item{targets}{names of targets to bulid, same as for function
@@ -24,16 +26,19 @@ plot_graph(plan, targets = drake::possible_targets(plan),
 
 \item{verbose}{logical, whether to output messages to the console.}
 
-\item{jobs}{The \code{outdated()} function is called internally, 
-and it needs to import objects and examine your 
+\item{jobs}{The \code{outdated()} function is called internally,
+and it needs to import objects and examine your
 input files to see what has been updated. This could take some time,
 and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
-See \code{?parallelism_choices} for details. The Makefile option is not available
-here. Drake will try to pick the best option for your system by default.}
+Execution order in \code{\link{make}()} is slightly different when
+\code{parallelism} equals \code{'Makefile'} because in that case,
+all the imports are imported before any target is built.
+Thus, the arrangement in the graph is different for Makefile parallelism.
+See \code{?parallelism_choices} for details.}
 
 \item{packages}{same as for \code{\link{make}()}.}
 
@@ -43,40 +48,60 @@ here. Drake will try to pick the best option for your system by default.}
 If \code{NULL} or \code{character(0)},
 no file is saved and the graph is rendered and displayed within R.}
 
-\item{selfcontained}{logical, whether to save the \code{file} as a self-contained
+\item{selfcontained}{logical, whether to save
+the \code{file} as a self-contained
 HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
 
-\item{targets_only}{logical, whether to skip the imports and only show the 
+\item{build_times}{logical, whether to print the \code{\link{build_times}()}
+in the graph. These are just elapsed times from \code{system.time()}.}
+
+\item{targets_only}{logical, whether to skip the imports and only show the
 targets in the workflow plan.}
 
-\item{config}{option internal runtime parameter list of 
+\item{split_columns}{logical, whether to break up the
+columns of nodes to make the aspect ratio of the rendered
+graph closer to 1:1. This improves the viewing experience,
+but the columns no longer strictly represent parallelizable
+stages of build items. (Although the targets/imports
+in each column are still conditionally independent,
+there may be more conditional independence than the graph
+indicates.)}
+
+\item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 Computing this
-in advance could save time if you plan multiple calls to 
+in advance could save time if you plan multiple calls to
 \code{outdated()}.}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{layout}{name of an igraph layout to use, such as "layout_with_sugiyama"
-or "layout_as_tree". Be careful with "layout_as_tree": the graph is a directed 
+\item{layout}{name of an igraph layout
+to use, such as 'layout_with_sugiyama'
+or 'layout_as_tree'. Be careful with
+'layout_as_tree': the graph is a directed
 acyclic graph, but not necessarily a tree.}
 
-\item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
-indicating the direction of the graph. Options include "LR", "RL", "DU", and "UD".
-At the time of writing this, the letters must be capitalized, 
-but this may not always be the case ;) in the future.}
+\item{main}{title of the graph}
 
-\item{navigationButtons}{logical, whether to add navigation buttons with 
-\code{visNetwork::visInteraction(navigationButtons = TRUE)}}
+\item{direction}{an argument to
+\code{visNetwork::visHierarchicalLayout()}
+indicating the direction of the graph.
+Options include 'LR', 'RL', 'DU', and 'UD'.
+At the time of writing this, the letters must be capitalized,
+but this may not always be the case ;) in the future.}
 
 \item{hover}{logical, whether to show the command that generated the target
 when you hover over a node with the mouse. For imports, the label does not
 change with hovering.}
 
-\item{...}{other arguments passed to \code{visNetwork::visNetwork()} to plot the graph.}
+\item{navigationButtons}{logical, whether to add navigation buttons with
+\code{visNetwork::visInteraction(navigationButtons = TRUE)}}
+
+\item{...}{other arguments passed to
+\code{visNetwork::visNetwork()} to plot the graph.}
 }
 \description{
 Plot the dependency structure of your workflow.
@@ -87,7 +112,7 @@ To save time for repeated plotting, this function is divided into
 \examples{
 \dontrun{
 load_basic_example()
-plot_graph(my_plan, width = "100\%") # The width is passed to visNetwork().
+plot_graph(my_plan, width = '100\%') # The width is passed to visNetwork
 make(my_plan)
 plot_graph(my_plan) # The red nodes from before are now green.
 }

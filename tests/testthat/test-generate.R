@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("generate")
 
-test_that("evaluate, expand, and gather", {
+test_with_dir("evaluate, expand, and gather", {
   dclean()
   
   df = plan(data = simulate(center = MU, scale = SIGMA))
@@ -67,7 +67,7 @@ test_that("evaluate, expand, and gather", {
   dclean()
 })
 
-test_that("analyses and summaries", {
+test_with_dir("analyses and summaries", {
   dclean()
   datasets = plan(
     small = simulate(5),

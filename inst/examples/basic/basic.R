@@ -157,6 +157,10 @@ missed(my_plan) # Nothing should be missing from your workspace.
 make(my_plan) # Run your project.
 # The non-file dependencies of your last target are already loaded
 # in your workspace.
+
+# How long did each target take to build?
+build_times()
+
 "report_dependencies" %in% ls() # Should be TRUE.
 progress() # See also in_progress()
 outdated(my_plan, verbose = FALSE) # Everything is up to date

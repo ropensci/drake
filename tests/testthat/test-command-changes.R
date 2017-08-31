@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("command-changes")
 
-test_that("changes to commands are handled well", {
+test_with_dir("changes to commands are handled well", {
   dclean()
   config = dbug()
   expect_equal(sort(outdated(config$plan, envir = config$envir, verbose = FALSE)), 

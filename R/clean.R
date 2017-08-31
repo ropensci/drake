@@ -1,24 +1,24 @@
 #' @title Function \code{clean}
-#' @description Cleans up all work done by \code{\link{make}()}. 
-#' @details You must be in your project's working directory 
+#' @description Cleans up all work done by \code{\link{make}()}.
+#' @details You must be in your project's working directory
 #' or a subdirectory of it.
 #' \code{clean(search = TRUE)} searches upwards in your folder structure
-#' for the drake cache and acts on the first one it sees. Use 
-#' \code{search == FALSE} to look within the current working 
+#' for the drake cache and acts on the first one it sees. Use
+#' \code{search == FALSE} to look within the current working
 #' directory only.
-#' WARNING: This deletes ALL work done with \code{\link{make}()}, 
-#' which includes 
+#' WARNING: This deletes ALL work done with \code{\link{make}()},
+#' which includes
 #' file targets as well as the entire drake cache. Only use \code{clean()}
 #' if you're sure you won't lose anything important.
-#' @seealso \code{\link{prune}}, \code{\link{make}}, 
+#' @seealso \code{\link{prune}}, \code{\link{make}},
 #' @export
 #' @param ... targets to remove from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming targets to be removed from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
-#' @param destroy logical, whether to totally remove the drake cache. 
-#' If \code{destroy} is \code{FALSE}, only the targets 
+#' @param destroy logical, whether to totally remove the drake cache.
+#' If \code{destroy} is \code{FALSE}, only the targets
 #' from \code{make}()
 #' are removed. If \code{TRUE}, the whole cache is removed, including
 #' session metadata, etc.
@@ -75,12 +75,12 @@ destroy <- function(
   path,
   search
   ){
-  where <- cachepath
+  where <- cache_dir
   if (search){
     where <- find_cache(path = path)
     if (!length(where)) return()
   }
-  unlink(where, recursive = TRUE)
+  unlink(where, recursive = TRUE, force = TRUE)
   invisible()
 }
 
@@ -109,7 +109,7 @@ uncache <- Vectorize(function(target, path, search){
         )
     ){
     unquote(target) %>%
-      unlink(recursive = TRUE)
+      unlink(recursive = TRUE, force = TRUE)
   }
   for (space in c("objects", "depends", "filemtime", "functions"))
     if (target %in% cache$list(namespace = space)){

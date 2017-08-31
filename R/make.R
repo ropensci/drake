@@ -151,7 +151,6 @@ make = function(plan, targets = drake::possible_targets(plan),
     prepend = prepend, command = command, args = args, 
     clear_progress = clear_progress)
   check_config(config)
-  assert_input_files_exist(config)
   store_config(config)
   config$cache$set(key = "sessionInfo", value = sessionInfo(), 
     namespace = "session")

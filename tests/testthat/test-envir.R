@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("envir")
 
-test_that("prune_envir in full build", {
+test_with_dir("prune_envir in full build", {
   dclean()
   
   # workflow with lots of nested deps

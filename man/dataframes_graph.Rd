@@ -7,11 +7,11 @@
 dataframes_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), targets_only = FALSE, font_size = 20,
-  config = NULL)
+  prework = character(0), build_times = TRUE, targets_only = FALSE,
+  split_columns = FALSE, font_size = 20, config = NULL)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function 
+\item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
 \item{targets}{names of targets to bulid, same as for function
@@ -22,36 +22,56 @@ dataframes_graph(plan, targets = drake::possible_targets(plan),
 
 \item{verbose}{logical, whether to output messages to the console.}
 
-\item{jobs}{The \code{outdated()} function is called internally, 
-and it needs to import objects and examine your 
+\item{jobs}{The \code{outdated()} function is called internally,
+and it needs to import objects and examine your
 input files to see what has been updated. This could take some time,
 and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
-See \code{?parallelism_choices} for details. The Makefile option is not available
-here. Drake will try to pick the best option for your system by default.}
+Execution order in \code{\link{make}()} is slightly different when
+\code{parallelism} equals \code{'Makefile'}
+because in that case, all the imports are imported
+before any target is built.
+Thus, the arrangement in the graph is different for Makefile parallelism.
+See \code{?parallelism_choices} for details.}
 
 \item{packages}{same as for \code{\link{make}}}
 
 \item{prework}{same as for \code{\link{make}}}
 
-\item{targets_only}{logical, whether to skip the imports and only include the 
+\item{build_times}{logical, whether to show the \code{\link{build_times}()}
+of the targets, if available.
+These are just elapsed times from \code{system.time()}.}
+
+\item{targets_only}{logical,
+whether to skip the imports and only include the
 targets in the workflow plan.}
+
+\item{split_columns}{logical, whether to break up the
+columns of nodes to make the aspect ratio of the rendered
+graph closer to 1:1. This improves the viewing experience,
+but the columns no longer strictly represent parallelizable
+stages of build items. (Although the targets/imports
+in each column are still conditionally independent,
+there may be more conditional independence than the graph
+indicates.)}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{config}{option internal runtime parameter list of 
+\item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 Computing this
-in advance could save time if you plan multiple calls to 
+in advance could save time if you plan multiple calls to
 \code{dataframes_graph()}.}
 }
 \value{
-a list of three data frames: one for nodes, one for edges, and one for
-the legend/key nodes.
+a list of three data frames: one for nodes,
+one for edges, and one for
+the legend/key nodes. The list also contains the
+default title of the graph.
 }
 \description{
 Get the information about nodes, edges, and the legend/key
@@ -61,14 +81,14 @@ IMPORTANT: you must be in the root directory of your project.
 \examples{
 \dontrun{
 load_basic_example()
-raw_graph = dataframes_graph(my_plan)
+raw_graph <- dataframes_graph(my_plan)
 str(raw_graph)
 # Plot your own custom visNetwork graph
 library(magrittr)
 library(visNetwork)
 visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
-  visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) \%>\% 
-  visHierarchicalLayout(direction = "LR")
+  visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) \%>\%
+  visHierarchicalLayout(direction = 'LR')
 }
 }
 \seealso{
