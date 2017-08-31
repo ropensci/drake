@@ -41,71 +41,10 @@ test_that("split_list works - grouped", {
   }
 })
 
-test_that("drake_split splits correctly", {
-  # the default number of groups is nrow() / 1 million
-  expect_identical(
-    drake_split(starwars),
-    split_sw_1
-    )
-  expect_identical(
-    drake_split(starwars, splits = 2),
-    split_sw_2
-    )
-  expect_identical(
-    drake_split(starwars, splits = 12),
-    split_sw_12
-    )
-})
 
-test_that("drake_split splits correctly - magrittr", {
-  # the default number of groups is nrow() / 1 million
-  expect_identical(
-    starwars %>% drake_split(),
-    split_sw_1
-    )
-  expect_identical(
-    starwars %>% drake_split(splits = 2),
-    split_sw_2
-    )
-  expect_identical(
-    starwars %>% drake_split(splits = 12),
-    split_sw_12
-    )
-})
-
-test_that("drake_split splits correctly - dplyr groups", {
-  # the default number of groups is nrow() / 1 million
-  expect_identical(
-    drake_split(sw_hair),
-    split_swg_1
-    )
-  expect_identical(
-    drake_split(sw_hair, splits = 2),
-    split_swg_2
-    )
-  expect_identical(
-    drake_split(sw_hair, splits = 12),
-    split_swg_12
-    )
-})
-
-test_that("drake_split splits correctly - pipe + groups", {
-  # the default number of groups is nrow() / 1 million
-  expect_identical(
-    sw_hair %>% drake_split(),
-    split_swg_1
-    )
-  expect_identical(
-    sw_hair %>% drake_split(splits = 2),
-    split_swg_2
-    )
-  expect_identical(
-    sw_hair %>% drake_split(splits = 12),
-    split_swg_12
-    )
-})
 
 test_that("split plans work", {
+  dclean()
   # Please not this is mostly an example, and should  not be thought of as an
   # actual, practical workflow
   plan_split <- drake_split(mtcars, splits = 3)
@@ -122,7 +61,9 @@ test_that("split plans work", {
     step_three = dplyr::select_(step_two_..dataset.., "qsec", "wt"), #nolint: wildcard
     strings_in_dots = "literals"
     )
-  plan_analyses <- analyses(plan = methods, datasets = plan_split)
+  # Notice me subsetting the datasets to avoid the list, and only operate on
+  # the frames
+  plan_analyses <- analyses(plan = methods, datasets = plan_split[2:4, ])
   plan_unsplit <- drake_unsplit(plan_analyses, out_target = "mtc_cleaned")
   plan_lm <- plan(lm_out  = lm(wt ~ qsec, data = mtc_cleaned))
   my_plan <- rbind(plan_split, plan_analyses, plan_unsplit, plan_lm)
@@ -135,4 +76,5 @@ test_that("split plans work", {
     lm("wt ~ qsec", data = .)
 
   expect_identical(coef(sane_way_lm), coef(lm_out))
+  dclean()
 })
