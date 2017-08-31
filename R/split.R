@@ -80,9 +80,9 @@ drake_unsplit <- function(
   out_target,
   last_method = gsub(
     x = tail(plan$target, 1),
-    pattern = "^(.*)_slice.*$", "\\1"
+    pattern = "^(.*)_split.*$", "\\1"
     ),
-  plan_type = "analysis" #c("analysis", "split")
+  plan_type = "analysis"
   ){
   stopifnot(is.character(last_method))
   stopifnot(plan_type %in% c("analysis", "split"))
