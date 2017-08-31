@@ -1,6 +1,7 @@
 context("split")
 
-# I picked the `starwars` dataset becasue It is large enough to actaully split nicely. Also, it groups well.
+# I picked the `starwars` dataset becasue It is large enough to actaully split
+# nicely. Also, it groups well.
 data(starwars, package = "dplyr")
 sw_hair <- dplyr::group_by_(starwars, "hair_color")
 
@@ -21,7 +22,23 @@ test_that("split_list works - ungrouped", {
 })
 
 test_that("split_list works - grouped", {
-
+  # Notice that i'm attemting at multiple split levels
+  for (i in c(1, 4, 7, 12)){
+    temp_list <- split_list(sw_hair, splits = i)
+    #expect correct number of vectors
+    expect_length(temp_list, i)
+    lengths_temp <- vapply(temp_list, length, integer(1))
+    # expect that the vectors are all there, and nothing else
+    expect_identical(sort(unlist(temp_list)), seq(nrow(sw_hair)))
+    # expect that elements of a group only show up in one list
+    group_lists <- lapply(
+      temp_list,
+      function(x){
+        unique(dplyr::group_indices(sw_hair)[x])
+      }
+      )
+    expect_identical(unlist(group_lists), unique(unlist(group_lists)))
+  }
 })
 
 test_that("drake_split splits correctly", {
