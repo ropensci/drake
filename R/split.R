@@ -63,7 +63,7 @@ split_list <- function(
   stopifnot(length(data_groups) == nrow(.data))
   n_groups <- max(data_groups)
   for (i in seq(from = 1, to = n_groups)){
-    push_to <- which.min(lapply(split_list, sum))
+    push_to <- which.min(lapply(split_list, length))
     push_group <- names(which.max(table(data_groups)))
     push_indices <- which(data_groups == push_group)
     split_list[[push_to]] <- c(split_list[[push_to]], push_indices)
