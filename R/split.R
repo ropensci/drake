@@ -17,73 +17,65 @@ drake_split <- function(
     side = "left",
     width = digits
     )
+  # create a frame to create the slice_list
+  slicelist_target <- paste("split", name, "indices", sep = "_")
+  slicelist_command <- paste0("split_list(", name, ", splits = ", splits, ")")
+  slicelist_plan <- data.frame(
+    target = slicelist_target,
+    command = slicelist_command
+    )
   # deparse target names (pre-application)
   slice_targets <- paste(
     "split",
     name,
     splits_vec,
     sep = "_")
+  slice_commands <- paste0(
+    name, "[", slicelist_target, "[[", splits_vec, "]], ]"
+    )
   # determine the number of rows in each split (also an integer)
-  split_rows <- ceiling(data_rows / splits)
-  if (dplyr::is_grouped_df(.data)){
-    grouplist_target <- paste("slice", name, "grouplist", sep = "_")
-    slice_targets <- c(
-      grouplist_target,
-      slice_targets
-      )
-    slice_commands <- c(
-      paste0("group_list(", name, ", splits = ", splits, ")"),
-      paste0(
-        name,
-        "[dplyr::group_indices(", name, ") %in% ",
-        grouplist_target, "[[", seq(splits), "]], ]"
-        )
-      )
-  } else {
-    #TODO: UNIFY grouped/ungrouped commands into one.
-    #TODO: add a separate plan frame for making split_list
-    split_seq_low <- seq(
-      from = 1L,
-      by = split_rows,
-      length.out = splits
-      )
-    split_seq_high <- seq(
-      from = split_rows,
-      by = split_rows,
-      length.out = splits
-      )
-    slice_commands <- paste0(
-      "dplyr::slice(",
-      name, ", ",
-      split_seq_low, ":", split_seq_high,
-      ")")
-  }
   slice_plan <- data.frame(target = slice_targets, command = slice_commands)
-  return(slice_plan)
+  return(rbind(slicelist_plan, slice_plan))
 }
 
 split_list <- function(
   .data,
   splits
   ){
-  # ensure split_rows is an integer
-  split_rows <- ceiling(nrow(.data) / splits)
   # Initialize split_list
   split_list <- vector("list", length = splits)
-  if (is_grouped_df(.data)){
+  if (dplyr::is_grouped_df(.data)){
     # determine the size of each group
     data_groups <- dplyr::group_indices(.data)
-    n_groups <- max(data_groups)
-    for (i in seq(from = 1, to = n_groups)){
-      push_to <- which.min(lapply(split_list, sum))
-    push_group <- which.max(table(data_groups))
+  } else{
+    ceil <- ceiling(nrow(.data) / splits)
+    floo <- floor(nrow(.data) / splits)
+    data_groups <- NULL
+    for (i in seq(splits)){
+      rep_num <- ifelse(
+        (nrow(.data) - length(data_groups)) / floo == (splits - i + 1),
+        floo,
+        ceil
+        )
+      print(rep_num)
+      # browser()
+      data_groups <- c(data_groups, rep(i, rep_num))
+    }
+    # data_groups <- cut(
+    #   seq(nrow(.data)),
+    #   breaks = splits,
+    #   labels = FALSE
+    #   )
+  }
+  stopifnot(length(data_groups) == nrow(.data))
+  n_groups <- max(data_groups)
+  for (i in seq(from = 1, to = n_groups)){
+    push_to <- which.min(lapply(split_list, sum))
+    push_group <- names(which.max(table(data_groups)))
     push_indices <- which(data_groups == push_group)
     split_list[[push_to]] <- c(split_list[[push_to]], push_indices)
     # remove those indices from consideration
     data_groups[push_indices] <- NA
-    }
-  } else{
-# TODO: deal with ungrouped frames.
   }
   # ensure it's a numeric vector in each list element
   split_list <- lapply(split_list, as.numeric)
