@@ -57,13 +57,18 @@ test_that("split plans work", {
     # step.
     # Further Notce that the filter_ command would not work on the generic
     # ..dataset.., since that doesn't have a hp_per_cyl column.
-    step_two = dplyr::filter_(step_one_..dataset.., "hp_per_cyl > 20"), #nolint: wildcard
-    step_three = dplyr::select_(step_two_..dataset.., "qsec", "wt"), #nolint: wildcard
+    step_two = dplyr::filter_(..dataset.., "hp_per_cyl > 20"), #nolint: wildcard
+    step_three = dplyr::select_(..dataset.., "qsec", "wt"), #nolint: wildcard
     strings_in_dots = "literals"
     )
   # Notice me subsetting the datasets to avoid the list, and only operate on
   # the frames
-  plan_analyses <- analyses(plan = methods, datasets = plan_split[2:4, ])
+  plan_analyses <- analyses_split(
+    split_plan = plan_split,
+    methods = methods,
+    wildcard = "..dataset..",
+    magic_wildcards = TRUE
+    )
   plan_unsplit <- drake_unsplit(plan_analyses, out_target = "mtc_cleaned")
   plan_lm <- plan(lm_out  = lm(wt ~ qsec, data = mtc_cleaned))
   my_plan <- rbind(plan_split, plan_analyses, plan_unsplit, plan_lm)
