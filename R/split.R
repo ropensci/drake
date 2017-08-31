@@ -57,15 +57,8 @@ split_list <- function(
         floo,
         ceil
         )
-      print(rep_num)
-      # browser()
       data_groups <- c(data_groups, rep(i, rep_num))
     }
-    # data_groups <- cut(
-    #   seq(nrow(.data)),
-    #   breaks = splits,
-    #   labels = FALSE
-    #   )
   }
   stopifnot(length(data_groups) == nrow(.data))
   n_groups <- max(data_groups)
