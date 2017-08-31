@@ -75,6 +75,40 @@ split_list <- function(
   return(split_list)
 }
 
+analyses_split <- function(
+  split_plan,
+  methods,
+  wildcard = "..datasets..",
+  # Magic wildcards will expand the wildcard automatically, such that the
+  # wildcard for the second step does not need to be prefixed with the
+  # targetname from the first
+  magic_wildcards = TRUE
+  ){
+  valid_targets <- split_plan$target[!grepl(
+    pattern = "^split_list(.*, splits = .*)$",
+    x = split_plan$command
+    )]
+  if (magic_wildcards){
+    methods_targets <- methods$target
+    wild_prefix <- paste0(dplyr::lag(methods_targets), "_")
+    # remove the initial wildcard prefix, since we want the first argument to
+    # find the original splits, not NA_splits
+    wild_prefix[1] <- ""
+    # Actually substutute the wild_prefix into for wildcard
+    methods <- evaluate(
+      plan = methods,
+      wildcard = wildcard,
+      values = paste0(wild_prefix, wildcard),
+      expand = FALSE
+      )
+  }
+  evaluate(
+    plan = methods,
+    wildcard = wildcard,
+    values = valid_targets
+    )
+}
+
 drake_unsplit <- function(
   plan,
   out_target,
