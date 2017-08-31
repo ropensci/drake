@@ -11,7 +11,12 @@ drake_split <- function(
   # Ensure that splits is an integer:
   splits <- ceiling(splits)
   digits <- ceiling(log10(splits))
-  splits_vec <- stringr::str_pad(seq(splits), pad = "0", side = "left", width = digits)
+  splits_vec <- stringr::str_pad(
+    seq(splits),
+    pad = "0",
+    side = "left",
+    width = digits
+    )
   # deparse target names (pre-application)
   slice_targets <- paste(
     "split",
@@ -69,7 +74,7 @@ split_list <- function(
     # determine the size of each group
     data_groups <- dplyr::group_indices(.data)
     n_groups <- max(data_groups)
-    for (i in seq(from =1, to = n_groups)){
+    for (i in seq(from = 1, to = n_groups)){
       push_to <- which.min(lapply(split_list, sum))
     push_group <- which.max(table(data_groups))
     push_indices <- which(data_groups == push_group)
