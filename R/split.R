@@ -71,7 +71,7 @@ split_list <- function(
     data_groups[push_indices] <- NA
   }
   # ensure it's a numeric vector in each list element
-  split_list <- lapply(split_list, as.numeric)
+  split_list <- lapply(split_list, as.integer)
   return(split_list)
 }
 
