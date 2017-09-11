@@ -20,9 +20,13 @@ time_stamp <- function(x){
   return(file.path(time_stamp_dir, key))
 }
 
-write_time_stamp = function(target){
-  file.copy(time_stamp_template, time_stamp(target),
-    overwrite = TRUE, copy.date = TRUE)
+write_time_stamp <- function(target){
+  file.copy(
+    time_stamp_template,
+    time_stamp(target),
+    overwrite = TRUE,
+    copy.date = TRUE
+    )
 }
 
 time_stamp_dir = file.path(cache_dir,  "ts")
