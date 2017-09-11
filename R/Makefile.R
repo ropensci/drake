@@ -62,17 +62,22 @@ makefile_head <- function(config){
   cat("all:", time_stamp(config$targets), sep = " \\\n")
 }
 
-makefile_rules = function(config){
-  targets = intersect(config$plan$target, V(config$graph)$name)
-  for(target in targets){
-    deps = dependencies(target, config) %>%
-      intersect(y = config$plan$target) %>% time_stamp
-    breaker = ifelse(length(deps), " \\\n", "\n")
+makefile_rules <- function(config){
+  targets <- intersect(config$plan$target, V(config$graph)$name)
+  for (target in targets){
+    deps <- dependencies(target, config) %>%
+      intersect(y = config$plan$target) %>%
+      time_stamp()
+    breaker <- ifelse(length(deps), " \\\n", "\n")
     cat("\n", time_stamp(target), ":", breaker, sep = "")
-    if(length(deps)) cat(deps, sep = breaker)
-    if(is_file(target)) 
-      target = paste0("drake::as_file(\"", unquote(target), "\")")
-    else target = quotes(unquote(target), single = FALSE)
+    if (length(deps)){
+      cat(deps, sep = breaker)
+    }
+    if (is_file(target)){
+      target <- paste0("drake::as_file(\"", unquote(target), "\")")
+    } else{
+      target <- quotes(unquote(target), single = FALSE)
+    }
     cat("\tRscript -e 'drake::mk(", target, ")'\n", sep = "")
   }
 }
