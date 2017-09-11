@@ -119,10 +119,15 @@ load_in_report <- plan(
 # WARNING: drake cannot track entire directories (folders).
 report <- plan(
   # report.md = my_knit('report.Rmd', report_dependencies), #nolint optional
-  report.md = my_knit(as_file("report.Rmd"), report_dependencies),
+  report.md = my_knit(
+    'report.Rmd', #nolint: use single quotes to specify file dependency.
+    report_dependencies
+    ),
   ## The html report requires pandoc. Commented out.
   ## report.html = my_render('report.md', report_dependencies), #nolint: optional
-  file_targets = TRUE, strings_in_dots = "filenames")
+  file_targets = TRUE,
+  strings_in_dots = "filenames" # Redundant, since we used single quotes
+  )
 
 # Row order doesn't matter in the workflow my_plan.
 my_plan <- rbind(report, my_datasets, load_in_report, my_analyses, results)
