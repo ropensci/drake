@@ -19,8 +19,12 @@
 #' make(my_plan)
 #' build_times()
 #' }
-build_times <- function(path = getwd(), search = TRUE, digits = 0,
-  cache = drake::get_cache(path = path, search = search)) {
+build_times <- function(
+  path = getwd(),
+  search = TRUE,
+  digits = 0,
+  cache = drake::get_cache(path = path, search = search)
+  ){
   eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
 
   empty_times <- data.frame(
@@ -61,5 +65,5 @@ build_times <- function(path = getwd(), search = TRUE, digits = 0,
 
   times$target <- times$target %>%
     as.character()
-  times
+  return(times)
 }
