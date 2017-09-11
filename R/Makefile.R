@@ -1,21 +1,39 @@
-run_Makefile = function(config, run = TRUE, debug = FALSE){
-  if(identical(globalenv(), config$envir))
-    save(list = ls(config$envir, all.names = TRUE), envir = config$envir,
-      file = globalenvpath)
+run_Makefile <- function( #nolint: we want Makefile capitalized.
+  config,
+  run = TRUE,
+  debug = FALSE
+  ){
+  if (identical(globalenv(), config$envir)){
+    save(
+      list = ls(config$envir, all.names = TRUE),
+      envir = config$envir,
+      file = globalenvpath
+      )
+  }
   config$cache$set("config", config, namespace = "makefile")
-  makefile = file.path(cache_dir, "Makefile")
+  makefile <- file.path(cache_dir, "Makefile")
   sink("Makefile")
   makefile_head(config)
   makefile_rules(config)
   sink()
-  out = outdated(plan = config$plan, targets = config$targets,
-    envir = config$envir, verbose = config$verbose, jobs = config$jobs,
-    parallelism = config$parallelism, packages = config$packages,
-    prework = config$prework)
+  out <- outdated(
+    plan = config$plan,
+    targets = config$targets,
+    envir = config$envir,
+    verbose = config$verbose,
+    jobs = config$jobs,
+    parallelism = config$parallelism,
+    packages = config$packages,
+    prework = config$prework
+    )
   time_stamps(config, outdated = out)
-  if(run) system2(command = config$command, args = config$args)
-  if(!debug) unlink(globalenvpath, force = TRUE)
-  invisible()
+  if (run){
+    system2(command = config$command, args = config$args)
+  }
+  if (!debug){
+    unlink(globalenvpath, force = TRUE)
+  }
+  return(invisible())
 }
 
 #' @title Internal function \code{default_system2_args}
