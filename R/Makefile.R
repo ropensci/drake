@@ -83,29 +83,35 @@ makefile_rules <- function(config){
 }
 
 #' @title Function \code{mk}
-#' @description Internal drake function to be called 
+#' @description Internal drake function to be called
 #' inside Makefiles only. Makes a single target.
 #' Users, do not invoke directly.
 #' @export
 #' @param target name of target to make
-mk = function(target){
-  config = get_cache()$get("config", namespace = "makefile")
-  if(identical(globalenv(), config$envir))
+mk <- function(target){
+  config <- get_cache()$get("config", namespace = "makefile")
+  if (identical(globalenv(), config$envir)){
     load(file = globalenvpath, envir = config$envir)
-  config = inventory(config)
+  }
+  config <- inventory(config)
   do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
-  hash_list = hash_list(targets = target, config = config)
-  old_hash = self_hash(target = target, config = config)
-  current = target_current(target = target, 
+  hash_list <- hash_list(targets = target, config = config)
+  old_hash <- self_hash(target = target, config = config)
+  current <- target_current(target = target,
     hashes = hash_list[[target]], config = config)
-  if(current) return(invisible())
-  build(target = target, 
-    hash_list = hash_list, config = config)
-  config = inventory(config)
-  new_hash = self_hash(target = target, config = config)
-  if(!identical(old_hash, new_hash)){
+  if (current){
+    return(invisible())
+  }
+  build(
+    target = target,
+    hash_list = hash_list,
+    config = config
+    )
+  config <- inventory(config)
+  new_hash <- self_hash(target = target, config = config)
+  if (!identical(old_hash, new_hash)){
     file_overwrite(time_stamp(target))
   }
-  invisible()
+  return(invisible())
 }
