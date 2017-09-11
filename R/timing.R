@@ -21,6 +21,7 @@
 #' }
 build_times <- function(path = getwd(), search = TRUE, digits = 0,
   cache = drake::get_cache(path = path, search = search)) {
+  eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
 
   empty_times <- data.frame(
     target = character(0),
@@ -33,7 +34,6 @@ build_times <- function(path = getwd(), search = TRUE, digits = 0,
     return(empty_times)
   }
 
-  eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
   times <- cache$list(namespace = "build_times") %>% Map(f = function(target) {
     # Try to get times if they are saved
     time <- cache$get(key = target, namespace = "build_times")
