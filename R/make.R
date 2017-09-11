@@ -181,11 +181,11 @@ make <- function(
     namespace = "session"
     )
   if (imports_only){
-     delete_these <- intersect(config$plan$target, V(config$graph)$name)
-     config$graph <- delete_vertices(config$graph, v = delete_these)
-     if (parallelism == "Makefile"){
-       parallelism <- default_parallelism()
-     }
+    delete_these <- intersect(config$plan$target, V(config$graph)$name)
+    config$graph <- delete_vertices(config$graph, v = delete_these)
+    if (parallelism == "Makefile"){
+      parallelism <- default_parallelism()
+    }
   }
   get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
   if (return_config){
@@ -195,10 +195,15 @@ make <- function(
   }
 }
 
-next_targets = function(graph_remaining_targets){
-  number_dependencies = sapply(V(graph_remaining_targets), 
-    function(x) 
-      adjacent_vertices(graph_remaining_targets, x, mode = "in") %>% 
-        unlist %>% length)
-  which(!number_dependencies) %>% names
+next_targets <- function(graph_remaining_targets){
+  number_dependencies <- sapply(
+    V(graph_remaining_targets),
+    function(x){
+      adjacent_vertices(graph_remaining_targets, x, mode = "in") %>%
+        unlist() %>%
+        length()
+    }
+    )
+  which(!number_dependencies) %>%
+    names()
 }
