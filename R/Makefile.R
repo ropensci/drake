@@ -37,7 +37,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
 }
 
 #' @title Internal function \code{default_system2_args}
-#' @description Internal function to configure 
+#' @description Internal function to configure
 #' arguments to \code{\link{system2}()} to run Makefiles.
 #' Not a user-side function.
 #' @export
@@ -47,10 +47,12 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
 #' @examples
 #' default_system2_args(jobs = 2, verbose = FALSE)
 #' default_system2_args(jobs = 4, verbose = TRUE)
-default_system2_args = function(jobs, verbose){
-  out = paste0("--jobs=", jobs)
-  if(!verbose) out = c(out, "--silent")
-  out
+default_system2_args <- function(jobs, verbose){
+  out <- paste0("--jobs=", jobs)
+  if (!verbose){
+    out <- c(out, "--silent")
+  }
+  return(out)
 }
 
 makefile_head = function(config){
