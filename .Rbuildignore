@@ -1,15 +1,17 @@
 Thumbs.db
 ^build_site.R$
-^raster$
+^images$
 ^reference$
 .DS_Store
 \.git$
 \.github$
 \.gitignore$
 \.Rapp.history$
+\.RData$
 \.Rbuildignore$
 \.Rhistory$
 \.drake$
+\.lintr$
 cran-comments.md
 cran-comments.html
 LICENSE
@@ -26,6 +28,7 @@ vignettes/.*_files
 ^.*\.js$
 ^.*\.log$
 ^.*\.Rproj$
+^.*\.sh$
 ^.*\.svg$
 ^\.Rproj\.user$
 ^.*\.yml$

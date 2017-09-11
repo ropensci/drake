@@ -3,7 +3,7 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
     save(list = ls(config$envir, all.names = TRUE), envir = config$envir,
       file = globalenvpath)
   config$cache$set("config", config, namespace = "makefile")
-  makefile = file.path(cachepath, "Makefile")
+  makefile = file.path(cache_dir, "Makefile")
   sink("Makefile")
   makefile_head(config)
   makefile_rules(config)
@@ -14,7 +14,7 @@ run_Makefile = function(config, run = TRUE, debug = FALSE){
     prework = config$prework)
   time_stamps(config, outdated = out)
   if(run) system2(command = config$command, args = config$args)
-  if(!debug) unlink(globalenvpath)
+  if(!debug) unlink(globalenvpath, force = TRUE)
   invisible()
 }
 
@@ -66,7 +66,7 @@ mk = function(target){
   if(identical(globalenv(), config$envir))
     load(file = globalenvpath, envir = config$envir)
   config = inventory(config)
-  do_prework(config = config, verbosePackages = FALSE)
+  do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
   hash_list = hash_list(targets = target, config = config)
   old_hash = self_hash(target = target, config = config)

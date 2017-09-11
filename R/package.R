@@ -1,6 +1,5 @@
-#' A scalable solution for reproducibility and high-performance computing
-#'
-#' Drake is a workflow manager and build system. 
+#' Drake is a workflow manager and build system,
+#' a scalable solution for reproducibility and high-performance computing.
 #' @docType package
 #' @name drake-package
 #' @aliases drake
@@ -22,7 +21,7 @@
 #' clean() # Restart from scratch
 #' make(my_plan, jobs = 2) # Distribute over 2 parallel jobs.
 #' clean()
-#' make(my_plan, jobs = 4, parallelism = "Makefile") # Distribute over 4 parallel R sessions.
+#' make(my_plan, jobs = 4, parallelism = "Makefile") # 4 parallel R sessions.
 #' make(my_plan, jobs = 4, parallelism = "Makefile") # Everything up to date.
 #' clean(destroy = TRUE) # Totally remove the cache.
 #' unlink(c("Makefile", "report.Rmd"))
@@ -33,10 +32,11 @@
 #' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom eply quotes strings unquote
-#' @importFrom igraph adjacent_vertices delete_vertices edge 
+#' @importFrom igraph adjacent_vertices delete_vertices edge
 #' is_dag make_empty_graph plot.igraph subcomponent V vertex
+#' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
-#' @importFrom parallel clusterCall clusterExport makePSOCKcluster 
+#' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded
@@ -44,10 +44,10 @@
 #' @importFrom storr encode64 storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
-#' @importFrom testthat expect_true
+#' @importFrom testthat expect_false expect_true test_that
 #' @importFrom tools md5sum
-#' @importFrom utils sessionInfo unzip
-#' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout 
+#' @importFrom utils capture.output sessionInfo unzip
+#' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
-#' @importFrom lubridate dseconds
+#' @importFrom withr with_dir
 NULL

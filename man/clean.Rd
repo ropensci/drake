@@ -15,8 +15,8 @@ or character strings (quoted). Similar to \code{...} in
 \item{list}{character vector naming targets to be removed from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
-\item{destroy}{logical, whether to totally remove the drake cache. 
-If \code{destroy} is \code{FALSE}, only the targets 
+\item{destroy}{logical, whether to totally remove the drake cache.
+If \code{destroy} is \code{FALSE}, only the targets
 from \code{make}()
 are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
@@ -33,14 +33,14 @@ current working directory only.}
 Cleans up all work done by \code{\link{make}()}.
 }
 \details{
-You must be in your project's working directory 
+You must be in your project's working directory
 or a subdirectory of it.
 \code{clean(search = TRUE)} searches upwards in your folder structure
-for the drake cache and acts on the first one it sees. Use 
-\code{search == FALSE} to look within the current working 
+for the drake cache and acts on the first one it sees. Use
+\code{search == FALSE} to look within the current working
 directory only.
-WARNING: This deletes ALL work done with \code{\link{make}()}, 
-which includes 
+WARNING: This deletes ALL work done with \code{\link{make}()},
+which includes
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.
 }

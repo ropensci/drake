@@ -8,6 +8,8 @@ cache: packages
 
 r_packages:
   - covr
+  - lintr
 
 after_success:
   - Rscript -e 'covr::codecov()'
+  - Rscript -e 'lintr::lint_package()'

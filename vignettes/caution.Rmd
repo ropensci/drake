@@ -19,6 +19,30 @@ clean(destroy = TRUE)
 
 With drake, there is room for error with respect to tracking dependencies, managing environments and workspaces, etc. For example, in some edge cases, it is possible to trick drake into ignoring dependencies. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
+## Beware unparsable symbols in your workflow plan
+
+```{r unparsable_plan}
+template <- plan(x = process(..setting..))
+processed <- evaluate(template, wildcard = "..setting..", 
+  values = c("\"option1\"", "\"option2\""))
+gathered <- gather(processed, target = "bad_target")
+my_plan <- rbind(processed, gathered)
+my_plan
+```
+
+Here, `make(my_plan)` would generate an error because the command for `bad_target` has illegal symbols. To avoid this sort of problem, please keep literal quotes out of your wildcards.
+
+```{r parsable_plan}
+template <- plan(x = process("..setting.."), strings_in_dots = "literals")
+processed <- evaluate(template, wildcard = "..setting..",
+  values = c("option1", "option2"))
+gathered <- gather(processed, target = "bad_target")
+my_plan <- rbind(processed, gathered)
+my_plan
+```
+
+To be safe, use `check(my_plan)` to screen for problems like this one.
+
 ## Your workspace is modified by default.
 
 As of version 3.0.0, drake's execution environment is the user's workspace by default. As an upshot, the workspace is vulnerable to side-effects of `make()`. To protect your workspace, you may want to create a custom evaluation environment containing all your imported objects and then pass it to the envir argument of `make()`. Here is how.
@@ -87,12 +111,15 @@ my_plan
 ```
 
 ```r
-# Run plot_graph() yourself for interactivity.
-# Then hover, click, drag, zoom, pan.
+# Hover, click, drag, zoom, and pan.
 plot_graph(my_plan, width = "100%", height = "500px") 
 ```
 
-![](outdated.png)
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/outdated.html"
+width = "100%" height = "600px" allowtransparency="true" 
+style="border: none; box-shadow: none">
+</iframe>
 
 
 You can also check the dependencies of individual targets.
@@ -149,6 +176,7 @@ With functions produced by `Vectorize()`, detecting dependencies is especially h
 
 Thus, If `f <- Vectorize(g, ...)` is such a function, drake searches `g()` for dependencies, not `f()`. Specifically, if drake sees that `environment(f)[["FUN"]]` exists and is a function, then `environment(f)[["FUN"]]` will be searched instead of `f()`.
 
+In addition, if `f()` is the output of `Vectorize()`, then drake reacts to changes in `environment(f)[["FUN"]]`, not `f()`. Thus, if the configuration settings of vectorization change (such as which arguments are vectorized), but the core element-wise functionality remains the same, then `make()` still thinks everything is up to date.
 
 ## Compiled code is not reproducibly tracked.
 
