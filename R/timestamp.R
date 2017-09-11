@@ -12,10 +12,12 @@ safe_encode <- function(x){
   # for details on this, see issue #47.
 }
 
-time_stamp = function(x){
-  if(!length(x)) return(character(0))
-  key = safe_encode(x) # must begin with alphanumeric
-  file.path(time_stamp_dir, key)
+time_stamp <- function(x){
+  if (!length(x)){
+    return(character(0))
+  }
+  key <- safe_encode(x) # must begin with alphanumeric
+  return(file.path(time_stamp_dir, key))
 }
 
 write_time_stamp = function(target){
