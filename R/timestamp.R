@@ -37,7 +37,7 @@ dir_empty <- function(x){
   dir.create(x)
 }
 
-file_overwrite = function(x){
+file_overwrite <- function(x){
   unlink(x, force = TRUE)
   file.create(x)
 }
