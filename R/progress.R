@@ -29,8 +29,8 @@ session <- function(path = getwd(), search = TRUE){
 #' @title Function \code{in_progress}
 #' @description List the targets that either
 #' (1) are currently being built if \code{\link{make}()} is running, or
-#' (2) were in the process of being built if the previous call to 
-#' \code{\link{make}()} quit unexpectedly. 
+#' (2) were in the process of being built if the previous call to
+#' \code{\link{make}()} quit unexpectedly.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
@@ -59,9 +59,9 @@ in_progress <- function(path = getwd(), search = TRUE){
 
 #' @title Function \code{progress}
 #' @description Get the build progress (overall or individual targets)
-#' of the last call to \code{\link{make}()}. 
+#' of the last call to \code{\link{make}()}.
 #' Objects that drake imported, built, or attempted
-#' to build are listed as \code{"finished"} or \code{"in progress"}. 
+#' to build are listed as \code{"finished"} or \code{"in progress"}.
 #' Skipped objects are not listed.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
@@ -74,10 +74,11 @@ in_progress <- function(path = getwd(), search = TRUE){
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
 #' @param no_imported_objects logical, whether to only return information
-#' about imported files and targets with commands (i.e. whether to ignore 
+#' about imported files and targets with commands (i.e. whether to ignore
 #' imported objects that are not files).
-#' @param imported_files_only logical, deprecated. Same as \code{no_imported_objects}.
-#' Use the \code{no_imported_objects} argument instead.
+#' @param imported_files_only logical, deprecated. Same as
+#' \code{no_imported_objects}.  Use the \code{no_imported_objects} argument
+#' instead.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
