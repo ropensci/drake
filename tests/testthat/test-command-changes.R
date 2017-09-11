@@ -1,7 +1,6 @@
 context("command-changes")
 
 test_with_dir("changes to commands are handled well", {
-  dclean()
   config <- dbug()
   expect_equal(
     sort(outdated(
@@ -66,5 +65,4 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     justbuilt(config),
     sort(c("'intermediatefile.rds'", "final")))
-  dclean()
 })
