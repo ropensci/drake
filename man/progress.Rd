@@ -16,11 +16,12 @@ or character strings (quoted). Similar to \code{...} in
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
 
 \item{no_imported_objects}{logical, whether to only return information
-about imported files and targets with commands (i.e. whether to ignore 
+about imported files and targets with commands (i.e. whether to ignore
 imported objects that are not files).}
 
-\item{imported_files_only}{logical, deprecated. Same as \code{no_imported_objects}.
-Use the \code{no_imported_objects} argument instead.}
+\item{imported_files_only}{logical, deprecated. Same as
+\code{no_imported_objects}.  Use the \code{no_imported_objects} argument
+instead.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
@@ -35,9 +36,9 @@ Statuses of targets
 }
 \description{
 Get the build progress (overall or individual targets)
-of the last call to \code{\link{make}()}. 
+of the last call to \code{\link{make}()}.
 Objects that drake imported, built, or attempted
-to build are listed as \code{"finished"} or \code{"in progress"}. 
+to build are listed as \code{"finished"} or \code{"in progress"}.
 Skipped objects are not listed.
 }
 \examples{

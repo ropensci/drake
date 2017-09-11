@@ -15,7 +15,7 @@ default_system2_args(jobs, verbose)
 \code{args} for \code{\link{system2}(command, args)}
 }
 \description{
-Internal function to configure 
+Internal function to configure
 arguments to \code{\link{system2}()} to run Makefiles.
 Not a user-side function.
 }

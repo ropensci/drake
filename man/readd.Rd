@@ -8,9 +8,9 @@ readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = NULL)
 }
 \arguments{
-\item{target}{If \code{character_only} is \code{TRUE}, 
+\item{target}{If \code{character_only} is \code{TRUE},
 \code{target} is a character string naming the object to read.
-Otherwise, \code{target} is an unquoted symbol with the name of the 
+Otherwise, \code{target} is an unquoted symbol with the name of the
 object. Note: \code{target} could be the name of an imported object.}
 
 \item{character_only}{logical, whether \code{name} should be treated
@@ -45,7 +45,7 @@ readd("'report.md'") # just a fingerprint of the file (md5 sum)
 }
 }
 \seealso{
-\code{\link{loadd}}, \code{\link{cached}}, 
-\code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
+\code{\link{loadd}}, \code{\link{cached}},
+\code{\link{built}}, \code{link{imported}}, \code{\link{plan}},
 \code{\link{make}}
 }

@@ -19,7 +19,7 @@ current working directory only.}
 a named list of configuration items
 }
 \description{
-Read all the configuration parameters 
+Read all the configuration parameters
 from your last attempted call to \code{\link{make}()}.
 These include the workflow plan
 }

@@ -10,7 +10,7 @@ mk(target)
 \item{target}{name of target to make}
 }
 \description{
-Internal drake function to be called 
+Internal drake function to be called
 inside Makefiles only. Makes a single target.
 Users, do not invoke directly.
 }

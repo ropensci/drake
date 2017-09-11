@@ -30,11 +30,11 @@ current working directory only.}
 calling environment (current workspace).}
 }
 \description{
-Load object(s) from the drake cache into the  
+Load object(s) from the drake cache into the
 current workspace (or \code{envir} if given). Defaults
-to loading the whole cache if arguments \code{...} 
-and \code{list} are not set 
-(or all the imported objects if in addition 
+to loading the whole cache if arguments \code{...}
+and \code{list} are not set
+(or all the imported objects if in addition
 imported_only is \code{TRUE}).
 }
 \examples{
@@ -51,6 +51,6 @@ loadd() # load everything, including built targets
 }
 }
 \seealso{
-\code{\link{cached}}, \code{\link{built}}, 
+\code{\link{cached}}, \code{\link{built}},
 \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
 }
