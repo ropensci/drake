@@ -42,8 +42,11 @@ file_overwrite <- function(x){
   file.create(x)
 }
 
-write_time_stamp_template = function(){
-  zip = system.file("timestamp.zip", 
-    package = "drake", mustWork = TRUE)
+write_time_stamp_template <- function(){
+  zip <- system.file(
+    "timestamp.zip",
+    package = "drake",
+    mustWork = TRUE
+    )
   unzip(zip, exdir = cache_dir, setTimes = TRUE)
 }
