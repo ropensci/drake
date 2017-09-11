@@ -7,10 +7,9 @@ time_stamps <- function(config, outdated){
   return(invisible())
 }
 
-safe_encode = function(x){
+safe_encode <- function(x){
   base32_encode(x)
-  # Collisions may occur for base 64 encoding on case-insensitive file systems.
-  # paste0("t", base64_urlencode(x))
+  # for details on this, see issue #47.
 }
 
 time_stamp = function(x){
