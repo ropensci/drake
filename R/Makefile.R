@@ -55,8 +55,10 @@ default_system2_args <- function(jobs, verbose){
   return(out)
 }
 
-makefile_head = function(config){
-  if(length(config$prepend)) cat(config$prepend, "\n", sep = "\n")
+makefile_head <- function(config){
+  if (length(config$prepend)){
+    cat(config$prepend, "\n", sep = "\n")
+  }
   cat("all:", time_stamp(config$targets), sep = " \\\n")
 }
 
