@@ -43,8 +43,10 @@ find_cache <- function(path = getwd()){
 #' make(my_plan)
 #' find_project()
 #' }
-find_project = function(path = getwd()){
-  cache = find_cache(path = path)
-  if(is.null(cache)) return()
-  dirname(cache)
+find_project <- function(path = getwd()){
+  cache <- find_cache(path = path)
+  if (is.null(cache)){
+    return(NULL)
+  }
+  return(dirname(cache))
 }
