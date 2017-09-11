@@ -32,7 +32,7 @@ write_time_stamp <- function(target){
 time_stamp_dir <- file.path(cache_dir,  "ts")
 time_stamp_template <- file.path(cache_dir, "timestamp")
 
-dir_empty = function(x){
+dir_empty <- function(x){
   unlink(x, recursive = TRUE, force = TRUE)
   dir.create(x)
 }
