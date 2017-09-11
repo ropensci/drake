@@ -1,14 +1,14 @@
 #' @title Function \code{readd}
 #' @description Read a drake target object from the cache.
 #' Does not delete the item from the cache.
-#' @seealso \code{\link{loadd}}, \code{\link{cached}}, 
-#' \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
+#' @seealso \code{\link{loadd}}, \code{\link{cached}},
+#' \code{\link{built}}, \code{link{imported}}, \code{\link{plan}},
 #' \code{\link{make}}
 #' @export
 #' @return drake target item from the cache
-#' @param target If \code{character_only} is \code{TRUE}, 
+#' @param target If \code{character_only} is \code{TRUE},
 #' \code{target} is a character string naming the object to read.
-#' Otherwise, \code{target} is an unquoted symbol with the name of the 
+#' Otherwise, \code{target} is an unquoted symbol with the name of the
 #' object. Note: \code{target} could be the name of an imported object.
 #' @param character_only logical, whether \code{name} should be treated
 #' as a character or a symbol
@@ -56,13 +56,13 @@ readd <- function(
 }
 
 #' @title Function \code{loadd}
-#' @description Load object(s) from the drake cache into the  
+#' @description Load object(s) from the drake cache into the
 #' current workspace (or \code{envir} if given). Defaults
-#' to loading the whole cache if arguments \code{...} 
-#' and \code{list} are not set 
-#' (or all the imported objects if in addition 
+#' to loading the whole cache if arguments \code{...}
+#' and \code{list} are not set
+#' (or all the imported objects if in addition
 #' imported_only is \code{TRUE}).
-#' @seealso \code{\link{cached}}, \code{\link{built}}, 
+#' @seealso \code{\link{cached}}, \code{\link{built}},
 #' \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
 #' @export
 #' @param ... targets to load from the cache, as names (unquoted)
@@ -137,7 +137,7 @@ load_target <- Vectorize(
   )
 
 #' @title Function \code{read_config}
-#' @description Read all the configuration parameters 
+#' @description Read all the configuration parameters
 #' from your last attempted call to \code{\link{make}()}.
 #' These include the workflow plan
 #' @seealso \code{\link{make}}
