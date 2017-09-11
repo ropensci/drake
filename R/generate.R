@@ -6,7 +6,7 @@
 #' @details Specify a single wildcard with the \code{wildcard}
 #' and \code{values} arguments. In each command, the text in
 #' \code{wildcard} will be replaced by each value in \code{values}
-#' in turn. Specify multiple wildcards ith the \code{rules} argument,
+#' in turn. Specify multiple wildcards with the \code{rules} argument,
 #' which overrules \code{wildcard} and \code{values} if
 #' not \code{NULL}. Here, \code{rules} should be a list with wildcards
 #' as names and vectors of possible values as list elements.
@@ -40,6 +40,8 @@
 #'   regression2 = reg2(..dataset..))
 #' evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target)
+#' evaluate(methods, wildcard = "..dataset..",
+#'   values = datasets$target, expand = FALSE)
 #' x = plan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate <- function(
