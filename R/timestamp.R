@@ -1,10 +1,10 @@
-time_stamps = function(config, outdated){
+time_stamps <- function(config, outdated){
   dir_empty(time_stamp_dir)
   write_time_stamp_template()
-  targets = intersect(V(config$graph)$name, config$plan$target)
-  stamp_these = setdiff(targets, outdated)
+  targets <- intersect(V(config$graph)$name, config$plan$target)
+  stamp_these <- setdiff(targets, outdated)
   lapply(stamp_these, write_time_stamp)
-  invisible()
+  return(invisible())
 }
 
 safe_encode = function(x){
