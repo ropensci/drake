@@ -11,7 +11,7 @@ gather(plan = NULL, target = "target", gather = "list")
 
 \item{target}{name of the new aggregated target}
 
-\item{gather}{function used to gather the targets. Should be 
+\item{gather}{function used to gather the targets. Should be
 one of \code{\link{list}(...)}, \code{\link{c}(...)},
 \code{\link{rbind}(...)}, or similar.}
 }
@@ -19,7 +19,7 @@ one of \code{\link{list}(...)}, \code{\link{c}(...)},
 workflow plan data frame for aggregating prespecified targets
 }
 \description{
-Create a new workflow plan data frame with a single new 
+Create a new workflow plan data frame with a single new
 target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame.
 }

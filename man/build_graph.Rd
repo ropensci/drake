@@ -24,9 +24,9 @@ Make a graph of the dependency structure of your workflow.
 }
 \details{
 This function returns an igraph object representing how
-the targets in your workflow depend on each other. 
+the targets in your workflow depend on each other.
 (\code{help(package = "igraph")}). To plot the graph, call
-to \code{\link{plot.igraph}()} on your graph, or just use 
+to \code{\link{plot.igraph}()} on your graph, or just use
 \code{\link{plot_graph}()} from the start.
 }
 \examples{

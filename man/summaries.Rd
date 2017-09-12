@@ -8,7 +8,7 @@ summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 }
 \arguments{
 \item{plan}{workflow plan data frame with commands for the summaries.
-Use the \code{..analysis..} and \code{..dataset..} wildcards 
+Use the \code{..analysis..} and \code{..dataset..} wildcards
 just like the \code{..dataset..} wildcard in \code{\link{analyses}()}.}
 
 \item{analyses}{workflow plan data frame of analysis instructions}
@@ -16,8 +16,8 @@ just like the \code{..dataset..} wildcard in \code{\link{analyses}()}.}
 \item{datasets}{workflow plan data frame with instructions to make
 or import the datasets.}
 
-\item{gather}{Character vector, names of functions to gather the 
-summaries. If not \code{NULL}, the length must be the number of 
+\item{gather}{Character vector, names of functions to gather the
+summaries. If not \code{NULL}, the length must be the number of
 rows in the \code{plan}. See the \code{\link{gather}()} function
 for more.}
 }
@@ -41,7 +41,7 @@ analyses <- analyses(methods, datasets = datasets)
 summary_types <- plan(
   summ = summary(..analysis..),
   coef = coef(..analysis..))
-summaries(summary_types, analyses, datasets, gather = NULL) 
+summaries(summary_types, analyses, datasets, gather = NULL)
 summaries(summary_types, analyses, datasets)
 summaries(summary_types, analyses, datasets, gather = "list")
 summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))

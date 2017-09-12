@@ -21,7 +21,7 @@ A character vector of target names
 \description{
 List the targets that either
 (1) are currently being built if \code{\link{make}()} is running, or
-(2) were in the process of being built if the previous call to 
+(2) were in the process of being built if the previous call to
 \code{\link{make}()} quit unexpectedly.
 }
 \examples{

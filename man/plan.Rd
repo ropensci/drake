@@ -18,23 +18,23 @@ quoting in \code{...}.}
 by the targets they generate.}
 
 \item{file_targets}{logical. If \code{TRUE}, targets are single-quoted
-to tell drake that these are external files that should be expected 
+to tell drake that these are external files that should be expected
 as output in the next call to \code{\link{make}()}.}
 
 \item{strings_in_dots}{character scalar. If \code{"filenames"},
 all character strings in \code{...} will be treated as names of file
 dependencies (single-quoted). If \code{"literals"}, all
 character strings in \code{...} will be treated as ordinary
-strings, not dependencies of any sort (double-quoted). 
-Because of R's automatic parsing/deparsing behavior, 
+strings, not dependencies of any sort (double-quoted).
+Because of R's automatic parsing/deparsing behavior,
 strings in \code{...} cannot simply be left alone.}
 }
 \value{
 data frame of targets and command
 }
 \description{
-Turns a named collection of command/target pairs into 
-a workflow plan data frame for \code{\link{make}} and 
+Turns a named collection of command/target pairs into
+a workflow plan data frame for \code{\link{make}} and
 \code{\link{check}}.
 }
 \details{
@@ -44,11 +44,11 @@ Targets are the objects and files that drake generates,
 and commands are the pieces of R code that produce them.
 
 For file inputs and targets, drake uses single quotes.
-Double quotes are reserved for ordinary strings. 
+Double quotes are reserved for ordinary strings.
 The distinction is important because drake thinks about
 how files, objects, targets, etc. depend on each other.
 Quotes in the \code{list} argument are left alone,
-but R messes with quotes when it parses the freeform 
+but R messes with quotes when it parses the freeform
 arguments in \code{...}, so use the \code{strings_in_dots}
 argument to control the quoting in \code{...}.
 }
