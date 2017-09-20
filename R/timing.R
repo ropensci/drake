@@ -68,19 +68,32 @@ build_times <- function(
   return(times)
 }
 
-#' @importFrom lubridate duration as.duration
+#' @importFrom lubridate duration as.duration duration
+#' @import magrittr
 #' @export
-predict_runtime <- function(plan, from_scratch = FALSE, config = NULL, ...){
+predict_runtime <- function(plan,
+                            from_scratch = FALSE,
+                            config = NULL,
+                            verbose = FALSE,
+                            untimed_method = mean,
+                            digits = 0,
+                            ...){
   
   if (missing(config))
-    config = config(plan = plan, ...)
+    config = config(plan = plan, verbose = verbose, ...)
   
-  times = build_times()
+  build_times = build_times()
   graph_remaining_targets = config$graph
-  i = 1
-  total_time = duration(0)
+  stage_i = 1
+  dt = data.frame()
   
-  while(length(V(graph_remaining_targets))) {
+  if (from_scratch) {
+    cat("If building from scratch:\n\n")
+  } else {
+    cat("If only building outdated targets:\n\n")
+  }
+  
+  while(length(igraph::V(graph_remaining_targets))) {
     
     candidates = next_targets(graph_remaining_targets)
     targets = Filter(x = candidates, . %>% is_in(plan$target))
@@ -90,30 +103,55 @@ predict_runtime <- function(plan, from_scratch = FALSE, config = NULL, ...){
       targets = Filter(x = targets, . %>% target_current(hashes(., config), config) %>% not)
     
     if (length(targets)) {
-      cat("Build stage", i, "\n")
-      cat("  Targets:", targets, "\n")
+
+      stage_dt = data.frame(
+        parallel_stage = stage_i,
+        target = targets
+      ) %>% merge(build_times, by = "target", all.x = TRUE)
       
-      untimed = setdiff(targets, times$target)
-      time = times[times$target %in% targets,]$elapsed
-      if (length(time)) {
-        time = time %>% max %>% as.duration
-        cat("  Est build time:", time %>% format, "\n")
-        total_time = total_time + time
+      # Deal with untimed targets
+      assumed_times = stage_dt$elapsed
+      if (is.function(untimed_method)) {
+        if (length(stage_dt$elapsed %>% na.omit)) {
+          untimed_filler = untimed_method(stage_dt$elapsed %>% na.omit) %>% duration
+        } else {
+          untimed_filler = duration(0)
+        }
+      } else {
+        untimed_filler = duration(untimed_method)
       }
-      if (length(untimed)) {
-        cat("  Untimed targets:", untimed, "\n")
-      }
+      assumed_times[is.na(assumed_times)] <- untimed_filler
       
-      i = i + 1
+      # Cumulative times without parallelization
+      pick_up_from = tail(dt$cumtime_serial, 1)
+      if (is.null(pick_up_from)) pick_up_from = duration(0)
+      stage_dt$cumtime_serial = (pick_up_from + cumsum(assumed_times)) %>% round(digits)
+      
+      # Cumulative times with parallelization and max_useful_jobs
+      pick_up_from = tail(dt$cumtime_parallel, 1)
+      if (is.null(pick_up_from)) pick_up_from = duration(0)
+      stage_dt$cumtime_parallel = (pick_up_from + max(assumed_times)) %>% round(digits) # Rounding is necessary because I'm
+                                                                                    # working with an outdated 
+                                                                                    # version of lubridate that breaks
+                                                                                    # when you have non-integer Durations
+                                                                                    # over 60sec. :^/
+      
+      # Output
+      cat("Build stage", stage_i, "\n")
+      cat(" ", targets %>% length, "targets,", is.na(stage_dt$elapsed) %>% sum, "untimed\n")
+      cat("  Cumulative serial build time:", tail(stage_dt$cumtime_serial, 1) %>% format, "\n")
+      cat("  Cumulative parallel build time:", tail(stage_dt$cumtime_parallel, 1) %>% format, "\n")
+      
+      dt = dt %>% rbind(stage_dt)
+      stage_i = stage_i + 1
     }
     
-    graph_remaining_targets = delete_vertices(graph_remaining_targets, v = candidates)
+    graph_remaining_targets = igraph::delete_vertices(graph_remaining_targets, v = candidates)
   }
   
-  cat("\nTOTAL BUILD TIME:", total_time %>% format, "\n")
-  cat(" ", setdiff(plan$target, times$target) %>% length, "untimed targets (never built)\n")
-  cat("  (assuming max_useful_jobs)\n")
-  cat("  (not including hashing and storage time [yet])\n")
+  cat("\nView(predict_build_time(...)) for details\n")
+  cat("(assuming max_useful_jobs when parallel)\n")
+  cat("(not including hashing and storage time [yet])\n")
   
-  invisible(total_time)
+  invisible(dt)
 }
