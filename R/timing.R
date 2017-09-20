@@ -68,15 +68,35 @@ build_times <- function(
   return(times)
 }
 
+#' Predict runtime
+#' 
+#' This function uses \code{\link{build_times}} and your plan to predict the amount of time it will
+#' take to \code{\link{make}}. 
+#' 
+#' @param from_scratch Predict building only \code{\link{outdated}} targets, or the entire plan?
+#' @param untimed_method What to do with targets that have never been built (and thus have no
+#' timing data)? By default, the function uses the mean of other build_times in the same build
+#' stage. This could be semi-accurate depending on your dependency graph. Override this by passing
+#' in a function like \code{mean} that summarizes a vector. Or, just pass in a constant.
+#' @param digits How many digits to round the times to.
+#' @param verbose same as for \code{\link{make}}
+#' @param config Optional internal runtime parameter list of
+#' \code{\link{make}(...)},
+#' produced with \code{\link{config}()}.
+#' Computing this
+#' in advance could save time if you plan multiple calls to
+#' \code{predict_runtime()}.
+#' @param ... Other arguments to pass to \link{\code{config}}
+#' 
 #' @importFrom lubridate duration as.duration duration
 #' @import magrittr
 #' @export
 predict_runtime <- function(plan,
                             from_scratch = FALSE,
-                            config = NULL,
-                            verbose = FALSE,
                             untimed_method = mean,
                             digits = 0,
+                            verbose = FALSE,
+                            config = NULL,
                             ...){
   
   if (missing(config))
@@ -96,11 +116,11 @@ predict_runtime <- function(plan,
   while(length(igraph::V(graph_remaining_targets))) {
     
     candidates = next_targets(graph_remaining_targets)
-    targets = Filter(x = candidates, . %>% is_in(plan$target))
+    targets = Filter(. %>% is_in(plan$target), candidates)
     
     # Filter out targets if they have already been built
     if (!from_scratch)
-      targets = Filter(x = targets, . %>% target_current(hashes(., config), config) %>% not)
+      targets = Filter(. %>% target_current(hashes(., config), config) %>% not, targets)
     
     if (length(targets)) {
 
