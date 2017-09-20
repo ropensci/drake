@@ -26,7 +26,7 @@ Computing this
 in advance could save time if you plan multiple calls to
 \code{predict_runtime()}.}
 
-\item{...}{Other arguments to pass to \link{\code{config}}}
+\item{...}{Other arguments to pass to \code{\link{config}}}
 }
 \description{
 This function uses \code{\link{build_times}} and your plan to predict the amount of time it will

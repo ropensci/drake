@@ -86,9 +86,11 @@ build_times <- function(
 #' Computing this
 #' in advance could save time if you plan multiple calls to
 #' \code{predict_runtime()}.
-#' @param ... Other arguments to pass to \link{\code{config}}
+#' @param ... Other arguments to pass to \code{\link{config}}
 #' 
 #' @importFrom lubridate duration as.duration duration
+#' @importFrom stats na.omit
+#' @importFrom utils tail
 #' @import magrittr
 #' @export
 predict_runtime <- function(plan,
