@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("full-build")
 
-test_that("scratch build with contained envir.", {
+test_with_dir("scratch build with contained envir.", {
   dclean()
   config = dbug()
   expect_error(session(search = FALSE))
@@ -26,7 +26,7 @@ test_that("scratch build with contained envir.", {
   expect_equal(config$cache$list(), all)
   expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
-  expect_true(file.exists(cachepath))
+  expect_true(file.exists(cache_dir))
   
   # prune
   expect_warning(prune(config$plan[config$plan$target != "final",]))
@@ -63,17 +63,17 @@ test_that("scratch build with contained envir.", {
   expect_equal(config$cache$list("functions"), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
-  expect_true(file.exists(cachepath))
+  expect_true(file.exists(cache_dir))
   expect_equal(config$cache$list("filemtime"), character(0))
   
   clean(destroy = TRUE, search = FALSE)
-  expect_false(file.exists(cachepath))
+  expect_false(file.exists(cache_dir))
   clean(destroy = TRUE, search = FALSE)
   clean(destroy = FALSE, search = FALSE)
   dclean()
 })
 
-test_that("clean in full build.", {
+test_with_dir("clean in full build.", {
   dclean()
   config = dbug()
   make(config$plan, envir = config$envir, verbose = FALSE)
@@ -82,9 +82,9 @@ test_that("clean in full build.", {
   expect_false("final" %in% config$cache$list())
   clean(search = TRUE)
   expect_equal(config$cache$list(), character(0))
-  expect_true(file.exists(cachepath))
+  expect_true(file.exists(cache_dir))
   clean(search = TRUE, destroy = TRUE)
-  expect_false(file.exists(cachepath))
+  expect_false(file.exists(cache_dir))
   dclean()
   expect_false(file.exists("input.rds"))
 })

@@ -7,21 +7,21 @@
 analyses(plan, datasets)
 }
 \arguments{
-\item{plan}{workflow plan data frame of analysis methods. 
+\item{plan}{workflow plan data frame of analysis methods.
 The commands in the \code{command} column must
 have the \code{..dataset..} wildcard where the datasets go.
 For example, one command could be \code{lm(..dataset..)}. Then,
 the commands in the output will include \code{lm(your_dataset_1)},
 \code{lm(your_dataset_2)}, etc.}
 
-\item{datasets}{workflow plan data frame with instructions 
+\item{datasets}{workflow plan data frame with instructions
 to make the datasets.}
 }
 \value{
 an evaluated workflow plan data frame of analysis instructions
 }
 \description{
-Generate a workflow plan data frame to 
+Generate a workflow plan data frame to
 analyze multiple datasets using multiple methods of analysis.
 }
 \examples{

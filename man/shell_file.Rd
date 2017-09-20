@@ -11,7 +11,7 @@ shell_file(path = file.path(getwd(), "shell.sh"))
 }
 \description{
 Write an example \code{shell.sh} file required by
-\code{make(..., parallelism = "Makefile", prepend = "SHELL=./shell.sh")}
+\code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}
 and do a `chmod +x` to enable execution.
 Use this option to run your project in parallel on a computing cluster
 or supercomputer.

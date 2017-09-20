@@ -1,7 +1,7 @@
 # library(testthat); library(devtools); load_all()
 context("Makefile")
 
-test_that("prepend arg works", {
+test_with_dir("prepend arg works", {
   dclean()
   config = dbug()
   config$verbose = FALSE
@@ -12,7 +12,7 @@ test_that("prepend arg works", {
   dclean()
 })
 
-test_that("files inside directories can be timestamped", {
+test_with_dir("files inside directories can be timestamped", {
   dclean()
   plan = plan(list = c("'t1/t2'" = 
     'dir.create("t1"); saveRDS(1, file.path("t1", "t2"))'))
@@ -27,18 +27,18 @@ test_that("files inside directories can be timestamped", {
   expect_silent(mk(config$plan$target[1]))
   expect_true(file.exists("t1"))
   expect_true(file.exists(eply::unquote(file)))
-  unlink("t1", recursive = TRUE)
+  unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
   dclean()
   expect_silent(make(config$plan, verbose = FALSE))
   expect_true(file.exists("t1"))
   expect_true(file.exists(eply::unquote(file)))
-  unlink("t1", recursive = TRUE)
+  unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
   dclean()
 })
 
-test_that("basic Makefile stuff works", {
+test_with_dir("basic Makefile stuff works", {
   dclean()
   config = dbug()
   make(config$plan, targets = "combined", 
@@ -61,7 +61,7 @@ test_that("basic Makefile stuff works", {
   expect_false(file.exists("Makefile"))
 })
 
-test_that("packages are loaded in prework", {
+test_with_dir("packages are loaded in prework", {
   dclean()
   original = getOption("testdrake")
   options(testdrake = "unset")
@@ -102,8 +102,14 @@ test_that("packages are loaded in prework", {
   library(MASS)
   config$packages = NULL
   expect_false(any(c("x", "y") %in% config$cache$list()))
+  opt = test_opt()
   suppressWarnings( # drake may be loaded but not installed.
-    testrun_automatic_packages(config))
+    make(plan = config$plan, targets = config$targets,
+      envir = config$envir, verbose = FALSE,
+      parallelism = opt$parallelism, jobs = opt$jobs,
+      prework = config$prework,
+      prepend = config$prepend, command = config$command)
+  )
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)

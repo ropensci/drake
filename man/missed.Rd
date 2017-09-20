@@ -10,7 +10,7 @@ missed(plan, targets = drake::possible_targets(plan),
   prework = character(0), font_size = 20, config = NULL)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function 
+\item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
 \item{targets}{names of targets to bulid, same as for function
@@ -21,16 +21,17 @@ missed(plan, targets = drake::possible_targets(plan),
 
 \item{verbose}{logical, whether to output messages to the console.}
 
-\item{jobs}{The \code{outdated()} function is called internally, 
-and it needs to import objects and examine your 
+\item{jobs}{The \code{outdated()} function is called internally,
+and it needs to import objects and examine your
 input files to see what has been updated. This could take some time,
 and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs 
+to speed up the process. The \code{jobs} argument is number of parallel jobs
 to use for faster computation.}
 
 \item{parallelism}{Choice of parallel backend to speed up the computation.
-See \code{?parallelism_choices} for details. The Makefile option is not available
-here. Drake will try to pick the best option for your system by default.}
+See \code{?parallelism_choices} for details. The Makefile option is not
+available here. Drake will try to pick the best option for your system by
+default.}
 
 \item{packages}{same as for \code{\link{make}}}
 
@@ -38,11 +39,11 @@ here. Drake will try to pick the best option for your system by default.}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{config}{option internal runtime parameter list of 
+\item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 Computing this
-in advance could save time if you plan multiple calls to 
+in advance could save time if you plan multiple calls to
 \code{missed()}.}
 }
 \description{

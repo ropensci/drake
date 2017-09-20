@@ -7,7 +7,7 @@
 check(plan, targets = drake::possible_targets(plan), envir = parent.frame())
 }
 \arguments{
-\item{plan}{workflow plan data frame, possibly from 
+\item{plan}{workflow plan data frame, possibly from
 \code{\link{plan}()}.}
 
 \item{targets}{character vector of targets to make}
@@ -18,15 +18,15 @@ check(plan, targets = drake::possible_targets(plan), envir = parent.frame())
 invisibly return \code{plan}
 }
 \description{
-Check a workflow plan, etc. for obvious 
-errors such as circular dependencies and 
+Check a workflow plan, etc. for obvious
+errors such as circular dependencies and
 missing input files.
 }
 \examples{
 \dontrun{
 load_basic_example()
 check(my_plan)
-unlink("report.Rmd")
+unlink('report.Rmd')
 check(my_plan)
 }
 }

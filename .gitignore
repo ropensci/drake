@@ -7,7 +7,9 @@ Thumbs.db
 *.log
 *.nav
 *.out
+*.sh
 *.snm
+*.Rout
 *.rds
 *.synctex.gz
 *.toc
@@ -15,6 +17,7 @@ Thumbs.db
 .DS_Store
 .drake
 .Rapp.history
+.RData
 .Rhistory
 Makefile
 Rbuildignore/*.pdf

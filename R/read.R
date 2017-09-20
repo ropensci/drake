@@ -1,14 +1,14 @@
 #' @title Function \code{readd}
 #' @description Read a drake target object from the cache.
 #' Does not delete the item from the cache.
-#' @seealso \code{\link{loadd}}, \code{\link{cached}}, 
-#' \code{\link{built}}, \code{link{imported}}, \code{\link{plan}}, 
+#' @seealso \code{\link{loadd}}, \code{\link{cached}},
+#' \code{\link{built}}, \code{link{imported}}, \code{\link{plan}},
 #' \code{\link{make}}
 #' @export
 #' @return drake target item from the cache
-#' @param target If \code{character_only} is \code{TRUE}, 
+#' @param target If \code{character_only} is \code{TRUE},
 #' \code{target} is a character string naming the object to read.
-#' Otherwise, \code{target} is an unquoted symbol with the name of the 
+#' Otherwise, \code{target} is an unquoted symbol with the name of the
 #' object. Note: \code{target} could be the name of an imported object.
 #' @param character_only logical, whether \code{name} should be treated
 #' as a character or a symbol
@@ -29,27 +29,40 @@
 #' readd("large", character_only = TRUE)
 #' readd("'report.md'") # just a fingerprint of the file (md5 sum)
 #' }
-readd = function(target, character_only = FALSE, path = getwd(), 
-  search = TRUE, cache = NULL){
-  if(is.null(cache)) cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("cannot find drake cache.")
-  if(!character_only) target = as.character(substitute(target))
-  store = cache$get(target)
-  if(store$type == "function")
-    value = cache$get(key = target, namespace = "functions")
-  else
-    value = store$value
-  value
+readd <- function(
+  target,
+  character_only = FALSE,
+  path = getwd(),
+  search = TRUE,
+  cache = NULL
+  ){
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
+  # if the cache is null after trying get_cache:
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
+  store <- cache$get(target)
+  if (store$type == "function"){
+    value <- cache$get(key = target, namespace = "functions")
+  } else{
+    value <- store$value
+  }
+  return(value)
 }
 
 #' @title Function \code{loadd}
-#' @description Load object(s) from the drake cache into the  
+#' @description Load object(s) from the drake cache into the
 #' current workspace (or \code{envir} if given). Defaults
-#' to loading the whole cache if arguments \code{...} 
-#' and \code{list} are not set 
-#' (or all the imported objects if in addition 
+#' to loading the whole cache if arguments \code{...}
+#' and \code{list} are not set
+#' (or all the imported objects if in addition
 #' imported_only is \code{TRUE}).
-#' @seealso \code{\link{cached}}, \code{\link{built}}, 
+#' @seealso \code{\link{cached}}, \code{\link{built}},
 #' \code{\link{imported}}, \code{\link{plan}}, \code{\link{make}},
 #' @export
 #' @param ... targets to load from the cache, as names (unquoted)
@@ -79,31 +92,52 @@ readd = function(target, character_only = FALSE, path = getwd(),
 #' loadd(imported_only = TRUE) # load all imported objects and functions
 #' loadd() # load everything, including built targets
 #' }
-loadd = function(..., list = character(0),
-  imported_only = FALSE, path = getwd(), 
-  search = TRUE, envir = parent.frame()){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("cannot find drake cache.")
+loadd <- function(
+  ...,
+  list = character(0),
+  imported_only = FALSE,
+  path = getwd(),
+  search = TRUE,
+  envir = parent.frame()
+  ){
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
   force(envir)
-  dots = match.call(expand.dots = FALSE)$...
-  targets = targets_from_dots(dots, list)
-  if(!length(targets)) targets = cache$list()
-  if(imported_only) 
-    targets = imported_only(targets = targets, cache = cache)
-  if(!length(targets)) 
+  dots <- match.call(expand.dots = FALSE)$...
+  targets <- targets_from_dots(dots, list)
+  if (!length(targets)){
+    targets <- cache$list()
+  }
+  if (imported_only){
+    targets <- imported_only(targets = targets, cache = cache)
+  }
+  if (!length(targets)){
     stop("no targets to load.")
+  }
   load_target(target = targets, cache = cache, envir = envir)
   invisible()
 }
 
-load_target = Vectorize(function(target, cache, envir){
-  value = readd(target, character_only = TRUE, 
-    cache = cache)
-  assign(x = target, value = value, envir = envir)
-}, "target")
+load_target <- Vectorize(
+  function(target, cache, envir){
+    value <- readd(
+      target,
+      character_only = TRUE,
+      cache = cache
+      )
+    assign(
+      x = target,
+      value = value,
+      envir = envir
+      )
+  },
+  "target"
+  )
 
 #' @title Function \code{read_config}
-#' @description Read all the configuration parameters 
+#' @description Read all the configuration parameters
 #' from your last attempted call to \code{\link{make}()}.
 #' These include the workflow plan
 #' @seealso \code{\link{make}}
@@ -121,12 +155,19 @@ load_target = Vectorize(function(target, cache, envir){
 #' make(my_plan)
 #' read_config()
 #' }
-read_config = function(path = getwd(), search = TRUE){
-  cache = get_cache(path = path, search = search)
-  if(is.null(cache)) stop("cannot find drake cache.")
-  sapply(cache$list(namespace = "config"), function(item)
-    cache$get(key = item, namespace = "config"),
-      simplify = FALSE, USE.NAMES = TRUE)
+read_config <- function(path = getwd(), search = TRUE){
+  cache <- get_cache(path = path, search = search)
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  sapply(
+    cache$list(namespace = "config"),
+    function(item){
+      cache$get(key = item, namespace = "config")
+    },
+    simplify = FALSE,
+    USE.NAMES = TRUE
+    )
 }
 
 #' @title Function \code{read_plan}
@@ -147,7 +188,7 @@ read_config = function(path = getwd(), search = TRUE){
 #' make(my_plan)
 #' read_plan()
 #' }
-read_plan = function(path = getwd(), search = TRUE){
+read_plan <- function(path = getwd(), search = TRUE){
   read_config(path = path, search = search)$plan
 }
 
@@ -175,7 +216,7 @@ read_plan = function(path = getwd(), search = TRUE){
 #' class(g)
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
-read_graph = function(path = getwd(), search = TRUE, ...){
-  config = read_config(path = path, search = search)
+read_graph <- function(path = getwd(), search = TRUE, ...){
+  config <- read_config(path = path, search = search)
   return(config$graph)
 }

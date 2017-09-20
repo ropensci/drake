@@ -13,14 +13,18 @@
 #' make(my_plan)
 #' find_cache()
 #' }
-find_cache = function(path = getwd()){
-  while (!(cachepath %in% list.files(path = path, all.files = TRUE))){
-    path = dirname(path)
-    if (path == dirname(path)) return(NULL)
+find_cache <- function(path = getwd()){
+  while (!(cache_dir %in% list.files(path = path, all.files = TRUE))){
+    path <- dirname(path)
+    if (path == dirname(path)){
+      return(NULL)
+    }
   }
-  path = file.path(path, cachepath)
-  if(!file.exists(path)) return(NULL)
-  path
+  path <- file.path(path, cache_dir)
+  if (!file.exists(path)){
+    return(NULL)
+  }
+  return(path)
 }
 
 #' @title Function \code{find_project}
@@ -39,8 +43,10 @@ find_cache = function(path = getwd()){
 #' make(my_plan)
 #' find_project()
 #' }
-find_project = function(path = getwd()){
-  cache = find_cache(path = path)
-  if(is.null(cache)) return()
-  dirname(cache)
+find_project <- function(path = getwd()){
+  cache <- find_cache(path = path)
+  if (is.null(cache)){
+    return(NULL)
+  }
+  return(dirname(cache))
 }

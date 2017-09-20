@@ -13,7 +13,7 @@ possible_targets(plan)
 character vector of possible targets
 }
 \description{
-internal function, returns the list of 
+internal function, returns the list of
 possible targets that you can select with the \code{targets}
 argument to \code{\link{make}()}.
 }
