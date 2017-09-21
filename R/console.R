@@ -18,8 +18,9 @@ console_verb_targets <- function(targets, verb, config, color = "slateblue2"){
     return(invisible())
   }
   cat(color(verb, color), " ", n, " item",
-    ifelse(n == 1, "", "s"), ": ", head(targets, 1) %>% crop_text(length = 50), 
-    ifelse(n == 1, "", ", ..."), "\n", sep = "")
+    ifelse(n == 1, "", "s"), ": ",
+    targets %>% paste(collapse = ", ") %>% crop_text(length = 50), 
+    "\n", sep = "")
 }
 
 color <- function(x, color) {
