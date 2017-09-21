@@ -36,6 +36,11 @@ test_with_dir("cache functions work", {
   # Because no build times are cached yet
   sink(tempfile())
   expect_equal(predict_runtime(config$plan, envir = envir, untimed_method = 0)$cumtime_serial %>% tail(1), duration(0))
+  expect_equal(predict_runtime(config$plan, envir = envir, from_scratch = T)$cumtime_serial %>% tail(1), duration(0))
+  # Default untimed_method combined with test_build_times should fill in 420s for both targets myinput and yourinput,
+  # and give zero for the rest. This gives us a final build time of 840s.
+  test_build_times = data.frame(target = "yourinput", elapsed = duration(420))
+  expect_equal(predict_runtime(config$plan, build_times = test_build_times)$cumtime_serial %>% tail(1), duration(840))
   sink()
   
   testrun(config)

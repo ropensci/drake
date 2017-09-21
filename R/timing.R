@@ -79,6 +79,10 @@ build_times <- function(
 #' timing data)? By default, the function uses the mean of other build_times in the same build
 #' stage. This could be semi-accurate depending on your dependency graph. Override this by passing
 #' in a function like \code{mean} that summarizes a vector. Or, just pass in a constant.
+#' @param build_times An optional data.frame in the format of \code{\link{build_times}} to override the
+#' internally calculated times for targets. Only the columns "target" and "elapsed" are required.
+#' For targets not in this data.frame, \code{\link{build_times}} is used as a fallback, and then
+#' \code{untimed_method}.
 #' @param digits How many digits to round the times to.
 #' @param verbose same as for \code{\link{make}}
 #' @param config Optional internal runtime parameter list of
@@ -97,6 +101,9 @@ build_times <- function(
 predict_runtime <- function(plan,
                             from_scratch = FALSE,
                             untimed_method = mean,
+                            build_times = data.frame(target = character(0),
+                                                     elapsed = duration(numeric(0)),
+                                               stringsAsFactors = F),
                             digits = 0,
                             verbose = FALSE,
                             config = NULL,
@@ -105,7 +112,10 @@ predict_runtime <- function(plan,
   if (missing(config))
     config = config(plan = plan, verbose = verbose, ...)
   
-  build_times = build_times()
+  build_times_fresh = build_times()
+  build_times_fresh = build_times_fresh[!(build_times_fresh$target %in% build_times$target), ]
+  build_times = merge(build_times, build_times_fresh, all = TRUE)
+  
   graph_remaining_targets = config$graph
   stage_i = 1
   dt = data.frame()

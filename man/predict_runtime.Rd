@@ -5,7 +5,9 @@
 \title{Predict runtime}
 \usage{
 predict_runtime(plan, from_scratch = FALSE, untimed_method = mean,
-  digits = 0, verbose = FALSE, config = NULL, ...)
+  build_times = data.frame(target = character(0), elapsed =
+  duration(numeric(0)), stringsAsFactors = F), digits = 0, verbose = FALSE,
+  config = NULL, ...)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -16,6 +18,11 @@ predict_runtime(plan, from_scratch = FALSE, untimed_method = mean,
 timing data)? By default, the function uses the mean of other build_times in the same build
 stage. This could be semi-accurate depending on your dependency graph. Override this by passing
 in a function like \code{mean} that summarizes a vector. Or, just pass in a constant.}
+
+\item{build_times}{An optional data.frame in the format of \code{\link{build_times}} to override the
+internally calculated times for targets. Only the columns "target" and "elapsed" are required.
+For targets not in this data.frame, \code{\link{build_times}} is used as a fallback, and then
+\code{untimed_method}.}
 
 \item{digits}{How many digits to round the times to.}
 
