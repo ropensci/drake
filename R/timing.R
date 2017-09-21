@@ -73,6 +73,7 @@ build_times <- function(
 #' This function uses \code{\link{build_times}} and your plan to predict the amount of time it will
 #' take to \code{\link{make}}. 
 #' 
+#' @param plan same as for \code{\link{make}}
 #' @param from_scratch Predict building only \code{\link{outdated}} targets, or the entire plan?
 #' @param untimed_method What to do with targets that have never been built (and thus have no
 #' timing data)? By default, the function uses the mean of other build_times in the same build

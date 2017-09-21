@@ -8,6 +8,8 @@ predict_runtime(plan, from_scratch = FALSE, untimed_method = mean,
   digits = 0, verbose = FALSE, config = NULL, ...)
 }
 \arguments{
+\item{plan}{same as for \code{\link{make}}}
+
 \item{from_scratch}{Predict building only \code{\link{outdated}} targets, or the entire plan?}
 
 \item{untimed_method}{What to do with targets that have never been built (and thus have no
