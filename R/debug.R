@@ -1,7 +1,4 @@
-dbug <- function(clean = TRUE) {
-  if (clean)
-    dclean()
-
+dbug <- function() {
   opt <- test_opt()
   envir <- eval(parse(text = opt$envir))
   envir <- dbug_envir(envir)
