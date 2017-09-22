@@ -10,7 +10,6 @@ Thumbs.db
 *.sh
 *.snm
 *.Rout
-*.rds
 *.synctex.gz
 *.toc
 *.vrb
