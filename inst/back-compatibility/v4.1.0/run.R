@@ -17,3 +17,4 @@ for (ns in clean_out){
   path <- paste0(".drake", "keys", ns)
   unlink(path, recursive = TRUE)
 }
+file.rename(from = ".drake", to = "cache")

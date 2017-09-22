@@ -1,9 +1,9 @@
 context("back compatibility")
 
-test_that("back-compatible with a tiny v4.1.0 project", {
+test_with_dir("back-compatible with a tiny v4.1.0 project", {
   root <- file.path("back-compatibility", "v4.1.0")
   cache <- system.file(
-    file.path(root, ".drake"),
+    file.path(root, "cache"),
     package = "drake",
     mustWork = TRUE
   )
@@ -18,6 +18,7 @@ test_that("back-compatible with a tiny v4.1.0 project", {
     recursive = TRUE,
     overwrite = TRUE
   ))
+  file.rename(from = "cache", to = ".drake")
   expect_true(file.copy(
     from = infile,
     to = getwd(),

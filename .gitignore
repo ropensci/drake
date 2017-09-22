@@ -14,6 +14,7 @@ Thumbs.db
 *.synctex.gz
 *.toc
 *.vrb
+.drake
 .DS_Store
 .Rapp.history
 .RData

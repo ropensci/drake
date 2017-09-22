@@ -3,6 +3,7 @@ Thumbs.db
 ^images$
 ^reference$
 .DS_Store
+\.drake$
 \.git$
 \.github$
 \.gitignore$
