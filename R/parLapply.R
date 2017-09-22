@@ -19,15 +19,17 @@ run_parLapply <- function(config) { # nolint
 }
 
 worker_parLapply <- function(targets, hash_list, config) { # nolint
-  prune_envir_parLapply(targets = targets, config = config)
+  prune_envir_parLapply(targets = targets, config = config) # nolint
   values <- parLapply(cl = config$cluster, X = targets, fun = build,
     hash_list = hash_list, config = config)
-  assign_to_envir_parLapply(target = targets, value = values,
-    config = config)
+  assign_to_envir_parLapply( # nolint
+    target = targets,
+    value = values,
+    config = config
+  )
 }
 
-prune_envir_parLapply <- # nolint
-  function(targets = targets, config = config) {
+prune_envir_parLapply <- function(targets = targets, config = config) { # nolint
   prune_envir(targets = targets, config = config)
   if (identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = prune_envir, targets = targets,

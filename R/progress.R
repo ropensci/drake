@@ -158,4 +158,4 @@ get_progress <- Vectorize(
   "target",
   SIMPLIFY = TRUE,
   USE.NAMES = TRUE
-  )
+)

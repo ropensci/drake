@@ -52,12 +52,28 @@ test_with_dir("basic Makefile stuff works", {
   }
   expect_true(file.exists("Makefile"))
   stamps <- sort(list.files(file.path(time_stamp_dir), full.names = TRUE))
-  stamps2 <- sort(time_stamp(c("combined", "myinput", "nextone",
-  "yourinput")))
+  stamps2 <- sort(
+    time_stamp(
+      c(
+        "combined",
+        "myinput",
+        "nextone",
+        "yourinput"
+      )
+    )
+  )
   expect_equal(stamps, stamps2)
-  expect_false(file.exists("intermediatefile.rds"))
-  mk("'intermediatefile.rds'")
-  expect_true(file.exists("intermediatefile.rds"))
+
+  targ <- "'intermediatefile.rds'"
+  expect_false(file.exists(eply::unquote(targ)))
+  config$cache$del(key = targ, namespace = "progress")
+  mk(targ)
+  expect_equal(unname(progress(list = targ)), "finished")
+  expect_true(file.exists(eply::unquote(targ)))
+  config$cache$del(key = targ, namespace = "progress")
+  mk(targ) # Verify behavior when target is current
+  expect_equal(unname(progress(list = targ)), "not built or imported")
+
   run_Makefile(config, run = FALSE)
   expect_false(file.exists(globalenvpath))
   dclean()
