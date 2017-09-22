@@ -13,7 +13,7 @@ test_that("back-compatible with a tiny v4.1.0 project", {
     mustWork = TRUE
   )
   expect_true(file.copy(
-    from = cache, 
+    from = cache,
     to = getwd(),
     recursive = TRUE,
     overwrite = TRUE
