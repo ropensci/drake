@@ -16,15 +16,12 @@
 find_cache <- function(path = getwd()){
   while (!(cache_dir %in% list.files(path = path, all.files = TRUE))){
     path <- dirname(path)
+    # If we can search no higher...
     if (path == dirname(path)){
-      return(NULL)
+      return(NULL) # The cache does not exist
     }
   }
-  path <- file.path(path, cache_dir)
-  if (!file.exists(path)){
-    return(NULL)
-  }
-  return(path)
+  file.path(path, cache_dir)
 }
 
 #' @title Function \code{find_project}

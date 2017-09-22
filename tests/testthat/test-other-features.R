@@ -106,7 +106,7 @@ test_with_dir("unique_random_string", {
   expect_equal(nchar(x), 15)
   expect_equal(nchar(y), 10)
   exclude <- c(letters, LETTERS, 1:9)
-  for(i in 1:100){
+  for (i in 1:100){
     expect_equal(
       unique_random_string(exclude = exclude, n = 1),
       "0"

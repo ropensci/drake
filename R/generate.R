@@ -288,7 +288,7 @@ with_analyses_only <- function(plan){
 }
 
 unique_random_string <- function(exclude = NULL, n = 30){
-  if(!length(exclude)){
+  if (!length(exclude)){
     return(stri_rand_strings(1, n))
   }
   out <- exclude[1]

@@ -9,6 +9,8 @@ test_with_dir("clean() works if there is no cache already", {
 test_with_dir("try to find a non-existent project", {
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
+  expect_error(loadd(list = "nothing", search = FALSE))
+  expect_error(read_config(search = FALSE))
 })
 
 test_with_dir("build times works if no targets are built", {
