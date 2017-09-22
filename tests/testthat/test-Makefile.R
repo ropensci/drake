@@ -1,5 +1,14 @@
 context("Makefile")
 
+test_with_dir("no Makefile if imports_only is TRUE", {
+  expect_equal(cached(), character(0))
+  x <- plan(a = ls())
+  expect_false(file.exists("Makefile"))
+  make(x, verbose = FALSE, imports_only = TRUE)
+  expect_true(cached("ls"))
+  expect_false(file.exists("Makefile"))
+})
+
 test_with_dir("prepend arg works", {
   dclean()
   config <- dbug()
