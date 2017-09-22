@@ -86,8 +86,8 @@ test_with_dir("analyses and summaries", {
   dclean()
   datasets <- plan(small = simulate(5), large = simulate(50))
   methods <- plan(
-    regression1 = reg1(..dataset..),
-    regression2 = reg2(..dataset..)
+    regression1 = reg1(..dataset..), # nolint
+    regression2 = reg2(..dataset..) # nolint
   )
   analyses <- analyses(methods, data = datasets)
   x <- data.frame(
@@ -110,8 +110,8 @@ test_with_dir("analyses and summaries", {
   expect_equal(analyses(m2, data = datasets), m2)
 
   no_analyses <- plan(
-    summ = summary(..dataset..),
-    coef = coef(..dataset..)
+    summ = summary(..dataset..), # nolint
+    coef = coef(..dataset..) # nolint
   )
   suppressWarnings(
     expect_error(
@@ -120,8 +120,8 @@ test_with_dir("analyses and summaries", {
   )
 
   summary_types <- plan(
-    summ = summary(..analysis..),
-    coef = coef(..analysis..)
+    summ = summary(..analysis..), # nolint
+    coef = coef(..analysis..) # nolint
   )
   results <- summaries(summary_types, analyses, datasets, gather = NULL)
   x <- data.frame(
@@ -150,8 +150,8 @@ test_with_dir("analyses and summaries", {
   expect_equal(results, x)
 
   summary_types <- plan(
-    summ = summary(..analysis.., ..dataset..),
-    coef = coef(..analysis..)
+    summ = summary(..analysis.., ..dataset..), # nolint
+    coef = coef(..analysis..) # nolint
   )
   results <- summaries(
     summary_types,
@@ -191,7 +191,12 @@ test_with_dir("analyses and summaries", {
   results <- summaries(summary_types, analyses, datasets)
   expect_true(all(grepl("^list\\(", results$command[1:2])))
 
-  newtypes <- rbind(summary_types, plan(other = myother(..dataset..)))
+  newtypes <- rbind(
+    summary_types,
+    plan(
+      other = myother(..dataset..) # nolint
+    )
+  )
   expect_warning(s <- summaries(newtypes, analyses, datasets,
     gather = NULL))
   expect_equal(nrow(s), 8)

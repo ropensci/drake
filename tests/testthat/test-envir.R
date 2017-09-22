@@ -7,14 +7,14 @@ test_with_dir("prune_envir in full build", {
   # prune_envir() doesn't work.
   datasets <- plan(x = 1, y = 2, z = 3)
   methods <- plan(
-    a = ..dataset..,
-    b = ..dataset..,
-    c = ..dataset..
+    a = ..dataset.., # nolint
+    b = ..dataset.., # nolint
+    c = ..dataset.. # nolint
   )
   analyses <- analyses(methods, datasets)
   heuristics <- plan(
-    s = c(..dataset.., ..analysis..),
-    t = ..analysis..)
+    s = c(..dataset.., ..analysis..), # nolint
+    t = ..analysis..) # nolint
   summaries <- summaries(
     heuristics,
     datasets = datasets,

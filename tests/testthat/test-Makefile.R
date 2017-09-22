@@ -80,6 +80,37 @@ test_with_dir("basic Makefile stuff works", {
   expect_false(file.exists("Makefile"))
 })
 
+test_with_dir("Makefile stuff in globalenv()", {
+  targ <- "drake_TESTGLOBAL_target"
+  drake_TESTGLOBAL_plan <- data.frame(target = targ, command = 1)
+  drake_TESTGLOBAL_config <- make(
+    drake_TESTGLOBAL_plan,
+    envir = globalenv(),
+    return_config = TRUE,
+    verbose = FALSE
+  )
+  run_Makefile(drake_TESTGLOBAL_config, run = FALSE, debug = TRUE)
+  clean(list = targ)
+  drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
+  expect_equal(unname(progress(list = targ)), "not built or imported")
+  mk("drake_TESTGLOBAL_target")
+  expect_equal(unname(progress(list = targ)), "finished")
+  drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
+  mk("drake_TESTGLOBAL_target")
+  expect_equal(unname(progress(list = targ)), "not built or imported")
+  loaded <- ls(envir = globalenv())
+  rm(list =
+    intersect(loaded,
+      c(
+        "drake_TESTGLOBAL_target",
+        "drake_TESTGLOBAL_plan",
+        "drake_TESTGLOBAL_config"
+      )
+    ),
+    envir = globalenv()
+  )
+})
+
 test_with_dir("packages are loaded in prework", {
   dclean()
   original <- getOption("testdrake")

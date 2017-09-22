@@ -11,10 +11,16 @@ run_parLapply <- function(config) { # nolint
   if (identical(config$envir, globalenv()))
     clusterExport(cl = config$cluster, varlist = ls(globalenv(),
       all.names = TRUE), envir = globalenv())
-  clusterCall(cl = config$cluster, fun = load_packages_parLapply)
+  clusterCall(
+    cl = config$cluster,
+    fun = load_packages_parLapply # nolint
+  )
   clusterCall(cl = config$cluster, fun = do_prework, config = config,
     verbose_packages = FALSE)
-  run_parallel(config = config, worker = worker_parLapply)
+  run_parallel(
+    config = config,
+    worker = worker_parLapply # nolint
+  )
   stopCluster(cl = config$cluster)
 }
 
