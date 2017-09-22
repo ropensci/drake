@@ -85,8 +85,8 @@ my_datasets <- plan(
 #   values = c("rep1", "rep2")).
 
 methods <- plan(
-  regression1 = reg1(..dataset..),
-  regression2 = reg2(..dataset..)
+  regression1 = reg1(..dataset..), ## nolint
+  regression2 = reg2(..dataset..) ## nolint
   )
 
 # same as evaluate(methods, wildcard = "..dataset..",
@@ -95,8 +95,8 @@ my_analyses <- analyses(methods, datasets = my_datasets)
 
 summary_types <- plan(
   # Perfect regression fits can happen.
-  summ = suppressWarnings(summary(..analysis..)),
-  coef = coef(..analysis..)
+  summ = suppressWarnings(summary(..analysis..)), ## nolint
+  coef = coef(..analysis..) ## nolint
   )
 
 # summaries() also uses evaluate(): once with expand = TRUE,
@@ -159,7 +159,7 @@ tracked(my_plan)
 
 
 ################################
-### SINGLE-PROCESS EXECUTION ###
+### SINGLE PROCESS EXECUTION ###
 ################################
 
 # Start off with a clean workspace (optional).
