@@ -55,16 +55,18 @@ plan <- function(
   targets <- names(commands)
   commands <- as.character(commands)
   if (!length(commands)){
-    return(data.frame(
+    return(
+      data.frame(
         target = character(0),
         command = character(0)
-        ))
+      )
+    )
   }
   plan <- data.frame(
     target = targets,
     command = commands,
     stringsAsFactors = FALSE
-    )
+  )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){
     plan$target <- quotes(plan$target, single = T)

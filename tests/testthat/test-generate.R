@@ -1,5 +1,15 @@
 context("generate")
 
+test_with_dir("empty plan", {
+  expect_equal(
+    plan(),
+    data.frame(
+      target = character(0),
+      command = character(0)
+    )
+  )
+})
+
 test_with_dir("evaluate, expand, and gather", {
   dclean()
 
