@@ -156,14 +156,16 @@ Drake can be fooled into skipping objects that should be treated as dependencies
 
 ```{r cautiondeps}
 f <- function(){
-  b = get("x", envir = globalenv()) # x is incorrectly ignored
-  file_dependency = readRDS('input_file.rds') # 'input_file.rds' is incorrectly ignored
+  b <- get("x", envir = globalenv()) # x is incorrectly ignored
+  file_dependency <- readRDS('input_file.rds') # 'input_file.rds' is incorrectly ignored
   digest::digest(file_dependency)
 }
 deps(f)
 command = "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
 deps(command)
 ```
+
+## Functions produced by `Vectorize()`
 
 With functions produced by `Vectorize()`, detecting dependencies is especially hard because the body of every such a function is 
 
@@ -182,6 +184,8 @@ With functions produced by `Vectorize()`, detecting dependencies is especially h
 Thus, If `f <- Vectorize(g, ...)` is such a function, drake searches `g()` for dependencies, not `f()`. Specifically, if drake sees that `environment(f)[["FUN"]]` exists and is a function, then `environment(f)[["FUN"]]` will be searched instead of `f()`.
 
 In addition, if `f()` is the output of `Vectorize()`, then drake reacts to changes in `environment(f)[["FUN"]]`, not `f()`. Thus, if the configuration settings of vectorization change (such as which arguments are vectorized), but the core element-wise functionality remains the same, then `make()` still thinks everything is up to date.
+
+In addition, if you import a function like `f <- Vectorize(g, ...)` and hover over the `f` node in `plot_graph(hover = TRUE)`, then you will see the body of `g()`, not the body of `f()`.
 
 ## Compiled code is not reproducibly tracked.
 
