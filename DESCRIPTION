@@ -1,7 +1,6 @@
 Package: drake
 Title: Data Frames in R for Make
 Version: 4.1.1.9000
-Date: 2017-09-05
 Authors@R: c(
   person(
     family = "Landau",
@@ -39,7 +38,7 @@ Imports:
   plyr,
   R.utils,
   stats,
-  storr,
+  storr (>= 1.1.0),
   stringi,
   stringr,
   testthat,
