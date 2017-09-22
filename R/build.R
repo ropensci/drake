@@ -98,10 +98,9 @@ store_file <- function(target, hashes, imported, config) {
 
 store_function <- function(target, value, hashes, imported,
   config) {
-  # Unfortunately, vectorization is removed, but this is for the best.
-  value <- unwrap_function(value)
   config$cache$set(key = target, value = value, namespace = "functions")
-  string <- deparse(value)
+  # Unfortunately, vectorization is removed, but this is for the best.
+  string <- deparse(unwrap_function(value))
   config$cache$set(key = target, value = list(type = "function",
     value = string, imported = imported,
     depends = hashes$depends)) # for nested functions
