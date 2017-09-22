@@ -6,6 +6,11 @@ test_with_dir("clean() works if there is no cache already", {
   dclean()
 })
 
+test_with_dir("try to find a non-existent project", {
+  expect_equal(find_cache(), NULL)
+  expect_equal(find_project(), NULL)
+})
+
 test_with_dir("build times works if no targets are built", {
   expect_equal(nrow(build_times(search = FALSE)), 0)
   my_plan <- plan(x = 1)
