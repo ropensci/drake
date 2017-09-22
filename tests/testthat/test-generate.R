@@ -10,6 +10,13 @@ test_with_dir("empty plan", {
   )
 })
 
+test_with_dir("empty generative args", {
+  x <- plan(a = 1, b = FUNCTION())
+  expect_equal(evaluate(x), x)
+  expect_equal(evaluations(x), x)
+  expect_equal(expand(x), x)
+})
+
 test_with_dir("evaluate, expand, and gather", {
   dclean()
 
@@ -200,6 +207,18 @@ test_with_dir("analyses and summaries", {
 
   results <- summaries(summary_types, analyses, datasets)
   expect_true(all(grepl("^list\\(", results$command[1:2])))
+
+  results <- summaries(summary_types, analyses, datasets, gather = "my_bind")
+  expect_true(all(grepl("^my_bind\\(", results$command[1:2])))
+
+  expect_error(
+    nope <- summaries(
+      summary_types,
+      analyses,
+      datasets,
+      gather = rep("list", 37)
+    )
+  )
 
   newtypes <- rbind(
     summary_types,
