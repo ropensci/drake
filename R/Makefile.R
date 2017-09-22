@@ -27,13 +27,15 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     prework = config$prework
     )
   time_stamps(config, outdated = out)
-  if (run){
-    system2(command = config$command, args = config$args)
-  }
+  error_code <- ifelse(
+    run,
+    system2(command = config$command, args = config$args),
+    0
+  )
   if (!debug){
     unlink(globalenvpath, force = TRUE)
   }
-  return(invisible())
+  return(invisible(error_code))
 }
 
 #' @title Internal function \code{default_system2_args}
