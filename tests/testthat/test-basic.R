@@ -1,12 +1,10 @@
 context("basic")
 
 test_with_dir("basic example works", {
-  dclean()
   opt <- test_opt()
   e <- eval(parse(text = opt$envir))
   jobs <- opt$jobs
   parallelism <- opt$parallelism
-  dclean()
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
@@ -105,5 +103,4 @@ test_with_dir("basic example works", {
   tmp <- dataframes_graph(my_plan, envir = e, jobs = jobs,
     parallelism = parallelism, verbose = FALSE)
   expect_true(is.data.frame(tmp$nodes))
-  dclean()
 })

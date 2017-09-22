@@ -1,7 +1,6 @@
 context("examples")
 
 test_with_dir("examples are listed and written", {
-  dclean()
   x <- examples_drake()
   expect_true(is.character(x) & length(x) > 0)
   for (i in x){
@@ -11,5 +10,4 @@ test_with_dir("examples are listed and written", {
     expect_true(file.info(i)$isdir)
     unlink(i, recursive = TRUE, force = TRUE)
   }
-  dclean()
 })

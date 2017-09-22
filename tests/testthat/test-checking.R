@@ -28,7 +28,6 @@ test_with_dir(
 })
 
 test_with_dir("tracked() works", {
-  dclean()
   config <- dbug()
   x <- sort(tracked(plan = config$plan, envir = config$envir))
   y <- sort(c("'intermediatefile.rds'", "yourinput", "nextone",
@@ -39,11 +38,9 @@ test_with_dir("tracked() works", {
     envir = config$envir))
   y <- sort(c("myinput", "'input.rds'", "readRDS"))
   expect_equal(x, y)
-  dclean()
 })
 
 test_with_dir("missing files via check()", {
-  dclean()
   config <- dbug()
   expect_output(check(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
@@ -51,5 +48,4 @@ test_with_dir("missing files via check()", {
   expect_warning(
     tmp <- capture.output(check(config$plan, envir = config$envir)))
   expect_warning(tmp <- missing_input_files(config))
-  dclean()
 })

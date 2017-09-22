@@ -1,7 +1,6 @@
 context("full-build")
 
 test_with_dir("scratch build with contained envir.", {
-  dclean()
   config <- dbug()
   expect_error(session(search = FALSE))
   expect_true(length(progress(search = FALSE)) == 0)
@@ -71,11 +70,9 @@ test_with_dir("scratch build with contained envir.", {
   expect_false(file.exists(cache_dir))
   clean(destroy = TRUE, search = FALSE)
   clean(destroy = FALSE, search = FALSE)
-  dclean()
 })
 
 test_with_dir("clean in full build.", {
-  dclean()
   config <- dbug()
   make(config$plan, envir = config$envir, verbose = FALSE)
   expect_true("final" %in% config$cache$list())
@@ -86,6 +83,4 @@ test_with_dir("clean in full build.", {
   expect_true(file.exists(cache_dir))
   clean(search = TRUE, destroy = TRUE)
   expect_false(file.exists(cache_dir))
-  dclean()
-  expect_false(file.exists("input.rds"))
 })

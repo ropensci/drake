@@ -1,7 +1,6 @@
 context("intermediate-file")
 
 test_with_dir("responses to intermediate file", {
-  dclean()
   config <- dbug()
   testrun(config)
 
@@ -25,5 +24,4 @@ test_with_dir("responses to intermediate file", {
   testrun(config)
   expect_equal(justbuilt(config), "'intermediatefile.rds'")
   expect_equal(final0, readd(final, search = FALSE))
-  dclean()
 })

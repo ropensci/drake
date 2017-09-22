@@ -1,7 +1,6 @@
 context("console")
 
 test_with_dir("console", {
-  dclean()
   config <- dbug()
   config$verbose <- TRUE
   expect_output(console(imported = FALSE, target = "myinput",
@@ -18,7 +17,6 @@ test_with_dir("console", {
   dots <- "\\.\\.\\.$"
   expect_false(grepl(dots, o1))
   expect_true(grepl(dots, o2))
-  dclean()
 })
 
 test_with_dir("console_parallel_stage() works", {

@@ -47,7 +47,6 @@ test_with_dir("function_dependencies() works on :: and :::", {
 })
 
 test_with_dir("namespaced workflow works", {
-  dclean()
   opts <- test_opt()
   envir <- dbug()$envir
   rm(list = ls(envir), envir = envir)
@@ -74,5 +73,4 @@ test_with_dir("namespaced workflow works", {
     outdated(x, envir = envir, verbose = FALSE),
     character(0)
   )
-  dclean()
 })

@@ -1,7 +1,6 @@
 context("import-object")
 
 test_with_dir("responses to imported objects and functions", {
-  dclean()
   config <- dbug()
   testrun(config)
 
@@ -75,5 +74,4 @@ test_with_dir("responses to imported objects and functions", {
   testrun(config)
   expect_equal(justbuilt(config), builds)
   expect_false(identical(final0, readd(final, search = FALSE)))
-  dclean()
 })

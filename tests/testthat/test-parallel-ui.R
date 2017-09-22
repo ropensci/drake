@@ -15,7 +15,6 @@ test_with_dir("shell_file() writes correctly", {
 })
 
 test_with_dir("mclapply and lapply", {
-  dclean()
   config <- dbug()
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
     jobs = 1, parallelism = "mclapply")
@@ -24,5 +23,4 @@ test_with_dir("mclapply and lapply", {
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
     jobs = 1, parallelism = "parLapply")
   expect_true(is.numeric(readd(final)))
-  dclean()
 })

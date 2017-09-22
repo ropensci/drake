@@ -17,6 +17,7 @@ dbug <- function(clean = TRUE) {
   config
 }
 
+# Keep around for interactive sessions.
 dclean <- function() {
   unlink(c(".drake", "intermediatefile.rds", "input.rds", "Makefile",
     "report.md", "report.Rmd"), recursive = TRUE, force = TRUE)

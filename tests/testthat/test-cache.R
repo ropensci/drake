@@ -1,9 +1,7 @@
 context("cache")
 
 test_with_dir("clean() works if there is no cache already", {
-  dclean()
   clean(list = "no_cache")
-  dclean()
 })
 
 test_with_dir("try to find a non-existent project", {
@@ -22,7 +20,6 @@ test_with_dir("build times works if no targets are built", {
 })
 
 test_with_dir("cache functions work", {
-  dclean()
   first_wd <- getwd()
   scratch <- file.path(first_wd, "scratch")
   if (!file.exists(scratch)){
@@ -180,7 +177,7 @@ test_with_dir("cache functions work", {
   read_graph(search = TRUE, path = s)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
-  dclean()
+
   setwd(scratch)
   pdf(NULL)
   read_graph(search = FALSE)
@@ -208,5 +205,4 @@ test_with_dir("cache functions work", {
 
   setwd(scratch)
   unlink("searchfrom", recursive = TRUE, force = TRUE)
-  dclean()
 })

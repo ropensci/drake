@@ -1,8 +1,6 @@
 context("envir")
 
 test_with_dir("prune_envir in full build", {
-  dclean()
-
   # workflow with lots of nested deps This will fail if
   # prune_envir() doesn't work.
   datasets <- plan(x = 1, y = 2, z = 3)
@@ -63,6 +61,4 @@ test_with_dir("prune_envir in full build", {
     ls(config$envir),
     c("a_x", "c_y", "s_b_x", "t_a_z", "y")
   )
-
-  dclean()
 })

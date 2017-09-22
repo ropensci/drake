@@ -4,24 +4,26 @@ test_with_dir("no Makefile if imports_only is TRUE", {
   expect_equal(cached(), character(0))
   x <- plan(a = ls())
   expect_false(file.exists("Makefile"))
-  make(x, verbose = FALSE, imports_only = TRUE)
+  make(
+    x,
+    parallelism = "Makefile",
+    imports_only = TRUE,
+    verbose = FALSE
+  )
   expect_true(cached("ls"))
   expect_false(file.exists("Makefile"))
 })
 
 test_with_dir("prepend arg works", {
-  dclean()
   config <- dbug()
   config$verbose <- FALSE
   config$prepend <- "# add"
   run_Makefile(config, run = FALSE)
   lines <- readLines("Makefile")
   expect_true(grepl("# add", lines[1]))
-  dclean()
 })
 
 test_with_dir("files inside directories can be timestamped", {
-  dclean()
   plan <- plan(
     list = c(
       `'t1/t2'` = "dir.create(\"t1\"); saveRDS(1, file.path(\"t1\", \"t2\"))"
@@ -39,17 +41,15 @@ test_with_dir("files inside directories can be timestamped", {
   expect_true(file.exists(eply::unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
-  dclean()
+
   expect_silent(make(config$plan, verbose = FALSE))
   expect_true(file.exists("t1"))
   expect_true(file.exists(eply::unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
-  dclean()
 })
 
 test_with_dir("basic Makefile stuff works", {
-  dclean()
   config <- dbug()
   make(config$plan, targets = "combined", envir = config$envir,
   verbose = FALSE)
@@ -85,8 +85,6 @@ test_with_dir("basic Makefile stuff works", {
 
   run_Makefile(config, run = FALSE)
   expect_false(file.exists(globalenvpath))
-  dclean()
-  expect_false(file.exists("Makefile"))
 })
 
 test_with_dir("Makefile stuff in globalenv()", {
@@ -121,7 +119,6 @@ test_with_dir("Makefile stuff in globalenv()", {
 })
 
 test_with_dir("packages are loaded in prework", {
-  dclean()
   original <- getOption("testdrake")
   options(testdrake = "unset")
   expect_equal(getOption("testdrake"), "unset")
@@ -172,5 +169,4 @@ test_with_dir("packages are loaded in prework", {
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
   options(testdrake = original)
-  dclean()
 })

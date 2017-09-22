@@ -1,15 +1,5 @@
 context("generate")
 
-test_with_dir("empty plan", {
-  expect_equal(
-    plan(),
-    data.frame(
-      target = character(0),
-      command = character(0)
-    )
-  )
-})
-
 test_with_dir("empty generative args", {
   x <- plan(a = 1, b = FUNCTION())
   expect_equal(evaluate(x), x)
@@ -18,8 +8,6 @@ test_with_dir("empty generative args", {
 })
 
 test_with_dir("evaluate, expand, and gather", {
-  dclean()
-
   df <- plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
@@ -96,11 +84,9 @@ test_with_dir("evaluate, expand, and gather", {
     stringsAsFactors = F
   )
   expect_equal(x7, y)
-  dclean()
 })
 
 test_with_dir("analyses and summaries", {
-  dclean()
   datasets <- plan(small = simulate(5), large = simulate(50))
   methods <- plan(
     regression1 = reg1(..dataset..), # nolint
@@ -229,6 +215,4 @@ test_with_dir("analyses and summaries", {
   expect_warning(s <- summaries(newtypes, analyses, datasets,
     gather = NULL))
   expect_equal(nrow(s), 8)
-
-  dclean()
 })

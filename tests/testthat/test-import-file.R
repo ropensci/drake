@@ -1,7 +1,6 @@
 context("import-file")
 
 test_with_dir("responses to imported file", {
-  dclean()
   config <- dbug()
   expect_output(check(plan = config$plan, envir = config$envir))
   expect_warning(check(plan = config$plan[-1, ], envir = config$envir))
@@ -27,5 +26,4 @@ test_with_dir("responses to imported file", {
   expect_equal(justbuilt(config), sort(c("'intermediatefile.rds'",
     "combined", "final", "myinput", "nextone")))
   expect_false(length(final0) == length(readd(final, search = FALSE)))
-  dclean()
 })
