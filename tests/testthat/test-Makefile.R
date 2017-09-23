@@ -34,7 +34,9 @@ test_with_dir("files inside directories can be timestamped", {
   config <- build_config(plan = plan, targets = plan$target[1],
     parallelism = "parLapply", verbose = FALSE, packages = character(0),
     prework = character(0), prepend = character(0), command = character(0),
-    args = character(0), envir = new.env(), jobs = 1)
+    args = character(0), envir = new.env(), jobs = 1,
+    short_hash_algo = default_short_hash_algo(),
+    long_hash_algo = default_long_hash_algo())
   run_Makefile(config, run = FALSE)
   expect_silent(mk(config$plan$target[1]))
   expect_true(file.exists("t1"))
@@ -52,7 +54,7 @@ test_with_dir("files inside directories can be timestamped", {
 test_with_dir("basic Makefile stuff works", {
   config <- dbug()
   make(config$plan, targets = "combined", envir = config$envir,
-  verbose = FALSE)
+    verbose = FALSE)
   config$verbose <- FALSE
   run_Makefile(config, run = FALSE, debug = TRUE)
   using_global <- identical(config$envir, globalenv())
@@ -68,7 +70,8 @@ test_with_dir("basic Makefile stuff works", {
         "myinput",
         "nextone",
         "yourinput"
-      )
+      ),
+      config = config
     )
   )
   expect_equal(stamps, stamps2)

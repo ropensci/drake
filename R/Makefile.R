@@ -26,7 +26,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     packages = config$packages,
     prework = config$prework
     )
-  time_stamps(config, outdated = out)
+  time_stamps(config = config, outdated = out)
   error_code <- ifelse(
     run,
     system2(command = config$command, args = config$args),
@@ -61,7 +61,7 @@ makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
   }
-  cat("all:", time_stamp(config$targets), sep = " \\\n")
+  cat("all:", time_stamp(config$targets, config = config), sep = " \\\n")
 }
 
 makefile_rules <- function(config){
@@ -69,9 +69,17 @@ makefile_rules <- function(config){
   for (target in targets){
     deps <- dependencies(target, config) %>%
       intersect(y = config$plan$target) %>%
-      time_stamp()
+      time_stamp(config = config)
     breaker <- ifelse(length(deps), " \\\n", "\n")
-    cat("\n", time_stamp(target), ":", breaker, sep = "")
+    cat(
+      "\n",
+      time_stamp(
+        x = target,
+        config = config),
+      ":",
+      breaker,
+      sep = ""
+    )
     if (length(deps)){
       cat(deps, sep = breaker)
     }
@@ -113,7 +121,7 @@ mk <- function(target){
   config <- inventory(config)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(old_hash, new_hash)){
-    file_overwrite(time_stamp(target))
+    file_overwrite(time_stamp(x = target, config = config))
   }
   return(invisible())
 }

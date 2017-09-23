@@ -39,7 +39,9 @@ test_with_dir("prune_envir in full build", {
     packages = character(0),
     prework = character(0),
     command = "make",
-    args = character(0)
+    args = character(0),
+    short_hash_algo = default_short_hash_algo(),
+    long_hash_algo = default_long_hash_algo()
   )
 
   # actually run

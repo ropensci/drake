@@ -7,7 +7,10 @@
 config(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0))
+  packages = (.packages()), prework = character(0),
+  prepend = character(0), command = character(0), args = character(0),
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo())
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -25,6 +28,16 @@ config(plan, targets = drake::possible_targets(plan),
 \item{packages}{same as for \code{\link{make}}}
 
 \item{prework}{same as for \code{\link{make}}}
+
+\item{prepend}{same as for \code{\link{make}}}
+
+\item{command}{same as for \code{\link{make}}}
+
+\item{args}{same as for \code{\link{make}}}
+
+\item{short_hash_algo}{same as for \code{\link{make}}}
+
+\item{long_hash_algo}{same as for \code{\link{make}}}
 }
 \description{
 Compute the internal runtime parameter list of

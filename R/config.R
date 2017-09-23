@@ -29,6 +29,11 @@
 #' @param jobs same as for \code{\link{make}}
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
+#' @param prepend same as for \code{\link{make}}
+#' @param command same as for \code{\link{make}}
+#' @param args same as for \code{\link{make}}
+#' @param short_hash_algo same as for \code{\link{make}}
+#' @param long_hash_algo same as for \code{\link{make}}
 config <- function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   parallelism = drake::default_parallelism(),

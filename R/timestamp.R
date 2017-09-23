@@ -7,29 +7,29 @@ time_stamps <- function(config, outdated){
   return(invisible())
 }
 
-safe_encode <- function(x, hash_algo){
+safe_encode <- Vectorize(function(x, hash_algo){
   digest(
     object = x,
     algo = hash_algo,
     file = FALSE
   )
-}
+}, "x")
 
-time_stamp <- function(x, hash_algo){
+time_stamp <- function(x, config){
   if (!length(x)){
     return(character(0))
   }
-  key <- safe_encode(x = x, hash_algo = hash_algo)
+  key <- safe_encode(x = x, hash_algo = config$short_hash_algo)
   return(file.path(time_stamp_dir, key))
 }
 
 write_time_stamp <- function(target, config){
   file.copy(
     time_stamp_template,
-    time_stamp(x = target, hash_algo = config$short_hash_algo),
+    time_stamp(x = target, config = config),
     overwrite = TRUE,
     copy.date = TRUE
-    )
+  )
 }
 
 time_stamp_dir <- file.path(cache_dir,  "ts")

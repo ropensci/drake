@@ -10,7 +10,9 @@ make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE, clear_progress = TRUE)
+  return_config = FALSE, clear_progress = TRUE,
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo())
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -127,6 +129,20 @@ of runtime configuration parameters used by \code{make()}}
 \item{clear_progress}{logical, whether to clear the saved record of
 progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 before anything is imported or built.}
+
+\item{short_hash_algo}{character scalar, name of the short
+hash algorithm to use. Drake uses both a short hash algorithm
+for fingerprints that could be file names and a long
+hash algorithm for fingerprints that are never file names.
+Windows restricts the length of file paths, so the
+distinction is important.}
+
+\item{long_hash_algo}{character scalar, name of the long
+hash algorithm to use. Drake uses both a short hash algorithm
+for fingerprints that could be file names and a long
+hash algorithm for fingerprints that are never file names.
+Windows restricts the length of file paths, so the
+distinction is important.}
 }
 \description{
 Run your project (build the targets).

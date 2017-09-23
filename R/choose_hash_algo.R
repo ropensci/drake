@@ -1,6 +1,6 @@
 #' @title Default short hash algorithm
 #' @export
-#' @descrition This is the hash algorithm
+#' @description This is the hash algorithm
 #' used most of the time. These hashes
 #' are used as file names in the cache
 #' and elsewhere, so they cannot be too long.
@@ -30,11 +30,11 @@ choose_hash_algos <- function(
   preferred_short = default_short_hash_algo(),
   preferred_long = default_long_hash_algo()
 ){
-  preferred_short = match.arg(
+  preferred_short <- match.arg(
     arg = preferred_short,
     choices = available_hash_algos()
   )
-  preferred_long = match.arg(
+  preferred_long <- match.arg(
     arg = preferred_long,
     choices = available_hash_algos()
   )
@@ -53,12 +53,11 @@ choose_hash_algos <- function(
 }
 
 old_hash_algos <- function(){
-  tryCatch(
-    {
+  tryCatch({
       try_old_hash_algos()
     },
     error = function(e){
-      list(short = "md5", long = "md5")
+      stop("Could not recover hash algorithms of previous make().")
     }
   )
 }
@@ -74,6 +73,10 @@ try_old_hash_algos <- function(){
     mangle_key = TRUE,
     hash_algorithm = short,
   )
+  previously_built <- "sessionInfo" %in% cache$list(namespace = "session")
+  if (!previously_built) {
+    return(list(short = short, long = NULL))
+  }
   last_build <- cache$get("sessionInfo", namespace = "session")
   drake_version <- last_build$otherPkgs$drake$Version
   built_after_4.1.0 <- compareVersion(drake_version, "4.1.0") > 0

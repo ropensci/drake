@@ -122,9 +122,9 @@ test_with_dir("true targets can be functions", {
   expect_equal(myfunction(4), 5)
 })
 
-test_with_dir("warn when file target names do not match actual filenames", {
+test_with_dir("error when file target names do not match actual filenames", {
   x <- plan(y = 1, file_targets = TRUE)
-  expect_warning(con <- make(x, verbose = FALSE, return_config = TRUE))
+  expect_warning(expect_error(make(x, verbose = FALSE)))
 })
 
 test_with_dir("stress test hashing decisions", {

@@ -117,7 +117,7 @@
 #' @param clear_progress logical, whether to clear the saved record of
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 #' before anything is imported or built.
-#' 
+#'
 #' @param short_hash_algo character scalar, name of the short
 #' hash algorithm to use. Drake uses both a short hash algorithm
 #' for fingerprints that could be file names and a long
