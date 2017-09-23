@@ -32,6 +32,14 @@ test_with_dir("different hashes", {
       return_config = TRUE
     )
   )
+  expect_equal(con$short_hash_algo, "crc32")
+  expect_equal(con$long_hash_algo, "sha512")
+  storr_hash <- scan(
+    file.path(cache_dir, "config", "hash_algorithm"),
+    what = character(),
+    quiet = TRUE
+  )
+  expect_equal(storr_hash, "crc32")
 })
 
 test_with_dir("different graphical arrangements for Makefile parallelism", {

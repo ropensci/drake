@@ -29,14 +29,33 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     target = "x",
     command = "my_function('my_file.rds')"
   )
-  my_function <- function(x){
+  envir <- eval(parse(text = test_opt()$envir))
+  envir$my_function <- function(x){
     x
   }
   version <- session()$otherPkgs$drake$Version # nolint
   expect_equal(version, "4.1.0")
-  o <- outdated(old_plan, verbose = FALSE)
+  o <- outdated(old_plan, envir = envir, verbose = FALSE)
   expect_equal(o, character(0))
   newconfig <- read_config(search = FALSE)
   expect_equal(newconfig$short_hash_algo, "md5")
   expect_equal(newconfig$long_hash_algo, "md5")
+  con <- make(
+    old_plan,
+    verbose = FALSE,
+    return_config = TRUE,
+    envir = envir,
+    parallelism = test_opt()$parallelism,
+    jobs = test_opt()$jobs
+  )
+  expect_equal(justbuilt(con), character(0))
+  expect_equal(con$short_hash_algo, "md5")
+  expect_equal(con$long_hash_algo, "md5")
+  storr_hash <- scan(
+    file.path(cache_dir, "config", "hash_algorithm"),
+    what = character(),
+    quiet = TRUE
+  )
+  expect_equal(storr_hash, "md5")
+  rm(list = "my_function", envir = envir)
 })
