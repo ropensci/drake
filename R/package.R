@@ -27,7 +27,6 @@
 #' unlink(c("Makefile", "report.Rmd"))
 #' }
 #' @references \url{https://github.com/wlandau-lilly/drake}
-#' @importFrom base64url base32_encode
 #' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest
@@ -45,7 +44,6 @@
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat expect_false expect_true test_that
-#' @importFrom tools md5sum
 #' @importFrom utils capture.output sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave

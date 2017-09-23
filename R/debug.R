@@ -8,7 +8,9 @@ dbug <- function() {
   config <- build_config(plan = plan, targets = plan$target,
     envir = envir, parallelism = opt$parallelism, jobs = opt$jobs,
     prepend = character(0), verbose = FALSE, packages = character(0),
-    prework = character(0), command = "make", args = character(0))
+    prework = character(0), command = "make", args = character(0),
+    short_hash_algo = default_short_hash_algo(),
+    long_hash_algo = default_long_hash_algo())
 
   # Maybe show config opts here
   config

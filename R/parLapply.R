@@ -52,9 +52,9 @@ assign_to_envir_parLapply <- # nolint
 
 load_packages_parLapply <- function() { # nolint
   # Not ideal, but necessary.
-  packages <- c("base64url", "codetools", "crayon", "eply",
+  packages <- c("codetools", "crayon", "eply",
     "digest", "igraph", "magrittr", "parallel", "plyr", "R.utils",
-    "storr", "stringi", "stringr", "testthat", "tools", "utils")
+    "storr", "stringi", "stringr", "testthat", "utils")
   for (package in packages)
     base::suppressPackageStartupMessages(
       eval(parse(

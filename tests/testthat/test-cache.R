@@ -69,6 +69,8 @@ test_with_dir("cache functions work", {
 
   # config
   newconfig <- read_config(search = FALSE)
+  expect_equal(newconfig$short_hash_algo, default_short_hash_algo())
+  expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = FALSE), config$plan)
   expect_equal(class(read_graph(search = FALSE)), "igraph")

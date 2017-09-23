@@ -150,7 +150,12 @@ get_cache <- function(path = getwd(), search = TRUE) {
     return(NULL)
   if (!file.exists(path))
     return(NULL)
-  cache <- storr_rds(path, mangle_key = TRUE, hash_algorithm = hash_algorithm)
+  hash_algos <- choose_hash_algos()
+  cache <- storr_rds(
+    path,
+    mangle_key = TRUE,
+    hash_algorithm = hash_algos$short
+  )
   cache$driver$path <- normalizePath(cache$driver$path)
   cache
 }

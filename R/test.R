@@ -22,7 +22,7 @@ test_with_dir <- function(desc, code){
   root <- tempdir()
   stopifnot(file.exists(root))
   relative_dir <- base32_encode(desc) %>%
-    digest(algo = hash_algorithm)
+    digest(algo = default_short_hash_algo())
   dir <- file.path(root, relative_dir)
   dir_empty(dir)
   with_dir(dir, test_that(desc = desc, code = code))

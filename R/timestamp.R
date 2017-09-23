@@ -3,27 +3,30 @@ time_stamps <- function(config, outdated){
   write_time_stamp_template()
   targets <- intersect(V(config$graph)$name, config$plan$target)
   stamp_these <- setdiff(targets, outdated)
-  lapply(stamp_these, write_time_stamp)
+  lapply(stamp_these, write_time_stamp, config = config)
   return(invisible())
 }
 
-safe_encode <- function(x){
-  base32_encode(x)
-  # for details on this, see issue #47.
+safe_encode <- function(x, hash_algo){
+  digest(
+    object = x,
+    algo = hash_algo,
+    file = FALSE
+  )
 }
 
-time_stamp <- function(x){
+time_stamp <- function(x, hash_algo){
   if (!length(x)){
     return(character(0))
   }
-  key <- safe_encode(x) # must begin with alphanumeric
+  key <- safe_encode(x = x, hash_algo = hash_algo)
   return(file.path(time_stamp_dir, key))
 }
 
-write_time_stamp <- function(target){
+write_time_stamp <- function(target, config){
   file.copy(
     time_stamp_template,
-    time_stamp(target),
+    time_stamp(x = target, hash_algo = config$short_hash_algo),
     overwrite = TRUE,
     copy.date = TRUE
     )

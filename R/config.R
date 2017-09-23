@@ -32,12 +32,19 @@
 config <- function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   parallelism = drake::default_parallelism(),
-  jobs = 1, packages = (.packages()), prework = character(0)) {
+  jobs = 1, packages = (.packages()), prework = character(0),
+  prepend = character(0), command = character(0), args = character(0),
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo()
+){
   force(envir)
   config <- make(imports_only = TRUE, return_config = TRUE,
     clear_progress = FALSE, plan = plan, targets = targets,
     envir = envir, verbose = verbose, parallelism = parallelism,
-    jobs = jobs, packages = packages, prework = prework)
+    jobs = jobs, packages = packages, prework = prework,
+    prepend = prepend, command = command, args = args,
+    short_hash_algo = short_hash_algo, long_hash_algo = long_hash_algo
+  )
   config$graph <- build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
   config
@@ -46,23 +53,32 @@ config <- function(plan, targets = drake::possible_targets(plan),
 build_config <- function(plan, targets, envir, jobs,
   parallelism = drake::parallelism_choices(),
   verbose, packages, prework, prepend, command,
-  args, clear_progress = TRUE) {
+  args, clear_progress = TRUE,
+  short_hash_algo, long_hash_algo
+){
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
   parallelism <- match.arg(parallelism)
   prework <- add_packages_to_prework(packages = packages,
     prework = prework)
+  hash_algos <- choose_hash_algos(
+    preferred_short = short_hash_algo,
+    preferred_long = long_hash_algo
+  )
   cache <- storr_rds(cache_dir, mangle_key = TRUE,
-    hash_algorithm = hash_algorithm)
+    hash_algorithm = hash_algos$short)
   cache$driver$path <- normalizePath(cache$driver$path)
-  if (clear_progress)
+  if (clear_progress){
     cache$clear(namespace = "progress")
+  }
   graph <- build_graph(plan = plan,
     targets = targets, envir = envir, verbose = verbose)
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command,
-    args = args, graph = graph, inventory = cache$list(),
+    args = args, graph = graph,
+    short_hash_algo = hash_algos$short, long_hash_algo = hash_algos$long,
+    inventory = cache$list(),
     inventory_filemtime = cache$list(namespace = "filemtime"))
 }
 

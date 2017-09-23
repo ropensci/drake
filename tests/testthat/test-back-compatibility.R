@@ -40,4 +40,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     outdated(old_plan, verbose = FALSE),
     character(0)
   )
+  newconfig <- read_config(search = FALSE)
+  expect_equal(newconfig$short_hash_algo, "md5")
+  expect_equal(newconfig$long_hash_algo, "md5")
 })

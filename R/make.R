@@ -117,6 +117,20 @@
 #' @param clear_progress logical, whether to clear the saved record of
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 #' before anything is imported or built.
+#' 
+#' @param short_hash_algo character scalar, name of the short
+#' hash algorithm to use. Drake uses both a short hash algorithm
+#' for fingerprints that could be file names and a long
+#' hash algorithm for fingerprints that are never file names.
+#' Windows restricts the length of file paths, so the
+#' distinction is important.
+#'
+#' @param long_hash_algo character scalar, name of the long
+#' hash algorithm to use. Drake uses both a short hash algorithm
+#' for fingerprints that could be file names and a long
+#' hash algorithm for fingerprints that are never file names.
+#' Windows restricts the length of file paths, so the
+#' distinction is important.
 #'
 #' @examples
 #' \dontrun{
@@ -152,8 +166,10 @@ make <- function(
     verbose = verbose
     ),
   return_config = FALSE,
-  clear_progress = TRUE
-  ){
+  clear_progress = TRUE,
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo()
+){
   force(envir)
   parallelism <- match.arg(
     arg = parallelism,
@@ -171,8 +187,10 @@ make <- function(
     prepend = prepend,
     command = command,
     args = args,
-    clear_progress = clear_progress
-    )
+    clear_progress = clear_progress,
+    short_hash_algo = short_hash_algo,
+    long_hash_algo = long_hash_algo
+  )
   check_config(config)
   store_config(config)
   config$cache$set(

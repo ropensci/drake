@@ -89,7 +89,11 @@ store_object <- function(target, value, imported, config) {
 }
 
 store_file <- function(target, hashes, imported, config) {
-  hash <- ifelse(imported, hashes$file, rehash_file(target))
+  hash <- ifelse(
+    imported,
+    hashes$file,
+    rehash_file(target = target, config = config)
+  )
   config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
     namespace = "filemtime")
   config$cache$set(key = target, value = list(type = "file",
