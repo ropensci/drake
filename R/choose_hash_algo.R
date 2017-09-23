@@ -27,29 +27,47 @@ available_hash_algos <- function(){
 }
 
 choose_hash_algos <- function(
-  preferred_short = default_short_hash_algo(),
-  preferred_long = default_long_hash_algo()
+  preferred_short = NULL,
+  preferred_long = NULL
 ){
-  preferred_short <- match.arg(
-    arg = preferred_short,
-    choices = available_hash_algos()
-  )
-  preferred_long <- match.arg(
-    arg = preferred_long,
-    choices = available_hash_algos()
-  )
   old <- old_hash_algos()
-  short <- ifelse(
-    is.null(old$short),
-    preferred_short,
-    old$short
-  )
-  long <- ifelse(
-    is.null(old$long),
-    preferred_long,
-    old$long
-  )
+  short <- choose_one_algo(
+    old = old$short,
+    preferred = preferred_short,
+    default = default_short_hash_algo(),
+    type = "short"
+  ) %>%
+    match.arg(choices = available_hash_algos())
+  long <- choose_one_algo(
+    old = old$long,
+    preferred = preferred_long,
+    default = default_long_hash_algo(),
+    type = "long"
+  ) %>%
+    match.arg(choices = available_hash_algos())
   list(short = short, long = long)
+}
+
+choose_one_algo <- function(old, preferred, default, type) {
+  if (!length(old) & !length(preferred)) {
+    default
+  } else if (!length(old) & length(preferred)) {
+    preferred
+  } else if (length(old) & !length(preferred)) {
+    old
+  } else if (length(old) & length(preferred)) {
+    warn_different_algo(to = old, from = preferred, type = type)
+    old
+  }
+}
+
+warn_different_algo <- function(to, from, type) {
+  warning(
+    "Using ", to, " instead of ", from, " for ", type,
+    "_hash_algorithm because the last build used ", to, ". ",
+    "To avoid this warning, use make(..., ", type,
+    "_hash_algorithm = ", to, ")."
+  )
 }
 
 old_hash_algos <- function(){
@@ -78,10 +96,10 @@ try_old_hash_algos <- function(){
     return(list(short = short, long = NULL))
   }
   last_build <- cache$get("sessionInfo", namespace = "session")
-  drake_version <- last_build$otherPkgs$drake$Version
-  built_after_4.1.0 <- compareVersion(drake_version, "4.1.0") > 0
+  drake_version <- last_build$otherPkgs$drake$Version # nolint
+  built_after_4.1.0 <- compareVersion(drake_version, "4.1.0") > 0 # nolint
   long <- ifelse(
-    built_after_4.1.0,
+    built_after_4.1.0, # nolint
     cache$get("long_hash_algo", namespace = "config"),
     "md5"
   )

@@ -13,7 +13,8 @@ safe_encode <- Vectorize(function(x, hash_algo){
     algo = hash_algo,
     file = FALSE
   )
-}, "x")
+},
+"x")
 
 time_stamp <- function(x, config){
   if (!length(x)){

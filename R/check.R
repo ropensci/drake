@@ -23,8 +23,8 @@ check <- function(plan, targets = drake::possible_targets(plan),
     verbose = TRUE, parallelism = "mclapply",
     jobs = 1, packages = character(0),
     prepend = character(0), prework = character(0), command = character(0),
-    args = character(0), short_hash_algo = default_short_hash_algo(),
-    long_hash_algo = default_long_hash_algo())
+    args = character(0), short_hash_algo = NULL,
+    long_hash_algo = NULL)
   check_config(config)
   check_strings(config$plan)
   invisible(plan)

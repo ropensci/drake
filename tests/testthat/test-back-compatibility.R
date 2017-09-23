@@ -32,14 +32,10 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   my_function <- function(x){
     x
   }
-  expect_equal(
-    session()$otherPkgs$drake$Version, # nolint
-    "4.1.0"
-  )
-  expect_equal(
-    outdated(old_plan, verbose = FALSE),
-    character(0)
-  )
+  version <- session()$otherPkgs$drake$Version # nolint
+  expect_equal(version, "4.1.0")
+  o <- outdated(old_plan, verbose = FALSE)
+  expect_equal(o, character(0))
   newconfig <- read_config(search = FALSE)
   expect_equal(newconfig$short_hash_algo, "md5")
   expect_equal(newconfig$long_hash_algo, "md5")

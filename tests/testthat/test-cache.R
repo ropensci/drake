@@ -4,6 +4,16 @@ test_with_dir("clean() works if there is no cache already", {
   clean(list = "no_cache")
 })
 
+test_with_dir("corrupt cache", {
+  x <- plan(a = 1)
+  make(x, verbose = FALSE)
+  path <- file.path(cache_dir, "config", "hash_algorithm")
+  expect_true(file.exists(path))
+  unlink(path)
+  expect_false(file.exists(path))
+  expect_warning(expect_error(make(x, verbose = FALSE)))
+})
+
 test_with_dir("try to find a non-existent project", {
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)

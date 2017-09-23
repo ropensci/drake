@@ -7,6 +7,33 @@ test_with_dir("graph does not fail if input file is binary", {
   unlink("input.rds", force = TRUE)
 })
 
+test_with_dir("illegal hashes", {
+  x <- plan(a = 1)
+  expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))
+  expect_error(make(x, long_hash_algo = "no_such_algo_aslkdjfoiewlk"))
+})
+
+test_with_dir("different hashes", {
+  x <- plan(a = 1)
+  con <- make(
+    x,
+    verbose = FALSE,
+    short_hash_algo = "crc32",
+    long_hash_algo = "sha512",
+    return_config = TRUE
+  )
+  expect_true(length(justbuilt(con)) > 0)
+  expect_warning(
+    con <- make(
+      x,
+      verbose = FALSE,
+      short_hash_algo = "murmur32",
+      long_hash_algo = "xxhash32",
+      return_config = TRUE
+    )
+  )
+})
+
 test_with_dir("different graphical arrangements for Makefile parallelism", {
   e <- new.env()
   x <- plan(a = 1, b = f(2))

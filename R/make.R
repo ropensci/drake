@@ -167,8 +167,8 @@ make <- function(
     ),
   return_config = FALSE,
   clear_progress = TRUE,
-  short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo()
+  short_hash_algo = NULL,
+  long_hash_algo = NULL
 ){
   force(envir)
   parallelism <- match.arg(
