@@ -24,7 +24,10 @@ Organize your work in a data frame. Then `make()` it.
 ```r
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-my_plan
+my_plan # Each target is a file (single-quoted) or object.
+```
+
+```r
 ##                    target                                      command
 ## 1             'report.md'   my_knit('report.Rmd', report_dependencies)
 ## 2                   small                                  simulate(5)
@@ -42,7 +45,10 @@ my_plan
 ## 14 coef_regression1_large                      coef(regression1_large)
 ## 15 coef_regression2_small                      coef(regression2_small)
 ## 16 coef_regression2_large                      coef(regression2_large)
-make(my_plan)
+```
+
+```r
+make(my_plan) # Run the commands to build the targets.
 ```
 
 # Installation
