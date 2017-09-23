@@ -66,7 +66,8 @@ warn_different_algo <- function(to, from, type) {
     "Using ", to, " instead of ", from, " for ", type,
     "_hash_algorithm because the last build used ", to, ". ",
     "To avoid this warning, use make(..., ", type,
-    "_hash_algorithm = ", to, ")."
+    "_hash_algorithm = \"", to, "\") or do not supply ",
+    "a ", type, " hash algorithm at all."
   )
 }
 
