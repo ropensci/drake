@@ -33,7 +33,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     x
   }
   expect_equal(
-    session()$otherPkgs$drake$Version,
+    session()$otherPkgs$drake$Version, # nolint
     "4.1.0"
   )
   expect_equal(
