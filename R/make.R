@@ -164,7 +164,7 @@ make <- function(
   args = drake::default_system2_args(
     jobs = jobs,
     verbose = verbose
-    ),
+  ),
   return_config = FALSE,
   clear_progress = TRUE,
   short_hash_algo = NULL,
