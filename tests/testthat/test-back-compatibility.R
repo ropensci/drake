@@ -27,8 +27,11 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   ))
   old_plan <- data.frame(
     target = "x",
-    command = "\"'my_file.rds'\""
+    command = "my_function('my_file.rds')"
   )
+  my_function <- function(x){
+    x
+  }
   expect_equal(
     session()$otherPkgs$drake$Version,
     "4.1.0"
