@@ -53,8 +53,9 @@ assign_to_envir_parLapply <- # nolint
 load_packages_parLapply <- function() { # nolint
   # Not ideal, but necessary.
   packages <- c("codetools", "crayon", "eply",
-    "digest", "igraph", "magrittr", "parallel", "plyr", "R.utils",
-    "storr", "stringi", "stringr", "testthat", "utils")
+    "digest", "igraph", "lubridate", "magrittr", "parallel",
+    "plyr", "R.utils", "storr", "stringi", "stringr", "testthat", "utils",
+    "visNetwork", "withr")
   for (package in packages)
     base::suppressPackageStartupMessages(
       eval(parse(
