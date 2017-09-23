@@ -10,9 +10,8 @@ make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE, clear_progress = TRUE,
-  short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo())
+  return_config = FALSE, clear_progress = TRUE, short_hash_algo = NULL,
+  long_hash_algo = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
