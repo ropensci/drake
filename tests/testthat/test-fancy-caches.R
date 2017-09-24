@@ -8,6 +8,27 @@ test_with_dir("fancy cache features, bad paths", {
   expect_equal(get_storr_rds_cache("not_found"), NULL)
 })
 
+test_with_dir("totally off the default cache", {
+  saveRDS("stuff", file = "some_file")
+  con <- dbug()
+  unlink(default_cache_path(), recursive = TRUE)
+  con$plan <- data.frame(target = "a", command = "c('some_file')")
+  con$targets <- con$plan$target
+  con$cache <- new_cache(
+    path = "my_new_cache",
+    short_hash_algo = "murmur32",
+    long_hash_algo = "crc32"
+  )
+  make(
+    con$plan,
+    cache = con$cache,
+    verbose = FALSE,
+    parallelism = test_opt()$parallelism,
+    jobs = test_opt()$jobs
+  )
+  expect_false(file.exists(default_cache_path()))
+})
+
 test_with_dir("use two differnt file system caches", {
   saveRDS("stuff", file = "some_file")
   con <- dbug()
@@ -48,7 +69,13 @@ test_with_dir("use two differnt file system caches", {
     verbose = FALSE,
     cache = con$cache
   )
-  con <- testrun(con)
+  con <- make(
+    con$plan,
+    cache = con$cache,
+    verbose = FALSE,
+    parallelism = test_opt()$parallelism,
+    jobs = test_opt()$jobs
+  )
   o3 <- outdated(
     con$plan,
     envir = con$envir,
@@ -75,5 +102,6 @@ test_with_dir("use two differnt file system caches", {
 })
 
 test_with_dir("memory cache", {
+  expect_false(file.exists(default_cache_path()))
   expect_false(file.exists(default_cache_path()))
 })
