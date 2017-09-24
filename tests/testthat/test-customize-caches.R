@@ -107,82 +107,101 @@ test_with_dir("totally off the default cache", {
 
 test_with_dir("use two differnt file system caches", {
   saveRDS("stuff", file = "some_file")
-  con <- dbug()
-  con$envir <- eval(parse(text = test_opt()$envir))
-  con$plan <- data.frame(target = "a", command = "c('some_file')")
-  con$targets <- con$plan$target
+  targ <- "DRAKE_TEST_target"
+  my_plan <- data.frame(target = targ, command = "my_function('some_file')")
+  opt <- test_opt()
+  parallelism <- opt$parallelism
+  jobs <- opt$jobs
+  envir <- eval(parse(text = opt$envir))
+  if (targ %in% ls(envir)){
+    rm(list = targ, envir = envir)
+  }
+  envir$my_function <- function(x){
+    x
+  }
+  cache <- dbug()$cache
 
-  make(
-    con$plan,
-    cache = con$cache,
+  con <- make(
+    my_plan,
+    cache = cache,
+    envir = envir,
     verbose = FALSE,
-    parallelism = test_opt()$parallelism,
-    jobs = test_opt()$jobs
+    parallelism = parallelism,
+    jobs = jobs,
+    return_config = TRUE
   )
 
   o1 <- outdated(
-    con$plan,
-    envir = con$envir,
+    my_plan,
+    envir = envir,
     verbose = FALSE,
-    cache = con$cache
+    cache = cache
   )
 
   expect_equal(o1, character(0))
   expect_equal(
+    short_hash(cache),
     con$short_hash_algo,
-    con$cache$get("short_hash_algo", namespace = "config"),
+    cache$get("short_hash_algo", namespace = "config"),
     default_short_hash_algo()
   )
   expect_equal(
+    long_hash(cache),
     con$long_hash_algo,
-    con$cache$get("long_hash_algo", namespace = "config"),
+    cache$get("long_hash_algo", namespace = "config"),
     default_long_hash_algo()
   )
   expect_equal(
-    con$cache$driver$hash_algorithm,
+    short_hash(cache),
+    cache$driver$hash_algorithm,
     default_short_hash_algo()
   )
 
-  con$cache <- new_cache(
+  cache2 <- new_cache(
     path = "my_new_cache",
     short_hash_algo = "murmur32",
     long_hash_algo = "crc32"
   )
   o2 <- outdated(
-    con$plan,
-    envir = con$envir,
+    my_plan,
+    envir = envir,
     verbose = FALSE,
-    cache = con$cache
+    cache = cache2
   )
-  con <- make(
-    con$plan,
-    cache = con$cache,
+  con2 <- make(
+    my_plan,
+    cache = cache2,
+    envir = envir,
     verbose = FALSE,
-    parallelism = test_opt()$parallelism,
-    jobs = test_opt()$jobs,
+    parallelism = parallelism,
+    jobs = jobs,
     return_config = TRUE
   )
   o3 <- outdated(
-    con$plan,
-    envir = con$envir,
+    my_plan,
+    envir = envir,
     verbose = FALSE,
-    cache = con$cache
+    cache = cache2
   )
-  expect_equal(o2, "a")
+  expect_equal(o2, targ)
   expect_equal(o3, character(0))
   expect_equal(
-    con$short_hash_algo,
-    con$cache$get("short_hash_algo", namespace = "config"),
+    short_hash(cache2),
+    con2$short_hash_algo,
+    cache2$get("short_hash_algo", namespace = "config"),
     "murmur32"
   )
   expect_equal(
-    con$long_hash_algo,
-    con$cache$get("long_hash_algo", namespace = "config"),
+    long_hash(cache2),
+    con2$long_hash_algo,
+    cache$get("long_hash_algo", namespace = "config"),
     "crc32"
   )
   expect_equal(
-    con$cache$driver$hash_algorithm,
+    short_hash(cache2),
+    con2$cache$driver$hash_algorithm,
     "murmur32"
   )
-  expect_true(grepl("my_new_cache", con$cache$driver$path))
+  expect_true(grepl("my_new_cache", con2$cache$driver$path))
+  expect_true(grepl("my_new_cache", cache_path(cache2)))
 })

@@ -54,6 +54,9 @@ outdated <-  function(
       prework = prework
     )
   }
+  if (!is.null(cache)){
+    config$cache <- configure_cache(cache)
+  }
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   rebuild <- Filter(
     x = all_targets,
