@@ -160,6 +160,7 @@ and finely tune the caching and hashing.
 
 ```r
 available_hash_algos()
+cache_path()
 cache_types()
 configure_cache()
 default_long_hash_algo()
