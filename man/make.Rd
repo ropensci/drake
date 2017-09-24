@@ -5,13 +5,12 @@
 \title{Function \code{make}}
 \usage{
 make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, imports_only = FALSE,
+  verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE, clear_progress = TRUE, short_hash_algo = NULL,
-  long_hash_algo = NULL)
+  return_config = FALSE, clear_progress = TRUE, imports_only = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -40,8 +39,9 @@ then reproducibly tracked as dependencies.}
 \item{verbose}{logical, whether to print progress to the console.
 Skipped objects are not printed.}
 
-\item{imports_only}{logical, whether to skip building the targets
-in \code{plan} and just import objects and files.}
+\item{cache}{drake cache as created by \code{\link{new_cache}()}.
+See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
+and \code{\link{recover_cache}()}}
 
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link{parallelism_choices}()}.
@@ -129,59 +129,8 @@ of runtime configuration parameters used by \code{make()}}
 progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 before anything is imported or built.}
 
-\item{short_hash_algo}{character scalar, name of the short
-hash algorithm to use.
-This argument is advanced, and most users can leave it alone. \cr \cr
-
-The algorithm must be among \code{\link{available_hash_algos}{}},
-which is just the collection of algorithms available to the `algo`
-argument in \code{digest::digest()}. \cr \cr
-
-If you express no preference for a hash, drake will use
-the short hash for the existing project, or
-\code{\link{default_short_hash_algo}()} for a new project.
-If you do supply a hash algorithm, it will only apply to
-fresh projects (see \code{\link{clean}(destroy = TRUE)}).
-For a project that already exists, if you supply a hash algorithm,
-drake will warn you and then ignore your choice, opting instead for
-the hash algorithm already chosen for the project
-in a previous \code{make()}. \cr \cr
-
-Drake uses both a short hash algorithm
-and a long hash algorithm. The shorter hash has fewer characters,
-and it is used to generate the names of internal cache files
-and auxiliary files. The decision for short names is important
-because Windows places restrictions on the length of file paths.
-On the other hand, some internal hashes in drake are
-never used as file names, and those hashes can use a longer hash
-to avoid collisions.}
-
-\item{long_hash_algo}{character scalar, name of the long
-hash algorithm to use.
-This argument is advanced, and most users can leave it alone. \cr \cr
-
-The algorithm must be among \code{\link{available_hash_algos}{}},
-which is just the collection of algorithms available to the `algo`
-argument in \code{digest::digest()}. \cr \cr
-
-If you express no preference for a hash, drake will use
-the long hash for the existing project, or
-\code{\link{default_long_hash_algo}()} for a new project.
-If you do supply a hash algorithm, it will only apply to
-fresh projects (see \code{\link{clean}(destroy = TRUE)}).
-For a project that already exists, if you supply a hash algorithm,
-drake will warn you and then ignore your choice, opting instead for
-the hash algorithm already chosen for the project
-in a previous \code{make()}. \cr \cr
-
-Drake uses both a short hash algorithm
-and a long hash algorithm. The shorter hash has fewer characters,
-and it is used to generate the names of internal cache files
-and auxiliary files. The decision for short names is important
-because Windows places restrictions on the length of file paths.
-On the other hand, some internal hashes in drake are
-never used as file names, and those hashes can use a longer hash
-to avoid collisions.}
+\item{imports_only}{logical, whether to skip building the targets
+in \code{plan} and just import objects and files.}
 }
 \description{
 Run your project (build the targets).

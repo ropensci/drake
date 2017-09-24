@@ -25,7 +25,9 @@ project root or a subdirectory of the project.}
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
-\item{cache}{a storr cache. Mainly for internal use.}
+\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+If \code{cache} is supplied,
+the \code{path} and \code{search} arguments are ignored.}
 }
 \value{
 drake target item from the cache

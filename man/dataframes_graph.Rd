@@ -5,7 +5,7 @@
 \title{Function \code{dataframes_graph}}
 \usage{
 dataframes_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, targets_only = FALSE,
   split_columns = FALSE, font_size = 20, config = NULL)
@@ -21,6 +21,9 @@ dataframes_graph(plan, targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
+
+\item{cache}{optional drake cache. Only used if the \code{config}
+argument is \code{NULL} (default). See code{\link{new_cache}()}.}
 
 \item{jobs}{The \code{outdated()} function is called internally,
 and it needs to import objects and examine your
@@ -76,7 +79,6 @@ default title of the graph.
 \description{
 Get the information about nodes, edges, and the legend/key
 so you can plot your own custom \code{visNetwork}.
-IMPORTANT: you must be in the root directory of your project.
 }
 \examples{
 \dontrun{

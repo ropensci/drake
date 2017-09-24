@@ -28,7 +28,6 @@ vignettes/.*_files
 ^.*\.js$
 ^.*\.log$
 ^.*\.Rproj$
-^.*\.sh$
 ^.*\.svg$
 ^\.Rproj\.user$
 ^.*\.yml$

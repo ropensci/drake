@@ -5,7 +5,7 @@
 \title{Function \code{loadd}}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
-  search = TRUE, envir = parent.frame())
+  search = TRUE, cache = NULL, envir = parent.frame())
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -25,6 +25,10 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+If \code{cache} is supplied,
+the \code{path} and \code{search} arguments are ignored.}
 
 \item{envir}{environment to load objects into. Defaults to the
 calling environment (current workspace).}

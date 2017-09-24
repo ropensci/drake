@@ -15,6 +15,9 @@
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}
 #' @param verbose same as for \code{\link{make}}
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' The \code{cache} argument is ignored if a
+#' non-null \code{config} argument is supplied.
 #' @param parallelism same as for \code{\link{make}}
 #' @param jobs same as for \code{\link{make}}
 #' @param packages same as for \code{\link{make}}
@@ -30,12 +33,13 @@ outdated <-  function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
+  cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
   prework = character(0),
   config = NULL
-  ){
+){
   force(envir)
   if (is.null(config)){
     config <- config(
@@ -43,11 +47,15 @@ outdated <-  function(
       targets = targets,
       envir = envir,
       verbose = verbose,
+      cache = cache,
       parallelism = parallelism,
       jobs = jobs,
       packages = packages,
       prework = prework
-      )
+    )
+  }
+  if (!is.null(cache)){
+    config$cache <- configure_cache(cache)
   }
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   rebuild <- Filter(

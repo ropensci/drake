@@ -9,6 +9,7 @@
 #' \code{\link{plan}()}.
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
+#' @param cache optional drake cache. See \code{\link{new_cache}()}
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -17,14 +18,14 @@
 #' check(my_plan)
 #' }
 check <- function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame()) {
+  envir = parent.frame(), cache = NULL) {
   force(envir)
   config <- build_config(plan = plan, targets = targets, envir = envir,
-    verbose = TRUE, parallelism = "mclapply",
+    verbose = TRUE, cache = cache, parallelism = "mclapply",
     jobs = 1, packages = character(0),
     prepend = character(0), prework = character(0), command = character(0),
-    args = character(0), short_hash_algo = NULL,
-    long_hash_algo = NULL)
+    args = character(0), clear_progress = FALSE
+  )
   check_config(config)
   check_strings(config$plan)
   invisible(plan)

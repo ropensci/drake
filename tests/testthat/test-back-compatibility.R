@@ -40,6 +40,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   newconfig <- read_config(search = FALSE)
   expect_equal(newconfig$short_hash_algo, "md5")
   expect_equal(newconfig$long_hash_algo, "md5")
+  expect_equal(newconfig$cache$driver$hash_algorithm, "md5")
   con <- make(
     old_plan,
     verbose = FALSE,
@@ -51,6 +52,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   expect_equal(justbuilt(con), character(0))
   expect_equal(con$short_hash_algo, "md5")
   expect_equal(con$long_hash_algo, "md5")
+  expect_equal(con$cache$driver$hash_algorithm, "md5")
   storr_hash <- scan(
     file.path(cache_dir, "config", "hash_algorithm"),
     what = character(),

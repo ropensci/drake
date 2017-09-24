@@ -5,7 +5,7 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE)
+  search = TRUE, cache = NULL)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
@@ -28,6 +28,10 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}. If
+If \code{cache} is supplied,
+the \code{path} and \code{search} arguments are ignored.}
 }
 \description{
 Cleans up all work done by \code{\link{make}()}.

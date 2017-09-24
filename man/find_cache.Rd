@@ -17,6 +17,8 @@ if no cache is found.
 \description{
 Return the file path of the nearest drake
 cache (searching upwards for directories containing a drake cache).
+Only works if the cache is a file system in a
+hidden folder named \code{.drake}.
 }
 \examples{
 \dontrun{

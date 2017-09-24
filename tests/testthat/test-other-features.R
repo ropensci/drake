@@ -1,5 +1,11 @@
 context("other-features")
 
+test_with_dir("available hash algos", {
+  x <- available_hash_algos()
+  expect_true(length(x) > 0)
+  expect_true(is.character(x))
+})
+
 test_with_dir("in_progress() works", {
   expect_equal(in_progress(), character(0))
   bad_plan <- plan(x = function_doesnt_exist())

@@ -2,30 +2,34 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   config,
   run = TRUE,
   debug = FALSE
-  ){
+){
+  this_cache_path <- cache_path(config$cache)
   if (identical(globalenv(), config$envir)){
     save(
       list = ls(config$envir, all.names = TRUE),
       envir = config$envir,
-      file = globalenvpath
-      )
+      file = globalenv_file(this_cache_path)
+    )
   }
   config$cache$set("config", config, namespace = "makefile")
-  makefile <- file.path(cache_dir, "Makefile")
-  sink("Makefile")
-  makefile_head(config)
-  makefile_rules(config)
-  sink()
+  with_output_sink(
+    new = "Makefile",
+    code = {
+      makefile_head(config)
+      makefile_rules(config)
+    }
+  )
   out <- outdated(
     plan = config$plan,
     targets = config$targets,
     envir = config$envir,
     verbose = config$verbose,
+    cache = config$cache,
     jobs = config$jobs,
     parallelism = config$parallelism,
     packages = config$packages,
     prework = config$prework
-    )
+  )
   time_stamps(config = config, outdated = out)
   error_code <- ifelse(
     run,
@@ -33,7 +37,9 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     0
   )
   if (!debug){
-    unlink(globalenvpath, force = TRUE)
+    dir <- cache_path(config$cache)
+    file <- globalenv_file(dir)
+    unlink(file, force = TRUE)
   }
   return(invisible(error_code))
 }
@@ -57,25 +63,39 @@ default_system2_args <- function(jobs, verbose){
   return(out)
 }
 
+# For normalized cache paths on Windows
+to_unix_path <- function(x){
+  gsub("\\\\", "/", x)
+}
+
 makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
   }
-  cat("all:", time_stamp(config$targets, config = config), sep = " \\\n")
+  cache_path <- cache_path(config$cache) %>%
+    to_unix_path
+  cat(cache_macro, "=", cache_path, "\n\n", sep = "")
+  cat(
+    "all:",
+    time_stamp_target(config$targets, config = config),
+    sep = " \\\n"
+  )
 }
 
 makefile_rules <- function(config){
   targets <- intersect(config$plan$target, V(config$graph)$name)
+  cache_path <- cache_path(config$cache)
   for (target in targets){
     deps <- dependencies(target, config) %>%
       intersect(y = config$plan$target) %>%
-      time_stamp(config = config)
+      time_stamp_target(config = config)
     breaker <- ifelse(length(deps), " \\\n", "\n")
     cat(
       "\n",
-      time_stamp(
-        x = target,
-        config = config),
+      time_stamp_target(
+        target = target,
+        config = config
+      ),
       ":",
       breaker,
       sep = ""
@@ -88,7 +108,10 @@ makefile_rules <- function(config){
     } else{
       target <- quotes(unquote(target), single = FALSE)
     }
-    cat("\tRscript -e 'drake::mk(", target, ")'\n", sep = "")
+    cat("\tRscript -e 'drake::mk(", target,
+      ", \"$(", cache_macro, ")\")'\n",
+      sep = ""
+    )
   }
 }
 
@@ -98,10 +121,14 @@ makefile_rules <- function(config){
 #' Users, do not invoke directly.
 #' @export
 #' @param target name of target to make
-mk <- function(target){
-  config <- get_cache()$get("config", namespace = "makefile")
+#' @param cache_path path to the drake cache
+mk <- function(target, cache_path = NULL){
+  cache <- this_cache(cache_path)
+  config <- cache$get("config", namespace = "makefile")
   if (identical(globalenv(), config$envir)){
-    load(file = globalenvpath, envir = config$envir)
+    dir <- cache_path
+    file <- globalenv_file(dir)
+    load(file = file, envir = config$envir)
   }
   config <- inventory(config)
   do_prework(config = config, verbose_packages = FALSE)
@@ -117,11 +144,16 @@ mk <- function(target){
     target = target,
     hash_list = hash_list,
     config = config
-    )
+  )
   config <- inventory(config)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(old_hash, new_hash)){
-    file_overwrite(time_stamp(x = target, config = config))
+    file <- time_stamp_file(target = target, config = config)
+    file_overwrite(file)
   }
   return(invisible())
+}
+
+globalenv_file <- function(cache_path){
+  file.path(cache_path, "globalenv.RData")
 }

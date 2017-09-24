@@ -35,10 +35,10 @@ test_with_dir("files inside directories can be timestamped", {
     parallelism = "parLapply", verbose = FALSE, packages = character(0),
     prework = character(0), prepend = character(0), command = character(0),
     args = character(0), envir = new.env(), jobs = 1,
-    short_hash_algo = default_short_hash_algo(),
-    long_hash_algo = default_long_hash_algo())
+    cache = NULL, clear_progress = FALSE)
+  path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE)
-  expect_silent(mk(config$plan$target[1]))
+  expect_silent(mk(config$plan$target[1], cache_path = path))
   expect_true(file.exists("t1"))
   expect_true(file.exists(eply::unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
@@ -56,16 +56,18 @@ test_with_dir("basic Makefile stuff works", {
   make(config$plan, targets = "combined", envir = config$envir,
     verbose = FALSE)
   config$verbose <- FALSE
+  cache_path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE, debug = TRUE)
   using_global <- identical(config$envir, globalenv())
   if (using_global) {
-    expect_true(file.exists(globalenvpath))
+    expect_true(file.exists(globalenv_file(cache_path)))
   }
   expect_true(file.exists("Makefile"))
-  stamps <- sort(list.files(file.path(time_stamp_dir), full.names = TRUE))
-  stamps2 <- sort(
+  dir <- time_stamp_dir(cache_path)
+  stamps <- unname(sort(list.files(dir, full.names = FALSE)))
+  stamps2 <- unname(sort(
     time_stamp(
-      c(
+     c(
         "combined",
         "myinput",
         "nextone",
@@ -73,21 +75,21 @@ test_with_dir("basic Makefile stuff works", {
       ),
       config = config
     )
-  )
+  ))
   expect_equal(stamps, stamps2)
 
   targ <- "'intermediatefile.rds'"
   expect_false(file.exists(eply::unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
-  mk(targ)
+  mk(targ, cache_path = cache_path)
   expect_equal(unname(progress(list = targ)), "finished")
   expect_true(file.exists(eply::unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
-  mk(targ) # Verify behavior when target is current
+  mk(targ, cache_path = cache_path) # Verify behavior when target is current
   expect_equal(unname(progress(list = targ)), "not built or imported")
 
   run_Makefile(config, run = FALSE)
-  expect_false(file.exists(globalenvpath))
+  expect_false(file.exists(globalenv_file(cache_path)))
 })
 
 test_with_dir("Makefile stuff in globalenv()", {
@@ -103,10 +105,10 @@ test_with_dir("Makefile stuff in globalenv()", {
   clean(list = targ)
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
   expect_equal(unname(progress(list = targ)), "not built or imported")
-  mk("drake_TESTGLOBAL_target")
+  mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
   expect_equal(unname(progress(list = targ)), "finished")
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
-  mk("drake_TESTGLOBAL_target")
+  mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
   expect_equal(unname(progress(list = targ)), "not built or imported")
   loaded <- ls(envir = globalenv())
   rm(list =
@@ -122,6 +124,14 @@ test_with_dir("Makefile stuff in globalenv()", {
 })
 
 test_with_dir("packages are loaded in prework", {
+  pkgs <- rownames(utils::installed.packages())
+  need <- c("abind", "MASS")
+  for (pkg in need){
+    if (!(pkg %in% pkgs)){
+      skip(paste("Package", pkg, "is not installed."))
+    }
+  }
+
   original <- getOption("testdrake_optionload_20170924")
   options(testdrake_optionload_20170924 = "unset")
   expect_equal(getOption("testdrake_optionload_20170924"), "unset")

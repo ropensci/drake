@@ -13,50 +13,6 @@ test_with_dir("illegal hashes", {
   expect_error(make(x, long_hash_algo = "no_such_algo_aslkdjfoiewlk"))
 })
 
-test_with_dir("different hashes", {
-  x <- data.frame(
-    target = "x",
-    command = "my_function('my_file.rds')"
-  )
-  saveRDS(1:5, "my_file.rds")
-  envir <- eval(parse(text = test_opt()$envir))
-  envir$my_function <- function(x){
-    x
-  }
-  con <- make(
-    x,
-    verbose = FALSE,
-    short_hash_algo = "crc32",
-    long_hash_algo = "sha512",
-    return_config = TRUE,
-    envir = envir,
-    parallelism = test_opt()$parallelism,
-    jobs = test_opt()$jobs
-  )
-  expect_true(length(justbuilt(con)) > 0)
-  expect_warning(
-    con2 <- make(
-      x,
-      verbose = FALSE,
-      short_hash_algo = "murmur32",
-      long_hash_algo = "xxhash32",
-      return_config = TRUE,
-      envir = envir,
-      parallelism = test_opt()$parallelism,
-      jobs = test_opt()$jobs
-    )
-  )
-  expect_equal(length(justbuilt(con2)), 0)
-  expect_equal(con$short_hash_algo, "crc32")
-  expect_equal(con$long_hash_algo, "sha512")
-  storr_hash <- scan(
-    file.path(cache_dir, "config", "hash_algorithm"),
-    what = character(),
-    quiet = TRUE
-  )
-  expect_equal(storr_hash, "crc32")
-})
-
 test_with_dir("different graphical arrangements for Makefile parallelism", {
   e <- new.env()
   x <- plan(a = 1, b = f(2))
@@ -206,4 +162,9 @@ test_with_dir("stress test hashing decisions", {
   expect_false(should_rehash_file(
     file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
   unlink(file, force = TRUE)
+})
+
+test_with_dir("parallelism not found for testrun()", {
+  config <- list(parallelism = "not found")
+  expect_error(testrun(config))
 })

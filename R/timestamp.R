@@ -1,6 +1,8 @@
 time_stamps <- function(config, outdated){
-  dir_empty(time_stamp_dir)
-  write_time_stamp_template()
+  cache_path <- cache_path(config$cache)
+  stamp_dir <- time_stamp_dir(cache_path)
+  dir_empty(stamp_dir)
+  write_time_stamp_template(cache_path)
   targets <- intersect(V(config$graph)$name, config$plan$target)
   stamp_these <- setdiff(targets, outdated)
   lapply(stamp_these, write_time_stamp, config = config)
@@ -16,25 +18,43 @@ safe_encode <- Vectorize(function(x, hash_algo){
 },
 "x")
 
-time_stamp <- function(x, config){
-  if (!length(x)){
+time_stamp <- function(target, config){
+  if (!length(target)){
     return(character(0))
   }
-  key <- safe_encode(x = x, hash_algo = config$short_hash_algo)
-  return(file.path(time_stamp_dir, key))
+  safe_encode(x = target, hash_algo = config$short_hash_algo)
+}
+
+time_stamp_file <- function(target, config){
+  stamp <- time_stamp(target = target, config)
+  dir <- time_stamp_dir(cache_path(config$cache))
+  file.path(dir, stamp)
+}
+
+time_stamp_target <- function(target, config){
+  stamp <- time_stamp(target = target, config)
+  dir <- time_stamp_dir(cache_value_macro)
+  file.path(dir, stamp)
 }
 
 write_time_stamp <- function(target, config){
+  cache_path <- cache_path(config$cache)
+  template <- time_stamp_template(cache_path)
   file.copy(
-    time_stamp_template,
-    time_stamp(x = target, config = config),
+    template,
+    time_stamp_file(target = target, config = config),
     overwrite = TRUE,
     copy.date = TRUE
   )
 }
 
-time_stamp_dir <- file.path(cache_dir,  "ts")
-time_stamp_template <- file.path(cache_dir, "timestamp")
+time_stamp_dir <- function(cache_path){
+  file.path(cache_path, "ts")
+}
+
+time_stamp_template <- function(cache_path){
+  file.path(cache_path, "timestamp")
+}
 
 dir_empty <- function(x){
   unlink(x, recursive = TRUE, force = TRUE)
@@ -46,11 +66,11 @@ file_overwrite <- function(x){
   file.create(x)
 }
 
-write_time_stamp_template <- function(){
+write_time_stamp_template <- function(cache_path){
   zip <- system.file(
     "timestamp.zip",
     package = "drake",
     mustWork = TRUE
-    )
-  unzip(zip, exdir = cache_dir, setTimes = TRUE)
+  )
+  unzip(zip, exdir = cache_path, setTimes = TRUE)
 }

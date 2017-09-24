@@ -4,7 +4,7 @@
 \alias{read_graph}
 \title{Function \code{read_graph}}
 \usage{
-read_graph(path = getwd(), search = TRUE, ...)
+read_graph(path = getwd(), search = TRUE, cache = NULL, ...)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -14,6 +14,10 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+If \code{cache} is supplied,
+the \code{path} and \code{search} arguments are ignored.}
 
 \item{...}{arguments to \code{visNetwork()} via \code{\link{plot_graph}()}}
 }
