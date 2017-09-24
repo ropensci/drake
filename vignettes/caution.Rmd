@@ -15,6 +15,7 @@ vignette: >
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 
 With drake, there is room for error with respect to tracking dependencies, managing environments and workspaces, etc. For example, in some edge cases, it is possible to trick drake into ignoring dependencies. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
@@ -224,3 +225,8 @@ make(..., cache = my_cache
 ```
 
 Code like the above is expected to work. However, only file system caches are currently supported, and in-memory caches will likely never be supported for `Makefile` parallelism. That means you should be wary of `storr::storr_dbi()`, especially at the moment.
+
+```{r rmfiles_caution, echo = FALSE}
+clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
