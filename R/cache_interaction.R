@@ -25,12 +25,16 @@
 #' all cached objects will be listed. Since all your functions and
 #' all their global variables are imported, the full list of
 #' imported objects could get really cumbersome.
+#' @param cache drake cache. See \code{\link{new_cache}()}.
+#' If supplied, \code{path} and \code{search} are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
+#' Ignored if a \code{cache} is supplied.
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' Ignored if a \code{cache} is supplied.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -40,8 +44,10 @@
 #' cached()
 #' }
 cached <- function(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE) {
-  cache <- get_cache(path = path, search = search)
+  path = getwd(), search = TRUE, cache = NULL) {
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
   if (is.null(cache))
     return(character(0))
   dots <- match.call(expand.dots = FALSE)$...
@@ -76,6 +82,8 @@ list_cache <- function(no_imported_objects, cache) {
 #' \code{link{imported}}
 #' @export
 #' @return list of imported objects in the cache
+#' @param cache drake cache. See \code{\link{new_cache}()}.
+#' If supplied, \code{path} and \code{search} are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -88,8 +96,10 @@ list_cache <- function(no_imported_objects, cache) {
 #' make(my_plan)
 #' built()
 #' }
-built <- function(path = getwd(), search = TRUE) {
-  cache <- get_cache(path = path, search = search)
+built <- function(path = getwd(), search = TRUE, cache = NULL) {
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
   if (is.null(cache))
     return(character(0))
   cache$list() %>% Filter(f = function(target) !is_imported(target = target,
@@ -106,6 +116,8 @@ built <- function(path = getwd(), search = TRUE) {
 #' and ignore imported objects. Since all your functions and
 #' all their global variables are imported, the full list of
 #' imported objects could get really cumbersome.
+#' @param cache drake cache. See \code{\link{new_cache}()}.
+#' If supplied, \code{path} and \code{search} are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -118,8 +130,12 @@ built <- function(path = getwd(), search = TRUE) {
 #' make(my_plan)
 #' imported()
 #' }
-imported <- function(files_only = FALSE, path = getwd(), search = TRUE) {
-  cache <- get_cache(path = path, search = search)
+imported <- function(
+  files_only = FALSE, path = getwd(), search = TRUE, cache = NULL
+){
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
   if (is.null(cache))
     return(character(0))
   targets <- cache$list() %>%

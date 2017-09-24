@@ -12,7 +12,8 @@
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param digits How many digits to round the times to.
-#' @param cache storr cache for drake
+#' @param cache optional drake cache. If supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -23,7 +24,7 @@ build_times <- function(
   path = getwd(),
   search = TRUE,
   digits = 0,
-  cache = drake::get_cache(path = path, search = search)
+  cache = NULL
   ){
   eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
 
@@ -34,6 +35,9 @@ build_times <- function(
     elapsed = duration(numeric(0))
   )
 
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
   if (is.null(cache)){
     return(empty_times)
   }

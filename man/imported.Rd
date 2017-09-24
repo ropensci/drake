@@ -4,7 +4,8 @@
 \alias{imported}
 \title{Function \code{imported}}
 \usage{
-imported(files_only = FALSE, path = getwd(), search = TRUE)
+imported(files_only = FALSE, path = getwd(), search = TRUE,
+  cache = NULL)
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only
@@ -19,6 +20,9 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{drake cache. See \code{\link{new_cache}()}.
+If supplied, \code{path} and \code{search} are ignored.}
 }
 \value{
 character vector naming the imported objects in the cache

@@ -22,6 +22,9 @@
 #' from \code{make}()
 #' are removed. If \code{TRUE}, the whole cache is removed, including
 #' session metadata, etc.
+#' @param cache optional drake cache. See code{\link{new_cache}()}. If
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -44,62 +47,44 @@ clean <- function(
   list = character(0),
   destroy = FALSE,
   path = getwd(),
-  search = TRUE
-  ){
+  search = TRUE,
+  cache = NULL
+){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search)
+  }
+  if (is.null(cache)){
+    return(invisible())
+  }
   if (!length(targets)) {
     return(clean_everything(
-        destroy = destroy,
-        path = path,
-        search = search
-        ))
+      destroy = destroy,
+      cache = cache
+    ))
   }
-  uncache(targets, path = path, search = search)
+  uncache(targets, cache = cache)
   invisible()
 }
 
 clean_everything <- function(
   destroy,
-  path,
-  search
-  ){
-  empty(path, search)
+  cache
+){
+  empty(cache)
   if (destroy) {
-    destroy(path, search)
+    cache$destroy()
   }
-  invisible()
 }
 
-destroy <- function(
-  path,
-  search
-  ){
-  where <- cache_dir
-  if (search){
-    where <- find_cache(path = path)
-    if (!length(where)) return()
-  }
-  unlink(where, recursive = TRUE, force = TRUE)
-  invisible()
+empty <- function(cache){
+  uncache(target = cache$list(), cache = cache)
 }
 
-empty <- function(path, search){
-  uncache(
-    cached(
-      path = path,
-      search = search
-      ),
-    path = path,
-    search = search
-    )
-  invisible()
-}
-
-uncache <- Vectorize(function(target, path, search){
-  cache <- get_cache(path = path, search = search)
+uncache <- Vectorize(function(target, cache){
   if (is.null(cache)){
-    return(invisible())
+    return()
   }
   if (
     is_file(target) &
@@ -115,7 +100,6 @@ uncache <- Vectorize(function(target, path, search){
     if (target %in% cache$list(namespace = space)){
       cache$del(target, namespace = space)
     }
-  invisible()
-    },
-  "target"
-  )
+    invisible()
+},
+"target")

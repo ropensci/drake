@@ -4,7 +4,7 @@
 \alias{built}
 \title{Function \code{built}}
 \usage{
-built(path = getwd(), search = TRUE)
+built(path = getwd(), search = TRUE, cache = NULL)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -14,6 +14,9 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{drake cache. See \code{\link{new_cache}()}.
+If supplied, \code{path} and \code{search} are ignored.}
 }
 \value{
 list of imported objects in the cache

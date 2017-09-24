@@ -5,7 +5,7 @@
 \title{Function \code{max_useful_jobs}}
 \usage{
 max_useful_jobs(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), config = NULL, imports = c("files", "all",
   "none"))
@@ -21,6 +21,10 @@ max_useful_jobs(plan, targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}. If
+The \code{cache} argument is ignored if a non-null
+\code{config} argument is supplied.}
 
 \item{jobs}{The \code{outdated()} function is called internally,
 and it needs to import objects and examine your

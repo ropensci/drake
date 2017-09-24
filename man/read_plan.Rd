@@ -4,7 +4,7 @@
 \alias{read_plan}
 \title{Function \code{read_plan}}
 \usage{
-read_plan(path = getwd(), search = TRUE)
+read_plan(path = getwd(), search = TRUE, cache = cache)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -14,6 +14,10 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+If \code{cache} is supplied,
+the \code{path} and \code{search} arguments are ignored.}
 }
 \value{
 a workflow plan data frame

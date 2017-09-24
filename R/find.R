@@ -1,6 +1,8 @@
 #' @title Function \code{find_cache}
 #' @description Return the file path of the nearest drake
 #' cache (searching upwards for directories containing a drake cache).
+#' Only works if the cache is a file system in a
+#' hidden folder named \code{.drake}.
 #' @seealso \code{\link{plan}}, \code{\link{make}},
 #' @export
 #' @return File path of the nearest drake cache or \code{NULL}
@@ -28,6 +30,7 @@ find_cache <- function(path = getwd()){
 #' @description Return the file path of the nearest drake
 #' project (searching upwards for directories
 #' containing a drake cache).
+#' Only works if the cache is a file system in a folder named \code{.drake}.
 #' @export
 #' @seealso \code{\link{plan}}, \code{\link{make}}
 #' @return File path of the nearest drake project or \code{NULL}

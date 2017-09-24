@@ -5,7 +5,7 @@
 \title{Function outdated}
 \usage{
 outdated(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE,
+  envir = parent.frame(), verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0), config = NULL)
 }
@@ -17,6 +17,10 @@ outdated(plan, targets = drake::possible_targets(plan),
 \item{envir}{same as for \code{\link{make}}}
 
 \item{verbose}{same as for \code{\link{make}}}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+The \code{cache} argument is ignored if a
+non-null \code{config} argument is supplied.}
 
 \item{parallelism}{same as for \code{\link{make}}}
 

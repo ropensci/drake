@@ -28,12 +28,19 @@ test_with_dir <- function(desc, code){
 }
 
 testrun <- function(config) {
+  should_handle_all_caches <- c(
+    "mclapply",
+    "parLapply"
+  )
+  if (!(config$parallelism %in% should_handle_all_caches)){
+    config$cache <- NULL
+  }
   invisible(
     make(plan = config$plan, targets = config$targets, envir = config$envir,
       verbose = FALSE, parallelism = config$parallelism, jobs = config$jobs,
       packages = config$packages, prework = config$prework,
       prepend = config$prepend, command = config$command,
-      return_config = TRUE))
+      return_config = TRUE, cache = config$cache))
 }
 
 set_test_opt <- function(opt) {

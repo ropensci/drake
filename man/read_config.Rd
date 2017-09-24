@@ -4,7 +4,7 @@
 \alias{read_config}
 \title{Function \code{read_config}}
 \usage{
-read_config(path = getwd(), search = TRUE)
+read_config(path = getwd(), search = TRUE, cache = NULL)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -14,6 +14,10 @@ project root or a subdirectory of the project.}
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
+
+\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+If \code{cache} is supplied,
+the \code{path} and \code{search} arguments are ignored.}
 }
 \value{
 a named list of configuration items

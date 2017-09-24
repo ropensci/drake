@@ -86,6 +86,9 @@ default_parallelism <- function() {
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
+#' @param cache optional drake cache. See code{\link{new_cache}()}. If
+#' The \code{cache} argument is ignored if a non-null
+#' \code{config} argument is supplied.
 #' @param jobs The \code{outdated()} function is called internally,
 #' and it needs to import objects and examine your
 #' input files to see what has been updated. This could take some time,
@@ -148,13 +151,14 @@ default_parallelism <- function() {
 #' max_useful_jobs(my_plan, imports = 'none') # 4
 #' }
 max_useful_jobs <- function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), config = NULL,
   imports = c("files", "all", "none")) {
   force(envir)
   nodes <- dataframes_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
+    envir = envir, verbose = verbose, cache = cache, jobs = jobs,
+    parallelism = parallelism,
     packages = packages, prework = prework, config = config,
     split_columns = FALSE)$nodes
   imports <- match.arg(imports)
