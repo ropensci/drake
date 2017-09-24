@@ -8,7 +8,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     save(
       list = ls(config$envir, all.names = TRUE),
       envir = config$envir,
-      file = file.path(dir, globalenv_file)
+      file = globalenv_file(dir)
     )
   }
   config$cache$set("config", config, namespace = "makefile")
@@ -38,7 +38,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   )
   if (!debug){
     dir <- cache_path(config$cache)
-    file <- file.path(dir, globalenv_file)
+    file <- globalenv_file(dir)
     unlink(file, force = TRUE)
   }
   return(invisible(error_code))
@@ -121,7 +121,7 @@ mk <- function(target, cache_path = NULL){
   config <- cache$get("config", namespace = "makefile")
   if (identical(globalenv(), config$envir)){
     dir <- cache_path
-    file <- file.path(dir, globalenv_file)
+    file <- globalenv_file(dir)
     load(file = file, envir = config$envir)
   }
   config <- inventory(config)
@@ -146,4 +146,8 @@ mk <- function(target, cache_path = NULL){
     file_overwrite(file)
   }
   return(invisible())
+}
+
+globalenv_file <- function(cache_path){
+  file.path(cache_path, "globalenv.RData")
 }

@@ -56,17 +56,18 @@ test_with_dir("basic Makefile stuff works", {
   make(config$plan, targets = "combined", envir = config$envir,
     verbose = FALSE)
   config$verbose <- FALSE
-  path <- cache_path(config$cache)
+  cache_path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE, debug = TRUE)
   using_global <- identical(config$envir, globalenv())
   if (using_global) {
-    expect_true(file.exists(globalenvpath))
+    expect_true(file.exists(globalenv_file(cache_path)))
   }
   expect_true(file.exists("Makefile"))
-  stamps <- sort(list.files(file.path(time_stamp_dir), full.names = TRUE))
-  stamps2 <- sort(
+  dir <- time_stamp_dir(cache_path)
+  stamps <- unname(sort(list.files(dir, full.names = FALSE)))
+  stamps2 <- unname(sort(
     time_stamp(
-      c(
+     c(
         "combined",
         "myinput",
         "nextone",
@@ -74,21 +75,21 @@ test_with_dir("basic Makefile stuff works", {
       ),
       config = config
     )
-  )
+  ))
   expect_equal(stamps, stamps2)
 
   targ <- "'intermediatefile.rds'"
   expect_false(file.exists(eply::unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
-  mk(targ, cache_path = path)
+  mk(targ, cache_path = cache_path)
   expect_equal(unname(progress(list = targ)), "finished")
   expect_true(file.exists(eply::unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
-  mk(targ, cache_path = path) # Verify behavior when target is current
+  mk(targ, cache_path = cache_path) # Verify behavior when target is current
   expect_equal(unname(progress(list = targ)), "not built or imported")
 
   run_Makefile(config, run = FALSE)
-  expect_false(file.exists(globalenvpath))
+  expect_false(file.exists(globalenv_file(cache_path)))
 })
 
 test_with_dir("Makefile stuff in globalenv()", {

@@ -9,6 +9,8 @@ dir <- file.path("testthat", "workspaces")
 setwd("..")
 
 system.time({
-  set_test_opt("local_Make_1")
-  test_dir("testthat")
+  for(opt in c("local_Make_1", "global_Make_16")){
+    set_test_opt(opt)
+    test_dir("testthat")
+  }
 })

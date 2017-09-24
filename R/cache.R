@@ -1,7 +1,6 @@
 cache_dir <- ".drake"
 cache_macro <- "DRAKE_CACHE"
 cache_value_macro <- paste0("$(", cache_macro, ")")
-globalenv_file <- "globalenv.RData"
 
 #' @title Function cache_path
 #' @export
