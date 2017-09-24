@@ -8,6 +8,17 @@ test_with_dir("fancy cache features, bad paths", {
   expect_equal(get_storr_rds_cache("not_found"), NULL)
 })
 
+test_with_dir("null hashes", {
+  x <- new_cache("x")
+  x$del("short_hash_algo", namespace = "config")
+  expect_null(short_hash(x))
+  expect_false(is.null(long_hash(x)))
+  y <- new_cache("y")
+  y$del("long_hash_algo", namespace = "config")
+  expect_false(is.null(short_hash(y)))
+  expect_null(long_hash(y))
+})
+
 test_with_dir("First configure", {
   x <- new_cache()
   expect_equal(short_hash(x), default_short_hash_algo())
