@@ -50,8 +50,8 @@ assign_to_envir_parLapply <- # nolint
       target = target, value = value, config = config)
 }
 
+# Slow, but necessary.
 load_packages_parLapply <- function() { # nolint
-  # Slow, but necessary.
   packages <- drake_package_dependencies()
   for (package in packages) {
     base::suppressPackageStartupMessages(
