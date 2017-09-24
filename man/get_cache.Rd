@@ -22,7 +22,8 @@ Search for and return a drake cache.
 get_cache()
 load_basic_example()
 make(my_plan)
-get_cache()
+x <- get_cache()
+x$list()
 }
 }
 \seealso{

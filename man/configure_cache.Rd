@@ -44,7 +44,8 @@ cache <- configure_cache(
   long_hash_algo = "murmur32",
   overwrite_hash_algos = TRUE
 )
-long_hash(cache)
+long_hash(cache) # long hash algorithm. See ?default_long_hash_algorithm.
+make(my_plan) # Changing the long hash puts targets out of date.
 }
 }
 \seealso{

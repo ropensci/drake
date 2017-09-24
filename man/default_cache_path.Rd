@@ -10,5 +10,5 @@ default_cache_path()
 default drake cache path
 }
 \examples{
-default_cache_path
+default_cache_path()
 }

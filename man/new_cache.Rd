@@ -28,8 +28,8 @@ Make a new drake cache.
 }
 \examples{
 \dontrun{
-new_cache() # Creates a new hidden '.drake' folder.
-new_cache(path = "not_hidden", hash_algo = "md5")
+cache1 <- new_cache() # Creates a new hidden '.drake' folder.
+cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 }
 }
 \seealso{

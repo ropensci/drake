@@ -15,7 +15,8 @@ globalenvpath <- file.path(cache_dir, "globalenv.RData")
 #' get_cache()
 #' load_basic_example()
 #' make(my_plan)
-#' get_cache()
+#' x <- get_cache()
+#' x$list()
 #' }
 get_cache <- function(
   path = getwd(),
@@ -81,8 +82,8 @@ this_cache <- function(
 #' \code{\link{make}()}
 #' @examples
 #' \dontrun{
-#' new_cache() # Creates a new hidden '.drake' folder.
-#' new_cache(path = "not_hidden", hash_algo = "md5")
+#' cache1 <- new_cache() # Creates a new hidden '.drake' folder.
+#' cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 #' }
 new_cache <- function(
   path = NULL,
@@ -161,7 +162,7 @@ recover_cache <- function(
 #' @export
 #' @description default drake cache path
 #' @examples
-#' default_cache_path
+#' default_cache_path()
 default_cache_path <- function(){
   file.path(getwd(), cache_dir)
 }
@@ -199,7 +200,8 @@ default_cache_path <- function(){
 #'   long_hash_algo = "murmur32",
 #'   overwrite_hash_algos = TRUE
 #' )
-#' long_hash(cache)
+#' long_hash(cache) # long hash algorithm. See ?default_long_hash_algorithm.
+#' make(my_plan) # Changing the long hash puts targets out of date.
 #' }
 configure_cache <- function(
   cache,
