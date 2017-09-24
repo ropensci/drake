@@ -1,5 +1,12 @@
 context("customize caches")
 
+test_with_dir("cache_path finding", {
+  x <- new_cache("x")
+  expect_true(is.character(cache_path(x)))
+  expect_null(cache_path(NULL))
+  expect_null(cache_path(1234))
+})
+
 test_with_dir("fancy cache features, bad paths", {
   saveRDS(1, file = "exists")
   expect_error(x <- new_cache("exists"))

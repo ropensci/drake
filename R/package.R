@@ -48,5 +48,5 @@
 #' @importFrom utils capture.output compareVersion sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
-#' @importFrom withr with_dir
+#' @importFrom withr with_dir with_output_sink
 NULL

@@ -4,18 +4,22 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   debug = FALSE
   ){
   if (identical(globalenv(), config$envir)){
+    dir <- cache_path(config$cache)
     save(
       list = ls(config$envir, all.names = TRUE),
       envir = config$envir,
-      file = globalenvpath
-      )
+      file = file.path(dir, globalenv_file)
+    )
   }
   config$cache$set("config", config, namespace = "makefile")
   makefile <- file.path(cache_dir, "Makefile")
-  sink("Makefile")
-  makefile_head(config)
-  makefile_rules(config)
-  sink()
+  with_output_sink(
+    new = "Makefile",
+    code = {
+      makefile_head(config)
+      makefile_rules(config)
+    }
+  )
   out <- outdated(
     plan = config$plan,
     targets = config$targets,
@@ -33,7 +37,9 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     0
   )
   if (!debug){
-    unlink(globalenvpath, force = TRUE)
+    dir <- cache_path(config$cache)
+    file <- file.path(dir, globalenv_file)
+    unlink(file, force = TRUE)
   }
   return(invisible(error_code))
 }
@@ -61,21 +67,29 @@ makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
   }
-  cat("all:", time_stamp(config$targets, config = config), sep = " \\\n")
+  cache_path <- cache_path(config$cache)
+  cat(cache_macro, "=", cache_path, "\n\n", sep = "")
+  cat(
+    "all:",
+    time_stamp_target(config$targets, config = config),
+    sep = " \\\n"
+  )
 }
 
 makefile_rules <- function(config){
   targets <- intersect(config$plan$target, V(config$graph)$name)
+  cache_path <- cache_path(config$cache)
   for (target in targets){
     deps <- dependencies(target, config) %>%
       intersect(y = config$plan$target) %>%
-      time_stamp(config = config)
+      time_stamp_target(config = config)
     breaker <- ifelse(length(deps), " \\\n", "\n")
     cat(
       "\n",
-      time_stamp(
-        x = target,
-        config = config),
+      time_stamp_target(
+        target = target,
+        config = config
+      ),
       ":",
       breaker,
       sep = ""
@@ -88,7 +102,10 @@ makefile_rules <- function(config){
     } else{
       target <- quotes(unquote(target), single = FALSE)
     }
-    cat("\tRscript -e 'drake::mk(", target, ")'\n", sep = "")
+    cat("\tRscript -e 'drake::mk(", target,
+      ", \"$(", cache_macro, ")\")'\n",
+      sep = ""
+    )
   }
 }
 
@@ -98,10 +115,14 @@ makefile_rules <- function(config){
 #' Users, do not invoke directly.
 #' @export
 #' @param target name of target to make
-mk <- function(target){
-  config <- get_cache()$get("config", namespace = "makefile")
+#' @param cache_path path to the drake cache
+mk <- function(target, cache_path = NULL){
+  cache <- this_cache(cache_path)
+  config <- cache$get("config", namespace = "makefile")
   if (identical(globalenv(), config$envir)){
-    load(file = globalenvpath, envir = config$envir)
+    dir <- cache_path
+    file <- file.path(dir, globalenv_file)
+    load(file = file, envir = config$envir)
   }
   config <- inventory(config)
   do_prework(config = config, verbose_packages = FALSE)
@@ -121,7 +142,8 @@ mk <- function(target){
   config <- inventory(config)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(old_hash, new_hash)){
-    file_overwrite(time_stamp(x = target, config = config))
+    file <- time_stamp_file(target = target, config = config)
+    file_overwrite(file)
   }
   return(invisible())
 }

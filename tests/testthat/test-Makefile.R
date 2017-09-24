@@ -36,8 +36,9 @@ test_with_dir("files inside directories can be timestamped", {
     prework = character(0), prepend = character(0), command = character(0),
     args = character(0), envir = new.env(), jobs = 1,
     cache = NULL, clear_progress = FALSE)
+  path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE)
-  expect_silent(mk(config$plan$target[1]))
+  expect_silent(mk(config$plan$target[1], cache_path = path))
   expect_true(file.exists("t1"))
   expect_true(file.exists(eply::unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
@@ -55,6 +56,7 @@ test_with_dir("basic Makefile stuff works", {
   make(config$plan, targets = "combined", envir = config$envir,
     verbose = FALSE)
   config$verbose <- FALSE
+  path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE, debug = TRUE)
   using_global <- identical(config$envir, globalenv())
   if (using_global) {
@@ -78,11 +80,11 @@ test_with_dir("basic Makefile stuff works", {
   targ <- "'intermediatefile.rds'"
   expect_false(file.exists(eply::unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
-  mk(targ)
+  mk(targ, cache_path = path)
   expect_equal(unname(progress(list = targ)), "finished")
   expect_true(file.exists(eply::unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
-  mk(targ) # Verify behavior when target is current
+  mk(targ, cache_path = path) # Verify behavior when target is current
   expect_equal(unname(progress(list = targ)), "not built or imported")
 
   run_Makefile(config, run = FALSE)
@@ -102,10 +104,10 @@ test_with_dir("Makefile stuff in globalenv()", {
   clean(list = targ)
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
   expect_equal(unname(progress(list = targ)), "not built or imported")
-  mk("drake_TESTGLOBAL_target")
+  mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
   expect_equal(unname(progress(list = targ)), "finished")
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
-  mk("drake_TESTGLOBAL_target")
+  mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
   expect_equal(unname(progress(list = targ)), "not built or imported")
   loaded <- ls(envir = globalenv())
   rm(list =

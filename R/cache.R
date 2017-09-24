@@ -1,5 +1,25 @@
 cache_dir <- ".drake"
-globalenvpath <- file.path(cache_dir, "globalenv.RData")
+cache_macro <- "DRAKE_CACHE"
+cache_value_macro <- paste0("$(", cache_macro, ")")
+globalenv_file <- "globalenv.RData"
+
+#' @title Function cache_path
+#' @export
+#' @description Returns the file path
+#' where the cache is stored. Currently
+#' only works with \code{storr} file system
+#' caches.
+#' @param cache the cache whose file path
+#' you want to know
+cache_path <- function(cache = NULL){
+  if (is.null(cache)){
+    NULL
+  } else if ("storr" %in% class(cache)){
+    cache$driver$path
+  } else {
+    NULL
+  }
+}
 
 #' @title Function get_cache
 #' @description Search for and return a drake cache.
