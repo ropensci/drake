@@ -6,7 +6,7 @@ test_with_dir("drake_package_dependencies()", {
   expect_true(is.character(pkgs))
   expect_true("digest" %in% pkgs)
   expect_false("base64url" %in% pkgs)
-  suggests <- p_depends(
+  suggests <- pacman::p_depends(
     package = "drake",
     local = TRUE,
     character.only = TRUE
