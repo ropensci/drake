@@ -1,0 +1,79 @@
+context("fancy caches")
+
+test_with_dir("fancy cache features, bad paths", {
+  saveRDS(1, file = "exists")
+  expect_error(x <- new_cache("exists"))
+  expect_equal(type_of_cache("not_found"), NULL)
+  expect_silent(tmp <- uncache(target = "targ", cache = NULL))
+  expect_equal(get_storr_rds_cache("not_found"), NULL)
+})
+
+test_with_dir("use two differnt file system caches", {
+  saveRDS("stuff", file = "some_file")
+  con <- dbug()
+  con$plan <- data.frame(target = "a", command = "c('some_file')")
+  con$targets <- con$plan$target
+  testrun(con)
+  o1 <- outdated(
+    con$plan,
+    envir = con$envir,
+    verbose = FALSE,
+    cache = con$cache
+  )
+
+  expect_equal(o1, character(0))
+  expect_equal(
+    con$short_hash_algo,
+    con$cache$get("short_hash_algo", namespace = "config"),
+    default_short_hash_algo()
+  )
+  expect_equal(
+    con$long_hash_algo,
+    con$cache$get("long_hash_algo", namespace = "config"),
+    default_long_hash_algo()
+  )
+  expect_equal(
+    con$cache$driver$hash_algorithm,
+    default_short_hash_algo()
+  )
+
+  con$cache <- new_cache(
+    path = "my_new_cache",
+    short_hash_algo = "murmur32",
+    long_hash_algo = "crc32"
+  )
+  o2 <- outdated(
+    con$plan,
+    envir = con$envir,
+    verbose = FALSE,
+    cache = con$cache
+  )
+  con <- testrun(con)
+  o3 <- outdated(
+    con$plan,
+    envir = con$envir,
+    verbose = FALSE,
+    cache = con$cache
+  )
+  expect_equal(o2, "a")
+  expect_equal(o3, character(0))
+  expect_equal(
+    con$short_hash_algo,
+    con$cache$get("short_hash_algo", namespace = "config"),
+    "murmur32"
+  )
+  expect_equal(
+    con$long_hash_algo,
+    con$cache$get("long_hash_algo", namespace = "config"),
+    "crc32"
+  )
+  expect_equal(
+    con$cache$driver$hash_algorithm,
+    "murmur32"
+  )
+  expect_true(grepl("my_new_cache", con$cache$driver$path))
+})
+
+test_with_dir("memory cache", {
+  expect_false(file.exists(default_cache_path()))
+})

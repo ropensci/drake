@@ -163,3 +163,8 @@ test_with_dir("stress test hashing decisions", {
     file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
   unlink(file, force = TRUE)
 })
+
+test_with_dir("parallelism not found for testrun()", {
+  config <- list(parallelism = "not found")
+  expect_error(testrun(config))
+})
