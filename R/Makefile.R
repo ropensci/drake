@@ -63,11 +63,17 @@ default_system2_args <- function(jobs, verbose){
   return(out)
 }
 
+# For normalized cache paths on Windows
+to_unix_path <- function(x){
+  gsub("\\\\", "/", x)
+}
+
 makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
   }
-  cache_path <- cache_path(config$cache)
+  cache_path <- cache_path(config$cache) %>%
+    to_unix_path
   cat(cache_macro, "=", cache_path, "\n\n", sep = "")
   cat(
     "all:",
