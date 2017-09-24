@@ -47,10 +47,12 @@ Imports:
   withr
 Suggests:
   abind,
+  DBI,
   knitr,
   MASS,
   methods,
   rmarkdown,
+  RSQlite,
   tibble
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake

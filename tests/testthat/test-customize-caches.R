@@ -54,7 +54,7 @@ test_with_dir("Pick the hashes", {
   expect_equal(short_hash(x), "murmur32")
   expect_equal(long_hash(x), "crc32")
   x$del("long_hash_algo", namespace = "config")
-  configure_cache(x, long_hash_algo = "sha1")
+  x <- configure_cache(x, long_hash_algo = "sha1")
   expect_equal(long_hash(x), "sha1")
   expect_error(configure_cache(x, long_hash_algo = "not found"))
   expect_error(configure_cache(x, short_hash_algo = "not found"))

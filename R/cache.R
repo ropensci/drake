@@ -211,16 +211,10 @@ configure_cache <- function(
   overwrite_hash_algos = FALSE
 ){
   if (is.null(short_hash_algo)){
-    short_hash_algo <- short_hash(cache)
-    if (is.null(short_hash_algo)){
-      short_hash_algo <- default_short_hash_algo()
-    }
+    short_hash_algo <- default_short_hash_algo(cache = cache)
   }
   if (is.null(long_hash_algo)){
-    long_hash_algo <- long_hash(cache)
-    if (is.null(long_hash_algo)){
-      long_hash_algo <- defualt_long_hash_algo()
-    }
+    long_hash_algo <- default_long_hash_algo(cache = cache)
   }
   short_hash_algo <- match.arg(short_hash_algo,
     choices = available_hash_algos())
@@ -247,66 +241,4 @@ configure_cache <- function(
   chosen_algo <- short_hash(cache)
   check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
   cache
-}
-
-#' @title Function long_hash
-#' @export
-#' @seealso \code{\link{default_short_hash_algo}},
-#' \code{\link{default_long_hash_algo}}
-#' @description Get the long hash algorithm of a drake cache.
-#' @details See \code{?\link{default_long_hash_algo}()}
-#' @param cache drake cache
-#' @examples
-#' \dontrun{
-#' load_basic_example()
-#' config <- make(my_plan, return_config = TRUE)
-#' cache <- config$cache
-#' long_hash(cache)
-#' }
-long_hash <- function(cache){
-  if (!("long_hash_algo" %in% cache$list(namespace = "config"))){
-    return(NULL)
-  }
-  cache$get("long_hash_algo", namespace = "config")
-}
-
-#' @title Function short_hash
-#' @export
-#' @seealso \code{\link{default_short_hash_algo}},
-#' \code{\link{default_long_hash_algo}}
-#' @description Get the short hash algorithm of a drake cache.
-#' @details See \code{?\link{default_long_hash_algo}()}
-#' @param cache drake cache
-#' @examples
-#' \dontrun{
-#' load_basic_example()
-#' config <- make(my_plan, return_config = TRUE)
-#' cache <- config$cache
-#' short_hash(cache)
-#' }
-short_hash <- function(cache){
-  if (!("short_hash_algo" %in% cache$list(namespace = "config"))){
-    return(NULL)
-  }
-  chosen_algo <- cache$get("short_hash_algo", namespace = "config")
-  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
-  cache$get("short_hash_algo", namespace = "config")
-}
-
-check_storr_short_hash <- function(cache, chosen_algo){
-  if ("storr" %in% class(cache)){
-    true_algo <- cache$driver$hash_algorithm
-    if (true_algo != chosen_algo){
-      warning(
-        "The storr-based cache acutally uses ", true_algo,
-        "for the short hash algorithm, but ", chosen_algo,
-        "was also supplied. Reverting to ", true_algo, "."
-      )
-      cache$set(
-        key = "short_hash_algo",
-        value = true_algo,
-        namespace = "config"
-      )
-    }
-  }
 }

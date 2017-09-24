@@ -4,7 +4,14 @@
 \alias{default_long_hash_algo}
 \title{Default long hash algorithm for \code{make()}}
 \usage{
-default_long_hash_algo()
+default_long_hash_algo(cache = NULL)
+}
+\arguments{
+\item{cache}{optional drake cache.
+When you \code{\link{configure_cache}(cache)} without
+supplying a long hash algorithm,
+\code{default_long_hash_algo(cache)} is the long
+hash algorithm that drake picks for you.}
 }
 \description{
 Hashing is advanced. Most users

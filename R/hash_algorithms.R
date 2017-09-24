@@ -1,3 +1,56 @@
+#' @title Function available_hash_algos
+#' @export
+#' @description List the available hash algorithms.
+#' @examples
+#' available_hash_algos()
+available_hash_algos <- function(){
+  eval(formals(digest::digest)$algo)
+}
+
+#' @title Function long_hash
+#' @export
+#' @seealso \code{\link{default_short_hash_algo}},
+#' \code{\link{default_long_hash_algo}}
+#' @description Get the long hash algorithm of a drake cache.
+#' @details See \code{?\link{default_long_hash_algo}()}
+#' @param cache drake cache
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- make(my_plan, return_config = TRUE)
+#' cache <- config$cache
+#' long_hash(cache)
+#' }
+long_hash <- function(cache){
+  if (!("long_hash_algo" %in% cache$list(namespace = "config"))){
+    return(NULL)
+  }
+  cache$get("long_hash_algo", namespace = "config")
+}
+
+#' @title Function short_hash
+#' @export
+#' @seealso \code{\link{default_short_hash_algo}},
+#' \code{\link{default_long_hash_algo}}
+#' @description Get the short hash algorithm of a drake cache.
+#' @details See \code{?\link{default_long_hash_algo}()}
+#' @param cache drake cache
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- make(my_plan, return_config = TRUE)
+#' cache <- config$cache
+#' short_hash(cache)
+#' }
+short_hash <- function(cache){
+  if (!("short_hash_algo" %in% cache$list(namespace = "config"))){
+    return(NULL)
+  }
+  chosen_algo <- cache$get("short_hash_algo", namespace = "config")
+  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
+  cache$get("short_hash_algo", namespace = "config")
+}
+
 #' @title Default short hash algorithm for \code{make()}
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
@@ -26,10 +79,29 @@
 #' On the other hand, some internal hashes in drake are
 #' never used as file names, and those hashes can use a longer hash
 #' to avoid collisions.
+#'
+#' @param cache optional drake cache.
+#' When you \code{\link{configure_cache}(cache)} without
+#' supplying a short hash algorithm,
+#' \code{default_short_hash_algo(cache)} is the short
+#' hash algorithm that drake picks for you.
 #' @examples
 #' default_short_hash_algo()
-default_short_hash_algo <- function() {
-  "xxhash64"
+default_short_hash_algo <- function(cache = NULL) {
+  out <- "xxhash64"
+  if (is.null(cache)){
+    return(out)
+  }
+  if ("short_hash_algo" %in% cache$list(namespace = "config")){
+    out <- cache$get(
+      key = "short_hash_algo",
+      namespace = "config"
+    )
+  }
+  if ("storr" %in% class(cache)){
+    out <- cache$driver$hash_algorithm
+  }
+  out
 }
 
 #' @title Default long hash algorithm for \code{make()}
@@ -60,17 +132,42 @@ default_short_hash_algo <- function() {
 #' On the other hand, some internal hashes in drake are
 #' never used as file names, and those hashes can use a longer hash
 #' to avoid collisions.
+#'
+#' @param cache optional drake cache.
+#' When you \code{\link{configure_cache}(cache)} without
+#' supplying a long hash algorithm,
+#' \code{default_long_hash_algo(cache)} is the long
+#' hash algorithm that drake picks for you.
 #' @examples
 #' default_long_hash_algo()
-default_long_hash_algo <- function() {
-  "sha256"
+default_long_hash_algo <- function(cache = NULL) {
+  out <- "sha256"
+  if (is.null(cache)){
+    return(out)
+  }
+  if ("long_hash_algo" %in% cache$list(namespace = "config")){
+    out <- cache$get(
+      key = "long_hash_algo",
+      namespace = "config"
+    )
+  }
+  out
 }
 
-#' @title Function available_hash_algos
-#' @export
-#' @description List the available hash algorithms.
-#' @examples
-#' available_hash_algos()
-available_hash_algos <- function(){
-  eval(formals(digest::digest)$algo)
+check_storr_short_hash <- function(cache, chosen_algo){
+  if ("storr" %in% class(cache)){
+    true_algo <- cache$driver$hash_algorithm
+    if (true_algo != chosen_algo){
+      warning(
+        "The storr-based cache actually uses ", true_algo,
+        " for the short hash algorithm, but ", chosen_algo,
+        " was also supplied. Reverting to ", true_algo, "."
+      )
+      cache$set(
+        key = "short_hash_algo",
+        value = true_algo,
+        namespace = "config"
+      )
+    }
+  }
 }
