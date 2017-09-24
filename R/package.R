@@ -37,6 +37,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
+#' @importFrom pacman p_depends
 #' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames

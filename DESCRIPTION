@@ -33,6 +33,7 @@ Imports:
   igraph,
   lubridate,
   magrittr,
+  pacman,
   parallel,
   plyr,
   R.utils,

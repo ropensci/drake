@@ -116,6 +116,12 @@ function_dependencies <- function(funct){
   parsable_list(out)
 }
 
+drake_package_dependencies <- function(){
+  pkgs <- p_depends(package = "drake", local = TRUE, character.only = TRUE)
+  pkgs$Suggests <- NULL
+  clean_dependency_list(pkgs)
+}
+
 clean_dependency_list <- function(x){
   x %>%
     unlist() %>%

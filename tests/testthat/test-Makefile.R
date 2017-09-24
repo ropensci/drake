@@ -122,9 +122,9 @@ test_with_dir("Makefile stuff in globalenv()", {
 })
 
 test_with_dir("packages are loaded in prework", {
-  original <- getOption("testdrake")
-  options(testdrake = "unset")
-  expect_equal(getOption("testdrake"), "unset")
+  original <- getOption("testdrake_optionload_20170924")
+  options(testdrake_optionload_20170924 = "unset")
+  expect_equal(getOption("testdrake_optionload_20170924"), "unset")
   config <- dbug()
   if (R.utils::isPackageLoaded("abind"))
   detach("package:abind")
@@ -135,21 +135,24 @@ test_with_dir("packages are loaded in prework", {
 
   # Load packages with the 'packages' argument
   config$packages <- c("abind", "MASS")
-  config$prework <- "options(testdrake = 'set')"
-  config$plan <- plan(x = getOption("testdrake"), y = c(abind("option"),
-  deparse(body(lda)), x), strings_in_dots = "literals")
+  config$prework <- "options(testdrake_optionload_20170924 = 'set')"
+  config$plan <- plan(
+    x = getOption("testdrake_optionload_20170924"),
+    y = c(abind("option"), deparse(body(lda)), x),
+    strings_in_dots = "literals"
+  )
   config$targets <- config$plan$target
   expect_false(any(c("x", "y") %in% config$cache$list()))
   testrun(config)
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
-  options(testdrake = original)
+  options(testdrake_optionload_20170924 = original)
   clean(search = FALSE)
 
   # load packages the usual way
-  options(testdrake = "unset")
-  expect_equal(getOption("testdrake"), "unset")
+  options(testdrake_optionload_20170924 = "unset")
+  expect_equal(getOption("testdrake_optionload_20170924"), "unset")
   if (R.utils::isPackageLoaded("abind"))
   detach("package:abind")
   if (R.utils::isPackageLoaded("MASS"))
@@ -171,5 +174,5 @@ test_with_dir("packages are loaded in prework", {
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
-  options(testdrake = original)
+  options(testdrake_optionload_20170924 = original)
 })
