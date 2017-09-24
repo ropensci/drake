@@ -113,6 +113,15 @@ readd(simple, cache = faster_cache)
 
 There are plenty of other `drake` functions that work on the cache of your choice.
 
+## Recovering the cache
+
+You can recover an old cache from the file system. You could use `storr::storr_rds()` if you remember the short hash algorithm, but `this_cache()` and `recover_cache()` are safer for `drake`.
+
+```r
+old_cache <- this_cache("faste_cache") # Get a cache you know exists...
+recovered <- recover_cache("faster_cache") # or create a new one if missing.
+```
+
 ## Changing the hash algorithms
 
 You can change the long hash algorithm easily.
