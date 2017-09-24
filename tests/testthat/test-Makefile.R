@@ -35,8 +35,7 @@ test_with_dir("files inside directories can be timestamped", {
     parallelism = "parLapply", verbose = FALSE, packages = character(0),
     prework = character(0), prepend = character(0), command = character(0),
     args = character(0), envir = new.env(), jobs = 1,
-    short_hash_algo = default_short_hash_algo(),
-    long_hash_algo = default_long_hash_algo())
+    cache = NULL, clear_progress = FALSE)
   run_Makefile(config, run = FALSE)
   expect_silent(mk(config$plan$target[1]))
   expect_true(file.exists("t1"))

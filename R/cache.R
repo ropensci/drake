@@ -21,8 +21,10 @@ get_cache <- function(
   path = getwd(),
   search = TRUE
 ){
-  if(search){
-    path <- find_cache(path = path, search = search)
+  if (search){
+    path <- find_cache(path = path)
+  } else {
+    path <- default_cache_path()
   }
   this_cache(path = path)
 }
@@ -93,7 +95,7 @@ new_cache <- function(
   if (file.exists(path)){
     stop("Cannot create new cache at ", path, ". File already exists.")
   }
-  type = match.arg(type, choices = cache_types())
+  type <- match.arg(type, choices = cache_types())
   cache_constructor <- paste0("new_", type, "_cache")
   cache <- get(cache_constructor, envir = getNamespace("drake"))(
     path = path,

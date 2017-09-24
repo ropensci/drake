@@ -42,4 +42,3 @@ type_of_cache <- function(path){
   }
   NULL
 }
-

@@ -1,7 +1,7 @@
 #' @title Default short hash algorithm for \code{make()}
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
-#' @description Hashing is advanced. Most users 
+#' @description Hashing is advanced. Most users
 #' do not need to know about this function.
 #' @details
 #' The short algorithm must be among \code{\link{available_hash_algos}{}},

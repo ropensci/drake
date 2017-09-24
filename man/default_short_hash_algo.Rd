@@ -7,7 +7,7 @@
 default_short_hash_algo()
 }
 \description{
-Hashing is advanced. Most users 
+Hashing is advanced. Most users
 do not need to know about this function.
 }
 \details{

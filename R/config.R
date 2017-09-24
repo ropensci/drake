@@ -49,7 +49,7 @@ config <- function(plan, targets = drake::possible_targets(plan),
     envir = envir, verbose = verbose, cache = cache,
     parallelism = parallelism, jobs = jobs,
     packages = packages, prework = prework,
-    prepend = prepend, command = command, args = args, cache = cache
+    prepend = prepend, command = command, args = args
   )
   config$graph <- build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
@@ -78,8 +78,8 @@ build_config <- function(plan, targets, envir,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command,
     args = args, graph = graph,
-    short_hash_algo = cache$get("hash_algo_short", namespace = "config"), 
-    long_hash_algo = cache$get("hash_algo_short", namespace = "config"),
+    short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
+    long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     inventory = cache$list(),
     inventory_filemtime = cache$list(namespace = "filemtime")
   )

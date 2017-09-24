@@ -1,6 +1,6 @@
 set_storr_hashes <- function(
   cache,
-  short_hash_algo, 
+  short_hash_algo,
   long_hash_algo
 ){
   cache$set(
@@ -39,9 +39,9 @@ get_storr_rds_cache <- function(path){
     return(NULL)
   }
   hash_algo_file <- file.path(path, "config", "hash_algorithm")
-  hash_algo <- scan(algo_file, quiet = TRUE, what = character())
+  hash_algo <- scan(hash_algo_file, quiet = TRUE, what = character())
   cache <- storr::storr_rds(
-    cache_dir,
+    path = path,
     mangle_key = TRUE,
     hash_algorithm = hash_algo,
   )
