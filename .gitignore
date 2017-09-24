@@ -7,7 +7,6 @@ Thumbs.db
 *.log
 *.nav
 *.out
-*.sh
 *.snm
 *.Rout
 *.synctex.gz
