@@ -15,6 +15,7 @@ vignette: >
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 
 # Data frames in R for [Make](http://kbroman.org/minimal_make/)
@@ -160,6 +161,7 @@ and finely tune the caching and hashing.
 ```r
 available_hash_algos()
 cache_types()
+configure_cache()
 default_long_hash_algo()
 default_short_hash_algo()
 long_hash()
@@ -179,6 +181,7 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
+vignette("storage") # Learn how drake stores your stuff.
 vignette("caution") # Avoid common pitfalls.
 ```
 
@@ -280,8 +283,8 @@ Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate
 
 In the sphere of reproducibility, drake and [remake](https://github.com/richfitz/remake) are examples of non-literate programming tools (as opposed to literate programming tools such as [knitr](https://CRAN.R-project.org/package=knitr)). Counterparts include [R.cache](https://CRAN.R-project.org/package=R.cache), [archivist](https://CRAN.R-project.org/package=archivist), [trackr](https://github.com/gmbecker/recordr), and [memoise](https://CRAN.R-project.org/package=memoise). See the [reporducible research CRAN task view](https://CRAN.R-project.org/view=ReproducibleResearch) for a more comprehensive list. Drake differentiates itself from these tools with its ability to track the relationships among cached objects and its extensive high-performance computing functionality.
 
-```{r rmfile, echo = FALSE}
+```{r rmfiles_main, echo = FALSE}
 clean(destroy = TRUE)
-unlink(c("report.Rmd", "Thumbs.db"))
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 

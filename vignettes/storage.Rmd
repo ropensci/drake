@@ -1,0 +1,178 @@
+---
+title: "Storage"
+subtitle: "caching, hashing, and customization"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{storage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+![](logo-vignettes.png)
+
+```{r suppression, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
+
+## Storage basics
+
+When you run `make()`, `drake` puts your imports and output targets in a hidden cache, or repository.
+
+
+```{r basic_storage}
+library(drake)
+load_basic_example()
+config <- make(my_plan, verbose = FALSE, return_config = TRUE)
+```
+
+You explore your data using functions like `loadd()`, `readd()`, and `cached()`.
+
+```{r explore_basic}
+head(cached())
+readd(small)
+loadd(large)
+head(large)
+rm(large) # Does not remove `large` from the cache.
+```
+
+## The true cache API
+
+The [storr](https://github.com/richfitz/storr) package does the heavy lifting. See the [main storr vignette](https://cran.r-project.org/package=storr/vignettes/storr.html) for a more thorough walkthrough.
+
+```{r get_storrs}
+class(config$cache) # from `config <- make(..., return_config = TRUE)`
+cache <- get_cache() # Get the default cache from the last build.
+class(cache)
+cache$list() # from storr
+cache$get("small") # from storr
+```
+
+## Hashes
+
+Drake uses [hash algorithms](https://en.wikipedia.org/wiki/Hash_function) to figure out what is up to date and what needs to be (re)built. A hash is like a fingerprint for a piece of data, so the hash should change if the dataset changes. Regardless of the data's size, the hash always has same number of characters.
+
+```{r hashes}
+library(digest)
+smaller_data <- 12
+larger_data <- rnorm(1000)
+digest(smaller_data)
+digest(larger_data)
+```
+
+But different hash algorithms can vary in length.
+
+```{r compare_algo_lengths}
+digest(larger_data, algo = "sha512")
+digest(larger_data, algo = "md5")
+digest(larger_data, algo = "xxhash64")
+digest(larger_data, algo = "murmur32")
+```
+
+## Which hash algorithm should you choose?
+
+Hashing is expensive, and unsurprisingly, shorter hashes are usually faster to compute. So why not always use `murmur32`? One reason is a higher risk of [collisions](https://en.wikipedia.org/wiki/Collision_(computer_science)). In general, the shorter the hash, the more likely two different datasets get the same fingerprint. We want our fingerprints to be unique. On the other hand, a longer hash is not always the answer. Besides speed, the decision depends on how we use the output. `Drake` and [storr](https://github.com/richfitz/storr) both use hash keys as names for internal cache files, and all file names should respect the [260-character cap on Windows file paths](https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx). That is why `drake` uses a shorter hash for internal file names and a longer hash for everything else.
+
+```{r justified_hash_choices}
+default_short_hash_algo() # for drake
+default_long_hash_algo()
+short_hash(cache)
+long_hash(cache)
+```
+
+
+## Custom caches
+
+Drake helps you create your own cache. Let us create a new cache in a folder called `faster_cache/`, and let us give it faster algorithms.
+
+```{r, custom cache}
+faster_cache <- new_cache(
+  path = "faster_cache",
+  short_hash_algo = "murmur32",
+  long_hash_algo = "murmur32"
+)
+cache_path(faster_cache)
+cache_path(cache) # location of the previous cache
+short_hash(faster_cache)
+long_hash(faster_cache)
+```
+
+Time to plug the new cache into `drake`.
+
+```{r faster_to_drake}
+new_plan <- plan(
+  simple = 1 + 1
+)
+make(new_plan, cache = faster_cache)
+cached(cache = faster_cache)
+readd(simple, cache = faster_cache)
+```
+
+There are plenty of other `drake` functions that work on the cache of your choice.
+
+## Changing the hash algorithms
+
+You can change the long hash algorithm easily.
+
+```{r change_long_hash}
+long_hash(faster_cache)
+changed_cache <- configure_cache(
+  faster_cache,
+  long_hash_algo = "md5",
+  overwrite_hash_algos = TRUE
+)
+long_hash(changed_cache)
+short_hash(changed_cache) # stayed the same
+```
+
+But you will have to rebuild your project. The same targets need to be tracked all over again with the new hash algorithm, and they will be rebuilt from scratch in the next `make()`.
+
+```{r outdated_due_to_hash}
+outdated(new_plan, cache = changed_cache)
+```
+
+For the available [storr](https://github.com/richfitz/storr)-powered caches, `drake` does not let you change the short hash algorithm. Existing internal cache files already have names generated with this hash. The following generates a warning.
+
+```r
+changed_cache <- configure_cache(
+  faster_cache,
+  short_hash_algo = "md5",
+  overwrite_hash_algos = TRUE
+)
+```
+
+## Storr caches
+
+You can use storr caches directly.
+
+
+```{r use_storr_directly}
+library(storr)
+my_storr <- storr_rds("my_storr", mangle_key = TRUE)
+make(new_plan, cache = faster_cache)
+cached(cache = faster_cache)
+readd(simple, cache = faster_cache)
+```
+
+Just be aware that in-memory caches like `storr_dbi()` are not supported yet, and will likely never be supported for `make(..., parallelism = "Makefile")`.
+
+
+## Clean up
+
+If you want to start from sratch, you can `clean()` the cache. Use the `destroy` argument to remove it completely.
+
+```{r cleaning_up}
+clean(small, large)
+cached()
+clean(destroy = TRUE)
+clean(destroy = TRUE, cache = faster_cache)
+clean(destroy = TRUE, cache = my_storr)
+```
+
+
+```{r cleanup_storage, echo = FALSE}
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```

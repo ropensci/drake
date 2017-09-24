@@ -153,6 +153,7 @@ and finely tune the caching and hashing.
 ```r
 available_hash_algos()
 cache_types()
+configure_cache()
 default_long_hash_algo()
 default_short_hash_algo()
 long_hash()
@@ -172,6 +173,7 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
+vignette("storage") # Learn how drake stores your stuff.
 vignette("caution") # Avoid common pitfalls.
 ```
 
