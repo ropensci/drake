@@ -5,7 +5,7 @@ test_with_dir("arbitrary storr file cache", {
   parallelism <- default_parallelism()
   jobs <- 2
   envir <- eval(parse(text = test_opt()$envir))
-  cache <- storr_rds("arbitrary_storr", mangle_key = TRUE)
+  cache <- storr::storr_rds("arbitrary_storr", mangle_key = TRUE)
   load_basic_example(envir = envir)
   my_plan <- envir$my_plan
   con <- make(

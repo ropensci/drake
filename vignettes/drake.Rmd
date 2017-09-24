@@ -146,7 +146,7 @@ config()
 read_config()
 ```
 
-and speed up your project with parallel computing.
+speed up your project with parallel computing,
 
 ```r
 make() # with jobs > 2
@@ -154,6 +154,22 @@ max_useful_jobs()
 parallelism_choices()
 shell_file()
 ```
+
+and finely tune the caching and hashing.
+
+```r
+available_hash_algos()
+cache_types()
+default_long_hash_algo()
+default_short_hash_algo()
+long_hash()
+short_hash()
+new_cache()
+recover_cache()
+this_cache()
+type_of_cache()
+```
+
 
 # Documentation
 
