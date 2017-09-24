@@ -1,4 +1,4 @@
-context("fancy caches")
+context("customize caches")
 
 test_with_dir("fancy cache features, bad paths", {
   saveRDS(1, file = "exists")
@@ -6,6 +6,64 @@ test_with_dir("fancy cache features, bad paths", {
   expect_equal(type_of_cache("not_found"), NULL)
   expect_silent(tmp <- uncache(target = "targ", cache = NULL))
   expect_equal(get_storr_rds_cache("not_found"), NULL)
+})
+
+test_with_dir("First configure", {
+  x <- new_cache()
+  expect_equal(short_hash(x), default_short_hash_algo())
+  expect_equal(long_hash(x), default_long_hash_algo())
+
+  x <- configure_cache(
+    cache = x,
+    short_hash_algo = "crc32",
+    long_hash_algo = "sha1"
+  )
+  expect_equal(short_hash(x), default_short_hash_algo())
+  expect_equal(long_hash(x), default_long_hash_algo())
+
+  expect_warning(
+    x <- configure_cache(
+      cache = x,
+      short_hash_algo = "crc32",
+      long_hash_algo = "sha1",
+      overwrite_hash_algos = TRUE
+    )
+  )
+
+  expect_equal(short_hash(x), default_short_hash_algo())
+  expect_equal(long_hash(x), "sha1")
+
+  expect_silent(
+    x <- configure_cache(
+      cache = x,
+      long_hash_algo = "murmur32",
+      overwrite_hash_algos = TRUE
+    )
+  )
+
+  expect_equal(short_hash(x), default_short_hash_algo())
+  expect_equal(long_hash(x), "murmur32")
+})
+
+test_with_dir("Pick the hashes", {
+  x <- new_cache("new",
+    short_hash_algo = "murmur32",
+    long_hash_algo = "crc32"
+  )
+  expect_true(file.exists("new"))
+  expect_equal(short_hash(x), "murmur32")
+  expect_equal(long_hash(x), "crc32")
+  x$del("long_hash_algo", namespace = "config")
+  configure_cache(x, long_hash_algo = "sha1")
+  expect_equal(long_hash(x), "sha1")
+  expect_error(configure_cache(x, long_hash_algo = "not found"))
+  expect_error(configure_cache(x, short_hash_algo = "not found"))
+
+  s <- short_hash(x)
+  l <- long_hash(x)
+  expect_silent(configure_cache(x, overwrite_hash_algos = TRUE))
+  expect_equal(s, short_hash(x))
+  expect_equal(l, long_hash(x))
 })
 
 test_with_dir("totally off the default cache", {
@@ -100,9 +158,4 @@ test_with_dir("use two differnt file system caches", {
     "murmur32"
   )
   expect_true(grepl("my_new_cache", con$cache$driver$path))
-})
-
-test_with_dir("memory cache", {
-  expect_false(file.exists(default_cache_path()))
-  expect_false(file.exists(default_cache_path()))
 })

@@ -103,15 +103,12 @@ new_cache <- function(
     short_hash_algo = short_hash_algo,
     long_hash_algo = long_hash_algo
   )
-  cache$set(
-    key = "short_hash_algo",
-    value = short_hash_algo,
-    namespace = "config"
-  )
-  cache$set(
-    key = "long_hash_algo",
-    value = long_hash_algo,
-    namespace = "config"
+  configure_cache(
+    cache = cache,
+    short_hash_algo = short_hash_algo,
+    long_hash_algo = long_hash_algo,
+    clear_progress = FALSE,
+    overwrite_hash_algos = FALSE
   )
   cache
 }
@@ -169,24 +166,145 @@ default_cache_path <- function(){
   file.path(getwd(), cache_dir)
 }
 
-configure_cache <- function(cache, clear_progress){
+#' @title Function configure_cache
+#' @export
+#' @seealso \code{\link{default_short_hash_algo}},
+#' \code{\link{default_long_hash_algo}}
+#' @description configure a cache for drake. This is
+#' to prepare the cache to be called from \code{\link{make}()}.
+#' @param cache cache to configure
+#' @param short_hash_algo short hash algorithm for drake.
+#' The short algorithm must be among \code{\link{available_hash_algos}{}},
+#' which is just the collection of algorithms available to the `algo`
+#' argument in \code{digest::digest()}.
+#' See \code{?\link{default_short_hash_algo}} for more.
+#' @param long_hash_algo short hash algorithm for drake.
+#' The long algorithm must be among \code{\link{available_hash_algos}{}},
+#' which is just the collection of algorithms available to the `algo`
+#' argument in \code{digest::digest()}.
+#' See \code{?\link{default_long_hash_algo}} for more.
+#' @param clear_progress logical, whether to clear the recorded
+#' build progress if this cache was used for previous calls to
+#' \code{\link{make}()}
+#' @param overwrite_hash_algos logical, whether to try to overwrite
+#' the hash algorithms in the cache with any user-specified ones.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- make(my_plan, return_config = TRUE)
+#' cache <- config$cache
+#' long_hash(cache)
+#' cache <- configure_cache(
+#'   cache = cache,
+#'   long_hash_algo = "murmur32",
+#'   overwrite_hash_algos = TRUE
+#' )
+#' long_hash(cache)
+#' }
+configure_cache <- function(
+  cache,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
+  clear_progress = FALSE,
+  overwrite_hash_algos = FALSE
+){
+  if (is.null(short_hash_algo)){
+    short_hash_algo <- short_hash(cache)
+    if (is.null(short_hash_algo)){
+      short_hash_algo <- default_short_hash_algo()
+    }
+  }
+  if (is.null(long_hash_algo)){
+    long_hash_algo <- long_hash(cache)
+    if (is.null(long_hash_algo)){
+      long_hash_algo <- defualt_long_hash_algo()
+    }
+  }
+  short_hash_algo <- match.arg(short_hash_algo,
+    choices = available_hash_algos())
+  long_hash_algo <- match.arg(long_hash_algo,
+    choices = available_hash_algos())
   if (clear_progress){
     cache$clear(namespace = "progress")
   }
   config_keys <- cache$list(namespace = "config")
-  if (!("short_hash_algo" %in% config_keys)){
+  if (overwrite_hash_algos | !("short_hash_algo" %in% config_keys)){
     cache$set(
       key = "short_hash_algo",
-      value = default_short_hash_algo(),
+      value = short_hash_algo,
       namespace = "config"
     )
   }
-  if (!("long_hash_algo" %in% config_keys)){
+  if (overwrite_hash_algos | !("long_hash_algo" %in% config_keys)){
     cache$set(
       key = "long_hash_algo",
-      value = default_long_hash_algo(),
+      value = long_hash_algo,
       namespace = "config"
     )
   }
+  chosen_algo <- short_hash(cache)
+  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
   cache
+}
+
+#' @title Function long_hash
+#' @export
+#' @seealso \code{\link{default_short_hash_algo}},
+#' \code{\link{default_long_hash_algo}}
+#' @description Get the long hash algorithm of a drake cache.
+#' @details See \code{?\link{default_long_hash_algo}()}
+#' @param cache drake cache
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- make(my_plan, return_config = TRUE)
+#' cache <- config$cache
+#' long_hash(cache)
+#' }
+long_hash <- function(cache){
+  if (!("long_hash_algo" %in% cache$list(namespace = "config"))){
+    return(NULL)
+  }
+  cache$get("long_hash_algo", namespace = "config")
+}
+
+#' @title Function short_hash
+#' @export
+#' @seealso \code{\link{default_short_hash_algo}},
+#' \code{\link{default_long_hash_algo}}
+#' @description Get the short hash algorithm of a drake cache.
+#' @details See \code{?\link{default_long_hash_algo}()}
+#' @param cache drake cache
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- make(my_plan, return_config = TRUE)
+#' cache <- config$cache
+#' short_hash(cache)
+#' }
+short_hash <- function(cache){
+  if (!("short_hash_algo" %in% cache$list(namespace = "config"))){
+    return(NULL)
+  }
+  chosen_algo <- cache$get("short_hash_algo", namespace = "config")
+  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
+  cache$get("short_hash_algo", namespace = "config")
+}
+
+check_storr_short_hash <- function(cache, chosen_algo){
+  if ("storr" %in% class(cache)){
+    true_algo <- cache$driver$hash_algorithm
+    if (true_algo != chosen_algo){
+      warning(
+        "The storr-based cache acutally uses ", true_algo,
+        "for the short hash algorithm, but ", chosen_algo,
+        "was also supplied. Reverting to ", true_algo, "."
+      )
+      cache$set(
+        key = "short_hash_algo",
+        value = true_algo,
+        namespace = "config"
+      )
+    }
+  }
 }

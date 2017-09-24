@@ -71,7 +71,11 @@ build_config <- function(plan, targets, envir,
     cache <- recover_cache()
   }
   # A storr_rds() cache should already have the right hash algorithms.
-  cache <- configure_cache(cache = cache, clear_progress = clear_progress)
+  cache <- configure_cache(
+    cache = cache,
+    clear_progress = clear_progress,
+    overwrite_hash_algos = FALSE
+  )
   graph <- build_graph(plan = plan,
     targets = targets, envir = envir, verbose = verbose)
   list(plan = plan, targets = targets, envir = envir, cache = cache,
