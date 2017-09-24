@@ -74,7 +74,8 @@ test_with_dir("use two differnt file system caches", {
     cache = con$cache,
     verbose = FALSE,
     parallelism = test_opt()$parallelism,
-    jobs = test_opt()$jobs
+    jobs = test_opt()$jobs,
+    return_config = TRUE
   )
   o3 <- outdated(
     con$plan,
