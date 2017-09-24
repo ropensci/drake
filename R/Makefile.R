@@ -2,17 +2,16 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   config,
   run = TRUE,
   debug = FALSE
-  ){
+){
+  this_cache_path <- cache_path(config$cache)
   if (identical(globalenv(), config$envir)){
-    dir <- cache_path(config$cache)
     save(
       list = ls(config$envir, all.names = TRUE),
       envir = config$envir,
-      file = globalenv_file(dir)
+      file = globalenv_file(this_cache_path)
     )
   }
   config$cache$set("config", config, namespace = "makefile")
-  makefile <- file.path(cache_dir, "Makefile")
   with_output_sink(
     new = "Makefile",
     code = {
@@ -25,11 +24,12 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     targets = config$targets,
     envir = config$envir,
     verbose = config$verbose,
+    cache = config$cache,
     jobs = config$jobs,
     parallelism = config$parallelism,
     packages = config$packages,
     prework = config$prework
-    )
+  )
   time_stamps(config = config, outdated = out)
   error_code <- ifelse(
     run,
@@ -138,7 +138,7 @@ mk <- function(target, cache_path = NULL){
     target = target,
     hash_list = hash_list,
     config = config
-    )
+  )
   config <- inventory(config)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(old_hash, new_hash)){

@@ -108,9 +108,17 @@ test_with_dir("totally off the default cache", {
 test_with_dir("use two differnt file system caches", {
   saveRDS("stuff", file = "some_file")
   con <- dbug()
+  con$envir <- eval(parse(text = test_opt()$envir))
   con$plan <- data.frame(target = "a", command = "c('some_file')")
   con$targets <- con$plan$target
-  testrun(con)
+
+  make(
+    con$plan,
+    cache = con$cache,
+    verbose = FALSE,
+    parallelism = test_opt()$parallelism,
+    jobs = test_opt()$jobs
+  )
   o1 <- outdated(
     con$plan,
     envir = con$envir,
