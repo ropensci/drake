@@ -31,12 +31,7 @@ get_cache <- function(
 #' @export
 #' @description Get a specific drake cache
 #' at the exact specified file path
-#' @param path file path to the cache
-#' @param search logical, whether to search back in the file system
-#' for the cache.
-#' @param type character scalar, type of the drake cache.
-#' Must be among the list of supported caches
-#' in \code{\link{cache_types}()}.
+#' @param path file path of the cache
 #' @examples
 #' \dontrun{
 #' x <- this_cache() # Does not exist yet
@@ -62,7 +57,7 @@ this_cache <- function(
   }
   cache_fetcher <- paste0("get_", type, "_cache")
   get(cache_fetcher, envir = getNamespace("drake"))(
-    path = path, search = search
+    path = path
   )
 }
 
@@ -99,8 +94,12 @@ new_cache <- function(
     stop("Cannot create new cache at ", path, ". File already exists.")
   }
   type = match.arg(type, choices = cache_types())
-  name <- paste0("new_", type, "_cache")
-  cache <- get(name, envir = getNamespace("drake"))(path = path, search = search)
+  cache_constructor <- paste0("new_", type, "_cache")
+  cache <- get(cache_constructor, envir = getNamespace("drake"))(
+    path = path,
+    short_hash_algo = short_hash_algo,
+    long_hash_algo = long_hash_algo
+  )
   cache$set(
     key = "short_hash_algo",
     value = short_hash_algo,
@@ -143,7 +142,7 @@ recover_cache <- function(
   long_hash_algo = default_long_hash_algo()
 ){
   if (is.null(path)){
-    path <- file.path(getwd(), cache_dir)
+    path <- default_cache_path()
   }
   cache <- this_cache(path = path)
   if (is.null(cache)){
@@ -155,6 +154,16 @@ recover_cache <- function(
     )
   }
   cache
+}
+
+
+#' @title Function default_cache_path
+#' @export
+#' @description default drake cache path
+#' @examples
+#' default_cache_path
+default_cache_path <- function(){
+  file.path(getwd(), cache_dir)
 }
 
 configure_cache <- function(cache, clear_progress){

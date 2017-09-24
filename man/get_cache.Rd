@@ -7,13 +7,15 @@
 get_cache(path = getwd(), search = TRUE)
 }
 \arguments{
-\item{path}{path to the cache}
+\item{path}{file path to the folder contianing the cache.
+Yes, this is the parent directory containing the cache,
+not the cache itself.}
 
 \item{search}{logical, whether to search back in the file system
 for the cache.}
 }
 \description{
-get the drake cache
+Search for and return a drake cache.
 }
 \examples{
 \dontrun{

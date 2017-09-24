@@ -68,10 +68,7 @@ build_config <- function(plan, targets, envir,
   prework <- add_packages_to_prework(packages = packages,
     prework = prework)
   if (is.null(cache)) {
-    cache <- recover_cache(
-      path = cache_dir,
-      type = cache_type
-    )
+    cache <- recover_cache()
   }
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(cache = cache, clear_progress = clear_progress)

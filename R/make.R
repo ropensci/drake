@@ -119,7 +119,7 @@
 #' before anything is imported or built.
 #'
 #' @param cache drake cache as created by \code{\link{new_cache}()}.
-#' See also \code{\link{get_cache}()), \code{\link{this_cache}()},
+#' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
 #' and \code{\link{recover_cache}()}
 #'
 #' @examples
