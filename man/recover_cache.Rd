@@ -16,11 +16,11 @@ Must be among the list of supported caches
 in \code{\link{cache_types}()}.}
 
 \item{short_hash_algo}{short hash algorithm for the cache.
-See \link{\code{default_short_hash_algorithm}()} and
+See \code{\link{default_short_hash_algo}()} and
 \code{\link{make}()}}
 
 \item{long_hash_algo}{long hash algorithm for the cache.
-See \link{\code{default_long_hash_algorithm}()} and
+See \code{\link{default_long_hash_algo}()} and
 \code{\link{make}()}}
 }
 \description{

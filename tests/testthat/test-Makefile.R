@@ -121,6 +121,14 @@ test_with_dir("Makefile stuff in globalenv()", {
 })
 
 test_with_dir("packages are loaded in prework", {
+  pkgs <- rownames(utils::installed.packages())
+  need <- c("abind", "MASS")
+  for (pkg in need){
+    if (!(pkg %in% pkgs)){
+      skip(paste("Package", pkg, "is not installed."))
+    }
+  }
+
   original <- getOption("testdrake_optionload_20170924")
   options(testdrake_optionload_20170924 = "unset")
   expect_equal(getOption("testdrake_optionload_20170924"), "unset")

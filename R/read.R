@@ -204,7 +204,7 @@ read_config <- function(path = getwd(), search = TRUE, cache = NULL){
 #' make(my_plan)
 #' read_plan()
 #' }
-read_plan <- function(path = getwd(), search = TRUE, cache = cache){
+read_plan <- function(path = getwd(), search = TRUE, cache = NULL){
   read_config(path = path, search = search, cache = cache)$plan
 }
 
@@ -235,8 +235,8 @@ read_plan <- function(path = getwd(), search = TRUE, cache = cache){
 #' class(g)
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
-read_graph <- function(path = getwd(), search = TRUE, 
-  cache = cache, ...){
+read_graph <- function(path = getwd(), search = TRUE,
+  cache = NULL, ...){
   config <- read_config(path = path, search = search, cache = cache)
   return(config$graph)
 }

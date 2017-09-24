@@ -66,17 +66,18 @@ this_cache <- function(
 #' @title Function new_cache
 #' @description Make a new drake cache.
 #' @export
-#' @seealso \link{\code{default_short_hash_algorithm}},
+#' @seealso \code{\link{default_short_hash_algo}},
+#' \code{\link{default_long_hash_algo}},
 #' \code{\link{make}}, \code{\link{cache_types}}
 #' @param path file path to the cache
 #' @param type character scalar, type of the drake cache.
 #' Must be among the list of supported caches
 #' in \code{\link{cache_types}()}.
 #' @param short_hash_algo short hash algorithm for the cache.
-#' See \link{\code{default_short_hash_algorithm}()} and
+#' See \code{\link{default_short_hash_algo}()} and
 #' \code{\link{make}()}
 #' @param long_hash_algo long hash algorithm for the cache.
-#' See \link{\code{default_long_hash_algorithm}()} and
+#' See \code{\link{default_long_hash_algo}()} and
 #' \code{\link{make}()}
 #' @examples
 #' \dontrun{
@@ -123,10 +124,10 @@ new_cache <- function(
 #' and create a new one otherwise.
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
-#' See \link{\code{default_short_hash_algorithm}()} and
+#' See \code{\link{default_short_hash_algo}()} and
 #' \code{\link{make}()}
 #' @param long_hash_algo long hash algorithm for the cache.
-#' See \link{\code{default_long_hash_algorithm}()} and
+#' See \code{\link{default_long_hash_algo}()} and
 #' \code{\link{make}()}
 #' @param type character scalar, type of the drake cache.
 #' Must be among the list of supported caches

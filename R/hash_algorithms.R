@@ -74,25 +74,3 @@ default_long_hash_algo <- function() {
 available_hash_algos <- function(){
   eval(formals(digest::digest)$algo)
 }
-
-choose_hash_algos <- function(
-  preferred_short = NULL,
-  preferred_long = NULL
-){
-  old <- old_hash_algos()
-  short <- choose_one_algo(
-    old = old$short,
-    preferred = preferred_short,
-    default = default_short_hash_algo(),
-    type = "short"
-  ) %>%
-    match.arg(choices = available_hash_algos())
-  long <- choose_one_algo(
-    old = old$long,
-    preferred = preferred_long,
-    default = default_long_hash_algo(),
-    type = "long"
-  ) %>%
-    match.arg(choices = available_hash_algos())
-  list(short = short, long = long)
-}

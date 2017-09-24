@@ -4,7 +4,7 @@
 \alias{read_graph}
 \title{Function \code{read_graph}}
 \usage{
-read_graph(path = getwd(), search = TRUE, cache = cache, ...)
+read_graph(path = getwd(), search = TRUE, cache = NULL, ...)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
