@@ -118,59 +118,9 @@
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 #' before anything is imported or built.
 #'
-#' @param short_hash_algo character scalar, name of the short
-#' hash algorithm to use.
-#' This argument is advanced, and most users can leave it alone. \cr \cr
-#'
-#' The algorithm must be among \code{\link{available_hash_algos}{}},
-#' which is just the collection of algorithms available to the `algo`
-#' argument in \code{digest::digest()}. \cr \cr
-#'
-#' If you express no preference for a hash, drake will use
-#' the short hash for the existing project, or
-#' \code{\link{default_short_hash_algo}()} for a new project.
-#' If you do supply a hash algorithm, it will only apply to
-#' fresh projects (see \code{\link{clean}(destroy = TRUE)}).
-#' For a project that already exists, if you supply a hash algorithm,
-#' drake will warn you and then ignore your choice, opting instead for
-#' the hash algorithm already chosen for the project
-#' in a previous \code{make()}. \cr \cr
-#'
-#' Drake uses both a short hash algorithm
-#' and a long hash algorithm. The shorter hash has fewer characters,
-#' and it is used to generate the names of internal cache files
-#' and auxiliary files. The decision for short names is important
-#' because Windows places restrictions on the length of file paths.
-#' On the other hand, some internal hashes in drake are
-#' never used as file names, and those hashes can use a longer hash
-#' to avoid collisions.
-#'
-#' @param long_hash_algo character scalar, name of the long
-#' hash algorithm to use.
-#' This argument is advanced, and most users can leave it alone. \cr \cr
-#'
-#' The algorithm must be among \code{\link{available_hash_algos}{}},
-#' which is just the collection of algorithms available to the `algo`
-#' argument in \code{digest::digest()}. \cr \cr
-#'
-#' If you express no preference for a hash, drake will use
-#' the long hash for the existing project, or
-#' \code{\link{default_long_hash_algo}()} for a new project.
-#' If you do supply a hash algorithm, it will only apply to
-#' fresh projects (see \code{\link{clean}(destroy = TRUE)}).
-#' For a project that already exists, if you supply a hash algorithm,
-#' drake will warn you and then ignore your choice, opting instead for
-#' the hash algorithm already chosen for the project
-#' in a previous \code{make()}. \cr \cr
-#'
-#' Drake uses both a short hash algorithm
-#' and a long hash algorithm. The shorter hash has fewer characters,
-#' and it is used to generate the names of internal cache files
-#' and auxiliary files. The decision for short names is important
-#' because Windows places restrictions on the length of file paths.
-#' On the other hand, some internal hashes in drake are
-#' never used as file names, and those hashes can use a longer hash
-#' to avoid collisions.
+#' @param cache drake cache as created by \code{\link{new_cache}()}.
+#' See also \code{\link{get_cache}()), \code{\link{this_cache}()},
+#' and \code{\link{recover_cache}()}
 #'
 #' @examples
 #' \dontrun{
@@ -194,7 +144,7 @@ make <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  imports_only = FALSE,
+  cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
@@ -207,8 +157,7 @@ make <- function(
   ),
   return_config = FALSE,
   clear_progress = TRUE,
-  short_hash_algo = NULL,
-  long_hash_algo = NULL
+  imports_only = FALSE
 ){
   force(envir)
   parallelism <- match.arg(
@@ -228,8 +177,7 @@ make <- function(
     command = command,
     args = args,
     clear_progress = clear_progress,
-    short_hash_algo = short_hash_algo,
-    long_hash_algo = long_hash_algo
+    cache = cache
   )
   check_config(config)
   store_config(config)

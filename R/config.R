@@ -32,63 +32,60 @@
 #' @param prepend same as for \code{\link{make}}
 #' @param command same as for \code{\link{make}}
 #' @param args same as for \code{\link{make}}
-#' @param short_hash_algo same as for \code{\link{make}}
-#' @param long_hash_algo same as for \code{\link{make}}
+#' @param cache same as for \code{\link{make}}
 config <- function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE,
+  envir = parent.frame(), verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1, packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(
     jobs = jobs,
     verbose = verbose
-  ),
-  short_hash_algo = NULL,
-  long_hash_algo = NULL
+  )
 ){
   force(envir)
   config <- make(imports_only = TRUE, return_config = TRUE,
     clear_progress = FALSE, plan = plan, targets = targets,
-    envir = envir, verbose = verbose, parallelism = parallelism,
-    jobs = jobs, packages = packages, prework = prework,
-    prepend = prepend, command = command, args = args,
-    short_hash_algo = short_hash_algo, long_hash_algo = long_hash_algo
+    envir = envir, verbose = verbose, cache = cache,
+    parallelism = parallelism, jobs = jobs,
+    packages = packages, prework = prework,
+    prepend = prepend, command = command, args = args, cache = cache
   )
   config$graph <- build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
   config
 }
 
-build_config <- function(plan, targets, envir, jobs,
-  parallelism = drake::parallelism_choices(),
-  verbose, packages, prework, prepend, command,
-  args, clear_progress = TRUE,
-  short_hash_algo, long_hash_algo
+build_config <- function(plan, targets, envir,
+  verbose, cache,
+  parallelism, jobs,
+  packages, prework, prepend, command,
+  args, clear_progress
 ){
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
-  parallelism <- match.arg(parallelism)
+  parallelism <- match.arg(parallelism, choices = parallelism_choices())
   prework <- add_packages_to_prework(packages = packages,
     prework = prework)
-  hash_algos <- choose_hash_algos(
-    preferred_short = short_hash_algo,
-    preferred_long = long_hash_algo
-  )
-  cache <- storr_rds(cache_dir, mangle_key = TRUE,
-    hash_algorithm = hash_algos$short)
-  cache$driver$path <- normalizePath(cache$driver$path)
-  if (clear_progress){
-    cache$clear(namespace = "progress")
+  if (is.null(cache)) {
+    cache <- recover_cache(
+      path = cache_dir,
+      type = cache_type
+    )
   }
+  # A storr_rds() cache should already have the right hash algorithms.
+  cache <- configure_cache(cache = cache, clear_progress = clear_progress)
   graph <- build_graph(plan = plan,
     targets = targets, envir = envir, verbose = verbose)
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command,
     args = args, graph = graph,
-    short_hash_algo = hash_algos$short, long_hash_algo = hash_algos$long,
+    short_hash_algo = cache$get("hash_algo_short", namespace = "config"), 
+    long_hash_algo = cache$get("hash_algo_short", namespace = "config"),
     inventory = cache$list(),
-    inventory_filemtime = cache$list(namespace = "filemtime"))
+    inventory_filemtime = cache$list(namespace = "filemtime")
+  )
 }
 
 add_packages_to_prework <- function(packages, prework) {

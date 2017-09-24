@@ -48,6 +48,7 @@ test_with_dir("different hashes", {
   )
   expect_equal(length(justbuilt(con2)), 0)
   expect_equal(con$short_hash_algo, "crc32")
+  expect_equal(con$cache$driver$hash_algorithm, "crc32")
   expect_equal(con$long_hash_algo, "sha512")
   storr_hash <- scan(
     file.path(cache_dir, "config", "hash_algorithm"),

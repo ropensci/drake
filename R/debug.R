@@ -10,7 +10,8 @@ dbug <- function() {
     prepend = character(0), verbose = FALSE, packages = character(0),
     prework = character(0), command = "make", args = character(0),
     short_hash_algo = NULL,
-    long_hash_algo = NULL
+    long_hash_algo = NULL,
+    clear_progress = TRUE
   )
 
   # Maybe show config opts here
