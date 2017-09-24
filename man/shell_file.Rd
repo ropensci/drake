@@ -4,10 +4,13 @@
 \alias{shell_file}
 \title{Function shell_file}
 \usage{
-shell_file(path = file.path(getwd(), "shell.sh"))
+shell_file(path = file.path(getwd(), "shell.sh"), overwrite = FALSE)
 }
 \arguments{
 \item{path}{file path of the shell file}
+
+\item{overwrite}{logical, whether to overwrite a possible
+destination file with the same name}
 }
 \description{
 Write an example \code{shell.sh} file required by

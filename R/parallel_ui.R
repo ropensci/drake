@@ -186,12 +186,12 @@ max_useful_jobs <- function(plan, targets = drake::possible_targets(plan),
 #' \code{\link{parallelism_choices}}
 #' @export
 #' @param path file path of the shell file
-shell_file <- function(path = file.path(getwd(), "shell.sh")) {
-  writeLines(
-    c(
-      "#!/bin/bash",
-      "shift",
-      "echo \"module load R; $*\" | qsub -sync y -cwd -j y"),
-    path)
-  system2("chmod", args = c("+x", path))
+#' @param overwrite logical, whether to overwrite a possible
+#' destination file with the same name
+shell_file <- function(
+  path = file.path(getwd(), "shell.sh"),
+  overwrite = FALSE
+){
+  from <- system.file("shell.sh", package = "drake", mustWork = TRUE)
+  file.copy(from = from, to = path, copy.mode = TRUE)
 }
