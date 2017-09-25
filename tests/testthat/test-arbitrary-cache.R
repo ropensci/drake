@@ -3,9 +3,9 @@ context("arbitrary cache")
 test_with_dir("arbitrary storr file cache", {
   expect_false(file.exists(default_cache_path()))
   parallelism <- default_parallelism()
-  jobs <- 2
+  jobs <- 1
   envir <- eval(parse(text = test_opt()$envir))
-  cache <- storr::storr_rds("arbitrary_storr", mangle_key = TRUE)
+  cache <- storr::storr_environment(hash_algorithm = "murmur32")
   load_basic_example(envir = envir)
   my_plan <- envir$my_plan
   con <- make(
@@ -22,6 +22,8 @@ test_with_dir("arbitrary storr file cache", {
     lm(y ~ x3, data = d)
   }
   expect_false(file.exists(default_cache_path()))
+  expect_equal(short_hash(con$cache), "murmur32")
+  expect_equal(long_hash(con$cache), default_long_hash_algo())
 
   expect_equal(cached(), character(0))
   targets <- my_plan$target
@@ -88,5 +90,6 @@ test_with_dir("arbitrary storr file cache", {
   expect_error(nrow(large))
   expect_silent(loadd(large, cache = cache))
   expect_true(nrow(large) > 0)
+  rm(large)
   expect_false(file.exists(default_cache_path()))
 })
