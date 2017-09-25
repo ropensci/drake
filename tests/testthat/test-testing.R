@@ -16,7 +16,9 @@ test_with_dir("set_testing_scenario", {
 })
 
 test_with_dir("testing utils", {
-  expect_error(unit_test_files())
+  path <- system.file("DESCRIPTION", package = "drake")
+  testfiles <- unit_test_files(path = path)
+  expect_equal(basename(testfiles), "testthat")
   expect_true(is.character(this_os()))
   scenario <- names(testing_scenarios)[1]
   expect_true(is.list(get_testing_scenario()))
@@ -95,5 +97,5 @@ test_with_dir("test_scenarios()", {
   )
   loggings <- grepl("logged scenario", log)
   expect_false(any(loggings))
-  expect_true(any(grepl("Skipping", log)))
+  expect_true(any(grepl("skip", log)))
 })

@@ -32,13 +32,13 @@ test_scenarios <- function(
     )
   }
   for (scenario_name in scenarios){
-    cat(scenario_name, "\n")
+    skip <- skip_criterion(scenario_name)
+    msg <- ifelse(skip, "skip", "run")
+    cat(msg, scenario_name, "\n")
     new <- list()
     new[[test_option_name]] <- scenario_name
-    if (skip_criterion(scenario_name)){
-      cat("  Skipping.\n")
-      next
+    if (!skip) {
+      with_options(new = new, testthat::test_dir(unit_test_dir))
     }
-    with_options(new = new, testthat::test_dir(unit_test_dir))
   }
 }

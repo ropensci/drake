@@ -32,14 +32,9 @@ test_with_dir <- function(desc, ...){
   with_dir(dir, test_that(desc = desc, ...))
 }
 
-unit_test_files <- function(){
-  file.path(
-    find_root(
-      criterion = "DESCRIPTION",
-      path = getwd()
-    ),
-    "tests", "testthat"
-  )
+unit_test_files <- function(path = getwd()){
+  root <- find_root(criterion = "DESCRIPTION", path = path)
+  file.path(root, "tests", "testthat")
 }
 
 this_os <- function(){
