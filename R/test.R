@@ -28,10 +28,6 @@ test_with_dir <- function(desc, code){
 }
 
 testrun <- function(config) {
-  safe_with_memory_cache <- c("mclapply", "parLapply")
-  if (!(config$parallelism %in% safe_with_memory_cache)){
-    config$cache <- NULL
-  }
   invisible(
     make(plan = config$plan, targets = config$targets, envir = config$envir,
       verbose = FALSE, parallelism = config$parallelism, jobs = config$jobs,
