@@ -20,12 +20,12 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 With drake, there is room for error with respect to tracking dependencies, managing environments and workspaces, etc. For example, in some edge cases, it is possible to trick drake into ignoring dependencies. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
-## Install all your packages
+# Install all your packages
 
 Your workflow may depend on external packages such as
 [ggplot2](https://CRAN.R-project.org/package=ggplot2), [dplyr](https://CRAN.R-project.org/package=dplyr), or [MASS](https://CRAN.R-project.org/package=MASS). Such packages must be formally installed with `install.packages()`, `devtools::install_github()`, `devtools::install_local()`, or a similar command. If you load uninstalled packages with `devtools::load_all()`, results may be unpredictable and incorrect.
 
-## Beware unparsable symbols in your workflow plan
+# Beware unparsable symbols in your workflow plan
 
 ```{r unparsable_plan}
 template <- plan(x = process(..setting..))
@@ -49,7 +49,7 @@ my_plan
 
 To be safe, use `check(my_plan)` to screen for problems like this one.
 
-## Your workspace is modified by default.
+# Your workspace is modified by default.
 
 As of version 3.0.0, drake's execution environment is the user's workspace by default. As an upshot, the workspace is vulnerable to side-effects of `make()`. To protect your workspace, you may want to create a custom evaluation environment containing all your imported objects and then pass it to the envir argument of `make()`. Here is how.
 
@@ -72,7 +72,7 @@ envir$out
 readd(out)
 ```
 
-## Commands are NOT perfectly flexible.
+# Commands are NOT perfectly flexible.
 
 In your workflow plan data frame (produced by `plan()` and accepted by `make()`), your commands can usually be flexible R expressions.
 
@@ -83,7 +83,7 @@ plan(target1 = 1 + 1 - sqrt(sqrt(3)),
 
 However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
 
-## Minimize the side effects of your commands.
+# Minimize the side effects of your commands.
 
 Consider the workflow plan data frame below.
 
@@ -99,15 +99,15 @@ deps(my_plan$command[1])
 
 Here, `x` is a mere side effect of the command, and it will not be reproducibly tracked. And if you add a proper target called `x` to the workflow plan data frame, the results of your analysis may not be correct. Side effects of commands can be unpredictable, so please try to minimize them. It is a good practice to write your commands as function calls. Nested function calls are okay.
 
-## Do not change your working directory.
+# Do not change your working directory.
 
 During the execution workflow of a drake project, please do not change your working directory (with `setwd()`, for example). At the very least, if you do change your working directory during a command in your workflow plan, please return to the original working directory before the command is completed. Drake relies on a hidden cache (the `.drake/` folder) at the root of your project, so navigating to a different folder may confuse drake.
 
-## Directories (folders) are not reproducibly tracked.
+# Directories (folders) are not reproducibly tracked.
 
 Yes, you can declare a file target or input file by enclosing it in single quotes in your workflow plan data frame. But entire directories (i.e. folders) cannot yet be tracked this way. Tracking directories is a tricky problem, and lots of individual edge cases need to be ironed out before I can deliver a clean, reliable solution. Please see [issue 12](https://github.com/wlandau-lilly/drake/issues/12) for updates and a discussion.
 
-## CHECK YOUR DEPENDENCIES
+# CHECK YOUR DEPENDENCIES
 
 As the user, you should take responsibility for how the steps of your workflow are interconnected. This will affect which targets are built and which ones are skipped. There are several ways to explore the dependency relatoinsihp. 
 
@@ -143,7 +143,7 @@ tracked(my_plan, targets = "small")
 tracked(my_plan)
 ```
 
-## Dependencies are not tracked in some edge cases.
+# Dependencies are not tracked in some edge cases.
 
 First of all, if you are ever unsure about what exactly is reproducibly tracked, consult the examples in the following documentation. 
 
@@ -166,7 +166,7 @@ command = "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
 deps(command)
 ```
 
-## Functions produced by `Vectorize()`
+# Functions produced by `Vectorize()`
 
 With functions produced by `Vectorize()`, detecting dependencies is especially hard because the body of every such a function is 
 
@@ -188,16 +188,16 @@ In addition, if `f()` is the output of `Vectorize()`, then drake reacts to chang
 
 In addition, if you import a function like `f <- Vectorize(g, ...)` and hover over the `f` node in `plot_graph(hover = TRUE)`, then you will see the body of `g()`, not the body of `f()`.
 
-## Compiled code is not reproducibly tracked.
+# Compiled code is not reproducibly tracked.
 
 Some R functions use `.Call()` to run compiled code in the backend. The R code in these functions is tracked, but not the compiled code called with `.Call()`.
 
-## Parallel computing on Windows
+# Parallel computing on Windows
 
 On Windows, do not use `make(..., parallelism = "mclapply")`. Replace `"mclapply"` with one of the other `parallelism_choices()` or let `drake` choose the  `parallelism` for you. For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 
 
-## Proper Makefiles are not standalone.
+# Proper Makefiles are not standalone.
 
 The [Makefile](http://kbroman.org/minimal_make/) generated by `make(myplan, parallelism = "Makefile")` is not standalone. Do not run it outside of `drake::make()`. Drake uses dummy timestamp files to tell the [Makefile](http://kbroman.org/minimal_make/) what to do, and running `make` in the [terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) will most likely give incorrect results.
 
@@ -207,7 +207,7 @@ unlink(c("report.Rmd", "Thumbs.db"))
 ```
 
 
-## Makefile-level parallelism for imported objects and files
+# Makefile-level parallelism for imported objects and files
 
 Makefile-level parallelism is only used for targets in your workflow plan data frame, not imports. To process imported objects and files, drake selects the best parallel backend for your system and uses the number of jobs you give to the `jobs` argument to `make()`. To use at most 2 jobs for imports and at most 4 jobs for targets, run
 
@@ -215,7 +215,7 @@ Makefile-level parallelism is only used for targets in your workflow plan data f
 make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")
 ```
 
-## Advanced caching and hashing
+# Advanced caching and hashing
 
 In theory, you could try any [storr](https://github.com/richfitz/storr)-like cache for drake.
 
