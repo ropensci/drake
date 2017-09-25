@@ -2,17 +2,16 @@ context("testing")
 
 test_with_dir("set_testing_scenario", {
   original <- get_testing_scenario_name()
-  original_opt <- getOption(test_option_name)
-  withr::with_options(new = list(), {
-    expect_error(set_testing_scenario("lskdjf"))
-    set_testing_scenario("local_mcl_1")
+  new <- list()
+  new[[test_option_name]] <- "local_mcl_1"
+  withr::with_options(new = new, {
     expect_equal(get_testing_scenario_name(), "local_mcl_1")
+    expect_error(set_testing_scenario("lskdjf"))
+    set_testing_scenario("local_mcl_8")
+    expect_equal(get_testing_scenario_name(), "local_mcl_8")
     expect_equal(get_testing_scenario()$parallelism, "mclapply")
-    expect_equal(get_testing_scenario()$jobs, 1)
+    expect_equal(get_testing_scenario()$jobs, 8)
   })
-  if (is.null(original_opt)){
-    options("drake_test_scenario" = NULL)
-  }
   expect_equal(original, get_testing_scenario_name())
 })
 
