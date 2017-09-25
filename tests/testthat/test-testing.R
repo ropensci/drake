@@ -60,16 +60,40 @@ test_with_dir("test_scenarios()", {
     ),
     con = file
   )
-  log <- capture.output(test_scenarios(unit_test_dir = subdir))
+
+  always_skip <- function(...){
+    TRUE
+  }
+  never_skip <- function(...){
+    FALSE
+  }
+  log <- capture.output(
+    test_scenarios(
+      unit_test_dir = subdir,
+      skip_criterion = never_skip
+    )
+  )
+
   expect_false("some_nested_object" %in% ls())
   expect_true("some_outside_object" %in% ls())
   expect_equal(getwd(), wd)
   expect_equal(old_scenario, getOption(test_option_name))
 
   # Check if we tested with all the options
-  log <- log[grepl("logged scenario", log)]
+  loggings <- grepl("logged scenario", log)
+  expect_true(any(loggings))
+  log <- log[loggings]
   log <- gsub("logged scenario", "", log)
   log <- gsub(" ", "", log)
   log <- gsub(".", "", log, fixed = TRUE)
   expect_equal(sort(log), sort(names(testing_scenarios)))
+
+  log <- capture.output(
+    test_scenarios(
+      unit_test_dir = subdir,
+      skip_criterion = always_skip
+    )
+  )
+  loggings <- grepl("logged scenario", log)
+  expect_false(any(loggings))
 })
