@@ -32,6 +32,21 @@ test_with_dir <- function(desc, ...){
   with_dir(dir, test_that(desc = desc, ...))
 }
 
+with_all_options <- function(code) {
+  old <- options()
+  on.exit(restore_options(old))
+  force(code)
+}
+
+restore_options <- function(old){
+  current <- options()
+  remove_these <- setdiff(names(current), names(old))
+  removal_list <- as.list(old[remove_these])
+  names(removal_list) <- remove_these
+  do.call(options, removal_list)
+  options(old)
+}
+
 unit_test_files <- function(path = getwd()){
   root <- find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")

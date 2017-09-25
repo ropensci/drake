@@ -3,10 +3,9 @@ context("testing")
 
 test_with_dir("set_testing_scenario", {
   original <- get_testing_scenario_name()
-  new <- list()
-  new[[test_option_name]] <- "local_mcl_1"
-  withr::with_options(new = new, {
-    expect_equal(get_testing_scenario_name(), "local_mcl_1")
+  original_opt <- getOption(test_option_name)
+  with_all_options({
+    expect_equal(get_testing_scenario_name(), original)
     expect_error(set_testing_scenario("lskdjf"))
     set_testing_scenario("local_mcl_8")
     expect_equal(get_testing_scenario_name(), "local_mcl_8")
@@ -14,6 +13,7 @@ test_with_dir("set_testing_scenario", {
     expect_equal(get_testing_scenario()$jobs, 8)
   })
   expect_equal(original, get_testing_scenario_name())
+  expect_equal(original_opt, getOption(test_option_name))
 })
 
 test_with_dir("testing utils", {
