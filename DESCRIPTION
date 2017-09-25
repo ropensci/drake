@@ -35,6 +35,7 @@ Imports:
   magrittr,
   pacman,
   parallel,
+  pkgload,
   plyr,
   R.utils,
   stats,

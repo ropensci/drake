@@ -4,11 +4,13 @@
 \alias{find_cache}
 \title{Function \code{find_cache}}
 \usage{
-find_cache(path = getwd())
+find_cache(path = getwd(), target = default_cache_path())
 }
 \arguments{
 \item{path}{starting path for search back for the cache.
 Should be a subdirectory of the drake project.}
+
+\item{target}{Name of the folder containing the cache.}
 }
 \value{
 File path of the nearest drake cache or \code{NULL}

@@ -1,7 +1,3 @@
-cache_dir <- ".drake"
-cache_macro <- "DRAKE_CACHE"
-cache_value_macro <- paste0("$(", cache_macro, ")")
-
 #' @title Function cache_path
 #' @export
 #' @description Returns the file path
@@ -68,7 +64,7 @@ this_cache <- function(
   path = NULL
 ){
   if (is.null(path)){
-    path <- file.path(getwd(), cache_dir)
+    path <- default_cache_path()
   }
   if (!file.exists(path)){
     return(NULL)
@@ -105,14 +101,11 @@ this_cache <- function(
 #' cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 #' }
 new_cache <- function(
-  path = NULL,
+  path = drake::default_cache_path(),
   type = drake::default_cache_type(),
-  short_hash_algo = default_short_hash_algo(),
-  long_hash_algo = default_long_hash_algo()
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo()
 ){
-  if (is.null(path)){
-    path <- file.path(path = getwd(), cache_dir)
-  }
   if (file.exists(path)){
     stop("Cannot create new cache at ", path, ". File already exists.")
   }
@@ -183,7 +176,7 @@ recover_cache <- function(
 #' @examples
 #' default_cache_path()
 default_cache_path <- function(){
-  file.path(getwd(), cache_dir)
+  file.path(getwd(), ".drake")
 }
 
 #' @title Function configure_cache

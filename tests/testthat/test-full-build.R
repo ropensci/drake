@@ -23,7 +23,7 @@ test_with_dir("scratch build with contained envir.", {
   expect_equal(config$cache$list(), all)
   expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
-  expect_true(file.exists(cache_dir))
+  expect_true(file.exists(default_cache_path()))
 
   # prune
   expect_warning(prune(config$plan[config$plan$target != "final", ]))
@@ -63,11 +63,11 @@ test_with_dir("scratch build with contained envir.", {
   expect_equal(config$cache$list("functions"), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
-  expect_true(file.exists(cache_dir))
+  expect_true(file.exists(default_cache_path()))
   expect_equal(config$cache$list("filemtime"), character(0))
 
   clean(destroy = TRUE, search = FALSE)
-  expect_false(file.exists(cache_dir))
+  expect_false(file.exists(default_cache_path()))
   clean(destroy = TRUE, search = FALSE)
   clean(destroy = FALSE, search = FALSE)
 })
@@ -80,7 +80,7 @@ test_with_dir("clean in full build.", {
   expect_false("final" %in% config$cache$list())
   clean(search = TRUE)
   expect_equal(config$cache$list(), character(0))
-  expect_true(file.exists(cache_dir))
+  expect_true(file.exists(default_cache_path()))
   clean(search = TRUE, destroy = TRUE)
-  expect_false(file.exists(cache_dir))
+  expect_false(file.exists(default_cache_path()))
 })

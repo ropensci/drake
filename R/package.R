@@ -35,9 +35,10 @@
 #' is_dag make_empty_graph plot.igraph subcomponent V vertex
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
+#' @importFrom pacman p_depends
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
-#' @importFrom pacman p_depends
+#' @importFrom pkgload pkg_path
 #' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
@@ -48,5 +49,5 @@
 #' @importFrom utils capture.output compareVersion sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
-#' @importFrom withr with_dir with_output_sink
+#' @importFrom withr with_dir with_options with_output_sink
 NULL

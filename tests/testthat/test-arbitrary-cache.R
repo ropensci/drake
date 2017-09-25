@@ -4,7 +4,7 @@ test_with_dir("arbitrary storr file cache", {
   expect_false(file.exists(default_cache_path()))
   parallelism <- default_parallelism()
   jobs <- 1
-  envir <- eval(parse(text = test_opt()$envir))
+  envir <- eval(parse(text = get_testing_scenario()$envir))
   cache <- storr::storr_environment(hash_algorithm = "murmur32")
   load_basic_example(envir = envir)
   my_plan <- envir$my_plan

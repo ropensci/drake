@@ -29,7 +29,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     target = "x",
     command = "my_function('my_file.rds')"
   )
-  envir <- eval(parse(text = test_opt()$envir))
+  envir <- eval(parse(text = get_testing_scenario()$envir))
   envir$my_function <- function(x){
     x
   }
@@ -46,15 +46,15 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     verbose = FALSE,
     return_config = TRUE,
     envir = envir,
-    parallelism = test_opt()$parallelism,
-    jobs = test_opt()$jobs
+    parallelism = get_testing_scenario()$parallelism,
+    jobs = get_testing_scenario()$jobs
   )
   expect_equal(justbuilt(con), character(0))
   expect_equal(con$short_hash_algo, "md5")
   expect_equal(con$long_hash_algo, "md5")
   expect_equal(con$cache$driver$hash_algorithm, "md5")
   storr_hash <- scan(
-    file.path(cache_dir, "config", "hash_algorithm"),
+    file.path(default_cache_path(), "config", "hash_algorithm"),
     what = character(),
     quiet = TRUE
   )

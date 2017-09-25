@@ -47,7 +47,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
 })
 
 test_with_dir("namespaced workflow works", {
-  opts <- test_opt()
+  scenarios <- get_testing_scenario()
   envir <- dbug()$envir
   rm(list = ls(envir), envir = envir)
   envir$f <- function(x) {
@@ -58,8 +58,8 @@ test_with_dir("namespaced workflow works", {
   make(
     x,
     envir = envir,
-    jobs = opts$jobs,
-    parallelism = opts$parallelism,
+    jobs = scenarios$jobs,
+    parallelism = scenarios$parallelism,
     verbose = FALSE
   )
   fromcache <- readd("base::list", character_only = TRUE)

@@ -1,10 +1,10 @@
 context("basic")
 
 test_with_dir("basic example works", {
-  opt <- test_opt()
-  e <- eval(parse(text = opt$envir))
-  jobs <- opt$jobs
-  parallelism <- opt$parallelism
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan

@@ -9,21 +9,25 @@
 #' if no cache is found.
 #' @param path starting path for search back for the cache.
 #' Should be a subdirectory of the drake project.
+#' @param target Name of the folder containing the cache.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan)
 #' find_cache()
 #' }
-find_cache <- function(path = getwd()){
-  while (!(cache_dir %in% list.files(path = path, all.files = TRUE))){
+find_cache <- function(path = getwd(), target = NULL){
+  if (is.null(target)){
+    target <- basename(default_cache_path())
+  }
+  while (!(target %in% list.files(path = path, all.files = TRUE))){
     path <- dirname(path)
     # If we can search no higher...
     if (path == dirname(path)){
       return(NULL) # The cache does not exist
     }
   }
-  file.path(path, cache_dir)
+  file.path(path, target)
 }
 
 #' @title Function \code{find_project}

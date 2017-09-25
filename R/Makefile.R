@@ -63,11 +63,6 @@ default_system2_args <- function(jobs, verbose){
   return(out)
 }
 
-# For normalized cache paths on Windows
-to_unix_path <- function(x){
-  gsub("\\\\", "/", x)
-}
-
 makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
@@ -152,8 +147,4 @@ mk <- function(target, cache_path = NULL){
     file_overwrite(file)
   }
   return(invisible())
-}
-
-globalenv_file <- function(cache_path){
-  file.path(cache_path, "globalenv.RData")
 }

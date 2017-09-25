@@ -132,9 +132,9 @@ test_with_dir("packages are loaded in prework", {
     }
   }
 
-  original <- getOption("testdrake_optionload_20170924")
-  options(testdrake_optionload_20170924 = "unset")
-  expect_equal(getOption("testdrake_optionload_20170924"), "unset")
+  original <- getOption("test_drake_option_12345")
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
   config <- dbug()
   if (R.utils::isPackageLoaded("abind"))
   detach("package:abind")
@@ -145,9 +145,9 @@ test_with_dir("packages are loaded in prework", {
 
   # Load packages with the 'packages' argument
   config$packages <- c("abind", "MASS")
-  config$prework <- "options(testdrake_optionload_20170924 = 'set')"
+  config$prework <- "options(test_drake_option_12345 = 'set')"
   config$plan <- plan(
-    x = getOption("testdrake_optionload_20170924"),
+    x = getOption("test_drake_option_12345"),
     y = c(abind("option"), deparse(body(lda)), x),
     strings_in_dots = "literals"
   )
@@ -157,12 +157,12 @@ test_with_dir("packages are loaded in prework", {
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
-  options(testdrake_optionload_20170924 = original)
+  options(test_drake_option_12345 = original)
   clean(search = FALSE)
 
   # load packages the usual way
-  options(testdrake_optionload_20170924 = "unset")
-  expect_equal(getOption("testdrake_optionload_20170924"), "unset")
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
   if (R.utils::isPackageLoaded("abind"))
   detach("package:abind")
   if (R.utils::isPackageLoaded("MASS"))
@@ -173,16 +173,17 @@ test_with_dir("packages are loaded in prework", {
   library(MASS)
   config$packages <- NULL
   expect_false(any(c("x", "y") %in% config$cache$list()))
-  opt <- test_opt()
 
   # drake may be loaded with devtools::load_all() but not
   # installed.
+  scenario <- get_testing_scenario()
   suppressWarnings(make(plan = config$plan, targets = config$targets,
-  envir = config$envir, verbose = FALSE, parallelism = opt$parallelism,
-  jobs = opt$jobs, prework = config$prework, prepend = config$prepend,
-  command = config$command))
+    envir = config$envir, verbose = FALSE, parallelism = scenario$parallelism,
+    jobs = scenario$jobs, prework = config$prework, prepend = config$prepend,
+    command = config$command
+  ))
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
-  options(testdrake_optionload_20170924 = original)
+  options(test_drake_option_12345 = original)
 })

@@ -99,8 +99,8 @@ test_with_dir("totally off the default cache", {
     con$plan,
     cache = con$cache,
     verbose = FALSE,
-    parallelism = test_opt()$parallelism,
-    jobs = test_opt()$jobs
+    parallelism = get_testing_scenario()$parallelism,
+    jobs = get_testing_scenario()$jobs
   )
   expect_false(file.exists(default_cache_path()))
 })
@@ -109,10 +109,10 @@ test_with_dir("use two differnt file system caches", {
   saveRDS("stuff", file = "some_file")
   targ <- "DRAKE_TEST_target"
   my_plan <- data.frame(target = targ, command = "my_function('some_file')")
-  opt <- test_opt()
-  parallelism <- opt$parallelism
-  jobs <- opt$jobs
-  envir <- eval(parse(text = opt$envir))
+  scenario <- get_testing_scenario()
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  envir <- eval(parse(text = scenario$envir))
   if (targ %in% ls(envir)){
     rm(list = targ, envir = envir)
   }

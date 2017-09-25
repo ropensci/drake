@@ -7,7 +7,7 @@ test_with_dir("clean() works if there is no cache already", {
 test_with_dir("corrupt cache", {
   x <- plan(a = 1)
   make(x, verbose = FALSE)
-  path <- file.path(cache_dir, "config", "hash_algorithm")
+  path <- file.path(default_cache_path(), "config", "hash_algorithm")
   expect_true(file.exists(path))
   unlink(path)
   expect_false(file.exists(path))
@@ -30,6 +30,7 @@ test_with_dir("build times works if no targets are built", {
 })
 
 test_with_dir("cache functions work", {
+  cache_dir <- basename(default_cache_path())
   first_wd <- getwd()
   scratch <- file.path(first_wd, "scratch")
   if (!file.exists(scratch)){
@@ -186,13 +187,13 @@ test_with_dir("cache functions work", {
   # Read the graph
   pdf(NULL)
   tmp <- dbug()
-  read_graph(search = TRUE, path = s)
+  tmp <- read_graph(search = TRUE, path = s)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
 
   setwd(scratch)
   pdf(NULL)
-  read_graph(search = FALSE)
+  tmp <- read_graph(search = FALSE)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
   pdf(NULL)

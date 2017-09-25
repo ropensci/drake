@@ -4,9 +4,10 @@
 \alias{new_cache}
 \title{Function new_cache}
 \usage{
-new_cache(path = NULL, type = drake::default_cache_type(),
-  short_hash_algo = default_short_hash_algo(),
-  long_hash_algo = default_long_hash_algo())
+new_cache(path = drake::default_cache_path(),
+  type = drake::default_cache_type(),
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo())
 }
 \arguments{
 \item{path}{file path to the cache}
