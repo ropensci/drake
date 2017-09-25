@@ -15,7 +15,14 @@ vignette: >
 ```{r suppression, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE)
-unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+unlink(
+  c(
+    "Makefile", "report.Rmd", "shell.sh",
+    "STDIN.o*", "Thumbs.db",
+    "faster_cache", "my_storr"
+  ),
+  recursive = TRUE
+)
 ```
 
 # Storage basics
@@ -164,7 +171,23 @@ cached(cache = faster_cache)
 readd(simple, cache = faster_cache)
 ```
 
-`Drake` supports [storr_rds()](https://github.com/richfitz/storr) caches, but currently struggles with non-`rds` caches such as  `storr_dbi()`. And some in-memory caches will likely never be supported for `make(..., parallelism = "Makefile")`.
+`Drake` supports [storr_rds()](https://github.com/richfitz/storr) caches. Other caches may be possible, but they should have a `storr`-like API and [namespace support](https://github.com/richfitz/storr/blob/master/vignettes/storr.Rmd#namespaces).
+
+# In-memory caches
+
+Some caches store your data in the computer's memory rather than saved files. `Drake` can make use of these in-memory caches, but not with any kind of parallel computing. In other words, when you call `make()`, the `parallelism` argument cannot be `"Makefile"` and `jobs` must be `1` (default). Also, keep in mind that unless you save your workspace, your in-memory cache will disappear when you close your R session.
+
+```{r memory_caches}
+memory_cache <- storr_environment()
+other_plan <- plan(
+  some_data = rnorm(50),
+  more_data = rpois(75, lambda = 10),
+  result = mean(c(some_data, more_data))
+)
+make(other_plan, cache = memory_cache)
+cached(cache = memory_cache)
+readd(result, cache = memory_cache)
+```
 
 # Cleaning up
 

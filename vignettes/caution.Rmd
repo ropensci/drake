@@ -215,16 +215,10 @@ Makefile-level parallelism is only used for targets in your workflow plan data f
 make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")
 ```
 
-# Advanced caching and hashing
+# Storage customization pitfalls
 
-In theory, you could try any [storr](https://github.com/richfitz/storr)-like cache for drake.
+The [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake` and opens up options for customization. But please do not try to change the short hash algorithm of an existing cache, and beware in-memory caches for parallel computing and persistent projects. See the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) for details.
 
-```r
-my_cache <- storr::storr_rds("my_cache", mangle_key = TRUE)
-make(..., cache = my_cache
-```
-
-Code like the above is expected to work. However, only file system caches are currently supported, and in-memory caches will likely never be supported for `Makefile` parallelism. That means you should be wary of `storr::storr_dbi()`, especially at the moment.
 
 ```{r rmfiles_caution, echo = FALSE}
 clean(destroy = TRUE)
