@@ -33,7 +33,10 @@ test_with_dir <- function(desc, ...){
 }
 
 unit_test_files <- function(){
-  root <- rprojroot::find_root("DESCRIPTION", path)
+  root <- find_root(
+    criterion = "DESCRIPTION",
+    path = getwd()
+  )
   file.path(root, "tests", "testthat")
 }
 
