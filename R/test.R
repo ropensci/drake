@@ -33,7 +33,8 @@ test_with_dir <- function(desc, ...){
 }
 
 unit_test_files <- function(){
-  file.path(pkg_path(), "tests", "testthat")
+  root <- rprojroot::find_root("DESCRIPTION", path)
+  file.path(root, "tests", "testthat")
 }
 
 this_os <- function(){

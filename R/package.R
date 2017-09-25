@@ -38,9 +38,9 @@
 #' @importFrom pacman p_depends
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
-#' @importFrom pkgload pkg_path
 #' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded
+#' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
