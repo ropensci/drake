@@ -1,4 +1,5 @@
-context("command-changes")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("command changes")
 
 test_with_dir("changes to commands are handled well", {
   config <- dbug()

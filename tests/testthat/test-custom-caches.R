@@ -1,4 +1,5 @@
-context("customize caches")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("custom caches")
 
 test_with_dir("cache_path finding", {
   x <- new_cache("x")

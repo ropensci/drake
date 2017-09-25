@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("examples")
 
 test_with_dir("examples are listed and written", {

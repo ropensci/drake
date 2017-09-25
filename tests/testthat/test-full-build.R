@@ -1,4 +1,5 @@
-context("full-build")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("full build")
 
 test_with_dir("scratch build with contained envir.", {
   config <- dbug()

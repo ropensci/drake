@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("Makefile")
 
 test_with_dir("no Makefile if imports_only is TRUE", {

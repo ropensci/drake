@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("edge-cases")
 
 test_with_dir("graph does not fail if input file is binary", {

@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("console")
 
 test_with_dir("console", {

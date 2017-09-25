@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("testing")
 
 test_with_dir("set_testing_scenario", {

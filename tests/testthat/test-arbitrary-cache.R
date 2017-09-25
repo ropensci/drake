@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("arbitrary cache")
 
 test_with_dir("arbitrary storr file cache", {

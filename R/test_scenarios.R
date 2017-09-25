@@ -34,7 +34,7 @@ test_scenarios <- function(
   for (scenario_name in scenarios){
     skip <- skip_criterion(scenario_name)
     msg <- ifelse(skip, "skip", "run")
-    cat(msg, scenario_name, "\n")
+    cat(scenario_name, ": ", msg, "\n", sep = "")
     new <- list()
     new[[test_option_name]] <- scenario_name
     if (!skip) {

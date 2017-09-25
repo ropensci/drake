@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("namespaced")
 
 test_with_dir("function_dependencies() works on :: and :::", {

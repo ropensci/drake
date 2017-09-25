@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("cache")
 
 test_with_dir("clean() works if there is no cache already", {

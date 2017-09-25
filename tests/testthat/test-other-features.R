@@ -1,4 +1,5 @@
-context("other-features")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("other features")
 
 test_with_dir("available hash algos", {
   x <- available_hash_algos()

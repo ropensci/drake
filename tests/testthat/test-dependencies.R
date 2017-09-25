@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("dependencies")
 
 test_with_dir("drake_package_dependencies()", {

@@ -1,4 +1,5 @@
-context("intermediate-file")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("intermediate file")
 
 test_with_dir("responses to intermediate file", {
   config <- dbug()

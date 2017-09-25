@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("envir")
 
 test_with_dir("prune_envir in full build", {

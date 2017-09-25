@@ -1,4 +1,5 @@
-context("import-file")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("import file")
 
 test_with_dir("responses to imported file", {
   config <- dbug()

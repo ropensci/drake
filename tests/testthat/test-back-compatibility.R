@@ -1,3 +1,4 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("back compatibility")
 
 test_with_dir("back-compatible with a tiny v4.1.0 project", {
