@@ -95,4 +95,5 @@ test_with_dir("test_scenarios()", {
   )
   loggings <- grepl("logged scenario", log)
   expect_false(any(loggings))
+  expect_true(any(grepl("Skipping", log)))
 })
