@@ -39,6 +39,6 @@ test_scenarios <- function(
       cat("  Skipping.\n")
       next
     }
-    with_options(new = new, test_dir(unit_test_dir))
+    with_options(new = new, testthat::test_dir(unit_test_dir))
   }
 }

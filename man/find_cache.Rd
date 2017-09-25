@@ -4,7 +4,7 @@
 \alias{find_cache}
 \title{Function \code{find_cache}}
 \usage{
-find_cache(path = getwd(), target = default_cache_path())
+find_cache(path = getwd(), target = NULL)
 }
 \arguments{
 \item{path}{starting path for search back for the cache.

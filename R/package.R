@@ -45,7 +45,7 @@
 #' @importFrom storr encode64 storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
-#' @importFrom testthat expect_false expect_true test_that
+#' @importFrom testthat expect_false expect_true test_dir test_that
 #' @importFrom utils capture.output compareVersion sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
