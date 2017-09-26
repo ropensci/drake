@@ -11,14 +11,16 @@ console <- function(imported, target, config) {
   cat(action, " ", target, "\n", sep = "")
 }
 
-console_parallel_stage <- function(targets, config){
+console_verb_targets <- function(targets, verb, config, color = "slateblue2"){
   if (!config$verbose) return(invisible())
   n <- length(targets)
   if (n < 1){
     return(invisible())
   }
-  cat(color("check", "slateblue2"), " ", n, " item",
-    ifelse(n == 1, "", "s"), "\n", sep = "")
+  cat(color(verb, color), " ", n, " item",
+    ifelse(n == 1, "", "s"), ": ",
+    targets %>% paste(collapse = ", ") %>% crop_text(length = 50), 
+    "\n", sep = "")
 }
 
 color <- function(x, color) {

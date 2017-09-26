@@ -33,6 +33,7 @@ prune_envir <- function(targets, config){
     intersect(y = already_loaded)
   rm(list = discard_these, envir = config$envir)
   if (length(load_these)){
+    console_verb_targets(load_these, "load", config = config)
     loadd(list = load_these, envir = config$envir)
   }
   invisible()
