@@ -16,8 +16,8 @@ warn_mclapply_windows <- function(
   jobs,
   os = this_os()
 ){
-  parallelism = match.arg(parallelism, choices = parallelism_choices())
-  if(parallelism == "mclapply" & jobs > 1 & os == "windows"){
+  parallelism <- match.arg(parallelism, choices = parallelism_choices())
+  if (parallelism == "mclapply" & jobs > 1 & os == "windows"){
     warning(
       "Demoting to one job at a time (no parallel computing). ",
       "The mclapply parallel backend does not support ",
