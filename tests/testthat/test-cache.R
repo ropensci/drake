@@ -117,7 +117,7 @@ test_with_dir("cache functions work", {
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
   expect_error(loadd(yourinput, myinput, search = FALSE, imported_only = TRUE))
-  loadd(h, i, j, c, search = FALSE, envir = envir)
+  loadd(h, i, j, c, jobs = 2, search = FALSE, envir = envir)
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))

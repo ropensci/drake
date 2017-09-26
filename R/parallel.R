@@ -22,3 +22,8 @@ parallel_stage <- function(graph_remaining_targets, worker, config) {
       config = config)
   delete_vertices(graph_remaining_targets, v = candidates)
 }
+
+lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
+  jobs <- ifelse(on_windows(), 1, jobs)
+  mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
+}

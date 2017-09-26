@@ -5,7 +5,7 @@
 \title{Function \code{loadd}}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, envir = parent.frame())
+  search = TRUE, cache = NULL, envir = parent.frame(), jobs = 1)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -32,6 +32,12 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{envir}{environment to load objects into. Defaults to the
 calling environment (current workspace).}
+
+\item{jobs}{number of parallel jobs for loading objects. On
+non-Windows systems, the loading process for multiple objects
+can be lightly parallelized via \code{parallel::mclapply()}.
+just set jobs to be an integer greater than 1. On Windows,
+\code{jobs} is automatically demoted to 1.}
 }
 \description{
 Load object(s) from the drake cache into the
@@ -49,7 +55,7 @@ loadd(reg1) # now check ls()
 reg1
 loadd(small)
 small
-loadd(list = c("small", "large"))
+loadd(list = c("small", "large"), jobs = 2)
 loadd(imported_only = TRUE) # load all imported objects and functions
 loadd() # load everything, including built targets
 }

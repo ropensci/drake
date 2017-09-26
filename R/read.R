@@ -85,6 +85,11 @@ readd <- function(
 #' current working directory only.
 #' @param envir environment to load objects into. Defaults to the
 #' calling environment (current workspace).
+#' @param jobs number of parallel jobs for loading objects. On
+#' non-Windows systems, the loading process for multiple objects
+#' can be lightly parallelized via \code{parallel::mclapply()}.
+#' just set jobs to be an integer greater than 1. On Windows,
+#' \code{jobs} is automatically demoted to 1.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -93,7 +98,7 @@ readd <- function(
 #' reg1
 #' loadd(small)
 #' small
-#' loadd(list = c("small", "large"))
+#' loadd(list = c("small", "large"), jobs = 2)
 #' loadd(imported_only = TRUE) # load all imported objects and functions
 #' loadd() # load everything, including built targets
 #' }
@@ -104,8 +109,9 @@ loadd <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  envir = parent.frame()
-  ){
+  envir = parent.frame(),
+  jobs = 1
+){
   if (is.null(cache)) {
     cache <- get_cache(path = path, search = search)
   }
@@ -124,25 +130,20 @@ loadd <- function(
   if (!length(targets)){
     stop("no targets to load.")
   }
-  load_target(target = targets, cache = cache, envir = envir)
+  lightly_parallelize(
+    X = targets, FUN = load_target, cache = cache, envir = envir
+  )
   invisible()
 }
 
-load_target <- Vectorize(
-  function(target, cache, envir){
-    value <- readd(
-      target,
-      character_only = TRUE,
-      cache = cache
-      )
-    assign(
-      x = target,
-      value = value,
-      envir = envir
-      )
-  },
-  "target"
+load_target <- function(target, cache, envir){
+  value <- readd(
+    target,
+    character_only = TRUE,
+    cache = cache
   )
+  assign(x = target, value = value, envir = envir)
+}
 
 #' @title Function \code{read_config}
 #' @description Read all the configuration parameters

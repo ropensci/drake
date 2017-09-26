@@ -22,8 +22,11 @@ console_parallel_stage <- function(targets, config){
 }
 
 color <- function(x, color) {
-  if (is.null(color))
-    x else make_style(color)(x)
+  if (is.null(color)){
+    x 
+  } else {
+    crayon::make_style(color)(x)
+  }
 }
 
 crop_text <- Vectorize(function(x, length = 50) {

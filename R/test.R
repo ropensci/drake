@@ -52,6 +52,10 @@ unit_test_files <- function(path = getwd()){
   file.path(root, "tests", "testthat")
 }
 
+on_windows <- function(){
+  this_os() == "windows"
+}
+
 this_os <- function(){
   Sys.info()["sysname"] %>%
     tolower %>%

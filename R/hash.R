@@ -1,10 +1,16 @@
 hash_list <- function(targets, config) {
-  sapply(targets, hashes, config = config, simplify = FALSE,
-    USE.NAMES = TRUE)
+  out <- lightly_parallelize(
+    X = targets, FUN = hashes,
+    jobs = config$jobs, config = config
+  )
+  names(out) <- lapply(out, "[[", "target") %>%
+    unlist
+  out
 }
 
 hashes <- function(target, config) {
   list(
+    target = target,
     depends = dependency_hash(target = target, config = config),
     file = file_hash(target = target, config = config)
   )
