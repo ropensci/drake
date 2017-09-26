@@ -117,7 +117,9 @@ function_dependencies <- function(funct){
 }
 
 drake_package_dependencies <- function(){
-  pkgs <- p_depends(package = "drake", local = TRUE, character.only = TRUE)
+  pkgs <- pacman::p_depends(
+    package = "drake", local = TRUE, character.only = TRUE
+  )
   pkgs$Suggests <- NULL
   clean_dependency_list(pkgs)
 }

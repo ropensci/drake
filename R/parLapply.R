@@ -52,7 +52,10 @@ assign_to_envir_parLapply <- # nolint
 
 # Slow, but necessary.
 load_packages_parLapply <- function() { # nolint
-  packages <- drake_package_dependencies()
+#  eval(parse(text = "base::require(magrittr)"))
+  packages <- c(
+    "magrittr"
+  ) #drake_package_dependencies()
   for (package in packages) {
     base::suppressPackageStartupMessages(
       eval(parse(
