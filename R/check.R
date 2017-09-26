@@ -40,6 +40,7 @@ check_config <- function(config) {
   stopifnot(length(config$targets) > 0)
   missing_input_files(config)
   warn_bad_symbols(config$plan$target)
+  parallelism_warnings(config)
 }
 
 missing_input_files <- function(config) {

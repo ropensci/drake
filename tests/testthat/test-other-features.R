@@ -1,6 +1,17 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("other features")
 
+test_with_dir("parallelism warnings", {
+  config <- dbug()
+  suppressWarnings(parallelism_warnings(config))
+  expect_silent(
+    warn_mclapply_windows(parallelism = "mclapply", jobs = 1)
+  )
+  expect_warning(
+    warn_mclapply_windows(parallelism = "mclapply", jobs = 2, os = "windows")
+  )
+})
+
 test_with_dir("available hash algos", {
   x <- available_hash_algos()
   expect_true(length(x) > 0)

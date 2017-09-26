@@ -41,3 +41,11 @@ this_os <- function(){
     tolower %>%
     unname
 }
+
+parallelism_warnings <- function(config){
+  warn_mclapply_windows(
+    parallelism = config$parallelism,
+    jobs = config$jobs,
+    os = this_os()
+  )
+}

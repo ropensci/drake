@@ -15,11 +15,11 @@ testing_scenarios <- list(
     parallelism = "mclapply",
     jobs = 1
   ),
-  # should just demote to 1 job on Windows
   local_mcl_8 = list(
     envir = "new.env(parent = globalenv())",
     parallelism = "mclapply",
-    jobs = 8
+    jobs = 8,
+    skip_os = "windows"
   ),
   local_Make_1 = list(
     envir = "new.env(parent = globalenv())",
