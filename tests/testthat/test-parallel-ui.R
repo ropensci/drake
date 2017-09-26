@@ -21,6 +21,18 @@ test_with_dir("mclapply and lapply", {
     jobs = 1, parallelism = "mclapply")
   expect_true(is.numeric(readd(final)))
   clean()
+
+  # should demote to 1 job on Windows
+  make(plan = config$plan, envir = config$envir, verbose = FALSE,
+    jobs = 2, parallelism = "mclapply")
+  expect_true(is.numeric(readd(final)))
+  clean()
+
+  make(plan = config$plan, envir = config$envir, verbose = FALSE,
+    jobs = 1, parallelism = "parLapply")
+  expect_true(is.numeric(readd(final)))
+  clean()
+
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
     jobs = 1, parallelism = "parLapply")
   expect_true(is.numeric(readd(final)))

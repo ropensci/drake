@@ -5,7 +5,8 @@ run_mclapply <- function(config){
 
 worker_mclapply <- function(targets, hash_list, config){
   prune_envir(targets = targets, config = config)
+  jobs <- safe_jobs(config$jobs)
   values <- mclapply(targets, build, hash_list = hash_list,
-    config = config, mc.cores = config$jobs)
+    config = config, mc.cores = jobs)
   assign_to_envir(target = targets, value = values, config = config)
 }

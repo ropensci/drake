@@ -26,9 +26,10 @@ test_with_dir("testing utils", {
   expect_true(is.list(testing_scenarios))
   expect_false(should_skip(scenario, os = "windows"))
   expect_false(should_skip(scenario, os = "linux"))
-  scenario <- "local_mcl_8"
+  scenario <- "global_mcl_2"
   expect_true(should_skip(scenario, os = "windows"))
   expect_false(should_skip(scenario, os = "linux"))
+  expect_error(should_skip("scenario not found"))
 })
 
 test_with_dir("test_with_dir() evaluates inside the testing envir", {

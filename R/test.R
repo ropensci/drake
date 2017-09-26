@@ -51,7 +51,3 @@ unit_test_files <- function(path = getwd()){
   root <- find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")
 }
-
-should_skip <- function(scenario_name, os = this_os()){
-  os %in% testing_scenarios[[scenario_name]]$skip_os
-}

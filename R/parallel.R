@@ -24,7 +24,7 @@ parallel_stage <- function(graph_remaining_targets, worker, config) {
 }
 
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
-  jobs <- ifelse(on_windows(), 1, jobs)
+  jobs <- safe_jobs(jobs)
   mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
 }
 

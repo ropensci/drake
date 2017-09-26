@@ -19,6 +19,14 @@ set_testing_scenario <- function(scenario = NULL) {
   options(new)
 }
 
+should_skip <- function(scenario_name, os = this_os()){
+  scenario_name <- match.arg(
+    arg = scenario_name,
+    choices = names(testing_scenarios)
+  )
+  os %in% testing_scenarios[[scenario_name]]$skip_os
+}
+
 test_scenarios <- function(
   scenarios = names(testing_scenarios),
   unit_test_dir = unit_test_files(),
