@@ -31,9 +31,20 @@ prune_envir <- function(targets, config){
   discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
     Filter(f = is_not_file) %>%
     intersect(y = already_loaded)
-  rm(list = discard_these, envir = config$envir)
+  if (length(discard_these)){
+    console_many_targets(
+      discard_these,
+      message = "unload",
+      config = config
+    )
+    rm(list = discard_these, envir = config$envir)
+  }
   if (length(load_these)){
-    console_many_targets(load_these, message = "load", config = config)
+    console_many_targets(
+      load_these,
+      message = "load",
+      config = config
+    )
     loadd(list = load_these, envir = config$envir)
   }
   invisible()

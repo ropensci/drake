@@ -4,18 +4,18 @@ console <- function(imported, target, config) {
   if (!config$verbose)
     return()
   if (is.na(imported))
-    action <- color("could not find", "darkorchid3")
+    action <- color("could not find", color_of("missing"))
   else if (imported)
-    action <- color("import", "dodgerblue3")
+    action <- color("import", color_of("import"))
   else
-    action <- color("target", "forestgreen")
+    action <- color("target", color_of("target"))
   out <- paste(action, target) %>%
     crop_text(length = console_length)
   cat(out, "\n", sep = "")
 }
 
 console_many_targets <- function(
-  targets, message, config, color = "slateblue2"
+  targets, message, config, color = color_of(message)
 ){
   if (!config$verbose) return(invisible())
   n <- length(targets)
@@ -29,14 +29,6 @@ console_many_targets <- function(
   ) %>%
     crop_text(length = console_length)
   cat(out, "\n", sep = "")
-}
-
-color <- function(x, color) {
-  if (is.null(color)){
-    x
-  } else {
-    crayon::make_style(color)(x)
-  }
 }
 
 crop_text <- Vectorize(function(x, length = 50) {

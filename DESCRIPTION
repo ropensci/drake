@@ -30,6 +30,7 @@ Imports:
   crayon,
   eply,
   digest,
+  gplots,
   igraph,
   lubridate,
   magrittr,

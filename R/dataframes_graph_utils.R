@@ -1,19 +1,6 @@
 # For hover text
 hover_text_length <- 250
 
-# colors in graphs
-generic_color <- "gray"
-import_color <- "#1874cd"
-in_progress_color <- "#ff7221"
-missing_color <- "#9a32cd"
-outdated_color <- "#aa0000"
-up_to_date_color <- "#228b22"
-
-# shapes in graph
-file_shape <- "square"
-function_shape <- "triangle"
-generic_shape <- "dot"
-
 append_build_times <- function(nodes, cache) {
   time_data <- build_times(cache = cache)
   timed <- intersect(time_data$target, nodes$id)
@@ -136,23 +123,6 @@ hover_text <- function(nodes, plan, targets, files, functions, envir) {
   nodes
 }
 
-legend_nodes <- function(font_size = 20) {
-  out <- data.frame(
-    label = c(
-      "Up to date", "In progress", "Outdated", "Imported",
-      "Missing", "Object", "Function", "File"),
-    color = c(
-      up_to_date_color, in_progress_color,
-      outdated_color, import_color, missing_color,
-      rep(generic_color, 3)),
-    shape = c(rep(generic_shape, 6),
-      function_shape, file_shape),
-      font.color = "black",
-      font.size = font_size)
-  out$id <- seq_len(nrow(out))
-  out
-}
-
 null_graph <- function() {
   nodes <- data.frame(id = 1, label = "Nothing to plot.")
   visNetwork::visNetwork(
@@ -228,13 +198,47 @@ split_node_columns <- function(nodes){
 
 style_nodes <- function(nodes, font_size) {
   nodes$font.size <- font_size # nolint
-  nodes[nodes$status == "imported", "color"] <- import_color
-  nodes[nodes$status == "in progress", "color"] <- in_progress_color
-  nodes[nodes$status == "missing", "color"] <- missing_color
-  nodes[nodes$status == "outdated", "color"] <- outdated_color
-  nodes[nodes$status == "up to date", "color"] <- up_to_date_color
-  nodes[nodes$type == "object", "shape"] <- generic_shape
-  nodes[nodes$type == "file", "shape"] <- file_shape
-  nodes[nodes$type == "function", "shape"] <- function_shape
+  nodes[nodes$status == "imported", "color"] <- color_of("import")
+  nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
+  nodes[nodes$status == "missing", "color"] <- color_of("missing")
+  nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
+  nodes[nodes$status == "up to date", "color"] <- color_of("target")
+  nodes[nodes$type == "object", "shape"] <- shape_of("object")
+  nodes[nodes$type == "file", "shape"] <- shape_of("file")
+  nodes[nodes$type == "function", "shape"] <- shape_of("funct")
   nodes
+}
+
+legend_nodes <- function(font_size = 20) {
+  out <- data.frame(
+    label = c(
+      "Up to date",
+      "In progress",
+      "Outdated",
+      "Imported",
+      "Missing",
+      "Object",
+      "Function",
+      "File"
+    ),
+    color = color_of(c(
+      "target",
+      "in_progress",
+      "outdated",
+      "import",
+      "missing",
+      "generic",
+      "generic",
+      "generic"
+    )),
+    shape = shape_of(c(
+      rep("object", 6),
+      "funct",
+      "file"
+    )),
+    font.color = "black",
+    font.size = font_size
+  )
+  out$id <- seq_len(nrow(out))
+  out
 }

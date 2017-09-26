@@ -1,6 +1,15 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("other features")
 
+test_with_dir("color and shape", {
+  expect_is(color_of("target"), "character")
+  expect_is(color_of("import"), "character")
+  expect_is(color_of("not found"), "character")
+  expect_is(shape_of("object"), "character")
+  expect_is(color_of("file"), "character")
+  expect_is(color_of("not found"), "character")
+})
+
 test_with_dir("parallelism warnings", {
   config <- dbug()
   suppressWarnings(parallelism_warnings(config))
