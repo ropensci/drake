@@ -26,7 +26,7 @@ nobuild <- function(config) {
 test_with_dir <- function(desc, ...){
   root <- tempdir()
   stopifnot(file.exists(root))
-  relative_dir <- digest(desc, algo = default_short_hash_algo())
+  relative_dir <- digest::digest(desc, algo = default_short_hash_algo())
   dir <- file.path(root, relative_dir)
   dir_empty(dir)
   with_dir(dir, test_that(desc = desc, ...))
@@ -50,16 +50,6 @@ restore_options <- function(old){
 unit_test_files <- function(path = getwd()){
   root <- find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")
-}
-
-on_windows <- function(){
-  this_os() == "windows"
-}
-
-this_os <- function(){
-  Sys.info()["sysname"] %>%
-    tolower %>%
-    unname
 }
 
 should_skip <- function(scenario_name, os = this_os()){

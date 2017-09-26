@@ -110,7 +110,7 @@ store_function <- function(target, value, hashes, imported,
     depends = hashes$depends)) # for nested functions
 }
 
-# bugfix: turn a command into an anonymous function
+# Turn a command into an anonymous function
 # call to avoid side effects that can interfere
 # with parallelism
 functionize <- function(command) {

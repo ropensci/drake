@@ -27,3 +27,17 @@ lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
   jobs <- ifelse(on_windows(), 1, jobs)
   mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
 }
+
+safe_jobs <- function(jobs){
+  ifelse(on_windows(), 1, jobs)
+}
+
+on_windows <- function(){
+  this_os() == "windows"
+}
+
+this_os <- function(){
+  Sys.info()["sysname"] %>%
+    tolower %>%
+    unname
+}

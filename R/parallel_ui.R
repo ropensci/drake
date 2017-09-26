@@ -61,7 +61,7 @@ parallelism_choices <- function() {
 #' @examples
 #' default_parallelism()
 default_parallelism <- function() {
-  ifelse(Sys.info()["sysname"] == "Windows", "parLapply", "mclapply") %>%
+  ifelse(on_windows(), "parLapply", "mclapply") %>%
     unname
 }
 

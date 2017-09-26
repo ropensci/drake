@@ -22,7 +22,7 @@ dependency_hash <- function(target, config) {
   dependencies(target, config) %>%
     self_hash(config = config) %>%
     c(command) %>%
-    digest(algo = config$long_hash_algo)
+    digest::digest(algo = config$long_hash_algo)
 }
 
 self_hash <- Vectorize(function(target, config) {
@@ -63,7 +63,7 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
 }
 
 rehash_file <- function(target, config) {
-  digest(
+  digest::digest(
     object = eply::unquote(target),
     algo = config$long_hash_algo,
     file = TRUE,

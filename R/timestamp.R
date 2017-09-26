@@ -10,7 +10,7 @@ time_stamps <- function(config, outdated){
 }
 
 safe_encode <- Vectorize(function(x, hash_algo){
-  digest(
+  digest::digest(
     object = x,
     algo = hash_algo,
     file = FALSE
