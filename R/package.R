@@ -35,7 +35,6 @@
 #' is_dag make_empty_graph plot.igraph subcomponent V vertex
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
-#' @importFrom pacman p_depends
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
@@ -51,3 +50,14 @@
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink
 NULL
+
+#' @title Pipe operator
+#' @export
+#' @description Pipe operator from the \code{magrittr} package
+#' @param lhs left-hand side argument
+#' @param rhs right-hand side argument
+#' @examples
+#' rnorm(2) %>%
+#'   mean %>%
+#'   c("third element")
+`%>%` <- magrittr::`%>%`

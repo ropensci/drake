@@ -11,10 +11,6 @@ run_parLapply <- function(config) { # nolint
   if (identical(config$envir, globalenv()))
     clusterExport(cl = config$cluster, varlist = ls(globalenv(),
       all.names = TRUE), envir = globalenv())
-  clusterCall(
-    cl = config$cluster,
-    fun = load_packages_parLapply # nolint
-  )
   clusterCall(cl = config$cluster, fun = do_prework, config = config,
     verbose_packages = FALSE)
   run_parallel(
@@ -48,21 +44,4 @@ assign_to_envir_parLapply <- # nolint
   if (identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = assign_to_envir,
       target = target, value = value, config = config)
-}
-
-# Slow, but necessary.
-load_packages_parLapply <- function() { # nolint
-#  eval(parse(text = "base::require(magrittr)"))
-  packages <- c(
-    "magrittr"
-  ) #drake_package_dependencies()
-  for (package in packages) {
-    base::suppressPackageStartupMessages(
-      eval(parse(
-        text = paste0(
-          "base::require(", package, ")")
-        )
-      )
-    )
-  }
 }
