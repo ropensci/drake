@@ -23,7 +23,7 @@ console_parallel_stage <- function(targets, config){
 
 color <- function(x, color) {
   if (is.null(color)){
-    x 
+    x
   } else {
     crayon::make_style(color)(x)
   }

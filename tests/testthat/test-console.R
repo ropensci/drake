@@ -10,6 +10,7 @@ test_with_dir("console", {
     console_parallel_stage(targets = letters, config = config))
   x50 <- paste(rep(0:9, 5), collapse = "")
   x51 <- paste0(x50, 0)
+  expect_equal(x50, color(x = x50, color = NULL))
   o1 <- capture.output(console(imported = FALSE, target = x50,
     config = config))
   o2 <- capture.output(console(imported = FALSE, target = x51,
