@@ -113,7 +113,7 @@ predict_runtime <- function(plan,
                             config = NULL,
                             ...){
   
-  if (missing(config))
+  if (is.null(config))
     config = config(plan = plan, verbose = verbose, ...)
   
   build_times_fresh = build_times()
