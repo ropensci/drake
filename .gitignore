@@ -7,15 +7,14 @@ Thumbs.db
 *.log
 *.nav
 *.out
-*.sh
 *.snm
 *.Rout
-*.rds
+*.Rproj
 *.synctex.gz
 *.toc
 *.vrb
-.DS_Store
 .drake
+.DS_Store
 .Rapp.history
 .RData
 .Rhistory

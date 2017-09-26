@@ -116,6 +116,7 @@ function_hover_text <- Vectorize(function(function_name, envir){
   tryCatch(
     eval(parse(text = function_name), envir = envir),
       error = function(e) function_name) %>%
+        unwrap_function %>%
         deparse %>%
         paste(collapse = "\n") %>%
         crop_text(length = hover_text_length)

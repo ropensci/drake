@@ -5,12 +5,12 @@
 \title{Function \code{make}}
 \usage{
 make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, imports_only = FALSE,
+  verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE, clear_progress = TRUE)
+  return_config = FALSE, clear_progress = TRUE, imports_only = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -39,8 +39,9 @@ then reproducibly tracked as dependencies.}
 \item{verbose}{logical, whether to print progress to the console.
 Skipped objects are not printed.}
 
-\item{imports_only}{logical, whether to skip building the targets
-in \code{plan} and just import objects and files.}
+\item{cache}{drake cache as created by \code{\link{new_cache}()}.
+See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
+and \code{\link{recover_cache}()}}
 
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link{parallelism_choices}()}.
@@ -127,6 +128,9 @@ of runtime configuration parameters used by \code{make()}}
 \item{clear_progress}{logical, whether to clear the saved record of
 progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 before anything is imported or built.}
+
+\item{imports_only}{logical, whether to skip building the targets
+in \code{plan} and just import objects and files.}
 }
 \description{
 Run your project (build the targets).

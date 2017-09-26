@@ -118,6 +118,10 @@
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 #' before anything is imported or built.
 #'
+#' @param cache drake cache as created by \code{\link{new_cache}()}.
+#' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
+#' and \code{\link{recover_cache}()}
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -140,7 +144,7 @@ make <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  imports_only = FALSE,
+  cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
@@ -150,10 +154,11 @@ make <- function(
   args = drake::default_system2_args(
     jobs = jobs,
     verbose = verbose
-    ),
+  ),
   return_config = FALSE,
-  clear_progress = TRUE
-  ){
+  clear_progress = TRUE,
+  imports_only = FALSE
+){
   force(envir)
   parallelism <- match.arg(
     arg = parallelism,
@@ -171,8 +176,9 @@ make <- function(
     prepend = prepend,
     command = command,
     args = args,
-    clear_progress = clear_progress
-    )
+    clear_progress = clear_progress,
+    cache = cache
+  )
   check_config(config)
   store_config(config)
   config$cache$set(

@@ -1,35 +1,48 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("console")
 
 test_with_dir("console", {
-  dclean()
   config <- dbug()
   config$verbose <- TRUE
   expect_output(console(imported = FALSE, target = "myinput",
     config = config))
   expect_output(
-    console_parallel_stage(targets = letters, config = config))
-  x50 <- paste(rep(0:9, 5), collapse = "")
-  x51 <- paste0(x50, 0)
-  o1 <- capture.output(console(imported = FALSE, target = x50,
+    console_many_targets(targets = letters,
+      message = "check", config = config
+    )
+  )
+  x1 <- "12345"
+  x2 <- paste(rep(0:9, length.out = console_length - 1), collapse = "")
+  expect_equal(x1, color(x = x1, color = NULL))
+  o1 <- capture.output(console(imported = FALSE, target = x1,
     config = config))
-  o2 <- capture.output(console(imported = FALSE, target = x51,
+  o2 <- capture.output(console(imported = FALSE, target = x2,
     config = config))
-  expect_equal(nchar(o1), nchar(o2), 50)
+  expect_true(nchar(o1) < console_length)
+  expect_equal(nchar(o2), console_length)
   dots <- "\\.\\.\\.$"
   expect_false(grepl(dots, o1))
   expect_true(grepl(dots, o2))
-  dclean()
 })
 
-test_with_dir("console_parallel_stage() works", {
+test_with_dir("console_many_targets() works", {
   config <- list(verbose = FALSE)
-  expect_silent(console_parallel_stage(
-    targets = character(0), config = config))
-  expect_silent(console_parallel_stage(
-    targets = "my_target", config = config))
+  expect_silent(console_many_targets(
+    targets = character(0), message = "check", config = config))
+  expect_silent(console_many_targets(
+    targets = "my_target", message = "check", config = config))
   config <- list(verbose = TRUE)
-  expect_silent(console_parallel_stage(
-    targets = character(0), config = config))
-  expect_output(console_parallel_stage(
-    targets = "my_target", config = config))
+  expect_silent(console_many_targets(
+    targets = character(0), message = "check", config = config))
+  expect_output(console_many_targets(
+    targets = "my_target", message = "check", config = config))
+  tmp <- capture.output(
+    console_many_targets(
+      targets = LETTERS,
+      message = unique_random_string(n = 100),
+      config = config
+    )
+  )
+  expect_true(is.character(tmp))
+  expect_true(nchar(tmp) < 51)
 })

@@ -1,36 +1,40 @@
 #' @title Function \code{find_cache}
 #' @description Return the file path of the nearest drake
 #' cache (searching upwards for directories containing a drake cache).
+#' Only works if the cache is a file system in a
+#' hidden folder named \code{.drake}.
 #' @seealso \code{\link{plan}}, \code{\link{make}},
 #' @export
 #' @return File path of the nearest drake cache or \code{NULL}
 #' if no cache is found.
 #' @param path starting path for search back for the cache.
 #' Should be a subdirectory of the drake project.
+#' @param target Name of the folder containing the cache.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan)
 #' find_cache()
 #' }
-find_cache <- function(path = getwd()){
-  while (!(cache_dir %in% list.files(path = path, all.files = TRUE))){
+find_cache <- function(path = getwd(), target = NULL){
+  if (is.null(target)){
+    target <- basename(default_cache_path())
+  }
+  while (!(target %in% list.files(path = path, all.files = TRUE))){
     path <- dirname(path)
+    # If we can search no higher...
     if (path == dirname(path)){
-      return(NULL)
+      return(NULL) # The cache does not exist
     }
   }
-  path <- file.path(path, cache_dir)
-  if (!file.exists(path)){
-    return(NULL)
-  }
-  return(path)
+  file.path(path, target)
 }
 
 #' @title Function \code{find_project}
 #' @description Return the file path of the nearest drake
 #' project (searching upwards for directories
 #' containing a drake cache).
+#' Only works if the cache is a file system in a folder named \code{.drake}.
 #' @export
 #' @seealso \code{\link{plan}}, \code{\link{make}}
 #' @return File path of the nearest drake project or \code{NULL}

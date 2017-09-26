@@ -19,7 +19,9 @@
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-#' @param cache a storr cache. Mainly for internal use.
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -72,6 +74,9 @@ readd <- function(
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
 #' @param imported_only logical, whether only imported objects
 #' should be loaded.
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -80,6 +85,11 @@ readd <- function(
 #' current working directory only.
 #' @param envir environment to load objects into. Defaults to the
 #' calling environment (current workspace).
+#' @param jobs number of parallel jobs for loading objects. On
+#' non-Windows systems, the loading process for multiple objects
+#' can be lightly parallelized via \code{parallel::mclapply()}.
+#' just set jobs to be an integer greater than 1. On Windows,
+#' \code{jobs} is automatically demoted to 1.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -88,7 +98,7 @@ readd <- function(
 #' reg1
 #' loadd(small)
 #' small
-#' loadd(list = c("small", "large"))
+#' loadd(list = c("small", "large"), jobs = 2)
 #' loadd(imported_only = TRUE) # load all imported objects and functions
 #' loadd() # load everything, including built targets
 #' }
@@ -98,9 +108,13 @@ loadd <- function(
   imported_only = FALSE,
   path = getwd(),
   search = TRUE,
-  envir = parent.frame()
-  ){
-  cache <- get_cache(path = path, search = search)
+  cache = NULL,
+  envir = parent.frame(),
+  jobs = 1
+){
+  if (is.null(cache)) {
+    cache <- get_cache(path = path, search = search)
+  }
   if (is.null(cache)){
     stop("cannot find drake cache.")
   }
@@ -116,25 +130,20 @@ loadd <- function(
   if (!length(targets)){
     stop("no targets to load.")
   }
-  load_target(target = targets, cache = cache, envir = envir)
+  lightly_parallelize(
+    X = targets, FUN = load_target, cache = cache, envir = envir
+  )
   invisible()
 }
 
-load_target <- Vectorize(
-  function(target, cache, envir){
-    value <- readd(
-      target,
-      character_only = TRUE,
-      cache = cache
-      )
-    assign(
-      x = target,
-      value = value,
-      envir = envir
-      )
-  },
-  "target"
+load_target <- function(target, cache, envir){
+  value <- readd(
+    target,
+    character_only = TRUE,
+    cache = cache
   )
+  assign(x = target, value = value, envir = envir)
+}
 
 #' @title Function \code{read_config}
 #' @description Read all the configuration parameters
@@ -143,6 +152,9 @@ load_target <- Vectorize(
 #' @seealso \code{\link{make}}
 #' @export
 #' @return a named list of configuration items
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -155,9 +167,11 @@ load_target <- Vectorize(
 #' make(my_plan)
 #' read_config()
 #' }
-read_config <- function(path = getwd(), search = TRUE){
-  cache <- get_cache(path = path, search = search)
-  if (is.null(cache)){
+read_config <- function(path = getwd(), search = TRUE, cache = NULL){
+  if (is.null(cache)) {
+    cache <- get_cache(path = path, search = search)
+  }
+  if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
   sapply(
@@ -176,6 +190,9 @@ read_config <- function(path = getwd(), search = TRUE){
 #' @seealso \code{\link{read_config}}
 #' @export
 #' @return a workflow plan data frame
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -188,8 +205,8 @@ read_config <- function(path = getwd(), search = TRUE){
 #' make(my_plan)
 #' read_plan()
 #' }
-read_plan <- function(path = getwd(), search = TRUE){
-  read_config(path = path, search = search)$plan
+read_plan <- function(path = getwd(), search = TRUE, cache = NULL){
+  read_config(path = path, search = search, cache = cache)$plan
 }
 
 #' @title Function \code{read_graph}
@@ -201,6 +218,9 @@ read_plan <- function(path = getwd(), search = TRUE){
 #' @export
 #' @return either a plot or an igraph object, depending
 #' on \code{plot}
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -216,7 +236,8 @@ read_plan <- function(path = getwd(), search = TRUE){
 #' class(g)
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
-read_graph <- function(path = getwd(), search = TRUE, ...){
-  config <- read_config(path = path, search = search)
+read_graph <- function(path = getwd(), search = TRUE,
+  cache = NULL, ...){
+  config <- read_config(path = path, search = search, cache = cache)
   return(config$graph)
 }

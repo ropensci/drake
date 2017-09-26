@@ -97,12 +97,17 @@ is_vectorized <- function(funct){
   is.function(f)
 }
 
+unwrap_function <- function(funct){
+  if (is_vectorized(funct)) {
+    funct <- environment(funct)[["FUN"]]
+  }
+  funct
+}
+
 function_dependencies <- function(funct){
+  funct <- unwrap_function(funct)
   if (typeof(funct) != "closure"){
     funct <- function(){} # nolint: curly braces are necessary
-  }
-  if (is_vectorized(funct)){
-    funct <- environment(funct)[["FUN"]]
   }
   out <- findGlobals(funct, merge = FALSE)
   namespaced <- find_namespaced_functions(funct)

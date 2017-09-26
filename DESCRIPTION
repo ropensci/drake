@@ -1,7 +1,6 @@
 Package: drake
 Title: Data Frames in R for Make
 Version: 4.1.1.9000
-Date: 2017-09-05
 Authors@R: c(
   person(
     family = "Landau",
@@ -27,7 +26,6 @@ License: GPL-3
 Depends:
   R (>= 3.2.0)
 Imports:
-  base64url,
   codetools,
   crayon,
   eply,
@@ -38,12 +36,12 @@ Imports:
   parallel,
   plyr,
   R.utils,
+  rprojroot,
   stats,
-  storr,
+  storr (>= 1.1.0),
   stringi,
   stringr,
   testthat,
-  tools,
   utils,
   visNetwork,
   withr

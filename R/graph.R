@@ -61,11 +61,11 @@ build_graph <- function(
   unlist() %>%
   unique() %>%
   setdiff(x = vertices)
-graph <- delete_vertices(graph, v = ignore)
-if (!is_dag(graph)){
-  stop("Workflow is circular (chicken and egg dilemma).")
-}
-return(graph)
+  graph <- delete_vertices(graph, v = ignore)
+  if (!is_dag(graph)){
+    stop("Workflow is circular (chicken and egg dilemma).")
+  }
+  return(graph)
 }
 
 #' @title Function \code{tracked}

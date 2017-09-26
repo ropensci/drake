@@ -1,16 +1,20 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("edge-cases")
 
 test_with_dir("graph does not fail if input file is binary", {
-  dclean()
   x <- plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
   expect_silent(out <- plot_graph(x, verbose = FALSE))
   unlink("input.rds", force = TRUE)
-  dclean()
+})
+
+test_with_dir("illegal hashes", {
+  x <- plan(a = 1)
+  expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))
+  expect_error(make(x, long_hash_algo = "no_such_algo_aslkdjfoiewlk"))
 })
 
 test_with_dir("different graphical arrangements for Makefile parallelism", {
-  dclean()
   e <- new.env()
   x <- plan(a = 1, b = f(2))
   e$f <- function(x) x
@@ -21,11 +25,9 @@ test_with_dir("different graphical arrangements for Makefile parallelism", {
     parallelism = "parLapply", jobs = 1))
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
     parallelism = "Makefile", jobs = 1))
-  dclean()
 })
 
 test_with_dir("Vectorized nested functions work", {
-  dclean()
   e <- new.env(parent = globalenv())
   eval(parse(text = "f <- Vectorize(function(x) g(x), \"x\")"),
     envir = e)
@@ -63,11 +65,9 @@ test_with_dir("Vectorized nested functions work", {
   testrun(config)
   expect_equal(justbuilt(config), "a")
   expect_equal(readd(a), 12:21)
-  dclean()
 })
 
 test_with_dir("stringsAsFactors can be TRUE", {
-  dclean()
   f <- function(x) {
     return(x)
   }
@@ -77,21 +77,17 @@ test_with_dir("stringsAsFactors can be TRUE", {
   expect_true(is.factor(myplan$command))
   make(myplan, verbose = FALSE)
   expect_equal(readd(a), "helloworld")
-  dclean()
 })
 
 test_with_dir("circular non-DAG workflows quit in error", {
-  dclean()
   p <- plan(a = b, b = c, c = a)
   expect_error(tmp <- capture.output(check(p)))
   expect_error(make(p, verbose = FALSE))
-  dclean()
 })
 
 # Target/import conflicts are unpredictable. A warning should
 # be enough.
 test_with_dir("target conflicts with current import or another target", {
-  dclean()
   config <- dbug()
   config$plan <- rbind(config$plan, data.frame(target = "f",
     command = "1+1"))
@@ -102,7 +98,6 @@ test_with_dir("target conflicts with current import or another target", {
 })
 
 test_with_dir("target conflicts with previous import", {
-  dclean()
   config <- dbug()
   testrun(config)
   config$plan$command[2] <- "g(1+1)"
@@ -112,21 +107,17 @@ test_with_dir("target conflicts with previous import", {
   testrun(config)
   expect_equal(justbuilt(config), sort(c("'intermediatefile.rds'",
     "combined", "f", "final", "yourinput")))
-  dclean()
 })
 
 test_with_dir("can use semicolons and multi-line commands", {
-  dclean()
   plan <- plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
   make(plan, verbose = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(cached(x, y, search = FALSE)))
   expect_equal(cached(search = FALSE), c("x", "y"))
-  dclean()
 })
 
 test_with_dir("true targets can be functions", {
-  dclean()
   generator <- function() return(function(x) {
     x + 1
   })
@@ -136,18 +127,14 @@ test_with_dir("true targets can be functions", {
   expect_true(is.list(config$cache$get("myfunction")))
   myfunction <- readd(myfunction)
   expect_equal(myfunction(4), 5)
-  dclean()
 })
 
-test_with_dir("warn when file target names do not match actual filenames", {
-  dclean()
+test_with_dir("error when file target names do not match actual filenames", {
   x <- plan(y = 1, file_targets = TRUE)
-  expect_warning(con <- make(x, verbose = FALSE, return_config = TRUE))
-  dclean()
+  expect_warning(expect_error(make(x, verbose = FALSE)))
 })
 
 test_with_dir("stress test hashing decisions", {
-  dclean()
   file <- "input.rds"
   expect_true(should_rehash_file(
     file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
@@ -176,5 +163,9 @@ test_with_dir("stress test hashing decisions", {
   expect_false(should_rehash_file(
     file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
   unlink(file, force = TRUE)
-  dclean()
+})
+
+test_with_dir("parallelism not found for testrun()", {
+  config <- list(parallelism = "not found")
+  expect_error(testrun(config))
 })

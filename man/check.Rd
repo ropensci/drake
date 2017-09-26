@@ -4,7 +4,8 @@
 \alias{check}
 \title{Function \code{check}}
 \usage{
-check(plan, targets = drake::possible_targets(plan), envir = parent.frame())
+check(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
+  cache = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
@@ -13,6 +14,8 @@ check(plan, targets = drake::possible_targets(plan), envir = parent.frame())
 \item{targets}{character vector of targets to make}
 
 \item{envir}{environment containing user-defined functions}
+
+\item{cache}{optional drake cache. See \code{\link{new_cache}()}}
 }
 \value{
 invisibly return \code{plan}

@@ -3,6 +3,7 @@ Thumbs.db
 ^images$
 ^reference$
 .DS_Store
+\.drake$
 \.git$
 \.github$
 \.gitignore$
@@ -10,7 +11,6 @@ Thumbs.db
 \.RData$
 \.Rbuildignore$
 \.Rhistory$
-\.drake$
 \.lintr$
 cran-comments.md
 cran-comments.html
@@ -28,7 +28,6 @@ vignettes/.*_files
 ^.*\.js$
 ^.*\.log$
 ^.*\.Rproj$
-^.*\.sh$
 ^.*\.svg$
 ^\.Rproj\.user$
 ^.*\.yml$

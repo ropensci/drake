@@ -24,7 +24,10 @@ Organize your work in a data frame. Then `make()` it.
 ```r
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-my_plan
+my_plan # Each target is a file (single-quoted) or object.
+```
+
+```r
 ##                    target                                      command
 ## 1             'report.md'   my_knit('report.Rmd', report_dependencies)
 ## 2                   small                                  simulate(5)
@@ -42,7 +45,10 @@ my_plan
 ## 14 coef_regression1_large                      coef(regression1_large)
 ## 15 coef_regression2_small                      coef(regression2_small)
 ## 16 coef_regression2_large                      coef(regression2_large)
-make(my_plan)
+```
+
+```r
+make(my_plan) # Run the commands to build the targets.
 ```
 
 # Installation
@@ -133,7 +139,7 @@ config()
 read_config()
 ```
 
-and speed up your project with parallel computing.
+speed up your project with parallel computing,
 
 ```r
 make() # with jobs > 2
@@ -141,6 +147,24 @@ max_useful_jobs()
 parallelism_choices()
 shell_file()
 ```
+
+and finely tune the caching and hashing.
+
+```r
+available_hash_algos()
+cache_path()
+cache_types()
+configure_cache()
+default_long_hash_algo()
+default_short_hash_algo()
+long_hash()
+short_hash()
+new_cache()
+recover_cache()
+this_cache()
+type_of_cache()
+```
+
 
 # Documentation
 
@@ -150,6 +174,7 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
+vignette("storage") # Learn how drake stores your stuff.
 vignette("caution") # Avoid common pitfalls.
 ```
 

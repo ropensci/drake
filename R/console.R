@@ -1,3 +1,5 @@
+console_length <- 50
+
 console <- function(imported, target, config) {
   if (!config$verbose)
     return()
@@ -7,23 +9,34 @@ console <- function(imported, target, config) {
     action <- color("import", "dodgerblue3")
   else
     action <- color("target", "forestgreen")
-  target <- crop_text(target, length = 50)
-  cat(action, " ", target, "\n", sep = "")
+  out <- paste(action, target) %>%
+    crop_text(length = console_length)
+  cat(out, "\n", sep = "")
 }
 
-console_parallel_stage <- function(targets, config){
+console_many_targets <- function(
+  targets, message, config, color = "slateblue2"
+){
   if (!config$verbose) return(invisible())
   n <- length(targets)
   if (n < 1){
     return(invisible())
   }
-  cat(color("check", "slateblue2"), " ", n, " item",
-    ifelse(n == 1, "", "s"), "\n", sep = "")
+  out <- paste0(
+    color(message, color), " ", n, " item",
+    ifelse(n == 1, "", "s"), ": ",
+    paste(targets, collapse = ", ")
+  ) %>%
+    crop_text(length = console_length)
+  cat(out, "\n", sep = "")
 }
 
 color <- function(x, color) {
-  if (is.null(color))
-    x else make_style(color)(x)
+  if (is.null(color)){
+    x
+  } else {
+    crayon::make_style(color)(x)
+  }
 }
 
 crop_text <- Vectorize(function(x, length = 50) {

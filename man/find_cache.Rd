@@ -4,11 +4,13 @@
 \alias{find_cache}
 \title{Function \code{find_cache}}
 \usage{
-find_cache(path = getwd())
+find_cache(path = getwd(), target = NULL)
 }
 \arguments{
 \item{path}{starting path for search back for the cache.
 Should be a subdirectory of the drake project.}
+
+\item{target}{Name of the folder containing the cache.}
 }
 \value{
 File path of the nearest drake cache or \code{NULL}
@@ -17,6 +19,8 @@ if no cache is found.
 \description{
 Return the file path of the nearest drake
 cache (searching upwards for directories containing a drake cache).
+Only works if the cache is a file system in a
+hidden folder named \code{.drake}.
 }
 \examples{
 \dontrun{

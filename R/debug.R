@@ -1,25 +1,18 @@
-dbug <- function(clean = TRUE) {
-  if (clean)
-    dclean()
-
-  opt <- test_opt()
-  envir <- eval(parse(text = opt$envir))
+dbug <- function() {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
   envir <- dbug_envir(envir)
   dbug_files()
   plan <- dbug_plan()
 
-  config <- build_config(plan = plan, targets = plan$target,
-    envir = envir, parallelism = opt$parallelism, jobs = opt$jobs,
-    prepend = character(0), verbose = FALSE, packages = character(0),
-    prework = character(0), command = "make", args = character(0))
-
-  # Maybe show config opts here
-  config
-}
-
-dclean <- function() {
-  unlink(c(".drake", "intermediatefile.rds", "input.rds", "Makefile",
-    "report.md", "report.Rmd"), recursive = TRUE, force = TRUE)
+  build_config(plan = plan, targets = plan$target,
+    envir = envir, parallelism = scenario$parallelism,
+    jobs = scenario$jobs, prepend = character(0),
+    verbose = FALSE, packages = character(0),
+    prework = character(0), command = "make", args = character(0),
+    cache = NULL,
+    clear_progress = TRUE
+  )
 }
 
 dbug_envir <- function(envir) {

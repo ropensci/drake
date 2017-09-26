@@ -1,23 +1,37 @@
-context("other-features")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("other features")
+
+test_with_dir("parallelism warnings", {
+  config <- dbug()
+  suppressWarnings(parallelism_warnings(config))
+  expect_silent(
+    warn_mclapply_windows(parallelism = "mclapply", jobs = 1)
+  )
+  expect_warning(
+    warn_mclapply_windows(parallelism = "mclapply", jobs = 2, os = "windows")
+  )
+})
+
+test_with_dir("available hash algos", {
+  x <- available_hash_algos()
+  expect_true(length(x) > 0)
+  expect_true(is.character(x))
+})
 
 test_with_dir("in_progress() works", {
-  dclean()
   expect_equal(in_progress(), character(0))
   bad_plan <- plan(x = function_doesnt_exist())
   expect_error(make(bad_plan, verbose = FALSE))
   expect_equal(in_progress(), "x")
-  dclean()
 })
 
 test_with_dir("missed() works", {
-  dclean()
   o <- dbug()
   expect_equal(character(0), missed(o$plan, envir = o$envir,
     verbose = F))
   rm(list = c("f", "g"), envir = o$envir)
   expect_equal(sort(c("f", "g")), sort(missed(o$plan, envir = o$envir,
     verbose = F)))
-  dclean()
 })
 
 test_with_dir(".onLoad() warns correctly and .onAttach() works", {
@@ -34,7 +48,6 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 })
 
 test_with_dir("graph functions work", {
-  dclean()
   config <- dbug()
   expect_equal(class(build_graph(config$plan)), "igraph")
   pdf(NULL)
@@ -46,11 +59,9 @@ test_with_dir("graph functions work", {
     parallelism = parallelism_choices()[1], split_columns = FALSE)))
   expect_true(is.character(default_graph_title(
     parallelism = parallelism_choices()[1], split_columns = TRUE)))
-  dclean()
 })
 
 test_with_dir("check_config() via check() and make()", {
-  dclean()
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
   expect_error(check(y, envir = config$envir))
@@ -62,22 +73,18 @@ test_with_dir("check_config() via check() and make()", {
     check(config$plan, targets = character(0), envir = config$envir))
   expect_error(
     make(config$plan, targets = character(0), envir = config$envir))
-  dclean()
 })
 
 test_with_dir("deprecation", {
-  dclean()
   plan <- data.frame(code = 1, output = "x")
   expect_warning(make(plan, verbose = FALSE))
-  dclean()
+
   expect_warning(make(plan, verbose = FALSE))
   expect_warning(status())
   expect_true(is.numeric(readd(x, search = FALSE)))
-  dclean()
 })
 
 test_with_dir("targets can be partially specified", {
-  dclean()
   config <- dbug()
   config$targets <- "'intermediatefile.rds'"
   testrun(config)
@@ -86,7 +93,6 @@ test_with_dir("targets can be partially specified", {
   config$targets <- "final"
   testrun(config)
   expect_true(is.numeric(readd(final, search = FALSE)))
-  dclean()
 })
 
 test_with_dir("misc stuff", {
@@ -94,7 +100,20 @@ test_with_dir("misc stuff", {
 })
 
 test_with_dir("misc empty/NULL cases", {
-  dclean()
   clean(list = "no_cache")
-  dclean()
+})
+
+test_with_dir("unique_random_string", {
+  set.seed(2017)
+  x <- unique_random_string(n = 15)
+  y <- unique_random_string(exclude = "a", n = 10)
+  expect_equal(nchar(x), 15)
+  expect_equal(nchar(y), 10)
+  exclude <- c(letters, LETTERS, 1:9)
+  for (i in 1:100){
+    expect_equal(
+      unique_random_string(exclude = exclude, n = 1),
+      "0"
+    )
+  }
 })

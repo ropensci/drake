@@ -1,13 +1,19 @@
-hash_algorithm <- "md5"
-
 hash_list <- function(targets, config) {
-  sapply(targets, hashes, config = config, simplify = FALSE,
-    USE.NAMES = TRUE)
+  out <- lightly_parallelize(
+    X = targets, FUN = hashes,
+    jobs = config$jobs, config = config
+  )
+  names(out) <- lapply(out, "[[", "target") %>%
+    unlist
+  out
 }
 
 hashes <- function(target, config) {
-  list(depends = dependency_hash(target, config), file = file_hash(target,
-    config))
+  list(
+    target = target,
+    depends = dependency_hash(target = target, config = config),
+    file = file_hash(target = target, config = config)
+  )
 }
 
 dependency_hash <- function(target, config) {
@@ -16,7 +22,7 @@ dependency_hash <- function(target, config) {
   dependencies(target, config) %>%
     self_hash(config = config) %>%
     c(command) %>%
-    digest(algo = hash_algorithm)
+    digest::digest(algo = config$long_hash_algo)
 }
 
 self_hash <- Vectorize(function(target, config) {
@@ -50,16 +56,19 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
   if (do_rehash){
-    rehash_file(target)
+    rehash_file(target = target, config = config)
   } else {
     config$cache$get(target)$value
   }
 }
 
-rehash_file <- function(target) {
-  eply::unquote(target) %>%
-    tools::md5sum() %>%
-    unname
+rehash_file <- function(target, config) {
+  digest::digest(
+    object = eply::unquote(target),
+    algo = config$long_hash_algo,
+    file = TRUE,
+    serialize = FALSE
+  )
 }
 
 tidy <- function(x) {

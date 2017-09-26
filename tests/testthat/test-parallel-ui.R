@@ -1,4 +1,5 @@
-context("parallel-ui")
+cat(get_testing_scenario_name(), ": ", sep = "")
+context("parallel UI")
 
 test_with_dir("shell_file() writes correctly", {
   expect_false(file.exists("shell.sh"))
@@ -15,14 +16,26 @@ test_with_dir("shell_file() writes correctly", {
 })
 
 test_with_dir("mclapply and lapply", {
-  dclean()
   config <- dbug()
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
     jobs = 1, parallelism = "mclapply")
   expect_true(is.numeric(readd(final)))
   clean()
+
+  # should demote to 1 job on Windows
+  suppressWarnings(
+    make(plan = config$plan, envir = config$envir, verbose = FALSE,
+      jobs = 2, parallelism = "mclapply")
+  )
+  expect_true(is.numeric(readd(final)))
+  clean()
+
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
     jobs = 1, parallelism = "parLapply")
   expect_true(is.numeric(readd(final)))
-  dclean()
+  clean()
+
+  make(plan = config$plan, envir = config$envir, verbose = FALSE,
+    jobs = 1, parallelism = "parLapply")
+  expect_true(is.numeric(readd(final)))
 })

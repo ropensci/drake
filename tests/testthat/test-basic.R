@@ -1,12 +1,11 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("basic")
 
 test_with_dir("basic example works", {
-  dclean()
-  opt <- test_opt()
-  e <- eval(parse(text = opt$envir))
-  jobs <- opt$jobs
-  parallelism <- opt$parallelism
-  dclean()
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
@@ -53,7 +52,16 @@ test_with_dir("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 8)
 
+  dats <- c("small", "large")
+  config$targets <- dats
   con <- testrun(config)
+  expect_equal(sort(justbuilt(con)), sort(dats))
+  rm(list = dats, envir = config$envir)
+  config$targets <- config$plan$target
+  con <- testrun(config)
+  jb <- justbuilt(con)
+  expect_true("'report.md'" %in% jb)
+  expect_false(any(dats %in% jb))
 
   # Check that file is not rehashed.
   # Code coverage should cover every line of file_hash().
@@ -105,5 +113,4 @@ test_with_dir("basic example works", {
   tmp <- dataframes_graph(my_plan, envir = e, jobs = jobs,
     parallelism = parallelism, verbose = FALSE)
   expect_true(is.data.frame(tmp$nodes))
-  dclean()
 })

@@ -1,9 +1,26 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("cache")
 
 test_with_dir("clean() works if there is no cache already", {
-  dclean()
   clean(list = "no_cache")
-  dclean()
+})
+
+test_with_dir("corrupt cache", {
+  x <- plan(a = 1)
+  make(x, verbose = FALSE)
+  path <- file.path(default_cache_path(), "config", "hash_algorithm")
+  expect_true(file.exists(path))
+  unlink(path)
+  expect_false(file.exists(path))
+  expect_warning(expect_error(make(x, verbose = FALSE)))
+})
+
+test_with_dir("try to find a non-existent project", {
+  expect_equal(find_cache(), NULL)
+  expect_equal(find_project(), NULL)
+  expect_error(loadd(list = "nothing", search = FALSE))
+  expect_error(tmp <- read_config(search = FALSE))
+  expect_error(tmp <- session(search = FALSE))
 })
 
 test_with_dir("build times works if no targets are built", {
@@ -14,7 +31,7 @@ test_with_dir("build times works if no targets are built", {
 })
 
 test_with_dir("cache functions work", {
-  dclean()
+  cache_dir <- basename(default_cache_path())
   first_wd <- getwd()
   scratch <- file.path(first_wd, "scratch")
   if (!file.exists(scratch)){
@@ -79,6 +96,8 @@ test_with_dir("cache functions work", {
   
   # config
   newconfig <- read_config(search = FALSE)
+  expect_equal(newconfig$short_hash_algo, default_short_hash_algo())
+  expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = FALSE), config$plan)
   expect_equal(class(read_graph(search = FALSE)), "igraph")
@@ -113,7 +132,7 @@ test_with_dir("cache functions work", {
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
   expect_error(loadd(yourinput, myinput, search = FALSE, imported_only = TRUE))
-  loadd(h, i, j, c, search = FALSE, envir = envir)
+  loadd(h, i, j, c, jobs = 2, search = FALSE, envir = envir)
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
@@ -184,13 +203,13 @@ test_with_dir("cache functions work", {
   # Read the graph
   pdf(NULL)
   tmp <- dbug()
-  read_graph(search = TRUE, path = s)
+  tmp <- read_graph(search = TRUE, path = s)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
-  dclean()
+
   setwd(scratch)
   pdf(NULL)
-  read_graph(search = FALSE)
+  tmp <- read_graph(search = FALSE)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
   pdf(NULL)
@@ -215,5 +234,4 @@ test_with_dir("cache functions work", {
 
   setwd(scratch)
   unlink("searchfrom", recursive = TRUE, force = TRUE)
-  dclean()
 })

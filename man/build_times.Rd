@@ -4,8 +4,7 @@
 \alias{build_times}
 \title{Function \code{build_times}}
 \usage{
-build_times(path = getwd(), search = TRUE, digits = 0,
-  cache = drake::get_cache(path = path, search = search))
+build_times(path = getwd(), search = TRUE, digits = 0, cache = NULL)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -18,7 +17,8 @@ current working directory only.}
 
 \item{digits}{How many digits to round the times to.}
 
-\item{cache}{storr cache for drake}
+\item{cache}{optional drake cache. If supplied,
+the \code{path} and \code{search} arguments are ignored.}
 }
 \value{
 data.frame of times from \code{\link{system.time}}

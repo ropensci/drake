@@ -12,6 +12,9 @@
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
+#' @param cache optional drake cache. See code{\link{new_cache}()}. If
+#' The \code{cache} argument is ignored if a non-null \code{config}
+#' argument is supplied.
 #' @param jobs The \code{outdated()} function is called internally,
 #' and it needs to import objects and examine your
 #' input files to see what has been updated. This could take some time,
@@ -80,7 +83,7 @@
 #' plot_graph(my_plan) # The red nodes from before are now green.
 #' }
 plot_graph <- function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), file = character(0),
   selfcontained = FALSE, build_times = TRUE, targets_only = FALSE,
@@ -94,7 +97,8 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
 
   force(envir)
   raw_graph <- dataframes_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose, jobs = jobs, parallelism = parallelism,
+    envir = envir, verbose = verbose, cache = cache,
+    jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework, build_times = build_times,
     targets_only = targets_only, split_columns = split_columns,
     config = config, font_size = font_size)

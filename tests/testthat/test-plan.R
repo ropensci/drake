@@ -1,4 +1,15 @@
+cat(get_testing_scenario_name(), ": ", sep = "")
 context("plan")
+
+test_with_dir("empty plan", {
+  expect_equal(
+    plan(),
+    data.frame(
+      target = character(0),
+      command = character(0)
+    )
+  )
+})
 
 test_with_dir("plan set 1", {
   x <- plan(
@@ -49,7 +60,7 @@ test_with_dir("plan set 4", {
     command = c("c", "'c'", "d", "readRDS('e')"), stringsAsFactors = F)
   expect_equal(x, y)
   expect_warning(check(x))
-  dclean()
+
 })
 
 test_with_dir("plan() trims outer whitespace in target names", {
@@ -62,7 +73,6 @@ test_with_dir("plan() trims outer whitespace in target names", {
 })
 
 test_with_dir("make() and check() trim outer whitespace in target names", {
-  dclean()
   x <- data.frame(target = c("a\n", "  b", "c ", "\t  d   "),
     command = 1)
   expect_silent(make(x, verbose = FALSE))
@@ -70,21 +80,21 @@ test_with_dir("make() and check() trim outer whitespace in target names", {
   stat <- c(a = "finished", b = "finished", c = "finished",
     d = "finished")
   expect_equal(progress(), stat)
-  dclean()
+
   expect_silent(make(x, verbose = FALSE, targets = c("a",
     "nobody_home")))
-  dclean()
+
   x <- data.frame(target = c("a", " a"), command = 1)
   expect_error(check(x))
-  dclean()
 })
 
 test_with_dir("make() plays nicely with tibbles", {
-  dclean()
+  if (!("tibble" %in% rownames(installed.packages()))){
+    skip("Package tibble not installed.")
+  }
   x <- tibble::tribble(~target, ~command, "nothing", 1)
   expect_silent(check(x))
   expect_silent(make(x, verbose = FALSE))
-  dclean()
 })
 
 test_with_dir("check() finds bad symbols", {

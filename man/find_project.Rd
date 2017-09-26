@@ -18,6 +18,7 @@ if no drake project is found.
 Return the file path of the nearest drake
 project (searching upwards for directories
 containing a drake cache).
+Only works if the cache is a file system in a folder named \code{.drake}.
 }
 \examples{
 \dontrun{

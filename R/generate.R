@@ -61,8 +61,8 @@ evaluate <- function(
   if (!any(matches)){
     return(plan)
   }
-  major <- unique_random_string(colnames(plan))
-  minor <- unique_random_string(c(colnames(plan), major))
+  major <- unique_random_string(exclude = colnames(plan))
+  minor <- unique_random_string(exclude = c(colnames(plan), major))
   plan[[minor]] <- seq_len(nrow(plan))
   plan[[major]] <- plan[[minor]]
   matching <- plan[matches, ]
@@ -287,9 +287,13 @@ with_analyses_only <- function(plan){
   return(plan[has_analysis, ])
 }
 
-unique_random_string <- function(exclude = NULL, n = 30){
-  out <- stri_rand_strings(1, n)
+unique_random_string <- function(n = 30, exclude = NULL){
+  if (!length(exclude)){
+    return(stri_rand_strings(1, n))
+  }
+  out <- exclude[1]
   while (out %in% exclude){
+    out <- stri_rand_strings(1, n)
     next
   }
   return(out)

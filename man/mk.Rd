@@ -4,10 +4,12 @@
 \alias{mk}
 \title{Function \code{mk}}
 \usage{
-mk(target)
+mk(target, cache_path = NULL)
 }
 \arguments{
 \item{target}{name of target to make}
+
+\item{cache_path}{path to the drake cache}
 }
 \description{
 Internal drake function to be called
