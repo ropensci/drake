@@ -1,3 +1,5 @@
+console_length <- 50
+
 console <- function(imported, target, config) {
   if (!config$verbose)
     return()
@@ -7,20 +9,26 @@ console <- function(imported, target, config) {
     action <- color("import", "dodgerblue3")
   else
     action <- color("target", "forestgreen")
-  target <- crop_text(target, length = 50)
-  cat(action, " ", target, "\n", sep = "")
+  out <- paste(action, target) %>%
+    crop_text(length = console_length)
+  cat(out, "\n", sep = "")
 }
 
-console_verb_targets <- function(targets, verb, config, color = "slateblue2"){
+console_many_targets <- function(
+  targets, message, config, color = "slateblue2"
+){
   if (!config$verbose) return(invisible())
   n <- length(targets)
   if (n < 1){
     return(invisible())
   }
-  cat(color(verb, color), " ", n, " item",
+  out <- paste0(
+    color(message, color), " ", n, " item",
     ifelse(n == 1, "", "s"), ": ",
-    targets %>% paste(collapse = ", ") %>% crop_text(length = 50), 
-    "\n", sep = "")
+    paste(targets, collapse = ", ")
+  ) %>%
+    crop_text(length = console_length)
+  cat(out, "\n", sep = "")
 }
 
 color <- function(x, color) {

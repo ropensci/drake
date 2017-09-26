@@ -14,9 +14,9 @@ prune_envir <- function(targets, config){
     function(vertex){
       subcomponent(config$graph, v = vertex, mode = "out")$name
     }
-    ) %>%
-  unlist() %>%
-  unique()
+  ) %>%
+    unlist() %>%
+    unique()
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
   load_these <- nonfile_target_dependencies(
@@ -33,7 +33,7 @@ prune_envir <- function(targets, config){
     intersect(y = already_loaded)
   rm(list = discard_these, envir = config$envir)
   if (length(load_these)){
-    console_verb_targets(load_these, "load", config = config)
+    console_many_targets(load_these, message = "load", config = config)
     loadd(list = load_these, envir = config$envir)
   }
   invisible()

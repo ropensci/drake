@@ -52,7 +52,16 @@ test_with_dir("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 8)
 
+  dats <- c("small", "large")
+  config$targets <- dats
   con <- testrun(config)
+  expect_equal(sort(justbuilt(con)), sort(dats))
+  rm(list = dats, envir = config$envir)
+  config$targets <- config$plan$target
+  con <- testrun(config)
+  jb <- justbuilt(con)
+  expect_true("'report.md'" %in% jb)
+  expect_false(any(dats %in% jb))
 
   # Check that file is not rehashed.
   # Code coverage should cover every line of file_hash().

@@ -55,7 +55,7 @@ test_with_dir("test_scenarios()", {
   writeLines(
     text = c(
       "test_with_dir('super nested test', {",
-      "  cat('logged scenario', getOption(test_option_name))",
+      "  cat('logged scenario', getOption(test_option_name), ' ')",
       "  some_nested_object <- 1",
       "  expect_true('some_nested_object' %in% ls())",
       "  expect_false('some_outside_object' %in% ls())",
@@ -86,9 +86,8 @@ test_with_dir("test_scenarios()", {
   loggings <- grepl("logged scenario", log)
   expect_true(any(loggings))
   log <- log[loggings]
-  log <- gsub("logged scenario", "", log)
-  log <- gsub(" ", "", log)
-  log <- gsub(".", "", log, fixed = TRUE)
+  log <- gsub("logged scenario ", "", log)
+  log <- gsub(" .*", "", log)
   expect_equal(sort(log), sort(names(testing_scenarios)))
 
   log <- capture.output(

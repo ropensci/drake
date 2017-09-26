@@ -270,7 +270,7 @@ clean() # Start over next time.
 
 # Use FALSE on regular local machines.
 if (FALSE){
-  # if (TRUE){ # Only attempt this part on a proper computing cluster.
+# if (TRUE){ # Only attempt this part on a proper computing cluster.
 
   # The file shell.sh tells the Makefile to submit jobs on a cluster.
   # You could write this file by hand if you wanted.

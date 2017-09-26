@@ -29,6 +29,7 @@ test_with_dir("prune_envir in full build", {
   plan <- rbind(datasets, analyses, summaries, output)
 
   # set up a workspace to test prune_envir()
+  # set verbose to TRUE to see log of loading
   config <- build_config(
     plan,
     targets = plan$target,
@@ -36,7 +37,7 @@ test_with_dir("prune_envir in full build", {
     parallelism = "mclapply",
     jobs = 1,
     prepend = character(0),
-    verbose = TRUE,
+    verbose = FALSE,
     packages = character(0),
     prework = character(0),
     command = "make",
