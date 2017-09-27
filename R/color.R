@@ -1,11 +1,17 @@
+# Below, the colors from "target" through 
+# "unload" are for the console. The rest
+# are for plot_graph().
 colors <- c(
-  target = "forestgreen",
+  target = "green3",
   import = "dodgerblue3",
   missing = "darkorchid3",
   check = "skyblue1",
   load = "gold",
   unload = "#ffa500",
+  up_to_date = "forestgreen",
   outdated = "#aa0000",
+  import_node = "dodgerblue3",
+  missing_node = "darkorchid3",
   in_progress = "#ff7221",
   other = "#888888"
 )

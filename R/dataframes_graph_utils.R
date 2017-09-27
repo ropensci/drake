@@ -198,11 +198,11 @@ split_node_columns <- function(nodes){
 
 style_nodes <- function(nodes, font_size) {
   nodes$font.size <- font_size # nolint
-  nodes[nodes$status == "imported", "color"] <- color_of("import")
+  nodes[nodes$status == "imported", "color"] <- color_of("import_node")
   nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
-  nodes[nodes$status == "missing", "color"] <- color_of("missing")
+  nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
   nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
-  nodes[nodes$status == "up to date", "color"] <- color_of("target")
+  nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
   nodes[nodes$type == "object", "shape"] <- shape_of("object")
   nodes[nodes$type == "file", "shape"] <- shape_of("file")
   nodes[nodes$type == "function", "shape"] <- shape_of("funct")
@@ -236,11 +236,11 @@ legend_nodes <- function(font_size = 20) {
       "File"
     ),
     color = color_of(c(
-      "target",
+      "up_to_date",
       "in_progress",
       "outdated",
-      "import",
-      "missing",
+      "import_node",
+      "missing_node",
       "generic",
       "generic",
       "generic"
