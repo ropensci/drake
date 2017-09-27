@@ -6,6 +6,10 @@ test_with_dir("console", {
   config$verbose <- TRUE
   expect_output(console(imported = FALSE, target = "myinput",
     config = config))
+  expect_output(console(imported = TRUE, target = "myinput",
+    config = config))
+  expect_output(console(imported = NA, target = "myinput",
+    config = config))
   expect_output(
     console_many_targets(targets = letters,
       message = "check", config = config
