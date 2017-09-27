@@ -145,9 +145,12 @@ resolve_levels <- function(nodes, graph) {
   nodes$level <- NA
   graph_remaining_targets <- graph
   while (length(V(graph_remaining_targets))) {
-    candidates <- next_targets(graph_remaining_targets)
-    nodes[candidates, "level"] <- level
-    level <- level + 1
+    candidates <- next_targets(graph_remaining_targets) %>%
+      intersect(y = rownames(nodes))
+    if (length(candidates)){
+      nodes[candidates, "level"] <- level
+      level <- level + 1
+    }
     graph_remaining_targets <-
       delete_vertices(graph_remaining_targets, v = candidates)
   }

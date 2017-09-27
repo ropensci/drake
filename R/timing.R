@@ -40,7 +40,8 @@ build_times <- function(
     digits = digits
   ) %>%
     do.call(what = rbind) %>%
-    rbind(empty_times())
+    rbind(empty_times()) %>%
+    round_times(digits = digits)
 }
 
 get_build_time <- function(target, cache, digits) {
@@ -51,7 +52,6 @@ get_build_time <- function(target, cache, digits) {
     user = time[["user.self"]],
     system = time[["sys.self"]]
   ) %>%
-    lapply(FUN = round, digits = digits) %>%
     lapply(FUN = dseconds)
   c(target = target, out) %>%
     as.data.frame(stringsAsFactors = FALSE)
@@ -64,4 +64,10 @@ empty_times <- function(){
     user = duration(numeric(0)),
     system = duration(numeric(0))
   )
+}
+
+round_times <- function(times, digits){
+  for (col in colnames(empty_times())){
+    times[[col]] <- rou9nd(times[[col]], digits = digits)
+  }
 }
