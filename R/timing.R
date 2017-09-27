@@ -25,49 +25,43 @@ build_times <- function(
   search = TRUE,
   digits = 0,
   cache = NULL
-  ){
+){
   eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
-
-  empty_times <- data.frame(
-    target = character(0),
-    user = duration(numeric(0)),
-    system = duration(numeric(0)),
-    elapsed = duration(numeric(0))
-  )
-
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search)
   }
   if (is.null(cache)){
-    return(empty_times)
+    return(empty_times())
   }
+  lapply(
+    cache$list(namespace = "build_times"),
+    get_build_time,
+    cache = cache,
+    digits = digits
+  ) %>%
+    do.call(what = rbind) %>%
+    rbind(empty_times())
+}
 
-  times <- cache$list(namespace = "build_times") %>% Map(f = function(target) {
-    # Try to get times if they are saved
-    time <- cache$get(key = target, namespace = "build_times")
-    if (class(time) == "proc_time") {
-      data.frame(
-        target = target,
-        user = time[["user.self"]] %>%
-          round(digits) %>%
-          dseconds,
-        system = time[["sys.self"]] %>%
-          round(digits) %>%
-          dseconds,
-        elapsed = time[["elapsed"]] %>%
-          round(digits) %>%
-          dseconds
-      )
-    }
-  }) %>% # Filter out NULLs
-    lapply(Filter, f = Negate(is.null)) %>% # Merge to data.frame
-    Reduce(f = function(x, y) rbind(x, y))
-
-  if (!length(times)){
-    return(empty_times)
-  }
-
-  times$target <- times$target %>%
-    as.character()
-  return(times)
+get_build_time <- function(target, cache, digits) {
+  time <- cache$get(key = target, namespace = "build_times")
+  stopifnot(class(time) == "proc_time")
+  out <- list(
+    elapsed = time[["elapsed"]],
+    user = time[["user.self"]],
+    system = time[["sys.self"]]
+  ) %>%
+    lapply(FUN = round, digits = digits) %>%
+    lapply(FUN = dseconds)
+  c(target = target, out) %>%
+    as.data.frame(stringsAsFactors = FALSE)
+}
+  
+empty_times <- function(){
+  data.frame(
+    target = character(0),
+    elapsed = duration(numeric(0)),
+    user = duration(numeric(0)),
+    system = duration(numeric(0))
+  )
 }
