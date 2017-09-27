@@ -63,14 +63,3 @@ col2hex <- function(cname){
     blue = col_mat[3, ] / 255
   )
 }
-
-palette <- function(){
-  out <- lapply(
-    names(colors),
-    function(x) {
-      color(x, color = colors[x])
-    }
-  )
-  out <- paste(out, collapse = "\n")
-  cat(out, "\n")
-}
