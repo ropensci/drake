@@ -1,3 +1,15 @@
+colors <- c(
+  target = "forestgreen",
+  import = "dodgerblue3",
+  missing = "darkorchid3",
+  check = "skyblue1",
+  load = "gold",
+  unload = "#ffa500",
+  outdated = "#aa0000",
+  in_progress = "#ff7221",
+  other = "#888888"
+)
+
 #' @title Function palette
 #' @export
 #' @description show color palette for drake.
@@ -23,18 +35,6 @@ color <- function(x, color) {
   }
 }
 
-colors <- c(
-  target = "forestgreen",
-  import = "dodgerblue3",
-  missing = "darkorchid3",
-  check = "steelblue3",
-  load = "orange3",
-  unload = "red3",
-  outdated = "#aa0000",
-  in_progress = "#ff7221",
-  other = "#888888"
-)
-
 color_of <- Vectorize(function(x){
   available <- x %in% names(colors)
   if (!available) {
@@ -55,11 +55,11 @@ color_grep <- function(text, pattern, color){
 
 # copied from the gtools package
 col2hex <- function(cname){
-  colMat <- grDevices::col2rgb(cname)
+  col_mat <- grDevices::col2rgb(cname)
   grDevices::rgb(
-    red = colMat[1, ] / 255,
-    green = colMat[2, ] / 255,
-    blue = colMat[3, ] / 255
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
   )
 }
 
