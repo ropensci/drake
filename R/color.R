@@ -13,6 +13,7 @@ colors <- c(
 #' @title Function palette
 #' @export
 #' @description show color palette for drake.
+#' Used in both the console and \code{\link{plot_graph}()}
 #' Your console must have the crayon package enabled.
 #' @examples
 #' drake_palette()
