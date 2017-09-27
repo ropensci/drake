@@ -44,5 +44,5 @@ test_with_dir("console_many_targets() works", {
     )
   )
   expect_true(is.character(tmp))
-  expect_true(nchar(tmp) < 51)
+  expect_true(nchar(tmp) <= console_length)
 })

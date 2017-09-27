@@ -1,4 +1,4 @@
-console_length <- 50
+console_length <- 80
 
 console <- function(imported, target, config) {
   if (!config$verbose)
