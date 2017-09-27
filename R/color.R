@@ -73,15 +73,3 @@ palette <- function(){
   out <- paste(out, collapse = "\n")
   cat(out, "\n")
 }
-
-
-
-shape_of <- Vectorize(function(x){
-  switch(x,
-    object = "dot",
-    file = "square",
-    funct = "triangle",
-    "dot"
-  )
-},
-"x", USE.NAMES = FALSE)
