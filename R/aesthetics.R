@@ -22,6 +22,15 @@ color_of <- Vectorize(function(x){
 },
 "x", USE.NAMES = FALSE)
 
+color_grep <- function(text, pattern, color){
+  colored_pattern <- color(x = pattern, color = color)
+  gsub(
+    pattern = paste0("^", pattern, " "),
+    replacement = paste0(colored_pattern, " "),
+    x = text
+  )
+}
+
 shape_of <- Vectorize(function(x){
   switch(x,
     object = "dot",

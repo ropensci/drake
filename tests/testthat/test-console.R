@@ -12,14 +12,14 @@ test_with_dir("console", {
     )
   )
   x1 <- "12345"
-  x2 <- paste(rep(0:9, length.out = console_length - 1), collapse = "")
+  x2 <- paste(rep(0:9, length.out = console_length + 400), collapse = "")
   expect_equal(x1, color(x = x1, color = NULL))
   o1 <- capture.output(console(imported = FALSE, target = x1,
     config = config))
   o2 <- capture.output(console(imported = FALSE, target = x2,
     config = config))
   expect_true(nchar(o1) < console_length)
-  expect_equal(nchar(o2), console_length)
+  expect_true(nchar(o2) < console_length + 20)
   dots <- "\\.\\.\\.$"
   expect_false(grepl(dots, o1))
   expect_true(grepl(dots, o2))
@@ -39,10 +39,10 @@ test_with_dir("console_many_targets() works", {
   tmp <- capture.output(
     console_many_targets(
       targets = LETTERS,
-      message = unique_random_string(n = 100),
+      message = unique_random_string(n = 400),
       config = config
     )
   )
   expect_true(is.character(tmp))
-  expect_true(nchar(tmp) <= console_length)
+  expect_true(nchar(tmp) <= console_length + 20)
 })
