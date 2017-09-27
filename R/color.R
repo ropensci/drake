@@ -1,4 +1,4 @@
-# Below, the colors from "target" through 
+# Below, the colors from "target" through
 # "unload" are for the console. The rest
 # are for plot_graph().
 colors <- c(
