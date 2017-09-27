@@ -30,7 +30,7 @@ non-null \code{config} argument is supplied.}
 
 \item{prework}{same as for \code{\link{make}}}
 
-\item{config}{option internal runtime parameter list of
+\item{config}{Optional internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 Computing this

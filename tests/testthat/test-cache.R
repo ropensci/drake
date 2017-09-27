@@ -49,6 +49,17 @@ test_with_dir("cache functions work", {
   using_global <- identical(config$envir, globalenv())
   if (using_global)
     envir <- globalenv() else envir <- environment()
+  
+  # Because no build times are cached yet
+  sink(tempfile())
+  expect_equal(predict_runtime(config$plan, envir = envir, untimed_method = 0)$cumtime_serial %>% tail(1), duration(0))
+  expect_equal(predict_runtime(config$plan, envir = envir, from_scratch = T)$cumtime_serial %>% tail(1), duration(0))
+  # Default untimed_method combined with test_build_times should fill in 420s for both targets myinput and yourinput,
+  # and give zero for the rest. This gives us a final build time of 840s.
+  test_build_times = data.frame(target = "yourinput", elapsed = duration(420))
+  expect_equal(predict_runtime(config$plan, build_times = test_build_times)$cumtime_serial %>% tail(1), duration(840))
+  sink()
+  
   testrun(config)
 
   # targets
@@ -79,6 +90,10 @@ test_with_dir("cache functions work", {
     c(bla = "not built or imported", f = "finished", h = "finished",
       final = "finished"))
 
+  # build_times
+  expect_equal(sort(build_times(search = FALSE)$target), builds)
+  expect_length(build_times(), 4) # 4 columns
+  
   # config
   newconfig <- read_config(search = FALSE)
   expect_equal(newconfig$short_hash_algo, default_short_hash_algo())
