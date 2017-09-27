@@ -11,6 +11,16 @@ show color palette for drake.
 Used in both the console and \code{\link{plot_graph}()}
 Your console must have the crayon package enabled.
 }
+\details{
+This palette applies to console output
+(internal functions \code{console()} and
+\code{console_many_targets()}) and the node colors
+in \code{\link{plot_graph}()}.
+So if you want to contribute improvements to the palette,
+please both \code{drake_palette()} and
+\code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}
+}
 \examples{
 drake_palette()
+visNetwork::visNetwork(nodes = legend_nodes())
 }

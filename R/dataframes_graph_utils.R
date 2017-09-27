@@ -209,6 +209,20 @@ style_nodes <- function(nodes, font_size) {
   nodes
 }
 
+#' @title Function legend_nodes
+#' @export
+#' @seealso \code{\link{drake_palette}()},
+#' \code{\link{plot_graph}()},
+#' \code{\link{dataframes_graph}()}
+#' @description Output a \code{visNetwork}-friendly
+#' data frame of nodes. It tells you what
+#' the colors and shapes mean
+#' in \code{\link{plot_graph}()}.
+#' @param font_size font size of the node label text
+#' @examples
+#' \dontrun{
+#' visNetwork::visNetwork(nodes = legend_nodes())
+#' }
 legend_nodes <- function(font_size = 20) {
   out <- data.frame(
     label = c(
