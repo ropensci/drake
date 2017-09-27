@@ -6,7 +6,7 @@
 #' drake_palette()
 drake_palette <- function(){
   out <- lapply(
-    names(colors),
+    sort(names(colors)),
     function(x) {
       color(x, color = colors[x])
     }
@@ -53,8 +53,8 @@ color_grep <- function(text, pattern, color){
   )
 }
 
-# copied from gtools
-col2hex <- function (cname){
+# copied from the gtools package
+col2hex <- function(cname){
   colMat <- grDevices::col2rgb(cname)
   grDevices::rgb(
     red = colMat[1, ] / 255,
@@ -73,3 +73,15 @@ palette <- function(){
   out <- paste(out, collapse = "\n")
   cat(out, "\n")
 }
+
+
+
+shape_of <- Vectorize(function(x){
+  switch(x,
+    object = "dot",
+    file = "square",
+    funct = "triangle",
+    "dot"
+  )
+},
+"x", USE.NAMES = FALSE)

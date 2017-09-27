@@ -1,13 +1,27 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("other features")
 
-test_with_dir("color and shape", {
+test_with_dir("colors and shapes", {
+  expect_output(drake_palette())
   expect_is(color_of("target"), "character")
   expect_is(color_of("import"), "character")
   expect_is(color_of("not found"), "character")
+  expect_is(color_of("not found"), "character")
+  expect_equal(color_of("bluhlaksjdf"), color_of("other"))
+  expect_is(shape_of("object"), "character")
+  expect_is(shape_of("file"), "character")
+  expect_is(shape_of("not found"), "character")
+  expect_equal(shape_of("bluhlaksjdf"), shape_of("other"))
+})
+
+test_with_dir("shapes", {
+  expect_is(shape_of("target"), "character")
+  expect_is(shape_of("import"), "character")
+  expect_is(shape_of("not found"), "character")
   expect_is(shape_of("object"), "character")
   expect_is(color_of("file"), "character")
   expect_is(color_of("not found"), "character")
+  expect_equal(color_of("bluhlaksjdf"), color_of("other"))
 })
 
 test_with_dir("parallelism warnings", {
