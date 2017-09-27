@@ -67,7 +67,9 @@ empty_times <- function(){
 }
 
 round_times <- function(times, digits){
-  for (col in colnames(empty_times())){
-    times[[col]] <- rou9nd(times[[col]], digits = digits)
+  cols <- setdiff(colnames(empty_times()), "target")
+  for (col in cols){
+    times[[col]] <- round(times[[col]], digits = digits)
   }
+  times
 }

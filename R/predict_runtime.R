@@ -1,14 +1,13 @@
 #' @title Function predict_runtime
 #' @description Predict the runtime of the next call to `make()`.
-#' This function resolves the \code{\link{rate_limiting_targets}()},
-#' optionally removes the up-to-date targets,
-#' and then sums the remaining elapsed times.
+#' This simply sums the elapsed build times
+#' from \code{\link{rate_limiting_times}()}.
 #' @details For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
 #' by \code{\link{make}()}). Otherwise, \code{predict_runtime()}
 #' will warn you and tell you which targets have missing times.
 #' @export
-#' @seealso \code{\link{predict_runtime}},
+#' @seealso \code{\link{rate_limiting_times}},
 #' \code{\link{build_times}}
 #' \code{\link{make}}
 #' @examples
@@ -37,6 +36,8 @@
 #' The \code{cache} argument is ignored if a
 #' non-null \code{config} argument is supplied.
 #' @param jobs same as for \code{\link{make}}
+#' @param packages same as for \code{\link{make}}
+#' @param prework same as for \code{\link{make}}
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -56,6 +57,7 @@ predict_runtime <- function(
   envir = parent.frame(),
   verbose = TRUE,
   cache = NULL,
+  parallelism,
   jobs = 1,
   packages = (.packages()),
   prework = character(0),
@@ -65,38 +67,28 @@ predict_runtime <- function(
   search = TRUE
 ){
   force(envir)
-  if (is.null(config)){
-    config <- config(
-      plan = plan,
-      targets = targets,
-      envir = envir,
-      verbose = verbose,
-      cache = cache,
-      parallelism = parallelism,
-      jobs = jobs,
-      packages = packages,
-      prework = prework
-    )
-  }
-  if (!is.null(cache)){
-    config$cache <- configure_cache(cache)
-  }
   times <- rate_limiting_times(
     plan = plan,
-    jobs = config$jobs,
+    from_scratch = from_scratch,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    cache = cache,
+    parallelism = parallelism,
+    jobs = jobs,
+    packages = packages,
+    prework = prework,
     config = config,
-    digits = Inf
+    digits = Inf,
+    path = path,
+    search = search
   )
-  if (!from_scratch){
-    keep <- outdated(plan = plan, config = config) %>%
-      intersect(y = times$target)
-    times <- times[times$target %in% keep, ]
-  }
-  sum(times$elapsed)
+  sum(times$elapsed) %>%
+    round(digits = digits)
 }
   
 #' @title Function rate_limiting_times
-#' @description Return a data frame of build times of
+#' @description Return a data frame of elapsed build times of
 #' the rate-limiting targets of a \code{\link{make}()} workflow.
 #' @details The \code{stage} column of the returned data frame
 #' is an index that denotes a parallelizable stage.
@@ -107,6 +99,11 @@ predict_runtime <- function(
 #' and one job gets all the slowest targets.
 #' The build times of this hypothetical pessimistic job
 #' are returned for each stage. \cr
+#'
+#' By default \code{from_scratch} is \code{FALSE}. That way,
+#' \code{rate_limiting_times()} takes into account that some
+#' targets are already up to date, meaning their elapsed
+#' build times will be instant during the next \code{\link{make}()}.
 #'
 #' For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
@@ -129,6 +126,9 @@ predict_runtime <- function(
 #' )
 #' }
 #' @param plan same as for \code{\link{make}}
+#' @param from_scratch logical, whether to assume
+#' next hypothetical call to \code{\link{make}()}
+#' is a build from scratch (after \code{\link{clean}()}).
 #' @param targets Targets to build in the workflow.
 #' Timing information is
 #' limited to these targets and their dependencies.
@@ -137,7 +137,10 @@ predict_runtime <- function(
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' The \code{cache} argument is ignored if a
 #' non-null \code{config} argument is supplied.
+#' @param parallelism same as for \code{\link{make}}
 #' @param jobs same as for \code{\link{make}}
+#' @param packages same as for \code{\link{make}}
+#' @param prework same as for \code{\link{make}}
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -152,10 +155,12 @@ predict_runtime <- function(
 #' for the cache.
 rate_limiting_times <- function(
   plan,
+  from_scratch = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
   cache = NULL,
+  parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
   prework = character(0),
@@ -187,11 +192,14 @@ rate_limiting_times <- function(
     digits = Inf,
     cache = config$cache
   )
-  browser()
   not_timed <- setdiff(plan$target, times$target)
   warn_not_timed(not_timed)
   times <- times[intersect(plan$target, times$target), ]
   rownames(times) <- times$target
+  if (!from_scratch){
+    outdated <- outdated(plan = plan, config = config)
+    times <- times[outdated, ]
+  }
   times <- resolve_levels(nodes = times, graph = config$graph)
   colnames(times) <- gsub("^level$", "stage", times)
   ddply(times, "stage", rate_limiting_at_stage, jobs = jobs) %>%
@@ -201,7 +209,7 @@ rate_limiting_times <- function(
 
 rate_limiting_at_stage <- function(stage, jobs){
   stage <- stage[order(stage$elapsed, decreasing = TRUE), ]
-  targets_per_job <- ceiling(nrow(x) / jobs) %>%
+  targets_per_job <- ceiling(nrow(stage) / jobs) %>%
     min(nrow(stage))
   stage[seq_len(targets_per_job), ]
 }

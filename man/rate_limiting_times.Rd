@@ -4,13 +4,19 @@
 \alias{rate_limiting_times}
 \title{Function rate_limiting_times}
 \usage{
-rate_limiting_times(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
+rate_limiting_times(plan, from_scratch = FALSE,
+  targets = drake::possible_targets(plan), envir = parent.frame(),
+  verbose = TRUE, cache = NULL,
+  parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0), config = NULL,
   digits = 0, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
+
+\item{from_scratch}{logical, whether to assume
+next hypothetical call to \code{\link{make}()}
+is a build from scratch (after \code{\link{clean}()}).}
 
 \item{targets}{Targets to build in the workflow.
 Timing information is
@@ -24,7 +30,13 @@ limited to these targets and their dependencies.}
 The \code{cache} argument is ignored if a
 non-null \code{config} argument is supplied.}
 
+\item{parallelism}{same as for \code{\link{make}}}
+
 \item{jobs}{same as for \code{\link{make}}}
+
+\item{packages}{same as for \code{\link{make}}}
+
+\item{prework}{same as for \code{\link{make}}}
 
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
@@ -43,7 +55,7 @@ not the cache itself.}
 for the cache.}
 }
 \description{
-Return a data frame of build times of
+Return a data frame of elapsed build times of
 the rate-limiting targets of a \code{\link{make}()} workflow.
 }
 \details{
@@ -56,6 +68,11 @@ we assume the targets are divided evenly among the jobs
 and one job gets all the slowest targets.
 The build times of this hypothetical pessimistic job
 are returned for each stage. \cr
+
+By default \code{from_scratch} is \code{FALSE}. That way,
+\code{rate_limiting_times()} takes into account that some
+targets are already up to date, meaning their elapsed
+build times will be instant during the next \code{\link{make}()}.
 
 For the results to make sense, the previous build times
 of all targets need to be available (automatically cached

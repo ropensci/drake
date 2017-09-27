@@ -6,9 +6,9 @@
 \usage{
 predict_runtime(plan, from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = NULL, jobs = 1, packages = (.packages()),
-  prework = character(0), config = NULL, digits = 0, path = getwd(),
-  search = TRUE)
+  verbose = TRUE, cache = NULL, parallelism, jobs = 1,
+  packages = (.packages()), prework = character(0), config = NULL,
+  digits = 0, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -32,6 +32,10 @@ non-null \code{config} argument is supplied.}
 
 \item{jobs}{same as for \code{\link{make}}}
 
+\item{packages}{same as for \code{\link{make}}}
+
+\item{prework}{same as for \code{\link{make}}}
+
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
@@ -50,9 +54,8 @@ for the cache.}
 }
 \description{
 Predict the runtime of the next call to `make()`.
-This function resolves the \code{\link{rate_limiting_targets}()},
-optionally removes the up-to-date targets,
-and then sums the remaining elapsed times.
+This simply sums the elapsed build times
+from \code{\link{rate_limiting_times}()}.
 }
 \details{
 For the results to make sense, the previous build times
@@ -74,7 +77,7 @@ predict_runtime(
 }
 }
 \seealso{
-\code{\link{predict_runtime}},
+\code{\link{rate_limiting_times}},
 \code{\link{build_times}}
 \code{\link{make}}
 }
