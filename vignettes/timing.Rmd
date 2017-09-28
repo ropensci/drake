@@ -17,7 +17,7 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 # Build times
 
-Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), drake records how long it takes to build each target.
+Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), `drake` records how long it takes to build each target.
 
 ```{r timing_intro}
 library(drake)
