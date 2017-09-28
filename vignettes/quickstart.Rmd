@@ -126,12 +126,12 @@ simulate = function(n){
 Then, we will analyze each dataset with multiple analysis methods.
 
 ```{r reg}
-reg1 = function(d){
+reg1 <- function(d){
   lm(y ~ + x, data = d)
 }
 
-reg2 = function(d){
-  d$x2 = d$x^2
+reg2 <- function(d){
+  d$x2 <- d$x ^ 2
   lm(y ~ x2, data = d)
 }
 ```
@@ -139,7 +139,7 @@ reg2 = function(d){
 Finally, we will generate a [dynamic report](http://rmarkdown.rstudio.com/) to display results.
 
 ```{r knit}
-my_knit = function(file, ...){
+my_knit <- function(file, ...){
   knit(file)
 }
 ```
@@ -147,7 +147,7 @@ my_knit = function(file, ...){
 We need the source file `report.Rmd`.
 
 ```{r file}
-lines = c(
+lines <- c(
   "---",
   "title: Example Report",
   "author: You",
@@ -218,7 +218,7 @@ The data frame `my_plan` would be a pain to write by hand, so `drake` has functi
 # my_plan
 
 ```{r datasets}
-my_datasets = plan(
+my_datasets <- plan(
   small = simulate(5),
   large = simulate(50))
 my_datasets
@@ -242,19 +242,19 @@ methods
 We evaluate the `..dataset..` wildcard.
 
 ```{r analyses}
-my_analyses = analyses(methods, data = my_datasets)
+my_analyses <- analyses(methods, data = my_datasets)
 my_analyses
 ```
 
 Next, we summarize each analysis of each dataset using summary statistics and regression coefficients. 
 
 ```{r summaries}
-summary_types = plan(
+summary_types <- plan(
   summ = suppressWarnings(summary(..analysis..)), # Occasionally there is a perfect regression fit.
   coef = coef(..analysis..))
 summary_types
 
-results = summaries(summary_types, analyses = my_analyses, 
+results <- summaries(summary_types, analyses = my_analyses, 
   datasets = my_datasets, gather = NULL)
 results
 ```
@@ -264,7 +264,7 @@ The `gather` feature groups summaries into a smaller number of more manageable t
 For the dynamic report, we have to declare the dependencies manually.
 
 ```{r reportdeps}
-load_in_report = plan(
+load_in_report <- plan(
   report_dependencies = c(small, large, coef_regression2_small))
 load_in_report
 ```
@@ -272,7 +272,7 @@ load_in_report
 Remember: use single quotes for file dependencies. The functions `quotes()`, `unquote()`, and `strings()` from the `eply` package may help. Also, please be aware that drake cannot track entire directories/folders.
 
 ```{r reportplan}
-report = plan(
+report <- plan(
   report.md = my_knit('report.Rmd', report_dependencies),
   file_targets = TRUE, strings_in_dots = "filenames")
 report
@@ -281,7 +281,7 @@ report
 Finally, gather your workflow together with `rbind()`. Row order does not matter.
 
 ```{r wholeplan}
-my_plan = rbind(report, my_datasets, load_in_report, my_analyses, results)
+my_plan <- rbind(report, my_datasets, load_in_report, my_analyses, results)
 my_plan
 ```
 
@@ -289,10 +289,10 @@ my_plan
 
 If your workflow does not fit the rigid datasets/analyses/summaries framework, check out functions `expand()`, `evaluate()`, and `gather()`.
 
-```{r}
-df = plan(data = simulate(center = MU, scale = SIGMA))
+```{r more_expansions_and_plans}
+df <- plan(data = simulate(center = MU, scale = SIGMA))
 df
-df = expand(df, values = c("rep1", "rep2"))
+df <- expand(df, values = c("rep1", "rep2"))
 df
 evaluate(df, wildcard = "MU", values = 1:2)
 evaluate(df, wildcard = "MU", values = 1:2, expand = FALSE)
@@ -369,8 +369,8 @@ make(my_plan)
 But if you change one of your functions, commands, or other dependencies, drake will update the affected parts of the workflow. Let's say we want to change the quadratic term to a cubic term in our `reg2()` function.
 
 ```{r changereg2invignette}
-reg2 = function(d){
-  d$x3 = d$x^3
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 ```
@@ -400,8 +400,8 @@ make(my_plan)
 But trivial changes to whitespace and comments are totally ignored in your functions and in `my_plan$command`.
 
 ```{r trivial}
-reg2 = function(d){
-  d$x3 = d$x^3
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d) # I indented here.
 }
 outdated(my_plan, verbose = FALSE) # Everything is up to date.
@@ -410,15 +410,15 @@ outdated(my_plan, verbose = FALSE) # Everything is up to date.
 Need to add new work on the fly? Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.
 
 ```{r newstuff}
-new_simulation = function(n){
+new_simulation <- function(n){
   data.frame(x = rnorm(n), y = rnorm(n))
 }
 
-additions = plan(
+additions <- plan(
   new_data = new_simulation(36) + sqrt(10))  
 additions
 
-my_plan = rbind(my_plan, additions)
+my_plan <- rbind(my_plan, additions)
 my_plan
 
 make(my_plan)
@@ -440,8 +440,8 @@ The network graph is the key to drake's parallel computing.
 clean()
 load_basic_example()
 make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
-reg2 = function(d){ # Change a dependency.
-  d$x3 = d$x^3
+reg2 <- function(d){ # Change a dependency.
+  d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 ```
@@ -477,8 +477,8 @@ max_useful_jobs(my_plan, imports = "files") # 1
 max_useful_jobs(my_plan, imports = "all") # 10
 max_useful_jobs(my_plan, imports = "none") # 0
 # Change a function so some targets are now out of date.
-reg2 = function(d){
-  d$x3 = d$x^3
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 plot_graph(my_plan)
@@ -487,8 +487,6 @@ max_useful_jobs(my_plan, imports = "files") # 4
 max_useful_jobs(my_plan, imports = "all") # 10
 max_useful_jobs(my_plan, imports = "none") # 4
 ```
-
-
 
 As for how the parallelism is implemented, you can choose from multiple built-in backends.
 

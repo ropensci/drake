@@ -57,14 +57,14 @@ As of version 3.0.0, drake's execution environment is the user's workspace by de
 library(drake)
 envir = new.env(parent = globalenv())
 eval(expression({
-  f = function(x){
+  f <- function(x){
     g(x) + 1
   }
-  g = function(x){
+  g <- function(x){
     x + 1
   }
 }), envir = envir)
-myplan = plan(out = f(1:3))
+myplan <- plan(out = f(1:3))
 make(myplan, envir = envir)
 ls() # Check that your workspace did not change.
 ls(envir) # Check your evaluation environment.
@@ -162,7 +162,7 @@ f <- function(){
   digest::digest(file_dependency)
 }
 deps(f)
-command = "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
+command <- "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
 deps(command)
 ```
 

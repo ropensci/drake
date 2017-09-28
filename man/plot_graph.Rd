@@ -22,7 +22,8 @@ plot_graph(plan, targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{envir}{environment to import from, same as for function
-\code{\link{make}()}.}
+\code{\link{make}()}. \code{config$envir} is ignored in favor
+of \code{envir}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
 
@@ -76,7 +77,8 @@ indicates.)}
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
-Computing this
+\code{config$envir} is ignored.
+Otherwise, computing this
 in advance could save time if you plan multiple calls to
 \code{outdated()}.}
 

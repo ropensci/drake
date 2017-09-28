@@ -209,7 +209,7 @@ next_targets <- function(graph_remaining_targets){
         unlist() %>%
         length()
     }
-    )
+  )
   which(!number_dependencies) %>%
     names()
 }

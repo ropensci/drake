@@ -10,7 +10,8 @@
 #' @param targets names of targets to bulid, same as for function
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
-#' \code{\link{make}()}.
+#' \code{\link{make}()}. \code{config$envir} is ignored in favor
+#' of \code{envir}.
 #' @param verbose logical, whether to output messages to the console.
 #' @param cache optional drake cache. See code{\link{new_cache}()}. If
 #' The \code{cache} argument is ignored if a non-null \code{config}
@@ -69,7 +70,8 @@
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
-#' Computing this
+#' \code{config$envir} is ignored.
+#' Otherwise, computing this
 #' in advance could save time if you plan multiple calls to
 #' \code{outdated()}.
 #' @param main title of the graph

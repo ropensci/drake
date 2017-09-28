@@ -13,7 +13,8 @@
 #' }
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
-#' @param envir same as for \code{\link{make}}
+#' @param envir same as for \code{\link{make}}. Overrides
+#' \code{config$envir}.
 #' @param verbose same as for \code{\link{make}}
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' The \code{cache} argument is ignored if a
@@ -25,7 +26,8 @@
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
-#' Computing this
+#' \code{config$envir} is ignored.
+#' Otherwise, computing \code{config}
 #' in advance could save time if you plan multiple calls to
 #' \code{outdated()}.
 outdated <-  function(
@@ -54,6 +56,7 @@ outdated <-  function(
       prework = prework
     )
   }
+  config <- inventory(config)
   if (!is.null(cache)){
     config$cache <- configure_cache(cache)
   }
@@ -64,7 +67,7 @@ outdated <-  function(
       hashes <- hashes(target, config)
       !target_current(target = target, hashes = hashes, config = config)
     }
-    )
+  )
   if (!length(rebuild)){
     return(invisible(character(0)))
   } else{

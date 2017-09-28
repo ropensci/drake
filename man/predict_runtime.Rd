@@ -31,7 +31,12 @@ limited to these targets and their dependencies.}
 The \code{cache} argument is ignored if a
 non-null \code{config} argument is supplied.}
 
-\item{jobs}{same as for \code{\link{make}}}
+\item{parallelism}{samea as for \code{\link{make}}. Used
+to parallelize import objects.}
+
+\item{jobs}{same as for \code{\link{make}}, and also
+used to predict the runtime of the next \code{\link{make}()}
+assuming this number of jobs.}
 
 \item{packages}{same as for \code{\link{make}}}
 
@@ -68,12 +73,15 @@ will warn you and tell you which targets have missing times.
 \dontrun{
 load_basic_example()
 make(my_plan)
-predict_runtime(my_plan) # 1 job
-predict_runtime(my_plan, jobs = 2)
+predict_runtime(my_plan, digits = 4) # everything is up to date
+predict_runtime(my_plan, digits = 4, from_scratch = TRUE) # 1 job
+predict_runtime(my_plan, jobs = 2, digits = 4, from_scratch = TRUE)
 predict_runtime(
   my_plan,
   targets = c("small", "large"),
-  jobs = 2
+  jobs = 2,
+  digits = 4,
+  from_scratch = TRUE
 )
 }
 }

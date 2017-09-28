@@ -96,6 +96,8 @@ test_with_dir("basic example works", {
     "summ_regression2_small")))
   expect_equal(max_useful_jobs(my_plan, envir = e, config = config),
     4)
+  expect_equal(max_useful_jobs(my_plan, envir = e, config = config,
+    from_scratch = TRUE), 8)
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "files",
     config = config), 4)
   expect_true(max_useful_jobs(my_plan, envir = e, imports = "all",

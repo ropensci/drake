@@ -22,7 +22,8 @@ is a build from scratch (after \code{\link{clean}()}).}
 Timing information is
 limited to these targets and their dependencies.}
 
-\item{envir}{same as for \code{\link{make}}}
+\item{envir}{same as for \code{\link{make}}. Supercedes
+\code{config$envir}.}
 
 \item{verbose}{same as for \code{\link{make}}}
 
@@ -30,9 +31,12 @@ limited to these targets and their dependencies.}
 The \code{cache} argument is ignored if a
 non-null \code{config} argument is supplied.}
 
-\item{parallelism}{same as for \code{\link{make}}}
+\item{parallelism}{same as for \code{\link{make}}, and
+also used to process imported objects/files.}
 
-\item{jobs}{same as for \code{\link{make}}}
+\item{jobs}{same as for \code{\link{make}}, and also
+and also used to predict the rate-limiting targets
+of the next \code{\link{make}()} assuming this number of jobs.}
 
 \item{packages}{same as for \code{\link{make}}}
 
@@ -41,7 +45,8 @@ non-null \code{config} argument is supplied.}
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
-Computing this
+\code{config$envir} is ignored.
+Otherwise, computing this
 in advance could save time if you plan multiple calls to
 this function.}
 
@@ -83,12 +88,15 @@ will warn you and tell you which targets have missing times.
 \dontrun{
 load_basic_example()
 make(my_plan)
-rate_limiting_times(my_plan) # 1 job
-rate_limiting_times(my_plan, jobs = 2)
+rate_limiting_times(my_plan) # everything is up to date
+rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4) # 1 job
+rate_limiting_times(my_plan, jobs = 2, from_scratch = TRUE, digits = 4)
 rate_limiting_times(
   my_plan,
   targets = c("small", "large"),
-  jobs = 2
+  jobs = 2,
+  from_scratch = TRUE,
+  digits = 4
 )
 }
 }

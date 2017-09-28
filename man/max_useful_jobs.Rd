@@ -4,8 +4,9 @@
 \alias{max_useful_jobs}
 \title{Function \code{max_useful_jobs}}
 \usage{
-max_useful_jobs(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
+max_useful_jobs(plan, from_scratch = FALSE,
+  targets = drake::possible_targets(plan), envir = parent.frame(),
+  verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), config = NULL, imports = c("files", "all",
   "none"))
@@ -14,11 +15,16 @@ max_useful_jobs(plan, targets = drake::possible_targets(plan),
 \item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
+\item{from_scratch}{logical, whether to compute the max
+useful jobs as if the workflow were to run from scratch
+(with all targets out of date).}
+
 \item{targets}{names of targets to bulid, same as for function
 \code{\link{make}()}.}
 
 \item{envir}{environment to import from, same as for function
-\code{\link{make}()}.}
+\code{\link{make}()}. \code{config$envir} is ignored in favor of
+\code{envir}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
 
@@ -48,7 +54,8 @@ See \code{?parallelism_choices} for details.}
 
 \item{config}{internal configuration list of \code{\link{make}(...)},
 produced also with \code{\link{config}()}.
-Computing this
+\code{config$envir} is ignored.
+Otherwise, computing this
 in advance could save time if you plan multiple calls to
 \code{dataframes_graph()}.}
 

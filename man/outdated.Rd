@@ -14,7 +14,8 @@ outdated(plan, targets = drake::possible_targets(plan),
 
 \item{targets}{same as for \code{\link{make}}}
 
-\item{envir}{same as for \code{\link{make}}}
+\item{envir}{same as for \code{\link{make}}. Overrides
+\code{config$envir}.}
 
 \item{verbose}{same as for \code{\link{make}}}
 
@@ -33,7 +34,8 @@ non-null \code{config} argument is supplied.}
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
-Computing this
+\code{config$envir} is ignored.
+Otherwise, computing \code{config}
 in advance could save time if you plan multiple calls to
 \code{outdated()}.}
 }

@@ -192,8 +192,9 @@ load_basic_example()
 outdated(my_plan) # Which targets need to be (re)built?
 make(my_plan) # Build what needs to be built.
 outdated(my_plan) # Everything is up to date.
-reg2 = function(d){ # Change one of your functions.
-  d$x3 = d$x^3
+# Change one of your functions.
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 outdated(my_plan) # Some targets depend on reg2().
