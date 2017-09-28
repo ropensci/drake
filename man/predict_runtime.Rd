@@ -6,7 +6,8 @@
 \usage{
 predict_runtime(plan, from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = NULL, parallelism, jobs = 1,
+  verbose = TRUE, cache = NULL,
+  parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0), config = NULL,
   digits = 0, path = getwd(), search = TRUE)
 }

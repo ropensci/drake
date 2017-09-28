@@ -57,7 +57,7 @@ predict_runtime <- function(
   envir = parent.frame(),
   verbose = TRUE,
   cache = NULL,
-  parallelism,
+  parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
   prework = character(0),
@@ -67,6 +67,7 @@ predict_runtime <- function(
   search = TRUE
 ){
   force(envir)
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for dseconds
   times <- rate_limiting_times(
     plan = plan,
     from_scratch = from_scratch,
@@ -84,7 +85,8 @@ predict_runtime <- function(
     search = search
   )
   sum(times$elapsed) %>%
-    round(digits = digits)
+    round(digits = digits) %>%
+    dseconds()
 }
   
 #' @title Function rate_limiting_times
@@ -192,16 +194,26 @@ rate_limiting_times <- function(
     digits = Inf,
     cache = config$cache
   )
-  not_timed <- setdiff(plan$target, times$target)
+  targets <- intersect(V(config$graph)$name, plan$target)
+  not_timed <- setdiff(targets, times$target)
   warn_not_timed(not_timed)
-  times <- times[intersect(plan$target, times$target), ]
+  if (!nrow(times)){
+    return(cbind(times, stage = numeric(0)))
+  }
   rownames(times) <- times$target
+  times <- times[intersect(targets, times$target), ]
   if (!from_scratch){
-    outdated <- outdated(plan = plan, config = config)
+    outdated <- outdated(plan = plan, config = config) %>%
+      intersect(y = times$target)
     times <- times[outdated, ]
   }
-  times <- resolve_levels(nodes = times, graph = config$graph)
-  colnames(times) <- gsub("^level$", "stage", times)
+  if (!nrow(times)){
+    return(cbind(times, stage = numeric(0)))
+  }
+  keep_these <- setdiff(V(config$graph)$name, rownames(times))
+  graph <- delete_vertices(config$graph, v = keep_these)
+  times <- resolve_levels(nodes = times, graph = graph)
+  colnames(times) <- gsub("^level$", "stage", colnames(times))
   ddply(times, "stage", rate_limiting_at_stage, jobs = jobs) %>%
     round_times(digits = digits) %>%
     unname_rows

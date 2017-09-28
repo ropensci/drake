@@ -143,10 +143,10 @@ resolve_levels <- function(nodes, graph) {
   stopifnot(is_dag(graph))
   level <- 1
   nodes$level <- NA
-  graph_remaining_targets <- graph
+  keep_these <- setdiff(V(graph)$name, rownames(nodes))
+  graph_remaining_targets <- delete_vertices(graph, v = keep_these)
   while (length(V(graph_remaining_targets))) {
-    candidates <- next_targets(graph_remaining_targets) %>%
-      intersect(y = rownames(nodes))
+    candidates <- next_targets(graph_remaining_targets)
     if (length(candidates)){
       nodes[candidates, "level"] <- level
       level <- level + 1
@@ -154,7 +154,6 @@ resolve_levels <- function(nodes, graph) {
     graph_remaining_targets <-
       delete_vertices(graph_remaining_targets, v = candidates)
   }
-  stopifnot(all(!is.na(nodes$level)))
   nodes
 }
 
