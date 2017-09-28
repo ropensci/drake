@@ -1,6 +1,18 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("console")
 
+test_with_dir("multiline message cap", {
+  n <- 100
+  x1 <- "aldksjf"
+  x2 <- rep(x1, n)
+  y1 <- capture.output(multiline_message(x1))
+  y2 <- capture.output(multiline_message(x2))
+  dots <- "\\.\\.\\."
+  expect_false(grepl(dots, y1))
+  expect_true(grepl(dots, y2))
+  expect_true(nchar(y2) < nchar(x1) * n)
+})
+
 test_with_dir("console", {
   config <- dbug()
   config$verbose <- TRUE

@@ -47,3 +47,11 @@ crop_text <- Vectorize(function(x, length = 50) {
   x
 },
 "x", USE.NAMES = FALSE)
+
+multiline_message <- function(x) {
+  n <- 30
+  if (length(x) > n){
+    x <- c(x[1:(n - 1)], "...")
+  }
+  paste0("  ", x) %>% paste(collapse = "\n")
+}

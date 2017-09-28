@@ -83,7 +83,3 @@ check_strings <- function(plan) {
       single = FALSE)), "\n", sep = "")
   }
 }
-
-multiline_message <- function(x) {
-  paste0("  ", x) %>% paste(collapse = "\n")
-}
