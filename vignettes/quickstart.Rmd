@@ -77,14 +77,48 @@ clean()
 cached()
 imported()
 built()
-build_times()
 readd()
 loadd()
 find_project()
 find_cache()
 ```
 
-debug your work,
+
+make use of recorded build times,
+
+```r
+build_times()
+predict_runtime()
+rate_limiting_times()
+```
+
+speed up your project with parallel computing,
+
+```r
+make() # with jobs > 2
+max_useful_jobs()
+parallelism_choices()
+shell_file()
+```
+
+finely tune the caching and hashing,
+
+```r
+available_hash_algos()
+cache_path()
+cache_types()
+configure_cache()
+default_long_hash_algo()
+default_short_hash_algo()
+long_hash()
+short_hash()
+new_cache()
+recover_cache()
+this_cache()
+type_of_cache()
+```
+
+and debug your work.
 ```r
 check()
 session()
@@ -92,15 +126,6 @@ in_progress()
 progress()
 config()
 read_config()
-```
-
-and speed up your project with parallel computing.
-
-```r
-make() # with jobs > 2
-max_useful_jobs()
-parallelism_choices()
-shell_file()
 ```
 
 # Setting up the basic example

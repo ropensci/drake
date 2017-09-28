@@ -218,8 +218,9 @@ Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the inte
 library(drake)
 load_basic_example()
 make(my_plan, jobs = 2) # See also max_useful_jobs(my_plan).
-reg2 = function(d){ # Change a dependency.
-  d$x3 = d$x^3
+# Change a dependency.
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 # Run plot_graph() yourself for interactivity.

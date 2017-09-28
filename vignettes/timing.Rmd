@@ -1,0 +1,117 @@
+---
+title: "Time logging"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{timing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r suppression_timing, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
+
+# Build times
+
+Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), drake records how long it takes to build each target.
+
+```{r timing_intro}
+library(drake)
+load_basic_example()
+make(my_plan, jobs = 2, verbose = FALSE) # See also max_useful_jobs(my_plan).
+build_times(digits = 8) # From the cache.
+```
+
+# Predicting runtime
+
+Drake uses these times to predict the runtime of the next `make()`.
+
+```{r predict_runtime}
+# Everything is up to date, so the next make() should be fast.
+predict_runtime(
+  my_plan,
+  digits = 8,
+  verbose = FALSE
+) 
+# Change a dependency.
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+predict_runtime(
+  my_plan,
+  digits = 8,
+  from_scratch = TRUE,
+  verbose = FALSE
+)
+predict_runtime(
+  my_plan,
+  digits = 8,
+  from_scratch = TRUE,
+  future_jobs = 2,
+  verbose = FALSE
+)
+predict_runtime(
+  my_plan,
+  digits = 8,
+  from_scratch = TRUE,
+  future_jobs = 4,
+  verbose = FALSE
+)
+```
+
+Caution: `drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and prints the untimed targets.
+
+# Rate-limiting targets
+
+To predict the next runtime with multiple parallel jobs, drake makes some assumptions.
+
+1. The outdated targets are spread out evenly over the available jobs. (All targets are used if `from_scratch` is `TRUE`)
+1. One job gets all the slowest targets (pessimistic scenario).
+
+Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a column in the workflow graph.
+
+```r
+# Hover, click, drag, zoom, and pan.
+plot_graph(my_plan, width = "100%", height = "500px")
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/reg2.html"
+width = "100%" height = "600px" allowtransparency="true" 
+style="border: none; box-shadow: none">
+</iframe>
+
+You can explore the rate-limiting targets.
+
+```{r rate_limiting_targets}
+rate_limiting_times(
+  my_plan,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE
+)
+rate_limiting_times(
+  my_plan,
+  future_jobs = 2,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE
+)
+rate_limiting_times(
+  my_plan,
+  future_jobs = 4,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE
+)
+```
+
+```{r endofline_timing, echo = F}
+clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
