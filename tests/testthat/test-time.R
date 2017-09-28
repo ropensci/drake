@@ -23,28 +23,45 @@ test_with_dir("build time the same after superfluous make", {
 })
 
 test_with_dir("empty time predictions", {
+  min_df <- function(df){
+    df <- df[!grepl("covr", df$item), ]
+    df <- df[!grepl(":::", df$item), ]
+    df
+  }
+
   my_plan <- plan(y = 1)
   expect_warning(
-    x <- rate_limiting_times(plan = my_plan, verbose = FALSE)
+    x <- rate_limiting_times(plan = my_plan, verbose = FALSE) %>%
+      min_df
   )
   expect_equal(nrow(x), 0)
   make(my_plan, verbose = FALSE)
-  x <- rate_limiting_times(plan = my_plan, verbose = FALSE)
+  x <- rate_limiting_times(plan = my_plan, verbose = FALSE) %>%
+    min_df
   expect_equal(nrow(x), 0)
   x <- rate_limiting_times(plan = my_plan, verbose = FALSE,
-    targets_only = TRUE)
+    targets_only = TRUE) %>%
+    min_df
   expect_equal(nrow(x), 0)
   x <- rate_limiting_times(plan = my_plan, verbose = FALSE,
-    from_scratch = TRUE)
+    from_scratch = TRUE) %>%
+    min_df
   expect_equal(nrow(x), 1)
   expect_true(all(complete.cases(x)))
   x <- rate_limiting_times(plan = my_plan, verbose = FALSE,
-    targets_only = TRUE, from_scratch = TRUE)
+    targets_only = TRUE, from_scratch = TRUE) %>%
+    min_df
   expect_equal(nrow(x), 1)
   expect_true(all(complete.cases(x)))
 })
 
 test_with_dir("time predictions: incomplete targets", {
+  min_df <- function(df){
+    df <- df[!grepl("covr", df$item), ]
+    df <- df[!grepl(":::", df$item), ]
+    df
+  }
+
   eval(parse(text = "require(methods, quietly = TRUE)"))
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
@@ -62,7 +79,8 @@ test_with_dir("time predictions: incomplete targets", {
       targets = dats,
       envir = config$envir,
       verbose = FALSE
-    )
+    ) %>%
+    min_df
   )
   expect_equal(nrow(x), 4)
   expect_warning(
@@ -72,7 +90,8 @@ test_with_dir("time predictions: incomplete targets", {
       envir = config$envir,
       verbose = FALSE,
       targets_only = TRUE
-    )
+    ) %>%
+    min_df
   )
   expect_equal(nrow(x), 0)
   expect_warning(
@@ -101,7 +120,8 @@ test_with_dir("time predictions: incomplete targets", {
       plan = config$plan,
       envir = config$envir,
       verbose = FALSE
-    )
+    ) %>%
+    min_df
   )
   expect_equal(nrow(x), 14)
 
@@ -115,7 +135,8 @@ test_with_dir("time predictions: incomplete targets", {
       envir = config$envir,
       verbose = FALSE,
       from_scratch = TRUE
-    )
+    ) %>%
+    min_df
   )
   expect_equal(nrow(x), 6)
   expect_warning(
@@ -123,7 +144,8 @@ test_with_dir("time predictions: incomplete targets", {
       plan = config$plan,
       envir = config$envir,
       verbose = FALSE
-    )
+    ) %>%
+    min_df
   )
   expect_equal(nrow(x), 14)
   expect_warning(
@@ -132,7 +154,8 @@ test_with_dir("time predictions: incomplete targets", {
       envir = config$envir,
       verbose = FALSE,
       from_scratch = TRUE
-    )
+    ) %>%
+    min_df
   )
   expect_equal(nrow(x), 16)
   expect_silent(
@@ -149,6 +172,12 @@ test_with_dir("time predictions: incomplete targets", {
 })
 
 test_with_dir("timing predictions with realistic build", {
+    min_df <- function(df){
+    df <- df[!grepl("covr", df$item), ]
+    df <- df[!grepl(":::", df$item), ]
+    df
+  }
+
   eval(parse(text = "require(methods, quietly = TRUE)"))
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
@@ -173,27 +202,31 @@ test_with_dir("timing predictions with realistic build", {
     config = config,
     digits = 4,
     verbose = FALSE
-  )
+  ) %>%
+  min_df
   scratch_df <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
     from_scratch = TRUE,
     digits = Inf,
     verbose = FALSE
-  )
+  ) %>%
+  min_df
   resume_df <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
     verbose = FALSE,
     digits = Inf
-  )
+  ) %>%
+  min_df
   resume_df_targets <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
     verbose = FALSE,
     digits = Inf,
     targets_only = TRUE,
-  )
+  ) %>%
+  min_df
   jobs_4_df <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
@@ -201,7 +234,8 @@ test_with_dir("timing predictions with realistic build", {
     future_jobs = 4,
     jobs = 1,
     verbose = FALSE
-  )
+  ) %>%
+  min_df
   jobs_4_df_targets <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
@@ -210,7 +244,8 @@ test_with_dir("timing predictions with realistic build", {
     jobs = 1,
     verbose = FALSE,
     targets_only = TRUE
-  )
+  ) %>%
+  min_df
   jobs_2_df <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
@@ -218,7 +253,8 @@ test_with_dir("timing predictions with realistic build", {
     future_jobs = 2,
     jobs = 1,
     verbose = FALSE
-  )
+  ) %>%
+  min_df
 
   scratch_time <- predict_runtime(
     plan = config$plan,
