@@ -6,10 +6,8 @@
 #' cat(drake_tip())
 drake_tip <- function() {
   tips <- c(
-    "New functions: a MUCH IMPROVED plot_graph(),
-     build_times(), load_basic_example(), outdated(),
-     missed(), deps(), dataframes_graph(),
-     max_useful_jobs(), and shell_file().",
+    "Predict the runtime of the next make() with predict_runtime().
+     See also build_times() and rate_limiting_times().",
 
     "Use example_drake('basic') to generate code files
      for a minimal drake example walkthrough.",

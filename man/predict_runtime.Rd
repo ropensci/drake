@@ -8,8 +8,8 @@ predict_runtime(plan, from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0), config = NULL,
-  digits = 0, path = getwd(), search = TRUE)
+  future_jobs = jobs, packages = (.packages()), prework = character(0),
+  config = NULL, digits = 0, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -34,8 +34,11 @@ non-null \code{config} argument is supplied.}
 \item{parallelism}{samea as for \code{\link{make}}. Used
 to parallelize import objects.}
 
-\item{jobs}{same as for \code{\link{make}}, and also
-used to predict the runtime of the next \code{\link{make}()}
+\item{jobs}{same as for \code{\link{make}}, just used to
+process imports}
+
+\item{future_jobs}{hypothetical number of jobs
+assumed for the predicted runtime.
 assuming this number of jobs.}
 
 \item{packages}{same as for \code{\link{make}}}
@@ -59,8 +62,9 @@ not the cache itself.}
 for the cache.}
 }
 \description{
-Predict the runtime of the next call to `make()`.
-This simply sums the elapsed build times
+Predict the elapsed runtime of the next call to `make()`.
+Only accounts for target build times, not imports or hashing.
+This function simply sums the elapsed build times
 from \code{\link{rate_limiting_times}()}.
 }
 \details{
@@ -75,11 +79,11 @@ load_basic_example()
 make(my_plan)
 predict_runtime(my_plan, digits = 4) # everything is up to date
 predict_runtime(my_plan, digits = 4, from_scratch = TRUE) # 1 job
-predict_runtime(my_plan, jobs = 2, digits = 4, from_scratch = TRUE)
+predict_runtime(my_plan, future_jobs = 2, digits = 4, from_scratch = TRUE)
 predict_runtime(
   my_plan,
   targets = c("small", "large"),
-  jobs = 2,
+  future_jobs = 2,
   digits = 4,
   from_scratch = TRUE
 )

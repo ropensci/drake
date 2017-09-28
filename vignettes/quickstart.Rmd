@@ -483,6 +483,7 @@ reg2 <- function(d){
 }
 plot_graph(my_plan)
 max_useful_jobs(my_plan) # 4
+max_useful_jobs(my_plan, from_scratch = TRUE) # 8
 max_useful_jobs(my_plan, imports = "files") # 4
 max_useful_jobs(my_plan, imports = "all") # 10
 max_useful_jobs(my_plan, imports = "none") # 4

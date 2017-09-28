@@ -124,14 +124,16 @@ test_with_dir("timing predictions with realistic build", {
     plan = config$plan,
     envir = config$envir,
     from_scratch = TRUE,
-    jobs = 4,
+    future_jobs = 4,
+    jobs = 1,
     verbose = FALSE
   )
   jobs_2_df <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
     from_scratch = TRUE,
-    jobs = 2,
+    future_jobs = 2,
+    jobs = 1,
     verbose = FALSE
   )
 
@@ -153,7 +155,8 @@ test_with_dir("timing predictions with realistic build", {
     envir = config$envir,
     config = config,
     from_scratch = TRUE,
-    jobs = 4,
+    future_jobs = 4,
+    jobs = 1,
     digits = Inf
   )
   jobs_2_time <- predict_runtime(
@@ -161,7 +164,8 @@ test_with_dir("timing predictions with realistic build", {
     envir = config$envir,
     config = config,
     from_scratch = TRUE,
-    jobs = 2,
+    future_jobs = 2,
+    jobs = 1,
     digits = Inf
   )
 

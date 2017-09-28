@@ -8,8 +8,8 @@ rate_limiting_times(plan, from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0), config = NULL,
-  digits = 0, path = getwd(), search = TRUE)
+  future_jobs = jobs, packages = (.packages()), prework = character(0),
+  config = NULL, digits = 0, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -34,9 +34,12 @@ non-null \code{config} argument is supplied.}
 \item{parallelism}{same as for \code{\link{make}}, and
 also used to process imported objects/files.}
 
-\item{jobs}{same as for \code{\link{make}}, and also
-and also used to predict the rate-limiting targets
-of the next \code{\link{make}()} assuming this number of jobs.}
+\item{jobs}{same as for \code{\link{make}}, just used to
+process imports.}
+
+\item{future_jobs}{hypothetical number of jobs
+assumed for the predicted runtime.
+assuming this number of jobs.}
 
 \item{packages}{same as for \code{\link{make}}}
 
@@ -62,6 +65,8 @@ for the cache.}
 \description{
 Return a data frame of elapsed build times of
 the rate-limiting targets of a \code{\link{make}()} workflow.
+Only build times are used.
+Hashing times, etc. are not factored in.
 }
 \details{
 The \code{stage} column of the returned data frame
@@ -90,11 +95,16 @@ load_basic_example()
 make(my_plan)
 rate_limiting_times(my_plan) # everything is up to date
 rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4) # 1 job
-rate_limiting_times(my_plan, jobs = 2, from_scratch = TRUE, digits = 4)
+rate_limiting_times(
+  my_plan,
+  future_jobs = 2,
+  from_scratch = TRUE,
+  digits = 4
+)
 rate_limiting_times(
   my_plan,
   targets = c("small", "large"),
-  jobs = 2,
+  future_jobs = 2,
   from_scratch = TRUE,
   digits = 4
 )

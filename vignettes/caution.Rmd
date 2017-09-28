@@ -55,7 +55,7 @@ As of version 3.0.0, drake's execution environment is the user's workspace by de
 
 ```{r envir}
 library(drake)
-envir = new.env(parent = globalenv())
+envir <- new.env(parent = globalenv())
 eval(expression({
   f <- function(x){
     g(x) + 1
@@ -92,7 +92,7 @@ library(drake)
 ```
 
 ```{r depscheck}
-my_plan = plan(list = c(a = "x <- 1; return(x)"))
+my_plan <- plan(list = c(a = "x <- 1; return(x)"))
 my_plan
 deps(my_plan$command[1])
 ```

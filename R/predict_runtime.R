@@ -1,6 +1,7 @@
 #' @title Function predict_runtime
-#' @description Predict the runtime of the next call to `make()`.
-#' This simply sums the elapsed build times
+#' @description Predict the elapsed runtime of the next call to `make()`.
+#' Only accounts for target build times, not imports or hashing.
+#' This function simply sums the elapsed build times
 #' from \code{\link{rate_limiting_times}()}.
 #' @details For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
@@ -16,11 +17,11 @@
 #' make(my_plan)
 #' predict_runtime(my_plan, digits = 4) # everything is up to date
 #' predict_runtime(my_plan, digits = 4, from_scratch = TRUE) # 1 job
-#' predict_runtime(my_plan, jobs = 2, digits = 4, from_scratch = TRUE)
+#' predict_runtime(my_plan, future_jobs = 2, digits = 4, from_scratch = TRUE)
 #' predict_runtime(
 #'   my_plan,
 #'   targets = c("small", "large"),
-#'   jobs = 2,
+#'   future_jobs = 2,
 #'   digits = 4,
 #'   from_scratch = TRUE
 #' )
@@ -40,8 +41,10 @@
 #' non-null \code{config} argument is supplied.
 #' @param parallelism samea as for \code{\link{make}}. Used
 #' to parallelize import objects.
-#' @param jobs same as for \code{\link{make}}, and also
-#' used to predict the runtime of the next \code{\link{make}()}
+#' @param jobs same as for \code{\link{make}}, just used to
+#' process imports
+#' @param future_jobs hypothetical number of jobs
+#' assumed for the predicted runtime.
 #' assuming this number of jobs.
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
@@ -66,6 +69,7 @@ predict_runtime <- function(
   cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
+  future_jobs = jobs,
   packages = (.packages()),
   prework = character(0),
   config = NULL,
@@ -84,6 +88,7 @@ predict_runtime <- function(
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
+    future_jobs = future_jobs,
     packages = packages,
     prework = prework,
     config = config,
@@ -99,6 +104,8 @@ predict_runtime <- function(
 #' @title Function rate_limiting_times
 #' @description Return a data frame of elapsed build times of
 #' the rate-limiting targets of a \code{\link{make}()} workflow.
+#' Only build times are used.
+#' Hashing times, etc. are not factored in.
 #' @details The \code{stage} column of the returned data frame
 #' is an index that denotes a parallelizable stage.
 #' Within each stage during \code{\link{make}()},
@@ -128,11 +135,16 @@ predict_runtime <- function(
 #' make(my_plan)
 #' rate_limiting_times(my_plan) # everything is up to date
 #' rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4) # 1 job
-#' rate_limiting_times(my_plan, jobs = 2, from_scratch = TRUE, digits = 4)
+#' rate_limiting_times(
+#'   my_plan,
+#'   future_jobs = 2,
+#'   from_scratch = TRUE,
+#'   digits = 4
+#' )
 #' rate_limiting_times(
 #'   my_plan,
 #'   targets = c("small", "large"),
-#'   jobs = 2,
+#'   future_jobs = 2,
 #'   from_scratch = TRUE,
 #'   digits = 4
 #' )
@@ -152,9 +164,11 @@ predict_runtime <- function(
 #' non-null \code{config} argument is supplied.
 #' @param parallelism same as for \code{\link{make}}, and
 #' also used to process imported objects/files.
-#' @param jobs same as for \code{\link{make}}, and also
-#' and also used to predict the rate-limiting targets
-#' of the next \code{\link{make}()} assuming this number of jobs.
+#' @param jobs same as for \code{\link{make}}, just used to
+#' process imports.
+#' @param future_jobs hypothetical number of jobs
+#' assumed for the predicted runtime.
+#' assuming this number of jobs.
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
 #' @param config option internal runtime parameter list of
@@ -179,6 +193,7 @@ rate_limiting_times <- function(
   cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
+  future_jobs = jobs,
   packages = (.packages()),
   prework = character(0),
   config = NULL,
@@ -229,14 +244,14 @@ rate_limiting_times <- function(
   graph <- delete_vertices(config$graph, v = keep_these)
   times <- resolve_levels(nodes = times, graph = graph)
   colnames(times) <- gsub("^level$", "stage", colnames(times))
-  ddply(times, "stage", rate_limiting_at_stage, jobs = jobs) %>%
+  ddply(times, "stage", rate_limiting_at_stage, future_jobs = future_jobs) %>%
     round_times(digits = digits) %>%
     unname_rows
 }
 
-rate_limiting_at_stage <- function(stage, jobs){
+rate_limiting_at_stage <- function(stage, future_jobs){
   stage <- stage[order(stage$elapsed, decreasing = TRUE), ]
-  targets_per_job <- ceiling(nrow(stage) / jobs) %>%
+  targets_per_job <- ceiling(nrow(stage) / future_jobs) %>%
     min(nrow(stage))
   stage[seq_len(targets_per_job), ]
 }
