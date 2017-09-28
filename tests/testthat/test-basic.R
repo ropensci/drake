@@ -56,7 +56,8 @@ test_with_dir("basic example works", {
   config$targets <- dats
   con <- testrun(config)
   expect_equal(sort(justbuilt(con)), sort(dats))
-  rm(list = dats, envir = config$envir)
+  remove_these <- intersect(dats, ls(config$envir))
+  rm(list = remove_these, envir = config$envir)
   config$targets <- config$plan$target
   con <- testrun(config)
   jb <- justbuilt(con)
