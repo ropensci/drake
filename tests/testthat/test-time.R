@@ -8,6 +8,18 @@ test_with_dir("build times works if no targets are built", {
   expect_equal(nrow(build_times(search = FALSE)), 0)
 })
 
+test_with_dir("build time the same after superfluous make", {
+  x <- plan(y = Sys.sleep(0.25))
+  c1 <- make(x, verbose = FALSE, return_config = TRUE)
+  expect_equal(justbuilt(c1), "y")
+  b1 <- build_times(search = FALSE)
+
+  c2 <- make(x, verbose = FALSE, return_config = TRUE)
+  expect_equal(justbuilt(c2), character(0))
+  b2 <- build_times(search = FALSE)
+  expect_equal(b1, b2)
+})
+
 test_with_dir("time predictions: incomplete targets", {
   eval(parse(text = "require(methods, quietly = TRUE)"))
   scenario <- get_testing_scenario()
@@ -90,7 +102,7 @@ test_with_dir("timing predictions with realistic build", {
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
-  config <- config(my_plan, envir = e,
+  config <- config(my_plan, envir = e, parallelism = "mclapply",
     jobs = 1, verbose = FALSE)
   config <- testrun(config)
   config$envir$reg2 <- function(d){
