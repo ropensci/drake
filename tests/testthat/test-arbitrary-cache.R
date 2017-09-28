@@ -26,6 +26,16 @@ test_with_dir("arbitrary storr file cache", {
   expect_equal(short_hash(con$cache), "murmur32")
   expect_equal(long_hash(con$cache), default_long_hash_algo())
 
+  x <- predict_runtime(
+    plan = my_plan, envir = envir, cache = cache, verbose = FALSE
+  )
+  y <- rate_limiting_times(
+    plan = my_plan, envir = envir, cache = cache, from_scratch = TRUE,
+    verbose = FALSE
+  )
+  expect_true(length(x) > 0)
+  expect_true(nrow(y) > 0)
+
   expect_equal(cached(), character(0))
   targets <- my_plan$target
   expect_true(all(targets %in% cached(cache = cache)))
