@@ -3,11 +3,11 @@ hover_text_length <- 250
 
 append_build_times <- function(nodes, cache) {
   time_data <- build_times(cache = cache)
-  timed <- intersect(time_data$target, nodes$id)
+  timed <- intersect(time_data$item, nodes$id)
   if (!length(timed))
     return(nodes)
   time_labels <- as.character(time_data$elapsed)
-  names(time_labels) <- time_data$target
+  names(time_labels) <- time_data$item
   time_labels <- time_labels[timed]
   nodes[timed, "label"] <-
     paste(nodes[timed, "label"], time_labels, sep = "\n")
