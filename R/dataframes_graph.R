@@ -42,8 +42,10 @@
 #' @param prework same as for \code{\link{make}}
 #'
 #' @param build_times logical, whether to show the \code{\link{build_times}()}
-#' of the targets, if available.
+#' of the targets and imports, if available.
 #' These are just elapsed times from \code{system.time()}.
+#'
+#' @param digits number of digits for rounding the build times
 #'
 #' @param targets_only logical,
 #' whether to skip the imports and only include the
@@ -81,7 +83,8 @@
 dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), build_times = TRUE, targets_only = FALSE,
+  prework = character(0), build_times = TRUE, digits = 0,
+  targets_only = FALSE,
   split_columns = FALSE, font_size = 20, config = NULL) {
   force(envir)
   if (is.null(config)){
@@ -114,7 +117,7 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
     files = files, functions = functions, imports = imports,
     in_progress = in_progress, missing = missing,
     outdated = outdated, targets = targets,
-    font_size = font_size, build_times = build_times)
+    font_size = font_size, build_times = build_times, digits = digits)
 
   edges <- network_data$edges
   if (nrow(edges))

@@ -1,8 +1,8 @@
 # For hover text
 hover_text_length <- 250
 
-append_build_times <- function(nodes, cache) {
-  time_data <- build_times(cache = cache)
+append_build_times <- function(nodes, digits, cache) {
+  time_data <- build_times(digits = digits, cache = cache)
   timed <- intersect(time_data$item, nodes$id)
   if (!length(timed))
     return(nodes)
@@ -43,7 +43,7 @@ categorize_nodes <- function(nodes, functions, imports,
 
 configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
   files, functions, imports, in_progress, missing, outdated, targets,
-  font_size, build_times) {
+  font_size, build_times, digits) {
   force(envir)
   functions <- intersect(nodes$id, functions)
   in_progress <- intersect(in_progress, nodes$id)
@@ -58,7 +58,7 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
     graph = graph, imports = imports, targets = targets)
   nodes <- style_nodes(nodes, font_size = font_size)
   if (build_times)
-    nodes <- append_build_times(nodes = nodes, cache = cache)
+    nodes <- append_build_times(nodes = nodes, digits = digits, cache = cache)
   hover_text(nodes = nodes, plan = plan, envir = envir,
     files = files, functions = functions, targets = targets)
 }

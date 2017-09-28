@@ -39,7 +39,8 @@
 #' external resources placed in an adjacent directory. If \code{TRUE},
 #' pandoc is required.
 #' @param build_times logical, whether to print the \code{\link{build_times}()}
-#' in the graph. These are just elapsed times from \code{system.time()}.
+#' in the graph.
+#' @param digits number of digits for rounding the build times
 #' @param targets_only logical, whether to skip the imports and only show the
 #' targets in the workflow plan.
 #' @param split_columns logical, whether to break up the
@@ -88,7 +89,8 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), file = character(0),
-  selfcontained = FALSE, build_times = TRUE, targets_only = FALSE,
+  selfcontained = FALSE, build_times = TRUE, digits = 0,
+  targets_only = FALSE,
   split_columns = FALSE, config = NULL, font_size = 20,
   layout = "layout_with_sugiyama",
   main = drake::default_graph_title(
@@ -101,7 +103,8 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   raw_graph <- dataframes_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose, cache = cache,
     jobs = jobs, parallelism = parallelism,
-    packages = packages, prework = prework, build_times = build_times,
+    packages = packages, prework = prework,
+    build_times = build_times, digits = digits,
     targets_only = targets_only, split_columns = split_columns,
     config = config, font_size = font_size)
   render_graph(raw_graph, file = file, selfcontained = selfcontained,

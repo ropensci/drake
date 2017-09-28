@@ -8,8 +8,9 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), file = character(0), selfcontained = FALSE,
-  build_times = TRUE, targets_only = FALSE, split_columns = FALSE,
-  config = NULL, font_size = 20, layout = "layout_with_sugiyama",
+  build_times = TRUE, digits = 0, targets_only = FALSE,
+  split_columns = FALSE, config = NULL, font_size = 20,
+  layout = "layout_with_sugiyama",
   main = drake::default_graph_title(parallelism = parallelism, split_columns =
   split_columns), direction = "LR", hover = TRUE,
   navigationButtons = TRUE, ...)
@@ -60,7 +61,9 @@ external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
 
 \item{build_times}{logical, whether to print the \code{\link{build_times}()}
-in the graph. These are just elapsed times from \code{system.time()}.}
+in the graph.}
+
+\item{digits}{number of digits for rounding the build times}
 
 \item{targets_only}{logical, whether to skip the imports and only show the
 targets in the workflow plan.}
