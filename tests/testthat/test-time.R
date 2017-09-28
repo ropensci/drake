@@ -79,7 +79,7 @@ test_with_dir("time predictions: incomplete targets", {
       digits = Inf
     )
   )
-  expect_true(y > lubridate::as.duration(0))
+  expect_equal(length(y), 1)
 })
 
 test_with_dir("timing predictions with realistic build", {
