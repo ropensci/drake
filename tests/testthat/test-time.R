@@ -13,11 +13,35 @@ test_with_dir("build time the same after superfluous make", {
   c1 <- make(x, verbose = FALSE, return_config = TRUE)
   expect_equal(justbuilt(c1), "y")
   b1 <- build_times(search = FALSE)
+  expect_true(all(complete.cases(b1)))
 
   c2 <- make(x, verbose = FALSE, return_config = TRUE)
   expect_equal(justbuilt(c2), character(0))
   b2 <- build_times(search = FALSE)
+  expect_true(all(complete.cases(b2)))
   expect_equal(b1, b2)
+})
+
+test_with_dir("empty time predictions", {
+  my_plan <- plan(y = 1)
+  expect_warning(
+    x <- rate_limiting_times(plan = my_plan, verbose = FALSE)
+  )
+  expect_equal(nrow(x), 0)
+  make(my_plan, verbose = FALSE)
+  x <- rate_limiting_times(plan = my_plan, verbose = FALSE)
+  expect_equal(nrow(x), 0)
+  x <- rate_limiting_times(plan = my_plan, verbose = FALSE,
+    targets_only = TRUE)
+  expect_equal(nrow(x), 0)
+  x <- rate_limiting_times(plan = my_plan, verbose = FALSE,
+    from_scratch = TRUE)
+  expect_equal(nrow(x), 1)
+  expect_true(all(complete.cases(x)))
+  x <- rate_limiting_times(plan = my_plan, verbose = FALSE,
+    targets_only = TRUE, from_scratch = TRUE)
+  expect_equal(nrow(x), 1)
+  expect_true(all(complete.cases(x)))
 })
 
 test_with_dir("time predictions: incomplete targets", {
@@ -40,6 +64,16 @@ test_with_dir("time predictions: incomplete targets", {
       verbose = FALSE
     )
   )
+  expect_equal(nrow(x), 4)
+  expect_warning(
+    x <- rate_limiting_times(
+      plan = config$plan,
+      targets = dats,
+      envir = config$envir,
+      verbose = FALSE,
+      targets_only = TRUE
+    )
+  )
   expect_equal(nrow(x), 0)
   expect_warning(
     y <- predict_runtime(
@@ -50,7 +84,18 @@ test_with_dir("time predictions: incomplete targets", {
       digits = Inf
     )
   )
-  expect_equal(lubridate::dseconds(0), y)
+  expect_equal(length(y), 1)
+  expect_warning(
+    y <- predict_runtime(
+      plan = config$plan,
+      targets = dats,
+      envir = config$envir,
+      verbose = FALSE,
+      digits = Inf,
+      targets_only = TRUE
+    )
+  )
+  expect_equal(length(y), 1)
   expect_warning(
     x <- rate_limiting_times(
       plan = config$plan,
@@ -58,7 +103,7 @@ test_with_dir("time predictions: incomplete targets", {
       verbose = FALSE
     )
   )
-  expect_equal(nrow(x), 0)
+  expect_equal(nrow(x), 14)
 
   config$targets <- dats
   con <- testrun(config)
@@ -72,7 +117,7 @@ test_with_dir("time predictions: incomplete targets", {
       from_scratch = TRUE
     )
   )
-  expect_equal(nrow(x), 2)
+  expect_equal(nrow(x), 6)
   expect_warning(
     x <- rate_limiting_times(
       plan = config$plan,
@@ -80,7 +125,16 @@ test_with_dir("time predictions: incomplete targets", {
       verbose = FALSE
     )
   )
-  expect_equal(nrow(x), 0)
+  expect_equal(nrow(x), 14)
+  expect_warning(
+    x <- rate_limiting_times(
+      plan = config$plan,
+      envir = config$envir,
+      verbose = FALSE,
+      from_scratch = TRUE
+    )
+  )
+  expect_equal(nrow(x), 16)
   expect_silent(
     y <- predict_runtime(
       plan = config$plan,
@@ -124,13 +178,21 @@ test_with_dir("timing predictions with realistic build", {
     plan = config$plan,
     envir = config$envir,
     from_scratch = TRUE,
-    digits = 4,
+    digits = Inf,
     verbose = FALSE
   )
   resume_df <- rate_limiting_times(
     plan = config$plan,
     envir = config$envir,
-    verbose = FALSE
+    verbose = FALSE,
+    digits = Inf
+  )
+  resume_df_targets <- rate_limiting_times(
+    plan = config$plan,
+    envir = config$envir,
+    verbose = FALSE,
+    digits = Inf,
+    targets_only = TRUE,
   )
   jobs_4_df <- rate_limiting_times(
     plan = config$plan,
@@ -139,6 +201,15 @@ test_with_dir("timing predictions with realistic build", {
     future_jobs = 4,
     jobs = 1,
     verbose = FALSE
+  )
+  jobs_4_df_targets <- rate_limiting_times(
+    plan = config$plan,
+    envir = config$envir,
+    from_scratch = TRUE,
+    future_jobs = 4,
+    jobs = 1,
+    verbose = FALSE,
+    targets_only = TRUE
   )
   jobs_2_df <- rate_limiting_times(
     plan = config$plan,
@@ -162,14 +233,12 @@ test_with_dir("timing predictions with realistic build", {
     config = config,
     digits = Inf
   )
-  jobs_4_time <- predict_runtime(
+  resume_time_targets <- predict_runtime(
     plan = config$plan,
     envir = config$envir,
     config = config,
-    from_scratch = TRUE,
-    future_jobs = 4,
-    jobs = 1,
-    digits = Inf
+    digits = Inf,
+    targets_only = TRUE
   )
   jobs_2_time <- predict_runtime(
     plan = config$plan,
@@ -180,12 +249,42 @@ test_with_dir("timing predictions with realistic build", {
     jobs = 1,
     digits = Inf
   )
+  jobs_4_time <- predict_runtime(
+    plan = config$plan,
+    envir = config$envir,
+    config = config,
+    from_scratch = TRUE,
+    future_jobs = 4,
+    jobs = 1,
+    digits = Inf
+  )
+  jobs_4_time_targets <- predict_runtime(
+    plan = config$plan,
+    envir = config$envir,
+    config = config,
+    from_scratch = TRUE,
+    future_jobs = 4,
+    jobs = 1,
+    digits = Inf,
+    targets_only = TRUE
+  )
 
-  expect_equal(nrow(scratch_df), nrow(config$plan))
-  expect_equal(nrow(resume_df), 8)
-  expect_equal(nrow(jobs_4_df), 6)
-  expect_equal(nrow(jobs_2_df), 9)
+  expect_true(all(complete.cases(scratch_df)))
+  expect_true(all(complete.cases(resume_df)))
+  expect_true(all(complete.cases(resume_df_targets)))
+  expect_true(all(complete.cases(jobs_2_df)))
+  expect_true(all(complete.cases(jobs_4_df)))
+  expect_true(all(complete.cases(jobs_4_df_targets)))
+
+  expect_equal(nrow(scratch_df), 30)
+  expect_equal(nrow(resume_df), nrow(scratch_df) - 8)
+  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 22)
+  expect_equal(nrow(jobs_2_df), nrow(scratch_df) - 14)
+  expect_equal(nrow(jobs_4_df), nrow(scratch_df) - 20)
+  expect_equal(nrow(jobs_4_df_targets), nrow(scratch_df) - 24)
   expect_true(resume_time <= scratch_time)
-  expect_true(jobs_4_time <= jobs_2_time)
+  expect_true(resume_time_targets <= resume_time)
   expect_true(jobs_2_time <= scratch_time)
+  expect_true(jobs_4_time <= jobs_2_time)
+  expect_true(jobs_4_time_targets <= jobs_4_time)
 })

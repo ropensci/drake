@@ -4,7 +4,8 @@
 \alias{build_times}
 \title{Function \code{build_times}}
 \usage{
-build_times(path = getwd(), search = TRUE, digits = 0, cache = NULL)
+build_times(path = getwd(), search = TRUE, digits = 0, cache = NULL,
+  targets_only = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -19,6 +20,9 @@ current working directory only.}
 
 \item{cache}{optional drake cache. If supplied,
 the \code{path} and \code{search} arguments are ignored.}
+
+\item{targets_only}{logical, whether to only return the
+build times of the targets (exclude the imports).}
 }
 \value{
 data.frame of times from \code{\link{system.time}}

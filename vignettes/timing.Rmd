@@ -24,20 +24,39 @@ library(drake)
 load_basic_example()
 make(my_plan, jobs = 2, verbose = FALSE) # See also max_useful_jobs(my_plan).
 build_times(digits = 8) # From the cache.
+build_times(digits = 8, targets_only = TRUE)
 ```
+
+For `drake` version 4.1.0 and earlier, `build_times()` just measures the elapsed runtime of each command in `my_plan$command`. For later versions, the build times also account for all the internal operations in `drake:::build()`, such as [storage and hashing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd).
 
 # Predicting runtime
 
-Drake uses these times to predict the runtime of the next `make()`.
+Drake uses these times to predict the runtime of the next `make()`. At the moment, everything is up to date, so a hypothetical next `make()` should be fast. Here, we only factor in the times of the targets (excluding the imports using `targets_only = TRUE`).
 
 ```{r predict_runtime}
-# Everything is up to date, so the next make() should be fast.
 predict_runtime(
   my_plan,
   digits = 8,
-  verbose = FALSE
-) 
-# Change a dependency.
+  verbose = FALSE,
+  targets_only = TRUE
+)
+```
+
+But you can also predict the elapsed time of a full runthrough scratch (after `clean()`).
+
+```{r predict_runtime_scratch}
+predict_runtime(
+  my_plan,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE,
+  targets_only = TRUE
+)
+```
+
+Let's change a dependency to make some targets out of date. Now, even though `from_scatch` is `FALSE`, the next `make()` should take some time.
+
+```{r changedep_timing}
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
@@ -45,26 +64,39 @@ reg2 <- function(d){
 predict_runtime(
   my_plan,
   digits = 8,
-  from_scratch = TRUE,
-  verbose = FALSE
-)
-predict_runtime(
-  my_plan,
-  digits = 8,
-  from_scratch = TRUE,
-  future_jobs = 2,
-  verbose = FALSE
-)
-predict_runtime(
-  my_plan,
-  digits = 8,
-  from_scratch = TRUE,
-  future_jobs = 4,
-  verbose = FALSE
+  verbose = FALSE,
+  targets_only = TRUE
 )
 ```
 
-Caution: `drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and prints the untimed targets.
+We can also factor in parallelism using the `future_jobs` argument.
+
+```{r future_jobs}
+predict_runtime(
+  my_plan,
+  future_jobs = 1,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE,
+  targets_only = TRUE
+)
+predict_runtime(
+  my_plan,
+  future_jobs = 2,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE,
+  targets_only = TRUE
+)
+predict_runtime(
+  my_plan,
+  future_jobs = 4,
+  from_scratch = TRUE,
+  digits = 8,
+  verbose = FALSE,
+  targets_only = TRUE
+)
+```
 
 # Rate-limiting targets
 
@@ -93,23 +125,30 @@ rate_limiting_times(
   my_plan,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE
+  verbose = FALSE,
+  targets_only = TRUE
 )
 rate_limiting_times(
   my_plan,
   future_jobs = 2,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE
+  verbose = FALSE,
+  targets_only = TRUE
 )
 rate_limiting_times(
   my_plan,
   future_jobs = 4,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE
+  verbose = FALSE,
+  targets_only = TRUE
 )
 ```
+
+# A word of caution
+
+`Drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and prints the untimed targets.
 
 ```{r endofline_timing, echo = F}
 clean(destroy = TRUE)

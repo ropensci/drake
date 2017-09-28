@@ -218,6 +218,10 @@ make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")
 The [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake` and opens up options for customization. But please do not try to change the short hash algorithm of an existing cache, and beware in-memory caches for parallel computing and persistent projects. See the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) for details.
 
 
+# Runtime predictions
+
+In `predict_runtime()` and `rate_limiting_times()`, `drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and prints the untimed targets.
+
 ```{r rmfiles_caution, echo = FALSE}
 clean(destroy = TRUE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))

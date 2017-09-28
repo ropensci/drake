@@ -1,4 +1,5 @@
 build <- function(target, hash_list, config) {
+  start <- proc.time()
   hashes <- hash_list[[target]]
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
@@ -8,12 +9,8 @@ build <- function(target, hash_list, config) {
     value <- imported_target(target = target, hashes = hashes,
       config = config)
   } else {
-    time <- system.time({
-      value <- build_target(target = target,
+    value <- build_target(target = target,
         hashes = hashes, config = config)
-    })
-    config$cache$set(key = target, value = time,
-      namespace = "build_times")
   }
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
@@ -21,6 +18,10 @@ build <- function(target, hash_list, config) {
     namespace = "depends")
   config$cache$set(key = target, value = "finished",
     namespace = "progress")
+  runtime <- (proc.time() - start) %>%
+    runtime_entry(target = target, imported = imported)
+  config$cache$set(key = target, value = runtime,
+    namespace = "build_times")
   value
 }
 

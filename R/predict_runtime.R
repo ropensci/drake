@@ -1,7 +1,6 @@
 #' @title Function predict_runtime
 #' @description Predict the elapsed runtime of the next call to `make()`.
-#' Only accounts for target build times, not imports or hashing.
-#' This function simply sums the elapsed build times
+#' This function simply sums the elapsed build times.
 #' from \code{\link{rate_limiting_times}()}.
 #' @details For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
@@ -31,6 +30,9 @@
 #' \code{\link{make}()} build from scratch or to
 #' take into account the fact that some targets may be
 #' already up to date and therefore skipped.
+#' @param targets_only logical, whether to factor in
+#' just the targets into the calculations or use the
+#' build times for everything, including the imports
 #' @param targets Targets to build in the workflow.
 #' Timing information is
 #' limited to these targets and their dependencies.
@@ -63,6 +65,7 @@
 predict_runtime <- function(
   plan,
   from_scratch = FALSE,
+  targets_only = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
@@ -82,6 +85,7 @@ predict_runtime <- function(
   times <- rate_limiting_times(
     plan = plan,
     from_scratch = from_scratch,
+    targets_only = targets_only,
     targets = targets,
     envir = envir,
     verbose = verbose,
@@ -104,8 +108,6 @@ predict_runtime <- function(
 #' @title Function rate_limiting_times
 #' @description Return a data frame of elapsed build times of
 #' the rate-limiting targets of a \code{\link{make}()} workflow.
-#' Only build times are used.
-#' Hashing times, etc. are not factored in.
 #' @details The \code{stage} column of the returned data frame
 #' is an index that denotes a parallelizable stage.
 #' Within each stage during \code{\link{make}()},
@@ -153,6 +155,8 @@ predict_runtime <- function(
 #' @param from_scratch logical, whether to assume
 #' next hypothetical call to \code{\link{make}()}
 #' is a build from scratch (after \code{\link{clean}()}).
+#' @param targets_only logical, whether to factor in just the
+#' targets or use times from everything, including the imports.
 #' @param targets Targets to build in the workflow.
 #' Timing information is
 #' limited to these targets and their dependencies.
@@ -187,6 +191,7 @@ predict_runtime <- function(
 rate_limiting_times <- function(
   plan,
   from_scratch = FALSE,
+  targets_only = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
@@ -219,28 +224,40 @@ rate_limiting_times <- function(
     config$cache <- configure_cache(cache)
   }
   times <- build_times(
+    targets_only = FALSE,
     path = path,
     search = search,
     digits = Inf,
     cache = config$cache
   )
-  targets <- intersect(V(config$graph)$name, plan$target)
-  not_timed <- setdiff(targets, times$target)
+  keys <- V(config$graph)$name
+  import_keys <- setdiff(keys, plan$target)
+  items <- intersect(keys, times$item)
+  not_timed <- setdiff(keys, items)
   warn_not_timed(not_timed)
   if (!nrow(times)){
     return(cbind(times, stage = numeric(0)))
   }
-  rownames(times) <- times$target
-  times <- times[intersect(targets, times$target), ]
+  rownames(times) <- times$item
+  times <- times[intersect(items, keys), ]
   if (!from_scratch){
     outdated <- outdated(plan = plan, envir = envir, config = config) %>%
-      intersect(y = times$target)
+      intersect(y = plan$target) %>%
+      c(import_keys) %>%
+      intersect(y = rownames(times)) %>%
+      unique
     times <- times[outdated, ]
   }
   if (!nrow(times)){
     return(cbind(times, stage = numeric(0)))
   }
-  keep_these <- setdiff(V(config$graph)$name, rownames(times))
+  if (targets_only){
+    times <- times[times$type == "target", ]
+  }
+  if (!nrow(times)){
+    return(cbind(times, stage = numeric(0)))
+  }
+  keep_these <- setdiff(keys, rownames(times))
   graph <- delete_vertices(config$graph, v = keep_these)
   times <- resolve_levels(nodes = times, graph = graph)
   colnames(times) <- gsub("^level$", "stage", colnames(times))

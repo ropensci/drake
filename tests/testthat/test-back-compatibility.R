@@ -3,7 +3,7 @@ context("back compatibility")
 
 test_with_dir("back-compatible with a tiny v4.1.0 project", {
   root <- file.path("back-compatibility", "v4.1.0")
-  cache <- system.file(
+  cache_files <- system.file(
     file.path(root, "cache"),
     package = "drake",
     mustWork = TRUE
@@ -14,12 +14,17 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     mustWork = TRUE
   )
   expect_true(file.copy(
-    from = cache,
+    from = cache_files,
     to = getwd(),
     recursive = TRUE,
     overwrite = TRUE
   ))
   file.rename(from = "cache", to = ".drake")
+  bt <- build_times()
+  expect_true(is.data.frame(bt))
+  expect_equal(dim(bt), c(1, 5))
+  expect_true(is.na(bt$type))
+  expect_equal(bt$item, "x")
   expect_true(file.copy(
     from = infile,
     to = getwd(),

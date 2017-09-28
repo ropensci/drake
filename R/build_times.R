@@ -5,6 +5,8 @@
 #' @seealso \code{\link{built}}
 #' @export
 #' @return data.frame of times from \code{\link{system.time}}
+#' @param targets_only logical, whether to only return the
+#' build times of the targets (exclude the imports).
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
@@ -24,52 +26,74 @@ build_times <- function(
   path = getwd(),
   search = TRUE,
   digits = 0,
-  cache = NULL
+  cache = NULL,
+  targets_only = FALSE
 ){
-  eval(parse(text = "require(methods, quietly = TRUE)"))  # needed for dseconds
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search)
   }
   if (is.null(cache)){
     return(empty_times())
   }
-  lapply(
+  out <- lapply(
     cache$list(namespace = "build_times"),
-    get_build_time,
-    cache = cache,
-    digits = digits
+    fetch_runtime,
+    cache = cache
   ) %>%
     do.call(what = rbind) %>%
     rbind(empty_times()) %>%
-    round_times(digits = digits)
-}
-
-get_build_time <- function(target, cache, digits) {
-  time <- cache$get(key = target, namespace = "build_times")
-  stopifnot(class(time) == "proc_time")
-  out <- list(
-    elapsed = time[["elapsed"]],
-    user = time[["user.self"]],
-    system = time[["sys.self"]]
-  ) %>%
-    lapply(FUN = dseconds)
-  c(target = target, out) %>%
-    as.data.frame(stringsAsFactors = FALSE)
+    round_times(digits = digits) %>%
+    to_dseconds
+  out <- out[order(out$item), ]
+  if (targets_only){
+    out <- out[out$type == "target", ]
+  }
+  out
 }
   
+fetch_runtime <- function(key, cache){
+  x <- cache$get(key = key, namespace = "build_times")
+  if (class(x) == "proc_time"){
+    x <- runtime_entry(runtime = x, target = key, imported = NA)
+  }
+  x
+}
+
 empty_times <- function(){
   data.frame(
-    target = character(0),
-    elapsed = duration(numeric(0)),
-    user = duration(numeric(0)),
-    system = duration(numeric(0))
+    item = character(0),
+    type = character(0),
+    elapsed = numeric(0),
+    user = numeric(0),
+    system = numeric(0)
   )
 }
 
 round_times <- function(times, digits){
-  cols <- setdiff(colnames(empty_times()), "target")
-  for (col in cols){
+  for (col in time_columns){
     times[[col]] <- round(times[[col]], digits = digits)
   }
   times
 }
+
+runtime_entry <- function(runtime, target, imported){
+  type <- ifelse(imported, "import", "target")
+  data.frame(
+    item = target,
+    type = type,
+    elapsed = runtime[["elapsed"]],
+    user = runtime[["user.self"]],
+    system = runtime[["sys.self"]],
+    stringsAsFactors = FALSE
+  )
+}
+
+to_dseconds <- function(times){
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for dseconds
+  for (col in time_columns){
+    times[[col]] <- dseconds(times[[col]])
+  }
+  times
+}
+
+time_columns <- c("elapsed", "user", "system")

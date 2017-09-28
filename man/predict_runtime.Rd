@@ -4,7 +4,7 @@
 \alias{predict_runtime}
 \title{Function predict_runtime}
 \usage{
-predict_runtime(plan, from_scratch = FALSE,
+predict_runtime(plan, from_scratch = FALSE, targets_only = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
@@ -18,6 +18,10 @@ predict_runtime(plan, from_scratch = FALSE,
 \code{\link{make}()} build from scratch or to
 take into account the fact that some targets may be
 already up to date and therefore skipped.}
+
+\item{targets_only}{logical, whether to factor in
+just the targets into the calculations or use the
+build times for everything, including the imports}
 
 \item{targets}{Targets to build in the workflow.
 Timing information is
@@ -63,8 +67,7 @@ for the cache.}
 }
 \description{
 Predict the elapsed runtime of the next call to `make()`.
-Only accounts for target build times, not imports or hashing.
-This function simply sums the elapsed build times
+This function simply sums the elapsed build times.
 from \code{\link{rate_limiting_times}()}.
 }
 \details{

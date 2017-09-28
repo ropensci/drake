@@ -54,9 +54,9 @@ test_with_dir("cache functions work", {
 
   # build_times
   x <- config$cache
-  expect_equal(sort(x$list(namespace = "build_times")), sort(built()))
-  expect_equal(sort(build_times(search = FALSE)$target), builds)
-  expect_length(build_times(), 4)  # 4 columns
+  expect_equal(sort(x$list(namespace = "build_times")), sort(cached()))
+  expect_equal(sort(build_times(search = FALSE)$item), all)
+  expect_length(build_times(), 5) # 5 columns
 
   # find stuff in current directory session, progress
   expect_true(is.list(session(search = FALSE)))

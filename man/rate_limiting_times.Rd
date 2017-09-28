@@ -4,7 +4,7 @@
 \alias{rate_limiting_times}
 \title{Function rate_limiting_times}
 \usage{
-rate_limiting_times(plan, from_scratch = FALSE,
+rate_limiting_times(plan, from_scratch = FALSE, targets_only = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
@@ -17,6 +17,9 @@ rate_limiting_times(plan, from_scratch = FALSE,
 \item{from_scratch}{logical, whether to assume
 next hypothetical call to \code{\link{make}()}
 is a build from scratch (after \code{\link{clean}()}).}
+
+\item{targets_only}{logical, whether to factor in just the
+targets or use times from everything, including the imports.}
 
 \item{targets}{Targets to build in the workflow.
 Timing information is
@@ -65,8 +68,6 @@ for the cache.}
 \description{
 Return a data frame of elapsed build times of
 the rate-limiting targets of a \code{\link{make}()} workflow.
-Only build times are used.
-Hashing times, etc. are not factored in.
 }
 \details{
 The \code{stage} column of the returned data frame
