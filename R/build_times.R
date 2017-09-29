@@ -40,6 +40,7 @@ build_times <- function(
     fetch_runtime,
     cache = cache
   ) %>%
+    Filter(f = is.data.frame) %>%
     do.call(what = rbind) %>%
     rbind(empty_times()) %>%
     round_times(digits = digits) %>%
