@@ -44,7 +44,7 @@ build_times <- function(
     do.call(what = rbind) %>%
     rbind(empty_times()) %>%
     round_times(digits = digits) %>%
-    to_dseconds
+    to_build_duration_df
   out <- out[order(out$item), ]
   out$type[is.na(out$type)] <- "target"
   if (targets_only){
@@ -91,12 +91,21 @@ runtime_entry <- function(runtime, target, imported){
   )
 }
 
-to_dseconds <- function(times){
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for dseconds
+to_build_duration_df <- function(times){
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   for (col in time_columns){
-    times[[col]] <- dseconds(times[[col]])
+    times[[col]] <- to_build_duration(times[[col]])
   }
   times
+}
+
+# From lubridate issue 472,
+# we need to round to the nearest second
+# for times longer than a minute.
+to_build_duration <- function(x){
+  round_these <- x >= 60
+  x[round_these] <- round(x[round_these], digits = 0)
+  dseconds(x)
 }
 
 time_columns <- c("elapsed", "user", "system")

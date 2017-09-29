@@ -81,7 +81,7 @@ predict_runtime <- function(
   search = TRUE
 ){
   force(envir)
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for dseconds
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   times <- rate_limiting_times(
     plan = plan,
     from_scratch = from_scratch,
@@ -102,7 +102,7 @@ predict_runtime <- function(
   )
   sum(times$elapsed) %>%
     round(digits = digits) %>%
-    dseconds()
+    to_build_duration
 }
   
 #' @title Function rate_limiting_times
