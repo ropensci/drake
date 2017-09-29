@@ -1,3 +1,7 @@
+# Version 4.2.0
+
+There are several improvements to code style and performance. In addition, there are new features such as cache/hash externalization and runtime prediction. See the new storage and timing vignettes for details. This release has automated checks for back-compatibility with existing projects, and I also did manual back compatibility checks on serious projects.
+
 # Version 4.0.0
 
 This major release is almost back-compatible. It now reproducibly tracks namespaced functions of the form `package::function()` and `package:::function()`. Adding this behavior was the right thing to do, but some projects from <= 3.0.0 might not be back-compatible. 

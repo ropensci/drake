@@ -45,6 +45,7 @@ build_times <- function(
     round_times(digits = digits) %>%
     to_dseconds
   out <- out[order(out$item), ]
+  out$type[is.na(out$type)] <- "target"
   if (targets_only){
     out <- out[out$type == "target", ]
   }
@@ -65,7 +66,8 @@ empty_times <- function(){
     type = character(0),
     elapsed = numeric(0),
     user = numeric(0),
-    system = numeric(0)
+    system = numeric(0),
+    stringsAsFactors = FALSE
   )
 }
 
