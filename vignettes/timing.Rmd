@@ -107,7 +107,7 @@ To predict the next runtime with multiple parallel jobs, drake makes some assump
 
 Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a column in the workflow graph.
 
-```r
+```{r faketiminggraph, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
 plot_graph(my_plan, width = "100%", height = "500px")
 ```
@@ -148,7 +148,7 @@ rate_limiting_times(
 
 # A word of caution
 
-`Drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and prints the untimed targets.
+`Drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and lists the names of the untimed targets.
 
 ```{r endofline_timing, echo = F}
 clean(destroy = TRUE)

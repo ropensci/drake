@@ -112,7 +112,7 @@ short_hash(config$cache) # would have been xxhash64 (default_short_hash_algo())
 long_hash(config$cache) # would have been sha256 (default_long_hash_algo())
 ```
 
-You can change the long hash algorithm without throwing away the cache, but the project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and its supporting files. At some point, `drake` might support more flexible in-memory caches.
+You can change the long hash algorithm without throwing away the cache, but the project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and its supporting files.
 
 ```{r more_cache}
 outdated(my_plan, verbose = FALSE) # empty
@@ -121,7 +121,12 @@ config$cache <- configure_cache(
   long_hash_algo = "murmur32",
   overwrite_hash_algos = TRUE
 )
-outdated(my_plan, verbose = FALSE) # existing hash keys no longer match the algorithm
+```
+
+Below, the targets become outdated because the existing hash keys do not match the new hash algorithm.
+
+```{r newhashmorecache}
+outdated(my_plan, verbose = FALSE)
 config <- make(my_plan, verbose = FALSE, return_config = TRUE)
 short_hash(config$cache) # same as before
 long_hash(config$cache) # different from before
@@ -154,7 +159,7 @@ readd(simple, cache = faster_cache)
 
 You can recover an old cache from the file system. You could use `storr::storr_rds()` directly if you know the short hash algorithm, but `this_cache()` and `recover_cache()` are safer for `drake`.
 
-```r
+```{r oldcachenoeval, eval = FALSE}
 old_cache <- this_cache("faste_cache") # Get a cache you know exists...
 recovered <- recover_cache("faster_cache") # or create a new one if missing.
 ```
@@ -195,9 +200,8 @@ If you want to start from sratch, you can `clean()` the cache. Use the `destroy`
 
 ```{r cleaning_up}
 clean(small, large)
-cached() # `small` and `large` are gone
-clean(destroy = TRUE) 
-# clean(destroy = TRUE, cache = cache) # previous line's default, already gone
+cached() # 'small' and 'large' are gone
+clean(destroy = TRUE)
 clean(destroy = TRUE, cache = faster_cache)
 clean(destroy = TRUE, cache = my_storr)
 ```

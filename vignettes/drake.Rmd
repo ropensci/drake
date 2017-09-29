@@ -27,52 +27,35 @@ Drake is a workflow manager and build system for
 
 Organize your work in a data frame. Then `make()` it.
 
-```r
+```{r firstintroindrake}
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
+load_basic_example() # Also (over)writes report.Rmd.
 my_plan # Each target is a file (single-quoted) or object
 ```
 
-```r
-##                    target                                      command
-## 1             'report.md'   my_knit('report.Rmd', report_dependencies)
-## 2                   small                                  simulate(5)
-## 3                   large                                 simulate(50)
-## 4     report_dependencies      c(small, large, coef_regression2_small)
-## 5       regression1_small                                  reg1(small)
-## 6       regression1_large                                  reg1(large)
-## 7       regression2_small                                  reg2(small)
-## 8       regression2_large                                  reg2(large)
-## 9  summ_regression1_small suppressWarnings(summary(regression1_small))
-## 10 summ_regression1_large suppressWarnings(summary(regression1_large))
-## 11 summ_regression2_small suppressWarnings(summary(regression2_small))
-## 12 summ_regression2_large suppressWarnings(summary(regression2_large))
-## 13 coef_regression1_small                      coef(regression1_small)
-## 14 coef_regression1_large                      coef(regression1_large)
-## 15 coef_regression2_small                      coef(regression2_small)
-## 16 coef_regression2_large                      coef(regression2_large)
-```
-
-```r
+```{r makedrakenoevalrmd, eval = FALSE}
 make(my_plan) # Run the commands to build the targets.
 ```
 
 # Installation
 
-```r
+```{r devinstall, eval = FALSE}
 install.packages("drake") # latest CRAN release
-devtools::install_github("wlandau-lilly/drake@v3.1.0", build = TRUE) # latest GitHub release
-devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
+devtools::install_github(
+  "wlandau-lilly/drake@v4.2.0",
+  build = TRUE
+) # GitHub release
+devtools::install_github("wlandau-lilly/drake", build = TRUE) # dev version
 ```
 
 For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 
 # Quickstart
 
-```r
+```{r quickstartdrakermd, eval = FALSE}
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-plot_graph(my_plan) # Hover, click, drag, zoom, pan. Try file = "graph.html" and targets_only = TRUE.
+load_basic_example() # Also (over)writes report.Rmd.
+plot_graph(my_plan) # Hover, click, drag, zoom, pan.
 outdated(my_plan) # Which targets need to be (re)built?
 missed(my_plan) # Are you missing anything from your workspace?
 check(my_plan) # Are you missing files? Is your workflow plan okay?
@@ -83,17 +66,17 @@ plot_graph(my_plan) # The graph also shows what is up to date.
 
 Dive deeper into the built-in examples.
 
-```r
+```{r examplesdrakermd, eval = FALSE}
 example_drake("basic") # Write the code files of the canonical tutorial.
 examples_drake() # List the other examples.
-vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
+vignette("quickstart") # See https://cran.r-project.org/package=drake/vignettes
 ```
 
 # Useful functions
 
 Besides `make()`, here are some useful functions to learn about drake,
 
-```r
+```{r learndrakermd, eval = FALSE}
 load_basic_example()
 drake_tip()
 examples_drake()
@@ -102,7 +85,7 @@ example_drake()
 
 set up your workflow plan,
 
-```r
+```{r plandrakermd, eval = FALSE}
 plan()
 analyses()
 summaries()
@@ -113,7 +96,8 @@ wildcard() # from the wildcard package
 ```
 
 explore the dependency network,
-```r
+
+```{r draakedepsdrakermd, eval = FALSE}
 outdated()
 missed()
 plot_graph()
@@ -125,7 +109,8 @@ tracked()
 ```
 
 interact with the cache,
-```r
+
+```{r cachedrakermd, eval = FALSE}
 clean()
 cached()
 imported()
@@ -138,7 +123,7 @@ find_cache()
 
 make use of recorded build times,
 
-```r
+```{r timesdrakermd, eval = FALSE}
 build_times()
 predict_runtime()
 rate_limiting_times()
@@ -146,7 +131,7 @@ rate_limiting_times()
 
 speed up your project with parallel computing,
 
-```r
+```{r speeddrakermd, eval = FALSE}
 make() # with jobs > 2
 max_useful_jobs()
 parallelism_choices()
@@ -155,7 +140,7 @@ shell_file()
 
 finely tune the caching and hashing,
 
-```r
+```{r hashcachedrakermd, eval = FALSE}
 available_hash_algos()
 cache_path()
 cache_types()
@@ -172,7 +157,7 @@ type_of_cache()
 
 and debug your work.
 
-```r
+```{r debugdrakermd, eval = FALSE}
 check()
 session()
 in_progress()
@@ -186,7 +171,7 @@ read_config()
 
 The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
 
-```r
+```{r vignettesdrakermd, eval = FALSE}
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
@@ -198,17 +183,18 @@ vignette("caution") # Avoid common pitfalls.
 
 Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
 
-# Reproducibility 
+# Reproducibility
 
-There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time. 
+There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time.
 
-```r
+```{r reproducibilitydrakermd, eval = FALSE}
 library(drake)
 load_basic_example()
 outdated(my_plan) # Which targets need to be (re)built?
 make(my_plan) # Build what needs to be built.
 outdated(my_plan) # Everything is up to date.
-reg2 <- function(d){ # Change one of your functions.
+# Change one of your functions.
+reg2 <- function(d) {
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
@@ -226,30 +212,31 @@ Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the inte
 ```{r basicgraph}
 library(drake)
 load_basic_example()
-make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
-reg2 <- function(d){ # Change a dependency.
+make(my_plan, jobs = 2, verbose = FALSE) # Parallelize with 2 jobs.
+# Change one of your functions.
+reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 ```
 
-```r
+```{r fakegraphdrakermd, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
 plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
 src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/reg2.html"
-width = "100%" height = "600px" allowtransparency="true" 
+width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. 
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
 
 See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date. Try out the following in a fresh R session.
 
-```r
+```{r masusefuljobsdrakermd, eval = FALSE}
 library(drake)
 load_basic_example()
 plot_graph(my_plan) # Look at the graph to make sense of the output.
@@ -297,4 +284,3 @@ In the sphere of reproducibility, drake and [remake](https://github.com/richfitz
 clean(destroy = TRUE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
-
