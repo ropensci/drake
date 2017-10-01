@@ -39,8 +39,8 @@ is_installed_package <- function(x, config){
 #' }
 package_version <- function(x){
   pkg <- sans_package(x)
-  if (pkg %in% utils::sessionInfo()$basePkgs) {
-    R.version$version.string
+  if (pkg %in% utils::sessionInfo()$basePkgs) { # nolint
+    R.version$version.string # nolint
   } else {
     utils::packageVersion(pkg)
   }
