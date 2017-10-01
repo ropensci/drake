@@ -6,6 +6,10 @@ test_with_dir("misbehavior with packages", {
   expect_warning(tmp <- sanitize_plan(x))
   expect_warning(tmp <- sanitize_targets(plan = x, targets = x$target))
   expect_null(rehash_package("dsjieliejfijlef", config = list()))
+  config <- list(installed_packages = c())
+  pkg <- "skldjfie"
+  hov <- package_hover_text(pkg, config = config)
+  expect_equal(hov, pkg)
 })
 
 test_with_dir("graph does not fail if input file is binary", {

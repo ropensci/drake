@@ -126,7 +126,7 @@ package_hover_text <- Vectorize(function(package_name, config){
     return(package_name)
   }
 },
-"package_name")
+"package_name", USE.NAMES = FALSE)
 
 target_hover_text <- function(targets, plan) {
   plan[plan$target %in% targets, "command"] %>%

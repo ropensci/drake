@@ -1,6 +1,10 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("dependencies")
 
+test_with_dir("deps is aware of packages", {
+  expect_equal(deps(readRDS), "package:base")
+})
+
 test_with_dir(
   "deps() correctly reports dependencies of functions and commands", {
   expect_equal(deps(""), character(0))

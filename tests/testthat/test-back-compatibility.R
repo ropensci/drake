@@ -68,7 +68,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   expect_equal(storr_hash, "md5")
   obj <- c("'my_file.rds'", "eply::strings", "my_function", "x")
   expect_equal(sort(cached(cache = con$cache)), sort(obj))
-    
+
   # Make from scratch. Should now depend on package:eply.
   clean(destroy = TRUE, cache = con$cache)
   con <- make(
