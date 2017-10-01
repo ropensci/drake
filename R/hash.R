@@ -121,21 +121,18 @@ rehash_package <- function(target, config) {
   if (!is_installed_package(target, config = config)) {
     return(NULL)
   }
-  content <- sans_package(target) %>%
-    asNamespace %>%
+  pkg <- sans_package(target)
+  content <- asNamespace(pkg) %>%
     eapply(FUN = clean_package_function, all.names = TRUE)
-  if (target == "package:base") {
-    content <- R.version
+  if (pkg %in% base_packages(config)) {
+    content <- R.version$version.string
   }
   digest::digest(content, algo = config$long_hash_algo)
 }
 
-# Functions loaded with devtools::load_all() will still have whitespace and
-# comments, which could cause drake to overreact to changes.
-# But then again, the caution vignette explicitly says to install
-# all the package properly, and properly-installed packages are not likely
-# to change very often.
+# Just removing the srcref does not work. The only
+# thing that has worked for me is actually deparsing the function.
+# See tests/testthat/test-import-package.R
 clean_package_function <- function(x) {
-  attr(x, "srcref") <- NULL
-  x
+  deparse(x)
 }

@@ -16,7 +16,12 @@ is_in_package <- function(funct){
 
 is_installed_package <- function(x, config){
   is_package(x) &
-    sans_package(x) %in% config$installed_packages
+    sans_package(x) %in% rownames(config$installed_packages)
+}
+
+# From miniCRAN
+base_packages <- function(config){
+  names(which(config$installed_packages[, "Priority"] == "base"))
 }
 
 package_version <- function(x){
