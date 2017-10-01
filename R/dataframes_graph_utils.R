@@ -17,7 +17,9 @@ append_build_times <- function(nodes, digits, cache) {
 arrange_nodes <- function(nodes, parallelism, graph, targets, imports){
   if (parallelism == "Makefile")
     resolve_levels_Makefile(nodes = nodes, graph = graph, imports = imports,
-      targets = targets) else resolve_levels(nodes = nodes, graph = graph)
+      targets = targets)
+  else
+    resolve_levels(nodes = nodes, graph = graph)
 }
 
 can_get_function <- function(x, envir) {
@@ -28,7 +30,7 @@ can_get_function <- function(x, envir) {
 }
 
 categorize_nodes <- function(nodes, functions, imports,
-  in_progress, missing, outdated, targets) {
+                             in_progress, missing, outdated, targets) {
   nodes$status <- "imported"
   nodes[targets, "status"] <- "up to date"
   nodes[missing, "status"] <- "missing"
@@ -43,10 +45,10 @@ categorize_nodes <- function(nodes, functions, imports,
 }
 
 configure_nodes <- function(nodes, plan, envir, parallelism,
-  graph, cache, config,
-  files, functions, packages, imports,
-  in_progress, missing, outdated, targets,
-  font_size, build_times, digits) {
+                            graph, cache, config,
+                            files, functions, packages, imports,
+                            in_progress, missing, outdated, targets,
+                            font_size, build_times, digits) {
   force(envir)
   functions <- intersect(functions, nodes$id)
   in_progress <- intersect(in_progress, nodes$id)
@@ -59,13 +61,13 @@ configure_nodes <- function(nodes, plan, envir, parallelism,
     imports = imports, in_progress = in_progress, missing = missing,
     outdated = outdated, targets = targets)
   nodes <- arrange_nodes(nodes = nodes, parallelism = parallelism,
-    graph = graph, imports = imports, targets = targets)
+                         graph = graph, imports = imports, targets = targets)
   nodes <- style_nodes(nodes, font_size = font_size)
   if (build_times)
     nodes <- append_build_times(nodes = nodes, digits = digits, cache = cache)
   hover_text(nodes = nodes, plan = plan, envir = envir,
-    files = files, functions = functions, packages = packages,
-    targets = targets, config = config)
+             files = files, functions = functions, packages = packages,
+             targets = targets, config = config)
 }
 
 #' @title Function default_graph_title
@@ -97,9 +99,9 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
     readLines(unquoted_file, n = 10, warn = FALSE) %>%
       paste(collapse = "\n") %>%
       crop_text(length = hover_text_length)
-    },
-    error = function(e) quoted_file,
-    warning = function(w) quoted_file
+  },
+  error = function(e) quoted_file,
+  warning = function(w) quoted_file
   )
 },
 "quoted_file")
@@ -107,11 +109,11 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
 function_hover_text <- Vectorize(function(function_name, envir){
   tryCatch(
     eval(parse(text = function_name), envir = envir),
-      error = function(e) function_name) %>%
-        unwrap_function %>%
-        deparse %>%
-        paste(collapse = "\n") %>%
-        crop_text(length = hover_text_length)
+    error = function(e) function_name) %>%
+    unwrap_function %>%
+    deparse %>%
+    paste(collapse = "\n") %>%
+    crop_text(length = hover_text_length)
 },
 "function_name")
 
@@ -132,7 +134,7 @@ target_hover_text <- function(targets, plan) {
 }
 
 hover_text <- function(nodes, plan, targets, files, functions,
-  packages, envir, config
+                       packages, envir, config
 ) {
   nodes$hover_label <- nodes$id
   import_files <- setdiff(files, targets)

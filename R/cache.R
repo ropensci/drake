@@ -269,5 +269,27 @@ configure_cache <- function(
   }
   chosen_algo <- short_hash(cache)
   check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
+  set_initial_drake_version(cache)
   cache
+}
+
+set_initial_drake_version <- function(cache){
+  keys <- cache$list(namespace = "session")
+  if ("initial_drake_version" %in% keys){
+    return()
+  } else if ("sessionInfo" %in% keys){
+    last_session <- session(cache = cache)
+  } else {
+    last_session <- sessionInfo()
+  }
+  version <- drake_version(last_session)
+  cache$set(
+    key = "initial_drake_version",
+    value = version,
+    namespace = "session"
+  )
+}
+
+drake_version <- function(session_info = sessionInfo()){
+  session_info$otherPkgs$drake$Version
 }

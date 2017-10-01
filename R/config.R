@@ -52,7 +52,7 @@ config <- function(plan, targets = drake::possible_targets(plan),
     prepend = prepend, command = command, args = args
   )
   config$graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose)
+    envir = envir, verbose = verbose, cache = config$cache)
   config
 }
 
@@ -76,8 +76,10 @@ build_config <- function(plan, targets, envir,
     clear_progress = clear_progress,
     overwrite_hash_algos = FALSE
   )
-  graph <- build_graph(plan = plan,
-    targets = targets, envir = envir, verbose = verbose)
+  graph <- build_graph(plan = plan, targets = targets,
+    envir = envir, verbose = verbose,
+    cache = cache
+  )
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command,

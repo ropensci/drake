@@ -5,7 +5,7 @@
 \title{Function \code{tracked}}
 \usage{
 tracked(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame())
+  envir = parent.frame(), cache = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -16,6 +16,13 @@ tracked(plan, targets = drake::possible_targets(plan),
 
 \item{envir}{environment to import from, same as for function
 \code{\link{make}()}.}
+
+\item{cache}{optional drake cache, as from \code{\link{new_cache}()}.
+The cache is used to check for back-compatibility with projects
+created with drake 4.2.0 or earlier. In these legacy projects,
+packages will not be tracked as dependencies. In projects created with
+a version of drake later than 4.2.0, packages are formally tracked as
+imports.}
 }
 \description{
 Print out which objects, functions, files, targets, etc.
