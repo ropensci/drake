@@ -18,7 +18,8 @@ test_with_dir("scratch build with contained envir.", {
   nobuild(config)
 
   # take this opportunity to test clean() and prune()
-  all <- sort(c("'input.rds'", "'intermediatefile.rds'", "a",
+  all <- sort(c("package:base", "'input.rds'",
+    "'intermediatefile.rds'", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i", "j",
     "myinput", "nextone", "readRDS", "saveRDS", "yourinput"))
   expect_equal(config$cache$list(), all)

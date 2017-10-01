@@ -12,7 +12,8 @@ hashes <- function(target, config) {
   list(
     target = target,
     depends = dependency_hash(target = target, config = config),
-    file = filesystem_hash(target = target, config = config)
+    file = file_hash(target = target, config = config),
+    package = rehash_package(target = target, config = config)
   )
 }
 
@@ -43,11 +44,8 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
   do_rehash
 }
 
-filesystem_hash <- function(target, config, size_cutoff = 1e5) {
-  if (is_package(target)) {
-    filename <- description_path(target) %>%
-      eply::unquote()
-  } else if (is_file(target)) {
+file_hash <- function(target, config, size_cutoff = 1e5) {
+  if (is_file(target)) {
     filename <- eply::unquote(target)
   } else {
     return(as.character(NA))
@@ -64,17 +62,9 @@ filesystem_hash <- function(target, config, size_cutoff = 1e5) {
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
   if (do_rehash){
-    rehash_filesystem(target = target, config = config)
+    rehash_file(target = target, config = config)
   } else {
     config$cache$get(target)$value
-  }
-}
-
-rehash_filesystem <- function(target, config){
-  if (is_package(target)){
-    rehash_package(pkg = target, config = config)
-  } else {
-    rehash_file(target = target, config = config)
   }
 }
 
@@ -106,14 +96,14 @@ get_command <- function(target, config) {
 # Rehashing the data could be too time-consuming and superfluous,
 # and the source files of compiled code are not reliably stored.
 # Hashing the compiled shared object file is probably unwise.
-rehash_package <- function(pkg, config) {
-  if (!is_package(pkg)) {
-    stop("Trying rehash_package() on a non-package")
+rehash_package <- function(target, config) {
+  if (!is_package(target)) {
+    return(NULL)
   }
-  content <- sans_package(pkg) %>%
+  content <- sans_package(target) %>%
     asNamespace %>%
     eapply(FUN = clean_package_function, all.names = TRUE)
-  if(pkg == "package:base") {
+  if (target == "package:base") {
     content <- R.version
   }
   digest(content, algo = config$long_hash_algo)

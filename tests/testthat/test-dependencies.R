@@ -31,13 +31,14 @@ test_with_dir(
 test_with_dir("tracked() works", {
   config <- dbug()
   x <- sort(tracked(plan = config$plan, envir = config$envir))
-  y <- sort(c("'intermediatefile.rds'", "yourinput", "nextone",
+  y <- sort(c("package:base", "'intermediatefile.rds'",
+    "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
     "c", "b", "a", "saveRDS", "'input.rds'", "readRDS"))
   expect_equal(x, y)
   x <- sort(tracked(plan = config$plan, targets = "myinput",
     envir = config$envir))
-  y <- sort(c("myinput", "'input.rds'", "readRDS"))
+  y <- sort(c("package:base", "myinput", "'input.rds'", "readRDS"))
   expect_equal(x, y)
 })
 

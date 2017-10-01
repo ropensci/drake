@@ -48,7 +48,7 @@ test_with_dir("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "files",
     config = config), 8)
   expect_true(max_useful_jobs(my_plan, envir = e, imports = "all",
-    config = config) > 8)
+    config = config) >= 8)
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 8)
 
@@ -80,7 +80,7 @@ test_with_dir("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "files",
     config = config), 1)
   expect_true(max_useful_jobs(my_plan, envir = e, imports = "all",
-    config = config) > 8)
+    config = config) >= 8)
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 0)
 
@@ -102,7 +102,7 @@ test_with_dir("basic example works", {
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "files",
     config = config), 4)
   expect_true(max_useful_jobs(my_plan, envir = e, imports = "all",
-    config = config) > 8)
+    config = config) >= 8)
   expect_equal(max_useful_jobs(my_plan, envir = e, imports = "none",
     config = config), 4)
 

@@ -45,10 +45,12 @@ test_with_dir("cache functions work", {
   testrun(config)
 
   # targets
-  all <- sort(c("'input.rds'", "'intermediatefile.rds'", "a",
+  all <- sort(c("package:base", "'input.rds'",
+    "'intermediatefile.rds'", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i", "j",
     "myinput", "nextone", "readRDS", "saveRDS", "yourinput"))
-  imports <- sort(c("'input.rds'", "a", "b", "c", "f", "g",
+  imports <- sort(c("package:base", "'input.rds'",
+    "a", "b", "c", "f", "g",
     "h", "i", "j", "readRDS", "saveRDS"))
   builds <- setdiff(all, imports)
 
