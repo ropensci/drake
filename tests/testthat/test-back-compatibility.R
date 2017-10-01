@@ -34,7 +34,7 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   ))
   old_plan <- data.frame(
     target = "x",
-    command = "my_function('my_file.rds')"
+    command = "eply::strings(my_function('my_file.rds'))"
   )
   envir <- eval(parse(text = get_testing_scenario()$envir))
   envir$my_function <- function(x){
@@ -66,5 +66,21 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
     quiet = TRUE
   )
   expect_equal(storr_hash, "md5")
+  obj <- c("'my_file.rds'", "eply::strings", "my_function", "x")
+  expect_equal(sort(cached(cache = con$cache)), sort(obj))
+    
+  # Make from scratch. Should now depend on package:eply.
+  clean(destroy = TRUE, cache = con$cache)
+  con <- make(
+    old_plan,
+    verbose = FALSE,
+    return_config = TRUE,
+    envir = envir,
+    parallelism = get_testing_scenario()$parallelism,
+    jobs = get_testing_scenario()$jobs
+  )
+  obj <- c(obj, "package:eply")
+  expect_equal(sort(cached(cache = con$cache)), sort(obj))
+
   rm(list = "my_function", envir = envir)
 })

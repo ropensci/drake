@@ -3,7 +3,7 @@ unlink("cache", recursive = TRUE)
 saveRDS(1:10, file = "my_file.rds")
 my_plan <- data.frame(
   target = "x",
-  command = "my_function('my_file.rds')"
+  command = "eply::strings(my_function('my_file.rds'))"
 )
 my_function <- function(x){
   x
