@@ -16,16 +16,32 @@ is_in_package <- function(funct){
 
 is_installed_package <- function(x, config){
   is_package(x) &
-    sans_package(x) %in% rownames(config$installed_packages)
+    sans_package(x) %in% config$installed_packages
 }
 
-# From miniCRAN
-base_packages <- function(config){
-  names(which(config$installed_packages[, "Priority"] == "base"))
-}
-
+#' @title Function package_version
+#' @export
+#' @description Packages are formally imported into drake workflows,
+#' and they serve as dependencies of package functions.
+#' Specifically, the version of each package is tracked.
+#' For base packages like \code{base} and \code{stats},
+#' the version of R itself is tracked. Here, the version string
+#' is used, so different snapshots of R-devel have different versions.
+#' @examples
+#' packageVersion("base")
+#' packageVersion("drake")
+#' packageVersion("package:drake")
+#' \dontrun{
+#' load_basic_example()
+#' plot_graph(my_plan) # Hover over the package nodes on the left.
+#' }
 package_version <- function(x){
-  packageVersion(sans_package(x))
+  pkg <- sans_package(x)
+  if (pkg %in% utils::sessionInfo()$basePkgs) {
+    R.version$version.string
+  } else {
+    utils::packageVersion(pkg)
+  }
 }
 
 description_path <- function(x){

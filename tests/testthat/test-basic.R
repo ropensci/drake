@@ -116,14 +116,4 @@ test_with_dir("basic example works", {
   tmp <- dataframes_graph(my_plan, envir = e, jobs = jobs,
     parallelism = parallelism, verbose = FALSE)
   expect_true(is.data.frame(tmp$nodes))
-
-  # Let's make things out of date by changing a package
-  expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
-    character(0))
-  target <- "package:base"
-  entry <- config$cache$get(target)
-  entry$value <- as.character(NA)
-  config$cache$set("package:base", value = entry)
-  expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
-    sort(my_plan$target))
 })

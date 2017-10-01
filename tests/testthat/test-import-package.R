@@ -52,52 +52,43 @@ test_with_dir("react to change in package", {
     new = c(lib, .libPaths()),
     code = {
       unloadNamespace("newpkg")
-      hash1 <- rehash_package("package:newpkg", config = con)
+      hash1 <- package_hash("package:newpkg", config = con)
     }
   )
   withr::with_libpaths(
     new = c(lib2, .libPaths()),
     code = {
       unloadNamespace("newpkg")
-      hash2 <- rehash_package("package:newpkg", config = con)
+      hash2 <- package_hash("package:newpkg", config = con)
     }
   )
   expect_equal(hash1, hash2)
 
   # Reinstall the same package and check that stuff is still up to date.
-  for (i in seq_len(2)){
-    withr::with_libpaths(
-      new = c(lib2, .libPaths()),
-      code = {
-        unloadNamespace("newpkg")
-        expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
-          character(0))
-        con <- config(my_plan, envir = e,
-          jobs = jobs, parallelism = parallelism,
-          verbose = FALSE)
-        testrun(con)
-        expect_equal(sort(justbuilt(con)), character(0))
-        expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
-          character(0))
-      }
-    )
-    install.packages("newpkg", type = "source", repos = NULL,
-      lib = lib2, quiet = TRUE)
-  }
-
-  # Install an altered copy of the package with the same version number.
-  # Targets should be out of date.
-  unlink("newpkg", recursive = TRUE)
-  pkgenv$newfunction <- function(x){
-    x + 2
-  }
-  withr::with_message_sink(
-    new = tempfile(),
+  withr::with_libpaths(
+    new = c(lib2, .libPaths()),
     code = {
-      package.skeleton(name = "newpkg", environment = pkgenv)
+      unloadNamespace("newpkg")
+      expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
+        character(0))
+      con <- config(my_plan, envir = e,
+        jobs = jobs, parallelism = parallelism,
+        verbose = FALSE)
+      testrun(con)
+      expect_equal(sort(justbuilt(con)), character(0))
+      expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
+        character(0))
     }
   )
-  unlink(file.path("newpkg", "man"), recursive = TRUE)
+
+  # Install an altered copy of the package with a different version number.
+  # Targets should be out of date.
+  path <- file.path("newpkg", "DESCRIPTION")
+  lines <- readLines(path)
+  index <- grep("^Version:", lines)
+  lines[index] <- paste0(lines[index], ".9") # Change the version.
+  unlink(path)
+  writeLines(text = lines, con = path)
   install.packages("newpkg", type = "source", repos = NULL,
     lib = lib, quiet = TRUE)
   obj <- sort(c("'report.md'", "report_dependencies",
@@ -112,8 +103,9 @@ test_with_dir("react to change in package", {
         jobs = jobs, parallelism = parallelism,
         verbose = FALSE)
       testrun(con)
-      expect_equal(sort(justbuilt(con)), setdiff(obj,
-        c("'report.md'", "report_dependencies")))
+      jb <- justbuilt(con)
+      expect_true(length(jb) < nrow(con$plan))
+      expect_true(all(c("regression2_small", "regression2_large") %in% jb))
       expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
         character(0))
     }
