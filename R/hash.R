@@ -110,10 +110,13 @@ rehash_package <- function(pkg, config) {
   if (!is_package(pkg)) {
     stop("Trying rehash_package() on a non-package")
   }
-  sans_package(pkg) %>%
+  content <- sans_package(pkg) %>%
     asNamespace %>%
-    eapply(FUN = clean_package_function, all.names = TRUE) %>%
-    digest(algo = config$long_hash_algo)
+    eapply(FUN = clean_package_function, all.names = TRUE)
+  if(pkg == "package:base") {
+    content <- R.version
+  }
+  digest(content, algo = config$long_hash_algo)
 }
 
 # Functions loaded with devtools::load_all() will still have whitespace and

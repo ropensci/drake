@@ -48,7 +48,7 @@ test_with_dir("can get_cache() a storr_environment", {
   expect_equal(e$hash_algorithm, "crc32")
 })
 
-test_with_dir("arbitrary storr file cache", {
+test_with_dir("arbitrary storr in-memory cache", {
   expect_false(file.exists(default_cache_path()))
   parallelism <- default_parallelism()
   jobs <- 1

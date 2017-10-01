@@ -1,10 +1,12 @@
 should_build <- function(target, hash_list, config){
-  !(target %in% config$plan$target) |
+  if (!(target %in% config$plan$target)) {
+    return(TRUE)
+  }
   !target_current(
     target = target,
     hashes = hash_list[[target]],
     config = config
-    )
+  )
 }
 
 target_current <- function(target, hashes, config){
@@ -17,7 +19,7 @@ target_current <- function(target, hashes, config){
   identical(
     config$cache$get(target, namespace = "depends"),
     hashes$depends
-    )
+  )
 }
 
 file_current <- function(target, hashes, config){

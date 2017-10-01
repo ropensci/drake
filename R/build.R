@@ -77,8 +77,8 @@ flexible_get <- function(target) {
 
 store_target <- function(target, value, hashes, imported, config) {
   if (is_package(target)) {
-    store_package(target = target, value = value, imported = imported,
-      config = config)
+    store_package(target = target, value = value,
+      imported = imported, config = config)
   } else if (is_file(target)) {
     store_file(target = target, hashes = hashes, imported = imported,
       config = config)
