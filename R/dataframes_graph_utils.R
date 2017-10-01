@@ -14,7 +14,7 @@ append_build_times <- function(nodes, digits, config) {
   nodes
 }
 
-arrange_nodes <- function(nodes,config, targets, imports){
+arrange_nodes <- function(nodes, config, targets, imports){
   if (config$parallelism == "Makefile")
     resolve_levels_Makefile(nodes = nodes, graph = config$graph,
       imports = imports, targets = targets)
