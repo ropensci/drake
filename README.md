@@ -215,8 +215,8 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Other imported functions, whether user-defined or from packages.
 1. For imported functions from your environment, any nested functions also in your environment or from packages.
 1. The packages where the imported functions came from, if applicable.
-    a. The version numbers for non-base packages.
-    a. The release version of R itself (or snapshot of development R), if applicable for base packages such as `base` and `stats`.
+    1. The version numbers for non-base packages.
+    1. The release version of R itself (or snapshot of development R), if applicable for base packages such as `base` and `stats`.
 1. Commands in your workflow plan data frame.
 1. Global varibles mentioned in the commands or imported functions.
 1. Upstream targets.

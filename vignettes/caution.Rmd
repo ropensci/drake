@@ -201,6 +201,8 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 
 `Drake` imports functions from packages, and it assigns as dependencies the packages they came from. Then, `drake` watches for changes in the version numbers of the packages, and it reacts by declaring any depending functions out of date. That means if you update a local development package without changing the version number, `drake` is oblivious, and `make()` could declare everything up to date.
 
+In addition, any dependency packages must be properly installed. `drake` does not support the use of packages loaded with `devtools::load_all()` or similar means.
+
 # High-performance computing
 
 ## Parallel computing on Windows
