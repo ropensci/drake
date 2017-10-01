@@ -79,7 +79,8 @@ check_strings <- function(plan) {
     sep = "\n")
   for (target in seq_len(length(x))) {
     cat("\ntarget:", names(x)[target], "\n")
-    cat("strings in command:\n", multiline_message(quotes(x[[target]],
+    cat("strings in command:\n",
+      multiline_message(eply::quotes(x[[target]],
       single = FALSE)), "\n", sep = "")
   }
 }

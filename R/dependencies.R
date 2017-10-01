@@ -55,7 +55,7 @@ command_dependencies <- function(command){
     unlist()
   files <- extract_filenames(command)
   if (length(files)){
-    files <- quotes(files, single = TRUE)
+    files <- eply::quotes(files, single = TRUE)
   }
   c(non_files, files) %>%
     clean_dependency_list()

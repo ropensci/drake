@@ -69,7 +69,7 @@ plan <- function(
   )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){
-    plan$target <- quotes(plan$target, single = T)
+    plan$target <- eply::quotes(plan$target, single = T)
   }
   if (strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
@@ -90,7 +90,7 @@ plan <- function(
 #' @examples
 #' as_file("my_file.rds")
 as_file <- function(x){
-  quotes(x, single = TRUE)
+  eply::quotes(x, single = TRUE)
 }
 
 wide_deparse <- function(x){

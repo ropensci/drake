@@ -99,9 +99,10 @@ makefile_rules <- function(config){
       cat(deps, sep = breaker)
     }
     if (is_file(target)){
-      target <- paste0("drake::as_file(\"", unquote(target), "\")")
+      target <- paste0("drake::as_file(\"", eply::unquote(target), "\")")
     } else{
-      target <- quotes(unquote(target), single = FALSE)
+      target <- eply::quotes(
+        eply::unquote(target), single = FALSE)
     }
     cat("\tRscript -e 'drake::mk(", target,
       ", \"$(", cache_macro, ")\")'\n",
