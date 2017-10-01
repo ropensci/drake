@@ -11,7 +11,7 @@ test_with_dir("react to change in package", {
   withr::with_message_sink(
     new = tempfile(),
     code = {
-      package.skeleton(name = "newpkg", environment = pkgenv)
+      utils::package.skeleton(name = "newpkg", environment = pkgenv)
     }
   )
   unlink(file.path("newpkg", "man"), recursive = TRUE)
@@ -20,8 +20,8 @@ test_with_dir("react to change in package", {
 
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  jobs <- scenario$jobs
-  parallelism <- scenario$parallelism
+  jobs <- 1 # scenario$jobs
+  parallelism <- "mclapply" # scenario$parallelism
   load_basic_example(envir = e)
   e$reg2 <- function(d) {
     y <- newpkg:::newfunction(10)
@@ -35,7 +35,7 @@ test_with_dir("react to change in package", {
       prework <- paste0(".libPaths('", lib, "')")
       con <- config(my_plan, envir = e,
         jobs = jobs, parallelism = parallelism,
-        verbose = FALSE, prework = prework)
+        verbose = TRUE, prework = prework)
       testrun(con)
       expect_equal(sort(justbuilt(con)), sort(my_plan$target))
       expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
