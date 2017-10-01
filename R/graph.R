@@ -35,7 +35,7 @@ build_graph <- function(
     targets = plan$target,
     envir = envir,
     verbose = verbose
-    )
+  )
   true_import_names <- setdiff(names(imports), targets)
   imports <- imports[true_import_names]
   import_deps <- lapply(imports, import_dependencies)

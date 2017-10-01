@@ -105,22 +105,32 @@ unwrap_function <- function(funct){
 }
 
 function_dependencies <- function(funct){
+  if (is_in_package(funct)) {
+    return(list(package = package_of_function(funct)))
+  }
   funct <- unwrap_function(funct)
   if (typeof(funct) != "closure"){
     funct <- function(){} # nolint: curly braces are necessary
-  }
-  # for functions from packages
-  env <- environment(funct)
-  if (isNamespace(env)) {
-    pkg <- getNamespaceName(env) %>%
-      as_package
-    return(list(package = pkg))
   }
   out <- findGlobals(funct, merge = FALSE)
   namespaced <- find_namespaced_functions(funct)
   out$functions <- c(out$functions, namespaced) %>%
     sort()
   parsable_list(out)
+}
+
+is_in_package <- function(funct){
+  isNamespace(environment(funct))
+}
+
+package_of_function <- function(funct) {
+  env <- environment(funct)
+  if (isNamespace(env)) {
+    getNamespaceName(env) %>%
+      as_package
+  } else {
+    character(0)
+  }
 }
 
 clean_dependency_list <- function(x){

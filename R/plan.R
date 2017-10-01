@@ -103,12 +103,28 @@ sanitize_plan <- function(plan){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
   }
-  as.data.frame(plan, stringsAsFactors = FALSE) %>%
+  out <- as.data.frame(plan, stringsAsFactors = FALSE) %>%
     fix_deprecated_plan_names()
+  warn_package_targets(out$target)
+  out
 }
 
 sanitize_targets <- function(plan, targets){
   plan <- sanitize_plan(plan)
-  str_trim(targets, side = "both") %>%
+  out <- str_trim(targets, side = "both") %>%
     intersect(y = plan$target)
+  warn_package_targets(out)
+  out
+}
+
+warn_package_targets <- function(targets){
+  x <- Filter(targets, f = is_package)
+  if (length(x)){
+    warning(
+      "Found target names that stand for packages. ",
+      "Target names must not have the form \"package:name\". ",
+      "Offending targets:\n",
+      multiline_message(x)
+    )
+  }
 }
