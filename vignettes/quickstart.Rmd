@@ -210,7 +210,7 @@ plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/outdated.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -371,7 +371,7 @@ dataframes_graph(my_plan)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/built.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/built.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -421,7 +421,7 @@ plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -487,7 +487,7 @@ plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/a816f791/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
