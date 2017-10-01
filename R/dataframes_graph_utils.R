@@ -38,18 +38,21 @@ categorize_nodes <- function(nodes, functions, imports,
   nodes$type <- "object"
   nodes[is_file(nodes$id), "type"] <- "file"
   nodes[functions, "type"] <- "function"
+  nodes[is_package(nodes$id), "type"] <- "package"
   nodes
 }
 
 configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
-  files, functions, imports, in_progress, missing, outdated, targets,
+  files, functions, packages = packages, imports,
+  in_progress, missing, outdated, targets,
   font_size, build_times, digits) {
   force(envir)
-  functions <- intersect(nodes$id, functions)
+  functions <- intersect(functions, nodes$id)
   in_progress <- intersect(in_progress, nodes$id)
-  missing <- intersect(nodes$id, missing)
+  missing <- intersect(missing, nodes$id)
   outdated <- intersect(outdated, nodes$id)
-  targets <- intersect(nodes$id, plan$target)
+  packages <- intersect(packages, nodes$id)
+  targets <- intersect(plan$target, nodes$id)
 
   nodes <- categorize_nodes(nodes = nodes, functions = functions,
     imports = imports, in_progress = in_progress, missing = missing,
@@ -60,7 +63,8 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
   if (build_times)
     nodes <- append_build_times(nodes = nodes, digits = digits, cache = cache)
   hover_text(nodes = nodes, plan = plan, envir = envir,
-    files = files, functions = functions, targets = targets)
+    files = files, functions = functions, packages = packages,
+    targets = targets)
 }
 
 #' @title Function default_graph_title
@@ -110,16 +114,35 @@ function_hover_text <- Vectorize(function(function_name, envir){
 },
 "function_name")
 
-hover_text <- function(nodes, plan, targets, files, functions, envir) {
+package_hover_text <- Vectorize(function(package_name){
+  if (is_installed_package(package_name)) {
+    version <- package_version(package_name) %>%
+      as.character
+    return(paste("version", version))
+  } else {
+    return(package_name)
+  }
+},
+"package_name")
+
+target_hover_text <- function(targets, plan) {
+  plan[plan$target %in% targets, "command"] %>%
+    wrap_text %>% crop_text(length = hover_text_length)
+}
+
+hover_text <- function(nodes, plan, targets, files, functions,
+  packages, envir
+) {
   nodes$hover_label <- nodes$id
   import_files <- setdiff(files, targets)
   nodes[import_files, "hover_label"] <-
     file_hover_text(quoted_file = import_files, targets = targets)
   nodes[functions, "hover_label"] <-
     function_hover_text(function_name = functions, envir = envir)
+  nodes[packages, "hover_label"] <-
+    package_hover_text(package_name = packages)
   nodes[targets, "hover_label"] <-
-    plan[plan$target %in% targets, "command"] %>%
-    wrap_text %>% crop_text(length = hover_text_length)
+    target_hover_text(targets = targets, plan = plan)
   nodes
 }
 
@@ -208,6 +231,7 @@ style_nodes <- function(nodes, font_size) {
   nodes[nodes$type == "object", "shape"] <- shape_of("object")
   nodes[nodes$type == "file", "shape"] <- shape_of("file")
   nodes[nodes$type == "function", "shape"] <- shape_of("funct")
+  nodes[nodes$type == "package", "shape"] <- shape_of("package")
   nodes
 }
 
@@ -229,29 +253,36 @@ legend_nodes <- function(font_size = 20) {
   out <- data.frame(
     label = c(
       "Up to date",
-      "In progress",
-      "Outdated",
-      "Imported",
-      "Missing",
       "Object",
+      "In progress",
       "Function",
-      "File"
+      "Outdated",
+      "File",
+      "Imported",
+      "Package",
+      "Missing"
     ),
     color = color_of(c(
       "up_to_date",
+      "generic",
       "in_progress",
+      "generic",
       "outdated",
+      "generic",
       "import_node",
-      "missing_node",
       "generic",
-      "generic",
-      "generic"
+      "missing_node"
     )),
     shape = shape_of(c(
-      rep("object", 6),
+      rep("object", 3),
       "funct",
-      "file"
+      "object",
+      "file",
+      "object",
+      "package",
+      "object"
     )),
+    group = c(rep("Status", 5), rep("Type", 4)),
     font.color = "black",
     font.size = font_size
   )

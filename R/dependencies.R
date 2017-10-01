@@ -123,16 +123,6 @@ is_in_package <- function(funct){
   isNamespace(environment(funct))
 }
 
-package_of_function <- function(funct) {
-  env <- environment(funct)
-  if (isNamespace(env)) {
-    getNamespaceName(env) %>%
-      as_package
-  } else {
-    character(0)
-  }
-}
-
 clean_dependency_list <- function(x){
   x %>%
     unlist() %>%
@@ -172,16 +162,4 @@ is_file <- function(x){
 
 is_not_file <- function(x){
   !is_file(x)
-}
-
-as_package <- function(x){
-  paste0("package:", x)
-}
-
-is_package <- function(x){
-  grepl("^package:", x)
-}
-
-sans_package <- function(x){
-  gsub("^package:", "", x)
 }

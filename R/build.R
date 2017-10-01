@@ -3,14 +3,14 @@ build <- function(target, hash_list, config) {
   hashes <- hash_list[[target]]
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
-  imported <- !(target %in% config$plan$target)
+  imported <- !(target %in% config$plan$target) | is_package(target)
   console(imported = imported, target = target, config = config)
   if (imported) {
     value <- imported_target(target = target, hashes = hashes,
       config = config)
   } else {
     value <- build_target(target = target,
-        hashes = hashes, config = config)
+      hashes = hashes, config = config)
   }
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
@@ -44,20 +44,24 @@ check_built_file <- function(target){
 }
 
 imported_target <- function(target, hashes, config) {
-  if (is_file(target))
+  if (is_package(target) | is_file(target)) {
     return(hashes$file)
-  else if (target %in% ls(config$envir, all.names = TRUE))
+  } else if (target %in% ls(config$envir, all.names = TRUE)) {
     value <- config$envir[[target]]
-  else
+  } else {
     value <- tryCatch(
       flexible_get(target),
       error = function(e)
         console(imported = NA, target = target, config = config))
+  }
   value
 }
 
 flexible_get <- function(target) {
   stopifnot(length(target) == 1)
+  if (is_installed_package(target)){
+    return(package_version(target))
+  }
   parsed <- parse(text = target) %>%
     as.call %>%
     as.list
@@ -72,14 +76,19 @@ flexible_get <- function(target) {
 }
 
 store_target <- function(target, value, hashes, imported, config) {
-  if (is_file(target))
-    store_file(target, hashes = hashes, imported = imported,
-      config = config) else if (is.function(value))
+  if (is_package(target)) {
+    store_package(target = target, value = value, imported = imported,
+      config = config)
+  } else if (is_file(target)) {
+    store_file(target = target, hashes = hashes, imported = imported,
+      config = config)
+  } else if (is.function(value)) {
     store_function(target = target, value = value,
       imported = imported, hashes = hashes, config = config)
-  else
+  } else {
     store_object(target = target, value = value,
       imported = imported, config = config)
+  }
   config$cache$set(key = target, value = hashes$depends,
     namespace = "depends")
 }
@@ -87,6 +96,22 @@ store_target <- function(target, value, hashes, imported, config) {
 store_object <- function(target, value, imported, config) {
   config$cache$set(key = target, value = list(type = "object",
     value = value, imported = imported))
+}
+
+store_package <- function(target, value, imported, config) {
+  config$cache$set(
+    key = target, value = list(
+      type = "package",
+      value = value,
+      imported = imported
+    )
+  )
+  description <- description_path(target)
+  config$cache$set(
+    key = target,
+    value = file.mtime(eply::unquote(description)),
+    namespace = "filemtime"
+  )
 }
 
 store_file <- function(target, hashes, imported, config) {

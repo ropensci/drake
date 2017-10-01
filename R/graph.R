@@ -41,7 +41,8 @@ build_graph <- function(
   import_deps <- lapply(imports, import_dependencies)
   command_deps <- lapply(plan$command, command_dependencies)
   names(command_deps) <- plan$target
-  dependency_list <- c(command_deps, import_deps)
+  dependency_list <- c(command_deps, import_deps) %>%
+    append_package_dependencies(config = config)
   keys <- names(dependency_list)
   vertices <- c(keys, unlist(dependency_list)) %>% unique
   from <- unlist(dependency_list) %>%
@@ -110,4 +111,12 @@ assert_unique_names <- function(imports, targets, envir, verbose){
       )
   }
   remove(list = common, envir = envir)
+}
+
+append_package_dependencies <- function(dependency_list, config) {
+  x <- c(names(dependency_list), unlist(dependency_list)) %>%
+    clean_dependency_list
+  sapply(x, package_of_name) %>%
+    Filter(f = length) %>%
+    c(dependency_list)
 }

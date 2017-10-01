@@ -159,7 +159,11 @@ render_graph <- function(graph, file = character(0),
   selfcontained = FALSE, ...) {
   out <- visNetwork::visNetwork(nodes = graph$nodes, edges = graph$edges,
     main = main, ...) %>%
-    visNetwork::visLegend(useGroups = FALSE, addNodes = graph$legend_nodes) %>%
+    visNetwork::visLegend(
+      useGroups = FALSE,
+      addNodes = graph$legend_nodes,
+      ncol = 2
+    ) %>%
     visNetwork::visHierarchicalLayout(direction = direction) %>%
     visNetwork::visIgraphLayout(physics = FALSE,
     randomSeed = 2017, layout = layout)

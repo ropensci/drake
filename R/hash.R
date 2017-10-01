@@ -12,7 +12,7 @@ hashes <- function(target, config) {
   list(
     target = target,
     depends = dependency_hash(target = target, config = config),
-    file = file_hash(target = target, config = config)
+    file = filesystem_hash(target = target, config = config)
   )
 }
 
@@ -28,8 +28,6 @@ dependency_hash <- function(target, config) {
 self_hash <- Vectorize(function(target, config) {
   if (target %in% config$inventory) {
     config$cache$get_hash(target)
-  } else if (is_package(target)) {
-    rehash_package(target)
   } else {
     as.character(NA)
   }
@@ -45,10 +43,15 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
   do_rehash
 }
 
-file_hash <- function(target, config, size_cutoff = 1e5) {
-  if (is_not_file(target))
+filesystem_hash <- function(target, config, size_cutoff = 1e5) {
+  if (is_package(target)) {
+    filename <- description_path(target) %>%
+      eply::unquote()
+  } else if (is_file(target)) {
+    filename <- eply::unquote(target)
+  } else {
     return(as.character(NA))
-  filename <- eply::unquote(target)
+  }
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(target %in% config$inventory_filemtime,
@@ -61,9 +64,17 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
   if (do_rehash){
-    rehash_file(target = target, config = config)
+    rehash_filesystem(target = target, config = config)
   } else {
     config$cache$get(target)$value
+  }
+}
+
+rehash_filesystem <- function(target, config){
+  if (is_package(target)){
+    rehash_package(pkg = target, config = config)
+  } else {
+    rehash_file(target = target, config = config)
   }
 }
 
@@ -100,19 +111,17 @@ rehash_package <- function(pkg, config) {
     stop("Trying rehash_package() on a non-package")
   }
   sans_package(pkg) %>%
-    asNamespace
+    asNamespace %>%
     eapply(FUN = clean_package_function, all.names = TRUE) %>%
     digest(algo = config$long_hash_algo)
 }
 
-# Jim Hester suggested to just remove the srcref of each function,
-# but I want to go further and deparse the functions instead.
-# Packages loaded with devtools::load_all() keep their whitespace
-# and comments, which would cause drake to overreact to trivial
-# changes if we just stripped the srcref. At the time of writing this,
-# package loading with devtools::load_all() is not officially supported,
-# but we may want to support it at some point.
+# Functions loaded with devtools::load_all() will still have whitespace and
+# comments, which could cause drake to overreact to changes.
+# But then again, the caution vignette explicitly says to install
+# all the package properly, and properly-installed packages are not likely
+# to change very often.
 clean_package_function <- function(x) {
-  unwrap_function(x) %>%
-    deparse
+  attr(x, "srcref") <- NULL
+  x
 }
