@@ -42,8 +42,9 @@ categorize_nodes <- function(nodes, functions, imports,
   nodes
 }
 
-configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
-  files, functions, packages = packages, imports,
+configure_nodes <- function(nodes, plan, envir, parallelism,
+  graph, cache, config,
+  files, functions, packages, imports,
   in_progress, missing, outdated, targets,
   font_size, build_times, digits) {
   force(envir)
@@ -64,7 +65,7 @@ configure_nodes <- function(nodes, plan, envir, parallelism, graph, cache,
     nodes <- append_build_times(nodes = nodes, digits = digits, cache = cache)
   hover_text(nodes = nodes, plan = plan, envir = envir,
     files = files, functions = functions, packages = packages,
-    targets = targets)
+    targets = targets, config = config)
 }
 
 #' @title Function default_graph_title
@@ -114,8 +115,8 @@ function_hover_text <- Vectorize(function(function_name, envir){
 },
 "function_name")
 
-package_hover_text <- Vectorize(function(package_name){
-  if (is_installed_package(package_name)) {
+package_hover_text <- Vectorize(function(package_name, config){
+  if (is_installed_package(package_name, config = config)) {
     version <- package_version(package_name) %>%
       as.character
     return(paste("version", version))
@@ -131,7 +132,7 @@ target_hover_text <- function(targets, plan) {
 }
 
 hover_text <- function(nodes, plan, targets, files, functions,
-  packages, envir
+  packages, envir, config
 ) {
   nodes$hover_label <- nodes$id
   import_files <- setdiff(files, targets)
@@ -140,7 +141,7 @@ hover_text <- function(nodes, plan, targets, files, functions,
   nodes[functions, "hover_label"] <-
     function_hover_text(function_name = functions, envir = envir)
   nodes[packages, "hover_label"] <-
-    package_hover_text(package_name = packages)
+    package_hover_text(package_name = packages, config = config)
   nodes[targets, "hover_label"] <-
     target_hover_text(targets = targets, plan = plan)
   nodes

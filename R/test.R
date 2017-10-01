@@ -1,7 +1,8 @@
 testrun <- function(config) {
   invisible(
     make(plan = config$plan, targets = config$targets, envir = config$envir,
-      verbose = FALSE, parallelism = config$parallelism, jobs = config$jobs,
+      verbose = config$verbose, parallelism = config$parallelism,
+      jobs = config$jobs,
       packages = config$packages, prework = config$prework,
       prepend = config$prepend, command = config$command,
       return_config = TRUE, cache = config$cache

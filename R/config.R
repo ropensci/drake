@@ -85,7 +85,8 @@ build_config <- function(plan, targets, envir,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     inventory = cache$list(),
-    inventory_filemtime = cache$list(namespace = "filemtime")
+    inventory_filemtime = cache$list(namespace = "filemtime"),
+    installed_packages = rownames(installed.packages())
   )
 }
 

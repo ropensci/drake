@@ -16,6 +16,9 @@ target_current <- function(target, hashes, config){
   if (!file_current(target = target, hashes = hashes, config = config)){
     return(FALSE)
   }
+  if (!package_current(target = target, hashes = hashes, config = config)){
+    return(FALSE)
+  }
   identical(
     config$cache$get(target, namespace = "depends"),
     hashes$depends
@@ -30,4 +33,11 @@ file_current <- function(target, hashes, config){
     return(FALSE)
   }
   identical(config$cache$get(target)$value, hashes$file)
+}
+
+package_current <- function(target, hashes, config){
+  if (!is_installed_package(target, config = config)){
+    return(TRUE)
+  }
+  identical(config$cache$get(target)$value, hashes$package)
 }

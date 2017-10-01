@@ -3,7 +3,7 @@ build <- function(target, hash_list, config) {
   hashes <- hash_list[[target]]
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
-  imported <- !(target %in% config$plan$target) | is_package(target)
+  imported <- !(target %in% config$plan$target)
   console(imported = imported, target = target, config = config)
   if (imported) {
     value <- imported_target(target = target, hashes = hashes,
@@ -12,6 +12,7 @@ build <- function(target, hash_list, config) {
     value <- build_target(target = target,
       hashes = hashes, config = config)
   }
+
   store_target(target = target, value = value, hashes = hashes,
     imported = imported, config = config)
   config$cache$set(key = target, value = hashes$depends,
@@ -44,8 +45,10 @@ check_built_file <- function(target){
 }
 
 imported_target <- function(target, hashes, config) {
-  if (is_package(target) | is_file(target)) {
+  if (is_file(target)) {
     return(hashes$file)
+  } else if (is_package(target)) {
+    return(hashes$package)
   } else if (target %in% ls(config$envir, all.names = TRUE)) {
     value <- config$envir[[target]]
   } else {
@@ -59,7 +62,7 @@ imported_target <- function(target, hashes, config) {
 
 flexible_get <- function(target) {
   stopifnot(length(target) == 1)
-  if (is_installed_package(target)){
+  if (is_package(target)){
     return(package_version(target))
   }
   parsed <- parse(text = target) %>%

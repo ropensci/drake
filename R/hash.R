@@ -13,7 +13,7 @@ hashes <- function(target, config) {
     target = target,
     depends = dependency_hash(target = target, config = config),
     file = file_hash(target = target, config = config),
-    package = rehash_package(target = target, config = config)
+    package = package_hash(target = target, config = config)
   )
 }
 
@@ -92,12 +92,33 @@ get_command <- function(target, config) {
   config$plan$command[config$plan$target == target] %>% tidy
 }
 
+package_hash <- function(target, config) {
+  if (!is_installed_package(target, config = config)) {
+    return(NULL)
+  }
+  filename <- description_path(target) %>%
+    eply::unquote()
+  old_mtime <- ifelse(target %in% config$inventory_filemtime,
+    config$cache$get(key = target, namespace = "filemtime"), -Inf)
+  new_mtime <- file.mtime(filename)
+  do_rehash <- should_rehash_file(
+    filename = filename,
+    new_mtime = new_mtime,
+    old_mtime = old_mtime,
+    size_cutoff = 0)
+  if (do_rehash){
+    rehash_package(target = target, config = config)
+  } else {
+    config$cache$get(target)$value
+  }
+}
+
 # Just hash deparsed package functions.
 # Rehashing the data could be too time-consuming and superfluous,
 # and the source files of compiled code are not reliably stored.
 # Hashing the compiled shared object file is probably unwise.
 rehash_package <- function(target, config) {
-  if (!is_package(target)) {
+  if (!is_installed_package(target, config = config)) {
     return(NULL)
   }
   content <- sans_package(target) %>%
@@ -106,7 +127,7 @@ rehash_package <- function(target, config) {
   if (target == "package:base") {
     content <- R.version
   }
-  digest(content, algo = config$long_hash_algo)
+  digest::digest(content, algo = config$long_hash_algo)
 }
 
 # Functions loaded with devtools::load_all() will still have whitespace and

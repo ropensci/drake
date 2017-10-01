@@ -14,9 +14,9 @@ is_in_package <- function(funct){
   isNamespace(environment(funct))
 }
 
-is_installed_package <- function(x){
+is_installed_package <- function(x, config){
   is_package(x) &
-    sans_package(x) %in% rownames(installed.packages())
+    sans_package(x) %in% config$installed_packages
 }
 
 package_version <- function(x){

@@ -114,7 +114,8 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
     f = function(x) missing_import(x, envir = envir))
 
   nodes <- configure_nodes(nodes = nodes, plan = plan, envir = envir,
-    graph = config$graph, cache = config$cache, parallelism = parallelism,
+    graph = config$graph, cache = config$cache,
+    config = config, parallelism = parallelism,
     files = files, functions = functions, imports = imports,
     in_progress = in_progress, missing = missing,
     outdated = outdated, packages = packages, targets = targets,

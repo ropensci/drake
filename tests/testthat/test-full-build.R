@@ -13,9 +13,25 @@ test_with_dir("scratch build with contained envir.", {
   expect_true(is.list(session(search = FALSE)))
   expect_true(all(session(search = FALSE)$target %in% config$plan$target))
 
+  cache <- get_cache()
+  y <- cache$get("package:base")
+  expect_true(is.character(y$value) & !is.na(y$value))
+  expect_equal(y$type, "package")
+  expect_true(y$imported)
+  y <- as.numeric(cache$get("package:base", namespace = "filemtime"))
+  expect_true(length(y) & !is.na(y))
+
   # changed nothing
   testrun(config)
   nobuild(config)
+
+  cache <- get_cache()
+  y <- cache$get("package:base")
+  expect_true(is.character(y$value) & !is.na(y$value))
+  expect_equal(y$type, "package")
+  expect_true(y$imported)
+  y <- as.numeric(cache$get("package:base", namespace = "filemtime"))
+  expect_true(length(y) & !is.na(y))
 
   # take this opportunity to test clean() and prune()
   all <- sort(c("package:base", "'input.rds'",
