@@ -10,8 +10,10 @@ this_cache(path = NULL)
 \item{path}{file path of the cache}
 }
 \description{
-Get a specific drake cache
+Get a known drake file system cache
 at the exact specified file path
+Do not use for in-memory caches such as
+\code{storr_environment()}.
 }
 \examples{
 \dontrun{

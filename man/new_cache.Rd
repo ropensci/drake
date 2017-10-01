@@ -7,10 +7,11 @@
 new_cache(path = drake::default_cache_path(),
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo())
+  long_hash_algo = drake::default_long_hash_algo(), ...)
 }
 \arguments{
-\item{path}{file path to the cache}
+\item{path}{file path to the cache if the cache
+is a file system cache.}
 
 \item{type}{character scalar, type of the drake cache.
 Must be among the list of supported caches
@@ -23,18 +24,27 @@ See \code{\link{default_short_hash_algo}()} and
 \item{long_hash_algo}{long hash algorithm for the cache.
 See \code{\link{default_long_hash_algo}()} and
 \code{\link{make}()}}
+
+\item{...}{other arguments to the cache constructor}
 }
 \description{
-Make a new drake cache.
+Make a new drake cache. Could be any
+type of cache in \code{\link{cache_types()}}.
 }
 \examples{
 \dontrun{
 cache1 <- new_cache() # Creates a new hidden '.drake' folder.
 cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 }
+e <- new.env()
+ls(e)
+y <- new_cache(type = "storr_environment", envir = e)
+ls(e)
+ls(e)
 }
 \seealso{
 \code{\link{default_short_hash_algo}},
 \code{\link{default_long_hash_algo}},
-\code{\link{make}}, \code{\link{cache_types}}
+\code{\link{make}}, \code{\link{cache_types}},
+\code{\link{in_memory_cache_types}}
 }

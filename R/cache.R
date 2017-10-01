@@ -17,7 +17,7 @@ cache_path <- function(cache = NULL){
 }
 
 #' @title Function get_cache
-#' @description Search for and return a drake cache.
+#' @description Search for and return a drake filesystem cache.
 #' @seealso \code{\link{config}}
 #' @export
 #' @param path file path to the folder contianing the cache.
@@ -47,8 +47,10 @@ get_cache <- function(
 
 #' @title Function this_cache
 #' @export
-#' @description Get a specific drake cache
+#' @description Get a known drake file system cache
 #' at the exact specified file path
+#' Do not use for in-memory caches such as
+#' \code{storr_environment()}.
 #' @param path file path of the cache
 #' @examples
 #' \dontrun{
@@ -80,12 +82,15 @@ this_cache <- function(
 }
 
 #' @title Function new_cache
-#' @description Make a new drake cache.
+#' @description Make a new drake cache. Could be any
+#' type of cache in \code{\link{cache_types()}}.
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}},
-#' \code{\link{make}}, \code{\link{cache_types}}
-#' @param path file path to the cache
+#' \code{\link{make}}, \code{\link{cache_types}},
+#' \code{\link{in_memory_cache_types}}
+#' @param path file path to the cache if the cache
+#' is a file system cache.
 #' @param type character scalar, type of the drake cache.
 #' Must be among the list of supported caches
 #' in \code{\link{cache_types}()}.
@@ -95,18 +100,27 @@ this_cache <- function(
 #' @param long_hash_algo long hash algorithm for the cache.
 #' See \code{\link{default_long_hash_algo}()} and
 #' \code{\link{make}()}
+#' @param ... other arguments to the cache constructor
 #' @examples
 #' \dontrun{
 #' cache1 <- new_cache() # Creates a new hidden '.drake' folder.
 #' cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 #' }
+#' e <- new.env()
+#' ls(e)
+#' y <- new_cache(type = "storr_environment", envir = e)
+#' ls(e)
+#' ls(e)
 new_cache <- function(
   path = drake::default_cache_path(),
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo()
+  long_hash_algo = drake::default_long_hash_algo(),
+  ...
 ){
-  if (file.exists(path)){
+  if (type %in% in_memory_cache_types()){
+    path <- NULL
+  } else if (file.exists(path)){
     stop("Cannot create new cache at ", path, ". File already exists.")
   }
   type <- match.arg(type, choices = cache_types())
@@ -114,7 +128,8 @@ new_cache <- function(
   cache <- get(cache_constructor, envir = getNamespace("drake"))(
     path = path,
     short_hash_algo = short_hash_algo,
-    long_hash_algo = long_hash_algo
+    long_hash_algo = long_hash_algo,
+    ...
   )
   configure_cache(
     cache = cache,
@@ -130,8 +145,10 @@ new_cache <- function(
 #' @export
 #' @seealso \code{\link{new_cache}}, \code{\link{this_cache}},
 #' \code{\link{get_cache}}
-#' @description Load an existing drake cache if it exists
+#' @description Load an existing drake files ystem cache if it exists
 #' and create a new one otherwise.
+#' Do not use for in-memory caches such as
+#' \code{storr_environment()}.
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
 #' See \code{\link{default_short_hash_algo}()} and

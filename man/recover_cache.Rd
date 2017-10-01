@@ -24,8 +24,10 @@ See \code{\link{default_long_hash_algo}()} and
 \code{\link{make}()}}
 }
 \description{
-Load an existing drake cache if it exists
+Load an existing drake files ystem cache if it exists
 and create a new one otherwise.
+Do not use for in-memory caches such as
+\code{storr_environment()}.
 }
 \examples{
 \dontrun{

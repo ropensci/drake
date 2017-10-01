@@ -1,14 +1,31 @@
 #' @title Function cache_types
 #' @description List the supported drake cache types.
 #' @export
-#' @seealso \code{\link{new_cache}}, \code{\link{get_cache}},
+#' @seealso \code{\link{in_memory_cache_types}},
+#' \code{\link{new_cache}}, \code{\link{get_cache}},
 #' \code{\link{default_cache_type}}
 #' @examples
 #' cache_types()
 cache_types <- function(){
   # The first is the default.
   c(
-    "storr_rds"
+    "storr_rds",
+    "storr_environment"
+  )
+}
+
+#' @title Function in_memorycache_types
+#' @description List the supported drake in-memory cache types.
+#' @export
+#' @seealso \code{\link{cache_types}},
+#' \code{\link{new_cache}}, \code{\link{get_cache}},
+#' \code{\link{default_cache_type}}
+#' @examples
+#' cache_types()
+in_memory_cache_types <- function(){
+  # The first is the default.
+  c(
+    "storr_environment"
   )
 }
 
@@ -25,7 +42,10 @@ default_cache_type <- function(){
 
 #' @title experimental function type_of_cache
 #' @export
-#' @description Experimental function for a possible
+#' @description Try to get the type of a drake
+#' file system cache. Only works on known caches
+#' with known file systems.
+#' @details Experimental function for a possible
 #' new feature in the future.
 #' It will come in handy if/when multiple cache types
 #' are supported.

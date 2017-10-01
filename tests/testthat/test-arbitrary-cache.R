@@ -1,6 +1,53 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("arbitrary cache")
 
+test_with_dir("storr_environment is a cache type", {
+  expect_true("storr_environment" %in% cache_types())
+  expect_error(tmp <- new_cache(type = "not found"))
+  expect_error(
+    x <- new_cache(type = "storr_environment",
+      short_hash_algo = "murmur32",
+      long_hash_algo = "not found"
+    )
+  )
+  file.create(default_cache_path())
+  x <- new_cache(type = "storr_environment",
+    short_hash_algo = "murmur32",
+    long_hash_algo = "sha1"
+  )
+  unlink(default_cache_path(), recursive = TRUE)
+  expect_false(file.exists(default_cache_path()))
+  expect_equal(short_hash(x), "murmur32")
+  expect_equal(long_hash(x), "sha1")
+  x <- new_cache(type = "storr_environment")
+  expect_false(file.exists(default_cache_path()))
+  expect_equal(short_hash(x), default_short_hash_algo())
+  expect_equal(long_hash(x), default_long_hash_algo())
+  expect_error(session(cache = x))
+  pln <- plan(y = 1)
+  make(pln, cache = x, verbose = FALSE)
+  expect_equal(cached(cache = x), "y")
+  expect_false(file.exists(default_cache_path()))
+  expect_equal(outdated(pln, cache = x, verbose = FALSE), character(0))
+  expect_false(file.exists(default_cache_path()))
+})
+
+test_with_dir("possibly superfluous function get_storr_environment_cache", {
+  tmp <- get_storr_environment_cache(
+    short_hash_algo = "md5",
+    long_hash_algo = "md5"
+  )
+  expect_true("storr" %in% class(tmp))
+})
+
+test_with_dir("can get_cache() a storr_environment", {
+  e <- new.env()
+  y <- new_cache(type = "storr_environment", envir = e,
+    short_hash_algo = "crc32"
+  )
+  expect_equal(e$hash_algorithm, "crc32")
+})
+
 test_with_dir("arbitrary storr file cache", {
   expect_false(file.exists(default_cache_path()))
   parallelism <- default_parallelism()

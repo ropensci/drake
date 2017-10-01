@@ -1,6 +1,5 @@
 new_storr_rds_cache <- function(
   path,
-  hash_algo,
   short_hash_algo,
   long_hash_algo
 ){
@@ -25,7 +24,7 @@ get_storr_rds_cache <- function(path){
   cache <- storr::storr_rds(
     path = path,
     mangle_key = TRUE,
-    hash_algorithm = hash_algo,
+    hash_algorithm = hash_algo
   )
   configure_cache(
     cache = cache,

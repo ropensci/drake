@@ -15,7 +15,7 @@ not the cache itself.}
 for the cache.}
 }
 \description{
-Search for and return a drake cache.
+Search for and return a drake filesystem cache.
 }
 \examples{
 \dontrun{
