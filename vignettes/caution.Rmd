@@ -197,6 +197,10 @@ Some R functions use `.Call()` to run compiled code in the backend. The R code i
 
 Yes, you can declare a file target or input file by enclosing it in single quotes in your workflow plan data frame. But entire directories (i.e. folders) cannot yet be tracked this way. Tracking directories is a tricky problem, and lots of individual edge cases need to be ironed out before I can deliver a clean, reliable solution. Please see [issue 12](https://github.com/wlandau-lilly/drake/issues/12) for updates and a discussion.
 
+## Packages as dependencies
+
+`Drake` imports functions from packages, and it assigns as dependencies the packages they came from. Then, `drake` watches for changes in the version numbers of the packages, and it reacts by declaring any depending functions out of date. That means if you update a local development package without changing the version number, `drake` is oblivious, and `make()` could declare everything up to date.
+
 # High-performance computing
 
 ## Parallel computing on Windows

@@ -364,17 +364,18 @@ In the new graph, the red nodes from before are now green.
 plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
-Optionally, get `visNetwork` nodes and edges so you can make your own plot with `visNetwork` or `render_graph()`.
-
-```{r dfgraph2quick, eval = FALSE}
-dataframes_graph(my_plan)
-```
 
 <iframe
 src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/built.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
+
+Optionally, get `visNetwork` nodes and edges so you can make your own plot with `visNetwork` or `render_graph()`.
+
+```{r dfgraph2quick, eval = FALSE}
+dataframes_graph(my_plan)
+```
 
 
 Use `readd()` and `loadd()` to load more targets. (They are cached in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
@@ -465,6 +466,23 @@ clean(small, reg1) # uncaches individual targets and imported objects
 clean() # cleans all targets out of the cache
 clean(destroy = TRUE) # removes the cache entirely
 ```
+
+# Watching for changed dependencies
+
+As you have seen with `reg2()`, `drake` reacts to changes. In other words, `make()` notices when your dependencies are different from last time, rebuilds any affected targets, and continues downstream. In particular, `drake` watches for nontrivial changes to
+
+1. Other imported functions, whether user-defined or from packages.
+1. For imported functions from your environment, any nested functions also in your environment or from packages.
+1. The packages where the imported functions came from, if applicable.
+    a. The version numbers for non-base packages.
+    a. The release version of R itself (or snapshot of development R), if applicable for base packages such as `base` and `stats`.
+1. Commands in your workflow plan data frame.
+1. Global varibles mentioned in the commands or imported functions.
+1. Upstream targets.
+
+
+To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `plot_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches.
+
 
 # High-performance computing
 
