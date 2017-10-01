@@ -35,7 +35,9 @@ non-null \code{config} argument is supplied.}
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 \code{config$envir} is ignored.
-Otherwise, computing \code{config}
+Overrides all the other arguments if given. For example,
+\code{plan} is replaced with \code{config$plan}.
+Computing \code{config}
 in advance could save time if you plan multiple calls to
 \code{outdated()}.}
 }

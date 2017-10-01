@@ -112,7 +112,9 @@ default_parallelism <- function() {
 #' @param config internal configuration list of \code{\link{make}(...)},
 #' produced also with \code{\link{config}()}.
 #' \code{config$envir} is ignored.
-#' Otherwise, computing this
+#' Overrides all the other arguments if given. For example,
+#' \code{plan} is replaced with \code{config$plan}.
+#' Computing \code{\link{config}}
 #' in advance could save time if you plan multiple calls to
 #' \code{dataframes_graph()}.
 #' @param imports Set the \code{imports} argument to change your
@@ -160,15 +162,30 @@ max_useful_jobs <- function(plan, from_scratch = FALSE,
   envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), config = NULL,
-  imports = c("files", "all", "none")) {
+  imports = c("files", "all", "none")
+) {
   force(envir)
-  nodes <- dataframes_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose, cache = cache, jobs = jobs,
-    parallelism = parallelism,
-    packages = packages, prework = prework, config = config,
+  if (is.null(config)){
+    config <- config(
+      plan = plan,
+      targets = targets,
+      envir = envir,
+      verbose = verbose,
+      cache = cache,
+      parallelism = parallelism,
+      jobs = jobs,
+      packages = packages,
+      prework = prework
+    )
+  }
+  config <- inventory(config)
+  if (!is.null(cache)){
+    config$cache <- configure_cache(cache)
+  }
+  nodes <- dataframes_graph(plan = config$plan, config = config,
     split_columns = FALSE)$nodes
   imports <- match.arg(imports)
-  just_targets <- intersect(nodes$id, plan$target)
+  just_targets <- intersect(nodes$id, config$plan$target)
   just_files <- Filter(x = nodes$id, f = is_file)
   targets_and_files <- union(just_targets, just_files)
   if (imports == "none")

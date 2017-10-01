@@ -1,8 +1,8 @@
 # For hover text
 hover_text_length <- 250
 
-append_build_times <- function(nodes, digits, cache) {
-  time_data <- build_times(digits = digits, cache = cache)
+append_build_times <- function(nodes, digits, config) {
+  time_data <- build_times(digits = digits, cache = config$cache)
   timed <- intersect(time_data$item, nodes$id)
   if (!length(timed))
     return(nodes)
@@ -14,12 +14,12 @@ append_build_times <- function(nodes, digits, cache) {
   nodes
 }
 
-arrange_nodes <- function(nodes, parallelism, graph, targets, imports){
-  if (parallelism == "Makefile")
-    resolve_levels_Makefile(nodes = nodes, graph = graph, imports = imports,
-      targets = targets)
+arrange_nodes <- function(nodes,config, targets, imports){
+  if (config$parallelism == "Makefile")
+    resolve_levels_Makefile(nodes = nodes, graph = config$graph,
+      imports = imports, targets = targets)
   else
-    resolve_levels(nodes = nodes, graph = graph)
+    resolve_levels(nodes = nodes, graph = config$graph)
 }
 
 can_get_function <- function(x, envir) {
@@ -44,30 +44,29 @@ categorize_nodes <- function(nodes, functions, imports,
   nodes
 }
 
-configure_nodes <- function(nodes, plan, envir, parallelism,
-                            graph, cache, config,
-                            files, functions, packages, imports,
-                            in_progress, missing, outdated, targets,
-                            font_size, build_times, digits) {
-  force(envir)
+configure_nodes <- function(nodes, config,
+  files, functions, packages, imports,
+  in_progress, missing, outdated, targets,
+  font_size, build_times, digits
+) {
   functions <- intersect(functions, nodes$id)
   in_progress <- intersect(in_progress, nodes$id)
   missing <- intersect(missing, nodes$id)
   outdated <- intersect(outdated, nodes$id)
   packages <- intersect(packages, nodes$id)
-  targets <- intersect(plan$target, nodes$id)
+  targets <- intersect(config$plan$target, nodes$id)
 
   nodes <- categorize_nodes(nodes = nodes, functions = functions,
     imports = imports, in_progress = in_progress, missing = missing,
     outdated = outdated, targets = targets)
-  nodes <- arrange_nodes(nodes = nodes, parallelism = parallelism,
-                         graph = graph, imports = imports, targets = targets)
+  nodes <- arrange_nodes(nodes = nodes, config = config,
+    imports = imports, targets = targets)
   nodes <- style_nodes(nodes, font_size = font_size)
   if (build_times)
-    nodes <- append_build_times(nodes = nodes, digits = digits, cache = cache)
-  hover_text(nodes = nodes, plan = plan, envir = envir,
-             files = files, functions = functions, packages = packages,
-             targets = targets, config = config)
+    nodes <- append_build_times(nodes = nodes,
+      digits = digits, config = config)
+  hover_text(nodes = nodes, config = config, files = files,
+    functions = functions, packages = packages, targets = targets)
 }
 
 #' @title Function default_graph_title
@@ -136,19 +135,17 @@ target_hover_text <- function(targets, plan) {
     wrap_text %>% crop_text(length = hover_text_length)
 }
 
-hover_text <- function(nodes, plan, targets, files, functions,
-                       packages, envir, config
-) {
+hover_text <- function(nodes, config, files, functions, packages, targets) {
   nodes$hover_label <- nodes$id
   import_files <- setdiff(files, targets)
   nodes[import_files, "hover_label"] <-
     file_hover_text(quoted_file = import_files, targets = targets)
   nodes[functions, "hover_label"] <-
-    function_hover_text(function_name = functions, envir = envir)
+    function_hover_text(function_name = functions, envir = config$envir)
   nodes[packages, "hover_label"] <-
     package_hover_text(package_name = packages, config = config)
   nodes[targets, "hover_label"] <-
-    target_hover_text(targets = targets, plan = plan)
+    target_hover_text(targets = targets, plan = config$plan)
   nodes
 }
 

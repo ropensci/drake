@@ -66,7 +66,9 @@
 #' \code{config$envir} is ignored.
 #' Otherwise, computing this
 #' in advance could save time if you plan multiple calls to
-#' \code{dataframes_graph()}.
+#' \code{dataframes_graph()}. Overrides arguments like
+#' \code{plan}, \code{envir},
+#' \code{parallelism}, and \code{cache} if given.
 #'
 #' @examples
 #' \dontrun{
@@ -113,9 +115,8 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
   missing <- Filter(x = imports,
     f = function(x) missing_import(x, envir = envir))
 
-  nodes <- configure_nodes(nodes = nodes, plan = plan, envir = envir,
-    graph = config$graph, cache = config$cache,
-    config = config, parallelism = parallelism,
+  nodes <- configure_nodes(nodes = nodes,
+    config = config,
     files = files, functions = functions, imports = imports,
     in_progress = in_progress, missing = missing,
     outdated = outdated, packages = packages, targets = targets,

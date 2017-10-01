@@ -33,6 +33,7 @@ test_with_dir("different graphical arrangements for Makefile parallelism", {
     parallelism = "mclapply", jobs = 1))
   expect_equal(1, max_useful_jobs(x, envir = e, config = con,
     parallelism = "parLapply", jobs = 1))
+  con$parallelism <- "Makefile"
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
     parallelism = "Makefile", jobs = 1))
 })

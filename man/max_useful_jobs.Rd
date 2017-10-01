@@ -55,7 +55,9 @@ See \code{?parallelism_choices} for details.}
 \item{config}{internal configuration list of \code{\link{make}(...)},
 produced also with \code{\link{config}()}.
 \code{config$envir} is ignored.
-Otherwise, computing this
+Overrides all the other arguments if given. For example,
+\code{plan} is replaced with \code{config$plan}.
+Computing \code{\link{config}}
 in advance could save time if you plan multiple calls to
 \code{dataframes_graph()}.}
 

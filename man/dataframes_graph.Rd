@@ -73,7 +73,9 @@ produced with \code{\link{config}()}.
 \code{config$envir} is ignored.
 Otherwise, computing this
 in advance could save time if you plan multiple calls to
-\code{dataframes_graph()}.}
+\code{dataframes_graph()}. Overrides arguments like
+\code{plan}, \code{envir},
+\code{parallelism}, and \code{cache} if given.}
 }
 \value{
 a list of three data frames: one for nodes,

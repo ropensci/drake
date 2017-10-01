@@ -4,6 +4,9 @@
 # reproduce the problem on any of my machines.
 # Things seem to work just fine in the real world.
 
+library(testthat)
+devtools::load_all()
+
 set_testing_scenario("local_mcl_1")
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("import package")
