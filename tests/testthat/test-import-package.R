@@ -15,7 +15,7 @@ test_with_dir("react to change in package", {
     }
   )
   unlink(file.path("newpkg", "man"), recursive = TRUE)
-  install.packages("newpkg", type = "source", repos = NULL,
+  utils::install.packages("newpkg", type = "source", repos = NULL,
     lib = lib, quiet = TRUE)
 
   scenario <- get_testing_scenario()
@@ -32,9 +32,10 @@ test_with_dir("react to change in package", {
   withr::with_libpaths(
     new = c(lib, .libPaths()),
     code = {
+      prework <- paste0(".libPaths('", lib, "')")
       con <- config(my_plan, envir = e,
         jobs = jobs, parallelism = parallelism,
-        verbose = FALSE)
+        verbose = FALSE, prework = prework)
       testrun(con)
       expect_equal(sort(justbuilt(con)), sort(my_plan$target))
       expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
@@ -46,7 +47,7 @@ test_with_dir("react to change in package", {
   # still give the same hash.
   lib2 <- "local_lib2"
   dir.create(lib2)
-  install.packages("newpkg", type = "source", repos = NULL,
+  utils::install.packages("newpkg", type = "source", repos = NULL,
     lib = lib2, quiet = TRUE)
   withr::with_libpaths(
     new = c(lib, .libPaths()),
@@ -71,9 +72,10 @@ test_with_dir("react to change in package", {
       unloadNamespace("newpkg")
       expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
         character(0))
+      prework <- paste0(".libPaths('", lib2, "')")
       con <- config(my_plan, envir = e,
         jobs = jobs, parallelism = parallelism,
-        verbose = FALSE)
+        verbose = FALSE, prework = prework)
       testrun(con)
       expect_equal(sort(justbuilt(con)), character(0))
       expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
@@ -89,7 +91,7 @@ test_with_dir("react to change in package", {
   lines[index] <- paste0(lines[index], ".9") # Change the version.
   unlink(path)
   writeLines(text = lines, con = path)
-  install.packages("newpkg", type = "source", repos = NULL,
+  utils::install.packages("newpkg", type = "source", repos = NULL,
     lib = lib, quiet = TRUE)
   obj <- sort(c("'report.md'", "report_dependencies",
     my_plan$target[grepl("regression2", my_plan$target)]))
@@ -99,9 +101,10 @@ test_with_dir("react to change in package", {
       unloadNamespace("newpkg")
       expect_equal(sort(outdated(my_plan, envir = e, verbose = FALSE)),
         obj)
+      prework <- paste0(".libPaths('", lib, "')")
       con <- config(my_plan, envir = e,
         jobs = jobs, parallelism = parallelism,
-        verbose = FALSE)
+        verbose = FALSE, prework = prework)
       testrun(con)
       jb <- justbuilt(con)
       expect_true(length(jb) < nrow(con$plan))

@@ -46,8 +46,8 @@
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat expect_false expect_true test_dir test_that
-#' @importFrom utils capture.output compareVersion packageVersion
-#' sessionInfo unzip
+#' @importFrom utils capture.output compareVersion installed.packages
+#' packageVersion sessionInfo unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink

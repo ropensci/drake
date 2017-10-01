@@ -6,6 +6,10 @@
 \usage{
 package_version(x)
 }
+\arguments{
+\item{x}{name of the package. Could have \code{"package:"} in front
+of it or not.}
+}
 \description{
 Packages are formally imported into drake workflows,
 and they serve as dependencies of package functions.
@@ -15,9 +19,9 @@ the version of R itself is tracked. Here, the version string
 is used, so different snapshots of R-devel have different versions.
 }
 \examples{
-packageVersion("base")
-packageVersion("drake")
-packageVersion("package:drake")
+package_version("base")
+package_version("stats")
+package_version("package:stats")
 \dontrun{
 load_basic_example()
 plot_graph(my_plan) # Hover over the package nodes on the left.

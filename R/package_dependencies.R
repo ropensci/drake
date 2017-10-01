@@ -27,10 +27,12 @@ is_installed_package <- function(x, config){
 #' For base packages like \code{base} and \code{stats},
 #' the version of R itself is tracked. Here, the version string
 #' is used, so different snapshots of R-devel have different versions.
+#' @param x name of the package. Could have \code{"package:"} in front
+#' of it or not.
 #' @examples
-#' packageVersion("base")
-#' packageVersion("drake")
-#' packageVersion("package:drake")
+#' package_version("base")
+#' package_version("stats")
+#' package_version("package:stats")
 #' \dontrun{
 #' load_basic_example()
 #' plot_graph(my_plan) # Hover over the package nodes on the left.
