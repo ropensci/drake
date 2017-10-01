@@ -19,7 +19,7 @@ is_installed_package <- function(x, config){
     sans_package(x) %in% config$installed_packages
 }
 
-#' @title Function package_version
+#' @title Function pacakge_dependency_version
 #' @export
 #' @description Packages are formally imported into drake workflows,
 #' and they serve as dependencies of package functions.
@@ -30,14 +30,14 @@ is_installed_package <- function(x, config){
 #' @param x name of the package. Could have \code{"package:"} in front
 #' of it or not.
 #' @examples
-#' package_version("base")
-#' package_version("stats")
-#' package_version("package:stats")
+#' pacakge_dependency_version("base")
+#' pacakge_dependency_version("stats")
+#' pacakge_dependency_version("package:stats")
 #' \dontrun{
 #' load_basic_example()
 #' plot_graph(my_plan) # Hover over the package nodes on the left.
 #' }
-package_version <- function(x){
+pacakge_dependency_version <- function(x){
   pkg <- sans_package(x)
   if (pkg %in% utils::sessionInfo()$basePkgs) { # nolint
     R.version$version.string # nolint
