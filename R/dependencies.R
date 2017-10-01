@@ -109,6 +109,13 @@ function_dependencies <- function(funct){
   if (typeof(funct) != "closure"){
     funct <- function(){} # nolint: curly braces are necessary
   }
+  # for functions from packages
+  env <- environment(funct)
+  if (isNamespace(env)) {
+    pkg <- getNamespaceName(env) %>%
+      as_package
+    return(list(package = pkg))
+  }
   out <- findGlobals(funct, merge = FALSE)
   namespaced <- find_namespaced_functions(funct)
   out$functions <- c(out$functions, namespaced) %>%
@@ -155,4 +162,16 @@ is_file <- function(x){
 
 is_not_file <- function(x){
   !is_file(x)
+}
+
+as_package <- function(x){
+  paste0("package:", x)
+}
+
+is_package <- function(x){
+  grepl("^package:", x)
+}
+
+sans_package <- function(x){
+  gsub("^package:", "", x)
 }

@@ -83,7 +83,7 @@ this_cache <- function(
 
 #' @title Function new_cache
 #' @description Make a new drake cache. Could be any
-#' type of cache in \code{\link{cache_types()}}.
+#' type of cache in \code{\link{cache_types}()}.
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}},

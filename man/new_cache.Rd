@@ -29,7 +29,7 @@ See \code{\link{default_long_hash_algo}()} and
 }
 \description{
 Make a new drake cache. Could be any
-type of cache in \code{\link{cache_types()}}.
+type of cache in \code{\link{cache_types}()}.
 }
 \examples{
 \dontrun{

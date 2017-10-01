@@ -26,8 +26,13 @@ dependency_hash <- function(target, config) {
 }
 
 self_hash <- Vectorize(function(target, config) {
-  if (target %in% config$inventory)
-    config$cache$get_hash(target) else as.character(NA)
+  if (target %in% config$inventory) {
+    config$cache$get_hash(target)
+  } else if (is_package(target)) {
+    rehash_package(target)
+  } else {
+    as.character(NA)
+  }
 },
 "target", USE.NAMES = FALSE)
 
@@ -84,4 +89,30 @@ braces <- function(x) {
 
 get_command <- function(target, config) {
   config$plan$command[config$plan$target == target] %>% tidy
+}
+
+# Just hash deparsed package functions.
+# Rehashing the data could be too time-consuming and superfluous,
+# and the source files of compiled code are not reliably stored.
+# Hashing the compiled shared object file is probably unwise.
+rehash_package <- function(pkg, config) {
+  if (!is_package(pkg)) {
+    stop("Trying rehash_package() on a non-package")
+  }
+  sans_package(pkg) %>%
+    asNamespace
+    eapply(FUN = clean_package_function, all.names = TRUE) %>%
+    digest(algo = config$long_hash_algo)
+}
+
+# Jim Hester suggested to just remove the srcref of each function,
+# but I want to go further and deparse the functions instead.
+# Packages loaded with devtools::load_all() keep their whitespace
+# and comments, which would cause drake to overreact to trivial
+# changes if we just stripped the srcref. At the time of writing this,
+# package loading with devtools::load_all() is not officially supported,
+# but we may want to support it at some point.
+clean_package_function <- function(x) {
+  unwrap_function(x) %>%
+    deparse
 }
