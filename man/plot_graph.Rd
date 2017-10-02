@@ -9,7 +9,7 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), file = character(0), selfcontained = FALSE,
   build_times = TRUE, digits = 0, targets_only = FALSE,
-  split_columns = FALSE, config = NULL, font_size = 20,
+  split_columns = FALSE, config = NULL, font_size = 18,
   layout = "layout_with_sugiyama",
   main = drake::default_graph_title(parallelism = parallelism, split_columns =
   split_columns), direction = "LR", hover = TRUE,

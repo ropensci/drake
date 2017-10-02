@@ -87,7 +87,7 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 0,
   targets_only = FALSE,
-  split_columns = FALSE, font_size = 20, config = NULL) {
+  split_columns = FALSE, font_size = 18, config = NULL) {
   force(envir)
   if (is.null(config)){
     config <- config(plan = plan, targets = targets,

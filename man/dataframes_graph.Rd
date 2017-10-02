@@ -8,7 +8,7 @@ dataframes_graph(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 0,
-  targets_only = FALSE, split_columns = FALSE, font_size = 20,
+  targets_only = FALSE, split_columns = FALSE, font_size = 18,
   config = NULL)
 }
 \arguments{
