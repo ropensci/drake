@@ -1,0 +1,15 @@
+---
+title: Example Report
+author: You
+output: html_document
+---
+
+Look how I read outputs from the drake cache.
+
+```{r example_chunk}
+library(drake)
+readd(small)
+readd(coef_regression2_small)
+loadd(large)
+head(large)
+```

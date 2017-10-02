@@ -48,26 +48,8 @@ my_render <- function(file, ...){
   render(file) # Drake will know if you load rmarkdown.
 }
 
-# Write the R Markdown source for a dynamic knitr report
-lines <- c(
-  "---",
-  "title: Example Report",
-  "author: You",
-  "output: html_document",
-  "---",
-  "",
-  "Look how I read outputs from the drake cache.",
-  "",
-  "```{r example_chunk}",
-  "library(drake)",
-  "readd(small)",
-  "readd(coef_regression2_small)",
-  "loadd(large)",
-  "head(large)",
-  "```"
-  )
-
-writeLines(lines, "report.Rmd")
+# At this point, please verify that a dynamic report
+# called report.Rmd is in your working directory.
 
 ###############################
 ### CONSTRUCT WORKFLOW PLAN ###
@@ -311,9 +293,9 @@ if (FALSE){
 ###########################
 
 clean(destroy = TRUE) # Totally remove the hidden .drake/ cache.
-unlink(c(
+unlink(
+  c(
     "Makefile",
-    "report.Rmd",
-    "shell.sh",
     "STDIN.o*"
-    )) # Clean up other files.
+  )
+) # Clean up other files.

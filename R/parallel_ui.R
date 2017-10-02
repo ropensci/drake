@@ -218,5 +218,5 @@ shell_file <- function(
   overwrite = FALSE
 ){
   from <- system.file("shell.sh", package = "drake", mustWork = TRUE)
-  file.copy(from = from, to = path, copy.mode = TRUE)
+  invisible(file.copy(from = from, to = path, copy.mode = TRUE))
 }
