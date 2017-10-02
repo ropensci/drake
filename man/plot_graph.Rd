@@ -10,10 +10,8 @@ plot_graph(plan, targets = drake::possible_targets(plan),
   prework = character(0), file = character(0), selfcontained = FALSE,
   build_times = TRUE, digits = 3, targets_only = FALSE,
   split_columns = FALSE, config = NULL, font_size = 18,
-  layout = "layout_with_sugiyama",
-  main = drake::default_graph_title(parallelism = parallelism, split_columns =
-  split_columns), direction = "LR", hover = TRUE,
-  navigationButtons = TRUE, ...)
+  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
+  hover = TRUE, navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

@@ -93,8 +93,7 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   targets_only = FALSE,
   split_columns = FALSE, config = NULL, font_size = 18,
   layout = "layout_with_sugiyama",
-  main = drake::default_graph_title(
-    parallelism = parallelism, split_columns = split_columns),
+  main = NULL,
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
   ...) {
@@ -107,6 +106,9 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
     build_times = build_times, digits = digits,
     targets_only = targets_only, split_columns = split_columns,
     config = config, font_size = font_size)
+  if (is.null(main)){
+    main <- raw_graph$default_title
+  }
   render_graph(raw_graph, file = file, selfcontained = selfcontained,
     layout = layout, direction = direction,
     navigationButtons = navigationButtons, # nolint

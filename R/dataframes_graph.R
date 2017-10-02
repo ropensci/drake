@@ -140,5 +140,5 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
   list(nodes = nodes, edges = edges,
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(
-      parallelism = parallelism, split_columns = split_columns))
+      parallelism = config$parallelism, split_columns = split_columns))
 }
