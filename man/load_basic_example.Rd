@@ -4,13 +4,19 @@
 \alias{load_basic_example}
 \title{Function \code{load_basic_example}}
 \usage{
-load_basic_example(envir = parent.frame())
+load_basic_example(envir = parent.frame(), to = getwd(), overwrite = TRUE)
 }
 \arguments{
 \item{envir}{The environment to load the example into.
 Defaults to your workspace.
 For an insulated workspace,
 set \code{envir = new.env(parent = globalenv())}.}
+
+\item{to}{where to write the dynamic report source file
+\code{report.Rmd}}
+
+\item{overwrite}{logical, whether to overwrite an
+existing file \code{report.Rmd}}
 }
 \description{
 Loads the basic example into your workspace
