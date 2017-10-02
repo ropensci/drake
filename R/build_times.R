@@ -25,7 +25,7 @@
 build_times <- function(
   path = getwd(),
   search = TRUE,
-  digits = 0,
+  digits = 3,
   cache = NULL,
   targets_only = FALSE
 ){

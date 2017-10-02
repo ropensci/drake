@@ -1,3 +1,4 @@
+
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("time")
 
@@ -19,7 +20,7 @@ test_with_dir("build time the same after superfluous make", {
   expect_equal(justbuilt(c2), character(0))
   b2 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b2)))
-  expect_equal(b1, b2)
+  expect_equal(b1[b1$item == "y", ], b2[b2$item == "y", ])
 })
 
 test_with_dir("empty time predictions", {

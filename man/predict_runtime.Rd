@@ -9,7 +9,7 @@ predict_runtime(plan, from_scratch = FALSE, targets_only = FALSE,
   verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   future_jobs = jobs, packages = (.packages()), prework = character(0),
-  config = NULL, digits = 0, path = getwd(), search = TRUE)
+  config = NULL, digits = 3, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}

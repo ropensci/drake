@@ -4,7 +4,7 @@
 \alias{build_times}
 \title{Function \code{build_times}}
 \usage{
-build_times(path = getwd(), search = TRUE, digits = 0, cache = NULL,
+build_times(path = getwd(), search = TRUE, digits = 3, cache = NULL,
   targets_only = FALSE)
 }
 \arguments{

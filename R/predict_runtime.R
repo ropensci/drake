@@ -76,7 +76,7 @@ predict_runtime <- function(
   packages = (.packages()),
   prework = character(0),
   config = NULL,
-  digits = 0,
+  digits = 3,
   path = getwd(),
   search = TRUE
 ){
@@ -202,7 +202,7 @@ rate_limiting_times <- function(
   packages = (.packages()),
   prework = character(0),
   config = NULL,
-  digits = 0,
+  digits = 3,
   path = getwd(),
   search = TRUE
 ){
