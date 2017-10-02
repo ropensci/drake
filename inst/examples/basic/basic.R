@@ -255,11 +255,13 @@ if (FALSE){
 # if (TRUE){ # Only attempt this part on a proper computing cluster.
 
   # The file shell.sh tells the Makefile to submit jobs on a cluster.
-  # You could write this file by hand if you wanted.
+  # You could write this file by hand if you want, or you can
+  # generate a starter file with drake::shell_file().
   # You may have to change 'module load R' to a command that
   # loads a specific version of R.
   # Writes an example shell.sh and does a `chmod +x` so drake can execute it.
-  shell_file()
+
+  # shell_file() # nolint
 
   # In reality, you would put all your code in an R script
   # and then run it in the Linux/Mac terminal with
@@ -269,7 +271,7 @@ if (FALSE){
   # depending on what is needed. These jobs could go to multiple
   # nodes for true distributed computing.
   make(my_plan, parallelism = "Makefile", jobs = 4, # build
-    prepend = "SHELL=./shell.sh")
+    prepend = "SHELL=./shell.sh") # Generate shell.sh with shell_file().
 
   # Alternatively, users of SLURM (https://slurm.schedmd.com/)
   # can just point to `srun` and dispense with `shell.sh` altogether.
