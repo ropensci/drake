@@ -261,7 +261,7 @@ if (FALSE){
   # loads a specific version of R.
   # Writes an example shell.sh and does a `chmod +x` so drake can execute it.
 
-  # shell_file() # nolint
+  shell_file()
 
   # In reality, you would put all your code in an R script
   # and then run it in the Linux/Mac terminal with
@@ -298,6 +298,7 @@ clean(destroy = TRUE) # Totally remove the hidden .drake/ cache.
 unlink(
   c(
     "Makefile",
-    "STDIN.o*"
+    "STDIN.o*",
+    "shell.sh"
   )
 ) # Clean up other files.
