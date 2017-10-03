@@ -1,0 +1,12 @@
+---
+title: "Load All Targets"
+author: "Will Landau"
+date: "October 3, 2017"
+output: html_document
+---
+
+`Drake` should know that this report depends on all the targets.
+
+```{r all}
+loadd()
+```
