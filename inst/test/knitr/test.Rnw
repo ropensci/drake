@@ -1,26 +1,23 @@
----
-title: "Test Report"
-author: "Will Landau"
-date: "October 3, 2017"
-output: html_document
----
+\documentclass{article}
+\begin{document}
 
-`Drake` should be able to analyze this report and detect the right dependencies
-using static code analysis on calls to `loadd()` and `readd()`.
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+options(formatR.arrow=TRUE,width=90)
+@
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+\title{Another test}
+\author{You}
+\maketitle
 
-```r
+Drake should be able to analyze this report and detect the right dependencies
+using static code analysis on calls to loadd() and readd().
+
+<<other, eval = FALSE>>=
 x <- readd(should_not_find)
-```
+@
 
-```{r dry, eval = FALSE}
-x <- readd(should_not_find)
-```
-
-```{r chunk}
+<<real_chunk>>=
 library(drake)
 var <- 10
 var2 <- list(17, var, "ignore", "ignore2")
@@ -46,4 +43,4 @@ f(readd(target = "target17", character_only = TRUE) + var)
 g <- function(){
   f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
 }
-```
+@
