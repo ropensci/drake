@@ -1,13 +1,7 @@
 
 # TO DO:
 # 1. Notice namespaced calls: drake::readd(), drake:::loadd(), etc.
-# 2. Notice that loadd() loads all the targets.
-# 3. Pay attention to the imported_only flag.
-
-
-
-
-
+# 2. Look for strings? (possible file targets)
 
 
 knitr_dependencies <- function(target){
@@ -45,7 +39,7 @@ find_knitr_targets <- function(expr, targets = character(0)){
 }
 
 analyze_loadd <- function(expr){
-  if (deparse(expr[[1]]) != "loadd"){
+  if (!grepl("loadd$", deparse(expr[[1]]))){
     return()
   }
   args <- as.list(expr)[-1]
@@ -55,7 +49,7 @@ analyze_loadd <- function(expr){
 }
 
 analyze_readd <- function(expr){
-  if (deparse(expr[[1]]) != "readd"){
+  if (!grepl("readd$", deparse(expr[[1]]))){
     return()
   }
   args <- as.list(expr)[-1]
