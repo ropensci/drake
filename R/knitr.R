@@ -1,3 +1,15 @@
+
+# TO DO:
+# 1. Notice namespaced calls: drake::readd(), drake:::loadd(), etc.
+# 2. Notice that loadd() loads all the targets.
+# 3. Pay attention to the imported_only flag.
+
+
+
+
+
+
+
 knitr_dependencies <- function(target){
   file <- unquote(target)
   fragments <- get_tangled_frags(file)

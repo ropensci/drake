@@ -1,11 +1,11 @@
 ---
-title: "Load All Targets"
+title: "Load all targets and imports"
 author: "Will Landau"
 date: "October 3, 2017"
 output: html_document
 ---
 
-`Drake` should know that this report depends on all the targets.
+`Drake` should know that this report depends on all the targets and imports.
 
 ```{r all}
 loadd()

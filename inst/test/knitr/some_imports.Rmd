@@ -1,0 +1,12 @@
+---
+title: "Some imports"
+author: "Will Landau"
+date: "October 3, 2017"
+output: html_document
+---
+
+This report should depend on `reg2`, but not `small`
+
+```r
+loadd(reg2, small, imported_only = TRUE)
+```
