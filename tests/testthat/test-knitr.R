@@ -30,10 +30,14 @@ test_with_dir("find_dknit_doc() works", {
   false <- c(
     "knit(4)",
     "other(f)",
-    "dknittles(f('file.Rmd'))"
+    "dknittles(f('file.Rmd'))",
+    "other::dknit('file.Rmd')",
+    "other:::dknit('file.Rmd')"
   )
   true <- c(
     "dknit('file.Rmd')",
+    "drake::dknit('file.Rmd')",
+    "drake:::dknit('file.Rmd')",
     "f(g(dknit('file.Rmd', output = 'file.md', quiet = TRUE)))",
     "f(g(dknit(output = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))",
     "f(g(dknit(output = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
