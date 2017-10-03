@@ -1,24 +1,24 @@
 #' @title Function dknit
 #' @export
 #' @seealso \code{\link{deps_in_document}},
-#' \code{\link{deps}}, \code{\link{deps_of_document}},
+#' \code{\link{deps}}, \code{\link{deps_in_document}},
 #' \code{\link{make}}, \code{\link{load_basic_example}}
 #' @description In a drake workflow, use the command
 #' \code{dknit("'your_document.Rmd'")} to knit the file
 #' \code{your_document.Rmd} while automatically accounting for the
 #' dependencies in \code{your_document.Rmd}. In the document,
 #' for any targerts/imports specifically invoked in calls to
-#' \code{\link{readd()}} and \code{\link{loadd()}} inside
+#' \code{\link{readd}()} and \code{\link{loadd}()} inside
 #' evaluated code chunks, drake will watch these items for changes.
-#' When any one of them changes, \code{\link{drake::make}()} will
+#' When any one of them changes, \code{\link{make}()} will
 #' recompile your document.
 #' @param input charadcter scalar, name of an imported dynamic document
 #' source file. The \code{input} is passed as the \code{input}
-#' argument to \code{\link{knitr::knit}}, but it must be
+#' argument to \code{knitr::knit}, but it must be
 #' enclosed in single quotes just like any other file target/import
 #' in drake. The file must also already exist beforehand, so it
 #' must be an imported file, not a built target.
-#' @param ...
+#' @param ... other arguments to \code{knitr::knit}.
 #' @examples
 #' \dontrun{
 #' load_basic_example
@@ -83,7 +83,7 @@ doc_of_function_call <- function(expr){
 #' @title Function deps_in_document
 #' @export
 #' @seealso \code{\link{deps_in_document}},
-#' \code{\link{deps}}, \code{\link{deps_of_document}},
+#' \code{\link{deps}}, \code{\link{deps_in_document}},
 #' \code{\link{make}}, \code{\link{load_basic_example}}
 #' @description Find the dependencies of a dynamic report. To
 #' enable drake to watch for these dependencies, your command

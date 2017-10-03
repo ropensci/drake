@@ -31,6 +31,6 @@ deps_in_document("report.md")
 }
 \seealso{
 \code{\link{deps_in_document}},
-\code{\link{deps}}, \code{\link{deps_of_document}},
+\code{\link{deps}}, \code{\link{deps_in_document}},
 \code{\link{make}}, \code{\link{load_basic_example}}
 }

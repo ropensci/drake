@@ -9,10 +9,12 @@ dknit(input, ...)
 \arguments{
 \item{input}{charadcter scalar, name of an imported dynamic document
 source file. The \code{input} is passed as the \code{input}
-argument to \code{\link{knitr::knit}}, but it must be
+argument to \code{knitr::knit}, but it must be
 enclosed in single quotes just like any other file target/import
 in drake. The file must also already exist beforehand, so it
 must be an imported file, not a built target.}
+
+\item{...}{other arguments to \code{knitr::knit}.}
 }
 \description{
 In a drake workflow, use the command
@@ -20,9 +22,9 @@ In a drake workflow, use the command
 \code{your_document.Rmd} while automatically accounting for the
 dependencies in \code{your_document.Rmd}. In the document,
 for any targerts/imports specifically invoked in calls to
-\code{\link{readd()}} and \code{\link{loadd()}} inside
+\code{\link{readd}()} and \code{\link{loadd}()} inside
 evaluated code chunks, drake will watch these items for changes.
-When any one of them changes, \code{\link{drake::make}()} will
+When any one of them changes, \code{\link{make}()} will
 recompile your document.
 }
 \examples{
@@ -41,6 +43,6 @@ make(my_plan) # 'report.md' should rebuild.
 }
 \seealso{
 \code{\link{deps_in_document}},
-\code{\link{deps}}, \code{\link{deps_of_document}},
+\code{\link{deps}}, \code{\link{deps_in_document}},
 \code{\link{make}}, \code{\link{load_basic_example}}
 }
