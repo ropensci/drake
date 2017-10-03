@@ -1,0 +1,36 @@
+---
+title: "Test Report"
+author: "Will Landau"
+date: "October 3, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```r
+x <- readd(should_not_find)
+```
+
+```{r dry, eval = FALSE}
+x <- readd(should_not_find)
+```
+
+```{r chunk}
+library(drake)
+var <- 10
+var2 <- list(17, var, "could_be_a_file", "so_could_this")
+f(readd(target1) + var)
+f(drake::readd(target2) + var)
+f(readd(target = target3) + var)
+g <- function(){
+  f(readd(target4, character_only = IGNORE_THIS) + var)
+}
+g <- function(){
+  f(readd(target5, character_only = IGNORE_THIS) + var)
+}
+print(drake::readd(target = "target6", character_only = TRUE, path = "subdir") + var)
+print(drake:::readd("target7", character_only = TRUE, cache = NULL) + var)
+f(loadd(regression2_large, small5, list = c("target8", "target9")), var)
+```
