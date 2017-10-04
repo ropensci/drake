@@ -16,7 +16,7 @@ The other names listed are functions or generic objects.
 }
 \description{
 List the dependencies of a function or workflow plan command.
-Or, if the argument is a single-quoted string that points to 
+Or, if the argument is a single-quoted string that points to
 a dynamic knitr report, the dependencies of the expected compiled
 output will be given. For example, \code{deps("'report.Rmd'")}
 will return target names found in calls to \code{\link{loadd}()}

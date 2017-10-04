@@ -92,10 +92,8 @@ report <- plan(
   # calls to loadd() and readd().
   report.md = knit(
     'report.Rmd', #nolint: use single quotes to specify file dependency.
-    quiet = TRUE
+     quiet = TRUE
   ),
-  ## The html report requires pandoc. Commented out.
-  ## report.html = my_render('report.md', report_dependencies), #nolint: optional
   file_targets = TRUE,
   strings_in_dots = "filenames" # Redundant, since we used single quotes
 )
@@ -148,7 +146,7 @@ make(my_plan) # Run your project.
 # How long did each target take to build?
 build_times()
 
-"report_dependencies" %in% ls() # Should be TRUE.
+ls() # Should contain the non-file dependencies of the last target(s).
 progress() # See also in_progress()
 outdated(my_plan, verbose = FALSE) # Everything is up to date
 # plot_graph(my_plan) # The red nodes from before turned green. #nolint: optional
