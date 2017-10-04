@@ -69,4 +69,5 @@ test_with_dir("misc knitr", {
     dknit("file.Rmd")
   }
   doc_of_function_call(f)
+  expect_equal(doc_of_function_call(as.expression(1)), character(0))
 })
