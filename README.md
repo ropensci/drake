@@ -83,7 +83,7 @@ vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignet
 
 # Useful functions
 
-Besides `make()`, here are some useful functions to learn about drake,
+Besides `make()`, here are some useful functions to learn about drake, 
 
 ```r
 load_basic_example()
