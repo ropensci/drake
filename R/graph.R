@@ -68,7 +68,7 @@ build_graph <- function(
     function(vertex){
       subcomponent(graph = graph, v = vertex, mode = "in")$name
     }
-    ) %>%
+  ) %>%
   unlist() %>%
   unique() %>%
   setdiff(x = vertices)

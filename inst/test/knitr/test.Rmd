@@ -46,4 +46,7 @@ f(readd(target = "target17", character_only = TRUE) + var)
 g <- function(){
   f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
 }
+function(){
+  f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
+}
 ```

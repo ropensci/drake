@@ -103,6 +103,12 @@ doc_of_function_call <- function(expr){
 #' }
 deps_in_document <- function(target){
   file <- unquote(target)
+  if (!file.exists(file)){
+    warning(
+      "dynamic report '", file,
+      "' does not exist and cannot be inspected for dependencies."
+    )
+  }
   fragments <- get_tangled_frags(file)
   sort(find_knitr_targets(fragments))
 }
