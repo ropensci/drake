@@ -115,7 +115,6 @@ check(my_plan)
 
 # Check the dependencies of individual functions and commands.
 deps(reg1)
-deps(my_knit)
 deps(my_plan$command[1])
 deps(my_plan$command[nrow(my_plan)])
 
