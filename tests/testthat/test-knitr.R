@@ -16,7 +16,9 @@ test_with_dir("knitr_deps() works", {
     paste0("target", seq_len(18)),
     as_file(paste0("file", seq_len(6)))
   ))
-  for (doc in c("'test.Rmd'", "test.Rmd", "test.Rnw"))
+  # You may include "test.Rnw" also, but it may generate
+  # LaTeX warnings that have nothing to do with drake.
+  for (doc in c("'test.Rmd'", "test.Rmd"))
     expect_equal(sort(knitr_deps(doc)), ans)
   expect_false(file.exists("test.md"))
   expect_warning(x <- knitr_deps("report.Rmd"))
