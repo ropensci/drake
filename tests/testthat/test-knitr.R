@@ -12,7 +12,10 @@ test_with_dir("knitr_deps() works", {
       overwrite = TRUE
     ))
   }
-  ans <- sort(paste0("target", seq_len(18)))
+  ans <- sort(c(
+    paste0("target", seq_len(18)),
+    as_file(paste0("file", seq_len(6)))
+  ))
   for (doc in c("'test.Rmd'", "test.Rmd", "test.Rnw"))
     expect_equal(sort(knitr_deps(doc)), ans)
   expect_false(file.exists("test.md"))
