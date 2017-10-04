@@ -45,11 +45,6 @@ load_basic_example <- function(envir = parent.frame(),
     lm(y ~ x2, data = d)
   }
 
-  # Knit and render a dynamic knitr report
-  envir$my_knit <- function(file, ...) {
-    knit(file, quiet = TRUE)  # drake knows you loaded the knitr package
-  }
-
   # construct workflow plan
 
   # remove 'undefinded globals' errors in R CMD check
@@ -76,20 +71,17 @@ load_basic_example <- function(envir = parent.frame(),
   # skip 'gather' (workflow my_plan is more readable)
   results <- summaries(summary_types, analyses, datasets, gather = NULL)
 
-  load_in_report <- plan(report_dependencies = c(small, large,
-    coef_regression2_small))
-
   # External file targets and dependencies should be
   # single-quoted.  Use double quotes to remove any special
   # meaning from character strings.  Single quotes inside
   # imported functions are ignored, so this mechanism only
   # works inside the workflow my_plan data frame.  WARNING:
   # drake cannot track entire directories (folders).
-  report <- plan(report.md = my_knit("report.Rmd", report_dependencies),
+  report <- plan(report.md = knit("report.Rmd", quiet = TRUE),
     file_targets = TRUE, strings_in_dots = "filenames")
 
   # Row order doesn't matter in the workflow my_plan.
-  envir$my_plan <- rbind(report, datasets, load_in_report,
+  envir$my_plan <- rbind(report, datasets,
     analyses, results)
 
   # Write the R Markdown source for a dynamic knitr report

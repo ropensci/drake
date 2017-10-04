@@ -30,22 +30,21 @@ my_plan # Each target is a file (single-quoted) or object.
 
 ```r
 ##                    target                                      command
-## 1             'report.md'   my_knit('report.Rmd', report_dependencies)
+## 1             'report.md'             knit('report.Rmd', quiet = TRUE)
 ## 2                   small                                  simulate(5)
 ## 3                   large                                 simulate(50)
-## 4     report_dependencies      c(small, large, coef_regression2_small)
-## 5       regression1_small                                  reg1(small)
-## 6       regression1_large                                  reg1(large)
-## 7       regression2_small                                  reg2(small)
-## 8       regression2_large                                  reg2(large)
-## 9  summ_regression1_small suppressWarnings(summary(regression1_small))
-## 10 summ_regression1_large suppressWarnings(summary(regression1_large))
-## 11 summ_regression2_small suppressWarnings(summary(regression2_small))
-## 12 summ_regression2_large suppressWarnings(summary(regression2_large))
-## 13 coef_regression1_small                      coef(regression1_small)
-## 14 coef_regression1_large                      coef(regression1_large)
-## 15 coef_regression2_small                      coef(regression2_small)
-## 16 coef_regression2_large                      coef(regression2_large)
+## 4       regression1_small                                  reg1(small)
+## 5       regression1_large                                  reg1(large)
+## 6       regression2_small                                  reg2(small)
+## 7       regression2_large                                  reg2(large)
+## 8  summ_regression1_small suppressWarnings(summary(regression1_small))
+## 9  summ_regression1_large suppressWarnings(summary(regression1_large))
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small))
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large))
+## 12 coef_regression1_small                      coef(regression1_small)
+## 13 coef_regression1_large                      coef(regression1_large)
+## 14 coef_regression2_small                      coef(regression2_small)
+## 15 coef_regression2_large                      coef(regression2_large)
 ```
 
 ```r
@@ -114,6 +113,7 @@ dataframes_graph()
 render_graph()
 read_graph()
 deps()
+knitr_deps()
 tracked()
 ```
 
@@ -181,7 +181,9 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 vignette(package = "drake") # List the vignettes.
 vignette("drake") # High-level intro.
 vignette("quickstart") # Walk through a simple example.
+vignette("high-performance-computing") # Extensive prallel computing functionality.
 vignette("storage") # Learn how drake stores your stuff.
+vignette("timing") # Build times of targets, predicting total runtime.
 vignette("caution") # Avoid common pitfalls.
 ```
 
@@ -221,7 +223,13 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Commands in your workflow plan data frame.
 1. Global varibles mentioned in the commands or imported functions.
 1. Upstream targets.
+1. For [dynamic knitr reports](https://yihui.name/knitr) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
 
+See the `quickstart` vignette for demonstrations of `drake`'s reproducibility and reactivity.
+
+```r
+vignette("quickstart")
+```
 
 # High-performance computing
 
@@ -245,11 +253,11 @@ plot_graph(my_plan, width = "100%")
 
 When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
 
-As for how the parallelism is implemented, you can choose from multiple built-in backends.
+As for the implementation, you can choose from multiple built-in parallel backends, including `parLapply()`, `mclapply()`, and [`Makefiles`](https://www.gnu.org/software/make/), the last of which can be tweaked to distribute targets to different jobs on a cluster. Please see the `high-performance-computing` vignette for details.
 
-1. **mclapply**: low-overhead, light-weight. `make(..., parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood and distributes the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
-2. **parLapply**: medium-overhead, light-weight. `make(..., parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
-3. **Makefile**: high-overhead, heavy-duty. `make(..., parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions. With custom settings, you can distribute the R sessions over different jobs/nodes on a cluster. The build order may be different here because all the imports are imported before any of the targets are built with the [Makefile](https://www.gnu.org/software/make/). That means `plot_graph()`, `dataframes_graph()`, and `max_useful_jobs()` behave differently for \code{parallelism = "Makefile"}. For more details, see the [quickstart vignette](https://cran.r-project.org/package=drake/vignettes/quickstart.html).
+```r
+vignette("high-performance-computing") 
+```
 
 # Acknowledgements and related work
 

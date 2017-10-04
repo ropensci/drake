@@ -36,100 +36,6 @@ examples_drake() # List the other examples.
 vignette("quickstart") # This vignette
 ```
 
-# Useful functions
-
-Besides `make()`, here are some useful functions to learn about drake,
-
-```{r examplesquick, eval = FALSE}
-load_basic_example()
-drake_tip()
-examples_drake()
-example_drake()
-```
-
-set up your workflow plan,
-
-```{r planquick, eval = FALSE}
-plan()
-analyses()
-summaries()
-evaluate()
-expand()
-gather()
-wildcard() # from the wildcard package
-```
-
-explore the dependency network,
-```{r depquick, eval = FALSE}
-outdated()
-missed()
-plot_graph()
-dataframes_graph()
-render_graph()
-read_graph()
-deps()
-tracked()
-```
-
-interact with the cache,
-
-```{r cachequicklist, eval = FALSE}
-clean()
-cached()
-imported()
-built()
-readd()
-loadd()
-find_project()
-find_cache()
-```
-
-
-make use of recorded build times,
-
-```{r timesquick, eval = FALSE}
-build_times()
-predict_runtime()
-rate_limiting_times()
-```
-
-speed up your project with parallel computing,
-
-```{r speedquick, eval = FALSE}
-make() # with jobs > 2
-max_useful_jobs()
-parallelism_choices()
-shell_file()
-```
-
-finely tune the caching and hashing,
-
-```{r cachequick, eval = FALSE}
-available_hash_algos()
-cache_path()
-cache_types()
-configure_cache()
-default_long_hash_algo()
-default_short_hash_algo()
-long_hash()
-short_hash()
-new_cache()
-recover_cache()
-this_cache()
-type_of_cache()
-```
-
-and debug your work.
-
-```{r debugquick, eval = FALSE}
-check()
-session()
-in_progress()
-progress()
-config()
-read_config()
-```
-
 # Setting up the basic example
 
 Let's establish the building blocks of a data analysis workflow.
@@ -163,15 +69,7 @@ reg2 <- function(d){
 }
 ```
 
-Finally, we will generate a [dynamic report](http://rmarkdown.rstudio.com/) to display results.
-
-```{r knit}
-my_knit <- function(file, ...){
-  knit(file)
-}
-```
-
-We need the source file `report.Rmd`.
+We need the source file `report.Rmd` for the end.k
 
 ```{r file}
 lines <- c(
@@ -182,6 +80,12 @@ lines <- c(
   "---",
   "",
   "Look how I read outputs from the drake cache.",
+  "Drake notices that `small`, `coef_regression2_small`,",
+  "and `large` are dependencies of the",
+  "future compiled output report file target, `report.md`.",
+  "Just be sure that the workflow plan command for the target `'report.md'`",
+  "has an explicit call to `knit()`, something like `knit('report.Rmd')` or",
+  "`knitr::knit(input = 'report.Rmd', quiet = TRUE)`.",
   "",
   "```{r example_chunk}",
   "library(drake)",
@@ -222,7 +126,7 @@ You can also check the dependencies of individual targets.
 ```{r checkdeps}
 deps(reg2)
 deps(my_plan$command[1]) # Files like report.Rmd are single-quoted.
-deps(my_plan$command[16])
+deps(my_plan$command[nrow(my_plan)])
 ```
 
 List all the reproducibly-tracked objects and files, including imports and targets.
@@ -288,19 +192,11 @@ results
 
 The `gather` feature groups summaries into a smaller number of more manageable targets. I shut it off here to make the data frames more readable.
 
-For the dynamic report, we have to declare the dependencies manually.
-
-```{r reportdeps}
-load_in_report <- plan(
-  report_dependencies = c(small, large, coef_regression2_small))
-load_in_report
-```
-
-Remember: use single quotes for file dependencies. The functions `quotes()`, `unquote()`, and `strings()` from the `eply` package may help. Also, please be aware that drake cannot track entire directories/folders.
+For the dynamic report, we have to make sure the files are single-quoted. Single quotes denote file targets and file imports, and double quotes denote literal strings that should not be treated as dependencies where they are mentioned. Also, `knit()` needs to be somewhere visible in the workflow plan command so that `drake` knows to dig into the active code chunks of `'report.Rmd'` and look for dependencies mentioned in calls to `loadd()` and `readd()`.
 
 ```{r reportplan}
 report <- plan(
-  report.md = my_knit('report.Rmd', report_dependencies), # nolint
+  report.md = knit('report.Rmd', quiet = TRUE), # nolint
   file_targets = TRUE, strings_in_dots = "filenames")
 report
 ```
@@ -308,7 +204,7 @@ report
 Finally, gather your workflow together with `rbind()`. Row order does not matter.
 
 ```{r wholeplan}
-my_plan <- rbind(report, my_datasets, load_in_report, my_analyses, results)
+my_plan <- rbind(report, my_datasets, my_analyses, results)
 my_plan
 ```
 
@@ -347,7 +243,7 @@ make(my_plan)
 The non-file dependencies of your last target are already loaded in your workspace.
 
 ```{r autoload}
-"report_dependencies" %in% ls() # Should be TRUE.
+ls()
 ```
 
 ```{r plotgraphfirstmake}
@@ -364,7 +260,6 @@ In the new graph, the red nodes from before are now green.
 plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
-
 <iframe
 src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/built.html"
 width = "100%" height = "600px" allowtransparency="true"
@@ -376,7 +271,6 @@ Optionally, get `visNetwork` nodes and edges so you can make your own plot with 
 ```{r dfgraph2quick, eval = FALSE}
 dataframes_graph(my_plan)
 ```
-
 
 Use `readd()` and `loadd()` to load more targets. (They are cached in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
 
@@ -467,7 +361,7 @@ clean() # cleans all targets out of the cache
 clean(destroy = TRUE) # removes the cache entirely
 ```
 
-# Watching for changed dependencies
+# Automatic watching for changed dependencies
 
 As you have seen with `reg2()`, `drake` reacts to changes. In other words, `make()` notices when your dependencies are different from last time, rebuilds any affected targets, and continues downstream. In particular, `drake` watches for nontrivial changes to
 
@@ -479,106 +373,13 @@ As you have seen with `reg2()`, `drake` reacts to changes. In other words, `make
 1. Commands in your workflow plan data frame.
 1. Global varibles mentioned in the commands or imported functions.
 1. Upstream targets.
+1. For [dynamic knitr reports](https://yihui.name/knitr) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
 
+To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `plot_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches. For more information on how `drake` watches for changes in the workflow, please see the reproducibility vignette.
 
-To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `plot_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches.
+# Need more speed?
 
-
-# High-performance computing
-
-The network graph is the key to drake's parallel computing.
-
-```{r plotgraph}
-clean()
-load_basic_example()
-make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
-# Change a dependency.
-reg2 <- function(d) {
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
-}
-```
-
-```{r graph4quick, eval = FALSE}
-# Hover, click, drag, zoom, and pan.
-plot_graph(my_plan, width = "100%", height = "500px")
-```
-
-<iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/reg2.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
-
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
-
-See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date. Try out the following in a fresh R session.
-
-```{r hpcquick, eval = FALSE}
-library(drake)
-load_basic_example()
-plot_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
-max_useful_jobs(my_plan) # 8
-max_useful_jobs(my_plan, imports = "files") # 8
-max_useful_jobs(my_plan, imports = "all") # 10
-max_useful_jobs(my_plan, imports = "none") # 8
-make(my_plan, jobs = 4)
-plot_graph(my_plan)
-# Ignore the targets already built.
-max_useful_jobs(my_plan) # 1
-max_useful_jobs(my_plan, imports = "files") # 1
-max_useful_jobs(my_plan, imports = "all") # 10
-max_useful_jobs(my_plan, imports = "none") # 0
-# Change a function so some targets are now out of date.
-reg2 <- function(d){
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
-}
-plot_graph(my_plan)
-max_useful_jobs(my_plan) # 4
-max_useful_jobs(my_plan, from_scratch = TRUE) # 8
-max_useful_jobs(my_plan, imports = "files") # 4
-max_useful_jobs(my_plan, imports = "all") # 10
-max_useful_jobs(my_plan, imports = "none") # 4
-```
-
-As for how the parallelism is implemented, you can choose from multiple built-in backends.
-
-1. **mclapply**: low-overhead, light-weight. `drake::make(my_plan, parallelism = "mclapply", jobs = 2)` invokes `parallel::mclapply()` under the hood, distributing the work over at most two independent processes (set with `jobs`). Mclapply is an ideal choice for low-overhead single-node parallelism, but it does not work on Windows.
-2. **parLapply**: medium-overhead, light-weight. `make(my_plan, parallelism = "parLapply", jobs = 2)` invokes `parallel::mclapply()` under the hood. This option is similar to mclapply except that it works on Windows and costs a little extra time up front.
-3. **Makefile**: high-overhead, heavy-duty. For this one, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). For everyone else, just make sure [Make](https://www.gnu.org/software/make/) is installed. The build order may be different for [Makefile](https://www.gnu.org/software/make/) parallelism because all the imports are imported before any of the targets are built with the [Makefile](https://www.gnu.org/software/make/). That means `plot_graph()`, `dataframes_graph()`, and `max_useful_jobs()` behave differently for \code{parallelism = "Makefile"}.
-- `make(my_plan, parallelism = "Makefile", jobs = 2)` creates a proper [Makefile](https://www.gnu.org/software/make/) to distribute the work over multiple independent R sessions.
-- `make(my_plan, parallelism = "Makefile", command = "make", args = "--jobs=4 --silent")` gives you finer control over the arguments and the program for the [Makefile](https://www.gnu.org/software/make/). For example, you could use [lsmake](https://www.ibm.com/support/knowledgecenter/en/SSETD4_9.1.2/lsf_command_ref/lsmake.1.html) instead of [Make](https://www.gnu.org/software/make/) itself.
-- `make(my_plan, parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")` is similar, but it uses a helper file `shell.sh` to distribute the R sessions over different jobs/nodes on a cluster. Your `shell.sh` file should look something like the following, and you can use `shell_file()` to write an example.
-
-<pre><code>#!/bin/bash
-shift
-echo "module load R; $*" | qsub -sync y -cwd -j y
-</code></pre>
-
-You may need to replace `module load R` with a command to load a specific version of R. [SLURM](https://slurm.schedmd.com/) users can just point to `srun` and dispense with `shell.sh` altogether.
-
-```{r cluster, eval = FALSE}
-make(my_plan, parallelism = "Makefile", jobs = 4,
-  prepend = "SHELL=srun")
-```
-
-For long projects, put your call to `make()` in an R script (say, `script.R`) and run it from the [Linux terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/).
-
-<pre><code>nohup nice -19 R CMD BATCH script.R &
-</code></pre>
-
-Even after you log out, a background process will keep running on the login node and submit new jobs at the appropriate time. Jobs are only submitted if the targets need to be (re)built.
-
-# Important notes on Makefile-level parallelism
-
-Makefile-level parallelism is only used for targets in your workflow plan data frame, not imports. To process imported objects and files, drake selects the best parallel backend for your system and uses the number of jobs you give to the `jobs` argument to `make()`. To use at most 2 jobs for imports and at most 4 jobs for targets, run
-
-```{r makefileargsquick, eval = FALSE}
-make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")
-```
-
-The [Makefile](http://kbroman.org/minimal_make/) generated by `make(plan, parallelism = "Makefile")` is not standalone. Do not run it outside of `drake::make()`. Drake uses dummy timestamp files to tell the [Makefile](http://kbroman.org/minimal_make/) which targets can be skipped and which need to be (re)built, so running `make` in the [terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) will most likely give incorrect results.
+`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and follow the instructions in the high-performance computing vignette.
 
 ```{r endofline_quickstart, echo = F}
 clean(destroy = TRUE)

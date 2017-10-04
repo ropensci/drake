@@ -51,7 +51,6 @@ Suggests:
   abind,
   MASS,
   methods,
-  pingr,
   rmarkdown,
   tibble
 VignetteBuilder: knitr

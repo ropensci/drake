@@ -27,7 +27,7 @@ prune_envir <- function(targets, config){
   keep_these <- nonfile_target_dependencies(
     targets = downstream,
     config = config
-    )
+  )
   discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
     Filter(f = is_not_file) %>%
     intersect(y = already_loaded)
@@ -45,7 +45,7 @@ prune_envir <- function(targets, config){
       message = "load",
       config = config
     )
-    loadd(list = load_these, envir = config$envir)
+    loadd(list = load_these, envir = config$envir, cache = config$cache)
   }
   invisible()
 }

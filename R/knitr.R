@@ -1,63 +1,62 @@
-#' @title Function dknit
+#' @title Function knitr_deps
 #' @export
-#' @seealso \code{\link{deps_in_document}},
-#' \code{\link{deps}}, \code{\link{deps_of_document}},
+#' @seealso \code{\link{knitr_deps}},
+#' \code{\link{deps}},
 #' \code{\link{make}}, \code{\link{load_basic_example}}
-#' @description In a drake workflow, use the command
-#' \code{dknit("'your_document.Rmd'")} to knit the file
-#' \code{your_document.Rmd} while automatically accounting for the
-#' dependencies in \code{your_document.Rmd}. In the document,
-#' for any targerts/imports specifically invoked in calls to
-#' \code{\link{readd()}} and \code{\link{loadd()}} inside
-#' evaluated code chunks, drake will watch these items for changes.
-#' When any one of them changes, \code{\link{drake::make}()} will
-#' recompile your document.
-#' @param input charadcter scalar, name of an imported dynamic document
-#' source file. The \code{input} is passed as the \code{input}
-#' argument to \code{\link{knitr::knit}}, but it must be
-#' enclosed in single quotes just like any other file target/import
-#' in drake. The file must also already exist beforehand, so it
-#' must be an imported file, not a built target.
-#' @param ...
+#' @description Find the dependencies of a dynamic report. To
+#' enable drake to watch for these dependencies, your workflow
+#' plan command to compile this report must make direct use of
+#' \code{knitr::knit()}.
+#' That is, it must look something like \code{knit('your_report.Rmd')}
+#' in your workflow plan data frame.
+#' @details Drake looks for dependencies in the document by
+#' analyzing evaluated code chunks for other targets/imports
+#' mentioned in \code{\link{loadd}()} and \code{\link{readd}()}.
+#' @param target file path to the file or name of the file target,
+#' source text of the document.
 #' @examples
 #' \dontrun{
-#' load_basic_example
-#' print(my_plan) # Notice: dknit('report.Rmd') makes 'report.md'.
-#' plot_graph(my_plan) # 'report.md' depends on mentions in 'report.Rmd'.
-#' make(my_plan) # First build.
-#' make(my_plan) # Everything up to date.
-#' reg2 <- function(d){
-#'   d$x3 <- d$x ^ 3
-#'   lm(y ~ x3, data = d)
+#' load_basic_example()
+#' knitr_deps("'report.Rmd'") # Files must be single-quoted
+#' knitr_deps("report.Rmd")
+#' make(my_plan)
+#' knitr_deps("'report.md'") # Work on the Rmd source, not the output.
 #' }
-#' make(my_plan) # 'report.md' should rebuild.
-#' }
-dknit <- function(input, ...){
-  if (!is_file(input)){
-    stop(
-      "In dknit(), the name of the file must be enclosed in single quotes ",
-      "just like file targets/imports in the workflow plan data frame."
-    )
+knitr_deps <- function(target){
+  if (!length(target)){
+    return(character(0))
   }
-  knitr::knit(input = eply::unquote(input), ...)
+  file <- unquote(target)
+  if (!file.exists(file)){
+    warning(
+      "dynamic report '", file,
+      "' does not exist and cannot be inspected for dependencies."
+    )
+    return(character(0))
+  }
+  fragments <- get_tangled_frags(file)
+  sort(find_knitr_targets(fragments))
 }
 
-find_dknit_doc <- function(expr, result = character(0)){
+find_knitr_doc <- function(expr, result = character(0)){
+  if (!length(expr)){
+    return(result)
+  }
   if (is.character(expr)){
     expr <- parse(text = expr)
   }
   if (is.function(expr)){
-    result <- find_dknit_doc(body(expr), result = result)
+    result <- find_knitr_doc(body(expr), result = result)
   } else if (is.call(expr) & length(expr) > 1){
-    if (is_drake_function_call(expr, what = "dknit")){
+    if (is_function_call(expr, package = "knitr", what = "knit")){
       result <- doc_of_function_call(expr)
     } else {
-      result <- lapply(as.list(expr), find_dknit_doc,
+      result <- lapply(as.list(expr), find_knitr_doc,
         result = result) %>%
         clean_dependency_list
     }
   } else if (is.recursive(expr)){
-    result <- lapply(as.list(expr), find_dknit_doc,
+    result <- lapply(as.list(expr), find_knitr_doc,
       result = result) %>%
       clean_dependency_list
   }
@@ -78,33 +77,6 @@ doc_of_function_call <- function(expr){
     input_index <- min(which(!nchar(names(args))))
     as.character(args[[input_index]])
   }
-}
-
-#' @title Function deps_in_document
-#' @export
-#' @seealso \code{\link{deps_in_document}},
-#' \code{\link{deps}}, \code{\link{deps_of_document}},
-#' \code{\link{make}}, \code{\link{load_basic_example}}
-#' @description Find the dependencies of a dynamic report. To
-#' enable drake to watch for these dependencies, your command
-#' to compile this report must be use \code{\link{dknit}}:
-#' that is, it must look something like \code{dknit('your_report.Rmd')}
-#' in your workflow plan data frame.
-#' @details Drake looks for dependencies in the document by
-#' analyzing evaluated code chunks for other targets/imports
-#' mentioned in \code{\link{loadd}()} and \code{\link{readd}()}.
-#' @param target file path to the file or name of the file target,
-#' source text of the document.
-#' @examples
-#' \dontrun{
-#' load_basic_example()
-#' deps_in_document("'report.Rmd'")
-#' deps_in_document("report.md")
-#' }
-deps_in_document <- function(target){
-  file <- unquote(target)
-  fragments <- get_tangled_frags(file)
-  sort(find_knitr_targets(fragments))
 }
 
 # From https://github.com/duncantl/CodeDepends/blob/master/R/sweave.R#L15
@@ -136,7 +108,7 @@ find_knitr_targets <- function(expr, targets = character(0)){
 }
 
 analyze_loadd <- function(expr){
-  if (!is_drake_function_call(expr, what = "loadd")){
+  if (!is_function_call(expr, package = "drake", what = "loadd")){
     return()
   }
   args <- as.list(expr)[-1]
@@ -146,7 +118,7 @@ analyze_loadd <- function(expr){
 }
 
 analyze_readd <- function(expr){
-  if (!is_drake_function_call(expr, what = "readd")){
+  if (!is_function_call(expr, package = "drake", what = "readd")){
     return()
   }
   args <- as.list(expr)[-1]
@@ -155,12 +127,15 @@ analyze_readd <- function(expr){
   c(targets, target)
 }
 
-is_drake_function_call <- function(expr,
-  what = c("dknit", "loadd", "readd")
+is_function_call <- function(
+  expr,
+  package = c("drake", "knitr"),
+  what = c("knit", "loadd", "readd")
 ){
+  package <- match.arg(package)
   what <- match.arg(what)
   eply::unquote(deparse(expr[[1]])) %in%
-    paste0(c("", "drake::", "drake:::"), what)
+    paste0(c("", paste0(package, c("::", ":::"))), what)
 }
 
 found_loadd_readd <- function(x){

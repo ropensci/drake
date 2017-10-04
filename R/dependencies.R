@@ -1,5 +1,13 @@
 #' @title Function deps
 #' @description List the dependencies of a function or workflow plan command.
+#' Or, if the argument is a single-quoted string that points to
+#' a dynamic knitr report, the dependencies of the expected compiled
+#' output will be given. For example, \code{deps("'report.Rmd'")}
+#' will return target names found in calls to \code{\link{loadd}()}
+#' and \code{\link{readd}()} in active code chunks.
+#' These targets are needed in order to run \code{knit('report.Rmd')}
+#' to produce the output file \code{'report.md'}, so technically,
+#' they are dependencies of \code{'report.md'}, not \code{'report.Rmd'}
 #' @export
 #' @param x Either a function or a string.
 #' Strings are commands from your workflow plan data frame.
@@ -19,9 +27,15 @@
 #' deps(my_plan$command[1])
 #' deps(my_plan$command[2])
 #' deps(my_plan$command[3])
+#' \dontrun{
+#' load_basic_example() # Writes 'report.Rmd'.
+#' deps("'report.Rmd'") # dependencies of future knitted output 'report.md'
+#' }
 deps <- function(x){
   if (is.function(x)){
     out <- function_dependencies(x)
+  } else if (is_file(x) & file.exists(file <- eply::unquote(x))){
+    out <- knitr_deps(x)
   } else if (is.character(x)){
     out <- command_dependencies(x)
   } else{
@@ -57,8 +71,10 @@ command_dependencies <- function(command){
   if (length(files)){
     files <- eply::quotes(files, single = TRUE)
   }
-  c(non_files, files) %>%
-    clean_dependency_list()
+  knitr <- find_knitr_doc(command) %>%
+    knitr_deps
+  c(non_files, files, knitr) %>%
+    clean_dependency_list
 }
 
 import_dependencies <- function(object){
