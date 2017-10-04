@@ -60,6 +60,9 @@ build_graph <- function(
   to <- rep(keys, times = sapply(dependency_list, length))
   edges <- rbind(from, to) %>%
     as.character()
+  
+  browser()
+  
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)

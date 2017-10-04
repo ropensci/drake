@@ -108,6 +108,7 @@ deps_in_document <- function(target){
       "dynamic report '", file,
       "' does not exist and cannot be inspected for dependencies."
     )
+    return(character(0))
   }
   fragments <- get_tangled_frags(file)
   sort(find_knitr_targets(fragments))
