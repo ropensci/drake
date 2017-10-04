@@ -16,6 +16,14 @@ The other names listed are functions or generic objects.
 }
 \description{
 List the dependencies of a function or workflow plan command.
+Or, if the argument is a single-quoted string that points to 
+a dynamic knitr report, the dependencies of the expected compiled
+output will be given. For example, \code{deps("'report.Rmd'")}
+will return target names found in calls to \code{\link{loadd}()}
+and \code{\link{readd}()} in active code chunks.
+These targets are needed in order to run \code{knit('report.Rmd')}
+to produce the output file \code{'report.md'}, so technically,
+they are dependencies of \code{'report.md'}, not \code{'report.Rmd'}
 }
 \examples{
 f <- function(x, y){
@@ -31,4 +39,8 @@ my_plan <- plan(
 deps(my_plan$command[1])
 deps(my_plan$command[2])
 deps(my_plan$command[3])
+\dontrun{
+load_basic_example() # Writes 'report.Rmd'.
+deps("'report.Rmd'") # dependencies of future knitted output 'report.md'
+}
 }

@@ -1,7 +1,7 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("knitr")
 
-test_with_dir("deps_in_document() and dknit() work", {
+test_with_dir("knitr_deps() works", {
   for (name in c("test.Rmd", "test.Rnw")){
     file <- file.path("test", "knitr", name) %>%
       system.file(package = "drake", mustWork = TRUE)
@@ -14,15 +14,13 @@ test_with_dir("deps_in_document() and dknit() work", {
   }
   ans <- sort(paste0("target", seq_len(18)))
   for (doc in c("'test.Rmd'", "test.Rmd", "test.Rnw"))
-    expect_equal(sort(deps_in_document(doc)), ans)
+    expect_equal(sort(knitr_deps(doc)), ans)
   expect_false(file.exists("test.md"))
-  expect_error(dknit("test.Rmd"))
-  expect_silent(tmp <- dknit("'test.Rmd'", quiet = TRUE))
-  expect_true(file.exists("test.md"))
-  expect_warning(x <- deps_in_document("report.Rmd"))
+  expect_warning(x <- knitr_deps("report.Rmd"))
   expect_equal(x, character(0))
+  expect_equal(0, length(knitr_deps(character(0))))
   load_basic_example()
-  x <- deps_in_document("report.Rmd")
+  x <- knitr_deps("report.Rmd")
   expect_equal(sort(x), sort(c(
     "small", "coef_regression2_small", "large"
   )))
@@ -31,32 +29,32 @@ test_with_dir("deps_in_document() and dknit() work", {
   }))
 })
 
-test_with_dir("find_dknit_doc() works", {
+test_with_dir("find_knitr_doc() works", {
   false <- c(
-    "dknit",
-    "dknit()",
-    "knit(4)",
+    "knit",
+    "knit()",
+    "dknit(4)",
     "other(f)",
-    "dknittles(f('file.Rmd'))",
-    "other::dknit('file.Rmd')",
-    "other:::dknit('file.Rmd')"
+    "knittles(f('file.Rmd'))",
+    "other::knit('file.Rmd')",
+    "drake:::knit('file.Rmd')"
   )
   true <- list(
-    "dknit('file.Rmd')",
-    "drake::dknit('file.Rmd')",
-    "drake:::dknit('file.Rmd')",
+    "knit('file.Rmd')",
+    "knitr::knit('file.Rmd')",
+    "knitr:::knit('file.Rmd')",
     function(x){
-      dknit("file.Rmd")
+      knit("file.Rmd")
     },
-    "f(g(dknit('file.Rmd', output = 'file.md', quiet = TRUE)))",
-    "f(g(dknit(output = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))",
-    "f(g(dknit(output = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
+    "f(g(knit('file.Rmd', output = 'file.md', quiet = TRUE)))",
+    "f(g(knit(output = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))",
+    "f(g(knit(output = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
   )
   for (cmd in false){
-    expect_equal(find_dknit_doc(cmd), character(0))
+    expect_equal(find_knitr_doc(cmd), character(0))
   }
   for (cmd in true){
-    expect_equal(find_dknit_doc(cmd), "file.Rmd")
+    expect_equal(find_knitr_doc(cmd), "file.Rmd")
   }
 })
 
@@ -64,10 +62,12 @@ test_with_dir("misc knitr", {
   o <- get_specific_arg(list(a = parse(text = "1 <- 2")), name = "a")
   expect_equal(o, character(0))
   f <- function()
-  expect_silent(o <- doc_of_function_call(dknit))
+  expect_silent(o <- doc_of_function_call(knit))
   f <- function(x){
-    dknit("file.Rmd")
+    knit("file.Rmd")
   }
   doc_of_function_call(f)
   expect_equal(doc_of_function_call(as.expression(1)), character(0))
+  expect_equal(doc_of_function_call(list(1, 2, 3)), "2")
+  expect_equal(find_knitr_doc(NULL), character(0))
 })

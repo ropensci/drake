@@ -90,11 +90,12 @@ test_with_dir("basic example works", {
   }
   config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  expect_equal(sort(outdated(my_plan, envir = e, jobs = jobs,
-    config = config)), sort(c("'report.md'", "coef_regression2_large",
-    "coef_regression2_small", "regression2_large", "regression2_small",
-    "report_dependencies", "summ_regression2_large",
-    "summ_regression2_small")))
+  expect_equal(
+    sort(outdated(my_plan, envir = e, jobs = jobs,
+      config = config)),
+    sort(c("'report.md'", "coef_regression2_large",
+      "coef_regression2_small", "regression2_large", "regression2_small",
+      "summ_regression2_large", "summ_regression2_small")))
   expect_equal(max_useful_jobs(my_plan, envir = e, config = config),
     4)
   expect_equal(max_useful_jobs(my_plan, envir = e, config = config,
