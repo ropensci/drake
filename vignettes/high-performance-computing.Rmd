@@ -138,7 +138,7 @@ shift
 echo "module load R; $*" | qsub -sync y -cwd -j y
 </code></pre>
 
-This file acts as the "shell" of the `Makefile` instead of, say, the [Unix shell](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) alone. It is a mechanism for tricking the `Makefile` into submitting each target as a job on your cluster rather than a new R session on your local machine. You may need to configure `shell.sh` for your system, such as changing `module load R` to reference the version of R installed on the compute nodes of the cluster.
+This file acts as the "shell" of the `Makefile` instead of, say, the [Unix shell](https://www.gnu.org/software/bash) alone. It is a mechanism for tricking the `Makefile` into submitting each target as a job on your cluster rather than a new R session on your local machine. You may need to configure `shell.sh` for your system, such as changing `module load R` to reference the version of R installed on the compute nodes of the cluster.
 
 To tell the `Makefile` to use `shell.sh`, you will need to add the line `SHELL=./shell.sh` to the top of the `Makefile`. This should not be done manually. Instead, use the `prepend` argument of `make()`.
 
