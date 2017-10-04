@@ -61,7 +61,7 @@ build_graph <- function(
   edges <- rbind(from, to) %>%
     as.character()
   
-  browser()
+
   
   graph <- make_empty_graph() +
     vertex(vertices) +
