@@ -1,0 +1,169 @@
+---
+title: "High-performance computing"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{high-performance-computing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r suppression, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
+
+`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and stay tuned for an explanation.
+
+# The approach
+
+`Drake`'s approach to parallelism relies on the network graph of the targets and imports.
+
+```{r hpcplotgraph, eval = FALSE}
+clean()
+load_basic_example()
+make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
+# Change a dependency.
+reg2 <- function(d) {
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+# Hover, click, drag, zoom, and pan.
+plot_graph(my_plan, width = "100%", height = "500px")
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/a55ef249/images/reg2.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
+
+# Max useful jobs
+
+See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date. Try out the following in a fresh R session.
+
+```{r hpcquick, eval = FALSE}
+library(drake)
+load_basic_example()
+plot_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
+max_useful_jobs(my_plan) # 8
+max_useful_jobs(my_plan, imports = "files") # 8
+max_useful_jobs(my_plan, imports = "all") # 8
+max_useful_jobs(my_plan, imports = "none") # 8
+make(my_plan, jobs = 4)
+plot_graph(my_plan)
+# Ignore the targets already built.
+max_useful_jobs(my_plan) # 1
+max_useful_jobs(my_plan, imports = "files") # 1
+max_useful_jobs(my_plan, imports = "all") # 8
+max_useful_jobs(my_plan, imports = "none") # 0
+# Change a function so some targets are now out of date.
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+plot_graph(my_plan)
+max_useful_jobs(my_plan) # 4
+max_useful_jobs(my_plan, from_scratch = TRUE) # 8
+max_useful_jobs(my_plan, imports = "files") # 4
+max_useful_jobs(my_plan, imports = "all") # 8
+max_useful_jobs(my_plan, imports = "none") # 4
+```
+
+# Parallel backends
+
+`Drake` has multiple parallel backends, i.e. separate mechanisms for achieving parallelism. Some are low-overhead and limited, others are high-overhead and scalable. Just set the `parallelism` argument of `Make` to choose a backend. The best choice usually depends on your project's scale and stage of deployment.
+
+```{r hpcchoices, eval = FALSE}
+parallelism_choices() # List the parallel backends.
+?parallelism_choices  # Read an explanation of each backend.
+default_parallelism() # "parLapply" on Windows, "mclapply" everywhere else
+```
+
+## mclapply
+
+The `mclapply` backend is powered by the `mclapply()` function from the `parallel` package. It is a way to fork multiple processes on your local machine to take advantage of multicore computing. It spins up quickly, but it lacks scalability, and it does not work on Windows. If you try to call `make(.., parallelism = "mclapply", jobs = 2)` on a Windows machine, `drake` will warn you and then demote the number of jobs to 1.
+
+## parLapply
+
+```{r hpcmclapply, eval = FALSE}
+make(.., parallelism = "mclapply", jobs = 2)
+```
+
+The `parLapply` backend is powered by the `parLapply()` function from the `parallel` package. Like the `mclapply` backend, `parLapply` only scales up to a handful of jobs on your local machine. However, it works on all platforms. The tradeoff is overhead. `parLapply` is fast once it gets going, but it takes a long time to set up because each call to `make()` creates a new parallel socket cluster and transfers all you data and session info to each parallel thread individually. So if `jobs` is less than 2, `make()` does not bother setting up a cluster, and it uses `lapply()` instead. More importantly, the default parallel backend is `parLapply` on Windows machines and `mclapply` everywhere else. 
+
+```{r hpcparLapply, eval = FALSE}
+make(.., parallelism = "parLapply", jobs = 2)
+default_parallelism() # "parLapply" on Windows, "mclapply" everywhere else
+```
+
+## Makefile
+
+The `Makefile` backend uses proper [Makefiles](https://www.gnu.org/software/make/) to distribute targets across different R sessions. After processing all the imports in parallel using the default backend, `make(..., parallelism = "Makefile")` spins up whole new separate R session for each target individually. The `Makefile` acts as a job scheduler, waiting until the dependencies are finished before initiating the next targets at each parallelizable stage. Thanks to a [clever idea](https://github.com/wlandau/parallelRemake/issues/4) by [Kirill Muller](https://github.com/krlmlr), `drake` communicates with the `Makefile` by writing hidden dummy files in the cache whose only job is to hold a timestamp. The `Makefile` sees these timestamps and knows which jobs to run and which ones to skip.
+
+Unlike other backends, the `Makefile` backend processes all the imports first before beginning the first target. This is different from the other backends, where some targets are sometimes built before or simultaneously with independent imports. In addition, during import processing, `make()` uses the system's default parallelism (`mclapply` or `parLapply`) and the number of jobs you supplied to the `jobs` argument. Stay tuned for how to use different numbers of jobs for imports versus targets.
+
+### Basic usage
+
+Before running `Makefile` parallelism, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). For everyone else, just make sure [Make](https://www.gnu.org/software/make/) is installed. Then, in the next `make()`, simply set the `parallelism` and `jobs` arguments as before.
+
+```{r Makefilehpc, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 2)
+```
+
+You will see a `Makefile` written to your working directory. Do not run this `Makefile` by itself. It will not work correctly by itself because it depends on the transient dummy timestamp files created by `make()`. 
+
+`Makefile` parallelism is just a bit richer. You can now use the `args` argument to send custom arguments to the `Makefile`. For example, you could use 4 parallel jobs for the imports and 6 parallel jobs for the targets.
+
+```{r hpcargs, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 4, args = "--jobs=6 --silent")
+```
+
+In addition, you can use a program other than [GNU Make](https://www.gnu.org/software/make/) to run the `Makefile`. You may be interested in `lsmake` as an alternative, for example.
+
+```{r hpclsmake, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 4, command = "lsmake")
+```
+
+### On a cluster
+
+Supercomputing with `drake` is as easy as adding a configuration file. The `shell_file()` function writes a starter for you.
+
+<pre><code>#!/bin/bash
+shift
+echo "module load R; $*" | qsub -sync y -cwd -j y
+</code></pre>
+
+This file acts as the "shell" of the `Makefile` instead of, say, the [Unix shell](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) alone. It is a mechanism for tricking the `Makefile` into submitting each target as a job on your cluster rather than a new R session on your local machine. You may need to configure `shell.sh` for your system, such as changing `module load R` to reference the version of R installed on the compute nodes of the cluster.
+
+To tell the `Makefile` to use `shell.sh`, you will need to add the line `SHELL=./shell.sh` to the top of the `Makefile`. This should not be done manually. Instead, use the `prepend` argument of `make()`.
+
+```{r hpcprepend, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")
+```
+
+[SLURM](https://slurm.schedmd.com/) users may be able to [invoke `srun` and dispense with `shell.sh` altogether](http://plindenbaum.blogspot.com/2014/09/parallelizing-gnu-make-4-in-slurm.html), although this has been known to fail on some SLURM systems.
+
+```{r cluster, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  prepend = "SHELL=srun")
+```
+
+If you are interested in `Makefile` parallelism on a cluster, then you likely have a project that takes several hours or more to run. In that case, we recommend that you submit a master job on the login node that runs persistently until your work is complete. To do so, just save you call to `make()` in an R script, say `my_script.R`, and then deploy your work from the [Linux terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) with the following.
+
+<pre><code>nohup nice -19 R CMD BATCH script.R &
+</code></pre>
+
+# More resources
+
+See the timing vignette for explanations of functions `rate_limiting_times()` and `predict_runtime()`, which can help predict the possible speed gains of having multiple independent jobs. If you suspect `drake` itself is slowing down your project, you may want to read the storage vignette to learn how to set the hashing algorithms of your project.
+
+
+```{r endofline_quickstart, echo = F}
+clean(destroy = TRUE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```

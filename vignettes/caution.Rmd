@@ -139,7 +139,7 @@ You can also check the dependencies of individual targets.
 ```{r checkdeps}
 deps(reg2)
 deps(my_plan$command[1]) # File dependencies like report.Rmd are single-quoted.
-deps(my_plan$command[16])
+deps(my_plan$command[nrow(my_plan)])
 ```
 
 List all the reproducibly-tracked objects and files, including imports and targets.
@@ -170,6 +170,35 @@ f <- function(){
 deps(f)
 command <- "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
 deps(command)
+```
+
+## Dynamic reports
+
+In [dynamic knitr reports](https://yihui.name/knitr/), you are encouraged to load and read cached targets and imports with the `loadd()` and `readd()` functions. In your workflow plan, as long as your command has an explicit reference to `knit()`, `drake` will automatically look for active code chunks and figure out the targets you are going to load and read. They are treated as dependencies for the final report.
+
+```{r knitrdeps1}
+load_basic_example()
+my_plan[1, ]
+```
+
+The [R Markdown report](http://rmarkdown.rstudio.com/lesson-1.html) loads targets 'small', 'large', and 'coef_regression2_small' using code chunks marked for evaluation.
+
+```{r knitr2}
+deps("knit('report.Rmd')")
+deps("'report.Rmd'") # These are actually dependencies of 'report.md' (output)
+```
+
+However, **you must explicitly mention each and every target loaded into a report**. The following examples are discouraged in code chunks because they do not reference any particular target directly or literally in a way that static code analysis can detect.
+
+```{r badknitr, eval = FALSE}
+var <- "good_target"
+# Works in isolation, but drake sees "var" literally as a dependency,
+# not "good_target".
+readd(target = var, character_only = TRUE)
+loadd(list = var)
+# All cached items are loaded, but none are treated as dependencies.
+loadd()
+loadd(imports_only = TRUE)
 ```
 
 ## Functions produced by `Vectorize()`

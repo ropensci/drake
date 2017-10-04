@@ -99,12 +99,15 @@ test_with_dir("check_config() via check() and make()", {
 })
 
 test_with_dir("deprecation", {
-  plan <- data.frame(code = 1, output = "x")
+  plan <- data.frame(code = 1:2, output = c("x", "y"))
   expect_warning(make(plan, verbose = FALSE))
 
   expect_warning(make(plan, verbose = FALSE))
   expect_warning(status())
   expect_true(is.numeric(readd(x, search = FALSE)))
+
+  expect_warning(prune(plan[1, ]))
+  expect_equal(cached(), "x")
 })
 
 test_with_dir("targets can be partially specified", {

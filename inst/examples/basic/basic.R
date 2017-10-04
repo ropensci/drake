@@ -16,7 +16,6 @@
 # call load_basic_example().
 
 library(knitr) # Drake knows you loaded knitr.
-# library(rmarkdown) # platform-dependent: render() requires pandoc #nolint: optional
 library(drake)
 
 clean() # remove any previous drake output
@@ -27,7 +26,7 @@ simulate <- function(n){
     # Drake tracks calls like `pkg::fn()` (namespaced functions).
     x = stats::rnorm(n),
     y = rpois(n, 1)
-    )
+  )
 }
 
 reg1 <- function(d){
@@ -37,15 +36,6 @@ reg1 <- function(d){
 reg2 <- function(d){
   d$x2 <- d$x ^ 2
   lm(y ~ x2, data = d)
-}
-
-# Knit and possibly render a dynamic R Markdown report.
-my_knit <- function(file, ...){
-  knit(file, quiet = TRUE) # Drake knows you loaded knitr.
-}
-
-my_render <- function(file, ...){
-  render(file) # Drake will know if you load rmarkdown.
 }
 
 # At this point, please verify that a dynamic report
@@ -69,7 +59,7 @@ my_datasets <- plan(
 methods <- plan(
   regression1 = reg1(..dataset..), ## nolint
   regression2 = reg2(..dataset..) ## nolint
-  )
+)
 
 # same as evaluate(methods, wildcard = "..dataset..",
 #   values = my_datasets$target)
@@ -90,29 +80,28 @@ results <- summaries(
   gather = NULL
   ) # skip 'gather' (workflow my_plan is more readable)
 
-load_in_report <- plan(
-  report_dependencies = c(small, large, coef_regression2_small)
-  )
-
 # External file targets and dependencies should be single-quoted.
 # Use double quotes to remove any special meaning from character strings.
 # Single quotes inside imported functions are ignored, so this mechanism
 # only works inside the workflow my_plan data frame.
 # WARNING: drake cannot track entire directories (folders).
 report <- plan(
-  # report.md = my_knit('report.Rmd', report_dependencies), #nolint optional
-  report.md = my_knit(
+  # As long as `knit()` is visible in your workflow plan command,
+  # drake will dig into the active code chunks of your `report.Rmd`
+  # and find the dependencies of `report.md` in the arguments of
+  # calls to loadd() and readd().
+  report.md = knit(
     'report.Rmd', #nolint: use single quotes to specify file dependency.
-    report_dependencies
-    ),
+    quiet = TRUE
+  ),
   ## The html report requires pandoc. Commented out.
   ## report.html = my_render('report.md', report_dependencies), #nolint: optional
   file_targets = TRUE,
   strings_in_dots = "filenames" # Redundant, since we used single quotes
-  )
+)
 
 # Row order doesn't matter in the workflow my_plan.
-my_plan <- rbind(report, my_datasets, load_in_report, my_analyses, results)
+my_plan <- rbind(report, my_datasets, my_analyses, results)
 
 
 #####################################
@@ -130,7 +119,7 @@ check(my_plan)
 deps(reg1)
 deps(my_knit)
 deps(my_plan$command[1])
-deps(my_plan$command[16])
+deps(my_plan$command[nrow(my_plan)])
 
 # List objects that are reproducibly tracked.
 "small" %in% tracked(my_plan)
