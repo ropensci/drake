@@ -32,6 +32,7 @@
 #' @param prepend same as for \code{\link{make}}
 #' @param command same as for \code{\link{make}}
 #' @param args same as for \code{\link{make}}
+#' @param recipe_command same as for \code{\link{make}}
 #' @param cache same as for \code{\link{make}}
 config <- function(plan, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = NULL,
@@ -41,7 +42,8 @@ config <- function(plan, targets = drake::possible_targets(plan),
   args = drake::default_system2_args(
     jobs = jobs,
     verbose = verbose
-  )
+  ),
+  recipe_command = drake::default_recipe_command()
 ){
   force(envir)
   config <- make(imports_only = TRUE, return_config = TRUE,
@@ -49,7 +51,8 @@ config <- function(plan, targets = drake::possible_targets(plan),
     envir = envir, verbose = verbose, cache = cache,
     parallelism = parallelism, jobs = jobs,
     packages = packages, prework = prework,
-    prepend = prepend, command = command, args = args
+    prepend = prepend, command = command, args = args,
+    recipe_command = recipe_command
   )
   config$graph <- build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose, cache = config$cache)
@@ -60,7 +63,7 @@ build_config <- function(plan, targets, envir,
   verbose, cache,
   parallelism, jobs,
   packages, prework, prepend, command,
-  args, clear_progress
+  args, clear_progress, recipe_command
 ){
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
@@ -83,7 +86,7 @@ build_config <- function(plan, targets, envir,
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
     prepend = prepend, prework = prework, command = command,
-    args = args, graph = graph,
+    args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     inventory = cache$list(),

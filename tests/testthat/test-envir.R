@@ -42,6 +42,7 @@ test_with_dir("prune_envir in full build", {
     prework = character(0),
     command = "make",
     args = character(0),
+    recipe_command = default_recipe_command(),
     cache = NULL,
     clear_progress = FALSE
   )

@@ -24,7 +24,8 @@ check <- function(plan, targets = drake::possible_targets(plan),
     verbose = TRUE, cache = cache, parallelism = "mclapply",
     jobs = 1, packages = character(0),
     prepend = character(0), prework = character(0), command = character(0),
-    args = character(0), clear_progress = FALSE
+    args = character(0), recipe_command = default_recipe_command(),
+    clear_progress = FALSE
   )
   check_config(config)
   check_strings(config$plan)

@@ -111,6 +111,9 @@
 #' will be distributed over independent parallel R sessions
 #' wherever possible.
 #'
+#' @param recipe_command Character scalar, command for the
+#' Makefile recipe for each target.
+#'
 #' @param return_config logical, whether to return the internal list
 #' of runtime configuration parameters used by \code{make()}
 #'
@@ -138,6 +141,8 @@
 #' make(my_plan) # Rebuild just the outdated targets.
 #' outdated(my_plan) # Everything is up to date again.
 #' plot_graph(my_plan) # The colors changed in the graph.
+#' clean() # Start from scratch
+#' make(my_plan, parallelism = "Makefile", jobs = 4)
 #' }
 make <- function(
   plan,
@@ -155,6 +160,7 @@ make <- function(
     jobs = jobs,
     verbose = verbose
   ),
+  recipe_command = drake::default_recipe_command(),
   return_config = FALSE,
   clear_progress = TRUE,
   imports_only = FALSE
@@ -176,6 +182,7 @@ make <- function(
     prepend = prepend,
     command = command,
     args = args,
+    recipe_command = recipe_command,
     clear_progress = clear_progress,
     cache = cache
   )

@@ -9,7 +9,8 @@ config(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
-  args = drake::default_system2_args(jobs = jobs, verbose = verbose))
+  args = drake::default_system2_args(jobs = jobs, verbose = verbose),
+  recipe_command = drake::default_recipe_command())
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -35,6 +36,8 @@ config(plan, targets = drake::possible_targets(plan),
 \item{command}{same as for \code{\link{make}}}
 
 \item{args}{same as for \code{\link{make}}}
+
+\item{recipe_command}{same as for \code{\link{make}}}
 }
 \description{
 Compute the internal runtime parameter list of

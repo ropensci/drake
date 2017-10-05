@@ -10,7 +10,8 @@ make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = "make",
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  return_config = FALSE, clear_progress = TRUE, imports_only = FALSE)
+  recipe_command = drake::default_recipe_command(), return_config = FALSE,
+  clear_progress = TRUE, imports_only = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -122,6 +123,9 @@ If \code{args} has something like \code{"--jobs=2"}, or if
 will be distributed over independent parallel R sessions
 wherever possible.}
 
+\item{recipe_command}{Character scalar, command for the
+Makefile recipe for each target.}
+
 \item{return_config}{logical, whether to return the internal list
 of runtime configuration parameters used by \code{make()}}
 
@@ -151,6 +155,8 @@ plot_graph(my_plan) # See how they fit in an interactive graph.
 make(my_plan) # Rebuild just the outdated targets.
 outdated(my_plan) # Everything is up to date again.
 plot_graph(my_plan) # The colors changed in the graph.
+clean() # Start from scratch
+make(my_plan, parallelism = "Makefile", jobs = 4)
 }
 }
 \seealso{
