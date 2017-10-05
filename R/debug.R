@@ -9,7 +9,8 @@ dbug <- function() {
     envir = envir, parallelism = scenario$parallelism,
     jobs = scenario$jobs, prepend = character(0),
     verbose = FALSE, packages = character(0),
-    prework = character(0), command = "make", args = character(0),
+    prework = character(0), command = default_Makefile_command(),
+    args = character(0),
     recipe_command = default_recipe_command(),
     cache = NULL, clear_progress = TRUE
   )

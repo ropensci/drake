@@ -91,7 +91,9 @@
 #' @param command character scalar, command to call the Makefile
 #' generated for distributed computing.
 #' Only applies when \code{parallelism} is \code{"Makefile"}.
-#' Defaults to the usual \code{"make"}, but it could also be
+#' Defaults to the usual \code{"make"}
+#' (\code{\link{default_Makefile_command}()}),
+#' but it could also be
 #' \code{"lsmake"} on supporting systems, for example.
 #' \code{command} and \code{args} are executed via
 #' \code{\link{system2}(command, args)} to run the Makefile.
@@ -133,7 +135,7 @@
 #' make(my_plan, jobs = my_jobs) # Build what needs to be built.
 #' outdated(my_plan) # Everything is up to date.
 #' reg2 = function(d){ # Change one of your functions.
-#'  d$x3 = d$x^3
+#'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
 #' outdated(my_plan) # Some targets depend on reg2().
@@ -143,6 +145,9 @@
 #' plot_graph(my_plan) # The colors changed in the graph.
 #' clean() # Start from scratch
 #' make(my_plan, parallelism = "Makefile", jobs = 4)
+#' clean()
+#' make(my_plan, parallelism = "Makefile", jobs = 4,
+#'   recipe_command = "R -q -e")
 #' }
 make <- function(
   plan,
@@ -155,7 +160,7 @@ make <- function(
   packages = (.packages()),
   prework = character(0),
   prepend = character(0),
-  command = "make",
+  command = drake::default_Makefile_command(),
   args = drake::default_system2_args(
     jobs = jobs,
     verbose = verbose

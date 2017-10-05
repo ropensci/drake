@@ -2,7 +2,7 @@
 % Please edit documentation in R/Makefile.R
 \name{default_system2_args}
 \alias{default_system2_args}
-\title{Internal function \code{default_system2_args}}
+\title{Function \code{default_system2_args}}
 \usage{
 default_system2_args(jobs, verbose)
 }
@@ -15,9 +15,8 @@ default_system2_args(jobs, verbose)
 \code{args} for \code{\link{system2}(command, args)}
 }
 \description{
-Internal function to configure
+Configures default
 arguments to \code{\link{system2}()} to run Makefiles.
-Not a user-side function.
 }
 \examples{
 default_system2_args(jobs = 2, verbose = FALSE)

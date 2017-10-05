@@ -8,7 +8,7 @@ make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
-  prepend = character(0), command = "make",
+  prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), return_config = FALSE,
   clear_progress = TRUE, imports_only = FALSE)
@@ -103,7 +103,9 @@ to take advantage of multiple nodes of a supercomputer.}
 \item{command}{character scalar, command to call the Makefile
 generated for distributed computing.
 Only applies when \code{parallelism} is \code{"Makefile"}.
-Defaults to the usual \code{"make"}, but it could also be
+Defaults to the usual \code{"make"}
+(\code{\link{default_Makefile_command}()}),
+but it could also be
 \code{"lsmake"} on supporting systems, for example.
 \code{command} and \code{args} are executed via
 \code{\link{system2}(command, args)} to run the Makefile.
@@ -147,7 +149,7 @@ my_jobs = max_useful_jobs(my_plan) # Depends on what is up to date.
 make(my_plan, jobs = my_jobs) # Build what needs to be built.
 outdated(my_plan) # Everything is up to date.
 reg2 = function(d){ # Change one of your functions.
- d$x3 = d$x^3
+  d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
 outdated(my_plan) # Some targets depend on reg2().
@@ -157,6 +159,9 @@ outdated(my_plan) # Everything is up to date again.
 plot_graph(my_plan) # The colors changed in the graph.
 clean() # Start from scratch
 make(my_plan, parallelism = "Makefile", jobs = 4)
+clean()
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "R -q -e")
 }
 }
 \seealso{

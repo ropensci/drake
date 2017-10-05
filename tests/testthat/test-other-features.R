@@ -4,7 +4,8 @@ context("other features")
 test_with_dir("recipe_command", {
   my_plan <- plan(y = 1)
   expect_true(is.character(default_recipe_command()))
-  con1 <- make(my_plan, parallelism = "Makefile", return_config = TRUE,
+  con1 <- make(my_plan, command = default_Makefile_command(),
+    parallelism = "Makefile", return_config = TRUE,
     recipe_command = "some_command", verbose = FALSE, imports_only = TRUE)
   expect_equal(con1$recipe_command, "some_command")
   expect_true(con1$recipe_command != default_recipe_command())
