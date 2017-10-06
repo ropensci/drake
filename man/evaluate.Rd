@@ -28,7 +28,7 @@ Must be the same length as \code{plan$command} if \code{expand} is
 \item{expand}{If \code{TRUE}, create a new rows in the workflow plan
 data frame
 if multiple values are assigned to a single wildcard.
-If \code{FALSE}, each occurence of the wildcard
+If \code{FALSE}, each occurrence of the wildcard
 is replaced with the next entry in the \code{values} vector,
 and the values are recycled.}
 }

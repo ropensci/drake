@@ -9,7 +9,7 @@
 #' @export
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
-#' @param targets names of targets to bulid, same as for function
+#' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
@@ -85,7 +85,7 @@ build_graph <- function(
 #' @export
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
-#' @param targets names of targets to bulid, same as for function
+#' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.

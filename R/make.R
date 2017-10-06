@@ -57,10 +57,10 @@
 #'
 #' @param packages character vector packages to load, in the order
 #' they should be loaded. Defaults to \code{(.packages())}, so you
-#' shouldn't usually need to set this manually. Just call
+#' should not usually need to set this manually. Just call
 #' \code{\link{library}()} to load your packages before \code{make()}.
 #' However, sometimes packages need to be strictly forced to load
-#' in a certian order, especially if \code{parallelism} is
+#' in a certain order, especially if \code{parallelism} is
 #' \code{"Makefile"}. To do this, do not use \code{\link{library}()}
 #' or \code{\link{require}()} or \code{\link{loadNamespace}()} or
 #' \code{\link{attachNamespace}()} to load any libraries beforehand.

@@ -53,7 +53,7 @@ units of execution.
  \code{\link{make}(..., parallelism = 'Makefile')}
  is NOT standalone. DO NOT run it outside of
 \code{\link{make}()} or \code{\link{make}()}.
- Also, Windows users will need to download and intall Rtools.
+ Also, Windows users will need to download and install Rtools.
 }}
 }
 \examples{

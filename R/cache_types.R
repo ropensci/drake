@@ -14,7 +14,7 @@ cache_types <- function(){
   )
 }
 
-#' @title Function in_memorycache_types
+#' @title Function in_memory_cache_types
 #' @description List the supported drake in-memory cache types.
 #' @export
 #' @seealso \code{\link{cache_types}},

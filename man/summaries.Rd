@@ -27,7 +27,7 @@ for computing summaries of analyses and datasets.
 analyses of multiple datasets in multiple ways.
 }
 \description{
-Generate a worklfow plan data frame for summarizing
+Generate a workflow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.
 }
 \examples{

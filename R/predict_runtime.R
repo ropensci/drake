@@ -41,7 +41,7 @@
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' The \code{cache} argument is ignored if a
 #' non-null \code{config} argument is supplied.
-#' @param parallelism samea as for \code{\link{make}}. Used
+#' @param parallelism same as for \code{\link{make}}. Used
 #' to parallelize import objects.
 #' @param jobs same as for \code{\link{make}}, just used to
 #' process imports
@@ -57,7 +57,7 @@
 #' in advance could save time if you plan multiple calls to
 #' this function.
 #' @param digits number of digits for rounding the times.
-#' @param path file path to the folder contianing the cache.
+#' @param path file path to the folder containing the cache.
 #' Yes, this is the parent directory containing the cache,
 #' not the cache itself.
 #' @param search logical, whether to search back in the file system
@@ -160,7 +160,7 @@ predict_runtime <- function(
 #' @param targets Targets to build in the workflow.
 #' Timing information is
 #' limited to these targets and their dependencies.
-#' @param envir same as for \code{\link{make}}. Supercedes
+#' @param envir same as for \code{\link{make}}. Supersedes
 #' \code{config$envir}.
 #' @param verbose same as for \code{\link{make}}
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
@@ -183,7 +183,7 @@ predict_runtime <- function(
 #' in advance could save time if you plan multiple calls to
 #' this function.
 #' @param digits number of digits for rounding the times.
-#' @param path file path to the folder contianing the cache.
+#' @param path file path to the folder containing the cache.
 #' Yes, this is the parent directory containing the cache,
 #' not the cache itself.
 #' @param search logical, whether to search back in the file system

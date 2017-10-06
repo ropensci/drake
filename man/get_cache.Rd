@@ -7,7 +7,7 @@
 get_cache(path = getwd(), search = TRUE)
 }
 \arguments{
-\item{path}{file path to the folder contianing the cache.
+\item{path}{file path to the folder containing the cache.
 Yes, this is the parent directory containing the cache,
 not the cache itself, and it assumes the cache is in the
 `.drake` folder. If you are looking for a different cache

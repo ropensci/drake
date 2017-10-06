@@ -29,7 +29,7 @@ data.frame of times from \code{\link{system.time}}
 }
 \description{
 List all the build times.
-This doesn't include the amount of time
+This does not include the amount of time
 spent loading and saving objects!
 }
 \examples{

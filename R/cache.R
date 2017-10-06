@@ -21,7 +21,7 @@ cache_path <- function(cache = NULL){
 #' @seealso \code{\link{this_cache}}, \code{\link{new_cache}},
 #' \code{\link{recover_cache}}, \code{\link{config}}
 #' @export
-#' @param path file path to the folder contianing the cache.
+#' @param path file path to the folder containing the cache.
 #' Yes, this is the parent directory containing the cache,
 #' not the cache itself, and it assumes the cache is in the
 #' `.drake` folder. If you are looking for a different cache
@@ -149,7 +149,7 @@ new_cache <- function(
 #' @export
 #' @seealso \code{\link{new_cache}}, \code{\link{this_cache}},
 #' \code{\link{get_cache}}
-#' @description Load an existing drake files ystem cache if it exists
+#' @description Load an existing drake files system cache if it exists
 #' and create a new one otherwise.
 #' Do not use for in-memory caches such as
 #' \code{storr_environment()}.

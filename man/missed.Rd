@@ -13,7 +13,7 @@ missed(plan, targets = drake::possible_targets(plan),
 \item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
-\item{targets}{names of targets to bulid, same as for function
+\item{targets}{names of targets to build, same as for function
 \code{\link{make}()}.}
 
 \item{envir}{environment to import from, same as for function

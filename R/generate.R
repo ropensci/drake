@@ -28,7 +28,7 @@
 #' @param expand If \code{TRUE}, create a new rows in the workflow plan
 #' data frame
 #' if multiple values are assigned to a single wildcard.
-#' If \code{FALSE}, each occurence of the wildcard
+#' If \code{FALSE}, each occurrence of the wildcard
 #' is replaced with the next entry in the \code{values} vector,
 #' and the values are recycled.
 #' @examples
@@ -194,7 +194,7 @@ analyses <- function(plan, datasets){
 }
 
 #' @title Function \code{summaries}
-#' @description Generate a worklfow plan data frame for summarizing
+#' @description Generate a workflow plan data frame for summarizing
 #' multiple analyses of multiple datasets multiple ways.
 #' @seealso \code{\link{analyses}}, \code{\link{make}}, \code{\link{plan}}
 #' @export

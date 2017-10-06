@@ -19,7 +19,7 @@ max_useful_jobs(plan, from_scratch = FALSE,
 useful jobs as if the workflow were to run from scratch
 (with all targets out of date).}
 
-\item{targets}{names of targets to bulid, same as for function
+\item{targets}{names of targets to build, same as for function
 \code{\link{make}()}.}
 
 \item{envir}{environment to import from, same as for function

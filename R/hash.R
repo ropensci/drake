@@ -99,5 +99,5 @@ package_hash <- function(target, config) {
   if (!is_installed_package(target, config = config)) {
     return(NULL)
   }
-  pacakge_dependency_version(target)
+  package_dependency_version(target)
 }

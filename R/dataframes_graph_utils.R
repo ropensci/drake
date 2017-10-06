@@ -118,7 +118,7 @@ function_hover_text <- Vectorize(function(function_name, envir){
 
 package_hover_text <- Vectorize(function(package_name, config){
   if (is_installed_package(package_name, config = config)) {
-    version <- pacakge_dependency_version(package_name) %>%
+    version <- package_dependency_version(package_name) %>%
       as.character
     if (!grepl("^R version", version)){
       version <- paste("version", version)

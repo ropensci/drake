@@ -25,7 +25,7 @@ targets or use times from everything, including the imports.}
 Timing information is
 limited to these targets and their dependencies.}
 
-\item{envir}{same as for \code{\link{make}}. Supercedes
+\item{envir}{same as for \code{\link{make}}. Supersedes
 \code{config$envir}.}
 
 \item{verbose}{same as for \code{\link{make}}}
@@ -58,7 +58,7 @@ this function.}
 
 \item{digits}{number of digits for rounding the times.}
 
-\item{path}{file path to the folder contianing the cache.
+\item{path}{file path to the folder containing the cache.
 Yes, this is the parent directory containing the cache,
 not the cache itself.}
 

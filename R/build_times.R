@@ -1,6 +1,6 @@
 #' @title Function \code{build_times}
 #' @description List all the build times.
-#' This doesn't include the amount of time
+#' This does not include the amount of time
 #' spent loading and saving objects!
 #' @seealso \code{\link{built}}
 #' @export

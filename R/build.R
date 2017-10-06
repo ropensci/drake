@@ -63,7 +63,7 @@ imported_target <- function(target, hashes, config) {
 flexible_get <- function(target) {
   stopifnot(length(target) == 1)
   if (is_package(target)){
-    return(pacakge_dependency_version(target))
+    return(package_dependency_version(target))
   }
   parsed <- parse(text = target) %>%
     as.call %>%

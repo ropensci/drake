@@ -115,7 +115,7 @@ During the execution workflow of a drake project, please do not change your work
 
 ## Check your dependencies.
 
-As the user, you should take responsibility for how the steps of your workflow are interconnected. This will affect which targets are built and which ones are skipped. There are several ways to explore the dependency relatoinsihp.
+As the user, you should take responsibility for how the steps of your workflow are interconnected. This will affect which targets are built and which ones are skipped. There are several ways to explore the dependency relationship.
 
 ```{r previewmyplan}
 load_basic_example()

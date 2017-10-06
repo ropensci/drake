@@ -35,7 +35,7 @@ limited to these targets and their dependencies.}
 The \code{cache} argument is ignored if a
 non-null \code{config} argument is supplied.}
 
-\item{parallelism}{samea as for \code{\link{make}}. Used
+\item{parallelism}{same as for \code{\link{make}}. Used
 to parallelize import objects.}
 
 \item{jobs}{same as for \code{\link{make}}, just used to
@@ -58,7 +58,7 @@ this function.}
 
 \item{digits}{number of digits for rounding the times.}
 
-\item{path}{file path to the folder contianing the cache.
+\item{path}{file path to the folder containing the cache.
 Yes, this is the parent directory containing the cache,
 not the cache itself.}
 

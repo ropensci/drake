@@ -43,7 +43,7 @@
 #'  \code{\link{make}(..., parallelism = 'Makefile')}
 #'  is NOT standalone. DO NOT run it outside of
 #' \code{\link{make}()} or \code{\link{make}()}.
-#'  Also, Windows users will need to download and intall Rtools.
+#'  Also, Windows users will need to download and install Rtools.
 #' }}
 #' @examples
 #' parallelism_choices()
@@ -84,7 +84,7 @@ default_parallelism <- function() {
 #' @param from_scratch logical, whether to compute the max
 #' useful jobs as if the workflow were to run from scratch
 #' (with all targets out of date).
-#' @param targets names of targets to bulid, same as for function
+#' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor of
