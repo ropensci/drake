@@ -164,8 +164,8 @@ Use the `Makefile_recipe()` function to show and tweak `Makefile` recipes in adv
 ```{r makefilerecipefunction}
 Makefile_recipe()
 Makefile_recipe(
-  target = "this_target",
   recipe_command = "R -e 'R_RECIPE' -q",
+  target = "this_target",
   cache_path = "custom_cache"
 )
 ```

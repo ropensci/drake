@@ -4,15 +4,14 @@
 \alias{Makefile_recipe}
 \title{Function Makefile_recipe}
 \usage{
-Makefile_recipe(target = "your_target",
-  recipe_command = drake::default_recipe_command(),
-  cache_path = drake::default_cache_path())
+Makefile_recipe(recipe_command = drake::default_recipe_command(),
+  target = "your_target", cache_path = drake::default_cache_path())
 }
 \arguments{
-\item{target}{character scalar, name of your target}
-
 \item{recipe_command}{The Makefile recipe command.
 See \code{\link{default_recipe_command}()}.}
+
+\item{target}{character scalar, name of your target}
 
 \item{cache_path}{path to the drake cache.
 In practice, this defaults to the hidden \code{.drake/} folder,

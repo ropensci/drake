@@ -4,9 +4,9 @@
 #' \code{\link{r_recipe_wildcard}}, \code{\link{make}}
 #' @description See what your \code{Makefile} recipes
 #' will look like in advance.
-#' @param target character scalar, name of your target
 #' @param recipe_command The Makefile recipe command.
 #' See \code{\link{default_recipe_command}()}.
+#' @param target character scalar, name of your target
 #' @param cache_path path to the drake cache.
 #' In practice, this defaults to the hidden \code{.drake/} folder,
 #' but this can be customized. In the Makefile, the drake cache
@@ -61,8 +61,8 @@
 #'   recipe_command = "R -e 'R_RECIPE' -q")
 #' }
 Makefile_recipe <- function( # nolint
-  target = "your_target",
   recipe_command = drake::default_recipe_command(),
+  target = "your_target",
   cache_path = drake::default_cache_path()){
   build_recipe(
     target = target,
