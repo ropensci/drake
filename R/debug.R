@@ -11,7 +11,7 @@ dbug <- function() {
     verbose = FALSE, packages = character(0),
     prework = character(0), command = default_Makefile_command(),
     args = character(0),
-    recipe_command = default_recipe_command(),
+    recipe_command = "Rscript -e",
     cache = NULL, clear_progress = TRUE
   )
 }

@@ -133,29 +133,49 @@ make(my_plan, parallelism = "Makefile", jobs = 4, command = "lsmake")
 default_Makefile_command()
 ```
 
-For more control over how R is called on each target, use the `recipe_command` argument. By default, the `recipe_command` is `"Rscript -e"`.
+For finer control over the build process, use the `recipe_command` argument. By default, the `recipe_command` is `"Rscript -e 'R_RECIPE'"`.
 
 ```{r defaultrecipecommandfunction}
 default_recipe_command()
+r_recipe_wildcard()
 ```
 
 
-That way, a target named `your_target` is built in the `Makefile` with the following. (To verify, read the `Makefile` output by `make()`.)
+The `R_RECIPE` wildcard is replaced by `drake::mk("your_target", "path_to_cache")` in the `Makefile`. That way, a target named `your_target` is built with the `Makefile` recipe,
 
-<pre><code>Rscript -e 'drake::mk("your_target", "$(DRAKE_CACHE")'
+<pre><code>Rscript -e 'drake::mk("your_target", "path_to_cache")'
 </code></pre>
 
-But you can change the recipe to something else. For example, to save some time and skip the loading of the `methods` package, you might use `R -q -e`.
+You can change the recipe with the `recipe_command` argument. For example, to save some time and skip the loading of the `methods` package, you might use `"R -e 'R_RECIPE' -q"`.
 
 ```{r hpcrqe, eval = FALSE}
 make(my_plan, parallelism = "Makefile", jobs = 4,
-  recipe_command = "R -q -e")
+  recipe_command = "R -e 'R_RECIPE' -q")
 ```
 
 The `Makefile` recipe for `your_target` becomes
 
-<pre><code>R -q -e 'drake::mk("your_target", "$(DRAKE_CACHE")'
+<pre><code>R -e 'drake::mk("your_target", "path_to_cache") -q'
 </code></pre>
+
+Try each of the following and look at the generated `Makefile` after each call to `make()`. To see the recipes printed to the console, run `clean()` between each `make()` and leave `verbose` equal to `TRUE` (default).
+
+
+```{r examplerecipes, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 4)
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "Rscript -e")
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "Rscript -e 'R_RECIPE'")
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "R -e 'R_RECIPE' -q")
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "R -q -e 'R_RECIPE'")
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "R -q -e")
+```
+
+
 
 ### Makefile parallelism on a cluster
 

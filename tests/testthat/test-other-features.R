@@ -4,6 +4,7 @@ context("other features")
 test_with_dir("recipe_command", {
   my_plan <- plan(y = 1)
   expect_true(is.character(default_recipe_command()))
+  expect_true(is.character(r_recipe_wildcard()))
   con1 <- make(my_plan, command = default_Makefile_command(),
     parallelism = "Makefile", return_config = TRUE,
     recipe_command = "some_command", verbose = FALSE, imports_only = TRUE)
