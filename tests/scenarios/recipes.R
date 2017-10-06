@@ -16,21 +16,22 @@ test_with_dir("custom Makefile recipes work", {
   parallelism <- scenario$parallelism
   load_basic_example(envir = e)
   my_plan <- e$my_plan
+  verbose <- TRUE
 
   con <- make(my_plan,
     envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, return_config = TRUE)
+    verbose = verbose, return_config = TRUE)
   expect_equal(sort(justbuilt(con)), sort(my_plan$target))
   clean()
 
   cmds <- c(
     "Rscript -e",
-    "R -e 'R_RECIPE' -q"
+    "R -e 'R_RECIPE' -q" # does not work on Windows
   )
   for (cmd in cmds){
     con <- make(my_plan, recipe_command = cmd,
       envir = e, jobs = jobs, parallelism = parallelism,
-      verbose = FALSE, return_config = TRUE)
+      verbose = verbose, return_config = TRUE)
     expect_equal(sort(justbuilt(con)), sort(my_plan$target))
     clean()
   }

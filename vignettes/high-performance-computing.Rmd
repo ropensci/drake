@@ -158,6 +158,8 @@ The `Makefile` recipe for `your_target` becomes
 <pre><code>R -e 'drake::mk("your_target", "path_to_cache") -q'
 </code></pre>
 
+That particular recipe fails on Windows, so just be sure to use a recipe command compatible with your platform.
+
 Try each of the following and look at the generated `Makefile` after each call to `make()`. To see the recipes printed to the console, run `clean()` between each `make()` and leave `verbose` equal to `TRUE` (default).
 
 
@@ -167,6 +169,11 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
   recipe_command = "Rscript -e")
 make(my_plan, parallelism = "Makefile", jobs = 4,
   recipe_command = "Rscript -e 'R_RECIPE'")
+```
+
+Only attempt the following on a non-Windows platform.
+
+```{r examplerecipesnowindows, eval = FALSE}
 make(my_plan, parallelism = "Makefile", jobs = 4,
   recipe_command = "R -e 'R_RECIPE' -q")
 make(my_plan, parallelism = "Makefile", jobs = 4,
@@ -174,7 +181,6 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 make(my_plan, parallelism = "Makefile", jobs = 4,
   recipe_command = "R -q -e")
 ```
-
 
 
 ### Makefile parallelism on a cluster
