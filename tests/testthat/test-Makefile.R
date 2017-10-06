@@ -1,6 +1,23 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("Makefile")
 
+test_with_dir("recipe commands", {
+  expect_output(Makefile_recipe())
+  expect_output(Makefile_recipe(recipe_command = "R -e 'R_RECIPE' -q"))
+  my_plan <- plan(y = 1)
+  expect_true(is.character(default_recipe_command()))
+  expect_true(is.character(r_recipe_wildcard()))
+  con1 <- make(my_plan, command = default_Makefile_command(),
+    parallelism = "Makefile", return_config = TRUE,
+    recipe_command = "some_command", verbose = FALSE, imports_only = TRUE)
+  expect_equal(con1$recipe_command, "some_command")
+  expect_true(con1$recipe_command != default_recipe_command())
+  con2 <- config(plan = my_plan, parallelism = "Makefile",
+    recipe_command = "my_command", verbose = FALSE)
+  expect_equal(con2$recipe_command, "my_command")
+  expect_true(con2$recipe_command != default_recipe_command())
+})
+
 test_with_dir("no Makefile if imports_only is TRUE", {
   expect_equal(cached(), character(0))
   x <- plan(a = ls())
