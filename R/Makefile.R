@@ -180,7 +180,8 @@ default_Makefile_command <- function(){
 #' from within R, the \code{Makefile} builds each target
 #' with the \code{Makefile} recipe,
 #' \code{R -e 'drake::mk("this_target", "path_to_cache")' -q}.
-#' The default \code{recipe_command} argument is
+#' But since \code{R -q -e} fails on Windows,
+#' so the default \code{recipe_command} argument is
 #' \code{"Rscript -e 'R_RECIPE'"}
 #' (equivalently just \code{"Rscript -e"}),
 #' so the default \code{Makefile} recipe for each target is
@@ -194,6 +195,7 @@ default_Makefile_command <- function(){
 #' make(my_plan, paralleliem = "Makefile")
 #' # Generates a Makefile with "R -q -e" rather than
 #' # "Rscript -e".
+#' # Be aware the R -q -e fails on Windows.
 #' make(my_plan, parallelism = "Makefile", jobs = 2
 #'   recipe_command = "R -q -e")
 #' # Same thing:
@@ -223,7 +225,8 @@ default_recipe_command <- function(){
 #' from within R, the \code{Makefile} builds each target
 #' with the \code{Makefile} recipe,
 #' \code{R -e 'drake::mk("this_target", "path_to_cache")' -q}.
-#' The default \code{recipe_command} argument is
+#' But since \code{R -q -e} fails on Windows,
+#' the default \code{recipe_command} argument is
 #' \code{"Rscript -e 'R_RECIPE'"}
 #' (equivalently just \code{"Rscript -e"}),
 #' so the default \code{Makefile} recipe for each target is
@@ -237,6 +240,7 @@ default_recipe_command <- function(){
 #' make(my_plan, paralleliem = "Makefile")
 #' # Generates a Makefile with "R -q -e" rather than
 #' # "Rscript -e".
+#' # Be aware the R -q -e fails on Windows.
 #' make(my_plan, parallelism = "Makefile", jobs = 2
 #'   recipe_command = "R -q -e")
 #' # Same thing:
