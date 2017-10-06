@@ -8,6 +8,7 @@ drake_tip()
 }
 \description{
 Output a random tip about drake.
+Tips are usually related to news and usage.
 }
 \examples{
 drake_tip()
