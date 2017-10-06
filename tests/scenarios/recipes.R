@@ -25,9 +25,13 @@ test_with_dir("custom Makefile recipes work", {
   clean()
 
   cmds <- c(
-    "Rscript -e",
-    "R -e 'R_RECIPE' -q" # does not work on Windows
+    "Rscript -e"
   )
+  if (!on_windows()){
+    cmds <- c(cmds,
+      "R -e 'R_RECIPE' -q"
+    )
+  }
   for (cmd in cmds){
     con <- make(my_plan, recipe_command = cmd,
       envir = e, jobs = jobs, parallelism = parallelism,
