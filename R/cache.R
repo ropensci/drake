@@ -17,7 +17,7 @@ cache_path <- function(cache = NULL){
 }
 
 #' @title Function get_cache
-#' @description Search for and return a drake filesystem cache.
+#' @description Search for and return a drake file system cache.
 #' @seealso \code{\link{this_cache}}, \code{\link{new_cache}},
 #' \code{\link{recover_cache}}, \code{\link{config}}
 #' @export

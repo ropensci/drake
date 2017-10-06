@@ -18,7 +18,7 @@ the \code{\link{this_cache}()} function.}
 for the cache.}
 }
 \description{
-Search for and return a drake filesystem cache.
+Search for and return a drake file system cache.
 }
 \examples{
 \dontrun{

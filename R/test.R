@@ -27,7 +27,10 @@ nobuild <- function(config) {
 test_with_dir <- function(desc, ...){
   root <- tempdir()
   stopifnot(file.exists(root))
-  relative_dir <- digest::digest(desc, algo = default_short_hash_algo())
+  relative_dir <- digest::digest(
+    list(desc, sessionInfo()$platform, rnorm(1)),
+    algo = default_short_hash_algo()
+  )
   dir <- file.path(root, relative_dir)
   dir_empty(dir)
   with_dir(dir, test_that(desc = desc, ...))
