@@ -115,7 +115,7 @@ test_with_dir("analyses and summaries", {
 
   no_analyses <- plan(
     summ = summary(..dataset..), # nolint
-    coef = coef(..dataset..) # nolint
+    coef = coefficients(..dataset..) # nolint
   )
   suppressWarnings(
     expect_error(
@@ -125,7 +125,7 @@ test_with_dir("analyses and summaries", {
 
   summary_types <- plan(
     summ = summary(..analysis..), # nolint
-    coef = coef(..analysis..) # nolint
+    coef = coefficients(..analysis..) # nolint
   )
   results <- summaries(summary_types, analyses, datasets, gather = NULL)
   x <- data.frame(
@@ -144,10 +144,10 @@ test_with_dir("analyses and summaries", {
       "summary(regression1_large)",
       "summary(regression2_small)",
       "summary(regression2_large)",
-      "coef(regression1_small)",
-      "coef(regression1_large)",
-      "coef(regression2_small)",
-      "coef(regression2_large)"
+      "coefficients(regression1_small)",
+      "coefficients(regression1_large)",
+      "coefficients(regression2_small)",
+      "coefficients(regression2_large)"
     ),
     stringsAsFactors = FALSE
   )
@@ -155,7 +155,7 @@ test_with_dir("analyses and summaries", {
 
   summary_types <- plan(
     summ = summary(..analysis.., ..dataset..), # nolint
-    coef = coef(..analysis..) # nolint
+    coef = coefficients(..analysis..) # nolint
   )
   results <- summaries(
     summary_types,
@@ -179,10 +179,10 @@ test_with_dir("analyses and summaries", {
       "summary(regression1_large, large)",
       "summary(regression2_small, small)",
       "summary(regression2_large, large)",
-      "coef(regression1_small)",
-      "coef(regression1_large)",
-      "coef(regression2_small)",
-      "coef(regression2_large)"
+      "coefficients(regression1_small)",
+      "coefficients(regression1_large)",
+      "coefficients(regression2_small)",
+      "coefficients(regression2_large)"
     ),
     stringsAsFactors = FALSE
   )

@@ -51,7 +51,7 @@ reg2 <- function(d){
 my_datasets <- plan(
   small = simulate(5),
   large = simulate(50)
-  )
+)
 
 # Optionally, get replicates with expand(my_datasets,
 #   values = c("rep1", "rep2")).
@@ -68,8 +68,8 @@ my_analyses <- analyses(methods, datasets = my_datasets)
 summary_types <- plan(
   # Perfect regression fits can happen.
   summ = suppressWarnings(summary(..analysis..)), ## nolint
-  coef = coef(..analysis..) ## nolint
-  )
+  coef = coefficients(..analysis..) ## nolint
+)
 
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
@@ -78,7 +78,7 @@ results <- summaries(
   my_analyses,
   my_datasets,
   gather = NULL
-  ) # skip 'gather' (workflow my_plan is more readable)
+) # skip 'gather' (workflow my_plan is more readable)
 
 # External file targets and dependencies should be single-quoted.
 # Use double quotes to remove any special meaning from character strings.

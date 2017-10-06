@@ -182,7 +182,7 @@ Next, we summarize each analysis of each dataset using summary statistics and re
 ```{r summaries}
 summary_types <- plan(
   summ = suppressWarnings(summary(..analysis..)),
-  coef = coef(..analysis..))
+  coef = coefficients(..analysis..))
 summary_types
 
 results <- summaries(summary_types, analyses = my_analyses,

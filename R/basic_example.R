@@ -64,7 +64,7 @@ load_basic_example <- function(envir = parent.frame(),
 
   summary_types <- plan(list = c(
     summ = "suppressWarnings(summary(..analysis..))",
-    coef = "coef(..analysis..)"))
+    coef = "coefficients(..analysis..)"))
 
   # summaries() also uses evaluate(): once with expand = TRUE,
   # once with expand = FALSE
