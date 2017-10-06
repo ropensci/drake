@@ -41,10 +41,10 @@ my_plan # Each target is a file (single-quoted) or object.
 ## 9  summ_regression1_large suppressWarnings(summary(regression1_large))
 ## 10 summ_regression2_small suppressWarnings(summary(regression2_small))
 ## 11 summ_regression2_large suppressWarnings(summary(regression2_large))
-## 12 coef_regression1_small                      coef(regression1_small)
-## 13 coef_regression1_large                      coef(regression1_large)
-## 14 coef_regression2_small                      coef(regression2_small)
-## 15 coef_regression2_large                      coef(regression2_large)
+## 12 coef_regression1_small              coefficients(regression1_small)
+## 13 coef_regression1_large              coefficients(regression1_large)
+## 14 coef_regression2_small              coefficients(regression2_small)
+## 15 coef_regression2_large              coefficients(regression2_large)
 ```
 
 ```r
