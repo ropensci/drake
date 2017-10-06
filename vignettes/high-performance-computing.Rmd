@@ -201,7 +201,7 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 
 ### Makefile parallelism on a cluster
 
-For supercomputing with `drake`, you need a new configuration file to tell the `Makefile` how to talk to the cluster. The `shell_file()` function writes a starter.
+For the recommended approach to supercomputing with `drake`, you need a new configuration file to tell the `Makefile` how to talk to the cluster. The `shell_file()` function writes a starter.
 
 <pre><code>#!/bin/bash
 shift
@@ -221,6 +221,13 @@ make(my_plan, parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")
 ```{r cluster, eval = FALSE}
 make(my_plan, parallelism = "Makefile", jobs = 4,
   prepend = "SHELL=srun")
+```
+
+And you may be able to use `recipe_command` to to talk to the cluster rather than `prepend` (though most job schedulers require a script file).
+
+```{r cluster2, eval = FALSE}
+make(my_plan, parallelism = "Makefile", jobs = 4,
+  recipe_command = "tell_cluster_to_submit Rscript -e")
 ```
 
 If you are interested in `Makefile` parallelism on a cluster, then you likely have a project that takes several hours or more to run. In that case, we recommend that you submit a master job on the login node that runs persistently until your work is complete. To do so, just save you call to `make()` in an R script, say `my_script.R`, and then deploy your work from the [Linux terminal](https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/) with the following.
