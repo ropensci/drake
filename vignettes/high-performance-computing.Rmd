@@ -170,6 +170,12 @@ Makefile_recipe(
 )
 ```
 
+If `recipe_command` contains no mention of `R_RECIPE`, then `R_RECIPE` is single-quoted and appended automatically.
+
+```{r reappendrrecipe}
+Makefile_recipe(recipe_command = "R -q -e")
+```
+
 Try each of the following and look at the generated `Makefile` after each call to `make()`. To see the recipes printed to the console, run `clean()` between each `make()` and leave `verbose` equal to `TRUE` (default).
 
 
