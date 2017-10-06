@@ -80,7 +80,7 @@ Makefile_recipe <- function( # nolint
 #' @details See the help file of \code{\link{Makefile_recipe}}
 #' for details and examples.
 default_recipe_command <- function(){
-  "Rscript -e 'R_RECIPE'"
+  paste0("Rscript -e '", r_recipe_wildcard(), "'")
 }
 
 #' @title r_recipe_wildcard
