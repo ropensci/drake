@@ -11,8 +11,6 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
-![](images/demo.gif)
-
 # Data frames in R for [Make](http://kbroman.org/minimal_make/)
 
 Drake is a workflow manager and build system for
@@ -55,29 +53,29 @@ make(my_plan) # Run the commands to build the targets.
 
 ```r
 install.packages("drake") # latest CRAN release
-devtools::install_github("wlandau-lilly/drake@v4.0.1", build = TRUE) # choose a GitHub tag/release
-devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
+devtools::install_github("wlandau-lilly/drake@v4.2.0", build = TRUE) # choose a GitHub tag/release
+devtools::install_github("wlandau-lilly/drake", build = TRUE)        # development version
 ```
 
 # Quickstart
 
 ```r
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-plot_graph(my_plan) # Click, drag, pan, hover. Try file = "graph.html" and targets_only = TRUE.
-outdated(my_plan) # Which targets need to be (re)built?
-missed(my_plan) # Are you missing anything from your workspace?
-check(my_plan) # Are you missing files? Is your workflow plan okay?
-make(my_plan) # Run the workflow.
-outdated(my_plan) # Everything is up to date.
-plot_graph(my_plan) # The graph also shows what is up to date.
+load_basic_example() # Also (over)writes report.Rmd.
+plot_graph(my_plan)  # Click, drag, pan, hover. Try file = "graph.html" and targets_only = TRUE.
+outdated(my_plan)    # Which targets need to be (re)built?
+missed(my_plan)      # Are you missing anything from your workspace?
+check(my_plan)       # Are you missing files? Is your workflow plan okay?
+make(my_plan)        # Run the workflow.
+outdated(my_plan)    # Everything is up to date.
+plot_graph(my_plan)  # The graph also shows what is up to date.
 ```
 
 Dive deeper into the built-in examples.
 
 ```r
 example_drake("basic") # Write the code files of the canonical tutorial.
-examples_drake() # List the other examples.
+examples_drake()       # List the other examples.
 vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
@@ -178,13 +176,13 @@ read_config()
 The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
 
 ```r
-vignette(package = "drake") # List the vignettes.
-vignette("drake") # High-level intro.
-vignette("quickstart") # Walk through a simple example.
+vignette(package = "drake")            # List the vignettes.
+vignette("drake")                      # High-level intro.
+vignette("quickstart")                 # Walk through a simple example.
 vignette("high-performance-computing") # Extensive prallel computing functionality.
-vignette("storage") # Learn how drake stores your stuff.
-vignette("timing") # Build times of targets, predicting total runtime.
-vignette("caution") # Avoid common pitfalls.
+vignette("storage")                    # Learn how drake stores your stuff.
+vignette("timing")                     # Build times of targets, predicting total runtime.
+vignette("caution")                    # Avoid common pitfalls.
 ```
 
 # Help and troubleshooting
@@ -199,17 +197,17 @@ There is room to improve the conversation and the landscape of reproducibility i
 library(drake)
 load_basic_example()
 outdated(my_plan) # Which targets need to be (re)built?
-make(my_plan) # Build what needs to be built.
+make(my_plan)     # Build what needs to be built.
 outdated(my_plan) # Everything is up to date.
 # Change one of your functions.
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan) # Some targets depend on reg2().
+outdated(my_plan)   # Some targets depend on reg2().
 plot_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
-make(my_plan) # Rebuild just the outdated targets.
-outdated(my_plan) # Everything is up to date again.
+make(my_plan)       # Rebuild just the outdated targets.
+outdated(my_plan)   # Everything is up to date again.
 plot_graph(my_plan) # The colors changed in the graph.
 ```
 
@@ -217,9 +215,6 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 
 1. Other imported functions, whether user-defined or from packages.
 1. For imported functions from your environment, any nested functions also in your environment or from packages.
-1. The packages where the imported functions came from, if applicable.
-    1. The version numbers for non-base packages.
-    1. The release version of R itself (or snapshot of development R), if applicable for base packages such as `base` and `stats`.
 1. Commands in your workflow plan data frame.
 1. Global varibles mentioned in the commands or imported functions.
 1. Upstream targets.
@@ -230,6 +225,8 @@ See the `quickstart` vignette for demonstrations of `drake`'s reproducibility an
 ```r
 vignette("quickstart")
 ```
+
+You can enhance reprodubility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
 # High-performance computing
 

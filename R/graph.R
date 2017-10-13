@@ -14,12 +14,6 @@
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
-#' @param cache optional drake cache, as from \code{\link{new_cache}()}.
-#' The cache is used to check for back-compatibility with projects
-#' created with drake 4.2.0 or earlier. In these legacy projects,
-#' packages will not be tracked as dependencies. In projects created with
-#' a version of drake later than 4.2.0, packages are formally tracked as
-#' imports.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -30,8 +24,7 @@ build_graph <- function(
   plan,
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = TRUE,
-  cache = NULL
+  verbose = TRUE
   ){
   force(envir)
   plan <- sanitize_plan(plan)
@@ -49,10 +42,6 @@ build_graph <- function(
   command_deps <- lapply(plan$command, command_dependencies)
   names(command_deps) <- plan$target
   dependency_list <- c(command_deps, import_deps)
-  if (account_for_packages(cache)) {
-    dependency_list <- append_package_dependencies(
-      dependency_list, config = config)
-  }
   keys <- names(dependency_list)
   vertices <- c(keys, unlist(dependency_list)) %>% unique
   from <- unlist(dependency_list) %>%
@@ -89,12 +78,6 @@ build_graph <- function(
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
-#' @param cache optional drake cache, as from \code{\link{new_cache}()}.
-#' The cache is used to check for back-compatibility with projects
-#' created with drake 4.2.0 or earlier. In these legacy projects,
-#' packages will not be tracked as dependencies. In projects created with
-#' a version of drake later than 4.2.0, packages are formally tracked as
-#' imports.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -103,12 +86,10 @@ build_graph <- function(
 tracked <- function(
   plan,
   targets = drake::possible_targets(plan),
-  envir = parent.frame(),
-  cache = NULL
+  envir = parent.frame()
   ){
   force(envir)
-  graph <- build_graph(plan = plan, targets = targets, envir = envir,
-    cache = cache)
+  graph <- build_graph(plan = plan, targets = targets, envir = envir)
   V(graph)$name
 }
 
@@ -129,20 +110,4 @@ assert_unique_names <- function(imports, targets, envir, verbose){
       )
   }
   remove(list = common, envir = envir)
-}
-
-append_package_dependencies <- function(dependency_list, config) {
-  x <- c(names(dependency_list), unlist(dependency_list)) %>%
-    clean_dependency_list
-  sapply(x, package_of_name) %>%
-    Filter(f = length) %>%
-    c(dependency_list)
-}
-
-account_for_packages <- function(cache){
-  if (is.null(cache)){
-    cache <- recover_cache()
-  }
-  version <- cache$get("initial_drake_version", namespace = "session")
-  compareVersion(version, "4.2.0") > 0
 }

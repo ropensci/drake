@@ -87,7 +87,7 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
-  split_columns = FALSE, font_size = 18, config = NULL) {
+  split_columns = FALSE, font_size = 20, config = NULL) {
   force(envir)
   if (is.null(config)){
     config <- config(plan = plan, targets = targets,
@@ -111,7 +111,6 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
   files <- Filter(x = nodes$id, f = is_file)
   functions <- Filter(x = imports,
     f = function(x) can_get_function(x, envir = envir))
-  packages <- Filter(x = imports, f = is_package)
   missing <- Filter(x = imports,
     f = function(x) missing_import(x, envir = envir))
 
@@ -119,7 +118,7 @@ dataframes_graph <- function(plan, targets = drake::possible_targets(plan),
     config = config,
     files = files, functions = functions, imports = imports,
     in_progress = in_progress, missing = missing,
-    outdated = outdated, packages = packages, targets = targets,
+    outdated = outdated, targets = targets,
     font_size = font_size, build_times = build_times, digits = digits)
 
   edges <- network_data$edges

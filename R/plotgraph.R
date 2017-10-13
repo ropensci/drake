@@ -91,7 +91,7 @@ plot_graph <- function(plan, targets = drake::possible_targets(plan),
   packages = (.packages()), prework = character(0), file = character(0),
   selfcontained = FALSE, build_times = TRUE, digits = 3,
   targets_only = FALSE,
-  split_columns = FALSE, config = NULL, font_size = 18,
+  split_columns = FALSE, config = NULL, font_size = 20,
   layout = "layout_with_sugiyama",
   main = NULL,
   direction = "LR", hover = TRUE,
@@ -163,8 +163,7 @@ render_graph <- function(graph, file = character(0),
     main = main, ...) %>%
     visNetwork::visLegend(
       useGroups = FALSE,
-      addNodes = graph$legend_nodes,
-      ncol = 2
+      addNodes = graph$legend_nodes
     ) %>%
     visNetwork::visHierarchicalLayout(direction = direction) %>%
     visNetwork::visIgraphLayout(physics = FALSE,

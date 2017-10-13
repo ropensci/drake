@@ -121,9 +121,6 @@ unwrap_function <- function(funct){
 }
 
 function_dependencies <- function(funct){
-  if (is_in_package(funct)) {
-    return(list(package = package_of_function(funct)))
-  }
   funct <- unwrap_function(funct)
   if (typeof(funct) != "closure"){
     funct <- function(){} # nolint: curly braces are necessary
@@ -133,10 +130,6 @@ function_dependencies <- function(funct){
   out$functions <- c(out$functions, namespaced) %>%
     sort()
   parsable_list(out)
-}
-
-is_in_package <- function(funct){
-  isNamespace(environment(funct))
 }
 
 clean_dependency_list <- function(x){

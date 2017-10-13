@@ -55,7 +55,7 @@ config <- function(plan, targets = drake::possible_targets(plan),
     recipe_command = recipe_command
   )
   config$graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose, cache = config$cache)
+    envir = envir, verbose = verbose)
   config
 }
 
@@ -80,8 +80,7 @@ build_config <- function(plan, targets, envir,
     overwrite_hash_algos = FALSE
   )
   graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose,
-    cache = cache
+    envir = envir, verbose = verbose
   )
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose,
