@@ -53,29 +53,29 @@ make(my_plan) # Run the commands to build the targets.
 
 ```r
 install.packages("drake") # latest CRAN release
-devtools::install_github("wlandau-lilly/drake@v4.0.1", build = TRUE) # choose a GitHub tag/release
-devtools::install_github("wlandau-lilly/drake", build = TRUE) # development version
+devtools::install_github("wlandau-lilly/drake@v4.2.0", build = TRUE) # choose a GitHub tag/release
+devtools::install_github("wlandau-lilly/drake", build = TRUE)        # development version
 ```
 
 # Quickstart
 
 ```r
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-plot_graph(my_plan) # Click, drag, pan, hover. Try file = "graph.html" and targets_only = TRUE.
-outdated(my_plan) # Which targets need to be (re)built?
-missed(my_plan) # Are you missing anything from your workspace?
-check(my_plan) # Are you missing files? Is your workflow plan okay?
-make(my_plan) # Run the workflow.
-outdated(my_plan) # Everything is up to date.
-plot_graph(my_plan) # The graph also shows what is up to date.
+load_basic_example() # Also (over)writes report.Rmd.
+plot_graph(my_plan)  # Click, drag, pan, hover. Try file = "graph.html" and targets_only = TRUE.
+outdated(my_plan)    # Which targets need to be (re)built?
+missed(my_plan)      # Are you missing anything from your workspace?
+check(my_plan)       # Are you missing files? Is your workflow plan okay?
+make(my_plan)        # Run the workflow.
+outdated(my_plan)    # Everything is up to date.
+plot_graph(my_plan)  # The graph also shows what is up to date.
 ```
 
 Dive deeper into the built-in examples.
 
 ```r
 example_drake("basic") # Write the code files of the canonical tutorial.
-examples_drake() # List the other examples.
+examples_drake()       # List the other examples.
 vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
@@ -176,13 +176,13 @@ read_config()
 The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
 
 ```r
-vignette(package = "drake") # List the vignettes.
-vignette("drake") # High-level intro.
-vignette("quickstart") # Walk through a simple example.
+vignette(package = "drake")            # List the vignettes.
+vignette("drake")                      # High-level intro.
+vignette("quickstart")                 # Walk through a simple example.
 vignette("high-performance-computing") # Extensive prallel computing functionality.
-vignette("storage") # Learn how drake stores your stuff.
-vignette("timing") # Build times of targets, predicting total runtime.
-vignette("caution") # Avoid common pitfalls.
+vignette("storage")                    # Learn how drake stores your stuff.
+vignette("timing")                     # Build times of targets, predicting total runtime.
+vignette("caution")                    # Avoid common pitfalls.
 ```
 
 # Help and troubleshooting
@@ -197,17 +197,17 @@ There is room to improve the conversation and the landscape of reproducibility i
 library(drake)
 load_basic_example()
 outdated(my_plan) # Which targets need to be (re)built?
-make(my_plan) # Build what needs to be built.
+make(my_plan)     # Build what needs to be built.
 outdated(my_plan) # Everything is up to date.
 # Change one of your functions.
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan) # Some targets depend on reg2().
+outdated(my_plan)   # Some targets depend on reg2().
 plot_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
-make(my_plan) # Rebuild just the outdated targets.
-outdated(my_plan) # Everything is up to date again.
+make(my_plan)       # Rebuild just the outdated targets.
+outdated(my_plan)   # Everything is up to date again.
 plot_graph(my_plan) # The colors changed in the graph.
 ```
 
