@@ -246,7 +246,7 @@ plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/54a071ad/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/98a49f04/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
