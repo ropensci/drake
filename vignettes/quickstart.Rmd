@@ -165,8 +165,8 @@ Each dataset is analyzed multiple ways.
 
 ```{r methods}
 methods <- plan(
-  regression1 = reg1(..dataset..),
-  regression2 = reg2(..dataset..))
+  regression1 = reg1(..dataset..), # nolint
+  regression2 = reg2(..dataset..)) # nolint
 methods
 ```
 
@@ -181,8 +181,8 @@ Next, we summarize each analysis of each dataset using summary statistics and re
 
 ```{r summaries}
 summary_types <- plan(
-  summ = suppressWarnings(summary(..analysis..)),
-  coef = coefficients(..analysis..))
+  summ = suppressWarnings(summary(..analysis..)), # nolint
+  coef = coefficients(..analysis..)) # nolint
 summary_types
 
 results <- summaries(summary_types, analyses = my_analyses,
@@ -367,15 +367,14 @@ As you have seen with `reg2()`, `drake` reacts to changes. In other words, `make
 
 1. Other imported functions, whether user-defined or from packages.
 1. For imported functions from your environment, any nested functions also in your environment or from packages.
-1. The packages where the imported functions came from, if applicable.
-    a. The version numbers for non-base packages.
-    a. The release version of R itself (or snapshot of development R), if applicable for base packages such as `base` and `stats`.
 1. Commands in your workflow plan data frame.
 1. Global variables mentioned in the commands or imported functions.
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
 
-To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `plot_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches. For more information on how `drake` watches for changes in the workflow, please see the reproducibility vignette.
+To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `plot_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches.
+
+There is more to reproducibility than just using `drake` to watch for dependencies. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
 # Need more speed?
 

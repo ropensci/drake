@@ -82,7 +82,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 6)
+  expect_equal(nrow(x), 4)
   expect_warning(
     x <- rate_limiting_times(
       plan = config$plan,
@@ -102,7 +102,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 15)
+  expect_equal(nrow(x), 12)
   expect_warning(
     y <- predict_runtime(
       plan = config$plan,
@@ -138,7 +138,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 8)
+  expect_equal(nrow(x), 6)
   expect_warning(
     x <- rate_limiting_times(
       plan = config$plan,
@@ -147,7 +147,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 15)
+  expect_equal(nrow(x), 12)
   expect_warning(
     x <- rate_limiting_times(
       plan = config$plan,
@@ -157,7 +157,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 17)
+  expect_equal(nrow(x), 14)
   expect_silent(
     y <- predict_runtime(
       plan = config$plan,
@@ -312,9 +312,9 @@ test_with_dir("timing predictions with realistic build", {
   expect_true(all(complete.cases(jobs_4_df)))
   expect_true(all(complete.cases(jobs_4_df_targets)))
 
-  expect_equal(nrow(scratch_df), 30)
+  expect_equal(nrow(scratch_df), 27)
   expect_equal(nrow(resume_df), nrow(scratch_df) - 8)
-  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 23)
+  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 20)
   expect_true(nrow(jobs_2_df) < nrow(scratch_df))
   expect_true(nrow(jobs_4_df) < nrow(jobs_2_df))
   expect_true(nrow(jobs_4_df_targets) < nrow(jobs_4_df))

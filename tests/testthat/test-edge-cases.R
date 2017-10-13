@@ -1,16 +1,6 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("edge-cases")
 
-test_with_dir("misbehavior with packages", {
-  x <- data.frame(target = "package:asdflkjlskdjioelkjdi", command = 1)
-  expect_warning(tmp <- sanitize_plan(x))
-  expect_warning(tmp <- sanitize_targets(plan = x, targets = x$target))
-  config <- list(installed_packages = c())
-  pkg <- "skldjfie"
-  hov <- package_hover_text(pkg, config = config)
-  expect_equal(hov, pkg)
-})
-
 test_with_dir("graph does not fail if input file is binary", {
   x <- plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")

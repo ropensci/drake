@@ -12,8 +12,7 @@ hashes <- function(target, config) {
   list(
     target = target,
     depends = dependency_hash(target = target, config = config),
-    file = file_hash(target = target, config = config),
-    package = package_hash(target = target, config = config)
+    file = file_hash(target = target, config = config)
   )
 }
 
@@ -90,14 +89,4 @@ braces <- function(x) {
 
 get_command <- function(target, config) {
   config$plan$command[config$plan$target == target] %>% tidy
-}
-
-# This isn't really a hash, it is just
-# the package version. Still, we're ready
-# to rehash packages if there is a need.
-package_hash <- function(target, config) {
-  if (!is_installed_package(target, config = config)) {
-    return(NULL)
-  }
-  package_dependency_version(target)
 }

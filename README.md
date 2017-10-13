@@ -217,9 +217,6 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 
 1. Other imported functions, whether user-defined or from packages.
 1. For imported functions from your environment, any nested functions also in your environment or from packages.
-1. The packages where the imported functions came from, if applicable.
-    1. The version numbers for non-base packages.
-    1. The release version of R itself (or snapshot of development R), if applicable for base packages such as `base` and `stats`.
 1. Commands in your workflow plan data frame.
 1. Global varibles mentioned in the commands or imported functions.
 1. Upstream targets.
@@ -230,6 +227,8 @@ See the `quickstart` vignette for demonstrations of `drake`'s reproducibility an
 ```r
 vignette("quickstart")
 ```
+
+You can enhance reprodubility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
 # High-performance computing
 

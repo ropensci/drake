@@ -5,7 +5,7 @@
 \title{Function \code{build_graph}}
 \usage{
 build_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL)
+  envir = parent.frame(), verbose = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -18,13 +18,6 @@ build_graph(plan, targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
-
-\item{cache}{optional drake cache, as from \code{\link{new_cache}()}.
-The cache is used to check for back-compatibility with projects
-created with drake 4.2.0 or earlier. In these legacy projects,
-packages will not be tracked as dependencies. In projects created with
-a version of drake later than 4.2.0, packages are formally tracked as
-imports.}
 }
 \description{
 Make a graph of the dependency structure of your workflow.

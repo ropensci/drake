@@ -40,12 +40,11 @@ categorize_nodes <- function(nodes, functions, imports,
   nodes$type <- "object"
   nodes[is_file(nodes$id), "type"] <- "file"
   nodes[functions, "type"] <- "function"
-  nodes[is_package(nodes$id), "type"] <- "package"
   nodes
 }
 
 configure_nodes <- function(nodes, config,
-  files, functions, packages, imports,
+  files, functions, imports,
   in_progress, missing, outdated, targets,
   font_size, build_times, digits
 ) {
@@ -53,7 +52,6 @@ configure_nodes <- function(nodes, config,
   in_progress <- intersect(in_progress, nodes$id)
   missing <- intersect(missing, nodes$id)
   outdated <- intersect(outdated, nodes$id)
-  packages <- intersect(packages, nodes$id)
   targets <- intersect(config$plan$target, nodes$id)
 
   nodes <- categorize_nodes(nodes = nodes, functions = functions,
@@ -66,7 +64,7 @@ configure_nodes <- function(nodes, config,
     nodes <- append_build_times(nodes = nodes,
       digits = digits, config = config)
   hover_text(nodes = nodes, config = config, files = files,
-    functions = functions, packages = packages, targets = targets)
+    functions = functions, targets = targets)
 }
 
 #' @title Function default_graph_title
@@ -116,34 +114,18 @@ function_hover_text <- Vectorize(function(function_name, envir){
 },
 "function_name")
 
-package_hover_text <- Vectorize(function(package_name, config){
-  if (is_installed_package(package_name, config = config)) {
-    version <- package_dependency_version(package_name) %>%
-      as.character
-    if (!grepl("^R version", version)){
-      version <- paste("version", version)
-    }
-    return(version)
-  } else {
-    return(package_name)
-  }
-},
-"package_name", USE.NAMES = FALSE)
-
 target_hover_text <- function(targets, plan) {
   plan[plan$target %in% targets, "command"] %>%
     wrap_text %>% crop_text(length = hover_text_length)
 }
 
-hover_text <- function(nodes, config, files, functions, packages, targets) {
+hover_text <- function(nodes, config, files, functions, targets) {
   nodes$hover_label <- nodes$id
   import_files <- setdiff(files, targets)
   nodes[import_files, "hover_label"] <-
     file_hover_text(quoted_file = import_files, targets = targets)
   nodes[functions, "hover_label"] <-
     function_hover_text(function_name = functions, envir = config$envir)
-  nodes[packages, "hover_label"] <-
-    package_hover_text(package_name = packages, config = config)
   nodes[targets, "hover_label"] <-
     target_hover_text(targets = targets, plan = config$plan)
   nodes
@@ -234,7 +216,6 @@ style_nodes <- function(nodes, font_size) {
   nodes[nodes$type == "object", "shape"] <- shape_of("object")
   nodes[nodes$type == "file", "shape"] <- shape_of("file")
   nodes[nodes$type == "function", "shape"] <- shape_of("funct")
-  nodes[nodes$type == "package", "shape"] <- shape_of("package")
   nodes
 }
 
@@ -256,36 +237,27 @@ legend_nodes <- function(font_size = 20) {
   out <- data.frame(
     label = c(
       "Up to date",
-      "Object",
       "In progress",
-      "Function",
       "Outdated",
-      "File",
       "Imported",
-      "Package",
-      "Missing"
+      "Missing",
+      "Object",
+      "Function",
+      "File"
     ),
     color = color_of(c(
       "up_to_date",
-      "generic",
       "in_progress",
-      "generic",
       "outdated",
-      "generic",
       "import_node",
-      "generic",
-      "missing_node"
+      "missing_node",
+      rep("generic", 3)
     )),
     shape = shape_of(c(
-      rep("object", 3),
+      rep("object", 6),
       "funct",
-      "object",
-      "file",
-      "object",
-      "package",
-      "object"
+      "file"
     )),
-    group = c(rep("Status", 5), rep("Type", 4)),
     font.color = "black",
     font.size = font_size
   )
