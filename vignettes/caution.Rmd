@@ -227,11 +227,9 @@ Some R functions use `.Call()` to run compiled code in the backend. The R code i
 
 Yes, you can declare a file target or input file by enclosing it in single quotes in your workflow plan data frame. But entire directories (i.e. folders) cannot yet be tracked this way. Tracking directories is a tricky problem, and lots of individual edge cases need to be ironed out before I can deliver a clean, reliable solution. Please see [issue 12](https://github.com/wlandau-lilly/drake/issues/12) for updates and a discussion.
 
-## Packages as dependencies
+## Packages are not tracked as dependencies
 
-`Drake` imports functions from packages, and it assigns as dependencies the packages they came from. Then, `drake` watches for changes in the version numbers of the packages, and it reacts by declaring any depending functions out of date. That means if you update a local development package without changing the version number, `drake` is oblivious, and `make()` could declare everything up to date.
-
-In addition, any dependency packages must be properly installed. `drake` does not support the use of packages loaded with `devtools::load_all()` or similar means.
+`Drake` may import functions from packages, but the packages themselves are not tracked as dependencies. For this, you will need other tools that support reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
 # High-performance computing
 
