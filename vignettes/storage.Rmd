@@ -3,7 +3,10 @@ title: "Storage"
 subtitle: "Caching, hashing, and customization"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{storage}
   %\VignetteEngine{knitr::rmarkdown}
