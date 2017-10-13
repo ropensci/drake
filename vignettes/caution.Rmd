@@ -3,7 +3,10 @@ title: "Caution"
 subtitle: "Cautionary notes for drake"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{caution}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +17,7 @@ vignette: >
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
+suppressMessages(suppressWarnings(library(magrittr)))
 clean(destroy = TRUE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
@@ -24,37 +28,71 @@ With drake, there is room for error with respect to tracking dependencies, manag
 
 ## Beware unparsable symbols in your workflow plan.
 
-```{r unparsable_plan}
-template <- plan(x = process(..setting..)) # nolint
-processed <- evaluate(template, wildcard = "..setting..",
-  values = c("\"option1\"", "\"option2\""))
-gathered <- gather(processed, target = "bad_target")
-my_plan <- rbind(processed, gathered)
-my_plan
+In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check(my_plan)` to screen for illegal symbols and other problem areas.
+
+A common pitfall is using the `evaluate()` function to expand wildcards after applying single quotes to file targets.
+
+```{r filethenevaluate}
+library(magrittr) # for the pipe operator %>%
+plan(
+  data = readRDS("data_..datasize...rds")
+) %>%
+  rbind(drake::plan(
+    file.csv = write.csv(
+      data_..datasize.., # nolint
+      "file_..datasize...csv"
+    ),
+    strings_in_dots = "literals",
+    file_targets = T
+  )) %>%
+  evaluate(
+    rules = list(..datasize.. = c("small", "large"))
+  )
 ```
 
-Here, `make(my_plan)` would generate an error because the command for `bad_target` has illegal symbols. To avoid this sort of problem, please keep literal quotes out of your wildcards.
+The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are illegal, and the target names do not even correspond to the files written. Instead, construct your workflow plan in multiple stages and apply the single quotes at the very end.
 
-```{r parsable_plan}
-template <- plan(x = process("..setting.."), strings_in_dots = "literals")
-processed <- evaluate(template, wildcard = "..setting..",
-  values = c("option1", "option2"))
-gathered <- gather(processed, target = "bad_target")
-my_plan <- rbind(processed, gathered)
-my_plan
+```{r correctevaldatasize}
+rules <- list(..datasize.. = c("small", "large"))
+datasets <- plan(data = readRDS("data_..datasize...rds")) %>%
+  evaluate(rules = rules)
 ```
 
-To be safe, use `check(my_plan)` to screen for problems like this one.
+Plan the CSV files separately.
+```{r correctevaldatasize2}
+files <- plan(
+  file = write.csv(data_..datasize.., "file_..datasize...csv"), # nolint
+  strings_in_dots = "literals"
+) %>%
+  evaluate(rules = rules)
+```
 
+Single-quote the file targets after `evaluate()`.
 
+```{r correctevaldatasize3}
+files$target <- paste0(
+  files$target, ".csv"
+) %>%
+  as_file
+```
+
+Put the workflow plan together.
+
+```{r correctevaldatasize4}
+rbind(datasets, files)
+```
+
+For more control over target names in cases like this, you may want to use the [wildcard package](https://github.com/wlandau/wildcard).
 
 ## Commands are NOT perfectly flexible.
 
 In your workflow plan data frame (produced by `plan()` and accepted by `make()`), your commands can usually be flexible R expressions.
 
-```{r}
-plan(target1 = 1 + 1 - sqrt(sqrt(3)),
-     target2 = my_function(web_scraped_data) %>% my_tidy)
+```{r tidyplancaution}
+plan(
+  target1 = 1 + 1 - sqrt(sqrt(3)),
+  target2 = my_function(web_scraped_data) %>% my_tidy
+)
 ```
 
 However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.

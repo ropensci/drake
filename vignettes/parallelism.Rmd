@@ -1,10 +1,13 @@
 ---
-title: "High-performance computing"
+title: "Parallel computing"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
-  %\VignetteIndexEntry{high-performance-computing}
+  %\VignetteIndexEntry{parallelism}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

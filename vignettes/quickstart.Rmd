@@ -3,7 +3,10 @@ title: "Quickstart"
 subtitle: "quickstart example for drake"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{quickstart}
   %\VignetteEngine{knitr::rmarkdown}
@@ -378,7 +381,7 @@ There is more to reproducibility than just using `drake` to watch for dependenci
 
 # Need more speed?
 
-`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and follow the instructions in the high-performance computing vignette.
+`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and follow the instructions in the `parallelism` vignette.
 
 ```{r endofline_quickstart, echo = F}
 clean(destroy = TRUE)
