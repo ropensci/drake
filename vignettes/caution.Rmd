@@ -148,7 +148,60 @@ Here, `x` is a mere side effect of the command, and it will not be reproducibly 
 
 During the execution workflow of a drake project, please do not change your working directory (with `setwd()`, for example). At the very least, if you do change your working directory during a command in your workflow plan, please return to the original working directory before the command is completed. Drake relies on a hidden cache (the `.drake/` folder) at the root of your project, so navigating to a different folder may confuse drake.
 
+## Take special precautions if your `drake` project is a package.
 
+Some users like to structure their `drake` projects as [formal R packages](https://cran.r-project.org/doc/manuals/R-exts.html). The straightforward way to run such a project is to 
+
+1. Write all your imported functions in `*.R` files in the package's `R/` folder.
+1. Load the execution environment with `devtools::load_all()`.
+1. Call `drake::make()`.
+
+```{r devtools1, eval = FALSE}
+env <- devtools::load_all("yourProject")$env # Has all your imported functions
+drake::make(my_plan, envir = env)            # Run the project normally.
+```
+
+However, the simple strategy above only works for `parLapply` parallelism with `jobs = 1` and `mcapply` parallelism. For other kinds of parallelism, you must turn  `devtools::load_all("yourProject")$env` into an ordinary environment that does not look like a package namespace. Thanks to [Jasper Clarkberg](https://github.com/dapperjapper) for the following workaround.
+
+1. Clone `devtools::load_all("yourProject")$env` in order to change the *binding environment* of all your functions.
+
+```{r devtools2, eval = FALSE}
+env <- devtools::load_all("yourProject")$env
+env <- list2env(as.list(env), parent = globalenv())
+```
+
+2. Change the [*enclosing environment*](http://adv-r.had.co.nz/Environments.html#function-envs) of your functions using an [unfortunate hack](https://stackoverflow.com/questions/14464442/using-get-with-replacement-functions) involving `environment<-`.
+
+```{r devtools3, eval = FALSE}
+for (name in ls(env)){
+  assign(
+    x = name,
+    envir = env,
+    value = `environment<-`(get(n, envir = env), env)
+  )
+}
+```
+
+3. Make sure `drake` does not attach `yourProject` as an external package.
+
+```{r devtools4, eval = FALSE}
+package_name <- "yourProject" # devtools::as.package(".")$package # nolint
+packages_to_load <- setdiff(.packages(), package_name)
+```
+
+4. Run the project with `make()`.
+
+```{r devtools5, eval = FALSE}
+make(
+  my_plan, # Prepared in advance
+  envir = env,
+  parallelism = "Makefile", # Or "parLapply"
+  jobs = 2,
+  packages = packages_to_load # Does not include "yourProject"
+)
+```
+
+You may need to adapt this last workaround, depending on the structure of the package, `yourProject`.
 
 # Dependencies
 

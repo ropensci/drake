@@ -99,12 +99,12 @@ dataframes_graph <- function(
       parallelism = parallelism, jobs = jobs,
       packages = packages, prework = prework)
   }
+  if (!length(V(config$graph)$name)){
+    return(null_graph())
+  }
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label
-  if (!nrow(config$nodes)){
-    return(null_graph())
-  }
 
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress()

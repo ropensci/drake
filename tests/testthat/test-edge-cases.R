@@ -20,6 +20,11 @@ test_with_dir("graph does not fail if input file is binary", {
   unlink("input.rds", force = TRUE)
 })
 
+test_with_dir("null graph", {
+  x <- dataframes_graph(config = list(graph = igraph::make_empty_graph()))
+  expect_equal(x, null_graph())
+})
+
 test_with_dir("illegal hashes", {
   x <- plan(a = 1)
   expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))
