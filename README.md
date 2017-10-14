@@ -22,8 +22,8 @@ Organize your work in a data frame. Then `make()` it.
 
 ```r
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd. `example_drake("basic")`, `vignette("quickstart")`.
-my_plan # Each target is a file (single-quoted) or object.
+load_basic_example()
+my_plan
 ```
 
 ```r
