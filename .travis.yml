@@ -19,3 +19,6 @@ script:
 after_success:
   - travis_wait 20 Rscript -e 'covr::codecov()'
   - Rscript -e 'lintr::lint_package()'
+
+after_failure:
+  - find *Rcheck -name '*fail' -print -exec cat '{}' \;
