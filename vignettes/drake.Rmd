@@ -33,7 +33,7 @@ Organize your work in a data frame. Then `make()` it.
 ```{r firstintroindrake}
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd.
-my_plan              # Each target is a file (single-quoted) or object
+my_plan              # Each target is a file (single-quoted) or object.
 ```
 
 ```{r makedrakenoevalrmd, eval = FALSE}
