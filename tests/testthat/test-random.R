@@ -1,18 +1,21 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("reproducible random numbers")
 
-test_with_dir("Objects are reproducible", {
+test_with_dir("Random targets are reproducible", {
   scenario <- get_testing_scenario()
   env <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
   jobs <- scenario$jobs
-  
+
   data <- plan(
     x = runif(20),
     y = runif(20),
-    z = rnorm(20)
+    z = rnorm(20),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
   )
-  make(
+  con <- make(
     data,
     envir = env,
     parallelism = parallelism,
@@ -22,78 +25,44 @@ test_with_dir("Objects are reproducible", {
   old_x <- readd(x)
   old_y <- readd(y)
   old_z <- readd(z)
-  
-  # Oh no, I've accidentally deleted some data that needs to be reproducible
-  clean(x, y, z)
-  make(
+  old_mx <- readd(mx)
+  old_my <- readd(my)
+  old_mz <- readd(mz)
+  expect_false(identical(old_x, old_y))
+
+  # Deleted and reproduce some random data.
+  clean()
+  con2 <- make(
     data,
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
     verbose = FALSE
   )
+
+  expect_identical(con$seed, con2$seed)
   expect_identical(readd(x), old_x)
   expect_identical(readd(y), old_y)
   expect_identical(readd(z), old_z)
-})
+  expect_identical(readd(mx), old_mx)
+  expect_identical(readd(my), old_my)
+  expect_identical(readd(mz), old_mz)
 
-test_with_dir("Random targets are distinct", {
-  scenario <- get_testing_scenario()
-  env <- eval(parse(text = scenario$envir))
-  parallelism <- scenario$parallelism
-  jobs <- scenario$jobs
-  data <- plan(
-    x = runif(20)
-  )
-  data_exp <- expand(data, values = c("a", "b"))
-  make(
-    data_exp,
+  # Change the seed and check that the targets are different.
+  tmp <- runif(1)
+  clean()
+  con3 <- make(
+    data,
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
     verbose = FALSE
   )
-  expect_false(identical(readd(x_a), readd(x_b)))
-})
-
-test_with_dir("Random sequential targets reproduce correctly", {
-  scenario <- get_testing_scenario()
-  env <- eval(parse(text = scenario$envir))
-  parallelism <- scenario$parallelism
-  jobs <- scenario$jobs
-  first_stage <- plan(
-    x = runif(20)
-  )
-  methods <- plan(
-    xbar = mean(..dataset..),  # nolint
-    y = sample(..dataset.., 5)  # nolint
-  )
-  second_stage <- analyses(
-    methods,
-    data = first_stage
-  )
-  make(
-    rbind(first_stage, second_stage),
-    envir = env,
-    parallelism = parallelism,
-    jobs = jobs,
-    verbose = FALSE
-  )
-  old_x <- readd(x)
-  old_xbax_x <- readd(xbar_x)
-  old_y_y <- readd(y_x)
-  
-  # How do I keep deleting my data like this? So clumsy.
-  clean(x, xbar_x, y_x)
-  
-  make(
-    rbind(first_stage, second_stage),
-    envir = env,
-    parallelism = parallelism,
-    jobs = jobs,
-    verbose = FALSE
-  )
-  expect_identical(old_x, readd(x))
-  expect_identical(old_xbax_x, readd(xbar_x))
-  expect_identical(old_y_y, readd(y_x))
+  expect_false(identical(con$seed, con3$seed))
+  expect_false(identical(readd(x), old_x))
+  expect_false(identical(readd(y), old_y))
+  expect_false(identical(readd(z), old_z))
+  expect_false(identical(readd(mx), old_mx))
+  expect_false(identical(readd(my), old_my))
+  expect_false(identical(readd(mz), old_mz))
 })

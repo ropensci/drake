@@ -69,7 +69,7 @@ build_config <- function(
   packages, prework, prepend, command,
   args, clear_progress, recipe_command
 ){
-  with_preserve_seed(seed <- .Random.seed)
+  seed <- get_valid_seed()
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
   parallelism <- match.arg(parallelism, choices = parallelism_choices())

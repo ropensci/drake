@@ -124,13 +124,3 @@ store_function <- function(target, value, hashes, imported,
 functionize <- function(command) {
   paste0("(function(){\n", command, "\n})()")
 }
-
-# A numeric hash that could be used as a
-# random number generator seed. Generated
-# from an arbitrary object x.
-seed_from_object <- function(x) {
-  hash <- digest::digest(x, algo = "murmur32")
-  hexval <- paste0("0x", hash)
-  intval <- utils::type.convert(hexval) %% .Machine$integer.max
-  set.seed(intval)
-}
