@@ -262,7 +262,7 @@ rate_limiting_times <- function(
   }
   keep_these <- setdiff(keys, rownames(times))
   graph <- delete_vertices(config$graph, v = keep_these)
-  times <- resolve_levels(nodes = times, graph = graph)
+  times <- resolve_levels(config = list(nodes = times, graph = graph))
   colnames(times) <- gsub("^level$", "stage", colnames(times))
   ddply(times, "stage", rate_limiting_at_stage, future_jobs = future_jobs) %>%
     round_times(digits = digits) %>%
