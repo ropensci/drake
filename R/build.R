@@ -28,7 +28,11 @@ build <- function(target, hash_list, config) {
 build_target <- function(target, hashes, config) {
   command <- get_command(target = target, config = config) %>%
     functionize
-  value <- eval(parse(text = command), envir = config$envir)
+  seed <- list(seed = config$seed, target = target) %>%
+    seed_from_object
+  withr::with_seed(seed, {
+    value <- eval(parse(text = command), envir = config$envir)
+  })
   check_built_file(target)
   value
 }
