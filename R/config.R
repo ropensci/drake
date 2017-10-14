@@ -69,6 +69,7 @@ build_config <- function(
   packages, prework, prepend, command,
   args, clear_progress, recipe_command
 ){
+  with_preserve_seed(seed <- .Random.seed)
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
   parallelism <- match.arg(parallelism, choices = parallelism_choices())
@@ -92,7 +93,7 @@ build_config <- function(
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    inventory = cache$list(),
+    inventory = cache$list(), seed = seed,
     inventory_filemtime = cache$list(namespace = "filemtime"),
     installed_packages = rownames(utils::installed.packages())
   )

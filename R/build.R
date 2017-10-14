@@ -28,7 +28,11 @@ build <- function(target, hash_list, config) {
 build_target <- function(target, hashes, config) {
   command <- get_command(target = target, config = config) %>%
     functionize
-  value <- eval(parse(text = command), envir = config$envir)
+  seed <- list(seed = config$seed, target = target) %>%
+    seed_from_object
+  withr::with_seed(seed, {
+    value <- eval(parse(text = command), envir = config$envir)
+  })
   check_built_file(target)
   value
 }
@@ -119,4 +123,14 @@ store_function <- function(target, value, hashes, imported,
 # with parallelism
 functionize <- function(command) {
   paste0("(function(){\n", command, "\n})()")
+}
+
+# A numeric hash that could be used as a
+# random number generator seed. Generated
+# from an arbitrary object x.
+seed_from_object <- function(x) {
+  hash <- digest::digest(x, algo = "murmur32")
+  hexval <- paste0("0x", hash)
+  intval <- utils::type.convert(hexval) %% .Machine$integer.max
+  set.seed(intval)
 }

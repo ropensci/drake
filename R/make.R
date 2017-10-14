@@ -182,7 +182,7 @@ make <- function(
   parallelism <- match.arg(
     arg = parallelism,
     choices = parallelism_choices()
-    )
+  )
   config <- build_config(
     plan = plan,
     targets = targets,

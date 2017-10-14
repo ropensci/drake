@@ -48,10 +48,11 @@
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat expect_false expect_true test_dir test_that
 #' @importFrom utils capture.output compareVersion installed.packages
-#' packageVersion sessionInfo unzip
+#' packageVersion sessionInfo type.convert unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink
+#' with_preserve_seed with_seed
 NULL
 
 #' @title Pipe operator
