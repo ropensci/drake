@@ -5,7 +5,7 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL)
+  search = TRUE, cache = drake::get_cache(path = path, search = search))
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)

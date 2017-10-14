@@ -25,7 +25,7 @@ fix_deprecated_plan_names <- function(plan){
 #' make(my_plan)
 #' clean(destroy = TRUE)
 #' }
-prune <- function(plan){
+prune <- function(plan = drake::plan()){
   .Deprecated(
     "clean",
     package = "drake",
@@ -86,7 +86,7 @@ status <- function(
   imported_files_only = logical(0),
   path = getwd(),
   search = TRUE
-  ){
+){
   .Deprecated(
     "progress",
     package = "drake",
@@ -99,5 +99,5 @@ status <- function(
     imported_files_only = imported_files_only,
     path = path,
     search = search
-    )
+  )
 }

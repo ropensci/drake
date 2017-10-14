@@ -4,7 +4,7 @@
 \alias{short_hash}
 \title{Function short_hash}
 \usage{
-short_hash(cache)
+short_hash(cache = drake::get_cache())
 }
 \arguments{
 \item{cache}{drake cache}
@@ -18,7 +18,7 @@ See \code{?\link{default_long_hash_algo}()}
 \examples{
 \dontrun{
 load_basic_example()
-config <- make(my_plan, return_config = TRUE)
+config <- make(my_plan)
 cache <- config$cache
 short_hash(cache)
 }

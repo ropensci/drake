@@ -5,7 +5,7 @@
 \title{Function \code{readd}}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
-  cache = NULL)
+  cache = drake::get_cache(path = path, search = search))
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE},

@@ -128,8 +128,7 @@ test_with_dir("use two differnt file system caches", {
     envir = envir,
     verbose = FALSE,
     parallelism = parallelism,
-    jobs = jobs,
-    return_config = TRUE
+    jobs = jobs
   )
 
   o1 <- outdated(
@@ -175,8 +174,7 @@ test_with_dir("use two differnt file system caches", {
     envir = envir,
     verbose = FALSE,
     parallelism = parallelism,
-    jobs = jobs,
-    return_config = TRUE
+    jobs = jobs
   )
   o3 <- outdated(
     my_plan,

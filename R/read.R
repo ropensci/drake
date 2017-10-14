@@ -36,11 +36,8 @@ readd <- function(
   character_only = FALSE,
   path = getwd(),
   search = TRUE,
-  cache = NULL
+  cache = drake::get_cache(path = path, search = search)
   ){
-  if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
-  }
   # if the cache is null after trying get_cache:
   if (is.null(cache)){
     stop("cannot find drake cache.")
@@ -108,13 +105,10 @@ loadd <- function(
   imported_only = FALSE,
   path = getwd(),
   search = TRUE,
-  cache = NULL,
+  cache = drake::get_cache(path = path, search = search),
   envir = parent.frame(),
   jobs = 1
 ){
-  if (is.null(cache)) {
-    cache <- get_cache(path = path, search = search)
-  }
   if (is.null(cache)){
     stop("cannot find drake cache.")
   }
@@ -167,10 +161,9 @@ load_target <- function(target, cache, envir){
 #' make(my_plan)
 #' read_config()
 #' }
-read_config <- function(path = getwd(), search = TRUE, cache = NULL){
-  if (is.null(cache)) {
-    cache <- get_cache(path = path, search = search)
-  }
+read_config <- function(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
@@ -205,7 +198,9 @@ read_config <- function(path = getwd(), search = TRUE, cache = NULL){
 #' make(my_plan)
 #' read_plan()
 #' }
-read_plan <- function(path = getwd(), search = TRUE, cache = NULL){
+read_plan <- function(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
   read_config(path = path, search = search, cache = cache)$plan
 }
 
@@ -237,7 +232,9 @@ read_plan <- function(path = getwd(), search = TRUE, cache = NULL){
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
 read_graph <- function(path = getwd(), search = TRUE,
-  cache = NULL, ...){
+  cache = drake::get_cache(path = path, search = search),
+  ...
+){
   config <- read_config(path = path, search = search, cache = cache)
   return(config$graph)
 }

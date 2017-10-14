@@ -26,8 +26,9 @@
 #' clean(destroy = TRUE)
 #' unlink('report.Rmd')
 #' }
-load_basic_example <- function(envir = parent.frame(),
-  to = getwd(), overwrite = TRUE) {
+load_basic_example <- function(
+  envir = parent.frame(), to = getwd(), overwrite = TRUE
+){
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   eval(parse(text = "base::require(knitr, quietly = TRUE)"))
 

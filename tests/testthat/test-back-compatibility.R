@@ -51,7 +51,6 @@ test_with_dir("back-compatible with a tiny v4.1.0 project", {
   con <- make(
     old_plan,
     verbose = FALSE,
-    return_config = TRUE,
     envir = envir,
     parallelism = get_testing_scenario()$parallelism,
     jobs = get_testing_scenario()$jobs

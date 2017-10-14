@@ -4,10 +4,10 @@
 \alias{missed}
 \title{Function \code{missed}}
 \usage{
-missed(plan, targets = drake::possible_targets(plan),
+missed(plan = drake::plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), font_size = 20, config = NULL)
+  prework = character(0), config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -37,11 +37,11 @@ default.}
 
 \item{prework}{same as for \code{\link{make}}}
 
-\item{font_size}{numeric, font size of the node labels in the graph}
-
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
+Overrides all other arguments except if not \code{NULL}.
+For example, \code{config$plan} overrides \code{plan}.
 Computing this
 in advance could save time if you plan multiple calls to
 \code{missed()}.}

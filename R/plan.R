@@ -46,7 +46,7 @@ plan <- function(
   list = character(0),
   file_targets = FALSE,
   strings_in_dots = c("filenames", "literals")
-  ){
+){
   strings_in_dots <- match.arg(strings_in_dots)
   dots <- match.call(expand.dots = FALSE)$...
   commands_dots <- lapply(dots, wide_deparse)

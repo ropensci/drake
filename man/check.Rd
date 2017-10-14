@@ -4,8 +4,8 @@
 \alias{check}
 \title{Function \code{check}}
 \usage{
-check(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
-  cache = NULL)
+check(plan = drake::plan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), cache = drake::get_cache())
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from

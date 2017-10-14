@@ -4,7 +4,8 @@
 \alias{default_graph_title}
 \title{Function default_graph_title}
 \usage{
-default_graph_title(parallelism = drake::parallelism_choices(), split_columns)
+default_graph_title(parallelism = drake::parallelism_choices(),
+  split_columns = FALSE)
 }
 \arguments{
 \item{parallelism}{Mode of parallelism intended for the workflow.

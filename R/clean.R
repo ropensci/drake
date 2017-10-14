@@ -48,7 +48,7 @@ clean <- function(
   destroy = FALSE,
   path = getwd(),
   search = TRUE,
-  cache = NULL
+  cache = drake::get_cache(path = path, search = search)
 ){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)

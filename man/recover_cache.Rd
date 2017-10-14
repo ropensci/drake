@@ -4,9 +4,10 @@
 \alias{recover_cache}
 \title{Function recover_cache}
 \usage{
-recover_cache(path = NULL, type = drake::default_cache_type(),
-  short_hash_algo = default_short_hash_algo(),
-  long_hash_algo = default_long_hash_algo())
+recover_cache(path = drake::default_cache_path(),
+  type = drake::default_cache_type(),
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo())
 }
 \arguments{
 \item{path}{file path of the cache}

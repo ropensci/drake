@@ -4,7 +4,8 @@
 \alias{in_progress}
 \title{Function \code{in_progress}}
 \usage{
-in_progress(path = getwd(), search = TRUE, cache = NULL)
+in_progress(path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search))
 }
 \arguments{
 \item{path}{Root directory of the drake project,

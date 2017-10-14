@@ -10,12 +10,12 @@ test_with_dir("build times works if no targets are built", {
 
 test_with_dir("build time the same after superfluous make", {
   x <- plan(y = Sys.sleep(0.25))
-  c1 <- make(x, verbose = FALSE, return_config = TRUE)
+  c1 <- make(x, verbose = FALSE)
   expect_equal(justbuilt(c1), "y")
   b1 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b1)))
 
-  c2 <- make(x, verbose = FALSE, return_config = TRUE)
+  c2 <- make(x, verbose = FALSE)
   expect_equal(justbuilt(c2), character(0))
   b2 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b2)))

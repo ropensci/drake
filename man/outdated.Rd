@@ -4,8 +4,8 @@
 \alias{outdated}
 \title{Function outdated}
 \usage{
-outdated(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL,
+outdated(plan = drake::plan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0), config = NULL)
 }
@@ -35,7 +35,8 @@ non-null \code{config} argument is supplied.}
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
 \code{config$envir} is ignored.
-Overrides all the other arguments if given. For example,
+Overrides all the other arguments if not \code{NULL}.
+For example,
 \code{plan} is replaced with \code{config$plan}.
 Computing \code{config}
 in advance could save time if you plan multiple calls to

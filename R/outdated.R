@@ -27,17 +27,18 @@
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
 #' \code{config$envir} is ignored.
-#' Overrides all the other arguments if given. For example,
+#' Overrides all the other arguments if not \code{NULL}.
+#' For example,
 #' \code{plan} is replaced with \code{config$plan}.
 #' Computing \code{config}
 #' in advance could save time if you plan multiple calls to
 #' \code{outdated()}.
 outdated <-  function(
-  plan,
+  plan = drake::plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  cache = NULL,
+  cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
@@ -59,9 +60,6 @@ outdated <-  function(
     )
   }
   config <- inventory(config)
-  if (!is.null(cache)){
-    config$cache <- configure_cache(cache)
-  }
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   rebuild <- Filter(
     x = all_targets,
@@ -108,12 +106,13 @@ outdated <-  function(
 #' See \code{?parallelism_choices} for details. The Makefile option is not
 #' available here. Drake will try to pick the best option for your system by
 #' default.
-#' @param font_size numeric, font size of the node labels in the graph
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
+#' Overrides all other arguments except if not \code{NULL}.
+#' For example, \code{config$plan} overrides \code{plan}.
 #' Computing this
 #' in advance could save time if you plan multiple calls to
 #' \code{missed()}.
@@ -125,7 +124,7 @@ outdated <-  function(
 #' missed(my_plan)
 #' }
 missed <- function(
-  plan,
+  plan = drake::plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
@@ -133,9 +132,8 @@ missed <- function(
   parallelism = drake::default_parallelism(),
   packages = (.packages()),
   prework = character(0),
-  font_size = 20,
   config = NULL
-  ){
+){
   force(envir)
   if (is.null(config)){
     config <- config(
@@ -156,7 +154,7 @@ missed <- function(
     f = function(x){
       missing_import(x, envir = envir)
     }
-    )
+  )
   if (!length(missing)){
     return(invisible(character(0)))
   }

@@ -112,7 +112,10 @@ default_parallelism <- function() {
 #' @param config internal configuration list of \code{\link{make}(...)},
 #' produced also with \code{\link{config}()}.
 #' \code{config$envir} is ignored.
-#' Overrides all the other arguments if given. For example,
+#' Otherwise, if not \code{NULL}, \code{config}
+#' overrides all the other arguments except
+#' \code{imports} and \code{from_scratch}.
+#' For example,
 #' \code{plan} is replaced with \code{config$plan}.
 #' Computing \code{\link{config}}
 #' in advance could save time if you plan multiple calls to
@@ -157,13 +160,14 @@ default_parallelism <- function() {
 #' max_useful_jobs(my_plan, imports = 'all') # 10
 #' max_useful_jobs(my_plan, imports = 'none') # 4
 #' }
-max_useful_jobs <- function(plan, from_scratch = FALSE,
+max_useful_jobs <- function(
+  plan = drake::plan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
-  parallelism = drake::default_parallelism(),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  jobs = 1, parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), config = NULL,
   imports = c("files", "all", "none")
-) {
+){
   force(envir)
   if (is.null(config)){
     config <- config(
@@ -179,9 +183,6 @@ max_useful_jobs <- function(plan, from_scratch = FALSE,
     )
   }
   config <- inventory(config)
-  if (!is.null(cache)){
-    config$cache <- configure_cache(cache)
-  }
   nodes <- dataframes_graph(plan = config$plan, config = config,
     split_columns = FALSE)$nodes
   imports <- match.arg(imports)

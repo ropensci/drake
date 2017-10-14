@@ -79,7 +79,8 @@ configure_nodes <- function(nodes, config,
 #' with the \code{split_columns} argument.
 default_graph_title <- function(
   parallelism = drake::parallelism_choices(),
-  split_columns){
+  split_columns = FALSE
+){
   parallelism <- match.arg(parallelism)
   out <- paste("Workflow graph:", parallelism, "parallelism")
   if (split_columns){

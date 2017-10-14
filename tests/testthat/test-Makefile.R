@@ -8,8 +8,9 @@ test_with_dir("recipe commands", {
   expect_true(is.character(default_recipe_command()))
   expect_true(is.character(r_recipe_wildcard()))
   con1 <- make(my_plan, command = default_Makefile_command(),
-    parallelism = "Makefile", return_config = TRUE,
-    recipe_command = "some_command", verbose = FALSE, imports_only = TRUE)
+    parallelism = "Makefile", recipe_command = "some_command",
+    verbose = FALSE, imports_only = TRUE
+  )
   expect_equal(con1$recipe_command, "some_command")
   expect_true(con1$recipe_command != default_recipe_command())
   con2 <- config(plan = my_plan, parallelism = "Makefile",
@@ -117,7 +118,6 @@ test_with_dir("Makefile stuff in globalenv()", {
   drake_TESTGLOBAL_config <- make(
     drake_TESTGLOBAL_plan,
     envir = globalenv(),
-    return_config = TRUE,
     verbose = FALSE
   )
   run_Makefile(drake_TESTGLOBAL_config, run = FALSE, debug = TRUE)

@@ -4,12 +4,13 @@
 \alias{rate_limiting_times}
 \title{Function rate_limiting_times}
 \usage{
-rate_limiting_times(plan, from_scratch = FALSE, targets_only = FALSE,
-  targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = NULL,
-  parallelism = drake::default_parallelism(), jobs = 1,
-  future_jobs = jobs, packages = (.packages()), prework = character(0),
-  config = NULL, digits = 3, path = getwd(), search = TRUE)
+rate_limiting_times(plan = drake::plan(), from_scratch = FALSE,
+  targets_only = FALSE, targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(path =
+  path, search = search), parallelism = drake::default_parallelism(),
+  jobs = 1, future_jobs = jobs, packages = (.packages()),
+  prework = character(0), config = NULL, digits = 3, path = getwd(),
+  search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -51,8 +52,9 @@ assuming this number of jobs.}
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced with \code{\link{config}()}.
-\code{config$envir} is ignored.
-Otherwise, computing this
+Overrides all arguments except \code{from_scratch},
+\code{targets_only}, and \code{digits}.
+Computing \code{config}
 in advance could save time if you plan multiple calls to
 this function.}
 

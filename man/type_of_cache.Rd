@@ -4,7 +4,7 @@
 \alias{type_of_cache}
 \title{experimental function type_of_cache}
 \usage{
-type_of_cache(path)
+type_of_cache(path = drake::default_cache_path())
 }
 \arguments{
 \item{path}{path to the cache}

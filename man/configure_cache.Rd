@@ -4,7 +4,9 @@
 \alias{configure_cache}
 \title{Function configure_cache}
 \usage{
-configure_cache(cache, short_hash_algo = NULL, long_hash_algo = NULL,
+configure_cache(cache = drake::get_cache(),
+  short_hash_algo = drake::default_short_hash_algo(cache = cache),
+  long_hash_algo = drake::default_long_hash_algo(cache = cache),
   clear_progress = FALSE, overwrite_hash_algos = FALSE)
 }
 \arguments{
@@ -36,7 +38,7 @@ to prepare the cache to be called from \code{\link{make}()}.
 \examples{
 \dontrun{
 load_basic_example()
-config <- make(my_plan, return_config = TRUE)
+config <- make(my_plan)
 cache <- config$cache
 long_hash(cache)
 cache <- configure_cache(

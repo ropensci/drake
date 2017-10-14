@@ -43,13 +43,15 @@
 #' cached(no_imported_objects = TRUE)
 #' cached()
 #' }
-cached <- function(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE, cache = NULL) {
+cached <- function(
+  ...,
+  list = character(0), no_imported_objects = FALSE,
+  path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
   if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
-  }
-  if (is.null(cache))
     return(character(0))
+  }
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (!length(targets))
@@ -96,12 +98,13 @@ list_cache <- function(no_imported_objects, cache) {
 #' make(my_plan)
 #' built()
 #' }
-built <- function(path = getwd(), search = TRUE, cache = NULL) {
+built <- function(
+  path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
   if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
-  }
-  if (is.null(cache))
     return(character(0))
+  }
   cache$list() %>% Filter(f = function(target) !is_imported(target = target,
     cache = cache))
 }
@@ -131,13 +134,12 @@ built <- function(path = getwd(), search = TRUE, cache = NULL) {
 #' imported()
 #' }
 imported <- function(
-  files_only = FALSE, path = getwd(), search = TRUE, cache = NULL
+  files_only = FALSE, path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
 ){
   if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
-  }
-  if (is.null(cache))
     return(character(0))
+  }
   targets <- cache$list() %>%
     Filter(f = function(target) is_imported(target = target, cache = cache))
   if (files_only)

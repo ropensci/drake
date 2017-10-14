@@ -6,7 +6,7 @@
 \usage{
 progress(..., list = character(0), no_imported_objects = FALSE,
   imported_files_only = logical(0), path = getwd(), search = TRUE,
-  cache = NULL)
+  cache = drake::get_cache(path = path, search = search))
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)

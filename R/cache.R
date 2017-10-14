@@ -67,12 +67,9 @@ get_cache <- function(
 #' manual2 <- get_cache("manual_cache") # same as above
 #' }
 this_cache <- function(
-  path = NULL
+  path = drake::default_cache_path()
 ){
-  if (is.null(path)){
-    path <- default_cache_path()
-  }
-  if (!file.exists(path)){
+  if (is.null(path) || !file.exists(path)){
     return(NULL)
   }
   type <- type_of_cache(path)
@@ -170,14 +167,11 @@ new_cache <- function(
 #' x <- recover_cache(".drake")
 #' }
 recover_cache <- function(
-  path = NULL,
+  path = drake::default_cache_path(),
   type = drake::default_cache_type(),
-  short_hash_algo = default_short_hash_algo(),
-  long_hash_algo = default_long_hash_algo()
+  short_hash_algo = drake::default_short_hash_algo(),
+  long_hash_algo = drake::default_long_hash_algo()
 ){
-  if (is.null(path)){
-    path <- default_cache_path()
-  }
   cache <- this_cache(path = path)
   if (is.null(cache)){
     cache <- new_cache(
@@ -225,7 +219,7 @@ default_cache_path <- function(){
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' config <- make(my_plan, return_config = TRUE)
+#' config <- make(my_plan)
 #' cache <- config$cache
 #' long_hash(cache)
 #' cache <- configure_cache(
@@ -237,18 +231,12 @@ default_cache_path <- function(){
 #' make(my_plan) # Changing the long hash puts targets out of date.
 #' }
 configure_cache <- function(
-  cache,
-  short_hash_algo = NULL,
-  long_hash_algo = NULL,
+  cache = drake::get_cache(),
+  short_hash_algo = drake::default_short_hash_algo(cache = cache),
+  long_hash_algo = drake::default_long_hash_algo(cache = cache),
   clear_progress = FALSE,
   overwrite_hash_algos = FALSE
 ){
-  if (is.null(short_hash_algo)){
-    short_hash_algo <- default_short_hash_algo(cache = cache)
-  }
-  if (is.null(long_hash_algo)){
-    long_hash_algo <- default_long_hash_algo(cache = cache)
-  }
   short_hash_algo <- match.arg(short_hash_algo,
     choices = available_hash_algos())
   long_hash_algo <- match.arg(long_hash_algo,

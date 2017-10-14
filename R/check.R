@@ -17,8 +17,12 @@
 #' unlink('report.Rmd')
 #' check(my_plan)
 #' }
-check <- function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), cache = NULL) {
+check <- function(
+  plan = drake::plan(),
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  cache = drake::get_cache()
+){
   force(envir)
   config <- build_config(plan = plan, targets = targets, envir = envir,
     verbose = TRUE, cache = cache, parallelism = "mclapply",

@@ -6,8 +6,9 @@ test_with_dir("recipe_command", {
   expect_true(is.character(default_recipe_command()))
   expect_true(is.character(r_recipe_wildcard()))
   con1 <- make(my_plan, command = default_Makefile_command(),
-    parallelism = "Makefile", return_config = TRUE,
-    recipe_command = "some_command", verbose = FALSE, imports_only = TRUE)
+    parallelism = "Makefile", recipe_command = "some_command",
+    verbose = FALSE, imports_only = TRUE
+  )
   expect_equal(con1$recipe_command, "some_command")
   expect_true(con1$recipe_command != default_recipe_command())
   con2 <- config(plan = my_plan, parallelism = "Makefile",
@@ -111,18 +112,6 @@ test_with_dir("check_config() via check() and make()", {
     check(config$plan, targets = character(0), envir = config$envir))
   expect_error(
     make(config$plan, targets = character(0), envir = config$envir))
-})
-
-test_with_dir("deprecation", {
-  plan <- data.frame(code = 1:2, output = c("x", "y"))
-  expect_warning(make(plan, verbose = FALSE))
-
-  expect_warning(make(plan, verbose = FALSE))
-  expect_warning(status())
-  expect_true(is.numeric(readd(x, search = FALSE)))
-
-  expect_warning(prune(plan[1, ]))
-  expect_equal(cached(), "x")
 })
 
 test_with_dir("targets can be partially specified", {

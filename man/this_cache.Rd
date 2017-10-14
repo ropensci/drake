@@ -4,7 +4,7 @@
 \alias{this_cache}
 \title{Function this_cache}
 \usage{
-this_cache(path = NULL)
+this_cache(path = drake::default_cache_path())
 }
 \arguments{
 \item{path}{file path of the cache}
