@@ -53,7 +53,9 @@
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
-#' Computing this
+#' Overrides all arguments except \code{from_scratch},
+#' \code{targets_only}, and \code{digits}.
+#' Computing \code{config}
 #' in advance could save time if you plan multiple calls to
 #' this function.
 #' @param digits number of digits for rounding the times.
@@ -63,13 +65,13 @@
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 predict_runtime <- function(
-  plan,
+  plan = drake::plan(),
   from_scratch = FALSE,
   targets_only = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  cache = NULL,
+  cache = drake::get_cache(path = path, search = search),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   future_jobs = jobs,
@@ -178,8 +180,9 @@ predict_runtime <- function(
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
-#' \code{config$envir} is ignored.
-#' Otherwise, computing this
+#' Overrides all arguments except \code{from_scratch},
+#' \code{targets_only}, and \code{digits}.
+#' Computing \code{config}
 #' in advance could save time if you plan multiple calls to
 #' this function.
 #' @param digits number of digits for rounding the times.
@@ -189,13 +192,13 @@ predict_runtime <- function(
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 rate_limiting_times <- function(
-  plan,
+  plan = drake::plan(),
   from_scratch = FALSE,
   targets_only = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  cache = NULL,
+  cache = drake::get_cache(path = path, search = search),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   future_jobs = jobs,
@@ -259,7 +262,7 @@ rate_limiting_times <- function(
   }
   keep_these <- setdiff(keys, rownames(times))
   graph <- delete_vertices(config$graph, v = keep_these)
-  times <- resolve_levels(nodes = times, graph = graph)
+  times <- resolve_levels(config = list(nodes = times, graph = graph))
   colnames(times) <- gsub("^level$", "stage", colnames(times))
   ddply(times, "stage", rate_limiting_at_stage, future_jobs = future_jobs) %>%
     round_times(digits = digits) %>%

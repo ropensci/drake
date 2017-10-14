@@ -4,7 +4,7 @@
 \alias{build_graph}
 \title{Function \code{build_graph}}
 \usage{
-build_graph(plan, targets = drake::possible_targets(plan),
+build_graph(plan = drake::plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE)
 }
 \arguments{

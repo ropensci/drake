@@ -4,8 +4,8 @@
 \alias{build_times}
 \title{Function \code{build_times}}
 \usage{
-build_times(path = getwd(), search = TRUE, digits = 3, cache = NULL,
-  targets_only = FALSE)
+build_times(path = getwd(), search = TRUE, digits = 3,
+  cache = get_cache(path = path, search = search), targets_only = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

@@ -17,11 +17,11 @@ available_hash_algos <- function(){
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' config <- make(my_plan, return_config = TRUE)
+#' config <- make(my_plan)
 #' cache <- config$cache
 #' long_hash(cache)
 #' }
-long_hash <- function(cache){
+long_hash <- function(cache = drake::get_cache()){
   if (!("long_hash_algo" %in% cache$list(namespace = "config"))){
     return(NULL)
   }
@@ -38,11 +38,11 @@ long_hash <- function(cache){
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' config <- make(my_plan, return_config = TRUE)
+#' config <- make(my_plan)
 #' cache <- config$cache
 #' short_hash(cache)
 #' }
-short_hash <- function(cache){
+short_hash <- function(cache = drake::get_cache()){
   if (!("short_hash_algo" %in% cache$list(namespace = "config"))){
     return(NULL)
   }

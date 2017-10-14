@@ -117,7 +117,9 @@
 #' Makefile recipe for each target.
 #'
 #' @param return_config logical, whether to return the internal list
-#' of runtime configuration parameters used by \code{make()}
+#' of runtime configuration parameters used by \code{make()}.
+#' This argument is deprecated. Now, a configuration list
+#' is always invisibly returned.
 #'
 #' @param clear_progress logical, whether to clear the saved record of
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
@@ -150,11 +152,11 @@
 #'   recipe_command = "R -q -e")
 #' }
 make <- function(
-  plan,
+  plan = drake::plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  cache = NULL,
+  cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = (.packages()),
@@ -166,11 +168,17 @@ make <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  return_config = FALSE,
+  return_config = NULL,
   clear_progress = TRUE,
   imports_only = FALSE
 ){
   force(envir)
+  if (!is.null(return_config)){
+    warning(
+      "The return_config argument to make() is deprecated. ",
+      "Now, an internal configuration list is always invisibly returned."
+    )
+  }
   parallelism <- match.arg(
     arg = parallelism,
     choices = parallelism_choices()
@@ -206,11 +214,7 @@ make <- function(
     }
   }
   get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
-  if (return_config){
-    return(config)
-  } else{
-    return(invisible())
-  }
+  return(invisible(config))
 }
 
 next_targets <- function(graph_remaining_targets){

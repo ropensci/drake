@@ -26,12 +26,9 @@ build_times <- function(
   path = getwd(),
   search = TRUE,
   digits = 3,
-  cache = NULL,
+  cache = get_cache(path = path, search = search),
   targets_only = FALSE
 ){
-  if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
-  }
   if (is.null(cache)){
     return(empty_times())
   }

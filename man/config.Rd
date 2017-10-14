@@ -4,8 +4,8 @@
 \alias{config}
 \title{Function config}
 \usage{
-config(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL,
+config(plan = drake::plan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -47,7 +47,7 @@ or \code{\link{plot_graph}()}. Drake needs to import and cache files
 and objects to compute the configuration list, which in turn
 supports user-side functions to help with visualization and parallelism.
 The result differs from
-\code{\link{make}(..., imports_only = TRUE, return_config = TRUE)}
+\code{\link{make}(..., imports_only = TRUE)}
 in that the graph includes both the targets and the imports,
 not just the imports.
 }

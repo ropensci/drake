@@ -5,7 +5,7 @@ testrun <- function(config) {
       jobs = config$jobs,
       packages = config$packages, prework = config$prework,
       prepend = config$prepend, command = config$command,
-      return_config = TRUE, cache = config$cache
+      cache = config$cache
     )
   )
 }

@@ -6,7 +6,7 @@
 #' and objects to compute the configuration list, which in turn
 #' supports user-side functions to help with visualization and parallelism.
 #' The result differs from
-#' \code{\link{make}(..., imports_only = TRUE, return_config = TRUE)}
+#' \code{\link{make}(..., imports_only = TRUE)}
 #' in that the graph includes both the targets and the imports,
 #' not just the imports.
 #' @export
@@ -34,8 +34,9 @@
 #' @param args same as for \code{\link{make}}
 #' @param recipe_command same as for \code{\link{make}}
 #' @param cache same as for \code{\link{make}}
-config <- function(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL,
+config <- function(
+  plan = drake::plan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1, packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -46,8 +47,10 @@ config <- function(plan, targets = drake::possible_targets(plan),
   recipe_command = drake::default_recipe_command()
 ){
   force(envir)
-  config <- make(imports_only = TRUE, return_config = TRUE,
-    clear_progress = FALSE, plan = plan, targets = targets,
+  config <- make(
+    imports_only = TRUE,
+    clear_progress = FALSE,
+    plan = plan, targets = targets,
     envir = envir, verbose = verbose, cache = cache,
     parallelism = parallelism, jobs = jobs,
     packages = packages, prework = prework,
@@ -59,7 +62,8 @@ config <- function(plan, targets = drake::possible_targets(plan),
   config
 }
 
-build_config <- function(plan, targets, envir,
+build_config <- function(
+  plan, targets, envir,
   verbose, cache,
   parallelism, jobs,
   packages, prework, prepend, command,
@@ -128,7 +132,7 @@ inventory <- function(config) {
 #' load_basic_example()
 #' possible_targets(my_plan)
 #' }
-possible_targets <- function(plan) {
+possible_targets <- function(plan = drake::plan()) {
   plan <- sanitize_plan(plan)
   c(as.character(plan$output), as.character(plan$target))
 }

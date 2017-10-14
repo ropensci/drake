@@ -4,13 +4,13 @@
 \alias{make}
 \title{Function \code{make}}
 \usage{
-make(plan, targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = NULL,
+make(plan = drake::plan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(), return_config = FALSE,
+  recipe_command = drake::default_recipe_command(), return_config = NULL,
   clear_progress = TRUE, imports_only = FALSE)
 }
 \arguments{
@@ -129,7 +129,9 @@ wherever possible.}
 Makefile recipe for each target.}
 
 \item{return_config}{logical, whether to return the internal list
-of runtime configuration parameters used by \code{make()}}
+of runtime configuration parameters used by \code{make()}.
+This argument is deprecated. Now, a configuration list
+is always invisibly returned.}
 
 \item{clear_progress}{logical, whether to clear the saved record of
 progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}

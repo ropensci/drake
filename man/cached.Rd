@@ -5,7 +5,8 @@
 \title{Function \code{cached}}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE, cache = NULL)
+  path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
+  search = search))
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)

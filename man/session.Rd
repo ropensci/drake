@@ -4,7 +4,8 @@
 \alias{session}
 \title{Function \code{session}}
 \usage{
-session(path = getwd(), search = TRUE, cache = NULL)
+session(path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search))
 }
 \arguments{
 \item{path}{Root directory of the drake project,

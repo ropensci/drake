@@ -4,7 +4,8 @@
 \alias{read_config}
 \title{Function \code{read_config}}
 \usage{
-read_config(path = getwd(), search = TRUE, cache = NULL)
+read_config(path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search))
 }
 \arguments{
 \item{path}{Root directory of the drake project,

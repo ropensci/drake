@@ -21,10 +21,9 @@
 #' make(my_plan)
 #' session()
 #' }
-session <- function(path = getwd(), search = TRUE, cache = NULL){
-  if (is.null(cache)) {
-    cache <- get_cache(path = path, search = search)
-  }
+session <- function(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
@@ -59,7 +58,9 @@ session <- function(path = getwd(), search = TRUE, cache = NULL){
 #' make(bad_plan) # error
 #' in_progress() # "x"
 #' }
-in_progress <- function(path = getwd(), search = TRUE, cache = NULL){
+in_progress <- function(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "in progress") %>%
     names() %>%
@@ -113,8 +114,8 @@ progress <- function(
   imported_files_only = logical(0),
   path = getwd(),
   search = TRUE,
-  cache = NULL
-  ){
+  cache = drake::get_cache(path = path, search = search)
+){
   # deprecate imported_files_only
   if (length(imported_files_only)){
     warning(
@@ -123,9 +124,6 @@ progress <- function(
       "Use the no_imported_objects argument instead."
       )
     no_imported_objects <- imported_files_only
-  }
-  if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
   }
   if (is.null(cache)){
     return(character(0))
@@ -149,7 +147,7 @@ list_progress <- function(no_imported_objects, cache){
     f = function(target){
       is_built_or_imported_file(target = target, cache = cache)
     }
-    )
+  )
   abridged_progress <- all_progress[abridged_marked]
   if (no_imported_objects){
     out <- abridged_progress

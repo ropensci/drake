@@ -4,7 +4,7 @@
 \alias{mk}
 \title{Function \code{mk}}
 \usage{
-mk(target, cache_path = NULL)
+mk(target = character(0), cache_path = drake::default_cache_path())
 }
 \arguments{
 \item{target}{name of target to make}

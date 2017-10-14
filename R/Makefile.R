@@ -110,7 +110,10 @@ build_recipe <- function(target, recipe_command,
 #' @export
 #' @param target name of target to make
 #' @param cache_path path to the drake cache
-mk <- function(target, cache_path = NULL){
+mk <- function(
+  target = character(0),
+  cache_path = drake::default_cache_path()
+){
   cache <- this_cache(cache_path)
   config <- cache$get("config", namespace = "makefile")
   if (identical(globalenv(), config$envir)){

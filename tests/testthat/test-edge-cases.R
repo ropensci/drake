@@ -1,11 +1,28 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("edge-cases")
 
+test_with_dir("deprecation", {
+  plan <- data.frame(code = 1:2, output = c("x", "y"))
+  expect_warning(make(plan, verbose = FALSE))
+  expect_warning(make(plan, verbose = FALSE))
+  expect_warning(status())
+  expect_true(is.numeric(readd(x, search = FALSE)))
+  expect_warning(prune(plan[1, ]))
+  expect_equal(cached(), "x")
+  expect_warning(make(plan(x = 1), return_config = TRUE,
+    verbose = FALSE))
+})
+
 test_with_dir("graph does not fail if input file is binary", {
   x <- plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
   expect_silent(out <- plot_graph(x, verbose = FALSE))
   unlink("input.rds", force = TRUE)
+})
+
+test_with_dir("null graph", {
+  x <- dataframes_graph(config = list(graph = igraph::make_empty_graph()))
+  expect_equal(x, null_graph())
 })
 
 test_with_dir("illegal hashes", {
@@ -123,7 +140,7 @@ test_with_dir("true targets can be functions", {
     x + 1
   })
   plan <- plan(myfunction = generator(), output = myfunction(1))
-  config <- make(plan, verbose = FALSE, return_config = TRUE)
+  config <- make(plan, verbose = FALSE)
   expect_equal(readd(output), 2)
   expect_true(is.list(config$cache$get("myfunction")))
   myfunction <- readd(myfunction)

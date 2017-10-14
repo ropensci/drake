@@ -1,25 +1,26 @@
 # For hover text
 hover_text_length <- 250
 
-append_build_times <- function(nodes, digits, config) {
-  time_data <- build_times(digits = digits, cache = config$cache)
-  timed <- intersect(time_data$item, nodes$id)
-  if (!length(timed))
-    return(nodes)
-  time_labels <- as.character(time_data$elapsed)
-  names(time_labels) <- time_data$item
-  time_labels <- time_labels[timed]
-  nodes[timed, "label"] <-
-    paste(nodes[timed, "label"], time_labels, sep = "\n")
-  nodes
+append_build_times <- function(config) {
+  with(config, {
+    time_data <- build_times(digits = digits, cache = config$cache)
+    timed <- intersect(time_data$item, nodes$id)
+    if (!length(timed))
+      return(nodes)
+    time_labels <- as.character(time_data$elapsed)
+    names(time_labels) <- time_data$item
+    time_labels <- time_labels[timed]
+    nodes[timed, "label"] <-
+      paste(nodes[timed, "label"], time_labels, sep = "\n")
+    nodes
+  })
 }
 
-arrange_nodes <- function(nodes, config, targets, imports){
+arrange_nodes <- function(config){
   if (config$parallelism == "Makefile")
-    resolve_levels_Makefile(nodes = nodes, graph = config$graph,
-      imports = imports, targets = targets)
+    resolve_levels_Makefile(config = config)
   else
-    resolve_levels(nodes = nodes, graph = config$graph)
+    resolve_levels(config = config)
 }
 
 can_get_function <- function(x, envir) {
@@ -29,42 +30,35 @@ can_get_function <- function(x, envir) {
   error = function(e) FALSE)
 }
 
-categorize_nodes <- function(nodes, functions, imports,
-                             in_progress, missing, outdated, targets) {
-  nodes$status <- "imported"
-  nodes[targets, "status"] <- "up to date"
-  nodes[missing, "status"] <- "missing"
-  nodes[outdated, "status"] <- "outdated"
-  nodes[in_progress, "status"] <- "in progress"
-
-  nodes$type <- "object"
-  nodes[is_file(nodes$id), "type"] <- "file"
-  nodes[functions, "type"] <- "function"
-  nodes
+categorize_nodes <- function(config) {
+  with(config, {
+    nodes$status <- "imported"
+    nodes[targets, "status"] <- "up to date"
+    nodes[missing, "status"] <- "missing"
+    nodes[outdated, "status"] <- "outdated"
+    nodes[in_progress, "status"] <- "in progress"
+    nodes$type <- "object"
+    nodes[is_file(nodes$id), "type"] <- "file"
+    nodes[functions, "type"] <- "function"
+    nodes
+  })
 }
 
-configure_nodes <- function(nodes, config,
-  files, functions, imports,
-  in_progress, missing, outdated, targets,
-  font_size, build_times, digits
-) {
-  functions <- intersect(functions, nodes$id)
-  in_progress <- intersect(in_progress, nodes$id)
-  missing <- intersect(missing, nodes$id)
-  outdated <- intersect(outdated, nodes$id)
-  targets <- intersect(config$plan$target, nodes$id)
-
-  nodes <- categorize_nodes(nodes = nodes, functions = functions,
-    imports = imports, in_progress = in_progress, missing = missing,
-    outdated = outdated, targets = targets)
-  nodes <- arrange_nodes(nodes = nodes, config = config,
-    imports = imports, targets = targets)
-  nodes <- style_nodes(nodes, font_size = font_size)
-  if (build_times)
-    nodes <- append_build_times(nodes = nodes,
-      digits = digits, config = config)
-  hover_text(nodes = nodes, config = config, files = files,
-    functions = functions, targets = targets)
+configure_nodes <- function(config){
+  elts <- c(
+    "functions", "in_progress", "missing",
+    "outdated", "targets"
+  )
+  for (elt in elts){
+    config[[elt]] <- intersect(config[[elt]], config$nodes$id)
+  }
+  config$nodes <- categorize_nodes(config = config)
+  config$nodes <- arrange_nodes(config = config)
+  config$nodes <- style_nodes(config = config)
+  if (config$build_times){
+    config$nodes <- append_build_times(config = config)
+  }
+  hover_text(config = config)
 }
 
 #' @title Function default_graph_title
@@ -79,7 +73,8 @@ configure_nodes <- function(nodes, config,
 #' with the \code{split_columns} argument.
 default_graph_title <- function(
   parallelism = drake::parallelism_choices(),
-  split_columns){
+  split_columns = FALSE
+){
   parallelism <- match.arg(parallelism)
   out <- paste("Workflow graph:", parallelism, "parallelism")
   if (split_columns){
@@ -119,16 +114,18 @@ target_hover_text <- function(targets, plan) {
     wrap_text %>% crop_text(length = hover_text_length)
 }
 
-hover_text <- function(nodes, config, files, functions, targets) {
-  nodes$hover_label <- nodes$id
-  import_files <- setdiff(files, targets)
-  nodes[import_files, "hover_label"] <-
-    file_hover_text(quoted_file = import_files, targets = targets)
-  nodes[functions, "hover_label"] <-
-    function_hover_text(function_name = functions, envir = config$envir)
-  nodes[targets, "hover_label"] <-
-    target_hover_text(targets = targets, plan = config$plan)
-  nodes
+hover_text <- function(config) {
+  with(config, {
+    nodes$hover_label <- nodes$id
+    import_files <- setdiff(files, targets)
+    nodes[import_files, "hover_label"] <-
+      file_hover_text(quoted_file = import_files, targets = targets)
+    nodes[functions, "hover_label"] <-
+      function_hover_text(function_name = functions, envir = config$envir)
+    nodes[targets, "hover_label"] <-
+      target_hover_text(targets = targets, plan = config$plan)
+    nodes
+  })
 }
 
 null_graph <- function() {
@@ -147,35 +144,39 @@ missing_import <- function(x, envir) {
   missing_object | missing_file
 }
 
-resolve_levels <- function(nodes, graph) {
-  stopifnot(is_dag(graph))
-  level <- 1
-  nodes$level <- NA
-  keep_these <- setdiff(V(graph)$name, rownames(nodes))
-  graph_remaining_targets <- delete_vertices(graph, v = keep_these)
-  while (length(V(graph_remaining_targets))) {
-    candidates <- next_targets(graph_remaining_targets)
-    if (length(candidates)){
-      nodes[candidates, "level"] <- level
-      level <- level + 1
+resolve_levels <- function(config) {
+  with(config, {
+    stopifnot(is_dag(graph))
+    level <- 1
+    nodes$level <- NA
+    keep_these <- setdiff(V(graph)$name, rownames(nodes))
+    graph_remaining_targets <- delete_vertices(graph, v = keep_these)
+    while (length(V(graph_remaining_targets))) {
+      candidates <- next_targets(graph_remaining_targets)
+      if (length(candidates)){
+        nodes[candidates, "level"] <- level
+        level <- level + 1
+      }
+      graph_remaining_targets <-
+        delete_vertices(graph_remaining_targets, v = candidates)
     }
-    graph_remaining_targets <-
-      delete_vertices(graph_remaining_targets, v = candidates)
-  }
-  nodes
+    nodes
+  })
 }
 
-resolve_levels_Makefile <- function(nodes, graph, imports, targets) { # nolint
-  graph_imports <- delete_vertices(graph, v = targets)
-  graph_targets <- delete_vertices(graph, v = imports)
-  nodes_imports <- nodes[nodes$id %in% imports, ]
-  nodes_targets <- nodes[nodes$id %in% targets, ]
-  nodes_imports <-
-    resolve_levels(nodes = nodes_imports, graph = graph_imports)
-  nodes_targets <-
-    resolve_levels(nodes = nodes_targets, graph = graph_targets)
-  nodes_imports$level <- nodes_imports$level - max(nodes_imports$level)
-  rbind(nodes_imports, nodes_targets)
+resolve_levels_Makefile <- function(config) { # nolint
+  with(config, {
+    graph_imports <- delete_vertices(graph, v = targets)
+    graph_targets <- delete_vertices(graph, v = imports)
+    nodes_imports <- nodes[nodes$id %in% imports, ]
+    nodes_targets <- nodes[nodes$id %in% targets, ]
+    nodes_imports <- resolve_levels(
+      config = list(nodes = nodes_imports, graph = graph_imports))
+    nodes_targets <- resolve_levels(
+      config = list(nodes = nodes_targets, graph = graph_targets))
+    nodes_imports$level <- nodes_imports$level - max(nodes_imports$level)
+    rbind(nodes_imports, nodes_targets)
+  })
 }
 
 # https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r
@@ -206,17 +207,19 @@ split_node_columns <- function(nodes){
   out
 }
 
-style_nodes <- function(nodes, font_size) {
-  nodes$font.size <- font_size # nolint
-  nodes[nodes$status == "imported", "color"] <- color_of("import_node")
-  nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
-  nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
-  nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
-  nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
-  nodes[nodes$type == "object", "shape"] <- shape_of("object")
-  nodes[nodes$type == "file", "shape"] <- shape_of("file")
-  nodes[nodes$type == "function", "shape"] <- shape_of("funct")
-  nodes
+style_nodes <- function(config) {
+  with(config, {
+    nodes$font.size <- font_size # nolint
+    nodes[nodes$status == "imported", "color"] <- color_of("import_node")
+    nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
+    nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
+    nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
+    nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
+    nodes[nodes$type == "object", "shape"] <- shape_of("object")
+    nodes[nodes$type == "file", "shape"] <- shape_of("file")
+    nodes[nodes$type == "function", "shape"] <- shape_of("funct")
+    nodes
+  })
 }
 
 #' @title Function legend_nodes

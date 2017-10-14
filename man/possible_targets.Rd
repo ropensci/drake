@@ -4,7 +4,7 @@
 \alias{possible_targets}
 \title{Function \code{possible_targets}}
 \usage{
-possible_targets(plan)
+possible_targets(plan = drake::plan())
 }
 \arguments{
 \item{plan}{workflow plan data frame}

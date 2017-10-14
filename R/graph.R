@@ -21,11 +21,11 @@
 #' class(g)
 #' }
 build_graph <- function(
-  plan,
+  plan = drake::plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE
-  ){
+){
   force(envir)
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
@@ -84,10 +84,10 @@ build_graph <- function(
 #' tracked(my_plan)
 #' }
 tracked <- function(
-  plan,
+  plan = drake::plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame()
-  ){
+){
   force(envir)
   graph <- build_graph(plan = plan, targets = targets, envir = envir)
   V(graph)$name

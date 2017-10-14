@@ -4,7 +4,8 @@
 \alias{built}
 \title{Function \code{built}}
 \usage{
-built(path = getwd(), search = TRUE, cache = NULL)
+built(path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
+  search = search))
 }
 \arguments{
 \item{path}{Root directory of the drake project,

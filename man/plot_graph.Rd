@@ -4,14 +4,14 @@
 \alias{plot_graph}
 \title{Function \code{plot_graph}}
 \usage{
-plot_graph(plan, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = NULL, jobs = 1,
-  parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), file = character(0), selfcontained = FALSE,
-  build_times = TRUE, digits = 3, targets_only = FALSE,
-  split_columns = FALSE, config = NULL, font_size = 20,
-  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
-  hover = TRUE, navigationButtons = TRUE, ...)
+plot_graph(plan = drake::plan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  jobs = 1, parallelism = drake::default_parallelism(),
+  packages = (.packages()), prework = character(0), config = NULL,
+  file = character(0), selfcontained = FALSE, build_times = TRUE,
+  digits = 3, targets_only = FALSE, split_columns = FALSE,
+  font_size = 20, layout = "layout_with_sugiyama", main = NULL,
+  direction = "LR", hover = TRUE, navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -48,6 +48,18 @@ See \code{?parallelism_choices} for details.}
 
 \item{prework}{same as for \code{\link{make}()}.}
 
+\item{config}{option internal runtime parameter list of
+\code{\link{make}(...)},
+produced with \code{\link{config}()}.
+\code{Config} overrides all arguments except
+\code{file}, \code{selfcontained}, \code{build_times},
+\code{digits}, \code{targets_only}, \code{split_columns},
+\code{font_size}, \code{layout}, \code{main}, \code{direction},
+\code{hover}, \code{navigationButtons}, and \code{...}.
+Computing \code{config}
+in advance could save time if you plan multiple calls to
+\code{outdated()}.}
+
 \item{file}{Name of HTML file to save the graph.
 If \code{NULL} or \code{character(0)},
 no file is saved and the graph is rendered and displayed within R.}
@@ -74,14 +86,6 @@ stages of build items. (Although the targets/imports
 in each column are still conditionally independent,
 there may be more conditional independence than the graph
 indicates.)}
-
-\item{config}{option internal runtime parameter list of
-\code{\link{make}(...)},
-produced with \code{\link{config}()}.
-\code{config$envir} is ignored.
-Otherwise, computing this
-in advance could save time if you plan multiple calls to
-\code{outdated()}.}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 

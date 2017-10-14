@@ -5,7 +5,8 @@
 \title{Function \code{loadd}}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, envir = parent.frame(), jobs = 1)
+  search = TRUE, cache = drake::get_cache(path = path, search = search),
+  envir = parent.frame(), jobs = 1)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)

@@ -56,7 +56,7 @@ default_cache_type <- function(){
 #' make(my_plan)
 #' type_of_cache(".drake")
 #' }
-type_of_cache <- function(path){
+type_of_cache <- function(path = drake::default_cache_path()){
   if (!file.exists(path)){
     return(NULL)
   }

@@ -4,7 +4,8 @@
 \alias{read_plan}
 \title{Function \code{read_plan}}
 \usage{
-read_plan(path = getwd(), search = TRUE, cache = NULL)
+read_plan(path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search))
 }
 \arguments{
 \item{path}{Root directory of the drake project,

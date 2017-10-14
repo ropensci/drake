@@ -15,8 +15,10 @@
 #' \dontrun{
 #' example_drake('basic') # Same as the quickstart vignette
 #' }
-example_drake <- function(example = drake::examples_drake(),
-  destination = getwd()) {
+example_drake <- function(
+  example = drake::examples_drake(),
+  destination = getwd()
+){
   example <- match.arg(example)
   dir <- system.file(file.path("examples", example), package = "drake",
     mustWork = TRUE)

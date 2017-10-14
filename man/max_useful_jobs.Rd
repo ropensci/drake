@@ -4,9 +4,9 @@
 \alias{max_useful_jobs}
 \title{Function \code{max_useful_jobs}}
 \usage{
-max_useful_jobs(plan, from_scratch = FALSE,
+max_useful_jobs(plan = drake::plan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = NULL, jobs = 1,
+  verbose = TRUE, cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), config = NULL, imports = c("files", "all",
   "none"))
@@ -55,7 +55,10 @@ See \code{?parallelism_choices} for details.}
 \item{config}{internal configuration list of \code{\link{make}(...)},
 produced also with \code{\link{config}()}.
 \code{config$envir} is ignored.
-Overrides all the other arguments if given. For example,
+Otherwise, if not \code{NULL}, \code{config}
+overrides all the other arguments except
+\code{imports} and \code{from_scratch}.
+For example,
 \code{plan} is replaced with \code{config$plan}.
 Computing \code{\link{config}}
 in advance could save time if you plan multiple calls to
