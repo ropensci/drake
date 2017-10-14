@@ -1,6 +1,5 @@
 # From withr
-get_valid_seed <- function(){
-  seed <- get_seed()
+get_valid_seed <- function(seed = get_seed()){
   if (is.null(seed)) {
     runif(1L)
     seed <- get_seed()
