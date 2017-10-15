@@ -7,10 +7,10 @@ test_with_dir("set_testing_scenario", {
   with_all_options({
     expect_equal(get_testing_scenario_name(), original)
     expect_error(set_testing_scenario("lskdjf"))
-    set_testing_scenario("local_mcl_8")
-    expect_equal(get_testing_scenario_name(), "local_mcl_8")
+    set_testing_scenario("local_mcl_9")
+    expect_equal(get_testing_scenario_name(), "local_mcl_9")
     expect_equal(get_testing_scenario()$parallelism, "mclapply")
-    expect_equal(get_testing_scenario()$jobs, 8)
+    expect_equal(get_testing_scenario()$jobs, 9)
   })
   expect_equal(original, get_testing_scenario_name())
   expect_equal(original_opt, getOption(test_option_name))
