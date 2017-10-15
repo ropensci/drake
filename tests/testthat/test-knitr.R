@@ -1,6 +1,12 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("knitr")
 
+test_with_dir("unparsable pieces of commands are handled correctly", {
+  x <- "bluh$"
+  expect_false(is_parsable(x))
+  expect_equal(find_knitr_doc(x), character(0))
+})
+
 test_with_dir("knitr_deps() works", {
   for (name in c("test.Rmd", "test.Rnw")){
     file <- file.path("test", "knitr", name) %>%

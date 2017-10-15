@@ -42,8 +42,12 @@ find_knitr_doc <- function(expr, result = character(0)){
   if (!length(expr)){
     return(result)
   }
-  if (is.character(expr)){
-    expr <- parse(text = expr)
+  if (is.character(expr)) {
+    if (is_parsable(expr)) {
+      expr <- parse(text = expr)
+    } else {
+      return(result)
+    }
   }
   if (is.function(expr)){
     result <- find_knitr_doc(body(expr), result = result)

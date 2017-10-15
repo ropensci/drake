@@ -146,12 +146,15 @@ parsable_list <- function(x){
 
 is_parsable <- Vectorize(function(x){
   tryCatch({
-    parse(text = x); TRUE
-  },
-  error = function(e) FALSE
-  )
+      parse(text = x)
+      TRUE
     },
-  "x")
+    error = function(e){
+      FALSE
+    }
+  )
+},
+"x")
 
 extract_filenames <- function(command){
   if (!safe_grepl("'", command)){
