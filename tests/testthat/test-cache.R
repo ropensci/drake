@@ -24,6 +24,10 @@ test_with_dir("try to find a non-existent project", {
 })
 
 test_with_dir("cache functions work", {
+  # May have been loaded in a globalenv() testing scenario
+  remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
+  rm(list = remove_these, envir = globalenv())
+
   cache_dir <- basename(default_cache_path())
   first_wd <- getwd()
   scratch <- file.path(first_wd, "scratch")
@@ -40,8 +44,11 @@ test_with_dir("cache functions work", {
   expect_error(readd(search = FALSE))
   config <- dbug()
   using_global <- identical(config$envir, globalenv())
-  if (using_global)
-    envir <- globalenv() else envir <- environment()
+  if (using_global){
+    envir <- globalenv()
+  } else {
+    envir <- environment()
+  }
   testrun(config)
 
   # targets

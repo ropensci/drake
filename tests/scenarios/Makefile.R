@@ -1,7 +1,7 @@
 library(testthat)
 devtools::load_all()
-scenarios <- c(
-  "local_Make_1",
-  "global_Make_16"
+scenario_names <- c(
+  "global_Makefile_2",
+  "local_Makefile_9"
 )
-test_scenarios(scenarios = scenarios)
+test_scenarios(scenario_names = scenario_names)

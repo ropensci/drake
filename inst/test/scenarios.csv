@@ -1,0 +1,11 @@
+envir,parallelism,jobs
+"local","parLapply",1
+"local","parLapply",2
+"local","mclapply",1
+"local","mclapply",9
+"local","Makefile",9
+"global","parLapply",1
+"global","parLapply",9
+"global","mclapply",1
+"global","mclapply",2
+"global","Makefile",2

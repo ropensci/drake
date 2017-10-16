@@ -65,6 +65,9 @@ test_with_dir("in_progress() works", {
 })
 
 test_with_dir("missed() works", {
+  # May have been loaded in a globalenv() testing scenario
+  remove_these <- intersect(ls(envir = globalenv()), c("f", "g"))
+  rm(list = remove_these, envir = globalenv())
   o <- dbug()
   expect_equal(character(0), missed(o$plan, envir = o$envir,
     verbose = F))
