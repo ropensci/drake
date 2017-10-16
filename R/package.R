@@ -40,7 +40,7 @@
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
-#' @importFrom R.utils isPackageLoaded read.csv
+#' @importFrom R.utils isPackageLoaded
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_rds
@@ -48,7 +48,7 @@
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat expect_false expect_true test_dir test_that
 #' @importFrom utils capture.output compareVersion installed.packages
-#' packageVersion sessionInfo type.convert unzip
+#' packageVersion read.csv sessionInfo type.convert unzip
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink
