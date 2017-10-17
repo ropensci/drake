@@ -48,7 +48,7 @@ Double quotes are reserved for ordinary strings.
 The distinction is important because drake thinks about
 how files, objects, targets, etc. depend on each other.
 Quotes in the \code{list} argument are left alone,
-but R messes with quotes when it parses the freeform
+but R messes with quotes when it parses the free-form
 arguments in \code{...}, so use the \code{strings_in_dots}
 argument to control the quoting in \code{...}.
 }
