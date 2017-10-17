@@ -1,10 +1,6 @@
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("knitr")
 
-root_knitr <- normalizePath(
-  file.path("aux", "knitr")
-)
-
 test_with_dir("unparsable pieces of commands are handled correctly", {
   x <- "bluh$"
   expect_false(is_parsable(x))
@@ -13,7 +9,7 @@ test_with_dir("unparsable pieces of commands are handled correctly", {
 
 test_with_dir("knitr_deps() works", {
   root_knitr <- file.path(
-    "..", "tests", "testthat", "aux", "knitr"
+    "..", "tests", "testthat", "helper_files", "knitr"
   ) %>%
     system.file(package = "drake", mustWork = TRUE)
   for (name in c("test.Rmd", "test.Rnw")){

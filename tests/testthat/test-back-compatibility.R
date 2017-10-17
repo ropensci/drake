@@ -3,7 +3,7 @@ context("back compatibility")
 
 test_with_dir("back-compatible with a tiny v4.1.0 project", {
   root <- file.path(
-    "..", "tests", "testthat", "aux", "back-compatibility", "v4.1.0"
+    "..", "tests", "testthat", "helper_files", "back-compatibility", "v4.1.0"
   ) %>%
     system.file(package = "drake", mustWork = TRUE)
   cache_files <- file.path(root, "cache")
