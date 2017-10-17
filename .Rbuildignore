@@ -20,6 +20,7 @@ README.md
 TESTS.md
 TODO.md
 TROUBLESHOOTING.md
+tests/back_compatibility
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log

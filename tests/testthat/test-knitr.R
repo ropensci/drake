@@ -8,25 +8,21 @@ test_with_dir("unparsable pieces of commands are handled correctly", {
 })
 
 test_with_dir("knitr_deps() works", {
-  root_knitr <- file.path("..", "tests", "inst", "knitr") %>%
-    system.file(package = "drake", mustWork = TRUE)
-  for (name in c("test.Rmd", "test.Rnw")){
-    file <- file.path(root_knitr, name)
-    expect_true(file.copy(
-      from = file,
-      to = getwd(),
-      recursive = TRUE,
-      overwrite = TRUE
-    ))
-  }
+  file <- system.file(
+    file.path("testing", "test.Rmd"),
+    package = "drake", mustWork = TRUE
+  )
+  expect_true(file.copy(
+    from = file,
+    to = getwd(),
+    recursive = TRUE,
+    overwrite = TRUE
+  ))
   ans <- sort(c(
     paste0("target", seq_len(18)),
     as_file(paste0("file", seq_len(6)))
   ))
-  # You may include "test.Rnw" also, but it may generate
-  # LaTeX warnings that have nothing to do with drake.
-  for (doc in c("'test.Rmd'", "test.Rmd"))
-    expect_equal(sort(knitr_deps(doc)), ans)
+  expect_equal(sort(knitr_deps("'test.Rmd'")), ans)
   expect_false(file.exists("test.md"))
   expect_warning(x <- knitr_deps("report.Rmd"))
   expect_equal(x, character(0))
