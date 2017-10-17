@@ -3,6 +3,7 @@ context("cache")
 
 test_with_dir("clean() works if there is no cache already", {
   clean(list = "no_cache")
+  expect_false(file.exists(default_cache_path()))
 })
 
 test_with_dir("corrupt cache", {

@@ -134,6 +134,7 @@ test_with_dir("misc stuff", {
 
 test_with_dir("misc empty/NULL cases", {
   clean(list = "no_cache")
+  expect_false(file.exists(default_cache_path()))
 })
 
 test_with_dir("unique_random_string", {

@@ -63,12 +63,9 @@ test_with_dir("evaluate, expand, and gather", {
   expect_equal(x4, y)
 
   x5 <- evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
-  expect_equal(
-    12,
-    nrow(x5),
-    length(unique(x5$target)),
-    length(unique(x5$command))
-  )
+  expect_equal(12, nrow(x5))
+  expect_equal(12, length(unique(x5$target)))
+  expect_equal(6, length(unique(x5$command)))
 
   x6 <- gather(x)
   y <- data.frame(
