@@ -8,9 +8,7 @@ test_with_dir("unparsable pieces of commands are handled correctly", {
 })
 
 test_with_dir("knitr_deps() works", {
-  root_knitr <- file.path(
-    "..", "tests", "testthat", "helper_files", "knitr"
-  ) %>%
+  root_knitr <- file.path("..", "tests", "inst", "knitr") %>%
     system.file(package = "drake", mustWork = TRUE)
   for (name in c("test.Rmd", "test.Rnw")){
     file <- file.path(root_knitr, name)

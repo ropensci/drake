@@ -2,9 +2,7 @@ cat(get_testing_scenario_name(), ": ", sep = "")
 context("back compatibility")
 
 test_with_dir("back-compatible with a tiny v4.1.0 project", {
-  root <- file.path(
-    "..", "tests", "testthat", "helper_files", "back-compatibility", "v4.1.0"
-  ) %>%
+  root <- file.path("..", "tests", "inst", "back-compatibility", "v4.1.0") %>%
     system.file(package = "drake", mustWork = TRUE)
   cache_files <- file.path(root, "cache")
   infile <- file.path(root, "my_file.rds")
