@@ -20,7 +20,7 @@ apply_skip_os <- function(x){
 }
 
 testing_scenarios <- function(){
-  file <- file.path("test", "scenarios.csv")
+  file <- file.path("testing", "scenarios.csv")
   path <- system.file(file, package = "drake", mustWork = TRUE)
   x <- read.csv(path, stringsAsFactors = FALSE)
   rownames(x) <- paste(x$envir, x$parallelism, x$jobs, sep = "_")
