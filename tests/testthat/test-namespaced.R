@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("namespaced")
+drake_context("namespaced")
 
 test_with_dir("function_dependencies() works on :: and :::", {
   expect_false("g" %in% ls())

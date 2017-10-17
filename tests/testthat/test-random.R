@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("reproducible random numbers")
+drake_context("reproducible random numbers")
 
 test_with_dir("get_valid_seed() gets a valid seed", {
   expect_true(is.integer(get_valid_seed(seed = NULL)))

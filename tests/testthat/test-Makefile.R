@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("Makefile")
+drake_context("Makefile")
 
 test_with_dir("recipe commands", {
   expect_output(Makefile_recipe())

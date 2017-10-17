@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("dependencies")
+drake_context("dependencies")
 
 test_with_dir("unparsable commands are handled correctly", {
   x <- "bluh$"

@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("generate")
+drake_context("generate")
 
 test_with_dir("empty generative args", {
   x <- plan(a = 1, b = FUNCTION())

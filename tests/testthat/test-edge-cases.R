@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("edge-cases")
+drake_context("edge cases")
 
 test_with_dir("deprecation", {
   plan <- data.frame(code = 1:2, output = c("x", "y"))
@@ -11,6 +10,14 @@ test_with_dir("deprecation", {
   expect_equal(cached(), "x")
   expect_warning(make(plan(x = 1), return_config = TRUE,
     verbose = FALSE))
+  x <- this_cache()
+
+  # We need to be able to set the drake version
+  # to check back compatibility.
+  x$del(key = "initial_drake_version", namespace = "session")
+  expect_false("initial_drake_version" %in% x$list(namespace = "session"))
+  set_initial_drake_version(cache = x)
+  expect_true("initial_drake_version" %in% x$list(namespace = "session"))
 })
 
 test_with_dir("graph does not fail if input file is binary", {

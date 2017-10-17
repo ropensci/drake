@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("other features")
+drake_context("other features")
 
 test_with_dir("recipe_command", {
   my_plan <- plan(y = 1)

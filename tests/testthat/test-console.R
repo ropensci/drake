@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("console")
+drake_context("console")
 
 test_with_dir("multiline message cap", {
   n <- 100

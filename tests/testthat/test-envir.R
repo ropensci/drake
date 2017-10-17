@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("envir")
+drake_context("envir")
 
 test_with_dir("prune_envir in full build", {
   # workflow with lots of nested deps This will fail if

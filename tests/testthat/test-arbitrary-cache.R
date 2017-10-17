@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("arbitrary cache")
+drake_context("arbitrary cache")
 
 test_with_dir("storr_environment is a cache type", {
   expect_true("storr_environment" %in% cache_types())

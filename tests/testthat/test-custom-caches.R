@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("custom caches")
+drake_context("custom caches")
 
 test_with_dir("cache_path finding", {
   x <- new_cache("x")

@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("testing")
+drake_context("testing")
 
 test_with_dir("set_testing_scenario", {
   original <- get_testing_scenario_name()

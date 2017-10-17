@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("basic")
+drake_context("basic")
 
 test_with_dir("basic example works", {
   scenario <- get_testing_scenario()

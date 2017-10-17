@@ -1,5 +1,15 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("time")
+drake_context("time")
+
+test_with_dir("proc_time runtimes can be fetched", {
+  cache <- storr::storr_rds("cache")
+  key <- "x"
+  t <- system.time({
+    z <- 1
+  })
+  cache$set(key = key, value = t, namespace = "build_times")
+  y <- fetch_runtime(key = key, cache = cache)
+  expect_true(nrow(y) > 0)
+})
 
 test_with_dir("build times works if no targets are built", {
   expect_equal(nrow(build_times(search = FALSE)), 0)

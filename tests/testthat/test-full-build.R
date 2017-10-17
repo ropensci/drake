@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("full build")
+drake_context("full build")
 
 test_with_dir("scratch build with custom filesystem cache.", {
   config <- dbug()

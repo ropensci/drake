@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("import object")
+drake_context("import object")
 
 test_with_dir("responses to imported objects and functions", {
   config <- dbug()

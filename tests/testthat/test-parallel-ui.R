@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("parallel UI")
+drake_context("parallel UI")
 
 test_with_dir("shell_file() writes correctly", {
   expect_false(file.exists("shell.sh"))

@@ -1,3 +1,8 @@
+drake_context <- function(x){
+  ctx <- paste0(get_testing_scenario_name(), ": ", x)
+  context(ctx)
+}
+
 testrun <- function(config) {
   invisible(
     make(plan = config$plan, targets = config$targets, envir = config$envir,

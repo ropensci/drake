@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("command changes")
+drake_context("command changes")
 
 test_with_dir("changes to commands are handled well", {
   config <- dbug()

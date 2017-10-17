@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("plan")
+drake_context("plan")
 
 test_with_dir("empty plan", {
   expect_equal(

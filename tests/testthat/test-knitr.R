@@ -1,5 +1,4 @@
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("knitr")
+drake_context("knitr")
 
 test_with_dir("unparsable pieces of commands are handled correctly", {
   x <- "bluh$"
