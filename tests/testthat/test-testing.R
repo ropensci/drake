@@ -54,12 +54,7 @@ test_with_dir("test_scenarios()", {
   file <- file.path(subdir, "test-small.R")
 
   writeLines(
-    text = c(
-      "cat('logged scenario', getOption(test_option_name), ' ')",
-      "some_nested_object <- 1",
-      "expect_true('some_nested_object' %in% ls())",
-      "expect_false('some_outside_object' %in% ls())"
-    ),
+    text = "cat('logged scenario', getOption('drake_test_scenario'), ' ')",
     con = file
   )
 
