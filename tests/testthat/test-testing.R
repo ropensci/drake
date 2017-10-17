@@ -52,14 +52,13 @@ test_with_dir("test_scenarios()", {
     dir.create(subdir)
   }
   file <- file.path(subdir, "test-small.R")
+
   writeLines(
     text = c(
-      "test_with_dir('super nested test', {",
-      "  cat('logged scenario', getOption(test_option_name), ' ')",
-      "  some_nested_object <- 1",
-      "  expect_true('some_nested_object' %in% ls())",
-      "  expect_false('some_outside_object' %in% ls())",
-      "})"
+      "cat('logged scenario', getOption(test_option_name), ' ')",
+      "some_nested_object <- 1",
+      "expect_true('some_nested_object' %in% ls())",
+      "expect_false('some_outside_object' %in% ls())"
     ),
     con = file
   )
