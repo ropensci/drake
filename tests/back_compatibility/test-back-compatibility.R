@@ -1,7 +1,6 @@
 devtools::load_all()
 library(testthat)
-cat(get_testing_scenario_name(), ": ", sep = "")
-context("back compatibility")
+drake_context("back compatibility")
 
 test_with_dir("back-compatible with a tiny v4.1.0 project", {
   root <- file.path("..", "tests", "back_compatibility", "v4.1.0") %>%
