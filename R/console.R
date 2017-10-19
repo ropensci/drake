@@ -35,6 +35,17 @@ console_many_targets <- function(
     finish_console(message = message)
 }
 
+console_up_to_date <- function(config, built = NULL){
+  if (is.null(built)){
+    built <- names(progress(cache = config$cache))
+  }
+  all_targets_up_to_date <- !any(built %in% config$plan$target)
+  msg <- color("All targets are already up to date.\n", colors["target"])
+  if (config$verbose && all_targets_up_to_date){
+    cat(msg)
+  }
+}
+
 finish_console <- function(text, message){
   crop_text(x = text, length = console_length) %>%
     color_grep(pattern = message, color = color_of(message)) %>%

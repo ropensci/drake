@@ -214,6 +214,9 @@ make <- function(
     }
   }
   get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
+  if (!imports_only){
+    console_up_to_date(config)
+  }
   return(invisible(config))
 }
 

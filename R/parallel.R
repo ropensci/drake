@@ -18,9 +18,10 @@ parallel_stage <- function(graph_remaining_targets, worker, config) {
     f = function(target)
       should_build(target = target, hash_list = hash_list, config = config))
   hash_list <- hash_list[build_these]
-  if (length(build_these))
+  if (length(build_these)){
     worker(targets = build_these, hash_list = hash_list,
       config = config)
+  }
   delete_vertices(graph_remaining_targets, v = candidates)
 }
 

@@ -1,5 +1,16 @@
 drake_context("console")
 
+test_with_dir("console_up_to_date", {
+  pl <- plan(a = 1)
+  con <- make(pl, verbose = FALSE)
+  expect_silent(console_up_to_date(con))
+  con$verbose <- TRUE
+  expect_silent(console_up_to_date(con))
+  con <- make(pl, verbose = FALSE)
+  con$verbose <- TRUE
+  expect_output(console_up_to_date(con))
+})
+
 test_with_dir("multiline message cap", {
   n <- 100
   x1 <- "aldksjf"

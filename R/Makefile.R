@@ -28,7 +28,8 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     jobs = config$jobs,
     parallelism = config$parallelism,
     packages = config$packages,
-    prework = config$prework
+    prework = config$prework,
+    inform_up_to_date = FALSE
   )
   time_stamps(config = config, outdated = out)
   error_code <- ifelse(
