@@ -244,7 +244,12 @@ rate_limiting_times <- function(
   rownames(times) <- times$item
   times <- times[intersect(items, keys), ]
   if (!from_scratch){
-    outdated <- outdated(plan = plan, envir = envir, config = config) %>%
+    outdated <- outdated(
+      plan = plan,
+      envir = envir,
+      config = config,
+      inform_up_to_date = FALSE
+    ) %>%
       intersect(y = plan$target) %>%
       c(import_keys) %>%
       intersect(y = rownames(times)) %>%
