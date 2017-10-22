@@ -19,7 +19,7 @@ test_with_dir("retries", {
     }
   }
   pl <- plan(x = f())
-  tmp <- tempfile()
+  tmp <- "test-retry-log.txt"
   if (!file.exists(tmp)){
     file.create(tmp)
   }
