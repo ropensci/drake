@@ -1,3 +1,8 @@
+# Release 4.4.0
+
+- New support for timeouts and retries when it comes to building targets.
+- Failed targets are now recorded during the build process. You can see them in `plot_graph()` and `progress()`. Also see the new `failed()` function, which is similar to `in_progress()`.
+
 # 2017-10-17
 
 Version 4.3.0 has:
