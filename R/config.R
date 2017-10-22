@@ -120,6 +120,15 @@ add_packages_to_prework <- function(packages, prework) {
     packages, ")", sep = "") %>% c(prework)
 }
 
+#' @title Internal function do_prework
+#' @export
+#' @description Run the \code{prework} of a \code{\link{make}()}.
+#' For internal use only.
+#' the only reason this function is exported
+#' is to set up PSOCK clusters efficiently.
+#' @param config internal configuration list
+#' @param verbose_packages logical, whether to print
+#' package startup messages
 do_prework <- function(config, verbose_packages) {
   wrapper <- ifelse(verbose_packages, invisible,
     base::suppressPackageStartupMessages)

@@ -1,4 +1,5 @@
 run_parLapply <- function(config) { # nolint
+  eval(parse(text = "require(drake)"))
   if (config$jobs < 2) {
     run_lapply(config = config)
     return(invisible())
@@ -6,11 +7,14 @@ run_parLapply <- function(config) { # nolint
   outfile <- ifelse(config$verbose, "",
     "/dev/null") # nolint
   config$cluster <- makePSOCKcluster(config$jobs, outfile = outfile)
-  clusterExport(cl = config$cluster, varlist = c("config",
-    ls("package:drake", all.names = TRUE)), envir = environment())
+  clusterExport(cl = config$cluster, varlist = "config",
+    envir = environment())
   if (identical(config$envir, globalenv()))
     clusterExport(cl = config$cluster, varlist = ls(globalenv(),
       all.names = TRUE), envir = globalenv())
+  clusterCall(cl = config$cluster, fun = function(){
+    eval(parse(text = "require(drake)"))
+  })
   clusterCall(cl = config$cluster, fun = do_prework, config = config,
     verbose_packages = FALSE)
   run_parallel(

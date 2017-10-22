@@ -1,3 +1,13 @@
+#' @title Internal function build
+#' @export
+#' @description Function to build a target.
+#' For internal use only.
+#' the only reason this function is exported
+#' is to set up PSOCK clusters efficiently.
+#' @param target name of the target
+#' @param hash_list list of hashes that tell which
+#' targets are up to date
+#' @param config internal configuration list
 build <- function(target, hash_list, config) {
   start <- proc.time()
   hashes <- hash_list[[target]]
