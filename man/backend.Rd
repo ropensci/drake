@@ -24,17 +24,17 @@ with \code{future::plan()}.
 }
 \examples{
 \dontrun{
-load_basic_examples()
+load_basic_example()
 library(future) # Use workflow() or drake::plan() instead of plan()
 backend(multicore) # Parallel backend for future_lapply()
-make(my_plan, parallelism = "future_lapply", jobs = 4)
+make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.
 backend(multisession) # Use separate background R sessions.
-make(my_plan, parallelism = "future_lapply", jobs = 4)
+make(my_plan, parallelism = "future_lapply")
 clean()
 library(future.batchtools) # More heavy-duty future-style parallel backends
 backend(batchtools_local) # https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
-make(my_plan, parallelism = "future_lapply", jobs = 4)
+make(my_plan, parallelism = "future_lapply")
 clean()
 }
 }

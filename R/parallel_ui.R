@@ -56,7 +56,7 @@
 #' @examples
 #' parallelism_choices()
 parallelism_choices <- function() {
-  c("parLapply", "mclapply", "Makefile")
+  c("parLapply", "mclapply", "Makefile", "future_lapply")
 }
 
 #' @title Function \code{default_parallelism}
