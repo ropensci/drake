@@ -29,7 +29,9 @@ check <- function(
     jobs = 1, packages = character(0),
     prepend = character(0), prework = character(0), command = character(0),
     args = character(0), recipe_command = default_recipe_command(),
-    clear_progress = FALSE
+    clear_progress = FALSE,
+    timeout = Inf, cpu = Inf, elapsed = Inf,
+    retries = 0
   )
   check_config(config)
   check_strings(config$plan)

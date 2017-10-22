@@ -37,6 +37,7 @@ categorize_nodes <- function(config) {
     nodes[missing, "status"] <- "missing"
     nodes[outdated, "status"] <- "outdated"
     nodes[in_progress, "status"] <- "in progress"
+    nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
     nodes[is_file(nodes$id), "type"] <- "file"
     nodes[functions, "type"] <- "function"
@@ -212,6 +213,7 @@ style_nodes <- function(config) {
     nodes$font.size <- font_size # nolint
     nodes[nodes$status == "imported", "color"] <- color_of("import_node")
     nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
+    nodes[nodes$status == "failed", "color"] <- color_of("failed")
     nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
     nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
     nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
@@ -240,8 +242,9 @@ legend_nodes <- function(font_size = 20) {
   out <- data.frame(
     label = c(
       "Up to date",
-      "In progress",
       "Outdated",
+      "In progress",
+      "Failed",
       "Imported",
       "Missing",
       "Object",
@@ -250,14 +253,15 @@ legend_nodes <- function(font_size = 20) {
     ),
     color = color_of(c(
       "up_to_date",
-      "in_progress",
       "outdated",
+      "in_progress",
+      "failed",
       "import_node",
       "missing_node",
       rep("generic", 3)
     )),
     shape = shape_of(c(
-      rep("object", 6),
+      rep("object", 7),
       "funct",
       "file"
     )),

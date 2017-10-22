@@ -52,17 +52,49 @@ session <- function(path = getwd(), search = TRUE,
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' make(my_plan)
-#' in_progress() # nothing
-#' bad_plan = plan(x = function_doesnt_exist())
-#' make(bad_plan) # error
-#' in_progress() # "x"
+#' make(my_plan) # Kill before targets finish.
+#' in_progress()
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search)
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "in progress") %>%
+    names() %>%
+    as.character()
+}
+
+#' @title Function \code{failed}
+#' @description List the targets that failed in the last call
+#' to \code{\link{make}()}
+#' @seealso \code{\link{session}},
+#' \code{\link{built}}, \code{\link{imported}},
+#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+#' @export
+#' @return A character vector of target names
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' failed() # nothing
+#' bad_plan = plan(x = function_doesnt_exist())
+#' make(bad_plan) # error
+#' failed() # "x"
+#' }
+failed <- function(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search)
+){
+  prog <- progress(path = path, search = search, cache = cache)
+  which(prog == "failed") %>%
     names() %>%
     as.character()
 }

@@ -43,7 +43,9 @@ test_with_dir("prune_envir in full build", {
     args = character(0),
     recipe_command = default_recipe_command(),
     cache = NULL,
-    clear_progress = FALSE
+    clear_progress = FALSE,
+    timeout = Inf, cpu = Inf, elapsed = Inf,
+    retries = 0
   )
 
   # actually run

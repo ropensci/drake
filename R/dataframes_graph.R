@@ -108,6 +108,7 @@ dataframes_graph <- function(
 
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress()
+  config$failed <- failed()
   config$outdated <- outdated(
     config = config,
     inform_up_to_date = FALSE
