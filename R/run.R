@@ -22,7 +22,7 @@ with_retries <- function(target, command, config){
       finish_console(text = text, message = "retry")
     }
   }
-  declare_failure(target = target, config = config)
+  give_up(target = target, config = config)
 }
 
 with_timeout <- function(target, command, config){
@@ -35,36 +35,26 @@ with_timeout <- function(target, command, config){
     elapsed = config$elapsed,
     onTimeout = "error")
   },
-  error = function(e){
-    catch_timeout(e, target = target, config = config)
+  TimeoutException = function(e){
+    catch_timeout(target = target, config = config)
   })
 }
   
-catch_timeout <- function(e, target, config){
-  if ("TimeoutException" %in% class(e)){
-    limits <- gsub(pattern = "^[^\\[]*", "", e$message)
-    text <- paste("timeout", target, limits)
-    if (config$verbose){
-      finish_console(text = text, message = "timeout")
-    }
-    stop(e$message)
-  } else {
-    stop(e$message)
+catch_timeout <- function(target, config){
+  text <- paste0("timeout ", target, ": cpu = ",
+    config$cpu, "s, elapsed = ", config$elapsed, "s")
+  if (config$verbose){
+    finish_console(text = text, message = "timeout")
   }
+  stop(text, call. = FALSE)
 }
 
-declare_failure <- function(target, config){
+give_up <- function(target, config){
   config$cache$set(key = target, value = "failed",
     namespace = "progress")
   text <- paste("fail", target)
   if (config$verbose){
     finish_console(text = text, message = "fail")
   }
-  stop(
-    "Target ", target, " failed.\n",
-    "No traceback available.\n",
-    "To debug, use debug() on one of your functions or ",
-    "call make() with browser() in the appropriate ",
-    "workflow plan command."
-  )
+  stop("Target ", target, " failed.\n", call. = FALSE)
 }
