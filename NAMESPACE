@@ -75,11 +75,8 @@ export(summaries)
 export(this_cache)
 export(tracked)
 export(type_of_cache)
-<<<<<<< HEAD
 export(workflow)
-=======
 importFrom(R.utils,evalWithTimeout)
->>>>>>> master
 importFrom(R.utils,isPackageLoaded)
 importFrom(codetools,findGlobals)
 importFrom(crayon,make_style)
