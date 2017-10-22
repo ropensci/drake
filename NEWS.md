@@ -1,4 +1,4 @@
-# Release 4.4.0
+# Changes in release 4.4.0
 
 - If 'verbose' is 'TRUE' and all targets are already up to date (nothing to build), then `make()` and `outdated()` print "All targets are already up to date" to the console.
 - New support for timeouts and retries when it comes to building targets.

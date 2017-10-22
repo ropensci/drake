@@ -179,6 +179,7 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 }
 }
 \seealso{
-\code{\link{plan}}, \code{\link{plot_graph}},
+\code{\link{plan}}, \code{\link{workflow}},
+\code{\link{backend}}, \code{\link{plot_graph}},
 \code{\link{max_useful_jobs}}, \code{\link{shell_file}}
 }
