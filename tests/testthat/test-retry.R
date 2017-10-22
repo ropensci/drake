@@ -27,18 +27,15 @@ test_with_dir("retries", {
     suppressWarnings(sink(type = "output"))
     suppressWarnings(sink(type = "message"))
   })
-  expect_silent({
-    make(
-      pl, parallelism = parallelism, jobs = jobs,
-      envir = e, verbose = FALSE, retries = 10,
-      prework = paste0(
-        "sink(file = \"", tmp,
-        "\"); sink(file = stdout(), type = \"message\")"
-      )
+  make(
+    pl, parallelism = parallelism, jobs = jobs,
+    envir = e, verbose = FALSE, retries = 10,
+    prework = paste0(
+      "sink(file = \"", tmp,
+      "\"); sink(file = stdout(), type = \"message\")"
     )
-    suppressWarnings(sink(type = "output"))
-    suppressWarnings(sink(type = "message"))
-  })
+  )
+  expect_true(cached(x))
 })
 
 # Only use the default parallelism

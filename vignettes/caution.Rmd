@@ -24,6 +24,10 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 With drake, there is room for error with respect to tracking dependencies, managing environments and workspaces, etc. For example, in some edge cases, it is possible to trick drake into ignoring dependencies. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
+# Install `drake` properly.
+
+You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`. Yes, `load_all()` will load `drake` into your personal R session, but the parallel computing functionality deploys separate R sessions on its own, and those sessions need to use `require()` to load `drake` separately.
+
 # Workflow plans
 
 ## Beware unparsable symbols in your workflow plan.

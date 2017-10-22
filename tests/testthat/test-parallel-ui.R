@@ -30,7 +30,7 @@ test_with_dir("mclapply and lapply", {
   clean()
 
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 1, parallelism = "parLapply")
+    jobs = 2, parallelism = "parLapply")
   expect_true(is.numeric(readd(final)))
   clean()
 

@@ -57,6 +57,8 @@ devtools::install_github("wlandau-lilly/drake@v4.2.0", build = TRUE) # choose a 
 devtools::install_github("wlandau-lilly/drake", build = TRUE)        # development version
 ```
 
+You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`.
+
 # Quickstart
 
 ```r

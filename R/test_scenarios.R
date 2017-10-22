@@ -1,4 +1,4 @@
-default_testing_scenario <- "local_parLapply_2"
+default_testing_scenario <- "local_mclapply_1" # previously local parLapply 2
 test_option_name <- "drake_test_scenario"
 
 envir_code <- function(x){
