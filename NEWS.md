@@ -1,3 +1,8 @@
+# Changes in release 4.4.0
+
+- If 'verbose' is 'TRUE' and all targets are already up to date (nothing to build), then `make()` and `outdated()` print "All targets are already up to date" to the console.
+- We added powerful parallelism options through the `future` and `future.batchtools` packages. The vignettes walk through the new functionality.
+
 # 2017-10-17
 
 Version 4.3.0 has:

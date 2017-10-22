@@ -1,6 +1,7 @@
 #' @title Function \code{make}
 #' @description Run your project (build the targets).
-#' @seealso \code{\link{plan}}, \code{\link{plot_graph}},
+#' @seealso \code{\link{plan}}, \code{\link{workflow}},
+#' \code{\link{backend}}, \code{\link{plot_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}}
 #' @export
 #' @param plan workflow plan data frame.
