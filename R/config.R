@@ -34,6 +34,10 @@
 #' @param args same as for \code{\link{make}}
 #' @param recipe_command same as for \code{\link{make}}
 #' @param cache same as for \code{\link{make}}
+#' @param timeout same as for \code{\link{make}}
+#' @param cpu same as for \code{\link{make}}
+#' @param elapsed same as for \code{\link{make}}
+#' @param retries same as for \code{\link{make}}
 config <- function(
   plan = drake::plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
@@ -44,7 +48,11 @@ config <- function(
     jobs = jobs,
     verbose = verbose
   ),
-  recipe_command = drake::default_recipe_command()
+  recipe_command = drake::default_recipe_command(),
+  timeout = Inf,
+  cpu = timeout,
+  elapsed = timeout,
+  retries = 0
 ){
   force(envir)
   config <- make(
@@ -55,7 +63,11 @@ config <- function(
     parallelism = parallelism, jobs = jobs,
     packages = packages, prework = prework,
     prepend = prepend, command = command, args = args,
-    recipe_command = recipe_command
+    recipe_command = recipe_command,
+    timeout = timeout,
+    cpu = cpu,
+    elapsed = elapsed,
+    retries = retries
   )
   config$graph <- build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
@@ -67,7 +79,8 @@ build_config <- function(
   verbose, cache,
   parallelism, jobs,
   packages, prework, prepend, command,
-  args, clear_progress, recipe_command
+  args, clear_progress, recipe_command,
+  timeout, cpu, elapsed, retries
 ){
   seed <- get_valid_seed()
   plan <- sanitize_plan(plan)
@@ -94,7 +107,8 @@ build_config <- function(
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     inventory = cache$list(), seed = seed,
-    inventory_filemtime = cache$list(namespace = "filemtime")
+    inventory_filemtime = cache$list(namespace = "filemtime"),
+    timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   )
 }
 

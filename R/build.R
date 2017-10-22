@@ -30,9 +30,9 @@ build_target <- function(target, hashes, config) {
     functionize
   seed <- list(seed = config$seed, target = target) %>%
     seed_from_object
-  withr::with_seed(seed, {
-    value <- eval(parse(text = command), envir = config$envir)
-  })
+  value <- run_command(
+    target = target, command = command, config = config, seed = seed
+  )
   check_built_file(target)
   value
 }
