@@ -59,8 +59,13 @@ test_with_dir("available hash algos", {
 test_with_dir("in_progress() works", {
   expect_equal(in_progress(), character(0))
   bad_plan <- plan(x = function_doesnt_exist())
-  expect_error(make(bad_plan, verbose = FALSE))
-  expect_equal(in_progress(), "x")
+  expect_error(tmp <- capture.output({
+      make(bad_plan, verbose = FALSE)
+    },
+    type = "message")
+  )
+  expect_equal(failed(), "x")
+  expect_equal(in_progress(), character(0))
 })
 
 test_with_dir("missed() works", {

@@ -54,7 +54,9 @@ test_with_dir("files inside directories can be timestamped", {
     prework = character(0), prepend = character(0), command = character(0),
     args = character(0), recipe_command = default_recipe_command(),
     envir = new.env(), jobs = 1,
-    cache = NULL, clear_progress = FALSE)
+    cache = NULL, clear_progress = FALSE,
+    timeout = Inf, cpu = Inf, elapsed = Inf,
+    retries = 0)
   path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE)
   expect_silent(mk(config$plan$target[1], cache_path = path))

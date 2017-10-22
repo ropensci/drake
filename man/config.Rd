@@ -10,7 +10,8 @@ config(plan = drake::plan(), targets = drake::possible_targets(plan),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command())
+  recipe_command = drake::default_recipe_command(), timeout = Inf,
+  cpu = timeout, elapsed = timeout, retries = 0)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -38,6 +39,14 @@ config(plan = drake::plan(), targets = drake::possible_targets(plan),
 \item{args}{same as for \code{\link{make}}}
 
 \item{recipe_command}{same as for \code{\link{make}}}
+
+\item{timeout}{same as for \code{\link{make}}}
+
+\item{cpu}{same as for \code{\link{make}}}
+
+\item{elapsed}{same as for \code{\link{make}}}
+
+\item{retries}{same as for \code{\link{make}}}
 }
 \description{
 Compute the internal runtime parameter list of

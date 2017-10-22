@@ -10,8 +10,9 @@ make(plan = drake::plan(), targets = drake::possible_targets(plan),
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(), return_config = NULL,
-  clear_progress = TRUE, imports_only = FALSE)
+  recipe_command = drake::default_recipe_command(), clear_progress = TRUE,
+  imports_only = FALSE, timeout = Inf, cpu = timeout, elapsed = timeout,
+  retries = 0, return_config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -128,17 +129,28 @@ wherever possible.}
 \item{recipe_command}{Character scalar, command for the
 Makefile recipe for each target.}
 
-\item{return_config}{logical, whether to return the internal list
-of runtime configuration parameters used by \code{make()}.
-This argument is deprecated. Now, a configuration list
-is always invisibly returned.}
-
 \item{clear_progress}{logical, whether to clear the saved record of
 progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 before anything is imported or built.}
 
 \item{imports_only}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
+
+\item{timeout}{Seconds of overall time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
+
+\item{cpu}{Seconds of cpu time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
+
+\item{elapsed}{Seconds of elapsed time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
+
+\item{retries}{Number of retries to execute if the target fails.}
+
+\item{return_config}{logical, whether to return the internal list
+of runtime configuration parameters used by \code{make()}.
+This argument is deprecated. Now, a configuration list
+is always invisibly returned.}
 }
 \description{
 Run your project (build the targets).

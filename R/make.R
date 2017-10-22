@@ -116,11 +116,6 @@
 #' @param recipe_command Character scalar, command for the
 #' Makefile recipe for each target.
 #'
-#' @param return_config logical, whether to return the internal list
-#' of runtime configuration parameters used by \code{make()}.
-#' This argument is deprecated. Now, a configuration list
-#' is always invisibly returned.
-#'
 #' @param clear_progress logical, whether to clear the saved record of
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
 #' before anything is imported or built.
@@ -128,6 +123,22 @@
 #' @param cache drake cache as created by \code{\link{new_cache}()}.
 #' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
 #' and \code{\link{recover_cache}()}
+#'
+#' @param timeout Seconds of overall time to allow before imposing
+#' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+#'
+#' @param cpu Seconds of cpu time to allow before imposing
+#' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+#'
+#' @param elapsed Seconds of elapsed time to allow before imposing
+#' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+#'
+#' @param retries Number of retries to execute if the target fails.
+#'
+#' @param return_config logical, whether to return the internal list
+#' of runtime configuration parameters used by \code{make()}.
+#' This argument is deprecated. Now, a configuration list
+#' is always invisibly returned.
 #'
 #' @examples
 #' \dontrun{
@@ -168,9 +179,13 @@ make <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  return_config = NULL,
   clear_progress = TRUE,
-  imports_only = FALSE
+  imports_only = FALSE,
+  timeout = Inf,
+  cpu = timeout,
+  elapsed = timeout,
+  retries = 0,
+  return_config = NULL
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -197,7 +212,11 @@ make <- function(
     args = args,
     recipe_command = recipe_command,
     clear_progress = clear_progress,
-    cache = cache
+    cache = cache,
+    timeout = timeout,
+    cpu = cpu,
+    elapsed = elapsed,
+    retries = retries
   )
   check_config(config)
   store_config(config)
