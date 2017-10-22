@@ -52,12 +52,12 @@ make(my_plan) # Run the commands to build the targets.
 # Installation
 
 ```r
-install.packages("drake") # latest CRAN release
-devtools::install_github("wlandau-lilly/drake@v4.2.0", build = TRUE) # choose a GitHub tag/release
+install.packages("drake")                                            # latest CRAN release
+devtools::install_github("wlandau-lilly/drake@v4.3.0", build = TRUE) # choose a GitHub tag/release
 devtools::install_github("wlandau-lilly/drake", build = TRUE)        # development version
 ```
 
-You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`.
+You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which muliple R sessions initialize and then try to `require(drake)`.
 
 # Quickstart
 
