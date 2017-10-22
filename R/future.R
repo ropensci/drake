@@ -1,7 +1,7 @@
 run_future_lapply <- function(config){
   # Any generated globals and loaded packages need to get on the PSOCK cluster.
   do_prework(config = config, verbose_packages = TRUE)
-  # Need clusterExport()s like in run_parLapply()
+  # Here, we need clusterExport()s like in run_parLapply()
   run_parallel(config = config, worker = worker_future_lapply)
 }
 
