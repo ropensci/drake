@@ -19,6 +19,10 @@ test_with_dir("retries", {
     }
   }
   pl <- plan(x = f())
+  tmp <- tempfile()
+  if (!file.exists(tmp)){
+    file.create(tmp)
+  }
   on.exit({
     suppressWarnings(sink(type = "output"))
     suppressWarnings(sink(type = "message"))
@@ -27,7 +31,10 @@ test_with_dir("retries", {
     make(
       pl, parallelism = parallelism, jobs = jobs,
       envir = e, verbose = FALSE, retries = 10,
-      prework = "sink(file = \"/dev/null\"); sink(file = stdout(), type = \"message\")" # nolint
+      prework = paste0(
+        "sink(file = \"", tmp,
+        "\"); sink(file = stdout(), type = \"message\")"
+      )
     )
     suppressWarnings(sink(type = "output"))
     suppressWarnings(sink(type = "message"))
