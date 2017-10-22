@@ -60,5 +60,6 @@ plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
   strings_in_dots = "literals")
 }
 \seealso{
-\code{link{check}}, \code{\link{make}},
+\code{\link{check}}, \code{\link{make}},
+\code{\link{workflow}}
 }

@@ -53,9 +53,9 @@ load_basic_example <- function(
     simulate <- knit <- my_knit <- report_dependencies <-
     reg1 <- reg2 <- coef_regression2_small <- NULL
 
-  datasets <- plan(small = simulate(5), large = simulate(50))
+  datasets <- drake::plan(small = simulate(5), large = simulate(50))
 
-  methods <- plan(list = c(
+  methods <- drake::plan(list = c(
     regression1 = "reg1(..dataset..)",
     regression2 = "reg2(..dataset..)"))
 
@@ -63,7 +63,7 @@ load_basic_example <- function(
   # = datasets$output)
   analyses <- analyses(methods, datasets = datasets)
 
-  summary_types <- plan(list = c(
+  summary_types <- drake::plan(list = c(
     summ = "suppressWarnings(summary(..analysis..))",
     coef = "coefficients(..analysis..)"))
 
@@ -78,7 +78,7 @@ load_basic_example <- function(
   # imported functions are ignored, so this mechanism only
   # works inside the workflow my_plan data frame.  WARNING:
   # drake cannot track entire directories (folders).
-  report <- plan(report.md = knit("report.Rmd", quiet = TRUE),
+  report <- drake::plan(report.md = knit("report.Rmd", quiet = TRUE),
     file_targets = TRUE, strings_in_dots = "filenames")
 
   # Row order doesn't matter in the workflow my_plan.

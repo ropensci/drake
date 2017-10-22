@@ -8,6 +8,14 @@
 #' the following values of \code{x} to distribute targets over parallel
 #' units of execution.
 #' \describe{
+#'  \item{'future_lapply'}{
+#'  opens up a whole trove of parallel backends
+#'  powered by the \code{future} and \code{future.batchtools}
+#'  packages. First, set the parallel backend globally using
+#'  \code{\link{backend}()} (or equivalently, \code{future::plan()}).
+#'  Then, apply the backend to your workflow
+#'  using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
+#'  }
 #'  \item{'parLapply'}{launches multiple processes in a single R session
 #'  using \code{parallel::\link{parLapply}()}.
 #'  This is single-node, (potentially) multicore computing.
@@ -48,7 +56,7 @@
 #' @examples
 #' parallelism_choices()
 parallelism_choices <- function() {
-  c("parLapply", "mclapply", "Makefile")
+  c("parLapply", "mclapply", "Makefile", "future_lapply")
 }
 
 #' @title Function \code{default_parallelism}
