@@ -27,7 +27,7 @@ with_retries <- function(target, command, config){
 
 with_timeout <- function(target, command, config){
   tryCatch({
-    R.utils::evalWithTimeout({
+    R.utils::withTimeout({
       value <- eval(parse(text = command), envir = config$envir)
     },
     timeout = config$timeout,
