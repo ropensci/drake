@@ -6,7 +6,6 @@ envir,parallelism,jobs,backend
 "local","Makefile",9,
 "local","future_lapply",1,"future::multicore"
 "local","future_lapply",1,"future::multisession"
-"local","future_lapply",1,"future.batchtools::batchtools_local"
 "global","parLapply",1,
 "global","parLapply",9,
 "global","mclapply",1,
@@ -14,4 +13,3 @@ envir,parallelism,jobs,backend
 "global","Makefile",2,
 "global","future_lapply",1,"future::multicore"
 "global","future_lapply",1,"future::multisession"
-"global","future_lapply",1,"future.batchtools::batchtools_local"
