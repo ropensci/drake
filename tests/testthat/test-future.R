@@ -23,15 +23,3 @@ test_with_dir("future package functionality", {
     character(0)
   )
 })
-
-test_with_dir("future jobs warning", {
-  pl <- workflow(x = 1, y = x)
-  expect_warning(
-    make(
-      pl,
-      parallelism = "future_lapply",
-      jobs = 2,
-      verbose = FALSE
-    )
-  )
-})

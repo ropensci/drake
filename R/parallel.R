@@ -50,5 +50,4 @@ parallelism_warnings <- function(config){
     jobs = config$jobs,
     os = this_os()
   )
-  warn_future_jobs(config)
 }

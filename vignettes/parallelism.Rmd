@@ -126,7 +126,7 @@ backend()
 
 `make()` knows which `future` backend you selected.
 
-```{r usebackend}
+```{r usebackend, eval = FALSE}
 make(my_plan, parallelism = "future_lapply")
 ```
 
