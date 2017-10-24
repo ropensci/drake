@@ -181,7 +181,7 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 vignette(package = "drake")            # List the vignettes.
 vignette("drake")                      # High-level intro.
 vignette("quickstart")                 # Walk through a simple example.
-vignette("high-performance-computing") # Extensive prallel computing functionality.
+vignette("parallelism") # Extensive prallel computing functionality.
 vignette("storage")                    # Learn how drake stores your stuff.
 vignette("timing")                     # Build times of targets, predicting total runtime.
 vignette("caution")                    # Avoid common pitfalls.
@@ -252,10 +252,10 @@ plot_graph(my_plan, width = "100%")
 
 When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
 
-As for the implementation, you can choose from multiple built-in parallel backends, including `parLapply()`, `mclapply()`, and [`Makefiles`](https://www.gnu.org/software/make/), the last of which can be tweaked to distribute targets to different jobs on a cluster. Please see the `high-performance-computing` vignette for details.
+As for the implementation, you can choose from multiple built-in parallel backends, including `parLapply()`, `mclapply()`, and [`Makefiles`](https://www.gnu.org/software/make/), the last of which can be tweaked to distribute targets to different jobs on a cluster. Please see the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for details.
 
 ```r
-vignette("high-performance-computing") 
+vignette("parallelism") 
 ```
 
 # Acknowledgements and related work
