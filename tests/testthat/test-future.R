@@ -1,7 +1,7 @@
 drake_context("future")
 
 test_with_dir("future package functionality", {
-  backend(future::multisession)
+  backend(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_basic_example(envir = e)
