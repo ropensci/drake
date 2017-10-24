@@ -86,7 +86,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' load_basic_example()
 #' make(my_plan)
 #' failed() # nothing
-#' bad_plan = plan(x = function_doesnt_exist())
+#' bad_plan <- drake::plan(x = function_doesnt_exist())
 #' make(bad_plan) # error
 #' failed() # "x"
 #' }
@@ -153,8 +153,9 @@ progress <- function(
     warning(
       "The imported_files_only argument to progress() is deprecated ",
       "and will be removed the next major release. ",
-      "Use the no_imported_objects argument instead."
-      )
+      "Use the no_imported_objects argument instead.",
+      call. = FALSE
+    )
     no_imported_objects <- imported_files_only
   }
   if (is.null(cache)){

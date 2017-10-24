@@ -2,7 +2,9 @@ fix_deprecated_plan_names <- function(plan){
   if (any(colnames(plan) %in% c("output", "code"))){
     warning("Drake is no longer using \"output\" or \"code\" ",
       "for column names in workflow plan data frames. Use \"target\" ",
-      "and \"command\" instead.")
+      "and \"command\" instead.",
+      call. = FALSE
+    )
   }
   colnames(plan) <- gsub("^output$", "target", colnames(plan)) %>%
     gsub(pattern = "^code$", replacement = "command")
@@ -30,7 +32,7 @@ prune <- function(plan = drake::plan()){
     "clean",
     package = "drake",
     msg = "prune() is deprecated. Use clean() instead."
-    )
+  )
   clean(list = setdiff(built(), possible_targets(plan)))
 }
 
@@ -91,7 +93,7 @@ status <- function(
     "progress",
     package = "drake",
     msg = "status() is deprecated. Use progress() instead."
-    )
+  )
   progress(
     ...,
     list = list,

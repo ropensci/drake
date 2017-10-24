@@ -192,12 +192,13 @@ make <- function(
   if (!is.null(return_config)){
     warning(
       "The return_config argument to make() is deprecated. ",
-      "Now, an internal configuration list is always invisibly returned."
+      "Now, an internal configuration list is always invisibly returned.",
+      call. = FALSE
     )
   }
   parallelism <- match.arg(
     arg = parallelism,
-    choices = parallelism_choices()
+    choices = parallelism_choices(distributed_only = FALSE)
   )
   config <- build_config(
     plan = plan,
@@ -229,7 +230,7 @@ make <- function(
   if (imports_only){
     delete_these <- intersect(config$plan$target, V(config$graph)$name)
     config$graph <- delete_vertices(config$graph, v = delete_these)
-    if (parallelism == "Makefile"){
+    if (parallelism %in% parallelism_choices(distributed_only = TRUE)){
       parallelism <- default_parallelism()
     }
   }

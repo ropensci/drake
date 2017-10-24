@@ -32,7 +32,7 @@ dbug_envir <- function(envir) {
 }
 
 dbug_plan <- function() {
-  plan(list = c(
+  drake::plan(list = c(
     `'intermediatefile.rds'` = "saveRDS(combined, \"intermediatefile.rds\")",
     yourinput = "f(1+1)",
     nextone = "myinput + g(7)",

@@ -51,16 +51,16 @@ not \code{NULL}. Here, \code{rules} should be a list with wildcards
 as names and vectors of possible values as list elements.
 }
 \examples{
-datasets <- plan(
+datasets <- drake::plan(
   small = simulate(5),
   large = simulate(50))
-methods <- plan(
+methods <- drake::plan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 evaluate(methods, wildcard = "..dataset..",
   values = datasets$target)
 evaluate(methods, wildcard = "..dataset..",
   values = datasets$target, expand = FALSE)
-x = plan(draws = rnorm(mean = Mean, sd = Sd))
+x <- drake::plan(draws = rnorm(mean = Mean, sd = Sd))
 evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 }

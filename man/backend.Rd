@@ -33,7 +33,8 @@ backend(multisession) # Use separate background R sessions.
 make(my_plan, parallelism = "future_lapply")
 clean()
 library(future.batchtools) # More heavy-duty future-style parallel backends
-backend(batchtools_local) # https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
+# https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
+backend(batchtools_local)
 make(my_plan, parallelism = "future_lapply")
 clean()
 }

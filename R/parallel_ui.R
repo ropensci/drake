@@ -8,14 +8,6 @@
 #' the following values of \code{x} to distribute targets over parallel
 #' units of execution.
 #' \describe{
-#'  \item{'future_lapply'}{
-#'  opens up a whole trove of parallel backends
-#'  powered by the \code{future} and \code{future.batchtools}
-#'  packages. First, set the parallel backend globally using
-#'  \code{\link{backend}()} (or equivalently, \code{future::plan()}).
-#'  Then, apply the backend to your workflow
-#'  using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
-#'  }
 #'  \item{'parLapply'}{launches multiple processes in a single R session
 #'  using \code{parallel::\link{parLapply}()}.
 #'  This is single-node, (potentially) multicore computing.
@@ -23,10 +15,24 @@
 #'  but it works on Windows. If \code{jobs} is \code{1} in
 #'  \code{\link{make}()}, then no 'cluster' is created and
 #'  no parallelism is used.}
+#'
 #'  \item{'mclapply'}{uses multiple processes in a single R session.
 #'  This is single-node, (potentially) multicore computing.
 #'  Does not work on Windows for \code{jobs > 1}
 #'  because \code{\link{mclapply}()} is based on forking.}
+#'
+#'  \item{'future_lapply'}{
+#'  opens up a whole trove of parallel backends
+#'  powered by the \code{future} and \code{future.batchtools}
+#'  packages. First, set the parallel backend globally using
+#'  \code{\link{backend}()} (or equivalently, \code{future::plan()}).
+#'  Then, apply the backend to your workflow
+#'  using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
+#'  But be warned: the environment for each target needs to be set up
+#'  from scratch, so this backend type is higher overhead than either
+#'  \code{mclapply} or \code{parLapply}.
+#'  }
+#'
 #'  \item{'Makefile'}{uses multiple R sessions
 #'  by creating and running a Makefile.
 #'  For distributed computing on a cluster or supercomputer,
@@ -53,10 +59,26 @@
 #' \code{\link{make}()} or \code{\link{make}()}.
 #'  Also, Windows users will need to download and install Rtools.
 #' }}
+#' @param distributed_only logical, whether to return only
+#' the distributed backend types, such as \code{Makefile} and
+#' \code{parLapply}
 #' @examples
 #' parallelism_choices()
-parallelism_choices <- function() {
-  c("parLapply", "mclapply", "Makefile", "future_lapply")
+#' parallelism_choices(distributed_only = TRUE)
+parallelism_choices <- function(distributed_only = FALSE) {
+  local <- c(
+    "parLapply",
+    "mclapply"
+  )
+  distributed <- c(
+    "Makefile",
+    "future_lapply"
+  )
+  if (distributed_only){
+    distributed
+  } else {
+    c(local, distributed)
+  }
 }
 
 #' @title Function \code{default_parallelism}

@@ -161,7 +161,8 @@ check_storr_short_hash <- function(cache, chosen_algo){
       warning(
         "The storr-based cache actually uses ", true_algo,
         " for the short hash algorithm, but ", chosen_algo,
-        " was also supplied. Reverting to ", true_algo, "."
+        " was also supplied. Reverting to ", true_algo, ".",
+        call. = FALSE
       )
       cache$set(
         key = "short_hash_algo",

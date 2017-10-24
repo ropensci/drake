@@ -30,6 +30,7 @@ Imports:
   crayon,
   eply,
   digest,
+  future,
   grDevices,
   igraph,
   knitr,

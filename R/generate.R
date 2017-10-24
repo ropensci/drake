@@ -32,17 +32,17 @@
 #' is replaced with the next entry in the \code{values} vector,
 #' and the values are recycled.
 #' @examples
-#' datasets <- plan(
+#' datasets <- drake::plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
-#' methods <- plan(
+#' methods <- drake::plan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target)
 #' evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target, expand = FALSE)
-#' x = plan(draws = rnorm(mean = Mean, sd = Sd))
+#' x <- drake::plan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate <- function(
   plan,
@@ -115,7 +115,7 @@ evaluations <- function(
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
 #' @examples
-#' datasets <- plan(
+#' datasets <- drake::plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' expand(datasets, values = c("rep1", "rep2", "rep3"))
@@ -144,7 +144,7 @@ expand <- function(plan, values = NULL){
 #' one of \code{\link{list}(...)}, \code{\link{c}(...)},
 #' \code{\link{rbind}(...)}, or similar.
 #' @examples
-#' datasets <- plan(
+#' datasets <- drake::plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' gather(datasets, target = "my_datasets")
@@ -178,10 +178,10 @@ gather <- function(
 #' @param datasets workflow plan data frame with instructions
 #' to make the datasets.
 #' @examples
-#' datasets <- plan(
+#' datasets <- drake::plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
-#' methods <- plan(
+#' methods <- drake::plan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' analyses(methods, datasets = datasets)
@@ -212,14 +212,14 @@ analyses <- function(plan, datasets){
 #' rows in the \code{plan}. See the \code{\link{gather}()} function
 #' for more.
 #' @examples
-#' datasets <- plan(
+#' datasets <- drake::plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
-#' methods <- plan(
+#' methods <- drake::plan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' analyses <- analyses(methods, datasets = datasets)
-#' summary_types <- plan(
+#' summary_types <- drake::plan(
 #'   summ = summary(..analysis..),
 #'   coef = coefficients(..analysis..))
 #' summaries(summary_types, analyses, datasets, gather = NULL)
@@ -281,8 +281,9 @@ with_analyses_only <- function(plan){
       "removing ",
       sum(has_analysis),
       " rows with no ..analysis.. wildcard in the command.",
-      "Use analyses() for these."
-      )
+      "Use analyses() for these.",
+      call. = FALSE
+    )
   }
   return(plan[has_analysis, ])
 }

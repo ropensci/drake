@@ -20,7 +20,7 @@ Expands a workflow plan data frame by duplicating rows.
 This generates multiple replicates of targets with the same commands.
 }
 \examples{
-datasets <- plan(
+datasets <- drake::plan(
   small = simulate(5),
   large = simulate(50))
 expand(datasets, values = c("rep1", "rep2", "rep3"))

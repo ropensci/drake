@@ -30,7 +30,8 @@ knitr_deps <- function(target){
   if (!file.exists(file)){
     warning(
       "dynamic report '", file,
-      "' does not exist and cannot be inspected for dependencies."
+      "' does not exist and cannot be inspected for dependencies.",
+      call. = FALSE
     )
     return(character(0))
   }

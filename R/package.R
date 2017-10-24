@@ -31,6 +31,7 @@
 #' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom eply quotes strings unquote
+#' @importFrom future future_lapply plan
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices delete_vertices edge
 #' is_dag make_empty_graph plot.igraph subcomponent V vertex
