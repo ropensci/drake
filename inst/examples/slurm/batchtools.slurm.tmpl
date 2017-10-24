@@ -1,0 +1,87 @@
+#!/bin/bash
+
+## Via https://github.com/mllg/batchtools/blob/master/inst/templates/
+## Job Resource Interface Definition
+##
+## ntasks [integer(1)]:       Number of required tasks,
+##                            Set larger than 1 if you want to further parallelize
+##                            with MPI within your job.
+## ncpus [integer(1)]:        Number of required cpus per task,
+##                            Set larger than 1 if you want to further parallelize
+##                            with multicore/parallel within each task.
+## walltime [integer(1)]:     Walltime for this job, in minutes.
+##                            Must be at least 1 minute.
+## memory   [integer(1)]:     Memory in megabytes for each cpu.
+##                            Must be at least 100 (when I tried lower values my
+##                            jobs did not start at all).
+##
+## Default resources can be set in your .batchtools.conf.R by defining the variable
+## 'default.resources' as a named list.
+
+<%
+# relative paths are not handled well by Slurm
+log.file = normalizePath(log.file, winslash = "/", mustWork = FALSE)
+
+#########################
+# Set defaults if needed.
+
+if (!"ncpus" %in% names(resources)) {
+  resources$ncpus = 1
+}
+
+if (!"walltime" %in% names(resources)) {
+  # Default time format is minutes but we later divide by 60 so set time in secs.
+  # Set 48 hours by default.
+  resources$walltime = 48 * 3600
+}
+
+if (!"partition" %in% names(resources)) {
+  resources$partition = "savio2"
+}
+
+
+if (!"qos" %in% names(resources)) {
+  resources$qos = "biostat_savio2_normal"
+}
+
+
+if (!"account" %in% names(resources)) {
+  resources$account = "co_biostat"
+}
+-%>
+
+
+#SBATCH --job-name=<%= job.name %>
+#SBATCH --output=<%= log.file %>
+#SBATCH --error=<%= log.file %>
+#SBATCH --time=<%= ceiling(resources$walltime / 60) %>
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=<%= resources$ncpus %>
+#SBATCH --mem-per-cpu=<%= resources$memory %>
+#SBATCH --qos=<%= resources$qos %>
+#SBATCH --account=<%= resources$account %>
+<%= if (!is.null(resources$partition)) sprintf(paste0("#SBATCH --partition='", resources$partition, "'")) %>
+<%= if (array.jobs) sprintf("#SBATCH --array=1-%i", nrow(jobs)) else "" %>
+
+## Initialize work environment like
+## source /etc/profile
+source /etc/profile
+
+## module add ...
+
+# Load R if we are using the built-in R module.
+# Comment out if using a custom compiled version of R.
+# module load r
+
+# Load a newer version of gcc than the default. Needed for C++11.
+module load gcc/4.8.5
+
+# Load Java if any R packages need RJava (bartMachine, h2o, etc.)
+module load java
+
+## Export value of DEBUGME environemnt var to slave
+export DEBUGME=<%= Sys.getenv("DEBUGME") %>
+
+## Run R:
+## we merge R output with stdout from SLURM, which gets then logged via --output option
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
