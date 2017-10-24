@@ -99,7 +99,13 @@ test_scenarios <- function(
     new <- list()
     new[[test_option_name]] <- scenario_name
     if (!skip) {
-      with_options(new = new, testthat::test_dir(unit_test_dir))
+      with_options(
+        new = new,
+        testthat::test_dir(
+          path = unit_test_dir,
+          reporter = "summary"
+        )
+      )
     }
   }
 }

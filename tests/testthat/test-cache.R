@@ -49,6 +49,7 @@ test_with_dir("cache functions work", {
   } else {
     envir <- environment()
   }
+
   testrun(config)
 
   # targets

@@ -6,4 +6,7 @@ scenario_names <- Filter(
     grepl("future", name)
   }
 )
-test_scenarios(scenario_names = scenario_names)
+withr::with_options(
+  list(mc.cores = 4),
+  test_scenarios(scenario_names = scenario_names)
+)

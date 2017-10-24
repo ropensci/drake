@@ -4,6 +4,7 @@ drake_context <- function(x){
 }
 
 testrun <- function(config) {
+  set_test_backend()
   invisible(
     make(plan = config$plan, targets = config$targets, envir = config$envir,
       verbose = config$verbose, parallelism = config$parallelism,
@@ -41,16 +42,10 @@ test_with_dir <- function(desc, ...){
   with_dir(
     new = dir,
     code = {
-      eval(parse(text = get_testing_scenario()$backend))
+      set_test_backend()
       test_that(desc = desc, ...)
     }
   )
-}
-
-with_all_options <- function(code) {
-  old <- options()
-  on.exit(restore_options(old))
-  force(code)
 }
 
 restore_options <- function(old){
@@ -62,7 +57,17 @@ restore_options <- function(old){
   options(old)
 }
 
+set_test_backend <- function(){
+  eval(parse(text = get_testing_scenario()$backend))
+}
+
 unit_test_files <- function(path = getwd()){
   root <- find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")
+}
+
+with_all_options <- function(code) {
+  old <- options()
+  on.exit(restore_options(old))
+  force(code)
 }
