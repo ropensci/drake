@@ -1,24 +1,31 @@
 run_command <- function(target, command, config, seed){
   retries <- 0
   while (retries <= config$retries){
-    try({
-      withr::with_seed(seed, {
-        value <- with_timeout(
-          target = target,
-          command = command,
-          config = config
+    exception <- tryCatch({
+        withr::with_seed(seed, {
+          value <- with_timeout(
+            target = target,
+            command = command,
+            config = config
+          )
+        })
+        return(value)
+      },
+      error = function(exception){
+        write(
+          x = paste("Error:", exception$message),
+          file = stderr()
         )
-      })
-      return(value)
-    },
-    silent = FALSE)
+        return(exception)
+      }
+    )
     retries <- retries + 1
     if (config$verbose & retries <= config$retries){
       text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
       finish_console(text = text, message = "retry")
     }
   }
-  give_up(target = target, config = config)
+  give_up(target = target, exception = exception, config = config)
 }
 
 with_timeout <- function(target, command, config){
@@ -45,12 +52,12 @@ catch_timeout <- function(target, config){
   stop(text, call. = FALSE)
 }
 
-give_up <- function(target, config){
+give_up <- function(target, exception, config){
   config$cache$set(key = target, value = "failed",
     namespace = "progress")
   text <- paste("fail", target)
   if (config$verbose){
     finish_console(text = text, message = "fail")
   }
-  stop("Target ", target, " failed.\n", call. = FALSE)
+  stop(exception)
 }

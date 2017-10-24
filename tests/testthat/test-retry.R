@@ -15,25 +15,16 @@ test_with_dir("retries", {
       saveRDS(n + 1, file)
     }
     if (n < 5){
-      stop("Function f failed.")
+      stop("Intentional error.")
     }
   }
   pl <- workflow(x = f())
-  tmp <- "test-retry-log.txt"
-  if (!file.exists(tmp)){
-    file.create(tmp)
-  }
-  on.exit({
-    suppressWarnings(sink(type = "output"))
-    suppressWarnings(sink(type = "message"))
-  })
-  make(
-    pl, parallelism = parallelism, jobs = jobs,
-    envir = e, verbose = FALSE, retries = 10,
-    prework = paste0(
-      "sink(file = \"", tmp,
-      "\"); sink(file = stdout(), type = \"message\")"
-    )
+  tmp <- capture.output(capture.output(
+    make(
+      pl, parallelism = parallelism, jobs = jobs,
+      envir = e, verbose = T, retries = 10
+    ),
+    type = "message"), type = "output"
   )
   expect_true(cached(x))
 })
