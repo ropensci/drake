@@ -1,6 +1,30 @@
 default_testing_scenario <- "local_parLapply_1"
 test_option_name <- "drake_test_scenario"
 
+testing_scenarios <- function(){
+  file <- file.path("testing", "scenarios.csv")
+  path <- system.file(file, package = "drake", mustWork = TRUE)
+  x <- read.csv(path, stringsAsFactors = FALSE)
+  rownames(x) <- paste(
+    x$envir,
+    x$parallelism,
+    x$jobs, x$backend,
+    sep = "_"
+  ) %>%
+    gsub(pattern = "_$", replacement = "")
+  x$backend <- backend_code(x$backend)
+  x$envir <- envir_code(x$envir)
+  apply_skip_os(x)
+}
+
+backend_code <- function(x){
+  ifelse(
+    nchar(x),
+    paste0("drake::backend(", x, ")"),
+    x
+  )
+}
+
 envir_code <- function(x){
   ifelse(
     x == "local",
@@ -17,15 +41,6 @@ apply_skip_os <- function(x){
     x$jobs > 1
   x$skip_os[skip_on_windows] <- "windows"
   x
-}
-
-testing_scenarios <- function(){
-  file <- file.path("testing", "scenarios.csv")
-  path <- system.file(file, package = "drake", mustWork = TRUE)
-  x <- read.csv(path, stringsAsFactors = FALSE)
-  rownames(x) <- paste(x$envir, x$parallelism, x$jobs, sep = "_")
-  x$envir <- envir_code(x$envir)
-  apply_skip_os(x)
 }
 
 testing_scenario_names <- function(){
