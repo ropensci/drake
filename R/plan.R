@@ -83,7 +83,7 @@ plan <- function(
 
 #' @title Function \code{workflow}
 #' @description An alternative to \code{drake::\link{plan}()}
-#' that does not conflic with \code{future::plan()}.
+#' that does not conflict with \code{future::plan()}.
 #' @seealso \code{\link{check}}, \code{\link{make}},
 #' \code{\link{plan}}
 #' @export
@@ -91,7 +91,7 @@ plan <- function(
 #' @param ... same as for \code{drake::\link{plan}()}
 #' @param list same as for \code{drake::\link{plan}()}
 #' @param file_targets same as for \code{drake::\link{plan}()}
-#' @param strings_in_dots csame as for \code{drake::\link{plan}()}
+#' @param strings_in_dots same as for \code{drake::\link{plan}()}
 #' @examples
 #' workflow(small = simulate(5), large = simulate(50))
 #' workflow(list = c(x = "1 + 1", y = "sqrt(x)"))

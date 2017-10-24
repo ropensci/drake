@@ -14,14 +14,14 @@ workflow(..., list = character(0), file_targets = FALSE,
 
 \item{file_targets}{same as for \code{drake::\link{plan}()}}
 
-\item{strings_in_dots}{csame as for \code{drake::\link{plan}()}}
+\item{strings_in_dots}{same as for \code{drake::\link{plan}()}}
 }
 \value{
 data frame of targets and command
 }
 \description{
 An alternative to \code{drake::\link{plan}()}
-that does not conflic with \code{future::plan()}.
+that does not conflict with \code{future::plan()}.
 }
 \examples{
 workflow(small = simulate(5), large = simulate(50))
