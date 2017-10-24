@@ -1,21 +1,14 @@
 run_future_lapply <- function(config){
-  # Any generated globals and loaded packages need to get on the PSOCK cluster.
-  do_prework(config = config, verbose_packages = TRUE)
-  # Here, we need clusterExport()s like in run_parLapply()
+  prepare_distributed(config = config)
   run_parallel(config = config, worker = worker_future_lapply)
 }
 
 worker_future_lapply <- function(targets, hash_list, config){
-  # If the config$envir is globalenv() (which is most of the time),
-  # We need to call prune_envir() on each of the PSOCK workers.
-  prune_envir(targets = targets, config = config)
-  values <- future::future_lapply(
-    x = targets, FUN = build,
-    hash_list = hash_list, config = config
+  future::future_lapply(
+    x = targets,
+    FUN = build_distributed,
+    cache_path = config$cache$driver$path
   )
-  # If the config$envir is globalenv() (which is most of the time),
-  # We need to call assign_to_envir() on each of the PSOCK workers.
-  assign_to_envir(target = targets, value = values, config = config)
 }
 
 #' @title Function \code{backend}
