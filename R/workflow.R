@@ -1,3 +1,57 @@
+#' @title Function \code{workflow}
+#' @description An alternative to \code{drake::\link{plan}()}
+#' that does not conflict with \code{future::plan()}.
+#' @seealso \code{\link{check}}, \code{\link{make}},
+#' \code{\link{plan}}
+#' @export
+#' @return data frame of targets and command
+#' @param ... same as for \code{drake::\link{plan}()}
+#' @param list same as for \code{drake::\link{plan}()}
+#' @param file_targets same as for \code{drake::\link{plan}()}
+#' @param strings_in_dots same as for \code{drake::\link{plan}()}
+#' @examples
+#' workflow(small = simulate(5), large = simulate(50))
+#' workflow(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' workflow(data = readRDS("my_data.rds"))
+#' workflow(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
+#'   strings_in_dots = "literals")
+workflow <- function(
+  ...,
+  list = character(0),
+  file_targets = FALSE,
+  strings_in_dots = c("filenames", "literals")
+){
+  strings_in_dots <- match.arg(strings_in_dots)
+  dots <- match.call(expand.dots = FALSE)$...
+  commands_dots <- lapply(dots, wide_deparse)
+  names(commands_dots) <- names(dots)
+  commands <- c(commands_dots, list)
+  targets <- names(commands)
+  commands <- as.character(commands)
+  if (!length(commands)){
+    return(
+      data.frame(
+        target = character(0),
+        command = character(0)
+      )
+    )
+  }
+  plan <- data.frame(
+    target = targets,
+    command = commands,
+    stringsAsFactors = FALSE
+  )
+  from_dots <- plan$target %in% names(commands_dots)
+  if (file_targets){
+    plan$target <- eply::quotes(plan$target, single = T)
+  }
+  if (strings_in_dots == "filenames"){
+    plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
+  }
+  sanitize_plan(plan)
+  
+}
+
 #' @title Function \code{plan}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
@@ -50,67 +104,8 @@ plan <- function(
   list = character(0),
   file_targets = FALSE,
   strings_in_dots = c("filenames", "literals")
-){
-  strings_in_dots <- match.arg(strings_in_dots)
-  dots <- match.call(expand.dots = FALSE)$...
-  commands_dots <- lapply(dots, wide_deparse)
-  names(commands_dots) <- names(dots)
-  commands <- c(commands_dots, list)
-  targets <- names(commands)
-  commands <- as.character(commands)
-  if (!length(commands)){
-    return(
-      data.frame(
-        target = character(0),
-        command = character(0)
-      )
-    )
-  }
-  plan <- data.frame(
-    target = targets,
-    command = commands,
-    stringsAsFactors = FALSE
-  )
-  from_dots <- plan$target %in% names(commands_dots)
-  if (file_targets){
-    plan$target <- eply::quotes(plan$target, single = T)
-  }
-  if (strings_in_dots == "filenames"){
-    plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
-  }
-  sanitize_plan(plan)
-}
-
-#' @title Function \code{workflow}
-#' @description An alternative to \code{drake::\link{plan}()}
-#' that does not conflict with \code{future::plan()}.
-#' @seealso \code{\link{check}}, \code{\link{make}},
-#' \code{\link{plan}}
-#' @export
-#' @return data frame of targets and command
-#' @param ... same as for \code{drake::\link{plan}()}
-#' @param list same as for \code{drake::\link{plan}()}
-#' @param file_targets same as for \code{drake::\link{plan}()}
-#' @param strings_in_dots same as for \code{drake::\link{plan}()}
-#' @examples
-#' workflow(small = simulate(5), large = simulate(50))
-#' workflow(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' workflow(data = readRDS("my_data.rds"))
-#' workflow(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
-#'   strings_in_dots = "literals")
-workflow <- function(
-  ...,
-  list = character(0),
-  file_targets = FALSE,
-  strings_in_dots = c("filenames", "literals")
-){
-  drake::plan(
-    ...,
-    list = list,
-    file_targets = file_targets,
-    strings_in_dots = strings_in_dots
-  )
-}
+){}
+body(plan) <- body(workflow)
 
 #' @title Function \code{as_file}
 #' @description Converts an ordinary character string

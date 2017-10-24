@@ -11,6 +11,21 @@ worker_future_lapply <- function(targets, hash_list, config){
   )
 }
 
+warn_future_jobs <- function(config){
+  if (config$parallelism == "future_lapply" && config$jobs > 1)
+  warning(
+    "The 'jobs' argument to make() is totally ignored ",
+    "for 'future_lapply' parallelism. The default number of ",
+    "workers is the number of targets in a given parallelizable stage. ",
+    "To avoid using too many workers, use something like ",
+    "'options(mc.cores = your_max_jobs)', for example. ",
+    "See ?future::future.options for a list of environment ",
+    "variables that restrict the number of workers ",
+    "for different 'future_lapply' backends.",
+    call. = FALSE
+  )
+}
+
 #' @title Function \code{backend}
 #' @export
 #' @seealso \code{\link{plan}}, \code{\link{make}},
