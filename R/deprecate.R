@@ -56,7 +56,7 @@ plan <- function(
   .Deprecated(
     "plan",
     package = "drake",
-    msg = "workflow() is deprecated. Use workflow() instead."
+    msg = "drake::plan() is deprecated. Use workflow() instead."
   )
   strings_in_dots <- match.arg(strings_in_dots)
   dots <- match.call(expand.dots = FALSE)$...

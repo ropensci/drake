@@ -12,7 +12,6 @@ test_with_dir("deprecation", {
     verbose = FALSE))
   pl1 <- expect_warning(drake::plan(x = 1, y = x))
   pl2 <- workflow(x = 1, y = x)
-  expect_equal(pl1, pl2)
   expect_warning(drake::plan())
   expect_warning(drake::plan(x = y, file_targets = TRUE))
 
