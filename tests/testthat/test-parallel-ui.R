@@ -1,5 +1,12 @@
 drake_context("parallel UI")
 
+test_with_dir("parallelism_choices", {
+  expect_true(
+    length(parallelism_choices(distributed_only = TRUE)) <
+    length(parallelism_choices(distributed_only = FALSE))
+  )
+})
+
 test_with_dir("shell_file() writes correctly", {
   expect_false(file.exists("shell.sh"))
   shell_file()

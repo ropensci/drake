@@ -31,14 +31,14 @@ Generate a workflow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.
 }
 \examples{
-datasets <- plan(
+datasets <- drake::plan(
   small = simulate(5),
   large = simulate(50))
-methods <- plan(
+methods <- drake::plan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 analyses <- analyses(methods, datasets = datasets)
-summary_types <- plan(
+summary_types <- drake::plan(
   summ = summary(..analysis..),
   coef = coefficients(..analysis..))
 summaries(summary_types, analyses, datasets, gather = NULL)

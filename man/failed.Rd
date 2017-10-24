@@ -32,7 +32,7 @@ to \code{\link{make}()}
 load_basic_example()
 make(my_plan)
 failed() # nothing
-bad_plan = plan(x = function_doesnt_exist())
+bad_plan <- drake::plan(x = function_doesnt_exist())
 make(bad_plan) # error
 failed() # "x"
 }

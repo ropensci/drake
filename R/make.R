@@ -1,6 +1,7 @@
 #' @title Function \code{make}
 #' @description Run your project (build the targets).
-#' @seealso \code{\link{plan}}, \code{\link{plot_graph}},
+#' @seealso \code{\link{plan}}, \code{\link{workflow}},
+#' \code{\link{backend}}, \code{\link{plot_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}}
 #' @export
 #' @param plan workflow plan data frame.
@@ -39,6 +40,11 @@
 #' \code{\link{example_drake}("basic")}
 #'
 #' @param jobs number of parallel processes or jobs to run.
+#' For \code{"future_lapply"} parallelism, \code{jobs}
+#' only applies to the imports.
+#' See \code{future::future.options} for environment variables that
+#' control the number of \code{future_lapply()} jobs for building targets.
+#' For example, you might use \code{options(mc.cores = max_jobs)}.
 #' See \code{\link{max_useful_jobs}()} or \code{\link{plot_graph}()}
 #' to help figure out what the number of jobs should be.
 #' Windows users should not set \code{jobs > 1} if
@@ -191,12 +197,13 @@ make <- function(
   if (!is.null(return_config)){
     warning(
       "The return_config argument to make() is deprecated. ",
-      "Now, an internal configuration list is always invisibly returned."
+      "Now, an internal configuration list is always invisibly returned.",
+      call. = FALSE
     )
   }
   parallelism <- match.arg(
     arg = parallelism,
-    choices = parallelism_choices()
+    choices = parallelism_choices(distributed_only = FALSE)
   )
   config <- build_config(
     plan = plan,
@@ -228,7 +235,7 @@ make <- function(
   if (imports_only){
     delete_these <- intersect(config$plan$target, V(config$graph)$name)
     config$graph <- delete_vertices(config$graph, v = delete_these)
-    if (parallelism == "Makefile"){
+    if (parallelism %in% parallelism_choices(distributed_only = TRUE)){
       parallelism <- default_parallelism()
     }
   }

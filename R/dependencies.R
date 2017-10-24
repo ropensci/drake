@@ -19,7 +19,7 @@
 #'   saveRDS(out, 'out.rds')
 #' }
 #' deps(f)
-#' my_plan <- plan(
+#' my_plan <- drake::plan(
 #'   x = 1 + some_object,
 #'   my_target = x + readRDS('tracked_input_file.rds'),
 #'   return_value = f(x, y, g(z + w))

@@ -3,7 +3,7 @@ drake_context("Makefile")
 test_with_dir("recipe commands", {
   expect_output(Makefile_recipe())
   expect_output(Makefile_recipe(recipe_command = "R -e 'R_RECIPE' -q"))
-  my_plan <- plan(y = 1)
+  my_plan <- drake::plan(y = 1)
   expect_true(is.character(default_recipe_command()))
   expect_true(is.character(r_recipe_wildcard()))
   con1 <- make(my_plan, command = default_Makefile_command(),
@@ -20,7 +20,7 @@ test_with_dir("recipe commands", {
 
 test_with_dir("no Makefile if imports_only is TRUE", {
   expect_equal(cached(), character(0))
-  x <- plan(a = ls())
+  x <- drake::plan(a = ls())
   expect_false(file.exists("Makefile"))
   make(
     x,
@@ -42,7 +42,7 @@ test_with_dir("prepend arg works", {
 })
 
 test_with_dir("files inside directories can be timestamped", {
-  plan <- plan(
+  plan <- drake::plan(
     list = c(
       `'t1/t2'` = "dir.create(\"t1\"); saveRDS(1, file.path(\"t1\", \"t2\"))"
     )
@@ -166,7 +166,7 @@ test_with_dir("packages are loaded in prework", {
   # Load packages with the 'packages' argument
   config$packages <- c("abind", "MASS")
   config$prework <- "options(test_drake_option_12345 = 'set')"
-  config$plan <- plan(
+  config$plan <- drake::plan(
     x = getOption("test_drake_option_12345"),
     y = c(abind("option"), deparse(body(lda)), x),
     strings_in_dots = "literals"

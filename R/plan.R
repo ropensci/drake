@@ -15,7 +15,8 @@
 #' but R messes with quotes when it parses the free-form
 #' arguments in \code{...}, so use the \code{strings_in_dots}
 #' argument to control the quoting in \code{...}.
-#' @seealso \code{link{check}}, \code{\link{make}},
+#' @seealso \code{\link{check}}, \code{\link{make}},
+#' \code{\link{workflow}}
 #' @export
 #' @return data frame of targets and command
 #' @param ... commands named by the targets they generate.
@@ -36,11 +37,14 @@
 #' Because of R's automatic parsing/deparsing behavior,
 #' strings in \code{...} cannot simply be left alone.
 #' @examples
-#' plan(small = simulate(5), large = simulate(50))
-#' plan(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' plan(data = readRDS("my_data.rds"))
-#' plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
-#'   strings_in_dots = "literals")
+#' drake::plan(small = simulate(5), large = simulate(50))
+#' drake::plan(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' drake::plan(data = readRDS("my_data.rds"))
+#' drake::plan(
+#'   my_file.rds = saveRDS(1+1, "my_file.rds"),
+#'   file_targets = TRUE,
+#'   strings_in_dots = "literals"
+#' )
 plan <- function(
   ...,
   list = character(0),
@@ -75,6 +79,37 @@ plan <- function(
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
+}
+
+#' @title Function \code{workflow}
+#' @description An alternative to \code{drake::\link{plan}()}
+#' that does not conflict with \code{future::plan()}.
+#' @seealso \code{\link{check}}, \code{\link{make}},
+#' \code{\link{plan}}
+#' @export
+#' @return data frame of targets and command
+#' @param ... same as for \code{drake::\link{plan}()}
+#' @param list same as for \code{drake::\link{plan}()}
+#' @param file_targets same as for \code{drake::\link{plan}()}
+#' @param strings_in_dots same as for \code{drake::\link{plan}()}
+#' @examples
+#' workflow(small = simulate(5), large = simulate(50))
+#' workflow(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' workflow(data = readRDS("my_data.rds"))
+#' workflow(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
+#'   strings_in_dots = "literals")
+workflow <- function(
+  ...,
+  list = character(0),
+  file_targets = FALSE,
+  strings_in_dots = c("filenames", "literals")
+){
+  drake::plan(
+    ...,
+    list = list,
+    file_targets = file_targets,
+    strings_in_dots = strings_in_dots
+  )
 }
 
 #' @title Function \code{as_file}

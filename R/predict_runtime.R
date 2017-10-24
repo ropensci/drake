@@ -288,7 +288,8 @@ warn_not_timed <- function(not_timed){
   warning(
     "Some targets have never been built ",
     "and their times are ignored:\n",
-    multiline_message(not_timed)
+    multiline_message(not_timed),
+    call. = FALSE
   )
 }
 

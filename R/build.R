@@ -52,8 +52,11 @@ check_built_file <- function(target){
     return()
   }
   if (!file.exists(eply::unquote(target))){
-    warning("File target ", target, " was built,\n",
-      "but the file itself does not exist.")
+    warning(
+      "File target ", target, " was built,\n",
+      "but the file itself does not exist.",
+      call. = FALSE
+    )
   }
 }
 

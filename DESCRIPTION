@@ -30,6 +30,7 @@ Imports:
   crayon,
   eply,
   digest,
+  future,
   grDevices,
   igraph,
   knitr,
@@ -49,6 +50,7 @@ Imports:
   withr
 Suggests:
   abind,
+  future.batchtools,
   MASS,
   methods,
   rmarkdown,

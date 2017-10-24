@@ -18,7 +18,7 @@ test_with_dir("retries", {
       stop("Function f failed.")
     }
   }
-  pl <- plan(x = f())
+  pl <- drake::plan(x = f())
   tmp <- "test-retry-log.txt"
   if (!file.exists(tmp)){
     file.create(tmp)

@@ -3,33 +3,13 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   run = TRUE,
   debug = FALSE
 ){
-  this_cache_path <- cache_path(config$cache)
-  if (identical(globalenv(), config$envir)){
-    save(
-      list = ls(config$envir, all.names = TRUE),
-      envir = config$envir,
-      file = globalenv_file(this_cache_path)
-    )
-  }
-  config$cache$set("config", config, namespace = "makefile")
+  out <- prepare_distributed(config = config)
   with_output_sink(
     new = "Makefile",
     code = {
       makefile_head(config)
       makefile_rules(config)
     }
-  )
-  out <- outdated(
-    plan = config$plan,
-    targets = config$targets,
-    envir = config$envir,
-    verbose = config$verbose,
-    cache = config$cache,
-    jobs = config$jobs,
-    parallelism = config$parallelism,
-    packages = config$packages,
-    prework = config$prework,
-    inform_up_to_date = FALSE
   )
   time_stamps(config = config, outdated = out)
   error_code <- ifelse(
@@ -115,31 +95,10 @@ mk <- function(
   target = character(0),
   cache_path = drake::default_cache_path()
 ){
-  cache <- this_cache(cache_path)
-  config <- cache$get("config", namespace = "makefile")
-  if (identical(globalenv(), config$envir)){
-    dir <- cache_path
-    file <- globalenv_file(dir)
-    load(file = file, envir = config$envir)
-  }
-  config <- inventory(config)
-  do_prework(config = config, verbose_packages = FALSE)
-  prune_envir(targets = target, config = config)
-  hash_list <- hash_list(targets = target, config = config)
-  old_hash <- self_hash(target = target, config = config)
-  current <- target_current(target = target,
-    hashes = hash_list[[target]], config = config)
-  if (current){
-    return(invisible())
-  }
-  build(
-    target = target,
-    hash_list = hash_list,
-    config = config
-  )
+  config <- build_distributed(target = target, cache_path = cache_path)
   config <- inventory(config)
   new_hash <- self_hash(target = target, config = config)
-  if (!identical(old_hash, new_hash)){
+  if (!identical(config$old_hash, new_hash)){
     file <- time_stamp_file(target = target, config = config)
     file_overwrite(file)
   }

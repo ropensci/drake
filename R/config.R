@@ -85,7 +85,10 @@ build_config <- function(
   seed <- get_valid_seed()
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
-  parallelism <- match.arg(parallelism, choices = parallelism_choices())
+  parallelism <- match.arg(
+    parallelism,
+    choices = parallelism_choices(distributed_only = FALSE)
+  )
   prework <- add_packages_to_prework(packages = packages,
     prework = prework)
   if (is.null(cache)) {

@@ -17,8 +17,8 @@ append_build_times <- function(config) {
 }
 
 arrange_nodes <- function(config){
-  if (config$parallelism == "Makefile")
-    resolve_levels_Makefile(config = config)
+  if (config$parallelism %in% parallelism_choices(distributed_only = TRUE))
+    resolve_levels_distributed(config = config)
   else
     resolve_levels(config = config)
 }
@@ -73,7 +73,7 @@ configure_nodes <- function(config){
 #' in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
 #' with the \code{split_columns} argument.
 default_graph_title <- function(
-  parallelism = drake::parallelism_choices(),
+  parallelism = drake::parallelism_choices(distributed_only = FALSE),
   split_columns = FALSE
 ){
   parallelism <- match.arg(parallelism)
@@ -165,7 +165,7 @@ resolve_levels <- function(config) {
   })
 }
 
-resolve_levels_Makefile <- function(config) { # nolint
+resolve_levels_distributed <- function(config) { # nolint
   with(config, {
     graph_imports <- delete_vertices(graph, v = targets)
     graph_targets <- delete_vertices(graph, v = imports)

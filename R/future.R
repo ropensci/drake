@@ -1,0 +1,45 @@
+run_future_lapply <- function(config){
+  prepare_distributed(config = config)
+  run_parallel(config = config, worker = worker_future_lapply)
+}
+
+worker_future_lapply <- function(targets, hash_list, config){
+  future::future_lapply(
+    x = targets,
+    FUN = build_distributed,
+    cache_path = config$cache$driver$path
+  )
+}
+
+#' @title Function \code{backend}
+#' @export
+#' @seealso \code{\link{plan}}, \code{\link{make}},
+#' @description Select the specific \code{future}-style
+#' parallel backend for \code{make(..., parallelism = "future_lapply")}.
+#' For more information, please read the documentation,
+#' tutorials, and vignettes of the R packages
+#' \code{future} and \code{future.batchtools}.
+#' @details The \code{backend()} function is exactly
+#' the same as \code{future::plan()}.
+#' We provide it only because \code{drake::plan()} conflicts
+#' with \code{future::plan()}.
+#' @param ... arguments to \code{future::plan()}.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' library(future) # Use workflow() or drake::plan() instead of plan()
+#' backend(multicore) # Parallel backend for future_lapply()
+#' make(my_plan, parallelism = "future_lapply")
+#' clean() # Erase the targets to start from scratch.
+#' backend(multisession) # Use separate background R sessions.
+#' make(my_plan, parallelism = "future_lapply")
+#' clean()
+#' library(future.batchtools) # More heavy-duty future-style parallel backends
+#' # https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
+#' backend(batchtools_local)
+#' make(my_plan, parallelism = "future_lapply")
+#' clean()
+#' }
+backend <- function(...){
+  future::plan(...)
+}

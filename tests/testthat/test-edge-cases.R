@@ -8,7 +8,7 @@ test_with_dir("deprecation", {
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_warning(prune(plan[1, ]))
   expect_equal(cached(), "x")
-  expect_warning(make(plan(x = 1), return_config = TRUE,
+  expect_warning(make(drake::plan(x = 1), return_config = TRUE,
     verbose = FALSE))
   x <- this_cache()
 
@@ -21,7 +21,7 @@ test_with_dir("deprecation", {
 })
 
 test_with_dir("graph does not fail if input file is binary", {
-  x <- plan(y = readRDS("input.rds"))
+  x <- drake::plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
   expect_silent(out <- plot_graph(x, verbose = FALSE))
   unlink("input.rds", force = TRUE)
@@ -33,14 +33,14 @@ test_with_dir("null graph", {
 })
 
 test_with_dir("illegal hashes", {
-  x <- plan(a = 1)
+  x <- drake::plan(a = 1)
   expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))
   expect_error(make(x, long_hash_algo = "no_such_algo_aslkdjfoiewlk"))
 })
 
-test_with_dir("different graphical arrangements for Makefile parallelism", {
+test_with_dir("different graphical arrangements for distributed parallelism", {
   e <- new.env()
-  x <- plan(a = 1, b = f(2))
+  x <- drake::plan(a = 1, b = f(2))
   e$f <- function(x) x
   con <- config(x, envir = e, verbose = FALSE)
   expect_equal(1, max_useful_jobs(x, envir = e, config = con,
@@ -50,6 +50,8 @@ test_with_dir("different graphical arrangements for Makefile parallelism", {
   con$parallelism <- "Makefile"
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
     parallelism = "Makefile", jobs = 1))
+  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
+    parallelism = "future_lapply", jobs = 1))
 })
 
 test_with_dir("Vectorized nested functions work", {
@@ -60,7 +62,7 @@ test_with_dir("Vectorized nested functions work", {
   e$y <- 7
   config <- dbug()
   config$envir <- e
-  config$plan <- plan(a = f(1:10))
+  config$plan <- drake::plan(a = f(1:10))
   config$targets <- "a"
   expect_equal(deps(e$f), "g")
   expect_equal(deps(e$g), "y")
@@ -105,7 +107,7 @@ test_with_dir("stringsAsFactors can be TRUE", {
 })
 
 test_with_dir("circular non-DAG workflows quit in error", {
-  p <- plan(a = b, b = c, c = a)
+  p <- drake::plan(a = b, b = c, c = a)
   expect_error(tmp <- capture.output(check(p)))
   expect_error(make(p, verbose = FALSE))
 })
@@ -135,7 +137,7 @@ test_with_dir("target conflicts with previous import", {
 })
 
 test_with_dir("can use semicolons and multi-line commands", {
-  plan <- plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
+  plan <- drake::plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
   make(plan, verbose = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(cached(x, y, search = FALSE)))
@@ -146,7 +148,7 @@ test_with_dir("true targets can be functions", {
   generator <- function() return(function(x) {
     x + 1
   })
-  plan <- plan(myfunction = generator(), output = myfunction(1))
+  plan <- drake::plan(myfunction = generator(), output = myfunction(1))
   config <- make(plan, verbose = FALSE)
   expect_equal(readd(output), 2)
   expect_true(is.list(config$cache$get("myfunction")))
@@ -155,7 +157,7 @@ test_with_dir("true targets can be functions", {
 })
 
 test_with_dir("error when file target names do not match actual filenames", {
-  x <- plan(y = 1, file_targets = TRUE)
+  x <- drake::plan(y = 1, file_targets = TRUE)
   expect_warning(expect_error(make(x, verbose = FALSE)))
 })
 

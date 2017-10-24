@@ -54,7 +54,7 @@ test_with_dir("namespaced workflow works", {
     x <- nchar(digest::digest(sqrt(x)))
     base:::c(x, 1)
   }
-  x <- plan(a = base::list(f(1)))
+  x <- drake::plan(a = base::list(f(1)))
   make(
     x,
     envir = envir,

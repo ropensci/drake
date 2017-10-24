@@ -4,7 +4,12 @@
 \alias{parallelism_choices}
 \title{Function \code{parallelism_choices}}
 \usage{
-parallelism_choices()
+parallelism_choices(distributed_only = FALSE)
+}
+\arguments{
+\item{distributed_only}{logical, whether to return only
+the distributed backend types, such as \code{Makefile} and
+\code{parLapply}}
 }
 \value{
 Character vector listing the types of parallel
@@ -25,10 +30,28 @@ units of execution.
  but it works on Windows. If \code{jobs} is \code{1} in
  \code{\link{make}()}, then no 'cluster' is created and
  no parallelism is used.}
+
  \item{'mclapply'}{uses multiple processes in a single R session.
  This is single-node, (potentially) multicore computing.
  Does not work on Windows for \code{jobs > 1}
  because \code{\link{mclapply}()} is based on forking.}
+
+ \item{'future_lapply'}{
+ opens up a whole trove of parallel backends
+ powered by the \code{future} and \code{future.batchtools}
+ packages. First, set the parallel backend globally using
+ \code{\link{backend}()} (or equivalently, \code{future::plan()}).
+ Then, apply the backend to your workflow
+ using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
+ But be warned: the environment for each target needs to be set up
+ from scratch, so this backend type is higher overhead than either
+ \code{mclapply} or \code{parLapply}.
+ Also, the \code{jobs} argument only applies to the imports.
+ for the max number of jobs to use for building targets,
+ use options(mc.cores = jobs), or see \code{?future::future::.options}
+ for environment variables that set the max number of jobs.
+ }
+
  \item{'Makefile'}{uses multiple R sessions
  by creating and running a Makefile.
  For distributed computing on a cluster or supercomputer,
@@ -58,6 +81,7 @@ units of execution.
 }
 \examples{
 parallelism_choices()
+parallelism_choices(distributed_only = TRUE)
 }
 \seealso{
 \code{\link{make}}, \code{\link{shell_file}}

@@ -56,7 +56,8 @@ missing_input_files <- function(config) {
     unquote %>%
     Filter(f = function(x) !file.exists(x))
   if (length(missing_files))
-    warning("missing input files:\n", multiline_message(missing_files))
+    warning("missing input files:\n", multiline_message(missing_files),
+      call. = FALSE)
   invisible(missing_files)
 }
 
@@ -65,7 +66,8 @@ warn_bad_symbols <- function(x) {
   bad <- which(!is_parsable(x)) %>% names
   if (!length(bad))
     return(invisible())
-  warning("Possibly bad target names:\n", multiline_message(bad))
+  warning("Possibly bad target names:\n", multiline_message(bad),
+    call. = FALSE)
   invisible()
 }
 
