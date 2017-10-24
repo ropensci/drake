@@ -41,7 +41,7 @@
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #' mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
-#' @importFrom R.utils evalWithTimeout isPackageLoaded
+#' @importFrom R.utils isPackageLoaded withTimeout
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_rds
