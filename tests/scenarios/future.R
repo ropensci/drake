@@ -1,5 +1,6 @@
 library(testthat)
 devtools::load_all()
+options(mc.cores = 4)
 scenario_names <- Filter(
   x = testing_scenario_names(),
   f = function(name){
