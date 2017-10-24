@@ -50,6 +50,7 @@ Imports:
   withr
 Suggests:
   abind,
+  future.batchtools,
   MASS,
   methods,
   rmarkdown,
