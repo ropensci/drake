@@ -31,6 +31,10 @@
 #'  But be warned: the environment for each target needs to be set up
 #'  from scratch, so this backend type is higher overhead than either
 #'  \code{mclapply} or \code{parLapply}.
+#'  Also, the \code{jobs} argument only applies to the imports.
+#'  for the max number of jobs to use for building targets,
+#'  use options(mc.cores = jobs), or see \code{?future::future::.options}
+#'  for environemnt variables that set the max number of jobs.
 #'  }
 #'
 #'  \item{'Makefile'}{uses multiple R sessions

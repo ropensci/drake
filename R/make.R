@@ -40,6 +40,11 @@
 #' \code{\link{example_drake}("basic")}
 #'
 #' @param jobs number of parallel processes or jobs to run.
+#' For \code{"future_lapply"} parallelism, \code{jobs}
+#' only applies to the imports.
+#' See \code{future::future.options} for environment variables that
+#' control the number of \code{future_lapply()} jobs for building targets.
+#' For example, you might use \code{options(mc.cores = max_jobs)}.
 #' See \code{\link{max_useful_jobs}()} or \code{\link{plot_graph}()}
 #' to help figure out what the number of jobs should be.
 #' Windows users should not set \code{jobs > 1} if

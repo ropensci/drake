@@ -328,6 +328,16 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 
 # High-performance computing
 
+## Maximum number of simultaneous jobs
+
+Be mindful of the maximum number of simultaneous parallel jobs you deploy. At best, too many jobs is poor etiquette on a system with many users and limited resources. At worst, too many jobs will crash a system. The `jobs` argument to `make()` sets the maximum number of simultaneous jobs in most cases, but not all.
+
+For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `backend()` or `future::plan()`. 
+
+## Name conflict between `future::plan()` and `drake::plan()`
+
+This is unlikely to be fixed in the future. So to avoid name conflicts, you can use the scoping operator `::` to specify the package of origin, or you can use `backend()` instead of `future::plan()` and `workflow()` instead of `drake::plan()`.
+
 ## Parallel computing on Windows
 
 On Windows, do not use `make(..., parallelism = "mclapply", jobs = n)` with `n` greater than 1. You could try, but `jobs` will just be demoted to 1. Instead, please replace `"mclapply"` with one of the other `parallelism_choices()` or let `drake` choose the  `parallelism` backend for you. For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).

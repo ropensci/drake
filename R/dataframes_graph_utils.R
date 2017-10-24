@@ -18,7 +18,7 @@ append_build_times <- function(config) {
 
 arrange_nodes <- function(config){
   if (config$parallelism %in% parallelism_choices(distributed_only = TRUE))
-    resolve_levels_distributed_parallelism(config = config)
+    resolve_levels_distributed(config = config)
   else
     resolve_levels(config = config)
 }
@@ -165,7 +165,7 @@ resolve_levels <- function(config) {
   })
 }
 
-resolve_levels_distributed_parallelism <- function(config) { # nolint
+resolve_levels_distributed <- function(config) { # nolint
   with(config, {
     graph_imports <- delete_vertices(graph, v = targets)
     graph_targets <- delete_vertices(graph, v = imports)

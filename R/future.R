@@ -4,13 +4,10 @@ run_future_lapply <- function(config){
 }
 
 worker_future_lapply <- function(targets, hash_list, config){
-  withr::with_options(
-    list(mc.cores = config$jobs),
-    future::future_lapply(
-      x = targets,
-      FUN = build_distributed,
-      cache_path = config$cache$driver$path
-    )
+  future::future_lapply(
+    x = targets,
+    FUN = build_distributed,
+    cache_path = config$cache$driver$path
   )
 }
 

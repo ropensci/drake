@@ -5,12 +5,16 @@ test_with_dir("future", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_basic_example(envir = e)
-  config <- make(
-    e$my_plan,
-    envir = e,
-    parallelism = "future_lapply",
-    jobs = 2,
-    verbose = FALSE
+  withr::with_options(
+    new = list(mc.cores = 2), code = {
+      config <- make(
+        e$my_plan,
+        envir = e,
+        parallelism = "future_lapply",
+        jobs = 2,
+        verbose = FALSE
+      )
+    }
   )
   expect_equal(
     outdated(e$my_plan, envir = e, verbose = FALSE),
