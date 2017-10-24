@@ -20,6 +20,11 @@ drake_tip <- function() {
     "Use suppressPackageStartupMessages() to eliminate
      package startup messages like this one.",
 
+    "Check out the 'future_lapply' backends. Example: 
+    load_basic_example(); 
+    backend(future::multisession);
+    make(my_plan, parallelism = \"future_lapply\")",
+
     "Drake quickstart:
      load_basic_example();
      plot_graph(my_plan);
