@@ -38,8 +38,13 @@ test_with_dir <- function(desc, ...){
   )
   dir <- file.path(root, relative_dir)
   dir_empty(dir)
-  eval(parse(text = get_testing_scenario()$backend))
-  with_dir(dir, test_that(desc = desc, ...))
+  with_dir(
+    new = dir,
+    code = {
+      eval(parse(text = get_testing_scenario()$backend))
+      test_that(desc = desc, ...)
+    }
+  )
 }
 
 with_all_options <- function(code) {
