@@ -5,7 +5,7 @@
 library(testthat)
 devtools::load_all()
 
-set_testing_scenario("local_Make_2")
+set_testing_scenario("local_Makefile_9")
 cat(get_testing_scenario_name(), ": ", sep = "")
 context("recipes")
 
