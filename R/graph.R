@@ -21,7 +21,7 @@
 #' class(g)
 #' }
 build_graph <- function(
-  plan = drake::plan(),
+  plan = workflow(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE
@@ -84,7 +84,7 @@ build_graph <- function(
 #' tracked(my_plan)
 #' }
 tracked <- function(
-  plan = drake::plan(),
+  plan = workflow(),
   targets = drake::possible_targets(plan),
   envir = parent.frame()
 ){

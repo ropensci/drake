@@ -32,7 +32,7 @@ to \code{\link{make}()}
 load_basic_example()
 make(my_plan)
 failed() # nothing
-bad_plan <- drake::plan(x = function_doesnt_exist())
+bad_plan <- workflow(x = function_doesnt_exist())
 make(bad_plan) # error
 failed() # "x"
 }
@@ -40,5 +40,5 @@ failed() # "x"
 \seealso{
 \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 }

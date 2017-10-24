@@ -8,20 +8,36 @@ workflow(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{same as for \code{drake::\link{plan}()}}
+\item{...}{same as for \code{drake::\link{workflow}()}}
 
-\item{list}{same as for \code{drake::\link{plan}()}}
+\item{list}{same as for \code{drake::\link{workflow}()}}
 
-\item{file_targets}{same as for \code{drake::\link{plan}()}}
+\item{file_targets}{same as for \code{drake::\link{workflow}()}}
 
-\item{strings_in_dots}{same as for \code{drake::\link{plan}()}}
+\item{strings_in_dots}{same as for \code{drake::\link{workflow}()}}
 }
 \value{
 data frame of targets and command
 }
 \description{
-An alternative to \code{drake::\link{plan}()}
-that does not conflict with \code{future::plan()}.
+Turns a named collection of command/target pairs into
+a workflow plan data frame for \code{\link{make}} and
+\code{\link{check}}.
+}
+\details{
+A workflow plan data frame is a data frame
+with a \code{target} column and a \code{command} column.
+Targets are the objects and files that drake generates,
+and commands are the pieces of R code that produce them.
+
+For file inputs and targets, drake uses single quotes.
+Double quotes are reserved for ordinary strings.
+The distinction is important because drake thinks about
+how files, objects, targets, etc. depend on each other.
+Quotes in the \code{list} argument are left alone,
+but R messes with quotes when it parses the free-form
+arguments in \code{...}, so use the \code{strings_in_dots}
+argument to control the quoting in \code{...}.
 }
 \examples{
 workflow(small = simulate(5), large = simulate(50))
@@ -29,8 +45,4 @@ workflow(list = c(x = "1 + 1", y = "sqrt(x)"))
 workflow(data = readRDS("my_data.rds"))
 workflow(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
   strings_in_dots = "literals")
-}
-\seealso{
-\code{\link{check}}, \code{\link{make}},
-\code{\link{plan}}
 }

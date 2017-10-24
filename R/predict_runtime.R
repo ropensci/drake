@@ -65,7 +65,7 @@
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 predict_runtime <- function(
-  plan = drake::plan(),
+  plan = workflow(),
   from_scratch = FALSE,
   targets_only = FALSE,
   targets = drake::possible_targets(plan),
@@ -192,7 +192,7 @@ predict_runtime <- function(
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 rate_limiting_times <- function(
-  plan = drake::plan(),
+  plan = workflow(),
   from_scratch = FALSE,
   targets_only = FALSE,
   targets = drake::possible_targets(plan),

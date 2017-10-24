@@ -63,5 +63,5 @@ cached()
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{loadd}},
-\code{\link{plan}}, \code{\link{make}}
+\code{\link{workflow}}, \code{\link{make}}
 }

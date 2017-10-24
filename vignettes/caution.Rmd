@@ -38,10 +38,10 @@ A common pitfall is using the `evaluate()` function to expand wildcards after ap
 
 ```{r filethenevaluate}
 library(magrittr) # for the pipe operator %>%
-plan(
+workflow(
   data = readRDS("data_..datasize...rds")
 ) %>%
-  rbind(drake::plan(
+  rbind(drake::workflow(
     file.csv = write.csv(
       data_..datasize.., # nolint
       "file_..datasize...csv"
@@ -58,13 +58,13 @@ The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are 
 
 ```{r correctevaldatasize}
 rules <- list(..datasize.. = c("small", "large"))
-datasets <- plan(data = readRDS("data_..datasize...rds")) %>%
+datasets <- workflow(data = readRDS("data_..datasize...rds")) %>%
   evaluate(rules = rules)
 ```
 
 Plan the CSV files separately.
 ```{r correctevaldatasize2}
-files <- plan(
+files <- workflow(
   file = write.csv(data_..datasize.., "file_..datasize...csv"), # nolint
   strings_in_dots = "literals"
 ) %>%
@@ -90,16 +90,16 @@ For more control over target names in cases like this, you may want to use the [
 
 ## Commands are NOT perfectly flexible.
 
-In your workflow plan data frame (produced by `plan()` and accepted by `make()`), your commands can usually be flexible R expressions.
+In your workflow plan data frame (produced by `workflow()` and accepted by `make()`), your commands can usually be flexible R expressions.
 
 ```{r tidyplancaution}
-plan(
+workflow(
   target1 = 1 + 1 - sqrt(sqrt(3)),
   target2 = my_function(web_scraped_data) %>% my_tidy
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan(f = function(x){x + 1})` or `plan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workflow(f = function(x){x + 1})` or `workflow(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
 
 # Execution environment and files
 
@@ -124,7 +124,7 @@ eval(expression({
   }
 }
 ), envir = envir)
-myplan <- plan(out = f(1:3))
+myplan <- workflow(out = f(1:3))
 make(myplan, envir = envir)
 ls() # Check that your workspace did not change.
 ls(envir) # Check your evaluation environment.
@@ -141,7 +141,7 @@ library(drake)
 ```
 
 ```{r depscheck}
-my_plan <- plan(list = c(a = "x <- 1; return(x)"))
+my_plan <- workflow(list = c(a = "x <- 1; return(x)"))
 my_plan
 deps(my_plan$command[1])
 ```
@@ -333,10 +333,6 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 Be mindful of the maximum number of simultaneous parallel jobs you deploy. At best, too many jobs is poor etiquette on a system with many users and limited resources. At worst, too many jobs will crash a system. The `jobs` argument to `make()` sets the maximum number of simultaneous jobs in most cases, but not all.
 
 For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `backend()` or `future::plan()`. 
-
-## Name conflict between `future::plan()` and `drake::plan()`
-
-This is unlikely to be fixed in the future. So to avoid name conflicts, you can use the scoping operator `::` to specify the package of origin, or you can use `backend()` instead of `future::plan()` and `workflow()` instead of `drake::plan()`.
 
 ## Parallel computing on Windows
 

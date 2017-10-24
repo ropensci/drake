@@ -31,5 +31,5 @@ find_cache()
 }
 }
 \seealso{
-\code{\link{plan}}, \code{\link{make}},
+\code{\link{workflow}}, \code{\link{make}},
 }

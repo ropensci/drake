@@ -90,7 +90,7 @@
 #' plot_graph(my_plan) # The red nodes from before are now green.
 #' }
 plot_graph <- function(
-  plan = drake::plan(), targets = drake::possible_targets(plan),
+  plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   jobs = 1, parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0),

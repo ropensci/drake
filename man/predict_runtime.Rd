@@ -4,7 +4,7 @@
 \alias{predict_runtime}
 \title{Function predict_runtime}
 \usage{
-predict_runtime(plan = drake::plan(), from_scratch = FALSE,
+predict_runtime(plan = workflow(), from_scratch = FALSE,
   targets_only = FALSE, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(path =
   path, search = search), parallelism = drake::default_parallelism(),

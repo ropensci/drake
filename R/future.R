@@ -28,7 +28,7 @@ warn_future_jobs <- function(config){
 
 #' @title Function \code{backend}
 #' @export
-#' @seealso \code{\link{plan}}, \code{\link{make}},
+#' @seealso \code{\link{workflow}}, \code{\link{make}},
 #' @description Select the specific \code{future}-style
 #' parallel backend for \code{make(..., parallelism = "future_lapply")}.
 #' For more information, please read the documentation,
@@ -36,13 +36,13 @@ warn_future_jobs <- function(config){
 #' \code{future} and \code{future.batchtools}.
 #' @details The \code{backend()} function is exactly
 #' the same as \code{future::plan()}.
-#' We provide it only because \code{drake::plan()} conflicts
+#' We provide it only because \code{workflow()} conflicts
 #' with \code{future::plan()}.
 #' @param ... arguments to \code{future::plan()}.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' library(future) # Use workflow() or drake::plan() instead of plan()
+#' library(future) # Use workflow() instead of plan()
 #' backend(multicore) # Parallel backend for future_lapply()
 #' make(my_plan, parallelism = "future_lapply")
 #' clean() # Erase the targets to start from scratch.

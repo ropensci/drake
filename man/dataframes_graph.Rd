@@ -4,13 +4,12 @@
 \alias{dataframes_graph}
 \title{Function \code{dataframes_graph}}
 \usage{
-dataframes_graph(plan = drake::plan(),
-  targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = drake::get_cache(), jobs = 1,
-  parallelism = drake::default_parallelism(), packages = (.packages()),
-  prework = character(0), build_times = TRUE, digits = 3,
-  targets_only = FALSE, split_columns = FALSE, font_size = 20,
-  config = NULL)
+dataframes_graph(plan = workflow(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  jobs = 1, parallelism = drake::default_parallelism(),
+  packages = (.packages()), prework = character(0), build_times = TRUE,
+  digits = 3, targets_only = FALSE, split_columns = FALSE,
+  font_size = 20, config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

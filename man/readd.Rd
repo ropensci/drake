@@ -48,6 +48,6 @@ readd("'report.md'") # just a fingerprint of the file (md5 sum)
 }
 \seealso{
 \code{\link{loadd}}, \code{\link{cached}},
-\code{\link{built}}, \code{link{imported}}, \code{\link{plan}},
+\code{\link{built}}, \code{link{imported}}, \code{\link{workflow}},
 \code{\link{make}}
 }

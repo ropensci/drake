@@ -4,7 +4,7 @@
 \alias{make}
 \title{Function \code{make}}
 \usage{
-make(plan = drake::plan(), targets = drake::possible_targets(plan),
+make(plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
@@ -20,7 +20,7 @@ A workflow plan data frame is a data frame
 with a \code{target} column and a \code{command} column.
 Targets are the objects and files that drake generates,
 and commands are the pieces of R code that produce them.
-Use the function \code{\link{plan}()} to generate workflow plan
+Use the function \code{\link{workflow}()} to generate workflow plan
 data frames easily, and see functions \code{\link{analyses}()},
 \code{\link{summaries}()}, \code{\link{evaluate}()},
 \code{\link{expand}()}, and \code{\link{gather}()} for
@@ -184,7 +184,7 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 }
 }
 \seealso{
-\code{\link{plan}}, \code{\link{workflow}},
+\code{\link{workflow}}, \code{\link{workflow}},
 \code{\link{backend}}, \code{\link{plot_graph}},
 \code{\link{max_useful_jobs}}, \code{\link{shell_file}}
 }

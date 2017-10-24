@@ -195,7 +195,7 @@ default_parallelism <- function() {
 #' max_useful_jobs(my_plan, imports = 'none') # 4
 #' }
 max_useful_jobs <- function(
-  plan = drake::plan(), from_scratch = FALSE,
+  plan = workflow(), from_scratch = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   jobs = 1, parallelism = drake::default_parallelism(),

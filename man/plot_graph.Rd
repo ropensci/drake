@@ -4,7 +4,7 @@
 \alias{plot_graph}
 \title{Function \code{plot_graph}}
 \usage{
-plot_graph(plan = drake::plan(), targets = drake::possible_targets(plan),
+plot_graph(plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   jobs = 1, parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), config = NULL,

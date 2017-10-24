@@ -4,7 +4,7 @@
 \alias{rate_limiting_times}
 \title{Function rate_limiting_times}
 \usage{
-rate_limiting_times(plan = drake::plan(), from_scratch = FALSE,
+rate_limiting_times(plan = workflow(), from_scratch = FALSE,
   targets_only = FALSE, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(path =
   path, search = search), parallelism = drake::default_parallelism(),

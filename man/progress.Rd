@@ -59,5 +59,5 @@ progress(no_imported_objects = TRUE)
 \seealso{
 \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 }

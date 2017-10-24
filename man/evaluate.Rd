@@ -9,7 +9,7 @@ evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by
-\code{link{plan}}}
+\code{ink{workflow}}}
 
 \item{rules}{Named list with wildcards as names and vectors of
 replacements
@@ -51,16 +51,16 @@ not \code{NULL}. Here, \code{rules} should be a list with wildcards
 as names and vectors of possible values as list elements.
 }
 \examples{
-datasets <- drake::plan(
+datasets <- workflow(
   small = simulate(5),
   large = simulate(50))
-methods <- drake::plan(
+methods <- workflow(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 evaluate(methods, wildcard = "..dataset..",
   values = datasets$target)
 evaluate(methods, wildcard = "..dataset..",
   values = datasets$target, expand = FALSE)
-x <- drake::plan(draws = rnorm(mean = Mean, sd = Sd))
+x <- workflow(draws = rnorm(mean = Mean, sd = Sd))
 evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 }

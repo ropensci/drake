@@ -35,10 +35,3 @@ test_with_dir("future jobs warning", {
     )
   )
 })
-
-test_with_dir("workflow", {
-  expect_equal(
-    workflow(x = 1, y = x),
-    workflow(x = 1, y = x)
-  )
-})

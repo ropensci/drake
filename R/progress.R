@@ -2,7 +2,7 @@
 #' @description Load the \code{\link{sessionInfo}()}
 #' of the last call to \code{\link{make}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
 #' @return \code{\link{sessionInfo}()} of the last
 #' call to \code{\link{make}()}
@@ -37,7 +37,7 @@ session <- function(path = getwd(), search = TRUE,
 #' \code{\link{make}()} quit unexpectedly.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
 #' @return A character vector of target names
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
@@ -69,7 +69,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' to \code{\link{make}()}
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
 #' @return A character vector of target names
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
@@ -86,7 +86,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' load_basic_example()
 #' make(my_plan)
 #' failed() # nothing
-#' bad_plan <- drake::plan(x = function_doesnt_exist())
+#' bad_plan <- workflow(x = function_doesnt_exist())
 #' make(bad_plan) # error
 #' failed() # "x"
 #' }
@@ -107,7 +107,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' Skipped objects are not listed.
 #' @seealso \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{plan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
 #' @return Statuses of targets
 #' @param ... objects to load from the cache, as names (unquoted)

@@ -18,7 +18,7 @@ test_with_dir("retries", {
       stop("Function f failed.")
     }
   }
-  pl <- drake::plan(x = f())
+  pl <- workflow(x = f())
   tmp <- "test-retry-log.txt"
   if (!file.exists(tmp)){
     file.create(tmp)
@@ -64,7 +64,7 @@ test_with_dir("timouts", {
       retries = 2
     ), type = "message"), type = "output")
   )
-  pl <- drake::plan(x = 1 + 1)
+  pl <- workflow(x = 1 + 1)
   expect_silent(
     tmp <- capture.output(make(
       pl,

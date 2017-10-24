@@ -150,7 +150,7 @@ cache_path(faster_cache)
 cache_path(cache) # location of the previous cache
 short_hash(faster_cache)
 long_hash(faster_cache)
-new_plan <- plan(
+new_plan <- workflow(
   simple = 1 + 1
 )
 make(new_plan, cache = faster_cache)
@@ -187,7 +187,7 @@ Some caches store your data in the computer's memory rather than saved files. `D
 
 ```{r memory_caches}
 memory_cache <- storr_environment()
-other_plan <- plan(
+other_plan <- workflow(
   some_data = rnorm(50),
   more_data = rpois(75, lambda = 10),
   result = mean(c(some_data, more_data))

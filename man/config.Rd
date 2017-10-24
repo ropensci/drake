@@ -4,7 +4,7 @@
 \alias{config}
 \title{Function config}
 \usage{
-config(plan = drake::plan(), targets = drake::possible_targets(plan),
+config(plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
@@ -72,5 +72,5 @@ dataframes_graph(my_plan, config = con)
 }
 }
 \seealso{
-\code{\link{plan}}, \code{\link{make}}, \code{\link{plot_graph}}
+\code{\link{workflow}}, \code{\link{make}}, \code{\link{plot_graph}}
 }

@@ -13,13 +13,13 @@ test_with_dir("proc_time runtimes can be fetched", {
 
 test_with_dir("build times works if no targets are built", {
   expect_equal(nrow(build_times(search = FALSE)), 0)
-  my_plan <- drake::plan(x = 1)
+  my_plan <- workflow(x = 1)
   make(my_plan, verbose = FALSE, imports_only = TRUE)
   expect_equal(nrow(build_times(search = FALSE)), 0)
 })
 
 test_with_dir("build time the same after superfluous make", {
-  x <- drake::plan(y = Sys.sleep(0.25))
+  x <- workflow(y = Sys.sleep(0.25))
   c1 <- make(x, verbose = FALSE)
   expect_equal(justbuilt(c1), "y")
   b1 <- build_times(search = FALSE)
@@ -39,7 +39,7 @@ test_with_dir("empty time predictions", {
     df
   }
 
-  my_plan <- drake::plan(y = 1)
+  my_plan <- workflow(y = 1)
   expect_warning(
     x <- rate_limiting_times(plan = my_plan, verbose = FALSE) %>%
       min_df

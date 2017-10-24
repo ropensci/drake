@@ -4,12 +4,12 @@
 \alias{check}
 \title{Function \code{check}}
 \usage{
-check(plan = drake::plan(), targets = drake::possible_targets(plan),
+check(plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), cache = drake::get_cache())
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
-\code{\link{plan}()}.}
+\code{\link{workflow}()}.}
 
 \item{targets}{character vector of targets to make}
 
@@ -34,5 +34,5 @@ check(my_plan)
 }
 }
 \seealso{
-\code{link{plan}}, \code{\link{make}}
+\code{ink{workflow}}, \code{\link{make}}
 }

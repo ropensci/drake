@@ -19,13 +19,13 @@ tutorials, and vignettes of the R packages
 \details{
 The \code{backend()} function is exactly
 the same as \code{future::plan()}.
-We provide it only because \code{drake::plan()} conflicts
+We provide it only because \code{workflow()} conflicts
 with \code{future::plan()}.
 }
 \examples{
 \dontrun{
 load_basic_example()
-library(future) # Use workflow() or drake::plan() instead of plan()
+library(future) # Use workflow() instead of plan()
 backend(multicore) # Parallel backend for future_lapply()
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.
@@ -40,5 +40,5 @@ clean()
 }
 }
 \seealso{
-\code{\link{plan}}, \code{\link{make}},
+\code{\link{workflow}}, \code{\link{make}},
 }
