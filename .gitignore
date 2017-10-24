@@ -15,6 +15,7 @@ Thumbs.db
 *.vrb
 .drake
 .DS_Store
+.future
 .Rapp.history
 .RData
 .Rhistory

@@ -26,7 +26,7 @@ with \code{future::plan()}.
 \dontrun{
 load_basic_example()
 library(future) # Use workflow() instead of plan()
-backend(multicore) # Parallel backend for future_lapply()
+backend(multicore) # Same as future::plan(multicore)
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.
 backend(multisession) # Use separate background R sessions.

@@ -4,6 +4,7 @@ Thumbs.db
 ^reference$
 .DS_Store
 \.drake$
+\.future$
 \.git$
 \.github$
 \.gitignore$

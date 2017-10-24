@@ -215,6 +215,30 @@ readd(coef_regression2_large) # see also: loadd(), cached()
 make(my_plan, jobs = 2)
 clean() # Start over next time.
 
+######################################
+### PARALLEL COMPUTING WITH FUTURE ###
+######################################
+
+# The `future` and `future.batchtools` packages
+# unlock a huge array of powerful parallel backends.
+# Here is just a taste. You can find a list of
+# future.batchtools backends at
+# https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
+# Note: the `jobs` argument no longer applies. Use
+# options(mc.cores = 4) or something similar from ?future.options.
+library(future) # Use workflow() instead of plan()
+backend(multicore) # Same as future::plan(multicore)
+make(my_plan, parallelism = "future_lapply")
+clean() # Erase the targets to start from scratch.
+backend(multisession) # Use separate background R sessions.
+make(my_plan, parallelism = "future_lapply")
+clean()
+if (require(future.batchtools)){ # More heavy-duty future-style parallel backends # nolint
+   backend(batchtools_local)
+   make(my_plan, parallelism = "future_lapply")
+}
+clean() # Start over next time
+
 ######################################################
 ### DISTRIBUTED COMPUTING: TWO PARALLEL R SESSIONS ###
 ######################################################
@@ -283,8 +307,10 @@ if (FALSE){
 clean(destroy = TRUE) # Totally remove the hidden .drake/ cache.
 unlink(
   c(
+    ".future",
     "Makefile",
-    "STDIN.o*",
-    "shell.sh"
-  )
+    "shell.sh",
+    "STDIN.o*"
+  ),
+  recursive = TRUE
 ) # Clean up other files.
