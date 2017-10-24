@@ -381,7 +381,7 @@ There is more to reproducibility than just using `drake` to watch for dependenci
 
 # Need more speed?
 
-`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and follow the instructions in the `parallelism` vignette.
+`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for the full details.
 
 ```{r endofline_quickstart, echo = F}
 clean(destroy = TRUE)

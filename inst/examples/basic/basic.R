@@ -224,18 +224,29 @@ clean() # Start over next time.
 # Here is just a taste. You can find a list of
 # future.batchtools backends at
 # https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
-# Note: the `jobs` argument no longer applies. Use
-# options(mc.cores = 4) or something similar from ?future.options.
+# Note: the `jobs` does not apply to the "future_lapply" backend.
+# Use `options(mc.cores = 4)` or something similar from ?future.options
+# to cap the number of simultaneous jobs.
+options(mc.cores = 2)
 library(future) # Use workflow() instead of plan()
 backend(multicore) # Same as future::plan(multicore)
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.
+
 backend(multisession) # Use separate background R sessions.
 make(my_plan, parallelism = "future_lapply")
 clean()
+
 if (require(future.batchtools)){ # More heavy-duty future-style parallel backends # nolint
-   backend(batchtools_local)
-   make(my_plan, parallelism = "future_lapply")
+  backend(batchtools_local)
+  make(my_plan, parallelism = "future_lapply")
+  clean()
+
+  # Deploy targets with batchtools_local and use `future`-style
+  # multicore parallism each individual target's command.
+  backend(list(batchtools_local, multicore))
+  make(my_plan, parallelism = "future_lapply")
+  clean()
 }
 clean() # Start over next time
 
