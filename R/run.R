@@ -1,18 +1,14 @@
-run_command <- function(target, command, config, seed = seed){
-  withr::with_seed(seed, {
-    with_retries(target = target, command = command, config = config)
-  })
-}
-
-with_retries <- function(target, command, config){
+run_command <- function(target, command, config, seed){
   retries <- 0
   while (retries <= config$retries){
     try({
-      value <- with_timeout(
-        target = target,
-        command = command,
-        config = config
-      )
+      withr::with_seed(seed, {
+        value <- with_timeout(
+          target = target,
+          command = command,
+          config = config
+        )
+      })
       return(value)
     },
     silent = FALSE)
@@ -27,7 +23,7 @@ with_retries <- function(target, command, config){
 
 with_timeout <- function(target, command, config){
   tryCatch({
-    R.utils::evalWithTimeout({
+    R.utils::withTimeout({
       value <- eval(parse(text = command), envir = config$envir)
     },
     timeout = config$timeout,
