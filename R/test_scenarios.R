@@ -37,8 +37,8 @@ envir_code <- function(x){
 apply_skip_os <- function(x){
   x$skip_os <- ""
   skip_on_windows <-
-    x$parallelism == "mclapply" &
-    x$jobs > 1
+    (x$parallelism == "mclapply" & x$jobs > 1) |
+    grepl("future::multisession", x$backend)
   x$skip_os[skip_on_windows] <- "windows"
   x
 }
