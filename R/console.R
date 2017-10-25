@@ -35,6 +35,13 @@ console_many_targets <- function(
     finish_console(message = message)
 }
 
+console_retry <- function(target, retries, config){
+  if (config$verbose & retries <= config$retries){
+    text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
+    finish_console(text = text, message = "retry")
+  }
+}
+
 console_up_to_date <- function(config, built = NULL){
   if (is.null(built)){
     built <- names(progress(cache = config$cache))

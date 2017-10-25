@@ -20,10 +20,7 @@ run_command <- function(target, command, seed, config){
       namespace = "errors"
     )
     retries <- retries + 1
-    if (config$verbose & retries <= config$retries){
-      text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
-      finish_console(text = text, message = "retry")
-    }
+    console_retry(target = target, retries = retries, config = config)
   }
   give_up(target = target, config = config)
 }
