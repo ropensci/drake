@@ -41,27 +41,14 @@ one_try <- function(target, command, seed, config){
 with_timeout <- function(target, command, config){
   env <- environment()
   command <- wrap_in_try_statement(target = target, command = command)
-  tryCatch({
-    R.utils::withTimeout({
+  R.utils::withTimeout({
       value <- eval(parse(text = command), envir = env)
     },
     timeout = config$timeout,
     cpu = config$cpu,
     elapsed = config$elapsed,
-    onTimeout = "error")
-  },
-  TimeoutException = function(e){
-    catch_timeout(target = target, config = config)
-  })
-}
-  
-catch_timeout <- function(target, config){
-  text <- paste0("timeout ", target, ": cpu = ",
-    config$cpu, "s, elapsed = ", config$elapsed, "s")
-  if (config$verbose){
-    finish_console(text = text, message = "timeout")
-  }
-  stop(text, call. = FALSE)
+    onTimeout = "error"
+  )
 }
 
 give_up <- function(target, config){

@@ -45,7 +45,8 @@ test_with_dir("timouts", {
   e <- eval(parse(text = scenario$envir))
   pl <- data.frame(target = "x", command = "Sys.sleep(0.25)")
   expect_error(
-    tmp <- capture.output(capture.output(make(
+    tmp <- capture.output(capture.output(
+      make(
       pl,
       envir = e,
       verbose = TRUE,
@@ -53,7 +54,8 @@ test_with_dir("timouts", {
     ), type = "message"), type = "output")
   )
   expect_error(
-    tmp <- capture.output(capture.output(make(
+    tmp <- capture.output(capture.output(
+      make(
       pl,
       envir = e,
       verbose = TRUE,
