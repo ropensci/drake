@@ -1,7 +1,7 @@
 library(future)
 library(drake)
 
-cl <- makeClusterPSOCK( # nolint
+cl <- future::makeClusterPSOCK( # nolint
   "localhost",
   ## Launch Rscript inside Docker container
   rscript = c(
@@ -11,8 +11,7 @@ cl <- makeClusterPSOCK( # nolint
   ## Install drake
   rscript_args = c(
     "-e", shQuote("install.packages('drake')")
-  ),
-  dryrun = TRUE
+  )
 )
 
 backend(cluster, workers = cl)
