@@ -1,7 +1,9 @@
 # Changes in release 4.4.0
 
+- Cache diagnostic information of targets that fail and retrieve diagnostic info with `diagnose()`.
 - Add `"future_lapply"` parallelism: parallel backends supported by the [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) packages. See `?backend` for examples and the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
 - If 'verbose' is 'TRUE' and all targets are already up to date (nothing to build), then `make()` and `outdated()` print "All targets are already up to date" to the console.
+- Add new examples in 'inst/examples', most of them demonstrating how to use the `"future_lapply"` backends.
 - New support for timeouts and retries when it comes to building targets.
 - Failed targets are now recorded during the build process. You can see them in `plot_graph()` and `progress()`. Also see the new `failed()` function, which is similar to `in_progress()`.
 - Speed up the overhead of `parLapply` parallelism. The downside to this fix is that `drake` has to be properly installed. It should not be loaded with `devtools::load_all()`. The speedup comes from lightening the first `clusterExport()` call in `run_parLapply()`. Previously, we exported every single individual `drake` function to all the workers, which created a bottleneck. Now, we just load `drake` itself in each of the workers, which works because `build()` and `do_prework()` are exported. 
