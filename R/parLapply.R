@@ -4,9 +4,7 @@ run_parLapply <- function(config) { # nolint
     run_lapply(config = config)
     return(invisible())
   }
-  outfile <- ifelse(config$verbose, "",
-    "/dev/null") # nolint
-  config$cluster <- makePSOCKcluster(config$jobs, outfile = outfile)
+  config$cluster <- makePSOCKcluster(config$jobs)
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
   if (identical(config$envir, globalenv()))
