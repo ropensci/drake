@@ -159,6 +159,13 @@ backend(list(batchjobs_sge, multiprocess))
 make(my_plan, parallelism = "future_lapply")
 ```
 
+For parallelism on clusters and job schedulers, configuration files are required. You can find some of these files on the `inst/template` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `examples_drake()` to view your options, and then `example_drake()` to write the files for an example.
+
+```{r writexamples, eval = FALSE}
+example_drake("sge")   # Sun/Univa Grid Engine workflow and supporting files
+example_drake("slurm") # SLURM workflow and supporting files
+```
+
 Be sure to heed the previously-mentioned cautionary note about deploying too many jobs. In `"future_lapply"` parallelism, the `jobs` argument is totally ignored. In at least some cases, you can limit the maximum number of jobs to 2 by calling `options(mc.cores = 2)` before `make()`. Depending on the `future` backend you select with `backend()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
 
 ## Makefile
