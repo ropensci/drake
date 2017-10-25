@@ -24,29 +24,6 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 `Drake` has edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
-# Due diligence
-
-## Install `drake` properly.
-
-You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
-
-## Diagnose your errors.
-
-When a target fails, use the `diagnose()` function to discover the problem. Try the following out yourself.
-
-```{r diagnosecaution, eval = FALSE}
-diagnose()
-f <- function(){
-  stop("unusual error")
-}
-bad_plan <- workflow(target = f())
-make(bad_plan)
-diagnose()
-error <- diagnose(y)
-str(error)
-error$calls # View the traceback.
-```
-
 # Workflow plans
 
 ## Beware unparsable symbols in your workflow plan.
@@ -122,10 +99,31 @@ However, please try to avoid formulas and function definitions in your commands.
 
 # Execution environment and files
 
+## Install `drake` properly.
+
+You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
+
 ## Install all your packages.
 
 Your workflow may depend on external packages such as
 [ggplot2](https://CRAN.R-project.org/package=ggplot2), [dplyr](https://CRAN.R-project.org/package=dplyr), or [MASS](https://CRAN.R-project.org/package=MASS). Such packages must be formally installed with `install.packages()`, `devtools::install_github()`, `devtools::install_local()`, or a similar command. If you load uninstalled packages with `devtools::load_all()`, results may be unpredictable and incorrect.
+
+## Diagnose your errors.
+
+When a target fails, use the `diagnose()` function to discover the problem. Try the following out yourself.
+
+```{r diagnosecaution, eval = FALSE}
+diagnose()
+f <- function(){
+  stop("unusual error")
+}
+bad_plan <- workflow(target = f())
+make(bad_plan)
+diagnose()
+error <- diagnose(y)
+str(error)
+error$calls # View the traceback.
+```
 
 ## Your workspace is modified by default.
 
@@ -225,6 +223,10 @@ make(
 ```
 
 You may need to adapt this last workaround, depending on the structure of the package, `yourProject`.
+
+## Timeouts may be unreliable.
+
+You can call `make(..., timeout = 10)` to time out all each target after 10 seconds. However, timeouts rely on [R.utils::withTimeout()](https://github.com/HenrikBengtsson/R.utils/issues/74), which in turn relies on `setTimeLimit()`. These functions are the best that R can offer right now, but they have [known issues](https://github.com/HenrikBengtsson/R.utils/issues/74), and the timeout may fail to take effect for certain environments.
 
 # Dependencies
 
