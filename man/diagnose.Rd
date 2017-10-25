@@ -33,8 +33,7 @@ Get the last stored error of a target
 that failed to build. This target could be a
 completely failed target or a target
 that failed initially, retried, then succeeded.
-If no target is given, or if there is no error information
-for the supplied target, then \code{diagnose()} simply
+If no target is given, then \code{diagnose()} simply
 lists the targets for which a error is retrievable.
 }
 \examples{
@@ -43,10 +42,10 @@ diagnose()
 f <- function(){
   stop("unusual error")
 }
-bad_plan <- workflow(target = f())
+bad_plan <- workflow(my_target = f())
 make(bad_plan)
 diagnose()
-error <- diagnose(y)
+error <- diagnose(my_target)
 str(error)
 error$calls # View the traceback.
 }

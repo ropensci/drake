@@ -29,7 +29,7 @@ test_with_dir("retries", {
   )
   expect_true(cached(x))
   expect_equal(diagnose(), "x")
-  expect_equal(diagnose("nothing"), "x")
+  expect_error(diagnose("notfound"))
   expect_true(inherits(diagnose(x), "error"))
   y <- "x"
   expect_true(inherits(diagnose(y, character_only = TRUE), "error"))

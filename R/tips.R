@@ -7,6 +7,9 @@
 #' cat(drake_tip())
 drake_tip <- function() {
   tips <- c(
+    "Use diagnose() to retrieve diagnostic information on
+     a target that fails to build.",
+
     "Predict the runtime of the next make() with predict_runtime().
      See also build_times() and rate_limiting_times().",
 

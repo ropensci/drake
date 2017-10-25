@@ -29,22 +29,21 @@ run_command <- function(target, command, seed, config){
 }
 
 one_try <- function(target, command, seed, config){
-  evaluate::try_capture_stack({
-    withr::with_seed(seed, {
-      with_timeout(
-        target = target,
-        command = command,
-        config = config
-      )
-    })
-  },
-  env = parent.frame())
+  withr::with_seed(seed, {
+    with_timeout(
+      target = target,
+      command = command,
+      config = config
+    )
+  })
 }
 
 with_timeout <- function(target, command, config){
+  env <- environment()
+  command <- wrap_in_try_statement(target = target, command = command)
   tryCatch({
     R.utils::withTimeout({
-      value <- eval(parse(text = command), envir = config$envir)
+      value <- eval(parse(text = command), envir = env)
     },
     timeout = config$timeout,
     cpu = config$cpu,
@@ -73,8 +72,18 @@ give_up <- function(target, config){
     finish_console(text = text, message = "fail")
   }
   stop(
-    "Target ", target, " failed. ",
+    "Target ", target, " failed to build. ",
     "Use diagnose(", target,
-    ") to retrieve diagnostic information."
+    ") to retrieve diagnostic information.",
+    call. = FALSE
+  )
+}
+
+wrap_in_try_statement <- function(target, command){
+  paste(
+    target,
+    "<- evaluate::try_capture_stack(quote({\n",
+    command,
+    "\n}), env = config$envir)"
   )
 }
