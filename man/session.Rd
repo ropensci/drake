@@ -36,6 +36,6 @@ session()
 }
 }
 \seealso{
-\code{\link{built}}, \code{\link{imported}},
+\code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 }

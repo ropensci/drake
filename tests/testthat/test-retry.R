@@ -19,6 +19,7 @@ test_with_dir("retries", {
     }
   }
   pl <- workflow(x = f())
+  expect_equal(diagnose(), character(0))
   tmp <- capture.output(capture.output(
     make(
       pl, parallelism = parallelism, jobs = jobs,
@@ -27,6 +28,11 @@ test_with_dir("retries", {
     type = "message"), type = "output"
   )
   expect_true(cached(x))
+  expect_equal(diagnose(), "x")
+  expect_equal(diagnose("nothing"), "x")
+  expect_true(inherits(diagnose(x), "error"))
+  y <- "x"
+  expect_true(inherits(diagnose(y, character_only = TRUE), "error"))
 })
 
 # Only use the default parallelism

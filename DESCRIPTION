@@ -29,6 +29,7 @@ Imports:
   codetools,
   crayon,
   eply,
+  evaluate,
   digest,
   future,
   grDevices,

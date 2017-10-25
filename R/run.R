@@ -1,23 +1,23 @@
-run_command <- function(target, command, config, seed){
+run_command <- function(target, command, seed, config){
   retries <- 0
   while (retries <= config$retries){
-    exception <- tryCatch({
-        withr::with_seed(seed, {
-          value <- with_timeout(
-            target = target,
-            command = command,
-            config = config
-          )
-        })
-        return(value)
-      },
-      error = function(exception){
-        write(
-          x = paste("Error:", exception$message),
-          file = stderr()
-        )
-        return(exception)
-      }
+    value <- one_try(
+      target = target,
+      command = command,
+      seed = seed,
+      config = config
+    )
+    if (!inherits(value, "error")){
+      return(value)
+    }
+    write(
+      x = paste0("Error building target ", target, ": ", value$message),
+      file = stderr()
+    )
+    config$cache$set(
+      key = target,
+      value = value,
+      namespace = "errors"
     )
     retries <- retries + 1
     if (config$verbose & retries <= config$retries){
@@ -25,7 +25,19 @@ run_command <- function(target, command, config, seed){
       finish_console(text = text, message = "retry")
     }
   }
-  give_up(target = target, exception = exception, config = config)
+  give_up(target = target, config = config)
+}
+
+one_try <- function(target, command, seed, config){
+  evaluate::try_capture_stack({
+    withr::with_seed(seed, {
+      with_timeout(
+        target = target,
+        command = command,
+        config = config
+      )
+    })
+  }, env = parent.frame())
 }
 
 with_timeout <- function(target, command, config){
@@ -52,12 +64,16 @@ catch_timeout <- function(target, config){
   stop(text, call. = FALSE)
 }
 
-give_up <- function(target, exception, config){
+give_up <- function(target, config){
   config$cache$set(key = target, value = "failed",
     namespace = "progress")
   text <- paste("fail", target)
   if (config$verbose){
     finish_console(text = text, message = "fail")
   }
-  stop(exception)
+  stop(
+    "Target ", target, " failed. ",
+    "Use diagnose(", target,
+    ") to retrieve diagnostic information."
+  )
 }

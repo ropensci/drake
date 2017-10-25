@@ -38,7 +38,7 @@ failed() # "x"
 }
 }
 \seealso{
-\code{\link{session}},
+\code{\link{diagnose}}, \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 }

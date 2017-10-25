@@ -1,7 +1,7 @@
 #' @title Function \code{session}
 #' @description Load the \code{\link{sessionInfo}()}
 #' of the last call to \code{\link{make}()}.
-#' @seealso \code{\link{built}}, \code{\link{imported}},
+#' @seealso \code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
 #' @return \code{\link{sessionInfo}()} of the last
@@ -35,7 +35,7 @@ session <- function(path = getwd(), search = TRUE,
 #' (1) are currently being built if \code{\link{make}()} is running, or
 #' (2) were in the process of being built if the previous call to
 #' \code{\link{make}()} quit unexpectedly.
-#' @seealso \code{\link{session}},
+#' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
@@ -67,7 +67,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @title Function \code{failed}
 #' @description List the targets that failed in the last call
 #' to \code{\link{make}()}
-#' @seealso \code{\link{session}},
+#' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
@@ -105,7 +105,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' Objects that drake imported, built, or attempted
 #' to build are listed as \code{"finished"} or \code{"in progress"}.
 #' Skipped objects are not listed.
-#' @seealso \code{\link{session}},
+#' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export

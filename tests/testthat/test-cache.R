@@ -94,7 +94,8 @@ test_with_dir("cache functions work", {
   expect_equal(read_plan(search = FALSE), config$plan)
   expect_equal(class(read_graph(search = FALSE)), "igraph")
 
-  # imported , built, cached
+  # imported , built, cached, diagnose
+  expect_equal(diagnose(search = FALSE), character(0))
   expect_equal(imported(files_only = FALSE, search = FALSE),
     imports)
   expect_equal(imported(files_only = TRUE, search = FALSE),
@@ -146,30 +147,33 @@ test_with_dir("cache functions work", {
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
   # progress, session
-  expect_true(is.list(session(search = T, path = s)))
-  expect_equal(sort(names(progress(search = T, path = s))),
+  expect_true(is.list(session(search = TRUE, path = s)))
+  expect_equal(sort(names(progress(search = TRUE, path = s))),
     sort(all))
-  expect_warning(status(search = T, path = s))
+  expect_warning(status(search = TRUE, path = s))
   expect_equal(sort(names(progress(no_imported_objects = TRUE,
-    search = T, path = s))), sort(c("'input.rds'", builds)))
-  expect_equal(sort(progress(search = T, path = s, bla, f,
+    search = TRUE, path = s))), sort(c("'input.rds'", builds)))
+  expect_equal(sort(progress(search = TRUE, path = s, bla, f,
     list = c("h", "final"))), sort(c(bla = "not built or imported",
     f = "finished", h = "finished", final = "finished")))
   expect_equal(in_progress(search = TRUE, path = s), character(0))
 
-  # imported, built, cached
-  expect_equal(sort(imported(files_only = FALSE, search = T,
+  # imported, built, cached, diagnose
+  expect_equal(diagnose(search = TRUE), character(0))
+  expect_equal(sort(imported(files_only = FALSE, search = TRUE,
     path = s)), sort(imports))
-  expect_equal(imported(files_only = T, search = T, path = s),
+  expect_equal(imported(files_only = TRUE, search = TRUE, path = s),
     "'input.rds'")
-  expect_equal(sort(built(search = T, path = s)), sort(config$plan$target))
-  twopiece <- sort(c(built(path = s, search = T), imported(files_only = FALSE,
-    path = s, search = T)))
-  expect_equal(sort(cached(path = s, search = T)), sort(all),
+  expect_equal(sort(built(search = TRUE, path = s)),
+    sort(config$plan$target))
+  twopiece <- sort(c(built(path = s, search = TRUE),
+    imported(files_only = FALSE,
+    path = s, search = TRUE)))
+  expect_equal(sort(cached(path = s, search = TRUE)), sort(all),
     twopiece)
   expect_equal(sort(cached(no_imported_objects = TRUE, path = s,
     search = T)), sort(c("'input.rds'", builds)))
-  expect_true(all(cached(list = all, path = s, search = T)))
+  expect_true(all(cached(list = all, path = s, search = TRUE)))
 
   # find your project
   expect_equal(find_project(path = s), file.path(scratch))
@@ -184,10 +188,10 @@ test_with_dir("cache functions work", {
     "igraph")
 
   # load and read stuff
-  expect_true(is.numeric(readd(a, path = s, search = T)))
+  expect_true(is.numeric(readd(a, path = s, search = TRUE)))
   expect_error(h(1))
   expect_error(j(1))
-  loadd(h, i, j, c, path = s, search = T, envir = envir)
+  loadd(h, i, j, c, path = s, search = TRUE, envir = envir)
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
