@@ -1,9 +1,9 @@
 library(future)
 library(drake)
 
-## Setup of Docker worker running rocker/r-base
+## Setup of Docker worker running rocker and r-base
 ## (requires installation of future package)
-cl <- makeClusterPSOCK(
+cl <- makeClusterPSOCK( # nolint
   "localhost",
   ## Launch Rscript inside Docker container
   rscript = c(
