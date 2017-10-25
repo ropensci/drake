@@ -24,9 +24,28 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 `Drake` has edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
-# Install `drake` properly.
+# Due diligence
+
+## Install `drake` properly.
 
 You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
+
+## Diagnose your errors.
+
+When a target fails, use the `diagnose()` function to discover the problem. Try the following out yourself.
+
+```{r diagnosecaution, eval = FALSE}
+diagnose()
+f <- function(){
+  stop("unusual error")
+}
+bad_plan <- workflow(target = f())
+make(bad_plan)
+diagnose()
+error <- diagnose(y)
+str(error)
+error$calls # View the traceback.
+```
 
 # Workflow plans
 

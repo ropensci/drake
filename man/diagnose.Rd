@@ -33,13 +33,17 @@ Get the last stored error of a target
 that failed to build. This target could be a
 completely failed target or a target
 that failed initially, retried, then succeeded.
-If no target is given, then \code{diagnose()} simply
+If no target is given, or if there is no error information
+for the supplied target, then \code{diagnose()} simply
 lists the targets for which a error is retrievable.
 }
 \examples{
 \dontrun{
 diagnose()
-bad_plan <- workflow(target = stop())
+f <- function(){
+  stop("unusual error")
+}
+bad_plan <- workflow(target = f())
 make(bad_plan)
 diagnose()
 error <- diagnose(y)

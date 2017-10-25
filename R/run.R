@@ -37,7 +37,8 @@ one_try <- function(target, command, seed, config){
         config = config
       )
     })
-  }, env = parent.frame())
+  },
+  env = parent.frame())
 }
 
 with_timeout <- function(target, command, config){

@@ -18,7 +18,7 @@ Drake is a workflow manager and build system for
 1. [Reproducibility](https://CRAN.R-project.org/view=ReproducibleResearch).
 2. [High-performance computing](https://CRAN.R-project.org/view=HighPerformanceComputing).
 
-Organize your work in a data frame. Then `make()` it.
+Organize your work in a data frame.
 
 ```r
 library(drake)
@@ -45,8 +45,19 @@ my_plan
 ## 15 coef_regression2_large              coefficients(regression2_large)
 ```
 
+Then `make()` it to build all your targets.
+
 ```r
-make(my_plan) # Run the commands to build the targets.
+make(my_plan)
+```
+
+If a target fails, diagnose it.
+
+```r
+diagnose() # targets with recorded failures
+error <- diagnose(large)
+str(error)
+error$calls # traceback
 ```
 
 # Installation
@@ -69,6 +80,7 @@ outdated(my_plan)    # Which targets need to be (re)built?
 missed(my_plan)      # Are you missing anything from your workspace?
 check(my_plan)       # Are you missing files? Is your workflow plan okay?
 make(my_plan)        # Run the workflow.
+diagnose(large)      # View error info if the target "large" failed to build.
 outdated(my_plan)    # Everything is up to date.
 plot_graph(my_plan)  # The graph also shows what is up to date.
 ```
@@ -83,7 +95,7 @@ vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignet
 
 # Useful functions
 
-Besides `make()`, here are some useful functions to learn about drake, 
+`make()` and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
 
 ```r
 load_basic_example()

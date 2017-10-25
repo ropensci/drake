@@ -29,6 +29,7 @@ load_basic_example() # Also (over)writes report.Rmd.
 plot_graph(my_plan) # Hover, click, drag, zoom, pan.
 make(my_plan) # Run the workflow.
 make(my_plan) # Check that everything is already up to date.
+diagnose(large) # View error info if the target "large" failed to build.
 ```
 
 Dive deeper into the built-in examples.
