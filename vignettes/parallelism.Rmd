@@ -144,6 +144,37 @@ backend(multisession)
 make(my_plan, parallelism = "future_lapply")
 ```
 
+You can even deploy to your own PSOCK clusters.
+
+```{r owncluster, eval = FALSE}
+library(parallel)
+cl <- makePSOCKcluster(2)
+backend(cluster, workers = cl)
+make(my_plan, parallelism = "future_lapply")
+```
+
+This approach should allow you to deploy targets to a [Docker container](https://www.docker.com/what-container).
+
+```{r owncluster, eval = FALSE}
+## Setup of Docker worker running rocker/r-base
+## (requires installation of future package)
+cl <- makeClusterPSOCK(
+  "localhost",
+  ## Launch Rscript inside Docker container
+  rscript = c(
+    "docker", "run", "--net=host", "rocker/r-base",
+    "Rscript"
+  ),
+  ## Install future package
+  rscript_args = c(
+    "-e", shQuote("install.packages('future')")
+  ),
+  dryrun = TRUE
+)
+backend(cluster, workers = cl)
+make(my_plan, parallelism = "future_lapply")
+```
+
 The [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) has [even more parallel backends](https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend), particularly for popular job schedulers such as [SLURM](https://slurm.schedmd.com/),  [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/), and the [Univa Grid Engine](https://supcom.hgc.jp/english/utili_info/manual/uge.html).
 
 ```{r futurebatchtools, eval = FALSE}
