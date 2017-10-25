@@ -23,7 +23,7 @@ test_with_dir("retries", {
   tmp <- capture.output(capture.output(
     make(
       pl, parallelism = parallelism, jobs = jobs,
-      envir = e, verbose = T, retries = 10
+      envir = e, verbose = FALSE, retries = 10
     ),
     type = "message"), type = "output"
   )
