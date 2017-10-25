@@ -15,7 +15,7 @@ test_with_dir("retries", {
       saveRDS(n + 1, file)
     }
     if (n < 5){
-      stop("Intentional error.")
+      stop("intentional error.")
     }
   }
   pl <- workflow(x = f())
