@@ -1,8 +1,6 @@
 library(future)
 library(drake)
 
-## Setup of Docker worker running rocker and r-base
-## (requires installation of future package)
 cl <- makeClusterPSOCK( # nolint
   "localhost",
   ## Launch Rscript inside Docker container
@@ -10,9 +8,9 @@ cl <- makeClusterPSOCK( # nolint
     "docker", "run", "--net=host", "rocker/r-base",
     "Rscript"
   ),
-  ## Install future package
+  ## Install drake
   rscript_args = c(
-    "-e", shQuote("install.packages('future')")
+    "-e", shQuote("install.packages('drake')")
   ),
   dryrun = TRUE
 )

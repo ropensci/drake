@@ -165,9 +165,9 @@ cl <- makeClusterPSOCK(
     "docker", "run", "--net=host", "rocker/r-base",
     "Rscript"
   ),
-  ## Install future package
+  ## Install drake
   rscript_args = c(
-    "-e", shQuote("install.packages('future')")
+    "-e", shQuote("install.packages('drake')")
   ),
   dryrun = TRUE
 )
