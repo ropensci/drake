@@ -43,7 +43,16 @@ test_with_dir("retries", {
 test_with_dir("timouts", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  pl <- data.frame(target = "x", command = "Sys.sleep(0.25)")
+  # From R.utils examples and tests
+  foo <- function() {
+    print("Tic")
+    for (kk in 1:20) {
+      print(kk)
+      Sys.sleep(0.1)
+    }
+    print("Tac")
+  }
+  pl <- data.frame(target = "x", command = "foo()")
   expect_error(
     tmp <- capture.output(capture.output(
       make(
@@ -53,6 +62,7 @@ test_with_dir("timouts", {
       timeout = 1e-3
     ), type = "message"), type = "output")
   )
+  expect_false(cached(x))
   expect_error(
     tmp <- capture.output(capture.output(
       make(
@@ -63,6 +73,7 @@ test_with_dir("timouts", {
       retries = 2
     ), type = "message"), type = "output")
   )
+  expect_false(cached(x))
   pl <- workflow(x = 1 + 1)
   expect_silent(
     tmp <- capture.output(make(
