@@ -150,8 +150,6 @@ check(my_plan)
 
 The data frame `my_plan` would be a pain to write by hand, so `drake` has functions to help you.
 
-# my_plan
-
 ```{r datasets}
 my_datasets <- workflow(
   small = simulate(5),
