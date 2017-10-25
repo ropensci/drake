@@ -1,0 +1,30 @@
+# from https://github.com/HenrikBengtsson/future.batchtools/blob/master/inst/templates/torque.tmpl
+#!/bin/bash
+######################################################################
+# A batchtools launch script template for a Torque/PBS
+#
+# Author: Henrik Bengtsson 
+######################################################################
+
+## Job name:
+#PBS -N <%= if (exists("job.name", mode = "character")) job.name else job.hash %>
+
+## Direct streams to logfile:
+#PBS -o <%= log.file %>
+
+## Merge standard error and output:
+#PBS -j oe
+
+## Email on abort (a) and termination (e), but not when starting (b)
+#PBS -m ae
+
+## Resources needed:
+<% if (length(resources) > 0) {
+  opts <- unlist(resources, use.names = TRUE)
+  opts <- sprintf("%s=%s", names(opts), opts)
+  opts <- paste(opts, collapse = ",") %>
+#PBS -l <%= opts %>
+<% } %>
+
+## Launch R and evaluated the batchtools R job
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
