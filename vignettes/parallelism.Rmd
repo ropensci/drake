@@ -156,7 +156,7 @@ make(my_plan, parallelism = "future_lapply")
 This approach should allow you to deploy targets to a [Docker container](https://www.docker.com/what-container).
 
 ```{r owncluster, eval = FALSE}
-## Setup of Docker worker running rocker/r-base
+## Setup of Docker worker running rocker and r-base
 ## (requires installation of future package)
 cl <- makeClusterPSOCK(
   "localhost",
