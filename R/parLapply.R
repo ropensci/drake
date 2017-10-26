@@ -14,7 +14,7 @@ run_parLapply <- function(config) { # nolint
   })
   clusterCall(cl = config$cluster, fun = do_prework, config = config,
     verbose_packages = FALSE)
-  run_parallel(
+  config <- run_parallel(
     config = config,
     worker = worker_parLapply # nolint
   )
