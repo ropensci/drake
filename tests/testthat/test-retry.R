@@ -20,12 +20,23 @@ test_with_dir("retries", {
   }
   pl <- workflow(x = f())
   expect_equal(diagnose(), character(0))
-  make(
-    pl, parallelism = parallelism, jobs = jobs,
-    envir = e, verbose = FALSE, retries = 10,
-    hook = function(code){
+
+  if (parallelism %in% "Makefile"){
+    hook <- function(code){
       withr::with_message_sink("sink.txt", code)
     }
+  } else {
+    hook <- function(code){
+      force(code)
+    }
+  }
+  tmp <- capture.output(
+    make(
+      pl, parallelism = parallelism, jobs = jobs,
+      envir = e, verbose = FALSE, retries = 10,
+      hook = hook
+    ),
+    type = "message"
   )
   expect_true(cached(x))
   expect_equal(diagnose(), "x")

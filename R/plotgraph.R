@@ -18,6 +18,8 @@
 #'
 #' @param verbose logical, whether to output messages to the console.
 #'
+#' @param hook same as for \code{\link{make}}
+#'
 #' @param cache optional drake cache. See code{\link{new_cache}()}. If
 #' The \code{cache} argument is ignored if a non-null \code{config}
 #' argument is supplied.

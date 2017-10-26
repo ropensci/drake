@@ -25,9 +25,7 @@ check <- function(
 ){
   force(envir)
   config <- build_config(plan = plan, targets = targets, envir = envir,
-    verbose = TRUE, hook = function(code){
-      force(code)
-    },
+    verbose = TRUE, hook = function(code) force(code),
     cache = cache, parallelism = "mclapply",
     jobs = 1, packages = character(0),
     prepend = character(0), prework = character(0), command = character(0),
