@@ -25,6 +25,7 @@
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}
 #' @param verbose same as for \code{\link{make}}
+#' @param hook same as for \code{\link{make}}
 #' @param parallelism same as for \code{\link{make}}
 #' @param jobs same as for \code{\link{make}}
 #' @param packages same as for \code{\link{make}}
@@ -40,7 +41,8 @@
 #' @param retries same as for \code{\link{make}}
 config <- function(
   plan = workflow(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  envir = parent.frame(), verbose = TRUE,
+  hook = function(code){force(code)}, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1, packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -59,7 +61,8 @@ config <- function(
     imports_only = TRUE,
     clear_progress = FALSE,
     plan = plan, targets = targets,
-    envir = envir, verbose = verbose, cache = cache,
+    envir = envir, verbose = verbose,
+    hook = hook, cache = cache,
     parallelism = use_default_parallelism(parallelism),
     jobs = jobs,
     packages = packages, prework = prework,
@@ -81,7 +84,7 @@ config <- function(
 
 build_config <- function(
   plan, targets, envir,
-  verbose, cache,
+  verbose, hook, cache,
   parallelism, jobs,
   packages, prework, prepend, command,
   args, clear_progress, recipe_command,
@@ -110,7 +113,7 @@ build_config <- function(
     envir = envir, verbose = verbose
   )
   list(plan = plan, targets = targets, envir = envir, cache = cache,
-    parallelism = parallelism, jobs = jobs, verbose = verbose,
+    parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),

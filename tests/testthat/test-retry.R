@@ -20,12 +20,12 @@ test_with_dir("retries", {
   }
   pl <- workflow(x = f())
   expect_equal(diagnose(), character(0))
-  tmp <- capture.output(capture.output(
-    make(
-      pl, parallelism = parallelism, jobs = jobs,
-      envir = e, verbose = FALSE, retries = 10
-    ),
-    type = "message"), type = "output"
+  make(
+    pl, parallelism = parallelism, jobs = jobs,
+    envir = e, verbose = FALSE, retries = 10,
+    hook = function(code){
+      withr::with_message_sink("sink.txt", code)
+    }
   )
   expect_true(cached(x))
   expect_equal(diagnose(), "x")
@@ -35,11 +35,6 @@ test_with_dir("retries", {
   expect_true(inherits(diagnose(y, character_only = TRUE), "error"))
 })
 
-# Only use the default parallelism
-# because errors are thrown in different
-# directions for different modes of parallelism.
-# Too much trouble to catch and handle the
-# intentional errors in tests.
 test_with_dir("timouts", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
@@ -54,33 +49,47 @@ test_with_dir("timouts", {
   }
   pl <- data.frame(target = "x", command = "foo()")
   expect_error(
-    tmp <- capture.output(capture.output(
+    tmp <- capture.output(
       make(
-      pl,
-      envir = e,
-      verbose = TRUE,
-      timeout = 1e-3
-    ), type = "message"), type = "output")
+        pl,
+        envir = e,
+        verbose = TRUE,
+        timeout = 1e-3,
+        hook = function(code){
+          withr::with_output_sink("out.txt",
+            withr::with_message_sink("err.txt", code)
+          )
+        }
+      )
+    )
   )
   expect_false(cached(x))
   expect_error(
-    tmp <- capture.output(capture.output(
+    tmp <- capture.output(
       make(
-      pl,
-      envir = e,
-      verbose = TRUE,
-      timeout = 1e-3,
-      retries = 2
-    ), type = "message"), type = "output")
+        pl,
+        envir = e,
+        verbose = TRUE,
+        timeout = 1e-3,
+        retries = 2,
+        hook = function(code){
+          withr::with_output_sink("out.txt",
+            withr::with_message_sink("err.txt", code)
+          )
+        }
+      )
+    )
   )
   expect_false(cached(x))
   pl <- workflow(x = 1 + 1)
   expect_silent(
-    tmp <- capture.output(make(
-      pl,
-      envir = e,
-      verbose = TRUE,
-      timeout = 1000
-    ), type = "output")
+    tmp <- capture.output(
+      make(
+        pl,
+        envir = e,
+        verbose = TRUE,
+        timeout = 1000
+      )
+    )
   )
 })

@@ -8,7 +8,17 @@
 #' @param hash_list list of hashes that tell which
 #' targets are up to date
 #' @param config internal configuration list
-build <- function(target, hash_list, config) {
+build <- function(target, hash_list, config){
+  config$hook(
+    build_in_hook(
+      target = target,
+      hash_list = hash_list,
+      config = config
+    )
+  )
+}
+
+build_in_hook <- function(target, hash_list, config) {
   start <- proc.time()
   hashes <- hash_list[[target]]
   config$cache$set(key = target, value = "in progress",
