@@ -38,7 +38,9 @@
 #' \code{hook = function(...){withr::with_message_sink("sink-file.txt", {...})}} # nolint
 #' This particular example is useful for distributed parallelism,
 #' where the calling R process does not have control over all the
-#' error and output streams.
+#' error and output streams. However, it may fail for PSOCK-based
+#' parallelism options such as \code{"parLapply"}, which
+#' do not always behave well with simultaneous message \code{sink()}s.
 #'
 #' @param imports_only logical, whether to skip building the targets
 #' in \code{plan} and just import objects and files.

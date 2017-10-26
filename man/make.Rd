@@ -49,7 +49,9 @@ For example, to redirect error messages, you might use
 \code{hook = function(...){withr::with_message_sink("sink-file.txt", {...})}} # nolint
 This particular example is useful for distributed parallelism,
 where the calling R process does not have control over all the
-error and output streams.}
+error and output streams. However, it may fail for PSOCK-based
+parallelism options such as \code{"parLapply"}, which
+do not always behave well with simultaneous message \code{sink()}s.}
 
 \item{cache}{drake cache as created by \code{\link{new_cache}()}.
 See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
