@@ -1,8 +1,7 @@
 run_parLapply <- function(config) { # nolint
   eval(parse(text = "require(drake)"))
   if (config$jobs < 2) {
-    run_lapply(config = config)
-    return(invisible())
+    return(run_lapply(config = config))
   }
   config$cluster <- makePSOCKcluster(config$jobs)
   clusterExport(cl = config$cluster, varlist = "config",
@@ -20,6 +19,7 @@ run_parLapply <- function(config) { # nolint
     worker = worker_parLapply # nolint
   )
   stopCluster(cl = config$cluster)
+  invisible(config)
 }
 
 worker_parLapply <- function(targets, hash_list, config) { # nolint

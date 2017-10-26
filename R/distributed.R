@@ -18,8 +18,7 @@ prepare_distributed <- function(config){
       jobs = config$jobs,
       parallelism = config$parallelism,
       packages = config$packages,
-      prework = config$prework,
-      inform_up_to_date = FALSE
+      prework = config$prework
     )
   )
 }

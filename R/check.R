@@ -31,7 +31,7 @@ check <- function(
     args = character(0), recipe_command = default_recipe_command(),
     clear_progress = FALSE,
     timeout = Inf, cpu = Inf, elapsed = Inf,
-    retries = 0
+    retries = 0, imports_only = FALSE
   )
   check_config(config)
   check_strings(config$plan)

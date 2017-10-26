@@ -202,10 +202,6 @@ make <- function(
       call. = FALSE
     )
   }
-  parallelism <- match.arg(
-    arg = parallelism,
-    choices = parallelism_choices(distributed_only = FALSE)
-  )
   config <- build_config(
     plan = plan,
     targets = targets,
@@ -221,30 +217,30 @@ make <- function(
     recipe_command = recipe_command,
     clear_progress = clear_progress,
     cache = cache,
+    imports_only = imports_only,
     timeout = timeout,
     cpu = cpu,
     elapsed = elapsed,
     retries = retries
   )
-  check_config(config)
-  store_config(config)
-  config$cache$set(
-    key = "sessionInfo",
-    value = sessionInfo(),
-    namespace = "session"
-    )
-  if (imports_only){
-    delete_these <- intersect(config$plan$target, V(config$graph)$name)
-    config$graph <- delete_vertices(config$graph, v = delete_these)
-    if (parallelism %in% parallelism_choices(distributed_only = TRUE)){
-      parallelism <- default_parallelism()
-    }
-  }
-  get(paste0("run_", parallelism), envir = getNamespace("drake"))(config)
-  if (!imports_only){
-    console_up_to_date(config)
-  }
+  check_config(config = config)
+  store_config(config = config)
+  store_session(config = config)
+  config <- imports_only_preprocessing(config = config)
+  config <- run_parallel_backend(config = config)
+  config$parallelism <- parallelism
+  console_up_to_date(config = config)
   return(invisible(config))
+}
+
+imports_only_preprocessing <- function(config){
+  if (!config$imports_only){
+    return(config)
+  }
+  delete_these <- intersect(config$plan$target, V(config$graph)$name)
+  config$graph <- delete_vertices(config$graph, v = delete_these)
+  config$parallelism <- use_default_parallelism(config$parallelism)
+  config
 }
 
 next_targets <- function(graph_remaining_targets){
@@ -258,4 +254,12 @@ next_targets <- function(graph_remaining_targets){
   )
   which(!number_dependencies) %>%
     names()
+}
+
+store_session <- function(config){
+  config$cache$set(
+    key = "sessionInfo",
+    value = sessionInfo(),
+    namespace = "session"
+  )
 }

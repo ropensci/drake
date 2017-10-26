@@ -42,14 +42,13 @@ console_retry <- function(target, retries, config){
   }
 }
 
-console_up_to_date <- function(config, built = NULL){
-  if (is.null(built)){
-    built <- names(progress(cache = config$cache))
+console_up_to_date <- function(config){
+  if (config$imports_only){
+    return(invisible())
   }
-  all_targets_up_to_date <- !any(built %in% config$plan$target)
-  msg <- color("All targets are already up to date.\n", colors["target"])
-  if (config$verbose && all_targets_up_to_date){
-    cat(msg)
+  if (config$verbose && !length(config$attempted_targets)){
+    color("All targets are already up to date.\n", colors["target"]) %>%
+      cat
   }
 }
 

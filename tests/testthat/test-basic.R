@@ -54,6 +54,8 @@ test_with_dir("basic example works", {
   dats <- c("small", "large")
   config$targets <- dats
   con <- testrun(config)
+  expect_equal(parallelism == "Makefile", file.exists("Makefile"))
+
   expect_equal(sort(justbuilt(con)), sort(dats))
   remove_these <- intersect(dats, ls(config$envir))
   rm(list = remove_these, envir = config$envir)
@@ -70,7 +72,7 @@ test_with_dir("basic example works", {
 
   config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  expect_equal(parallelism == "Makefile", file.exists("Makefile"))
+
   expect_equal(outdated(my_plan, envir = e, jobs = jobs,
     parallelism = parallelism,
     verbose = FALSE), character(0))

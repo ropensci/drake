@@ -247,8 +247,7 @@ rate_limiting_times <- function(
     outdated <- outdated(
       plan = plan,
       envir = envir,
-      config = config,
-      inform_up_to_date = FALSE
+      config = config
     ) %>%
       intersect(y = plan$target) %>%
       c(import_keys) %>%

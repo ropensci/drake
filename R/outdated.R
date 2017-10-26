@@ -33,9 +33,6 @@
 #' Computing \code{config}
 #' in advance could save time if you plan multiple calls to
 #' \code{outdated()}.
-#' @param inform_up_to_date logical, whether to print
-#' "All targets already up to date." if applicable.
-#' Intended for internal use only.
 outdated <-  function(
   plan = workflow(),
   targets = drake::possible_targets(plan),
@@ -46,8 +43,7 @@ outdated <-  function(
   jobs = 1,
   packages = (.packages()),
   prework = character(0),
-  config = NULL,
-  inform_up_to_date = TRUE
+  config = NULL
 ){
   force(envir)
   if (is.null(config)){
@@ -73,10 +69,7 @@ outdated <-  function(
     }
   )
   if (!length(rebuild)){
-    if (inform_up_to_date){
-      console_up_to_date(config, built = character(0))
-    }
-    return(invisible(character(0)))
+    return(character(0))
   } else{
     lapply(
       rebuild,
@@ -163,7 +156,7 @@ missed <- function(
     }
   )
   if (!length(missing)){
-    return(invisible(character(0)))
+    return(character(0))
   }
   return(missing)
 }

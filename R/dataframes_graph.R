@@ -109,10 +109,7 @@ dataframes_graph <- function(
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress()
   config$failed <- failed()
-  config$outdated <- outdated(
-    config = config,
-    inform_up_to_date = FALSE
-  )
+  config$outdated <- outdated(config = config)
   config$files <- Filter(x = config$nodes$id, f = is_file)
   config$functions <- Filter(x = config$imports,
     f = function(x) can_get_function(x, envir = envir))

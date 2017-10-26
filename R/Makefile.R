@@ -3,7 +3,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   run = TRUE,
   debug = FALSE
 ){
-  out <- prepare_distributed(config = config)
+  config$attempted_targets <- prepare_distributed(config = config)
   with_output_sink(
     new = "Makefile",
     code = {
@@ -11,7 +11,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
       makefile_rules(config)
     }
   )
-  time_stamps(config = config, outdated = out)
+  time_stamps(config = config)
   error_code <- ifelse(
     run,
     system2(command = config$command, args = config$args),
@@ -22,7 +22,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     file <- globalenv_file(dir)
     unlink(file, force = TRUE)
   }
-  return(invisible(error_code))
+  return(invisible(config))
 }
 
 makefile_head <- function(config){

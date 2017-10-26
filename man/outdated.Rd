@@ -7,8 +7,7 @@
 outdated(plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = (.packages()), prework = character(0), config = NULL,
-  inform_up_to_date = TRUE)
+  packages = (.packages()), prework = character(0), config = NULL)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -42,10 +41,6 @@ For example,
 Computing \code{config}
 in advance could save time if you plan multiple calls to
 \code{outdated()}.}
-
-\item{inform_up_to_date}{logical, whether to print
-"All targets already up to date." if applicable.
-Intended for internal use only.}
 }
 \description{
 Check which targets are out of date and need to be rebuilt.

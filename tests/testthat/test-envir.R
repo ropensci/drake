@@ -45,7 +45,8 @@ test_with_dir("prune_envir in full build", {
     cache = NULL,
     clear_progress = FALSE,
     timeout = Inf, cpu = Inf, elapsed = Inf,
-    retries = 0
+    retries = 0,
+    imports_only = FALSE
   )
 
   # actually run

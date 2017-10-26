@@ -60,7 +60,8 @@ config <- function(
     clear_progress = FALSE,
     plan = plan, targets = targets,
     envir = envir, verbose = verbose, cache = cache,
-    parallelism = parallelism, jobs = jobs,
+    parallelism = use_default_parallelism(parallelism),
+    jobs = jobs,
     packages = packages, prework = prework,
     prepend = prepend, command = command, args = args,
     recipe_command = recipe_command,
@@ -68,6 +69,10 @@ config <- function(
     cpu = cpu,
     elapsed = elapsed,
     retries = retries
+  )
+  config$parallelism <- match.arg(
+    parallelism,
+    choices = parallelism_choices(distributed_only = FALSE)
   )
   config$graph <- build_graph(plan = plan, targets = targets,
     envir = envir, verbose = verbose)
@@ -80,6 +85,7 @@ build_config <- function(
   parallelism, jobs,
   packages, prework, prepend, command,
   args, clear_progress, recipe_command,
+  imports_only,
   timeout, cpu, elapsed, retries
 ){
   seed <- get_valid_seed()
@@ -109,7 +115,7 @@ build_config <- function(
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    inventory = cache$list(), seed = seed,
+    inventory = cache$list(), seed = seed, imports_only = imports_only,
     inventory_filemtime = cache$list(namespace = "filemtime"),
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   )

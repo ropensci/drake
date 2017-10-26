@@ -14,7 +14,7 @@ dbug <- function() {
     recipe_command = "Rscript -e",
     cache = NULL, clear_progress = TRUE,
     timeout = Inf, cpu = Inf, elapsed = Inf,
-    retries = 0
+    retries = 0, imports_only = FALSE
   )
 }
 
