@@ -12,25 +12,31 @@
 #' as names and vectors of possible values as list elements.
 #' @export
 #' @return a workflow plan data frame with the wildcards evaluated
+#'
 #' @param plan workflow plan data frame, similar to one produced by
 #' \code{ink{workflow}}
+#'
 #' @param rules Named list with wildcards as names and vectors of
 #' replacements
 #' as values. This is a way to evaluate multiple wildcards at once.
 #' When not \code{NULL}, \code{rules} overrules \code{wildcard} and
 #' \code{values} if
 #' not \code{NULL}.
+#'
 #' @param wildcard character scalar denoting a wildcard placeholder
+#'
 #' @param values vector of values to replace the wildcard
 #' in the drake instructions. Will be treated as a character vector.
 #' Must be the same length as \code{plan$command} if \code{expand} is
 #' \code{TRUE}.
+#'
 #' @param expand If \code{TRUE}, create a new rows in the workflow plan
 #' data frame
 #' if multiple values are assigned to a single wildcard.
 #' If \code{FALSE}, each occurrence of the wildcard
 #' is replaced with the next entry in the \code{values} vector,
 #' and the values are recycled.
+#'
 #' @examples
 #' datasets <- workflow(
 #'   small = simulate(5),

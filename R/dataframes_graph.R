@@ -19,6 +19,8 @@
 #'
 #' @param verbose logical, whether to output messages to the console.
 #'
+#' @param hook same as for \code{\link{make}}
+#'
 #' @param cache optional drake cache. Only used if the \code{config}
 #' argument is \code{NULL} (default). See code{\link{new_cache}()}.
 #'
@@ -38,7 +40,9 @@
 #' See \code{?parallelism_choices} for details.
 #'
 #' @param font_size numeric, font size of the node labels in the graph
+#'
 #' @param packages same as for \code{\link{make}}
+#'
 #' @param prework same as for \code{\link{make}}
 #'
 #' @param build_times logical, whether to show the \code{\link{build_times}()}
@@ -87,6 +91,9 @@
 dataframes_graph <- function(
   plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
+  hook = function(code){
+    force(code)
+  },
   cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
@@ -95,7 +102,8 @@ dataframes_graph <- function(
   force(envir)
   if (is.null(config)){
     config <- config(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, cache = cache,
+      envir = envir, verbose = verbose,
+      hook = hook, cache = cache,
       parallelism = parallelism, jobs = jobs,
       packages = packages, prework = prework)
   }

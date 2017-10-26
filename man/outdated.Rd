@@ -5,7 +5,8 @@
 \title{Function outdated}
 \usage{
 outdated(plan = workflow(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0), config = NULL)
 }
@@ -18,6 +19,8 @@ outdated(plan = workflow(), targets = drake::possible_targets(plan),
 \code{config$envir}.}
 
 \item{verbose}{same as for \code{\link{make}}}
+
+\item{hook}{same as for \code{\link{make}}}
 
 \item{cache}{optional drake cache. See code{\link{new_cache}()}.
 The \code{cache} argument is ignored if a

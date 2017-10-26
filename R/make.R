@@ -39,7 +39,7 @@
 #' This particular example is useful for distributed parallelism,
 #' where the calling R process does not have control over all the
 #' error and output streams.
-#' 
+#'
 #' @param imports_only logical, whether to skip building the targets
 #' in \code{plan} and just import objects and files.
 #'
@@ -183,7 +183,9 @@ make <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  hook = function(code){force(code)},
+  hook = function(code){
+    force(code)
+  },
   cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1,

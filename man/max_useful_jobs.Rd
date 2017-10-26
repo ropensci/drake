@@ -6,7 +6,8 @@
 \usage{
 max_useful_jobs(plan = workflow(), from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, cache = drake::get_cache(), jobs = 1,
+  verbose = TRUE, hook = function(code) {     force(code) },
+  cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), config = NULL, imports = c("files", "all",
   "none"))
@@ -27,6 +28,8 @@ useful jobs as if the workflow were to run from scratch
 \code{envir}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
+
+\item{hook}{same as for \code{\link{make}}}
 
 \item{cache}{optional drake cache. See code{\link{new_cache}()}. If
 The \code{cache} argument is ignored if a non-null

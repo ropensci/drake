@@ -38,6 +38,7 @@
 #' limited to these targets and their dependencies.
 #' @param envir same as for \code{\link{make}}
 #' @param verbose same as for \code{\link{make}}
+#' @param hook same as for \code{\link{make}}
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' The \code{cache} argument is ignored if a
 #' non-null \code{config} argument is supplied.
@@ -71,6 +72,9 @@ predict_runtime <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
+  hook = function(code){
+    force(code)
+  },
   cache = drake::get_cache(path = path, search = search),
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -91,6 +95,7 @@ predict_runtime <- function(
     targets = targets,
     envir = envir,
     verbose = verbose,
+    hook = hook,
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
@@ -106,10 +111,12 @@ predict_runtime <- function(
     round(digits = digits) %>%
     to_build_duration
 }
-  
+
 #' @title Function rate_limiting_times
 #' @description Return a data frame of elapsed build times of
 #' the rate-limiting targets of a \code{\link{make}()} workflow.
+#' @export
+#'
 #' @details The \code{stage} column of the returned data frame
 #' is an index that denotes a parallelizable stage.
 #' Within each stage during \code{\link{make}()},
@@ -129,10 +136,11 @@ predict_runtime <- function(
 #' of all targets need to be available (automatically cached
 #' by \code{\link{make}()}). Otherwise, \code{rate_limiting_times()}
 #' will warn you and tell you which targets have missing times.
-#' @export
+#'
 #' @seealso \code{\link{predict_runtime}},
 #' \code{\link{build_times}}
 #' \code{\link{make}}
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -153,30 +161,45 @@ predict_runtime <- function(
 #'   digits = 4
 #' )
 #' }
+#'
 #' @param plan same as for \code{\link{make}}
+#'
 #' @param from_scratch logical, whether to assume
 #' next hypothetical call to \code{\link{make}()}
 #' is a build from scratch (after \code{\link{clean}()}).
+#'
 #' @param targets_only logical, whether to factor in just the
 #' targets or use times from everything, including the imports.
+#'
 #' @param targets Targets to build in the workflow.
 #' Timing information is
 #' limited to these targets and their dependencies.
+#'
 #' @param envir same as for \code{\link{make}}. Supersedes
 #' \code{config$envir}.
+#'
 #' @param verbose same as for \code{\link{make}}
+#'
+#' @param hook same as for \code{\link{make}}
+#'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' The \code{cache} argument is ignored if a
 #' non-null \code{config} argument is supplied.
+#'
 #' @param parallelism same as for \code{\link{make}}, and
 #' also used to process imported objects/files.
+#'
 #' @param jobs same as for \code{\link{make}}, just used to
 #' process imports.
+#'
 #' @param future_jobs hypothetical number of jobs
 #' assumed for the predicted runtime.
 #' assuming this number of jobs.
+#'
 #' @param packages same as for \code{\link{make}}
+#'
 #' @param prework same as for \code{\link{make}}
+#'
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -185,10 +208,13 @@ predict_runtime <- function(
 #' Computing \code{config}
 #' in advance could save time if you plan multiple calls to
 #' this function.
+#'
 #' @param digits number of digits for rounding the times.
+#'
 #' @param path file path to the folder containing the cache.
 #' Yes, this is the parent directory containing the cache,
 #' not the cache itself.
+#'
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 rate_limiting_times <- function(
@@ -198,6 +224,9 @@ rate_limiting_times <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
+  hook = function(code){
+    force(code)
+  },
   cache = drake::get_cache(path = path, search = search),
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -216,6 +245,7 @@ rate_limiting_times <- function(
       targets = targets,
       envir = envir,
       verbose = verbose,
+      hook = hook,
       cache = cache,
       parallelism = parallelism,
       jobs = jobs,

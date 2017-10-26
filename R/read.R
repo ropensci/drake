@@ -64,29 +64,38 @@ readd <- function(
 #' @seealso \code{\link{cached}}, \code{\link{built}},
 #' \code{\link{imported}}, \code{\link{workflow}}, \code{\link{make}},
 #' @export
+#'
 #' @param ... targets to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
+#'
 #' @param list character vector naming targets to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#'
 #' @param imported_only logical, whether only imported objects
 #' should be loaded.
+#'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
+#'
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
+#'
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#'
 #' @param envir environment to load objects into. Defaults to the
 #' calling environment (current workspace).
+#'
 #' @param jobs number of parallel jobs for loading objects. On
 #' non-Windows systems, the loading process for multiple objects
 #' can be lightly parallelized via \code{parallel::mclapply()}.
 #' just set jobs to be an integer greater than 1. On Windows,
 #' \code{jobs} is automatically demoted to 1.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()

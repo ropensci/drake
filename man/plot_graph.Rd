@@ -5,13 +5,14 @@
 \title{Function \code{plot_graph}}
 \usage{
 plot_graph(plan = workflow(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
-  jobs = 1, parallelism = drake::default_parallelism(),
-  packages = (.packages()), prework = character(0), config = NULL,
-  file = character(0), selfcontained = FALSE, build_times = TRUE,
-  digits = 3, targets_only = FALSE, split_columns = FALSE,
-  font_size = 20, layout = "layout_with_sugiyama", main = NULL,
-  direction = "LR", hover = TRUE, navigationButtons = TRUE, ...)
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(), jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), config = NULL, file = character(0),
+  selfcontained = FALSE, build_times = TRUE, digits = 3,
+  targets_only = FALSE, split_columns = FALSE, font_size = 20,
+  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
+  hover = TRUE, navigationButtons = TRUE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

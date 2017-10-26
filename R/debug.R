@@ -8,7 +8,10 @@ dbug <- function() {
   build_config(plan = plan, targets = plan$target,
     envir = envir, parallelism = scenario$parallelism,
     jobs = scenario$jobs, prepend = character(0),
-    verbose = FALSE, hook = function(code){force(code)},
+    verbose = FALSE,
+    hook = function(code){
+      force(code)
+    },
     packages = character(0), prework = character(0),
     command = default_Makefile_command(),
     args = character(0),

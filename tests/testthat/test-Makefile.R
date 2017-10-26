@@ -56,6 +56,9 @@ test_with_dir("files inside directories can be timestamped", {
     envir = new.env(), jobs = 1,
     cache = NULL, clear_progress = FALSE,
     timeout = Inf, cpu = Inf, elapsed = Inf,
+    hook = function(code){
+      force(code)
+    },
     retries = 0, imports_only = FALSE)
   path <- cache_path(config$cache)
   run_Makefile(config, run = FALSE)

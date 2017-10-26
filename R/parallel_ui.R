@@ -4,6 +4,7 @@
 #' @seealso \code{\link{make}}, \code{\link{shell_file}}
 #' @return Character vector listing the types of parallel
 #' computing supported.
+#'
 #' @details Run \code{make(..., parallelism = x, jobs = n)} for any of
 #' the following values of \code{x} to distribute targets over parallel
 #' units of execution.
@@ -63,9 +64,11 @@
 #' \code{\link{make}()} or \code{\link{make}()}.
 #'  Also, Windows users will need to download and install Rtools.
 #' }}
+#'
 #' @param distributed_only logical, whether to return only
 #' the distributed backend types, such as \code{Makefile} and
 #' \code{parLapply}
+#'
 #' @examples
 #' parallelism_choices()
 #' parallelism_choices(distributed_only = TRUE)
@@ -109,30 +112,42 @@ default_parallelism <- function() {
 #' how fast objects/files are imported.
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
+#'
 #' @return a list of three data frames: one for nodes, one for edges,
 #' and one for the legend/key nodes.
+#'
 #' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}},
 #' \code{\link{shell_file}}
+#'
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
+#'
 #' @param from_scratch logical, whether to compute the max
 #' useful jobs as if the workflow were to run from scratch
 #' (with all targets out of date).
+#'
 #' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
+#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor of
 #' \code{envir}.
+#'
 #' @param verbose logical, whether to output messages to the console.
+#'
+#' @param hook same as for \code{\link{make}}
+#'
 #' @param cache optional drake cache. See code{\link{new_cache}()}. If
 #' The \code{cache} argument is ignored if a non-null
 #' \code{config} argument is supplied.
+#'
 #' @param jobs The \code{outdated()} function is called internally,
 #' and it needs to import objects and examine your
 #' input files to see what has been updated. This could take some time,
 #' and parallel computing may be needed
 #' to speed up the process. The \code{jobs} argument is number of parallel jobs
 #' to use for faster computation.
+#'
 #' @param parallelism Choice of parallel backend to speed up the computation.
 #' Execution order in \code{\link{make}()} is slightly different
 #' when \code{parallelism} equals \code{'Makefile'}
@@ -141,8 +156,11 @@ default_parallelism <- function() {
 #' Thus, \code{max_useful_jobs()} may give a
 #' different answer for Makefile parallelism.
 #' See \code{?parallelism_choices} for details.
+#'
 #' @param packages same as for \code{\link{make}}
+#'
 #' @param prework same as for \code{\link{make}}
+#'
 #' @param config internal configuration list of \code{\link{make}(...)},
 #' produced also with \code{\link{config}()}.
 #' \code{config$envir} is ignored.
@@ -154,6 +172,7 @@ default_parallelism <- function() {
 #' Computing \code{\link{config}}
 #' in advance could save time if you plan multiple calls to
 #' \code{dataframes_graph()}.
+#'
 #' @param imports Set the \code{imports} argument to change your
 #' assumptions about how fast objects/files are imported.
 #' Possible values:
@@ -168,6 +187,7 @@ default_parallelism <- function() {
 #'  \item{'none'}{: Ignore all the imports and just focus on the max number
 #'    of useful jobs for parallelizing targets.}
 #' }
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -197,7 +217,11 @@ default_parallelism <- function() {
 max_useful_jobs <- function(
   plan = workflow(), from_scratch = FALSE,
   targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  envir = parent.frame(), verbose = TRUE,
+  hook = function(code){
+    force(code)
+  },
+  cache = drake::get_cache(),
   jobs = 1, parallelism = drake::default_parallelism(),
   packages = (.packages()), prework = character(0), config = NULL,
   imports = c("files", "all", "none")
@@ -209,6 +233,7 @@ max_useful_jobs <- function(
       targets = targets,
       envir = envir,
       verbose = verbose,
+      hook = hook,
       cache = cache,
       parallelism = parallelism,
       jobs = jobs,

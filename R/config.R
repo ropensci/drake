@@ -42,7 +42,10 @@
 config <- function(
   plan = workflow(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
-  hook = function(code){force(code)}, cache = drake::get_cache(),
+  hook = function(code){
+    force(code)
+  },
+  cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1, packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),

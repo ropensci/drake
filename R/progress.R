@@ -109,27 +109,36 @@ failed <- function(path = getwd(), search = TRUE,
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
 #' @export
+#'
 #' @return Statuses of targets
+#'
 #' @param ... objects to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
+#'
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#'
 #' @param no_imported_objects logical, whether to only return information
 #' about imported files and targets with commands (i.e. whether to ignore
 #' imported objects that are not files).
+#'
 #' @param imported_files_only logical, deprecated. Same as
 #' \code{no_imported_objects}.  Use the \code{no_imported_objects} argument
 #' instead.
+#'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
+#'
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
+#'
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()

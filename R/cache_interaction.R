@@ -12,11 +12,14 @@
 #' @return Either a named logical indicating whether the given
 #' targets or cached or a character vector listing all cached
 #' items, depending on whether any targets are specified
+#'
 #' @param ... objects to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
+#'
 #' @param list character vector naming objects to be loaded from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#'
 #' @param no_imported_objects logical, applies only when
 #' no targets are specified and a list of cached targets is returned.
 #' If \code{no_imported_objects} is \code{TRUE}, then \code{cached()}
@@ -25,16 +28,20 @@
 #' all cached objects will be listed. Since all your functions and
 #' all their global variables are imported, the full list of
 #' imported objects could get really cumbersome.
+#'
 #' @param cache drake cache. See \code{\link{new_cache}()}.
 #' If supplied, \code{path} and \code{search} are ignored.
+#'
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
 #' Ignored if a \code{cache} is supplied.
+#'
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' Ignored if a \code{cache} is supplied.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()

@@ -5,7 +5,8 @@
 \title{Function \code{make}}
 \usage{
 make(plan = workflow(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = (.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -40,6 +41,15 @@ then reproducibly tracked as dependencies.}
 
 \item{verbose}{logical, whether to print progress to the console.
 Skipped objects are not printed.}
+
+\item{hook}{function with at least one argument.
+Serves as a wrapper around the build of each target or import
+(via \code{drake:::build()}).
+For example, to redirect error messages, you might use
+\code{hook = function(...){withr::with_message_sink("sink-file.txt", {...})}} # nolint
+This particular example is useful for distributed parallelism,
+where the calling R process does not have control over all the
+error and output streams.}
 
 \item{cache}{drake cache as created by \code{\link{new_cache}()}.
 See also \code{\link{get_cache}()}, \code{\link{this_cache}()},

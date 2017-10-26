@@ -5,11 +5,12 @@
 \title{Function \code{dataframes_graph}}
 \usage{
 dataframes_graph(plan = workflow(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(),
-  jobs = 1, parallelism = drake::default_parallelism(),
-  packages = (.packages()), prework = character(0), build_times = TRUE,
-  digits = 3, targets_only = FALSE, split_columns = FALSE,
-  font_size = 20, config = NULL)
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(), jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), build_times = TRUE, digits = 3,
+  targets_only = FALSE, split_columns = FALSE, font_size = 20,
+  config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -23,6 +24,8 @@ dataframes_graph(plan = workflow(), targets = drake::possible_targets(plan),
 of \code{envir}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
+
+\item{hook}{same as for \code{\link{make}}}
 
 \item{cache}{optional drake cache. Only used if the \code{config}
 argument is \code{NULL} (default). See code{\link{new_cache}()}.}

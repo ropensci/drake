@@ -6,11 +6,11 @@
 \usage{
 predict_runtime(plan = workflow(), from_scratch = FALSE,
   targets_only = FALSE, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, cache = drake::get_cache(path =
-  path, search = search), parallelism = drake::default_parallelism(),
-  jobs = 1, future_jobs = jobs, packages = (.packages()),
-  prework = character(0), config = NULL, digits = 3, path = getwd(),
-  search = TRUE)
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(path = path, search = search),
+  parallelism = drake::default_parallelism(), jobs = 1,
+  future_jobs = jobs, packages = (.packages()), prework = character(0),
+  config = NULL, digits = 3, path = getwd(), search = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -31,6 +31,8 @@ limited to these targets and their dependencies.}
 \item{envir}{same as for \code{\link{make}}}
 
 \item{verbose}{same as for \code{\link{make}}}
+
+\item{hook}{same as for \code{\link{make}}}
 
 \item{cache}{optional drake cache. See code{\link{new_cache}()}.
 The \code{cache} argument is ignored if a

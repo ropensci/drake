@@ -13,6 +13,7 @@ configure_cache(cache = drake::get_cache(),
 \item{cache}{cache to configure}
 
 \item{short_hash_algo}{short hash algorithm for drake.
+
 The short algorithm must be among \code{\link{available_hash_algos}{}},
 which is just the collection of algorithms available to the `algo`
 argument in \code{digest::digest()}.

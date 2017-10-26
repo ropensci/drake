@@ -12,25 +12,31 @@
 #' if you're sure you won't lose anything important.
 #' @seealso \code{\link{prune}}, \code{\link{make}},
 #' @export
+#'
 #' @param ... targets to remove from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
 #' @param list character vector naming targets to be removed from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#'
 #' @param destroy logical, whether to totally remove the drake cache.
 #' If \code{destroy} is \code{FALSE}, only the targets
 #' from \code{make}()
 #' are removed. If \code{TRUE}, the whole cache is removed, including
 #' session metadata, etc.
+#'
 #' @param cache optional drake cache. See code{\link{new_cache}()}. If
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
+#'
 #' @param path Root directory of the drake project,
 #' or if \code{search} is \code{TRUE}, either the
 #' project root or a subdirectory of the project.
+#'
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()

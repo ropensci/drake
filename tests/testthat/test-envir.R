@@ -37,6 +37,9 @@ test_with_dir("prune_envir in full build", {
     jobs = 1,
     prepend = character(0),
     verbose = FALSE,
+    hook = function(code){
+      force(code)
+    },
     packages = character(0),
     prework = character(0),
     command = "make",

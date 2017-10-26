@@ -85,6 +85,7 @@ short_hash <- function(cache = drake::get_cache()){
 #' supplying a short hash algorithm,
 #' \code{default_short_hash_algo(cache)} is the short
 #' hash algorithm that drake picks for you.
+#'
 #' @examples
 #' default_short_hash_algo()
 default_short_hash_algo <- function(cache = NULL) {
@@ -138,6 +139,7 @@ default_short_hash_algo <- function(cache = NULL) {
 #' supplying a long hash algorithm,
 #' \code{default_long_hash_algo(cache)} is the long
 #' hash algorithm that drake picks for you.
+#'
 #' @examples
 #' default_long_hash_algo()
 default_long_hash_algo <- function(cache = NULL) {

@@ -4,9 +4,12 @@
 #' \code{\link{r_recipe_wildcard}}, \code{\link{make}}
 #' @description See what your \code{Makefile} recipes
 #' will look like in advance.
+#'
 #' @param recipe_command The Makefile recipe command.
 #' See \code{\link{default_recipe_command}()}.
+#'
 #' @param target character scalar, name of your target
+#'
 #' @param cache_path path to the drake cache.
 #' In practice, this defaults to the hidden \code{.drake/} folder,
 #' but this can be customized. In the Makefile, the drake cache
@@ -14,6 +17,7 @@
 #' with `$(DRAKE_CACHE)`. To simplify things for users who may
 #' be unfamiliar with Unix variables, the \code{recipe()} function
 #' just shows the literal path to the cache.
+#'
 #' @details Makefile recipes to build targets are customizable.
 #' Use the \code{Makefile_recipe()} function to show and tweak
 #' Makefile recipes in advance, and see
@@ -34,6 +38,7 @@
 #' (equivalently just \code{"Rscript -e"}),
 #' so the default \code{Makefile} recipe for each target is
 #' \code{Rscript -e 'drake::mk("this_target", "path_to_cache")'}.
+#'
 #' @examples
 #' Makefile_recipe()
 #' Makefile_recipe(
