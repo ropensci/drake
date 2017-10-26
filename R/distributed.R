@@ -7,20 +7,19 @@ prepare_distributed <- function(config){
       file = globalenv_file(this_cache_path)
     )
   }
-  config$cache$set("config", config, namespace = "distributed")
-  invisible(
-    outdated(
-      plan = config$plan,
-      targets = config$targets,
-      envir = config$envir,
-      verbose = config$verbose,
-      cache = config$cache,
-      jobs = config$jobs,
-      parallelism = config$parallelism,
-      packages = config$packages,
-      prework = config$prework
-    )
+  config$attempted_targets <- outdated(
+    plan = config$plan,
+    targets = config$targets,
+    envir = config$envir,
+    verbose = config$verbose,
+    cache = config$cache,
+    jobs = config$jobs,
+    parallelism = config$parallelism,
+    packages = config$packages,
+    prework = config$prework
   )
+  config$cache$set("config", config, namespace = "distributed")
+  invisible(config)
 }
 
 build_distributed <- function(target, cache_path){

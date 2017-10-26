@@ -3,7 +3,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   run = TRUE,
   debug = FALSE
 ){
-  config$attempted_targets <- prepare_distributed(config = config)
+  config <- prepare_distributed(config = config)
   with_output_sink(
     new = "Makefile",
     code = {
