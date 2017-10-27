@@ -130,7 +130,7 @@ test_with_dir("targets can be partially specified", {
   config$targets <- "final"
   testrun(config)
   expect_true(is.numeric(readd(final, search = FALSE)))
-  pl <- plan(x = 1, y = 2)
+  pl <- workplan(x = 1, y = 2)
   expect_error(check(pl, "lskjdf"))
   expect_warning(check(pl, c("lskdjf", "x")))
   expect_silent(check(pl))
