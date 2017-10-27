@@ -56,7 +56,7 @@ give_up <- function(target, config){
     finish_console(text = text, message = "fail")
   }
   stop(
-    "Target ", target, " failed to build. ",
+    "Target '", target, "' failed to build. ",
     "Use diagnose(", target,
     ") to retrieve diagnostic information.",
     call. = FALSE
