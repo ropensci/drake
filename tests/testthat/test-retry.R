@@ -37,15 +37,11 @@ test_with_dir("retries", {
 test_with_dir("timouts", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  # From R.utils examples and tests.
-  e$foo <- function() {
-    print("Tic")
-    for (kk in 1:20) {
-      print(kk)
-      Sys.sleep(0.1)
-    }
-    print("Tac")
-  }
+
+  # I may figure out how to use hooks to test other backends at some point
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+
   pl <- data.frame(target = "x", command = "Sys.sleep(0.25)")
 
   # Should have no errors.
