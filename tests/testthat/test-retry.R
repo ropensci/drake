@@ -21,18 +21,11 @@ test_with_dir("retries", {
   pl <- workplan(x = f())
   expect_equal(diagnose(), character(0))
   
-  hook <- function(code){
-    msg <- file(paste0("msg", Sys.getpid()), "w")
-    on.exit(suppressWarnings(sink(type = "message")))
-    sink(msg, type = "message")
-    force(code)
-  }
-  
   tmp <- capture.output(
     make(
       pl, parallelism = parallelism, jobs = jobs,
       envir = e, verbose = FALSE, retries = 10,
-      hook = hook
+      hook = message_sink_hook
     ),
     type = "message"
   )
@@ -58,31 +51,22 @@ test_with_dir("timouts", {
   }
   pl <- data.frame(target = "x", command = "foo()")
   
-  expect_error(
-    tmp <- capture.output(capture.output(
-      make(
-        pl,
-        envir = e,
-        verbose = TRUE,
-        timeout = 1e-3,
-        hook = silencer_hook
-      )
-    ), type = "message")
+  tmp1 <- capture.output(
+    tmp2 <- capture.output(
+      expect_error(
+        make(
+          pl,
+          envir = e,
+          verbose = TRUE,
+          timeout = 1e-3
+        )
+      ),
+      type = "output"
+    ),
+    type = "message"
   )
   expect_false(cached(x))
-  expect_error(
-    tmp <- capture.output(capture.output(
-      make(
-        pl,
-        envir = e,
-        verbose = TRUE,
-        timeout = 1e-3,
-        retries = 2,
-        hook = silencer_hook
-      )
-    ), type = "message")
-  )
-  expect_false(cached(x))
+  
   pl <- workplan(x = 1 + 1)
   expect_silent(
     tmp <-capture.output(

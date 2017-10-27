@@ -2,7 +2,8 @@
 #' @description Run your project (build the targets).
 #' @seealso \code{\link{workplan}}, \code{\link{workplan}},
 #' \code{\link{backend}}, \code{\link{plot_graph}},
-#' \code{\link{max_useful_jobs}}, \code{\link{shell_file}}
+#' \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
+#' \code{\link{message_sink_hook}}
 #' @export
 #'
 #' @param plan workflow plan data frame.
@@ -35,12 +36,11 @@
 #' Serves as a wrapper around the build of each target or import
 #' (via \code{drake:::build()}).
 #' For example, to redirect error messages, you might use
-#' \code{hook = function(...){withr::with_message_sink("sink-file.txt", {...})}} # nolint
+#' \code{\link{message_sink_hook}}, as in
+#' \code{make(my_plan, hook = message_sink_hook)}.
 #' This particular example is useful for distributed parallelism,
 #' where the calling R process does not have control over all the
-#' error and output streams. However, it may fail for PSOCK-based
-#' parallelism options such as \code{"parLapply"}, which
-#' do not always behave well with simultaneous message \code{sink()}s.
+#' error and output streams.
 #'
 #' @param imports_only logical, whether to skip building the targets
 #' in \code{plan} and just import objects and files.
