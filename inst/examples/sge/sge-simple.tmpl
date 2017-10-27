@@ -1,27 +1,34 @@
-# From https://github.com/mllg/batchtools/tree/master/inst/templates
 #!/bin/bash
+#
+# This is a batchtools configuration file
+# for the Sun/Univa Grid Engine.
+# It resembles https://github.com/mllg/batchtools/blob/master/inst/templates/sge-simple.tmpl,
+# but it is specifically tailored for drake.
+# Drake has some special requirements.
 
-## The name of the job, can be anything, simply used when displaying the list of running jobs
-#$ -N <%= job.name %>
+# Each line beginning with `#$` contains flags to qsub.
+# In this case, we are going to write the equivalent of
+# qsub -sync y -cwd -j y
+# Enter `man qsub` in the Linux terminal for details.
 
-## Combining output/error messages into one file
-#$ -j y
+# First, we tell qsub to wait until
+# the job finished before exiting.
+# In other words, we build a target only after
+# its dependencies are ready.
+#$ -sync y
 
-## Giving the name of the output log file
-#$ -o <%= log.file %>
-
-## One needs to tell the queue system to use the current directory as the working directory
-## Or else the script may fail as it will execute in your top level home directory /home/username
+# Next, we point the job's working directory to the
+# directory in which you called `drake::make()`.
 #$ -cwd
+
+# For convenience, we direct console output
+# and error messages (stdout and stderr)
+# to the same file.
+#$ -j y
 
 ## Use environment variables
 #$ -V
 
-## Use correct queue
-#$ -q <%= resources$queue %>
-
-## Export value of DEBUGME environemnt var to slave
-export DEBUGME=<%= Sys.getenv("DEBUGME") %>
-
+module load R-qualified
 Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
 exit 0
