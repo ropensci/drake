@@ -63,5 +63,5 @@ loadd() # load everything, including built targets
 }
 \seealso{
 \code{\link{cached}}, \code{\link{built}},
-\code{\link{imported}}, \code{\link{workflow}}, \code{\link{make}},
+\code{\link{imported}}, \code{\link{workplan}}, \code{\link{make}},
 }

@@ -1,5 +1,5 @@
 #' @title Function \code{plot_graph}
-#' @description Plot the dependency structure of your workflow.
+#' @description Plot the dependency structure of your workplan.
 #' IMPORTANT: you must be in the root directory of your project.
 #' To save time for repeated plotting, this function is divided into
 #' \code{\link{dataframes_graph}()} and \code{\link{render_graph}()}.
@@ -116,7 +116,7 @@
 #' plot_graph(my_plan) # The red nodes from before are now green.
 #' }
 plot_graph <- function(
-  plan = workflow(), targets = drake::possible_targets(plan),
+  plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)

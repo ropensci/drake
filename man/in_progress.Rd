@@ -39,5 +39,5 @@ in_progress()
 \seealso{
 \code{\link{diagnose}}, \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 }

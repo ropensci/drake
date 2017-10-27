@@ -10,7 +10,7 @@
 #' for ordinary error messages printed to the console.
 #' @seealso
 #' \code{\link{failed}}, \code{\link{progress}},
-#' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 #' @export
 #'
 #' @param target name of the target of the error to get.
@@ -39,7 +39,7 @@
 #' f <- function(){
 #'   stop("unusual error")
 #' }
-#' bad_plan <- workflow(my_target = f())
+#' bad_plan <- workplan(my_target = f())
 #' make(bad_plan)
 #' failed() # from the last make() only
 #' diagnose() # from all previous make()'s

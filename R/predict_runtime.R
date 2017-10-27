@@ -33,7 +33,7 @@
 #' @param targets_only logical, whether to factor in
 #' just the targets into the calculations or use the
 #' build times for everything, including the imports
-#' @param targets Targets to build in the workflow.
+#' @param targets Targets to build in the workplan.
 #' Timing information is
 #' limited to these targets and their dependencies.
 #' @param envir same as for \code{\link{make}}
@@ -66,7 +66,7 @@
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 predict_runtime <- function(
-  plan = workflow(),
+  plan = workplan(),
   from_scratch = FALSE,
   targets_only = FALSE,
   targets = drake::possible_targets(plan),
@@ -114,7 +114,7 @@ predict_runtime <- function(
 
 #' @title Function rate_limiting_times
 #' @description Return a data frame of elapsed build times of
-#' the rate-limiting targets of a \code{\link{make}()} workflow.
+#' the rate-limiting targets of a \code{\link{make}()} workplan.
 #' @export
 #'
 #' @details The \code{stage} column of the returned data frame
@@ -171,7 +171,7 @@ predict_runtime <- function(
 #' @param targets_only logical, whether to factor in just the
 #' targets or use times from everything, including the imports.
 #'
-#' @param targets Targets to build in the workflow.
+#' @param targets Targets to build in the workplan.
 #' Timing information is
 #' limited to these targets and their dependencies.
 #'
@@ -218,7 +218,7 @@ predict_runtime <- function(
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 rate_limiting_times <- function(
-  plan = workflow(),
+  plan = workplan(),
   from_scratch = FALSE,
   targets_only = FALSE,
   targets = drake::possible_targets(plan),

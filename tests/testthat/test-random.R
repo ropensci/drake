@@ -10,7 +10,7 @@ test_with_dir("Random targets are reproducible", {
   parallelism <- scenario$parallelism
   jobs <- scenario$jobs
 
-  data <- workflow(
+  data <- workplan(
     x = runif(20),
     y = runif(20),
     z = rnorm(20),

@@ -35,7 +35,7 @@ for ordinary error messages printed to the console.
 load_basic_example()
 make(my_plan)
 failed() # nothing
-bad_plan <- workflow(x = function_doesnt_exist())
+bad_plan <- workplan(x = function_doesnt_exist())
 make(bad_plan) # error
 failed() # "x"
 diagnose(x)
@@ -44,5 +44,5 @@ diagnose(x)
 \seealso{
 \code{\link{diagnose}}, \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 }

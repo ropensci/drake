@@ -27,7 +27,7 @@
 #'  powered by the \code{future} and \code{future.batchtools}
 #'  packages. First, set the parallel backend globally using
 #'  \code{\link{backend}()} (or equivalently, \code{future::plan()}).
-#'  Then, apply the backend to your workflow
+#'  Then, apply the backend to your workplan
 #'  using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
 #'  But be warned: the environment for each target needs to be set up
 #'  from scratch, so this backend type is higher overhead than either
@@ -123,7 +123,7 @@ default_parallelism <- function() {
 #' \code{\link{make}()}.
 #'
 #' @param from_scratch logical, whether to compute the max
-#' useful jobs as if the workflow were to run from scratch
+#' useful jobs as if the workplan were to run from scratch
 #' (with all targets out of date).
 #'
 #' @param targets names of targets to build, same as for function
@@ -215,7 +215,7 @@ default_parallelism <- function() {
 #' max_useful_jobs(my_plan, imports = 'none') # 4
 #' }
 max_useful_jobs <- function(
-  plan = workflow(), from_scratch = FALSE,
+  plan = workplan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){

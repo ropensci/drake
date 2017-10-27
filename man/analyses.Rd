@@ -25,15 +25,15 @@ Generate a workflow plan data frame to
 analyze multiple datasets using multiple methods of analysis.
 }
 \examples{
-datasets <- workflow(
+datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
-methods <- workflow(
+methods <- workplan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 analyses(methods, datasets = datasets)
 }
 \seealso{
 \code{\link{summaries}},
- \code{\link{make}}, \code{\link{workflow}}
+ \code{\link{make}}, \code{\link{workplan}}
 }

@@ -28,5 +28,5 @@ find_project()
 }
 }
 \seealso{
-\code{\link{workflow}}, \code{\link{make}}
+\code{\link{workplan}}, \code{\link{make}}
 }

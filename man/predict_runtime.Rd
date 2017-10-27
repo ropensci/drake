@@ -4,7 +4,7 @@
 \alias{predict_runtime}
 \title{Function predict_runtime}
 \usage{
-predict_runtime(plan = workflow(), from_scratch = FALSE,
+predict_runtime(plan = workplan(), from_scratch = FALSE,
   targets_only = FALSE, targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = function(code) {    
   force(code) }, cache = drake::get_cache(path = path, search = search),
@@ -24,7 +24,7 @@ already up to date and therefore skipped.}
 just the targets into the calculations or use the
 build times for everything, including the imports}
 
-\item{targets}{Targets to build in the workflow.
+\item{targets}{Targets to build in the workplan.
 Timing information is
 limited to these targets and their dependencies.}
 

@@ -63,5 +63,5 @@ status(no_imported_objects = TRUE)
 \seealso{
 \code{\link{progress}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 }

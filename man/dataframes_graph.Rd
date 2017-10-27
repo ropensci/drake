@@ -4,7 +4,7 @@
 \alias{dataframes_graph}
 \title{Function \code{dataframes_graph}}
 \usage{
-dataframes_graph(plan = workflow(), targets = drake::possible_targets(plan),
+dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = function(code) {    
   force(code) }, cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),

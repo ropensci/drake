@@ -53,9 +53,9 @@ load_basic_example <- function(
     simulate <- knit <- my_knit <- report_dependencies <-
     reg1 <- reg2 <- coef_regression2_small <- NULL
 
-  datasets <- workflow(small = simulate(5), large = simulate(50))
+  datasets <- workplan(small = simulate(5), large = simulate(50))
 
-  methods <- workflow(list = c(
+  methods <- workplan(list = c(
     regression1 = "reg1(..dataset..)",
     regression2 = "reg2(..dataset..)"))
 
@@ -63,25 +63,25 @@ load_basic_example <- function(
   # = datasets$output)
   analyses <- analyses(methods, datasets = datasets)
 
-  summary_types <- workflow(list = c(
+  summary_types <- workplan(list = c(
     summ = "suppressWarnings(summary(..analysis..))",
     coef = "coefficients(..analysis..)"))
 
   # summaries() also uses evaluate(): once with expand = TRUE,
   # once with expand = FALSE
-  # skip 'gather' (workflow my_plan is more readable)
+  # skip 'gather' (workplan my_plan is more readable)
   results <- summaries(summary_types, analyses, datasets, gather = NULL)
 
   # External file targets and dependencies should be
   # single-quoted.  Use double quotes to remove any special
   # meaning from character strings.  Single quotes inside
   # imported functions are ignored, so this mechanism only
-  # works inside the workflow my_plan data frame.  WARNING:
+  # works inside the workplan my_plan data frame.  WARNING:
   # drake cannot track entire directories (folders).
-  report <- workflow(report.md = knit("report.Rmd", quiet = TRUE),
+  report <- workplan(report.md = knit("report.Rmd", quiet = TRUE),
     file_targets = TRUE, strings_in_dots = "filenames")
 
-  # Row order doesn't matter in the workflow my_plan.
+  # Row order doesn't matter in the workplan my_plan.
   envir$my_plan <- rbind(report, datasets,
     analyses, results)
 

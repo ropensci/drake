@@ -4,7 +4,7 @@
 \alias{plot_graph}
 \title{Function \code{plot_graph}}
 \usage{
-plot_graph(plan = workflow(), targets = drake::possible_targets(plan),
+plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = function(code) {    
   force(code) }, cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
@@ -118,7 +118,7 @@ change with hovering.}
 \code{visNetwork::visNetwork()} to plot the graph.}
 }
 \description{
-Plot the dependency structure of your workflow.
+Plot the dependency structure of your workplan.
 IMPORTANT: you must be in the root directory of your project.
 To save time for repeated plotting, this function is divided into
 \code{\link{dataframes_graph}()} and \code{\link{render_graph}()}.

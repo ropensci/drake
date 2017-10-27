@@ -1,7 +1,7 @@
 drake_context("other features")
 
 test_with_dir("recipe_command", {
-  my_plan <- workflow(y = 1)
+  my_plan <- workplan(y = 1)
   expect_true(is.character(default_recipe_command()))
   expect_true(is.character(r_recipe_wildcard()))
   con1 <- make(my_plan, command = default_Makefile_command(),
@@ -58,7 +58,7 @@ test_with_dir("available hash algos", {
 
 test_with_dir("in_progress() works", {
   expect_equal(in_progress(), character(0))
-  bad_plan <- workflow(x = function_doesnt_exist())
+  bad_plan <- workplan(x = function_doesnt_exist())
   expect_error(tmp <- capture.output({
       make(bad_plan, verbose = FALSE)
     },

@@ -89,7 +89,7 @@
 #'   visHierarchicalLayout(direction = 'LR')
 #' }
 dataframes_graph <- function(
-  plan = workflow(), targets = drake::possible_targets(plan),
+  plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)

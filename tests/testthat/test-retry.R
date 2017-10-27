@@ -18,7 +18,7 @@ test_with_dir("retries", {
       stop("this error is deliberate and expected.")
     }
   }
-  pl <- workflow(x = f())
+  pl <- workplan(x = f())
   expect_equal(diagnose(), character(0))
 
   if (parallelism %in% "Makefile"){
@@ -92,7 +92,7 @@ test_with_dir("timouts", {
     )
   )
   expect_false(cached(x))
-  pl <- workflow(x = 1 + 1)
+  pl <- workplan(x = 1 + 1)
   expect_silent(
     tmp <- capture.output(
       make(

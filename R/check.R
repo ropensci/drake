@@ -2,11 +2,11 @@
 #' @description Check a workflow plan, etc. for obvious
 #' errors such as circular dependencies and
 #' missing input files.
-#' @seealso \code{ink{workflow}}, \code{\link{make}}
+#' @seealso \code{ink{workplan}}, \code{\link{make}}
 #' @export
 #' @return invisibly return \code{plan}
 #' @param plan workflow plan data frame, possibly from
-#' \code{\link{workflow}()}.
+#' \code{\link{workplan}()}.
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See \code{\link{new_cache}()}
@@ -18,7 +18,7 @@
 #' check(my_plan)
 #' }
 check <- function(
-  plan = workflow(),
+  plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache()

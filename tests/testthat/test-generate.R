@@ -1,14 +1,14 @@
 drake_context("generate")
 
 test_with_dir("empty generative args", {
-  x <- workflow(a = 1, b = FUNCTION())
+  x <- workplan(a = 1, b = FUNCTION())
   expect_equal(evaluate(x), x)
   expect_equal(evaluations(x), x)
   expect_equal(expand(x), x)
 })
 
 test_with_dir("evaluate, expand, and gather", {
-  df <- workflow(data = simulate(center = MU, scale = SIGMA))
+  df <- workplan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
   m1 <- evaluate(df, rules = list(nothing = 1:2), expand = FALSE)
@@ -84,8 +84,8 @@ test_with_dir("evaluate, expand, and gather", {
 })
 
 test_with_dir("analyses and summaries", {
-  datasets <- workflow(small = simulate(5), large = simulate(50))
-  methods <- workflow(
+  datasets <- workplan(small = simulate(5), large = simulate(50))
+  methods <- workplan(
     regression1 = reg1(..dataset..), # nolint
     regression2 = reg2(..dataset..) # nolint
   )
@@ -106,10 +106,10 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(analyses, x)
 
-  m2 <- workflow(regression1 = reg1(n), regression2 = reg2(n))
+  m2 <- workplan(regression1 = reg1(n), regression2 = reg2(n))
   expect_equal(analyses(m2, data = datasets), m2)
 
-  no_analyses <- workflow(
+  no_analyses <- workplan(
     summ = summary(..dataset..), # nolint
     coef = coefficients(..dataset..) # nolint
   )
@@ -119,7 +119,7 @@ test_with_dir("analyses and summaries", {
     )
   )
 
-  summary_types <- workflow(
+  summary_types <- workplan(
     summ = summary(..analysis..), # nolint
     coef = coefficients(..analysis..) # nolint
   )
@@ -149,7 +149,7 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(results, x)
 
-  summary_types <- workflow(
+  summary_types <- workplan(
     summ = summary(..analysis.., ..dataset..), # nolint
     coef = coefficients(..analysis..) # nolint
   )
@@ -205,7 +205,7 @@ test_with_dir("analyses and summaries", {
 
   newtypes <- rbind(
     summary_types,
-    workflow(
+    workplan(
       other = myother(..dataset..) # nolint
     )
   )

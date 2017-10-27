@@ -14,7 +14,7 @@
 #' @return a workflow plan data frame with the wildcards evaluated
 #'
 #' @param plan workflow plan data frame, similar to one produced by
-#' \code{ink{workflow}}
+#' \code{ink{workplan}}
 #'
 #' @param rules Named list with wildcards as names and vectors of
 #' replacements
@@ -38,17 +38,17 @@
 #' and the values are recycled.
 #'
 #' @examples
-#' datasets <- workflow(
+#' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
-#' methods <- workflow(
+#' methods <- workplan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target)
 #' evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target, expand = FALSE)
-#' x <- workflow(draws = rnorm(mean = Mean, sd = Sd))
+#' x <- workplan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate <- function(
   plan,
@@ -121,7 +121,7 @@ evaluations <- function(
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
 #' @examples
-#' datasets <- workflow(
+#' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' expand(datasets, values = c("rep1", "rep2", "rep3"))
@@ -150,7 +150,7 @@ expand <- function(plan, values = NULL){
 #' one of \code{\link{list}(...)}, \code{\link{c}(...)},
 #' \code{\link{rbind}(...)}, or similar.
 #' @examples
-#' datasets <- workflow(
+#' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' gather(datasets, target = "my_datasets")
@@ -172,7 +172,7 @@ gather <- function(
 #' @description Generate a workflow plan data frame to
 #' analyze multiple datasets using multiple methods of analysis.
 #' @seealso \code{\link{summaries}},
-#'  \code{\link{make}}, \code{\link{workflow}}
+#'  \code{\link{make}}, \code{\link{workplan}}
 #' @export
 #' @return an evaluated workflow plan data frame of analysis instructions
 #' @param plan workflow plan data frame of analysis methods.
@@ -184,10 +184,10 @@ gather <- function(
 #' @param datasets workflow plan data frame with instructions
 #' to make the datasets.
 #' @examples
-#' datasets <- workflow(
+#' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
-#' methods <- workflow(
+#' methods <- workplan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' analyses(methods, datasets = datasets)
@@ -202,7 +202,7 @@ analyses <- function(plan, datasets){
 #' @title Function \code{summaries}
 #' @description Generate a workflow plan data frame for summarizing
 #' multiple analyses of multiple datasets multiple ways.
-#' @seealso \code{\link{analyses}}, \code{\link{make}}, \code{\link{workflow}}
+#' @seealso \code{\link{analyses}}, \code{\link{make}}, \code{\link{workplan}}
 #' @export
 #' @return an evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.
@@ -218,14 +218,14 @@ analyses <- function(plan, datasets){
 #' rows in the \code{plan}. See the \code{\link{gather}()} function
 #' for more.
 #' @examples
-#' datasets <- workflow(
+#' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
-#' methods <- workflow(
+#' methods <- workplan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' analyses <- analyses(methods, datasets = datasets)
-#' summary_types <- workflow(
+#' summary_types <- workplan(
 #'   summ = summary(..analysis..),
 #'   coef = coefficients(..analysis..))
 #' summaries(summary_types, analyses, datasets, gather = NULL)

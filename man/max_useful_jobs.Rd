@@ -4,7 +4,7 @@
 \alias{max_useful_jobs}
 \title{Function \code{max_useful_jobs}}
 \usage{
-max_useful_jobs(plan = workflow(), from_scratch = FALSE,
+max_useful_jobs(plan = workplan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, hook = function(code) {     force(code) },
   cache = drake::get_cache(), jobs = 1,
@@ -17,7 +17,7 @@ max_useful_jobs(plan = workflow(), from_scratch = FALSE,
 \code{\link{make}()}.}
 
 \item{from_scratch}{logical, whether to compute the max
-useful jobs as if the workflow were to run from scratch
+useful jobs as if the workplan were to run from scratch
 (with all targets out of date).}
 
 \item{targets}{names of targets to build, same as for function

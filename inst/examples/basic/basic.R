@@ -48,7 +48,7 @@ reg2 <- function(d){
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
 # call load_basic_example().
 
-my_datasets <- workflow(
+my_datasets <- workplan(
   small = simulate(5),
   large = simulate(50)
 )
@@ -56,7 +56,7 @@ my_datasets <- workflow(
 # Optionally, get replicates with expand(my_datasets,
 #   values = c("rep1", "rep2")).
 
-methods <- workflow(
+methods <- workplan(
   regression1 = reg1(..dataset..), ## nolint
   regression2 = reg2(..dataset..) ## nolint
 )
@@ -65,7 +65,7 @@ methods <- workflow(
 #   values = my_datasets$target)
 my_analyses <- analyses(methods, datasets = my_datasets)
 
-summary_types <- workflow(
+summary_types <- workplan(
   # Perfect regression fits can happen.
   summ = suppressWarnings(summary(..analysis..)), ## nolint
   coef = coefficients(..analysis..) ## nolint
@@ -85,7 +85,7 @@ results <- summaries(
 # Single quotes inside imported functions are ignored, so this mechanism
 # only works inside the workflow my_plan data frame.
 # WARNING: drake cannot track entire directories (folders).
-report <- workflow(
+report <- workplan(
   # As long as `knit()` is visible in your workflow plan command,
   # drake will dig into the active code chunks of your `report.Rmd`
   # and find the dependencies of `report.md` in the arguments of
@@ -186,7 +186,7 @@ new_simulation <- function(n){
 
 # Any R expression can be a command
 # except for formulas and function definitions.
-additions <- workflow(
+additions <- workplan(
   new_data = new_simulation(36) + sqrt(10)
   )
 
@@ -228,7 +228,7 @@ clean() # Start over next time.
 # Use `options(mc.cores = 4)` or something similar from ?future.options
 # to cap the number of simultaneous jobs.
 options(mc.cores = 2)
-library(future) # Use workflow() instead of plan()
+library(future) # Use workplan() instead of plan()
 backend(multicore) # Same as future::plan(multicore)
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.

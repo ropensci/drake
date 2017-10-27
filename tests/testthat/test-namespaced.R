@@ -46,7 +46,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
   )
 })
 
-test_with_dir("namespaced workflow works", {
+test_with_dir("namespaced workplan works", {
   scenarios <- get_testing_scenario()
   envir <- dbug()$envir
   rm(list = ls(envir), envir = envir)
@@ -54,7 +54,7 @@ test_with_dir("namespaced workflow works", {
     x <- nchar(digest::digest(sqrt(x)))
     base:::c(x, 1)
   }
-  x <- workflow(a = base::list(f(1)))
+  x <- workplan(a = base::list(f(1)))
   make(
     x,
     envir = envir,

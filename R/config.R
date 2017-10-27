@@ -10,7 +10,7 @@
 #' in that the graph includes both the targets and the imports,
 #' not just the imports.
 #' @export
-#' @seealso \code{\link{workflow}}, \code{\link{make}}, \code{\link{plot_graph}}
+#' @seealso \code{\link{workplan}}, \code{\link{make}}, \code{\link{plot_graph}}
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -40,7 +40,7 @@
 #' @param elapsed same as for \code{\link{make}}
 #' @param retries same as for \code{\link{make}}
 config <- function(
-  plan = workflow(), targets = drake::possible_targets(plan),
+  plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)
@@ -170,7 +170,7 @@ inventory <- function(config) {
 #' load_basic_example()
 #' possible_targets(my_plan)
 #' }
-possible_targets <- function(plan = workflow()) {
+possible_targets <- function(plan = workplan()) {
   plan <- sanitize_plan(plan)
   c(as.character(plan$output), as.character(plan$target))
 }

@@ -1,7 +1,7 @@
 #' @title Function \code{build_graph}
-#' @description Make a graph of the dependency structure of your workflow.
+#' @description Make a graph of the dependency structure of your workplan.
 #' @details This function returns an igraph object representing how
-#' the targets in your workflow depend on each other.
+#' the targets in your workplan depend on each other.
 #' (\code{help(package = "igraph")}). To plot the graph, call
 #' to \code{\link{plot.igraph}()} on your graph, or just use
 #' \code{\link{plot_graph}()} from the start.
@@ -21,7 +21,7 @@
 #' class(g)
 #' }
 build_graph <- function(
-  plan = workflow(),
+  plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE
@@ -84,7 +84,7 @@ build_graph <- function(
 #' tracked(my_plan)
 #' }
 tracked <- function(
-  plan = workflow(),
+  plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame()
 ){

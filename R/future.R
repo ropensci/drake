@@ -13,7 +13,7 @@ worker_future_lapply <- function(targets, hash_list, config){
 
 #' @title Function \code{backend}
 #' @export
-#' @seealso \code{\link{workflow}}, \code{\link{make}},
+#' @seealso \code{\link{workplan}}, \code{\link{make}},
 #' @description Select the specific \code{future}-style
 #' parallel backend for \code{make(..., parallelism = "future_lapply")}.
 #' For more information, please read the documentation,
@@ -21,13 +21,13 @@ worker_future_lapply <- function(targets, hash_list, config){
 #' \code{future} and \code{future.batchtools}.
 #' @details The \code{backend()} function is exactly
 #' the same as \code{future::plan()}.
-#' We provide it only because \code{workflow()} conflicts
+#' We provide it only because \code{workplan()} conflicts
 #' with \code{future::plan()}.
 #' @param ... arguments to \code{future::plan()}.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' library(future) # Use workflow() instead of plan()
+#' library(future) # Use workplan() instead of plan()
 #' backend(multicore) # Same as future::plan(multicore)
 #' make(my_plan, parallelism = "future_lapply")
 #' clean() # Erase the targets to start from scratch.

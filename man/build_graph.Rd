@@ -4,7 +4,7 @@
 \alias{build_graph}
 \title{Function \code{build_graph}}
 \usage{
-build_graph(plan = workflow(), targets = drake::possible_targets(plan),
+build_graph(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE)
 }
 \arguments{
@@ -20,11 +20,11 @@ build_graph(plan = workflow(), targets = drake::possible_targets(plan),
 \item{verbose}{logical, whether to output messages to the console.}
 }
 \description{
-Make a graph of the dependency structure of your workflow.
+Make a graph of the dependency structure of your workplan.
 }
 \details{
 This function returns an igraph object representing how
-the targets in your workflow depend on each other.
+the targets in your workplan depend on each other.
 (\code{help(package = "igraph")}). To plot the graph, call
 to \code{\link{plot.igraph}()} on your graph, or just use
 \code{\link{plot_graph}()} from the start.

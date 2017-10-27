@@ -4,7 +4,7 @@
 \alias{tracked}
 \title{Function \code{tracked}}
 \usage{
-tracked(plan = workflow(), targets = drake::possible_targets(plan),
+tracked(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame())
 }
 \arguments{

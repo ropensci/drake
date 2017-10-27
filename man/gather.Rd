@@ -24,7 +24,7 @@ target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame.
 }
 \examples{
-datasets <- workflow(
+datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
 gather(datasets, target = "my_datasets")

@@ -108,7 +108,7 @@ example_drake()
 set up your workflow plan,
 
 ```r
-workflow()
+workplan()
 analyses()
 summaries()
 evaluate()

@@ -1,6 +1,6 @@
 #' @title Function \code{make}
 #' @description Run your project (build the targets).
-#' @seealso \code{\link{workflow}}, \code{\link{workflow}},
+#' @seealso \code{\link{workplan}}, \code{\link{workplan}},
 #' \code{\link{backend}}, \code{\link{plot_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}}
 #' @export
@@ -10,7 +10,7 @@
 #' with a \code{target} column and a \code{command} column.
 #' Targets are the objects and files that drake generates,
 #' and commands are the pieces of R code that produce them.
-#' Use the function \code{\link{workflow}()} to generate workflow plan
+#' Use the function \code{\link{workplan}()} to generate workflow plan
 #' data frames easily, and see functions \code{\link{analyses}()},
 #' \code{\link{summaries}()}, \code{\link{evaluate}()},
 #' \code{\link{expand}()}, and \code{\link{gather}()} for
@@ -181,7 +181,7 @@
 #'   recipe_command = "R -q -e")
 #' }
 make <- function(
-  plan = workflow(),
+  plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,

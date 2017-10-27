@@ -67,7 +67,7 @@ configure_nodes <- function(config){
 #' \code{\link{plot_graph}()}.
 #' @export
 #' @seealso \code{\link{dataframes_graph}}, \code{\link{plot_graph}}
-#' @param parallelism Mode of parallelism intended for the workflow.
+#' @param parallelism Mode of parallelism intended for the workplan.
 #' See \code{\link{parallelism_choices}()}.
 #' @param split_columns logical, whether the columns were split
 #' in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}

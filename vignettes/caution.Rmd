@@ -34,10 +34,10 @@ A common pitfall is using the `evaluate()` function to expand wildcards after ap
 
 ```{r filethenevaluate}
 library(magrittr) # for the pipe operator %>%
-workflow(
+workplan(
   data = readRDS("data_..datasize...rds")
 ) %>%
-  rbind(drake::workflow(
+  rbind(drake::workplan(
     file.csv = write.csv(
       data_..datasize.., # nolint
       "file_..datasize...csv"
@@ -54,13 +54,13 @@ The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are 
 
 ```{r correctevaldatasize}
 rules <- list(..datasize.. = c("small", "large"))
-datasets <- workflow(data = readRDS("data_..datasize...rds")) %>%
+datasets <- workplan(data = readRDS("data_..datasize...rds")) %>%
   evaluate(rules = rules)
 ```
 
 Plan the CSV files separately.
 ```{r correctevaldatasize2}
-files <- workflow(
+files <- workplan(
   file = write.csv(data_..datasize.., "file_..datasize...csv"), # nolint
   strings_in_dots = "literals"
 ) %>%
@@ -86,16 +86,16 @@ For more control over target names in cases like this, you may want to use the [
 
 ## Commands are NOT perfectly flexible.
 
-In your workflow plan data frame (produced by `workflow()` and accepted by `make()`), your commands can usually be flexible R expressions.
+In your workflow plan data frame (produced by `workplan()` and accepted by `make()`), your commands can usually be flexible R expressions.
 
 ```{r tidyplancaution}
-workflow(
+workplan(
   target1 = 1 + 1 - sqrt(sqrt(3)),
   target2 = my_function(web_scraped_data) %>% my_tidy
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workflow(f = function(x){x + 1})` or `workflow(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
 
 # Execution environment and files
 
@@ -117,7 +117,7 @@ diagnose()
 f <- function(){
   stop("unusual error")
 }
-bad_plan <- workflow(target = f())
+bad_plan <- workplan(target = f())
 make(bad_plan)
 failed() # From the last make() only
 diagnose() # From all previous make()s
@@ -142,7 +142,7 @@ eval(expression({
   }
 }
 ), envir = envir)
-myplan <- workflow(out = f(1:3))
+myplan <- workplan(out = f(1:3))
 make(myplan, envir = envir)
 ls() # Check that your workspace did not change.
 ls(envir) # Check your evaluation environment.
@@ -159,7 +159,7 @@ library(drake)
 ```
 
 ```{r depscheck}
-my_plan <- workflow(list = c(a = "x <- 1; return(x)"))
+my_plan <- workplan(list = c(a = "x <- 1; return(x)"))
 my_plan
 deps(my_plan$command[1])
 ```

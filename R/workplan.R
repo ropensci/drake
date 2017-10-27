@@ -1,4 +1,4 @@
-#' @title Function \code{workflow}
+#' @title Function \code{workplan}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
 #' \code{\link{check}}.
@@ -17,17 +17,17 @@
 #' argument to control the quoting in \code{...}.
 #' @export
 #' @return data frame of targets and command
-#' @param ... same as for \code{drake::\link{workflow}()}
-#' @param list same as for \code{drake::\link{workflow}()}
-#' @param file_targets same as for \code{drake::\link{workflow}()}
-#' @param strings_in_dots same as for \code{drake::\link{workflow}()}
+#' @param ... same as for \code{drake::\link{workplan}()}
+#' @param list same as for \code{drake::\link{workplan}()}
+#' @param file_targets same as for \code{drake::\link{workplan}()}
+#' @param strings_in_dots same as for \code{drake::\link{workplan}()}
 #' @examples
-#' workflow(small = simulate(5), large = simulate(50))
-#' workflow(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' workflow(data = readRDS("my_data.rds"))
-#' workflow(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
+#' workplan(small = simulate(5), large = simulate(50))
+#' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' workplan(data = readRDS("my_data.rds"))
+#' workplan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
 #'   strings_in_dots = "literals")
-workflow <- function(
+workplan <- function(
   ...,
   list = character(0),
   file_targets = FALSE,

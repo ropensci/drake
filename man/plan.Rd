@@ -36,20 +36,21 @@ data frame of targets and command
 Turns a named collection of command/target pairs into
 a workflow plan data frame for \code{\link{make}} and
 \code{\link{check}}. Deprecated in favor of
-\code{\link{workflow}()} due to a name conflict with
+\code{\link{workplan}()} due to a name conflict with
 \code{future::plan()}.
 }
 \examples{
-workflow(small = simulate(5), large = simulate(50))
-workflow(list = c(x = "1 + 1", y = "sqrt(x)"))
-workflow(data = readRDS("my_data.rds"))
-workflow(
+# plan() is deprecated. Use workplan() instead.
+workplan(small = simulate(5), large = simulate(50))
+workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
+workplan(data = readRDS("my_data.rds"))
+workplan(
   my_file.rds = saveRDS(1+1, "my_file.rds"),
   file_targets = TRUE,
   strings_in_dots = "literals"
 )
 }
 \seealso{
-\code{\link{workflow}}, \code{\link{make}},
+\code{\link{workplan}}, \code{\link{make}},
 \code{\link{check}}
 }

@@ -4,7 +4,7 @@
 \alias{outdated}
 \title{Function outdated}
 \usage{
-outdated(plan = workflow(), targets = drake::possible_targets(plan),
+outdated(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = function(code) {    
   force(code) }, cache = drake::get_cache(),
   parallelism = drake::default_parallelism(), jobs = 1,
@@ -58,6 +58,6 @@ outdated(my_plan)
 }
 }
 \seealso{
-\code{\link{missed}}, \code{\link{workflow}},
+\code{\link{missed}}, \code{\link{workplan}},
 \code{\link{make}}, \code{\link{plot_graph}}
 }

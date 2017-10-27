@@ -162,7 +162,7 @@ check(my_plan)
 The data frame `my_plan` would be a pain to write by hand, so `drake` has functions to help you.
 
 ```{r datasets}
-my_datasets <- workflow(
+my_datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
 my_datasets
@@ -177,7 +177,7 @@ expand(my_datasets, values = c("rep1", "rep2"))
 Each dataset is analyzed multiple ways.
 
 ```{r methods}
-methods <- workflow(
+methods <- workplan(
   regression1 = reg1(..dataset..), # nolint
   regression2 = reg2(..dataset..)) # nolint
 methods
@@ -193,7 +193,7 @@ my_analyses
 Next, we summarize each analysis of each dataset using summary statistics and regression coefficients.
 
 ```{r summaries}
-summary_types <- workflow(
+summary_types <- workplan(
   summ = suppressWarnings(summary(..analysis..)), # nolint
   coef = coefficients(..analysis..)) # nolint
 summary_types
@@ -208,7 +208,7 @@ The `gather` feature groups summaries into a smaller number of more manageable t
 For the dynamic report, we have to make sure the files are single-quoted. Single quotes denote file targets and file imports, and double quotes denote literal strings that should not be treated as dependencies where they are mentioned. Also, `knit()` needs to be somewhere visible in the workflow plan command so that `drake` knows to dig into the active code chunks of `'report.Rmd'` and look for dependencies mentioned in calls to `loadd()` and `readd()`.
 
 ```{r reportplan}
-report <- workflow(
+report <- workplan(
   report.md = knit('report.Rmd', quiet = TRUE), # nolint
   file_targets = TRUE, strings_in_dots = "filenames")
 report
@@ -226,7 +226,7 @@ my_plan
 If your workflow does not fit the rigid datasets/analyses/summaries framework, check out functions `expand()`, `evaluate()`, and `gather()`.
 
 ```{r more_expansions_and_plans}
-df <- workflow(data = simulate(center = MU, scale = SIGMA))
+df <- workplan(data = simulate(center = MU, scale = SIGMA))
 df
 df <- expand(df, values = c("rep1", "rep2"))
 df
@@ -356,7 +356,7 @@ new_simulation <- function(n){
   data.frame(x = rnorm(n), y = rnorm(n))
 }
 
-additions <- workflow(
+additions <- workplan(
   new_data = new_simulation(36) + sqrt(10))
 additions
 

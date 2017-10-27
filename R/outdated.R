@@ -2,7 +2,7 @@
 #' @description Check which targets are out of date and need to be rebuilt.
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
-#' @seealso \code{\link{missed}}, \code{\link{workflow}},
+#' @seealso \code{\link{missed}}, \code{\link{workplan}},
 #' \code{\link{make}}, \code{\link{plot_graph}}
 #' @examples
 #' \dontrun{
@@ -35,7 +35,7 @@
 #' in advance could save time if you plan multiple calls to
 #' \code{outdated()}.
 outdated <-  function(
-  plan = workflow(),
+  plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
@@ -89,7 +89,7 @@ outdated <-  function(
 }
 
 #' @title Function \code{missed}
-#' @description Report any import objects required by your workflow
+#' @description Report any import objects required by your workplan
 #' plan but missing from your workspace.
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
@@ -141,7 +141,7 @@ outdated <-  function(
 #' missed(my_plan)
 #' }
 missed <- function(
-  plan = workflow(),
+  plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,

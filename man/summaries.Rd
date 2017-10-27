@@ -31,14 +31,14 @@ Generate a workflow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.
 }
 \examples{
-datasets <- workflow(
+datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
-methods <- workflow(
+methods <- workplan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 analyses <- analyses(methods, datasets = datasets)
-summary_types <- workflow(
+summary_types <- workplan(
   summ = summary(..analysis..),
   coef = coefficients(..analysis..))
 summaries(summary_types, analyses, datasets, gather = NULL)
@@ -47,5 +47,5 @@ summaries(summary_types, analyses, datasets, gather = "list")
 summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
 }
 \seealso{
-\code{\link{analyses}}, \code{\link{make}}, \code{\link{workflow}}
+\code{\link{analyses}}, \code{\link{make}}, \code{\link{workplan}}
 }

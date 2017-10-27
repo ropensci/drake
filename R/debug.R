@@ -36,7 +36,7 @@ dbug_envir <- function(envir) {
 }
 
 dbug_plan <- function() {
-  workflow(list = c(
+  workplan(list = c(
     `'intermediatefile.rds'` = "saveRDS(combined, \"intermediatefile.rds\")",
     yourinput = "f(1+1)",
     nextone = "myinput + g(7)",
