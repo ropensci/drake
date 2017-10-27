@@ -20,16 +20,14 @@ test_with_dir("retries", {
   }
   pl <- workplan(x = f())
   expect_equal(diagnose(), character(0))
-
-  if (parallelism %in% "Makefile"){
-    hook <- function(code){
-      withr::with_message_sink("sink.txt", code)
-    }
-  } else {
-    hook <- function(code){
-      force(code)
-    }
+  
+  hook <- function(code){
+    msg <- file(paste0("msg", Sys.getpid()), "w")
+    on.exit(suppressWarnings(sink(type = "message")))
+    sink(msg, type = "message")
+    force(code)
   }
+  
   tmp <- capture.output(
     make(
       pl, parallelism = parallelism, jobs = jobs,
@@ -50,7 +48,7 @@ test_with_dir("timouts", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   # From R.utils examples and tests
-  foo <- function() {
+  e$foo <- function() {
     print("Tic")
     for (kk in 1:20) {
       print(kk)
@@ -59,42 +57,35 @@ test_with_dir("timouts", {
     print("Tac")
   }
   pl <- data.frame(target = "x", command = "foo()")
+  
   expect_error(
-    tmp <- capture.output(
+    tmp <- capture.output(capture.output(
       make(
         pl,
         envir = e,
         verbose = TRUE,
         timeout = 1e-3,
-        hook = function(code){
-          withr::with_output_sink("out.txt",
-            withr::with_message_sink("err.txt", code)
-          )
-        }
+        hook = silencer_hook
       )
-    )
+    ), type = "message")
   )
   expect_false(cached(x))
   expect_error(
-    tmp <- capture.output(
+    tmp <- capture.output(capture.output(
       make(
         pl,
         envir = e,
         verbose = TRUE,
         timeout = 1e-3,
         retries = 2,
-        hook = function(code){
-          withr::with_output_sink("out.txt",
-            withr::with_message_sink("err.txt", code)
-          )
-        }
+        hook = silencer_hook
       )
-    )
+    ), type = "message")
   )
   expect_false(cached(x))
   pl <- workplan(x = 1 + 1)
   expect_silent(
-    tmp <- capture.output(
+    tmp <-capture.output(
       make(
         pl,
         envir = e,
