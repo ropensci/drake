@@ -15,7 +15,11 @@ an example \code{hook} argument to
 }
 \examples{
 \dontrun{
-x <- workplan(bad = stop())
+output_sink_hook({
+  cat(1234)
+  stop(5678)
+})
+x <- workplan(loud = cat(1234), bad = stop(5678))
 make(x, hook = output_sink_hook)
 }
 }

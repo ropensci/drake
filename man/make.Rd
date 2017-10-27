@@ -43,15 +43,21 @@ then reproducibly tracked as dependencies.}
 Skipped objects are not printed.}
 
 \item{hook}{function with at least one argument.
-Serves as a wrapper around the build of each target or import
-(via \code{drake:::build()}).
-For example, to redirect output and error messages, you might use
-\code{\link{silencer_hook}()}, as in
+The hook is as a wrapper around the code that drake uses
+to build a target (see the body of \code{drake:::build()}).
+Hooks can control the side effects of build behavior.
+For example, to redirect output and error messages to text files,
+you might use the built-in \code{\link{silencer_hook}()}, as in
 \code{make(my_plan, hook = silencer_hook)}.
-This particular example is useful for distributed parallelism,
+The silencer hook is useful for distributed parallelism,
 where the calling R process does not have control over all the
 error and output streams. See also \code{\link{output_sink_hook}()}
-and \code{\link{message_sink_hook}()}}
+and \code{\link{message_sink_hook}()}.
+For your own custom hooks, treat the first argument as the code
+that builds a target, and make sure this argument is actually evaluated.
+Otherwise, the code will not run and none of your targets will build.
+For example, \code{function(code){force(code)}} is a good hook
+and \code{function(code){cat("Avoiding the code")}} is a bad hook.}
 
 \item{cache}{drake cache as created by \code{\link{new_cache}()}.
 See also \code{\link{get_cache}()}, \code{\link{this_cache}()},

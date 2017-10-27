@@ -7,7 +7,11 @@
 #' \code{\link{output_sink_hook}}
 #' @param code code to run to build the target.
 #' @examples \dontrun{
-#' x <- workplan(bad = stop())
+#' silencer_hook({
+#'   cat(1234)
+#'   stop(5678)
+#' })
+#' x <- workplan(loud = cat(1234), bad = stop(5678))
 #' make(x, hook = silencer_hook)
 #' }
 silencer_hook <- function(code){
@@ -26,7 +30,11 @@ silencer_hook <- function(code){
 #' \code{\link{output_sink_hook}}
 #' @param code code to run to build the target.
 #' @examples \dontrun{
-#' x <- workplan(bad = stop())
+#' message_sink_hook({
+#'   cat(1234)
+#'   stop(5678)
+#' })
+#' x <- workplan(loud = cat(1234), bad = stop(5678))
 #' make(x, hook = message_sink_hook)
 #' }
 message_sink_hook <- function(code){
@@ -47,7 +55,11 @@ message_sink_hook <- function(code){
 #' \code{\link{message_sink_hook}}
 #' @param code code to run to build the target.
 #' @examples \dontrun{
-#' x <- workplan(bad = stop())
+#' output_sink_hook({
+#'   cat(1234)
+#'   stop(5678)
+#' })
+#' x <- workplan(loud = cat(1234), bad = stop(5678))
 #' make(x, hook = output_sink_hook)
 #' }
 output_sink_hook <- function(code){
