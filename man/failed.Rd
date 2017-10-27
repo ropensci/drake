@@ -25,7 +25,10 @@ A character vector of target names
 }
 \description{
 List the targets that failed in the last call
-to \code{\link{make}()}
+to \code{\link{make}()}.
+Together, functions \code{failed} and
+\code{\link{diagnose}()} should eliminate the strict need
+for ordinary error messages printed to the console.
 }
 \examples{
 \dontrun{
@@ -35,6 +38,7 @@ failed() # nothing
 bad_plan <- workflow(x = function_doesnt_exist())
 make(bad_plan) # error
 failed() # "x"
+diagnose(x)
 }
 }
 \seealso{

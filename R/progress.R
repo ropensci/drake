@@ -66,7 +66,10 @@ in_progress <- function(path = getwd(), search = TRUE,
 
 #' @title Function \code{failed}
 #' @description List the targets that failed in the last call
-#' to \code{\link{make}()}
+#' to \code{\link{make}()}.
+#' Together, functions \code{failed} and
+#' \code{\link{diagnose}()} should eliminate the strict need
+#' for ordinary error messages printed to the console.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
@@ -89,6 +92,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' bad_plan <- workflow(x = function_doesnt_exist())
 #' make(bad_plan) # error
 #' failed() # "x"
+#' diagnose(x)
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search)

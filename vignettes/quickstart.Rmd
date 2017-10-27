@@ -23,13 +23,24 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 # Quick examples
 
+Inspect and run your project.
+
 ```{r quickstartquickstart, eval = FALSE}
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd.
 plot_graph(my_plan) # Hover, click, drag, zoom, pan.
 make(my_plan) # Run the workflow.
-make(my_plan) # Check that everything is already up to date.
-diagnose(large) # View error info if the target "large" failed to build.
+outdated(my_plan) # Check that everything is already up to date.
+```
+
+Debug errors.
+
+```{r quickdebug, eval = FALSE}
+failed()                 # Targets that failed in the most recent `make()`
+diagnose()               # Targets that failed in any previous `make()`
+error <- diagnose(large) # Most recent verbose  of `large`
+str(error)               # Object of class "error"
+error$calls              # Call stack / traceback
 ```
 
 Dive deeper into the built-in examples.

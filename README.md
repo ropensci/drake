@@ -54,10 +54,11 @@ make(my_plan)
 If a target fails, diagnose it.
 
 ```r
-diagnose() # targets with recorded failures
-error <- diagnose(large)
-str(error)
-error$calls # traceback
+failed()                 # Targets that failed in the most recent `make()`
+diagnose()               # Targets that failed in any previous `make()`
+error <- diagnose(large) # Most recent verbose  of `large`
+str(error)               # Object of class "error"
+error$calls              # Call stack / traceback
 ```
 
 # Installation

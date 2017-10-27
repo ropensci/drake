@@ -5,6 +5,9 @@
 #' that failed initially, retried, then succeeded.
 #' If no target is given, then \code{diagnose()} simply
 #' lists the targets for which a error is retrievable.
+#' Together, functions \code{\link{failed}()} and
+#' \code{diagnose()} should eliminate the strict need
+#' for ordinary error messages printed to the console.
 #' @seealso
 #' \code{\link{failed}}, \code{\link{progress}},
 #' \code{\link{readd}}, \code{\link{workflow}}, \code{\link{make}}
@@ -38,7 +41,8 @@
 #' }
 #' bad_plan <- workflow(my_target = f())
 #' make(bad_plan)
-#' diagnose()
+#' failed() # from the last make() only
+#' diagnose() # from all previous make()'s
 #' error <- diagnose(my_target)
 #' str(error)
 #' error$calls # View the traceback.

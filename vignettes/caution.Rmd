@@ -108,9 +108,9 @@ You must properly install `drake` using `install.packages()`, `devtools::install
 Your workflow may depend on external packages such as
 [ggplot2](https://CRAN.R-project.org/package=ggplot2), [dplyr](https://CRAN.R-project.org/package=dplyr), or [MASS](https://CRAN.R-project.org/package=MASS). Such packages must be formally installed with `install.packages()`, `devtools::install_github()`, `devtools::install_local()`, or a similar command. If you load uninstalled packages with `devtools::load_all()`, results may be unpredictable and incorrect.
 
-## Diagnose your errors.
+## Find and diagnose your errors.
 
-When a target fails, use the `diagnose()` function to discover the problem. Try the following out yourself.
+When a `make()` fails, use `failed()` and `diagnose()` to debug. Try the following out yourself.
 
 ```{r diagnosecaution, eval = FALSE}
 diagnose()
@@ -119,6 +119,7 @@ f <- function(){
 }
 bad_plan <- workflow(target = f())
 make(bad_plan)
+failed()
 diagnose()
 error <- diagnose(y)
 str(error)
