@@ -96,7 +96,7 @@ vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignet
 
 # Useful functions
 
-`make()` and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
+`make()`, `workplan()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
 
 ```r
 load_basic_example()

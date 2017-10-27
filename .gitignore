@@ -19,10 +19,11 @@ Thumbs.db
 .Rapp.history
 .RData
 .Rhistory
+.Rproj.user
 Makefile
 Rbuildignore/*.pdf
 Rbuildignore/local/
-.Rproj.user
+README.html
 vignettes/*.html
 vignettes/*.md
 vignettes/*_files

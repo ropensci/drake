@@ -36,7 +36,7 @@ When you run `make()`, `drake` puts your imports and output targets in a hidden 
 ```{r basic_storage}
 library(drake)
 load_basic_example()
-config <- make(my_plan, verbose = FALSE, return_config = TRUE)
+config <- make(my_plan, verbose = FALSE)
 ```
 
 You can explore your cached data using functions like `loadd()`, `readd()`, and `cached()`.
@@ -54,7 +54,7 @@ rm(large) # Does not remove `large` from the cache.
 The [storr](https://github.com/richfitz/storr) package does the heavy lifting. A `storr` is an object in R that serves as an abstraction for a storage backend, usually a file system. See the [main storr vignette](https://cran.r-project.org/package=storr/vignettes/storr.html) for a thorough walkthrough.
 
 ```{r get_storrs}
-class(config$cache) # from `config <- make(..., return_config = TRUE)`
+class(config$cache) # from `config <- make(...)`
 cache <- get_cache() # Get the default cache from the last build.
 class(cache)
 cache$list() # functionality from storr
@@ -110,7 +110,7 @@ tmp <- new_cache(
 The cache at `default_cache_path()` (equivalently, the `.drake/` folder) is the default cache used for `make()`.
 
 ```{r default_cache_control}
-config <- make(my_plan, verbose = FALSE, return_config = TRUE)
+config <- make(my_plan, verbose = FALSE)
 short_hash(config$cache) # would have been xxhash64 (default_short_hash_algo())
 long_hash(config$cache) # would have been sha256 (default_long_hash_algo())
 ```
@@ -130,7 +130,7 @@ Below, the targets become outdated because the existing hash keys do not match t
 
 ```{r newhashmorecache}
 outdated(my_plan, verbose = FALSE)
-config <- make(my_plan, verbose = FALSE, return_config = TRUE)
+config <- make(my_plan, verbose = FALSE)
 short_hash(config$cache) # same as before
 long_hash(config$cache) # different from before
 ```
