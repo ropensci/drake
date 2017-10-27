@@ -105,7 +105,7 @@ examples_drake()
 example_drake()
 ```
 
-set up your workflow plan,
+set up your workflow plan data frame,
 
 ```r
 workplan()
