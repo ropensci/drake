@@ -95,6 +95,17 @@ sanitize_plan <- function(plan){
 
 sanitize_targets <- function(plan, targets){
   plan <- sanitize_plan(plan)
-  str_trim(targets, side = "both") %>%
-    intersect(y = plan$target)
+  targets <- str_trim(targets, side = "both")
+  if (!any(targets %in% plan$target)){
+    stop("No valid targets requested.", call. = FALSE)
+  }
+  diffs <- setdiff(targets, plan$target)
+  if (length(diffs)){
+    warning(
+      "Ignoring requested targets not in the workflow plan:\n",
+      multiline_message(diffs),
+      call. = FALSE
+    )
+  }
+  intersect(targets, plan$target)
 }
