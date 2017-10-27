@@ -389,6 +389,26 @@ Makefile-level parallelism is only used for targets in your workflow plan data f
 make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")
 ```
 
+## Zombie processes
+
+Some parallel backends, particularly `mclapply` and `future::multicore`, may create zombie processes. Zombies are not usually harmful, but you may wish to kill them yourself. The following function by [Carl Boneri](https://github.com/CarlBoneri) should work on Unix-like systems. For a discussion, see [drake issue 116](https://github.com/wlandau-lilly/drake/issues/116).
+
+```{r cautionzombies, eval = FALSE}
+fork_kill_zombies <- function(){
+  require(inline)
+  includes <- '#include <sys/wait.h>'
+  code <- 'int wstat; while (waitpid(-1, &wstat, WNOHANG) > 0) {};'
+
+  wait <- inline::cfunction(
+    body = code,
+    includes = includes,
+    convention='.C'
+  )
+
+  invisible(wait())
+}
+```
+
 # Storage
 
 ## Storage customization pitfalls
