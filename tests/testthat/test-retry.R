@@ -57,8 +57,8 @@ test_with_dir("timouts", {
 
   # Should time out.
   clean()
-  tmp <- capture.output(
-    expect_error(
+  expect_error(
+    tmp <- capture.output(
       make(
         pl,
         envir = e,
