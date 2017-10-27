@@ -20,14 +20,11 @@ test_with_dir("retries", {
   }
   pl <- workplan(x = f())
   expect_equal(diagnose(), character(0))
-  
-  tmp <- capture.output(
-    make(
-      pl, parallelism = parallelism, jobs = jobs,
-      envir = e, verbose = FALSE, retries = 10,
-      hook = message_sink_hook
-    ),
-    type = "message"
+
+  make(
+    pl, parallelism = parallelism, jobs = jobs,
+    envir = e, verbose = FALSE, retries = 10,
+    hook = silencer_hook
   )
   expect_true(cached(x))
   expect_equal(diagnose(), "x")
@@ -40,7 +37,7 @@ test_with_dir("retries", {
 test_with_dir("timouts", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  # From R.utils examples and tests
+  # From R.utils examples and tests.
   e$foo <- function() {
     print("Tic")
     for (kk in 1:20) {
@@ -49,33 +46,32 @@ test_with_dir("timouts", {
     }
     print("Tac")
   }
-  pl <- data.frame(target = "x", command = "foo()")
-  
-  tmp1 <- capture.output(
-    tmp2 <- capture.output(
-      expect_error(
-        make(
-          pl,
-          envir = e,
-          verbose = TRUE,
-          timeout = 1e-3
-        )
-      ),
-      type = "output"
-    ),
-    type = "message"
+  pl <- data.frame(target = "x", command = "Sys.sleep(0.25)")
+
+  # Should have no errors.
+  tmp <- capture.output(
+    make(
+      pl,
+      envir = e,
+      verbose = TRUE,
+      hook = silencer_hook
+    )
   )
-  expect_false(cached(x))
-  
-  pl <- workplan(x = 1 + 1)
-  expect_silent(
-    tmp <-capture.output(
+  expect_true(cached(x))
+
+  # Should time out.
+  clean()
+  tmp <- capture.output(
+    expect_error(
       make(
         pl,
         envir = e,
         verbose = TRUE,
-        timeout = 1000
+        hook = silencer_hook,
+        timeout = 1e-3,
+        retries = 2
       )
     )
   )
+  expect_false(cached(x))
 })

@@ -180,20 +180,3 @@ store_config <- function(config) {
   lapply(save_these, function(item) config$cache$set(key = item,
     value = config[[item]], namespace = "config"))
 }
-
-#' @title Function message_sink_hook
-#' @description an example \code{hook} argument to
-#' \code{make()} that redirects error messages to files.
-#' @export
-#' @seealso \code{\link{make}}
-#' @param code code to run to build the target.
-#' @examples \dontrun{
-#' x <- workplan(bad = stop())
-#' make(x, hook = message_sink_hook)
-#' }
-message_sink_hook <- function(code){
-  msg <- file(paste0("msg", Sys.getpid()), "w")
-  on.exit(suppressWarnings(sink(type = "message")))
-  sink(msg, type = "message")
-  force(code)
-}

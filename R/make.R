@@ -3,7 +3,7 @@
 #' @seealso \code{\link{workplan}}, \code{\link{workplan}},
 #' \code{\link{backend}}, \code{\link{plot_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
-#' \code{\link{message_sink_hook}}
+#' \code{\link{silencer_hook}}
 #' @export
 #'
 #' @param plan workflow plan data frame.
@@ -35,12 +35,13 @@
 #' @param hook function with at least one argument.
 #' Serves as a wrapper around the build of each target or import
 #' (via \code{drake:::build()}).
-#' For example, to redirect error messages, you might use
-#' \code{\link{message_sink_hook}}, as in
-#' \code{make(my_plan, hook = message_sink_hook)}.
+#' For example, to redirect output and error messages, you might use
+#' \code{\link{silencer_hook}()}, as in
+#' \code{make(my_plan, hook = silencer_hook)}.
 #' This particular example is useful for distributed parallelism,
 #' where the calling R process does not have control over all the
-#' error and output streams.
+#' error and output streams. See also \code{\link{output_sink_hook}()}
+#' and \code{\link{message_sink_hook}()}
 #'
 #' @param imports_only logical, whether to skip building the targets
 #' in \code{plan} and just import objects and files.
