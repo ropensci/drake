@@ -56,7 +56,7 @@ If a target fails, diagnose it.
 ```r
 failed()                 # Targets that failed in the most recent `make()`
 diagnose()               # Targets that failed in any previous `make()`
-error <- diagnose(large) # Most recent verbose  of `large`
+error <- diagnose(large) # Most recent verbose error log of `large`
 str(error)               # Object of class "error"
 error$calls              # Call stack / traceback
 ```

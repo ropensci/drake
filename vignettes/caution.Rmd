@@ -119,8 +119,8 @@ f <- function(){
 }
 bad_plan <- workflow(target = f())
 make(bad_plan)
-failed()
-diagnose()
+failed() # From the last make() only
+diagnose() # From all previous make()s
 error <- diagnose(y)
 str(error)
 error$calls # View the traceback.
