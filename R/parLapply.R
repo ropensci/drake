@@ -4,6 +4,7 @@ run_parLapply <- function(config) { # nolint
     return(run_lapply(config = config))
   }
   config$cluster <- makePSOCKcluster(config$jobs)
+  on.exit(stopCluster(cl = config$cluster))
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
   if (identical(config$envir, globalenv()))
@@ -18,7 +19,6 @@ run_parLapply <- function(config) { # nolint
     config = config,
     worker = worker_parLapply # nolint
   )
-  stopCluster(cl = config$cluster)
   invisible(config)
 }
 
