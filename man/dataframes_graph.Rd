@@ -83,20 +83,31 @@ If not \code{NULL},
 \code{build_times}, \code{digits}, \code{targets_only},
 \code{split_columns}, and \code{font_size}.}
 
-\item{from}{Optional collection of target names.
+\item{from}{Optional collection of target/import names.
 If \code{from} is nonempty,
 the graph will restrict itself to
-\code{from} and the nodes downstream.
-Can be combined with \code{to}.}
+a neighborhood of \code{from}.
+Control the neighborhood with
+\code{mode} and \code{order}.}
 
-\item{to}{Optional collection of target names.
-If \code{to} is nonempty,
-the graph will restrict itself to
-\code{to} and the nodes downstream.
-Can be combined with \code{from}.}
+\item{mode}{Which direction to branch out in the graph
+to create a neighborhood around \code{from}.
+Use \code{"in"} to go upstream,
+\code{"out"} to go downstream,
+and \code{"all"} to go both ways and disregard
+edge direction altogether.}
 
-\item{combine}{How to put together the \code{to} subgraph and the
-\code{from} subgraph: intersection or union.}
+\item{order}{How far to branch out to create
+a neighborhood around \code{from} (measured
+in the number of nodes). Defaults to
+as far as possible.}
+
+\item{shrink_edges}{logical: for a
+neighborhood around \code{from}, whether to
+disregard the meaning of columns as parallelizable stages
+and shrink the edges so the nodes are closer to each other.
+Only applies if a subset of the graph is selected with
+\code{from} and \code{order}.}
 }
 \value{
 a list of three data frames: one for nodes,

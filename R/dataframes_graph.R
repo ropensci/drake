@@ -13,20 +13,31 @@
 #' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #'
-#' @param from Optional collection of target names.
+#' @param from Optional collection of target/import names.
 #' If \code{from} is nonempty,
 #' the graph will restrict itself to
-#' \code{from} and the nodes downstream.
-#' Can be combined with \code{to}.
+#' a neighborhood of \code{from}.
+#' Control the neighborhood with
+#' \code{mode} and \code{order}.
 #'
-#' @param to Optional collection of target names.
-#' If \code{to} is nonempty,
-#' the graph will restrict itself to
-#' \code{to} and the nodes downstream.
-#' Can be combined with \code{from}.
+#' @param mode Which direction to branch out in the graph
+#' to create a neighborhood around \code{from}.
+#' Use \code{"in"} to go upstream,
+#' \code{"out"} to go downstream,
+#' and \code{"all"} to go both ways and disregard
+#' edge direction altogether.
 #' 
-#' @param combine How to put together the \code{to} subgraph and the
-#' \code{from} subgraph: intersection or union.
+#' @param order How far to branch out to create
+#' a neighborhood around \code{from} (measured
+#' in the number of nodes). Defaults to
+#' as far as possible.
+#'
+#' @param shrink_edges logical: for a
+#' neighborhood around \code{from}, whether to
+#' disregard the meaning of columns as parallelizable stages
+#' and shrink the edges so the nodes are closer to each other.
+#' Only applies if a subset of the graph is selected with
+#' \code{from} and \code{order}.
 #'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
