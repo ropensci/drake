@@ -155,10 +155,15 @@ dataframes_graph <- function(
   if (shrink_edges){
     config <- trim_graph(config)
   }
-
+  
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label
+  
+  config$edges <- network_data$edges
+  if (nrow(config$edges)){
+    config$edges$arrows <- "to"
+  }
 
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress(cache = config$cache)
@@ -173,15 +178,11 @@ dataframes_graph <- function(
   config$digits <- digits
 
   config$nodes <- configure_nodes(config = config)
-  config$edges <- network_data$edges
-  if (nrow(config$edges)){
-    config$edges$arrows <- "to"
-  }
-
+  
   if (!shrink_edges){
     config <- trim_graph(config)
+    config <- subset_nodes_edges(config = config, keep = V(config$graph)$name)
   }
-  config <- subset_nodes_edges(config = config, keep = V(config$graph)$name)
   if (targets_only) {
     config <- subset_nodes_edges(config = config, keep = targets)
   }

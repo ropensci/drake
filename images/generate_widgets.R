@@ -53,5 +53,16 @@ plot_graph(
   shrink_edges = TRUE
 )
 
+small_plan <- workplan(a = 1, b = f(2))
+f <- function(x){
+  x
+}
+
+plot_graph(small_plan, file = "small_local.html", selfcontained = TRUE,
+  width = "100%", height = "500px")
+
+plot_graph(small_plan, file = "small_distributed.html", selfcontained = TRUE,
+  width = "100%", height = "500px", parallelism = "future_lapply")
+
 clean(destroy = TRUE)
 unlink("report.Rmd")

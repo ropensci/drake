@@ -22,6 +22,11 @@ knitr::opts_chunk$set(eval = FALSE)
 
 `Drake` has powerful visuals to help you understand and plan your workflow. The workflow plan graph is interactive. Click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
 
+
+# Dependency reactivity
+
+Initially, your entire project is out of date.
+
 ```{r graphoutdated}
 library(drake)
 load_basic_example()
@@ -34,11 +39,6 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-# Parallel computing laid bare
-
-When you call `make(my_plan, jobs = 8)`, the work proceeds in chronological order from left to right in the above graph. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 8)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 8 jobs.
-
-# Dependency reactivity
 
 In the previous graph, all the targets were out of date. But after a `make()`, we will be all caught up, and the graph will show you.
 
@@ -144,3 +144,8 @@ style="border: none; box-shadow: none">
 # Finer control
 
 We have only scratched the surface of `plot_graph()`, there is much more functionality documented in the help file (`?plot_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
+
+
+# Parallel computing laid bare
+
+When you call `make(my_plan, jobs = 8)`, the work proceeds in chronological order from left to right in the above graph. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 8)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 8 jobs.
