@@ -1,6 +1,6 @@
 # Generate the HTML widgets in the images/ folder.
 # These interactive graphs are embedded in the vignettes.
-devtools::load_all() # load drake
+devtools::load_all() # load current drake
 clean(destroy = TRUE)
 load_basic_example()
 
