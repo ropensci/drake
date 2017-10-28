@@ -219,10 +219,16 @@ make(my_plan, parallelism = "Makefile", jobs = 2)
 
 You will see a `Makefile` written to your working directory. Do not run this `Makefile` by itself. It will not work correctly by itself because it depends on the transient dummy timestamp files created by `make()`. 
 
-`Makefile` parallelism is just a bit richer. You can now use the `args` argument to send custom arguments to the `Makefile`. For example, you could use 4 parallel jobs for the imports and 6 parallel jobs for the targets.
+`Makefile` parallelism has its own kind of flexibility. You can now use the `args` argument to send custom arguments to the `Makefile`. For example, you could use 4 parallel jobs for the imports and 6 parallel jobs for the targets.
 
 ```{r hpcargs, eval = FALSE}
 make(my_plan, parallelism = "Makefile", jobs = 4, args = "--jobs=6 --silent")
+```
+
+The `args` also let you print out the `Makefile` without running it, which helps during troubleshooting.
+
+```{r touchsilent, eval = FALSE}
+make(my_plan, parallelism = "Makefile", args = c("--touch", "--silent"))
 ```
 
 In addition, you can use a program other than [GNU Make](https://www.gnu.org/software/make/) to run the `Makefile`. You may be interested in `lsmake` as an alternative, for example.
