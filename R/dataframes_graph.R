@@ -24,6 +24,9 @@
 #' the graph will restrict itself to
 #' \code{to} and the nodes downstream.
 #' Can be combined with \code{from}.
+#' 
+#' @param combine How to put together the \code{to} subgraph and the
+#' \code{from} subgraph: intersection or union.
 #'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
@@ -107,6 +110,7 @@
 #' }
 dataframes_graph <- function(
   plan = workplan(), from = NULL, to = NULL,
+  combine = c("union", "intersection"),
   targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
@@ -134,6 +138,7 @@ dataframes_graph <- function(
 
   config$from <- from
   config$to <- to
+  config$combine <- match.arg(combine)
   config <- trim_graph(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes

@@ -18,13 +18,13 @@ test_with_dir("basic example works", {
   # Different graph configurations should be checked manually.
   tmp <- dataframes_graph(my_plan, envir = e, config = config)
   tmp2 <- dataframes_graph(my_plan, envir = e, config = config,
-    targets_only = TRUE)
-  tmp3 <- dataframes_graph(my_plan, envir = e, config = config,
-    split_columns = TRUE)
-  tmp4 <- dataframes_graph(my_plan, envir = e, config = config,
-    targets_only = TRUE, split_columns = TRUE)
-  tmp5 <- dataframes_graph(my_plan, envir = e, config = config,
     from = c("small", "reg2"), to = "regression2_small")
+  tmp3 <- dataframes_graph(my_plan, envir = e, config = config,
+    targets_only = TRUE)
+  tmp4 <- dataframes_graph(my_plan, envir = e, config = config,
+    split_columns = TRUE)
+  tmp5 <- dataframes_graph(my_plan, envir = e, config = config,
+    targets_only = TRUE, split_columns = TRUE)
   expect_error(
     tmp6 <- dataframes_graph(my_plan, envir = e, config = config,
       from = "not_found")

@@ -130,8 +130,7 @@ trim_graph <- function(config){
     from_sub <- whole_subcomponent(
       graph = config$graph,
       roots = config$from,
-      mode = "out",
-      jobs = config$jobs
+      mode = "out"
     )
     config$from <- c(config$from, from_sub)
   }
@@ -139,8 +138,7 @@ trim_graph <- function(config){
     to_sub <- whole_subcomponent(
       graph = config$graph,
       roots = config$to,
-      mode = "in",
-      jobs = config$jobs
+      mode = "in"
     )
     config$to <- c(config$to, to_sub)
   }
@@ -156,13 +154,12 @@ trim_graph <- function(config){
   config
 }
 
-whole_subcomponent <- function(graph, roots, mode, jobs){
-  out <- lightly_parallelize(
+whole_subcomponent <- function(graph, roots, mode){
+  out <- lapply(
     roots,
     igraph::subcomponent,
     graph = graph,
-    mode = mode,
-    jobs = jobs
+    mode = mode
   ) %>%
     do.call(what = igraph::union)
   out$name

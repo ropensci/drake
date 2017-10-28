@@ -22,13 +22,13 @@ plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
 \item{targets}{names of targets to build, same as for function
 \code{\link{make}()}.}
 
-\item{from}{Optional collection of target names. 
+\item{from}{Optional collection of target names.
 If \code{from} is nonempty,
 the graph will restrict itself to
 \code{from} and the nodes downstream.
 Can be combined with \code{to}.}
 
-\item{to}{Optional collection of target names. 
+\item{to}{Optional collection of target names.
 If \code{to} is nonempty,
 the graph will restrict itself to
 \code{to} and the nodes downstream.
@@ -144,7 +144,7 @@ load_basic_example()
 plot_graph(my_plan, width = '100\%') # The width is passed to visNetwork
 make(my_plan)
 plot_graph(my_plan) # The red nodes from before are now green.
-plot_graph(
+plot_graph( # plot a subgraph
   my_plan,
   from = c("small", "reg2"),
   to = "summ_regression2_small"

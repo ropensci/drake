@@ -76,7 +76,7 @@ You must properly install `drake` using `install.packages()`, `devtools::install
 ```r
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd.
-plot_graph(my_plan)  # Click, drag, pan, hover. Try file = "graph.html" and targets_only = TRUE.
+plot_graph(my_plan)  # Click, drag, pan, hover. See arguments 'from' and 'to'.
 outdated(my_plan)    # Which targets need to be (re)built?
 missed(my_plan)      # Are you missing anything from your workspace?
 check(my_plan)       # Are you missing files? Is your workflow plan okay?
@@ -121,7 +121,7 @@ explore the dependency network,
 ```r
 outdated()
 missed()
-plot_graph()
+plot_graph() # Now with subgraph functionality.
 dataframes_graph()
 render_graph()
 read_graph()
@@ -220,7 +220,7 @@ reg2 <- function(d){
   lm(y ~ x3, data = d)
 }
 outdated(my_plan)   # Some targets depend on reg2().
-plot_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
+plot_graph(my_plan) # See arguments 'from' and 'to'.
 make(my_plan)       # Rebuild just the outdated targets.
 outdated(my_plan)   # Everything is up to date again.
 plot_graph(my_plan) # The colors changed in the graph.

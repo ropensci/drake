@@ -24,6 +24,9 @@
 #' \code{to} and the nodes downstream.
 #' Can be combined with \code{from}.
 #'
+#' @param combine How to put together the \code{to} subgraph and the
+#' \code{from} subgraph: intersection or union.
+#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
@@ -128,7 +131,7 @@
 #' plot_graph(my_plan, width = '100%') # The width is passed to visNetwork
 #' make(my_plan)
 #' plot_graph(my_plan) # The red nodes from before are now green.
-#' plot_graph(
+#' plot_graph( # plot a subgraph
 #'   my_plan,
 #'   from = c("small", "reg2"),
 #'   to = "summ_regression2_small"
@@ -137,6 +140,7 @@
 plot_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
   from = NULL, to = NULL,
+  combine = c("union", "intersection"),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)
@@ -156,7 +160,8 @@ plot_graph <- function(
 ){
   force(envir)
   raw_graph <- dataframes_graph(
-    plan = plan, from = from, to = to, targets = targets,
+    plan = plan, from = from, to = to,
+    combine = combine, targets = targets,
     envir = envir, verbose = verbose, hook = hook, cache = cache,
     jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework,

@@ -70,7 +70,7 @@ For `make(..., parallelism = "Makefile")`, Windows users need to download and in
 ```{r quickstartdrakermd, eval = FALSE}
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd.
-plot_graph(my_plan)  # Hover, click, drag, zoom, pan.
+plot_graph(my_plan)  # Hover, click, drag, zoom, pan. See args 'from' and 'to'.
 outdated(my_plan)    # Which targets need to be (re)built?
 missed(my_plan)      # Are you missing anything from your workspace?
 check(my_plan)       # Are you missing files? Is your workflow plan okay?
@@ -115,7 +115,7 @@ explore the dependency network,
 ```{r draakedepsdrakermd, eval = FALSE}
 outdated()
 missed()
-plot_graph()
+plot_graph() # Now with subgraphs too.
 dataframes_graph()
 render_graph()
 read_graph()
@@ -257,7 +257,7 @@ reg2 <- function(d){
 ```
 
 ```{r fakegraphdrakermd, eval = FALSE}
-# Hover, click, drag, zoom, and pan.
+# Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
 plot_graph(my_plan, width = "100%", height = "500px")
 ```
 

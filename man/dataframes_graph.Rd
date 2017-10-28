@@ -17,13 +17,13 @@ dataframes_graph(plan = workplan(), from = NULL, to = NULL,
 \item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
-\item{from}{Optional collection of target names. 
+\item{from}{Optional collection of target names.
 If \code{from} is nonempty,
 the graph will restrict itself to
 \code{from} and the nodes downstream.
 Can be combined with \code{to}.}
 
-\item{to}{Optional collection of target names. 
+\item{to}{Optional collection of target names.
 If \code{to} is nonempty,
 the graph will restrict itself to
 \code{to} and the nodes downstream.

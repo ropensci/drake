@@ -271,15 +271,3 @@ legend_nodes <- function(font_size = 20) {
   out$id <- seq_len(nrow(out))
   out
 }
-
-sanitize_from_to <- function(config){
-  choices <- V(config$graph)$name
-  for (direction in c("from", "to")){
-    nodes <- config[[direction]]
-    if (length(nodes)){
-      config[[direction]] <-
-        sanitize_nodes(nodes = nodes, choices = choices)
-    }
-  }
-  config
-}

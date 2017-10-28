@@ -241,7 +241,7 @@ my_plan
 ```
 
 ```{r demoplotgraphcaution, eval = FALSE}
-# Hover, click, drag, zoom, and pan.
+# Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
 plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
