@@ -5,7 +5,7 @@
 \title{Function \code{build_graph}}
 \usage{
 build_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE)
+  envir = parent.frame(), verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -18,6 +18,10 @@ build_graph(plan = workplan(), targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
+
+\item{jobs}{number of jobs to accelerate the construction
+of the dependency graph. A light \code{mclapply}-based
+parallelism is used if your operating system is not Windows.}
 }
 \description{
 Make a graph of the dependency structure of your workplan.

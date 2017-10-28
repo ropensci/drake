@@ -4,9 +4,10 @@
 \alias{dataframes_graph}
 \title{Function \code{dataframes_graph}}
 \usage{
-dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
-  force(code) }, cache = drake::get_cache(), jobs = 1,
+dataframes_graph(plan = workplan(), from = NULL, to = NULL,
+  targets = drake::possible_targets(plan), envir = parent.frame(),
+  verbose = TRUE, hook = function(code) {     force(code) },
+  cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
@@ -15,6 +16,18 @@ dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
+
+\item{from}{Optional collection of target names. 
+If \code{from} is nonempty,
+the graph will restrict itself to
+\code{from} and the nodes downstream.
+Can be combined with \code{to}.}
+
+\item{to}{Optional collection of target names. 
+If \code{to} is nonempty,
+the graph will restrict itself to
+\code{to} and the nodes downstream.
+Can be combined with \code{from}.}
 
 \item{targets}{names of targets to build, same as for function
 \code{\link{make}()}.}
@@ -96,6 +109,11 @@ so you can plot your own custom \code{visNetwork}.
 \dontrun{
 load_basic_example()
 raw_graph <- dataframes_graph(my_plan)
+smaller_raw_graph <- dataframes_graph(
+  my_plan,
+  from = c("small", "reg2"),
+  to = "summ_regression2_small"
+)
 str(raw_graph)
 # Plot your own custom visNetwork graph
 library(magrittr)

@@ -81,7 +81,7 @@ config <- function(
     choices = parallelism_choices(distributed_only = FALSE)
   )
   config$graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose)
+    envir = envir, verbose = verbose, jobs = jobs)
   config
 }
 
@@ -113,7 +113,7 @@ build_config <- function(
     overwrite_hash_algos = FALSE
   )
   graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose
+    envir = envir, verbose = verbose, jobs = jobs
   )
   list(plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
@@ -177,6 +177,15 @@ possible_targets <- function(plan = workplan()) {
 
 store_config <- function(config) {
   save_these <- setdiff(names(config), "envir")  # envir could get massive.
-  lapply(save_these, function(item) config$cache$set(key = item,
-    value = config[[item]], namespace = "config"))
+  lightly_parallelize(
+    save_these,
+    function(item){
+      config$cache$set(
+        key = item,
+        value = config[[item]],
+        namespace = "config"
+      )
+    },
+    jobs = config$jobs
+  )
 }

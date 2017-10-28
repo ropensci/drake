@@ -56,14 +56,3 @@
 #' @importFrom withr with_dir with_options with_output_sink
 #' with_preserve_seed with_seed
 NULL
-
-#' @title Pipe operator
-#' @export
-#' @description Pipe operator from the \code{magrittr} package
-#' @param lhs left-hand side argument
-#' @param rhs right-hand side argument
-#' @examples
-#' rnorm(2) %>%
-#'   mean %>%
-#'   c("third element")
-`%>%` <- magrittr::`%>%`

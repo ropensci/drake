@@ -47,7 +47,7 @@ categorize_nodes <- function(config) {
 
 configure_nodes <- function(config){
   elts <- c(
-    "functions", "in_progress", "missing",
+    "failed", "functions", "in_progress", "missing",
     "outdated", "targets"
   )
   for (elt in elts){
@@ -270,4 +270,16 @@ legend_nodes <- function(font_size = 20) {
   )
   out$id <- seq_len(nrow(out))
   out
+}
+
+sanitize_from_to <- function(config){
+  choices <- V(config$graph)$name
+  for (direction in c("from", "to")){
+    nodes <- config[[direction]]
+    if (length(nodes)){
+      config[[direction]] <- 
+        sanitize_nodes(nodes = nodes, choices = choices)
+    }
+  }
+  config
 }

@@ -82,30 +82,3 @@ as_file <- function(x){
 wide_deparse <- function(x){
   paste(deparse(x), collapse = "")
 }
-
-sanitize_plan <- function(plan){
-  for (field in c("code", "command", "output", "target")){
-    if (!is.null(plan[[field]])){
-      plan[[field]] <- str_trim(plan[[field]], side = "both")
-    }
-  }
-  as.data.frame(plan, stringsAsFactors = FALSE) %>%
-    fix_deprecated_plan_names()
-}
-
-sanitize_targets <- function(plan, targets){
-  plan <- sanitize_plan(plan)
-  targets <- str_trim(targets, side = "both")
-  if (!any(targets %in% plan$target)){
-    stop("No valid targets requested.", call. = FALSE)
-  }
-  diffs <- setdiff(targets, plan$target)
-  if (length(diffs)){
-    warning(
-      "Ignoring requested targets not in the workflow plan:\n",
-      multiline_message(diffs),
-      call. = FALSE
-    )
-  }
-  intersect(targets, plan$target)
-}

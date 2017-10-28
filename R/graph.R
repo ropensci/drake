@@ -14,6 +14,9 @@
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
 #' @param verbose logical, whether to output messages to the console.
+#' @param jobs number of jobs to accelerate the construction
+#' of the dependency graph. A light \code{mclapply}-based
+#' parallelism is used if your operating system is not Windows.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -24,7 +27,8 @@ build_graph <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   force(envir)
   plan <- sanitize_plan(plan)
@@ -38,8 +42,10 @@ build_graph <- function(
   )
   true_import_names <- setdiff(names(imports), targets)
   imports <- imports[true_import_names]
-  import_deps <- lapply(imports, import_dependencies)
-  command_deps <- lapply(plan$command, command_dependencies)
+  import_deps <- lightly_parallelize(
+    imports, import_dependencies, jobs = jobs)
+  command_deps <- lightly_parallelize(
+    plan$command, command_dependencies, jobs = jobs)
   names(command_deps) <- plan$target
   dependency_list <- c(command_deps, import_deps)
   keys <- names(dependency_list)
@@ -52,11 +58,12 @@ build_graph <- function(
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)
-  ignore <- lapply(
+  ignore <- lightly_parallelize(
     targets,
     function(vertex){
       subcomponent(graph = graph, v = vertex, mode = "in")$name
-    }
+    },
+    jobs = jobs
   ) %>%
   unlist() %>%
   unique() %>%
@@ -78,6 +85,9 @@ build_graph <- function(
 #' \code{\link{make}()}.
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}.
+#' @param jobs number of jobs to accelerate the construction
+#' of the dependency graph. A light \code{mclapply}-based
+#' parallelism is used if your operating system is not Windows.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -86,10 +96,12 @@ build_graph <- function(
 tracked <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
-  envir = parent.frame()
+  envir = parent.frame(),
+  jobs = 1
 ){
   force(envir)
-  graph <- build_graph(plan = plan, targets = targets, envir = envir)
+  graph <- build_graph(
+    plan = plan, targets = targets, envir = envir, jobs = jobs)
   V(graph)$name
 }
 
@@ -110,4 +122,48 @@ assert_unique_names <- function(imports, targets, envir, verbose){
       )
   }
   remove(list = common, envir = envir)
+}
+
+trim_graph <- function(config){
+  config <- sanitize_from_to(config)
+  if (length(config$from)){
+    from_sub <- whole_subcomponent(
+      graph = config$graph,
+      roots = config$from,
+      mode = "out",
+      jobs = config$jobs
+    )
+    config$from <- c(config$from, from_sub)
+  }
+  if (length(config$to)){
+    to_sub <- whole_subcomponent(
+      graph = config$graph,
+      roots = config$to,
+      mode = "in",
+      jobs = config$jobs
+    )
+    config$to <- c(config$to, to_sub)
+  }
+  for (direction in c("from", "to")){
+    nodes <- intersect(V(config$graph)$name, config[[direction]])
+    if (length(nodes)){
+      config$graph <- igraph::induced_subgraph(
+        graph = config$graph,
+        vids = nodes
+      )
+    }
+  }
+  config
+}
+
+whole_subcomponent <- function(graph, roots, mode, jobs){
+  out <- lightly_parallelize(
+    roots,
+    igraph::subcomponent,
+    graph = graph,
+    mode = mode,
+    jobs = jobs
+  ) %>%
+    do.call(what = igraph::union)
+  out$name
 }

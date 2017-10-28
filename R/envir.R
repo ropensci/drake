@@ -9,11 +9,12 @@ assign_to_envir <- Vectorize(
   )
 
 prune_envir <- function(targets, config){
-  downstream <- lapply(
+  downstream <- lightly_parallelize(
     targets,
     function(vertex){
       subcomponent(config$graph, v = vertex, mode = "out")$name
-    }
+    },
+    jobs = config$jobs
   ) %>%
     unlist() %>%
     unique()

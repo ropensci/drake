@@ -76,12 +76,13 @@ outdated <-  function(
   if (!length(rebuild)){
     return(character(0))
   } else{
-    lapply(
+    lightly_parallelize(
       rebuild,
       function(vertex){
         subcomponent(config$graph, v = vertex, mode = "out")$name
-      }
-      ) %>%
+      },
+      jobs = jobs
+    ) %>%
     unlist() %>%
     unique() %>%
     sort()

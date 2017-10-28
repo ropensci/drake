@@ -5,7 +5,7 @@
 \title{Function \code{tracked}}
 \usage{
 tracked(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame())
+  envir = parent.frame(), jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -16,6 +16,10 @@ tracked(plan = workplan(), targets = drake::possible_targets(plan),
 
 \item{envir}{environment to import from, same as for function
 \code{\link{make}()}.}
+
+\item{jobs}{number of jobs to accelerate the construction
+of the dependency graph. A light \code{mclapply}-based
+parallelism is used if your operating system is not Windows.}
 }
 \description{
 Print out which objects, functions, files, targets, etc.

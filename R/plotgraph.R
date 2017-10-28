@@ -12,6 +12,18 @@
 #' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #'
+#' @param from Optional collection of target names.
+#' If \code{from} is nonempty,
+#' the graph will restrict itself to
+#' \code{from} and the nodes downstream.
+#' Can be combined with \code{to}.
+#'
+#' @param to Optional collection of target names.
+#' If \code{to} is nonempty,
+#' the graph will restrict itself to
+#' \code{to} and the nodes downstream.
+#' Can be combined with \code{from}.
+#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
@@ -105,6 +117,8 @@
 #'
 #' @param main title of the graph
 #'
+#' @param ncol_legend number of columns in the legend nodes
+#'
 #' @param ... other arguments passed to
 #' \code{visNetwork::visNetwork()} to plot the graph.
 #'
@@ -114,9 +128,15 @@
 #' plot_graph(my_plan, width = '100%') # The width is passed to visNetwork
 #' make(my_plan)
 #' plot_graph(my_plan) # The red nodes from before are now green.
+#' plot_graph(
+#'   my_plan,
+#'   from = c("small", "reg2"),
+#'   to = "summ_regression2_small"
+#' )
 #' }
 plot_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
+  from = NULL, to = NULL,
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)
@@ -131,23 +151,26 @@ plot_graph <- function(
   layout = "layout_with_sugiyama", main = NULL,
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
+  ncol_legend = 1,
   ...
 ){
   force(envir)
-  raw_graph <- dataframes_graph(plan = plan, targets = targets,
+  raw_graph <- dataframes_graph(
+    plan = plan, from = from, to = to, targets = targets,
     envir = envir, verbose = verbose, hook = hook, cache = cache,
     jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework,
     build_times = build_times, digits = digits,
     targets_only = targets_only, split_columns = split_columns,
-    config = config, font_size = font_size)
+    config = config, font_size = font_size
+  )
   if (is.null(main)){
     main <- raw_graph$default_title
   }
   render_graph(raw_graph, file = file, selfcontained = selfcontained,
     layout = layout, direction = direction,
     navigationButtons = navigationButtons, # nolint
-    hover = hover, main = main, ...)
+    hover = hover, main = main, ncol_legend = ncol_legend, ...)
 }
 
 #' @title Function \code{render_graph}
@@ -191,6 +214,8 @@ plot_graph <- function(
 #'
 #' @param main title of the graph
 #'
+#' @param ncol_legend number of columns in the legend nodes
+#'
 #' @param ... arguments passed to \code{visNetwork()}.
 #'
 #' @examples
@@ -204,6 +229,7 @@ render_graph <- function(
   layout = "layout_with_sugiyama", direction = "LR", hover = TRUE,
   main = graph_dataframes$default_title, selfcontained = FALSE,
   navigationButtons = TRUE, # nolint
+  ncol_legend = 1,
   ...
 ){
   out <- visNetwork::visNetwork(
@@ -213,7 +239,8 @@ render_graph <- function(
   ) %>%
     visNetwork::visLegend(
       useGroups = FALSE,
-      addNodes = graph_dataframes$legend_nodes
+      addNodes = graph_dataframes$legend_nodes,
+      ncol = ncol_legend
     ) %>%
     visNetwork::visHierarchicalLayout(direction = direction) %>%
     visNetwork::visIgraphLayout(

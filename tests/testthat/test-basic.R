@@ -23,9 +23,16 @@ test_with_dir("basic example works", {
     split_columns = TRUE)
   tmp4 <- dataframes_graph(my_plan, envir = e, config = config,
     targets_only = TRUE, split_columns = TRUE)
+  tmp5 <- dataframes_graph(my_plan, envir = e, config = config,
+    from = c("small", "reg2"), to = "regression2_small")
+  expect_error(
+    tmp6 <- dataframes_graph(my_plan, envir = e, config = config,
+      from = "not_found")
+  )
   expect_false(identical(tmp$nodes, tmp2$nodes))
   expect_false(identical(tmp$nodes, tmp3$nodes))
   expect_false(identical(tmp$nodes, tmp4$nodes))
+  expect_false(identical(tmp$nodes, tmp5$nodes))
 
   expect_false(file.exists("Makefile"))
   expect_true(is.data.frame(tmp$nodes))

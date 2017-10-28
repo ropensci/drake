@@ -13,6 +13,18 @@
 #' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #'
+#' @param from Optional collection of target names.
+#' If \code{from} is nonempty,
+#' the graph will restrict itself to
+#' \code{from} and the nodes downstream.
+#' Can be combined with \code{to}.
+#'
+#' @param to Optional collection of target names.
+#' If \code{to} is nonempty,
+#' the graph will restrict itself to
+#' \code{to} and the nodes downstream.
+#' Can be combined with \code{from}.
+#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
@@ -80,6 +92,11 @@
 #' \dontrun{
 #' load_basic_example()
 #' raw_graph <- dataframes_graph(my_plan)
+#' smaller_raw_graph <- dataframes_graph(
+#'   my_plan,
+#'   from = c("small", "reg2"),
+#'   to = "summ_regression2_small"
+#' )
 #' str(raw_graph)
 #' # Plot your own custom visNetwork graph
 #' library(magrittr)
@@ -89,7 +106,8 @@
 #'   visHierarchicalLayout(direction = 'LR')
 #' }
 dataframes_graph <- function(
-  plan = workplan(), targets = drake::possible_targets(plan),
+  plan = workplan(), from = NULL, to = NULL,
+  targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)
@@ -110,19 +128,25 @@ dataframes_graph <- function(
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }
+  config$plan <- sanitize_plan(plan = plan)
+  config$targets <- sanitize_targets(plan = plan, targets = targets)
+  config$outdated <- outdated(config = config)
+
+  config$from <- from
+  config$to <- to
+  config <- trim_graph(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label
 
   config$imports <- setdiff(config$nodes$id, config$plan$target)
-  config$in_progress <- in_progress()
-  config$failed <- failed()
-  config$outdated <- outdated(config = config)
+  config$in_progress <- in_progress(cache = config$cache)
+  config$failed <- failed(cache = config$cache)
   config$files <- Filter(x = config$nodes$id, f = is_file)
   config$functions <- Filter(x = config$imports,
-    f = function(x) can_get_function(x, envir = envir))
+    f = function(x) can_get_function(x, envir = config$envir))
   config$missing <- Filter(x = config$imports,
-    f = function(x) missing_import(x, envir = envir))
+    f = function(x) missing_import(x, envir = config$envir))
   config$font_size <- font_size
   config$build_times <- build_times
   config$digits <- digits
