@@ -26,7 +26,7 @@
 #' \code{"out"} to go downstream,
 #' and \code{"all"} to go both ways and disregard
 #' edge direction altogether.
-#' 
+#'
 #' @param order How far to branch out to create
 #' a neighborhood around \code{from} (measured
 #' in the number of nodes). Defaults to
@@ -151,15 +151,15 @@ dataframes_graph <- function(
   config$from <- from
   config$mode <- match.arg(mode)
   config$order <- order
-  
+
   if (shrink_edges){
     config <- trim_graph(config)
   }
-  
+
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label
-  
+
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
@@ -177,7 +177,7 @@ dataframes_graph <- function(
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
   }
-  
+
   if (!shrink_edges){
     config <- trim_graph(config)
   }
@@ -191,7 +191,7 @@ dataframes_graph <- function(
   if (split_columns){
     config$nodes <- split_node_columns(nodes = config$nodes)
   }
-  
+
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(

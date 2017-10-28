@@ -25,12 +25,12 @@
 #' \code{"out"} to go downstream,
 #' and \code{"all"} to go both ways and disregard
 #' edge direction altogether.
-#' 
+#'
 #' @param order How far to branch out to create
 #' a neighborhood around \code{from} (measured
 #' in the number of nodes). Defaults to
 #' as far as possible.
-#' 
+#'
 #' @param shrink_edges logical: for a
 #' neighborhood around \code{from}, whether to
 #' disregard the meaning of columns as parallelizable stages
