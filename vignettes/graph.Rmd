@@ -1,5 +1,6 @@
 ---
-title: "Visuals with drake"
+title: "Graphing with drake"
+subtitle: "Visualize your workflow."
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +8,7 @@ output:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{visual}
+  %\VignetteIndexEntry{graph}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
