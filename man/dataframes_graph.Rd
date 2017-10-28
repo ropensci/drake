@@ -4,30 +4,18 @@
 \alias{dataframes_graph}
 \title{Function \code{dataframes_graph}}
 \usage{
-dataframes_graph(plan = workplan(), from = NULL, to = NULL,
-  targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, hook = function(code) {     force(code) },
-  cache = drake::get_cache(), jobs = 1,
+dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(), jobs = 1,
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
-  config = NULL)
+  config = NULL, from = NULL, mode = c("out", "in", "all"),
+  order = NULL, shrink_edges = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
-
-\item{from}{Optional collection of target names.
-If \code{from} is nonempty,
-the graph will restrict itself to
-\code{from} and the nodes downstream.
-Can be combined with \code{to}.}
-
-\item{to}{Optional collection of target names.
-If \code{to} is nonempty,
-the graph will restrict itself to
-\code{to} and the nodes downstream.
-Can be combined with \code{from}.}
 
 \item{targets}{names of targets to build, same as for function
 \code{\link{make}()}.}
@@ -94,6 +82,21 @@ If not \code{NULL},
 \code{config} overrides all arguments except
 \code{build_times}, \code{digits}, \code{targets_only},
 \code{split_columns}, and \code{font_size}.}
+
+\item{from}{Optional collection of target names.
+If \code{from} is nonempty,
+the graph will restrict itself to
+\code{from} and the nodes downstream.
+Can be combined with \code{to}.}
+
+\item{to}{Optional collection of target names.
+If \code{to} is nonempty,
+the graph will restrict itself to
+\code{to} and the nodes downstream.
+Can be combined with \code{from}.}
+
+\item{combine}{How to put together the \code{to} subgraph and the
+\code{from} subgraph: intersection or union.}
 }
 \value{
 a list of three data frames: one for nodes,

@@ -14,14 +14,11 @@ sanitize_targets <- function(plan, targets){
   sanitize_nodes(nodes = targets, choices = plan$target)
 }
 
-sanitize_from_to <- function(config){
+sanitize_from <- function(config){
   choices <- V(config$graph)$name
-  for (direction in c("from", "to")){
-    nodes <- config[[direction]]
-    if (length(nodes)){
-      config[[direction]] <-
-        sanitize_nodes(nodes = nodes, choices = choices)
-    }
+  if (length(config$from)){
+    config$from <-
+      sanitize_nodes(nodes = config$from, choices = choices)
   }
   config
 }

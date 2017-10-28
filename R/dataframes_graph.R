@@ -109,9 +109,7 @@
 #'   visHierarchicalLayout(direction = 'LR')
 #' }
 dataframes_graph <- function(
-  plan = workplan(), from = NULL, to = NULL,
-  combine = c("union", "intersection"),
-  targets = drake::possible_targets(plan),
+  plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)
@@ -120,7 +118,10 @@ dataframes_graph <- function(
   parallelism = drake::default_parallelism(), packages = (.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
-  split_columns = FALSE, font_size = 20, config = NULL) {
+  split_columns = FALSE, font_size = 20, config = NULL,
+  from = NULL, mode = c("out", "in", "all"), order = NULL,
+  shrink_edges = FALSE
+) {
   force(envir)
   if (is.null(config)){
     config <- config(plan = plan, targets = targets,
@@ -137,13 +138,17 @@ dataframes_graph <- function(
   config$outdated <- outdated(config = config)
 
   config$from <- from
-  config$to <- to
-  config$combine <- match.arg(combine)
-  config <- trim_graph(config)
+  config$mode <- match.arg(mode)
+  config$order <- order
+  
+  if (shrink_edges){
+    config <- trim_graph(config)
+  }
+  
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label
-
+  
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
@@ -156,23 +161,27 @@ dataframes_graph <- function(
   config$build_times <- build_times
   config$digits <- digits
 
-  nodes <- configure_nodes(config = config)
-  edges <- network_data$edges
-  if (nrow(edges))
-    edges$arrows <- "to"
+  config$nodes <- configure_nodes(config = config)
+  config$edges <- network_data$edges
+  if (nrow(config$edges)){
+    config$edges$arrows <- "to"
+  }
+  
+  if (!shrink_edges){
+    config <- trim_graph(config)
+  }
+  config <- subset_nodes_edges(config = config, keep = V(config$graph)$name)
   if (targets_only) {
-    nodes <- nodes[targets, ]
-    edges <-
-      edges[edges$from %in% targets & edges$to %in% targets, ]
+    config <- subset_nodes_edges(config = config, keep = targets)
   }
 
   # Cannot split columns until imports are removed,
   # if applicable.
   if (split_columns){
-    nodes <- split_node_columns(nodes = nodes)
+    config$nodes <- split_node_columns(nodes = config$nodes)
   }
-
-  list(nodes = nodes, edges = edges,
+  
+  list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(
       parallelism = config$parallelism, split_columns = split_columns))

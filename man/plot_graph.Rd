@@ -5,15 +5,15 @@
 \title{Function \code{plot_graph}}
 \usage{
 plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  from = NULL, to = NULL, envir = parent.frame(), verbose = TRUE,
-  hook = function(code) {     force(code) }, cache = drake::get_cache(),
-  jobs = 1, parallelism = drake::default_parallelism(),
-  packages = (.packages()), prework = character(0), config = NULL,
-  file = character(0), selfcontained = FALSE, build_times = TRUE,
-  digits = 3, targets_only = FALSE, split_columns = FALSE,
-  font_size = 20, layout = "layout_with_sugiyama", main = NULL,
-  direction = "LR", hover = TRUE, navigationButtons = TRUE,
-  ncol_legend = 1, ...)
+  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
+  force(code) }, cache = drake::get_cache(), jobs = 1,
+  parallelism = drake::default_parallelism(), packages = (.packages()),
+  prework = character(0), config = NULL, file = character(0),
+  selfcontained = FALSE, build_times = TRUE, digits = 3,
+  targets_only = FALSE, split_columns = FALSE, font_size = 20,
+  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
+  hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
+  "in", "all"), order = NULL, shrink_edges = FALSE, ncol_legend = 1, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -21,18 +21,6 @@ plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
 
 \item{targets}{names of targets to build, same as for function
 \code{\link{make}()}.}
-
-\item{from}{Optional collection of target names.
-If \code{from} is nonempty,
-the graph will restrict itself to
-\code{from} and the nodes downstream.
-Can be combined with \code{to}.}
-
-\item{to}{Optional collection of target names.
-If \code{to} is nonempty,
-the graph will restrict itself to
-\code{to} and the nodes downstream.
-Can be combined with \code{from}.}
 
 \item{envir}{environment to import from, same as for function
 \code{\link{make}()}. \code{config$envir} is ignored in favor
@@ -127,10 +115,25 @@ change with hovering.}
 \item{navigationButtons}{logical, whether to add navigation buttons with
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
 
+\item{from}{Optional collection of target names.
+If \code{from} is nonempty,
+the graph will restrict itself to
+\code{from} and the nodes downstream.
+Can be combined with \code{to}.}
+
 \item{ncol_legend}{number of columns in the legend nodes}
 
 \item{...}{other arguments passed to
 \code{visNetwork::visNetwork()} to plot the graph.}
+
+\item{to}{Optional collection of target names.
+If \code{to} is nonempty,
+the graph will restrict itself to
+\code{to} and the nodes downstream.
+Can be combined with \code{from}.}
+
+\item{combine}{How to put together the \code{to} subgraph and the
+\code{from} subgraph: intersection or union.}
 }
 \description{
 Plot the dependency structure of your workplan.

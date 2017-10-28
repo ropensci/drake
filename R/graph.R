@@ -125,42 +125,19 @@ assert_unique_names <- function(imports, targets, envir, verbose){
 }
 
 trim_graph <- function(config){
-  config <- sanitize_from_to(config)
-  if (length(config$from)){
-    from_sub <- whole_subcomponent(
-      graph = config$graph,
-      roots = config$from,
-      mode = "out"
-    )
-    config$from <- c(config$from, from_sub)
+  if (!length(config$from)){
+    return(config)
   }
-  if (length(config$to)){
-    to_sub <- whole_subcomponent(
-      graph = config$graph,
-      roots = config$to,
-      mode = "in"
-    )
-    config$to <- c(config$to, to_sub)
+  config <- sanitize_from(config)
+  if (!length(config$order)){
+    config$order <- length(V(config$graph))
   }
-  for (direction in c("from", "to")){
-    nodes <- intersect(V(config$graph)$name, config[[direction]])
-    if (length(nodes)){
-      config$graph <- igraph::induced_subgraph(
-        graph = config$graph,
-        vids = nodes
-      )
-    }
-  }
-  config
-}
-
-whole_subcomponent <- function(graph, roots, mode){
-  out <- lapply(
-    roots,
-    igraph::subcomponent,
-    graph = graph,
-    mode = mode
+  config$graph <- igraph::make_ego_graph(
+    graph = config$graph,
+    order = config$order,
+    nodes = config$from,
+    mode = config$mode
   ) %>%
     do.call(what = igraph::union)
-  out$name
+  config
 }

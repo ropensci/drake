@@ -224,6 +224,15 @@ style_nodes <- function(config) {
   })
 }
 
+subset_nodes_edges <- function(config, keep){
+  config$nodes <- config$nodes[keep, ]
+  config$edges <-
+    config$edges[
+      config$edges$from %in% keep &
+      config$edges$to %in% keep, ]
+  config
+}
+
 #' @title Function legend_nodes
 #' @export
 #' @seealso \code{\link{drake_palette}()},

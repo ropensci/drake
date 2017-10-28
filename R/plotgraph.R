@@ -139,8 +139,6 @@
 #' }
 plot_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
-  from = NULL, to = NULL,
-  combine = c("union", "intersection"),
   envir = parent.frame(), verbose = TRUE,
   hook = function(code){
     force(code)
@@ -155,13 +153,16 @@ plot_graph <- function(
   layout = "layout_with_sugiyama", main = NULL,
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
+  from = NULL, mode = c("out", "in", "all"), order = NULL,
+  shrink_edges = FALSE,
   ncol_legend = 1,
   ...
 ){
   force(envir)
   raw_graph <- dataframes_graph(
-    plan = plan, from = from, to = to,
-    combine = combine, targets = targets,
+    plan = plan, targets = targets,
+    from = from, mode = mode, order = order,
+    shrink_edges = shrink_edges,
     envir = envir, verbose = verbose, hook = hook, cache = cache,
     jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework,
