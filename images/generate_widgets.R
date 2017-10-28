@@ -20,10 +20,18 @@ reg2 <- function(d){
 plot_graph(my_plan, file = "reg2.html", selfcontained = TRUE,
   width = "100%", height = "500px")
 
+
+plot_graph(
+  my_plan, file = "targetsonly.html", selfcontained = TRUE,
+  targets_only = TRUE,
+  width = "100%", height = "500px",
+  from = c("large", "small")
+)
+
 plot_graph(
   my_plan, file = "fromout.html", selfcontained = TRUE,
   width = "100%", height = "500px",
-  from = c("large", "small")
+  from = c("regression2_small", "regression2_large")
 )
 
 plot_graph(

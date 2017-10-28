@@ -1,0 +1,143 @@
+---
+title: "Visuals with drake"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{visual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+![](logo-vignettes.png)
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+`Drake` has powerful visuals to help you understand and plan your workflow.
+
+```{r graphoutdated}
+library(drake)
+load_basic_example()
+plot_graph(my_plan)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/outdated.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+# Parallelism
+
+When you call `make(my_plan, jobs = 8)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 8)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 8 jobs.
+
+# Dependency reactivity
+
+In the previous graph, all the targets were out of date.
+
+```{r graphmake}
+make(my_plan, jobs = 4)
+plot_graph(my_plan)
+```
+
+But after a `make()`, we are all caught up.
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/built.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+
+When you change a dependency, you throw some targets out of date until you call `make(my_plan)` again.
+
+```{r reg2graphvisual}
+reg2 <- function(d){
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+plot_graph(my_plan)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/reg2.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+# Subgraphs
+
+Graphs can grow enormous for serious workflows, so there are multiple ways to focus on a subgraph. True, you can simply zoom into any of the graphs above using your mouse, but that is probably not enough. Use `targets_only` to ignore the imports.
+
+```{r targetsonly}
+plot_graph(my_plan, targets_only = TRUE)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/targetsonly.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+
+Similarly, you can just show downstream nodes.
+
+```{r fromout}
+plot_graph(my_plan, from = c("regression2_small", "regression2_large"))
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/fromout.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+
+Or upstream ones.
+
+```{r fromin}
+plot_graph(my_plan, from = "small", mode = "in")
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/fromin.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+In fact, let's just take a small neighborhood around a target.
+
+
+```{r fromall}
+plot_graph(my_plan, from = "small", mode = "all", order = 1)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/fromall.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+Remember, the `report.md` node is far to the right because it is in a later parallelizable stage. If you do not care about parallelizable stages, simply `shrink_edges`.
+
+```{r shrink}
+plot_graph(
+  my_plan,
+  from = "small",
+  mode = "all",
+  order = 1,
+  shrink_edges = TRUE
+)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/shrink.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>

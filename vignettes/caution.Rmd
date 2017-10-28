@@ -396,13 +396,13 @@ Some parallel backends, particularly `mclapply` and `future::multicore`, may cre
 ```{r cautionzombies, eval = FALSE}
 fork_kill_zombies <- function(){
   require(inline)
-  includes <- '#include <sys/wait.h>'
-  code <- 'int wstat; while (waitpid(-1, &wstat, WNOHANG) > 0) {};'
+  includes <- "#include <sys/wait.h>"
+  code <- "int wstat; while (waitpid(-1, &wstat, WNOHANG) > 0) {};"
 
   wait <- inline::cfunction(
     body = code,
     includes = includes,
-    convention='.C'
+    convention = ".C"
   )
 
   invisible(wait())
