@@ -35,7 +35,7 @@ plot_graph(my_plan)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/outdated.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -49,7 +49,7 @@ plot_graph(my_plan)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/built.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/built.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -66,7 +66,7 @@ plot_graph(my_plan)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -80,7 +80,7 @@ plot_graph(my_plan, targets_only = TRUE)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/targetsonly.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/targetsonly.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -93,7 +93,7 @@ plot_graph(my_plan, from = c("regression2_small", "regression2_large"))
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/fromout.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/fromout.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -106,7 +106,7 @@ plot_graph(my_plan, from = "small", mode = "in")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/fromin.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/fromin.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -119,7 +119,7 @@ plot_graph(my_plan, from = "small", mode = "all", order = 1)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/fromall.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/fromall.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -132,7 +132,7 @@ The `report.md` node is drawn in somewhat, but it is still the farthest right in
 `Drake` shows its parallel computing strategy plainly in the graph.
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -154,7 +154,7 @@ plot_graph(small_plan)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/small_local.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/small_local.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -167,7 +167,7 @@ plot_graph(small_plan, parallelism = "future_lapply")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/small_distributed.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/9474c9aa/images/small_distributed.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
