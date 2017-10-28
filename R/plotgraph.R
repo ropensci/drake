@@ -12,7 +12,7 @@
 #' @param targets names of targets to build, same as for function
 #' \code{\link{make}()}.
 #'
-#' @param from Optional collection of target/import names.
+#' @param from Optional character vector of target/import names.
 #' If \code{from} is nonempty,
 #' the graph will restrict itself to
 #' a neighborhood of \code{from}.
@@ -30,6 +30,13 @@
 #' a neighborhood around \code{from} (measured
 #' in the number of nodes). Defaults to
 #' as far as possible.
+#' 
+#' @param subset Optional character vector of of target/import names.
+#' Subset of nodes to display in the graph.
+#' Applied after \code{from}, \code{mode}, and \code{order}.
+#' Be advised: edges are only kept for adgacent nodes in \code{subset}.
+#' If you do not select all the intermediate nodes,
+#' edges will drop from the graph.
 #'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
@@ -158,19 +165,20 @@ plot_graph <- function(
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
   from = NULL, mode = c("out", "in", "all"), order = NULL,
+  subset = NULL,
   ncol_legend = 1,
   ...
 ){
   force(envir)
   raw_graph <- dataframes_graph(
     plan = plan, targets = targets,
-    from = from, mode = mode, order = order,
     envir = envir, verbose = verbose, hook = hook, cache = cache,
     jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework,
     build_times = build_times, digits = digits,
     targets_only = targets_only, split_columns = split_columns,
-    config = config, font_size = font_size
+    config = config, font_size = font_size,
+    from = from, mode = mode, order = order, subset = subset
   )
   if (is.null(main)){
     main <- raw_graph$default_title
@@ -250,12 +258,15 @@ render_graph <- function(
       addNodes = graph_dataframes$legend_nodes,
       ncol = ncol_legend
     ) %>%
-    visNetwork::visHierarchicalLayout(direction = direction) %>%
-    visNetwork::visIgraphLayout(
+    visNetwork::visHierarchicalLayout(direction = direction)
+  if (nrow(graph_dataframes$edges)){
+    out <- visNetwork::visIgraphLayout(
+      graph = out,
       physics = FALSE,
       randomSeed = 2017,
       layout = layout
     )
+  }
   if (navigationButtons) # nolint
     out <- visNetwork::visInteraction(out,
       navigationButtons = TRUE) # nolint

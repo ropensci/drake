@@ -13,7 +13,7 @@ plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   layout = "layout_with_sugiyama", main = NULL, direction = "LR",
   hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, ncol_legend = 1, ...)
+  "in", "all"), order = NULL, subset = NULL, ncol_legend = 1, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -115,7 +115,7 @@ change with hovering.}
 \item{navigationButtons}{logical, whether to add navigation buttons with
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
 
-\item{from}{Optional collection of target/import names.
+\item{from}{Optional character vector of target/import names.
 If \code{from} is nonempty,
 the graph will restrict itself to
 a neighborhood of \code{from}.
@@ -133,6 +133,13 @@ edge direction altogether.}
 a neighborhood around \code{from} (measured
 in the number of nodes). Defaults to
 as far as possible.}
+
+\item{subset}{Optional character vector of of target/import names.
+Subset of nodes to display in the graph.
+Applied after \code{from}, \code{mode}, and \code{order}.
+Be advised: edges are only kept for adgacent nodes in \code{subset}.
+If you do not select all the intermediate nodes,
+edges will drop from the graph.}
 
 \item{ncol_legend}{number of columns in the legend nodes}
 

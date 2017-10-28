@@ -215,6 +215,7 @@ split_node_columns <- function(nodes){
       old_levels = stage$level, max_reps = max_reps)
     stage
   })
+  rownames(out) <- out$id
   out$level <- as.integer(as.factor(out$level))
   out
 }
@@ -235,7 +236,8 @@ style_nodes <- function(config) {
   })
 }
 
-subset_nodes_edges <- function(config, keep){
+subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
+  keep <- sanitize_nodes(nodes = keep, choices = choices)
   config$nodes <- config$nodes[keep, ]
   config$edges <-
     config$edges[

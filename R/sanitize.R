@@ -27,7 +27,7 @@ sanitize_nodes <- function(nodes, choices){
   if (!any(nodes %in% choices)){
     stop(
       "All import/target names are invalid ",
-      "in argument 'targets', 'to', or 'from' ",
+      "in argument 'targets', 'from', or 'subset' ",
       "for make(), plot_graph(), or similar.",
       call. = FALSE
     )
@@ -35,10 +35,11 @@ sanitize_nodes <- function(nodes, choices){
   diffs <- setdiff(nodes, choices)
   if (length(diffs)){
     warning(
-      "Ignoring imports/targets that were requeted but not found:\n",
+      "Ignoring imports/targets that were requested but not found:\n",
       multiline_message(diffs),
       call. = FALSE
     )
   }
-  intersect(nodes, choices)
+  intersect(nodes, choices) %>%
+    unique
 }

@@ -11,7 +11,7 @@ dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   config = NULL, from = NULL, mode = c("out", "in", "all"),
-  order = NULL)
+  order = NULL, subset = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -101,6 +101,13 @@ edge direction altogether.}
 a neighborhood around \code{from} (measured
 in the number of nodes). Defaults to
 as far as possible.}
+
+\item{subset}{Optional character vector of of target/import names.
+Subset of nodes to display in the graph.
+Applied after \code{from}, \code{mode}, and \code{order}.
+Be advised: edges are only kept for adgacent nodes in \code{subset}.
+If you do not select all the intermediate nodes,
+edges will drop from the graph.}
 }
 \value{
 a list of three data frames: one for nodes,

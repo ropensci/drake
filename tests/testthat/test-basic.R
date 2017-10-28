@@ -17,6 +17,8 @@ test_with_dir("basic example works", {
 
   # Different graph configurations should be checked manually.
   tmp <- dataframes_graph(my_plan, envir = e, config = config)
+  tmp0 <- dataframes_graph(my_plan, envir = e, config = config,
+    subset = c("small", "regression2_large"))
   tmp1 <- dataframes_graph(my_plan, envir = e, config = config,
     from = "small")
   tmp2 <- dataframes_graph(my_plan, envir = e, config = config,
@@ -35,6 +37,8 @@ test_with_dir("basic example works", {
     tmp7 <- dataframes_graph(my_plan, envir = e, config = config,
       from = "not_found")
   )
+  expect_equal(nrow(tmp0$nodes), 2)
+  expect_false(identical(tmp$nodes, tmp0$nodes))
   expect_false(identical(tmp$nodes, tmp1$nodes))
   expect_false(identical(tmp$nodes, tmp2$nodes))
   expect_false(identical(tmp$nodes, tmp3$nodes))

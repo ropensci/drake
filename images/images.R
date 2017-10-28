@@ -46,6 +46,12 @@ plot_graph(
   from = "small", mode = "all", order = 1
 )
 
+plot_graph(
+  my_plan, file = "subset.html", selfcontained = TRUE,
+  width = "100%", height = "500px",
+  subset = c("regression2_small", "'report.md'")
+)
+
 small_plan <- workplan(a = 1, b = f(2))
 f <- function(x){
   x

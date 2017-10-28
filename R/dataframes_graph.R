@@ -32,6 +32,13 @@
 #' in the number of nodes). Defaults to
 #' as far as possible.
 #'
+#' @param subset Optional character vector of of target/import names.
+#' Subset of nodes to display in the graph.
+#' Applied after \code{from}, \code{mode}, and \code{order}.
+#' Be advised: edges are only kept for adgacent nodes in \code{subset}.
+#' If you do not select all the intermediate nodes,
+#' edges will drop from the graph.
+#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
@@ -123,7 +130,7 @@ dataframes_graph <- function(
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
   split_columns = FALSE, font_size = 20, config = NULL,
-  from = NULL, mode = c("out", "in", "all"), order = NULL
+  from = NULL, mode = c("out", "in", "all"), order = NULL, subset = NULL
 ) {
   force(envir)
   if (is.null(config)){
@@ -136,13 +143,10 @@ dataframes_graph <- function(
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }
+
   config$plan <- sanitize_plan(plan = plan)
   config$targets <- sanitize_targets(plan = plan, targets = targets)
   config$outdated <- outdated(config = config)
-
-  config$from <- from
-  config$mode <- match.arg(mode)
-  config$order <- order
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
@@ -166,17 +170,31 @@ dataframes_graph <- function(
   config$digits <- digits
 
   config$nodes <- configure_nodes(config = config)
+  config$from <- from
+  config$mode <- match.arg(mode)
+  config$order <- order
   config <- trim_graph(config)
-  config <- subset_nodes_edges(config = config, keep = V(config$graph)$name)
+  config <- subset_nodes_edges(
+    config = config,
+    keep = V(config$graph)$name
+  )
 
   if (targets_only) {
-    config <- subset_nodes_edges(config = config, keep = targets)
+    config <- subset_nodes_edges(
+      config = config,
+      keep = targets
+    )
   }
   if (split_columns){
     config$nodes <- split_node_columns(nodes = config$nodes)
   }
+  if (length(subset)){
+    config <- subset_nodes_edges(
+      config = config,
+      keep = subset
+    )
+  }
   config$nodes <- shrink_levels(config$nodes)
-
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(
