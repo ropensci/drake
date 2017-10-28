@@ -11,7 +11,7 @@ dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   config = NULL, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, shrink_edges = FALSE)
+  order = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -101,13 +101,6 @@ edge direction altogether.}
 a neighborhood around \code{from} (measured
 in the number of nodes). Defaults to
 as far as possible.}
-
-\item{shrink_edges}{logical: for a
-neighborhood around \code{from}, whether to
-disregard the meaning of columns as parallelizable stages
-and shrink the edges so the nodes are closer to each other.
-Only applies if a subset of the graph is selected with
-\code{from} and \code{order}.}
 }
 \value{
 a list of three data frames: one for nodes,

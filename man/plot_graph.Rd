@@ -13,7 +13,7 @@ plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   layout = "layout_with_sugiyama", main = NULL, direction = "LR",
   hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, shrink_edges = FALSE, ncol_legend = 1, ...)
+  "in", "all"), order = NULL, ncol_legend = 1, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -133,13 +133,6 @@ edge direction altogether.}
 a neighborhood around \code{from} (measured
 in the number of nodes). Defaults to
 as far as possible.}
-
-\item{shrink_edges}{logical: for a
-neighborhood around \code{from}, whether to
-disregard the meaning of columns as parallelizable stages
-and shrink the edges so the nodes are closer to each other.
-Only applies if a subset of the graph is selected with
-\code{from} and \code{order}.}
 
 \item{ncol_legend}{number of columns in the legend nodes}
 

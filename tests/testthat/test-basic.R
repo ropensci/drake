@@ -18,9 +18,9 @@ test_with_dir("basic example works", {
   # Different graph configurations should be checked manually.
   tmp <- dataframes_graph(my_plan, envir = e, config = config)
   tmp1 <- dataframes_graph(my_plan, envir = e, config = config,
-    from = "small", shrink_edges = TRUE)
+    from = "small")
   tmp2 <- dataframes_graph(my_plan, envir = e, config = config,
-    from = "small", shrink_edges = FALSE)
+    from = "small", targets_only = TRUE, parallelism = "Makefile")
   tmp3 <- dataframes_graph(my_plan, envir = e, config = config,
     targets_only = TRUE)
   tmp4 <- dataframes_graph(my_plan, envir = e, config = config,

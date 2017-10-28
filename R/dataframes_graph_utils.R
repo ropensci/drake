@@ -23,6 +23,12 @@ arrange_nodes <- function(config){
     resolve_levels(config = config)
 }
 
+shrink_levels <- function(nodes){
+  nodes <- nodes[order(nodes$level), ]
+  nodes$level <- c(0, cumsum(diff(nodes$level) > 0))
+  nodes
+}
+
 can_get_function <- function(x, envir) {
   tryCatch({
     is.function(eval(parse(text = x), envir = envir))

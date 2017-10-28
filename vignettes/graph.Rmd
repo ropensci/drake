@@ -124,27 +124,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The `report.md` node is far to the right because it is in a later parallelizable stage (more on parallel computing strategy below). If you do not care about parallelizable stages, simply `shrink_edges`.
-
-```{r shrink}
-plot_graph(
-  my_plan,
-  from = "small",
-  mode = "all",
-  order = 1,
-  shrink_edges = TRUE
-)
-```
-
-<iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/375ed27b/images/shrink.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
-
-# Finer control
-
-We have only scratched the surface of `plot_graph()`, there is much more functionality documented in the help file (`?plot_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
+The `report.md` node is drawn in somewhat, but it is still the farthest right in order to communicate `drake`'s parallel computing strategy. 
 
 
 # Parallel computing laid bare
@@ -204,3 +184,8 @@ The help file of `parallelism_choices()` is particularly detailed.
 ```{r lookupparallelism}
 ?parallelism_choices
 ```
+
+# Finer control
+
+We have only scratched the surface of `plot_graph()`, there is much more functionality documented in the help file (`?plot_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
+

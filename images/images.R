@@ -46,13 +46,6 @@ plot_graph(
   from = "small", mode = "all", order = 1
 )
 
-plot_graph(
-  my_plan, file = "shrink.html", selfcontained = TRUE,
-  width = "100%", height = "500px",
-  from = "small", mode = "all", order = 1,
-  shrink_edges = TRUE
-)
-
 small_plan <- workplan(a = 1, b = f(2))
 f <- function(x){
   x

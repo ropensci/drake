@@ -32,13 +32,6 @@
 #' in the number of nodes). Defaults to
 #' as far as possible.
 #'
-#' @param shrink_edges logical: for a
-#' neighborhood around \code{from}, whether to
-#' disregard the meaning of columns as parallelizable stages
-#' and shrink the edges so the nodes are closer to each other.
-#' Only applies if a subset of the graph is selected with
-#' \code{from} and \code{order}.
-#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
@@ -130,8 +123,7 @@ dataframes_graph <- function(
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
   split_columns = FALSE, font_size = 20, config = NULL,
-  from = NULL, mode = c("out", "in", "all"), order = NULL,
-  shrink_edges = FALSE
+  from = NULL, mode = c("out", "in", "all"), order = NULL
 ) {
   force(envir)
   if (is.null(config)){
@@ -152,14 +144,10 @@ dataframes_graph <- function(
   config$mode <- match.arg(mode)
   config$order <- order
 
-  if (shrink_edges){
-    config <- trim_graph(config)
-  }
-  
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label
-  
+
   config$edges <- network_data$edges
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
@@ -178,20 +166,16 @@ dataframes_graph <- function(
   config$digits <- digits
 
   config$nodes <- configure_nodes(config = config)
-  
-  if (!shrink_edges){
-    config <- trim_graph(config)
-    config <- subset_nodes_edges(config = config, keep = V(config$graph)$name)
-  }
+  config <- trim_graph(config)
+  config <- subset_nodes_edges(config = config, keep = V(config$graph)$name)
+
   if (targets_only) {
     config <- subset_nodes_edges(config = config, keep = targets)
   }
-
-  # Cannot split columns until imports are removed,
-  # if applicable.
   if (split_columns){
     config$nodes <- split_node_columns(nodes = config$nodes)
   }
+  config$nodes <- shrink_levels(config$nodes)
 
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),

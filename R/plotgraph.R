@@ -31,13 +31,6 @@
 #' in the number of nodes). Defaults to
 #' as far as possible.
 #'
-#' @param shrink_edges logical: for a
-#' neighborhood around \code{from}, whether to
-#' disregard the meaning of columns as parallelizable stages
-#' and shrink the edges so the nodes are closer to each other.
-#' Only applies if a subset of the graph is selected with
-#' \code{from} and \code{order}.
-#'
 #' @param envir environment to import from, same as for function
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
@@ -165,7 +158,6 @@ plot_graph <- function(
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
   from = NULL, mode = c("out", "in", "all"), order = NULL,
-  shrink_edges = FALSE,
   ncol_legend = 1,
   ...
 ){
@@ -173,7 +165,6 @@ plot_graph <- function(
   raw_graph <- dataframes_graph(
     plan = plan, targets = targets,
     from = from, mode = mode, order = order,
-    shrink_edges = shrink_edges,
     envir = envir, verbose = verbose, hook = hook, cache = cache,
     jobs = jobs, parallelism = parallelism,
     packages = packages, prework = prework,
