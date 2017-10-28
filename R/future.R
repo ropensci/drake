@@ -4,6 +4,10 @@ run_future_lapply <- function(config){
 }
 
 worker_future_lapply <- function(targets, hash_list, config){
+  targets <- intersect(targets, config$plan$target)
+  if (!length(targets)){
+    return()
+  }
   future::future_lapply(
     x = targets,
     FUN = build_distributed,
