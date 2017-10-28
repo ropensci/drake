@@ -90,8 +90,12 @@ max_useful_jobs(my_plan, imports = "none") # 4
 
 `Drake` has multiple parallel backends, i.e. separate mechanisms for achieving parallelism. Some are low-overhead and limited, others are high-overhead and scalable. Just set the `parallelism` argument of `Make` to choose a backend. The best choice usually depends on your project's scale and stage of deployment.
 
-```{r hpcchoices, eval = FALSE}
-parallelism_choices() # List the parallel backends.
+```{r hpcchoices, eval = TRUE}
+parallelism_choices()
+parallelism_choices(distributed_only = TRUE)
+```
+
+```{r hpcmoredocs, eval = FALSE}
 ?parallelism_choices  # Read an explanation of each backend.
 default_parallelism() # "parLapply" on Windows, "mclapply" everywhere else
 ```

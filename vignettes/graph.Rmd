@@ -16,6 +16,7 @@ vignette: >
 ![](logo-vignettes.png)
 
 ```{r, echo = FALSE}
+suppressMessages(suppressWarnings(library(drake)))
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
@@ -123,7 +124,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The `report.md` node is far to the right because it is in a later parallelizable stage. If you do not care about parallelizable stages, simply `shrink_edges`.
+The `report.md` node is far to the right because it is in a later parallelizable stage (more on parallel computing strategy below). If you do not care about parallelizable stages, simply `shrink_edges`.
 
 ```{r shrink}
 plot_graph(
@@ -148,4 +149,58 @@ We have only scratched the surface of `plot_graph()`, there is much more functio
 
 # Parallel computing laid bare
 
-When you call `make(my_plan, jobs = 8)`, the work proceeds in chronological order from left to right in the above graph. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 8)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 8 jobs.
+`Drake` shows its parallel computing strategy plainly in the graph.
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/reg2.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right in the above graph. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
+
+The division of targets into parallelizable stages depends on the kind of parallelism you use. Even the small workflow plan below is affected.
+
+```{r smallplan, eval = TRUE}
+f <- function(x){
+  x
+}
+small_plan <- workplan(a = 1, b = f(2))
+small_plan
+```
+
+```{r plotgraphusualsmall}
+plot_graph(small_plan)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/small_local.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+However, for any kind of distributed `parallelism` option such as `"Makefile"` or `"future_lapply"`, all the imports are processed before any of the targets are built. For the small workflow, this puts both targets in the same parallelizable stage.
+
+```{r plotgraphsmalldistributed}
+
+plot_graph(small_plan, parallelism = "future_lapply")
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/small_distributed.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+You can list the distributed backends quickly, or you can read the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd).
+
+```{r listbackendsgraph, eval = TRUE}
+parallelism_choices()
+parallelism_choices(distributed_only = TRUE)
+```
+
+The help file of `parallelism_choices()` is particularly detailed.
+
+```{r lookupparallelism}
+?parallelism_choices
+```
