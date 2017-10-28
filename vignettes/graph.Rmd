@@ -1,5 +1,5 @@
 ---
-title: "Graphing with drake"
+title: "Graphs with drake"
 subtitle: "Visualize your workflow."
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 
-`Drake` has powerful visuals to help you understand and plan your workflow.
+`Drake` has powerful visuals to help you understand and plan your workflow. The workflow plan graph is interactive. Click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
 
 ```{r graphoutdated}
 library(drake)
@@ -34,20 +34,18 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-# Parallelism
+# Parallel computing laid bare
 
-When you call `make(my_plan, jobs = 8)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 8)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 8 jobs.
+When you call `make(my_plan, jobs = 8)`, the work proceeds in chronological order from left to right in the above graph. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 8)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 8 jobs.
 
 # Dependency reactivity
 
-In the previous graph, all the targets were out of date.
+In the previous graph, all the targets were out of date. But after a `make()`, we will be all caught up, and the graph will show you.
 
 ```{r graphmake}
 make(my_plan, jobs = 4)
 plot_graph(my_plan)
 ```
-
-But after a `make()`, we are all caught up.
 
 <iframe
 src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/built.html"
@@ -56,7 +54,7 @@ style="border: none; box-shadow: none">
 </iframe>
 
 
-When you change a dependency, you throw some targets out of date until you call `make(my_plan)` again.
+But when you change a dependency, you throw some targets out of date until you call `make(my_plan)` again.
 
 ```{r reg2graphvisual}
 reg2 <- function(d){
@@ -74,7 +72,7 @@ style="border: none; box-shadow: none">
 
 # Subgraphs
 
-Graphs can grow enormous for serious workflows, so there are multiple ways to focus on a subgraph. True, you can simply zoom into any of the graphs above using your mouse, but that is probably not enough. Use `targets_only` to ignore the imports.
+Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. Use `targets_only` to ignore the imports.
 
 ```{r targetsonly}
 plot_graph(my_plan, targets_only = TRUE)
@@ -125,7 +123,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-Remember, the `report.md` node is far to the right because it is in a later parallelizable stage. If you do not care about parallelizable stages, simply `shrink_edges`.
+The `report.md` node is far to the right because it is in a later parallelizable stage. If you do not care about parallelizable stages, simply `shrink_edges`.
 
 ```{r shrink}
 plot_graph(
@@ -142,3 +140,7 @@ src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/shrink.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
+
+# Finer control
+
+We have only scratched the surface of `plot_graph()`, there is much more functionality documented in the help file (`?plot_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
