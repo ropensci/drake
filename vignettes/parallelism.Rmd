@@ -39,7 +39,7 @@ plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>

@@ -191,6 +191,7 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 ```{r vignettesdrakermd, eval = FALSE}
 vignette(package = "drake")            # List the vignettes.
 vignette("drake")                      # High-level intro.
+vignette("graph")                      # Visualilze the workflow graph.
 vignette("quickstart")                 # Walk through a simple example.
 vignette("parallelism") # Lots of parallel computing support.
 vignette("storage")                    # Learn how drake stores your stuff.
@@ -233,9 +234,10 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr/) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, `report.md`).
 
-See the `quickstart` vignette for demonstrations of `drake`'s reproducibility and reactivity.
+See the `quickstart` vignette for demonstrations of `drake`'s reproducibility and reactivity. See the `graph` vignette for a walkthrough of the workflow plan visualizations.
 
 ```{r drakermdquickvignette, eval = FALSE}
+vignette("graph")
 vignette("quickstart")
 ```
 
@@ -262,7 +264,7 @@ plot_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/74a87231/images/reg2.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/b0169ed6/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>

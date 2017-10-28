@@ -1,5 +1,6 @@
 # Changes in release 4.4.0
 
+- Extend `plot_graph()` to display subcomponents. Check out arguments `from`, `mode`, `order`, and `shrink_edges`. The [graphing vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/graph.Rmd) has demonstrations.
 - Add `"future_lapply"` parallelism: parallel backends supported by the [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) packages. See `?backend` for examples and the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
 - Cache diagnostic information of targets that fail and retrieve diagnostic info with `diagnose()`.
 - Add an optional `hook` argument to `make()` to wrap around `build()`. That way, users can more easily control the side effects of distributed jobs. For example, to redirect error messages to a file in `make(..., parallelism = "Makefile", jobs = 2, hook = my_hook)`, `my_hook` should be something like `function(code){withr::with_message_sink("messages.txt", code)}`.
