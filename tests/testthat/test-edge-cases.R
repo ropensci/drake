@@ -58,6 +58,9 @@ test_with_dir("different graphical arrangements for distributed parallelism", {
     parallelism = "Makefile", jobs = 1))
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
     parallelism = "future_lapply", jobs = 1))
+  y <- workplan(a = 1, b = 2)
+  tmp <- dataframes_graph(y, parallelism = "Makefile")
+  expect_true(is.list(tmp))
 })
 
 test_with_dir("Vectorized nested functions work", {

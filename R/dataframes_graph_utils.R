@@ -176,7 +176,7 @@ resolve_levels_distributed <- function(config) { # nolint
     targets <- intersect(plan$target, nodes$id)
     imports <- setdiff(nodes$id, targets)
     if (!length(targets) | !length(imports)){
-      return(nodes)
+      return(resolve_levels(config))
     }
     graph_imports <- delete_vertices(graph, v = targets)
     graph_targets <- delete_vertices(graph, v = imports)
