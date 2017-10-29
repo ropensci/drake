@@ -29,6 +29,11 @@
 ## Use environment variables
 #$ -V
 
+# You may have to change the following to 'module load R-3.4.2' or similar.
+# Just be sure to name the correct environment module.
+# See 'module avail' or 'module avail R'.
 module load R
+
+# Run the work.
 Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
 exit 0
