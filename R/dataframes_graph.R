@@ -182,7 +182,7 @@ dataframes_graph <- function(
   if (targets_only) {
     config <- subset_nodes_edges(
       config = config,
-      keep = targets
+      keep = intersect(targets, config$nodes$id)
     )
   }
   if (split_columns){
@@ -195,6 +195,7 @@ dataframes_graph <- function(
     )
   }
   config$nodes <- shrink_levels(config$nodes)
+
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(

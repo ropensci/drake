@@ -30,7 +30,7 @@
 #' a neighborhood around \code{from} (measured
 #' in the number of nodes). Defaults to
 #' as far as possible.
-#' 
+#'
 #' @param subset Optional character vector of of target/import names.
 #' Subset of nodes to display in the graph.
 #' Applied after \code{from}, \code{mode}, and \code{order}.
