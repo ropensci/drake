@@ -11,6 +11,8 @@
 - New support for timeouts and retries when it comes to building targets.
 - Failed targets are now recorded during the build process. You can see them in `plot_graph()` and `progress()`. Also see the new `failed()` function, which is similar to `in_progress()`.
 - Speed up the overhead of `parLapply` parallelism. The downside to this fix is that `drake` has to be properly installed. It should not be loaded with `devtools::load_all()`. The speedup comes from lightening the first `clusterExport()` call in `run_parLapply()`. Previously, we exported every single individual `drake` function to all the workers, which created a bottleneck. Now, we just load `drake` itself in each of the workers, which works because `build()` and `do_prework()` are exported. 
+- Change default value of `overwrite` to `FALSE` in `load_basic_example()`.
+- Warn when overwriting an existing `report.Rmd` in `load_basic_example()`.
 
 # 2017-10-17
 

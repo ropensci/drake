@@ -5,7 +5,7 @@
 library(future.batchtools)
 library(drake)
 backend(batchtools_torque(template = "torque.tmpl"))
-load_basic_example(overwrite = FALSE)
+load_basic_example()
 make(
   my_plan,
   parallelism = "future_lapply"

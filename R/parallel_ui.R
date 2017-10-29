@@ -274,9 +274,13 @@ max_useful_jobs <- function(
 #' @param overwrite logical, whether to overwrite a possible
 #' destination file with the same name
 shell_file <- function(
-  path = file.path(getwd(), "shell.sh"),
+  path = "shell.sh",
   overwrite = FALSE
 ){
   from <- system.file("shell.sh", package = "drake", mustWork = TRUE)
-  invisible(file.copy(from = from, to = path, copy.mode = TRUE))
+  if (file.exists(path) & overwrite){
+    warning("Overwriting file ", path)
+  }
+  invisible(file.copy(from = from, to = path, copy.mode = TRUE,
+    overwrite = overwrite))
 }

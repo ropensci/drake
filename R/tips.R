@@ -7,6 +7,10 @@
 #' cat(drake_tip())
 drake_tip <- function() {
   tips <- c(
+    "In drake >= 4.4.0, you can select subgraphs of the workflow graph:
+     e.g. plot_graph(..., from = some_targets, mode = \"out\", order = 2).
+     See the new 'graph' vignette for more.",
+
     "Use diagnose() to retrieve diagnostic information on
      a target that fails to build.",
 

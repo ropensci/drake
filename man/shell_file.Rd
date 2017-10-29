@@ -4,7 +4,7 @@
 \alias{shell_file}
 \title{Function shell_file}
 \usage{
-shell_file(path = file.path(getwd(), "shell.sh"), overwrite = FALSE)
+shell_file(path = "shell.sh", overwrite = FALSE)
 }
 \arguments{
 \item{path}{file path of the shell file}

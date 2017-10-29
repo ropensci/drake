@@ -11,7 +11,8 @@
 #' Defaults to your workspace.
 #' For an insulated workspace,
 #' set \code{envir = new.env(parent = globalenv())}.
-#' @param to where to write the dynamic report source file
+#' @param report_file where to write the report file \code{report.Rmd}.
+#' @param to deprecated, where to write the dynamic report source file
 #' \code{report.Rmd}
 #' @param overwrite logical, whether to overwrite an
 #' existing file \code{report.Rmd}
@@ -27,8 +28,16 @@
 #' unlink('report.Rmd')
 #' }
 load_basic_example <- function(
-  envir = parent.frame(), to = getwd(), overwrite = TRUE
+  envir = parent.frame(), report_file = "report.Rmd", overwrite = FALSE,
+  to = report_file
 ){
+  if (to != report_file){
+    warning(
+      "In load_basic_example(), argument 'to' is deprecated. ",
+      "Use 'report_file' instead."
+    )
+  }
+
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   eval(parse(text = "base::require(knitr, quietly = TRUE)"))
 
@@ -91,7 +100,9 @@ load_basic_example <- function(
     package = "drake",
     mustWork = TRUE
   )
-  file.copy(from = report, to = to, overwrite = overwrite)
-
+  if (file.exists(report_file) & overwrite){
+    warning("Overwriting file 'report.Rmd'.")
+  }
+  file.copy(from = report, to = report_file, overwrite = overwrite)
   invisible(envir$my_plan)
 }
