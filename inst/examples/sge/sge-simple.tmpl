@@ -29,6 +29,6 @@
 ## Use environment variables
 #$ -V
 
-module load R-qualified
+module load R
 Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
 exit 0
