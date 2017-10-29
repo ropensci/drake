@@ -24,6 +24,12 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 `Drake` has edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
+# Experimental features
+
+## Built-in examples
+
+`Drake` has [built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) that you can list with `examples_drake()` and write to your file system with `example_drake()`. Some of these may not work as-is, particularly the ones that require special difficult-to-install software like [SLURM](http://slurm.schedmd.com/) and [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/). Here is where you can help. If you have experience with these systems, please help us test and fix the examples. You can [share your suggestions on the issue tracker](https://github.com/wlandau-lilly/drake/issues) and [submit bugfixes via pull request](https://help.github.com/articles/about-pull-requests/).
+
 # Workflow plans
 
 ## Beware unparsable symbols in your workflow plan.
