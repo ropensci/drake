@@ -31,7 +31,7 @@ if (!"ncpus" %in% names(resources)) {
 
 if (!"walltime" %in% names(resources)) {
   # Default time format is minutes but we later divide by 60 so set time in secs.
-  # Set 48 hours by default.
+  # Set 48 hours by default. This is excessive for drake's built-in examples.
   resources$walltime = 48 * 3600
 }
 -%>
