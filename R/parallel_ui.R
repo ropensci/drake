@@ -223,7 +223,7 @@ max_useful_jobs <- function(
   },
   cache = drake::get_cache(),
   jobs = 1, parallelism = drake::default_parallelism(),
-  packages = (.packages()), prework = character(0), config = NULL,
+  packages = rev(.packages()), prework = character(0), config = NULL,
   imports = c("files", "all", "none")
 ){
   force(envir)

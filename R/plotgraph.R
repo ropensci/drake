@@ -156,7 +156,7 @@ plot_graph <- function(
   },
   cache = drake::get_cache(),
   jobs = 1, parallelism = drake::default_parallelism(),
-  packages = (.packages()), prework = character(0),
+  packages = rev(.packages()), prework = character(0),
   config = NULL,
   file = character(0), selfcontained = FALSE,
   build_times = TRUE, digits = 3, targets_only = FALSE,

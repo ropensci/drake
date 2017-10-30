@@ -81,7 +81,7 @@
 #' \code{make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")}
 #'
 #' @param packages character vector packages to load, in the order
-#' they should be loaded. Defaults to \code{(.packages())}, so you
+#' they should be loaded. Defaults to \code{rev(.packages())}, so you
 #' should not usually need to set this manually. Just call
 #' \code{\link{library}()} to load your packages before \code{make()}.
 #' However, sometimes packages need to be strictly forced to load
@@ -198,7 +198,7 @@ make <- function(
   cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1,
-  packages = (.packages()),
+  packages = rev(.packages()),
   prework = character(0),
   prepend = character(0),
   command = drake::default_Makefile_command(),

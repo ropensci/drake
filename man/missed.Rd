@@ -7,7 +7,7 @@
 missed(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = function(code) {    
   force(code) }, jobs = 1, parallelism = drake::default_parallelism(),
-  packages = (.packages()), prework = character(0), config = NULL)
+  packages = rev(.packages()), prework = character(0), config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

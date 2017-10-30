@@ -45,7 +45,7 @@ outdated <-  function(
   cache = drake::get_cache(),
   parallelism = drake::default_parallelism(),
   jobs = 1,
-  packages = (.packages()),
+  packages = rev(.packages()),
   prework = character(0),
   config = NULL
 ){
@@ -151,7 +151,7 @@ missed <- function(
   },
   jobs = 1,
   parallelism = drake::default_parallelism(),
-  packages = (.packages()),
+  packages = rev(.packages()),
   prework = character(0),
   config = NULL
 ){
