@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Via https://github.com/mllg/batchtools/blob/master/inst/templates/
+## Modified from  https://github.com/mllg/batchtools/blob/master/inst/templates/
 ## Job Resource Interface Definition
 ##
 ## ntasks [integer(1)]:       Number of required tasks,
@@ -31,25 +31,10 @@ if (!"ncpus" %in% names(resources)) {
 
 if (!"walltime" %in% names(resources)) {
   # Default time format is minutes but we later divide by 60 so set time in secs.
-  # Set 48 hours by default.
+  # Set 48 hours by default. This is excessive for drake's built-in examples.
   resources$walltime = 48 * 3600
 }
-
-if (!"partition" %in% names(resources)) {
-  resources$partition = "savio2"
-}
-
-
-if (!"qos" %in% names(resources)) {
-  resources$qos = "biostat_savio2_normal"
-}
-
-
-if (!"account" %in% names(resources)) {
-  resources$account = "co_biostat"
-}
 -%>
-
 
 #SBATCH --job-name=<%= job.name %>
 #SBATCH --output=<%= log.file %>
@@ -58,9 +43,7 @@ if (!"account" %in% names(resources)) {
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=<%= resources$ncpus %>
 #SBATCH --mem-per-cpu=<%= resources$memory %>
-#SBATCH --qos=<%= resources$qos %>
-#SBATCH --account=<%= resources$account %>
-<%= if (!is.null(resources$partition)) sprintf(paste0("#SBATCH --partition='", resources$partition, "'")) %>
+
 <%= if (array.jobs) sprintf("#SBATCH --array=1-%i", nrow(jobs)) else "" %>
 
 ## Initialize work environment like
@@ -71,16 +54,7 @@ source /etc/profile
 
 # Load R if we are using the built-in R module.
 # Comment out if using a custom compiled version of R.
-# module load r
-
-# Load a newer version of gcc than the default. Needed for C++11.
-module load gcc/4.8.5
-
-# Load Java if any R packages need RJava (bartMachine, h2o, etc.)
-module load java
-
-## Export value of DEBUGME environemnt var to slave
-export DEBUGME=<%= Sys.getenv("DEBUGME") %>
+# module load R
 
 ## Run R:
 ## we merge R output with stdout from SLURM, which gets then logged via --output option
