@@ -324,11 +324,18 @@ To tell the `Makefile` to use `shell.sh`, you will need to add the line `SHELL=.
 make(my_plan, parallelism = "Makefile", jobs = 2, prepend = "SHELL=./shell.sh")
 ```
 
-[SLURM](https://slurm.schedmd.com/) users may be able to [invoke `srun` and dispense with `shell.sh` altogether](http://plindenbaum.blogspot.com/2014/09/parallelizing-gnu-make-4-in-slurm.html), although this has been known to fail on some SLURM systems.
+[SLURM](https://slurm.schedmd.com/) users may be able to [invoke `srun` and dispense with `shell.sh` altogether](http://plindenbaum.blogspot.com/2014/09/parallelizing-gnu-make-4-in-slurm.html), though success may vary depending on the SLURM system. You will probably also need to set SLURM configuration parameters like the wall time and queue.
 
 ```{r cluster, eval = FALSE}
-make(my_plan, parallelism = "Makefile", jobs = 4,
-  prepend = "SHELL=srun")
+make(
+  my_plan,
+  parallelism = "Makefile",
+  jobs = 2,
+  prepend = c(
+    "SHELL=srun",
+    ".SHELLFLAGS=-N1 -n1 bash -c"
+  )
+)
 ```
 
 And you may be able to use `recipe_command` to to talk to the cluster rather than `prepend` (though most job schedulers require a script file).
