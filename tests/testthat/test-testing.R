@@ -1,7 +1,7 @@
 drake_context("testing")
 
 test_with_dir("test_with_dir() clears out files", {
-  for(i in 1:10){
+  for (i in 1:10){
     expect_silent(
       test_with_dir("test", {
         expect_false(file.exists("x"))
