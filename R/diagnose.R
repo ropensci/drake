@@ -32,7 +32,7 @@
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
-#' 
+#'
 #' @param verbose whether to print console messages
 #'
 #' @examples

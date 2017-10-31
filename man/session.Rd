@@ -5,7 +5,7 @@
 \title{Function \code{session}}
 \usage{
 session(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = TRUE), verbose = verbose)
+  path, search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

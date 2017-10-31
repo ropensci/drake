@@ -242,6 +242,7 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param verbose logical, whether to print console messages
 #' @param ... arguments to \code{visNetwork()} via \code{\link{plot_graph}()}
 #' @examples
 #' \dontrun{
@@ -252,8 +253,8 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' read_graph() # Actually plot the graph as an interactive visNetwork widget.
 #' }
 read_graph <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = TRUE),
-  verbose = verbose,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE,
   ...
 ){
   config <- read_config(path = path, search = search, cache = cache)

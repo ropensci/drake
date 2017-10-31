@@ -5,7 +5,7 @@
 \title{Function \code{read_graph}}
 \usage{
 read_graph(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = TRUE), verbose = verbose, ...)
+  path, search = search, verbose = verbose), verbose = TRUE, ...)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -19,6 +19,8 @@ current working directory only.}
 \item{cache}{optional drake cache. See code{\link{new_cache}()}.
 If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
+
+\item{verbose}{logical, whether to print console messages}
 
 \item{...}{arguments to \code{visNetwork()} via \code{\link{plot_graph}()}}
 }

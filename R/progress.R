@@ -23,8 +23,8 @@
 #' session()
 #' }
 session <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = TRUE),
-  verbose = verbose
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   if (is.null(cache)) {
     stop("No drake::make() session detected.")

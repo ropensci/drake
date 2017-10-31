@@ -20,9 +20,7 @@ console_cache <- function(path, verbose){
     return(invisible())
   }
   if (!length(path)){
-    path <- paste("created at", default_cache_path())
-  } else {
-    path <- paste("found at", path)
+    path <- default_cache_path()
   }
   paste("cache", path) %>%
     finish_console(message = "cache")

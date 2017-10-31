@@ -5,7 +5,8 @@
 \title{Function \code{imported}}
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose))
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE)
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only
