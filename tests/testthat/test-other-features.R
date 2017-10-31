@@ -9,6 +9,8 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
     out1 <- lightly_parallelize_atomic(X = x, FUN = append, jobs = 1)
     out2 <- lapply(X = x, FUN = append)
     expect_identical(out1, out2)
+    y <- gsub("_text", "", unlist(out1))
+    expect_identical(x, y)
   })
 })
 
