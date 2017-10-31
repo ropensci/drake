@@ -1,5 +1,17 @@
 drake_context("other features")
 
+test_with_dir("lightly_parallelize_atomic() is correct", {
+  withr::with_seed(seed = 2017, code = {
+    x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
+    append <- function(x){
+      paste0(x, "_text")
+    }
+    out1 <- lightly_parallelize_atomic(X = x, FUN = append, jobs = 1)
+    out2 <- lapply(X = x, FUN = append)
+    expect_identical(out1, out2)
+  })
+})
+
 test_with_dir("recipe_command", {
   my_plan <- workplan(y = 1)
   expect_true(is.character(default_recipe_command()))

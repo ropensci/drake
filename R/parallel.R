@@ -40,7 +40,18 @@ parallel_stage <- function(worker, config) {
 
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
   jobs <- safe_jobs(jobs)
-  mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
+  if (is.atomic(X)){
+    lightly_parallelize_atomic(X = X, FUN = FUN, jobs = jobs, ...)
+  } else {
+    mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
+  }
+}
+
+lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...){
+  keys <- unique(X)
+  index <- match(X, keys)
+  values <- mclapply(X = keys, FUN = FUN, mc.cores = jobs, ...)
+  values[index]
 }
 
 safe_jobs <- function(jobs){
