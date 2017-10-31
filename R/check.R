@@ -10,6 +10,7 @@
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See \code{\link{new_cache}()}
+#' @param verbose logical, whether to log progress to the console.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -21,11 +22,12 @@ check <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  cache = drake::get_cache()
+  cache = drake::get_cache(),
+  verbose = TRUE
 ){
   force(envir)
   config <- build_config(plan = plan, targets = targets, envir = envir,
-    verbose = TRUE, hook = function(code) force(code),
+    verbose = verbose, hook = function(code) force(code),
     cache = cache, parallelism = "mclapply",
     jobs = 1, packages = character(0),
     prepend = character(0), prework = character(0), command = character(0),

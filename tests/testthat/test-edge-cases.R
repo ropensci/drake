@@ -59,7 +59,7 @@ test_with_dir("different graphical arrangements for distributed parallelism", {
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
     parallelism = "future_lapply", jobs = 1))
   y <- workplan(a = 1, b = 2)
-  tmp <- dataframes_graph(y, parallelism = "Makefile")
+  tmp <- dataframes_graph(y, parallelism = "Makefile", verbose = FALSE)
   expect_true(is.list(tmp))
 })
 

@@ -42,8 +42,16 @@ build_graph <- function(
   )
   true_import_names <- setdiff(names(imports), targets)
   imports <- imports[true_import_names]
+  console_dependencies(
+    targets = names(imports),
+    config = list(verbose = verbose)
+  )
   import_deps <- lightly_parallelize(
     imports, import_dependencies, jobs = jobs)
+  console_dependencies(
+    targets = plan$target,
+    config = list(verbose = verbose)
+  )
   command_deps <- lightly_parallelize(
     plan$command, command_dependencies, jobs = jobs)
   names(command_deps) <- plan$target
@@ -88,6 +96,8 @@ build_graph <- function(
 #' @param jobs number of jobs to accelerate the construction
 #' of the dependency graph. A light \code{mclapply}-based
 #' parallelism is used if your operating system is not Windows.
+#' @param verbose logical, whether to print
+#' progress messages to the console.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -97,11 +107,14 @@ tracked <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  jobs = 1
+  jobs = 1,
+  verbose = TRUE
 ){
   force(envir)
   graph <- build_graph(
-    plan = plan, targets = targets, envir = envir, jobs = jobs)
+    plan = plan, targets = targets, envir = envir,
+    jobs = jobs, verbose = verbose
+  )
   V(graph)$name
 }
 

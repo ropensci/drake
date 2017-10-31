@@ -15,6 +15,14 @@ console <- function(imported, target, config) {
     finish_console(message = message)
 }
 
+console_dependencies <- function(targets, config){
+  console_many_targets(
+    targets = targets,
+    message = "interconnect",
+    config = config
+  )
+}
+
 console_many_targets <- function(
   targets, message, config, color = color_of(message)
 ){

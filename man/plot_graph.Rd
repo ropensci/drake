@@ -137,7 +137,7 @@ as far as possible.}
 \item{subset}{Optional character vector of of target/import names.
 Subset of nodes to display in the graph.
 Applied after \code{from}, \code{mode}, and \code{order}.
-Be advised: edges are only kept for adgacent nodes in \code{subset}.
+Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
 edges will drop from the graph.}
 

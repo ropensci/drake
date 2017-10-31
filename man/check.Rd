@@ -5,7 +5,7 @@
 \title{Function \code{check}}
 \usage{
 check(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), cache = drake::get_cache())
+  envir = parent.frame(), cache = drake::get_cache(), verbose = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
@@ -16,6 +16,8 @@ check(plan = workplan(), targets = drake::possible_targets(plan),
 \item{envir}{environment containing user-defined functions}
 
 \item{cache}{optional drake cache. See \code{\link{new_cache}()}}
+
+\item{verbose}{logical, whether to log progress to the console.}
 }
 \value{
 invisibly return \code{plan}

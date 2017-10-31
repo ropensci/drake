@@ -3,8 +3,12 @@ drake_context("import file")
 test_with_dir("responses to imported file", {
   config <- dbug()
   expect_output(check(plan = config$plan, envir = config$envir))
-  expect_warning(check(plan = config$plan[-1, ], envir = config$envir))
-  expect_silent(check(plan = config$plan[c(-1, -6), ], envir = config$envir))
+  expect_warning(
+    check(plan = config$plan[-1, ], envir = config$envir,
+          verbose = FALSE))
+  expect_silent(
+    check(plan = config$plan[c(-1, -6), ], envir = config$envir,
+          verbose = FALSE))
   testrun(config)
   expect_true(length(justbuilt(config)) > 0)
   testrun(config)
