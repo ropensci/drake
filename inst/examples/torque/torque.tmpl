@@ -3,6 +3,7 @@
 # A batchtools launch script template for a Torque/PBS
 # https://github.com/HenrikBengtsson/future.batchtools/blob/master/inst/templates/torque.tmpl
 # Author: Henrik Bengtsson 
+# Modified: Will Landau
 ######################################################################
 
 ## Job name:
@@ -15,6 +16,7 @@
 #PBS -j oe
 
 ## Email on abort (a) and termination (e), but not when starting (b)
+## Requires mailutils if on Linux.
 #PBS -m ae
 
 ## Resources needed:
