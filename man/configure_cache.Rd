@@ -4,10 +4,10 @@
 \alias{configure_cache}
 \title{Function configure_cache}
 \usage{
-configure_cache(cache = drake::get_cache(),
+configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  clear_progress = FALSE, overwrite_hash_algos = FALSE)
+  clear_progress = FALSE, overwrite_hash_algos = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{cache}{cache to configure}
@@ -31,6 +31,8 @@ build progress if this cache was used for previous calls to
 
 \item{overwrite_hash_algos}{logical, whether to try to overwrite
 the hash algorithms in the cache with any user-specified ones.}
+
+\item{verbose}{whether to print console messages}
 }
 \description{
 configure a cache for drake. This is

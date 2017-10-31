@@ -5,7 +5,7 @@
 \title{Function \code{imported}}
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search))
+  cache = drake::get_cache(path = path, search = search, verbose = verbose))
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only
@@ -23,6 +23,8 @@ current working directory only.}
 
 \item{cache}{drake cache. See \code{\link{new_cache}()}.
 If supplied, \code{path} and \code{search} are ignored.}
+
+\item{verbose}{whether to print console messages}
 }
 \value{
 character vector naming the imported objects in the cache

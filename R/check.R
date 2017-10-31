@@ -22,7 +22,7 @@ check <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  cache = drake::get_cache(),
+  cache = drake::get_cache(verbose = verbose),
   verbose = TRUE
 ){
   force(envir)

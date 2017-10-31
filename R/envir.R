@@ -46,7 +46,8 @@ prune_envir <- function(targets, config){
       message = "load",
       config = config
     )
-    loadd(list = load_these, envir = config$envir, cache = config$cache)
+    loadd(list = load_these, envir = config$envir, cache = config$cache,
+          verbose = FALSE)
   }
   invisible()
 }

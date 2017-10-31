@@ -6,7 +6,7 @@
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
-  search = search))
+  search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -37,6 +37,8 @@ Ignored if a \code{cache} is supplied.}
 
 \item{cache}{drake cache. See \code{\link{new_cache}()}.
 If supplied, \code{path} and \code{search} are ignored.}
+
+\item{verbose}{whether to print console messages}
 }
 \value{
 Either a named logical indicating whether the given

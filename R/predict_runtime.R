@@ -75,7 +75,7 @@ predict_runtime <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(path = path, search = search),
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   future_jobs = jobs,
@@ -227,7 +227,7 @@ rate_limiting_times <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(path = path, search = search),
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   future_jobs = jobs,

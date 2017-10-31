@@ -15,6 +15,19 @@ console <- function(imported, target, config) {
     finish_console(message = message)
 }
 
+console_cache <- function(path, verbose){
+  if (!verbose){
+    return(invisible())
+  }
+  if (!length(path)){
+    path <- paste("created at", default_cache_path())
+  } else {
+    path <- paste("found at", path)
+  }
+  paste("cache", path) %>%
+    finish_console(message = "cache")
+}
+
 console_dependencies <- function(targets, config){
   console_many_targets(
     targets = targets,

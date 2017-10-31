@@ -5,7 +5,7 @@
 \title{Function \code{built}}
 \usage{
 built(path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
-  search = search))
+  search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -18,6 +18,8 @@ current working directory only.}
 
 \item{cache}{drake cache. See \code{\link{new_cache}()}.
 If supplied, \code{path} and \code{search} are ignored.}
+
+\item{verbose}{whether to print console messages}
 }
 \value{
 list of imported objects in the cache

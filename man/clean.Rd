@@ -5,7 +5,7 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = drake::get_cache(path = path, search = search))
+  search = TRUE, cache = NULL, verbose = TRUE)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
@@ -32,6 +32,8 @@ current working directory only.}
 \item{cache}{optional drake cache. See code{\link{new_cache}()}. If
 If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
+
+\item{verbose}{whether to print console messages}
 }
 \description{
 Cleans up all work done by \code{\link{make}()}.

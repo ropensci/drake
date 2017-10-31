@@ -5,6 +5,7 @@ colors <- c(
   target = "green3",
   import = "dodgerblue3",
   missing = "darkorchid3",
+  cache = "skyblue1",
   check = "skyblue1",
   interconnect = "skyblue1",
   load = "#ff9933",

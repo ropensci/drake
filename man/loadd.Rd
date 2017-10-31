@@ -5,8 +5,8 @@
 \title{Function \code{loadd}}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
-  search = TRUE, cache = drake::get_cache(path = path, search = search),
-  envir = parent.frame(), jobs = 1)
+  search = TRUE, cache = drake::get_cache(path = path, search = search,
+  verbose = verbose), envir = parent.frame(), jobs = 1, verbose = TRUE)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -39,6 +39,8 @@ non-Windows systems, the loading process for multiple objects
 can be lightly parallelized via \code{parallel::mclapply()}.
 just set jobs to be an integer greater than 1. On Windows,
 \code{jobs} is automatically demoted to 1.}
+
+\item{verbose}{whether to print console messages}
 }
 \description{
 Load object(s) from the drake cache into the

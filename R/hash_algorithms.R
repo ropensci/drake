@@ -14,6 +14,7 @@ available_hash_algos <- function(){
 #' @description Get the long hash algorithm of a drake cache.
 #' @details See \code{?\link{default_long_hash_algo}()}
 #' @param cache drake cache
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -21,7 +22,10 @@ available_hash_algos <- function(){
 #' cache <- config$cache
 #' long_hash(cache)
 #' }
-long_hash <- function(cache = drake::get_cache()){
+long_hash <- function(
+  cache = drake::get_cache(verbose = verbose),
+  verbose = TRUE
+){
   if (!("long_hash_algo" %in% cache$list(namespace = "config"))){
     return(NULL)
   }
@@ -35,6 +39,7 @@ long_hash <- function(cache = drake::get_cache()){
 #' @description Get the short hash algorithm of a drake cache.
 #' @details See \code{?\link{default_long_hash_algo}()}
 #' @param cache drake cache
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -42,7 +47,10 @@ long_hash <- function(cache = drake::get_cache()){
 #' cache <- config$cache
 #' short_hash(cache)
 #' }
-short_hash <- function(cache = drake::get_cache()){
+short_hash <- function(
+  cache = drake::get_cache(verbose = verbose),
+  verbose = verbose
+){
   if (!("short_hash_algo" %in% cache$list(namespace = "config"))){
     return(NULL)
   }

@@ -45,7 +45,7 @@ config <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(),
+  cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1, packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),

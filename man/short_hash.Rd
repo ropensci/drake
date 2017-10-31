@@ -4,10 +4,12 @@
 \alias{short_hash}
 \title{Function short_hash}
 \usage{
-short_hash(cache = drake::get_cache())
+short_hash(cache = drake::get_cache(verbose = verbose), verbose = verbose)
 }
 \arguments{
 \item{cache}{drake cache}
+
+\item{verbose}{whether to print console messages}
 }
 \description{
 Get the short hash algorithm of a drake cache.

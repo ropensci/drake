@@ -16,6 +16,7 @@
 #' @param digits How many digits to round the times to.
 #' @param cache optional drake cache. If supplied,
 #' the \code{path} and \code{search} arguments are ignored.
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -26,8 +27,9 @@ build_times <- function(
   path = getwd(),
   search = TRUE,
   digits = 3,
-  cache = get_cache(path = path, search = search),
-  targets_only = FALSE
+  cache = get_cache(path = path, search = search, verbose = verbose),
+  targets_only = FALSE,
+  verbose = TRUE
 ){
   if (is.null(cache)){
     return(empty_times())

@@ -7,7 +7,7 @@
 max_useful_jobs(plan = workplan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = TRUE, hook = function(code) {     force(code) },
-  cache = drake::get_cache(), jobs = 1,
+  cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), config = NULL, imports = c("files", "all",
   "none"))

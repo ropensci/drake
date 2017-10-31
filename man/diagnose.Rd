@@ -5,7 +5,8 @@
 \title{Function \code{diagnose}}
 \usage{
 diagnose(target = NULL, character_only = FALSE, path = getwd(),
-  search = TRUE, cache = drake::get_cache(path = path, search = search))
+  search = TRUE, cache = drake::get_cache(path = path, search = search,
+  verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{target}{name of the target of the error to get.
@@ -27,6 +28,8 @@ current working directory only.}
 \item{cache}{optional drake cache. See code{\link{new_cache}()}.
 If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
+
+\item{verbose}{whether to print console messages}
 }
 \description{
 Get the last stored error of a target

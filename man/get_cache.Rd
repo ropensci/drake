@@ -4,7 +4,7 @@
 \alias{get_cache}
 \title{Function get_cache}
 \usage{
-get_cache(path = getwd(), search = TRUE)
+get_cache(path = getwd(), search = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{path}{file path to the folder containing the cache.
@@ -16,6 +16,8 @@ the \code{\link{this_cache}()} function.}
 
 \item{search}{logical, whether to search back in the file system
 for the cache.}
+
+\item{verbose}{logical, whether to print the location of the cache}
 }
 \description{
 Search for and return a drake file system cache.

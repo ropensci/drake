@@ -32,6 +32,8 @@
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' 
+#' @param verbose whether to print console messages
 #'
 #' @examples
 #' \dontrun{
@@ -52,7 +54,8 @@ diagnose <- function(
   character_only = FALSE,
   path = getwd(),
   search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   if (is.null(cache)){
     return(character(0))

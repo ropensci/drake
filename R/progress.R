@@ -15,6 +15,7 @@
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -22,7 +23,8 @@
 #' session()
 #' }
 session <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = TRUE),
+  verbose = verbose
 ){
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
@@ -49,6 +51,7 @@ session <- function(path = getwd(), search = TRUE,
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -56,7 +59,8 @@ session <- function(path = getwd(), search = TRUE,
 #' in_progress()
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "in progress") %>%
@@ -84,6 +88,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @param search If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -95,7 +100,8 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' diagnose(x)
 #' }
 failed <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "failed") %>%
@@ -143,6 +149,8 @@ failed <- function(path = getwd(), search = TRUE,
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #'
+#' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -159,7 +167,8 @@ progress <- function(
   imported_files_only = logical(0),
   path = getwd(),
   search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   # deprecate imported_files_only
   if (length(imported_files_only)){

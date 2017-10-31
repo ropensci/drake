@@ -154,7 +154,7 @@ plot_graph <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(),
+  cache = drake::get_cache(verbose = verbose),
   jobs = 1, parallelism = drake::default_parallelism(),
   packages = rev(.packages()), prework = character(0),
   config = NULL,

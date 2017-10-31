@@ -5,7 +5,8 @@
 \title{Function \code{check}}
 \usage{
 check(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), cache = drake::get_cache(), verbose = TRUE)
+  envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
+  verbose = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from

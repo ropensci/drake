@@ -6,7 +6,7 @@
 \usage{
 plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = function(code) {    
-  force(code) }, cache = drake::get_cache(), jobs = 1,
+  force(code) }, cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), config = NULL, file = character(0),
   selfcontained = FALSE, build_times = TRUE, digits = 3,

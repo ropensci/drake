@@ -42,7 +42,7 @@ outdated <-  function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(),
+  cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = rev(.packages()),

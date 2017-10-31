@@ -37,6 +37,8 @@
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #'
+#' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -54,12 +56,13 @@ clean <- function(
   destroy = FALSE,
   path = getwd(),
   search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = NULL,
+  verbose = TRUE
 ){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (is.null(cache)){
-    cache <- get_cache(path = path, search = search)
+    cache <- get_cache(path = path, search = search, verbose = verbose)
   }
   if (is.null(cache)){
     return(invisible())

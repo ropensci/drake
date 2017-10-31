@@ -4,10 +4,12 @@
 \alias{long_hash}
 \title{Function long_hash}
 \usage{
-long_hash(cache = drake::get_cache())
+long_hash(cache = drake::get_cache(verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{cache}{drake cache}
+
+\item{verbose}{whether to print console messages}
 }
 \description{
 Get the long hash algorithm of a drake cache.

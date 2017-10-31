@@ -42,6 +42,8 @@
 #' current working directory only.
 #' Ignored if a \code{cache} is supplied.
 #'
+#' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -54,7 +56,8 @@ cached <- function(
   ...,
   list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   if (is.null(cache)){
     return(character(0))
@@ -99,6 +102,7 @@ list_cache <- function(no_imported_objects, cache) {
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -107,7 +111,8 @@ list_cache <- function(no_imported_objects, cache) {
 #' }
 built <- function(
   path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   if (is.null(cache)){
     return(character(0))
@@ -134,6 +139,7 @@ built <- function(
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -142,7 +148,8 @@ built <- function(
 #' }
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
 ){
   if (is.null(cache)){
     return(character(0))

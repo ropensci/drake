@@ -125,7 +125,7 @@ dataframes_graph <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(), jobs = 1,
+  cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
