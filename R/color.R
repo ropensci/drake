@@ -7,7 +7,7 @@ colors <- c(
   missing = "darkorchid3",
   cache = "skyblue1",
   check = "skyblue1",
-  interconnect = "skyblue1",
+  connect = "skyblue1",
   load = "#ff9933",
   unload = "#ff7221",
   timeout = "maroon",

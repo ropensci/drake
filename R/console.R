@@ -26,16 +26,8 @@ console_cache <- function(path, verbose){
     finish_console(message = "cache")
 }
 
-console_dependencies <- function(targets, config){
-  console_many_targets(
-    targets = targets,
-    message = "interconnect",
-    config = config
-  )
-}
-
 console_many_targets <- function(
-  targets, message, config, color = color_of(message)
+  targets, message, config, color = color_of(message), type = "item"
 ){
   if (!config$verbose) {
     return(invisible())
@@ -46,7 +38,7 @@ console_many_targets <- function(
   }
   paste0(
     message,
-    " ", n, " item",
+    " ", n, " ", type,
     ifelse(n == 1, "", "s"),
     ": ",
     paste(targets, collapse = ", ")

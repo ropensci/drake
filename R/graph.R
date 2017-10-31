@@ -42,14 +42,18 @@ build_graph <- function(
   )
   true_import_names <- setdiff(names(imports), targets)
   imports <- imports[true_import_names]
-  console_dependencies(
+  console_many_targets(
     targets = names(imports),
+    message = "connect",
+    type = "import",
     config = list(verbose = verbose)
   )
   import_deps <- lightly_parallelize(
     imports, import_dependencies, jobs = jobs)
-  console_dependencies(
+  console_many_targets(
     targets = plan$target,
+    message = "connect",
+    type = "target",
     config = list(verbose = verbose)
   )
   command_deps <- lightly_parallelize(
