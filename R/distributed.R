@@ -7,7 +7,7 @@ prepare_distributed <- function(config){
       file = globalenv_file(this_cache_path)
     )
   }
-  config$attempted_targets <- outdated(
+  target_attempts <- outdated(
     plan = config$plan,
     targets = config$targets,
     envir = config$envir,
@@ -18,19 +18,13 @@ prepare_distributed <- function(config){
     packages = config$packages,
     prework = config$prework
   )
+  log_target_attempts(targets = target_attempts, config = config)
   config$cache$set("config", config, namespace = "distributed")
-  invisible(config)
+  invisible()
 }
 
 build_distributed <- function(target, cache_path){
-  cache <- this_cache(cache_path)
-  config <- cache$get("config", namespace = "distributed")
-  if (identical(globalenv(), config$envir)){
-    dir <- cache_path
-    file <- globalenv_file(dir)
-    load(file = file, envir = config$envir)
-  }
-  config <- inventory(config)
+  config <- recover_config(cache_path = cache_path)
   do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
   hash_list <- hash_list(targets = target, config = config)
@@ -47,5 +41,16 @@ build_distributed <- function(target, cache_path){
       config = config
     )
   }
-  invisible(config)
+  invisible()
+}
+
+recover_config <- function(cache_path){
+  cache <- this_cache(cache_path)
+  config <- cache$get("config", namespace = "distributed")
+  if (identical(globalenv(), config$envir)){
+    dir <- cache_path
+    file <- globalenv_file(dir)
+    load(file = file, envir = config$envir)
+  }
+  inventory(config)
 }

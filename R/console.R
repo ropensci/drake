@@ -65,7 +65,8 @@ console_up_to_date <- function(config){
   if (config$imports_only){
     return(invisible())
   }
-  if (config$verbose && !length(config$attempted_targets)){
+  any_attempted <- length(config$cache$list(namespace = "target_attempts"))
+  if (config$verbose && !any_attempted){
     color("All targets are already up to date.\n", colors["target"]) %>%
       cat
   }

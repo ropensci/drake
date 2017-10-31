@@ -247,9 +247,9 @@ make <- function(
   )
   check_config(config = config)
   store_config(config = config)
-  store_session(config = config)
+  initialize_session(config = config)
   config <- imports_only_preprocessing(config = config)
-  config <- run_parallel_backend(config = config)
+  run_parallel_backend(config = config)
   config$parallelism <- parallelism
   console_up_to_date(config = config)
   return(invisible(config))
@@ -278,7 +278,8 @@ next_targets <- function(graph_remaining_targets){
     names()
 }
 
-store_session <- function(config){
+initialize_session <- function(config){
+  config$cache$clear(namespace = "target_attempts")
   config$cache$set(
     key = "sessionInfo",
     value = sessionInfo(),

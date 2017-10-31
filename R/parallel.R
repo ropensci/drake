@@ -10,7 +10,7 @@ run_parallel <- function(config, worker) {
   while (length(V(config$graph_remaining_targets))){
     config <- parallel_stage(worker = worker, config = config)
   }
-  config
+  invisible()
 }
 
 parallel_stage <- function(worker, config) {
@@ -24,10 +24,8 @@ parallel_stage <- function(worker, config) {
   build_these <- Filter(candidates,
     f = function(target)
       should_build(target = target, hash_list = hash_list, config = config))
-  config$attempted_targets <- c(
-    config$attempted_targets,
-    intersect(build_these, config$plan$target)
-  )
+  target_attempts <- intersect(build_these, config$plan$target)
+  log_target_attempts(targets = target_attempts, config = config)
   hash_list <- hash_list[build_these]
   if (length(build_these)){
     worker(targets = build_these, hash_list = hash_list,

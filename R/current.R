@@ -31,3 +31,9 @@ file_current <- function(target, hashes, config){
   }
   identical(config$cache$get(target)$value, hashes$file)
 }
+
+log_target_attempts <- Vectorize(function(targets, config){
+  config$cache$set(key = targets, value = targets,
+    namespace = "target_attempts")
+},
+"targets")

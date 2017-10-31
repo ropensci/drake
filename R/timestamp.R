@@ -4,7 +4,8 @@ time_stamps <- function(config){
   dir_empty(stamp_dir)
   write_time_stamp_template(cache_path)
   targets <- intersect(V(config$graph)$name, config$plan$target)
-  stamp_these <- setdiff(targets, config$attempted_targets)
+  target_attempts <- config$cache$list(namespace = "target_attempts")
+  stamp_these <- setdiff(targets, target_attempts)
   lightly_parallelize(
     stamp_these, write_time_stamp, jobs = config$jobs, config = config)
   return(invisible())
