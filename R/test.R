@@ -48,6 +48,7 @@ test_with_dir <- function(desc, ...){
       )
     }
   )
+  invisible()
 }
 
 restore_options <- function(old){
