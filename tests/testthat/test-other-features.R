@@ -95,7 +95,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 
 test_with_dir("graph functions work", {
   config <- dbug()
-  expect_equal(class(build_graph(config$plan)), "igraph")
+  expect_equal(class(build_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
   tmp <- plot_graph(plan = config$plan, envir = config$envir,
     verbose = FALSE)
@@ -131,9 +131,9 @@ test_with_dir("targets can be partially specified", {
   testrun(config)
   expect_true(is.numeric(readd(final, search = FALSE)))
   pl <- workplan(x = 1, y = 2)
-  expect_error(check(pl, "lskjdf"))
-  expect_warning(check(pl, c("lskdjf", "x")))
-  expect_silent(check(pl))
+  expect_error(check(pl, "lskjdf", verbose = FALSE))
+  expect_warning(check(pl, c("lskdjf", "x"), verbose = FALSE))
+  expect_silent(check(pl, verbose = FALSE))
 })
 
 test_with_dir("misc stuff", {

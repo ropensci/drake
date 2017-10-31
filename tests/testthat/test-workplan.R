@@ -58,8 +58,7 @@ test_with_dir("plan set 4", {
     target = eply::quotes(letters[1:4], single = TRUE),
     command = c("c", "'c'", "d", "readRDS('e')"), stringsAsFactors = F)
   expect_equal(x, y)
-  expect_warning(check(x))
-
+  expect_warning(check(x, verbose = FALSE))
 })
 
 test_with_dir("workplan() trims outer whitespace in target names", {
@@ -84,7 +83,7 @@ test_with_dir("make() and check() trim outer whitespace in target names", {
     "nobody_home")))
 
   x <- data.frame(target = c("a", " a"), command = 1)
-  expect_error(check(x))
+  expect_error(check(x, verbose = FALSE))
 })
 
 test_with_dir("make() plays nicely with tibbles", {
@@ -92,7 +91,7 @@ test_with_dir("make() plays nicely with tibbles", {
     skip("Package tibble not installed.")
   }
   x <- tibble::tribble(~target, ~command, "nothing", 1)
-  expect_silent(check(x))
+  expect_silent(check(x, verbose = FALSE))
   expect_silent(make(x, verbose = FALSE))
 })
 
@@ -100,9 +99,9 @@ test_with_dir("check() finds bad symbols", {
   x <- data.frame(
     target = c("gotcha", "b", "\"targs\"", "a'x'", "b'x'"),
     command = 1)
-  expect_warning(o <- check(x))
+  expect_warning(o <- check(x, verbose = FALSE))
   x <- data.frame(
     target = c("gotcha", "b", "\"targs\""),
     command = 1)
-  expect_silent(o <- check(x))
+  expect_silent(o <- check(x, verbose = FALSE))
 })
