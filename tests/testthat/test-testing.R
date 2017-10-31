@@ -1,5 +1,17 @@
 drake_context("testing")
 
+test_with_dir("test_with_dir() clears out files", {
+  for(i in 1:10){
+    expect_silent(
+      test_with_dir("test", {
+        expect_false(file.exists("x"))
+        file.create("x")
+        expect_true(file.exists("x"))
+      })
+    )
+  }
+})
+
 test_with_dir("set_testing_scenario", {
   original <- get_testing_scenario_name()
   original_opt <- getOption(test_option_name)

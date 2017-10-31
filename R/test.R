@@ -31,16 +31,10 @@ nobuild <- function(config) {
 }
 
 test_with_dir <- function(desc, ...){
-  root <- tempdir()
-  stopifnot(file.exists(root))
-  relative_dir <- digest::digest(
-    list(desc, sessionInfo()$platform, rnorm(1)),
-    algo = default_short_hash_algo()
-  )
-  dir <- file.path(root, relative_dir)
-  dir_empty(dir)
+  new <- tempfile()
+  dir_empty(new)
   with_dir(
-    new = dir,
+    new = new,
     code = {
       set_test_backend()
       tmp <- capture.output(
