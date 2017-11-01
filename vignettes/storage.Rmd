@@ -174,9 +174,9 @@ If you want bypass `drake` and generate a cache directly from [storr](https://gi
 ```{r use_storr_directly}
 library(storr)
 my_storr <- storr_rds("my_storr", mangle_key = TRUE)
-make(new_plan, cache = faster_cache)
-cached(cache = faster_cache)
-readd(simple, cache = faster_cache)
+make(new_plan, cache = my_storr)
+cached(cache = my_storr)
+readd(simple, cache = my_storr)
 ```
 
 `Drake` supports [storr_rds()](https://github.com/richfitz/storr) caches. Other caches may be possible, but they should have a `storr`-like API and [namespace support](https://github.com/richfitz/storr/blob/master/vignettes/storr.Rmd#namespaces).
@@ -187,7 +187,7 @@ Some caches store your data in the computer's memory rather than saved files. `D
 
 ```{r memory_caches}
 memory_cache <- storr_environment()
-other_plan <- workplan(
+other_plan <- plan(
   some_data = rnorm(50),
   more_data = rpois(75, lambda = 10),
   result = mean(c(some_data, more_data))
