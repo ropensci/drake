@@ -10,7 +10,7 @@ config(plan = workplan(), targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
-  args = drake::default_system2_args(jobs = jobs, verbose = verbose),
+  args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, clear_progress = FALSE,
   graph = NULL)

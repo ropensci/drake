@@ -202,7 +202,7 @@ make <- function(
   prework = character(0),
   prepend = character(0),
   command = drake::default_Makefile_command(),
-  args = drake::default_system2_args(
+  args = drake::default_Makefile_args(
     jobs = jobs,
     verbose = verbose
   ),

@@ -1,6 +1,7 @@
 drake_context("edge cases")
 
 test_with_dir("deprecation", {
+  expect_warning(default_system2_args(jobs = 1, verbose = TRUE))
   plan <- data.frame(code = 1:2, output = c("x", "y"))
   expect_warning(make(plan, verbose = FALSE))
   expect_warning(make(plan, verbose = FALSE))

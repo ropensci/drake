@@ -256,3 +256,26 @@ status <- function(
     search = search
   )
 }
+
+#' @title Deprecated function \code{default_system2_args}
+#' @description Use \code{\link{default_Makefile_args}()} instead.
+#' @seealso \code{\link{default_Makefile_args}}
+#' @export
+#' @return \code{args} for \code{\link{system2}(command, args)}
+#' @param jobs number of jobs
+#' @param verbose logical, whether to be verbose
+default_system2_args <- function(jobs, verbose){
+  .Deprecated(
+    "default_system2_args",
+    package = "drake",
+    msg = paste(
+      "default_system2_args() is deprecated.",
+      "Use default_Makefile_args() instead."
+    )
+  )
+  out <- paste0("--jobs=", jobs)
+  if (!verbose){
+    out <- c(out, "--silent")
+  }
+  return(out)
+}

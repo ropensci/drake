@@ -75,12 +75,15 @@ test_with_dir("basic Makefile stuff works", {
   cache_path <- cache_path(config$cache)
   initialize_session(config = config)
   log_target_attempts(targets = outdated(config = config), config = config)
+  config$recipe_command <- "Rscript -e"
   run_Makefile(config, run = FALSE, debug = TRUE)
   using_global <- identical(config$envir, globalenv())
   if (using_global) {
     expect_true(file.exists(globalenv_file(cache_path)))
   }
   expect_true(file.exists("Makefile"))
+  lines <- paste(readLines("Makefile"), collapse = "\n")
+  expect_true(grepl("Rscript -e 'drake::mk(", lines, fixed = TRUE))
   dir <- time_stamp_dir(cache_path)
   stamps <- unname(sort(list.files(dir, full.names = FALSE)))
   stamps2 <- unname(sort(
