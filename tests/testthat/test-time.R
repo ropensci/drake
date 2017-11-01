@@ -81,7 +81,7 @@ test_with_dir("time predictions: incomplete targets", {
   my_plan <- e$my_plan
   config <- config(my_plan, envir = e,
     jobs = 1, verbose = FALSE)
-
+  
   dats <- c("small", "large")
   expect_warning(
     x <- rate_limiting_times(

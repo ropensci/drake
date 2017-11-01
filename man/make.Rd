@@ -11,8 +11,8 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_system2_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(), clear_progress = TRUE,
-  imports_only = FALSE, timeout = Inf, cpu = timeout, elapsed = timeout,
+  recipe_command = drake::default_recipe_command(), clear_progress = NULL,
+  imports_only = NULL, timeout = Inf, cpu = timeout, elapsed = timeout,
   retries = 0, return_config = NULL)
 }
 \arguments{

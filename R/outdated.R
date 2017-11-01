@@ -64,6 +64,7 @@ outdated <-  function(
       prework = prework
     )
   }
+  make_imports(config = config)
   config <- inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   rebuild <- Filter(

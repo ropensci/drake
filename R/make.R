@@ -207,8 +207,8 @@ make <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  clear_progress = TRUE,
-  imports_only = FALSE,
+  clear_progress = NULL,
+  imports_only = NULL,
   timeout = Inf,
   cpu = timeout,
   elapsed = timeout,
@@ -216,6 +216,7 @@ make <- function(
   return_config = NULL
 ){
   force(envir)
+  
   if (!is.null(return_config)){
     warning(
       "The return_config argument to make() is deprecated. ",
@@ -223,7 +224,15 @@ make <- function(
       call. = FALSE
     )
   }
-  config <- build_config(
+  if (!is.null(clear_progress)){
+    warning(
+      "The clear_progress argument to make() is deprecated. ",
+      "Progress is always cleared.",
+      call. = FALSE
+    )
+  }
+  
+  config <- config(
     plan = plan,
     targets = targets,
     envir = envir,
@@ -237,9 +246,8 @@ make <- function(
     command = command,
     args = args,
     recipe_command = recipe_command,
-    clear_progress = clear_progress,
+    clear_progress = TRUE,
     cache = cache,
-    imports_only = imports_only,
     timeout = timeout,
     cpu = cpu,
     elapsed = elapsed,
@@ -248,34 +256,39 @@ make <- function(
   check_config(config = config)
   store_config(config = config)
   initialize_session(config = config)
-  config <- imports_only_preprocessing(config = config)
+  
+  if (!is.null(imports_only)){
+    warning(
+      "The imports_only argument to make() is deprecated. ",
+      "Instead, use config() and make_imports().",
+      call. = FALSE
+    )
+    make_imports(config = config)
+    return(invisible(config))
+  }
+  
   run_parallel_backend(config = config)
-  config$parallelism <- parallelism
   console_up_to_date(config = config)
   return(invisible(config))
 }
 
-imports_only_preprocessing <- function(config){
-  if (!config$imports_only){
-    return(config)
-  }
+#' @title Function make_imports
+#' @description just make the imports
+#' @export
+#' @seealso \code{\link{make}}, \code{\link{config}}
+#' @param config a configuration list returned by \code{\link{config}()}
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' con <- config(my_plan)
+#' make_imports(config = con)
+#' }
+make_imports <- function(config){
   delete_these <- intersect(config$plan$target, V(config$graph)$name)
   config$graph <- delete_vertices(config$graph, v = delete_these)
   config$parallelism <- use_default_parallelism(config$parallelism)
-  config
-}
-
-next_targets <- function(graph_remaining_targets){
-  number_dependencies <- sapply(
-    V(graph_remaining_targets),
-    function(x){
-      adjacent_vertices(graph_remaining_targets, x, mode = "in") %>%
-        unlist() %>%
-        length()
-    }
-  )
-  which(!number_dependencies) %>%
-    names()
+  run_parallel_backend(config = config)
+  invisible()
 }
 
 initialize_session <- function(config){

@@ -13,7 +13,8 @@ plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   layout = "layout_with_sugiyama", main = NULL, direction = "LR",
   hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, ncol_legend = 1, ...)
+  "in", "all"), order = NULL, subset = NULL, ncol_legend = 1,
+  from_scratch = FALSE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -142,6 +143,12 @@ If you do not select all the intermediate nodes,
 edges will drop from the graph.}
 
 \item{ncol_legend}{number of columns in the legend nodes}
+
+\item{from_scratch}{logical, whether to assume that
+all targets are out of date and the next \code{\link{make}()}
+will happen from scratch. Setting to \code{TRUE} will prevent
+the graph from showing you which targets are up to date,
+but it makes computing the graph much faster.}
 
 \item{...}{other arguments passed to
 \code{visNetwork::visNetwork()} to plot the graph.}

@@ -26,15 +26,12 @@ check <- function(
   verbose = TRUE
 ){
   force(envir)
-  config <- build_config(plan = plan, targets = targets, envir = envir,
-    verbose = verbose, hook = function(code) force(code),
-    cache = cache, parallelism = "mclapply",
-    jobs = 1, packages = character(0),
-    prepend = character(0), prework = character(0), command = character(0),
-    args = character(0), recipe_command = default_recipe_command(),
-    clear_progress = FALSE,
-    timeout = Inf, cpu = Inf, elapsed = Inf,
-    retries = 0, imports_only = FALSE
+  config <- config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    cache = cache
   )
   check_config(config)
   check_strings(config$plan)

@@ -4,21 +4,9 @@ dbug <- function() {
   envir <- dbug_envir(envir)
   dbug_files()
   plan <- dbug_plan()
-
-  build_config(plan = plan, targets = plan$target,
+  config(plan = plan, targets = plan$target,
     envir = envir, parallelism = scenario$parallelism,
-    jobs = scenario$jobs, prepend = character(0),
-    verbose = FALSE,
-    hook = function(code){
-      force(code)
-    },
-    packages = character(0), prework = character(0),
-    command = default_Makefile_command(),
-    args = character(0),
-    recipe_command = "Rscript -e",
-    cache = NULL, clear_progress = TRUE,
-    timeout = Inf, cpu = Inf, elapsed = Inf,
-    retries = 0, imports_only = FALSE
+    jobs = scenario$jobs, verbose = FALSE
   )
 }
 

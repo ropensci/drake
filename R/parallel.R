@@ -36,6 +36,19 @@ parallel_stage <- function(worker, config) {
   invisible(config)
 }
 
+next_targets <- function(graph_remaining_targets){
+  number_dependencies <- sapply(
+    V(graph_remaining_targets),
+    function(x){
+      adjacent_vertices(graph_remaining_targets, x, mode = "in") %>%
+        unlist() %>%
+        length()
+    }
+  )
+  which(!number_dependencies) %>%
+    names()
+}
+
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
   jobs <- safe_jobs(jobs)
   if (is.atomic(X)){
