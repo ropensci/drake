@@ -37,7 +37,7 @@ console_many_targets <- function(
     finish_console(message = message, verbose = config$verbose)
 }
 
-console_parLapply <- function(config){
+console_parLapply <- function(config){ # nolint
   finish_console(text = "load parallel socket cluster", message = "load",
     verbose = config$verbose)
 }
