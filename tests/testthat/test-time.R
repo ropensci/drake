@@ -198,6 +198,7 @@ test_with_dir("timing predictions with realistic build", {
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
+  my_plan$command <- paste("Sys.sleep(0.001);", my_plan$command)
   config <- config(my_plan, envir = e, parallelism = "mclapply",
     jobs = 1, verbose = FALSE)
   config <- testrun(config)
@@ -325,9 +326,9 @@ test_with_dir("timing predictions with realistic build", {
   expect_true(all(complete.cases(jobs_4_df)))
   expect_true(all(complete.cases(jobs_4_df_targets)))
 
-  expect_equal(nrow(scratch_df), 27)
+  expect_equal(nrow(scratch_df), 28)
   expect_equal(nrow(resume_df), nrow(scratch_df) - 8)
-  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 20)
+  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 21)
   expect_true(nrow(jobs_2_df) < nrow(scratch_df))
   expect_true(nrow(jobs_4_df) < nrow(jobs_2_df))
   expect_true(nrow(jobs_4_df_targets) < nrow(jobs_4_df))

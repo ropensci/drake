@@ -13,9 +13,9 @@ test_with_dir("console_up_to_date", {
 
 test_with_dir("console_parLapply", {
   config <- list(verbose = TRUE)
-  expect_output(console_parLapply(config = config))
+  expect_output(console_parLapply(config = config)) # nolint
   config <- list(verbose = FALSE)
-  expect_silent(console_parLapply(config = config))
+  expect_silent(console_parLapply(config = config)) # nolint
 })
 
 test_with_dir("multiline message cap", {
