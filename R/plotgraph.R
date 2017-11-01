@@ -133,6 +133,12 @@
 #'
 #' @param ncol_legend number of columns in the legend nodes
 #'
+#' @param from_scratch logical, whether to assume that
+#' all targets are out of date and the next \code{\link{make}()}
+#' will happen from scratch. Setting to \code{TRUE} will prevent
+#' the graph from showing you which targets are up to date,
+#' but it makes computing the graph much faster.
+#'
 #' @param ... other arguments passed to
 #' \code{visNetwork::visNetwork()} to plot the graph.
 #'
@@ -167,6 +173,7 @@ plot_graph <- function(
   from = NULL, mode = c("out", "in", "all"), order = NULL,
   subset = NULL,
   ncol_legend = 1,
+  from_scratch = FALSE,
   ...
 ){
   force(envir)
@@ -178,7 +185,8 @@ plot_graph <- function(
     build_times = build_times, digits = digits,
     targets_only = targets_only, split_columns = split_columns,
     config = config, font_size = font_size,
-    from = from, mode = mode, order = order, subset = subset
+    from = from, mode = mode, order = order, subset = subset,
+    from_scratch = from_scratch
   )
   if (is.null(main)){
     main <- raw_graph$default_title

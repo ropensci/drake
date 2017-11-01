@@ -64,6 +64,7 @@ outdated <-  function(
       prework = prework
     )
   }
+  make_imports(config = config)
   config <- inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   rebuild <- Filter(
@@ -107,8 +108,6 @@ outdated <-  function(
 #'
 #' @param verbose logical, whether to output messages to the console.
 #'
-#' @param hook same as for \code{\link{make}}
-#'
 #' @param jobs The \code{outdated()} function is called internally,
 #' and it needs to import objects and examine your
 #' input files to see what has been updated. This could take some time,
@@ -146,9 +145,6 @@ missed <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
   jobs = 1,
   parallelism = drake::default_parallelism(),
   packages = rev(.packages()),
@@ -162,7 +158,6 @@ missed <- function(
       targets = targets,
       envir = envir,
       verbose = verbose,
-      hook = hook,
       parallelism = parallelism,
       jobs = jobs,
       packages = packages,

@@ -11,7 +11,7 @@ dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   config = NULL, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL)
+  order = NULL, subset = NULL, from_scratch = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -108,6 +108,12 @@ Applied after \code{from}, \code{mode}, and \code{order}.
 Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
 edges will drop from the graph.}
+
+\item{from_scratch}{logical, whether to assume that
+all targets are out of date and the next \code{\link{make}()}
+will happen from scratch. Setting to \code{TRUE} will prevent
+the graph from showing you which targets are up to date,
+but it makes computing the graph much faster.}
 }
 \value{
 a list of three data frames: one for nodes,

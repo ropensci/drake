@@ -102,6 +102,12 @@
 #' \code{build_times}, \code{digits}, \code{targets_only},
 #' \code{split_columns}, and \code{font_size}.
 #'
+#' @param from_scratch logical, whether to assume that
+#' all targets are out of date and the next \code{\link{make}()}
+#' will happen from scratch. Setting to \code{TRUE} will prevent
+#' the graph from showing you which targets are up to date,
+#' but it makes computing the graph much faster.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -130,7 +136,8 @@ dataframes_graph <- function(
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
   split_columns = FALSE, font_size = 20, config = NULL,
-  from = NULL, mode = c("out", "in", "all"), order = NULL, subset = NULL
+  from = NULL, mode = c("out", "in", "all"), order = NULL, subset = NULL,
+  from_scratch = FALSE
 ) {
   force(envir)
   if (is.null(config)){
@@ -146,7 +153,12 @@ dataframes_graph <- function(
 
   config$plan <- sanitize_plan(plan = plan)
   config$targets <- sanitize_targets(plan = plan, targets = targets)
-  config$outdated <- outdated(config = config)
+
+  if (from_scratch){
+    config$outdated <- plan$target
+  } else {
+    config$outdated <- outdated(config = config)
+  }
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes

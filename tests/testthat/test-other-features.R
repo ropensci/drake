@@ -14,22 +14,6 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
   })
 })
 
-test_with_dir("recipe_command", {
-  my_plan <- workplan(y = 1)
-  expect_true(is.character(default_recipe_command()))
-  expect_true(is.character(r_recipe_wildcard()))
-  con1 <- make(my_plan, command = default_Makefile_command(),
-    parallelism = "Makefile", recipe_command = "some_command",
-    verbose = FALSE, imports_only = TRUE
-  )
-  expect_equal(con1$recipe_command, "some_command")
-  expect_true(con1$recipe_command != default_recipe_command())
-  con2 <- config(plan = my_plan, parallelism = "Makefile",
-    recipe_command = "my_command", verbose = FALSE)
-  expect_equal(con2$recipe_command, "my_command")
-  expect_true(con2$recipe_command != default_recipe_command())
-})
-
 test_with_dir("colors and shapes", {
   expect_output(drake_palette())
   expect_is(color_of("target"), "character")

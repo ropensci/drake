@@ -17,6 +17,8 @@ test_with_dir("basic example works", {
 
   # Different graph configurations should be checked manually.
   tmp <- dataframes_graph(my_plan, envir = e, config = config)
+  tmpcopy <- dataframes_graph(my_plan, envir = e, config = config,
+    from_scratch = TRUE)
   tmp0 <- dataframes_graph(my_plan, envir = e, config = config,
     subset = c("small", "regression2_large"))
   tmp1 <- dataframes_graph(my_plan, envir = e, config = config,
@@ -38,6 +40,7 @@ test_with_dir("basic example works", {
       from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)
+  expect_true(identical(tmp$nodes, tmpcopy$nodes))
   expect_false(identical(tmp$nodes, tmp0$nodes))
   expect_false(identical(tmp$nodes, tmp1$nodes))
   expect_false(identical(tmp$nodes, tmp2$nodes))
@@ -72,7 +75,12 @@ test_with_dir("basic example works", {
   dats <- c("small", "large")
   config$targets <- dats
   con <- testrun(config)
+
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
+  tmp1 <- dataframes_graph(my_plan, envir = e, config = config)
+  tmp2 <- dataframes_graph(my_plan, envir = e, config = config,
+    from_scratch = TRUE)
+  expect_false(identical(tmp1$nodes, tmp2$nodes))
 
   expect_equal(sort(justbuilt(con)), sort(dats))
   remove_these <- intersect(dats, ls(config$envir))

@@ -39,17 +39,26 @@
 #' @param cpu same as for \code{\link{make}}
 #' @param elapsed same as for \code{\link{make}}
 #' @param retries same as for \code{\link{make}}
+#' @param clear_progress logical, whether to clear
+#' the cached progress of the targets readable by
+#' @param graph igraph object representing the workflow plan network
+#' \code{\link{progress}()}
 config <- function(
-  plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE,
+  plan = workplan(),
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  verbose = TRUE,
   hook = function(code){
     force(code)
   },
   cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(),
-  jobs = 1, packages = rev(.packages()), prework = character(0),
-  prepend = character(0), command = drake::default_Makefile_command(),
-  args = drake::default_system2_args(
+  jobs = 1,
+  packages = rev(.packages()),
+  prework = character(0),
+  prepend = character(0),
+  command = drake::default_Makefile_command(),
+  args = drake::default_Makefile_args(
     jobs = jobs,
     verbose = verbose
   ),
@@ -57,43 +66,11 @@ config <- function(
   timeout = Inf,
   cpu = timeout,
   elapsed = timeout,
-  retries = 0
+  retries = 0,
+  clear_progress = FALSE,
+  graph = NULL
 ){
   force(envir)
-  config <- make(
-    imports_only = TRUE,
-    clear_progress = FALSE,
-    plan = plan, targets = targets,
-    envir = envir, verbose = verbose,
-    hook = hook, cache = cache,
-    parallelism = use_default_parallelism(parallelism),
-    jobs = jobs,
-    packages = packages, prework = prework,
-    prepend = prepend, command = command, args = args,
-    recipe_command = recipe_command,
-    timeout = timeout,
-    cpu = cpu,
-    elapsed = elapsed,
-    retries = retries
-  )
-  config$parallelism <- match.arg(
-    parallelism,
-    choices = parallelism_choices(distributed_only = FALSE)
-  )
-  config$graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose, jobs = jobs)
-  config
-}
-
-build_config <- function(
-  plan, targets, envir,
-  verbose, hook, cache,
-  parallelism, jobs,
-  packages, prework, prepend, command,
-  args, clear_progress, recipe_command,
-  imports_only,
-  timeout, cpu, elapsed, retries
-){
   seed <- get_valid_seed()
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
@@ -101,8 +78,10 @@ build_config <- function(
     parallelism,
     choices = parallelism_choices(distributed_only = FALSE)
   )
-  prework <- add_packages_to_prework(packages = packages,
-    prework = prework)
+  prework <- add_packages_to_prework(
+    packages = packages,
+    prework = prework
+  )
   if (is.null(cache)) {
     cache <- recover_cache()
   }
@@ -112,16 +91,18 @@ build_config <- function(
     clear_progress = clear_progress,
     overwrite_hash_algos = FALSE
   )
-  graph <- build_graph(plan = plan, targets = targets,
-    envir = envir, verbose = verbose, jobs = jobs
-  )
-  list(plan = plan, targets = targets, envir = envir, cache = cache,
+  if (is.null(graph)){
+    graph <- build_graph(plan = plan, targets = targets,
+      envir = envir, verbose = verbose, jobs = jobs)
+  }
+  list(
+    plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    inventory = cache$list(), seed = seed, imports_only = imports_only,
+    inventory = cache$list(), seed = seed,
     inventory_filemtime = cache$list(namespace = "filemtime"),
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   )

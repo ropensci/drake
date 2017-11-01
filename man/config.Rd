@@ -10,9 +10,10 @@ config(plan = workplan(), targets = drake::possible_targets(plan),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
-  args = drake::default_system2_args(jobs = jobs, verbose = verbose),
+  args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
-  cpu = timeout, elapsed = timeout, retries = 0)
+  cpu = timeout, elapsed = timeout, retries = 0, clear_progress = FALSE,
+  graph = NULL)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -50,6 +51,12 @@ config(plan = workplan(), targets = drake::possible_targets(plan),
 \item{elapsed}{same as for \code{\link{make}}}
 
 \item{retries}{same as for \code{\link{make}}}
+
+\item{clear_progress}{logical, whether to clear
+the cached progress of the targets readable by}
+
+\item{graph}{igraph object representing the workflow plan network
+\code{\link{progress}()}}
 }
 \description{
 Compute the internal runtime parameter list of

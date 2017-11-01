@@ -1,6 +1,7 @@
 drake_context("edge cases")
 
 test_with_dir("deprecation", {
+  expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   plan <- data.frame(code = 1:2, output = c("x", "y"))
   expect_warning(make(plan, verbose = FALSE))
   expect_warning(make(plan, verbose = FALSE))
@@ -9,6 +10,10 @@ test_with_dir("deprecation", {
   expect_warning(prune(plan[1, ]))
   expect_equal(cached(), "x")
   expect_warning(make(workplan(x = 1), return_config = TRUE,
+    verbose = FALSE))
+  expect_warning(make(workplan(x = 1), clear_progress = TRUE,
+    verbose = FALSE))
+  expect_warning(make(workplan(x = 1), imports_only = TRUE,
     verbose = FALSE))
   pl1 <- expect_warning(drake::plan(x = 1, y = x))
   pl2 <- workplan(x = 1, y = x)

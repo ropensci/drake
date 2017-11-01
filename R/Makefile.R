@@ -105,7 +105,7 @@ mk <- function(
   return(invisible())
 }
 
-#' @title Function \code{default_system2_args}
+#' @title Function \code{default_Makefile_args}
 #' @description Configures default
 #' arguments to \code{\link{system2}()} to run Makefiles.
 #' @export
@@ -113,9 +113,9 @@ mk <- function(
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
 #' @examples
-#' default_system2_args(jobs = 2, verbose = FALSE)
-#' default_system2_args(jobs = 4, verbose = TRUE)
-default_system2_args <- function(jobs, verbose){
+#' default_Makefile_args(jobs = 2, verbose = FALSE)
+#' default_Makefile_args(jobs = 4, verbose = TRUE)
+default_Makefile_args <- function(jobs, verbose){
   out <- paste0("--jobs=", jobs)
   if (!verbose){
     out <- c(out, "--silent")

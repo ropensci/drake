@@ -29,27 +29,11 @@ test_with_dir("prune_envir in full build", {
 
   # set up a workspace to test prune_envir()
   # set verbose to TRUE to see log of loading
-  config <- build_config(
+  config <- config(
     plan,
     targets = plan$target,
     envir = new.env(parent = globalenv()),
-    parallelism = "mclapply",
-    jobs = 1,
-    prepend = character(0),
     verbose = FALSE,
-    hook = function(code){
-      force(code)
-    },
-    packages = character(0),
-    prework = character(0),
-    command = "make",
-    args = character(0),
-    recipe_command = default_recipe_command(),
-    cache = NULL,
-    clear_progress = FALSE,
-    timeout = Inf, cpu = Inf, elapsed = Inf,
-    retries = 0,
-    imports_only = FALSE
   )
 
   # actually run

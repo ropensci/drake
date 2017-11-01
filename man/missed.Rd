@@ -5,9 +5,9 @@
 \title{Function \code{missed}}
 \usage{
 missed(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
-  force(code) }, jobs = 1, parallelism = drake::default_parallelism(),
-  packages = rev(.packages()), prework = character(0), config = NULL)
+  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  parallelism = drake::default_parallelism(), packages = rev(.packages()),
+  prework = character(0), config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -20,8 +20,6 @@ missed(plan = workplan(), targets = drake::possible_targets(plan),
 \code{\link{make}()}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
-
-\item{hook}{same as for \code{\link{make}}}
 
 \item{jobs}{The \code{outdated()} function is called internally,
 and it needs to import objects and examine your
