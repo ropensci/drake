@@ -159,7 +159,7 @@ dataframes_graph <- function(
   } else {
     config$outdated <- outdated(config = config)
   }
-  
+
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   rownames(config$nodes) <- config$nodes$label

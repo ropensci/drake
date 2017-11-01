@@ -216,7 +216,7 @@ make <- function(
   return_config = NULL
 ){
   force(envir)
-  
+
   if (!is.null(return_config)){
     warning(
       "The return_config argument to make() is deprecated. ",
@@ -231,7 +231,7 @@ make <- function(
       call. = FALSE
     )
   }
-  
+
   config <- config(
     plan = plan,
     targets = targets,
@@ -256,7 +256,7 @@ make <- function(
   check_config(config = config)
   store_config(config = config)
   initialize_session(config = config)
-  
+
   if (!is.null(imports_only)){
     warning(
       "The imports_only argument to make() is deprecated. ",
@@ -266,7 +266,7 @@ make <- function(
     make_imports(config = config)
     return(invisible(config))
   }
-  
+
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   return(invisible(config))
