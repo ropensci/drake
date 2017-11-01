@@ -35,5 +35,6 @@ file_current <- function(target, hashes, config){
 log_target_attempts <- Vectorize(function(targets, config){
   config$cache$set(key = targets, value = targets,
     namespace = "target_attempts")
+  invisible()
 },
 "targets")

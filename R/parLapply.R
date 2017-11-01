@@ -3,6 +3,7 @@ run_parLapply <- function(config) { # nolint
   if (config$jobs < 2) {
     return(run_lapply(config = config))
   }
+  console_parLapply(config)
   config$cluster <- makePSOCKcluster(config$jobs)
   on.exit(stopCluster(cl = config$cluster))
   clusterExport(cl = config$cluster, varlist = "config",

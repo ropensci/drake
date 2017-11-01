@@ -11,6 +11,13 @@ test_with_dir("console_up_to_date", {
   expect_output(console_up_to_date(con))
 })
 
+test_with_dir("console_parLapply", {
+  config <- list(verbose = TRUE)
+  expect_output(console_parLapply(config = config))
+  config <- list(verbose = FALSE)
+  expect_silent(console_parLapply(config = config))
+})
+
 test_with_dir("multiline message cap", {
   n <- 100
   x1 <- "aldksjf"

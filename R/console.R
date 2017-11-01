@@ -1,9 +1,6 @@
 console_length <- 80
 
 console <- function(imported, target, config) {
-  if (!config$verbose) {
-    return()
-  }
   if (is.na(imported)) {
     message <- "missing"
   } else if (imported) {
@@ -12,26 +9,20 @@ console <- function(imported, target, config) {
     message <- "target"
   }
   paste(message, target) %>%
-    finish_console(message = message)
+    finish_console(message = message, verbose = config$verbose)
 }
 
 console_cache <- function(path, verbose){
-  if (!verbose){
-    return(invisible())
-  }
   if (!length(path)){
     path <- default_cache_path()
   }
   paste("cache", path) %>%
-    finish_console(message = "cache")
+    finish_console(message = "cache", verbose = verbose)
 }
 
 console_many_targets <- function(
   targets, message, config, color = color_of(message), type = "item"
 ){
-  if (!config$verbose) {
-    return(invisible())
-  }
   n <- length(targets)
   if (n < 1){
     return(invisible())
@@ -43,13 +34,18 @@ console_many_targets <- function(
     ": ",
     paste(targets, collapse = ", ")
   ) %>%
-    finish_console(message = message)
+    finish_console(message = message, verbose = config$verbose)
+}
+
+console_parLapply <- function(config){
+  finish_console(text = "load parallel socket cluster", message = "load",
+    verbose = config$verbose)
 }
 
 console_retry <- function(target, retries, config){
-  if (config$verbose & retries <= config$retries){
+  if (retries <= config$retries){
     text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
-    finish_console(text = text, message = "retry")
+    finish_console(text = text, message = "retry", verbose = config$verbose)
   }
 }
 
@@ -61,7 +57,10 @@ console_up_to_date <- function(config){
   }
 }
 
-finish_console <- function(text, message){
+finish_console <- function(text, message, verbose){
+  if (!verbose){
+    return(invisible())
+  }
   crop_text(x = text, length = console_length) %>%
     color_grep(pattern = message, color = color_of(message)) %>%
     cat("\n", sep = "")
