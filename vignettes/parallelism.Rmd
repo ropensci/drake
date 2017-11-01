@@ -378,6 +378,6 @@ See the timing vignette for explanations of functions `rate_limiting_times()` an
 
 
 ```{r endofline_quickstart, echo = F}
-clean(destroy = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```

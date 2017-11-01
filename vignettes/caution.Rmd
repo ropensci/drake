@@ -18,7 +18,7 @@ vignette: >
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
-clean(destroy = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 
@@ -427,6 +427,6 @@ The [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignet
 In `predict_runtime()` and `rate_limiting_times()`, `drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and prints the untimed targets.
 
 ```{r rmfiles_caution, echo = FALSE}
-clean(destroy = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```

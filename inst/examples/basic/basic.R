@@ -228,7 +228,7 @@ clean() # Start over next time.
 # Use `options(mc.cores = 4)` or something similar from ?future.options
 # to cap the number of simultaneous jobs.
 options(mc.cores = 2)
-library(future) # Use workplan() instead of plan()
+library(future)
 backend(multicore) # Same as future::plan(multicore)
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.

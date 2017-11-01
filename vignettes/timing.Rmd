@@ -14,7 +14,7 @@ vignette: >
 
 ```{r suppression_timing, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
-clean(destroy = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 
@@ -154,6 +154,6 @@ rate_limiting_times(
 `Drake` only accounts for the targets with logged build times. If some targets have not been timed, `drake` throws a warning and lists the names of the untimed targets.
 
 ```{r endofline_timing, echo = F}
-clean(destroy = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```

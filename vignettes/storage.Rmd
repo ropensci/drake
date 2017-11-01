@@ -17,7 +17,7 @@ vignette: >
 
 ```{r suppression, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
-clean(destroy = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
 unlink(
   c(
     "Makefile", "report.Rmd", "shell.sh",
