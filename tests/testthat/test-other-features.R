@@ -6,9 +6,11 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
     append <- function(x){
       paste0(x, "_text")
     }
+    out0 <- lightly_parallelize(X = x, FUN = append, jobs = 2)
     out1 <- lightly_parallelize_atomic(X = x, FUN = append, jobs = 2)
     out2 <- lapply(X = x, FUN = append)
-    expect_identical(out1, out2)
+    expect_identical(out0, out1)
+    expect_identical(out0, out2)
     y <- gsub("_text", "", unlist(out1))
     expect_identical(x, y)
   })
