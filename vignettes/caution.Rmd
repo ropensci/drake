@@ -24,12 +24,6 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 `Drake` has edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
 
-# Experimental features
-
-## Built-in examples
-
-`Drake` has [built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) that you can list with `examples_drake()` and write to your file system with `example_drake()`. Some of these may not work as-is, particularly the ones that require special difficult-to-install software like [SLURM](http://slurm.schedmd.com/) and [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/). Here is where you can help. If you have experience with these systems, please help us test and fix the examples. You can [share your suggestions on the issue tracker](https://github.com/wlandau-lilly/drake/issues) and [submit bugfixes via pull request](https://help.github.com/articles/about-pull-requests/).
-
 # Workflow plans
 
 ## Beware unparsable symbols in your workflow plan.
@@ -368,7 +362,7 @@ On Windows, do not use `make(..., parallelism = "mclapply", jobs = n)` with `n` 
 
 ## Configuring [future](https://github.com/HenrikBengtsson/future)/[batchtools](https://github.com/mllg/batchtools)-based distributed computing on clusters
 
-The `"future_lapply"` backend unlocks a large array of distributed computing options on serious computing clusters. However, it is your responsibility to configure your workflow for your specific job scheduler. In particular, special `*.tmpl` configuration files are required. You can find some examples of these files in the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `examples_drake()` to view your options, and then `example_drake()` to write the files for an example.
+The `"future_lapply"` backend unlocks a large array of distributed computing options on serious computing clusters. However, it is your responsibility to configure your workflow for your specific job scheduler. In particular, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). You can find some examples of these files in the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `examples_drake()` to view your options, and then `example_drake()` to write the files for an example.
 
 ```{r writexamples, eval = FALSE}
 example_drake("sge")    # Sun/Univa Grid Engine workflow and supporting files

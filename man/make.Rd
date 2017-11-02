@@ -12,7 +12,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
-  imports_only = NULL, timeout = Inf, cpu = timeout, elapsed = timeout,
+  imports_only = FALSE, timeout = Inf, cpu = timeout, elapsed = timeout,
   retries = 0, return_config = NULL)
 }
 \arguments{
