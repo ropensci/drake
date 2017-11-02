@@ -17,7 +17,8 @@ parallel_stage <- function(worker, config) {
   config <- inventory(config)
   remaining_targets <- V(config$graph_remaining_targets) %>%
     names %>% intersect(config$targets)
-  candidates <- next_targets(config$graph_remaining_targets)
+  candidates <- next_targets(
+    config$graph_remaining_targets, jobs = config$jobs)
   console_many_targets(targets = candidates,
     message = "check", config = config)
   hash_list <- hash_list(targets = candidates, config = config)
@@ -36,15 +37,17 @@ parallel_stage <- function(worker, config) {
   invisible(config)
 }
 
-next_targets <- function(graph_remaining_targets){
-  number_dependencies <- sapply(
-    V(graph_remaining_targets),
-    function(x){
+next_targets <- function(graph_remaining_targets, jobs = 1){
+  number_dependencies <- lightly_parallelize(
+    X = V(graph_remaining_targets),
+    FUN = function(x){
       adjacent_vertices(graph_remaining_targets, x, mode = "in") %>%
         unlist() %>%
         length()
-    }
-  )
+    },
+    jobs = jobs
+  ) %>%
+    unlist
   which(!number_dependencies) %>%
     names()
 }

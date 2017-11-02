@@ -51,7 +51,7 @@ check_config <- function(config) {
 }
 
 missing_input_files <- function(config) {
-  missing_files <- next_targets(config$graph) %>%
+  missing_files <- next_targets(config$graph, jobs = config$jobs) %>%
     Filter(f = is_file) %>%
     unquote %>%
     Filter(f = function(x) !file.exists(x))

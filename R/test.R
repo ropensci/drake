@@ -17,13 +17,20 @@ testrun <- function(config) {
 }
 
 justbuilt <- function(config) {
-  sapply(config$cache$list(namespace = "progress"),
-    function(target)
-      config$cache$get(key = target, namespace = "progress")) %>%
-      Filter(f = function(x) x == "finished") %>%
-      names %>%
-      intersect(y = config$plan$target) %>%
-      sort
+  recorded <- config$cache$list(namespace = "progress")
+  all <- lightly_parallelize(
+    X = recorded,
+    FUN = function(target){
+      config$cache$get(key = target, namespace = "progress")
+    },
+    jobs = config$jobs
+  )
+  names(all) <- recorded
+  unlist(all) %>%
+    Filter(f = function(x) x == "finished") %>%
+    names %>%
+    intersect(y = config$plan$target) %>%
+    sort
 }
 
 nobuild <- function(config) {

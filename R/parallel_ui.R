@@ -248,9 +248,11 @@ max_useful_jobs <- function(
   just_targets <- intersect(nodes$id, config$plan$target)
   just_files <- Filter(x = nodes$id, f = is_file)
   targets_and_files <- union(just_targets, just_files)
-  if (imports == "none")
-    nodes <- nodes[just_targets, ] else if (imports == "files")
+  if (imports == "none"){
+    nodes <- nodes[just_targets, ]
+  } else if (imports == "files"){
     nodes <- nodes[targets_and_files, ]
+  }
   if (!from_scratch){
     nodes <- nodes[nodes$status != "up to date", ]
   }

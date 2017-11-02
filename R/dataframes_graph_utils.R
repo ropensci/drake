@@ -159,7 +159,7 @@ resolve_levels <- function(config) {
     keep_these <- setdiff(V(graph)$name, rownames(nodes))
     graph_remaining_targets <- delete_vertices(graph, v = keep_these)
     while (length(V(graph_remaining_targets))) {
-      candidates <- next_targets(graph_remaining_targets)
+      candidates <- next_targets(graph_remaining_targets, jobs = jobs)
       if (length(candidates)){
         nodes[candidates, "level"] <- level
         level <- level + 1
@@ -183,9 +183,19 @@ resolve_levels_distributed <- function(config) { # nolint
     nodes_imports <- nodes[nodes$id %in% imports, ]
     nodes_targets <- nodes[nodes$id %in% targets, ]
     nodes_imports <- resolve_levels(
-      config = list(nodes = nodes_imports, graph = graph_imports))
+      config = list(
+        nodes = nodes_imports,
+        graph = graph_imports,
+        jobs = config$jobs
+      )
+    )
     nodes_targets <- resolve_levels(
-      config = list(nodes = nodes_targets, graph = graph_targets))
+      config = list(
+        nodes = nodes_targets,
+        graph = graph_targets,
+        jobs = config$jobs
+      )
+    )
     nodes_imports$level <- nodes_imports$level - max(nodes_imports$level)
     rbind(nodes_imports, nodes_targets)
   })
