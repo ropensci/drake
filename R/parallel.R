@@ -19,8 +19,6 @@ parallel_stage <- function(worker, config) {
     names %>% intersect(config$targets)
   candidates <- next_targets(
     config$graph_remaining_targets, jobs = config$jobs)
-  console_many_targets(targets = candidates,
-    message = "check", config = config)
   hash_list <- hash_list(targets = candidates, config = config)
   build_these <- Filter(candidates,
     f = function(target)

@@ -67,10 +67,11 @@ outdated <-  function(
   make_imports(config = config)
   config <- inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
+  hash_list <- hash_list(targets = all_targets, config = config)
   rebuild <- Filter(
     x = all_targets,
     f = function(target){
-      hashes <- hashes(target, config)
+      hashes <- hash_list[[target]]
       !target_current(target = target, hashes = hashes, config = config)
     }
   )

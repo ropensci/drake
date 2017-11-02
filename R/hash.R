@@ -1,4 +1,6 @@
 hash_list <- function(targets, config) {
+  console_many_targets(targets = targets,
+    message = "check", config = config)
   out <- lightly_parallelize(
     X = targets, FUN = hashes,
     jobs = config$jobs, config = config
