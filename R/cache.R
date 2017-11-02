@@ -298,3 +298,4 @@ set_initial_drake_version <- function(cache){
 drake_version <- function(session_info = sessionInfo()){ # nolint
   session_info$otherPkgs$drake$Version # nolint
 }
+
