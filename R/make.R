@@ -208,7 +208,7 @@ make <- function(
   ),
   recipe_command = drake::default_recipe_command(),
   clear_progress = NULL,
-  imports_only = NULL,
+  imports_only = FALSE,
   timeout = Inf,
   cpu = timeout,
   elapsed = timeout,
@@ -256,17 +256,10 @@ make <- function(
   check_config(config = config)
   store_config(config = config)
   initialize_session(config = config)
-
-  if (!is.null(imports_only)){
-    warning(
-      "The imports_only argument to make() is deprecated. ",
-      "Instead, use config() and make_imports().",
-      call. = FALSE
-    )
+  if (imports_only){
     make_imports(config = config)
     return(invisible(config))
   }
-
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   return(invisible(config))

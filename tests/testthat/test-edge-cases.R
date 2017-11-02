@@ -13,7 +13,7 @@ test_with_dir("deprecation", {
     verbose = FALSE))
   expect_warning(make(workplan(x = 1), clear_progress = TRUE,
     verbose = FALSE))
-  expect_warning(make(workplan(x = 1), imports_only = TRUE,
+  expect_silent(make(workplan(x = 1), imports_only = TRUE,
     verbose = FALSE))
   pl1 <- expect_warning(drake::plan(x = 1, y = x))
   pl2 <- workplan(x = 1, y = x)
