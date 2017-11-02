@@ -32,16 +32,18 @@ build_in_hook <- function(target, hash_list, config) {
     value <- build_target(target = target,
       hashes = hashes, config = config)
   }
-  store_target(target = target, value = value, hashes = hashes,
-    imported = imported, config = config)
+
   config$cache$set(key = target, value = hashes$depends,
     namespace = "depends")
-  config$cache$set(key = target, value = "finished",
-    namespace = "progress")
+  config$cache$set(key = target, value = imported, namespace = "imported")
   runtime <- (proc.time() - start) %>%
     runtime_entry(target = target, imported = imported)
   config$cache$set(key = target, value = runtime,
     namespace = "build_times")
+  store_target(target = target, value = value, hashes = hashes,
+    imported = imported, config = config)
+  config$cache$set(key = target, value = "finished",
+    namespace = "progress")
   value
 }
 

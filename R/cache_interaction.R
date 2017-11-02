@@ -184,9 +184,10 @@ no_imported_objects <- function(targets, cache) {
 }
 
 is_imported <- Vectorize(function(target, cache) {
-  if (!(target %in% cache$list()))
+  if (!(target %in% cache$list())){
     return(FALSE)
-  cache$get(target)$imported
+  }
+  cache$get(target, namespace = "imported")
 },
 "target", SIMPLIFY = TRUE)
 
