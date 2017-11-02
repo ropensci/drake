@@ -62,6 +62,7 @@ lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
 }
 
 lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...){
+  jobs <- safe_jobs(jobs)
   keys <- unique(X)
   index <- match(X, keys)
   values <- mclapply(X = keys, FUN = FUN, mc.cores = jobs, ...)
