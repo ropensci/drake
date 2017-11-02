@@ -13,6 +13,10 @@
 - Speed up the overhead of `parLapply` parallelism. The downside to this fix is that `drake` has to be properly installed. It should not be loaded with `devtools::load_all()`. The speedup comes from lightening the first `clusterExport()` call in `run_parLapply()`. Previously, we exported every single individual `drake` function to all the workers, which created a bottleneck. Now, we just load `drake` itself in each of the workers, which works because `build()` and `do_prework()` are exported. 
 - Change default value of `overwrite` to `FALSE` in `load_basic_example()`.
 - Warn when overwriting an existing `report.Rmd` in `load_basic_example()`.
+- Tell the user the location of the cache using a console message. Happens on every call to `get_cache(..., verbose = TRUE)`.
+- Increase efficiency of internal preprocessing via `lightly_parallelize()` and `lightly_parallelize_atomic()`. Now, processing happens faster, and only over the unique values of a vector.
+- Add a new `storr` namespace called `imports` to be used in `is_imported()`. That way, the whole object need not be read to `clean()` is. `clean()` is much faster and safer.
+
 
 # 2017-10-17
 
