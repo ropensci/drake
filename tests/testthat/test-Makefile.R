@@ -172,9 +172,9 @@ test_with_dir("packages are loaded in prework", {
     strings_in_dots = "literals"
   )
   config$targets <- config$plan$target
-  expect_false(any(c("x", "y") %in% config$cache$list()))
+  expect_false(any(c("x", "y") %in% config$cache$list(namespace = "readd")))
   testrun(config)
-  expect_true(all(c("x", "y") %in% config$cache$list()))
+  expect_true(all(c("x", "y") %in% config$cache$list(namespace = "readd")))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
   options(test_drake_option_12345 = original)
@@ -192,7 +192,7 @@ test_with_dir("packages are loaded in prework", {
   library(abind)
   library(MASS)
   config$packages <- NULL
-  expect_false(any(c("x", "y") %in% config$cache$list()))
+  expect_false(any(c("x", "y") %in% config$cache$list(namespace = "readd")))
 
   # drake may be loaded with devtools::load_all() but not
   # installed.
@@ -202,7 +202,7 @@ test_with_dir("packages are loaded in prework", {
     jobs = scenario$jobs, prework = config$prework, prepend = config$prepend,
     command = config$command
   ))
-  expect_true(all(c("x", "y") %in% config$cache$list()))
+  expect_true(all(c("x", "y") %in% config$cache$list(namespace = "readd")))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
   options(test_drake_option_12345 = original)

@@ -106,10 +106,22 @@ uncache <- Vectorize(function(target, cache){
       unlink(recursive = TRUE, force = TRUE)
   }
   default <- cache$default_namespace
-  for (space in c(default, "depends", "filemtime", "functions"))
+  namespaces <- c(
+    "commands",
+    "depends",
+    "depends_debug",
+    "file_modification_times",
+    "imported",
+    "readd",
+    "reproducibly_tracked",
+    "target_attempts",
+    "type"
+  )
+  for (space in namespaces){
     if (target %in% cache$list(namespace = space)){
       cache$del(target, namespace = space)
     }
-    invisible()
+  }
+  invisible()
 },
 "target")

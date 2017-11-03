@@ -113,6 +113,9 @@ store_target <- function(target, value, hashes, build_time, config) {
     store_object(target = target, value = value,
       config = config)
   }
+  hash <- config$cache$get_hash(key = target, namespace = "readd")
+  config$cache$driver$set_hash(
+    key = target, namespace = config$cache$default_namespace, hash = hash)
 }
 
 store_object <- function(target, value, config) {
@@ -134,9 +137,8 @@ store_file <- function(target, hashes, config) {
     hashes$file,
     rehash_file(target = target, config = config)
   )
-  for(namespace in c("readd", "reproducibly_tracked")){
-    config$cache$set(
-      key = target, value = hash, namespace = namespace)
+  for (namespace in c("readd", "reproducibly_tracked")){
+    config$cache$set(key = target, value = hash, namespace = namespace)
   }
 }
 

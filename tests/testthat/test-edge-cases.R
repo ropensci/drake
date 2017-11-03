@@ -165,7 +165,12 @@ test_with_dir("true targets can be functions", {
   plan <- workplan(myfunction = generator(), output = myfunction(1))
   config <- make(plan, verbose = FALSE)
   expect_equal(readd(output), 2)
-  expect_true(is.list(config$cache$get("myfunction")))
+  expect_true(
+    is.character(
+      config$cache$get("myfunction",
+      namespace = "reproducibly_tracked")
+    )
+  )
   myfunction <- readd(myfunction)
   expect_equal(myfunction(4), 5)
 })
