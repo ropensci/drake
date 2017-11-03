@@ -131,7 +131,7 @@ store_file <- function(target, hashes, config) {
   config$cache$set(key = target, value = "file",
     namespace = "type")
   config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
-    namespace = "file_modification_time")
+    namespace = "file_modification_times")
   hash <- ifelse(
     hashes$imported,
     hashes$file,
