@@ -39,6 +39,7 @@
 #' @param cpu same as for \code{\link{make}}
 #' @param elapsed same as for \code{\link{make}}
 #' @param retries same as for \code{\link{make}}
+#' @param force same as for \code{\link{make}}
 #' @param clear_progress logical, whether to clear
 #' the cached progress of the targets readable by
 #' @param graph igraph object representing the workflow plan network
@@ -51,7 +52,7 @@ config <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(verbose = verbose),
+  cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = rev(.packages()),
@@ -67,6 +68,7 @@ config <- function(
   cpu = timeout,
   elapsed = timeout,
   retries = 0,
+  force = FALSE,
   clear_progress = FALSE,
   graph = NULL
 ){
@@ -83,7 +85,10 @@ config <- function(
     prework = prework
   )
   if (is.null(cache)) {
-    cache <- recover_cache()
+    cache <- recover_cache(force = force)
+  }
+  if (!force){
+    assert_compatible_cache(cache = cache)
   }
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(

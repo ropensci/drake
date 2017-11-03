@@ -7,7 +7,7 @@
 recover_cache(path = drake::default_cache_path(),
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo())
+  long_hash_algo = drake::default_long_hash_algo(), force = FALSE)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -23,6 +23,10 @@ See \code{\link{default_short_hash_algo}()} and
 \item{long_hash_algo}{long hash algorithm for the cache.
 See \code{\link{default_long_hash_algo}()} and
 \code{\link{make}()}}
+
+\item{force}{logical, whether to load the cache
+despite any back compatibility issues with the
+running version of drake.}
 }
 \description{
 Load an existing drake files system cache if it exists

@@ -30,6 +30,9 @@ cache_path <- function(cache = NULL){
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 #' @param verbose logical, whether to print the location of the cache
+#' @param force logical, whether to load the cache
+#' despite any back compatibility issues with the
+#' running version of drake.
 #' @examples
 #' \dontrun{
 #' get_cache()
@@ -41,7 +44,8 @@ cache_path <- function(cache = NULL){
 get_cache <- function(
   path = getwd(),
   search = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  force = FALSE
 ){
   if (search){
     path <- find_cache(path = path)
@@ -49,7 +53,7 @@ get_cache <- function(
     path <- default_cache_path()
   }
   console_cache(path = path, verbose = verbose)
-  this_cache(path = path)
+  this_cache(path = path, force = force)
 }
 
 #' @title Function this_cache
@@ -59,6 +63,9 @@ get_cache <- function(
 #' Do not use for in-memory caches such as
 #' \code{storr_environment()}.
 #' @param path file path of the cache
+#' @param force logical, whether to load the cache
+#' despite any back compatibility issues with the
+#' running version of drake.
 #' @examples
 #' \dontrun{
 #' x <- this_cache() # Does not exist yet
@@ -70,7 +77,7 @@ get_cache <- function(
 #' manual2 <- get_cache("manual_cache") # same as above
 #' }
 this_cache <- function(
-  path = drake::default_cache_path()
+  path = drake::default_cache_path(), force = FALSE
 ){
   if (is.null(path) || !file.exists(path)){
     return(NULL)
@@ -83,7 +90,9 @@ this_cache <- function(
   cache <- get(cache_fetcher, envir = getNamespace("drake"))(
     path = path
   )
-  assert_compatible_cache(cache = cache)
+  if (!force){
+    assert_compatible_cache(cache = cache)
+  }
   cache
 }
 
@@ -165,6 +174,9 @@ new_cache <- function(
 #' @param type character scalar, type of the drake cache.
 #' Must be among the list of supported caches
 #' in \code{\link{cache_types}()}.
+#' @param force logical, whether to load the cache
+#' despite any back compatibility issues with the
+#' running version of drake.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -175,9 +187,10 @@ recover_cache <- function(
   path = drake::default_cache_path(),
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo()
+  long_hash_algo = drake::default_long_hash_algo(),
+  force = FALSE
 ){
-  cache <- this_cache(path = path)
+  cache <- this_cache(path = path, force = force)
   if (is.null(cache)){
     cache <- new_cache(
       path = path,

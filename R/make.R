@@ -199,7 +199,7 @@ make <- function(
   hook = function(code){
     force(code)
   },
-  cache = drake::get_cache(verbose = verbose),
+  cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = rev(.packages()),
@@ -237,30 +237,28 @@ make <- function(
     )
   }
 
-  force_hook <- ifelse(force, try, identity)
-  force_hook({
-    config <- config(
-      plan = plan,
-      targets = targets,
-      envir = envir,
-      verbose = verbose,
-      hook = hook,
-      parallelism = parallelism,
-      jobs = jobs,
-      packages = packages,
-      prework = prework,
-      prepend = prepend,
-      command = command,
-      args = args,
-      recipe_command = recipe_command,
-      clear_progress = TRUE,
-      cache = cache,
-      timeout = timeout,
-      cpu = cpu,
-      elapsed = elapsed,
-      retries = retries
-    )
-  })
+  config <- config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    hook = hook,
+    parallelism = parallelism,
+    jobs = jobs,
+    packages = packages,
+    prework = prework,
+    prepend = prepend,
+    command = command,
+    args = args,
+    recipe_command = recipe_command,
+    clear_progress = TRUE,
+    cache = cache,
+    timeout = timeout,
+    cpu = cpu,
+    elapsed = elapsed,
+    retries = retries,
+    force = force
+  )
   store_config(config = config)
   initialize_session(config = config)
   if (imports_only){
