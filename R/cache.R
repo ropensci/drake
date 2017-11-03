@@ -314,7 +314,7 @@ assert_compatible_cache <- function(cache){
     return()
   }
   err <- try(
-    old <- session(cache = cache)$otherPkgs$drake$Version, silent = TRUE)
+    old <- session(cache = cache)$otherPkgs$drake$Version, silent = TRUE) # nolint
   if (inherits(err, "try-error")){
     return()
   }
@@ -332,6 +332,7 @@ assert_compatible_cache <- function(cache){
     "migrate() restructures the cache in a way that ",
     "preserves the statuses of your targets (up to date vs outdated). ",
     "But in case of errors, migrate() first backs up '", path, "' to '",
-    newpath, "'."
+    newpath, "'. Alternatively, you can just run your project from scratch ",
+    "as is with make(..., force = TRUE)"
   )
 }
