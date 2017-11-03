@@ -80,9 +80,11 @@ this_cache <- function(
     type <- default_cache_type()
   }
   cache_fetcher <- paste0("get_", type, "_cache")
-  get(cache_fetcher, envir = getNamespace("drake"))(
+  cache <- get(cache_fetcher, envir = getNamespace("drake"))(
     path = path
   )
+  assert_compatible_cache(cache = cache)
+  cache
 }
 
 #' @title Function new_cache
@@ -304,5 +306,32 @@ safe_get <- function(key, namespace, config){
     key %in% config$cache$list(namespace = namespace),
     config$cache$get(key = key, namespace = namespace),
     NA
+  )
+}
+
+assert_compatible_cache <- function(cache){
+  if (is.null(cache)){
+    return()
+  }
+  err <- try(
+    old <- session(cache = cache)$otherPkgs$drake$Version, silent = TRUE)
+  if (inherits(err, "try-error")){
+    return()
+  }
+  comparison <- compareVersion(old, "4.4.0")
+  if (comparison > 0){
+    return(invisible)
+  }
+  current <- packageVersion("drake")
+  path <- cache$driver$path
+  newpath <- paste0(path, "_drake_", current)
+  stop(
+    "The project at '", path, "' was previously built by drake ", old, ". ",
+    "You are running drake ", current, ", which is not back-compatible. ",
+    "To format your cache for the newer drake, try migrate('", path, "'). ",
+    "migrate() restructures the cache in a way that ",
+    "preserves the statuses of your targets (up to date vs outdated). ",
+    "But in case of errors, migrate() first backs up '", path, "' to '",
+    newpath, "'."
   )
 }

@@ -75,3 +75,12 @@ with_all_options <- function(code) {
   on.exit(restore_options(old))
   force(code)
 }
+
+write_v4.1.0_cache <- function(){
+  zip <- system.file(
+    file.path("testing", "v4.1.0_basic_cache.zip"),
+    package = "drake",
+    mustWork = TRUE
+  )
+  unzip(zip, exdir = ".", setTimes = TRUE)
+}
