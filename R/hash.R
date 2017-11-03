@@ -15,9 +15,6 @@ hashes <- function(target, config) {
     target = target,
     command = get_command(target = target, config = config),
     depends = dependency_hash(target = target, config = config),
-    depends_list = dependency_hash_list(
-      target = target, config = config
-    ),
     file = file_hash(target = target, config = config),
     imported = !(target %in% config$plan$target)
   )
