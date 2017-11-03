@@ -23,27 +23,18 @@ build_in_hook <- function(target, hash_list, config) {
   hashes <- hash_list[[target]]
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
-  imported <- !(target %in% config$plan$target)
-  console(imported = imported, target = target, config = config)
-  if (imported) {
+  console(imported = hashes$imported, target = target, config = config)
+  if (hashes$imported) {
     value <- imported_target(target = target, hashes = hashes,
       config = config)
   } else {
     value <- build_target(target = target,
       hashes = hashes, config = config)
   }
-
-  config$cache$set(key = target, value = hashes$depends,
-    namespace = "depends")
-  config$cache$set(key = target, value = imported, namespace = "imported")
-  runtime <- (proc.time() - start) %>%
-    runtime_entry(target = target, imported = imported)
-  config$cache$set(key = target, value = runtime,
-    namespace = "build_times")
+  build_time <- (proc.time() - start) %>%
+    runtime_entry(target = target, imported = hashes$imported)
   store_target(target = target, value = value, hashes = hashes,
-    imported = imported, config = config)
-  config$cache$set(key = target, value = "finished",
-    namespace = "progress")
+    build_time = build_time, config = config)
   value
 }
 
@@ -101,46 +92,66 @@ flexible_get <- function(target) {
   get(fun, envir = getNamespace(pkg))
 }
 
-store_target <- function(target, value, hashes, imported, config) {
+store_target <- function(target, value, hashes, build_time, config) {
+  config$cache$set(key = target, value = runtime,
+    namespace = "build_times")
+  config$cache$set(key = target, value = hashes$command,
+    namespace = "commands")
+  config$cache$set(key = target, value = hashes$depends,
+    namespace = "depends")
+  config$cache$set(key = target, value = hashes$imported,
+    namespace = "imported")
+  config$cache$set(key = target, value = "finished",
+    namespace = "progress")
   if (is_file(target)) {
-    store_file(target = target, hashes = hashes, imported = imported,
+    store_file(target = target, hashes = hashes,
       config = config)
   } else if (is.function(value)) {
     store_function(target = target, value = value,
-      imported = imported, hashes = hashes, config = config)
+      hashes = hashes, config = config)
   } else {
     store_object(target = target, value = value,
-      imported = imported, config = config)
+      config = config)
   }
-  config$cache$set(key = target, value = hashes$depends,
-    namespace = "depends")
 }
 
-store_object <- function(target, value, imported, config) {
-  config$cache$set(key = target, value = list(type = "object",
-    value = value, imported = imported))
+store_object <- function(target, value, config) {
+  config$cache$set(key = target, value = "object",
+    namespace = "type")
+  hash <- config$cache$set(
+    key = target, value = value, namespace = "readd")
+  config$cache$driver$set_hash(
+    key = target, namespace = "reproducibly_tracked", hash = hash)
 }
 
 store_file <- function(target, hashes, imported, config) {
+  config$cache$set(key = target, value = "file",
+    namespace = "type")
+  config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
+    namespace = "file_modification_time")
   hash <- ifelse(
     imported,
     hashes$file,
     rehash_file(target = target, config = config)
   )
-  config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
-    namespace = "filemtime")
-  config$cache$set(key = target, value = list(type = "file",
-    value = hash, imported = imported))
+  for(namespace in c("readd", "reproducibly_tracked")){
+    config$cache$set(
+      key = target, value = hash, namespace = namespace)
+  }
 }
 
-store_function <- function(target, value, hashes, imported,
-  config) {
-  config$cache$set(key = target, value = value, namespace = "functions")
+store_function <- function(target, value, hashes, imported, config
+){
+  config$cache$set(key = target, value = "function",
+    namespace = "type")
+  config$cache$set(key = target, value = value, namespace = "readd")
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
-  config$cache$set(key = target, value = list(type = "function",
-    value = string, imported = imported,
-    depends = hashes$depends)) # for nested functions
+  if (hashes$imported){
+    string <- c(string, hashes$depends)
+  }
+  config$cache$set(key = target, value = string,
+    namespace = "reproducibly_tracked")
 }
 
 # Turn a command into an anonymous function

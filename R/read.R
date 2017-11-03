@@ -47,13 +47,7 @@ readd <- function(
   if (!character_only){
     target <- as.character(substitute(target))
   }
-  store <- cache$get(target)
-  if (store$type == "function"){
-    value <- cache$get(key = target, namespace = "functions")
-  } else{
-    value <- store$value
-  }
-  return(value)
+  cache$get(target, namespace = "readd")
 }
 
 #' @title Function \code{loadd}

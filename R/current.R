@@ -1,5 +1,5 @@
 should_build <- function(target, hash_list, config){
-  if (!(target %in% config$plan$target)) {
+  if (hash_list$imported) {
     return(TRUE)
   }
   !target_current(
@@ -16,6 +16,10 @@ target_current <- function(target, hashes, config){
   if (!file_current(target = target, hashes = hashes, config = config)){
     return(FALSE)
   }
+  identical(
+    config$cache$get(target, namespace = "command"),
+    hashes$command
+  ) &
   identical(
     config$cache$get(target, namespace = "depends"),
     hashes$depends
