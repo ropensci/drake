@@ -13,7 +13,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = timeout, elapsed = timeout,
-  retries = 0, return_config = NULL)
+  retries = 0, force = FALSE, return_config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -169,6 +169,10 @@ a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
 a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
 
 \item{retries}{Number of retries to execute if the target fails.}
+
+\item{force}{Force \code{make()} to build your targets even if some
+about your setup is not quite right: for example, if you are using
+a version of drake that is not back compatible with your project's cache.}
 
 \item{return_config}{logical, whether to return the internal list
 of runtime configuration parameters used by \code{make()}.

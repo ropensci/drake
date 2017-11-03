@@ -9,7 +9,7 @@ prepare_distributed <- function(config){
   }
   target_attempts <- outdated(config = config)
   log_target_attempts(targets = target_attempts, config = config)
-  config$cache$set("config", config, namespace = "distributed")
+  config$cache$set(key = "envir", value = config$envir, namespace = "config")
   invisible()
 }
 
@@ -36,7 +36,7 @@ build_distributed <- function(target, cache_path){
 
 recover_config <- function(cache_path){
   cache <- this_cache(cache_path)
-  config <- cache$get("config", namespace = "distributed")
+  config <- read_config(cache = cache)
   if (identical(globalenv(), config$envir)){
     dir <- cache_path
     file <- globalenv_file(dir)

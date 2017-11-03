@@ -333,6 +333,6 @@ assert_compatible_cache <- function(cache){
     "preserves the statuses of your targets (up to date vs outdated). ",
     "But in case of errors, migrate() first backs up '", path, "' to '",
     newpath, "'. Alternatively, you can just run your project from scratch ",
-    "as is with make(..., force = TRUE)"
+    "as is with make(..., force = TRUE)."
   )
 }

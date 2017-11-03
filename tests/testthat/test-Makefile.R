@@ -36,6 +36,7 @@ test_with_dir("prepend arg works", {
   config <- dbug()
   config$verbose <- FALSE
   config$prepend <- "# add"
+  store_config(config = config)
   run_Makefile(config, run = FALSE)
   lines <- readLines("Makefile")
   expect_true(grepl("# add", lines[1]))
@@ -53,6 +54,7 @@ test_with_dir("files inside directories can be timestamped", {
     parallelism = "parLapply", verbose = FALSE,
     envir = new.env(), cache = NULL)
   path <- cache_path(config$cache)
+  store_config(config = config)
   run_Makefile(config, run = FALSE)
   expect_silent(mk(config$plan$target[1], cache_path = path))
   expect_true(file.exists("t1"))
@@ -76,6 +78,7 @@ test_with_dir("basic Makefile stuff works", {
   initialize_session(config = config)
   log_target_attempts(targets = outdated(config = config), config = config)
   config$recipe_command <- "Rscript -e"
+  store_config(config = config)
   run_Makefile(config, run = FALSE, debug = TRUE)
   using_global <- identical(config$envir, globalenv())
   if (using_global) {
@@ -109,6 +112,7 @@ test_with_dir("basic Makefile stuff works", {
   mk(targ, cache_path = cache_path) # Verify behavior when target is current
   expect_equal(unname(progress(list = targ)), "not built or imported")
 
+  store_config(config = config)
   run_Makefile(config, run = FALSE)
   expect_false(file.exists(globalenv_file(cache_path)))
 })
@@ -121,6 +125,7 @@ test_with_dir("Makefile stuff in globalenv()", {
     envir = globalenv(),
     verbose = FALSE
   )
+  store_config(drake_TESTGLOBAL_config)
   run_Makefile(drake_TESTGLOBAL_config, run = FALSE, debug = TRUE)
   clean(list = targ)
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")

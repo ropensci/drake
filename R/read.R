@@ -186,7 +186,7 @@ read_config <- function(path = getwd(), search = TRUE,
     },
     simplify = FALSE,
     USE.NAMES = TRUE
-    )
+  )
 }
 
 #' @title Function \code{read_plan}

@@ -160,6 +160,10 @@
 #'
 #' @param retries Number of retries to execute if the target fails.
 #'
+#' @param force Force \code{make()} to build your targets even if some
+#' about your setup is not quite right: for example, if you are using
+#' a version of drake that is not back compatible with your project's cache.
+#'
 #' @param return_config logical, whether to return the internal list
 #' of runtime configuration parameters used by \code{make()}.
 #' This argument is deprecated. Now, a configuration list
@@ -213,6 +217,7 @@ make <- function(
   cpu = timeout,
   elapsed = timeout,
   retries = 0,
+  force = FALSE,
   return_config = NULL
 ){
   force(envir)
@@ -232,28 +237,30 @@ make <- function(
     )
   }
 
-  config <- config(
-    plan = plan,
-    targets = targets,
-    envir = envir,
-    verbose = verbose,
-    hook = hook,
-    parallelism = parallelism,
-    jobs = jobs,
-    packages = packages,
-    prework = prework,
-    prepend = prepend,
-    command = command,
-    args = args,
-    recipe_command = recipe_command,
-    clear_progress = TRUE,
-    cache = cache,
-    timeout = timeout,
-    cpu = cpu,
-    elapsed = elapsed,
-    retries = retries
-  )
-  check_config(config = config)
+  force_hook <- ifelse(force, try, identity)
+  force_hook({
+    config <- config(
+      plan = plan,
+      targets = targets,
+      envir = envir,
+      verbose = verbose,
+      hook = hook,
+      parallelism = parallelism,
+      jobs = jobs,
+      packages = packages,
+      prework = prework,
+      prepend = prepend,
+      command = command,
+      args = args,
+      recipe_command = recipe_command,
+      clear_progress = TRUE,
+      cache = cache,
+      timeout = timeout,
+      cpu = cpu,
+      elapsed = elapsed,
+      retries = retries
+    )
+  })
   store_config(config = config)
   initialize_session(config = config)
   if (imports_only){

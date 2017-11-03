@@ -95,7 +95,7 @@ config <- function(
     graph <- build_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs)
   }
-  out <- list(
+  config <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
@@ -104,8 +104,10 @@ config <- function(
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
-  )
-  inventory(out)
+  ) %>%
+    inventory
+  check_config(config = config)
+  config
 }
 
 add_packages_to_prework <- function(packages, prework) {
