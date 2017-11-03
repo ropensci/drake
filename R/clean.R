@@ -88,7 +88,7 @@ clean_everything <- function(
 }
 
 empty <- function(cache){
-  uncache(target = cache$list(), cache = cache)
+  uncache(target = cache$list(namespace = "readd"), cache = cache)
 }
 
 uncache <- Vectorize(function(target, cache){

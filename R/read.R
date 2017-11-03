@@ -124,7 +124,7 @@ loadd <- function(
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (!length(targets)){
-    targets <- cache$list()
+    targets <- cache$list(namespace = "readd")
   }
   if (imported_only){
     targets <- imported_only(targets = targets, cache = cache)

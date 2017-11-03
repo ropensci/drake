@@ -75,13 +75,13 @@ cached <- function(
 is_cached <- function(targets, no_imported_objects, cache) {
   if (no_imported_objects)
     targets <- no_imported_objects(targets = targets, cache = cache)
-  inclusion <- targets %in% cache$list()
+  inclusion <- targets %in% cache$list(namespace = "readd")
   names(inclusion) <- targets
   inclusion
 }
 
 list_cache <- function(no_imported_objects, cache) {
-  targets <- cache$list()
+  targets <- cache$list(namespace = "readd")
   if (no_imported_objects)
     targets <- no_imported_objects(targets = targets, cache = cache)
   targets
@@ -117,8 +117,12 @@ built <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  cache$list() %>% Filter(f = function(target) !is_imported(target = target,
-    cache = cache))
+  cache$list(namespace = "readd") %>%
+    Filter(
+      f = function(target){
+        !is_imported(target = target, cache = cache)
+      }
+    )
 }
 
 #' @title Function \code{imported}
@@ -154,7 +158,7 @@ imported <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  targets <- cache$list() %>%
+  targets <- cache$list(namespace = "readd") %>%
     Filter(f = function(target) is_imported(target = target, cache = cache))
   if (files_only)
     targets <- Filter(targets, f = is_file)
@@ -184,7 +188,7 @@ no_imported_objects <- function(targets, cache) {
 }
 
 is_imported <- Vectorize(function(target, cache) {
-  if (!(target %in% cache$list())){
+  if (!(target %in% cache$list(namespace = "readd"))){
     return(FALSE)
   }
   cache$get(target, namespace = "imported")

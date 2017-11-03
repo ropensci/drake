@@ -95,17 +95,17 @@ config <- function(
     graph <- build_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs)
   }
-  list(
+  out <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    inventory = cache$list(), seed = seed,
-    inventory_filemtime = cache$list(namespace = "filemtime"),
+    seed = seed,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   )
+  inventory(out)
 }
 
 add_packages_to_prework <- function(packages, prework) {

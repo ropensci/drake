@@ -28,7 +28,7 @@ get_cache()
 load_basic_example()
 make(my_plan)
 x <- get_cache()
-x$list()
+x$list(namespace = "readd")
 }
 }
 \seealso{

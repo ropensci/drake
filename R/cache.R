@@ -36,7 +36,7 @@ cache_path <- function(cache = NULL){
 #' load_basic_example()
 #' make(my_plan)
 #' x <- get_cache()
-#' x$list()
+#' x$list(namespace = "readd")
 #' }
 get_cache <- function(
   path = getwd(),
