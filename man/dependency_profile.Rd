@@ -6,6 +6,12 @@
 \usage{
 dependency_profile(target, config)
 }
+\arguments{
+\item{target}{name of the target}
+
+\item{config}{configuration list output by
+\code{\link{config}} or \code{\link{make}}}
+}
 \description{
 Return the detailed dependency profile
 of the target. Useful for debugging.
@@ -28,5 +34,6 @@ con$cache$get_hash("simulate",
 }
 }
 \seealso{
-\code{\link{deps}}, \code{\link{make}}
+\code{\link{deps}}, \code{\link{make}},
+\code{\link{config}}
 }

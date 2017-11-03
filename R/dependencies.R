@@ -52,7 +52,11 @@ deps <- function(x){
 #' \code{cached_dependency_hash} and
 #' \code{current_dependency_hash}.
 #' @export
-#' @seealso \code{\link{deps}}, \code{\link{make}}
+#' @seealso \code{\link{deps}}, \code{\link{make}},
+#' \code{\link{config}}
+#' @param target name of the target
+#' @param config configuration list output by
+#' \code{\link{config}} or \code{\link{make}}
 #' @examples
 #' \dontrun{
 #' load_basic_example()
