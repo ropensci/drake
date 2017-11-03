@@ -298,3 +298,11 @@ set_initial_drake_version <- function(cache){
 drake_version <- function(session_info = sessionInfo()){ # nolint
   session_info$otherPkgs$drake$Version # nolint
 }
+
+safe_get <- function(key, namespace, config){
+  ifelse(
+    key %in% config$cache$list(namespace = namespace),
+    config$cache$get(key = key, namespace = namespace),
+    NA
+  )
+}

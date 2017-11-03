@@ -12,6 +12,10 @@ test_with_dir("basic example works", {
     jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
 
+  expect_true(is.list(dependency_profile(
+    target = "'report.md'", config = config)))
+  expect_true(is.list(dependency_profile(
+    target = "'report.Rmd'", config = config)))
   tmp <- plot_graph(my_plan, envir = e, config = config)
   expect_false(file.exists("Makefile"))
 
@@ -76,6 +80,8 @@ test_with_dir("basic example works", {
   config$targets <- dats
   con <- testrun(config)
 
+  expect_true(is.list(dependency_profile(
+    target = "small", config = con)))
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
   tmp1 <- dataframes_graph(my_plan, envir = e, config = config)
   tmp2 <- dataframes_graph(my_plan, envir = e, config = config,

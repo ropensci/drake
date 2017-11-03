@@ -44,6 +44,57 @@ deps <- function(x){
   clean_dependency_list(out)
 }
 
+#' @title Function dependency_profile
+#' @description Return the detailed dependency profile
+#' of the target. Useful for debugging.
+#' For up to date targets, like elements
+#' of the returned list should agree: for example,
+#' \code{cached_dependency_hash} and
+#' \code{current_dependency_hash}.
+#' @export
+#' @seealso \code{\link{deps}}, \code{\link{make}}
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' con <- make(my_plan)
+#' dependency_profile("small", config = con)
+#' dependency_profile("'report.md'", config = con)
+#' clean(large) # most information gone
+#' dependency_profile("large", config = con) # hashes of deps still available
+#' # should agree with `$hashes_of_dependencies`
+#' con$cache$get_hash("simulate",
+#'   namespace = "reproducibly_tracked")
+#' }
+dependency_profile <- function(target, config){
+  cached_command <- safe_get(key = target, namespace = "commands",
+    config = config)
+  current_command <- get_command(target = target, config = config)
+
+  deps <- dependencies(target, config)
+  hashes_of_dependencies <- self_hash(target = deps, config = config)
+  current_dependency_hash <- digest::digest(hashes_of_dependencies,
+    algo = config$long_hash_algo)
+  cached_dependency_hash <- safe_get(key = target, namespace = "depends",
+    config = config)
+  names(hashes_of_dependencies) <- deps
+
+  cached_file_modification_time <- safe_get(
+    key = target, namespace = "file_modification_times", config = config)
+  current_file_modification_time <- ifelse(is_file(target),
+    file.mtime(eply::unquote(target)), NA)
+
+  out <- list(
+    cached_command = cached_command,
+    current_command = current_command,
+    cached_file_modification_time = cached_file_modification_time,
+    current_file_modification_time = current_file_modification_time,
+    cached_dependency_hash = cached_dependency_hash,
+    current_dependency_hash = current_dependency_hash,
+    hashes_of_dependencies = hashes_of_dependencies
+  )
+  out[!is.na(out)]
+}
+
 dependencies <- function(targets, config){
   adjacent_vertices(
     graph = config$graph,

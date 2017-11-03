@@ -15,22 +15,15 @@ hashes <- function(target, config) {
     target = target,
     command = get_command(target = target, config = config),
     depends = dependency_hash(target = target, config = config),
-    depends_list = dependency_hash_list(
-      target = target, config = config
-    ),
     file = file_hash(target = target, config = config),
     imported = !(target %in% config$plan$target)
   )
 }
 
 dependency_hash <- function(target, config) {
-  dependency_hash_list(target, config) %>%
-    digest::digest(algo = config$long_hash_algo)
-}
-
-dependency_hash_list <- function(target, config){
   dependencies(target, config) %>%
-    self_hash(config = config)
+    self_hash(config = config) %>%
+    digest::digest(algo = config$long_hash_algo)
 }
 
 self_hash <- Vectorize(function(target, config) {
