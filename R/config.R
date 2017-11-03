@@ -133,8 +133,9 @@ do_prework <- function(config, verbose_packages) {
 }
 
 inventory <- function(config) {
-  config$inventory <- config$cache$list()
-  config$inventory_filemtime <- config$cache$list(namespace = "filemtime")
+  config$inventory <- config$cache$list(namespace = "reproducibly_tracked")
+  config$inventory_filemtime <-
+    config$cache$list(namespace = "file_modification_times")
   config
 }
 

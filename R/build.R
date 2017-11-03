@@ -93,7 +93,7 @@ flexible_get <- function(target) {
 }
 
 store_target <- function(target, value, hashes, build_time, config) {
-  config$cache$set(key = target, value = runtime,
+  config$cache$set(key = target, value = build_time,
     namespace = "build_times")
   config$cache$set(key = target, value = hashes$command,
     namespace = "commands")
@@ -124,13 +124,13 @@ store_object <- function(target, value, config) {
     key = target, namespace = "reproducibly_tracked", hash = hash)
 }
 
-store_file <- function(target, hashes, imported, config) {
+store_file <- function(target, hashes, config) {
   config$cache$set(key = target, value = "file",
     namespace = "type")
   config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
     namespace = "file_modification_time")
   hash <- ifelse(
-    imported,
+    hashes$imported,
     hashes$file,
     rehash_file(target = target, config = config)
   )
@@ -140,7 +140,7 @@ store_file <- function(target, hashes, imported, config) {
   }
 }
 
-store_function <- function(target, value, hashes, imported, config
+store_function <- function(target, value, hashes, config
 ){
   config$cache$set(key = target, value = "function",
     namespace = "type")

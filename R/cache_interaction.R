@@ -187,11 +187,7 @@ is_imported <- Vectorize(function(target, cache) {
   if (!(target %in% cache$list())){
     return(FALSE)
   }
-  ifelse(
-    target %in% cache$list(namespace = "imported"),
-    cache$get(target, namespace = "imported"),
-    cache$get(target)$imported
-  )
+  cache$get(target, namespace = "imported")
 },
 "target", SIMPLIFY = TRUE)
 

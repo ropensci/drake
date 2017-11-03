@@ -1,5 +1,5 @@
 should_build <- function(target, hash_list, config){
-  if (hash_list$imported) {
+  if (hash_list[[target]]$imported) {
     return(TRUE)
   }
   !target_current(
@@ -17,7 +17,7 @@ target_current <- function(target, hashes, config){
     return(FALSE)
   }
   identical(
-    config$cache$get(target, namespace = "command"),
+    config$cache$get(target, namespace = "commands"),
     hashes$command
   ) &
   identical(
@@ -33,7 +33,10 @@ file_current <- function(target, hashes, config){
   if (!file.exists(unquote(target))){
     return(FALSE)
   }
-  identical(config$cache$get(target)$value, hashes$file)
+  identical(
+    config$cache$get(target, namespace = "reproducibly_tracked"),
+    hashes$file
+  )
 }
 
 log_target_attempts <- Vectorize(function(targets, config){

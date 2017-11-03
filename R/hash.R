@@ -19,7 +19,7 @@ hashes <- function(target, config) {
       target = target, config = config
     ),
     file = file_hash(target = target, config = config),
-    imported = target %in% config$plan$target
+    imported = !(target %in% config$plan$target)
   )
 }
 
@@ -35,7 +35,7 @@ dependency_hash_list <- function(target, config){
 
 self_hash <- Vectorize(function(target, config) {
   if (target %in% config$inventory) {
-    config$cache$get_hash(target)
+    config$cache$get_hash(target, namespace = "reproducibly_tracked")
   } else {
     as.character(NA)
   }
@@ -60,7 +60,7 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(target %in% config$inventory_filemtime,
-    config$cache$get(key = target, namespace = "filemtime"),
+    config$cache$get(key = target, namespace = "file_modification_times"),
     -Inf)
   new_mtime <- file.mtime(filename)
   do_rehash <- should_rehash_file(
@@ -71,7 +71,7 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    config$cache$get(target)$value
+    config$cache$get(key = target, namespace = "reproducibly_tracked")
   }
 }
 
