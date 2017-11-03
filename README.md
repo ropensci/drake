@@ -178,6 +178,8 @@ type_of_cache()
 
 and debug your work.
 ```r
+diagnose()
+dependency_profile()
 check()
 session()
 in_progress()

@@ -175,6 +175,7 @@ and debug your work.
 
 ```{r debugdrakermd, eval = FALSE}
 diagnose()
+dependency_profile()
 check()
 session()
 in_progress()

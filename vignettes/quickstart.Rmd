@@ -305,7 +305,7 @@ session() # of the last call to make()
 The next time you run `make(my_plan)`, nothing will be built because drake knows everything is up to date.
 
 ```{r uptodateinvig}
-make(my_plan)
+config <- make(my_plan) # Will use config later. See also config().
 ```
 
 But if you change one of your functions, commands, or other dependencies, drake will update the affected parts of the workflow. Let's say we want to change the quadratic term to a cubic term in our `reg2()` function.
@@ -321,6 +321,14 @@ The targets depending on `reg2()` need to be rebuilt and everything else is left
 
 ```{r plotwithreg2}
 outdated(my_plan, verbose = FALSE)
+```
+
+**Advanced**: To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`.
+
+```{r depprofile}
+dependency_profile(target = "regression2_small", config = config)
+config$cache$get_hash(key = "small") # same
+config$cache$get_hash(key = "reg2") # different
 ```
 
 ```{r graph3quick, eval = FALSE}

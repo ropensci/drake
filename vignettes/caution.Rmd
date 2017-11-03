@@ -348,6 +348,24 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 
 `Drake` may import functions from packages, but the packages themselves are not tracked as dependencies. For this, you will need other tools that support reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
+## Advanced: find out why a target is out of date.
+
+To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`.
+
+```{r depprofilecaution}
+my_plan <- load_basic_example()
+config <- make(my_plan, verbose = FALSE)
+# Change a dependency.
+reg2 <- function(d) {
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+outdated(my_plan, verbose = FALSE)
+dependency_profile(target = "regression2_small", config = config)
+config$cache$get_hash(key = "small") # same
+config$cache$get_hash(key = "reg2") # different
+```
+
 # High-performance computing
 
 ## Maximum number of simultaneous jobs
