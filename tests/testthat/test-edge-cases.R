@@ -194,6 +194,10 @@ test_with_dir("stress test hashing decisions", {
     file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
   expect_true(should_rehash_file(
     file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
+})
+
+test_with_dir("more stress testing of hashing decisions", {
+  file <- "input.rds"
   saveRDS(1, file = file)
   expect_true(file.exists(file))
   expect_true(should_rehash_file(
@@ -208,7 +212,14 @@ test_with_dir("stress test hashing decisions", {
     file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
   expect_false(should_rehash_file(
     file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
-  unlink(file, force = TRUE)
+})
+
+test_with_dir("stress test file hash", {
+  load_basic_example()
+  con <- config(my_plan, verbose = FALSE)
+  make_imports(con)
+  expect_true(is.character(file_hash("'report.Rmd'", config = con, 0)))
+  expect_true(is.character(file_hash("'report.Rmd'", config = con, Inf)))
 })
 
 test_with_dir("parallelism not found for testrun()", {
