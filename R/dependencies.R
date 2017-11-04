@@ -70,7 +70,7 @@ deps <- function(x){
 #'   namespace = "reproducibly_tracked")
 #' }
 dependency_profile <- function(target, config){
-  config <- inventory(config)
+  config <- thorough_inventory(config)
   cached_command <- safe_get(key = target, namespace = "commands",
     config = config)
   current_command <- get_command(target = target, config = config)

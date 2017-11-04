@@ -110,7 +110,7 @@ config <- function(
     seed = seed,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   ) %>%
-    inventory
+    quick_inventory
   check_config(config = config)
   config
 }
@@ -140,8 +140,7 @@ do_prework <- function(config, verbose_packages) {
 }
 
 quick_inventory <- function(config) {
-  namesaces <- c(
-    config$cache$default_namespace,
+  namespaces <- c(
     "reproducibly_tracked",
     "file_modification_times"
   )
@@ -149,14 +148,14 @@ quick_inventory <- function(config) {
 }
 
 thorough_inventory <- function(config) {
-  namesaces <- cache_namespaces(default = config$cache$default_namespace)
+  namespaces <- cache_namespaces(default = config$cache$default_namespace)
   do_inventory(namespaces = namespaces, config = config)
 }
 
 do_inventory <- function(namespaces = cache_namespaces(), config){
   config$inventory <- list()
   for(namespace in namespaces){
-    config$inventory[[namespace]] <- cache$list(namespace = namespace)
+    config$inventory[[namespace]] <- config$cache$list(namespace = namespace)
   }
   config
 }

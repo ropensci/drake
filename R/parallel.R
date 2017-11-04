@@ -14,7 +14,7 @@ run_parallel <- function(config, worker) {
 }
 
 parallel_stage <- function(worker, config) {
-  config <- inventory(config)
+  config <- quick_inventory(config)
   remaining_targets <- V(config$graph_remaining_targets) %>%
     names %>% intersect(config$targets)
   candidates <- next_targets(

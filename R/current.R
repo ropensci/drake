@@ -10,7 +10,7 @@ should_build <- function(target, hash_list, config){
 }
 
 target_current <- function(target, hashes, config){
-  if (!(target %in% config$inventory)){
+  if (!(target %in% config$inventory$reproducibly_tracked)){
     return(FALSE)
   }
   if (!file_current(target = target, hashes = hashes, config = config)){

@@ -42,5 +42,5 @@ recover_config <- function(cache_path){
     file <- globalenv_file(dir)
     load(file = file, envir = config$envir)
   }
-  inventory(config)
+  thorough_inventory(config)
 }

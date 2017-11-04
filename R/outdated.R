@@ -65,7 +65,7 @@ outdated <-  function(
     )
   }
   make_imports(config = config)
-  config <- inventory(config)
+  config <- quick_inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   hash_list <- hash_list(targets = all_targets, config = config)
   rebuild <- Filter(

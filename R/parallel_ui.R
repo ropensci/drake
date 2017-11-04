@@ -241,7 +241,7 @@ max_useful_jobs <- function(
       prework = prework
     )
   }
-  config <- inventory(config)
+  config <- quick_inventory(config)
   nodes <- dataframes_graph(plan = config$plan, config = config,
     split_columns = FALSE)$nodes
   imports <- match.arg(imports)
