@@ -139,10 +139,25 @@ do_prework <- function(config, verbose_packages) {
     envir = config$envir))
 }
 
-inventory <- function(config) {
-  config$inventory <- config$cache$list(namespace = "reproducibly_tracked")
-  config$inventory_filemtime <-
-    config$cache$list(namespace = "file_modification_times")
+quick_inventory <- function(config) {
+  namesaces <- c(
+    config$cache$default_namespace,
+    "reproducibly_tracked",
+    "file_modification_times"
+  )
+  do_inventory(namespaces = namespaces, config = config)
+}
+
+thorough_inventory <- function(config) {
+  namesaces <- cache_namespaces(default = config$cache$default_namespace)
+  do_inventory(namespaces = namespaces, config = config)
+}
+
+do_inventory <- function(namespaces = cache_namespaces(), config){
+  config$inventory <- list()
+  for(namespace in namespaces){
+    config$inventory[[namespace]] <- cache$list(namespace = namespace)
+  }
   config
 }
 
