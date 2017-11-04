@@ -21,6 +21,13 @@ dangling orphaned files that prevent you from loading or cleaning.
 This function tries to remove those files so you can use the
 cache normally again.
 }
+\examples{
+\dontrun{
+load_basic_example()
+make(my_plan)
+rescue_cache(jobs = 2)
+}
+}
 \seealso{
 \code{\link{get_cache}}, \code{\link{cached}}
 }

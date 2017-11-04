@@ -5,12 +5,16 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = TRUE)
+  search = TRUE, cache = NULL, verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
 or character strings (quoted). Similar to \code{...} in
-\code{\link{remove}(...)}.}
+\code{\link{remove}(...)}.
+The symbols must not match other (formal) arguments of \code{clean()},
+such as \code{destroy}, \code{cache}, \code{path}, \code{search},
+\code{verbose}, or \code{jobs}. If there are name conflicts,
+use the \code{list} argument instead of \code{...}.}
 
 \item{list}{character vector naming targets to be removed from the
 cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
@@ -34,6 +38,9 @@ If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
 
 \item{verbose}{whether to print console messages}
+
+\item{jobs}{Number of jobs for light parallelism
+(disabled on Windows).}
 }
 \description{
 Cleans up all work done by \code{\link{make}()}.
@@ -58,7 +65,7 @@ cached(no_imported_objects = TRUE)
 clean(summ_regression1_large, small)
 cached(no_imported_objects = TRUE)
 make(my_plan)
-clean()
+clean(jobs = 2)
 clean(destroy = TRUE)
 }
 }

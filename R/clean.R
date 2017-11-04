@@ -16,6 +16,11 @@
 #' @param ... targets to remove from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
 #' \code{\link{remove}(...)}.
+#' The symbols must not match other (formal) arguments of \code{clean()},
+#' such as \code{destroy}, \code{cache}, \code{path}, \code{search},
+#' \code{verbose}, or \code{jobs}. If there are name conflicts,
+#' use the \code{list} argument instead of \code{...}.
+#' 
 #' @param list character vector naming targets to be removed from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
 #'
@@ -38,6 +43,9 @@
 #' current working directory only.
 #'
 #' @param verbose whether to print console messages
+#' 
+#' @param jobs Number of jobs for light parallelism
+#' (disabled on Windows).
 #'
 #' @examples
 #' \dontrun{
@@ -47,7 +55,7 @@
 #' clean(summ_regression1_large, small)
 #' cached(no_imported_objects = TRUE)
 #' make(my_plan)
-#' clean()
+#' clean(jobs = 2)
 #' clean(destroy = TRUE)
 #' }
 clean <- function(
@@ -57,7 +65,8 @@ clean <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
@@ -67,13 +76,14 @@ clean <- function(
   if (is.null(cache)){
     return(invisible())
   }
+  rescue_cache(cache)
   if (!length(targets)) {
     return(clean_everything(
       destroy = destroy,
       cache = cache
     ))
   }
-  uncache(targets, cache = cache)
+  uncache(targets = targets, cache = cache, jobs = jobs)
   invisible()
 }
 
@@ -91,26 +101,46 @@ empty <- function(cache){
   uncache(target = cache$list(namespace = "readd"), cache = cache)
 }
 
-uncache <- Vectorize(function(target, cache){
+uncache <- function(targets, cache, jobs){
   if (is.null(cache)){
     return()
   }
+  files <- Filter(x = targets, f = is_file)
+  lightly_parallelize(
+    X = targets,
+    FUN = remove_file_target,
+    jobs = jobs,
+    cache = cache
+  )
+  namespaces <- cache_namespaces(default = cache$default_namespace)
+  for (namespace in namespaces){
+    lightly_parallelize(
+      X = targets,
+      FUN = uncache_single,
+      jobs = jobs,
+      cache = cache,
+      namespace = namespace,
+      list = cache$list(namespace = namespace)
+    )
+  }
+  invisible()
+}
+
+remove_file_target <- function(target, cache){
   if (
-    is_file(target) &
-      !is_imported(
-        target = target,
-        cache = cache
-        )
-    ){
+    is_file(target) &&
+    !is_imported(
+      target = target,
+      cache = cache
+    )
+  ){
     unquote(target) %>%
       unlink(recursive = TRUE, force = TRUE)
   }
-  namespaces <- cache_namespaces(default = cache$default_namespace)
-  for (space in namespaces){
-    if (target %in% cache$list(namespace = space)){
-      cache$del(target, namespace = space)
-    }
+}
+
+uncache_single <- function(target, cache, namespace, list){
+  if (target %in% list){
+    cache$del(target, namespace = namespace)
   }
-  invisible()
-},
-"target")
+}

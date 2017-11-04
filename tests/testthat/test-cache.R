@@ -224,7 +224,7 @@ test_with_dir("cache functions work", {
 
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
-  clean(final, path = s, search = TRUE)
+  clean(final, path = s, search = TRUE, jobs = 2)
   expect_true(all(setdiff(all, "final") %in% cached(path = s,
     search = T)))
   clean(path = s, search = TRUE)
