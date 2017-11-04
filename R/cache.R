@@ -343,31 +343,3 @@ safe_get <- function(key, namespace, config){
     NA
   )
 }
-
-assert_compatible_cache <- function(cache){
-  if (is.null(cache)){
-    return()
-  }
-  err <- try(
-    old <- session(cache = cache)$otherPkgs$drake$Version, silent = TRUE) # nolint
-  if (inherits(err, "try-error")){
-    return()
-  }
-  comparison <- compareVersion(old, "4.4.0")
-  if (comparison > 0){
-    return(invisible)
-  }
-  current <- packageVersion("drake")
-  path <- cache$driver$path
-  newpath <- paste0(path, "_drake_", current)
-  stop(
-    "The project at '", path, "' was previously built by drake ", old, ". ",
-    "You are running drake ", current, ", which is not back-compatible. ",
-    "To format your cache for the newer drake, try migrate('", path, "'). ",
-    "migrate() restructures the cache in a way that ",
-    "preserves the statuses of your targets (up to date vs outdated). ",
-    "But in case of errors, migrate() first backs up '", path, "' to '",
-    newpath, "'. Alternatively, you can just run your project from scratch ",
-    "as is with make(..., force = TRUE)."
-  )
-}
