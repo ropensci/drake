@@ -30,7 +30,7 @@ clean(large) # most information gone
 dependency_profile("large", config = con) # hashes of deps still available
 # should agree with `$meta_of_dependencies`
 con$cache$get_hash("simulate",
-  namespace = "reproducibly_tracked")
+  namespace = "triggers")
 }
 }
 \seealso{
