@@ -24,7 +24,7 @@
 migrate <- function(path = drake::default_cache_path(), jobs = 1){
   cache <- should_migrate(path = path)
   if (is.null(cache)){
-    return(invisible())
+    return(invisible(TRUE))
   }
   version <- session(cache = cache)$otherPkgs$drake$Version # nolint
   backup <- backup_cache_path(path = path, old = version)
@@ -55,6 +55,14 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
 should_migrate <- function(path){
   tryCatch({
       tmp <- this_cache(path = path, force = FALSE)
+      if (is.null(tmp)){
+        cat("No cache found to migrate.\n")
+      } else {
+        cat(
+          "This project is already compatible with your system's drake.",
+          "No need to migrate.\n"
+        )
+      }
       NULL
     },
     error = function(e){
@@ -102,9 +110,7 @@ migrate_hook <- function(code){
   config <- env$config
   build_time <- tryCatch(
     config$cache$get(key = target, namespace = "build_times"),
-    error = function(e){
-      proc.time() - proc.time()
-    }
+    error = null_proc_time
   )
   error <- try(
     value <- legacy_readd(target = target, cache = config$cache),
@@ -119,6 +125,10 @@ migrate_hook <- function(code){
   }
   store_target(target = target, value = value, meta = meta,
     build_time = build_time, config = config)
+}
+
+null_proc_time <- function(e){
+  proc.time() - proc.time()
 }
 
 legacy_readd <- function(target, cache){

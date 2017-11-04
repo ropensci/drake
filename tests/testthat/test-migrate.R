@@ -24,6 +24,12 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_true(length(cached()) == 0)
 })
 
+test_with_dir("null cases for migrate()", {
+  expect_true(migrate(path = "not_found"))
+  x <- new_cache(path = "path")
+  expect_true(migrate(path = "path"))
+})
+
 test_with_dir("migrate() an up to date cache", {
   report_file <- file.path("testing", "report.md") %>%
     system.file(package = "drake", mustWork = TRUE)
