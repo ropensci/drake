@@ -4,6 +4,10 @@
 #' @param path Full path to the cache
 #' @param jobs number of jobs for light parallelism.
 #' (Disabled on Windows.)
+#' @return \code{TRUE} if the migration was successful, \code{FALSE} otherwise.
+#' A migration is successful if the transition preserves target status:
+#' that is, outdated targets remain outdated and up to date targets
+#' remain up to date.
 #' @description Migrate a project/cache from drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @details Versions after drake have a different internal structure for the cache.
@@ -11,6 +15,11 @@
 #' with projects built with a later version of drake. migrate() converts
 #' an old cache to a format compatible with the version of drake
 #' installed on your system.
+#' A migration is successful if the transition preserves target status:
+#' that is, outdated targets remain outdated and up to date targets
+#' remain up to date. At the end, \code{migrate()} tells you whether the migration
+#' is successful. If it is not successful, \code{migrat()} tells you where
+#' it backed up your old project.
 migrate <- function(path = drake::default_cache_path(), jobs = 1){
   cache <- should_migrate(path = path)
   if (is.null(cache)){
@@ -38,9 +47,8 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   outdated <- outdated(config = config) %>%
     sort
   success <- identical(config$outdated, outdated)
-  message <- ifelse(success, migration_success(),
-   migration_failure(backup = backup))
-  cat(message)
+  migration_result(success = success, backup = backup)
+  success
 }
 
 should_migrate <- function(path){
@@ -78,7 +86,8 @@ assert_compatible_cache <- function(cache){
     "preserves the statuses of your targets (up to date vs outdated). ",
     "But in case of errors, migrate() first backs up '", path, "' to '",
     newpath, "'. Alternatively, you can just run your project from scratch ",
-    "as is with make(..., force = TRUE)."
+    "as is with make(..., force = TRUE).",
+    call. = FALSE
   )
 }
 
@@ -96,7 +105,13 @@ migrate_hook <- function(code){
       proc.time() - proc.time()
     }
   )
-  value <- legacy_readd(target = target, cache = config$cache)
+  error <- try(
+    value <- legacy_readd(target = target, cache = config$cache),
+    silent = TRUE
+  )
+  if (inherits(error, "try_error")){
+    return()
+  }
   meta <- meta(target = target, config = config)
   if (target %in% config$outdated){
     return()
@@ -115,13 +130,22 @@ legacy_readd <- function(target, cache){
   return(value)
 }
 
+migration_result <- function(success, backup){
+  if (success){
+    migration_success()
+  } else {
+    migration_failure(backup)
+  }
+}
+
 migration_failure <- function(backup){
   paste(
     "Migration failed:",
     "target statuses failed to transfer (outdated vs current).",
     "Original cache saved:", backup,
     collapse = "\n"
-  )
+  ) %>%
+    stop(call. = FALSE)
 }
 
 migration_success <- function(){
@@ -129,7 +153,8 @@ migration_success <- function(){
     "Migration successful:",
     "target statuses preserved (outdated vs current).",
     collapse = "\n"
-  )
+  ) %>%
+    cat
 }
 
 legacy_outdated <- function(config){

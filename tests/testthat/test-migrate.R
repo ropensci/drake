@@ -1,4 +1,4 @@
-drake_context("back compatibility")
+drake_context("migrate")
 
 test_with_dir("force loading a non-back-compatible cache", {
   expect_null(assert_compatible_cache(NULL))
@@ -30,7 +30,26 @@ test_with_dir("migrate() an up to date cache", {
   file.copy(from = report_file, to = ".")
   write_v4.1.0_cache()
   file.rename(from = ".drake", to = "old")
-  config <- migrate(path = "old", jobs = 2)
-  expect_equal(outdated(config = config), character(0))
-  migrate
+  expect_true(migrate(path = "old", jobs = 2))
+})
+
+test_with_dir("migrate() a partially outdated cache", {
+  report_file <- file.path("testing", "report.md") %>%
+    system.file(package = "drake", mustWork = TRUE)
+  file.copy(from = report_file, to = ".")
+  write_v4.1.0_cache()
+  file.rename(from = ".drake", to = "old")
+  cache <- this_cache(path = "old", force = TRUE)
+  for (namespace in cache$list_namespaces()){
+    cache$del(key = "report_dependencies", namespace = namespace)
+  }
+  plan <- cache$get("plan", namespace = "config")
+  plan$command[plan$target == "small"] = "simulate(6)"
+  cache$set(key = "plan", value = plan, namespace = "config")
+  expect_true(migrate(path = "old", jobs = 2))
+})
+
+test_with_dir("migration_result()", {
+  expect_error(migration_result(FALSE, "backup"))
+  expect_output(migration_result(TRUE, "backup"))
 })

@@ -4,10 +4,19 @@
 \alias{migrate}
 \title{Function migrate}
 \usage{
-migrate(path)
+migrate(path = drake::default_cache_path(), jobs = 1)
 }
 \arguments{
 \item{path}{Full path to the cache}
+
+\item{jobs}{number of jobs for light parallelism.
+(Disabled on Windows.)}
+}
+\value{
+\code{TRUE} if the migration was successful, \code{FALSE} otherwise.
+A migration is successful if the transition preserves target status:
+that is, outdated targets remain outdated and up to date targets
+remain up to date.
 }
 \description{
 Migrate a project/cache from drake 4.4.0 or earlier
@@ -19,6 +28,11 @@ This means projects built with drake 4.4.0 or before are not compatible
 with projects built with a later version of drake. migrate() converts
 an old cache to a format compatible with the version of drake
 installed on your system.
+A migration is successful if the transition preserves target status:
+that is, outdated targets remain outdated and up to date targets
+remain up to date. At the end, \code{migrate()} tells you whether the migration
+is successful. If it is not successful, \code{migrat()} tells you where
+it backed up your old project.
 }
 \seealso{
 \code{\link{rescue_cache}}, \code{\link{make}}
