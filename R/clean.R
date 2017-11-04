@@ -107,6 +107,7 @@ uncache <- Vectorize(function(target, cache){
   }
   default <- cache$default_namespace
   namespaces <- c(
+    default,
     "commands",
     "depends",
     "depends_debug",
