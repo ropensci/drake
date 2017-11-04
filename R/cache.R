@@ -10,7 +10,6 @@ cache_namespaces <- function(default = storr::storr_environment()$default_namesp
     default,
     "commands",
     "depends",
-    "depends_debug",
     "file_modification_times",
     "imported",
     "readd",
