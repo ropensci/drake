@@ -67,12 +67,12 @@ outdated <-  function(
   make_imports(config = config)
   config <- quick_inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
-  hash_list <- hash_list(targets = all_targets, config = config)
+  meta_list <- meta_list(targets = all_targets, config = config)
   rebuild <- Filter(
     x = all_targets,
     f = function(target){
-      hashes <- hash_list[[target]]
-      !target_current(target = target, hashes = hashes, config = config)
+      meta <- meta_list[[target]]
+      !target_current(target = target, meta = meta, config = config)
     }
   )
   if (!length(rebuild)){

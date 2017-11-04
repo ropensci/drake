@@ -1,32 +1,32 @@
-should_build <- function(target, hash_list, config){
-  if (hash_list[[target]]$imported) {
+should_build <- function(target, meta_list, config){
+  if (meta_list[[target]]$imported) {
     return(TRUE)
   }
   !target_current(
     target = target,
-    hashes = hash_list[[target]],
+    meta = meta_list[[target]],
     config = config
   )
 }
 
-target_current <- function(target, hashes, config){
+target_current <- function(target, meta, config){
   if (!(target %in% config$inventory$reproducibly_tracked)){
     return(FALSE)
   }
-  if (!file_current(target = target, hashes = hashes, config = config)){
+  if (!file_current(target = target, meta = meta, config = config)){
     return(FALSE)
   }
   identical(
     config$cache$get(target, namespace = "commands"),
-    hashes$command
+    meta$command
   ) &
   identical(
     config$cache$get(target, namespace = "depends"),
-    hashes$depends
+    meta$depends
   )
 }
 
-file_current <- function(target, hashes, config){
+file_current <- function(target, meta, config){
   if (!is_file(target)){
     return(TRUE)
   }
@@ -35,7 +35,7 @@ file_current <- function(target, hashes, config){
   }
   identical(
     config$cache$get(target, namespace = "reproducibly_tracked"),
-    hashes$file
+    meta$file
   )
 }
 

@@ -1,8 +1,8 @@
-hash_list <- function(targets, config) {
+meta_list <- function(targets, config) {
   console_many_targets(targets = targets,
     message = "check", config = config)
   out <- lightly_parallelize(
-    X = targets, FUN = hashes,
+    X = targets, FUN = meta,
     jobs = config$jobs, config = config
   )
   names(out) <- lapply(out, "[[", "target") %>%
@@ -10,7 +10,7 @@ hash_list <- function(targets, config) {
   out
 }
 
-hashes <- function(target, config) {
+meta <- function(target, config) {
   list(
     target = target,
     command = get_command(target = target, config = config),

@@ -5,40 +5,40 @@
 #' the only reason this function is exported
 #' is to set up PSOCK clusters efficiently.
 #' @param target name of the target
-#' @param hash_list list of hashes that tell which
+#' @param meta_list list of metadata that tell which
 #' targets are up to date
 #' @param config internal configuration list
-build <- function(target, hash_list, config){
+build <- function(target, meta_list, config){
   config$hook(
     build_in_hook(
       target = target,
-      hash_list = hash_list,
+      meta_list = meta_list,
       config = config
     )
   )
 }
 
-build_in_hook <- function(target, hash_list, config) {
+build_in_hook <- function(target, meta_list, config) {
   start <- proc.time()
-  hashes <- hash_list[[target]]
+  meta <- meta_list[[target]]
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
-  console(imported = hashes$imported, target = target, config = config)
-  if (hashes$imported) {
-    value <- imported_target(target = target, hashes = hashes,
+  console(imported = meta$imported, target = target, config = config)
+  if (meta$imported) {
+    value <- imported_target(target = target, meta = meta,
       config = config)
   } else {
     value <- build_target(target = target,
-      hashes = hashes, config = config)
+      meta = meta, config = config)
   }
   build_time <- (proc.time() - start) %>%
-    runtime_entry(target = target, imported = hashes$imported)
-  store_target(target = target, value = value, hashes = hashes,
+    runtime_entry(target = target, imported = meta$imported)
+  store_target(target = target, value = value, meta = meta,
     build_time = build_time, config = config)
   value
 }
 
-build_target <- function(target, hashes, config) {
+build_target <- function(target, meta, config) {
   command <- get_command(target = target, config = config) %>%
     functionize
   seed <- list(seed = config$seed, target = target) %>%
@@ -63,9 +63,9 @@ check_built_file <- function(target){
   }
 }
 
-imported_target <- function(target, hashes, config) {
+imported_target <- function(target, meta, config) {
   if (is_file(target)) {
-    return(hashes$file)
+    return(meta$file)
   } else if (target %in% ls(config$envir, all.names = TRUE)) {
     value <- config$envir[[target]]
   } else {
@@ -92,23 +92,23 @@ flexible_get <- function(target) {
   get(fun, envir = getNamespace(pkg))
 }
 
-store_target <- function(target, value, hashes, build_time, config) {
+store_target <- function(target, value, meta, build_time, config) {
   config$cache$set(key = target, value = build_time,
     namespace = "build_times")
-  config$cache$set(key = target, value = hashes$command,
+  config$cache$set(key = target, value = meta$command,
     namespace = "commands")
-  config$cache$set(key = target, value = hashes$depends,
+  config$cache$set(key = target, value = meta$depends,
     namespace = "depends")
-  config$cache$set(key = target, value = hashes$imported,
+  config$cache$set(key = target, value = meta$imported,
     namespace = "imported")
   config$cache$set(key = target, value = "finished",
     namespace = "progress")
   if (is_file(target)) {
-    store_file(target = target, hashes = hashes,
+    store_file(target = target, meta = meta,
       config = config)
   } else if (is.function(value)) {
     store_function(target = target, value = value,
-      hashes = hashes, config = config)
+      meta = meta, config = config)
   } else {
     store_object(target = target, value = value,
       config = config)
@@ -127,14 +127,14 @@ store_object <- function(target, value, config) {
     key = target, namespace = "reproducibly_tracked", hash = hash)
 }
 
-store_file <- function(target, hashes, config) {
+store_file <- function(target, meta, config) {
   config$cache$set(key = target, value = "file",
     namespace = "type")
   config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
     namespace = "file_modification_times")
   hash <- ifelse(
-    hashes$imported,
-    hashes$file,
+    meta$imported,
+    meta$file,
     rehash_file(target = target, config = config)
   )
   for (namespace in c("readd", "reproducibly_tracked")){
@@ -142,15 +142,15 @@ store_file <- function(target, hashes, config) {
   }
 }
 
-store_function <- function(target, value, hashes, config
+store_function <- function(target, value, meta, config
 ){
   config$cache$set(key = target, value = "function",
     namespace = "type")
   config$cache$set(key = target, value = value, namespace = "readd")
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
-  if (hashes$imported){
-    string <- c(string, hashes$depends)
+  if (meta$imported){
+    string <- c(string, meta$depends)
   }
   config$cache$set(key = target, value = string,
     namespace = "reproducibly_tracked")

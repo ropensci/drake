@@ -4,12 +4,12 @@
 \alias{build}
 \title{Internal function build}
 \usage{
-build(target, hash_list, config)
+build(target, meta_list, config)
 }
 \arguments{
 \item{target}{name of the target}
 
-\item{hash_list}{list of hashes that tell which
+\item{meta_list}{list of metadata that tell which
 targets are up to date}
 
 \item{config}{internal configuration list}

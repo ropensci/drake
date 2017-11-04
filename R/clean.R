@@ -98,7 +98,7 @@ clean_everything <- function(
 }
 
 empty <- function(cache){
-  uncache(target = cache$list(namespace = "readd"), cache = cache)
+  uncache(targets = cache$list(namespace = "readd"), cache = cache)
 }
 
 uncache <- function(targets, cache, jobs){

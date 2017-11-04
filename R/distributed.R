@@ -17,17 +17,17 @@ build_distributed <- function(target, cache_path){
   config <- recover_config(cache_path = cache_path)
   do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
-  hash_list <- hash_list(targets = target, config = config)
+  meta_list <- meta_list(targets = target, config = config)
   config$old_hash <- self_hash(target = target, config = config)
   current <- target_current(
     target = target,
-    hashes = hash_list[[target]],
+    meta = meta_list[[target]],
     config = config
   )
   if (!current){
     build(
       target = target,
-      hash_list = hash_list,
+      meta_list = meta_list,
       config = config
     )
   }

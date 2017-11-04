@@ -65,7 +65,7 @@ deps <- function(x){
 #' dependency_profile("'report.md'", config = con)
 #' clean(large) # most information gone
 #' dependency_profile("large", config = con) # hashes of deps still available
-#' # should agree with `$hashes_of_dependencies`
+#' # should agree with `$meta_of_dependencies`
 #' con$cache$get_hash("simulate",
 #'   namespace = "reproducibly_tracked")
 #' }
@@ -76,12 +76,12 @@ dependency_profile <- function(target, config){
   current_command <- get_command(target = target, config = config)
 
   deps <- dependencies(target, config)
-  hashes_of_dependencies <- self_hash(target = deps, config = config)
-  current_dependency_hash <- digest::digest(hashes_of_dependencies,
+  meta_of_dependencies <- self_hash(target = deps, config = config)
+  current_dependency_hash <- digest::digest(meta_of_dependencies,
     algo = config$long_hash_algo)
   cached_dependency_hash <- safe_get(key = target, namespace = "depends",
     config = config)
-  names(hashes_of_dependencies) <- deps
+  names(meta_of_dependencies) <- deps
 
   cached_file_modification_time <- safe_get(
     key = target, namespace = "file_modification_times", config = config)
@@ -95,7 +95,7 @@ dependency_profile <- function(target, config){
     current_file_modification_time = current_file_modification_time,
     cached_dependency_hash = cached_dependency_hash,
     current_dependency_hash = current_dependency_hash,
-    hashes_of_dependencies = hashes_of_dependencies
+    meta_of_dependencies = meta_of_dependencies
   )
   out[!is.na(out)]
 }

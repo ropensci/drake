@@ -3,7 +3,7 @@ run_future_lapply <- function(config){
   run_parallel(config = config, worker = worker_future_lapply)
 }
 
-worker_future_lapply <- function(targets, hash_list, config){
+worker_future_lapply <- function(targets, meta_list, config){
   targets <- intersect(targets, config$plan$target)
   if (!length(targets)){
     return()

@@ -4,7 +4,7 @@
 \alias{cache_namespaces}
 \title{Function drake_namespaces}
 \usage{
-cache_namespaces(default = storr_environment()$default_namespace)
+cache_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \arguments{
 \item{default}{name of the default namespace}

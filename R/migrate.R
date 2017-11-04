@@ -33,6 +33,7 @@ backup_cache_path <- function(path, old){
 #' @title Function migrate
 #' @export
 #' @seealso \code{\link{rescue_cache}}, \code{\link{make}}
+#' @param path Full path to the cache
 #' @description Migrate a project/cache from drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @details Versions after drake have a different internal structure for the cache.
