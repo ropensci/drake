@@ -23,8 +23,10 @@ test_with_dir("try to find a non-existent project", {
   expect_error(tmp <- session(search = FALSE))
 })
 
-test_with_dir("try to rescue a non-existent cache", {
+test_with_dir("try to rescue non-existent stuff", {
   expect_null(rescue_cache())
+  cache <- storr_rds("dummy_cache")
+  expect_silent(rescue_del(key = "no_key", cache = cache, namespace = "none"))
 })
 
 test_with_dir("cache functions work", {
@@ -98,7 +100,7 @@ test_with_dir("cache functions work", {
   expect_equal(read_plan(search = FALSE), config$plan)
   expect_equal(class(read_graph(search = FALSE)), "igraph")
 
-  # imported , built, cached, diagnose
+  # imported , built, cached, diagnose, rescue
   expect_equal(diagnose(search = FALSE), character(0))
   expect_equal(imported(files_only = FALSE, search = FALSE),
     imports)
@@ -182,7 +184,7 @@ test_with_dir("cache functions work", {
   expect_true(all(cached(list = all, path = s, search = TRUE)))
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
   expect_true(all(cached(list = all, path = s, search = TRUE)))
-  
+
   # find your project
   expect_equal(find_project(path = s), file.path(scratch))
   expect_equal(find_cache(path = s),

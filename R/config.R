@@ -154,7 +154,7 @@ thorough_inventory <- function(config) {
 
 do_inventory <- function(namespaces = cache_namespaces(), config){
   config$inventory <- list()
-  for(namespace in namespaces){
+  for (namespace in namespaces){
     config$inventory[[namespace]] <- config$cache$list(namespace = namespace)
   }
   config

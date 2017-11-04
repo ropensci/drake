@@ -80,7 +80,8 @@ clean <- function(
   if (!length(targets)) {
     return(clean_everything(
       destroy = destroy,
-      cache = cache
+      cache = cache,
+      jobs = jobs
     ))
   }
   uncache(targets = targets, cache = cache, jobs = jobs)
@@ -89,16 +90,18 @@ clean <- function(
 
 clean_everything <- function(
   destroy,
-  cache
+  cache,
+  jobs
 ){
-  empty(cache)
+  empty(cache = cache, jobs = jobs)
   if (destroy) {
     cache$destroy()
   }
 }
 
-empty <- function(cache){
-  uncache(targets = cache$list(namespace = "readd"), cache = cache)
+empty <- function(cache, jobs){
+  uncache(
+    targets = cache$list(namespace = "readd"), cache = cache, jobs = jobs)
 }
 
 uncache <- function(targets, cache, jobs){

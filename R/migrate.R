@@ -10,7 +10,8 @@
 #' remain up to date.
 #' @description Migrate a project/cache from drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
-#' @details Versions after drake have a different internal structure for the cache.
+#' @details Drake versions after 4.4.0
+#' have a different internal structure for the cache.
 #' This means projects built with drake 4.4.0 or before are not compatible
 #' with projects built with a later version of drake. migrate() converts
 #' an old cache to a format compatible with the version of drake
@@ -32,12 +33,12 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   file.copy(from = path, to = backup, recursive = TRUE)
   cat("Migrating cache at", path, "for your system's drake.\n")
   config <- read_config(cache = cache)
-  config$cache = cache
+  config$cache <- cache
   config$parallelism = "mclapply"
   config$jobs <- safe_jobs(jobs)
   config$hook <- migrate_hook
   config$envir <- new.env(parent = globalenv())
-  config$verbose = TRUE
+  config$verbose <- TRUE
   config$outdated <- legacy_outdated(config) %>%
     sort
   config$cache$clear(namespace = "depends")
@@ -159,7 +160,7 @@ migration_success <- function(){
 
 legacy_outdated <- function(config){
   config$inventory <- config$cache$list()
-  config$inventory_filemtime = config$cache$list(namespace = "filemtime")
+  config$inventory_filemtime <- config$cache$list(namespace = "filemtime")
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   hash_list <- hash_list(targets = all_targets, config = config)
   rebuild <- Filter(
@@ -177,7 +178,7 @@ legacy_outdated <- function(config){
       function(vertex){
         subcomponent(config$graph, v = vertex, mode = "out")$name
       },
-      jobs = jobs
+      jobs = config$jobs
     ) %>%
       unlist() %>%
       unique() %>%

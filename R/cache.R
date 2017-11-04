@@ -5,7 +5,9 @@
 #' @param default name of the default namespace
 #' @examples
 #' cache_namespaces()
-cache_namespaces <- function(default = storr::storr_environment()$default_namespace){
+cache_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+){
   c(
     default,
     "attempts",

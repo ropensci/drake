@@ -234,16 +234,20 @@ rescue_cache <- function(
   for (namespace in cache$list_namespaces()){
     tmp <- lightly_parallelize(
       X = cache$list(namespace = namespace),
-      FUN = function(key){
-        tryCatch(
-          cache$get(key = key, namespace = namespace),
-          error = function(e){
-            cache$del(key = key, namespace = namespace)
-          }
-        )
-      },
-      jobs = jobs
+      FUN = rescue_del,
+      jobs = jobs,
+      cache = cache,
+      namespace = namespace
     )
   }
   invisible(cache)
+}
+
+rescue_del <- function(key, cache, namespace){
+  tryCatch(
+    cache$get(key = key, namespace = namespace),
+    error = function(e){
+      cache$del(key = key, namespace = namespace)
+    }
+  )
 }

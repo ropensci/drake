@@ -23,7 +23,8 @@ Migrate a project/cache from drake 4.4.0 or earlier
 to be compatible with the version of drake on your system.
 }
 \details{
-Versions after drake have a different internal structure for the cache.
+Drake versions after 4.4.0
+have a different internal structure for the cache.
 This means projects built with drake 4.4.0 or before are not compatible
 with projects built with a later version of drake. migrate() converts
 an old cache to a format compatible with the version of drake
