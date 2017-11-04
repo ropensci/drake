@@ -76,7 +76,7 @@ test_with_dir("basic Makefile stuff works", {
   config$verbose <- FALSE
   cache_path <- cache_path(config$cache)
   initialize_session(config = config)
-  log_target_attempts(targets = outdated(config = config), config = config)
+  log_attempts(targets = outdated(config = config), config = config)
   config$recipe_command <- "Rscript -e"
   store_config(config = config)
   run_Makefile(config, run = FALSE, debug = TRUE)
