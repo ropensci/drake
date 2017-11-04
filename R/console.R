@@ -50,7 +50,7 @@ console_retry <- function(target, retries, config){
 }
 
 console_up_to_date <- function(config){
-  any_attempted <- length(config$cache$list(namespace = "target_attempts"))
+  any_attempted <- length(config$cache$list(namespace = "attempts"))
   if (config$verbose && !any_attempted){
     color("All targets are already up to date.\n", colors["target"]) %>%
       cat

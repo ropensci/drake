@@ -290,7 +290,7 @@ make_imports <- function(config){
 }
 
 initialize_session <- function(config){
-  config$cache$clear(namespace = "target_attempts")
+  config$cache$clear(namespace = "attempts")
   config$cache$set(
     key = "sessionInfo",
     value = sessionInfo(),

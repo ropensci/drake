@@ -141,8 +141,8 @@ do_prework <- function(config, verbose_packages) {
 
 quick_inventory <- function(config) {
   namespaces <- c(
-    "reproducibly_tracked",
-    "file_modification_times"
+    "triggers",
+    "mtimes"
   )
   do_inventory(namespaces = namespaces, config = config)
 }

@@ -8,13 +8,13 @@
 cache_namespaces <- function(default = storr::storr_environment()$default_namespace){
   c(
     default,
+    "attempts",
     "commands",
     "depends",
-    "file_modification_times",
     "imported",
+    "mtimes",
     "readd",
-    "reproducibly_tracked",
-    "target_attempts",
+    "triggers",
     "type"
   )
 }

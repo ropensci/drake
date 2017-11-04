@@ -67,7 +67,7 @@ deps <- function(x){
 #' dependency_profile("large", config = con) # hashes of deps still available
 #' # should agree with `$meta_of_dependencies`
 #' con$cache$get_hash("simulate",
-#'   namespace = "reproducibly_tracked")
+#'   namespace = "triggers")
 #' }
 dependency_profile <- function(target, config){
   config <- thorough_inventory(config)
@@ -84,7 +84,7 @@ dependency_profile <- function(target, config){
   names(meta_of_dependencies) <- deps
 
   cached_file_modification_time <- safe_get(
-    key = target, namespace = "file_modification_times", config = config)
+    key = target, namespace = "mtimes", config = config)
   current_file_modification_time <- ifelse(is_file(target),
     file.mtime(eply::unquote(target)), NA)
 

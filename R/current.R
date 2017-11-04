@@ -10,7 +10,7 @@ should_build <- function(target, meta_list, config){
 }
 
 target_current <- function(target, meta, config){
-  if (!(target %in% config$inventory$reproducibly_tracked)){
+  if (!(target %in% config$inventory$triggers)){
     return(FALSE)
   }
   if (!file_current(target = target, meta = meta, config = config)){
@@ -34,14 +34,14 @@ file_current <- function(target, meta, config){
     return(FALSE)
   }
   identical(
-    config$cache$get(target, namespace = "reproducibly_tracked"),
+    config$cache$get(target, namespace = "triggers"),
     meta$file
   )
 }
 
-log_target_attempts <- Vectorize(function(targets, config){
+log_attempts <- Vectorize(function(targets, config){
   config$cache$set(key = targets, value = targets,
-    namespace = "target_attempts")
+    namespace = "attempts")
   invisible()
 },
 "targets")

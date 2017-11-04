@@ -23,8 +23,8 @@ parallel_stage <- function(worker, config) {
   build_these <- Filter(candidates,
     f = function(target)
       should_build(target = target, meta_list = meta_list, config = config))
-  target_attempts <- intersect(build_these, config$plan$target)
-  log_target_attempts(targets = target_attempts, config = config)
+  attempts <- intersect(build_these, config$plan$target)
+  log_attempts(targets = attempts, config = config)
   meta_list <- meta_list[build_these]
   if (length(build_these)){
     worker(targets = build_these, meta_list = meta_list,
