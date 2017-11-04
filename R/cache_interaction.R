@@ -212,6 +212,12 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' @param ... arguments to \code{\link{get_cache}}
 #' @param jobs number of jobs for light parallelism
 #' (disabled on Windows)
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan)
+#' rescue_cache(jobs = 2)
+#' }
 rescue_cache <- function(..., jobs = 1){
   cache <- get_cache(...)
   if (is.null(cache)){

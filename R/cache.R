@@ -1,3 +1,25 @@
+#' @title Function drake_namespaces
+#' @export
+#' @description List the default namespaces of a \code{storr}
+#' cache for drake.
+#' @param default name of the default namespace
+#' @examples
+#' cache_namespaces()
+cache_namespaces <- function(default = storr_environment()$default_namespace){
+  c(
+    default,
+    "commands",
+    "depends",
+    "depends_debug",
+    "file_modification_times",
+    "imported",
+    "readd",
+    "reproducibly_tracked",
+    "target_attempts",
+    "type"
+  )
+}
+
 #' @title Function cache_path
 #' @export
 #' @description Returns the file path
