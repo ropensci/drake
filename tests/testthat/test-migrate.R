@@ -28,6 +28,7 @@ test_with_dir("null cases for migrate()", {
   expect_true(migrate(path = "not_found"))
   x <- new_cache(path = "path")
   expect_true(migrate(path = "path"))
+  expect_silent(tmp <- null_proc_time())
 })
 
 test_with_dir("migrate() an up to date cache", {
