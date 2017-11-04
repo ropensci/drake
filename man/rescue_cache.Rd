@@ -4,10 +4,20 @@
 \alias{rescue_cache}
 \title{Function rescue_cache}
 \usage{
-rescue_cache(..., jobs = 1)
+rescue_cache(path = getwd(), search = TRUE, verbose = TRUE,
+  force = FALSE, cache = drake::get_cache(path = path, search = search,
+  verbose = verbose, force = force), jobs = 1)
 }
 \arguments{
-\item{...}{arguments to \code{\link{get_cache}}}
+\item{path}{same as for \code{\link{get_cache}()}}
+
+\item{search}{same as for \code{\link{get_cache}()}}
+
+\item{verbose}{same as for \code{\link{get_cache}()}}
+
+\item{force}{same as for \code{\link{get_cache}()}}
+
+\item{cache}{a `storr` cache object}
 
 \item{jobs}{number of jobs for light parallelism
 (disabled on Windows)}

@@ -209,7 +209,11 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' @return Invisibly returns the cache.
 #' @export
 #' @seealso \code{\link{get_cache}}, \code{\link{cached}}
-#' @param ... arguments to \code{\link{get_cache}}
+#' @param path same as for \code{\link{get_cache}()}
+#' @param search same as for \code{\link{get_cache}()}
+#' @param verbose same as for \code{\link{get_cache}()}
+#' @param force same as for \code{\link{get_cache}()}
+#' @param cache a `storr` cache object
 #' @param jobs number of jobs for light parallelism
 #' (disabled on Windows)
 #' @examples
@@ -218,8 +222,12 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' make(my_plan)
 #' rescue_cache(jobs = 2)
 #' }
-rescue_cache <- function(..., jobs = 1){
-  cache <- get_cache(...)
+rescue_cache <- function(
+  path = getwd(), search = TRUE, verbose = TRUE, force = FALSE,
+  cache = drake::get_cache(
+    path = path, search = search, verbose = verbose, force = force),
+  jobs = 1
+){
   if (is.null(cache)){
     return(invisible())
   }
