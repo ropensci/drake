@@ -23,6 +23,10 @@ test_with_dir("try to find a non-existent project", {
   expect_error(tmp <- session(search = FALSE))
 })
 
+test_with_dir("try to rescue a non-existent cache", {
+  expect_null(rescue_cache())
+})
+
 test_with_dir("cache functions work", {
   # May have been loaded in a globalenv() testing scenario
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
@@ -113,6 +117,8 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(i, bla, list = c("final", "run"),
     search = FALSE)), sort(c(i = TRUE, bla = FALSE, final = TRUE,
     run = FALSE)))
+  expect_true(inherits(rescue_cache(search = FALSE), "storr"))
+  expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
 
   # find your project
   expect_equal(find_project(), getwd())
@@ -174,7 +180,9 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(no_imported_objects = TRUE, path = s,
     search = T)), sort(c("'input.rds'", builds)))
   expect_true(all(cached(list = all, path = s, search = TRUE)))
-
+  expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
+  expect_true(all(cached(list = all, path = s, search = TRUE)))
+  
   # find your project
   expect_equal(find_project(path = s), file.path(scratch))
   expect_equal(find_cache(path = s),

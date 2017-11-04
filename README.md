@@ -178,14 +178,15 @@ type_of_cache()
 
 and debug your work.
 ```r
-diagnose()
-dependency_profile()
 check()
-session()
-in_progress()
-progress()
 config()
 read_config()
+diagnose()
+dependency_profile()
+in_progress()
+progress()
+rescue_cache()
+session()
 ```
 
 # Documentation

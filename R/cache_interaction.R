@@ -200,3 +200,36 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
   !imported | (imported & is_file(target))
 },
 "target", SIMPLIFY = TRUE)
+
+#' @title Function rescue_cache
+#' @description Sometimes, \code{storr} caches may have
+#' dangling orphaned files that prevent you from loading or cleaning.
+#' This function tries to remove those files so you can use the
+#' cache normally again.
+#' @return Invisibly returns the cache.
+#' @export
+#' @seealso \code{\link{get_cache}}, \code{\link{cached}}
+#' @param ... arguments to \code{\link{get_cache}}
+#' @param jobs number of jobs for light parallelism
+#' (disabled on Windows)
+rescue_cache <- function(..., jobs = 1){
+  cache <- get_cache(...)
+  if (is.null(cache)){
+    return(invisible())
+  }
+  for (namespace in cache$list_namespaces()){
+    tmp <- lightly_parallelize(
+      X = cache$list(namespace = namespace),
+      FUN = function(key){
+        tryCatch(
+          cache$get(key = key, namespace = namespace),
+          error = function(e){
+            cache$del(key = key, namespace = namespace)
+          }
+        )
+      },
+      jobs = jobs
+    )
+  }
+  invisible(cache)
+}
