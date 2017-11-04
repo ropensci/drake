@@ -23,3 +23,14 @@ test_with_dir("force loading a non-back-compatible cache", {
   clean()
   expect_true(length(cached()) == 0)
 })
+
+test_with_dir("migrate() an up to date cache", {
+  report_file <- file.path("testing", "report.md") %>%
+    system.file(package = "drake", mustWork = TRUE)
+  file.copy(from = report_file, to = ".")
+  write_v4.1.0_cache()
+  file.rename(from = ".drake", to = "old")
+  config <- migrate(path = "old", jobs = 2)
+  expect_equal(outdated(config = config), character(0))
+  migrate
+})
