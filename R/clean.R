@@ -76,7 +76,7 @@ clean <- function(
   if (is.null(cache)){
     return(invisible())
   }
-  rescue_cache(cache)
+  rescue_cache(cache = cache)
   if (!length(targets)) {
     return(clean_everything(
       destroy = destroy,
