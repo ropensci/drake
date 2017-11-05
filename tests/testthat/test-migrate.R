@@ -41,8 +41,10 @@ test_with_dir("migrate() an up to date cache", {
   plan <- plan[plan$target != "'report.md'", ]
   cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate(path = "old", jobs = 2))
-  load_basic_example()
-  con <- make(plan, cache = cache)
+  e <- new.env(parent = globalenv())
+  load_basic_example(envir = e)
+  file.rename(from = "old", to = default_cache_path())
+  con <- make(plan, envir = e)
   expect_equal(justbuilt(config = con), character(0))
 })
 
