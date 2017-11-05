@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{cache_namespaces}
 \alias{cache_namespaces}
-\title{Function drake_namespaces}
+\title{Function cache_namespaces}
 \usage{
 cache_namespaces(default = storr::storr_environment()$default_namespace)
 }
@@ -10,9 +10,12 @@ cache_namespaces(default = storr::storr_environment()$default_namespace)
 \item{default}{name of the default namespace}
 }
 \description{
-List the default namespaces of a \code{storr}
-cache for drake.
+List the important \code{storr} cache namespaces
+that need to be inventoried periodically in a call to \code{\link{make}()}.
 }
 \examples{
 cache_namespaces()
+}
+\seealso{
+\code{\link{make}}
 }
