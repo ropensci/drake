@@ -19,12 +19,12 @@ build_distributed <- function(target, cache_path){
   prune_envir(targets = target, config = config)
   meta_list <- meta_list(targets = target, config = config)
   config$old_hash <- self_hash(target = target, config = config)
-  current <- target_current(
+  do_build <- should_build_target(
     target = target,
     meta = meta_list[[target]],
     config = config
   )
-  if (!current){
+  if (do_build){
     build(
       target = target,
       meta_list = meta_list,

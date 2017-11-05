@@ -75,7 +75,7 @@ outdated <-  function(
     x = all_targets,
     f = function(target){
       meta <- meta_list[[target]]
-      !target_current(target = target, meta = meta, config = config)
+      should_build_target(target = target, meta = meta, config = config)
     }
   )
   if (!length(rebuild)){

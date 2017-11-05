@@ -164,10 +164,16 @@
 #' about your setup is not quite right: for example, if you are using
 #' a version of drake that is not back compatible with your project's cache.
 #'
-#' @param return_config logical, whether to return the internal list
+#' @param return_config Logical, whether to return the internal list
 #' of runtime configuration parameters used by \code{make()}.
 #' This argument is deprecated. Now, a configuration list
 #' is always invisibly returned.
+#' 
+#' @param rush Logical, whether to just build any missing targets
+#' without checking dependencies at all. If you just want to
+#' speed through a workflow for debugging purposes, this could help.
+#' It is equivalent to choosing a \code{trigger} column with
+#' all entries \code{"missing"} in the workflow plan data frame.
 #'
 #' @examples
 #' \dontrun{
@@ -216,7 +222,8 @@ make <- function(
   elapsed = timeout,
   retries = 0,
   force = FALSE,
-  return_config = NULL
+  return_config = NULL,
+  rush = FALSE
 ){
   force(envir)
 
@@ -234,7 +241,10 @@ make <- function(
       call. = FALSE
     )
   }
-
+  
+  if (rush && nrow(plan)){
+    plan$trigger = "missing"
+  }
   config <- config(
     plan = plan,
     targets = targets,
