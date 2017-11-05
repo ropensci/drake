@@ -13,7 +13,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = timeout, elapsed = timeout,
-  retries = 0, force = FALSE, return_config = NULL)
+  retries = 0, force = FALSE, return_config = NULL, rush = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -174,10 +174,17 @@ a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
 about your setup is not quite right: for example, if you are using
 a version of drake that is not back compatible with your project's cache.}
 
-\item{return_config}{logical, whether to return the internal list
+\item{return_config}{Logical, whether to return the internal list
 of runtime configuration parameters used by \code{make()}.
 This argument is deprecated. Now, a configuration list
 is always invisibly returned.}
+
+\item{rush}{Logical, whether to just build any missing targets
+without checking dependencies at all. If you just want to
+speed through a workflow for debugging purposes, this could help.
+It is equivalent to choosing a \code{trigger} column with
+all entries \code{"missing"} in the workflow plan data frame.
+See the \code{\link{triggers}()} function for the available triggers.}
 }
 \description{
 Run your project (build the targets).
@@ -209,5 +216,6 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 \code{\link{workplan}}, \code{\link{workplan}},
 \code{\link{backend}}, \code{\link{plot_graph}},
 \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
-\code{\link{silencer_hook}}
+\code{\link{default_hook}}, \code{\link{silencer_hook}},
+\code{\link{triggers}}
 }

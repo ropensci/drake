@@ -1,11 +1,15 @@
 sanitize_plan <- function(plan){
-  for (field in c("code", "command", "output", "target")){
+  for (field in c("code", "command", "output", "target", "trigger")){
     if (!is.null(plan[[field]])){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
   }
-  as.data.frame(plan, stringsAsFactors = FALSE) %>%
+  plan <- as.data.frame(plan, stringsAsFactors = FALSE) %>%
     fix_deprecated_plan_names()
+  if (!is.null(plan$trigger)){
+    assert_legal_triggers(plan$trigger)
+  }
+  plan
 }
 
 sanitize_targets <- function(plan, targets){

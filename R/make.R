@@ -3,7 +3,8 @@
 #' @seealso \code{\link{workplan}}, \code{\link{workplan}},
 #' \code{\link{backend}}, \code{\link{plot_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
-#' \code{\link{silencer_hook}}
+#' \code{\link{default_hook}}, \code{\link{silencer_hook}},
+#' \code{\link{triggers}}
 #' @export
 #'
 #' @param plan workflow plan data frame.
@@ -174,6 +175,7 @@
 #' speed through a workflow for debugging purposes, this could help.
 #' It is equivalent to choosing a \code{trigger} column with
 #' all entries \code{"missing"} in the workflow plan data frame.
+#' See the \code{\link{triggers}()} function for the available triggers.
 #'
 #' @examples
 #' \dontrun{
