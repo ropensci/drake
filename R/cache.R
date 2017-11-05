@@ -1,7 +1,8 @@
-#' @title Function drake_namespaces
+#' @title Function cache_namespaces
 #' @export
-#' @description List the default namespaces of a \code{storr}
-#' cache for drake.
+#' @seealso \code{\link{make}}
+#' @description List the important \code{storr} cache namespaces
+#' that need to be inventoried periodically in a call to \code{\link{make}()}.
 #' @param default name of the default namespace
 #' @examples
 #' cache_namespaces()

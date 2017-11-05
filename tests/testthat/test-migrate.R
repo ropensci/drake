@@ -32,20 +32,22 @@ test_with_dir("null cases for migrate()", {
 })
 
 test_with_dir("migrate() an up to date cache", {
-  report_file <- file.path("testing", "report.md") %>%
-    system.file(package = "drake", mustWork = TRUE)
-  file.copy(from = report_file, to = ".")
   write_v4.1.0_cache()
-  file.rename(from = ".drake", to = "old")
+  file.rename(from = default_cache_path(), to = "old")
+  expect_error(this_cache(path = "old"))
+  cache <- this_cache(path = "old", force = TRUE)
+  plan <- cache$get(key = "plan", namespace = "config")
+  plan <- plan[plan$target != "'report.md'", ]
+  cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate(path = "old", jobs = 2))
+  load_basic_example()
+  con <- make(plan, cache = cache)
+  expect_equal(justbuilt(config = con), character(0))
 })
 
 test_with_dir("migrate() a partially outdated cache", {
-  report_file <- file.path("testing", "report.md") %>%
-    system.file(package = "drake", mustWork = TRUE)
-  file.copy(from = report_file, to = ".")
   write_v4.1.0_cache()
-  file.rename(from = ".drake", to = "old")
+  file.rename(from = default_cache_path(), to = "old")
   cache <- this_cache(path = "old", force = TRUE)
   for (namespace in cache$list_namespaces()){
     cache$del(key = "report_dependencies", namespace = namespace)
@@ -54,6 +56,12 @@ test_with_dir("migrate() a partially outdated cache", {
   plan$command[plan$target == "small"] <- "simulate(6)"
   cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate(path = "old", jobs = 2))
+  e <- new.env(parent = globalenv())
+  load_basic_example(envir = e)
+  out <- outdated(plan = plan, envir = e, cache = cache)
+  out2 <- c("'report.md'", "report_dependencies",
+    plan$target[grepl("small", plan$target)])
+  expect_equal(sort(out), sort(out2))
 })
 
 test_with_dir("migration_result()", {

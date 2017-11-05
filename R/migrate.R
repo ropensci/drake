@@ -43,6 +43,8 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   config$outdated <- legacy_outdated(config) %>%
     sort
   config$cache$clear(namespace = "depends")
+  store_config(config = config)
+  initialize_session(config = config)
   run_mclapply(config = config)
   cat("Checking for outdated targets.\n")
   config$hook <- empty_hook
@@ -113,19 +115,20 @@ migrate_hook <- function(code){
     config$cache$get(key = target, namespace = "build_times"),
     error = null_proc_time
   )
-  error <- try(
-    value <- legacy_readd(target = target, cache = config$cache),
-    silent = TRUE
+  value <- tryCatch(
+    legacy_readd(target = target, cache = config$cache),
+    error = error_na
   )
-  if (inherits(error, "try_error")){
-    return()
-  }
   meta <- meta(target = target, config = config)
   if (target %in% config$outdated){
     return()
   }
   store_target(target = target, value = value, meta = meta,
     build_time = build_time, config = config)
+}
+
+error_na <- function(e){
+  return(NA)
 }
 
 null_proc_time <- function(e){
@@ -154,19 +157,16 @@ migration_failure <- function(backup){
   paste(
     "Migration failed:",
     "target statuses failed to transfer (outdated vs current).",
-    "Original cache saved:", backup,
-    collapse = "\n"
+    "Original cache saved:", backup
   ) %>%
     stop(call. = FALSE)
 }
 
 migration_success <- function(){
-  paste(
+  cat(
     "Migration successful:",
-    "target statuses preserved (outdated vs current).",
-    collapse = "\n"
-  ) %>%
-    cat
+    "target statuses preserved (outdated vs current).\n"
+  )
 }
 
 legacy_outdated <- function(config){
