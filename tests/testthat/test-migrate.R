@@ -44,7 +44,7 @@ test_with_dir("migrate() an up to date cache", {
   e <- new.env(parent = globalenv())
   load_basic_example(envir = e)
   con <- make(plan, envir = e, cache = cache)
-#  expect_equal(justbuilt(config = con), character(0)) # not on covr
+#  expect_equal(justbuilt(config = con), character(0)) # not on covr # nolint
 })
 
 test_with_dir("migrate() a partially outdated cache", {
@@ -63,7 +63,7 @@ test_with_dir("migrate() a partially outdated cache", {
   out <- outdated(plan = plan, envir = e, cache = cache)
   out2 <- c("'report.md'", "report_dependencies",
     plan$target[grepl("small", plan$target)])
-#  expect_equal(sort(out), sort(out2)) # not on covr
+#  expect_equal(sort(out), sort(out2)) # not on covr # nolint
 })
 
 test_with_dir("migration_result()", {
