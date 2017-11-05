@@ -14,9 +14,9 @@ cache_namespaces <- function(
     "commands",
     "depends",
     "imported",
+    "kernels",
     "mtimes",
     "readd",
-    "triggers",
     "type"
   )
 }

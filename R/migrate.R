@@ -18,8 +18,9 @@
 #' installed on your system.
 #' A migration is successful if the transition preserves target status:
 #' that is, outdated targets remain outdated and up to date targets
-#' remain up to date. At the end, \code{migrate()} tells you whether the migration
-#' is successful. If it is not successful, \code{migrat()} tells you where
+#' remain up to date. At the end, \code{migrate()}
+#' tells you whether the migration
+#' is successful. If it is not successful, \code{migrate()} tells you where
 #' it backed up your old project.
 migrate <- function(path = drake::default_cache_path(), jobs = 1){
   cache <- should_migrate(path = path)
@@ -34,7 +35,7 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   cat("Migrating cache at", path, "for your system's drake.\n")
   config <- read_config(cache = cache)
   config$cache <- cache
-  config$parallelism = "mclapply"
+  config$parallelism <- "mclapply"
   config$jobs <- safe_jobs(jobs)
   config$hook <- migrate_hook
   config$envir <- new.env(parent = globalenv())
@@ -44,7 +45,7 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   config$cache$clear(namespace = "depends")
   run_mclapply(config = config)
   cat("Checking for outdated targets.\n")
-  config$hook <- function(code){}
+  config$hook <- empty_hook
   outdated <- outdated(config = config) %>%
     sort
   success <- identical(config$outdated, outdated)

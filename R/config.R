@@ -141,7 +141,7 @@ do_prework <- function(config, verbose_packages) {
 
 quick_inventory <- function(config) {
   namespaces <- c(
-    "triggers",
+    "kernels",
     "mtimes"
   )
   do_inventory(namespaces = namespaces, config = config)

@@ -168,7 +168,7 @@ test_with_dir("true targets can be functions", {
   expect_true(
     is.character(
       config$cache$get("myfunction",
-      namespace = "triggers")
+      namespace = "kernels")
     )
   )
   myfunction <- readd(myfunction)

@@ -68,3 +68,18 @@ output_sink_hook <- function(code){
   sink(output, type = "output")
   force(code)
 }
+
+#' @title Function empty_hook
+#' @description a \code{hook} argument to \code{\link{make}()}
+#' for which no targets get built and no imports get resolved
+#' @export
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan, hook = empty_hook)
+#' }
+#' @param code Placeholder for the code to build a target/import.
+#' For \code{empty_hook}, this code does not actually get executed.
+empty_hook <- function(code){
+  invisible()
+}

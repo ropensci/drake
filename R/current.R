@@ -10,7 +10,7 @@ should_build <- function(target, meta_list, config){
 }
 
 target_current <- function(target, meta, config){
-  if (!(target %in% config$inventory$triggers)){
+  if (!(target %in% config$inventory$kernels)){
     return(FALSE)
   }
   if (!file_current(target = target, meta = meta, config = config)){
@@ -34,7 +34,7 @@ file_current <- function(target, meta, config){
     return(FALSE)
   }
   identical(
-    config$cache$get(target, namespace = "triggers"),
+    config$cache$get(target, namespace = "kernels"),
     meta$file
   )
 }

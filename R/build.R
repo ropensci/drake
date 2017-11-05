@@ -124,7 +124,7 @@ store_object <- function(target, value, config) {
   hash <- config$cache$set(
     key = target, value = value, namespace = "readd")
   config$cache$driver$set_hash(
-    key = target, namespace = "triggers", hash = hash)
+    key = target, namespace = "kernels", hash = hash)
 }
 
 store_file <- function(target, meta, config) {
@@ -137,7 +137,7 @@ store_file <- function(target, meta, config) {
     meta$file,
     rehash_file(target = target, config = config)
   )
-  for (namespace in c("readd", "triggers")){
+  for (namespace in c("readd", "kernels")){
     config$cache$set(key = target, value = hash, namespace = namespace)
   }
 }
@@ -153,7 +153,7 @@ store_function <- function(target, value, meta, config
     string <- c(string, meta$depends)
   }
   config$cache$set(key = target, value = string,
-    namespace = "triggers")
+    namespace = "kernels")
 }
 
 # Turn a command into an anonymous function

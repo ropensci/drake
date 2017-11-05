@@ -27,8 +27,8 @@ dependency_hash <- function(target, config) {
 }
 
 self_hash <- Vectorize(function(target, config) {
-  if (target %in% config$inventory$triggers) {
-    config$cache$get_hash(target, namespace = "triggers")
+  if (target %in% config$inventory$kernels) {
+    config$cache$get_hash(target, namespace = "kernels")
   } else {
     as.character(NA)
   }
@@ -64,7 +64,7 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    config$cache$get(key = target, namespace = "triggers")
+    config$cache$get(key = target, namespace = "kernels")
   }
 }
 

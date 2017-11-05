@@ -20,7 +20,7 @@
 #' such as \code{destroy}, \code{cache}, \code{path}, \code{search},
 #' \code{verbose}, or \code{jobs}. If there are name conflicts,
 #' use the \code{list} argument instead of \code{...}.
-#' 
+#'
 #' @param list character vector naming targets to be removed from the
 #' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
 #'
@@ -43,7 +43,7 @@
 #' current working directory only.
 #'
 #' @param verbose whether to print console messages
-#' 
+#'
 #' @param jobs Number of jobs for light parallelism
 #' (disabled on Windows).
 #'

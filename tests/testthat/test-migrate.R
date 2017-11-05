@@ -51,7 +51,7 @@ test_with_dir("migrate() a partially outdated cache", {
     cache$del(key = "report_dependencies", namespace = namespace)
   }
   plan <- cache$get("plan", namespace = "config")
-  plan$command[plan$target == "small"] = "simulate(6)"
+  plan$command[plan$target == "small"] <- "simulate(6)"
   cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate(path = "old", jobs = 2))
 })

@@ -67,7 +67,7 @@ deps <- function(x){
 #' dependency_profile("large", config = con) # hashes of deps still available
 #' # should agree with `$meta_of_dependencies`
 #' con$cache$get_hash("simulate",
-#'   namespace = "triggers")
+#'   namespace = "kernels")
 #' }
 dependency_profile <- function(target, config){
   config <- thorough_inventory(config)
