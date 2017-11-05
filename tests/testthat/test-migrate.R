@@ -38,8 +38,23 @@ test_with_dir("migrate() an up to date cache", {
   cache <- this_cache(path = "old", force = TRUE)
   expect_true(migrate(path = "old", jobs = 2))
   load_basic_example()
-  con <- make(my_plan, cache = cache)
-#  expect_equal(justbuilt(config = con), character(0)) # r-lib/covr#289 # nolint
+  config <- make(my_plan, cache = cache)
+#  expect_equal(justbuilt(config = config), character(0)) # r-lib/covr#289 # nolint
+
+  # Test some null cases in legacy functions.
+  # Already tested and heavily used in previous versions of drake.
+  expect_true(is.na(legacy_self_hash(target = "ok123", config = config)))
+  expect_true(is.character(
+    legacy_file_hash(target = "'report.md'", config = config,
+      size_cutoff = -1)
+  ))
+  expect_false(
+    legacy_target_current(target = "ok123", hashes = NULL, config = config))
+  unlink("report.md")
+  expect_false(
+    legacy_target_current(
+      target = "'report.md'", hashes = NULL, config = config))
+  expect_true(is.na(error_na()))
 })
 
 test_with_dir("migrate() a partially outdated cache", {
