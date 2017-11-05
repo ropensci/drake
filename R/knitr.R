@@ -150,9 +150,7 @@ found_loadd_readd <- function(x){
 get_specific_arg <- function(args, name){
   tryCatch(
     eval(args[[name]]),
-    error = function(e){
-      character(0)
-    }
+    error = error_character0
   )
 }
 

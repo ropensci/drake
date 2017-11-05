@@ -5,10 +5,11 @@
 \title{Function outdated}
 \usage{
 outdated(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
-  force(code) }, cache = drake::get_cache(verbose = verbose),
+  envir = parent.frame(), verbose = TRUE, hook = default_hook,
+  cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0), config = NULL)
+  packages = rev(.packages()), prework = character(0), config = NULL,
+  make_imports = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -40,10 +41,13 @@ produced with \code{\link{config}()}.
 \code{config$envir} is ignored.
 Overrides all the other arguments if not \code{NULL}.
 For example,
-\code{plan} is replaced with \code{config$plan}.
-Computing \code{config}
-in advance could save time if you plan multiple calls to
-\code{outdated()}.}
+\code{plan} is replaced with \code{config$plan}.}
+
+\item{make_imports}{logical, whether to import external files
+and objects from the user's workspace to detemine
+which targets are up to date. If \code{FALSE}, the computation
+is faster, but all the relevant information is drawn from the cache
+and may be out of date.}
 }
 \description{
 Check which targets are out of date and need to be rebuilt.

@@ -205,9 +205,7 @@ is_parsable <- Vectorize(function(x){
       parse(text = x)
       TRUE
     },
-    error = function(e){
-      FALSE
-    }
+    error = error_false
   )
 },
 "x")
@@ -221,7 +219,7 @@ extract_filenames <- function(command){
 }
 
 safe_grepl <- function(pattern, x){
-  tryCatch(grepl(pattern, x), error = function(e) FALSE)
+  tryCatch(grepl(pattern, x), error = error_false)
 }
 
 is_file <- function(x){

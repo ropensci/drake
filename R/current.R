@@ -33,9 +33,12 @@ file_current <- function(target, meta, config){
   if (!file.exists(unquote(target))){
     return(FALSE)
   }
-  identical(
-    config$cache$get(target, namespace = "kernels"),
-    meta$file
+  tryCatch(
+    identical(
+      config$cache$get(target, namespace = "kernels"),
+      meta$file
+    ),
+    error = error_false
   )
 }
 

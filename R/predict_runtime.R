@@ -72,9 +72,7 @@ predict_runtime <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
+  hook = default_hook,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -224,9 +222,7 @@ rate_limiting_times <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
+  hook = default_hook,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1,

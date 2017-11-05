@@ -6,11 +6,10 @@
 \usage{
 max_useful_jobs(plan = workplan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, hook = function(code) {     force(code) },
-  cache = drake::get_cache(verbose = verbose), jobs = 1,
-  parallelism = drake::default_parallelism(), packages = rev(.packages()),
-  prework = character(0), config = NULL, imports = c("files", "all",
-  "none"))
+  verbose = TRUE, hook = default_hook, cache = drake::get_cache(verbose =
+  verbose), jobs = 1, parallelism = drake::default_parallelism(),
+  packages = rev(.packages()), prework = character(0), config = NULL,
+  imports = c("files", "all", "none"), make_imports = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -81,6 +80,12 @@ Possible values:
  \item{'none'}{: Ignore all the imports and just focus on the max number
    of useful jobs for parallelizing targets.}
 }}
+
+\item{make_imports}{logical, whether to import external files
+and objects from the user's workspace to detemine
+which targets are up to date. If \code{FALSE}, the computation
+is faster, but all the relevant information is drawn from the cache
+and may be out of date.}
 }
 \value{
 a list of three data frames: one for nodes, one for edges,

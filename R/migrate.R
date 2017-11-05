@@ -22,6 +22,18 @@
 #' tells you whether the migration
 #' is successful. If it is not successful, \code{migrate()} tells you where
 #' it backed up your old project.
+#' @examples
+#' \dontrun{
+#' # With drake 4.3.0:
+#' load_basic_example()
+#' make(my_plan)
+#' # Now, install drake >= 5.0.0
+#' load_basic_example()
+#' make(my_plan) # Error: cache is not back compatible.
+#' migrate() # Convert the project's '.drake/' cache to the new format.
+#' make(my_plan) # Everything is still up to date!
+#' # Outdated objects from before migration will remain out of date afterwards.
+#' }
 migrate <- function(path = drake::default_cache_path(), jobs = 1){
   cache <- should_migrate(path = path)
   if (is.null(cache)){

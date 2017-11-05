@@ -6,9 +6,9 @@
 \usage{
 rate_limiting_times(plan = workplan(), from_scratch = FALSE,
   targets_only = FALSE, targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
-  force(code) }, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose), parallelism = drake::default_parallelism(), jobs = 1,
+  envir = parent.frame(), verbose = TRUE, hook = default_hook,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  parallelism = drake::default_parallelism(), jobs = 1,
   future_jobs = jobs, packages = rev(.packages()), prework = character(0),
   config = NULL, digits = 3, path = getwd(), search = TRUE)
 }

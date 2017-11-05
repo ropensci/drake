@@ -5,13 +5,13 @@
 \title{Function \code{dataframes_graph}}
 \usage{
 dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = function(code) {    
-  force(code) }, cache = drake::get_cache(verbose = verbose), jobs = 1,
+  envir = parent.frame(), verbose = TRUE, hook = default_hook,
+  cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   config = NULL, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL, from_scratch = FALSE)
+  order = NULL, subset = NULL, make_imports = TRUE, from_scratch = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -109,11 +109,13 @@ Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
 edges will drop from the graph.}
 
-\item{from_scratch}{logical, whether to assume that
-all targets are out of date and the next \code{\link{make}()}
-will happen from scratch. Setting to \code{TRUE} will prevent
-the graph from showing you which targets are up to date,
-but it makes computing the graph much faster.}
+\item{make_imports}{logical, whether to import external files
+and objects from the user's workspace to detemine
+which targets are up to date. If \code{FALSE}, the computation
+is faster, but all the relevant information is drawn from the cache
+and may be out of date.}
+
+\item{from_scratch}{deprecated: use \code{make_imports} instead.}
 }
 \value{
 a list of three data frames: one for nodes,

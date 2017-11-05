@@ -31,23 +31,24 @@
 #' Overrides all the other arguments if not \code{NULL}.
 #' For example,
 #' \code{plan} is replaced with \code{config$plan}.
-#' Computing \code{config}
-#' in advance could save time if you plan multiple calls to
-#' \code{outdated()}.
+#' @param make_imports logical, whether to import external files
+#' and objects from the user's workspace to detemine
+#' which targets are up to date. If \code{FALSE}, the computation
+#' is faster, but all the relevant information is drawn from the cache
+#' and may be out of date.
 outdated <-  function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
+  hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = rev(.packages()),
   prework = character(0),
-  config = NULL
+  config = NULL,
+  make_imports = TRUE
 ){
   force(envir)
   if (is.null(config)){
@@ -64,7 +65,9 @@ outdated <-  function(
       prework = prework
     )
   }
-  make_imports(config = config)
+  if (make_imports){
+    make_imports(config = config)
+  }
   config <- quick_inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   meta_list <- meta_list(targets = all_targets, config = config)

@@ -49,9 +49,7 @@ config <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
+  hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(),
   jobs = 1,

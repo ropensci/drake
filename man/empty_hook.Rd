@@ -17,6 +17,7 @@ for which no targets get built and no imports get resolved
 \examples{
 \dontrun{
 load_basic_example()
-make(my_plan, hook = empty_hook)
+make(my_plan, hook = empty_hook) # Nothing gets built!
+cached() # character(0)
 }
 }

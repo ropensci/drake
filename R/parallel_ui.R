@@ -187,6 +187,12 @@ default_parallelism <- function() {
 #'  \item{'none'}{: Ignore all the imports and just focus on the max number
 #'    of useful jobs for parallelizing targets.}
 #' }
+#' 
+#' @param make_imports logical, whether to import external files
+#' and objects from the user's workspace to detemine
+#' which targets are up to date. If \code{FALSE}, the computation
+#' is faster, but all the relevant information is drawn from the cache
+#' and may be out of date.
 #'
 #' @examples
 #' \dontrun{
@@ -218,13 +224,12 @@ max_useful_jobs <- function(
   plan = workplan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
+  hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   jobs = 1, parallelism = drake::default_parallelism(),
   packages = rev(.packages()), prework = character(0), config = NULL,
-  imports = c("files", "all", "none")
+  imports = c("files", "all", "none"),
+  make_imports = TRUE
 ){
   force(envir)
   if (is.null(config)){
@@ -243,7 +248,7 @@ max_useful_jobs <- function(
   }
   config <- quick_inventory(config)
   nodes <- dataframes_graph(plan = config$plan, config = config,
-    split_columns = FALSE)$nodes
+    split_columns = FALSE, make_imports = make_imports)$nodes
   imports <- match.arg(imports)
   just_targets <- intersect(nodes$id, config$plan$target)
   just_files <- Filter(x = nodes$id, f = is_file)

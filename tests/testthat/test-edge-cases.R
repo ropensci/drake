@@ -1,5 +1,11 @@
 drake_context("edge cases")
 
+test_with_dir("error handlers", {
+  expect_equal(error_na(1), NA)
+  expect_false(error_false(1))
+  expect_equal(error_character0(1), character(0))
+})
+
 test_with_dir("deprecation", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   plan <- data.frame(code = 1:2, output = c("x", "y"))

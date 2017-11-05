@@ -73,13 +73,28 @@ output_sink_hook <- function(code){
 #' @description a \code{hook} argument to \code{\link{make}()}
 #' for which no targets get built and no imports get resolved
 #' @export
+#' @param code Placeholder for the code to build a target/import.
+#' For \code{empty_hook}, this code does not actually get executed.
 #' @examples
 #' \dontrun{
 #' load_basic_example()
-#' make(my_plan, hook = empty_hook)
+#' make(my_plan, hook = empty_hook) # Nothing gets built!
+#' cached() # character(0)
 #' }
-#' @param code Placeholder for the code to build a target/import.
-#' For \code{empty_hook}, this code does not actually get executed.
 empty_hook <- function(code){
   invisible()
+}
+
+#' @title Function default_hook
+#' @description The default \code{hook} argument to \code{\link{make}()}.
+#' @export
+#' @param code Placeholder for the code to build a target/import.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' make(my_plan, hook = default_hook) # Nothing gets built!
+#' cached() # character(0)
+#' }
+default_hook <- function(code){
+  force(code)
 }

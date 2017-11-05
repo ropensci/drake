@@ -102,11 +102,13 @@
 #' \code{build_times}, \code{digits}, \code{targets_only},
 #' \code{split_columns}, and \code{font_size}.
 #'
-#' @param from_scratch logical, whether to assume that
-#' all targets are out of date and the next \code{\link{make}()}
-#' will happen from scratch. Setting to \code{TRUE} will prevent
-#' the graph from showing you which targets are up to date,
-#' but it makes computing the graph much faster.
+#' @param make_imports logical, whether to import external files
+#' and objects from the user's workspace to detemine
+#' which targets are up to date. If \code{FALSE}, the computation
+#' is faster, but all the relevant information is drawn from the cache
+#' and may be out of date.
+#'
+#' @param from_scratch deprecated: use \code{make_imports} instead.
 #'
 #' @examples
 #' \dontrun{
@@ -128,17 +130,22 @@
 dataframes_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
-  hook = function(code){
-    force(code)
-  },
+  hook = default_hook,
   cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE,
   split_columns = FALSE, font_size = 20, config = NULL,
   from = NULL, mode = c("out", "in", "all"), order = NULL, subset = NULL,
-  from_scratch = FALSE
+  make_imports = TRUE,
+  from_scratch = NULL
 ) {
+  if (!is.null(from_scratch)){
+    warning(
+      "Argument 'from_scratch' is deprecated. Using 'make_imports' instead."
+    )
+  }
+  
   force(envir)
   if (is.null(config)){
     config <- config(plan = plan, targets = targets,
@@ -153,12 +160,7 @@ dataframes_graph <- function(
 
   config$plan <- sanitize_plan(plan = plan)
   config$targets <- sanitize_targets(plan = plan, targets = targets)
-
-  if (from_scratch){
-    config$outdated <- plan$target
-  } else {
-    config$outdated <- outdated(config = config)
-  }
+  config$outdated <- outdated(config = config, make_imports = make_imports)
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
