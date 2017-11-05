@@ -14,7 +14,7 @@ plot_graph(plan = workplan(), targets = drake::possible_targets(plan),
   layout = "layout_with_sugiyama", main = NULL, direction = "LR",
   hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
   "in", "all"), order = NULL, subset = NULL, ncol_legend = 1,
-  make_imports = TRUE, from_scratch = NULL, ...)
+  make_imports = TRUE, from_scratch = FALSE, ...)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -150,7 +150,10 @@ which targets are up to date. If \code{FALSE}, the computation
 is faster, but all the relevant information is drawn from the cache
 and may be out of date.}
 
-\item{from_scratch}{Deprecated. Use \code{make_imports} instead.}
+\item{from_scratch}{logical, whether to assume all the targets
+will be made from scratch on the next \code{\link{make}()}.
+Makes all targets outdated, but keeps information about
+build progress in previous \code{\link{make}()}s.}
 
 \item{...}{other arguments passed to
 \code{visNetwork::visNetwork()} to plot the graph.}

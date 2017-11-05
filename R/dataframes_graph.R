@@ -108,7 +108,10 @@
 #' is faster, but all the relevant information is drawn from the cache
 #' and may be out of date.
 #'
-#' @param from_scratch deprecated: use \code{make_imports} instead.
+#' @param from_scratch logical, whether to assume all the targets
+#' will be made from scratch on the next \code{\link{make}()}.
+#' Makes all targets outdated, but keeps information about
+#' build progress in previous \code{\link{make}()}s.
 #'
 #' @examples
 #' \dontrun{
@@ -138,14 +141,8 @@ dataframes_graph <- function(
   split_columns = FALSE, font_size = 20, config = NULL,
   from = NULL, mode = c("out", "in", "all"), order = NULL, subset = NULL,
   make_imports = TRUE,
-  from_scratch = NULL
+  from_scratch = FALSE
 ) {
-  if (!is.null(from_scratch)){
-    warning(
-      "Argument 'from_scratch' is deprecated. Using 'make_imports' instead."
-    )
-  }
-  
   force(envir)
   if (is.null(config)){
     config <- config(plan = plan, targets = targets,
@@ -160,7 +157,11 @@ dataframes_graph <- function(
 
   config$plan <- sanitize_plan(plan = plan)
   config$targets <- sanitize_targets(plan = plan, targets = targets)
-  config$outdated <- outdated(config = config, make_imports = make_imports)
+  if (from_scratch){
+    config$outdated <- config$plan$target
+  } else {
+    config$outdated <- outdated(config = config, make_imports = make_imports)
+  }
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes

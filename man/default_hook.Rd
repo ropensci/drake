@@ -16,6 +16,6 @@ The default \code{hook} argument to \code{\link{make}()}.
 \dontrun{
 load_basic_example()
 make(my_plan, hook = default_hook) # Nothing gets built!
-cached() # character(0)
+cached() # character(0) # nolint
 }
 }

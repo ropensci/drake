@@ -248,7 +248,8 @@ max_useful_jobs <- function(
   }
   config <- quick_inventory(config)
   nodes <- dataframes_graph(plan = config$plan, config = config,
-    split_columns = FALSE, make_imports = make_imports)$nodes
+    split_columns = FALSE, make_imports = make_imports,
+    from_scratch = from_scratch)$nodes
   imports <- match.arg(imports)
   just_targets <- intersect(nodes$id, config$plan$target)
   just_files <- Filter(x = nodes$id, f = is_file)

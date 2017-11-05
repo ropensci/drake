@@ -79,7 +79,7 @@ output_sink_hook <- function(code){
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan, hook = empty_hook) # Nothing gets built!
-#' cached() # character(0)
+#' cached() # character(0) # nolint
 #' }
 empty_hook <- function(code){
   invisible()
@@ -93,7 +93,7 @@ empty_hook <- function(code){
 #' \dontrun{
 #' load_basic_example()
 #' make(my_plan, hook = default_hook) # Nothing gets built!
-#' cached() # character(0)
+#' cached() # character(0) # nolint
 #' }
 default_hook <- function(code){
   force(code)

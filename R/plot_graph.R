@@ -139,7 +139,10 @@
 #' is faster, but all the relevant information is drawn from the cache
 #' and may be out of date.
 #'
-#' @param from_scratch Deprecated. Use \code{make_imports} instead.
+#' @param from_scratch logical, whether to assume all the targets
+#' will be made from scratch on the next \code{\link{make}()}.
+#' Makes all targets outdated, but keeps information about
+#' build progress in previous \code{\link{make}()}s.
 #'
 #' @param ... other arguments passed to
 #' \code{visNetwork::visNetwork()} to plot the graph.
@@ -174,7 +177,7 @@ plot_graph <- function(
   subset = NULL,
   ncol_legend = 1,
   make_imports = TRUE,
-  from_scratch = NULL,
+  from_scratch = FALSE,
   ...
 ){
   force(envir)

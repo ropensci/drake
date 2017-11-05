@@ -18,6 +18,6 @@ for which no targets get built and no imports get resolved
 \dontrun{
 load_basic_example()
 make(my_plan, hook = empty_hook) # Nothing gets built!
-cached() # character(0)
+cached() # character(0) # nolint
 }
 }

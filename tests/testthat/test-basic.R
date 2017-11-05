@@ -22,7 +22,7 @@ test_with_dir("basic example works", {
   # Different graph configurations should be checked manually.
   tmp <- dataframes_graph(my_plan, envir = e, config = config)
   tmpcopy <- dataframes_graph(my_plan, envir = e, config = config,
-    from_scratch = TRUE)
+    make_imports = FALSE)
   tmp0 <- dataframes_graph(my_plan, envir = e, config = config,
     subset = c("small", "regression2_large"))
   tmp1 <- dataframes_graph(my_plan, envir = e, config = config,
@@ -83,9 +83,9 @@ test_with_dir("basic example works", {
   expect_true(is.list(dependency_profile(
     target = "small", config = con)))
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
-  tmp1 <- dataframes_graph(my_plan, envir = e, config = config)
-  tmp2 <- dataframes_graph(my_plan, envir = e, config = config,
-    from_scratch = TRUE)
+  tmp1 <- dataframes_graph(my_plan, envir = e, config = config,
+    make_imports = FALSE)
+  tmp2 <- dataframes_graph(my_plan, envir = e, config = config)
   expect_false(identical(tmp1$nodes, tmp2$nodes))
 
   expect_equal(sort(justbuilt(con)), sort(dats))

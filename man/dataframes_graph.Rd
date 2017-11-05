@@ -11,7 +11,8 @@ dataframes_graph(plan = workplan(), targets = drake::possible_targets(plan),
   prework = character(0), build_times = TRUE, digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
   config = NULL, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL, make_imports = TRUE, from_scratch = NULL)
+  order = NULL, subset = NULL, make_imports = TRUE,
+  from_scratch = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -115,7 +116,10 @@ which targets are up to date. If \code{FALSE}, the computation
 is faster, but all the relevant information is drawn from the cache
 and may be out of date.}
 
-\item{from_scratch}{deprecated: use \code{make_imports} instead.}
+\item{from_scratch}{logical, whether to assume all the targets
+will be made from scratch on the next \code{\link{make}()}.
+Makes all targets outdated, but keeps information about
+build progress in previous \code{\link{make}()}s.}
 }
 \value{
 a list of three data frames: one for nodes,
