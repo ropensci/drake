@@ -31,8 +31,9 @@ an old cache to a format compatible with the version of drake
 installed on your system.
 A migration is successful if the transition preserves target status:
 that is, outdated targets remain outdated and up to date targets
-remain up to date. At the end, \code{migrate()} tells you whether the migration
-is successful. If it is not successful, \code{migrat()} tells you where
+remain up to date. At the end, \code{migrate()}
+tells you whether the migration
+is successful. If it is not successful, \code{migrate()} tells you where
 it backed up your old project.
 }
 \seealso{
