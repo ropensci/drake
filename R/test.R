@@ -76,9 +76,9 @@ with_all_options <- function(code) {
   force(code)
 }
 
-write_v4.1.0_cache <- function(){ # nolint
+write_v4.3.0_project <- function(){ # nolint
   zip <- system.file(
-    file.path("testing", "v4.1.0_basic_cache.zip"),
+    file.path("testing", "built_basic_example_v4.3.0.zip"),
     package = "drake",
     mustWork = TRUE
   )

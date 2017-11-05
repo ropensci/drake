@@ -69,8 +69,15 @@ test_with_dir("Pick the hashes", {
     long_hash_algo = "crc32"
   )
   expect_true(file.exists("new"))
+  y <- this_cache(path = "new")
+  expect_true(file.exists("new"))
   expect_equal(short_hash(x), "murmur32")
   expect_equal(long_hash(x), "crc32")
+  expect_equal(short_hash(y), "murmur32")
+  expect_equal(long_hash(y), "crc32")
+  expect_equal(x$driver$hash_algorithm, "murmur32")
+  expect_equal(y$driver$hash_algorithm, "murmur32")
+
   x$del("long_hash_algo", namespace = "config")
   x <- configure_cache(x, long_hash_algo = "sha1")
   expect_equal(long_hash(x), "sha1")

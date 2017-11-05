@@ -5,7 +5,7 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_null(get_cache())
   expect_null(this_cache())
   expect_true(inherits(recover_cache(), "storr"))
-  write_v4.1.0_cache() # nolint
+  write_v4.3.0_project() # nolint
   suppressWarnings({
     expect_error(get_cache())
     expect_error(this_cache())
@@ -32,23 +32,18 @@ test_with_dir("null cases for migrate()", {
 })
 
 test_with_dir("migrate() an up to date cache", {
-  write_v4.1.0_cache() # nolint
+  write_v4.3.0_project() # nolint
   file.rename(from = default_cache_path(), to = "old")
   expect_error(this_cache(path = "old"))
   cache <- this_cache(path = "old", force = TRUE)
-  expect_equal(cache$driver$hash_algorithm, "md5")
-  plan <- cache$get(key = "plan", namespace = "config")
-  plan <- plan[plan$target != "'report.md'", ]
-  cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate(path = "old", jobs = 2))
-  e <- new.env(parent = globalenv())
-  load_basic_example(envir = e)
-  con <- make(plan, envir = e, cache = cache)
-#  expect_equal(justbuilt(config = con), character(0)) # not on covr # nolint
+  load_basic_example()
+  con <- make(my_plan, cache = cache)
+#  expect_equal(justbuilt(config = con), character(0)) # r-lib/covr#289 # nolint
 })
 
 test_with_dir("migrate() a partially outdated cache", {
-  write_v4.1.0_cache() # nolint
+  write_v4.3.0_project() # nolint
   file.rename(from = default_cache_path(), to = "old")
   cache <- this_cache(path = "old", force = TRUE)
   for (namespace in cache$list_namespaces()){
@@ -58,12 +53,10 @@ test_with_dir("migrate() a partially outdated cache", {
   plan$command[plan$target == "small"] <- "simulate(6)"
   cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate(path = "old", jobs = 2))
-  e <- new.env(parent = globalenv())
-  load_basic_example(envir = e)
-  out <- outdated(plan = plan, envir = e, cache = cache)
-  out2 <- c("'report.md'", "report_dependencies",
-    plan$target[grepl("small", plan$target)])
-#  expect_equal(sort(out), sort(out2)) # not on covr # nolint
+  out <- c("'report.md'", plan$target[grep("small", plan$target)])
+  load_basic_example()
+  out2 <- outdated(plan, cache = cache)
+#  expect_equal(sort(out), sort(out2)) # r-lib/covr#289 # nolint
 })
 
 test_with_dir("migration_result()", {
