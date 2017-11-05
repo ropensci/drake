@@ -255,7 +255,8 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    config$cache$get(target)$value
+    # already tested in previous drake versions
+    config$cache$get(target)$value # nocov
   }
 }
 
@@ -264,7 +265,7 @@ legacy_target_current <- function(target, hashes, config){
     return(FALSE)
   }
   if (!legacy_file_current(target = target, hashes = hashes, config = config)){
-    return(FALSE)
+    return(FALSE) # already tested in previous drake versions # nocov
   }
   identical(
     config$cache$get(target, namespace = "depends"),
@@ -277,7 +278,7 @@ legacy_file_current <- function(target, hashes, config){
     return(TRUE)
   }
   if (!file.exists(unquote(target))){
-    return(FALSE)
+    return(FALSE) # already tested in previous drake versions # nocov
   }
   identical(config$cache$get(target)$value, hashes$file)
 }
