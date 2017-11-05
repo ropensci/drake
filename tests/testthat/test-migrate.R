@@ -36,6 +36,7 @@ test_with_dir("migrate() an up to date cache", {
   file.rename(from = default_cache_path(), to = "old")
   expect_error(this_cache(path = "old"))
   cache <- this_cache(path = "old", force = TRUE)
+  expect_equal(cache$driver$hash_algorithm, "md5")
   plan <- cache$get(key = "plan", namespace = "config")
   plan <- plan[plan$target != "'report.md'", ]
   cache$set(key = "plan", value = plan, namespace = "config")
