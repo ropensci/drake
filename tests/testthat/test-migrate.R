@@ -55,6 +55,9 @@ test_with_dir("migrate() an up to date cache", {
     legacy_target_current(
       target = "'report.md'", hashes = NULL, config = config))
   expect_true(is.na(error_na()))
+
+  clean(cache = cache)
+  expect_equal(cached(cache = cache), character(0))
 })
 
 test_with_dir("migrate() a partially outdated cache", {
