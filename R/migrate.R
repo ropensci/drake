@@ -52,7 +52,7 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
     sort
   success <- identical(config$outdated, outdated)
   migration_result(success = success, backup = backup)
-  success
+  invisible(success)
 }
 
 should_migrate <- function(path){
@@ -244,8 +244,8 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(target %in% config$inventory_filemtime,
-                      config$cache$get(key = target, namespace = "filemtime"),
-                      -Inf)
+    config$cache$get(key = target, namespace = "filemtime"),
+    -Inf)
   new_mtime <- file.mtime(filename)
   do_rehash <- should_rehash_file(
     filename = filename,
