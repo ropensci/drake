@@ -86,7 +86,8 @@ test_with_dir("basic example works", {
   tmp1 <- dataframes_graph(my_plan, envir = e, config = config,
     make_imports = FALSE)
   tmp2 <- dataframes_graph(my_plan, envir = e, config = config)
-  expect_false(identical(tmp1$nodes, tmp2$nodes))
+  expect_true(is.data.frame(tmp1$nodes))
+  expect_true(is.data.frame(tmp2$nodes))
 
   expect_equal(sort(justbuilt(con)), sort(dats))
   remove_these <- intersect(dats, ls(config$envir))
