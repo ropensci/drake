@@ -194,7 +194,9 @@ legacy_outdated <- function(config){
     }
   )
   if (!length(rebuild)){
-    return(character(0))
+    # This line was reached in previous versions of drake.
+    # Legacy code will not change anyway.
+    return(character(0)) # nocov
   } else{
     lightly_parallelize(
       rebuild,
@@ -269,7 +271,9 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    config$cache$get(target)$value
+    # This line was reached for previous version of drake.
+    # Legacy code will not change anyway.
+    config$cache$get(target)$value # nocov
   }
 }
 
