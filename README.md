@@ -195,13 +195,14 @@ The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rend
 
 ```r
 vignette(package = "drake")            # List the vignettes.
+vignette("caution")                    # Avoid common pitfalls.
 vignette("drake")                      # High-level intro.
 vignette("graph")                      # Visualilze the workflow graph.
 vignette("quickstart")                 # Walk through a simple example.
-vignette("parallelism") # Extensive prallel computing functionality.
+vignette("parallelism")                # Extensive prallel computing functionality.
 vignette("storage")                    # Learn how drake stores your stuff.
 vignette("timing")                     # Build times of targets, predicting total runtime.
-vignette("caution")                    # Avoid common pitfalls.
+vignette("triggers")                   # Relax drake's reproducible reactivity rules.
 ```
 
 # Help and troubleshooting
@@ -239,14 +240,13 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
 
-See the `quickstart` vignette for demonstrations of `drake`'s reproducibility and reactivity. See the `graph` vignette for a detailed walkthrough of the visualizations.
+However, you can relax this reproducible reacitivty by choosing target-level triggers. See the `triggers` vignette for more.
 
 ```r
-vignette("graph")
-vignette("quickstart")
+vignette("triggers")
 ```
 
-You can enhance reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
+In other ways, you can enhance reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
 # High-performance computing
 
