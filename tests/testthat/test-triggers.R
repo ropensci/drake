@@ -58,21 +58,21 @@ test_with_dir("triggers work as expected", {
   file.rename("intermediatefile.rds", "tmp")
   con <- make(
     con$plan, rush = TRUE, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = TRUE)
+    envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(justbuilt(con), character(0))
 
   # Rush builds just one thing.
   clean(combined)
   con <- make(
     con$plan, rush = TRUE, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = con$verbose)
+    envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(justbuilt(con), "combined")
 
   # Rush does not build imports
   clean()
   con <- make(
     con$plan, rush = TRUE, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = con$verbose)
+    envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(sort(justbuilt(con)), sort(con$plan$target))
   expect_true(all(con$plan$trigger == "missing"))
 
