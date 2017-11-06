@@ -255,9 +255,11 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   }
   if (!file.exists(filename))
     return(as.character(NA))
-  old_mtime <- ifelse(target %in% config$inventory_filemtime,
+  old_mtime <- ifelse(
+    target %in% config$cache$list(namespace = "filemtime"),
     config$cache$get(key = target, namespace = "filemtime"),
-    -Inf)
+    -Inf
+  )
   new_mtime <- file.mtime(filename)
   do_rehash <- should_rehash_file(
     filename = filename,
