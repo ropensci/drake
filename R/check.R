@@ -46,8 +46,20 @@ check_config <- function(config) {
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
   missing_input_files(config)
+  assert_standard_columns(config)
   warn_bad_symbols(config$plan$target)
   parallelism_warnings(config)
+}
+
+assert_standard_columns <- function(config){
+  x <- setdiff(colnames(config$plan), workplan_columns())
+  if (length(x)){
+    warning(
+      "Non-standard columns in workflow plan:\n",
+      multiline_message(x),
+      call. = FALSE
+    )
+  }
 }
 
 missing_input_files <- function(config) {

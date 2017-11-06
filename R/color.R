@@ -10,7 +10,7 @@ colors <- c(
   connect = "skyblue1",
   load = "#ff9933",
   unload = "#ff7221",
-  timeout = "maroon",
+  trigger = "maroon",
   retry = "forestgreen",
   fail = "red",
   up_to_date = "forestgreen",

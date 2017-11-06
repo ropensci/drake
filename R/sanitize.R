@@ -1,5 +1,5 @@
 sanitize_plan <- function(plan){
-  for (field in c("code", "command", "output", "target", "trigger")){
+  for (field in workplan_columns()){
     if (!is.null(plan[[field]])){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
@@ -10,6 +10,10 @@ sanitize_plan <- function(plan){
     assert_legal_triggers(plan$trigger)
   }
   plan
+}
+
+workplan_columns <- function(){
+  c("code", "command", "output", "target", "trigger")
 }
 
 sanitize_targets <- function(plan, targets){

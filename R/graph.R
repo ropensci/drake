@@ -44,7 +44,7 @@ build_graph <- function(
   imports <- imports[true_import_names]
   console_many_targets(
     targets = names(imports),
-    message = "connect",
+    pattern = "connect",
     type = "import",
     config = list(verbose = verbose)
   )
@@ -52,12 +52,16 @@ build_graph <- function(
     imports, import_dependencies, jobs = jobs)
   console_many_targets(
     targets = plan$target,
-    message = "connect",
+    pattern = "connect",
     type = "target",
     config = list(verbose = verbose)
   )
   command_deps <- lightly_parallelize(
     plan$command, command_dependencies, jobs = jobs)
+  names(command_deps) <- plan$target
+  command_deps <- lightly_parallelize(
+    plan$target, trigger_trim_deps, jobs = jobs,
+    command_deps = command_deps, plan = plan)
   names(command_deps) <- plan$target
   dependency_list <- c(command_deps, import_deps)
   keys <- names(dependency_list)
@@ -139,6 +143,15 @@ assert_unique_names <- function(imports, targets, envir, verbose){
       )
   }
   remove(list = common, envir = envir)
+}
+
+trigger_trim_deps <- function(target, command_deps, plan){
+  deps <- command_deps[[target]]
+  trigger <- get_trigger(target = target, config = list(plan = plan))
+  if (trigger %in% triggers_with_depends()){
+    return(deps)
+  }
+  intersect(deps, plan$target)
 }
 
 trim_graph <- function(config){

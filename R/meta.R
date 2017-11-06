@@ -1,6 +1,7 @@
 meta_list <- function(targets, config) {
   console_many_targets(targets = targets,
-    message = "check", config = config)
+    pattern = "check", color = "check",
+    config = config)
   out <- lightly_parallelize(
     X = targets, FUN = meta,
     jobs = config$jobs, config = config
@@ -59,6 +60,15 @@ self_hash <- Vectorize(function(target, config) {
 },
 "target", USE.NAMES = FALSE)
 
+rehash_file <- function(target, config) {
+  digest::digest(
+    object = eply::unquote(target),
+    algo = config$long_hash_algo,
+    file = TRUE,
+    serialize = FALSE
+  )
+}
+
 should_rehash_file <- function(filename, new_mtime, old_mtime,
   size_cutoff){
   do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
@@ -90,28 +100,4 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   } else {
     config$cache$get(key = target, namespace = "kernels")
   }
-}
-
-rehash_file <- function(target, config) {
-  digest::digest(
-    object = eply::unquote(target),
-    algo = config$long_hash_algo,
-    file = TRUE,
-    serialize = FALSE
-  )
-}
-
-tidy <- function(x) {
-  parse(text = x) %>%
-    as.character %>%
-    paste(collapse = "\n") %>%
-    braces
-}
-
-braces <- function(x) {
-  paste("{\n", x, "\n}")
-}
-
-get_command <- function(target, config) {
-  config$plan$command[config$plan$target == target] %>% tidy
 }

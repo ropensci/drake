@@ -12,34 +12,34 @@
 #' Set the trigger for each target with a \code{"trigger"}
 #' column in your workflow plan data frame. The \code{triggers()}
 #' function lists the available triggers:
-#' 
+#'
 #' \itemize{
-#'   \item{'any'}{: 
+#'   \item{'any'}{:
 #'     Build the target if any of the other triggers activate.
 #'   }
-#'   
-#'   \item{'command'}{: 
+#'
+#'   \item{'command'}{:
 #'     Build if the workflow plan command has changed since last
 #'     time the target was built. Also built if \code{missing} is triggered.
 #'   }
 #'
-#'   \item{'depends'}{: 
+#'   \item{'depends'}{:
 #'     Build if any of the target's dependencies
 #'     has changed since the last \code{\link{make}()}.
 #'     Also build if \code{missing} is triggered.
 #'   }
-#'   
-#'   \item{'file'}{: 
+#'
+#'   \item{'file'}{:
 #'     Build if the target is a file and
 #'     that output file is either missing or corrupted.
 #'     Also build if \code{missing} is triggered.
 #'   }
 #'
-#'   \item{'missing'}{: 
+#'   \item{'missing'}{:
 #'     Build if the target itself is missing. Always applies.
 #'   }
 #' }
-#' 
+#'
 #' @examples
 #' triggers()
 #' \dontrun{
@@ -80,6 +80,9 @@ triggers_with_file <- function(){
 
 get_trigger <- function(target, config){
   plan <- config$plan
+  if (!(target %in% plan$target)){
+    return("any")
+  }
   if ("trigger" %in% colnames(plan)){
     plan$trigger[plan$target == target]
   } else {
@@ -133,8 +136,6 @@ file_trigger <- function(target, meta, config){
 }
 
 should_build <- function(target, meta_list, config){
-browser()
-  
   if (meta_list[[target]]$imported) {
     return(TRUE)
   }

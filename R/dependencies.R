@@ -230,3 +230,18 @@ is_file <- function(x){
 is_not_file <- function(x){
   !is_file(x)
 }
+
+tidy <- function(x) {
+  parse(text = x) %>%
+    as.character %>%
+    paste(collapse = "\n") %>%
+    braces
+}
+
+braces <- function(x) {
+  paste("{\n", x, "\n}")
+}
+
+get_command <- function(target, config) {
+  config$plan$command[config$plan$target == target] %>% tidy
+}

@@ -169,7 +169,7 @@
 #' of runtime configuration parameters used by \code{make()}.
 #' This argument is deprecated. Now, a configuration list
 #' is always invisibly returned.
-#' 
+#'
 #' @param rush Logical, whether to just build any missing targets
 #' without checking dependencies at all. If you just want to
 #' speed through a workflow for debugging purposes, this could help.
@@ -243,7 +243,7 @@ make <- function(
       call. = FALSE
     )
   }
-  
+
   if (rush && nrow(plan)){
     plan$trigger = "missing"
   }
