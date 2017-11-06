@@ -155,7 +155,7 @@ should_build_target <- function(target, meta, config){
   }
   if (trigger %in% triggers_with_depends()){
     do_build <- do_build ||
-      file_trigger(target = target, meta = meta, config = config)
+      depends_trigger(target = target, meta = meta, config = config)
   }
   if (trigger %in% triggers_with_file()){
     do_build <- do_build ||
