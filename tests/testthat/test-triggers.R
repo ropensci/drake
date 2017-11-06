@@ -57,8 +57,8 @@ test_with_dir("triggers work as expected", {
   con$plan$command[con$plan$target == "yourinput"] <- "1+2"
   file.rename("intermediatefile.rds", "tmp")
   con <- make(
-    con$plan, rush = TRUE, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = FALSE)
+    con$plan, rush = TRUE,
+    envir = con$envir, verbose = TRUE)
   expect_equal(justbuilt(con), character(0))
 
   # Rush builds just one thing.
