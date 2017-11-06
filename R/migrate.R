@@ -194,7 +194,8 @@ legacy_outdated <- function(config){
     }
   )
   if (!length(rebuild)){
-    # Already tested in previous versions of drake.
+    # Legacy functions were tested in previous versions of drake,
+    # and they are not going to develop going forward.
     return(character(0)) # nocov
   } else{
     lightly_parallelize(
@@ -268,7 +269,8 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    # already tested in previous drake versions
+    # Legacy functions were tested in previous versions of drake,
+    # and they are not going to develop going forward.
     config$cache$get(target)$value # nocov
   }
 }
@@ -278,7 +280,9 @@ legacy_target_current <- function(target, hashes, config){
     return(FALSE)
   }
   if (!legacy_file_current(target = target, hashes = hashes, config = config)){
-    return(FALSE) # already tested in previous drake versions # nocov
+    # Legacy functions were tested in previous versions of drake,
+    # and they are not going to develop going forward.
+    return(FALSE) # nocov
   }
   identical(
     config$cache$get(target, namespace = "depends"),
@@ -291,7 +295,9 @@ legacy_file_current <- function(target, hashes, config){
     return(TRUE)
   }
   if (!file.exists(unquote(target))){
-    return(FALSE) # already tested in previous drake versions # nocov
+    # Legacy functions were tested in previous versions of drake,
+    # and they are not going to develop going forward.
+    return(FALSE) # nocov
   }
   identical(config$cache$get(target)$value, hashes$file)
 }

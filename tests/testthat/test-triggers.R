@@ -7,10 +7,10 @@ test_with_dir("triggers work as expected", {
   expect_equal(outdated(config = con), character(0))
 
   # Illegal trigger
-  con$plan$trigger[1] = 5
-  expect_error(outdated(config = config))
-  con$plan$trigger[1] = "missing"
-  
+  con$plan$trigger[1] <- 5
+  expect_error(testrun(con))
+  con$plan$trigger[1] <- "missing"
+
   # Change a command.
   cmd <- con$plan$command[con$plan$target == "combined"]
   con$plan$command[con$plan$target == "combined"] <-
@@ -75,4 +75,6 @@ test_with_dir("triggers work as expected", {
     envir = con$envir, jobs = con$jobs, verbose = con$verbose)
   expect_equal(sort(justbuilt(con)), sort(con$plan$target))
   expect_true(all(con$plan$trigger == "missing"))
+
+
 })
