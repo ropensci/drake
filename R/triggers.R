@@ -101,7 +101,7 @@ assert_legal_triggers <- function(x){
 
 command_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$command))
-  identical(
+  !identical(
     config$cache$get(target, namespace = "commands"),
     meta$command
   )
@@ -109,7 +109,7 @@ command_trigger <- function(target, meta, config){
 
 depends_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$depends))
-  identical(
+  !identical(
     config$cache$get(target, namespace = "depends"),
     meta$depends
   )
@@ -118,13 +118,13 @@ depends_trigger <- function(target, meta, config){
 file_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$file))
   if (!is_file(target)){
-    return(TRUE)
-  }
-  if (!file.exists(unquote(target))){
     return(FALSE)
   }
+  if (!file.exists(unquote(target))){
+    return(TRUE)
+  }
   tryCatch(
-    identical(
+    !identical(
       config$cache$get(target, namespace = "kernels"),
       meta$file
     ),
