@@ -67,14 +67,27 @@ test_with_dir("triggers work as expected", {
     con$plan, rush = TRUE, parallelism = con$parallelism,
     envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(justbuilt(con), "combined")
+})
 
-  # Rush does not build imports
-  clean()
+test_with_dir("rush brings targets up to date", {
+  con <- dbug()
   con <- make(
     con$plan, rush = TRUE, parallelism = con$parallelism,
     envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(sort(justbuilt(con)), sort(con$plan$target))
   expect_true(all(con$plan$trigger == "missing"))
+  expect_equal(outdated(config = con), character(0))
+})
 
-
+test_with_dir("Depends brings targets up to date", {
+  con <- dbug()
+  con$plan$trigger <- "depends"
+  con <- make(
+    con$plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs, verbose = FALSE)
+  con2 <-  make(
+    con$plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs, verbose = FALSE)
+  expect_equal(sort(justbuilt(con2)), character(0))
+  expect_equal(outdated(config = con2), character(0))
 })
