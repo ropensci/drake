@@ -25,17 +25,7 @@ function lists the available triggers:
   \item{'any'}{: 
     Build the target if any of the other triggers activate.
   }
-
-  \item{'missing'}{: 
-    Build if the target itself is missing. Always applies.
-  }
-
-  \item{'file'}{: 
-    Build if the target is a file and
-    that output file is either missing or corrupted.
-    Also build if \code{missing} is triggered.
-  }
-
+  
   \item{'command'}{: 
     Build if the workflow plan command has changed since last
     time the target was built. Also built if \code{missing} is triggered.
@@ -45,6 +35,16 @@ function lists the available triggers:
     Build if any of the target's dependencies
     has changed since the last \code{\link{make}()}.
     Also build if \code{missing} is triggered.
+  }
+  
+  \item{'file'}{: 
+    Build if the target is a file and
+    that output file is either missing or corrupted.
+    Also build if \code{missing} is triggered.
+  }
+
+  \item{'missing'}{: 
+    Build if the target itself is missing. Always applies.
   }
 }
 }
