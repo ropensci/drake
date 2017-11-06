@@ -237,7 +237,7 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr/) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, `report.md`).
 
-However, you can relax this reproducible reacitivty by choosing target-level triggers. See the `triggers` vignette for more.
+However, if you are simply debugging and testing a project, you can relax this reproducible reacitivty by choosing target-level triggers. See the `triggers` vignette for more.
 
 ```r
 vignette("triggers")

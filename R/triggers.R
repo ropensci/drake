@@ -133,6 +133,8 @@ file_trigger <- function(target, meta, config){
 }
 
 should_build <- function(target, meta_list, config){
+browser()
+  
   if (meta_list[[target]]$imported) {
     return(TRUE)
   }
