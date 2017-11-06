@@ -119,6 +119,9 @@ test_with_dir("check_config() via check() and make()", {
     check(config$plan, targets = character(0), envir = config$envir))
   expect_error(
     make(config$plan, targets = character(0), envir = config$envir))
+  y <- workplan(x = 1, y = 2)
+  y$bla = "bluh"
+  expect_warning(make(y))
 })
 
 test_with_dir("targets can be partially specified", {
