@@ -53,7 +53,7 @@ give_up <- function(target, config){
     namespace = "progress")
   text <- paste("fail", target)
   if (config$verbose){
-    finish_console(text = text, message = "fail")
+    finish_console(text = text, pattern = "fail")
   }
   stop(
     "Target '", target, "' failed to build. ",

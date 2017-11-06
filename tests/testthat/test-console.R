@@ -41,7 +41,7 @@ test_with_dir("console", {
     config = config))
   expect_output(
     console_many_targets(targets = letters,
-      message = "check", config = config
+      pattern = "check", config = config
     )
   )
   x1 <- "12345"
@@ -61,18 +61,18 @@ test_with_dir("console", {
 test_with_dir("console_many_targets() works", {
   config <- list(verbose = FALSE)
   expect_silent(console_many_targets(
-    targets = character(0), message = "check", config = config))
+    targets = character(0), pattern = "check", config = config))
   expect_silent(console_many_targets(
-    targets = "my_target", message = "check", config = config))
+    targets = "my_target", pattern = "check", config = config))
   config <- list(verbose = TRUE)
   expect_silent(console_many_targets(
-    targets = character(0), message = "check", config = config))
+    targets = character(0), pattern = "check", config = config))
   expect_output(console_many_targets(
-    targets = "my_target", message = "check", config = config))
+    targets = "my_target", pattern = "check", config = config))
   tmp <- capture.output(
     console_many_targets(
       targets = LETTERS,
-      message = unique_random_string(n = 400),
+      pattern = unique_random_string(n = 400),
       config = config
     )
   )

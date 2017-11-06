@@ -171,4 +171,3 @@ log_attempts <- Vectorize(function(targets, config){
   invisible()
 },
 "targets")
-

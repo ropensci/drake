@@ -71,10 +71,13 @@ console_retry <- function(target, retries, config){
 }
 
 console_up_to_date <- function(config){
+  if (!config$verbose){
+    return(invisible())
+  }
   any_attempted <- length(config$cache$list(namespace = "attempts"))
   no_triggers <- is.null(config$plan$trigger) ||
     all(config$plan$trigger == "any")
-  if (config$verbose && !any_attempted && no_triggers){
+  if (!any_attempted && no_triggers){
     color("All targets are already up to date.\n", colors["target"]) %>%
       cat
   } else if (!no_triggers){

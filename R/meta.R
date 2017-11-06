@@ -24,7 +24,7 @@ meta <- function(target,  config) {
     meta$command <- get_command(target = target, config = config)
   }
   if (trigger %in% triggers_with_depends()){
-    meta$depends = dependency_hash(target = target, config = config)
+    meta$depends <- dependency_hash(target = target, config = config)
   }
   if (trigger %in% triggers_with_file()){
     meta$file <- file_hash(target = target, config = config)
@@ -37,7 +37,7 @@ finish_meta <- function(target, meta, config){
     meta$command <- get_command(target = target, config = config)
   }
   if (is.null(meta$depends)){
-    meta$depends = dependency_hash(target = target, config = config)
+    meta$depends <- dependency_hash(target = target, config = config)
   }
   if (is.null(meta$file)){
     meta$file <- file_hash(target = target, config = config)

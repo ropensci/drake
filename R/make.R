@@ -245,7 +245,7 @@ make <- function(
   }
 
   if (rush && nrow(plan)){
-    plan$trigger = "missing"
+    plan$trigger <- "missing"
   }
   config <- config(
     plan = plan,

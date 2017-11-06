@@ -194,7 +194,8 @@ legacy_outdated <- function(config){
     }
   )
   if (!length(rebuild)){
-    return(character(0))
+    # Already tested in previous versions of drake.
+    return(character(0)) # nocov
   } else{
     lightly_parallelize(
       rebuild,
@@ -211,7 +212,7 @@ legacy_outdated <- function(config){
 
 hash_list <- function(targets, config) {
   console_many_targets(targets = targets,
-    message = "check", config = config)
+    pattern = "check", config = config)
   out <- lightly_parallelize(
     X = targets, FUN = hashes,
     jobs = config$jobs, config = config

@@ -187,7 +187,7 @@ default_parallelism <- function() {
 #'  \item{'none'}{: Ignore all the imports and just focus on the max number
 #'    of useful jobs for parallelizing targets.}
 #' }
-#' 
+#'
 #' @param make_imports logical, whether to import external files
 #' and objects from the user's workspace to detemine
 #' which targets are up to date. If \code{FALSE}, the computation
