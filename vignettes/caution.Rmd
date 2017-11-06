@@ -15,18 +15,18 @@ vignette: >
 
 ![](logo-vignettes.png)
 
-```{r, echo = F}
+```{r cautionstart, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 
-`Drake` has edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. In this vignette, I will try to address some of the main issues to keep in mind for writing reproducible workflows safely.
+This vignette addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. For a guide to debugging and testing `drake` projects, please refer to the separate ["debug" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 
-# Projects built with drake <= 4.4.0 are not back compatible with drake >= 5.0.0
+# Projects built with drake <= 4.4.0 are not back compatible with later versions.
 
-Version 5.0.0 of `drake` comes with changes to the internals of caching that increase speed and open up possibilities for future development. However, if you have a project built with version 4.0.0, `drake` >= 5.0.0 will think all your targets are out of date. Hence, a simple `make()` will quit in error to stop you from doing any damage. To move your project to 5.0.0, you have two options.
+Versions `drake` after 4.4.0 have different caching internals that increase speed and open up possibilities for future development. However, if you have a project built with version 4.4.0 or earlier, a later version of `drake` will think all your targets are out of date. So by design, a simple `make()` will quit in error to stop you from doing any damage. To migrate your project to a later `drake`, you have two options.
 
 1. Run your project from scratch with `make(..., force = TRUE)`
 1. Use `migrate()` to convert your project to the new format. The `migrate()` function
@@ -241,42 +241,6 @@ You can call `make(..., timeout = 10)` to time out all each target after 10 seco
 
 # Dependencies
 
-## Check your dependencies.
-
-As the user, you should take responsibility for how the steps of your workflow are interconnected. This will affect which targets are built and which ones are skipped. There are several ways to explore the dependency relationship.
-
-```{r previewmyplan}
-load_basic_example()
-my_plan
-```
-
-```{r demoplotgraphcaution, eval = FALSE}
-# Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
-plot_graph(my_plan, width = "100%", height = "500px")
-```
-
-<iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/2211b300/images/outdated.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
-
-
-You can also check the dependencies of individual targets.
-
-```{r checkdeps}
-deps(reg2)
-deps(my_plan$command[1]) # File dependencies like report.Rmd are single-quoted.
-deps(my_plan$command[nrow(my_plan)])
-```
-
-List all the reproducibly-tracked objects and files, including imports and targets.
-
-```{r tracked}
-tracked(my_plan, targets = "small")
-tracked(my_plan)
-```
-
 ## Dependencies are not tracked in some edge cases.
 
 First of all, if you are ever unsure about what exactly is reproducibly tracked, consult the examples in the following documentation.
@@ -358,23 +322,6 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 
 `Drake` may import functions from packages, but the packages themselves are not tracked as dependencies. For this, you will need other tools that support reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
-## Advanced: find out why a target is out of date.
-
-To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`.
-
-```{r depprofilecaution}
-my_plan <- load_basic_example()
-config <- make(my_plan, verbose = FALSE)
-# Change a dependency.
-reg2 <- function(d) {
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
-}
-outdated(my_plan, verbose = FALSE)
-dependency_profile(target = "regression2_small", config = config)
-config$cache$get_hash(key = "small") # same
-config$cache$get_hash(key = "reg2") # different
-```
 
 # High-performance computing
 
