@@ -49,13 +49,13 @@ Imports:
   utils,
   visNetwork,
   withr
-Suggests:
-  abind,
-  future.batchtools,
-  MASS,
-  methods,
-  rmarkdown,
-  tibble
+Suggests: 
+    abind,
+    future.batchtools,
+    MASS,
+    methods,
+    rmarkdown,
+    tibble
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues
