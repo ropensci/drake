@@ -71,6 +71,7 @@ deps <- function(x){
 #' }
 dependency_profile <- function(target, config){
   config <- thorough_inventory(config)
+  config$plan$trigger <- NULL
   cached_command <- safe_get(key = target, namespace = "commands",
     config = config)
   current_command <- get_command(target = target, config = config)

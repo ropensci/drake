@@ -20,7 +20,8 @@ build <- function(target, meta_list, config){
 
 build_in_hook <- function(target, meta_list, config) {
   start <- proc.time()
-  meta <- meta_list[[target]]
+  meta <- finish_meta(
+    target = target, meta = meta_list[[target]], config = config)
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
   console(imported = meta$imported, target = target, config = config)
@@ -163,3 +164,11 @@ store_function <- function(target, value, meta, config
 functionize <- function(command) {
   paste0("(function(){\n", command, "\n})()")
 }
+
+log_attempts <- Vectorize(function(targets, config){
+  config$cache$set(
+    key = targets, value = targets, namespace = "attempts")
+  invisible()
+},
+"targets")
+

@@ -17,17 +17,7 @@
 #'   \item{'any'}{: 
 #'     Build the target if any of the other triggers activate.
 #'   }
-#'
-#'   \item{'missing'}{: 
-#'     Build if the target itself is missing. Always applies.
-#'   }
-#'
-#'   \item{'file'}{: 
-#'     Build if the target is a file and
-#'     that output file is either missing or corrupted.
-#'     Also build if \code{missing} is triggered.
-#'   }
-#'
+#'   
 #'   \item{'command'}{: 
 #'     Build if the workflow plan command has changed since last
 #'     time the target was built. Also built if \code{missing} is triggered.
@@ -37,6 +27,16 @@
 #'     Build if any of the target's dependencies
 #'     has changed since the last \code{\link{make}()}.
 #'     Also build if \code{missing} is triggered.
+#'   }
+#'   
+#'   \item{'file'}{: 
+#'     Build if the target is a file and
+#'     that output file is either missing or corrupted.
+#'     Also build if \code{missing} is triggered.
+#'   }
+#'
+#'   \item{'missing'}{: 
+#'     Build if the target itself is missing. Always applies.
 #'   }
 #' }
 #' 
@@ -58,12 +58,33 @@
 #' }
 triggers <- function(){
   c(
-    "missing",
-    "file",
+    "any",
     "command",
     "depends",
-    "any"
+    "file",
+    "missing"
   )
+}
+
+triggers_with_command <- function(){
+  c("any", "command")
+}
+
+triggers_with_depends <- function(){
+  c("any", "depends")
+}
+
+triggers_with_file <- function(){
+  c("any", "file")
+}
+
+get_trigger <- function(target, config){
+  plan <- config$plan
+  if ("trigger" %in% colnames(plan)){
+    plan$trigger[plan$target == target]
+  } else {
+    "any"
+  }
 }
 
 assert_legal_triggers <- function(x){
@@ -75,6 +96,39 @@ assert_legal_triggers <- function(x){
     "Illegal triggers found. See triggers() for the legal ones. Illegal:\n",
     multiline_message(x),
     call. = FALSE
+  )
+}
+
+command_trigger <- function(target, meta, config){
+  stopifnot(!is.null(meta$command))
+  identical(
+    config$cache$get(target, namespace = "commands"),
+    meta$command
+  )
+}
+
+depends_trigger <- function(target, meta, config){
+  stopifnot(!is.null(meta$depends))
+  identical(
+    config$cache$get(target, namespace = "depends"),
+    meta$depends
+  )
+}
+
+file_trigger <- function(target, meta, config){
+  stopifnot(!is.null(meta$file))
+  if (!is_file(target)){
+    return(TRUE)
+  }
+  if (!file.exists(unquote(target))){
+    return(FALSE)
+  }
+  tryCatch(
+    identical(
+      config$cache$get(target, namespace = "kernels"),
+      meta$file
+    ),
+    error = error_false
   )
 }
 
@@ -91,40 +145,21 @@ should_build <- function(target, meta_list, config){
 
 should_build_target <- function(target, meta, config){
   if (!(target %in% config$inventory$kernels)){
-    return(FALSE)
-  }
-  if (!file_current(target = target, meta = meta, config = config)){
-    return(FALSE)
-  }
-  identical(
-    config$cache$get(target, namespace = "commands"),
-    meta$command
-  ) &
-  identical(
-    config$cache$get(target, namespace = "depends"),
-    meta$depends
-  )
-}
-
-file_current <- function(target, meta, config){
-  if (!is_file(target)){
     return(TRUE)
   }
-  if (!file.exists(unquote(target))){
-    return(FALSE)
+  do_build <- FALSE
+  trigger <- get_trigger(target = target, config = config)
+  if (trigger %in% triggers_with_command()){
+    do_build <- do_build ||
+      command_trigger(target = target, meta = meta, config = config)
   }
-  tryCatch(
-    identical(
-      config$cache$get(target, namespace = "kernels"),
-      meta$file
-    ),
-    error = error_false
-  )
+  if (trigger %in% triggers_with_depends()){
+    do_build <- do_build ||
+      file_trigger(target = target, meta = meta, config = config)
+  }
+  if (trigger %in% triggers_with_file()){
+    do_build <- do_build ||
+      file_trigger(target = target, meta = meta, config = config)
+  }
+  do_build
 }
-
-log_attempts <- Vectorize(function(targets, config){
-  config$cache$set(key = targets, value = targets,
-    namespace = "attempts")
-  invisible()
-},
-"targets")

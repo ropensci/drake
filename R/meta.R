@@ -10,14 +10,38 @@ meta_list <- function(targets, config) {
   out
 }
 
-meta <- function(target, config) {
-  list(
+meta <- function(target,  config) {
+  meta <- list(
     target = target,
-    command = get_command(target = target, config = config),
-    depends = dependency_hash(target = target, config = config),
-    file = file_hash(target = target, config = config),
-    imported = !(target %in% config$plan$target)
+    imported = !(target %in% config$plan$target),
+    missing = target %in% config$inventory$kernels
   )
+  trigger <- get_trigger(target = target, config = config)
+  # Need to make sure meta includes all these
+  # fields by the beginning of build_in_hook().
+  if (trigger %in% triggers_with_command()){
+    meta$command <- get_command(target = target, config = config)
+  }
+  if (trigger %in% triggers_with_depends()){
+    meta$depends = dependency_hash(target = target, config = config)
+  }
+  if (trigger %in% triggers_with_file()){
+    meta$file <- file_hash(target = target, config = config)
+  }
+  meta
+}
+
+finish_meta <- function(target, meta, config){
+  if (is.null(meta$command)){
+    meta$command <- get_command(target = target, config = config)
+  }
+  if (is.null(meta$depends)){
+    meta$depends = dependency_hash(target = target, config = config)
+  }
+  if (is.null(meta$file)){
+    meta$file <- file_hash(target = target, config = config)
+  }
+  meta
 }
 
 dependency_hash <- function(target, config) {
