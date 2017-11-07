@@ -12,6 +12,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+![](logo-vignettes.png)
+
 ```{r debugstart, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))

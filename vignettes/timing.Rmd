@@ -12,6 +12,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+![](logo-vignettes.png)
+
 ```{r suppression_timing, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE, verbose = FALSE)
