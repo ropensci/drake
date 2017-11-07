@@ -178,12 +178,10 @@
 #' This argument is deprecated. Now, a configuration list
 #' is always invisibly returned.
 #'
-#' @param rush Logical, whether to just build any missing targets
-#' without checking dependencies at all. If you just want to
-#' speed through a workflow for debugging purposes, this could help.
-#' It is equivalent to choosing a \code{trigger} column with
-#' all entries \code{"missing"} in the workflow plan data frame.
-#' See the \code{\link{triggers}()} function for the available triggers.
+#' @param trigger Name of the trigger to apply to all targets.
+#' Ignored if \code{plan} has a \code{trigger} column.
+#' Must be in \code{\link{triggers}()}.
+#' See \code{?triggers} for explanations of the chioces.
 #'
 #' @examples
 #' \dontrun{
@@ -233,7 +231,7 @@ make <- function(
   retries = 0,
   force = FALSE,
   return_config = NULL,
-  rush = FALSE
+  trigger = "any"
 ){
   force(envir)
 
@@ -252,9 +250,6 @@ make <- function(
     )
   }
 
-  if (rush && nrow(plan)){
-    plan$trigger <- "missing"
-  }
   config <- config(
     plan = plan,
     targets = targets,
@@ -275,7 +270,8 @@ make <- function(
     cpu = cpu,
     elapsed = elapsed,
     retries = retries,
-    force = force
+    force = force,
+    trigger = trigger
   )
   store_config(config = config)
   initialize_session(config = config)

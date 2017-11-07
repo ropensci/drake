@@ -68,7 +68,8 @@ config <- function(
   retries = 0,
   force = FALSE,
   clear_progress = FALSE,
-  graph = NULL
+  graph = NULL,
+  trigger = "any"
 ){
   force(envir)
   seed <- get_valid_seed()
@@ -98,6 +99,7 @@ config <- function(
     graph <- build_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs)
   }
+  trigger <- match.arg(arg = trigger, choices = triggers())
   config <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
@@ -105,7 +107,7 @@ config <- function(
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    seed = seed,
+    seed = seed, trigger = trigger,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   ) %>%
     quick_inventory

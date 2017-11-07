@@ -54,7 +54,10 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' make(my_plan) # Nothing changes!
-#' make(my_plan, rush = TRUE) # Same as the "missing" trigger everywhere.
+#' # You can use a global trigger if your workflow plan
+#' # does not have a 'trigger' column
+#' my_plan$trigger <- NULL # Would override the global trigger.
+#' make(my_plan, trigger = "missing") 
 #' }
 triggers <- function(){
   c(
@@ -83,11 +86,11 @@ get_trigger <- function(target, config){
   if (!(target %in% plan$target)){
     return("any")
   }
-  if ("trigger" %in% colnames(plan)){
-    plan$trigger[plan$target == target]
-  } else {
-    "any"
-  }
+  workplan_override(
+    target = target,
+    field = "trigger",
+    config = config
+  )
 }
 
 assert_legal_triggers <- function(x){

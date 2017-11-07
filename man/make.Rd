@@ -13,7 +13,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
-  retries = 0, force = FALSE, return_config = NULL, rush = FALSE)
+  retries = 0, force = FALSE, return_config = NULL, trigger = "any")
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -187,12 +187,10 @@ of runtime configuration parameters used by \code{make()}.
 This argument is deprecated. Now, a configuration list
 is always invisibly returned.}
 
-\item{rush}{Logical, whether to just build any missing targets
-without checking dependencies at all. If you just want to
-speed through a workflow for debugging purposes, this could help.
-It is equivalent to choosing a \code{trigger} column with
-all entries \code{"missing"} in the workflow plan data frame.
-See the \code{\link{triggers}()} function for the available triggers.}
+\item{trigger}{Name of the trigger to apply to all targets.
+Ignored if \code{plan} has a \code{trigger} column.
+Must be in \code{\link{triggers}()}.
+See \code{?triggers} for explanations of the chioces.}
 }
 \description{
 Run your project (build the targets).

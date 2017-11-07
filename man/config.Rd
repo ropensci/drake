@@ -13,7 +13,7 @@ config(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  clear_progress = FALSE, graph = NULL)
+  clear_progress = FALSE, graph = NULL, trigger = "any")
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
