@@ -7,9 +7,9 @@ prepare_distributed <- function(config){
       file = globalenv_file(this_cache_path)
     )
   }
+  config$cache$set(key = "envir", value = config$envir, namespace = "config")
   attempts <- outdated(config = config)
   log_attempts(targets = attempts, config = config)
-  config$cache$set(key = "envir", value = config$envir, namespace = "config")
   invisible()
 }
 
