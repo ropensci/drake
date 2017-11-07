@@ -82,3 +82,12 @@ as_file <- function(x){
 wide_deparse <- function(x){
   paste(deparse(x), collapse = "")
 }
+
+workplan_override <- function(target, field, config){
+  in_plan <- config$plan[[field]]
+  if (is.null(in_plan)){
+    return(config[[field]])
+  } else {
+    return(in_plan[config$plan$target == target])
+  }
+}

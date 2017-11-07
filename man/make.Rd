@@ -12,7 +12,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
-  imports_only = FALSE, timeout = Inf, cpu = timeout, elapsed = timeout,
+  imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, rush = FALSE)
 }
 \arguments{
@@ -160,15 +160,23 @@ before anything is imported or built.}
 in \code{plan} and just import objects and files.}
 
 \item{timeout}{Seconds of overall time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level timeout times with an optional \code{timeout}
+column in \code{plan}.}
 
 \item{cpu}{Seconds of cpu time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level cpu timeout times with an optional \code{cpu}
+column in \code{plan}.}
 
 \item{elapsed}{Seconds of elapsed time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.}
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level elapsed timeout times with an optional \code{elapsed}
+column in \code{plan}.}
 
-\item{retries}{Number of retries to execute if the target fails.}
+\item{retries}{Number of retries to execute if the target fails.
+Assign target-level retries with an optional \code{retries}
+column in \code{plan}.}
 
 \item{force}{Force \code{make()} to build your targets even if some
 about your setup is not quite right: for example, if you are using

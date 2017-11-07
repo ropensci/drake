@@ -13,7 +13,17 @@ sanitize_plan <- function(plan){
 }
 
 workplan_columns <- function(){
-  c("code", "command", "output", "target", "trigger")
+  c(
+    "code",
+    "cpu",
+    "command",
+    "elapsed",
+    "output",
+    "retries",
+    "target",
+    "timeout",
+    "trigger"
+  )
 }
 
 sanitize_targets <- function(plan, targets){

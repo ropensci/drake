@@ -152,14 +152,22 @@
 #'
 #' @param timeout Seconds of overall time to allow before imposing
 #' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+#' Assign target-level timeout times with an optional \code{timeout}
+#' column in \code{plan}.
 #'
 #' @param cpu Seconds of cpu time to allow before imposing
 #' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+#' Assign target-level cpu timeout times with an optional \code{cpu}
+#' column in \code{plan}.
 #'
 #' @param elapsed Seconds of elapsed time to allow before imposing
 #' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+#' Assign target-level elapsed timeout times with an optional \code{elapsed}
+#' column in \code{plan}.
 #'
 #' @param retries Number of retries to execute if the target fails.
+#' Assign target-level retries with an optional \code{retries}
+#' column in \code{plan}.
 #'
 #' @param force Force \code{make()} to build your targets even if some
 #' about your setup is not quite right: for example, if you are using
@@ -220,8 +228,8 @@ make <- function(
   clear_progress = NULL,
   imports_only = FALSE,
   timeout = Inf,
-  cpu = timeout,
-  elapsed = timeout,
+  cpu = NULL,
+  elapsed = NULL,
   retries = 0,
   force = FALSE,
   return_config = NULL,
