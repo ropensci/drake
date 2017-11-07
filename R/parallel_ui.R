@@ -189,7 +189,7 @@ default_parallelism <- function() {
 #' }
 #'
 #' @param make_imports logical, whether to import external files
-#' and objects from the user's workspace to detemine
+#' and objects from the user's workspace to determine
 #' which targets are up to date. If \code{FALSE}, the computation
 #' is faster, but all the relevant information is drawn from the cache
 #' and may be out of date.

@@ -191,15 +191,15 @@ session()
 The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
 
 ```{r vignettesdrakermd, eval = FALSE}
-vignette(package = "drake")            # List the vignettes.
-vignette("caution")                    # Avoid common pitfalls.
-vignette("debug")                      # Debugging and testing.
-vignette("drake")                      # High-level intro.
-vignette("graph")                      # Visualilze the workflow graph.
-vignette("quickstart")                 # Walk through a simple example.
-vignette("parallelism")                # Extensive prallel computing functionality.
-vignette("storage")                    # Learn how drake stores your stuff.
-vignette("timing")                     # Build times of targets, predicting total runtime.
+vignette(package = "drake") # List the vignettes.
+vignette("caution")         # Avoid common pitfalls.
+vignette("debug")           # Debugging and testing.
+vignette("drake")           # High-level intro.
+vignette("graph")           # Visualilze the workflow graph.
+vignette("quickstart")      # Walk through a simple example.
+vignette("parallelism")     # High-performance computing.
+vignette("storage")         # Learn how drake stores your stuff.
+vignette("timing")          # Build times, runtime predictions
 ```
 
 # Help and troubleshooting
@@ -239,7 +239,7 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 
 However, if you are simply debugging and testing a project, you can relax this reproducible reactivity by choosing target-level triggers. See the `debug` vignette for more.
 
-```r
+```{r vignettedebug}
 vignette("debug")
 ```
 

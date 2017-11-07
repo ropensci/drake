@@ -194,15 +194,15 @@ session()
 The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
 
 ```r
-vignette(package = "drake")            # List the vignettes.
-vignette("caution")                    # Avoid common pitfalls.
-vignette("debug")                      # Debugging and testing.
-vignette("drake")                      # High-level intro.
-vignette("graph")                      # Visualilze the workflow graph.
-vignette("quickstart")                 # Walk through a simple example.
-vignette("parallelism")                # Extensive prallel computing functionality.
-vignette("storage")                    # Learn how drake stores your stuff.
-vignette("timing")                     # Build times of targets, predicting total runtime.
+vignette(package = "drake") # List the vignettes.
+vignette("caution")         # Avoid common pitfalls.
+vignette("debug")           # Debugging and testing.
+vignette("drake")           # High-level intro.
+vignette("graph")           # Visualilze the workflow graph.
+vignette("quickstart")      # Walk through a simple example.
+vignette("parallelism")     # High-performance computing.
+vignette("storage")         # Learn how drake stores your stuff.
+vignette("timing")          # Build times, runtime predictions
 ```
 
 # Help and troubleshooting

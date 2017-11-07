@@ -21,15 +21,53 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 This vignette is a guide to debugging and testing `drake` projects. Please also see the ["caution" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/caution.Rmd), which addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version.
 
+# The configuration list
 
-## Check your dependencies.
+Most of `drake`'s functions rely on a central `config` list. An understanding of `config` will help you grasp the internals. `make()` and `config()` both return the `config` list. Unlike `make()`, `config()`'s return value is visible, and its only purpose is to construct your `config`.
 
-As the user, you should take responsibility for how the steps of your workflow are interconnected. This will affect which targets are built and which ones are skipped. There are several ways to explore the dependency relationship.
+```{r debugconfig}
+load_basic_example()
+config <- config(my_plan)
+sort(names(config))
+```
 
-```{r previewmyplandebug}
+The fields of `config` mostly arguments to `make()` and are documented there. The rest of the fields are as follows.
+
+- `graph`: An [igraph](https://github.com/igraph/rigraph) object with the directed acyclic graph (DAG) of the workflow.
+- `inventory`: A running list of the cached objects in each `storr` namespace. Maintaining this list helps avoid repeated calls to `config$cache$list()`, which increases speed.
+- `long_hash_algo`: Name of the long hash algorithm used throughout `make()`. Used to generate hash keys that *will not* become the names of files. See the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) for details.
+- `seed`: The random number generator seed taken from the user's R session. Each target is built reproducibly using a deterministic function of this seed, and the build does not change the seed outside the scope of the target's command.
+- `short_hash_algo`: Name of the short hash algorithm used throughout `make()`. Used to generate hash keys that could become names of files. See the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) for details.
+
+Early in `make()`, the `config` list is stored in the cache. You can retrieve it with
+
+```{r readconfig, eval = FALSE}
+read_config()
+```
+
+and you can access parts of it with some companion functions.
+
+```{r readcompanions, eval = FALSE}
+read_graph()
+read_plan()
+```
+
+
+# Plan your work.
+
+## Workflow plan data frames
+
+The workflow plan data frame is your responsibility, and it takes effort and care. Fortunately, functions in `drake` can help. You can check the plan for formatting issues, missing input files, etc. with the `check()` function.
+
+```{r checkdebug}
 load_basic_example()
 my_plan
+check(my_plan) # No issues.
 ```
+
+## Visualize your workflow.
+
+After quality-checking your plan, you should check that you understand how the steps of your workflow are interconnected. The web of dependencies affects which targets are built and which ones are skipped during `make()`.
 
 ```{r demoplotgraphdebug, eval = FALSE}
 # Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
@@ -42,8 +80,12 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
+See the [rendered graph vignette](https://cran.r-project.org/package=drake/vignettes/graph.html) to learn more about how graphing can help (for example, how to visualize small subgraphs). If you want to take control of your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/), use the `dataframes_graph()` function to get data frames of nodes, edges, and legend nodes.
 
-You can also check the dependencies of individual targets.
+
+## Check dependency relationships.
+
+Programmatically, several functions can help you check immediate dependencies.
 
 ```{r checkdepsdebug}
 deps(reg2)
@@ -58,9 +100,21 @@ tracked(my_plan, targets = "small")
 tracked(my_plan)
 ```
 
-## Find out why a target is out of date.
+## Outdated, up to date, and missing items
 
-To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`.
+`missed()` reports import dependencies missing from your environment
+
+```{r misseddebug}
+missed(my_plan, verbose = FALSE) # Nothing is missing right now.
+```
+
+`outdated()` reports any targets that are outdated, plus any downstream targets that depend on them.
+
+```{r outdateddebug}
+outdated(my_plan, verbose = FALSE)
+```
+
+To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument.
 
 ```{r depprofiledebug}
 my_plan <- load_basic_example()
@@ -76,13 +130,102 @@ config$cache$get_hash(key = "small") # same
 config$cache$get_hash(key = "reg2") # different
 ```
 
+# Test with triggers.
+
+To track dependencies and make decisions about what needs building, `make()` store the fingerprint, or hash, of each target. Hashing is great for detecting the right changes in targets, but if all you want to do is test and debug a workflow, the full rigor can be time-consuming. Fortunately, there is a `rush` argument that tells `make()` to just build the missing targets without any regard for dependencies. Notice below that `make(..., rush = TRUE)` does not bother to import anything.
+
+```{r rushdebug}
+clean() # Start from scratch
+make(my_plan, rush = TRUE)
+```
+
+Above, `make()` references triggers. A trigger is a condition that tells `drake` to build a target. The `rush` argument makes use of the "missing" trigger, where a target is built if and only if it is missing. The full list of triggers is as follows.
+
+- `any`: Build the target if any of the other triggers activate (default).
+- `command`: Build if the workflow plan command has changed since last time the target was built. Also built if `missing` is triggered.
+- `depends`: Build if any of the target's dependencies has changed since the last `make()`. Also build if `missing` is triggered.
+- `file`: Build if the target is a file and that output file is either missing or corrupted. Also build if `missing` is triggered.
+- `missing`: Build if the target itself is missing. Always applies.
+
+You can set the trigger of each individual target in the workflow plan data frame.
+
+```{r indivtrigger}
+my_plan$trigger <- "command"
+my_plan$trigger[1] <- "file"
+my_plan
+# Change an imported dependency:
+reg2
+function(d) {
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+make(my_plan) # Nothing changes!
+```
 
 
+# Diagnose failures.
 
+When targets fail, it may be difficult to diagnose the problem, especially if you are using `drake`'s powerful [high-performance computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd). Fortunately, `drake` records
 
+1. which targets failed in the last `make()`, and
+1. the most recent error log of every target.
 
+```{r diagnosedebug}
+diagnose(verbose = FALSE)
+f <- function(){
+  stop("unusual error")
+}
+bad_plan <- workplan(my_target = f())
+testthat::expect_error(make(bad_plan))
+failed(verbose = FALSE) # from the last make() only
+diagnose(verbose = FALSE) # from all previous make()'s
+error <- diagnose(my_target, verbose = FALSE)
+str(error)
+error$calls # View the traceback.
+```
 
+# Debrief a build session.
 
+After your project is at least somewhat built, you can inspect and read your results from the cache.
+
+```{r debriefdebug}
+cached(verbose = FALSE)
+built(verbose = FALSE)
+imported(verbose = FALSE)
+loadd(large, verbose = FALSE)
+head(large)
+readd(small, verbose = FALSE)
+progress(verbose = FALSE)
+in_progress(verbose = FALSE) # Unfinished targets
+```
+
+There are functions to help you locate the project's cache.
+
+```{r finddebug}
+find_project()
+find_cache()
+```
+
+For more information on the cache, see the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd).
+
+# Start tinkering.
+
+The `load_basic_example()` function loads the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic) right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. All you need to do is call `make(my_plan)` to build it.
+
+`Drake` [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) to help get you started. To see your choices, use
+
+```{r examplesdrakedebug}
+examples_drake()
+```
+
+To write the files for an example, use `example_drake()`.
+
+```{r examplesdrake, eval = FALSE}
+example_drake("basic")
+example_drake("slurm")
+```
+
+In most cases, all you need to do is run the R code provided.
 
 ```{r rmfiles_debug, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)

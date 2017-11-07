@@ -15,7 +15,7 @@
 #'
 #' \itemize{
 #'   \item{'any'}{:
-#'     Build the target if any of the other triggers activate.
+#'     Build the target if any of the other triggers activate (default).
 #'   }
 #'
 #'   \item{'command'}{:
@@ -44,9 +44,9 @@
 #' triggers()
 #' \dontrun{
 #' load_basic_example()
-#' my_plan$trigger = "command"
+#' my_plan$trigger <- "command"
 #' # You can have different triggers for different targets.
-#' my_plan$trigger[1] = "file"
+#' my_plan$trigger[1] <- "file"
 #' make(my_plan)
 #' # Change a dependency
 #' function(d) {
