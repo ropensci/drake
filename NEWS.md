@@ -1,8 +1,12 @@
 # Release 5.0.0
 
+- Let the user define a trigger for each target to customize when `make()` decides to build targets.
+- Document triggers and other debugging/testing tools in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 - Restructure the internals of the `storr` cache in a way that is not back-compatible with projects from versions 4.4.0 and earlier. The main change is to make more intelligent use of `storr` namespaces, improving speed and opening up possibilities for new features. If you attempt to run drake >= 5.0.0 on a project from drake <= 4.0.0, drake will stop you before any damage to the cache is done, and you will be instructed how to migrate your project to the new drake.
 - Speed up clean() by refactoring the cache inventory and using light parallelism.
 - Implement `rescue_cache()`, exposed to the user and used in `clean()`. This function removes dangling orphaned files in the cache so that a broken cache can be cleaned and used in the usual ways once more.
+- Change the default `cpu` and `elapsed` arguments of `make()` to `NULL`. This solves an elusive bug in how drake imposes timeouts.
+- Allow users to set target-specific timeouts (overall, cpu, and elapsed) with columns in the workflow plan data frame.
 
 # Changes in release 4.4.0
 
