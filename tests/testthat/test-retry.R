@@ -85,7 +85,7 @@ test_with_dir("timeouts", {
     )
   )
   expect_false(cached(x))
-  
+
   # Should time out too. The workflow plan should override
   # the arguments to make().
   # CPU time should be similar, but testing it is elusive.
