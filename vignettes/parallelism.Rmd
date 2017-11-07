@@ -351,7 +351,22 @@ If you are interested in `Makefile` parallelism on a cluster, then you likely ha
 <pre><code>nohup nice -19 R CMD BATCH script.R &
 </code></pre>
 
+# Drake as an ordinary job scheduler
+
+Maybe all you want is a job scheduler that submits interdependent jobs in the right order, waiting for some to complete before running the next ones. In that case, you can use [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers).
+
+```{r triggerparallel, eval = FALSE}
+load_basic_example()
+make(my_plan, trigger = "missing")
+```
+
+Above, `drake` only builds the targets that do not yet exist. It does not worry about reproducibility, so it does not spend time or storage formally caching imported objects. It skips much of the [time-consuming hashing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd#hash-algorithms) that ordinarily detects which targets are out of date, and it skips entire targets more often.
+
 # Final thoughts
+
+## Debugging
+
+For large workflows, downsizing and debugging tools become super important. See the ["debug" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd) for help on diagnosing problems with a workflow. [Triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and [cached error logs](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#diagnose-failures) especially speed the development and testing process.
 
 ## Zombies
 

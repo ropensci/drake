@@ -142,6 +142,8 @@ clean() # Start from scratch
 make(my_plan, trigger = "missing")
 ```
 
+In fact, combined with the [high-performance computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), the `"missing"` trigger allows `drake` to act as an ordinary job schedule. Here, it simply submits interdependent stages of jobs in the correct order without making you adhere to reproducibility.
+
 You can choose from a variety of triggers.
 
 - `any`: Build the target if any of the other triggers activate (default).
