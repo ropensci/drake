@@ -6,7 +6,8 @@
 - Speed up clean() by refactoring the cache inventory and using light parallelism.
 - Implement `rescue_cache()`, exposed to the user and used in `clean()`. This function removes dangling orphaned files in the cache so that a broken cache can be cleaned and used in the usual ways once more.
 - Change the default `cpu` and `elapsed` arguments of `make()` to `NULL`. This solves an elusive bug in how drake imposes timeouts.
-- Allow users to set target-specific timeouts (overall, cpu, and elapsed) with columns in the workflow plan data frame.
+- Allow users to set target-level timeouts (overall, cpu, and elapsed) with columns in the workflow plan data frame.
+- Document timeouts and retries in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 
 # Changes in release 4.4.0
 

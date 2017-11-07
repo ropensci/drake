@@ -52,7 +52,6 @@ read_graph()
 read_plan()
 ```
 
-
 # Plan your work.
 
 ## Workflow plan data frames
@@ -164,6 +163,41 @@ reg2 <- function(d) {
 make(my_plan, trigger = "any") # Nothing changes!
 ```
 
+# Impose timeouts and retries
+
+Some bugs may cause your code to keep running indefinitely. In other cases, you may want to retry failed targets to look ahead to other parts of your workflow. For this type of control, see the `timeout`, `cpu`, `elapsed`, and `retries` argument to `make()`.
+
+```{r timeoutretry}
+clean()
+f <- function(...){
+  Sys.sleep(1)
+}
+debug_plan <- workplan(x = 1, y = f(x))
+debug_plan
+withr::with_message_sink(
+  new = stdout(),
+  code = try(
+    make(debug_plan, timeout = 1e-3, retries = 2),
+    silent = FALSE
+  )
+)
+```
+
+To customize these settings separately for each target, define new `timeout`, `cpu`, `elapsed`, or `retries` columns in your workflow plan. These columns override the analogous arguments to `make()`.
+
+```{r timeoutretry2}
+clean()
+debug_plan$timeout <- c(1e-3, 2e-3)
+debug_plan$retries <- 1:2
+debug_plan
+withr::with_message_sink(
+  new = stdout(),
+  try(
+    make(debug_plan, timeout = Inf, retries = 0),
+    silent = FALSE
+  )
+)
+```
 
 # Diagnose failures.
 
@@ -178,7 +212,13 @@ f <- function(){
   stop("unusual error")
 }
 bad_plan <- workplan(my_target = f())
-testthat::expect_error(make(bad_plan))
+withr::with_message_sink(
+  new = stdout(),
+  try(
+    make(bad_plan),
+    silent = FALSE
+  )
+)
 failed(verbose = FALSE) # from the last make() only
 diagnose(verbose = FALSE) # from all previous make()'s
 error <- diagnose(my_target, verbose = FALSE)
@@ -191,6 +231,7 @@ error$calls # View the traceback.
 After your project is at least somewhat built, you can inspect and read your results from the cache.
 
 ```{r debriefdebug}
+make(my_plan, verbose = FALSE)
 cached(verbose = FALSE)
 built(verbose = FALSE)
 imported(verbose = FALSE)
