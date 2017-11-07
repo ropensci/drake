@@ -44,6 +44,7 @@
 #' the cached progress of the targets readable by
 #' @param graph igraph object representing the workflow plan network
 #' \code{\link{progress}()}
+#' @param trigger same as for \code{\link{make}}
 config <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
@@ -95,11 +96,11 @@ config <- function(
     clear_progress = clear_progress,
     overwrite_hash_algos = FALSE
   )
+  trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
     graph <- build_graph(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, jobs = jobs)
+      envir = envir, verbose = verbose, jobs = jobs, trigger = trigger)
   }
-  trigger <- match.arg(arg = trigger, choices = triggers())
   config <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,

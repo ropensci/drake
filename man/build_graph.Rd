@@ -5,7 +5,7 @@
 \title{Function \code{build_graph}}
 \usage{
 build_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1)
+  envir = parent.frame(), verbose = TRUE, jobs = 1, trigger = "any")
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -22,6 +22,11 @@ build_graph(plan = workplan(), targets = drake::possible_targets(plan),
 \item{jobs}{number of jobs to accelerate the construction
 of the dependency graph. A light \code{mclapply}-based
 parallelism is used if your operating system is not Windows.}
+
+\item{trigger}{Name of the trigger to apply to all targets.
+Ignored if \code{plan} has a \code{trigger} column.
+Must be in \code{\link{triggers}()}.
+See \code{?triggers} for explanations of the choices.}
 }
 \description{
 Make a graph of the dependency structure of your workplan.

@@ -132,14 +132,16 @@ config$cache$get_hash(key = "reg2") # different
 
 # Test with triggers.
 
-To track dependencies and make decisions about what needs building, `make()` store the fingerprint, or hash, of each target. Hashing is great for detecting the right changes in targets, but if all you want to do is test and debug a workflow, the full rigor can be time-consuming. Fortunately, there is a `rush` argument that tells `make()` to just build the missing targets without any regard for dependencies. Notice below that `make(..., rush = TRUE)` does not bother to import anything.
+To track dependencies and make decisions about what needs building, `make()` store the fingerprint, or hash, of each target. Hashing is great for detecting the right changes in targets, but if all you want to do is test and debug a workflow, the full rigor can be time-consuming.
+
+Fortunately, you can change the triggers that tell `drake` to (re)build the target. Below, `drake` disregards outdatedness and just builds the targets that are missing. Notice that no imports are formally processed (except to build the internal dependency network).
 
 ```{r rushdebug}
 clean() # Start from scratch
-make(my_plan, rush = TRUE)
+make(my_plan, trigger = "missing")
 ```
 
-Above, `make()` references triggers. A trigger is a condition that tells `drake` to build a target. The `rush` argument makes use of the "missing" trigger, where a target is built if and only if it is missing. The full list of triggers is as follows.
+You can choose from a variety of triggers.
 
 - `any`: Build the target if any of the other triggers activate (default).
 - `command`: Build if the workflow plan command has changed since last time the target was built. Also built if `missing` is triggered.
@@ -147,7 +149,7 @@ Above, `make()` references triggers. A trigger is a condition that tells `drake`
 - `file`: Build if the target is a file and that output file is either missing or corrupted. Also build if `missing` is triggered.
 - `missing`: Build if the target itself is missing. Always applies.
 
-You can set the trigger of each individual target in the workflow plan data frame.
+You can set separate triggers for individual targets with a `trigger` column in the workflow plan data frame. This overrides the `trigger` argument to `make()`
 
 ```{r indivtrigger}
 my_plan$trigger <- "command"
@@ -155,11 +157,11 @@ my_plan$trigger[1] <- "file"
 my_plan
 # Change an imported dependency:
 reg2
-function(d) {
+reg2 <- function(d) {
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-make(my_plan) # Nothing changes!
+make(my_plan, trigger = "any") # Nothing changes!
 ```
 
 

@@ -31,7 +31,7 @@ test_with_dir("retries", {
   }
   make(
     pl, parallelism = parallelism, jobs = jobs,
-    envir = e, retries = 10, verbose = FALSE, 
+    envir = e, retries = 10, verbose = FALSE,
     hook = silencer_hook
   )
   debrief_retries()

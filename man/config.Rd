@@ -59,6 +59,8 @@ the cached progress of the targets readable by}
 
 \item{graph}{igraph object representing the workflow plan network
 \code{\link{progress}()}}
+
+\item{trigger}{same as for \code{\link{make}}}
 }
 \description{
 Compute the internal runtime parameter list of

@@ -57,7 +57,7 @@
 #' # You can use a global trigger if your workflow plan
 #' # does not have a 'trigger' column
 #' my_plan$trigger <- NULL # Would override the global trigger.
-#' make(my_plan, trigger = "missing") 
+#' make(my_plan, trigger = "missing")
 #' }
 triggers <- function(){
   c(
@@ -168,4 +168,11 @@ should_build_target <- function(target, meta, config){
       file_trigger(target = target, meta = meta, config = config)
   }
   do_build
+}
+
+using_default_triggers <- function(config){
+  default_plan_triggers <-
+    is.null(config$plan$trigger) ||
+    all(config$plan$trigger == "any")
+  default_plan_triggers && config$trigger == "any"
 }

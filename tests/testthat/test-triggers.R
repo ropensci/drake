@@ -53,26 +53,27 @@ test_with_dir("triggers work as expected", {
   saveRDS(value, "intermediatefile.rds")
   check_file(con)
 
-  # Rush builds nothing:
+  # Nothing is built (global missing trigger)
   con$plan$command[con$plan$target == "yourinput"] <- "1+2"
   file.rename("intermediatefile.rds", "tmp")
+  con$plan$trigger <- NULL
   con <- make(
-    con$plan, rush = TRUE,
+    con$plan, trigger = "missing",
     envir = con$envir, verbose = TRUE)
   expect_equal(justbuilt(con), character(0))
 
-  # Rush builds just one thing.
-  clean(combined)
+  # Global trigger is overridden
+  con$plan$trigger <- "missing"
   con <- make(
-    con$plan, rush = TRUE, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = FALSE)
-  expect_equal(justbuilt(con), "combined")
+    con$plan, trigger = "command",
+    envir = con$envir, verbose = TRUE)
+  expect_equal(justbuilt(con), character(0))
 })
 
-test_with_dir("rush brings targets up to date", {
+test_with_dir("global missing trigger brings targets up to date", {
   con <- dbug()
   con <- make(
-    con$plan, rush = TRUE, parallelism = con$parallelism,
+    con$plan, trigger = "missing", parallelism = con$parallelism,
     envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(sort(justbuilt(con)), sort(con$plan$target))
   expect_true(all(con$plan$trigger == "missing"))

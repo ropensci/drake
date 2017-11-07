@@ -52,11 +52,11 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   config$hook <- migrate_hook
   config$envir <- new.env(parent = globalenv())
   config$verbose <- TRUE
+  config$trigger <- "any"
   config$outdated <- legacy_outdated(config) %>%
     sort
   config$cache$clear(namespace = "depends")
   store_config(config = config)
-  initialize_session(config = config)
   run_mclapply(config = config)
   cat("Checking for outdated targets.\n")
   config$hook <- empty_hook
@@ -64,6 +64,9 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
     sort
   success <- identical(config$outdated, outdated)
   migration_result(success = success, backup = backup)
+  if (success){
+    initialize_session(config = config)
+  }
   invisible(success)
 }
 

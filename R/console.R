@@ -25,7 +25,8 @@ console_import <- function(target, config){
 console_target <- function(target, config){
   pattern <- "target"
   text <- paste("target", target)
-  if ("trigger" %in% colnames(config$plan)){
+  trigger <- get_trigger(target = target, config = config)
+  if (trigger != "any"){
     trigger <- get_trigger(target = target, config = config)
     trigger_text <- color(x = "trigger", color = color_of("trigger"))
     text <- paste0(text, ": ", trigger_text, " \"", trigger, "\"")
@@ -75,12 +76,11 @@ console_up_to_date <- function(config){
     return(invisible())
   }
   any_attempted <- length(config$cache$list(namespace = "attempts"))
-  no_triggers <- is.null(config$plan$trigger) ||
-    all(config$plan$trigger == "any")
-  if (!any_attempted && no_triggers){
+  default_triggers <- using_default_triggers(config)
+  if (!any_attempted && default_triggers){
     color("All targets are already up to date.\n", colors["target"]) %>%
       cat
-  } else if (!no_triggers){
+  } else if (!default_triggers){
     color(
       paste(
         "Used non-default triggers.",

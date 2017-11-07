@@ -65,7 +65,7 @@ make(my_plan) # Nothing changes!
 # You can use a global trigger if your workflow plan
 # does not have a 'trigger' column
 my_plan$trigger <- NULL # Would override the global trigger.
-make(my_plan, trigger = "missing") 
+make(my_plan, trigger = "missing")
 }
 }
 \seealso{

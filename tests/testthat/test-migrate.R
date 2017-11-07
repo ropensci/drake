@@ -42,6 +42,8 @@ test_with_dir("migrate() an up to date cache", {
  # expect_equal(justbuilt(config = config), character(0)) # r-lib/covr#289 # nolint
   clean(cache = cache)
   expect_equal(cached(cache = cache), character(0))
+  # Already migrated, nothing to do
+  expect_true(migrate(path = "old", jobs = 2))
 })
 
 test_with_dir("migrate() a partially outdated cache", {
