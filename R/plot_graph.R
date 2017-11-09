@@ -293,7 +293,7 @@ render_graph <- function(
 }
 
 with_hover <- function(x) {
-  visNetwork::visInteraction(x, hover = T) %>%
+  visNetwork::visInteraction(x, hover = TRUE) %>%
     visNetwork::visEvents(hoverNode =
       "function(e){
         var label_info = this.body.data.nodes.get({

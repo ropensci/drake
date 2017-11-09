@@ -164,7 +164,7 @@ gather <- function(
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
   return(
-    data.frame(target = target, command = command, stringsAsFactors = F)
+    data.frame(target = target, command = command, stringsAsFactors = FALSE)
     )
 }
 

@@ -55,7 +55,7 @@ workplan <- function(
   )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){
-    plan$target <- eply::quotes(plan$target, single = T)
+    plan$target <- eply::quotes(plan$target, single = TRUE)
   }
   if (strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
