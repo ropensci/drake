@@ -13,6 +13,12 @@ prepare_distributed <- function(config){
   invisible()
 }
 
+finish_distributed <- function(config){
+  dir <- cache_path(config$cache)
+  file <- globalenv_file(dir)
+  unlink(file, force = TRUE)
+}
+
 build_distributed <- function(target, cache_path){
   config <- recover_config(cache_path = cache_path)
   do_prework(config = config, verbose_packages = FALSE)

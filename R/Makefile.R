@@ -18,9 +18,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     0
   )
   if (!debug){
-    dir <- cache_path(config$cache)
-    file <- globalenv_file(dir)
-    unlink(file, force = TRUE)
+    finish_distributed(config = config)
   }
   return(invisible(config))
 }
