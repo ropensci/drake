@@ -56,8 +56,9 @@ with_timeout <- function(target, command, config){
 }
 
 resolve_timeouts <- function(target, config){
-  timeouts <- sapply(
-    X = c("timeout", "cpu", "elapsed"),
+  keys <- c("timeout", "cpu", "elapsed")
+  timeouts <- lapply(
+    X = keys,
     FUN = function(field){
       workplan_override(
         target = target,
@@ -65,10 +66,9 @@ resolve_timeouts <- function(target, config){
         config = config
       ) %>%
         as.numeric
-    },
-    simplify = FALSE,
-    USE.NAMES = TRUE
+    }
   )
+  names(timeouts) <- keys
   for (field in c("cpu", "elapsed")){
     if (!length(timeouts[[field]])){
       timeouts[[field]] <- timeouts$timeout

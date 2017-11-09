@@ -179,14 +179,15 @@ read_config <- function(path = getwd(), search = TRUE,
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
-  sapply(
-    cache$list(namespace = "config"),
-    function(item){
+  keys <- cache$list(namespace = "config")
+  out <- lapply(
+    X = keys,
+    FUN = function(item){
       cache$get(key = item, namespace = "config")
-    },
-    simplify = FALSE,
-    USE.NAMES = TRUE
+    }
   )
+  names(out) <- keys
+  out
 }
 
 #' @title Function \code{read_plan}

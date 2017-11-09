@@ -80,7 +80,13 @@ build_graph <- function(
   vertices <- c(keys, unlist(dependency_list)) %>% unique
   from <- unlist(dependency_list) %>%
     unname()
-  to <- rep(keys, times = sapply(dependency_list, length))
+  times <- vapply(
+    X = dependency_list,
+    FUN = length,
+    FUN.VALUE = integer(1),
+    USE.NAMES = TRUE
+  )
+  to <- rep(keys, times = times)
   edges <- rbind(from, to) %>%
     as.character()
   graph <- make_empty_graph() +
