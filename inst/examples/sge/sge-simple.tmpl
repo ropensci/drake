@@ -11,13 +11,7 @@
 # qsub -sync y -cwd -j y
 # Enter `man qsub` in the Linux terminal for details.
 
-# First, we tell qsub to wait until
-# the job finished before exiting.
-# In other words, we build a target only after
-# its dependencies are ready.
-#$ -sync y
-
-# Next, we point the job's working directory to the
+# First, we point the job's working directory to the
 # directory in which you called `drake::make()`.
 #$ -cwd
 
