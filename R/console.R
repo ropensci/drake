@@ -60,7 +60,8 @@ console_many_targets <- function(
 }
 
 console_parLapply <- function(config){ # nolint
-  finish_console(text = "load parallel socket cluster", pattern = "load",
+  text <- paste("load parallel socket cluster with", config$jobs, "workers")
+  finish_console(text = text, pattern = "load",
     verbose = config$verbose)
 }
 
