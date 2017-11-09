@@ -44,7 +44,7 @@ style="border: none; box-shadow: none">
 In the previous graph, all the targets were out of date. But after a `make()`, we will be all caught up, and the graph will show you.
 
 ```{r graphmake}
-make(my_plan, jobs = 4)
+make(my_plan, jobs = 4, verbose = FALSE)
 plot_graph(my_plan)
 ```
 
