@@ -112,8 +112,10 @@ assert_compatible_cache <- function(cache){
     "migrate() restructures the cache in a way that ",
     "preserves the statuses of your targets (up to date vs outdated). ",
     "But in case of errors, migrate() first backs up '", path, "' to '",
-    newpath, "'. Alternatively, you can just run your project from scratch ",
-    "as is with make(..., force = TRUE).",
+    newpath, "'. Alternatively, you can revert to a back-compatible version ",
+    " of drake with 'devtools::install_version(\"drake\", \"4.4.0\")' ",
+    " or just run your project from scratch as is with ",
+    "make(..., force = TRUE).",
     call. = FALSE
   )
 }

@@ -24,10 +24,11 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 This vignette addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version. For a guide to debugging and testing `drake` projects, please refer to the separate ["debug" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 
-# Projects built with drake <= 4.4.0 are not back compatible with later versions.
+# Projects built with drake <= 4.4.0 are not back compatible with drake > 4.4.0.
 
 Versions `drake` after 4.4.0 have different caching internals that increase speed and open up possibilities for future development. However, if you have a project built with version 4.4.0 or earlier, a later version of `drake` will think all your targets are out of date. So by design, a simple `make()` will quit in error to stop you from doing any damage. To migrate your project to a later `drake`, you have two options.
 
+1. Revert to a back-compatible version of drake with `devtools::install_version("drake", "4.4.0")`. Here, the [devtools package](https://github.com/hadley/devtools) must be installed (`install.packages("devtools")`).
 1. Run your project from scratch with `make(..., force = TRUE)`
 1. Use `migrate()` to convert your project to the new format. The `migrate()` function
     1. copies your old project to a backup folder.
