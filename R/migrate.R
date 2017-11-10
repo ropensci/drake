@@ -41,10 +41,10 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   }
   version <- session(cache = cache)$otherPkgs$drake$Version # nolint
   backup <- backup_cache_path(path = path, old = version)
-  cat("Backing up", path, "to a backup cache at ", backup, "\n")
+  message("Backing up", path, "to a backup cache at ", backup)
   dir.create(backup)
   file.copy(from = path, to = backup, recursive = TRUE)
-  cat("Migrating cache at", path, "for your system's drake.\n")
+  message("Migrating cache at", path, "for your system's drake.")
   config <- read_config(cache = cache)
   config$cache <- cache
   config$parallelism <- "mclapply"
@@ -58,7 +58,7 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   config$cache$clear(namespace = "depends")
   store_config(config = config)
   run_mclapply(config = config)
-  cat("Checking for outdated targets.\n")
+  message("Checking for outdated targets.")
   config$hook <- empty_hook
   outdated <- outdated(config = config) %>%
     sort
@@ -74,11 +74,11 @@ should_migrate <- function(path){
   tryCatch({
       tmp <- this_cache(path = path, force = FALSE)
       if (is.null(tmp)){
-        cat("No cache found to migrate.\n")
+        message("No cache found to migrate.")
       } else {
-        cat(
-          "This project is already compatible with your system's drake.",
-          "No need to migrate.\n"
+        message(
+          "This project is already compatible with your system's drake. ",
+          "No need to migrate."
         )
       }
       NULL
@@ -171,18 +171,18 @@ migration_result <- function(success, backup){
 }
 
 migration_failure <- function(backup){
-  paste(
-    "Migration failed:",
-    "target statuses failed to transfer (outdated vs current).",
-    "Original cache saved:", backup
+  paste0(
+    "migration failed: ",
+    "target statuses failed to transfer (outdated vs current). ",
+    "Original cache saved: ", backup
   ) %>%
     stop(call. = FALSE)
 }
 
 migration_success <- function(){
-  cat(
-    "Migration successful:",
-    "target statuses preserved (outdated vs current).\n"
+  message(
+    "Migration successful: ",
+    "target statuses preserved (outdated vs current)."
   )
 }
 

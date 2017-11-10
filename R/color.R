@@ -45,7 +45,7 @@ drake_palette <- function(){
     }
   )
   out <- paste(out, collapse = "\n")
-  cat(out, "\n")
+  message(out)
 }
 
 color <- function(x, color) {

@@ -65,7 +65,7 @@ test_with_dir("migrate() a partially outdated cache", {
 
 test_with_dir("migration_result()", {
   expect_error(migration_result(FALSE, "backup"))
-  expect_output(migration_result(TRUE, "backup"))
+  expect_message(migration_result(TRUE, "backup"))
 })
 
 test_with_dir("Null cases in legacy functions", {

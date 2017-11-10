@@ -17,7 +17,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 })
 
 test_with_dir("colors and shapes", {
-  expect_output(drake_palette())
+  expect_message(drake_palette())
   expect_is(color_of("target"), "character")
   expect_is(color_of("import"), "character")
   expect_is(color_of("not found"), "character")

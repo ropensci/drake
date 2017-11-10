@@ -74,7 +74,7 @@ Makefile_recipe <- function( # nolint
     recipe_command = recipe_command,
     cache_path = cache_path
   ) %>%
-    cat("\n")
+    message()
 }
 
 #' @title default_recipe_command

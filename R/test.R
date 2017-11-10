@@ -45,7 +45,8 @@ test_with_dir <- function(desc, ...){
     code = {
       set_test_backend()
       tmp <- capture.output(
-        test_that(desc = desc, ...)
+        test_that(desc = desc, ...),
+        type = "message"
       )
     }
   )

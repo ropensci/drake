@@ -138,8 +138,8 @@ test_with_dir("target conflicts with current import or another target", {
   config <- dbug()
   config$plan <- rbind(config$plan, data.frame(target = "f",
     command = "1+1"))
-  expect_silent(tmp <- capture.output(check(plan = config$plan,
-    envir = config$envir)))
+  expect_message(check(plan = config$plan,
+    envir = config$envir))
   config$plan$target <- "repeated"
   expect_error(check(plan = config$plan))
 })

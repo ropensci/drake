@@ -12,5 +12,5 @@ Tips are usually related to news and usage.
 }
 \examples{
 drake_tip()
-cat(drake_tip())
+message(drake_tip())
 }

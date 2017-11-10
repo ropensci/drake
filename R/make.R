@@ -48,7 +48,7 @@
 #' that builds a target, and make sure this argument is actually evaluated.
 #' Otherwise, the code will not run and none of your targets will build.
 #' For example, \code{function(code){force(code)}} is a good hook
-#' and \code{function(code){cat("Avoiding the code")}} is a bad hook.
+#' and \code{function(code){message("Avoiding the code")}} is a bad hook.
 #'
 #' @param imports_only logical, whether to skip building the targets
 #' in \code{plan} and just import objects and files.
