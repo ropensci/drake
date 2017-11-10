@@ -5,7 +5,8 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = TRUE, jobs = 1)
+  search = TRUE, cache = NULL, verbose = TRUE, jobs = 1,
+  force = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
@@ -41,6 +42,10 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{jobs}{Number of jobs for light parallelism
 (disabled on Windows).}
+
+\item{force}{logical, whether to try to clean the cache
+even though the project may not be back compatible with the
+current version of drake.}
 }
 \description{
 Cleans up all work done by \code{\link{make}()}.

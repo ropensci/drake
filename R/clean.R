@@ -47,6 +47,10 @@
 #' @param jobs Number of jobs for light parallelism
 #' (disabled on Windows).
 #'
+#' @param force logical, whether to try to clean the cache
+#' even though the project may not be back compatible with the
+#' current version of drake.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example()
@@ -66,12 +70,14 @@ clean <- function(
   search = TRUE,
   cache = NULL,
   verbose = TRUE,
-  jobs = 1
+  jobs = 1,
+  force = FALSE
 ){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (is.null(cache)){
-    cache <- get_cache(path = path, search = search, verbose = verbose)
+    cache <- get_cache(
+      path = path, search = search, verbose = verbose, force = force)
   }
   if (is.null(cache)){
     return(invisible())

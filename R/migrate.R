@@ -54,6 +54,7 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   config$verbose <- TRUE
   config$trigger <- "any"
   config$outdated <- legacy_outdated(config) %>%
+    as.character %>%
     sort
   config$cache$clear(namespace = "depends")
   store_config(config = config)
@@ -198,11 +199,7 @@ legacy_outdated <- function(config){
       !legacy_target_current(target = target, hashes = hashes, config = config)
     }
   )
-  if (!length(rebuild)){
-    # This line was reached in previous versions of drake.
-    # Legacy code will not change anyway.
-    return(character(0)) # nocov
-  } else{
+  if (length(rebuild)){
     lightly_parallelize(
       rebuild,
       function(vertex){
@@ -276,9 +273,8 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    # This line was reached for previous version of drake.
-    # Legacy code will not change anyway.
-    config$cache$get(target)$value # nocov
+    out <- config$cache$get(target)
+    ifelse(is.character(out), out, out$value)
   }
 }
 
@@ -302,5 +298,7 @@ legacy_file_current <- function(target, hashes, config){
   if (!file.exists(unquote(target))){
     return(FALSE)
   }
-  identical(config$cache$get(target)$value, hashes$file)
+  out <- config$cache$get(target)
+  out <- ifelse(is.character(out), out, out$value)
+  identical(out, hashes$file)
 }

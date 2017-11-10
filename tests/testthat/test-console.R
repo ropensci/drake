@@ -47,19 +47,27 @@ test_with_dir("console", {
   x1 <- "12345"
   x2 <- paste(rep(0:9, length.out = console_length + 400), collapse = "")
   expect_equal(x1, color(x = x1, color = NULL))
-  o1 <- capture.output(console(imported = FALSE, target = x1,
-    config = config), type = "message")
-  o2 <- capture.output(console(imported = FALSE, target = x2,
-    config = config), type = "message")
-  
-  # testthat redirects messages somehow.
-  if (FALSE){
-    expect_true(nchar(o1) < console_length)
-    expect_true(nchar(o2) < console_length + 20)
-    dots <- "\\.\\.\\.$"
-    expect_false(grepl(dots, o1))
-    expect_true(grepl(dots, o2))
-  }
+  o1 <- evaluate_promise(
+    console(
+      imported = FALSE,
+      target = x1,
+      config = config
+    ),
+    print = TRUE
+  )$messages
+  o2 <- evaluate_promise(
+    console(
+      imported = FALSE,
+      target = x2,
+      config = config
+    ),
+    print = TRUE
+  )$messages
+  expect_true(nchar(o1) < console_length)
+  expect_true(nchar(o2) < console_length + 20)
+  dots <- "\\.\\.\\.\n$"
+  expect_false(grepl(dots, o1))
+  expect_true(grepl(dots, o2))
 })
 
 test_with_dir("console_many_targets() works", {
@@ -73,17 +81,14 @@ test_with_dir("console_many_targets() works", {
     targets = character(0), pattern = "check", config = config))
   expect_message(console_many_targets(
     targets = "my_target", pattern = "check", config = config))
-  tmp <- capture.output(
+  tmp <- evaluate_promise(
     console_many_targets(
       targets = LETTERS,
       pattern = unique_random_string(n = 400),
       config = config
     ),
-    type = "message"
-  )
-  # testthat redirects messages somehow.
-  if (FALSE){
-    expect_true(is.character(tmp))
-    expect_true(nchar(tmp) <= console_length + 20)
-  }
+    print = TRUE
+  )$messages
+  expect_true(is.character(tmp))
+  expect_true(nchar(tmp) <= console_length + 20)
 })

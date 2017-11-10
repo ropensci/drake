@@ -95,18 +95,16 @@ test_with_dir("test_scenarios()", {
   log <- gsub(" .*", "", log)
   expect_equal(sort(log), sort(testing_scenario_names()))
 
-  log <- capture.output(
+  log <- evaluate_promise(
     test_scenarios(
       unit_test_dir = subdir,
       skip_criterion = always_skip
     ),
-    type = "message"
+    print = TRUE
   )
+  log <- c(log$output, log$messages)
+
   loggings <- grepl("logged scenario", log)
-  
-  # testthat suppresses messages somehow
-  if (FALSE){
-    expect_false(any(loggings))
-    expect_true(any(grepl("skip", log)))
-  }
+  expect_false(any(loggings))
+  expect_true(any(grepl("skip", log)))
 })
