@@ -208,7 +208,7 @@ Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob
 
 # Reproducibility
 
-There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that the alleged results of an analysis really do match the code. Drake helps keep this promise by tracking the relationships among the components of the analysis, a rare and effective approach that also saves time.
+There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that alleged computational results really do match the generating code. To reinforce this promise, drake fingerprints and watches dependencies and output, skipping computations that are already up to date.
 
 ```{r reproducibilitydrakermd, eval = FALSE}
 library(drake)
