@@ -41,10 +41,10 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   }
   version <- session(cache = cache)$otherPkgs$drake$Version # nolint
   backup <- backup_cache_path(path = path, old = version)
-  cat("Backing up", path, "to a backup cache at ", backup, "\n")
+  message("Backing up", path, "to a backup cache at ", backup)
   dir.create(backup)
   file.copy(from = path, to = backup, recursive = TRUE)
-  cat("Migrating cache at", path, "for your system's drake.\n")
+  message("Migrating cache at", path, "for your system's drake.")
   config <- read_config(cache = cache)
   config$cache <- cache
   config$parallelism <- "mclapply"
@@ -54,11 +54,12 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
   config$verbose <- TRUE
   config$trigger <- "any"
   config$outdated <- legacy_outdated(config) %>%
+    as.character %>%
     sort
   config$cache$clear(namespace = "depends")
   store_config(config = config)
   run_mclapply(config = config)
-  cat("Checking for outdated targets.\n")
+  message("Checking for outdated targets.")
   config$hook <- empty_hook
   outdated <- outdated(config = config) %>%
     sort
@@ -74,11 +75,11 @@ should_migrate <- function(path){
   tryCatch({
       tmp <- this_cache(path = path, force = FALSE)
       if (is.null(tmp)){
-        cat("No cache found to migrate.\n")
+        message("No cache found to migrate.")
       } else {
-        cat(
-          "This project is already compatible with your system's drake.",
-          "No need to migrate.\n"
+        message(
+          "This project is already compatible with your system's drake. ",
+          "No need to migrate."
         )
       }
       NULL
@@ -171,18 +172,18 @@ migration_result <- function(success, backup){
 }
 
 migration_failure <- function(backup){
-  paste(
-    "Migration failed:",
-    "target statuses failed to transfer (outdated vs current).",
-    "Original cache saved:", backup
+  paste0(
+    "migration failed: ",
+    "target statuses failed to transfer (outdated vs current). ",
+    "Original cache saved: ", backup
   ) %>%
     stop(call. = FALSE)
 }
 
 migration_success <- function(){
-  cat(
-    "Migration successful:",
-    "target statuses preserved (outdated vs current).\n"
+  message(
+    "Migration successful: ",
+    "target statuses preserved (outdated vs current)."
   )
 }
 
@@ -198,11 +199,7 @@ legacy_outdated <- function(config){
       !legacy_target_current(target = target, hashes = hashes, config = config)
     }
   )
-  if (!length(rebuild)){
-    # This line was reached in previous versions of drake.
-    # Legacy code will not change anyway.
-    return(character(0)) # nocov
-  } else{
+  if (length(rebuild)){
     lightly_parallelize(
       rebuild,
       function(vertex){
@@ -276,9 +273,8 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    # This line was reached for previous version of drake.
-    # Legacy code will not change anyway.
-    config$cache$get(target)$value # nocov
+    out <- config$cache$get(target)
+    ifelse(is.character(out), out, out$value)
   }
 }
 
@@ -302,5 +298,7 @@ legacy_file_current <- function(target, hashes, config){
   if (!file.exists(unquote(target))){
     return(FALSE)
   }
-  identical(config$cache$get(target)$value, hashes$file)
+  out <- config$cache$get(target)
+  out <- ifelse(is.character(out), out, out$value)
+  identical(out, hashes$file)
 }

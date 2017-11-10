@@ -4,7 +4,7 @@
 #' @export
 #' @examples
 #' drake_tip()
-#' cat(drake_tip())
+#' message(drake_tip())
 drake_tip <- function() {
   tips <- c(
     "In drake >= 4.4.0, you can select subgraphs of the workflow graph:

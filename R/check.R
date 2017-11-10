@@ -93,15 +93,14 @@ check_strings <- function(plan) {
     if (length(y) > 2)
       return(y[seq(from = 1, to = length(y), by = 2)]) else return(y)
   })
-  cat("Double-quoted strings were found in plan$command.",
-    "Should these be single-quoted instead?",
-    "Remember: single-quoted strings are file target dependencies",
-    "and double-quoted strings are just ordinary strings.",
-    sep = "\n")
+  message("Double-quoted strings were found in plan$command.\n",
+    "Should these be single-quoted instead?\n",
+    "Remember: single-quoted strings are file target dependencies\n",
+    "and double-quoted strings are just ordinary strings.")
   for (target in seq_len(length(x))) {
-    cat("\ntarget:", names(x)[target], "\n")
-    cat("strings in command:\n",
+    message("\ntarget: ", names(x)[target])
+    message("strings in command:\n",
       multiline_message(eply::quotes(x[[target]],
-      single = FALSE)), "\n", sep = "")
+      single = FALSE)), sep = "")
   }
 }

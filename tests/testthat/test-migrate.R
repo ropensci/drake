@@ -65,7 +65,7 @@ test_with_dir("migrate() a partially outdated cache", {
 
 test_with_dir("migration_result()", {
   expect_error(migration_result(FALSE, "backup"))
-  expect_output(migration_result(TRUE, "backup"))
+  expect_message(migration_result(TRUE, "backup"))
 })
 
 test_with_dir("Null cases in legacy functions", {
@@ -86,10 +86,22 @@ test_with_dir("Null cases in legacy functions", {
   expect_true(is.na(error_na()))
 })
 
-test_with_dir("more legacy functions", {
+test_with_dir("edge cases in the legacy functions. (no glaring errors)", {
   con <- dbug()
   testrun(con)
-  file.rename("intermediatefile.rds", "tmp")
-  expect_false(legacy_target_current("'intermediatefile.rds'", hashes = list(),
-    config = list(inventory = "'intermediatefile.rds'")))
+  target <- "'intermediatefile.rds'"
+
+  # Force legacy_file_hash() to rehash a file.
+  con$cache$set(key = target, value = Inf, namespace = "filemtime")
+  expect_true(
+    is.character(
+      legacy_file_hash(
+        target = target, config = con, size_cutoff = -1
+      )
+    )
+  )
+
+  # Force legacy_target_current() to show a target out of date.
+  expect_false(legacy_target_current(target, hashes = list(),
+    config = con))
 })

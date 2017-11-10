@@ -44,9 +44,7 @@ test_with_dir <- function(desc, ...){
     new = new,
     code = {
       set_test_backend()
-      tmp <- capture.output(
-        test_that(desc = desc, ...)
-      )
+      test_that(desc = desc, ...)
     }
   )
   invisible()

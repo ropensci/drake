@@ -1,8 +1,8 @@
 drake_context("Makefile")
 
 test_with_dir("recipe commands", {
-  expect_output(Makefile_recipe())
-  expect_output(Makefile_recipe(recipe_command = "R -e 'R_RECIPE' -q"))
+  expect_message(Makefile_recipe())
+  expect_message(Makefile_recipe(recipe_command = "R -e 'R_RECIPE' -q"))
   my_plan <- workplan(y = 1)
   expect_true(is.character(default_recipe_command()))
   expect_true(is.character(r_recipe_wildcard()))

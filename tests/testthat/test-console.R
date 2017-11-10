@@ -8,12 +8,12 @@ test_with_dir("console_up_to_date", {
   expect_silent(console_up_to_date(con))
   con <- make(pl, verbose = FALSE)
   con$verbose <- TRUE
-  expect_output(console_up_to_date(con))
+  expect_message(console_up_to_date(con))
 })
 
 test_with_dir("console_parLapply", {
   config <- list(verbose = TRUE)
-  expect_output(console_parLapply(config = config)) # nolint
+  expect_message(console_parLapply(config = config)) # nolint
   config <- list(verbose = FALSE)
   expect_silent(console_parLapply(config = config)) # nolint
 })
@@ -33,13 +33,13 @@ test_with_dir("multiline message cap", {
 test_with_dir("console", {
   config <- dbug()
   config$verbose <- TRUE
-  expect_output(console(imported = FALSE, target = "myinput",
+  expect_message(console(imported = FALSE, target = "myinput",
     config = config))
-  expect_output(console(imported = TRUE, target = "myinput",
+  expect_message(console(imported = TRUE, target = "myinput",
     config = config))
-  expect_output(console(imported = NA, target = "myinput",
+  expect_message(console(imported = NA, target = "myinput",
     config = config))
-  expect_output(
+  expect_message(
     console_many_targets(targets = letters,
       pattern = "check", config = config
     )
@@ -47,13 +47,25 @@ test_with_dir("console", {
   x1 <- "12345"
   x2 <- paste(rep(0:9, length.out = console_length + 400), collapse = "")
   expect_equal(x1, color(x = x1, color = NULL))
-  o1 <- capture.output(console(imported = FALSE, target = x1,
-    config = config))
-  o2 <- capture.output(console(imported = FALSE, target = x2,
-    config = config))
+  o1 <- evaluate_promise(
+    console(
+      imported = FALSE,
+      target = x1,
+      config = config
+    ),
+    print = TRUE
+  )$messages
+  o2 <- evaluate_promise(
+    console(
+      imported = FALSE,
+      target = x2,
+      config = config
+    ),
+    print = TRUE
+  )$messages
   expect_true(nchar(o1) < console_length)
   expect_true(nchar(o2) < console_length + 20)
-  dots <- "\\.\\.\\.$"
+  dots <- "\\.\\.\\.\n$"
   expect_false(grepl(dots, o1))
   expect_true(grepl(dots, o2))
 })
@@ -67,15 +79,16 @@ test_with_dir("console_many_targets() works", {
   config <- list(verbose = TRUE)
   expect_silent(console_many_targets(
     targets = character(0), pattern = "check", config = config))
-  expect_output(console_many_targets(
+  expect_message(console_many_targets(
     targets = "my_target", pattern = "check", config = config))
-  tmp <- capture.output(
+  tmp <- evaluate_promise(
     console_many_targets(
       targets = LETTERS,
       pattern = unique_random_string(n = 400),
       config = config
-    )
-  )
+    ),
+    print = TRUE
+  )$messages
   expect_true(is.character(tmp))
   expect_true(nchar(tmp) <= console_length + 20)
 })

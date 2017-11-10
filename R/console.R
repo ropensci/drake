@@ -79,15 +79,15 @@ console_up_to_date <- function(config){
   any_attempted <- length(config$cache$list(namespace = "attempts"))
   default_triggers <- using_default_triggers(config)
   if (!any_attempted && default_triggers){
-    color("All targets are already up to date.\n", colors["target"]) %>%
-      cat
+    color("All targets are already up to date.", colors["target"]) %>%
+      message
   } else if (!default_triggers){
     color(
       paste(
         "Used non-default triggers.",
-        "Some targets may be not be up to date.\n"),
+        "Some targets may be not be up to date."),
       colors["trigger"]) %>%
-      cat
+      message
   }
 }
 
@@ -97,7 +97,7 @@ finish_console <- function(text, pattern, verbose){
   }
   crop_text(x = text, length = console_length) %>%
     color_grep(pattern = pattern, color = color_of(pattern)) %>%
-    cat("\n", sep = "")
+    message(sep = "")
 }
 
 crop_text <- Vectorize(function(x, length = 50) {
