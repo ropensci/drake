@@ -209,6 +209,10 @@ vignette("timing")          # Build times, runtime predictions
 
 Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
 
+# Contributing
+
+Bug reports, suggestions, and code are welcome. Please see [.github/CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/.github/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
+
 # Reproducibility 
 
 There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that alleged computational results really do match the generating code. To reinforce this promise, drake fingerprints and watches dependencies and output, skipping computations that are already up to date. 

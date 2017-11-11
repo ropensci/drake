@@ -34,3 +34,4 @@ vignettes/.*_files
 ^.*\.svg$
 ^\.Rproj\.user$
 ^.*\.yml$
+^CONDUCT\.md$
