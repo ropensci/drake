@@ -189,26 +189,6 @@ rescue_cache()
 session()
 ```
 
-# Documentation
-
-The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
-
-```r
-vignette(package = "drake") # List the vignettes.
-vignette("caution")         # Avoid common pitfalls.
-vignette("debug")           # Debugging and testing.
-vignette("drake")           # High-level intro.
-vignette("graph")           # Visualilze the workflow graph.
-vignette("quickstart")      # Walk through a simple example.
-vignette("parallelism")     # High-performance computing.
-vignette("storage")         # Learn how drake stores your stuff.
-vignette("timing")          # Build times, runtime predictions
-```
-
-# Help and troubleshooting
-
-Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
-
 # Reproducibility 
 
 There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that alleged computational results really do match the generating code. To reinforce this promise, drake fingerprints and watches dependencies and output, skipping computations that are already up to date. 
@@ -295,3 +275,27 @@ Special thanks to [Jarad](http://www.jarad.me/), my advisor from [graduate schoo
 The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. There are [many other pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), but few are R-focused.
 
 In the sphere of reproducibility, drake and [remake](https://github.com/richfitz/remake) are examples of non-literate programming tools (as opposed to literate programming tools such as [knitr](https://CRAN.R-project.org/package=knitr)). Counterparts include [R.cache](https://CRAN.R-project.org/package=R.cache), [archivist](https://CRAN.R-project.org/package=archivist), [trackr](https://github.com/gmbecker/recordr), and [memoise](https://CRAN.R-project.org/package=memoise). See the [reproducible research CRAN task view](https://CRAN.R-project.org/view=ReproducibleResearch) for a more comprehensive list. Drake differentiates itself from these tools with its ability to track the relationships among cached objects and its extensive high-performance computing functionality.
+
+# Documentation
+
+The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
+
+```r
+vignette(package = "drake") # List the vignettes.
+vignette("caution")         # Avoid common pitfalls.
+vignette("debug")           # Debugging and testing.
+vignette("drake")           # High-level intro.
+vignette("graph")           # Visualilze the workflow graph.
+vignette("quickstart")      # Walk through a simple example.
+vignette("parallelism")     # High-performance computing.
+vignette("storage")         # Learn how drake stores your stuff.
+vignette("timing")          # Build times, runtime predictions
+```
+
+# Help and troubleshooting
+
+Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
+
+# Contributing
+
+Bug reports, suggestions, and code are welcome. Please see [.github/CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/.github/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).

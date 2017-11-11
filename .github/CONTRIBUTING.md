@@ -1,9 +1,11 @@
-# Troubleshooting
+# Code of Conduct
 
-The ["caution" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/caution.Rmd) (`vignette("caution")`, also linked from the [CRAN page](https://CRAN.R-project.org/package=drake) under "vignettes") lists some known issues, limitations, and edge cases. Please look there first if you encounter problems or unexpected behavior. The ["debug" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd) (`vignette("debug")`) describes how to debug and test `drake` workflows. If these vignettes do not solve your issue, please search the [issues page](https://github.com/wlandau-lilly/drake/issues), taking care to browse the closed issues as well. If you are still unsatisfied, please submit your bug report, question, or feature reqest as a [new issue](https://github.com/wlandau-lilly/drake/issues/new).
+Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
 
-# Experimental features
+# Contributions
 
-## Built-in examples
+Suggestions, bug reports, and code are welcome. Please [fork this repository](https://help.github.com/articles/fork-a-repo/) and submit a [pull request](https://github.com/wlandau-lilly/drake/pulls).
 
-`Drake` has [built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) that you can list with `examples_drake()` and write to your file system with `example_drake()`. Some of these may not work as-is, particularly the ones that require special difficult-to-install software like [SLURM](http://slurm.schedmd.com/) and [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/). Here is where you can help. If you have experience with these systems, please help us test and fix the examples. You can [share your suggestions on the issue tracker](https://github.com/wlandau-lilly/drake/issues) and [submit bugfixes via pull request](https://help.github.com/articles/about-pull-requests/).
+# Best ways to help
+
+Multiple [issues](https://github.com/wlandau-lilly/drake/issues) are labeled ["help wanted"](https://github.com/wlandau-lilly/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22). This is where help from the community would be particularly appreciated.
