@@ -190,7 +190,7 @@ is always invisibly returned.}
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.
 Must be in \code{\link{triggers}()}.
-See \code{?triggers} for explanations of the chioces.}
+See \code{?triggers} for explanations of the choices.}
 }
 \description{
 Run your project (build the targets).
