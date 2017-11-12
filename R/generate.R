@@ -185,7 +185,7 @@ gather_plan <- function(
   plan = NULL,
   target = "target",
   gather = "list"
-  ){
+){
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")

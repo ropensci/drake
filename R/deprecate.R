@@ -367,7 +367,8 @@ expand <- function(
 #' @seealso \code{\link{gather_plan}}
 #' @return Same as for \code{\link{gather_plan}}
 #' @param plan Same as for \code{\link{gather_plan}}
-#' @param values Same as for \code{\link{gather_plan}}
+#' @param target Same as for \code{\link{gather_plan}}
+#' @param gather Same as for \code{\link{gather_plan}}
 #' @examples
 #' # See ?gather_plan for examples.
 gather <- function(

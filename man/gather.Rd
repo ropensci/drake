@@ -9,7 +9,9 @@ gather(plan = NULL, target = "target", gather = "list")
 \arguments{
 \item{plan}{Same as for \code{\link{gather_plan}}}
 
-\item{values}{Same as for \code{\link{gather_plan}}}
+\item{target}{Same as for \code{\link{gather_plan}}}
+
+\item{gather}{Same as for \code{\link{gather_plan}}}
 }
 \value{
 Same as for \code{\link{gather_plan}}
