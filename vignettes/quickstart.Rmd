@@ -178,12 +178,12 @@ Each dataset is analyzed multiple ways.
 
 ```{r methods}
 methods <- workplan(
-  regression1 = reg1(..dataset..), # nolint
-  regression2 = reg2(..dataset..)) # nolint
+  regression1 = reg1(dataset__), # nolint
+  regression2 = reg2(dataset__)) # nolint
 methods
 ```
 
-We evaluate the `..dataset..` wildcard.
+We evaluate the `dataset__` wildcard.
 
 ```{r analyses}
 my_analyses <- plan_analyses(methods, data = my_datasets)
@@ -194,8 +194,8 @@ Next, we summarize each analysis of each dataset using summary statistics and re
 
 ```{r summaries}
 summary_types <- workplan(
-  summ = suppressWarnings(summary(..analysis..)), # nolint
-  coef = coefficients(..analysis..)) # nolint
+  summ = suppressWarnings(summary(analysis__)), # nolint
+  coef = coefficients(analysis__)) # nolint
 summary_types
 
 results <- plan_summaries(summary_types, analyses = my_analyses,

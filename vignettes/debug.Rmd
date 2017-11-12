@@ -244,6 +244,7 @@ After your project is at least somewhat built, you can inspect and read your res
 
 ```{r debriefdebug}
 make(my_plan, verbose = FALSE)
+drake_session(verbose = FALSE)
 cached(verbose = FALSE)
 built(verbose = FALSE)
 imported(verbose = FALSE)
