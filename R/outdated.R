@@ -18,6 +18,7 @@
 #' @param jobs same as for \code{\link{make}}
 #' @param packages same as for \code{\link{make}}
 #' @param prework same as for \code{\link{make}}
+#' @param graph same as for \code{\link{make}}
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -49,6 +50,7 @@ outdated <-  function(
   jobs = 1,
   packages = rev(.packages()),
   prework = character(0),
+  graph = NULL, 
   config = NULL,
   make_imports = TRUE
 ){
@@ -64,7 +66,8 @@ outdated <-  function(
       parallelism = parallelism,
       jobs = jobs,
       packages = packages,
-      prework = prework
+      prework = prework, 
+      graph = graph
     )
   }
   if (make_imports){
@@ -131,6 +134,8 @@ outdated <-  function(
 #'
 #' @param prework same as for \code{\link{make}}
 #'
+#' @param graph same as for \code{\link{make}}
+#'
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
 #' produced with \code{\link{config}()}.
@@ -156,6 +161,7 @@ missed <- function(
   parallelism = drake::default_parallelism(),
   packages = rev(.packages()),
   prework = character(0),
+  graph = NULL,
   config = NULL
 ){
   force(envir)
@@ -168,7 +174,8 @@ missed <- function(
       parallelism = parallelism,
       jobs = jobs,
       packages = packages,
-      prework = prework
+      prework = prework,
+      graph = graph
     )
   }
   graph <- config$graph
