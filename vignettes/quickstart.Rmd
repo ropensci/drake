@@ -186,7 +186,7 @@ methods
 We evaluate the `..dataset..` wildcard.
 
 ```{r analyses}
-my_analyses <- analyses(methods, data = my_datasets)
+my_analyses <- plan_analyses(methods, data = my_datasets)
 my_analyses
 ```
 

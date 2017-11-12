@@ -110,7 +110,7 @@ set up your workflow plan data frame,
 
 ```r
 workplan()
-analyses()
+plan_analyses()
 summaries()
 evaluate_plan()
 expand_plan()

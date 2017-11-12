@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{summaries}
 \alias{summaries}
-\title{Function \code{summaries}}
+\title{Function \code{plan_summaries}}
 \usage{
 summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 }
@@ -40,7 +40,7 @@ methods <- workplan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
 # Generate the part of the workflow plan to analyze the datasets.
-analyses <- analyses(methods, datasets = datasets)
+analyses <- plan_analyses(methods, datasets = datasets)
 # Create a template workflow plan dataset with the
 # types of summaries you want.
 summary_types <- workplan(
@@ -57,5 +57,6 @@ my_plan <- rbind(datasets, analyses, summs)
 my_plan
 }
 \seealso{
-\code{\link{analyses}}, \code{\link{make}}, \code{\link{workplan}}
+\code{\link{plan_analyses}}, \code{\link{make}},
+\code{\link{workplan}}
 }

@@ -78,7 +78,7 @@ load_basic_example <- function(
 
   # same as evaluate_plan(methods, wildcard = '..dataset..', values
   # = datasets$output)
-  analyses <- analyses(methods, datasets = datasets)
+  analyses <- plan_analyses(methods, datasets = datasets)
 
   summary_types <- workplan(list = c(
     summ = "suppressWarnings(summary(..analysis..))",

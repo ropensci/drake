@@ -9,7 +9,7 @@ test_with_dir("prune_envir in full build", {
     b = ..dataset.., # nolint
     c = ..dataset.. # nolint
   )
-  analyses <- analyses(methods, datasets)
+  analyses <- plan_analyses(methods, datasets)
   heuristics <- workplan(
     s = c(..dataset.., ..analysis..), # nolint
     t = ..analysis..) # nolint

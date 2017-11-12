@@ -1,3 +1,26 @@
+#' @title Function \code{analyses}
+#' @description Use \code{\link{plan_analyses}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @seealso \code{\link{future_backend}}
+#' @return The same return value as \code{\link{plan_analyses}()}.
+#' @param plan Same as for \code{\link{plan_analyses}()}.
+#' @param datasets Same as for \code{\link{plan_analyses}()}.
+#' @examples
+#' # See ?future_backend for examples.
+analyses <- function(plan, datasets){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::analyses() is deprecated",
+      "due to possible name conflicts.",
+      "Use plan_analyses() instead."
+    )
+  )
+  plan_analyses(plan = plan, datasets = datasets)
+}
+
 #' @title Function \code{future_backend}
 #' @description Use \code{\link{future_backend}()} instead.
 #' @details Deprecated on 2017-11-12.

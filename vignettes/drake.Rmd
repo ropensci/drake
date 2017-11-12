@@ -102,7 +102,7 @@ example_drake()
 set up your workflow plan,
 
 ```{r plandrakermd, eval = FALSE}
-analyses()
+plan_analyses()
 summaries()
 evaluate_plan()
 expand_plan()

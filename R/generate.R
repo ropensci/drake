@@ -196,10 +196,10 @@ gather_plan <- function(
   )
 }
 
-#' @title Function \code{analyses}
+#' @title Function \code{plan_analyses}
 #' @description Generate a workflow plan data frame to
 #' analyze multiple datasets using multiple methods of analysis.
-#' @seealso \code{\link{summaries}},
+#' @seealso \code{\link{plan_summaries}},
 #'  \code{\link{make}}, \code{\link{workplan}}
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.
@@ -222,12 +222,12 @@ gather_plan <- function(
 #'   regression2 = reg2(..dataset..))
 #' # Evaluate the wildcards to create the part of the workflow plan
 #' # encoding the analyses of the datasets.
-#' ans <- analyses(methods, datasets = datasets)
+#' ans <- plan_analyses(methods, datasets = datasets)
 #' ans
 #' # For the final workflow plan, row bind the pieces together.
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
-analyses <- function(plan, datasets){
+plan_analyses <- function(plan, datasets){
   evaluate_plan(
     plan,
     wildcard = "..dataset..",
@@ -235,10 +235,11 @@ analyses <- function(plan, datasets){
   )
 }
 
-#' @title Function \code{summaries}
+#' @title Function \code{plan_summaries}
 #' @description Generate a workflow plan data frame for summarizing
 #' multiple analyses of multiple datasets multiple ways.
-#' @seealso \code{\link{analyses}}, \code{\link{make}}, \code{\link{workplan}}
+#' @seealso \code{\link{plan_analyses}}, \code{\link{make}},
+#' \code{\link{workplan}}
 #' @export
 #' @return An evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.
@@ -263,7 +264,7 @@ analyses <- function(plan, datasets){
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
 #' # Generate the part of the workflow plan to analyze the datasets.
-#' analyses <- analyses(methods, datasets = datasets)
+#' analyses <- plan_analyses(methods, datasets = datasets)
 #' # Create a template workflow plan dataset with the
 #' # types of summaries you want.
 #' summary_types <- workplan(
@@ -291,7 +292,7 @@ summaries <- function(
   if (!any(grepl("..analysis..", out$command, fixed = TRUE))){
     stop(
       "no '..analysis..' wildcard found in plan$command. ",
-      "Use analyses() instead."
+      "Use plan_analyses() instead."
       )
   }
   out <- evaluate_plan(out, wildcard = "..analysis..", values = analyses$target)
@@ -333,7 +334,7 @@ with_analyses_only <- function(plan){
       "removing ",
       sum(has_analysis),
       " rows with no ..analysis.. wildcard in the command.",
-      "Use analyses() for these.",
+      "Use plan_analyses() for these.",
       call. = FALSE
     )
   }

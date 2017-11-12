@@ -49,4 +49,5 @@ test_with_dir("generative templating deprecation", {
   expect_warning(drake::evaluate(workplan()))
   expect_warning(drake::expand(workplan()))
   expect_warning(drake::gather(workplan()))
+  expect_warning(drake::analyses(workplan(), workplan()))
 })
