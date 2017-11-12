@@ -25,11 +25,6 @@
 #' of the dependency graph. A light \code{mclapply}-based
 #' parallelism is used if your operating system is not Windows.
 #'
-#' @param trigger Name of the trigger to apply to all targets.
-#' Ignored if \code{plan} has a \code{trigger} column.
-#' Must be in \code{\link{triggers}()}.
-#' See \code{?triggers} for explanations of the choices.
-#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
@@ -42,8 +37,7 @@ build_graph <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  jobs = 1,
-  trigger = "any"
+  jobs = 1
 ){
   force(envir)
   plan <- sanitize_plan(plan)
@@ -73,10 +67,6 @@ build_graph <- function(
   )
   command_deps <- lightly_parallelize(
     plan$command, command_dependencies, jobs = jobs)
-  names(command_deps) <- plan$target
-  command_deps <- lightly_parallelize(
-    plan$target, trigger_trim_deps, jobs = jobs,
-    command_deps = command_deps, plan = plan, trigger = trigger)
   names(command_deps) <- plan$target
   dependency_list <- c(command_deps, import_deps)
   keys <- names(dependency_list)
@@ -128,10 +118,6 @@ build_graph <- function(
 #' parallelism is used if your operating system is not Windows.
 #' @param verbose logical, whether to print
 #' progress messages to the console.
-#' @param trigger Name of the trigger to apply to all targets.
-#' Ignored if \code{plan} has a \code{trigger} column.
-#' Must be in \code{\link{triggers}()}.
-#' See \code{?triggers} for explanations of the choices.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
@@ -143,13 +129,12 @@ tracked <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,
-  verbose = TRUE,
-  trigger = "any"
+  verbose = TRUE
 ){
   force(envir)
   graph <- build_graph(
     plan = plan, targets = targets, envir = envir,
-    jobs = jobs, verbose = verbose, trigger = trigger
+    jobs = jobs, verbose = verbose
   )
   V(graph)$name
 }
@@ -171,18 +156,6 @@ assert_unique_names <- function(imports, targets, envir, verbose){
     )
   }
   remove(list = common, envir = envir)
-}
-
-trigger_trim_deps <- function(target, command_deps, plan, trigger){
-  deps <- command_deps[[target]]
-  trigger <- get_trigger(
-    target = target,
-    config = list(plan = plan, trigger = trigger)
-  )
-  if (trigger %in% triggers_with_depends()){
-    return(deps)
-  }
-  intersect(deps, plan$target)
 }
 
 trim_graph <- function(config){

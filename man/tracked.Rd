@@ -5,7 +5,7 @@
 \title{Function \code{tracked}}
 \usage{
 tracked(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), jobs = 1, verbose = TRUE, trigger = "any")
+  envir = parent.frame(), jobs = 1, verbose = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -23,11 +23,6 @@ parallelism is used if your operating system is not Windows.}
 
 \item{verbose}{logical, whether to print
 progress messages to the console.}
-
-\item{trigger}{Name of the trigger to apply to all targets.
-Ignored if \code{plan} has a \code{trigger} column.
-Must be in \code{\link{triggers}()}.
-See \code{?triggers} for explanations of the choices.}
 }
 \value{
 A character vector with the names of reproducibly-tracked targets.

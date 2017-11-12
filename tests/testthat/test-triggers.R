@@ -70,14 +70,18 @@ test_with_dir("triggers work as expected", {
   expect_equal(justbuilt(con), character(0))
 })
 
-test_with_dir("missing trigger updates targets (assumes full igraph)", {
+test_with_dir("'missing' trigger brings targets up to date", {
   con <- dbug()
   con <- make(
     con$plan, trigger = "missing", parallelism = con$parallelism,
     envir = con$envir, jobs = con$jobs, verbose = FALSE)
   expect_equal(sort(justbuilt(con)), sort(con$plan$target))
   expect_true(all(con$plan$trigger == "missing"))
-  expect_equal(outdated(config = con), character(0))
+  out <- outdated(
+    plan = con$plan,
+    envir = con$envir
+  )
+  expect_equal(out, character(0))
 })
 
 test_with_dir("Depends brings targets up to date", {
