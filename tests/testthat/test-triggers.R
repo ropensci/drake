@@ -96,3 +96,13 @@ test_with_dir("Depends brings targets up to date", {
   expect_equal(sort(justbuilt(con2)), character(0))
   expect_equal(outdated(config = con2), character(0))
 })
+
+# Similar enough to the triggers to include here:
+test_with_dir("make(..., skip_imports = TRUE) works", {
+  con <- dbug()
+  con <- make(
+    con$plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs, verbose = TRUE,
+    skip_imports = TRUE)
+  expect_equal(sort(cached()), sort(con$plan$target))
+})

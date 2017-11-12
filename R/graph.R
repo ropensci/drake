@@ -25,6 +25,11 @@
 #' of the dependency graph. A light \code{mclapply}-based
 #' parallelism is used if your operating system is not Windows.
 #'
+#' @param skip_imports logical, whether to totally neglect to
+#' process the imports and jump straight to the targets. This can be useful
+#' if your imports are massive and you just want to test your project,
+#' but it is bad practice for reproducible data analysis.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
@@ -37,12 +42,17 @@ build_graph <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  jobs = 1
+  jobs = 1,
+  skip_imports = FALSE
 ){
   force(envir)
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
-  imports <- as.list(envir)
+  if (skip_imports){
+    imports <- list()
+  } else {
+    imports <- as.list(envir)
+  }
   assert_unique_names(
     imports = names(imports),
     targets = plan$target,
@@ -66,7 +76,12 @@ build_graph <- function(
     config = list(verbose = verbose)
   )
   command_deps <- lightly_parallelize(
-    plan$command, command_dependencies, jobs = jobs)
+    plan$command, command_dependencies, jobs = jobs) %>%
+    filter_out_imports(
+      plan = plan,
+      skip_imports = skip_imports,
+      jobs = jobs
+    )
   names(command_deps) <- plan$target
   dependency_list <- c(command_deps, import_deps)
   keys <- names(dependency_list)
@@ -102,6 +117,19 @@ build_graph <- function(
   return(graph)
 }
 
+filter_out_imports <- function(command_deps, plan, skip_imports, jobs){
+  if (!skip_imports){
+    return(command_deps)
+  }
+  lightly_parallelize(
+    command_deps,
+    function(x){
+      intersect(x, plan$target)
+    },
+    jobs = jobs
+  )
+}
+
 #' @title Function \code{tracked}
 #' @description Print out which objects, functions, files, targets, etc.
 #' are reproducibly tracked.
@@ -118,6 +146,10 @@ build_graph <- function(
 #' parallelism is used if your operating system is not Windows.
 #' @param verbose logical, whether to print
 #' progress messages to the console.
+#' @param skip_imports logical, whether to totally neglect to
+#' process the imports and jump straight to the targets. This can be useful
+#' if your imports are massive and you just want to test your project,
+#' but it is bad practice for reproducible data analysis.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
@@ -129,12 +161,13 @@ tracked <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,
-  verbose = TRUE
+  verbose = TRUE,
+  skip_imports = FALSE
 ){
   force(envir)
   graph <- build_graph(
     plan = plan, targets = targets, envir = envir,
-    jobs = jobs, verbose = verbose
+    jobs = jobs, verbose = verbose, skip_imports = skip_imports
   )
   V(graph)$name
 }

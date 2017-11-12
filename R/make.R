@@ -186,11 +186,18 @@
 #' Supplying a pre-built graph could save time.
 #' The graph is constructed by \code{\link{build_graph}()}.
 #' You can also get one from \code{\link{config}(my_plan)$graph}.
+#' Overrides \code{skip_imports}.
 #'
 #' @param trigger Name of the trigger to apply to all targets.
 #' Ignored if \code{plan} has a \code{trigger} column.
 #' Must be in \code{\link{triggers}()}.
 #' See \code{?triggers} for explanations of the choices.
+#'
+#' @param skip_imports logical, whether to totally neglect to
+#' process the imports and jump straight to the targets. This can be useful
+#' if your imports are massive and you just want to test your project,
+#' but it is bad practice for reproducible data analysis.
+#' This argument is overridden if you supply your own \code{graph} argument.
 #'
 #' @examples
 #' \dontrun{
@@ -244,7 +251,8 @@ make <- function(
   force = FALSE,
   return_config = NULL,
   graph = NULL,
-  trigger = "any"
+  trigger = "any",
+  skip_imports = FALSE
 ){
   force(envir)
 
@@ -262,7 +270,6 @@ make <- function(
       call. = FALSE
     )
   }
-
   config <- config(
     plan = plan,
     targets = targets,
@@ -285,7 +292,8 @@ make <- function(
     retries = retries,
     force = force,
     graph = graph,
-    trigger = trigger
+    trigger = trigger,
+    skip_imports = skip_imports
   )
   store_config(config = config)
   initialize_session(config = config)

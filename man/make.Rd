@@ -14,7 +14,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
-  trigger = "any")
+  trigger = "any", skip_imports = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -191,12 +191,19 @@ is always invisibly returned.}
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.
 The graph is constructed by \code{\link{build_graph}()}.
-You can also get one from \code{\link{config}(my_plan)$graph}.}
+You can also get one from \code{\link{config}(my_plan)$graph}.
+Overrides \code{skip_imports}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.
 Must be in \code{\link{triggers}()}.
 See \code{?triggers} for explanations of the choices.}
+
+\item{skip_imports}{logical, whether to totally neglect to
+process the imports and jump straight to the targets. This can be useful
+if your imports are massive and you just want to test your project,
+but it is bad practice for reproducible data analysis.
+This argument is overridden if you supply your own \code{graph} argument.}
 }
 \value{
 The master internal configuration list, mostly

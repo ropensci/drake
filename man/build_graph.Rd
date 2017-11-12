@@ -5,7 +5,8 @@
 \title{Function \code{build_graph}}
 \usage{
 build_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1)
+  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  skip_imports = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -22,6 +23,11 @@ build_graph(plan = workplan(), targets = drake::possible_targets(plan),
 \item{jobs}{number of jobs to accelerate the construction
 of the dependency graph. A light \code{mclapply}-based
 parallelism is used if your operating system is not Windows.}
+
+\item{skip_imports}{logical, whether to totally neglect to
+process the imports and jump straight to the targets. This can be useful
+if your imports are massive and you just want to test your project,
+but it is bad practice for reproducible data analysis.}
 }
 \value{
 An igraph object representing

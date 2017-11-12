@@ -138,11 +138,9 @@ To track dependencies and make decisions about what needs building, `make()` sto
 Fortunately, you can change the triggers that tell `drake` to (re)build the target. Below, `drake` disregards outdatedness and just builds the targets that are missing. Notice that no imports are formally processed (except to build the internal dependency network).
 
 ```{r rushdebug}
-clean() # Start from scratch
+clean(verbose = FALSE) # Start from scratch
 make(my_plan, trigger = "missing")
 ```
-
-In fact, combined with the [high-performance computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), the `"missing"` trigger allows `drake` to act as an ordinary job schedule. Here, it simply submits interdependent stages of jobs in the correct order without making you adhere to reproducibility.
 
 You can choose from a variety of triggers.
 
@@ -165,6 +163,16 @@ reg2 <- function(d) {
   lm(y ~ x3, data = d)
 }
 make(my_plan, trigger = "any") # Nothing changes!
+```
+
+# Skipping imports
+
+Similar to triggers, another way to speed testing is to skip the imports entirely. However, *you should only use this for testing purposes* because it puts your targets out of sync with your imports. In other words, `outdated()` will almost certainly flag any targets you build this way.. Hence, your work is no longer reproducible, and `drake` is reduced to an ordinary unopinionated job scheduler.
+
+```{r skipimports}
+clean(verbose = FALSE)
+my_plan$trigger <- NULL
+make(my_plan, skip_imports = TRUE)
 ```
 
 # Impose timeouts and retries

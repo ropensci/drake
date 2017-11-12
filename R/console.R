@@ -78,10 +78,20 @@ console_up_to_date <- function(config){
   }
   any_attempted <- length(config$cache$list(namespace = "attempts"))
   default_triggers <- using_default_triggers(config)
-  if (!any_attempted && default_triggers){
+  if (!any_attempted && default_triggers && !config$skip_imports){
     color("All targets are already up to date.", colors["target"]) %>%
       message
-  } else if (!default_triggers){
+    return(invisible())
+  }
+  if (config$skip_imports){
+    color(
+      paste(
+        "Skipped the imports.",
+        "Targets are almost surely out of date."),
+      colors["trigger"]) %>%
+      message
+  }
+  if (!default_triggers){
     color(
       paste(
         "Used non-default triggers.",

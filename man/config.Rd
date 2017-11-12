@@ -13,7 +13,8 @@ config(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  clear_progress = FALSE, graph = NULL, trigger = "any")
+  clear_progress = FALSE, graph = NULL, trigger = "any",
+  skip_imports = FALSE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -57,10 +58,16 @@ config(plan = workplan(), targets = drake::possible_targets(plan),
 \item{clear_progress}{logical, whether to clear
 the cached progress of the targets readable by}
 
-\item{graph}{igraph object representing the workflow plan network
-\code{\link{progress}()}}
+\item{graph}{igraph object representing the workflow plan network.
+Overrides \code{skip_imports}.}
 
 \item{trigger}{same as for \code{\link{make}}}
+
+\item{skip_imports}{logical, whether to totally neglect to
+process the imports and jump straight to the targets. This can be useful
+if your imports are massive and you just want to test your project,
+but it is bad practice for reproducible data analysis.
+This argument is overridden if you supply your own \code{graph} argument.}
 }
 \value{
 The master internal configuration list of a project.

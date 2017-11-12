@@ -33,9 +33,14 @@
 #' @param force same as for \code{\link{make}}
 #' @param clear_progress logical, whether to clear
 #' the cached progress of the targets readable by
-#' @param graph igraph object representing the workflow plan network
-#' \code{\link{progress}()}
+#' @param graph igraph object representing the workflow plan network.
+#' Overrides \code{skip_imports}.
 #' @param trigger same as for \code{\link{make}}
+#' @param skip_imports logical, whether to totally neglect to
+#' process the imports and jump straight to the targets. This can be useful
+#' if your imports are massive and you just want to test your project,
+#' but it is bad practice for reproducible data analysis.
+#' This argument is overridden if you supply your own \code{graph} argument.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -76,7 +81,8 @@ config <- function(
   force = FALSE,
   clear_progress = FALSE,
   graph = NULL,
-  trigger = "any"
+  trigger = "any",
+  skip_imports = FALSE
 ){
   force(envir)
   seed <- get_valid_seed()
@@ -105,7 +111,8 @@ config <- function(
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
     graph <- build_graph(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, jobs = jobs)
+      envir = envir, verbose = verbose, jobs = jobs,
+      skip_imports = skip_imports)
   }
   config <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,
@@ -114,7 +121,7 @@ config <- function(
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    seed = seed, trigger = trigger,
+    seed = seed, trigger = trigger, skip_imports = skip_imports,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   ) %>%
     quick_inventory

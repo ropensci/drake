@@ -216,10 +216,10 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr/) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, `report.md`).
 
-However, if you are simply debugging and testing a project, you can relax this reproducible reactivity using [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers). For example, if you do not care about reproducibility and just want `drake` to be an ordinary job scheduler, use the `"missing"` trigger. That way, targets will still be built in the correct sequence of interdependent stages, but any targets that already exist will be skipped. You lose reproducibility, but execution can be much faster.
+With alternate [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and the [option to skip imports](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#skipping-imports), you can sacrifice reproducibility to gain speed. However, these options throw the dependency network out of sync. You should only use them for testing and debugging, never for production.
 
 ```{r triggermissingdrake, eval = FALSE}
-make(..., trigger = "missing")
+make(..., skip_imports = TRUE, trigger = "missing")
 ```
 
 Using other tools, you can enhance reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
