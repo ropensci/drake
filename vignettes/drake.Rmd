@@ -55,15 +55,19 @@ error$calls              # Call stack / traceback
 # Installation
 
 ```{r devinstall, eval = FALSE}
-install.packages("drake") # latest CRAN release
+install.packages("drake")    # Latest CRAN release.
+install.packages("devtools") # For installing from GitHub.
+# Choose a GitHub release.
 devtools::install_github(
-  "wlandau-lilly/drake@v4.2.0",
+  "wlandau-lilly/drake@v4.4.0",
   build = TRUE
-) # GitHub release
-devtools::install_github("wlandau-lilly/drake", build = TRUE) # dev version
+)
+# Install the development version.
+install_github("wlandau-lilly/drake", build = TRUE) # dev version
 ```
 
-For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
+- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which muliple R sessions initialize and then try to `require(drake)`.
+- For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 
 # Quickstart
 
