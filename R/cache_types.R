@@ -21,7 +21,7 @@ cache_types <- function(){
 #' \code{\link{new_cache}}, \code{\link{get_cache}},
 #' \code{\link{default_cache_type}}
 #' @examples
-#' cache_types()
+#' in_memory_cache_types()
 in_memory_cache_types <- function(){
   # The first is the default.
   c(
@@ -52,8 +52,10 @@ default_cache_type <- function(){
 #' @param path path to the cache
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # Get the type of the cache
+#' # located in the (default) '.drake' folder.
 #' type_of_cache(".drake")
 #' }
 type_of_cache <- function(path = drake::default_cache_path()){

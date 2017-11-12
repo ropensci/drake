@@ -12,11 +12,14 @@
 #' \code{\link{make}}
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' predict_runtime(my_plan, digits = 4) # everything is up to date
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' predict_runtime(my_plan, digits = 4) # Everything is up to date.
 #' predict_runtime(my_plan, digits = 4, from_scratch = TRUE) # 1 job
+#' # Assumes you clean() out your project and start from scratch with 2 jobs.
 #' predict_runtime(my_plan, future_jobs = 2, digits = 4, from_scratch = TRUE)
+#' # Just predict how long it will take to build
+#' # the targets 'small' and 'large'.
 #' predict_runtime(
 #'   my_plan,
 #'   targets = c("small", "large"),
@@ -141,16 +144,20 @@ predict_runtime <- function(
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' rate_limiting_times(my_plan) # everything is up to date
-#' rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4) # 1 job
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' rate_limiting_times(my_plan) # Everything is up to date.
+#' # Assume everything runs from scratch with 1 job.
+#' rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4)
+#' # With 2 jobs, some of the targets are not rate-limiting.
 #' rate_limiting_times(
 #'   my_plan,
 #'   future_jobs = 2,
 #'   from_scratch = TRUE,
 #'   digits = 4
 #' )
+#' # What if we just build the 'small' and 'large' targets,
+#' # plus dependencies?
 #' rate_limiting_times(
 #'   my_plan,
 #'   targets = c("small", "large"),

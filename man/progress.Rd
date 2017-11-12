@@ -51,12 +51,13 @@ Skipped objects are not listed.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-progress()
-progress(small, large)
-progress(list = c("small", "large"))
-progress(no_imported_objects = TRUE)
+load_basic_example() # Load the canonical example.
+make(my_plan) # Run the project, build the targets.
+# Watch the changing progress() as make() is running.
+progress() # List all the targets reached so far.
+progress(small, large) # Just see the progress of some targets.
+progress(list = c("small", "large")) # Same as above.
+progress(no_imported_objects = TRUE) # Ignore imported R objects.
 }
 }
 \seealso{

@@ -21,5 +21,6 @@ into a filename understandable by drake. In other words,
 \code{as_file(x)} just wraps single quotes around \code{x}.
 }
 \examples{
-as_file("my_file.rds")
+# Wraps the string in single quotes.
+as_file("my_file.rds") # "'my_file.rds'"
 }

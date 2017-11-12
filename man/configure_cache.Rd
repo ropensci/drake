@@ -40,17 +40,20 @@ to prepare the cache to be called from \code{\link{make}()}.
 }
 \examples{
 \dontrun{
-load_basic_example()
-config <- make(my_plan)
+load_basic_example() # Load drake's canonical example into the workspace.
+config <- make(my_plan) # Run the project, build all the targets.
+# Locate the drake/storr cache of the project
+# inside the master internal configuration list.
 cache <- config$cache
-long_hash(cache)
+long_hash(cache) # Return the long hash algorithm used.
+# Change the long hash algorithm of the cache.
 cache <- configure_cache(
   cache = cache,
   long_hash_algo = "murmur32",
   overwrite_hash_algos = TRUE
 )
-long_hash(cache) # long hash algorithm. See ?default_long_hash_algorithm.
-make(my_plan) # Changing the long hash puts targets out of date.
+long_hash(cache) # Show the new long hash algorithm.
+make(my_plan) # Changing the long hash puts the targets out of date.
 }
 }
 \seealso{

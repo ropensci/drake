@@ -64,13 +64,23 @@ if you're sure you won't lose anything important.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build the targets.
+# List objects in the cache, excluding R objects
+# imported from your workspace.
 cached(no_imported_objects = TRUE)
+# Remove 'summ_regression1_large' and 'small' from the cache.
 clean(summ_regression1_large, small)
+# Those objects should be gone.
 cached(no_imported_objects = TRUE)
+# Rebuild the missing targets.
 make(my_plan)
+# Remove all the targets and imports.
+# On non-Windows machines, parallelize over at most 2 jobs.
 clean(jobs = 2)
+# All the targets and imports are gone.
+cached()
+# Completely remove the entire cache (default: '.drake/' folder).
 clean(destroy = TRUE)
 }
 }

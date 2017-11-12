@@ -133,20 +133,25 @@ so you can plot your own custom \code{visNetwork}.
 }
 \examples{
 \dontrun{
-load_basic_example()
+load_basic_example() # Load drake's canonical example.
+# Get a list of data frames representing the nodes, edges,
+# and legend nodes of the visNetwork graph from plot_graph().
 raw_graph <- dataframes_graph(my_plan)
+# Choose a subset of the graph.
 smaller_raw_graph <- dataframes_graph(
   my_plan,
   from = c("small", "reg2"),
-  to = "summ_regression2_small"
+  mode = "in"
 )
+# Inspect the raw graph.
 str(raw_graph)
-# Plot your own custom visNetwork graph
+# Use the data frames to plot your own custom visNetwork graph.
+# For example, you can omit the legend nodes
+# and change the direction of the graph.
 library(magrittr)
 library(visNetwork)
 visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
-  visLegend(useGroups = FALSE, addNodes = raw_graph$legend_nodes) \%>\%
-  visHierarchicalLayout(direction = 'LR')
+  visHierarchicalLayout(direction = 'UD')
 }
 }
 \seealso{

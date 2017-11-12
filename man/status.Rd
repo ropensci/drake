@@ -52,11 +52,14 @@ Skipped objects are not listed.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the projects, build the targets.
 status() # Deprecated. Use progress() instead.
+# Check the progress/status of the specified targets.
 status(small, large)
 status(list = c("small", "large"))
+# Exclude imported objects from your workspace: that is,
+# only show targets and imported files.
 status(no_imported_objects = TRUE)
 }
 }

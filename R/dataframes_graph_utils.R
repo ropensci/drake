@@ -69,7 +69,7 @@ configure_nodes <- function(config){
 }
 
 #' @title Function default_graph_title
-#' @description Default title of the graph from
+#' @description Default title of the graph for
 #' \code{\link{plot_graph}()}.
 #' @export
 #' @seealso \code{\link{dataframes_graph}}, \code{\link{plot_graph}}
@@ -78,6 +78,8 @@ configure_nodes <- function(config){
 #' @param split_columns logical, whether the columns were split
 #' in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
 #' with the \code{split_columns} argument.
+#' @examples
+#' default_graph_title()
 default_graph_title <- function(
   parallelism = drake::parallelism_choices(distributed_only = FALSE),
   split_columns = FALSE
@@ -268,6 +270,8 @@ subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
 #' @param font_size font size of the node label text
 #' @examples
 #' \dontrun{
+#' # Show the legend nodes used in plot_graph().
+#' # For example, you may want to inspect the color palette more closely.
 #' visNetwork::visNetwork(nodes = legend_nodes())
 #' }
 legend_nodes <- function(font_size = 20) {

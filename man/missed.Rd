@@ -53,10 +53,10 @@ IMPORTANT: you must be in the root directory of your project.
 }
 \examples{
 \dontrun{
-load_basic_example()
-missed(my_plan)
-rm(reg1)
-missed(my_plan)
+load_basic_example() # Load the canonical example.
+missed(my_plan) # All the imported files and objects should be present.
+rm(reg1) # Remove an import dependency from you workspace.
+missed(my_plan) # Should report that reg1 is missing.
 }
 }
 \seealso{

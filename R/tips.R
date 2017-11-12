@@ -3,8 +3,8 @@
 #' Tips are usually related to news and usage.
 #' @export
 #' @examples
-#' drake_tip()
-#' message(drake_tip())
+#' drake_tip() # Show a tip about using drake.
+#' message(drake_tip()) # Print out a tip as a message.
 drake_tip <- function() {
   tips <- c(
     "In drake >= 4.4.0, you can select subgraphs of the workflow graph:

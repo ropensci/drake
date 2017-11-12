@@ -41,12 +41,13 @@ Does not delete the item from the cache.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-readd(reg1)
-readd(small)
-readd("large", character_only = TRUE)
-readd("'report.md'") # just a fingerprint of the file (md5 sum)
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build the targets.
+readd(reg1) # Return imported object 'reg1' from the cache.
+readd(small) # Return targets 'small' from the cache.
+readd("large", character_only = TRUE) Return target 'large' from the cache.
+# For external files, only the fingerprint/hash is stored.
+readd("'report.md'")
 }
 }
 \seealso{

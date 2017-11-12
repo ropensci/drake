@@ -44,17 +44,25 @@ for ordinary error messages printed to the console.
 }
 \examples{
 \dontrun{
-diagnose()
+diagnose() # List all the targets with recorded error logs.
+# Define a function doomed to failure.
 f <- function(){
   stop("unusual error")
 }
+# Create a workflow plan doomed to failure.
 bad_plan <- workplan(my_target = f())
+# Running the project should generate an error
+# when trying to build 'my_target'.
 make(bad_plan)
-failed() # from the last make() only
-diagnose() # from all previous make()'s
+failed() # List the failed targets from the last make() (my_target).
+# List targets that failed at one point or another
+# over the course of the project (my_target).
+# Drake keeps all the error logs.
+diagnose()
+# Get the error log, an object of class "error".
 error <- diagnose(my_target)
-str(error)
-error$calls # View the traceback.
+str(error) # See what's inside the error log.
+error$calls # View the traceback. (See the traceback() function).
 }
 }
 \seealso{

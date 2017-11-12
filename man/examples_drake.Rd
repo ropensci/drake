@@ -15,7 +15,13 @@ The \code{'basic'} example is the one from the
 quickstart vignette: \code{vignette('quickstart')}.
 }
 \examples{
-examples_drake()
+\dontrun{
+examples_drake() # List all the drake examples.
+# Sets up the same example as the quickstart vignette.
+example_drake("basic")
+# Sets up the SLURM example.
+example_drake("slurm")
+}
 }
 \seealso{
 \code{\link{example_drake}}, \code{\link{make}}

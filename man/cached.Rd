@@ -55,11 +55,15 @@ Read/load a cached item with \code{\link{readd}()} or
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-cached(list = 'reg1')
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build all the targets.
+cached(list = 'reg1') # Is 'reg1' in the cache?
+# List all the targets and imported files in the cache.
+# Exclude R objects imported from your workspace.
 cached(no_imported_objects = TRUE)
+# List all targets and imports in the cache.
 cached()
+# For file targets/imports, only the fingerprints/hashes are stored.
 }
 }
 \seealso{

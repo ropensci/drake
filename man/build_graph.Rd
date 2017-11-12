@@ -40,9 +40,10 @@ to \code{\link{plot.igraph}()} on your graph, or just use
 }
 \examples{
 \dontrun{
-load_basic_example()
+load_basic_example() # Load the canonical example for drake.
+# Make the igraph network connecting all the targets and imports.
 g <- build_graph(my_plan)
-class(g)
+class(g) # "igraph"
 }
 }
 \seealso{

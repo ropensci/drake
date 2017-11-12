@@ -16,7 +16,8 @@ for which no targets get built and no imports get resolved
 }
 \examples{
 \dontrun{
-load_basic_example()
+load_basic_example() # Load the canonical example for drake.
+# Run the project with the empty hook.
 make(my_plan, hook = empty_hook) # Nothing gets built!
 cached() # character(0) # nolint
 }

@@ -18,13 +18,20 @@
 #' existing file \code{report.Rmd}
 #' @examples
 #' \dontrun{
+#' # Populate your workspace and write 'report.Rmd'.
 #' load_basic_example()
+#' # Check the dependencies of an imported function.
 #' deps(reg1)
+#' # Check the dependencies of commands in the workflow plan.
 #' deps(my_plan$command[1])
 #' deps(my_plan$command[4])
+#' # Plot the interactive network visualization of the workflow.
 #' plot_graph(my_plan)
+#' # Run the workflow to build all the targets in the plan.
 #' make(my_plan)
+#' # Remove the whole cache.
 #' clean(destroy = TRUE)
+#' # Clean up the imported file.
 #' unlink('report.Rmd')
 #' }
 load_basic_example <- function(

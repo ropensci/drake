@@ -25,12 +25,13 @@
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' readd(reg1)
-#' readd(small)
-#' readd("large", character_only = TRUE)
-#' readd("'report.md'") # just a fingerprint of the file (md5 sum)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' readd(reg1) # Return imported object 'reg1' from the cache.
+#' readd(small) # Return targets 'small' from the cache.
+#' readd("large", character_only = TRUE) Return target 'large' from the cache.
+#' # For external files, only the fingerprint/hash is stored.
+#' readd("'report.md'")
 #' }
 readd <- function(
   target,
@@ -96,15 +97,17 @@ readd <- function(
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' loadd(reg1) # now check ls()
-#' reg1
-#' loadd(small)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the projects, build the targets.
+#' loadd(small) # Load target 'small' into your workspace.
 #' small
+#' # For many targets, you can parallelize loadd()
+#' # using the 'jobs' argument.
 #' loadd(list = c("small", "large"), jobs = 2)
-#' loadd(imported_only = TRUE) # load all imported objects and functions
-#' loadd() # load everything, including built targets
+#' loadd(imported_only = TRUE) # Load all the imported objects/functions.
+#' # Load everything, including built targets. Be sure your computer
+#' # has enough memory.
+#' loadd()
 #' }
 loadd <- function(
   ...,
@@ -168,8 +171,9 @@ load_target <- function(target, cache, envir, verbose){
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # Retrieve the master internal configuration list from the cache.
 #' read_config()
 #' }
 read_config <- function(path = getwd(), search = TRUE,
@@ -208,9 +212,9 @@ read_config <- function(path = getwd(), search = TRUE,
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' read_plan()
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' read_plan() # Retrieve the workflow plan data frame from the cache.
 #' }
 read_plan <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -241,11 +245,11 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' @param ... arguments to \code{visNetwork()} via \code{\link{plot_graph}()}
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' g <- read_graph(plot = FALSE)
-#' class(g)
-#' read_graph() # Actually plot the graph as an interactive visNetwork widget.
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # Retrieve the igraph network from the cache.
+#' g <- read_graph()
+#' class(g) # "igraph"
 #' }
 read_graph <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),

@@ -51,21 +51,23 @@ function lists the available triggers:
 \examples{
 triggers()
 \dontrun{
-load_basic_example()
+load_basic_example() # Load drake's canonical example.
 my_plan$trigger <- "command"
 # You can have different triggers for different targets.
 my_plan$trigger[1] <- "file"
-make(my_plan)
-# Change a dependency
-function(d) {
+make(my_plan) # Run the project, build the targets.
+# Change an imported dependency function.
+reg2 <- function(d) {
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-make(my_plan) # Nothing changes!
+# Nothing changes! To react to `reg2`, you would need the
+# "any" or "depends" trigger.
+make(my_plan)
 # You can use a global trigger if your workflow plan
-# does not have a 'trigger' column
+# does not have a 'trigger' column.
 my_plan$trigger <- NULL # Would override the global trigger.
-make(my_plan, trigger = "missing")
+make(my_plan, trigger = "missing") # Just build missing targets.
 }
 }
 \seealso{

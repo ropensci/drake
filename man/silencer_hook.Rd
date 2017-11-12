@@ -15,12 +15,15 @@ an example \code{hook} argument to
 }
 \examples{
 \dontrun{
+# Test out the silencer hook on its own.
 silencer_hook({
   cat(1234)
   stop(5678)
 })
+# Make a new workflow plan.
 x <- workplan(loud = cat(1234), bad = stop(5678))
-make(x, hook = silencer_hook)
+# Test out the silencer hook on a drake project.
+make(x, hook = silencer_hook) # All output should be suppressed.
 }
 }
 \seealso{

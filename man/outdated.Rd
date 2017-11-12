@@ -55,9 +55,10 @@ IMPORTANT: you must be in the root directory of your project.
 }
 \examples{
 \dontrun{
-load_basic_example()
-outdated(my_plan)
-make(my_plan)
+load_basic_example() # Load the canonical example of drake.
+outdated(my_plan) # Which targets are out of date?
+make(my_plan) # Run the projects, build the targets.
+# Now, everything should be up to date (no targets listed).
 outdated(my_plan)
 }
 }

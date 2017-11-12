@@ -4,7 +4,8 @@
 \alias{this_cache}
 \title{Function this_cache}
 \usage{
-this_cache(path = drake::default_cache_path(), force = FALSE)
+this_cache(path = drake::default_cache_path(), force = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -12,6 +13,8 @@ this_cache(path = drake::default_cache_path(), force = FALSE)
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the
 running version of drake.}
+
+\item{verbose, }{whether to print the file path of the cache.}
 }
 \description{
 Get a known drake file system cache

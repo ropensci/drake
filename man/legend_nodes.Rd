@@ -17,6 +17,8 @@ in \code{\link{plot_graph}()}.
 }
 \examples{
 \dontrun{
+# Show the legend nodes used in plot_graph().
+# For example, you may want to inspect the color palette more closely.
 visNetwork::visNetwork(nodes = legend_nodes())
 }
 }

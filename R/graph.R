@@ -30,9 +30,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
+#' load_basic_example() # Load the canonical example for drake.
+#' # Make the igraph network connecting all the targets and imports.
 #' g <- build_graph(my_plan)
-#' class(g)
+#' class(g) # "igraph"
 #' }
 build_graph <- function(
   plan = workplan(),
@@ -130,7 +131,8 @@ build_graph <- function(
 #' See \code{?triggers} for explanations of the choices.
 #' @examples
 #' \dontrun{
-#' load_basic_example()
+#' load_basic_example() # Load the canonical example for drake.
+#' # List all the targets/imports that are reproducibly tracked.
 #' tracked(my_plan)
 #' }
 tracked <- function(

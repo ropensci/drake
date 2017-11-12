@@ -25,13 +25,21 @@ Generate a workflow plan data frame to
 analyze multiple datasets using multiple methods of analysis.
 }
 \examples{
+# Create the piece of the workflow plan for the datasets.
 datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
+# Create a template for the analysis methods.
 methods <- workplan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
-analyses(methods, datasets = datasets)
+# Evaluate the wildcards to create the part of the workflow plan
+# encoding the analyses of the datasets.
+ans <- analyses(methods, datasets = datasets)
+ans
+# For the final workflow plan, row bind the pieces together.
+my_plan <- rbind(datasets, ans)
+my_plan
 }
 \seealso{
 \code{\link{summaries}},

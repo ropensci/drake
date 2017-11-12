@@ -80,7 +80,9 @@ units of execution.
 }}
 }
 \examples{
+# See all the parallel computing options.
 parallelism_choices()
+# See just the distributed computing options.
 parallelism_choices(distributed_only = TRUE)
 }
 \seealso{

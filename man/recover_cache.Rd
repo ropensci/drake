@@ -7,7 +7,8 @@
 recover_cache(path = drake::default_cache_path(),
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo(), force = FALSE)
+  long_hash_algo = drake::default_long_hash_algo(), force = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -27,18 +28,21 @@ See \code{\link{default_long_hash_algo}()} and
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the
 running version of drake.}
+
+\item{verbose}{logical, whether to print the file path of the cache.}
 }
 \description{
 Load an existing drake files system cache if it exists
 and create a new one otherwise.
 Do not use for in-memory caches such as
 \code{storr_environment()}.
+For internal use only.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-x <- recover_cache(".drake")
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build all the targets.
+x <- recover_cache(".drake") # Recover the project's storr cache.
 }
 }
 \seealso{

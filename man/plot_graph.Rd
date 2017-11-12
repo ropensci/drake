@@ -166,11 +166,13 @@ To save time for repeated plotting, this function is divided into
 }
 \examples{
 \dontrun{
-load_basic_example()
+load_basic_example() # Load drake's canonical example.
+# Plot the network graph representation of the workflow.
 plot_graph(my_plan, width = '100\%') # The width is passed to visNetwork
-make(my_plan)
+make(my_plan) # Run the project, build the targets.
 plot_graph(my_plan) # The red nodes from before are now green.
-plot_graph( # plot a subgraph
+# Plot a subgraph of the workflow.
+plot_graph(
   my_plan,
   from = c("small", "reg2"),
   to = "summ_regression2_small"

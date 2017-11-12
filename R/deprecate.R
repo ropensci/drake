@@ -40,6 +40,7 @@ fix_deprecated_plan_names <- function(plan){
 #' strings in \code{...} cannot simply be left alone.
 #' @examples
 #' # plan() is deprecated. Use workplan() instead.
+#' # Generate example workflow plan data frames for make().
 #' workplan(small = simulate(5), large = simulate(50))
 #' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
 #' workplan(data = readRDS("my_data.rds"))
@@ -118,6 +119,7 @@ plan <- function(
 #' @param strings_in_dots same as for \code{drake::\link{workplan}()}
 #' @examples
 #' # workflow() is deprecated. Use workplan() instead.
+#' # Generate example workflow plan data frames for make().
 #' workplan(small = simulate(5), large = simulate(50))
 #' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
 #' workplan(data = readRDS("my_data.rds"))
@@ -172,13 +174,15 @@ workflow <- function(
 #' \code{\link{workplan}}.
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' cached()
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the targets, build the project.
+#' cached() # List the targets/imports in the cache.
+#' # Remove all the cached targets except the first 3 targets
+#' # in the workflow plan.
 #' prune(my_plan[1:3,])
-#' cached()
-#' make(my_plan)
-#' clean(destroy = TRUE)
+#' cached() # Only the first 3 targets remain, plus all the imports.
+#' make(my_plan) # Re-make the deleted targets.
+#' clean(destroy = TRUE) # Completely remove the cache.
 #' }
 prune <- function(plan = workplan()){
   .Deprecated(
@@ -227,11 +231,14 @@ prune <- function(plan = workplan()){
 #' current working directory only.
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the projects, build the targets.
 #' status() # Deprecated. Use progress() instead.
+#' # Check the progress/status of the specified targets.
 #' status(small, large)
 #' status(list = c("small", "large"))
+#' # Exclude imported objects from your workspace: that is,
+#' # only show targets and imported files.
 #' status(no_imported_objects = TRUE)
 #' }
 status <- function(
@@ -264,6 +271,8 @@ status <- function(
 #' @return \code{args} for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
+#' @examples
+#' default_system2_args()
 default_system2_args <- function(jobs, verbose){
   .Deprecated(
     "default_system2_args",

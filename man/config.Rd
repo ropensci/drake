@@ -76,13 +76,18 @@ not just the imports.
 }
 \examples{
 \dontrun{
-load_basic_example()
-con <- config(my_plan)
-outdated(my_plan, config = con)
-missed(my_plan, config = con)
-max_useful_jobs(my_plan, config = con)
-plot_graph(my_plan, config = con)
-dataframes_graph(my_plan, config = con)
+load_basic_example() # Load drake's canonical example.
+con <- config(my_plan) # Construct the master internal configuration list.
+# These functions are faster than otherwise
+# because they use the configuration list.
+outdated(config = con) # Which targets are out of date?
+missed(config = con) # Which imports are missing?
+# In make(..., jobs = n), it would be silly to set `n` higher than this:
+max_useful_jobs(config = con)
+# Show a visNetwork graph
+plot_graph(config = con)
+# Get the underlying node/edge data frames of the graph.
+dataframes_graph(config = con)
 }
 }
 \seealso{

@@ -33,8 +33,9 @@ cache normally again.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
+load_basic_example() # Load the canonical example.
+make(my_plan) # Run the project, build targets. This creates the cache.
+# Remove dangling cache files that could cause errors.
 rescue_cache(jobs = 2)
 }
 }

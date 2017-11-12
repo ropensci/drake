@@ -13,7 +13,11 @@
 #' to write the folder containing the code files for the example.
 #' @examples
 #' \dontrun{
-#' example_drake('basic') # Same as the quickstart vignette
+#' examples_drake() # List all the drake examples.
+#' # Sets up the same example as the quickstart vignette.
+#' example_drake("basic")
+#' # Sets up the SLURM example.
+#' example_drake("slurm")
 #' }
 example_drake <- function(
   example = drake::examples_drake(),
@@ -37,7 +41,13 @@ example_drake <- function(
 #' @seealso \code{\link{example_drake}}, \code{\link{make}}
 #' @return names of all the drake examples.
 #' @examples
-#' examples_drake()
+#' \dontrun{
+#' examples_drake() # List all the drake examples.
+#' # Sets up the same example as the quickstart vignette.
+#' example_drake("basic")
+#' # Sets up the SLURM example.
+#' example_drake("slurm")
+#' }
 examples_drake <- function() {
   list.dirs(system.file("examples", package = "drake", mustWork = TRUE),
     full.names = FALSE, recursive = FALSE)

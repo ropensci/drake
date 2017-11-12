@@ -11,6 +11,6 @@ Output a random tip about drake.
 Tips are usually related to news and usage.
 }
 \examples{
-drake_tip()
-message(drake_tip())
+drake_tip() # Show a tip about using drake.
+message(drake_tip()) # Print out a tip as a message.
 }

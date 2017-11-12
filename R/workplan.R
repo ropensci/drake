@@ -22,6 +22,7 @@
 #' @param file_targets same as for \code{drake::\link{workplan}()}
 #' @param strings_in_dots same as for \code{drake::\link{workplan}()}
 #' @examples
+#' # Create example workflow plan data frames for make()
 #' workplan(small = simulate(5), large = simulate(50))
 #' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
 #' workplan(data = readRDS("my_data.rds"))
@@ -74,7 +75,8 @@ workplan <- function(
 #' understandable by drake (i.e., a string with literal
 #' single quotes on both ends).
 #' @examples
-#' as_file("my_file.rds")
+#' # Wraps the string in single quotes.
+#' as_file("my_file.rds") # "'my_file.rds'"
 as_file <- function(x){
   eply::quotes(x, single = TRUE)
 }

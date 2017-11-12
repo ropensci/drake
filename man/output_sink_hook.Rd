@@ -15,11 +15,15 @@ an example \code{hook} argument to
 }
 \examples{
 \dontrun{
+# Test out the output sink hook on its own.
 output_sink_hook({
   cat(1234)
   stop(5678)
 })
+# Create a new workflow plan.
 x <- workplan(loud = cat(1234), bad = stop(5678))
+# Run the project. Standard output (via cat() and print())
+# should be suppressed, but messages should persist.
 make(x, hook = output_sink_hook)
 }
 }

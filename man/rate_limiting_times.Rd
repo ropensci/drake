@@ -96,16 +96,20 @@ will warn you and tell you which targets have missing times.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-rate_limiting_times(my_plan) # everything is up to date
-rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4) # 1 job
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build the targets.
+rate_limiting_times(my_plan) # Everything is up to date.
+# Assume everything runs from scratch with 1 job.
+rate_limiting_times(my_plan, from_scratch  = TRUE, digits = 4)
+# With 2 jobs, some of the targets are not rate-limiting.
 rate_limiting_times(
   my_plan,
   future_jobs = 2,
   from_scratch = TRUE,
   digits = 4
 )
+# What if we just build the 'small' and 'large' targets,
+# plus dependencies?
 rate_limiting_times(
   my_plan,
   targets = c("small", "large"),

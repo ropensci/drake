@@ -23,7 +23,11 @@ To see the names of all the examples, run \code{\link{examples_drake}}.
 }
 \examples{
 \dontrun{
-example_drake('basic') # Same as the quickstart vignette
+examples_drake() # List all the drake examples.
+# Sets up the same example as the quickstart vignette.
+example_drake("basic")
+# Sets up the SLURM example.
+example_drake("slurm")
 }
 }
 \seealso{

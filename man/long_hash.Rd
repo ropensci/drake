@@ -19,9 +19,12 @@ See \code{?\link{default_long_hash_algo}()}
 }
 \examples{
 \dontrun{
-load_basic_example()
+load_basic_example() # Load the canonical example for drake.
+# Run the project and return the internal master configuration list.
 config <- make(my_plan)
+# Locate the storr cache.
 cache <- config$cache
+# Get the long hash algorithm of the cache.
 long_hash(cache)
 }
 }

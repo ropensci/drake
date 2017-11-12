@@ -17,6 +17,9 @@ default_system2_args(jobs, verbose)
 \description{
 Use \code{\link{default_Makefile_args}()} instead.
 }
+\examples{
+default_system2_args()
+}
 \seealso{
 \code{\link{default_Makefile_args}}
 }

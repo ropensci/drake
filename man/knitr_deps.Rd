@@ -25,10 +25,11 @@ mentioned in \code{\link{loadd}()} and \code{\link{readd}()}.
 }
 \examples{
 \dontrun{
-load_basic_example()
-knitr_deps("'report.Rmd'") # Files must be single-quoted
+load_basic_example() # Load the canonical example of drake.
+knitr_deps("'report.Rmd'") # Files must be single-quoted.
+# Find the dependencies of the compiled output target, 'report.md'.
 knitr_deps("report.Rmd")
-make(my_plan)
+make(my_plan) # Run the project.
 knitr_deps("'report.md'") # Work on the Rmd source, not the output.
 }
 }

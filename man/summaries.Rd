@@ -31,20 +31,30 @@ Generate a workflow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.
 }
 \examples{
+# Create the part of the workflow plan data frame for the datasets.
 datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
+# Create a template workflow plan containing the analysis methods.
 methods <- workplan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
+# Generate the part of the workflow plan to analyze the datasets.
 analyses <- analyses(methods, datasets = datasets)
+# Create a template workflow plan dataset with the
+# types of summaries you want.
 summary_types <- workplan(
   summ = summary(..analysis..),
   coef = coefficients(..analysis..))
+# Evaluate the appropriate wildcards to encode the summary targets.
 summaries(summary_types, analyses, datasets, gather = NULL)
 summaries(summary_types, analyses, datasets)
 summaries(summary_types, analyses, datasets, gather = "list")
-summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
+summs <- summaries(
+  summary_types, analyses, datasets, gather = c("list", "rbind"))
+# For the final workflow plan, row bind the pieces together.
+my_plan <- rbind(datasets, analyses, summs)
+my_plan
 }
 \seealso{
 \code{\link{analyses}}, \code{\link{make}}, \code{\link{workplan}}

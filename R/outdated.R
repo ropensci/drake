@@ -4,13 +4,6 @@
 #' @export
 #' @seealso \code{\link{missed}}, \code{\link{workplan}},
 #' \code{\link{make}}, \code{\link{plot_graph}}
-#' @examples
-#' \dontrun{
-#' load_basic_example()
-#' outdated(my_plan)
-#' make(my_plan)
-#' outdated(my_plan)
-#' }
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}. Overrides
@@ -36,6 +29,14 @@
 #' which targets are up to date. If \code{FALSE}, the computation
 #' is faster, but all the relevant information is drawn from the cache
 #' and may be out of date.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example of drake.
+#' outdated(my_plan) # Which targets are out of date?
+#' make(my_plan) # Run the projects, build the targets.
+#' # Now, everything should be up to date (no targets listed).
+#' outdated(my_plan)
+#' }
 outdated <-  function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
@@ -139,10 +140,10 @@ outdated <-  function(
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' missed(my_plan)
-#' rm(reg1)
-#' missed(my_plan)
+#' load_basic_example() # Load the canonical example.
+#' missed(my_plan) # All the imported files and objects should be present.
+#' rm(reg1) # Remove an import dependency from you workspace.
+#' missed(my_plan) # Should report that reg1 is missing.
 #' }
 missed <- function(
   plan = workplan(),

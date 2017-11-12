@@ -36,11 +36,11 @@ and related functions.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-g <- read_graph(plot = FALSE)
-class(g)
-read_graph() # Actually plot the graph as an interactive visNetwork widget.
+load_basic_example() # Load the canonical example.
+make(my_plan) # Run the project, build the targets.
+# Retrieve the igraph network from the cache.
+g <- read_graph()
+class(g) # "igraph"
 }
 }
 \seealso{

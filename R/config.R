@@ -11,16 +11,6 @@
 #' not just the imports.
 #' @export
 #' @seealso \code{\link{workplan}}, \code{\link{make}}, \code{\link{plot_graph}}
-#' @examples
-#' \dontrun{
-#' load_basic_example()
-#' con <- config(my_plan)
-#' outdated(my_plan, config = con)
-#' missed(my_plan, config = con)
-#' max_useful_jobs(my_plan, config = con)
-#' plot_graph(my_plan, config = con)
-#' dataframes_graph(my_plan, config = con)
-#' }
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}
@@ -45,6 +35,21 @@
 #' @param graph igraph object representing the workflow plan network
 #' \code{\link{progress}()}
 #' @param trigger same as for \code{\link{make}}
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load drake's canonical example.
+#' con <- config(my_plan) # Construct the master internal configuration list.
+#' # These functions are faster than otherwise
+#' # because they use the configuration list.
+#' outdated(config = con) # Which targets are out of date?
+#' missed(config = con) # Which imports are missing?
+#' # In make(..., jobs = n), it would be silly to set `n` higher than this:
+#' max_useful_jobs(config = con)
+#' # Show a visNetwork graph
+#' plot_graph(config = con)
+#' # Get the underlying node/edge data frames of the graph.
+#' dataframes_graph(config = con)
+#' }
 config <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
@@ -133,6 +138,17 @@ add_packages_to_prework <- function(packages, prework) {
 #' @param config internal configuration list
 #' @param verbose_packages logical, whether to print
 #' package startup messages
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load drake's canonical example.
+#' # Create a master internal configuration list with prework.
+#' con <- config(my_plan, prework = c("library(knitr)", "x <- 1"))
+#' # Do the prework. Usually done at the beginning of `make()`,
+#' # and for distributed computing backends like "future_lapply",
+#' # right before each target is built.
+#' do_prework(config = con, verbose_packages = TRUE)
+#' identical(x, 1) # Should be TRUE.
+#' }
 do_prework <- function(config, verbose_packages) {
   wrapper <- ifelse(verbose_packages, invisible,
     base::suppressPackageStartupMessages)
@@ -171,7 +187,9 @@ do_inventory <- function(namespaces = cache_namespaces(), config){
 #' @param plan workflow plan data frame
 #' @examples
 #' \dontrun{
-#' load_basic_example()
+#' load_basic_example() # Load the canonical drake example.
+#' # List the possible targets you could choose for the
+#' # `targets` argument to make(). You may choose any subset.
 #' possible_targets(my_plan)
 #' }
 possible_targets <- function(plan = workplan()) {

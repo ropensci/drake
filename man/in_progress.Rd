@@ -33,8 +33,9 @@ List the targets that either
 }
 \examples{
 \dontrun{
-load_basic_example()
+load_basic_example() # Load the canonical example.
 make(my_plan) # Kill before targets finish.
+# If you interrupted make(), some targets will probably be listed:
 in_progress()
 }
 }

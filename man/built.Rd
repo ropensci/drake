@@ -30,9 +30,10 @@ cache.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-built()
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build all the targets.
+built() # List all the cached targets (built objects and files).
+# For file targets, only the fingerprints/hashes are stored.
 }
 }
 \seealso{

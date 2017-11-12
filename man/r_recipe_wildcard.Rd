@@ -7,12 +7,15 @@
 r_recipe_wildcard()
 }
 \description{
-Function to give the R recipe wildcard
+Gives the R recipe wildcard
 for Makefiles.
 }
 \details{
 See the help file of \code{\link{Makefile_recipe}}
 for details and examples.
+}
+\examples{
+r_recipe_wildcard()
 }
 \seealso{
 \code{\link{default_recipe_command}}

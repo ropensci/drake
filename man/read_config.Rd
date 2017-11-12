@@ -32,8 +32,9 @@ These include the workflow plan
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build the targets.
+# Retrieve the master internal configuration list from the cache.
 read_config()
 }
 }

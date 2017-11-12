@@ -85,10 +85,27 @@ build_recipe <- function(target, recipe_command,
 #' @title Function \code{mk}
 #' @description Internal drake function to be called
 #' inside Makefiles only. Makes a single target.
-#' Users, do not invoke directly.
+#' Users should not need to invoke this function directly.
 #' @export
 #' @param target name of target to make
 #' @param cache_path path to the drake cache
+#' @examples
+#' \dontrun{
+#' # This function is meant to be part of Makefile recipes for
+#' # make(..., parallelism = "Makefile").
+#' # These examples peer into the internals of drake,
+#' # but are not really of practical use for most users.
+#' load_basic_example() # Load drake's canonical example.
+#' con <- config(my_plan) # Construct the internal configuration list.
+#' # Prepare to use a distributed computing parallel backend
+#' # such as "Makefile" or "future_lapply".
+#' drake:::prepare_distributed(config = con)
+#' # Write the dummy timestamp files usually written at the beginning
+#' # of make(..., parallelism = "Makefile").
+#' time_stamps(config = con)
+#' # Use mk() to build a target. Usually called inside a Makefile recipe.
+#' mk(target = "small", cache_path = default_cache_path())
+#' }
 mk <- function(
   target = character(0),
   cache_path = drake::default_cache_path()
@@ -104,8 +121,11 @@ mk <- function(
 }
 
 #' @title Function \code{default_Makefile_args}
-#' @description Configures default
-#' arguments to \code{\link{system2}()} to run Makefiles.
+#' @description For \code{make(..., parallelism = "Makefile")},
+#' this function configures the default
+#' arguments to \code{\link{system2}()}.
+#' It is an internal function, and most users do not need to
+#' worry about it.
 #' @export
 #' @return \code{args} for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
@@ -123,7 +143,8 @@ default_Makefile_args <- function(jobs, verbose){
 
 #' @title Function \code{default_Makefile_command}
 #' @description Give the default \code{command}
-#' argument to \code{\link{make}()}
+#' argument to \code{\link{make}()}. Relevant for
+#' \code{"Makefile"} parallelism only.
 #' @export
 #' @examples
 #' default_Makefile_command()

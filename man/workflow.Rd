@@ -41,6 +41,7 @@ argument to control the quoting in \code{...}.
 }
 \examples{
 # workflow() is deprecated. Use workplan() instead.
+# Generate example workflow plan data frames for make().
 workplan(small = simulate(5), large = simulate(50))
 workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
 workplan(data = readRDS("my_data.rds"))

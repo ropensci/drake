@@ -14,22 +14,32 @@
 #' @return names of dependencies. Files wrapped in single quotes.
 #' The other names listed are functions or generic objects.
 #' @examples
+#' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y){
 #'   out <- x + y + g(x)
 #'   saveRDS(out, 'out.rds')
 #' }
+#' # Find the dependencies of f. These could be R objects/functions
+#' # in your workspace or packages. Any file names or target names
+#' # will be ignored.
 #' deps(f)
+#' # Define a workflow plan data frame that uses your function f().
 #' my_plan <- workplan(
 #'   x = 1 + some_object,
 #'   my_target = x + readRDS('tracked_input_file.rds'),
 #'   return_value = f(x, y, g(z + w))
 #' )
+#' # Get the dependencies of workflow plan commands.
+#' # Here, the dependencies could be R functions/objects from your workspace
+#' # or packages, imported files, or other targets in the workflow plan.
 #' deps(my_plan$command[1])
 #' deps(my_plan$command[2])
 #' deps(my_plan$command[3])
 #' \dontrun{
-#' load_basic_example() # Writes 'report.Rmd'.
-#' deps("'report.Rmd'") # dependencies of future knitted output 'report.md'
+#' load_basic_example() # Loads the basic example and writes 'report.Rmd'.
+#' # Dependencies of the knitr-generated targets like 'report.md'
+#' # include targets/imports referenced with `readd()` or `loadd()`.
+#' deps("'report.Rmd'")
 #' }
 deps <- function(x){
   if (is.function(x)){
@@ -59,13 +69,15 @@ deps <- function(x){
 #' \code{\link{config}} or \code{\link{make}}
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' con <- make(my_plan)
+#' load_basic_example() # Load drake's canonical exmaple.
+#' con <- make(my_plan) # Run the project, build the targets.
+#' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)
 #' dependency_profile("'report.md'", config = con)
-#' clean(large) # most information gone
-#' dependency_profile("large", config = con) # hashes of deps still available
-#' # should agree with `$meta_of_dependencies`
+#' clean(large) # Clear out most of the information about the target 'large'.
+#' # The dependency hashes are still there.
+#' dependency_profile("large", config = con)
+#' # Should agree with `$hashes_of_dependencies`.
 #' con$cache$get_hash("simulate",
 #'   namespace = "kernels")
 #' }
@@ -77,12 +89,12 @@ dependency_profile <- function(target, config){
   current_command <- get_command(target = target, config = config)
 
   deps <- dependencies(target, config)
-  meta_of_dependencies <- self_hash(target = deps, config = config)
-  current_dependency_hash <- digest::digest(meta_of_dependencies,
+  hashes_of_dependencies <- self_hash(target = deps, config = config)
+  current_dependency_hash <- digest::digest(hashes_of_dependencies,
     algo = config$long_hash_algo)
   cached_dependency_hash <- safe_get(key = target, namespace = "depends",
     config = config)
-  names(meta_of_dependencies) <- deps
+  names(hashes_of_dependencies) <- deps
 
   cached_file_modification_time <- safe_get(
     key = target, namespace = "mtimes", config = config)
@@ -96,7 +108,7 @@ dependency_profile <- function(target, config){
     current_file_modification_time = current_file_modification_time,
     cached_dependency_hash = cached_dependency_hash,
     current_dependency_hash = current_dependency_hash,
-    meta_of_dependencies = meta_of_dependencies
+    hashes_of_dependencies = hashes_of_dependencies
   )
   out[!is.na(out)]
 }

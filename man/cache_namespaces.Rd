@@ -7,11 +7,13 @@
 cache_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \arguments{
-\item{default}{name of the default namespace}
+\item{default}{name of the default \code{storr} namespace}
 }
 \description{
 List the important \code{storr} cache namespaces
 that need to be inventoried periodically in a call to \code{\link{make}()}.
+Ordinary users do not need to worry about this function.
+It is just another window into \code{drake}'s internals.
 }
 \examples{
 cache_namespaces()

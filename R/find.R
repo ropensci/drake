@@ -12,8 +12,10 @@
 #' @param directory Name of the folder containing the cache.
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the target.
+#' # Find the file path of the project's cache.
+#' # Search up through parent directories if necessary.
 #' find_cache()
 #' }
 find_cache <- function(
@@ -43,9 +45,11 @@ find_cache <- function(
 #' Should be a subdirectory of the drake project.
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' find_project()
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the target.
+#' # Find the root directory of the current drake project.
+#' # Search up through parent directories if necessary.
+#' find_cache()
 #' }
 find_project <- function(path = getwd()){
   cache <- find_cache(path = path)

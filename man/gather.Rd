@@ -24,9 +24,17 @@ target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame.
 }
 \examples{
+# Workflow plan for datasets:
 datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
+# Create a new target that brings the datasets together.
 gather(datasets, target = "my_datasets")
-gather(datasets, target = "aggregated_data", gather = "rbind")
+# This time, the new target just appends the rows of 'small' and 'large'
+# into a single matrix or data frame.
+gathered <- gather(datasets, target = "aggregated_data", gather = "rbind")
+gathered
+# For the complete workflow plan, row bind the pieces together.
+my_plan <- rbind(datasets, gathered)
+my_plan
 }

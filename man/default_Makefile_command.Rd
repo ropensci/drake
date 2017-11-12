@@ -8,7 +8,8 @@ default_Makefile_command()
 }
 \description{
 Give the default \code{command}
-argument to \code{\link{make}()}
+argument to \code{\link{make}()}. Relevant for
+\code{"Makefile"} parallelism only.
 }
 \examples{
 default_Makefile_command()

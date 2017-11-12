@@ -19,6 +19,14 @@ and do a `chmod +x` to enable execution.
 Use this option to run your project in parallel on a computing cluster
 or supercomputer.
 }
+\examples{
+\dontrun{
+# Write shell.sh to your working directory.
+# Read the parallelism vignette to learn how it is used
+# in Makefile parallelism.
+shell_file()
+}
+}
 \seealso{
 \code{\link{make}}, \code{\link{max_useful_jobs}},
 \code{\link{parallelism_choices}}

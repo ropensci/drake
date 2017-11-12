@@ -8,6 +8,27 @@
 #' @param meta_list list of metadata that tell which
 #' targets are up to date
 #' @param config internal configuration list
+#' @examples
+#' \dontrun{
+#' # This example is not really a user-side demonstration.
+#' # It just walks through a dive into the internals.
+#' # Populate your workspace and write 'report.Rmd'.
+#' load_basic_example()
+#' # Create the master internal configuration list.
+#' config <- config(my_plan)
+#' # Compute metadata on 'small', including a hash/fingerprint
+#' # of the dependencies.
+#' meta_list <- list(
+#'   small = drake:::meta(target = "small", config = config)
+#' )
+#' # Should not yet include 'small'.
+#' cached()
+#' # Build 'small'
+#' build(target = "small", meta_list = meta_list, config = config)
+#' # Should now include 'small'
+#' cached()
+#' readd(small)
+#' }
 build <- function(target, meta_list, config){
   config$hook(
     build_in_hook(
@@ -159,8 +180,8 @@ store_function <- function(target, value, meta, config
 }
 
 # Turn a command into an anonymous function
-# call to avoid side effects that can interfere
-# with parallelism
+# call to avoid side effects that could interfere
+# with parallelism.
 functionize <- function(command) {
   paste0("(function(){\n", command, "\n})()")
 }

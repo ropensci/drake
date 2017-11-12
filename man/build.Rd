@@ -20,3 +20,25 @@ For internal use only.
 the only reason this function is exported
 is to set up PSOCK clusters efficiently.
 }
+\examples{
+\dontrun{
+# This example is not really a user-side demonstration.
+# It just walks through a dive into the internals.
+# Populate your workspace and write 'report.Rmd'.
+load_basic_example()
+# Create the master internal configuration list.
+config <- config(my_plan)
+# Compute metadata on 'small', including a hash/fingerprint
+# of the dependencies.
+meta_list <- list(
+  small = drake:::meta(target = "small", config = config)
+)
+# Should not yet include 'small'.
+cached()
+# Build 'small'
+build(target = "small", meta_list = meta_list, config = config)
+# Should now include 'small'
+cached()
+readd(small)
+}
+}

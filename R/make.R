@@ -185,12 +185,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
+#' load_basic_example() # Load drake's canonical example.
 #' outdated(my_plan) # Which targets need to be (re)built?
 #' my_jobs = max_useful_jobs(my_plan) # Depends on what is up to date.
 #' make(my_plan, jobs = my_jobs) # Build what needs to be built.
 #' outdated(my_plan) # Everything is up to date.
-#' reg2 = function(d){ # Change one of your functions.
+#' # Change one of your imported function dependencies.
+#' reg2 = function(d){
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
@@ -199,9 +200,11 @@
 #' make(my_plan) # Rebuild just the outdated targets.
 #' outdated(my_plan) # Everything is up to date again.
 #' plot_graph(my_plan) # The colors changed in the graph.
-#' clean() # Start from scratch
+#' clean() # Start from scratch.
+#' # Rerun with "Makefile" parallelism with at most 4 jobs.
 #' make(my_plan, parallelism = "Makefile", jobs = 4)
-#' clean()
+#' clean() # Start from scratch.
+#' # Specify your own Makefile recipe.
 #' make(my_plan, parallelism = "Makefile", jobs = 4,
 #'   recipe_command = "R -q -e")
 #' }
@@ -291,8 +294,9 @@ make <- function(
 #' @param config a configuration list returned by \code{\link{config}()}
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' con <- config(my_plan)
+#' load_basic_example() # Load the canonical example.
+#' con <- config(my_plan) # Generate the master internal configuration list.
+#' # Just cache the imports, do not build any targets.
 #' make_imports(config = con)
 #' }
 make_imports <- function(config){

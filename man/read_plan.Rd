@@ -31,9 +31,9 @@ from your last attempted call to \code{\link{make}()}.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-read_plan()
+load_basic_example() # Load the canonical example.
+make(my_plan) # Run the project, build the targets.
+read_plan() # Retrieve the workflow plan data frame from the cache.
 }
 }
 \seealso{

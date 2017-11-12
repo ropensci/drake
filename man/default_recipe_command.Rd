@@ -7,12 +7,15 @@
 default_recipe_command()
 }
 \description{
-Function to give the default
+Gives the default
 recipe command for Makefile parallelism.
 }
 \details{
 See the help file of \code{\link{Makefile_recipe}}
 for details and examples.
+}
+\examples{
+default_recipe_command()
 }
 \seealso{
 \code{\link{Makefile_recipe}}

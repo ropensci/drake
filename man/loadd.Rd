@@ -52,15 +52,17 @@ imported_only is \code{TRUE}).
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
-loadd(reg1) # now check ls()
-reg1
-loadd(small)
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the projects, build the targets.
+loadd(small) # Load target 'small' into your workspace.
 small
+# For many targets, you can parallelize loadd()
+# using the 'jobs' argument.
 loadd(list = c("small", "large"), jobs = 2)
-loadd(imported_only = TRUE) # load all imported objects and functions
-loadd() # load everything, including built targets
+loadd(imported_only = TRUE) # Load all the imported objects/functions.
+# Load everything, including built targets. Be sure your computer
+# has enough memory.
+loadd()
 }
 }
 \seealso{

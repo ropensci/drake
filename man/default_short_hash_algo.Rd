@@ -43,6 +43,15 @@ to avoid collisions.
 }
 \examples{
 default_short_hash_algo()
+#' \dontrun{
+load_basic_example() # Load the canonical example for drake.
+# Run the project and return the internal master configuration list.
+config <- make(my_plan)
+# Locate the storr cache.
+cache <- config$cache
+# Get the default short hash algorithm of an existing cache.
+default_short_hash_algo(cache)
+}
 }
 \seealso{
 \code{\link{make}}, \code{\link{available_hash_algos}}

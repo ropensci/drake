@@ -70,7 +70,9 @@
 #' \code{parLapply}
 #'
 #' @examples
+#' # See all the parallel computing options.
 #' parallelism_choices()
+#' # See just the distributed computing options.
 #' parallelism_choices(distributed_only = TRUE)
 parallelism_choices <- function(distributed_only = FALSE) {
   local <- c(
@@ -89,7 +91,8 @@ parallelism_choices <- function(distributed_only = FALSE) {
 }
 
 #' @title Function \code{default_parallelism}
-#' @description Default parallelism for \code{\link{make}()}:
+#' @description Show the default parallelism for \code{\link{make}()}
+#' on your system:
 #' \code{'parLapply'} for Windows machines and \code{'mclapply'}
 #' for other platforms.
 #' @export
@@ -196,18 +199,27 @@ default_parallelism <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' plot_graph(my_plan) # Look at the graph to make sense of the output.
-#' max_useful_jobs(my_plan) # 8
-#' max_useful_jobs(my_plan, imports = 'files') # 8
-#' max_useful_jobs(my_plan, imports = 'all') # 10
-#' max_useful_jobs(my_plan, imports = 'none') # 8
-#' make(my_plan)
+#' load_basic_example() # Load drake's canonical example.
+#' # Look at the graph. The work proceeds column by column
+#' # in parallelizable stages. The maximum number of useful jobs
+#' # is determined by the number and kind of targets/imports
+#' # in the columns.
 #' plot_graph(my_plan)
+#' # Should be 8 because everythign is out of date.
+#' max_useful_jobs(my_plan) # 8
+#' # Take into account targets and imported files.
+#' max_useful_jobs(my_plan, imports = 'files') # 8
+#' # Include imported R objects too.
+#' max_useful_jobs(my_plan, imports = 'all') # 10
+#' # Exclude all imported objects.
+#' max_useful_jobs(my_plan, imports = 'none') # 8
+#' make(my_plan) # Run the project, build the targets.
+#' plot_graph(my_plan) # Everything is up to date.
 #' # Ignore the targets already built.
 #' max_useful_jobs(my_plan) # 1
 #' max_useful_jobs(my_plan, imports = 'files') # 1
-#' max_useful_jobs(my_plan, imports = 'all') # 10
+#' # Imports are never really skipped in make().
+#' max_useful_jobs(my_plan, imports = 'all') # 9
 #' max_useful_jobs(my_plan, imports = 'none') # 0
 #' # Change a function so some targets are now out of date.
 #' reg2 = function(d){
@@ -215,9 +227,14 @@ default_parallelism <- function() {
 #'   lm(y ~ x3, data = d)
 #' }
 #' plot_graph(my_plan)
+#' # We have different numbers of max useful jobs.
+#' # By default, the output takes into account which
+#' # targets are out of date. To disable, consider
+#' # using the from_scratch argument.
 #' max_useful_jobs(my_plan) # 4
+#' max_useful_jobs(my_plan, from_scratch = TRUE) # 8
 #' max_useful_jobs(my_plan, imports = 'files') # 4
-#' max_useful_jobs(my_plan, imports = 'all') # 10
+#' max_useful_jobs(my_plan, imports = 'all') # 9
 #' max_useful_jobs(my_plan, imports = 'none') # 4
 #' }
 max_useful_jobs <- function(
@@ -281,6 +298,13 @@ max_useful_jobs <- function(
 #' @param path file path of the shell file
 #' @param overwrite logical, whether to overwrite a possible
 #' destination file with the same name
+#' @examples
+#' \dontrun{
+#' # Write shell.sh to your working directory.
+#' # Read the parallelism vignette to learn how it is used
+#' # in Makefile parallelism.
+#' shell_file()
+#' }
 shell_file <- function(
   path = "shell.sh",
   overwrite = FALSE

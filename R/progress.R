@@ -18,9 +18,9 @@
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' session()
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' session() # Retrieve the cached sessionInfo() of the last make().
 #' }
 session <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -54,8 +54,9 @@ session <- function(path = getwd(), search = TRUE,
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
+#' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Kill before targets finish.
+#' # If you interrupted make(), some targets will probably be listed:
 #' in_progress()
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
@@ -91,13 +92,14 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' failed() # nothing
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' failed() # Should show that no targets failed.
+#' # Build a workflow plan doomed to fail:
 #' bad_plan <- workplan(x = function_doesnt_exist())
 #' make(bad_plan) # error
 #' failed() # "x"
-#' diagnose(x)
+#' diagnose(x) # Retrieve the cached error log of x.
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -153,12 +155,13 @@ failed <- function(path = getwd(), search = TRUE,
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' progress()
-#' progress(small, large)
-#' progress(list = c("small", "large"))
-#' progress(no_imported_objects = TRUE)
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # Watch the changing progress() as make() is running.
+#' progress() # List all the targets reached so far.
+#' progress(small, large) # Just see the progress of some targets.
+#' progress(list = c("small", "large")) # Same as above.
+#' progress(no_imported_objects = TRUE) # Ignore imported R objects.
 #' }
 progress <- function(
   ...,

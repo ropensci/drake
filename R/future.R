@@ -31,19 +31,25 @@ worker_future_lapply <- function(targets, meta_list, config){
 #' @param ... arguments to \code{future::plan()}.
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' library(future) # Use workplan() instead of plan()
+#' load_basic_example() # Load the canonical drake example.
+#' # For future-based backends, you will need the "future" package,
+#' # and for high-performance computing, maybe future.batchtools.
+#' library(future)
 #' backend(multicore) # Same as future::plan(multicore)
+#' # Run the project with future-powered multicore parallelism.
+#' # The number of jobs is automatic: however many would benefit.
+#' # Set options(mc.cores = 2) to cap the number of jobs at 2.
 #' make(my_plan, parallelism = "future_lapply")
 #' clean() # Erase the targets to start from scratch.
 #' backend(multisession) # Use separate background R sessions.
+#' # This next make() is similar to "parLapply" parallelism.
 #' make(my_plan, parallelism = "future_lapply")
-#' clean()
+#' clean() # Remove targets/imports from the cache, start from scratch.
 #' library(future.batchtools) # More heavy-duty future-style parallel backends
 #' # https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend # nolint
-#' backend(batchtools_local)
+#' backend(batchtools_local) # Test out future.batchtools locally.
+#' # Should proceed prety much like the multisession backend.
 #' make(my_plan, parallelism = "future_lapply")
-#' clean()
 #' }
 backend <- function(...){
   future::plan(...)

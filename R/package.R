@@ -7,7 +7,7 @@
 #' @examples
 #' \dontrun{
 #' library(drake)
-#' load_basic_example()
+#' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Build everything.
 #' make(my_plan) # Nothing is done because everything is already up to date.
 #' reg2 = function(d){ # Change one of your functions.
@@ -15,16 +15,19 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' make(my_plan) # Only the pieces depending on reg2() get rebuilt.
-#' readd(small) # Read/load from the cache.
+#' # Read/load from the cache.
+#' readd(small)
 #' loadd(large)
 #' head(large)
-#' clean() # Restart from scratch
+#' clean() # Restart from scratch.
 #' make(my_plan, jobs = 2) # Distribute over 2 parallel jobs.
-#' clean()
-#' make(my_plan, jobs = 4, parallelism = "Makefile") # 4 parallel R sessions.
-#' make(my_plan, jobs = 4, parallelism = "Makefile") # Everything up to date.
+#' clean() # Restart from scratch.
+#' # Parallelize over at most 4 separate R sessions.
+#' make(my_plan, jobs = 4, parallelism = "Makefile")
+#' # Everything is already up to date.
+#' make(my_plan, jobs = 4, parallelism = "Makefile")
 #' clean(destroy = TRUE) # Totally remove the cache.
-#' unlink(c("Makefile", "report.Rmd"))
+#' unlink(c("Makefile", "report.Rmd")) # Clean up the remaining files.
 #' }
 #' @references \url{https://github.com/wlandau-lilly/drake}
 #' @importFrom codetools findGlobals

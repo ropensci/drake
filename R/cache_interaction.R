@@ -46,11 +46,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' cached(list = 'reg1')
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build all the targets.
+#' cached(list = 'reg1') # Is 'reg1' in the cache?
+#' # List all the targets and imported files in the cache.
+#' # Exclude R objects imported from your workspace.
 #' cached(no_imported_objects = TRUE)
+#' # List all targets and imports in the cache.
 #' cached()
+#' # For file targets/imports, only the fingerprints/hashes are stored.
 #' }
 cached <- function(
   ...,
@@ -105,9 +109,10 @@ list_cache <- function(no_imported_objects, cache) {
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' built()
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build all the targets.
+#' built() # List all the cached targets (built objects and files).
+#' # For file targets, only the fingerprints/hashes are stored.
 #' }
 built <- function(
   path = getwd(), search = TRUE,
@@ -146,9 +151,10 @@ built <- function(
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
-#' imported()
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' imported() # List all the imported objects/files in the cache.
+#' # For imported files, only the fingerprints/hashes are stored.
 #' }
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,
@@ -218,8 +224,9 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' (disabled on Windows)
 #' @examples
 #' \dontrun{
-#' load_basic_example()
-#' make(my_plan)
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build targets. This creates the cache.
+#' # Remove dangling cache files that could cause errors.
 #' rescue_cache(jobs = 2)
 #' }
 rescue_cache <- function(

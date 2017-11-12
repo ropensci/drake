@@ -41,7 +41,7 @@ build_distributed <- function(target, cache_path){
 }
 
 recover_config <- function(cache_path){
-  cache <- this_cache(cache_path)
+  cache <- this_cache(cache_path, verbose = FALSE)
   config <- read_config(cache = cache)
   if (identical(globalenv(), config$envir)){
     dir <- cache_path

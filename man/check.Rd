@@ -30,10 +30,10 @@ missing input files.
 }
 \examples{
 \dontrun{
-load_basic_example()
-check(my_plan)
-unlink('report.Rmd')
-check(my_plan)
+load_basic_example() # Load drake's canonical example.
+check(my_plan) # Check the workflow plan dataframe for obvious errors.
+unlink('report.Rmd') # Remove an import file mentioned in the plan.
+check(my_plan) # check() tells you that 'report.Rmd' is missing.
 }
 }
 \seealso{

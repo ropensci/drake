@@ -14,8 +14,9 @@ The default \code{hook} argument to \code{\link{make}()}.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan, hook = default_hook) # Nothing gets built!
-cached() # character(0) # nolint
+load_basic_example() # Load the canonical drake example.
+# Everything gets built normally.
+make(my_plan, hook = default_hook)
+cached() # List the cached targets and imports.
 }
 }

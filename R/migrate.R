@@ -25,14 +25,16 @@
 #' @examples
 #' \dontrun{
 #' # With drake 4.3.0:
-#' load_basic_example()
-#' make(my_plan)
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the old project.
 #' # Now, install drake >= 5.0.0
-#' load_basic_example()
+#' load_basic_example() # Load the canonical example again.
 #' make(my_plan) # Error: cache is not back compatible.
 #' migrate() # Convert the project's '.drake/' cache to the new format.
 #' make(my_plan) # Everything is still up to date!
-#' # Outdated objects from before migration will remain out of date afterwards.
+#' # Outdated objects from before migration
+#' # should remain out of date afterwards.
+#' outdated(my_plan)
 #' }
 migrate <- function(path = drake::default_cache_path(), jobs = 1){
   cache <- should_migrate(path = path)
@@ -73,7 +75,7 @@ migrate <- function(path = drake::default_cache_path(), jobs = 1){
 
 should_migrate <- function(path){
   tryCatch({
-      tmp <- this_cache(path = path, force = FALSE)
+      tmp <- this_cache(path = path, force = FALSE, verbose = TRUE)
       if (is.null(tmp)){
         message("No cache found to migrate.")
       } else {
@@ -85,7 +87,7 @@ should_migrate <- function(path){
       NULL
     },
     error = function(e){
-      this_cache(path = path, force = TRUE)
+      this_cache(path = path, force = TRUE, verbose = TRUE)
     }
   )
 }

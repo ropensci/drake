@@ -16,8 +16,11 @@ in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
 with the \code{split_columns} argument.}
 }
 \description{
-Default title of the graph from
+Default title of the graph for
 \code{\link{plot_graph}()}.
+}
+\examples{
+default_graph_title()
 }
 \seealso{
 \code{\link{dataframes_graph}}, \code{\link{plot_graph}}

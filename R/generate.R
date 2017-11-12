@@ -38,16 +38,30 @@
 #' and the values are recycled.
 #'
 #' @examples
+#' # Create the part of the workflow plan for the datasets.
 #' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
+#' # Create a template workflow plan for the analyses.
 #' methods <- workplan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
+#' # Evaluate the wildcards in the template
+#' # to produce the actual part of the workflow plan
+#' # that encodes the analyses of the datasets.
+#' # Create one analysis for each combination of dataset and method.
 #' evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target)
-#' evaluate(methods, wildcard = "..dataset..",
+#' # Only choose some combinations of dataset and analysis method.
+#' ans <- evaluate(methods, wildcard = "..dataset..",
 #'   values = datasets$target, expand = FALSE)
+#' ans
+#' # For the complete workflow plan, row bind the pieces together.
+#' my_plan <- rbind(datasets, ans)
+#' my_plan
+#' # Workflow plans can have multiple wildcards.
+#' # Each combination of wildcard values will be used
+#' # Except when expand is FALSE.
 #' x <- workplan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate <- function(
@@ -121,9 +135,12 @@ evaluations <- function(
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
 #' @examples
+#' # Create the part of the workflow plan for the datasets.
 #' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
+#' # Create replicates. If you want repeat targets,
+#' # this is convenient.
 #' expand(datasets, values = c("rep1", "rep2", "rep3"))
 expand <- function(plan, values = NULL){
   if (!length(values)){
@@ -150,11 +167,19 @@ expand <- function(plan, values = NULL){
 #' one of \code{\link{list}(...)}, \code{\link{c}(...)},
 #' \code{\link{rbind}(...)}, or similar.
 #' @examples
+#' # Workflow plan for datasets:
 #' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
+#' # Create a new target that brings the datasets together.
 #' gather(datasets, target = "my_datasets")
-#' gather(datasets, target = "aggregated_data", gather = "rbind")
+#' # This time, the new target just appends the rows of 'small' and 'large'
+#' # into a single matrix or data frame.
+#' gathered <- gather(datasets, target = "aggregated_data", gather = "rbind")
+#' gathered
+#' # For the complete workflow plan, row bind the pieces together.
+#' my_plan <- rbind(datasets, gathered)
+#' my_plan
 gather <- function(
   plan = NULL,
   target = "target",
@@ -165,7 +190,7 @@ gather <- function(
   command <- paste0(gather, "(", command, ")")
   return(
     data.frame(target = target, command = command, stringsAsFactors = FALSE)
-    )
+  )
 }
 
 #' @title Function \code{analyses}
@@ -184,19 +209,27 @@ gather <- function(
 #' @param datasets workflow plan data frame with instructions
 #' to make the datasets.
 #' @examples
+#' # Create the piece of the workflow plan for the datasets.
 #' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
+#' # Create a template for the analysis methods.
 #' methods <- workplan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
-#' analyses(methods, datasets = datasets)
+#' # Evaluate the wildcards to create the part of the workflow plan
+#' # encoding the analyses of the datasets.
+#' ans <- analyses(methods, datasets = datasets)
+#' ans
+#' # For the final workflow plan, row bind the pieces together.
+#' my_plan <- rbind(datasets, ans)
+#' my_plan
 analyses <- function(plan, datasets){
   evaluate(
     plan,
     wildcard = "..dataset..",
     values = datasets$target
-    )
+  )
 }
 
 #' @title Function \code{summaries}
@@ -218,20 +251,30 @@ analyses <- function(plan, datasets){
 #' rows in the \code{plan}. See the \code{\link{gather}()} function
 #' for more.
 #' @examples
+#' # Create the part of the workflow plan data frame for the datasets.
 #' datasets <- workplan(
 #'   small = simulate(5),
 #'   large = simulate(50))
+#' # Create a template workflow plan containing the analysis methods.
 #' methods <- workplan(
 #'   regression1 = reg1(..dataset..),
 #'   regression2 = reg2(..dataset..))
+#' # Generate the part of the workflow plan to analyze the datasets.
 #' analyses <- analyses(methods, datasets = datasets)
+#' # Create a template workflow plan dataset with the
+#' # types of summaries you want.
 #' summary_types <- workplan(
 #'   summ = summary(..analysis..),
 #'   coef = coefficients(..analysis..))
+#' # Evaluate the appropriate wildcards to encode the summary targets.
 #' summaries(summary_types, analyses, datasets, gather = NULL)
 #' summaries(summary_types, analyses, datasets)
 #' summaries(summary_types, analyses, datasets, gather = "list")
-#' summaries(summary_types, analyses, datasets, gather = c("list", "rbind"))
+#' summs <- summaries(
+#'   summary_types, analyses, datasets, gather = c("list", "rbind"))
+#' # For the final workflow plan, row bind the pieces together.
+#' my_plan <- rbind(datasets, analyses, summs)
+#' my_plan
 summaries <- function(
   plan,
   analyses,

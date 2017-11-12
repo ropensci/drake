@@ -22,13 +22,15 @@ of the returned list should agree: for example,
 }
 \examples{
 \dontrun{
-load_basic_example()
-con <- make(my_plan)
+load_basic_example() # Load drake's canonical exmaple.
+con <- make(my_plan) # Run the project, build the targets.
+# Get some example dependency profiles of targets.
 dependency_profile("small", config = con)
 dependency_profile("'report.md'", config = con)
-clean(large) # most information gone
-dependency_profile("large", config = con) # hashes of deps still available
-# should agree with `$meta_of_dependencies`
+clean(large) # Clear out most of the information about the target 'large'.
+# The dependency hashes are still there.
+dependency_profile("large", config = con)
+# Should agree with `$hashes_of_dependencies`.
 con$cache$get_hash("simulate",
   namespace = "kernels")
 }

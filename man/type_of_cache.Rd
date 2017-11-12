@@ -22,8 +22,10 @@ are supported.
 }
 \examples{
 \dontrun{
-load_basic_example()
-make(my_plan)
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build the targets.
+# Get the type of the cache
+# located in the (default) '.drake' folder.
 type_of_cache(".drake")
 }
 }

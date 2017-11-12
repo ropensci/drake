@@ -51,16 +51,30 @@ not \code{NULL}. Here, \code{rules} should be a list with wildcards
 as names and vectors of possible values as list elements.
 }
 \examples{
+# Create the part of the workflow plan for the datasets.
 datasets <- workplan(
   small = simulate(5),
   large = simulate(50))
+# Create a template workflow plan for the analyses.
 methods <- workplan(
   regression1 = reg1(..dataset..),
   regression2 = reg2(..dataset..))
+# Evaluate the wildcards in the template
+# to produce the actual part of the workflow plan
+# that encodes the analyses of the datasets.
+# Create one analysis for each combination of dataset and method.
 evaluate(methods, wildcard = "..dataset..",
   values = datasets$target)
-evaluate(methods, wildcard = "..dataset..",
+# Only choose some combinations of dataset and analysis method.
+ans <- evaluate(methods, wildcard = "..dataset..",
   values = datasets$target, expand = FALSE)
+ans
+# For the complete workflow plan, row bind the pieces together.
+my_plan <- rbind(datasets, ans)
+my_plan
+# Workflow plans can have multiple wildcards.
+# Each combination of wildcard values will be used
+# Except when expand is FALSE.
 x <- workplan(draws = rnorm(mean = Mean, sd = Sd))
 evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 }
