@@ -28,3 +28,4 @@ Deprecated on 2017-11-12.
 \seealso{
 \code{\link{gather_plan}}
 }
+\keyword{internal}

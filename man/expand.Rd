@@ -26,3 +26,4 @@ Deprecated on 2017-11-12.
 \seealso{
 \code{\link{expand_plan}}
 }
+\keyword{internal}

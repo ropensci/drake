@@ -30,3 +30,4 @@ Deprecated on 2017-10
 \examples{
 # See ?workplan for examples.
 }
+\keyword{internal}

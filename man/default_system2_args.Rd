@@ -28,3 +28,4 @@ default_system2_args(jobs = 1, verbose = TRUE)
 \seealso{
 \code{\link{default_Makefile_args}}
 }
+\keyword{internal}
