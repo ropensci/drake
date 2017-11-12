@@ -4,10 +4,21 @@
 \alias{future_backend}
 \title{Function \code{future_backend}}
 \usage{
-future_backend(...)
+future_backend(strategy = NULL, ..., substitute = TRUE, .call = TRUE,
+  .cleanup = TRUE, .init = TRUE)
 }
 \arguments{
-\item{...}{arguments to \code{future::plan()}.}
+\item{strategy}{Same as for \code{future::plan()}.}
+
+\item{...}{Same as for \code{future::plan()}.}
+
+\item{substitute}{Same as for \code{future::plan()}.}
+
+\item{.call}{Same as for \code{future::plan()}.}
+
+\item{.cleanup}{Same as for \code{future::plan()}.}
+
+\item{.init}{Same as for \code{future::plan()}.}
 }
 \value{
 The same return value as \code{future::plan()}.

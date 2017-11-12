@@ -2,43 +2,27 @@
 % Please edit documentation in R/deprecate.R
 \name{expand}
 \alias{expand}
-\alias{expand}
 \title{Deprecated function expand}
 \usage{
-expand(plan, values = NULL)
-
 expand(plan, values = NULL)
 }
 \arguments{
 \item{plan}{Same as for \code{\link{expand_plan}}}
 
 \item{values}{Same as for \code{\link{expand_plan}}}
-
-\item{plan}{Same as for \code{\link{expand_plan}}}
-
-\item{values}{Same as for \code{\link{expand_plan}}}
 }
 \value{
-Same as for \code{\link{expand_plan}}
-
 Same as for \code{\link{expand_plan}}
 }
 \description{
 Use \code{\link{expand_plan}()} instead.
-
-Use \code{\link{expand_plan}()} instead.
 }
 \details{
-Deprecated on 2017-11-12.
-
 Deprecated on 2017-11-12.
 }
 \examples{
 # See ?expand_plan for examples.
-# See ?expand_plan for examples.
 }
 \seealso{
-\code{\link{expand_plan}}
-
 \code{\link{expand_plan}}
 }

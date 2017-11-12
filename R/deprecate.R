@@ -28,7 +28,6 @@ analyses <- function(plan, datasets){
 #' @seealso \code{\link{future_backend}}
 #' @return The same return value as \code{future::plan()}.
 #' @param ... Arguments to \code{future::plan()}.
-#' @examples
 #' # See ?future_backend for examples.
 backend <- function(...){
   .Deprecated(
@@ -229,112 +228,13 @@ gather <- function(
   )
 }
 
-#' @title Deprecated function evaluate
-#' @description Use \code{\link{evaluate_plan}()} instead.
-#' @details Deprecated on 2017-11-12.
-#' @export
-#' @seealso \code{\link{evaluate_plan}}
-#' @return Same as for \code{\link{evaluate_plan}}
-#' @param plan Same as for \code{\link{evaluate_plan}}
-#' @param rules Same as for \code{\link{evaluate_plan}}
-#' @param wildcard Same as for \code{\link{evaluate_plan}}
-#' @param values Same as for \code{\link{evaluate_plan}}
-#' @param expand Same as for \code{\link{evaluate_plan}}
-#' @examples
-#' # See ?evaluate_plan for examples.
-evaluate <- function(
-  plan,
-  rules = NULL,
-  wildcard = NULL,
-  values = NULL,
-  expand = TRUE
-){
-  .Deprecated(
-    "evaluate",
-    package = "drake",
-    msg = paste(
-      "drake::evaluate() is deprecated",
-      "due to a conflict with evaluate::evaluate().",
-      "Use evaluate_plan() instead."
-    )
-  )
-  evaluate_plan(
-    plan = plan,
-    rules = rules,
-    wildcard = wildcard,
-    values = values,
-    expand = expand
-  )
-}
-
-#' @title Deprecated function expand
-#' @description Use \code{\link{expand_plan}()} instead.
-#' @details Deprecated on 2017-11-12.
-#' @export
-#' @seealso \code{\link{expand_plan}}
-#' @return Same as for \code{\link{expand_plan}}
-#' @param plan Same as for \code{\link{expand_plan}}
-#' @param values Same as for \code{\link{expand_plan}}
-#' @examples
-#' # See ?expand_plan for examples.
-expand <- function(
-  plan,
-  values = NULL
-){
-  .Deprecated(
-    "expand",
-    package = "drake",
-    msg = paste(
-      "drake::expand() is deprecated",
-      "due to a conflict with tidyr::expand().",
-      "Use expand_plan() instead."
-    )
-  )
-  expand_plan(
-    plan = plan,
-    values = values
-  )
-}
-
-#' @title Deprecated function \code{gather}
-#' @description Use \code{\link{gather_plan}()} instead.
-#' @details Deprecated on 2017-11-12.
-#' @export
-#' @seealso \code{\link{gather_plan}}
-#' @return Same as for \code{\link{gather_plan}}
-#' @param plan Same as for \code{\link{gather_plan}}
-#' @param target Same as for \code{\link{gather_plan}}
-#' @param gather Same as for \code{\link{gather_plan}}
-#' @examples
-#' # See ?gather_plan for examples.
-gather <- function(
-  plan = NULL,
-  target = "target",
-  gather = "list"
-){
-  .Deprecated(
-    "gather",
-    package = "drake",
-    msg = paste(
-      "drake::gather() is deprecated",
-      "due to a conflict with tidyr::gather().",
-      "Use gather_plan() instead."
-    )
-  )
-  gather_plan(
-    plan = plan,
-    target = target,
-    gather = gather
-  )
-}
-
 #' @title Deprecated function \code{plan}
 #' @description Use \code{\link{workplan}()} instead.
 #' @details Deprecated on 2017-10.
 #' @seealso \code{\link{workplan}}
 #' @export
 #' @return A data frame of targets and commands.
-#' @param ... 
+#' @param ... Same as for \code{\link{workplan}()}.
 #' @param list Same as for \code{\link{workplan}()}.
 #' @param file_targets Same as for \code{\link{workplan}()}.
 #' @param strings_in_dots Same as for \code{\link{workplan}()}.
@@ -427,7 +327,7 @@ session <- function(
 #' @export
 #' @return Same as for \code{\link{plan_summaries}()}.
 #' @param plan Same as for \code{\link{plan_summaries}()}.
-#' @param analyses Same as for \code{\link{dplan_summaries}()}.
+#' @param analyses Same as for \code{\link{plan_summaries}()}.
 #' @param datasets Same as for \code{\link{plan_summaries}()}.
 #' @param gather Same as for \code{\link{plan_summaries}()}.
 #' @examples

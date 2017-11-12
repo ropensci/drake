@@ -8,7 +8,7 @@ plan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{}
+\item{...}{Same as for \code{\link{workplan}()}.}
 
 \item{list}{Same as for \code{\link{workplan}()}.}
 

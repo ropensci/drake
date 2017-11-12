@@ -42,6 +42,6 @@ my_plan <- rbind(datasets, ans)
 my_plan
 }
 \seealso{
-\code{\link{plan_summaries(}},
+\code{\link{plan_summaries}},
  \code{\link{make}}, \code{\link{workplan}}
 }

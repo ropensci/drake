@@ -29,7 +29,12 @@ worker_future_lapply <- function(targets, meta_list, config){
 #' We provide it only because \code{workplan()} conflicts
 #' with \code{future::plan()}.
 #' @return The same return value as \code{future::plan()}.
-#' @param ... arguments to \code{future::plan()}.
+#' @param strategy Same as for \code{future::plan()}.
+#' @param ... Same as for \code{future::plan()}.
+#' @param substitute Same as for \code{future::plan()}.
+#' @param .call Same as for \code{future::plan()}.
+#' @param .cleanup Same as for \code{future::plan()}.
+#' @param .init Same as for \code{future::plan()}.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical drake example.
@@ -53,6 +58,4 @@ worker_future_lapply <- function(targets, meta_list, config){
 #' # Should proceed prety much like the multisession backend.
 #' make(my_plan, parallelism = "future_lapply")
 #' }
-future_backend <- function(...){
-  future::plan(...)
-}
+future_backend <- future::plan

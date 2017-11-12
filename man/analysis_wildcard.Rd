@@ -11,7 +11,7 @@ The analysis wildcard used in \code{\link{plan_summaries}()}.
 }
 \description{
 Show the analysis wildcard
-used in \code{\link{plan_summaies}()}.
+used in \code{\link{plan_summaries}()}.
 }
 \examples{
 # See ?plan_analyses for examples

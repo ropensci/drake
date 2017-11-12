@@ -9,7 +9,7 @@ summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 \arguments{
 \item{plan}{Same as for \code{\link{plan_summaries}()}.}
 
-\item{analyses}{Same as for \code{\link{dplan_summaries}()}.}
+\item{analyses}{Same as for \code{\link{plan_summaries}()}.}
 
 \item{datasets}{Same as for \code{\link{plan_summaries}()}.}
 

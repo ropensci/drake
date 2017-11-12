@@ -1,6 +1,6 @@
 #' @title Function analysis_wildcard
 #' @description Show the analysis wildcard
-#' used in \code{\link{plan_summaies}()}.
+#' used in \code{\link{plan_summaries}()}.
 #' @export
 #' @seealso \code{\link{plan_summaries}()}
 #' @return The analysis wildcard used in \code{\link{plan_summaries}()}.
@@ -224,7 +224,7 @@ gather_plan <- function(
 #' @title Function \code{plan_analyses}
 #' @description Generate a workflow plan data frame to
 #' analyze multiple datasets using multiple methods of analysis.
-#' @seealso \code{\link{plan_summaries(}},
+#' @seealso \code{\link{plan_summaries}},
 #'  \code{\link{make}}, \code{\link{workplan}}
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.

@@ -21,6 +21,7 @@
     - `session()` => `drake_session()`
     - `summaries()` => `plan_summaries()`
 - Disallow `output` and `code` as names in the workflow plan data frame. Use `target` and `command` instead. This naming switch has been formally deprecated for several months prior.
+- Deprecate the ..analysis.. and ..dataset.. wildcards in favor of analysis__ and dataset__, respectively. The new wildcards are stylistically better an pass linting checks.
 
 # Changes in release 4.4.0
 

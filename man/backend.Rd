@@ -7,7 +7,8 @@
 backend(...)
 }
 \arguments{
-\item{...}{Arguments to \code{future::plan()}.}
+\item{...}{Arguments to \code{future::plan()}.
+# See ?future_backend for examples.}
 }
 \value{
 The same return value as \code{future::plan()}.
@@ -17,9 +18,6 @@ Use \code{\link{future_backend}()} instead.
 }
 \details{
 Deprecated on 2017-11-12.
-}
-\examples{
-# See ?future_backend for examples.
 }
 \seealso{
 \code{\link{future_backend}}
