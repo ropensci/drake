@@ -1,4 +1,4 @@
-#' @title Function \code{evaluate}
+#' @title Function \code{evaluate_plan}
 #' @description The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
@@ -50,10 +50,10 @@
 #' # to produce the actual part of the workflow plan
 #' # that encodes the analyses of the datasets.
 #' # Create one analysis for each combination of dataset and method.
-#' evaluate(methods, wildcard = "..dataset..",
+#' evaluate_plan(methods, wildcard = "..dataset..",
 #'   values = datasets$target)
 #' # Only choose some combinations of dataset and analysis method.
-#' ans <- evaluate(methods, wildcard = "..dataset..",
+#' ans <- evaluate_plan(methods, wildcard = "..dataset..",
 #'   values = datasets$target, expand = FALSE)
 #' ans
 #' # For the complete workflow plan, row bind the pieces together.
@@ -63,14 +63,14 @@
 #' # Each combination of wildcard values will be used
 #' # Except when expand is FALSE.
 #' x <- workplan(draws = rnorm(mean = Mean, sd = Sd))
-#' evaluate(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
-evaluate <- function(
+#' evaluate_plan(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
+evaluate_plan <- function(
   plan,
   rules = NULL,
   wildcard = NULL,
   values = NULL,
   expand = TRUE
-  ){
+){
   if (!is.null(rules)){
     return(evaluations(plan = plan, rules = rules, expand = expand))
   }
@@ -87,7 +87,7 @@ evaluate <- function(
   plan[[major]] <- plan[[minor]]
   matching <- plan[matches, ]
   if (expand){
-    matching <- expand(matching, values)
+    matching <- expand_plan(matching, values)
   }
   values <- rep(values, length.out = nrow(matching))
   matching$command <- Vectorize(
@@ -116,7 +116,7 @@ evaluations <- function(
   }
   stopifnot(is.list(rules))
   for (index in seq_len(length(rules))){
-    plan <- evaluate(
+    plan <- evaluate_plan(
       plan,
       wildcard = names(rules)[index],
       values = rules[[index]],
@@ -126,7 +126,7 @@ evaluations <- function(
   return(plan)
 }
 
-#' @title Function \code{expand}
+#' @title Function \code{expand_plan}
 #' @description Expands a workflow plan data frame by duplicating rows.
 #' This generates multiple replicates of targets with the same commands.
 #' @export
@@ -141,8 +141,8 @@ evaluations <- function(
 #'   large = simulate(50))
 #' # Create replicates. If you want repeat targets,
 #' # this is convenient.
-#' expand(datasets, values = c("rep1", "rep2", "rep3"))
-expand <- function(plan, values = NULL){
+#' expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
+expand_plan <- function(plan, values = NULL){
   if (!length(values)){
     return(plan)
   }
@@ -155,7 +155,7 @@ expand <- function(plan, values = NULL){
   return(plan)
 }
 
-#' @title Function \code{gather}
+#' @title Function \code{gather_plan}
 #' @description Create a new workflow plan data frame with a single new
 #' target. This new target is a list, vector, or other aggregate of
 #' a collection of existing targets in another workflow plan data frame.
@@ -173,15 +173,15 @@ expand <- function(plan, values = NULL){
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' # Create a new target that brings the datasets together.
-#' gather(datasets, target = "my_datasets")
+#' gather_plan(datasets, target = "my_datasets")
 #' # This time, the new target just appends the rows of 'small' and 'large'
 #' # into a single matrix or data frame.
-#' gathered <- gather(datasets, target = "aggregated_data", gather = "rbind")
+#' gathered <- gather_plan(datasets, target = "aggregated_data", gather = "rbind")
 #' gathered
 #' # For the complete workflow plan, row bind the pieces together.
 #' my_plan <- rbind(datasets, gathered)
 #' my_plan
-gather <- function(
+gather_plan <- function(
   plan = NULL,
   target = "target",
   gather = "list"
@@ -226,7 +226,7 @@ gather <- function(
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
 analyses <- function(plan, datasets){
-  evaluate(
+  evaluate_plan(
     plan,
     wildcard = "..dataset..",
     values = datasets$target
@@ -292,8 +292,8 @@ summaries <- function(
       "Use analyses() instead."
       )
   }
-  out <- evaluate(out, wildcard = "..analysis..", values = analyses$target)
-  out <- evaluate(
+  out <- evaluate_plan(out, wildcard = "..analysis..", values = analyses$target)
+  out <- evaluate_plan(
     out,
     wildcard = "..dataset..",
     values = datasets$target,
@@ -313,7 +313,7 @@ summaries <- function(
     group,
     function(summary_group){
       summary_type <- summary_group[[group]][1]
-      gather(
+      gather_plan(
         summary_group,
         target = summary_type,
         gather = gather[which(summary_type == plan$target)])

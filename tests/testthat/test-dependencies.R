@@ -57,13 +57,13 @@ test_with_dir("tracked() works", {
   expect_equal(x, y)
 })
 
-test_with_dir("missing files via check()", {
+test_with_dir("missing files via check_plan()", {
   config <- dbug()
-  expect_message(check(config$plan, envir = config$envir))
+  expect_message(check_plan(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
   unlink("input.rds", force = TRUE)
   expect_warning(
-    tmp <- capture.output(check(config$plan, envir = config$envir)))
+    tmp <- capture.output(check_plan(config$plan, envir = config$envir)))
   expect_warning(tmp <- missing_input_files(config))
 })
 

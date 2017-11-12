@@ -23,6 +23,12 @@ test_with_dir("shapes", {
   expect_equal(color_of("bluhlaksjdf"), color_of("other"))
 })
 
+test_with_dir("make() with imports_only", {
+  expect_silent(make(workplan(x = 1), imports_only = TRUE,
+    verbose = FALSE))
+  expect_false(cached(x))
+})
+
 test_with_dir("in_progress() works", {
   expect_equal(in_progress(), character(0))
   bad_plan <- workplan(x = function_doesnt_exist())
@@ -60,16 +66,16 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_with_dir("check_config() via check() and make()", {
+test_with_dir("check_config() via check_plan() and make()", {
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
-  expect_error(check(y, envir = config$envir))
+  expect_error(check_plan(y, envir = config$envir))
   expect_error(make(y, envir = config$envir))
   y <- data.frame(target = character(0), command = character(0))
-  expect_error(check(y, envir = config$envir))
+  expect_error(check_plan(y, envir = config$envir))
   expect_error(make(y, envir = config$envir))
   expect_error(
-    check(config$plan, targets = character(0), envir = config$envir))
+    check_plan(config$plan, targets = character(0), envir = config$envir))
   expect_error(
     make(config$plan, targets = character(0), envir = config$envir))
   y <- workplan(x = 1, y = 2)
@@ -87,9 +93,9 @@ test_with_dir("targets can be partially specified", {
   testrun(config)
   expect_true(is.numeric(readd(final, search = FALSE)))
   pl <- workplan(x = 1, y = 2)
-  expect_error(check(pl, "lskjdf", verbose = FALSE))
-  expect_warning(check(pl, c("lskdjf", "x"), verbose = FALSE))
-  expect_silent(check(pl, verbose = FALSE))
+  expect_error(check_plan(pl, "lskjdf", verbose = FALSE))
+  expect_warning(check_plan(pl, c("lskdjf", "x"), verbose = FALSE))
+  expect_silent(check_plan(pl, verbose = FALSE))
 })
 
 test_with_dir("as_file quotes properly", {

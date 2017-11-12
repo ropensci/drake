@@ -18,7 +18,7 @@ test_with_dir("null graph", {
 
 test_with_dir("circular non-DAG workplans quit in error", {
   p <- workplan(a = b, b = c, c = a)
-  expect_error(tmp <- capture.output(check(p)))
+  expect_error(tmp <- capture.output(check_plan(p)))
   expect_error(make(p, verbose = FALSE))
 })
 

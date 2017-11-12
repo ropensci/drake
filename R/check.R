@@ -1,4 +1,4 @@
-#' @title Function \code{check}
+#' @title Function \code{check_plan}
 #' @description Check a workflow plan, etc. for obvious
 #' errors such as circular dependencies and
 #' missing input files.
@@ -14,11 +14,11 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
-#' check(my_plan) # Check the workflow plan dataframe for obvious errors.
+#' check_plan(my_plan) # Check the workflow plan dataframe for obvious errors.
 #' unlink('report.Rmd') # Remove an import file mentioned in the plan.
-#' check(my_plan) # check() tells you that 'report.Rmd' is missing.
+#' check_plan(my_plan) # check_plan() tells you that 'report.Rmd' is missing.
 #' }
-check <- function(
+check_plan <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),

@@ -58,12 +58,12 @@ read_plan()
 
 ## Workflow plan data frames
 
-The workflow plan data frame is your responsibility, and it takes effort and care. Fortunately, functions in `drake` can help. You can check the plan for formatting issues, missing input files, etc. with the `check()` function.
+The workflow plan data frame is your responsibility, and it takes effort and care. Fortunately, functions in `drake` can help. You can check the plan for formatting issues, missing input files, etc. with the `check_plan()` function.
 
 ```{r checkdebug}
 load_basic_example()
 my_plan
-check(my_plan) # No issues.
+check_plan(my_plan) # No issues.
 ```
 
 ## Visualize your workflow.

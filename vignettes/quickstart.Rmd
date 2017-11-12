@@ -154,7 +154,7 @@ tracked(my_plan)
 Check for cycles, missing input files, and other pitfalls.
 
 ```{r check}
-check(my_plan)
+check_plan(my_plan)
 ```
 
 # Generate the workflow plan
@@ -171,7 +171,7 @@ my_datasets
 For multiple replicates:
 
 ```{r expand}
-expand(my_datasets, values = c("rep1", "rep2"))
+expand_plan(my_datasets, values = c("rep1", "rep2"))
 ```
 
 Each dataset is analyzed multiple ways.
@@ -223,19 +223,19 @@ my_plan
 
 # Flexible helpers to make workflow plans
 
-If your workflow does not fit the rigid datasets/analyses/summaries framework, check out functions `expand()`, `evaluate()`, and `gather()`.
+If your workflow does not fit the rigid datasets/analyses/summaries framework, check out functions `expand_plan()`, `evaluate_plan()`, and `gather_plan()`.
 
 ```{r more_expansions_and_plans}
 df <- workplan(data = simulate(center = MU, scale = SIGMA))
 df
-df <- expand(df, values = c("rep1", "rep2"))
+df <- expand_plan(df, values = c("rep1", "rep2"))
 df
-evaluate(df, wildcard = "MU", values = 1:2)
-evaluate(df, wildcard = "MU", values = 1:2, expand = FALSE)
-evaluate(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1)), expand = FALSE)
-evaluate(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
-gather(df)
-gather(df, target = "my_summaries", gather = "rbind")
+evaluate_plan(df, wildcard = "MU", values = 1:2)
+evaluate_plan(df, wildcard = "MU", values = 1:2, expand = FALSE)
+evaluate_plan(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1)), expand = FALSE)
+evaluate_plan(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
+gather_plan(df)
+gather_plan(df, target = "my_summaries", gather = "rbind")
 ```
 
 # Run the workflow

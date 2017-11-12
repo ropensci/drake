@@ -76,7 +76,7 @@ load_basic_example <- function(
     regression1 = "reg1(..dataset..)",
     regression2 = "reg2(..dataset..)"))
 
-  # same as evaluate(methods, wildcard = '..dataset..', values
+  # same as evaluate_plan(methods, wildcard = '..dataset..', values
   # = datasets$output)
   analyses <- analyses(methods, datasets = datasets)
 
@@ -84,7 +84,7 @@ load_basic_example <- function(
     summ = "suppressWarnings(summary(..analysis..))",
     coef = "coefficients(..analysis..)"))
 
-  # summaries() also uses evaluate(): once with expand = TRUE,
+  # summaries() also uses evaluate_plan(): once with expand = TRUE,
   # once with expand = FALSE
   # skip 'gather' (workplan my_plan is more readable)
   results <- summaries(summary_types, analyses, datasets, gather = NULL)

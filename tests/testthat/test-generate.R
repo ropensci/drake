@@ -2,19 +2,19 @@ drake_context("generate")
 
 test_with_dir("empty generative args", {
   x <- workplan(a = 1, b = FUNCTION())
-  expect_equal(evaluate(x), x)
+  expect_equal(evaluate_plan(x), x)
   expect_equal(evaluations(x), x)
-  expect_equal(expand(x), x)
+  expect_equal(expand_plan(x), x)
 })
 
 test_with_dir("evaluate, expand, and gather", {
   df <- workplan(data = simulate(center = MU, scale = SIGMA))
-  m0 <- evaluate(df, wildcard = "NULL", values = 1:2)
+  m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
-  m1 <- evaluate(df, rules = list(nothing = 1:2), expand = FALSE)
+  m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
   expect_equal(m1, df)
 
-  x <- expand(df, values = c("rep1", "rep2"))
+  x <- expand_plan(df, values = c("rep1", "rep2"))
   y <- data.frame(
     target = c("data_rep1", "data_rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2),
@@ -22,7 +22,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x, y)
 
-  x2 <- evaluate(x, wildcard = "MU", values = 1:2)
+  x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
   y <- data.frame(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
@@ -35,7 +35,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x2, y)
 
-  x3 <- evaluate(x2, wildcard = "SIGMA", values = letters[1:2],
+  x3 <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
     expand = FALSE)
   y <- data.frame(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
@@ -49,7 +49,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x3, y)
 
-  x4 <- evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
+  x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
     expand = FALSE)
   y <- data.frame(
     target = c("data_rep1", "data_rep2"),
@@ -61,12 +61,12 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x4, y)
 
-  x5 <- evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
+  x5 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
   expect_equal(12, nrow(x5))
   expect_equal(12, length(unique(x5$target)))
   expect_equal(6, length(unique(x5$command)))
 
-  x6 <- gather(x)
+  x6 <- gather_plan(x)
   y <- data.frame(
     target = "target",
     command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)",
@@ -74,7 +74,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x6, y)
 
-  x7 <- gather(x, target = "my_summaries", gather = "rbind")
+  x7 <- gather_plan(x, target = "my_summaries", gather = "rbind")
   y <- data.frame(
     target = "my_summaries",
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)",

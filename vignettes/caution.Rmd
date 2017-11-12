@@ -39,9 +39,9 @@ Versions `drake` after 4.4.0 have different caching internals that increase spee
 
 ## Beware unparsable symbols in your workflow plan.
 
-In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check(my_plan)` to screen for illegal symbols and other problem areas.
+In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check_plan(my_plan)` to screen for illegal symbols and other problem areas.
 
-A common pitfall is using the `evaluate()` function to expand wildcards after applying single quotes to file targets.
+A common pitfall is using the `evaluate_plan()` function to expand wildcards after applying single quotes to file targets.
 
 ```{r filethenevaluate}
 library(magrittr) # for the pipe operator %>%
@@ -56,7 +56,7 @@ workplan(
     strings_in_dots = "literals",
     file_targets = T
   )) %>%
-  evaluate(
+  evaluate_plan(
     rules = list(..datasize.. = c("small", "large"))
   )
 ```
@@ -66,7 +66,7 @@ The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are 
 ```{r correctevaldatasize}
 rules <- list(..datasize.. = c("small", "large"))
 datasets <- workplan(data = readRDS("data_..datasize...rds")) %>%
-  evaluate(rules = rules)
+  evaluate_plan(rules = rules)
 ```
 
 Plan the CSV files separately.
@@ -75,10 +75,10 @@ files <- workplan(
   file = write.csv(data_..datasize.., "file_..datasize...csv"), # nolint
   strings_in_dots = "literals"
 ) %>%
-  evaluate(rules = rules)
+  evaluate_plan(rules = rules)
 ```
 
-Single-quote the file targets after `evaluate()`.
+Single-quote the file targets after `evaluate_plan()`.
 
 ```{r correctevaldatasize3}
 files$target <- paste0(
@@ -106,7 +106,7 @@ workplan(
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
 
 # Execution environment and files
 

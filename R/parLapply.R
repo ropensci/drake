@@ -24,7 +24,7 @@ run_parLapply <- function(config) { # nolint
 
 worker_parLapply <- function(targets, meta_list, config) { # nolint
   prune_envir_parLapply(targets = targets, config = config) # nolint
-  values <- parLapply(cl = config$cluster, X = targets, fun = build,
+  values <- parLapply(cl = config$cluster, X = targets, fun = drake_build,
     meta_list = meta_list, config = config)
   assign_to_envir_parLapply( # nolint
     target = targets,

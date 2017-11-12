@@ -17,17 +17,7 @@ prune(plan = workplan())
 Use \code{\link{clean}()} instead
 }
 \examples{
-\dontrun{
-load_basic_example() # Load the canonical example.
-make(my_plan) # Run the targets, build the project.
-cached() # List the targets/imports in the cache.
-# Remove all the cached targets except the first 3 targets
-# in the workflow plan.
-prune(my_plan[1:3,])
-cached() # Only the first 3 targets remain, plus all the imports.
-make(my_plan) # Re-make the deleted targets.
-clean(destroy = TRUE) # Completely remove the cache.
-}
+# See ?clean for examples.
 }
 \seealso{
 \code{\link{clean}}, \code{\link{make}}
