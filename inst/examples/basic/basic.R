@@ -229,22 +229,22 @@ clean() # Start over next time.
 # to cap the number of simultaneous jobs.
 options(mc.cores = 2)
 library(future)
-future_backend(multicore) # Same as future::plan(multicore)
+future::plan(multicore) # Avoid drake::plan().
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.
 
-future_backend(multisession) # Use separate background R sessions.
+future::plan(multisession) # Use separate background R sessions.
 make(my_plan, parallelism = "future_lapply")
 clean()
 
 if (require(future.batchtools)){ # More heavy-duty future-style parallel backends # nolint
-  future_backend(batchtools_local)
+  future::plan(batchtools_local)
   make(my_plan, parallelism = "future_lapply")
   clean()
 
   # Deploy targets with batchtools_local and use `future`-style
   # multicore parallism each individual target's command.
-  future_backend(list(batchtools_local, multicore))
+  future::plan(list(batchtools_local, multicore))
   make(my_plan, parallelism = "future_lapply")
   clean()
 }

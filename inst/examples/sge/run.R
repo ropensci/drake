@@ -6,7 +6,7 @@ library(future.batchtools)
 library(drake)
 
 # Use backend(multicore) instead for a dry run.
-future_backend(batchtools_sge(template = "sge-simple.tmpl"))
+future::plan(batchtools_sge(template = "sge-simple.tmpl"))
 
 load_basic_example()
 make(

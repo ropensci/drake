@@ -13,7 +13,7 @@
 - Delete long-deprecated functions `prune()` and `status()`.
 - Deprecate and rename functions:
     - `analyses()` => `plan_analyses()`
-    - `backend()` => `future_backend()`
+    - `backend()` => `future::plan()`
     - `check()` => `check_plan()`
     - `evaluate()` => `evaluate_plan()`
     - `expand()` => `expand_plan()`

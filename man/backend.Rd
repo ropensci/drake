@@ -2,23 +2,28 @@
 % Please edit documentation in R/deprecate.R
 \name{backend}
 \alias{backend}
-\title{Function \code{future_backend}}
+\title{Deprecated function \code{backend}}
 \usage{
 backend(...)
 }
 \arguments{
 \item{...}{Arguments to \code{future::plan()}.
-# See ?future_backend for examples.}
+\dontrun{
+load_basic_example() # Load the canonical example
+# Choose future's multicore parallel backend.
+future::plan(multicore) # Instead of backend(). Avoid drake::plan().
+# Run the project, build the targets.
+# Future knows that you chose the multicore backend.
+make(my_plan, parallelism = "future_lapply")
+}}
 }
 \value{
 The same return value as \code{future::plan()}.
 }
 \description{
-Use \code{\link{future_backend}()} instead.
+Use \code{future::plan()} instead.
+Avoid \code{drake::plan()}.
 }
 \details{
 Deprecated on 2017-11-12.
-}
-\seealso{
-\code{\link{future_backend}}
 }

@@ -2,12 +2,12 @@
 #' @description Use \code{\link{plan_analyses}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
-#' @seealso \code{\link{future_backend}}
+#' @seealso \code{\link{plan_analyses}}
 #' @return The same return value as \code{\link{plan_analyses}()}.
 #' @param plan Same as for \code{\link{plan_analyses}()}.
 #' @param datasets Same as for \code{\link{plan_analyses}()}.
 #' @examples
-#' # See ?future_backend for examples.
+#' # See ?plan_analyses for examples.
 analyses <- function(plan, datasets){
   .Deprecated(
     "backend",
@@ -21,22 +21,32 @@ analyses <- function(plan, datasets){
   plan_analyses(plan = plan, datasets = datasets)
 }
 
-#' @title Function \code{future_backend}
-#' @description Use \code{\link{future_backend}()} instead.
+#' @title Deprecated function \code{backend}
+#' @description Use \code{future::plan()} instead.
+#' Avoid \code{drake::plan()}.
 #' @details Deprecated on 2017-11-12.
 #' @export
-#' @seealso \code{\link{future_backend}}
 #' @return The same return value as \code{future::plan()}.
 #' @param ... Arguments to \code{future::plan()}.
-#' # See ?future_backend for examples.
+#' \dontrun{
+#' load_basic_example() # Load the canonical example
+#' # Choose future's multicore parallel backend.
+#' future::plan(multicore) # Instead of backend(). Avoid drake::plan().
+#' # Run the project, build the targets.
+#' # Future knows that you chose the multicore backend.
+#' make(my_plan, parallelism = "future_lapply")
+#' }
 backend <- function(...){
   .Deprecated(
     "backend",
     package = "drake",
     msg = paste(
-      "drake::backend() is deprecated",
-      "due to possible name conflicts.",
-      "Use future_backend() instead."
+      "drake::backend() is deprecated.",
+      "Use future::plan() directly.",
+      "drake::backend() only exists because of a name conflict",
+      "between drake::plan() and future::plan().",
+      "Once enough time has passed for users to adjust,",
+      "drake::plan() will be removed."
     )
   )
   future::plan(...)

@@ -21,8 +21,8 @@ Use \code{\link{plan_analyses}()} instead.
 Deprecated on 2017-11-12.
 }
 \examples{
-# See ?future_backend for examples.
+# See ?plan_analyses for examples.
 }
 \seealso{
-\code{\link{future_backend}}
+\code{\link{plan_analyses}}
 }

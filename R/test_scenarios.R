@@ -20,7 +20,7 @@ testing_scenarios <- function(){
 backend_code <- function(x){
   ifelse(
     nchar(x),
-    paste0("drake::future_backend(", x, ")"),
+    paste0("future::plan(", x, ")"),
     x
   )
 }
