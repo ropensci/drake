@@ -8,6 +8,8 @@
 - Change the default `cpu` and `elapsed` arguments of `make()` to `NULL`. This solves an elusive bug in how drake imposes timeouts.
 - Allow users to set target-level timeouts (overall, cpu, and elapsed) with columns in the workflow plan data frame.
 - Document timeouts and retries in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
+- Add a new `graph` argument to functions `make()`, `outdated()`, and `missed()`.
+- Export a new `prune_graph()` function for igraph objects.
 
 # Changes in release 4.4.0
 

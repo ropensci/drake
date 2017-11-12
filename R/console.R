@@ -79,26 +79,42 @@ console_up_to_date <- function(config){
   any_attempted <- length(config$cache$list(namespace = "attempts"))
   default_triggers <- using_default_triggers(config)
   if (!any_attempted && default_triggers && !config$skip_imports){
-    color("All targets are already up to date.", colors["target"]) %>%
-      message
+    console_all_up_to_date()
     return(invisible())
   }
   if (config$skip_imports){
-    color(
-      paste(
-        "Skipped the imports.",
-        "Targets are almost surely out of date."),
-      colors["trigger"]) %>%
-      message
+    console_skipped_imports()
   }
   if (!default_triggers){
-    color(
-      paste(
-        "Used non-default triggers.",
-        "Some targets may be not be up to date."),
-      colors["trigger"]) %>%
-      message
+    console_nondefault_triggers()
   }
+}
+
+console_all_up_to_date <- function(){
+  color("All targets are already up to date.", colors["target"]) %>%
+      message
+}
+
+console_skipped_imports <- function(){
+  color(
+    paste(
+      "Skipped the imports.",
+      "Targets are almost surely out of date."
+    ),
+    colors["trigger"]
+  ) %>%
+    message
+}
+
+console_nondefault_triggers <- function(){
+  color(
+    paste(
+      "Used non-default triggers.",
+      "Some targets may be not be up to date."
+    ),
+    colors["trigger"]
+  ) %>%
+    message
 }
 
 finish_console <- function(text, pattern, verbose){

@@ -100,9 +100,14 @@ test_with_dir("Depends brings targets up to date", {
 # Similar enough to the triggers to include here:
 test_with_dir("make(..., skip_imports = TRUE) works", {
   con <- dbug()
-  con <- make(
-    con$plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = TRUE,
-    skip_imports = TRUE)
+  verbose <- con$jobs < 2 & con$parallelism == "parLapply"
+  suppressMessages(
+    con <- make(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      hook = silencer_hook,
+      skip_imports = TRUE
+    )
+  )
   expect_equal(sort(cached()), sort(con$plan$target))
 })
