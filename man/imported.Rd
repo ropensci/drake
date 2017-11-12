@@ -28,7 +28,7 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-character vector naming the imported objects in the cache
+Character vector naming the imports in the cache.
 }
 \description{
 List all the imported objects in the drake cache

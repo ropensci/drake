@@ -7,7 +7,7 @@
 default_parallelism()
 }
 \value{
-default parallelism option for the current platform
+The default parallelism option for your system.
 }
 \description{
 Show the default parallelism for \code{\link{make}()}

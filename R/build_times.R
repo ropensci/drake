@@ -4,7 +4,7 @@
 #' spent loading and saving objects!
 #' @seealso \code{\link{built}}
 #' @export
-#' @return data.frame of times from \code{\link{system.time}}
+#' @return A data frame of times, each from \code{\link{system.time}()}.
 #' @param targets_only logical, whether to only return the
 #' build times of the targets (exclude the imports).
 #' @param path Root directory of the drake project,

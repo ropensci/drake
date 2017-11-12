@@ -9,6 +9,9 @@ legend_nodes(font_size = 20)
 \arguments{
 \item{font_size}{font size of the node label text}
 }
+\value{
+A data frame of legend nodes for \code{\link{plot_graph}()}.
+}
 \description{
 Output a \code{visNetwork}-friendly
 data frame of nodes. It tells you what

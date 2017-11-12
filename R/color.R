@@ -34,6 +34,8 @@ colors <- c(
 #' So if you want to contribute improvements to the palette,
 #' please both \code{drake_palette()} and
 #' \code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}
+#' @return There is a console message,
+#' but the actual return value is \code{NULL}.
 #' @examples
 #' # Show drake's color palette as text.
 #' drake_palette()

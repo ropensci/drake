@@ -41,7 +41,7 @@ session <- function(path = getwd(), search = TRUE,
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 #' @export
-#' @return A character vector of target names
+#' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
@@ -79,7 +79,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 #' @export
-#' @return A character vector of target names
+#' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
@@ -122,7 +122,8 @@ failed <- function(path = getwd(), search = TRUE,
 #' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 #' @export
 #'
-#' @return Statuses of targets
+#' @return The build progress of each target reached by
+#' the current \code{\link{make}()} so far.
 #'
 #' @param ... objects to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in

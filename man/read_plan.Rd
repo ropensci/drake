@@ -23,7 +23,7 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-a workflow plan data frame
+A workflow plan data frame.
 }
 \description{
 Read the workflow plan

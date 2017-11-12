@@ -7,6 +7,7 @@
 #' call \code{\link{example_drake}('basic')} to generate an R script
 #' that builds up this example step by step.
 #' @export
+#' @return The workflow plan data frame of the basic example.
 #' @param envir The environment to load the example into.
 #' Defaults to your workspace.
 #' For an insulated workspace,

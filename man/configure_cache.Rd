@@ -34,6 +34,9 @@ the hash algorithms in the cache with any user-specified ones.}
 
 \item{verbose}{whether to print console messages}
 }
+\value{
+A drake/storr cache.
+}
 \description{
 configure a cache for drake. This is
 to prepare the cache to be called from \code{\link{make}()}.

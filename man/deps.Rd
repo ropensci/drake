@@ -11,8 +11,9 @@ deps(x)
 Strings are commands from your workflow plan data frame.}
 }
 \value{
-names of dependencies. Files wrapped in single quotes.
-The other names listed are functions or generic objects.
+A character vector, names of dependencies.
+Files wrapped in single quotes.
+The other names listed are functions or generic R objects.
 }
 \description{
 List the dependencies of a function or workflow plan command.

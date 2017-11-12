@@ -21,6 +21,9 @@ existing file \code{report.Rmd}}
 \item{to}{deprecated, where to write the dynamic report source file
 \code{report.Rmd}}
 }
+\value{
+The workflow plan data frame of the basic example.
+}
 \description{
 Loads the basic example into your workspace
 (or the environment you specify).

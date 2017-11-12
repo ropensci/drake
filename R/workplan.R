@@ -16,7 +16,7 @@
 #' arguments in \code{...}, so use the \code{strings_in_dots}
 #' argument to control the quoting in \code{...}.
 #' @export
-#' @return data frame of targets and command
+#' @return A data frame of targets and commands.
 #' @param ... same as for \code{drake::\link{workplan}()}
 #' @param list same as for \code{drake::\link{workplan}()}
 #' @param file_targets same as for \code{drake::\link{workplan}()}
@@ -69,7 +69,7 @@ workplan <- function(
 #' into a filename understandable by drake. In other words,
 #' \code{as_file(x)} just wraps single quotes around \code{x}.
 #' @export
-#' @return a single-quoted character string: i.e., a filename
+#' @return A single-quoted character string: i.e., a filename
 #' understandable by drake.
 #' @param x character string to be turned into a filename
 #' understandable by drake (i.e., a string with literal

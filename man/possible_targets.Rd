@@ -10,7 +10,7 @@ possible_targets(plan = workplan())
 \item{plan}{workflow plan data frame}
 }
 \value{
-character vector of possible targets
+Character vector of possible targets given the workflow plan.
 }
 \description{
 internal function, returns the list of

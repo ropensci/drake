@@ -5,6 +5,8 @@
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{message_sink_hook}},
 #' \code{\link{output_sink_hook}}
+#' @return A function that you can supply to the \code{hook} argument
+#' of \code{\link{make}()}.
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' # Test out the silencer hook on its own.
@@ -31,6 +33,8 @@ silencer_hook <- function(code){
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{silencer_hook}},
 #' \code{\link{output_sink_hook}}
+#' @return A function that you can supply to the \code{hook} argument
+#' of \code{\link{make}()}.
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' # Test out the message sink hook on its own.
@@ -59,6 +63,8 @@ message_sink_hook <- function(code){
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{silencer_hook}},
 #' \code{\link{message_sink_hook}}
+#' @return A function that you can supply to the \code{hook} argument
+#' of \code{\link{make}()}.
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' # Test out the output sink hook on its own.
@@ -83,6 +89,8 @@ output_sink_hook <- function(code){
 #' @description a \code{hook} argument to \code{\link{make}()}
 #' for which no targets get built and no imports get resolved
 #' @export
+#' @return A function that you can supply to the \code{hook} argument
+#' of \code{\link{make}()}.
 #' @param code Placeholder for the code to build a target/import.
 #' For \code{empty_hook}, this code does not actually get executed.
 #' @examples
@@ -99,6 +107,8 @@ empty_hook <- function(code){
 #' @title Function default_hook
 #' @description The default \code{hook} argument to \code{\link{make}()}.
 #' @export
+#' @return A function that you can supply to the \code{hook} argument
+#' of \code{\link{make}()}.
 #' @param code Placeholder for the code to build a target/import.
 #' @examples
 #' \dontrun{

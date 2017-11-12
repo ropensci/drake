@@ -122,9 +122,9 @@ Makes all targets outdated, but keeps information about
 build progress in previous \code{\link{make}()}s.}
 }
 \value{
-a list of three data frames: one for nodes,
+A list of three data frames: one for nodes,
 one for edges, and one for
-the legend/key nodes. The list also contains the
+the legend nodes. The list also contains the
 default title of the graph.
 }
 \description{

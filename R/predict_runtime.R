@@ -28,6 +28,8 @@
 #'   from_scratch = TRUE
 #' )
 #' }
+#' @return A \code{lubridate} \code{Duration} object
+#' with the predicted runtime of the next \code{\link{make}()}.
 #' @param plan same as for \code{\link{make}}
 #' @param from_scratch logical, whether to predict a
 #' \code{\link{make}()} build from scratch or to
@@ -166,6 +168,9 @@ predict_runtime <- function(
 #'   digits = 4
 #' )
 #' }
+#'
+#' @return A data frame of times of the worst-case scenario
+#' rate-limiting targets in each parallelizable stage.
 #'
 #' @param plan same as for \code{\link{make}}
 #'

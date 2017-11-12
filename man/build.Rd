@@ -14,6 +14,9 @@ targets are up to date}
 
 \item{config}{internal configuration list}
 }
+\value{
+The value of the target right after it is built.
+}
 \description{
 Function to build a target.
 For internal use only.

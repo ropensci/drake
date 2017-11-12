@@ -10,6 +10,7 @@
 #' in that the graph includes both the targets and the imports,
 #' not just the imports.
 #' @export
+#' @return The master internal configuration list of a project.
 #' @seealso \code{\link{workplan}}, \code{\link{make}}, \code{\link{plot_graph}}
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
@@ -135,6 +136,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' For internal use only.
 #' the only reason this function is exported
 #' is to set up PSOCK clusters efficiently.
+#' @return Inivisibly returns \code{NULL}.
 #' @param config internal configuration list
 #' @param verbose_packages logical, whether to print
 #' package startup messages
@@ -154,12 +156,14 @@ do_prework <- function(config, verbose_packages) {
     base::suppressPackageStartupMessages)
   for (code in config$prework) wrapper(eval(parse(text = code),
     envir = config$envir))
+  invisible()
 }
 
 quick_inventory <- function(config) {
   namespaces <- c(
     "kernels",
-    "mtimes"
+    "mtimes",
+    "readd"
   )
   do_inventory(namespaces = namespaces, config = config)
 }
@@ -183,7 +187,7 @@ do_inventory <- function(namespaces = cache_namespaces(), config){
 #' argument to \code{\link{make}()}.
 #' @seealso \code{\link{make}}
 #' @export
-#' @return character vector of possible targets
+#' @return Character vector of possible targets given the workflow plan.
 #' @param plan workflow plan data frame
 #' @examples
 #' \dontrun{

@@ -6,8 +6,11 @@
 \usage{
 default_cache_type()
 }
+\value{
+Default drake cache type.
+}
 \description{
-Name the default type of drake cache.
+Names the default type of drake cache.
 }
 \examples{
 default_cache_type()

@@ -13,6 +13,9 @@ supplying a long hash algorithm,
 \code{default_long_hash_algo(cache)} is the long
 hash algorithm that drake picks for you.}
 }
+\value{
+A character vector naming a hash algorithm.
+}
 \description{
 Hashing is advanced. Most users
 do not need to know about this function.

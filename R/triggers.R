@@ -2,6 +2,7 @@
 #' @export
 #' @seealso \code{\link{workplan}}, \code{\link{make}}
 #' @description List the available triggers.
+#' @return A character vector with the names of the available triggers.
 #' @details By default, \code{make()}
 #' builds targets that need updating and
 #' skips over the ones that are already up to date.

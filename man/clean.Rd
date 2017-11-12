@@ -47,6 +47,9 @@ the \code{path} and \code{search} arguments are ignored.}
 even though the project may not be back compatible with the
 current version of drake.}
 }
+\value{
+Invisibly return \code{NULL}.
+}
 \description{
 Cleans up all work done by \code{\link{make}()}.
 }

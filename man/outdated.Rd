@@ -49,6 +49,9 @@ which targets are up to date. If \code{FALSE}, the computation
 is faster, but all the relevant information is drawn from the cache
 and may be out of date.}
 }
+\value{
+Character vector of the names of outdated targets.
+}
 \description{
 Check which targets are out of date and need to be rebuilt.
 IMPORTANT: you must be in the root directory of your project.

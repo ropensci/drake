@@ -6,6 +6,9 @@
 \usage{
 default_cache_path()
 }
+\value{
+Default file path of the drake/storr cache.
+}
 \description{
 Return the default file path of the drake/storr cache.
 }

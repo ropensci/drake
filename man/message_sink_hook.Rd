@@ -9,6 +9,10 @@ message_sink_hook(code)
 \arguments{
 \item{code}{code to run to build the target.}
 }
+\value{
+A function that you can supply to the \code{hook} argument
+of \code{\link{make}()}.
+}
 \description{
 an example \code{hook} argument to
 \code{make()} that redirects error messages to files.

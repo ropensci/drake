@@ -14,6 +14,9 @@ run \code{\link{examples_drake}}.}
 \item{destination}{character scalar, file path, where
 to write the folder containing the code files for the example.}
 }
+\value{
+\code{NULL}
+}
 \description{
 Copy a folder of code files for a
 drake example to the current working directory.

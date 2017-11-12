@@ -46,6 +46,9 @@ Computing this
 in advance could save time if you plan multiple calls to
 \code{missed()}.}
 }
+\value{
+Character vector of names of missing objects and files.
+}
 \description{
 Report any import objects required by your workplan
 plan but missing from your workspace.

@@ -192,6 +192,12 @@ Ignored if \code{plan} has a \code{trigger} column.
 Must be in \code{\link{triggers}()}.
 See \code{?triggers} for explanations of the choices.}
 }
+\value{
+The master internal configuration list, mostly
+containing arguments to \code{make()} and important objects
+constructed along the way. See \code{\link{config}()}
+for more details.
+}
 \description{
 Run your project (build the targets).
 }

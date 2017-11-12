@@ -29,6 +29,9 @@ Ignored if \code{plan} has a \code{trigger} column.
 Must be in \code{\link{triggers}()}.
 See \code{?triggers} for explanations of the choices.}
 }
+\value{
+A character vector with the names of reproducibly-tracked targets.
+}
 \description{
 Print out which objects, functions, files, targets, etc.
 are reproducibly tracked.

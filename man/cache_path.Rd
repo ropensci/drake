@@ -10,6 +10,9 @@ cache_path(cache = NULL)
 \item{cache}{the cache whose file path
 you want to know}
 }
+\value{
+File path where the cache is stored.
+}
 \description{
 Returns the file path
 where the cache is stored. Currently

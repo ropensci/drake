@@ -10,6 +10,9 @@ knitr_deps(target)
 \item{target}{file path to the file or name of the file target,
 source text of the document.}
 }
+\value{
+A character vector of the names of dependencies.
+}
 \description{
 Find the dependencies of a dynamic report. To
 enable drake to watch for these dependencies, your workplan

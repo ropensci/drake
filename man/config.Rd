@@ -62,6 +62,9 @@ the cached progress of the targets readable by}
 
 \item{trigger}{same as for \code{\link{make}}}
 }
+\value{
+The master internal configuration list of a project.
+}
 \description{
 Compute the internal runtime parameter list of
 \code{\link{make}()}. This could save time if you are planning

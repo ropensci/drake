@@ -40,7 +40,8 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-Statuses of targets
+The build progress of each target reached by
+the current \code{\link{make}()} so far.
 }
 \description{
 Get the build progress (overall or individual targets)

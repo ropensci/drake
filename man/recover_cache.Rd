@@ -31,6 +31,9 @@ running version of drake.}
 
 \item{verbose}{logical, whether to print the file path of the cache.}
 }
+\value{
+A drake/storr cache.
+}
 \description{
 Load an existing drake files system cache if it exists
 and create a new one otherwise.

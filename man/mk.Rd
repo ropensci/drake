@@ -11,6 +11,9 @@ mk(target = character(0), cache_path = drake::default_cache_path())
 
 \item{cache_path}{path to the drake cache}
 }
+\value{
+\code{NULL}
+}
 \description{
 Internal drake function to be called
 inside Makefiles only. Makes a single target.

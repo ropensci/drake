@@ -12,7 +12,7 @@ understandable by drake (i.e., a string with literal
 single quotes on both ends).}
 }
 \value{
-a single-quoted character string: i.e., a filename
+A single-quoted character string: i.e., a filename
 understandable by drake.
 }
 \description{

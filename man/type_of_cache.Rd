@@ -2,12 +2,15 @@
 % Please edit documentation in R/cache_types.R
 \name{type_of_cache}
 \alias{type_of_cache}
-\title{experimental function type_of_cache}
+\title{Experimental function type_of_cache}
 \usage{
 type_of_cache(path = drake::default_cache_path())
 }
 \arguments{
-\item{path}{path to the cache}
+\item{path}{Path to the file system cache.}
+}
+\value{
+Type of the cache at the specified path.
 }
 \description{
 Try to get the type of a drake
@@ -26,6 +29,6 @@ load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # Get the type of the cache
 # located in the (default) '.drake' folder.
-type_of_cache(".drake")
+type_of_cache(".drake") # storr_rds
 }
 }

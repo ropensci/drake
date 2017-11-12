@@ -4,6 +4,7 @@
 #' @export
 #' @seealso \code{\link{missed}}, \code{\link{workplan}},
 #' \code{\link{make}}, \code{\link{plot_graph}}
+#' @return Character vector of the names of outdated targets.
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}. Overrides
@@ -101,6 +102,7 @@ outdated <-  function(
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
 #' @seealso \code{\link{outdated}}
+#' @return Character vector of names of missing objects and files.
 #'
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.

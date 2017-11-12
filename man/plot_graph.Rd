@@ -158,6 +158,9 @@ build progress in previous \code{\link{make}()}s.}
 \item{...}{other arguments passed to
 \code{visNetwork::visNetwork()} to plot the graph.}
 }
+\value{
+A visNetwork graph.
+}
 \description{
 Plot the dependency structure of your workplan.
 IMPORTANT: you must be in the root directory of your project.

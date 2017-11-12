@@ -13,6 +13,9 @@ supplying a short hash algorithm,
 \code{default_short_hash_algo(cache)} is the short
 hash algorithm that drake picks for you.}
 }
+\value{
+A character vector naming a hash algorithm.
+}
 \description{
 Hashing is advanced. Most users
 do not need to know about this function.

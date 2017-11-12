@@ -13,7 +13,7 @@ expand(plan, values = NULL)
 the names of the new targets.}
 }
 \value{
-an expanded workflow plan data frame
+An expanded workflow plan data frame (with replicated targets).
 }
 \description{
 Expands a workflow plan data frame by duplicating rows.

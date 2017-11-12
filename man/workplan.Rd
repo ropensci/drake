@@ -17,7 +17,7 @@ workplan(..., list = character(0), file_targets = FALSE,
 \item{strings_in_dots}{same as for \code{drake::\link{workplan}()}}
 }
 \value{
-data frame of targets and command
+A data frame of targets and commands.
 }
 \description{
 Turns a named collection of command/target pairs into

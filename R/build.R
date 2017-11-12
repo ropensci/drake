@@ -4,6 +4,7 @@
 #' For internal use only.
 #' the only reason this function is exported
 #' is to set up PSOCK clusters efficiently.
+#' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta_list list of metadata that tell which
 #' targets are up to date

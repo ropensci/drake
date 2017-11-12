@@ -7,7 +7,7 @@
 examples_drake()
 }
 \value{
-names of all the drake examples.
+Names of all the drake examples.
 }
 \description{
 List the names of all the drake examples.

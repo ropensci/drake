@@ -69,6 +69,10 @@ not the cache itself.}
 \item{search}{logical, whether to search back in the file system
 for the cache.}
 }
+\value{
+A data frame of times of the worst-case scenario
+rate-limiting targets in each parallelizable stage.
+}
 \description{
 Return a data frame of elapsed build times of
 the rate-limiting targets of a \code{\link{make}()} workplan.

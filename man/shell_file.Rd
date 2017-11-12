@@ -12,6 +12,10 @@ shell_file(path = "shell.sh", overwrite = FALSE)
 \item{overwrite}{logical, whether to overwrite a possible
 destination file with the same name}
 }
+\value{
+The return value of the call to \code{file.copy()} that
+wrote the shell file.
+}
 \description{
 Write an example \code{shell.sh} file required by
 \code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}

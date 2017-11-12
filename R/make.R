@@ -6,6 +6,10 @@
 #' \code{\link{default_hook}}, \code{\link{silencer_hook}},
 #' \code{\link{triggers}}
 #' @export
+#' @return The master internal configuration list, mostly
+#' containing arguments to \code{make()} and important objects
+#' constructed along the way. See \code{\link{config}()}
+#' for more details.
 #'
 #' @param plan workflow plan data frame.
 #' A workflow plan data frame is a data frame
@@ -291,6 +295,8 @@ make <- function(
 #' @description just make the imports
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{config}}
+#' @return The master internal configuration list
+#' used by \code{\link{make}()}.
 #' @param config a configuration list returned by \code{\link{config}()}
 #' @examples
 #' \dontrun{
@@ -304,7 +310,7 @@ make_imports <- function(config){
   config$graph <- delete_vertices(config$graph, v = delete_these)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
-  invisible()
+  invisible(config)
 }
 
 initialize_session <- function(config){

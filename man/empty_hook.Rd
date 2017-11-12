@@ -10,6 +10,10 @@ empty_hook(code)
 \item{code}{Placeholder for the code to build a target/import.
 For \code{empty_hook}, this code does not actually get executed.}
 }
+\value{
+A function that you can supply to the \code{hook} argument
+of \code{\link{make}()}.
+}
 \description{
 a \code{hook} argument to \code{\link{make}()}
 for which no targets get built and no imports get resolved

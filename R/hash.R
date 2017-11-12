@@ -1,6 +1,7 @@
 #' @title Function available_hash_algos
 #' @export
 #' @description List the available hash algorithms.
+#' @return A character vector of names of available hash algorithms.
 #' @examples
 #' available_hash_algos()
 available_hash_algos <- function(){
@@ -13,6 +14,7 @@ available_hash_algos <- function(){
 #' \code{\link{default_long_hash_algo}}
 #' @description Get the long hash algorithm of a drake cache.
 #' @details See \code{?\link{default_long_hash_algo}()}
+#' @return A character vector naming a hash algorithm.
 #' @param cache drake cache
 #' @param verbose whether to print console messages
 #' @examples
@@ -41,6 +43,7 @@ long_hash <- function(
 #' \code{\link{default_long_hash_algo}}
 #' @description Get the short hash algorithm of a drake cache.
 #' @details See \code{?\link{default_long_hash_algo}()}
+#' @return A character vector naming a hash algorithm.
 #' @param cache drake cache
 #' @param verbose whether to print console messages
 #' @examples
@@ -93,6 +96,8 @@ short_hash <- function(
 #' On the other hand, some internal hashes in drake are
 #' never used as file names, and those hashes can use a longer hash
 #' to avoid collisions.
+#' 
+#' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
 #' When you \code{\link{configure_cache}(cache)} without
@@ -156,6 +161,8 @@ default_short_hash_algo <- function(cache = NULL) {
 #' On the other hand, some internal hashes in drake are
 #' never used as file names, and those hashes can use a longer hash
 #' to avoid collisions.
+#' 
+#' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
 #' When you \code{\link{configure_cache}(cache)} without

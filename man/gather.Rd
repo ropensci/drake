@@ -16,7 +16,8 @@ one of \code{\link{list}(...)}, \code{\link{c}(...)},
 \code{\link{rbind}(...)}, or similar.}
 }
 \value{
-workflow plan data frame for aggregating prespecified targets
+A workflow plan data frame that aggregates multiple
+prespecified targets into one additional target downstream.
 }
 \description{
 Create a new workflow plan data frame with a single new

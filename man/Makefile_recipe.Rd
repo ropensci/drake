@@ -21,6 +21,9 @@ with `$(DRAKE_CACHE)`. To simplify things for users who may
 be unfamiliar with Unix variables, the \code{recipe()} function
 just shows the literal path to the cache.}
 }
+\value{
+A character scalar with a Makefile recipe.
+}
 \description{
 See what your \code{Makefile} recipes
 will look like in advance.

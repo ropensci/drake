@@ -12,6 +12,8 @@
 #' \code{\link{failed}}, \code{\link{progress}},
 #' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
 #' @export
+#' @return Either a character vector of target names or an object
+#' of class \code{"error"}.
 #'
 #' @param target name of the target of the error to get.
 #' Can be a symbol if \code{character_only} is \code{FALSE},

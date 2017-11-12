@@ -23,7 +23,7 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-A character vector of target names
+A character vector of target names.
 }
 \description{
 List the targets that failed in the last call

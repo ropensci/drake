@@ -28,7 +28,7 @@ build times of the targets (exclude the imports).}
 \item{verbose}{whether to print console messages}
 }
 \value{
-data.frame of times from \code{\link{system.time}}
+A data frame of times, each from \code{\link{system.time}()}.
 }
 \description{
 List all the build times.

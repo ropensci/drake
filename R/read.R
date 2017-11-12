@@ -5,7 +5,7 @@
 #' \code{\link{built}}, \code{link{imported}}, \code{\link{workplan}},
 #' \code{\link{make}}
 #' @export
-#' @return drake target item from the cache
+#' @return The cached value of the \code{target}.
 #' @param target If \code{character_only} is \code{TRUE},
 #' \code{target} is a character string naming the object to read.
 #' Otherwise, \code{target} is an unquoted symbol with the name of the
@@ -61,6 +61,7 @@ readd <- function(
 #' @seealso \code{\link{cached}}, \code{\link{built}},
 #' \code{\link{imported}}, \code{\link{workplan}}, \code{\link{make}},
 #' @export
+#' @return \code{NULL}
 #'
 #' @param ... targets to load from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in
@@ -158,7 +159,8 @@ load_target <- function(target, cache, envir, verbose){
 #' These include the workflow plan
 #' @seealso \code{\link{make}}
 #' @export
-#' @return a named list of configuration items
+#' @return The cached master internal configuration list
+#' of the last \code{\link{make}()}.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
@@ -199,7 +201,7 @@ read_config <- function(path = getwd(), search = TRUE,
 #' from your last attempted call to \code{\link{make}()}.
 #' @seealso \code{\link{read_config}}
 #' @export
-#' @return a workflow plan data frame
+#' @return A workflow plan data frame.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
@@ -230,8 +232,8 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' and related functions.
 #' @seealso \code{\link{plot_graph}}, \code{\link{read_config}}
 #' @export
-#' @return either a plot or an igraph object, depending
-#' on \code{plot}
+#' @return An \code{igraph} object representing the dependency
+#' network of the workflow.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.

@@ -6,6 +6,9 @@
 \usage{
 default_recipe_command()
 }
+\value{
+A character scalar with the default recipe command.
+}
 \description{
 Gives the default
 recipe command for Makefile parallelism.

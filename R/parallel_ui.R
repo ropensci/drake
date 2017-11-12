@@ -97,7 +97,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
 #' for other platforms.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{shell_file}}
-#' @return default parallelism option for the current platform
+#' @return The default parallelism option for your system.
 #' @examples
 #' default_parallelism()
 default_parallelism <- function() {
@@ -116,8 +116,8 @@ default_parallelism <- function() {
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
 #'
-#' @return a list of three data frames: one for nodes, one for edges,
-#' and one for the legend/key nodes.
+#' @return A numeric scalar, the maximum number of useful jobs for
+#' \code{\link{make}(..., jobs = ...)}.
 #'
 #' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}},
 #' \code{\link{shell_file}}
@@ -295,6 +295,8 @@ max_useful_jobs <- function(
 #' @seealso \code{\link{make}}, \code{\link{max_useful_jobs}},
 #' \code{\link{parallelism_choices}}
 #' @export
+#' @return The return value of the call to \code{file.copy()} that
+#' wrote the shell file.
 #' @param path file path of the shell file
 #' @param overwrite logical, whether to overwrite a possible
 #' destination file with the same name

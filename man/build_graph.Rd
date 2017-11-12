@@ -28,6 +28,10 @@ Ignored if \code{plan} has a \code{trigger} column.
 Must be in \code{\link{triggers}()}.
 See \code{?triggers} for explanations of the choices.}
 }
+\value{
+An igraph object representing
+the workflow plan dependency network.
+}
 \description{
 Make a graph of the dependency structure of your workplan.
 }

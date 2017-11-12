@@ -21,7 +21,7 @@ check(plan = workplan(), targets = drake::possible_targets(plan),
 \item{verbose}{logical, whether to log progress to the console.}
 }
 \value{
-invisibly return \code{plan}
+Invisibly return \code{plan}.
 }
 \description{
 Check a workflow plan, etc. for obvious

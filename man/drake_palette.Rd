@@ -6,6 +6,10 @@
 \usage{
 drake_palette()
 }
+\value{
+There is a console message,
+but the actual return value is \code{NULL}.
+}
 \description{
 show color palette for drake.
 Used in both the console and \code{\link{plot_graph}()}

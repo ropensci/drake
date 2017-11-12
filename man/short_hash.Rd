@@ -11,6 +11,9 @@ short_hash(cache = drake::get_cache(verbose = verbose), verbose = verbose)
 
 \item{verbose}{whether to print console messages}
 }
+\value{
+A character vector naming a hash algorithm.
+}
 \description{
 Get the short hash algorithm of a drake cache.
 }

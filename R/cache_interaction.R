@@ -97,7 +97,7 @@ list_cache <- function(no_imported_objects, cache) {
 #' @seealso \code{\link{cached}}, \code{\link{loadd}},
 #' \code{link{imported}}
 #' @export
-#' @return list of imported objects in the cache
+#' @return Character vector naming the built targets in the cache.
 #' @param cache drake cache. See \code{\link{new_cache}()}.
 #' If supplied, \code{path} and \code{search} are ignored.
 #' @param path Root directory of the drake project,
@@ -135,7 +135,7 @@ built <- function(
 #' @seealso \code{\link{cached}}, \code{\link{loadd}},
 #' \code{\link{built}}
 #' @export
-#' @return character vector naming the imported objects in the cache
+#' @return Character vector naming the imports in the cache.
 #' @param files_only logical, whether to show imported files only
 #' and ignore imported objects. Since all your functions and
 #' all their global variables are imported, the full list of
@@ -212,7 +212,7 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the
 #' cache normally again.
-#' @return Invisibly returns the cache.
+#' @return The rescued drake/storr cache.
 #' @export
 #' @seealso \code{\link{get_cache}}, \code{\link{cached}}
 #' @param path same as for \code{\link{get_cache}()}

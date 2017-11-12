@@ -6,6 +6,9 @@
 \usage{
 r_recipe_wildcard()
 }
+\value{
+The R recipe wildcard.
+}
 \description{
 Gives the R recipe wildcard
 for Makefiles.

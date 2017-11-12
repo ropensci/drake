@@ -23,7 +23,8 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-a named list of configuration items
+The cached master internal configuration list
+of the last \code{\link{make}()}.
 }
 \description{
 Read all the configuration parameters

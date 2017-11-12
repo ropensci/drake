@@ -23,15 +23,20 @@ for the cache.}
 despite any back compatibility issues with the
 running version of drake.}
 }
+\value{
+A drake/storr cache, if available. \code{NULL} otherwise.
+}
 \description{
 Search for and return a drake file system cache.
 }
 \examples{
 \dontrun{
-get_cache()
-load_basic_example()
-make(my_plan)
-x <- get_cache()
+# No cache is available.
+get_cache() # NULL
+load_basic_example() # Load drake's canonical example.
+make(my_plan) # Run the project, build the targets.
+x <- get_cache() # Now, there is a cache.
+# List the objects readable from the cache with readd().
 x$list(namespace = "readd")
 }
 }

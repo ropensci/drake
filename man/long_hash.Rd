@@ -11,6 +11,9 @@ long_hash(cache = drake::get_cache(verbose = verbose), verbose = TRUE)
 
 \item{verbose}{whether to print console messages}
 }
+\value{
+A character vector naming a hash algorithm.
+}
 \description{
 Get the long hash algorithm of a drake cache.
 }

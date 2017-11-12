@@ -22,7 +22,7 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-list of imported objects in the cache
+Character vector naming the built targets in the cache.
 }
 \description{
 List all the built (non-imported) objects in the drake

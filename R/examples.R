@@ -6,6 +6,7 @@
 #' To see the names of all the examples, run \code{\link{examples_drake}}.
 #' @seealso \code{\link{examples_drake}}, \code{\link{make}}
 #' @export
+#' @return \code{NULL}
 #' @param example name of the example.
 #' To see all the available example names,
 #' run \code{\link{examples_drake}}.
@@ -39,7 +40,7 @@ example_drake <- function(
 #' quickstart vignette: \code{vignette('quickstart')}.
 #' @export
 #' @seealso \code{\link{example_drake}}, \code{\link{make}}
-#' @return names of all the drake examples.
+#' @return Names of all the drake examples.
 #' @examples
 #' \dontrun{
 #' examples_drake() # List all the drake examples.

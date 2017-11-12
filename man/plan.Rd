@@ -30,7 +30,7 @@ Because of R's automatic parsing/deparsing behavior,
 strings in \code{...} cannot simply be left alone.}
 }
 \value{
-data frame of targets and command
+A data frame of targets and commands.
 }
 \description{
 Turns a named collection of command/target pairs into

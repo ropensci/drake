@@ -11,7 +11,7 @@
 #' not \code{NULL}. Here, \code{rules} should be a list with wildcards
 #' as names and vectors of possible values as list elements.
 #' @export
-#' @return a workflow plan data frame with the wildcards evaluated
+#' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan workflow plan data frame, similar to one produced by
 #' \code{ink{workplan}}
@@ -130,7 +130,7 @@ evaluations <- function(
 #' @description Expands a workflow plan data frame by duplicating rows.
 #' This generates multiple replicates of targets with the same commands.
 #' @export
-#' @return an expanded workflow plan data frame
+#' @return An expanded workflow plan data frame (with replicated targets).
 #' @param plan workflow plan data frame
 #' @param values values to expand over. These will be appended to
 #' the names of the new targets.
@@ -160,7 +160,8 @@ expand <- function(plan, values = NULL){
 #' target. This new target is a list, vector, or other aggregate of
 #' a collection of existing targets in another workflow plan data frame.
 #' @export
-#' @return workflow plan data frame for aggregating prespecified targets
+#' @return A workflow plan data frame that aggregates multiple
+#' prespecified targets into one additional target downstream.
 #' @param plan workflow plan data frame of prespecified targets
 #' @param target name of the new aggregated target
 #' @param gather function used to gather the targets. Should be
@@ -199,7 +200,7 @@ gather <- function(
 #' @seealso \code{\link{summaries}},
 #'  \code{\link{make}}, \code{\link{workplan}}
 #' @export
-#' @return an evaluated workflow plan data frame of analysis instructions
+#' @return An evaluated workflow plan data frame of analysis targets.
 #' @param plan workflow plan data frame of analysis methods.
 #' The commands in the \code{command} column must
 #' have the \code{..dataset..} wildcard where the datasets go.
@@ -237,7 +238,7 @@ analyses <- function(plan, datasets){
 #' multiple analyses of multiple datasets multiple ways.
 #' @seealso \code{\link{analyses}}, \code{\link{make}}, \code{\link{workplan}}
 #' @export
-#' @return an evaluated workflow plan data frame of instructions
+#' @return An evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.
 #' analyses of multiple datasets in multiple ways.
 #' @param plan workflow plan data frame with commands for the summaries.

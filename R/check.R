@@ -4,7 +4,7 @@
 #' missing input files.
 #' @seealso \code{ink{workplan}}, \code{\link{make}}
 #' @export
-#' @return invisibly return \code{plan}
+#' @return Invisibly return \code{plan}.
 #' @param plan workflow plan data frame, possibly from
 #' \code{\link{workplan}()}.
 #' @param targets character vector of targets to make

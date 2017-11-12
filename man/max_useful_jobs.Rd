@@ -88,8 +88,8 @@ is faster, but all the relevant information is drawn from the cache
 and may be out of date.}
 }
 \value{
-a list of three data frames: one for nodes, one for edges,
-and one for the legend/key nodes.
+A numeric scalar, the maximum number of useful jobs for
+\code{\link{make}(..., jobs = ...)}.
 }
 \description{
 Get the maximum number of useful jobs in the next call

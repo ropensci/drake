@@ -9,6 +9,10 @@ default_hook(code)
 \arguments{
 \item{code}{Placeholder for the code to build a target/import.}
 }
+\value{
+A function that you can supply to the \code{hook} argument
+of \code{\link{make}()}.
+}
 \description{
 The default \code{hook} argument to \code{\link{make}()}.
 }

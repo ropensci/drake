@@ -9,6 +9,7 @@
 #' \code{knitr::knit()}.
 #' That is, it must look something like \code{knit('your_report.Rmd')}
 #' in your workflow plan data frame.
+#' @return A character vector of the names of dependencies.
 #' @details Drake looks for dependencies in the document by
 #' analyzing evaluated code chunks for other targets/imports
 #' mentioned in \code{\link{loadd}()} and \code{\link{readd}()}.

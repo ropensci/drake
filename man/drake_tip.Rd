@@ -6,6 +6,9 @@
 \usage{
 drake_tip()
 }
+\value{
+A character scalar with a tip on how to use drake.
+}
 \description{
 Output a random tip about drake.
 Tips are usually related to news and usage.

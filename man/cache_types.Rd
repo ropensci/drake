@@ -6,6 +6,9 @@
 \usage{
 cache_types()
 }
+\value{
+Character vector naming the supported cache types.
+}
 \description{
 List the supported drake cache types.
 }

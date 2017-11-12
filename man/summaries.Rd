@@ -22,7 +22,7 @@ rows in the \code{plan}. See the \code{\link{gather}()} function
 for more.}
 }
 \value{
-an evaluated workflow plan data frame of instructions
+An evaluated workflow plan data frame of instructions
 for computing summaries of analyses and datasets.
 analyses of multiple datasets in multiple ways.
 }

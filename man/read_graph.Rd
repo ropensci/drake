@@ -25,8 +25,8 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{...}{arguments to \code{visNetwork()} via \code{\link{plot_graph}()}}
 }
 \value{
-either a plot or an igraph object, depending
-on \code{plot}
+An \code{igraph} object representing the dependency
+network of the workflow.
 }
 \description{
 Read the igraph-style dependency graph of your targets

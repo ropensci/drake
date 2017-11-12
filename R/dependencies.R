@@ -11,8 +11,9 @@
 #' @export
 #' @param x Either a function or a string.
 #' Strings are commands from your workflow plan data frame.
-#' @return names of dependencies. Files wrapped in single quotes.
-#' The other names listed are functions or generic objects.
+#' @return A character vector, names of dependencies.
+#' Files wrapped in single quotes.
+#' The other names listed are functions or generic R objects.
 #' @examples
 #' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y){
@@ -61,6 +62,8 @@ deps <- function(x){
 #' of the returned list should agree: for example,
 #' \code{cached_dependency_hash} and
 #' \code{current_dependency_hash}.
+#' @return A list of information that drake takes into account
+#' when examining the dependencies of the target.
 #' @export
 #' @seealso \code{\link{deps}}, \code{\link{make}},
 #' \code{\link{config}}

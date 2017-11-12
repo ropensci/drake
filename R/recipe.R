@@ -4,6 +4,7 @@
 #' \code{\link{r_recipe_wildcard}}, \code{\link{make}}
 #' @description See what your \code{Makefile} recipes
 #' will look like in advance.
+#' @return A character scalar with a Makefile recipe.
 #'
 #' @param recipe_command The Makefile recipe command.
 #' See \code{\link{default_recipe_command}()}.
@@ -86,6 +87,7 @@ Makefile_recipe <- function( # nolint
 #' recipe command for Makefile parallelism.
 #' @details See the help file of \code{\link{Makefile_recipe}}
 #' for details and examples.
+#' @return A character scalar with the default recipe command.
 #' @examples
 #' default_recipe_command()
 default_recipe_command <- function(){
@@ -99,6 +101,7 @@ default_recipe_command <- function(){
 #' for Makefiles.
 #' @details See the help file of \code{\link{Makefile_recipe}}
 #' for details and examples.
+#' @return The R recipe wildcard.
 #' @examples
 #' r_recipe_wildcard()
 r_recipe_wildcard <- function(){

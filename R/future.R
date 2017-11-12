@@ -28,6 +28,7 @@ worker_future_lapply <- function(targets, meta_list, config){
 #' the same as \code{future::plan()}.
 #' We provide it only because \code{workplan()} conflicts
 #' with \code{future::plan()}.
+#' @return The same return value as \code{future::plan()}.
 #' @param ... arguments to \code{future::plan()}.
 #' @examples
 #' \dontrun{

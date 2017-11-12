@@ -23,7 +23,7 @@ rescue_cache(path = getwd(), search = TRUE, verbose = TRUE,
 (disabled on Windows)}
 }
 \value{
-Invisibly returns the cache.
+The rescued drake/storr cache.
 }
 \description{
 Sometimes, \code{storr} caches may have

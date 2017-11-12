@@ -33,7 +33,7 @@ is replaced with the next entry in the \code{values} vector,
 and the values are recycled.}
 }
 \value{
-a workflow plan data frame with the wildcards evaluated
+A workflow plan data frame with the wildcards evaluated.
 }
 \description{
 The commands in workflow plan data frames can have

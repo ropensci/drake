@@ -9,6 +9,9 @@ backend(...)
 \arguments{
 \item{...}{arguments to \code{future::plan()}.}
 }
+\value{
+The same return value as \code{future::plan()}.
+}
 \description{
 Select the specific \code{future}-style
 parallel backend for \code{make(..., parallelism = "future_lapply")}.

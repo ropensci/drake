@@ -70,6 +70,10 @@ not the cache itself.}
 \item{search}{logical, whether to search back in the file system
 for the cache.}
 }
+\value{
+A \code{lubridate} \code{Duration} object
+with the predicted runtime of the next \code{\link{make}()}.
+}
 \description{
 Predict the elapsed runtime of the next call to `make()`.
 This function simply sums the elapsed build times.

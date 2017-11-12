@@ -27,6 +27,9 @@ See \code{\link{default_long_hash_algo}()} and
 
 \item{...}{other arguments to the cache constructor}
 }
+\value{
+A newly created drake cache as a storr object.
+}
 \description{
 Make a new drake cache. Could be any
 type of cache in \code{\link{cache_types}()}.
@@ -36,11 +39,11 @@ type of cache in \code{\link{cache_types}()}.
 cache1 <- new_cache() # Creates a new hidden '.drake' folder.
 cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 }
-e <- new.env()
-ls(e)
+# Create a storr_environment() cache from a custom environment.
+e <- new.env() # Create a new environment.
+ls(e) # Emtpy.
 y <- new_cache(type = "storr_environment", envir = e)
-ls(e)
-ls(e)
+ls(e) # Storr populates the environment for use in an in-memory cache.
 }
 \seealso{
 \code{\link{default_short_hash_algo}},

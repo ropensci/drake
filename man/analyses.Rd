@@ -18,7 +18,7 @@ the commands in the output will include \code{lm(your_dataset_1)},
 to make the datasets.}
 }
 \value{
-an evaluated workflow plan data frame of analysis instructions
+An evaluated workflow plan data frame of analysis targets.
 }
 \description{
 Generate a workflow plan data frame to

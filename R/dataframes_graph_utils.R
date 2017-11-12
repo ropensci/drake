@@ -268,6 +268,7 @@ subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
 #' the colors and shapes mean
 #' in \code{\link{plot_graph}()}.
 #' @param font_size font size of the node label text
+#' @return A data frame of legend nodes for \code{\link{plot_graph}()}.
 #' @examples
 #' \dontrun{
 #' # Show the legend nodes used in plot_graph().

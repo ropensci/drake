@@ -33,7 +33,7 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-drake target item from the cache
+The cached value of the \code{target}.
 }
 \description{
 Read a drake target object from the cache.

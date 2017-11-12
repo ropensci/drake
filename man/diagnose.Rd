@@ -31,6 +31,10 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{verbose}{whether to print console messages}
 }
+\value{
+Either a character vector of target names or an object
+of class \code{"error"}.
+}
 \description{
 Get the last stored error of a target
 that failed to build. This target could be a

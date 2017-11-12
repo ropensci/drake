@@ -7,6 +7,8 @@
 #' \code{\link{plot_graph}()} from the start.
 #' @seealso \code{\link{plot_graph}}
 #' @export
+#' @return An igraph object representing
+#' the workflow plan dependency network.
 #'
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
@@ -114,6 +116,7 @@ build_graph <- function(
 #' @description Print out which objects, functions, files, targets, etc.
 #' are reproducibly tracked.
 #' @export
+#' @return A character vector with the names of reproducibly-tracked targets.
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
 #' @param targets names of targets to build, same as for function

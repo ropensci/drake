@@ -87,6 +87,7 @@ build_recipe <- function(target, recipe_command,
 #' inside Makefiles only. Makes a single target.
 #' Users should not need to invoke this function directly.
 #' @export
+#' @return \code{NULL}
 #' @param target name of target to make
 #' @param cache_path path to the drake cache
 #' @examples
@@ -145,6 +146,8 @@ default_Makefile_args <- function(jobs, verbose){
 #' @description Give the default \code{command}
 #' argument to \code{\link{make}()}. Relevant for
 #' \code{"Makefile"} parallelism only.
+#' @return A character scalar naming a Linux/Unix command
+#' to run a Makefile.
 #' @export
 #' @examples
 #' default_Makefile_command()

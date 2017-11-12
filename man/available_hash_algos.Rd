@@ -6,6 +6,9 @@
 \usage{
 available_hash_algos()
 }
+\value{
+A character vector of names of available hash algorithms.
+}
 \description{
 List the available hash algorithms.
 }

@@ -9,6 +9,10 @@ make_imports(config)
 \arguments{
 \item{config}{a configuration list returned by \code{\link{config}()}}
 }
+\value{
+The master internal configuration list
+used by \code{\link{make}()}.
+}
 \description{
 just make the imports
 }

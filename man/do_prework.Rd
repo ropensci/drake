@@ -12,6 +12,9 @@ do_prework(config, verbose_packages)
 \item{verbose_packages}{logical, whether to print
 package startup messages}
 }
+\value{
+Inivisibly returns \code{NULL}.
+}
 \description{
 Run the \code{prework} of a \code{\link{make}()}.
 For internal use only.

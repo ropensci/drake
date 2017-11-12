@@ -2,9 +2,9 @@
 #' @description Get the information about nodes, edges, and the legend/key
 #' so you can plot your own custom \code{visNetwork}.
 #' @export
-#' @return a list of three data frames: one for nodes,
+#' @return A list of three data frames: one for nodes,
 #' one for edges, and one for
-#' the legend/key nodes. The list also contains the
+#' the legend nodes. The list also contains the
 #' default title of the graph.
 #' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}}
 #' @param plan workflow plan data frame, same as for function

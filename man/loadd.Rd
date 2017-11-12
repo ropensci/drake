@@ -42,6 +42,9 @@ just set jobs to be an integer greater than 1. On Windows,
 
 \item{verbose}{whether to print console messages}
 }
+\value{
+\code{NULL}
+}
 \description{
 Load object(s) from the drake cache into the
 current workspace (or \code{envir} if given). Defaults

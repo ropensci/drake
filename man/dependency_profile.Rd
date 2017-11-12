@@ -12,6 +12,10 @@ dependency_profile(target, config)
 \item{config}{configuration list output by
 \code{\link{config}} or \code{\link{make}}}
 }
+\value{
+A list of information that drake takes into account
+when examining the dependencies of the target.
+}
 \description{
 Return the detailed dependency profile
 of the target. Useful for debugging.

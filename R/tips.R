@@ -2,6 +2,7 @@
 #' @description Output a random tip about drake.
 #' Tips are usually related to news and usage.
 #' @export
+#' @return A character scalar with a tip on how to use drake.
 #' @examples
 #' drake_tip() # Show a tip about using drake.
 #' message(drake_tip()) # Print out a tip as a message.

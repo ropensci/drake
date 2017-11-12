@@ -12,6 +12,7 @@
 #' if you're sure you won't lose anything important.
 #' @seealso \code{\link{prune}}, \code{\link{make}},
 #' @export
+#' @return Invisibly return \code{NULL}.
 #'
 #' @param ... targets to remove from the cache, as names (unquoted)
 #' or character strings (quoted). Similar to \code{...} in

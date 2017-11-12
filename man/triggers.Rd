@@ -6,6 +6,9 @@
 \usage{
 triggers()
 }
+\value{
+A character vector with the names of the available triggers.
+}
 \description{
 List the available triggers.
 }
