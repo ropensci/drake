@@ -25,6 +25,9 @@ Same as for \code{\link{check_plan}()}.
 \description{
 Use \code{\link{check_plan}()} instead.
 }
+\details{
+Deprecated on 2017-11-12.
+}
 \examples{
 \dontrun{
 default_system2_args(jobs = 1, verbose = TRUE)

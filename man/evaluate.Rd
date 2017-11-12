@@ -2,8 +2,12 @@
 % Please edit documentation in R/deprecate.R
 \name{evaluate}
 \alias{evaluate}
+\alias{evaluate}
 \title{Deprecated function evaluate}
 \usage{
+evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
+  expand = TRUE)
+
 evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
   expand = TRUE)
 }
@@ -17,16 +21,38 @@ evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
 \item{values}{Same as for \code{\link{evaluate_plan}}}
 
 \item{expand}{Same as for \code{\link{evaluate_plan}}}
+
+\item{plan}{Same as for \code{\link{evaluate_plan}}}
+
+\item{rules}{Same as for \code{\link{evaluate_plan}}}
+
+\item{wildcard}{Same as for \code{\link{evaluate_plan}}}
+
+\item{values}{Same as for \code{\link{evaluate_plan}}}
+
+\item{expand}{Same as for \code{\link{evaluate_plan}}}
 }
 \value{
+Same as for \code{\link{evaluate_plan}}
+
 Same as for \code{\link{evaluate_plan}}
 }
 \description{
 Use \code{\link{evaluate_plan}()} instead.
+
+Use \code{\link{evaluate_plan}()} instead.
+}
+\details{
+Deprecated on 2017-11-12.
+
+Deprecated on 2017-11-12.
 }
 \examples{
 # See ?evaluate_plan for examples.
+# See ?evaluate_plan for examples.
 }
 \seealso{
+\code{\link{evaluate_plan}}
+
 \code{\link{evaluate_plan}}
 }

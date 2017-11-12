@@ -187,7 +187,7 @@ dependency_profile()
 in_progress()
 progress()
 rescue_cache()
-session()
+drake_session()
 ```
 
 # Reproducibility 

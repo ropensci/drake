@@ -2,9 +2,6 @@ drake_context("deprecation")
 
 test_with_dir("deprecation: make()", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
-  plan <- data.frame(code = 1:2, output = c("x", "y"))
-  expect_warning(make(plan, verbose = FALSE))
-  expect_warning(make(plan, verbose = FALSE))
   expect_warning(make(workplan(x = 1), return_config = TRUE,
     verbose = FALSE))
   expect_warning(make(workplan(x = 1), clear_progress = TRUE,
@@ -15,9 +12,8 @@ test_with_dir("deprecation: cache functions", {
   plan <- workplan(x = 1)
   expect_silent(make(plan, verbose = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
-  expect_warning(status())
   expect_equal(cached(), "x")
-  expect_warning(prune(plan[1, ]))
+  expect_warning(session())
 })
 
 test_with_dir("workplan deprecation", {

@@ -8,41 +8,26 @@ plan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{commands named by the targets they generate.
-Recall that drake uses single quotes to denote external files
-and double-quoted strings as ordinary strings.
-Use the \code{strings_in_dots} argument to control the
-quoting in \code{...}.}
+\item{...}{}
 
-\item{list}{character vector of commands named
-by the targets they generate.}
+\item{list}{Same as for \code{\link{workplan}()}.}
 
-\item{file_targets}{logical. If \code{TRUE}, targets are single-quoted
-to tell drake that these are external files that should be expected
-as output in the next call to \code{\link{make}()}.}
+\item{file_targets}{Same as for \code{\link{workplan}()}.}
 
-\item{strings_in_dots}{character scalar. If \code{"filenames"},
-all character strings in \code{...} will be treated as names of file
-dependencies (single-quoted). If \code{"literals"}, all
-character strings in \code{...} will be treated as ordinary
-strings, not dependencies of any sort (double-quoted).
-Because of R's automatic parsing/deparsing behavior,
-strings in \code{...} cannot simply be left alone.}
+\item{strings_in_dots}{Same as for \code{\link{workplan}()}.}
 }
 \value{
 A data frame of targets and commands.
 }
 \description{
-Turns a named collection of command/target pairs into
-a workflow plan data frame for \code{\link{make}} and
-\code{\link{check}}. Deprecated in favor of
-\code{\link{workplan}()} due to a name conflict with
-\code{future::plan()}.
+Use \code{\link{workplan}()} instead.
+}
+\details{
+Deprecated on 2017-10.
 }
 \examples{
 # See ?workplan for examples.
 }
 \seealso{
-\code{\link{workplan}}, \code{\link{make}},
-\code{\link{check}}
+\code{\link{workplan}}
 }

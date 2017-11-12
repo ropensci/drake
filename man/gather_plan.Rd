@@ -33,7 +33,9 @@ datasets <- workplan(
 gather_plan(datasets, target = "my_datasets")
 # This time, the new target just appends the rows of 'small' and 'large'
 # into a single matrix or data frame.
-gathered <- gather_plan(datasets, target = "aggregated_data", gather = "rbind")
+gathered <- gather_plan(
+  datasets, target = "aggregated_data", gather = "rbind"
+)
 gathered
 # For the complete workflow plan, row bind the pieces together.
 my_plan <- rbind(datasets, gathered)

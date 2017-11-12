@@ -20,7 +20,7 @@ test_with_dir("try to find a non-existent project", {
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
   expect_error(tmp <- read_config(search = FALSE))
-  expect_error(tmp <- session(search = FALSE))
+  expect_error(tmp <- drake_session(search = FALSE))
 })
 
 test_with_dir("try to rescue non-existent stuff", {
@@ -79,10 +79,9 @@ test_with_dir("cache functions work", {
   expect_true(n1 > n2 & n2 > 0)
 
   # find stuff in current directory session, progress
-  expect_true(is.list(session(search = FALSE)))
+  expect_true(is.list(drake_session(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
   expect_equal(in_progress(search = FALSE), character(0))
-  expect_warning(tmp <- status(search = FALSE))
   expect_warning(tmp <- progress(imported_files_only = TRUE))
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(
@@ -155,10 +154,9 @@ test_with_dir("cache functions work", {
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
   # progress, session
-  expect_true(is.list(session(search = TRUE, path = s)))
+  expect_true(is.list(drake_session(search = TRUE, path = s)))
   expect_equal(sort(names(progress(search = TRUE, path = s))),
     sort(all))
-  expect_warning(status(search = TRUE, path = s))
   expect_equal(sort(names(progress(no_imported_objects = TRUE,
     search = TRUE, path = s))), sort(c("'input.rds'", builds)))
   expect_equal(sort(progress(search = TRUE, path = s, bla, f,

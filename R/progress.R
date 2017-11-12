@@ -1,4 +1,4 @@
-#' @title Function \code{session}
+#' @title Function \code{drake_session}
 #' @description Load the \code{\link{sessionInfo}()}
 #' of the last call to \code{\link{make}()}.
 #' @seealso \code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
@@ -20,9 +20,9 @@
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
-#' session() # Retrieve the cached sessionInfo() of the last make().
+#' drake_session() # Retrieve the cached sessionInfo() of the last make().
 #' }
-session <- function(path = getwd(), search = TRUE,
+drake_session <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = TRUE
 ){

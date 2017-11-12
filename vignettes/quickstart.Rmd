@@ -299,7 +299,7 @@ imported()
 head(read_plan())
 head(progress()) # See also in_progress()
 progress(large)
-session() # of the last call to make()
+drake_session() # of the last call to make()
 ```
 
 The next time you run `make(my_plan)`, nothing will be built because drake knows everything is up to date.

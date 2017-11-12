@@ -63,11 +63,8 @@ test_with_dir("plan set 4", {
 
 test_with_dir("workplan() trims outer whitespace in target names", {
   x <- workplan(list = c(` a` = 1, `b \t\n` = 2))
-  y <- x
-  y$output <- y$target
-  y$target <- NULL
-  z <- workplan(a = 1, b = 2)
-  expect_equal(x$target, y$output, z$target)
+  y <- workplan(a = 1, b = 2)
+  expect_equal(x$target, y$target)
 })
 
 test_with_dir("make() and check_plan() trim outer whitespace in target names", {

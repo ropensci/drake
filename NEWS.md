@@ -10,6 +10,14 @@
 - Document timeouts and retries in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 - Add a new `graph` argument to functions `make()`, `outdated()`, and `missed()`.
 - Export a new `prune_graph()` function for igraph objects.
+- Delete long-deprecated functions `prune()` and `status()`.
+- Deprecate and rename functions:
+    - `check()` => `check_plan()`
+    - `evaluate()` => `evaluate_plan()`
+    - `expand()` => `expand_plan()`
+    - `gather()` => `gather_plan()`
+    - `session()` => `drake_session()`
+- Disallow `output` and `code` as names in the workflow plan data frame. Use `target` and `command` instead. This naming switch has been formally deprecated for several months prior.
 
 # Changes in release 4.4.0
 

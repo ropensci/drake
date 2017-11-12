@@ -30,7 +30,7 @@ Versions `drake` after 4.4.0 have different caching internals that increase spee
 
 1. Revert to a back-compatible version of drake with `devtools::install_version("drake", "4.4.0")`. Here, the [devtools package](https://github.com/hadley/devtools) must be installed (`install.packages("devtools")`).
 1. Run your project from scratch with `make(..., force = TRUE)`
-1. Use `migrate()` to convert your project to the new format. The `migrate()` function
+1. Use `migrate_drake_project()` to convert your project to the new format. The `migrate_drake_project()` function
     1. copies your old project to a backup folder.
     1. converts your project's cache to a format compatible with 5.0.0.
     1. informs you if the migration succeeded: that is, if outdated targets remained outdated and up to date targets remained up to date in the conversion.
