@@ -6,6 +6,17 @@
 \usage{
 prune_graph(graph, to = igraph::V(graph)$name)
 }
+\arguments{
+\item{graph}{An igraph object to be pruned.}
+
+\item{to}{Character vector, names of the vertices that draw
+the line for pruning. The pruning process removes all vertices
+downstream of \code{to}.}
+}
+\value{
+A pruned igraph object representing the dependency network
+of the workflow.
+}
 \description{
 Prune an igraph object. Igraph objects are used
 internally to represent the dependency network of your workflow.

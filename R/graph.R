@@ -117,6 +117,12 @@ build_graph <- function(
 #' @details For a supplied graph, take the subgraph of all combined
 #' incoming paths to the vertices in \code{to}. In other words,
 #' remove the vertices after \code{to} from the graph.
+#' @return A pruned igraph object representing the dependency network
+#' of the workflow.
+#' @param graph An igraph object to be pruned.
+#' @param to Character vector, names of the vertices that draw
+#' the line for pruning. The pruning process removes all vertices
+#' downstream of \code{to}.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.
