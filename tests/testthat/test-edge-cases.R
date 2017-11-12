@@ -98,7 +98,7 @@ test_with_dir("deprecation", {
   expect_warning(drake::plan(x = y, file_targets = TRUE))
   expect_warning(drake::workflow())
   expect_warning(drake::workflow(x = y, file_targets = TRUE))
-  
+
   # We need to be able to set the drake version
   # to check back compatibility.
   x <- this_cache()
