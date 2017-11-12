@@ -15,6 +15,22 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
   )
 })
 
+test_with_dir("Supplied graph is pruned.", {
+  load_basic_example()
+  graph <- build_graph(my_plan)
+  con <- config(my_plan, targets = c("small", "large"), graph = graph)
+  vertices <- V(con$graph)$name
+  include <- c("small", "simulate", "data.frame", "rpois",
+    "stats::rnorm", "large")
+  exclude <- setdiff(my_plan$target, include)
+  expect_true(all(include %in% vertices))
+  expect_false(any(exclude %in% vertices))
+})
+
+test_with_dir("Supplied graph is not an igraph.", {
+  expect_error(prune_graph(12345, to = "node"))
+})
+
 test_with_dir("error handlers", {
   expect_equal(error_na(1), NA)
   expect_false(error_false(1))

@@ -113,6 +113,8 @@ config <- function(
     graph <- build_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs,
       skip_imports = skip_imports)
+  } else {
+    graph <- prune_graph(graph = graph, to = targets)
   }
   config <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,

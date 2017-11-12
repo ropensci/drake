@@ -116,6 +116,48 @@ dependency_profile <- function(target, config){
   out[!is.na(out)]
 }
 
+#' @title Function \code{tracked}
+#' @description Print out which objects, functions, files, targets, etc.
+#' are reproducibly tracked.
+#' @export
+#' @return A character vector with the names of reproducibly-tracked targets.
+#' @param plan workflow plan data frame, same as for function
+#' \code{\link{make}()}.
+#' @param targets names of targets to build, same as for function
+#' \code{\link{make}()}.
+#' @param envir environment to import from, same as for function
+#' \code{\link{make}()}.
+#' @param jobs number of jobs to accelerate the construction
+#' of the dependency graph. A light \code{mclapply}-based
+#' parallelism is used if your operating system is not Windows.
+#' @param verbose logical, whether to print
+#' progress messages to the console.
+#' @param skip_imports logical, whether to totally neglect to
+#' process the imports and jump straight to the targets. This can be useful
+#' if your imports are massive and you just want to test your project,
+#' but it is bad practice for reproducible data analysis.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example for drake.
+#' # List all the targets/imports that are reproducibly tracked.
+#' tracked(my_plan)
+#' }
+tracked <- function(
+  plan = workplan(),
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  jobs = 1,
+  verbose = TRUE,
+  skip_imports = FALSE
+){
+  force(envir)
+  graph <- build_graph(
+    plan = plan, targets = targets, envir = envir,
+    jobs = jobs, verbose = verbose, skip_imports = skip_imports
+  )
+  V(graph)$name
+}
+
 dependencies <- function(targets, config){
   adjacent_vertices(
     graph = config$graph,

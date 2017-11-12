@@ -49,7 +49,6 @@ check_config <- function(config) {
   assert_standard_columns(config = config)
   warn_bad_symbols(config$plan$target)
   parallelism_warnings(config = config)
-  check_graph(config = config)
 }
 
 assert_standard_columns <- function(config){
@@ -83,20 +82,6 @@ warn_bad_symbols <- function(x) {
   warning("Possibly bad target names:\n", multiline_message(bad),
     call. = FALSE)
   invisible()
-}
-
-check_graph <- function(config){
-  graph_nodes <- V(config$graph)$name %>%
-    sort
-  unlisted <- setdiff(config$targets, graph_nodes)
-  if (!length(unlisted)){
-    return()
-  }
-  warning(
-    "Targets requested but not in the workflow graph:\n",
-    multiline_message(unlisted),
-    call. = FALSE
-  )
 }
 
 check_strings <- function(plan) {

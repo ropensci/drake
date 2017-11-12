@@ -100,21 +100,67 @@ build_graph <- function(
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)
-  ignore <- lightly_parallelize(
-    targets,
-    function(vertex){
-      subcomponent(graph = graph, v = vertex, mode = "in")$name
-    },
-    jobs = jobs
-  ) %>%
-  unlist() %>%
-  unique() %>%
-  setdiff(x = vertices)
-  graph <- delete_vertices(graph, v = ignore)
+  graph <- prune_graph(graph = graph, to = targets)
   if (!is_dag(graph)){
     stop("Workflow is circular (chicken and egg dilemma).")
   }
   return(graph)
+}
+
+#' @title Function prune_graph
+#' @export
+#' @seealso \code{\link{build_graph}}, \code{\link{config}},
+#' \code{\link{make}}
+#' @description Prune an igraph object. Igraph objects are used
+#' internally to represent the dependency network of your workflow.
+#' See \code{\link{config}(my_plan)$graph} from the basic example.
+#' @details For a supplied graph, take the subgraph of all combined
+#' incoming paths to the vertices in \code{to}. In other words,
+#' remove the vertices after \code{to} from the graph.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example.
+#' # Build the igraph object representing the workflow dependency network.
+#' # You could also use config(my_plan)$graph
+#' graph <- build_graph(my_plan)
+#' # The default plotting is not the greatest,
+#' # but you will get the idea.
+#' plot(graph)
+#' # Prune the graph: that is, remove the nodes downstream
+#' # from 'small' and 'large'
+#' pruned <- prune_graph(graph = graph, to = c("small", "large"))
+#' plot(pruned)
+#' }
+prune_graph <- function(graph, to = igraph::V(graph)$name){
+  if (!inherits(graph, "igraph")){
+    stop(
+      "supplied graph must be an igraph object",
+      call. = FALSE
+    )
+  }
+  unlisted <- setdiff(to, V(graph)$name)
+  if (length(unlisted)){
+    warning(
+      "supplied targets not in the workflow graph:\n",
+      multiline_message(unlisted),
+      call. = FALSE
+    )
+    to <- setdiff(to, unlisted)
+  }
+  if (!length(to)){
+    warning(
+      "cannot prune graph: no valid destination vertices supplied",
+      call. = FALSE
+    )
+    return(graph)
+  }
+  igraph::make_ego_graph(
+    graph = graph,
+    order = length(igraph::V(graph)),
+    nodes = to,
+    mode = "in"
+  ) %>%
+    do.call(what = igraph::union)
 }
 
 filter_out_imports <- function(command_deps, plan, skip_imports, jobs){
@@ -128,48 +174,6 @@ filter_out_imports <- function(command_deps, plan, skip_imports, jobs){
     },
     jobs = jobs
   )
-}
-
-#' @title Function \code{tracked}
-#' @description Print out which objects, functions, files, targets, etc.
-#' are reproducibly tracked.
-#' @export
-#' @return A character vector with the names of reproducibly-tracked targets.
-#' @param plan workflow plan data frame, same as for function
-#' \code{\link{make}()}.
-#' @param targets names of targets to build, same as for function
-#' \code{\link{make}()}.
-#' @param envir environment to import from, same as for function
-#' \code{\link{make}()}.
-#' @param jobs number of jobs to accelerate the construction
-#' of the dependency graph. A light \code{mclapply}-based
-#' parallelism is used if your operating system is not Windows.
-#' @param verbose logical, whether to print
-#' progress messages to the console.
-#' @param skip_imports logical, whether to totally neglect to
-#' process the imports and jump straight to the targets. This can be useful
-#' if your imports are massive and you just want to test your project,
-#' but it is bad practice for reproducible data analysis.
-#' @examples
-#' \dontrun{
-#' load_basic_example() # Load the canonical example for drake.
-#' # List all the targets/imports that are reproducibly tracked.
-#' tracked(my_plan)
-#' }
-tracked <- function(
-  plan = workplan(),
-  targets = drake::possible_targets(plan),
-  envir = parent.frame(),
-  jobs = 1,
-  verbose = TRUE,
-  skip_imports = FALSE
-){
-  force(envir)
-  graph <- build_graph(
-    plan = plan, targets = targets, envir = envir,
-    jobs = jobs, verbose = verbose, skip_imports = skip_imports
-  )
-  V(graph)$name
 }
 
 assert_unique_names <- function(imports, targets, envir, verbose){
