@@ -1,3 +1,25 @@
+#' @title Function \code{future_backend}
+#' @description Use \code{\link{future_backend}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @seealso \code{\link{future_backend}}
+#' @return The same return value as \code{future::plan()}.
+#' @param ... Arguments to \code{future::plan()}.
+#' @examples
+#' # See ?future_backend for examples.
+backend <- function(...){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::backend() is deprecated",
+      "due to possible name conflicts.",
+      "Use future_backend() instead."
+    )
+  )
+  future::plan(...)
+}
+
 #' @title Deprecated function \code{check}
 #' @description Use \code{\link{check_plan}()} instead.
 #' @details Deprecated on 2017-11-12.

@@ -1,5 +1,9 @@
 drake_context("deprecation")
 
+test_with_dir("deprecation: future", {
+  expect_warning(backend())
+})
+
 test_with_dir("deprecation: make()", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   expect_warning(make(workplan(x = 1), return_config = TRUE,

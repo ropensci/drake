@@ -12,6 +12,7 @@
 - Export a new `prune_graph()` function for igraph objects.
 - Delete long-deprecated functions `prune()` and `status()`.
 - Deprecate and rename functions:
+    - `backend()` => `future_backend()`
     - `check()` => `check_plan()`
     - `evaluate()` => `evaluate_plan()`
     - `expand()` => `expand_plan()`
