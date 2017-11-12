@@ -28,8 +28,6 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
   expect_warning(
     make(
       plan = con$plan,
-      parallelism = con$parallelism,
-      jobs = con$jobs,
       envir = con$envir,
       graph = con2$graph,
       verbose = FALSE
