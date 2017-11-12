@@ -64,7 +64,8 @@ assert_standard_columns <- function(config){
 }
 
 missing_input_files <- function(config) {
-  missing_files <- next_targets(config$graph, jobs = config$jobs) %>%
+  missing_files <- V(config$graph)$name %>%
+    setdiff(y = config$plan$target) %>%
     Filter(f = is_file) %>%
     unquote %>%
     Filter(f = function(x) !file.exists(x))
