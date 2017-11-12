@@ -49,7 +49,7 @@
 #'   recipe_command = "R -e 'R_RECIPE' -q",
 #'   cache_path = "custom_cache"
 #' )
-#' default_recipe_command() # "Rscript -e 'R_RECIPE'"
+#' default_recipe_command() # "Rscript -e 'R_RECIPE'" # nolint
 #' r_recipe_wildcard() # "R_RECIPE"
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
