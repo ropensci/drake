@@ -28,6 +28,7 @@ analyses <- function(plan, datasets){
 #' @export
 #' @return The same return value as \code{future::plan()}.
 #' @param ... Arguments to \code{future::plan()}.
+#' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example
 #' # Choose future's multicore parallel backend.

@@ -7,15 +7,7 @@
 backend(...)
 }
 \arguments{
-\item{...}{Arguments to \code{future::plan()}.
-\dontrun{
-load_basic_example() # Load the canonical example
-# Choose future's multicore parallel backend.
-future::plan(multicore) # Instead of backend(). Avoid drake::plan().
-# Run the project, build the targets.
-# Future knows that you chose the multicore backend.
-make(my_plan, parallelism = "future_lapply")
-}}
+\item{...}{Arguments to \code{future::plan()}.}
 }
 \value{
 The same return value as \code{future::plan()}.
@@ -26,4 +18,14 @@ Avoid \code{drake::plan()}.
 }
 \details{
 Deprecated on 2017-11-12.
+}
+\examples{
+\dontrun{
+load_basic_example() # Load the canonical example
+# Choose future's multicore parallel backend.
+future::plan(multicore) # Instead of backend(). Avoid drake::plan().
+# Run the project, build the targets.
+# Future knows that you chose the multicore backend.
+make(my_plan, parallelism = "future_lapply")
+}
 }
