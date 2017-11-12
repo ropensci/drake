@@ -1,40 +1,14 @@
 drake_context("edge cases")
 
-test_with_dir("Supplied graph disagrees with the workflow plan", {
-  con <- dbug()
-  con2 <- config(workplan(a = 1), verbose = FALSE)
-  expect_warning(
-    make(
-      plan = con$plan,
-      parallelism = con$parallelism,
-      jobs = con$jobs,
-      envir = con$envir,
-      graph = con2$graph,
-      verbose = FALSE
-    )
-  )
-})
-
-test_with_dir("Supplied graph is pruned.", {
-  load_basic_example()
-  graph <- build_graph(my_plan)
-  con <- config(my_plan, targets = c("small", "large"), graph = graph)
-  vertices <- V(con$graph)$name
-  include <- c("small", "simulate", "data.frame", "rpois",
-    "stats::rnorm", "large")
-  exclude <- setdiff(my_plan$target, include)
-  expect_true(all(include %in% vertices))
-  expect_false(any(exclude %in% vertices))
-})
-
-test_with_dir("Supplied graph is not an igraph.", {
-  expect_error(prune_graph(12345, to = "node"))
-})
-
 test_with_dir("error handlers", {
   expect_equal(error_na(1), NA)
   expect_false(error_false(1))
   expect_equal(error_character0(1), character(0))
+})
+
+test_with_dir("error when file target names do not match actual filenames", {
+  x <- workplan(y = 1, file_targets = TRUE)
+  expect_warning(expect_error(make(x, verbose = FALSE)))
 })
 
 test_with_dir("deprecation", {
@@ -66,43 +40,6 @@ test_with_dir("deprecation", {
   expect_false("initial_drake_version" %in% x$list(namespace = "session"))
   set_initial_drake_version(cache = x)
   expect_true("initial_drake_version" %in% x$list(namespace = "session"))
-})
-
-test_with_dir("graph does not fail if input file is binary", {
-  x <- workplan(y = readRDS("input.rds"))
-  saveRDS(as.list(mtcars), "input.rds")
-  expect_silent(out <- plot_graph(x, verbose = FALSE))
-  unlink("input.rds", force = TRUE)
-})
-
-test_with_dir("null graph", {
-  x <- dataframes_graph(config = list(graph = igraph::make_empty_graph()))
-  expect_equal(x, null_graph())
-})
-
-test_with_dir("illegal hashes", {
-  x <- workplan(a = 1)
-  expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))
-  expect_error(make(x, long_hash_algo = "no_such_algo_aslkdjfoiewlk"))
-})
-
-test_with_dir("different graphical arrangements for distributed parallelism", {
-  e <- new.env()
-  x <- workplan(a = 1, b = f(2))
-  e$f <- function(x) x
-  con <- config(x, envir = e, verbose = FALSE)
-  expect_equal(1, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "mclapply", jobs = 1))
-  expect_equal(1, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "parLapply", jobs = 1))
-  con$parallelism <- "Makefile"
-  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "Makefile", jobs = 1))
-  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "future_lapply", jobs = 1))
-  y <- workplan(a = 1, b = 2)
-  tmp <- dataframes_graph(y, parallelism = "Makefile", verbose = FALSE)
-  expect_true(is.list(tmp))
 })
 
 test_with_dir("Vectorized nested functions work", {
@@ -157,12 +94,6 @@ test_with_dir("stringsAsFactors can be TRUE", {
   expect_equal(readd(a), "helloworld")
 })
 
-test_with_dir("circular non-DAG workplans quit in error", {
-  p <- workplan(a = b, b = c, c = a)
-  expect_error(tmp <- capture.output(check(p)))
-  expect_error(make(p, verbose = FALSE))
-})
-
 # Target/import conflicts are unpredictable. A warning should
 # be enough.
 test_with_dir("target conflicts with current import or another target", {
@@ -210,56 +141,4 @@ test_with_dir("true targets can be functions", {
   )
   myfunction <- readd(myfunction)
   expect_equal(myfunction(4), 5)
-})
-
-test_with_dir("error when file target names do not match actual filenames", {
-  x <- workplan(y = 1, file_targets = TRUE)
-  expect_warning(expect_error(make(x, verbose = FALSE)))
-})
-
-test_with_dir("stress test hashing decisions", {
-  file <- "input.rds"
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
-})
-
-test_with_dir("more stress testing of hashing decisions", {
-  file <- "input.rds"
-  saveRDS(1, file = file)
-  expect_true(file.exists(file))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
-  expect_false(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
-  expect_false(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
-})
-
-test_with_dir("stress test file hash", {
-  load_basic_example()
-  con <- config(my_plan, verbose = FALSE)
-  make_imports(con)
-  expect_true(is.character(file_hash("'report.Rmd'", config = con, 0)))
-  expect_true(is.character(file_hash("'report.Rmd'", config = con, Inf)))
-})
-
-test_with_dir("parallelism not found for testrun()", {
-  config <- list(parallelism = "not found")
-  expect_error(testrun(config))
 })

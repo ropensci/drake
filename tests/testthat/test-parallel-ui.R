@@ -1,5 +1,10 @@
 drake_context("parallel UI")
 
+test_with_dir("parallelism not found for testrun()", {
+  config <- list(parallelism = "not found")
+  expect_error(testrun(config))
+})
+
 test_with_dir("parallelism_choices", {
   expect_true(
     length(parallelism_choices(distributed_only = TRUE)) <
