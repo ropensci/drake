@@ -50,13 +50,13 @@ test_with_dir("generative templating deprecation", {
     small = simulate(5),
     large = simulate(50))
   methods <- workplan(
-    regression1 = reg1(..dataset..),
-    regression2 = reg2(..dataset..))
+    regression1 = reg1(..dataset..), # nolint
+    regression2 = reg2(..dataset..)) # nolint
   expect_warning(
     analyses <- analyses(methods, datasets = datasets))
   summary_types <- workplan(
-    summ = summary(..analysis..),
-    coef = coefficients(..analysis..))
+    summ = summary(..analysis..), # nolint
+    coef = coefficients(..analysis..)) # nolint
   expect_warning(
     summaries(summary_types, analyses, datasets))
 })
