@@ -6,7 +6,7 @@ library(future.batchtools)
 library(drake)
 
 # Use backend(multicore) instead for a dry run.
-backend(batchtools_torque(template = "torque.tmpl"))
+future_backend(batchtools_torque(template = "torque.tmpl"))
 
 load_basic_example()
 make(
