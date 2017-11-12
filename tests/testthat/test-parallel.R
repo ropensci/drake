@@ -1,4 +1,4 @@
-drake_context("parallel UI")
+drake_context("parallel")
 
 test_with_dir("parallelism not found for testrun()", {
   config <- list(parallelism = "not found")
@@ -9,6 +9,17 @@ test_with_dir("parallelism_choices", {
   expect_true(
     length(parallelism_choices(distributed_only = TRUE)) <
     length(parallelism_choices(distributed_only = FALSE))
+  )
+})
+
+test_with_dir("parallelism warnings", {
+  config <- dbug()
+  suppressWarnings(parallelism_warnings(config))
+  expect_silent(
+    warn_mclapply_windows(parallelism = "mclapply", jobs = 1)
+  )
+  expect_warning(
+    warn_mclapply_windows(parallelism = "mclapply", jobs = 2, os = "windows")
   )
 })
 
@@ -54,4 +65,20 @@ test_with_dir("mclapply and lapply", {
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
     jobs = 1, parallelism = "parLapply")
   expect_true(is.numeric(readd(final)))
+})
+
+test_with_dir("lightly_parallelize_atomic() is correct", {
+  withr::with_seed(seed = 2017, code = {
+    x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
+    append <- function(x){
+      paste0(x, "_text")
+    }
+    out0 <- lightly_parallelize(X = x, FUN = append, jobs = 2)
+    out1 <- lightly_parallelize_atomic(X = x, FUN = append, jobs = 2)
+    out2 <- lapply(X = x, FUN = append)
+    expect_identical(out0, out1)
+    expect_identical(out0, out2)
+    y <- gsub("_text", "", unlist(out1))
+    expect_identical(x, y)
+  })
 })

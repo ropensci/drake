@@ -1,5 +1,11 @@
 drake_context("hash")
 
+test_with_dir("available hash algos", {
+  x <- available_hash_algos()
+  expect_true(length(x) > 0)
+  expect_true(is.character(x))
+})
+
 test_with_dir("illegal hashes", {
   x <- workplan(a = 1)
   expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))

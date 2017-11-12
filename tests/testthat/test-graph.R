@@ -37,6 +37,20 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
   )
 })
 
+test_with_dir("graph functions work", {
+  config <- dbug()
+  expect_equal(class(build_graph(config$plan, verbose = FALSE)), "igraph")
+  pdf(NULL)
+  tmp <- plot_graph(plan = config$plan, envir = config$envir,
+                    verbose = FALSE)
+  dev.off()
+  unlink("Rplots.pdf", force = TRUE)
+  expect_true(is.character(default_graph_title(
+    parallelism = parallelism_choices()[1], split_columns = FALSE)))
+  expect_true(is.character(default_graph_title(
+    parallelism = parallelism_choices()[1], split_columns = TRUE)))
+})
+
 test_with_dir("Supplied graph is pruned.", {
   load_basic_example()
   graph <- build_graph(my_plan)

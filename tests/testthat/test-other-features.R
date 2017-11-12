@@ -1,21 +1,5 @@
 drake_context("other features")
 
-test_with_dir("lightly_parallelize_atomic() is correct", {
-  withr::with_seed(seed = 2017, code = {
-    x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
-    append <- function(x){
-      paste0(x, "_text")
-    }
-    out0 <- lightly_parallelize(X = x, FUN = append, jobs = 2)
-    out1 <- lightly_parallelize_atomic(X = x, FUN = append, jobs = 2)
-    out2 <- lapply(X = x, FUN = append)
-    expect_identical(out0, out1)
-    expect_identical(out0, out2)
-    y <- gsub("_text", "", unlist(out1))
-    expect_identical(x, y)
-  })
-})
-
 test_with_dir("colors and shapes", {
   expect_message(drake_palette())
   expect_is(color_of("target"), "character")
@@ -37,23 +21,6 @@ test_with_dir("shapes", {
   expect_is(color_of("file"), "character")
   expect_is(color_of("not found"), "character")
   expect_equal(color_of("bluhlaksjdf"), color_of("other"))
-})
-
-test_with_dir("parallelism warnings", {
-  config <- dbug()
-  suppressWarnings(parallelism_warnings(config))
-  expect_silent(
-    warn_mclapply_windows(parallelism = "mclapply", jobs = 1)
-  )
-  expect_warning(
-    warn_mclapply_windows(parallelism = "mclapply", jobs = 2, os = "windows")
-  )
-})
-
-test_with_dir("available hash algos", {
-  x <- available_hash_algos()
-  expect_true(length(x) > 0)
-  expect_true(is.character(x))
 })
 
 test_with_dir("in_progress() works", {
@@ -93,20 +60,6 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_with_dir("graph functions work", {
-  config <- dbug()
-  expect_equal(class(build_graph(config$plan, verbose = FALSE)), "igraph")
-  pdf(NULL)
-  tmp <- plot_graph(plan = config$plan, envir = config$envir,
-    verbose = FALSE)
-  dev.off()
-  unlink("Rplots.pdf", force = TRUE)
-  expect_true(is.character(default_graph_title(
-    parallelism = parallelism_choices()[1], split_columns = FALSE)))
-  expect_true(is.character(default_graph_title(
-    parallelism = parallelism_choices()[1], split_columns = TRUE)))
-})
-
 test_with_dir("check_config() via check() and make()", {
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
@@ -139,23 +92,18 @@ test_with_dir("targets can be partially specified", {
   expect_silent(check(pl, verbose = FALSE))
 })
 
-test_with_dir("misc stuff", {
+test_with_dir("as_file quotes properly", {
   expect_equal(as_file("x"), "'x'")
 })
 
-test_with_dir("misc empty/NULL cases", {
-  clean(list = "no_cache")
-  expect_false(file.exists(default_cache_path()))
-})
-
-test_with_dir("unique_random_string", {
+test_with_dir("unique_random_string() works", {
   set.seed(2017)
   x <- unique_random_string(n = 15)
   y <- unique_random_string(exclude = "a", n = 10)
   expect_equal(nchar(x), 15)
   expect_equal(nchar(y), 10)
   exclude <- c(letters, LETTERS, 1:9)
-  for (i in 1:100){
+  for (i in 1:10){
     expect_equal(
       unique_random_string(exclude = exclude, n = 1),
       "0"
