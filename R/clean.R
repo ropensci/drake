@@ -93,15 +93,15 @@ clean <- function(
   if (is.null(cache)){
     return(invisible())
   }
-  rescue_cache(cache = cache)
   if (!length(targets)) {
-    return(clean_everything(
+    clean_everything(
       destroy = destroy,
       cache = cache,
       jobs = jobs
-    ))
+    )
+  } else {
+    uncache(targets = targets, cache = cache, jobs = jobs)
   }
-  uncache(targets = targets, cache = cache, jobs = jobs)
   invisible()
 }
 

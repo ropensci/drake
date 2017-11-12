@@ -64,6 +64,8 @@ error$calls              # Call stack / traceback
 
 # Installation
 
+You can choose among different versions of `drake`:
+
 ```r
 install.packages("drake")                                  # Latest CRAN release.
 install.packages("devtools")                               # For installing from GitHub.
