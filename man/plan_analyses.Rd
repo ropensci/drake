@@ -9,8 +9,8 @@ plan_analyses(plan, datasets)
 \arguments{
 \item{plan}{workflow plan data frame of analysis methods.
 The commands in the \code{command} column must
-have the \code{..dataset..} wildcard where the datasets go.
-For example, one command could be \code{lm(..dataset..)}. Then,
+have the \code{dataset__} wildcard where the datasets go.
+For example, one command could be \code{lm(dataset__)}. Then,
 the commands in the output will include \code{lm(your_dataset_1)},
 \code{lm(your_dataset_2)}, etc.}
 
@@ -31,8 +31,8 @@ datasets <- workplan(
   large = simulate(50))
 # Create a template for the analysis methods.
 methods <- workplan(
-  regression1 = reg1(..dataset..),
-  regression2 = reg2(..dataset..))
+  regression1 = reg1(dataset__),
+  regression2 = reg2(dataset__))
 # Evaluate the wildcards to create the part of the workflow plan
 # encoding the analyses of the datasets.
 ans <- plan_analyses(methods, datasets = datasets)
@@ -42,6 +42,6 @@ my_plan <- rbind(datasets, ans)
 my_plan
 }
 \seealso{
-\code{\link{plan_summaries}},
+\code{\link{plan_summaries(}},
  \code{\link{make}}, \code{\link{workplan}}
 }

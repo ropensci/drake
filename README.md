@@ -111,7 +111,7 @@ set up your workflow plan data frame,
 ```r
 workplan()
 plan_analyses()
-summaries()
+plan_summaries()
 evaluate_plan()
 expand_plan()
 gather_plan()

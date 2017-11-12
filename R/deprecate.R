@@ -111,6 +111,25 @@ default_system2_args <- function(jobs, verbose){
   return(out)
 }
 
+# Deprecated ..analysis.. and ..dataset.. on 2017-11-12
+# in favor of analysis__ and dataset__
+deprecate_wildcard <- function(plan, old, replacement){
+  if (any(grepl(old, plan$command, fixed = TRUE))){
+    warning(
+      "The '", old, "' wildcard is deprecated. ",
+      "Use '", replacement, "' instead.",
+      call. = FALSE
+    )
+  }
+  plan$command <- gsub(
+    pattern = old,
+    replacement = replacement,
+    x = plan$command,
+    fixed = TRUE
+  )
+  plan
+}
+
 #' @title Deprecated function evaluate
 #' @description Use \code{\link{evaluate_plan}()} instead.
 #' @details Deprecated on 2017-11-12.
@@ -398,6 +417,41 @@ session <- function(
     search = search,
     cache = cache,
     verbose = verbose
+  )
+}
+
+#' @title Deprecated function \code{summaries}
+#' @description Use \code{\link{summaries}()} instead
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{summaries}}
+#' @export
+#' @return Same as for \code{\link{plan_summaries}()}.
+#' @param plan Same as for \code{\link{plan_summaries}()}.
+#' @param analyses Same as for \code{\link{dplan_summaries}()}.
+#' @param datasets Same as for \code{\link{plan_summaries}()}.
+#' @param gather Same as for \code{\link{plan_summaries}()}.
+#' @examples
+#' # See ?drake_session for examples.
+summaries <- function(
+  plan,
+  analyses,
+  datasets,
+  gather = rep("list", nrow(plan))
+){
+  .Deprecated(
+    "summaries",
+    package = "drake",
+    msg = paste(
+      "drake::summaries() is deprecated",
+      "due to possible name conflicts.",
+      "Use plan_summaries() instead."
+    )
+  )
+  plan_summaries(
+    plan = plan,
+    analyses = analyses,
+    datasets = datasets,
+    gather = gather
   )
 }
 

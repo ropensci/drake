@@ -198,7 +198,7 @@ summary_types <- workplan(
   coef = coefficients(..analysis..)) # nolint
 summary_types
 
-results <- summaries(summary_types, analyses = my_analyses,
+results <- plan_summaries(summary_types, analyses = my_analyses,
   datasets = my_datasets, gather = NULL)
 results
 ```

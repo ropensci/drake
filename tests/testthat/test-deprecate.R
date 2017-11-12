@@ -27,9 +27,6 @@ test_with_dir("workplan deprecation", {
   expect_warning(drake::plan(x = y, file_targets = TRUE))
   expect_warning(drake::workflow())
   expect_warning(drake::workflow(x = y, file_targets = TRUE))
-})
-
-test_with_dir("check_plan() is deprecated", {
   expect_warning(check(workplan(a = 1)))
 })
 
@@ -49,5 +46,17 @@ test_with_dir("generative templating deprecation", {
   expect_warning(drake::evaluate(workplan()))
   expect_warning(drake::expand(workplan()))
   expect_warning(drake::gather(workplan()))
-  expect_warning(drake::analyses(workplan(), workplan()))
+  datasets <- workplan(
+    small = simulate(5),
+    large = simulate(50))
+  methods <- workplan(
+    regression1 = reg1(..dataset..),
+    regression2 = reg2(..dataset..))
+  expect_warning(
+    analyses <- analyses(methods, datasets = datasets))
+  summary_types <- workplan(
+    summ = summary(..analysis..),
+    coef = coefficients(..analysis..))
+  expect_warning(
+    summaries(summary_types, analyses, datasets))
 })

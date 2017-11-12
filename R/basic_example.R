@@ -73,21 +73,21 @@ load_basic_example <- function(
   datasets <- workplan(small = simulate(5), large = simulate(50))
 
   methods <- workplan(list = c(
-    regression1 = "reg1(..dataset..)",
-    regression2 = "reg2(..dataset..)"))
+    regression1 = "reg1(dataset__)",
+    regression2 = "reg2(dataset__)"))
 
-  # same as evaluate_plan(methods, wildcard = '..dataset..', values
-  # = datasets$output)
+  # Same as evaluate_plan(methods, wildcard = 'dataset__',
+  #   values = datasets$output).
   analyses <- plan_analyses(methods, datasets = datasets)
 
   summary_types <- workplan(list = c(
-    summ = "suppressWarnings(summary(..analysis..))",
-    coef = "coefficients(..analysis..)"))
+    summ = "suppressWarnings(summary(analysis__))",
+    coef = "coefficients(analysis__)"))
 
-  # summaries() also uses evaluate_plan(): once with expand = TRUE,
+  # plan_summaries() also uses evaluate_plan(): once with expand = TRUE,
   # once with expand = FALSE
   # skip 'gather' (workplan my_plan is more readable)
-  results <- summaries(summary_types, analyses, datasets, gather = NULL)
+  results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
 
   # External file targets and dependencies should be
   # single-quoted.  Use double quotes to remove any special

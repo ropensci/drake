@@ -57,16 +57,16 @@ datasets <- workplan(
   large = simulate(50))
 # Create a template workflow plan for the analyses.
 methods <- workplan(
-  regression1 = reg1(..dataset..),
-  regression2 = reg2(..dataset..))
+  regression1 = reg1(dataset__),
+  regression2 = reg2(dataset__))
 # Evaluate the wildcards in the template
 # to produce the actual part of the workflow plan
 # that encodes the analyses of the datasets.
 # Create one analysis for each combination of dataset and method.
-evaluate_plan(methods, wildcard = "..dataset..",
+evaluate_plan(methods, wildcard = "dataset__",
   values = datasets$target)
 # Only choose some combinations of dataset and analysis method.
-ans <- evaluate_plan(methods, wildcard = "..dataset..",
+ans <- evaluate_plan(methods, wildcard = "dataset__",
   values = datasets$target, expand = FALSE)
 ans
 # For the complete workflow plan, row bind the pieces together.

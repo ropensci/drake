@@ -1,3 +1,28 @@
+#' @title Function analysis_wildcard
+#' @description Show the analysis wildcard
+#' used in \code{\link{plan_summaies}()}.
+#' @export
+#' @seealso \code{\link{plan_summaries}()}
+#' @return The analysis wildcard used in \code{\link{plan_summaries}()}.
+#' @examples 
+#' # See ?plan_analyses for examples
+analysis_wildcard <- function(){
+  "analysis__"
+}
+
+#' @title Function dataset_wildcard
+#' @description Show the dataset wildcard
+#' used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+#' @export
+#' @seealso \code{\link{plan_analyses}()}
+#' @return The dataset wildcard used in
+#' \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+#' @examples 
+#' # See ?plan_analyses for examples
+dataset_wildcard <- function(){
+  "dataset__"
+}
+
 #' @title Function \code{evaluate_plan}
 #' @description The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
@@ -44,16 +69,16 @@
 #'   large = simulate(50))
 #' # Create a template workflow plan for the analyses.
 #' methods <- workplan(
-#'   regression1 = reg1(..dataset..),
-#'   regression2 = reg2(..dataset..))
+#'   regression1 = reg1(dataset__),
+#'   regression2 = reg2(dataset__))
 #' # Evaluate the wildcards in the template
 #' # to produce the actual part of the workflow plan
 #' # that encodes the analyses of the datasets.
 #' # Create one analysis for each combination of dataset and method.
-#' evaluate_plan(methods, wildcard = "..dataset..",
+#' evaluate_plan(methods, wildcard = "dataset__",
 #'   values = datasets$target)
 #' # Only choose some combinations of dataset and analysis method.
-#' ans <- evaluate_plan(methods, wildcard = "..dataset..",
+#' ans <- evaluate_plan(methods, wildcard = "dataset__",
 #'   values = datasets$target, expand = FALSE)
 #' ans
 #' # For the complete workflow plan, row bind the pieces together.
@@ -199,14 +224,14 @@ gather_plan <- function(
 #' @title Function \code{plan_analyses}
 #' @description Generate a workflow plan data frame to
 #' analyze multiple datasets using multiple methods of analysis.
-#' @seealso \code{\link{plan_summaries}},
+#' @seealso \code{\link{plan_summaries(}},
 #'  \code{\link{make}}, \code{\link{workplan}}
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.
 #' @param plan workflow plan data frame of analysis methods.
 #' The commands in the \code{command} column must
-#' have the \code{..dataset..} wildcard where the datasets go.
-#' For example, one command could be \code{lm(..dataset..)}. Then,
+#' have the \code{dataset__} wildcard where the datasets go.
+#' For example, one command could be \code{lm(dataset__)}. Then,
 #' the commands in the output will include \code{lm(your_dataset_1)},
 #' \code{lm(your_dataset_2)}, etc.
 #' @param datasets workflow plan data frame with instructions
@@ -218,8 +243,8 @@ gather_plan <- function(
 #'   large = simulate(50))
 #' # Create a template for the analysis methods.
 #' methods <- workplan(
-#'   regression1 = reg1(..dataset..),
-#'   regression2 = reg2(..dataset..))
+#'   regression1 = reg1(dataset__),
+#'   regression2 = reg2(dataset__))
 #' # Evaluate the wildcards to create the part of the workflow plan
 #' # encoding the analyses of the datasets.
 #' ans <- plan_analyses(methods, datasets = datasets)
@@ -228,9 +253,14 @@ gather_plan <- function(
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
 plan_analyses <- function(plan, datasets){
+  plan <- deprecate_wildcard(
+    plan = plan,
+    old = "..dataset..",
+    replacement = dataset_wildcard()
+  )
   evaluate_plan(
     plan,
-    wildcard = "..dataset..",
+    wildcard = dataset_wildcard(),
     values = datasets$target
   )
 }
@@ -245,8 +275,8 @@ plan_analyses <- function(plan, datasets){
 #' for computing summaries of analyses and datasets.
 #' analyses of multiple datasets in multiple ways.
 #' @param plan workflow plan data frame with commands for the summaries.
-#' Use the \code{..analysis..} and \code{..dataset..} wildcards
-#' just like the \code{..dataset..} wildcard in \code{\link{analyses}()}.
+#' Use the \code{analysis__} and \code{dataset__} wildcards
+#' just like the \code{dataset__} wildcard in \code{\link{analyses}()}.
 #' @param analyses workflow plan data frame of analysis instructions
 #' @param datasets workflow plan data frame with instructions to make
 #' or import the datasets.
@@ -261,44 +291,54 @@ plan_analyses <- function(plan, datasets){
 #'   large = simulate(50))
 #' # Create a template workflow plan containing the analysis methods.
 #' methods <- workplan(
-#'   regression1 = reg1(..dataset..),
-#'   regression2 = reg2(..dataset..))
+#'   regression1 = reg1(dataset__),
+#'   regression2 = reg2(dataset__))
 #' # Generate the part of the workflow plan to analyze the datasets.
 #' analyses <- plan_analyses(methods, datasets = datasets)
 #' # Create a template workflow plan dataset with the
 #' # types of summaries you want.
 #' summary_types <- workplan(
-#'   summ = summary(..analysis..),
-#'   coef = coefficients(..analysis..))
+#'   summ = summary(analysis__),
+#'   coef = coefficients(analysis__))
 #' # Evaluate the appropriate wildcards to encode the summary targets.
-#' summaries(summary_types, analyses, datasets, gather = NULL)
-#' summaries(summary_types, analyses, datasets)
-#' summaries(summary_types, analyses, datasets, gather = "list")
-#' summs <- summaries(
+#' plan_summaries(summary_types, analyses, datasets, gather = NULL)
+#' plan_summaries(summary_types, analyses, datasets)
+#' plan_summaries(summary_types, analyses, datasets, gather = "list")
+#' summs <- plan_summaries(
 #'   summary_types, analyses, datasets, gather = c("list", "rbind"))
 #' # For the final workflow plan, row bind the pieces together.
 #' my_plan <- rbind(datasets, analyses, summs)
 #' my_plan
-summaries <- function(
+plan_summaries <- function(
   plan,
   analyses,
   datasets,
   gather = rep("list", nrow(plan))
-  ){
+){
+  plan <- deprecate_wildcard(
+    plan = plan, 
+    old = "..analysis..",
+    replacement = analysis_wildcard()
+  )
+  plan <- deprecate_wildcard(
+    plan = plan, 
+    old = "..dataset..",
+    replacement = dataset_wildcard()
+  )
   plan <- with_analyses_only(plan)
   out <- plan
   group <- paste(colnames(out), collapse = "_")
   out[[group]] <- out$target
-  if (!any(grepl("..analysis..", out$command, fixed = TRUE))){
+  if (!any(grepl(analysis_wildcard(), out$command, fixed = TRUE))){
     stop(
-      "no '..analysis..' wildcard found in plan$command. ",
+      "no 'analysis__' wildcard found in plan$command. ",
       "Use plan_analyses() instead."
       )
   }
-  out <- evaluate_plan(out, wildcard = "..analysis..", values = analyses$target)
+  out <- evaluate_plan(out, wildcard = analysis_wildcard(), values = analyses$target)
   out <- evaluate_plan(
     out,
-    wildcard = "..dataset..",
+    wildcard = dataset_wildcard(),
     values = datasets$target,
     expand = FALSE
     )
@@ -328,12 +368,12 @@ summaries <- function(
 }
 
 with_analyses_only <- function(plan){
-  has_analysis <- grepl("..analysis..", plan$command, fixed = TRUE)
+  has_analysis <- grepl(analysis_wildcard(), plan$command, fixed = TRUE)
   if (any(!has_analysis)){
     warning(
       "removing ",
       sum(has_analysis),
-      " rows with no ..analysis.. wildcard in the command.",
+      " rows with no 'analysis__' wildcard in the command.",
       "Use plan_analyses() for these.",
       call. = FALSE
     )

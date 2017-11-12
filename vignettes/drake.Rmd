@@ -103,7 +103,7 @@ set up your workflow plan,
 
 ```{r plandrakermd, eval = FALSE}
 plan_analyses()
-summaries()
+plan_summaries()
 evaluate_plan()
 expand_plan()
 gather_plan()
