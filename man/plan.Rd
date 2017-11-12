@@ -31,3 +31,4 @@ Deprecated on 2017-10.
 \seealso{
 \code{\link{workplan}}
 }
+\keyword{internal}

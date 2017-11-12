@@ -31,3 +31,4 @@ Deprecated on 2017-11-12.
 \seealso{
 \code{\link{drake_session}}
 }
+\keyword{internal}

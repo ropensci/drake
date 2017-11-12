@@ -29,3 +29,4 @@ future::plan(multicore) # Instead of backend(). Avoid drake::plan().
 make(my_plan, parallelism = "future_lapply")
 }
 }
+\keyword{internal}

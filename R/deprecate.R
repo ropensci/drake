@@ -2,6 +2,7 @@
 #' @description Use \code{\link{plan_analyses}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
+#' @keywords internal
 #' @seealso \code{\link{plan_analyses}}
 #' @return The same return value as \code{\link{plan_analyses}()}.
 #' @param plan Same as for \code{\link{plan_analyses}()}.
@@ -26,6 +27,7 @@ analyses <- function(plan, datasets){
 #' Avoid \code{drake::plan()}.
 #' @details Deprecated on 2017-11-12.
 #' @export
+#' @keywords internal
 #' @return The same return value as \code{future::plan()}.
 #' @param ... Arguments to \code{future::plan()}.
 #' @examples
@@ -58,6 +60,7 @@ backend <- function(...){
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{check_plan}}
 #' @export
+#' @keywords internal
 #' @return Same as for \code{\link{check_plan}()}.
 #' @param plan Same as for \code{\link{check_plan}()}.
 #' @param targets Same as for \code{\link{check_plan}()}.
@@ -98,6 +101,7 @@ check <- function(
 #' @details Deprecated on 2017-10.
 #' @seealso \code{\link{default_Makefile_args}}
 #' @export
+#' @keywords internal
 #' @return \code{args} for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
@@ -144,6 +148,7 @@ deprecate_wildcard <- function(plan, old, replacement){
 #' @description Use \code{\link{evaluate_plan}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
+#' @keywords internal
 #' @seealso \code{\link{evaluate_plan}}
 #' @return Same as for \code{\link{evaluate_plan}}
 #' @param plan Same as for \code{\link{evaluate_plan}}
@@ -182,6 +187,7 @@ evaluate <- function(
 #' @description Use \code{\link{expand_plan}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
+#' @keywords internal
 #' @seealso \code{\link{expand_plan}}
 #' @return Same as for \code{\link{expand_plan}}
 #' @param plan Same as for \code{\link{expand_plan}}
@@ -211,6 +217,7 @@ expand <- function(
 #' @description Use \code{\link{gather_plan}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
+#' @keywords internal
 #' @seealso \code{\link{gather_plan}}
 #' @return Same as for \code{\link{gather_plan}}
 #' @param plan Same as for \code{\link{gather_plan}}
@@ -244,6 +251,7 @@ gather <- function(
 #' @details Deprecated on 2017-10.
 #' @seealso \code{\link{workplan}}
 #' @export
+#' @keywords internal
 #' @return A data frame of targets and commands.
 #' @param ... Same as for \code{\link{workplan}()}.
 #' @param list Same as for \code{\link{workplan}()}.
@@ -301,6 +309,7 @@ plan <- function(
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{drake_session}}
 #' @export
+#' @keywords internal
 #' @return Same as for \code{\link{drake_session}()}.
 #' @param cache Same as for \code{\link{drake_session}()}.
 #' @param path Same as for \code{\link{drake_session}()}.
@@ -336,6 +345,7 @@ session <- function(
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{summaries}}
 #' @export
+#' @keywords internal
 #' @return Same as for \code{\link{plan_summaries}()}.
 #' @param plan Same as for \code{\link{plan_summaries}()}.
 #' @param analyses Same as for \code{\link{plan_summaries}()}.
@@ -372,6 +382,7 @@ summaries <- function(
 #' \code{\link{check}}.
 #' @details Deprecated on 2017-10
 #' @export
+#' @keywords internal
 #' @return A data frame of targets and commands.
 #' @param ... same as for \code{drake::\link{workplan}()}
 #' @param list same as for \code{drake::\link{workplan}()}
