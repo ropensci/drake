@@ -191,7 +191,8 @@ test_with_dir("analyses and summaries", {
   results <- plan_summaries(summary_types, analyses, datasets)
   expect_true(all(grepl("^list\\(", results$command[1:2])))
 
-  results <- plan_summaries(summary_types, analyses, datasets, gather = "my_bind")
+  results <- plan_summaries(
+    summary_types, analyses, datasets, gather = "my_bind")
   expect_true(all(grepl("^my_bind\\(", results$command[1:2])))
 
   expect_error(

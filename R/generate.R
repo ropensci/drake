@@ -4,7 +4,7 @@
 #' @export
 #' @seealso \code{\link{plan_summaries}()}
 #' @return The analysis wildcard used in \code{\link{plan_summaries}()}.
-#' @examples 
+#' @examples
 #' # See ?plan_analyses for examples
 analysis_wildcard <- function(){
   "analysis__"
@@ -17,7 +17,7 @@ analysis_wildcard <- function(){
 #' @seealso \code{\link{plan_analyses}()}
 #' @return The dataset wildcard used in
 #' \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
-#' @examples 
+#' @examples
 #' # See ?plan_analyses for examples
 dataset_wildcard <- function(){
   "dataset__"
@@ -316,12 +316,12 @@ plan_summaries <- function(
   gather = rep("list", nrow(plan))
 ){
   plan <- deprecate_wildcard(
-    plan = plan, 
+    plan = plan,
     old = "..analysis..",
     replacement = analysis_wildcard()
   )
   plan <- deprecate_wildcard(
-    plan = plan, 
+    plan = plan,
     old = "..dataset..",
     replacement = dataset_wildcard()
   )
@@ -335,13 +335,17 @@ plan_summaries <- function(
       "Use plan_analyses() instead."
       )
   }
-  out <- evaluate_plan(out, wildcard = analysis_wildcard(), values = analyses$target)
+  out <- evaluate_plan(
+    out,
+    wildcard = analysis_wildcard(),
+    values = analyses$target
+  )
   out <- evaluate_plan(
     out,
     wildcard = dataset_wildcard(),
     values = datasets$target,
     expand = FALSE
-    )
+  )
   if (!length(gather)){
     return(out[setdiff(names(out), group)])
   }

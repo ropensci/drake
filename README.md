@@ -80,7 +80,7 @@ load_basic_example() # Also (over)writes report.Rmd.
 plot_graph(my_plan)  # Click, drag, pan, hover. See arguments 'from' and 'to'.
 outdated(my_plan)    # Which targets need to be (re)built?
 missed(my_plan)      # Are you missing anything from your workspace?
-check_plan(my_plan)       # Are you missing files? Is your workflow plan okay?
+check_plan(my_plan)  # Are you missing files? Is your workflow plan okay?
 make(my_plan)        # Run the workflow.
 diagnose(large)      # View error info if the target "large" failed to build.
 outdated(my_plan)    # Everything is up to date.
@@ -115,7 +115,7 @@ plan_summaries()
 evaluate_plan()
 expand_plan()
 gather_plan()
-wildcard() # from the wildcard package
+wildcard() # From the wildcard package.
 ```
 
 explore the dependency network,
