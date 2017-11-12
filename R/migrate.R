@@ -1,4 +1,4 @@
-#' @title Function migrate
+#' @title Function migrate_drake_project
 #' @export
 #' @seealso \code{\link{rescue_cache}}, \code{\link{make}}
 #' @param path Full path to the cache
@@ -13,14 +13,16 @@
 #' @details Drake versions after 4.4.0
 #' have a different internal structure for the cache.
 #' This means projects built with drake 4.4.0 or before are not compatible
-#' with projects built with a later version of drake. migrate() converts
+#' with projects built with a later version of drake.
+#' The \code{migrate_drake_project()} function converts
 #' an old cache to a format compatible with the version of drake
 #' installed on your system.
 #' A migration is successful if the transition preserves target status:
 #' that is, outdated targets remain outdated and up to date targets
-#' remain up to date. At the end, \code{migrate()}
+#' remain up to date. At the end, \code{migrate_drake_project()}
 #' tells you whether the migration
-#' is successful. If it is not successful, \code{migrate()} tells you where
+#' is successful. If it is not successful,
+#' \code{migrate_drake_project()} tells you where
 #' it backed up your old project.
 #' @examples
 #' \dontrun{
@@ -30,18 +32,21 @@
 #' # Now, install drake >= 5.0.0
 #' load_basic_example() # Load the canonical example again.
 #' make(my_plan) # Error: cache is not back compatible.
-#' migrate() # Convert the project's '.drake/' cache to the new format.
+#' # Convert the project's '.drake/' cache to the new format.
+#' migrate_drake_project()
 #' make(my_plan) # Everything is still up to date!
 #' # Outdated objects from before migration
 #' # should remain out of date afterwards.
 #' outdated(my_plan)
 #' }
-migrate <- function(path = drake::default_cache_path(), jobs = 1){
+migrate_drake_project <- function(
+  path = drake::default_cache_path(), jobs = 1
+){
   cache <- should_migrate(path = path)
   if (is.null(cache)){
     return(invisible(TRUE))
   }
-  version <- session(cache = cache)$otherPkgs$drake$Version # nolint
+  version <- drake_session(cache = cache)$otherPkgs$drake$Version # nolint
   backup <- backup_cache_path(path = path, old = version)
   message("Backing up", path, "to a backup cache at ", backup)
   dir.create(backup)
@@ -97,7 +102,9 @@ assert_compatible_cache <- function(cache){
     return()
   }
   err <- try(
-    old <- session(cache = cache)$otherPkgs$drake$Version, silent = TRUE) # nolint
+    old <- drake_session(cache = cache)$otherPkgs$drake$Version, # nolint
+    silent = TRUE
+  )
   if (inherits(err, "try-error")){
     return(invisible())
   }
@@ -111,11 +118,14 @@ assert_compatible_cache <- function(cache){
   stop(
     "The project at '", path, "' was previously built by drake ", old, ". ",
     "You are running drake ", current, ", which is not back-compatible. ",
-    "To format your cache for the newer drake, try migrate('", path, "'). ",
-    "migrate() restructures the cache in a way that ",
+    "To format your cache for the newer drake, ",
+    "try migrate_drake_project('", path, "'). ",
+    "migrate_drake_project() restructures the cache in a way that ",
     "preserves the statuses of your targets (up to date vs outdated). ",
-    "But in case of errors, migrate() first backs up '", path, "' to '",
-    newpath, "'. Alternatively, you can revert to a back-compatible version ",
+    "But in case of errors, ",
+    "migrate_drake_project() first backs up '", path, "' to '",
+    newpath, "'. Alternatively, ",
+    "you can revert to a back-compatible version ",
     " of drake with 'devtools::install_version(\"drake\", \"4.4.0\")' ",
     " or just run your project from scratch as is with ",
     "make(..., force = TRUE).",
@@ -198,7 +208,8 @@ legacy_outdated <- function(config){
     x = all_targets,
     f = function(target){
       hashes <- hash_list[[target]]
-      !legacy_target_current(target = target, hashes = hashes, config = config)
+      !legacy_target_current(
+        target = target, hashes = hashes, config = config)
     }
   )
   if (length(rebuild)){
@@ -284,7 +295,8 @@ legacy_target_current <- function(target, hashes, config){
   if (!(target %in% config$inventory)){
     return(FALSE)
   }
-  if (!legacy_file_current(target = target, hashes = hashes, config = config)){
+  if (!legacy_file_current(
+    target = target, hashes = hashes, config = config)){
     return(FALSE)
   }
   identical(

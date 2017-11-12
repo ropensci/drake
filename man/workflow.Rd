@@ -25,26 +25,8 @@ a workflow plan data frame for \code{\link{make}} and
 \code{\link{check}}.
 }
 \details{
-A workflow plan data frame is a data frame
-with a \code{target} column and a \code{command} column.
-Targets are the objects and files that drake generates,
-and commands are the pieces of R code that produce them.
-
-For file inputs and targets, drake uses single quotes.
-Double quotes are reserved for ordinary strings.
-The distinction is important because drake thinks about
-how files, objects, targets, etc. depend on each other.
-Quotes in the \code{list} argument are left alone,
-but R messes with quotes when it parses the free-form
-arguments in \code{...}, so use the \code{strings_in_dots}
-argument to control the quoting in \code{...}.
+Deprecated on 2017-10
 }
 \examples{
-# workflow() is deprecated. Use workplan() instead.
-# Generate example workflow plan data frames for make().
-workplan(small = simulate(5), large = simulate(50))
-workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
-workplan(data = readRDS("my_data.rds"))
-workplan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
-  strings_in_dots = "literals")
+# See ?workplan for examples.
 }

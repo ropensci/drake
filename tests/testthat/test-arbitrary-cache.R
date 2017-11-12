@@ -22,7 +22,7 @@ test_with_dir("storr_environment is a cache type", {
   expect_false(file.exists(default_cache_path()))
   expect_equal(short_hash(x), default_short_hash_algo())
   expect_equal(long_hash(x), default_long_hash_algo())
-  expect_error(session(cache = x))
+  expect_error(drake_session(cache = x))
   pln <- workplan(y = 1)
   make(pln, cache = x, verbose = FALSE)
   expect_equal(cached(cache = x), "y")
@@ -86,8 +86,8 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(all(targets %in% cached(cache = cache, verbose = FALSE)))
   expect_false(file.exists(default_cache_path()))
 
-  expect_error(session(verbose = FALSE))
-  expect_true(is.list(session(cache = cache, verbose = FALSE)))
+  expect_error(drake_session(verbose = FALSE))
+  expect_true(is.list(drake_session(cache = cache, verbose = FALSE)))
   expect_false(file.exists(default_cache_path()))
 
   expect_equal(length(imported(verbose = FALSE)), 0)

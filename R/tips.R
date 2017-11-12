@@ -30,7 +30,7 @@ drake_tip <- function() {
 
     "Check out the \"future_lapply\" backends. Example:
     load_basic_example();
-    backend(future::multisession);
+    future::plan(future::multisession);
     make(my_plan, parallelism = \"future_lapply\")",
 
     "Drake quickstart:

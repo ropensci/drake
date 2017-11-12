@@ -17,6 +17,9 @@ default_system2_args(jobs, verbose)
 \description{
 Use \code{\link{default_Makefile_args}()} instead.
 }
+\details{
+Deprecated on 2017-10.
+}
 \examples{
 \dontrun{
 default_system2_args(jobs = 1, verbose = TRUE)

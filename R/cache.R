@@ -354,7 +354,7 @@ set_initial_drake_version <- function(cache){
   if ("initial_drake_version" %in% keys){
     return()
   } else if ("sessionInfo" %in% keys){
-    last_session <- session(cache = cache)
+    last_session <- drake_session(cache = cache)
   } else {
     last_session <- sessionInfo()
   }

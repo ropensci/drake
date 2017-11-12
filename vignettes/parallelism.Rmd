@@ -54,7 +54,7 @@ When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological orde
 
 Be mindful of the maximum number of simultaneous parallel jobs you deploy. At best, too many jobs is poor etiquette on a system with many users and limited resources. At worst, too many jobs will crash a system. The `jobs` argument to `make()` sets the maximum number of simultaneous jobs in most cases, but not all.
 
-For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `backend()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
+For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `future::plan()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
 
 ## Drake can suggest a maximum number of useful jobs
 
@@ -121,13 +121,13 @@ default_parallelism() # "parLapply" on Windows, "mclapply" everywhere else
 
 ## future_lapply
 
-The `future` package unlocks a wide array of powerful parallel backends. The idea is to set up a `future` backend in advance (with `drake::backend()` or `future::plan()`) and then call `make(parallelism = "future_lapply")`.
+The `future` package unlocks a wide array of powerful parallel backends. The idea is to set up a `future` backend in advance (with `drake::future::plan()` or `future::plan()`) and then call `make(parallelism = "future_lapply")`.
 
 ```{r sequential}
 library(future)
-backend() # same as future::plan()
-backend(multicore)
-backend()
+future::plan() # same as future::plan()
+future::plan(multicore)
+future::plan()
 ```
 
 `make()` knows which `future` backend you selected.
@@ -139,14 +139,14 @@ make(my_plan, parallelism = "future_lapply")
 You can try different backends in an R session. Here are examples for forked processes
 
 ```{r futuremulticore, eval = FALSE}
-backend(multicore)
+future::plan(multicore)
 make(my_plan, parallelism = "future_lapply")
 ```
 
 and multiple R sessions.
 
 ```{r futuremultisession, eval = FALSE}
-backend(multisession)
+future::plan(multisession)
 make(my_plan, parallelism = "future_lapply")
 ```
 
@@ -154,7 +154,7 @@ You can even deploy to your own PSOCK clusters. We recommend `future::makeCluste
 
 ```{r owncluster, eval = FALSE}
 cl <- future::makeClusterPSOCK(2L, dryrun = TRUE)(2)
-backend(cluster, workers = cl)
+future::plan(cluster, workers = cl)
 make(my_plan, parallelism = "future_lapply")
 ```
 
@@ -175,7 +175,7 @@ cl <- future::makeClusterPSOCK(
     "-e", shQuote("install.packages('drake')")
   )
 )
-backend(cluster, workers = cl)
+future::plan(cluster, workers = cl)
 make(my_plan, parallelism = "future_lapply")
 ```
 
@@ -183,14 +183,14 @@ The [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) ha
 
 ```{r futurebatchtools, eval = FALSE}
 library(future.batchtools)
-backend(batchtools_local)
+future::plan(batchtools_local)
 make(my_plan, parallelism = "future_lapply")
 ```
 
 You can even nest parallelism strategies together. In the following example, targets are submitted as jobs on the Univa Grid engine, and then `future`-style multicore parallelism is applied to each target's command individually.
 
 ```{r hybridparallelism, eval = FALSE}
-backend(list(batchjobs_sge, multiprocess))
+future::plan(list(batchjobs_sge, multiprocess))
 make(my_plan, parallelism = "future_lapply")
 ```
 
@@ -202,7 +202,7 @@ example_drake("slurm") # SLURM workflow and supporting files
 ```
 
 
-Be sure to heed the previously-mentioned cautionary note about deploying too many jobs. In `"future_lapply"` parallelism, the `jobs` argument is totally ignored. In at least some cases, you can limit the maximum number of jobs to 2 by calling `options(mc.cores = 2)` before `make()`. Depending on the `future` backend you select with `backend()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
+Be sure to heed the previously-mentioned cautionary note about deploying too many jobs. In `"future_lapply"` parallelism, the `jobs` argument is totally ignored. In at least some cases, you can limit the maximum number of jobs to 2 by calling `options(mc.cores = 2)` before `make()`. Depending on the `future` backend you select with `future::plan()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
 
 ## Makefile
 

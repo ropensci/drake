@@ -5,7 +5,7 @@ run_lapply <- function(config){
 
 worker_lapply <- function(targets, meta_list, config){
   prune_envir(targets = targets, config = config)
-  values <- lapply(X = targets, FUN = build,
+  values <- lapply(X = targets, FUN = drake_build,
     meta_list = meta_list, config = config)
   assign_to_envir(target = targets, value = values, config = config)
 }

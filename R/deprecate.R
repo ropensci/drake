@@ -1,54 +1,256 @@
-fix_deprecated_plan_names <- function(plan){
-  if (any(colnames(plan) %in% c("output", "code"))){
-    warning("Drake is no longer using \"output\" or \"code\" ",
-      "for column names in workflow plan data frames. Use \"target\" ",
-      "and \"command\" instead.",
+#' @title Function \code{analyses}
+#' @description Use \code{\link{plan_analyses}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @seealso \code{\link{plan_analyses}}
+#' @return The same return value as \code{\link{plan_analyses}()}.
+#' @param plan Same as for \code{\link{plan_analyses}()}.
+#' @param datasets Same as for \code{\link{plan_analyses}()}.
+#' @examples
+#' # See ?plan_analyses for examples.
+analyses <- function(plan, datasets){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::analyses() is deprecated",
+      "due to possible name conflicts.",
+      "Use plan_analyses() instead."
+    )
+  )
+  plan_analyses(plan = plan, datasets = datasets)
+}
+
+#' @title Deprecated function \code{backend}
+#' @description Use \code{future::plan()} instead.
+#' Avoid \code{drake::plan()}.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @return The same return value as \code{future::plan()}.
+#' @param ... Arguments to \code{future::plan()}.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example
+#' # Choose future's multicore parallel backend.
+#' future::plan(multicore) # Instead of backend(). Avoid drake::plan().
+#' # Run the project, build the targets.
+#' # Future knows that you chose the multicore backend.
+#' make(my_plan, parallelism = "future_lapply")
+#' }
+backend <- function(...){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::backend() is deprecated.",
+      "Use future::plan() directly.",
+      "drake::backend() only exists because of a name conflict",
+      "between drake::plan() and future::plan().",
+      "Once enough time has passed for users to adjust,",
+      "drake::plan() will be removed."
+    )
+  )
+  future::plan(...)
+}
+
+#' @title Deprecated function \code{check}
+#' @description Use \code{\link{check_plan}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{check_plan}}
+#' @export
+#' @return Same as for \code{\link{check_plan}()}.
+#' @param plan Same as for \code{\link{check_plan}()}.
+#' @param targets Same as for \code{\link{check_plan}()}.
+#' @param envir Same as for \code{\link{check_plan}()}.
+#' @param cache Same as for \code{\link{check_plan}()}.
+#' @param verbose Same as for \code{\link{check_plan}()}.
+#' @examples
+#' \dontrun{
+#' default_system2_args(jobs = 1, verbose = TRUE)
+#' }
+check <- function(
+  plan = workplan(),
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  cache = drake::get_cache(verbose = verbose),
+  verbose = TRUE
+){
+  .Deprecated(
+    "check",
+    package = "drake",
+    msg = paste(
+      "drake::check() is deprecated",
+      "due to a conflict with devtools::check().",
+      "Use check_plan() instead."
+    )
+  )
+  check_plan(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    cache = cache,
+    verbose = verbose
+  )
+}
+
+#' @title Deprecated function \code{default_system2_args}
+#' @description Use \code{\link{default_Makefile_args}()} instead.
+#' @details Deprecated on 2017-10.
+#' @seealso \code{\link{default_Makefile_args}}
+#' @export
+#' @return \code{args} for \code{\link{system2}(command, args)}
+#' @param jobs number of jobs
+#' @param verbose logical, whether to be verbose
+#' @examples
+#' \dontrun{
+#' default_system2_args(jobs = 1, verbose = TRUE)
+#' }
+default_system2_args <- function(jobs, verbose){
+  .Deprecated(
+    "default_system2_args",
+    package = "drake",
+    msg = paste(
+      "default_system2_args() is deprecated.",
+      "Use default_Makefile_args() instead."
+    )
+  )
+  out <- paste0("--jobs=", jobs)
+  if (!verbose){
+    out <- c(out, "--silent")
+  }
+  return(out)
+}
+
+# Deprecated ..analysis.. and ..dataset.. on 2017-11-12
+# in favor of analysis__ and dataset__
+deprecate_wildcard <- function(plan, old, replacement){
+  if (any(grepl(old, plan$command, fixed = TRUE))){
+    warning(
+      "The '", old, "' wildcard is deprecated. ",
+      "Use '", replacement, "' instead.",
       call. = FALSE
     )
   }
-  colnames(plan) <- gsub("^output$", "target", colnames(plan)) %>%
-    gsub(pattern = "^code$", replacement = "command")
-  as.data.frame(plan, stringsAsFactors = FALSE)
+  plan$command <- gsub(
+    pattern = old,
+    replacement = replacement,
+    x = plan$command,
+    fixed = TRUE
+  )
+  plan
+}
+
+#' @title Deprecated function evaluate
+#' @description Use \code{\link{evaluate_plan}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @seealso \code{\link{evaluate_plan}}
+#' @return Same as for \code{\link{evaluate_plan}}
+#' @param plan Same as for \code{\link{evaluate_plan}}
+#' @param rules Same as for \code{\link{evaluate_plan}}
+#' @param wildcard Same as for \code{\link{evaluate_plan}}
+#' @param values Same as for \code{\link{evaluate_plan}}
+#' @param expand Same as for \code{\link{evaluate_plan}}
+#' @examples
+#' # See ?evaluate_plan for examples.
+evaluate <- function(
+  plan,
+  rules = NULL,
+  wildcard = NULL,
+  values = NULL,
+  expand = TRUE
+){
+  .Deprecated(
+    "evaluate",
+    package = "drake",
+    msg = paste(
+      "drake::evaluate() is deprecated",
+      "due to a conflict with evaluate::evaluate().",
+      "Use evaluate_plan() instead."
+    )
+  )
+  evaluate_plan(
+    plan = plan,
+    rules = rules,
+    wildcard = wildcard,
+    values = values,
+    expand = expand
+  )
+}
+
+#' @title Deprecated function expand
+#' @description Use \code{\link{expand_plan}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @seealso \code{\link{expand_plan}}
+#' @return Same as for \code{\link{expand_plan}}
+#' @param plan Same as for \code{\link{expand_plan}}
+#' @param values Same as for \code{\link{expand_plan}}
+#' @examples
+#' # See ?expand_plan for examples.
+expand <- function(
+  plan,
+  values = NULL
+){
+  .Deprecated(
+    "expand",
+    package = "drake",
+    msg = paste(
+      "drake::expand() is deprecated",
+      "due to a conflict with tidyr::expand().",
+      "Use expand_plan() instead."
+    )
+  )
+  expand_plan(
+    plan = plan,
+    values = values
+  )
+}
+
+#' @title Deprecated function \code{gather}
+#' @description Use \code{\link{gather_plan}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @seealso \code{\link{gather_plan}}
+#' @return Same as for \code{\link{gather_plan}}
+#' @param plan Same as for \code{\link{gather_plan}}
+#' @param target Same as for \code{\link{gather_plan}}
+#' @param gather Same as for \code{\link{gather_plan}}
+#' @examples
+#' # See ?gather_plan for examples.
+gather <- function(
+  plan = NULL,
+  target = "target",
+  gather = "list"
+){
+  .Deprecated(
+    "gather",
+    package = "drake",
+    msg = paste(
+      "drake::gather() is deprecated",
+      "due to a conflict with tidyr::gather().",
+      "Use gather_plan() instead."
+    )
+  )
+  gather_plan(
+    plan = plan,
+    target = target,
+    gather = gather
+  )
 }
 
 #' @title Deprecated function \code{plan}
-#' @description Turns a named collection of command/target pairs into
-#' a workflow plan data frame for \code{\link{make}} and
-#' \code{\link{check}}. Deprecated in favor of
-#' \code{\link{workplan}()} due to a name conflict with
-#' \code{future::plan()}.
-#' @seealso \code{\link{workplan}}, \code{\link{make}},
-#' \code{\link{check}}
+#' @description Use \code{\link{workplan}()} instead.
+#' @details Deprecated on 2017-10.
+#' @seealso \code{\link{workplan}}
 #' @export
 #' @return A data frame of targets and commands.
-#' @param ... commands named by the targets they generate.
-#' Recall that drake uses single quotes to denote external files
-#' and double-quoted strings as ordinary strings.
-#' Use the \code{strings_in_dots} argument to control the
-#' quoting in \code{...}.
-#' @param list character vector of commands named
-#' by the targets they generate.
-#' @param file_targets logical. If \code{TRUE}, targets are single-quoted
-#' to tell drake that these are external files that should be expected
-#' as output in the next call to \code{\link{make}()}.
-#' @param strings_in_dots character scalar. If \code{"filenames"},
-#' all character strings in \code{...} will be treated as names of file
-#' dependencies (single-quoted). If \code{"literals"}, all
-#' character strings in \code{...} will be treated as ordinary
-#' strings, not dependencies of any sort (double-quoted).
-#' Because of R's automatic parsing/deparsing behavior,
-#' strings in \code{...} cannot simply be left alone.
+#' @param ... Same as for \code{\link{workplan}()}.
+#' @param list Same as for \code{\link{workplan}()}.
+#' @param file_targets Same as for \code{\link{workplan}()}.
+#' @param strings_in_dots Same as for \code{\link{workplan}()}.
 #' @examples
-#' # plan() is deprecated. Use workplan() instead.
-#' # Generate example workflow plan data frames for make().
-#' workplan(small = simulate(5), large = simulate(50))
-#' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' workplan(data = readRDS("my_data.rds"))
-#' workplan(
-#'   my_file.rds = saveRDS(1+1, "my_file.rds"),
-#'   file_targets = TRUE,
-#'   strings_in_dots = "literals"
-#' )
+#' # See ?workplan for examples.
 plan <- function(
   ...,
   list = character(0),
@@ -94,23 +296,81 @@ plan <- function(
   sanitize_plan(plan)
 }
 
+#' @title Deprecated function \code{session}
+#' @description Use \code{\link{drake_session}()} instead
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{drake_session}}
+#' @export
+#' @return Same as for \code{\link{drake_session}()}.
+#' @param cache Same as for \code{\link{drake_session}()}.
+#' @param path Same as for \code{\link{drake_session}()}.
+#' @param search Same as for \code{\link{drake_session}()}.
+#' @param verbose Same as for \code{\link{drake_session}()}.
+#' @examples
+#' # See ?drake_session for examples.
+session <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
+){
+  .Deprecated(
+    "session",
+    package = "drake",
+    msg = paste(
+      "drake::session() is deprecated",
+      "due to a possible conlict with the R/shiny lexicon.",
+      "Use drake_session() instead."
+    )
+  )
+  drake_session(
+    path = path,
+    search = search,
+    cache = cache,
+    verbose = verbose
+  )
+}
+
+#' @title Deprecated function \code{summaries}
+#' @description Use \code{\link{summaries}()} instead
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{summaries}}
+#' @export
+#' @return Same as for \code{\link{plan_summaries}()}.
+#' @param plan Same as for \code{\link{plan_summaries}()}.
+#' @param analyses Same as for \code{\link{plan_summaries}()}.
+#' @param datasets Same as for \code{\link{plan_summaries}()}.
+#' @param gather Same as for \code{\link{plan_summaries}()}.
+#' @examples
+#' # See ?drake_session for examples.
+summaries <- function(
+  plan,
+  analyses,
+  datasets,
+  gather = rep("list", nrow(plan))
+){
+  .Deprecated(
+    "summaries",
+    package = "drake",
+    msg = paste(
+      "drake::summaries() is deprecated",
+      "due to possible name conflicts.",
+      "Use plan_summaries() instead."
+    )
+  )
+  plan_summaries(
+    plan = plan,
+    analyses = analyses,
+    datasets = datasets,
+    gather = gather
+  )
+}
+
 #' @title Function \code{workflow}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
 #' \code{\link{check}}.
-#' @details A workflow plan data frame is a data frame
-#' with a \code{target} column and a \code{command} column.
-#' Targets are the objects and files that drake generates,
-#' and commands are the pieces of R code that produce them.
-#'
-#' For file inputs and targets, drake uses single quotes.
-#' Double quotes are reserved for ordinary strings.
-#' The distinction is important because drake thinks about
-#' how files, objects, targets, etc. depend on each other.
-#' Quotes in the \code{list} argument are left alone,
-#' but R messes with quotes when it parses the free-form
-#' arguments in \code{...}, so use the \code{strings_in_dots}
-#' argument to control the quoting in \code{...}.
+#' @details Deprecated on 2017-10
 #' @export
 #' @return A data frame of targets and commands.
 #' @param ... same as for \code{drake::\link{workplan}()}
@@ -118,13 +378,7 @@ plan <- function(
 #' @param file_targets same as for \code{drake::\link{workplan}()}
 #' @param strings_in_dots same as for \code{drake::\link{workplan}()}
 #' @examples
-#' # workflow() is deprecated. Use workplan() instead.
-#' # Generate example workflow plan data frames for make().
-#' workplan(small = simulate(5), large = simulate(50))
-#' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' workplan(data = readRDS("my_data.rds"))
-#' workplan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
-#'   strings_in_dots = "literals")
+#' # See ?workplan for examples.
 workflow <- function(
   ...,
   list = character(0),
@@ -164,130 +418,4 @@ workflow <- function(
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
-}
-
-#' @title Deprecated function \code{prune}
-#' @description Use \code{\link{clean}()} instead
-#' @seealso \code{\link{clean}}, \code{\link{make}}
-#' @export
-#' @return \code{NULL}
-#' @param plan workflow plan data frame, as generated by
-#' \code{\link{workplan}}.
-#' @examples
-#' \dontrun{
-#' load_basic_example() # Load the canonical example.
-#' make(my_plan) # Run the targets, build the project.
-#' cached() # List the targets/imports in the cache.
-#' # Remove all the cached targets except the first 3 targets
-#' # in the workflow plan.
-#' prune(my_plan[1:3,])
-#' cached() # Only the first 3 targets remain, plus all the imports.
-#' make(my_plan) # Re-make the deleted targets.
-#' clean(destroy = TRUE) # Completely remove the cache.
-#' }
-prune <- function(plan = workplan()){
-  .Deprecated(
-    "clean",
-    package = "drake",
-    msg = "prune() is deprecated. Use clean() instead."
-  )
-  clean(list = setdiff(built(), possible_targets(plan)))
-}
-
-#' @title Deprecated function \code{status}
-#' @description Use \code{\link{progress}()} instead.
-#' Gets the build progress (overall or individual targets)
-#' of the last call to \code{\link{make}()}.
-#' Objects that drake imported, built, or attempted
-#' to build are listed as \code{"finished"} or \code{"in progress"}.
-#' Skipped objects are not listed.
-#' @seealso \code{\link{progress}},
-#' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
-#' @export
-#' @return Either the build progress of each target given (from the last
-#' call to \code{\link{make}()} or \code{\link{make}()}), or if no
-#' targets are specified, a data frame containing the build progress
-#' of the last session.
-#' In the latter case, only finished targets are listed.
-#' @return Either a named logical indicating whether the given
-#' targets or cached or a character vector listing all cached
-#' items, depending on whether any targets are specified
-#' @param ... objects to load from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to \code{...} in
-#' \code{\link{remove}(...)}.
-#' @param list character vector naming objects to be loaded from the
-#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
-#' @param no_imported_objects logical, whether to only return information
-#' about imported files and targets with commands (i.e. whether to ignore
-#' imported objects that are not files).
-#' @param imported_files_only logical, deprecated.
-#' Same as \code{no_imported_objects}.
-#' Use the \code{no_imported_objects} argument instead.
-#' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
-#' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
-#' @examples
-#' \dontrun{
-#' load_basic_example() # Load drake's canonical example.
-#' make(my_plan) # Run the projects, build the targets.
-#' status() # Deprecated. Use progress() instead.
-#' # Check the progress/status of the specified targets.
-#' status(small, large)
-#' status(list = c("small", "large"))
-#' # Exclude imported objects from your workspace: that is,
-#' # only show targets and imported files.
-#' status(no_imported_objects = TRUE)
-#' }
-status <- function(
-  ...,
-  list = character(0),
-  no_imported_objects = FALSE,
-  imported_files_only = logical(0),
-  path = getwd(),
-  search = TRUE
-){
-  .Deprecated(
-    "progress",
-    package = "drake",
-    msg = "status() is deprecated. Use progress() instead."
-  )
-  progress(
-    ...,
-    list = list,
-    no_imported_objects = no_imported_objects,
-    imported_files_only = imported_files_only,
-    path = path,
-    search = search
-  )
-}
-
-#' @title Deprecated function \code{default_system2_args}
-#' @description Use \code{\link{default_Makefile_args}()} instead.
-#' @seealso \code{\link{default_Makefile_args}}
-#' @export
-#' @return \code{args} for \code{\link{system2}(command, args)}
-#' @param jobs number of jobs
-#' @param verbose logical, whether to be verbose
-#' @examples
-#' \dontrun{
-#' default_system2_args(jobs = 1, verbose = TRUE)
-#' }
-default_system2_args <- function(jobs, verbose){
-  .Deprecated(
-    "default_system2_args",
-    package = "drake",
-    msg = paste(
-      "default_system2_args() is deprecated.",
-      "Use default_Makefile_args() instead."
-    )
-  )
-  out <- paste0("--jobs=", jobs)
-  if (!verbose){
-    out <- c(out, "--silent")
-  }
-  return(out)
 }

@@ -9,7 +9,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
     short_hash_algo = "murmur32",
     long_hash_algo = "sha512"
   )
-  expect_error(session(cache = cache))
+  expect_error(drake_session(cache = cache))
   expect_true(length(progress(cache = cache)) == 0)
   expect_equal(config$cache$list(namespace = "readd"), character(0))
 
@@ -18,8 +18,8 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(is.numeric(readd(final, cache = cache)))
   expect_true(length(config$cache$list(namespace = "readd")) > 2)
   expect_false(any(c("f", "final") %in% ls()))
-  expect_true(is.list(session(cache = cache)))
-  expect_true(all(session(cache = cache)$target %in% config$plan$target))
+  expect_true(is.list(drake_session(cache = cache)))
+  expect_true(all(drake_session(cache = cache)$target %in% config$plan$target))
 
   cache <- this_cache(path = path)
   expect_equal(short_hash(cache), "murmur32")

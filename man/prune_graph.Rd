@@ -4,7 +4,7 @@
 \alias{prune_graph}
 \title{Function prune_graph}
 \usage{
-prune_graph(graph, to = igraph::V(graph)$name)
+prune_graph(graph, to = igraph::V(graph)$name, jobs = 1)
 }
 \arguments{
 \item{graph}{An igraph object to be pruned.}
@@ -12,6 +12,8 @@ prune_graph(graph, to = igraph::V(graph)$name)
 \item{to}{Character vector, names of the vertices that draw
 the line for pruning. The pruning process removes all vertices
 downstream of \code{to}.}
+
+\item{jobs}{Number of jobs for light parallelism (on non-Windows machines).}
 }
 \value{
 A pruned igraph object representing the dependency network

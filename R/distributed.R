@@ -31,7 +31,7 @@ build_distributed <- function(target, cache_path){
     config = config
   )
   if (do_build){
-    build(
+    drake_build(
       target = target,
       meta_list = meta_list,
       config = config

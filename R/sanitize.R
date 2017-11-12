@@ -4,8 +4,7 @@ sanitize_plan <- function(plan){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
   }
-  plan <- as.data.frame(plan, stringsAsFactors = FALSE) %>%
-    fix_deprecated_plan_names()
+  plan <- as.data.frame(plan, stringsAsFactors = FALSE)
   if (!is.null(plan$trigger)){
     assert_legal_triggers(plan$trigger)
   }
@@ -14,11 +13,9 @@ sanitize_plan <- function(plan){
 
 workplan_columns <- function(){
   c(
-    "code",
     "cpu",
     "command",
     "elapsed",
-    "output",
     "retries",
     "target",
     "timeout",

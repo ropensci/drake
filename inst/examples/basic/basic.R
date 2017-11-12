@@ -57,23 +57,23 @@ my_datasets <- workplan(
 #   values = c("rep1", "rep2")).
 
 methods <- workplan(
-  regression1 = reg1(..dataset..), ## nolint
-  regression2 = reg2(..dataset..) ## nolint
+  regression1 = reg1(dataset__),
+  regression2 = reg2(dataset__)
 )
 
 # same as evaluate(methods, wildcard = "..dataset..",
 #   values = my_datasets$target)
-my_analyses <- analyses(methods, datasets = my_datasets)
+my_analyses <- plan_analyses(methods, datasets = my_datasets)
 
 summary_types <- workplan(
   # Perfect regression fits can happen.
-  summ = suppressWarnings(summary(..analysis..)), ## nolint
-  coef = coefficients(..analysis..) ## nolint
+  summ = suppressWarnings(summary(analysis__)),
+  coef = coefficients(analysis__)
 )
 
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
-results <- summaries(
+results <- plan_summaries(
   summary_types,
   my_analyses,
   my_datasets,
@@ -111,7 +111,7 @@ my_plan <- rbind(report, my_datasets, my_analyses, results)
 workflow_graph <- build_graph(my_plan) # igraph object
 
 # Check for circularities, missing input files, etc.
-check(my_plan)
+check_plan(my_plan)
 
 # Check the dependencies of individual functions and commands.
 deps(reg1)
@@ -229,22 +229,22 @@ clean() # Start over next time.
 # to cap the number of simultaneous jobs.
 options(mc.cores = 2)
 library(future)
-backend(multicore) # Same as future::plan(multicore)
+future::plan(multicore) # Avoid drake::plan().
 make(my_plan, parallelism = "future_lapply")
 clean() # Erase the targets to start from scratch.
 
-backend(multisession) # Use separate background R sessions.
+future::plan(multisession) # Use separate background R sessions.
 make(my_plan, parallelism = "future_lapply")
 clean()
 
 if (require(future.batchtools)){ # More heavy-duty future-style parallel backends # nolint
-  backend(batchtools_local)
+  future::plan(batchtools_local)
   make(my_plan, parallelism = "future_lapply")
   clean()
 
   # Deploy targets with batchtools_local and use `future`-style
   # multicore parallism each individual target's command.
-  backend(list(batchtools_local, multicore))
+  future::plan(list(batchtools_local, multicore))
   make(my_plan, parallelism = "future_lapply")
   clean()
 }
@@ -307,8 +307,7 @@ if (FALSE){
     parallelism = "Makefile",
     jobs = 4,
     prepend = "SHELL=./shell.sh"
-    )
-
+  )
 } # if(FALSE)
 
 ###########################

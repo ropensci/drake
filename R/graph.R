@@ -100,7 +100,7 @@ build_graph <- function(
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)
-  graph <- prune_graph(graph = graph, to = targets)
+  graph <- prune_graph(graph = graph, to = targets, jobs = jobs)
   if (!is_dag(graph)){
     stop("Workflow is circular (chicken and egg dilemma).")
   }
@@ -123,6 +123,7 @@ build_graph <- function(
 #' @param to Character vector, names of the vertices that draw
 #' the line for pruning. The pruning process removes all vertices
 #' downstream of \code{to}.
+#' @param jobs Number of jobs for light parallelism (on non-Windows machines).
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.
@@ -137,7 +138,9 @@ build_graph <- function(
 #' pruned <- prune_graph(graph = graph, to = c("small", "large"))
 #' plot(pruned)
 #' }
-prune_graph <- function(graph, to = igraph::V(graph)$name){
+prune_graph <- function(
+  graph, to = igraph::V(graph)$name, jobs = 1
+){
   if (!inherits(graph, "igraph")){
     stop(
       "supplied graph must be an igraph object",
@@ -160,13 +163,17 @@ prune_graph <- function(graph, to = igraph::V(graph)$name){
     )
     return(graph)
   }
-  igraph::make_ego_graph(
-    graph = graph,
-    order = length(igraph::V(graph)),
-    nodes = to,
-    mode = "in"
+  ignore <- lightly_parallelize(
+    X = to,
+    FUN = function(vertex){
+      subcomponent(graph = graph, v = vertex, mode = "in")$name
+    },
+    jobs = jobs
   ) %>%
-    do.call(what = igraph::union)
+    unlist() %>%
+    unique() %>%
+    setdiff(x = igraph::V(graph)$name)
+  delete_vertices(graph, v = ignore)
 }
 
 filter_out_imports <- function(command_deps, plan, skip_imports, jobs){

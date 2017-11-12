@@ -30,7 +30,7 @@ Versions `drake` after 4.4.0 have different caching internals that increase spee
 
 1. Revert to a back-compatible version of drake with `devtools::install_version("drake", "4.4.0")`. Here, the [devtools package](https://github.com/hadley/devtools) must be installed (`install.packages("devtools")`).
 1. Run your project from scratch with `make(..., force = TRUE)`
-1. Use `migrate()` to convert your project to the new format. The `migrate()` function
+1. Use `migrate_drake_project()` to convert your project to the new format. The `migrate_drake_project()` function
     1. copies your old project to a backup folder.
     1. converts your project's cache to a format compatible with 5.0.0.
     1. informs you if the migration succeeded: that is, if outdated targets remained outdated and up to date targets remained up to date in the conversion.
@@ -39,46 +39,46 @@ Versions `drake` after 4.4.0 have different caching internals that increase spee
 
 ## Beware unparsable symbols in your workflow plan.
 
-In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check(my_plan)` to screen for illegal symbols and other problem areas.
+In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check_plan(my_plan)` to screen for illegal symbols and other problem areas.
 
-A common pitfall is using the `evaluate()` function to expand wildcards after applying single quotes to file targets.
+A common pitfall is using the `evaluate_plan()` function to expand wildcards after applying single quotes to file targets.
 
 ```{r filethenevaluate}
 library(magrittr) # for the pipe operator %>%
 workplan(
-  data = readRDS("data_..datasize...rds")
+  data = readRDS("data_DATASIZE__rds")
 ) %>%
   rbind(drake::workplan(
     file.csv = write.csv(
-      data_..datasize.., # nolint
-      "file_..datasize...csv"
+      data_DATASIZE__, # nolint
+      "file_DATASIZE__csv"
     ),
     strings_in_dots = "literals",
     file_targets = T
   )) %>%
-  evaluate(
-    rules = list(..datasize.. = c("small", "large"))
+  evaluate_plan(
+    rules = list(DATASIZE__ = c("small", "large"))
   )
 ```
 
 The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are illegal, and the target names do not even correspond to the files written. Instead, construct your workflow plan in multiple stages and apply the single quotes at the very end.
 
 ```{r correctevaldatasize}
-rules <- list(..datasize.. = c("small", "large"))
-datasets <- workplan(data = readRDS("data_..datasize...rds")) %>%
-  evaluate(rules = rules)
+rules <- list(DATASIZE__ = c("small", "large"))
+datasets <- workplan(data = readRDS("data_DATASIZE__rds")) %>%
+  evaluate_plan(rules = rules)
 ```
 
 Plan the CSV files separately.
 ```{r correctevaldatasize2}
 files <- workplan(
-  file = write.csv(data_..datasize.., "file_..datasize...csv"), # nolint
+  file = write.csv(data_DATASIZE__, "file_DATASIZE__csv"), # nolint
   strings_in_dots = "literals"
 ) %>%
-  evaluate(rules = rules)
+  evaluate_plan(rules = rules)
 ```
 
-Single-quote the file targets after `evaluate()`.
+Single-quote the file targets after `evaluate_plan()`.
 
 ```{r correctevaldatasize3}
 files$target <- paste0(
@@ -106,7 +106,7 @@ workplan(
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
 
 # Execution environment and files
 
@@ -141,7 +141,7 @@ error$calls # View the traceback.
 
 As of version 3.0.0, drake's execution environment is the user's workspace by default. As an upshot, the workspace is vulnerable to side-effects of `make()`. To protect your workspace, you may want to create a custom evaluation environment containing all your imported objects and then pass it to the envir argument of `make()`. Here is how.
 
-```{r envir}
+```{r envircaution, eval = FALSE}
 library(drake)
 envir <- new.env(parent = globalenv())
 eval(expression({
@@ -334,7 +334,7 @@ Yes, you can declare a file target or input file by enclosing it in single quote
 
 Be mindful of the maximum number of simultaneous parallel jobs you deploy. At best, too many jobs is poor etiquette on a system with many users and limited resources. At worst, too many jobs will crash a system. The `jobs` argument to `make()` sets the maximum number of simultaneous jobs in most cases, but not all.
 
-For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `backend()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
+For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `future::plan()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
 
 ## Parallel computing on Windows
 

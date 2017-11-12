@@ -2,19 +2,19 @@ drake_context("generate")
 
 test_with_dir("empty generative args", {
   x <- workplan(a = 1, b = FUNCTION())
-  expect_equal(evaluate(x), x)
+  expect_equal(evaluate_plan(x), x)
   expect_equal(evaluations(x), x)
-  expect_equal(expand(x), x)
+  expect_equal(expand_plan(x), x)
 })
 
 test_with_dir("evaluate, expand, and gather", {
   df <- workplan(data = simulate(center = MU, scale = SIGMA))
-  m0 <- evaluate(df, wildcard = "NULL", values = 1:2)
+  m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
-  m1 <- evaluate(df, rules = list(nothing = 1:2), expand = FALSE)
+  m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
   expect_equal(m1, df)
 
-  x <- expand(df, values = c("rep1", "rep2"))
+  x <- expand_plan(df, values = c("rep1", "rep2"))
   y <- data.frame(
     target = c("data_rep1", "data_rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2),
@@ -22,7 +22,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x, y)
 
-  x2 <- evaluate(x, wildcard = "MU", values = 1:2)
+  x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
   y <- data.frame(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
@@ -35,7 +35,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x2, y)
 
-  x3 <- evaluate(x2, wildcard = "SIGMA", values = letters[1:2],
+  x3 <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
     expand = FALSE)
   y <- data.frame(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
@@ -49,7 +49,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x3, y)
 
-  x4 <- evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
+  x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
     expand = FALSE)
   y <- data.frame(
     target = c("data_rep1", "data_rep2"),
@@ -61,12 +61,12 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x4, y)
 
-  x5 <- evaluate(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
+  x5 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
   expect_equal(12, nrow(x5))
   expect_equal(12, length(unique(x5$target)))
   expect_equal(6, length(unique(x5$command)))
 
-  x6 <- gather(x)
+  x6 <- gather_plan(x)
   y <- data.frame(
     target = "target",
     command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)",
@@ -74,7 +74,7 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x6, y)
 
-  x7 <- gather(x, target = "my_summaries", gather = "rbind")
+  x7 <- gather_plan(x, target = "my_summaries", gather = "rbind")
   y <- data.frame(
     target = "my_summaries",
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)",
@@ -86,10 +86,10 @@ test_with_dir("evaluate, expand, and gather", {
 test_with_dir("analyses and summaries", {
   datasets <- workplan(small = simulate(5), large = simulate(50))
   methods <- workplan(
-    regression1 = reg1(..dataset..), # nolint
-    regression2 = reg2(..dataset..) # nolint
+    regression1 = reg1(dataset__),
+    regression2 = reg2(dataset__)
   )
-  analyses <- analyses(methods, data = datasets)
+  analyses <- plan_analyses(methods, data = datasets)
   x <- data.frame(
     target = c(
       "regression1_small",
@@ -107,23 +107,23 @@ test_with_dir("analyses and summaries", {
   expect_equal(analyses, x)
 
   m2 <- workplan(regression1 = reg1(n), regression2 = reg2(n))
-  expect_equal(analyses(m2, data = datasets), m2)
+  expect_equal(plan_analyses(m2, data = datasets), m2)
 
   no_analyses <- workplan(
-    summ = summary(..dataset..), # nolint
-    coef = coefficients(..dataset..) # nolint
+    summ = summary(dataset__),
+    coef = coefficients(dataset__)
   )
   suppressWarnings(
     expect_error(
-      summaries(no_analyses, analyses, datasets)
+      plan_summaries(no_analyses, analyses, datasets)
     )
   )
 
   summary_types <- workplan(
-    summ = summary(..analysis..), # nolint
-    coef = coefficients(..analysis..) # nolint
+    summ = summary(analysis__),
+    coef = coefficients(analysis__)
   )
-  results <- summaries(summary_types, analyses, datasets, gather = NULL)
+  results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
   x <- data.frame(
     target = c(
       "summ_regression1_small",
@@ -150,10 +150,10 @@ test_with_dir("analyses and summaries", {
   expect_equal(results, x)
 
   summary_types <- workplan(
-    summ = summary(..analysis.., ..dataset..), # nolint
-    coef = coefficients(..analysis..) # nolint
+    summ = summary(analysis__, dataset__),
+    coef = coefficients(analysis__)
   )
-  results <- summaries(
+  results <- plan_summaries(
     summary_types,
     analyses,
     datasets,
@@ -188,14 +188,15 @@ test_with_dir("analyses and summaries", {
   expect_true(grepl("^rbind\\(coef", results$command[1]))
   expect_true(grepl("^list\\(summ", results$command[2]))
 
-  results <- summaries(summary_types, analyses, datasets)
+  results <- plan_summaries(summary_types, analyses, datasets)
   expect_true(all(grepl("^list\\(", results$command[1:2])))
 
-  results <- summaries(summary_types, analyses, datasets, gather = "my_bind")
+  results <- plan_summaries(
+    summary_types, analyses, datasets, gather = "my_bind")
   expect_true(all(grepl("^my_bind\\(", results$command[1:2])))
 
   expect_error(
-    nope <- summaries(
+    nope <- plan_summaries(
       summary_types,
       analyses,
       datasets,
@@ -206,10 +207,10 @@ test_with_dir("analyses and summaries", {
   newtypes <- rbind(
     summary_types,
     workplan(
-      other = myother(..dataset..) # nolint
+      other = myother(dataset__)
     )
   )
-  expect_warning(s <- summaries(newtypes, analyses, datasets,
+  expect_warning(s <- plan_summaries(newtypes, analyses, datasets,
     gather = NULL))
   expect_equal(nrow(s), 8)
 })

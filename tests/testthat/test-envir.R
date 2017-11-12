@@ -5,15 +5,15 @@ test_with_dir("prune_envir in full build", {
   # prune_envir() doesn't work.
   datasets <- workplan(x = 1, y = 2, z = 3)
   methods <- workplan(
-    a = ..dataset.., # nolint
-    b = ..dataset.., # nolint
-    c = ..dataset.. # nolint
+    a = dataset__,
+    b = dataset__,
+    c = dataset__
   )
-  analyses <- analyses(methods, datasets)
+  analyses <- plan_analyses(methods, datasets)
   heuristics <- workplan(
-    s = c(..dataset.., ..analysis..), # nolint
-    t = ..analysis..) # nolint
-  summaries <- summaries(
+    s = c(dataset__, analysis__),
+    t = analysis__)
+  summaries <- plan_summaries(
     heuristics,
     datasets = datasets,
     analyses = analyses,
@@ -33,7 +33,7 @@ test_with_dir("prune_envir in full build", {
     plan,
     targets = plan$target,
     envir = new.env(parent = globalenv()),
-    verbose = FALSE,
+    verbose = FALSE
   )
 
   # actually run

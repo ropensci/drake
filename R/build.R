@@ -1,6 +1,6 @@
-#' @title Internal function build
+#' @title Internal function drake_build
 #' @export
-#' @description Function to build a target.
+#' @description Function to build a target or import.
 #' For internal use only.
 #' the only reason this function is exported
 #' is to set up PSOCK clusters efficiently.
@@ -25,12 +25,12 @@
 #' # Should not yet include 'small'.
 #' cached()
 #' # Build 'small'
-#' build(target = "small", meta_list = meta_list, config = config)
+#' drake_build(target = "small", meta_list = meta_list, config = config)
 #' # Should now include 'small'
 #' cached()
 #' readd(small)
 #' }
-build <- function(target, meta_list, config){
+drake_build <- function(target, meta_list, config){
   config$hook(
     build_in_hook(
       target = target,

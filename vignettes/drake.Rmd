@@ -73,7 +73,7 @@ load_basic_example() # Also (over)writes report.Rmd.
 plot_graph(my_plan)  # Hover, click, drag, zoom, pan. See args 'from' and 'to'.
 outdated(my_plan)    # Which targets need to be (re)built?
 missed(my_plan)      # Are you missing anything from your workspace?
-check(my_plan)       # Are you missing files? Is your workflow plan okay?
+check_plan(my_plan)  # Are you missing files? Is your workflow plan okay?
 make(my_plan)        # Run the workflow.
 diagnose(large)      # View error info if the target "large" failed to build.
 outdated(my_plan)    # Everything is up to date.
@@ -102,11 +102,11 @@ example_drake()
 set up your workflow plan,
 
 ```{r plandrakermd, eval = FALSE}
-analyses()
-summaries()
-evaluate()
-expand()
-gather()
+plan_analyses()
+plan_summaries()
+evaluate_plan()
+expand_plan()
+gather_plan()
 wildcard() # from the wildcard package
 ```
 
@@ -174,7 +174,7 @@ type_of_cache()
 and debug your work.
 
 ```{r debugdrakermd, eval = FALSE}
-check()
+check_plan()
 config()
 read_config()
 diagnose()
@@ -182,7 +182,7 @@ dependency_profile()
 in_progress()
 progress()
 rescue_cache()
-session()
+drake_session()
 ```
 
 # Reproducibility
