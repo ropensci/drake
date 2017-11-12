@@ -7,7 +7,7 @@
 missed(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
-  prework = character(0), config = NULL)
+  prework = character(0), graph = NULL, config = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -36,6 +36,8 @@ default.}
 \item{packages}{same as for \code{\link{make}}}
 
 \item{prework}{same as for \code{\link{make}}}
+
+\item{graph}{same as for \code{\link{make}}}
 
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},

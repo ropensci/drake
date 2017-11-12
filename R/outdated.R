@@ -50,7 +50,7 @@ outdated <-  function(
   jobs = 1,
   packages = rev(.packages()),
   prework = character(0),
-  graph = NULL, 
+  graph = NULL,
   config = NULL,
   make_imports = TRUE
 ){
@@ -66,7 +66,7 @@ outdated <-  function(
       parallelism = parallelism,
       jobs = jobs,
       packages = packages,
-      prework = prework, 
+      prework = prework,
       graph = graph
     )
   }

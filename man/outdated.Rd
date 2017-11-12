@@ -8,8 +8,8 @@ outdated(plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE, hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0), config = NULL,
-  make_imports = TRUE)
+  packages = rev(.packages()), prework = character(0), graph = NULL,
+  config = NULL, make_imports = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -34,6 +34,8 @@ non-null \code{config} argument is supplied.}
 \item{packages}{same as for \code{\link{make}}}
 
 \item{prework}{same as for \code{\link{make}}}
+
+\item{graph}{same as for \code{\link{make}}}
 
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
