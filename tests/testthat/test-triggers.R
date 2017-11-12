@@ -70,7 +70,7 @@ test_with_dir("triggers work as expected", {
   expect_equal(justbuilt(con), character(0))
 })
 
-test_with_dir("global missing trigger brings targets up to date", {
+test_with_dir("missing trigger updates targets (assumes full igraph)", {
   con <- dbug()
   con <- make(
     con$plan, trigger = "missing", parallelism = con$parallelism,

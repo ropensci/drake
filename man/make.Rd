@@ -13,7 +13,8 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
-  retries = 0, force = FALSE, return_config = NULL, trigger = "any")
+  retries = 0, force = FALSE, return_config = NULL, graph = NULL,
+  trigger = "any")
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -186,6 +187,11 @@ a version of drake that is not back compatible with your project's cache.}
 of runtime configuration parameters used by \code{make()}.
 This argument is deprecated. Now, a configuration list
 is always invisibly returned.}
+
+\item{graph}{An \code{igraph} object from the previous \code{make()}.
+Supplying a pre-built graph could save time.
+The graph is constructed by \code{\link{build_graph}()}.
+You can also get one from \code{\link{config}(my_plan)$graph}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.

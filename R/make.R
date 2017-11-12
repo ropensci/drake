@@ -182,6 +182,11 @@
 #' This argument is deprecated. Now, a configuration list
 #' is always invisibly returned.
 #'
+#' @param graph An \code{igraph} object from the previous \code{make()}.
+#' Supplying a pre-built graph could save time.
+#' The graph is constructed by \code{\link{build_graph}()}.
+#' You can also get one from \code{\link{config}(my_plan)$graph}.
+#'
 #' @param trigger Name of the trigger to apply to all targets.
 #' Ignored if \code{plan} has a \code{trigger} column.
 #' Must be in \code{\link{triggers}()}.
@@ -238,6 +243,7 @@ make <- function(
   retries = 0,
   force = FALSE,
   return_config = NULL,
+  graph = NULL,
   trigger = "any"
 ){
   force(envir)
@@ -278,6 +284,7 @@ make <- function(
     elapsed = elapsed,
     retries = retries,
     force = force,
+    graph = graph,
     trigger = trigger
   )
   store_config(config = config)

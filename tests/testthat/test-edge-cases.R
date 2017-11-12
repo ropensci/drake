@@ -1,5 +1,20 @@
 drake_context("edge cases")
 
+test_with_dir("Supplied graph disagrees with the workflow plan", {
+  con <- dbug()
+  con2 <- config(workplan(a = 1), verbose = FALSE)
+  expect_warning(
+    make(
+      plan = con$plan,
+      parallelism = con$parallelism,
+      jobs = con$jobs,
+      envir = con$envir,
+      graph = con2$graph,
+      verbose = FALSE
+    )
+  )
+})
+
 test_with_dir("error handlers", {
   expect_equal(error_na(1), NA)
   expect_false(error_false(1))
