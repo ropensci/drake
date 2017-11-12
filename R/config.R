@@ -91,7 +91,7 @@ config <- function(
     prework = prework
   )
   if (is.null(cache)) {
-    cache <- recover_cache(force = force)
+    cache <- recover_cache(force = force, verbose = verbose)
   }
   if (!force){
     assert_compatible_cache(cache = cache)

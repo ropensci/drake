@@ -273,7 +273,9 @@ status <- function(
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
 #' @examples
-#' default_system2_args()
+#' \dontrun{
+#' default_system2_args(jobs = 1, verbose = TRUE)
+#' }
 default_system2_args <- function(jobs, verbose){
   .Deprecated(
     "default_system2_args",

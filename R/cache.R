@@ -150,6 +150,7 @@ this_cache <- function(
 #' \code{\link{in_memory_cache_types}}
 #' @param path file path to the cache if the cache
 #' is a file system cache.
+#' @param verbose logical, whether to print out the path of the cache.
 #' @param type character scalar, type of the drake cache.
 #' Must be among the list of supported caches
 #' in \code{\link{cache_types}()}.
@@ -172,6 +173,7 @@ this_cache <- function(
 #' ls(e) # Storr populates the environment for use in an in-memory cache.
 new_cache <- function(
   path = drake::default_cache_path(),
+  verbose = TRUE,
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(),
@@ -197,6 +199,7 @@ new_cache <- function(
     clear_progress = FALSE,
     overwrite_hash_algos = FALSE
   )
+  console_cache(path = cache_path(cache), verbose = verbose)
   cache
 }
 
@@ -242,6 +245,7 @@ recover_cache <- function(
   if (is.null(cache)){
     cache <- new_cache(
       path = path,
+      verbose = verbose,
       short_hash_algo = short_hash_algo,
       long_hash_algo = long_hash_algo,
       type = type

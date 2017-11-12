@@ -67,5 +67,7 @@ type_of_cache <- function(path = drake::default_cache_path()){
   if (!file.exists(path)){
     return(NULL)
   }
-  "storr_rds" # This is the only type of filesystem cache considered so far.
+  # NULL means the same thing as the default "storr_rds",
+  # currently the only supported file system cache type.
+  NULL
 }

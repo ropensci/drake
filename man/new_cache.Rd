@@ -4,7 +4,7 @@
 \alias{new_cache}
 \title{Function new_cache}
 \usage{
-new_cache(path = drake::default_cache_path(),
+new_cache(path = drake::default_cache_path(), verbose = TRUE,
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(), ...)
@@ -12,6 +12,8 @@ new_cache(path = drake::default_cache_path(),
 \arguments{
 \item{path}{file path to the cache if the cache
 is a file system cache.}
+
+\item{verbose}{logical, whether to print out the path of the cache.}
 
 \item{type}{character scalar, type of the drake cache.
 Must be among the list of supported caches

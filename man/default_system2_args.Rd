@@ -18,7 +18,9 @@ default_system2_args(jobs, verbose)
 Use \code{\link{default_Makefile_args}()} instead.
 }
 \examples{
-default_system2_args()
+\dontrun{
+default_system2_args(jobs = 1, verbose = TRUE)
+}
 }
 \seealso{
 \code{\link{default_Makefile_args}}

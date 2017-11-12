@@ -96,7 +96,7 @@ short_hash <- function(
 #' On the other hand, some internal hashes in drake are
 #' never used as file names, and those hashes can use a longer hash
 #' to avoid collisions.
-#' 
+#'
 #' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
@@ -107,7 +107,7 @@ short_hash <- function(
 #'
 #' @examples
 #' default_short_hash_algo()
-#' #' \dontrun{
+#' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project and return the internal master configuration list.
 #' config <- make(my_plan)
@@ -161,7 +161,7 @@ default_short_hash_algo <- function(cache = NULL) {
 #' On the other hand, some internal hashes in drake are
 #' never used as file names, and those hashes can use a longer hash
 #' to avoid collisions.
-#' 
+#'
 #' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
@@ -172,7 +172,7 @@ default_short_hash_algo <- function(cache = NULL) {
 #'
 #' @examples
 #' default_long_hash_algo()
-#' #' \dontrun{
+#' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project and return the internal master configuration list.
 #' config <- make(my_plan)
