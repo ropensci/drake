@@ -26,14 +26,16 @@ to be compatible with the version of drake on your system.
 Drake versions after 4.4.0
 have a different internal structure for the cache.
 This means projects built with drake 4.4.0 or before are not compatible
-with projects built with a later version of drake. migrate_drake_project() converts
+with projects built with a later version of drake.
+The \code{migrate_drake_project()} function converts
 an old cache to a format compatible with the version of drake
 installed on your system.
 A migration is successful if the transition preserves target status:
 that is, outdated targets remain outdated and up to date targets
 remain up to date. At the end, \code{migrate_drake_project()}
 tells you whether the migration
-is successful. If it is not successful, \code{migrate_drake_project()} tells you where
+is successful. If it is not successful,
+\code{migrate_drake_project()} tells you where
 it backed up your old project.
 }
 \examples{

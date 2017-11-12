@@ -114,7 +114,7 @@ config <- function(
       envir = envir, verbose = verbose, jobs = jobs,
       skip_imports = skip_imports)
   } else {
-    graph <- prune_graph(graph = graph, to = targets)
+    graph <- prune_graph(graph = graph, to = targets, jobs = jobs)
   }
   config <- list(
     plan = plan, targets = targets, envir = envir, cache = cache,
