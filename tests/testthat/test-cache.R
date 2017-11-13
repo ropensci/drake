@@ -57,6 +57,8 @@ test_with_dir("cache functions work", {
   }
 
   testrun(config)
+
+  # drake_gc() should not remove any important targets/imports.
   x <- cached()
   expect_true(length(x) > 0)
   drake_gc()
