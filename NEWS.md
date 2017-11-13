@@ -20,6 +20,8 @@
     - `evaluate()` => `evaluate_plan()`
     - `expand()` => `expand_plan()`
     - `gather()` => `gather_plan()`
+    - `plot_graph()` => `vis_drake_graph()`
+    - `render_graph()` => `render_drake_graph()`
     - `session()` => `drake_session()`
     - `summaries()` => `plan_summaries()`
 - Disallow `output` and `code` as names in the workflow plan data frame. Use `target` and `command` instead. This naming switch has been formally deprecated for several months prior.

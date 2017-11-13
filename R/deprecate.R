@@ -391,7 +391,7 @@ plan <- function(
 #' @param from_scratch Same as for \code{\link{vis_drake_graph}()}.
 #' @param ... Same as for \code{\link{vis_drake_graph}()}.
 #' @examples
-#' # See ?workplan for examples.
+#' # See ?vis_drake_graph for examples.
 plot_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
@@ -462,6 +462,60 @@ plot_graph <- function(
     ncol_legend = ncol_legend,
     make_imports = make_imports,
     from_scratch = from_scratch,
+    ... = ...
+  )
+}
+
+#' @title Deprecated function \code{render_graph}
+#' @description Use \code{\link{render_drake_graph}()} instead.
+#' @details Deprecated on 2017-10.
+#' @seealso \code{\link{render_drake_graph}}
+#' @export
+#' @keywords internal
+#' @return Same as for \code{\link{render_drake_graph}()}.
+#' @param graph_dataframes Same as for \code{\link{render_drake_graph}()}.
+#' @param file Same as for \code{\link{render_drake_graph}()}.
+#' @param layout Same as for \code{\link{render_drake_graph}()}.
+#' @param direction Same as for \code{\link{render_drake_graph}()}.
+#' @param hover Same as for \code{\link{render_drake_graph}()}.
+#' @param main Same as for \code{\link{render_drake_graph}()}.
+#' @param selfcontained Same as for \code{\link{render_drake_graph}()}.
+#' @param navigationButtons Same as for \code{\link{render_drake_graph}()}. # nolint
+#' @param ncol_legend Same as for \code{\link{render_drake_graph}()}.
+#' @param ... Same as for \code{\link{render_drake_graph}()}.
+#' @examples
+#' # See ?render_drake_graph for examples.
+render_graph <- function(
+  graph_dataframes,
+  file = character(0),
+  layout = "layout_with_sugiyama",
+  direction = "LR",
+  hover = TRUE,
+  main = graph_dataframes$default_title,
+  selfcontained = FALSE,
+  navigationButtons = TRUE, # nolint
+  ncol_legend = 1,
+  ...
+){
+  .Deprecated(
+    "render_graph",
+    package = "drake",
+    msg = paste(
+      "drake::render_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use render_drake_graph() instead."
+    )
+  )
+  render_drake_graph(
+    graph_dataframes = graph_dataframes,
+    file = file,
+    layout = layout,
+    direction = direction,
+    hover = hover,
+    main = main,
+    selfcontained = selfcontained,
+    navigationButtons = navigationButtons,
+    ncol_legend = ncol_legend,
     ... = ...
   )
 }

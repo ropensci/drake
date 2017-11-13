@@ -83,7 +83,7 @@ Use \code{\link{vis_drake_graph}()} instead.
 Deprecated on 2017-10.
 }
 \examples{
-# See ?workplan for examples.
+# See ?vis_drake_graph for examples.
 }
 \seealso{
 \code{\link{vis_drake_graph}}

@@ -128,7 +128,7 @@ outdated()
 missed()
 vis_drake_graph() # Now with subgraph functionality.
 dataframes_graph()
-render_graph()
+render_drake_graph()
 read_graph()
 deps()
 knitr_deps()

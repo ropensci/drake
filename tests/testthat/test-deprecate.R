@@ -62,8 +62,11 @@ test_with_dir("generative templating deprecation", {
 })
 
 test_with_dir("deprecated graphing functions", {
-  expect_warning(build_graph(workplan(a = 1)))
-  expect_warning(plot_graph(workplan(a = 1), file = "graph.html"))
+  pl <- workplan(a = 1)
+  expect_warning(build_graph(pl))
+  expect_warning(out <- plot_graph(pl))
+  df <- dataframes_graph(pl)
+  expect_warning(out <- render_graph(df))
 })
 
 test_with_dir("deprecate misc utilities", {
