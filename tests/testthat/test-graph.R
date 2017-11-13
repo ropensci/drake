@@ -7,7 +7,7 @@ test_with_dir("Supplied graph is not an igraph.", {
 test_with_dir("graph does not fail if input file is binary", {
   x <- workplan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
-  expect_silent(out <- plot_graph(x, verbose = FALSE))
+  expect_silent(out <- vis_drake_graph(x, verbose = FALSE))
   unlink("input.rds", force = TRUE)
 })
 
@@ -39,7 +39,7 @@ test_with_dir("graph functions work", {
   config <- dbug()
   expect_equal(class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
-  tmp <- plot_graph(plan = config$plan, envir = config$envir,
+  tmp <- vis_drake_graph(plan = config$plan, envir = config$envir,
                     verbose = FALSE)
   dev.off()
   unlink("Rplots.pdf", force = TRUE)

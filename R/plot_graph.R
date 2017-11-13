@@ -1,4 +1,4 @@
-#' @title Function \code{plot_graph}
+#' @title Function \code{vis_drake_graph}
 #' @description Plot the dependency structure of your workplan.
 #' IMPORTANT: you must be in the root directory of your project.
 #' To save time for repeated plotting, this function is divided into
@@ -152,17 +152,17 @@
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
 #' # Plot the network graph representation of the workflow.
-#' plot_graph(my_plan, width = '100%') # The width is passed to visNetwork
+#' vis_drake_graph(my_plan, width = '100%') # The width is passed to visNetwork
 #' make(my_plan) # Run the project, build the targets.
-#' plot_graph(my_plan) # The red nodes from before are now green.
+#' vis_drake_graph(my_plan) # The red nodes from before are now green.
 #' # Plot a subgraph of the workflow.
-#' plot_graph(
+#' vis_drake_graph(
 #'   my_plan,
 #'   from = c("small", "reg2"),
 #'   to = "summ_regression2_small"
 #' )
 #' }
-plot_graph <- function(
+vis_drake_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = TRUE,
   hook = default_hook,
@@ -253,11 +253,11 @@ plot_graph <- function(
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
-#' # Instead of jumpting right to plot_graph(), get the data frames
+#' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
 #' graph <- dataframes_graph(my_plan)
 #' # You can pass the data frames right to render_graph()
-#' # (as in plot_graph()) or you can create your own custom visNewtork graph.
+#' # (as in vis_drake_graph()) or you can create your own custom visNewtork graph.
 #' render_graph(graph, width = '100%') # The width is passed to visNetwork.
 #' }
 render_graph <- function(

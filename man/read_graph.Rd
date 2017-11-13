@@ -22,7 +22,7 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{verbose}{logical, whether to print console messages}
 
-\item{...}{arguments to \code{visNetwork()} via \code{\link{plot_graph}()}}
+\item{...}{arguments to \code{visNetwork()} via \code{\link{vis_drake_graph}()}}
 }
 \value{
 An \code{igraph} object representing the dependency
@@ -31,7 +31,7 @@ network of the workflow.
 \description{
 Read the igraph-style dependency graph of your targets
 from your last attempted call to \code{\link{make}()}.
-For better graphing utilities, see \code{\link{plot_graph}()}
+For better graphing utilities, see \code{\link{vis_drake_graph}()}
 and related functions.
 }
 \examples{
@@ -44,5 +44,5 @@ class(g) # "igraph"
 }
 }
 \seealso{
-\code{\link{plot_graph}}, \code{\link{read_config}}
+\code{\link{vis_drake_graph}}, \code{\link{read_config}}
 }

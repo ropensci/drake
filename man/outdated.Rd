@@ -69,5 +69,5 @@ outdated(my_plan)
 }
 \seealso{
 \code{\link{missed}}, \code{\link{workplan}},
-\code{\link{make}}, \code{\link{plot_graph}}
+\code{\link{make}}, \code{\link{vis_drake_graph}}
 }

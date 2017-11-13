@@ -355,6 +355,117 @@ plan <- function(
   sanitize_plan(plan)
 }
 
+#' @title Deprecated function \code{plot_graph}
+#' @description Use \code{\link{vis_drake_graph}()} instead.
+#' @details Deprecated on 2017-10.
+#' @seealso \code{\link{vis_drake_graph}}
+#' @export
+#' @keywords internal
+#' @return Same as for \code{\link{vis_drake_graph}()}.
+#' @param plan Same as for \code{\link{vis_drake_graph}()}.
+#' @param envir Same as for \code{\link{vis_drake_graph}()}.
+#' @param hook Same as for \code{\link{vis_drake_graph}()}.
+#' @param cache Same as for \code{\link{vis_drake_graph}()}.
+#' @param jobs Same as for \code{\link{vis_drake_graph}()}.
+#' @param packages Same as for \code{\link{vis_drake_graph}()}.
+#' @param prework Same as for \code{\link{vis_drake_graph}()}.
+#' @param verbose Same as for \code{\link{vis_drake_graph}()}.
+#' @param config Same as for \code{\link{vis_drake_graph}()}.
+#' @param file Same as for \code{\link{vis_drake_graph}()}.
+#' @param build_times Same as for \code{\link{vis_drake_graph}()}.
+#' @param digits Same as for \code{\link{vis_drake_graph}()}.
+#' @param targets_only Same as for \code{\link{vis_drake_graph}()}.
+#' @param split_columns Same as for \code{\link{vis_drake_graph}()}.
+#' @param font_size Same as for \code{\link{vis_drake_graph}()}.
+#' @param layout Same as for \code{\link{vis_drake_graph}()}.
+#' @param main Same as for \code{\link{vis_drake_graph}()}.
+#' @param direction Same as for \code{\link{vis_drake_graph}()}.
+#' @param hover Same as for \code{\link{vis_drake_graph}()}.
+#' @param navigationButtons Same as for \code{\link{vis_drake_graph}()}. # nolint
+#' @param from Same as for \code{\link{vis_drake_graph}()}.
+#' @param mode Same as for \code{\link{vis_drake_graph}()}.
+#' @param order Same as for \code{\link{vis_drake_graph}()}.
+#' @param subset Same as for \code{\link{vis_drake_graph}()}.
+#' @param ncol_legend Same as for \code{\link{vis_drake_graph}()}.
+#' @param make_imports Same as for \code{\link{vis_drake_graph}()}.
+#' @param from_scratch Same as for \code{\link{vis_drake_graph}()}.
+#' @param ... Same as for \code{\link{vis_drake_graph}()}.
+#' @examples
+#' # See ?workplan for examples.
+plot_graph <- function(
+  plan = workplan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE,
+  hook = default_hook,
+  cache = drake::get_cache(verbose = verbose),
+  jobs = 1,
+  parallelism = drake::default_parallelism(),
+  packages = rev(.packages()),
+  prework = character(0),
+  config = NULL,
+  file = character(0),
+  selfcontained = FALSE,
+  build_times = TRUE,
+  digits = 3,
+  targets_only = FALSE,
+  split_columns = FALSE,
+  font_size = 20,
+  layout = "layout_with_sugiyama",
+  main = NULL,
+  direction = "LR",
+  hover = TRUE,
+  navigationButtons = TRUE, # nolint
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  ncol_legend = 1,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  ...
+){
+  .Deprecated(
+    "plot_graph",
+    package = "drake",
+    msg = paste(
+      "drake::plot_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use vis_drake_graph() instead."
+    )
+  )
+  vis_drake_graph(
+    plan = plan,
+    envir = envir,
+    verbose = verbose,
+    hook = hook,
+    cache = cache,
+    jobs = jobs,
+    parallelism = parallelism,
+    packages = packages,
+    prework = prework,
+    config = config,
+    file = file,
+    selfcontained = selfcontained,
+    build_times = build_times,
+    digits = digits,
+    targets_only = targets_only,
+    split_columns = split_columns,
+    font_size = font_size,
+    layout = layout,
+    main = main,
+    direction = direction,
+    hover = hover,
+    navigationButtons = navigationButtons, # nolint
+    from = from,
+    mode = mode,
+    order = order,
+    subset = subset,
+    ncol_legend = ncol_legend,
+    make_imports = make_imports,
+    from_scratch = from_scratch,
+    ... = ...
+  )
+}
+
 #' @title Deprecated function \code{session}
 #' @description Use \code{\link{drake_session}()} instead
 #' @details Deprecated on 2017-11-12.

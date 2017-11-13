@@ -228,9 +228,9 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' @title Function \code{read_graph}
 #' @description Read the igraph-style dependency graph of your targets
 #' from your last attempted call to \code{\link{make}()}.
-#' For better graphing utilities, see \code{\link{plot_graph}()}
+#' For better graphing utilities, see \code{\link{vis_drake_graph}()}
 #' and related functions.
-#' @seealso \code{\link{plot_graph}}, \code{\link{read_config}}
+#' @seealso \code{\link{vis_drake_graph}}, \code{\link{read_config}}
 #' @export
 #' @return An \code{igraph} object representing the dependency
 #' network of the workflow.
@@ -244,7 +244,7 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose logical, whether to print console messages
-#' @param ... arguments to \code{visNetwork()} via \code{\link{plot_graph}()}
+#' @param ... arguments to \code{visNetwork()} via \code{\link{vis_drake_graph}()}
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.

@@ -135,7 +135,7 @@ so you can plot your own custom \code{visNetwork}.
 \dontrun{
 load_basic_example() # Load drake's canonical example.
 # Get a list of data frames representing the nodes, edges,
-# and legend nodes of the visNetwork graph from plot_graph().
+# and legend nodes of the visNetwork graph from vis_drake_graph().
 raw_graph <- dataframes_graph(my_plan)
 # Choose a subset of the graph.
 smaller_raw_graph <- dataframes_graph(
@@ -155,5 +155,5 @@ visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
 }
 }
 \seealso{
-\code{\link{plot_graph}}, \code{\link{build_drake_graph}}
+\code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}}
 }

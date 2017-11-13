@@ -16,7 +16,7 @@ test_with_dir("basic example works", {
     target = "'report.md'", config = config)))
   expect_true(is.list(dependency_profile(
     target = "'report.Rmd'", config = config)))
-  tmp <- plot_graph(my_plan, envir = e, config = config)
+  tmp <- vis_drake_graph(my_plan, envir = e, config = config)
   expect_false(file.exists("Makefile"))
 
   # Different graph configurations should be checked manually.
@@ -60,7 +60,7 @@ test_with_dir("basic example works", {
 
   file <- "graph.html"
   expect_false(file.exists(file))
-  plot_graph(my_plan, envir = e, config = config, file = file)
+  vis_drake_graph(my_plan, envir = e, config = config, file = file)
   expect_true(file.exists(file))
   unlink(file, force = TRUE)
   unlink("graph_files", recursive = TRUE, force = TRUE)
@@ -146,7 +146,7 @@ test_with_dir("basic example works", {
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, config = config)),
     character(0))
-  tmp <- plot_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  tmp <- vis_drake_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   tmp <- dataframes_graph(my_plan, envir = e, jobs = jobs,
     parallelism = parallelism, verbose = FALSE)

@@ -12,16 +12,16 @@ default_graph_title(parallelism = drake::parallelism_choices(distributed_only
 See \code{\link{parallelism_choices}()}.}
 
 \item{split_columns}{logical, whether the columns were split
-in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
+in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
 with the \code{split_columns} argument.}
 }
 \description{
 Default title of the graph for
-\code{\link{plot_graph}()}.
+\code{\link{vis_drake_graph}()}.
 }
 \examples{
 default_graph_title()
 }
 \seealso{
-\code{\link{dataframes_graph}}, \code{\link{plot_graph}}
+\code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
 }

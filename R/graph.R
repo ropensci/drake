@@ -4,8 +4,8 @@
 #' the targets in your workplan depend on each other.
 #' (\code{help(package = "igraph")}). To plot the graph, call
 #' to \code{\link{plot.igraph}()} on your graph, or just use
-#' \code{\link{plot_graph}()} from the start.
-#' @seealso \code{\link{plot_graph}}
+#' \code{\link{vis_drake_graph}()} from the start.
+#' @seealso \code{\link{vis_drake_graph}}
 #' @export
 #' @return An igraph object representing
 #' the workflow plan dependency network.

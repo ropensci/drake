@@ -28,7 +28,7 @@ Inspect and run your project.
 ```{r quickstartquickstart, eval = FALSE}
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd.
-plot_graph(my_plan) # Hover, click, drag, zoom, pan. See args 'from' and 'to'.
+vis_drake_graph(my_plan) # Hover, click, drag, zoom, pan. See args 'from' and 'to'.
 make(my_plan) # Run the workflow.
 outdated(my_plan) # Check that everything is already up to date.
 ```
@@ -125,7 +125,7 @@ Each row is an intermediate step, and each **command** generates a **target**. A
 
 ```{r graph1quick, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
-plot_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -270,7 +270,7 @@ In the new graph, the red nodes from before are now green.
 
 ```{r graph2quick, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
-plot_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -333,7 +333,7 @@ config$cache$get_hash(key = "reg2") # different
 
 ```{r graph3quick, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
-plot_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -393,7 +393,7 @@ As you have seen with `reg2()`, `drake` reacts to changes. In other words, `make
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr/) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
 
-To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `plot_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches.
+To explore the dependencies, please refer to the `deps()` and `tracked()` functions. Better yet, generate interactive graphs with `vis_drake_graph()` as shown above. Hover over the nodes in the graph to see the content that `drake` watches.
 
 There is more to reproducibility than just using `drake` to watch for dependencies. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 

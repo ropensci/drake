@@ -9,7 +9,7 @@
 drake_tip <- function() {
   tips <- c(
     "In drake >= 4.4.0, you can select subgraphs of the workflow graph:
-     e.g. plot_graph(..., from = some_targets, mode = \"out\", order = 2).
+     e.g. vis_drake_graph(..., from = some_targets, mode = \"out\", order = 2).
      See the new 'graph' vignette for more.",
 
     "Use diagnose() to retrieve diagnostic information on
@@ -35,9 +35,9 @@ drake_tip <- function() {
 
     "Drake quickstart:
      load_basic_example();
-     plot_graph(my_plan);
+     vis_drake_graph(my_plan);
      make(my_plan);
-     plot_graph(my_plan)"
+     vis_drake_graph(my_plan)"
   ) %>% wrap_text
   sample(tips, 1)
 }

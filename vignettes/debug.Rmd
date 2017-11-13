@@ -72,7 +72,7 @@ After quality-checking your plan, you should check that you understand how the s
 
 ```{r demoplotgraphdebug, eval = FALSE}
 # Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
-plot_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe

@@ -106,7 +106,7 @@ workplan(
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_drake_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `vis_drake_graph()` and `build_drake_graph()` to see the dependency structure of your project.
 
 # Execution environment and files
 
@@ -253,7 +253,7 @@ First of all, if you are ever unsure about what exactly is reproducibly tracked,
 ```{r helpfuncitons, eval = FALSE}
 ?deps
 ?tracked
-?plot_graph
+?vis_drake_graph
 ```
 
 Drake can be fooled into skipping objects that should be treated as dependencies. For example:
@@ -313,7 +313,7 @@ do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]),
 
 Thus, If `f <- Vectorize(g, ...)` is such a function, drake searches `g()` for dependencies, not `f()`. Specifically, if drake sees that `environment(f)[["FUN"]]` exists and is a function, then `environment(f)[["FUN"]]` will be searched instead of `f()`.
 
-In addition, if `f()` is the output of `Vectorize()`, then drake reacts to changes in `environment(f)[["FUN"]]`, not `f()`. Thus, if the configuration settings of vectorization change (such as which arguments are vectorized), but the core element-wise functionality remains the same, then `make()` still thinks everything is up to date. Also, if you hover over the `f` node in `plot_graph(hover = TRUE)`, then you will see the body of `environment(f)[["FUN"]]`, not the body of `f()`.
+In addition, if `f()` is the output of `Vectorize()`, then drake reacts to changes in `environment(f)[["FUN"]]`, not `f()`. Thus, if the configuration settings of vectorization change (such as which arguments are vectorized), but the core element-wise functionality remains the same, then `make()` still thinks everything is up to date. Also, if you hover over the `f` node in `vis_drake_graph(hover = TRUE)`, then you will see the body of `environment(f)[["FUN"]]`, not the body of `f()`.
 
 ## Compiled code is not reproducibly tracked.
 

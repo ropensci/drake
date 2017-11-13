@@ -81,14 +81,14 @@ install_github("wlandau-lilly/drake", build = TRUE)        # Development version
 ```r
 library(drake)
 load_basic_example() # Also (over)writes report.Rmd.
-plot_graph(my_plan)  # Click, drag, pan, hover. See arguments 'from' and 'to'.
+vis_drake_graph(my_plan)  # Click, drag, pan, hover. See arguments 'from' and 'to'.
 outdated(my_plan)    # Which targets need to be (re)built?
 missed(my_plan)      # Are you missing anything from your workspace?
 check_plan(my_plan)  # Are you missing files? Is your workflow plan okay?
 make(my_plan)        # Run the workflow.
 diagnose(large)      # View error info if the target "large" failed to build.
 outdated(my_plan)    # Everything is up to date.
-plot_graph(my_plan)  # The graph also shows what is up to date.
+vis_drake_graph(my_plan)  # The graph also shows what is up to date.
 ```
 
 Dive deeper into the built-in examples.
@@ -126,7 +126,7 @@ explore the dependency network,
 ```r
 outdated()
 missed()
-plot_graph() # Now with subgraph functionality.
+vis_drake_graph() # Now with subgraph functionality.
 dataframes_graph()
 render_graph()
 read_graph()
@@ -210,10 +210,10 @@ reg2 <- function(d){
   lm(y ~ x3, data = d)
 }
 outdated(my_plan)   # Some targets depend on reg2().
-plot_graph(my_plan) # See arguments 'from' and 'to'.
+vis_drake_graph(my_plan) # See arguments 'from' and 'to'.
 make(my_plan)       # Rebuild just the outdated targets.
 outdated(my_plan)   # Everything is up to date again.
-plot_graph(my_plan) # The colors changed in the graph.
+vis_drake_graph(my_plan) # The colors changed in the graph.
 ```
 
 Similarly to imported functions like `reg2()`, `drake` reacts to changes in
@@ -246,9 +246,9 @@ reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-# Run plot_graph() yourself for interactivity.
+# Run vis_drake_graph() yourself for interactivity.
 # Then hover, click, drag, pan, and zoom.
-plot_graph(my_plan, width = "100%")
+vis_drake_graph(my_plan, width = "100%")
 ```
 
 ![](./images/graph.png)
