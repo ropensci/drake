@@ -108,7 +108,7 @@ my_plan <- rbind(report, my_datasets, my_analyses, results)
 
 # Graph the dependency structure of your workflow
 # vis_drake_graph(my_plan) # plots an interactive web app via visNetwork. #nolint optional
-workflow_graph <- build_graph(my_plan) # igraph object
+workflow_graph <- build_drake_graph(my_plan) # igraph object
 
 # Check for circularities, missing input files, etc.
 check_plan(my_plan)
