@@ -20,6 +20,7 @@ test_with_dir("deprecation: cache functions", {
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
   expect_warning(session())
+  expect_warning(read_graph())
 })
 
 test_with_dir("workplan deprecation", {

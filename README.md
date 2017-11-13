@@ -129,7 +129,7 @@ missed()
 vis_drake_graph() # Now with subgraph functionality.
 dataframes_graph()
 render_drake_graph()
-read_graph()
+read_drake_graph()
 deps()
 knitr_deps()
 tracked()

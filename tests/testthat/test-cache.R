@@ -97,7 +97,7 @@ test_with_dir("cache functions work", {
   expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = FALSE), config$plan)
-  expect_equal(class(read_graph(search = FALSE)), "igraph")
+  expect_equal(class(read_drake_graph(search = FALSE)), "igraph")
 
   # imported , built, cached, diagnose, rescue
   expect_equal(diagnose(search = FALSE), character(0))
@@ -192,7 +192,7 @@ test_with_dir("cache functions work", {
   newconfig <- read_drake_config(search = TRUE, path = s)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = TRUE, path = s), config$plan)
-  expect_equal(class(read_graph(search = TRUE, path = s)),
+  expect_equal(class(read_drake_graph(search = TRUE, path = s)),
     "igraph")
 
   # load and read stuff
@@ -207,13 +207,13 @@ test_with_dir("cache functions work", {
   # Read the graph
   pdf(NULL)
   tmp <- dbug()
-  tmp <- read_graph(search = TRUE, path = s)
+  tmp <- read_drake_graph(search = TRUE, path = s)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
 
   setwd(scratch)
   pdf(NULL)
-  tmp <- read_graph(search = FALSE)
+  tmp <- read_drake_graph(search = FALSE)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
   pdf(NULL)

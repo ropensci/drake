@@ -50,7 +50,7 @@ read_drake_config()
 and you can access parts of it with some companion functions.
 
 ```{r readcompanions, eval = FALSE}
-read_graph()
+read_drake_graph()
 read_plan()
 ```
 

@@ -646,6 +646,42 @@ read_config <- function(
   )
 }
 
+#' @title Deprecated function \code{read_graph}
+#' @description Use \code{\link{read_drake_graph}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{read_drake_graph}}.
+#' @export
+#' @keywords internal
+#' @return An \code{igraph} object representing the dependency
+#' network of the workflow.
+#' @param cache Same as for \code{\link{read_drake_graph}()}.
+#' @param path Same as for \code{\link{read_drake_graph}()}.
+#' @param search Same as for \code{\link{read_drake_graph}()}.
+#' @param verbose Same as for \code{\link{read_drake_graph}()}.
+#' @param ... Same as for \code{\link{read_drake_graph}()}.
+#' @examples
+#' # See ?read_drake_graph for the examples.
+read_graph <- function(
+  path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE, ...
+){
+  .Deprecated(
+    "read_graph",
+    package = "drake",
+    msg = paste(
+      "drake::read_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use read_drake_graph() instead."
+    )
+  )
+  read_drake_graph(
+    path = path,
+    search = search,
+    cache = cache,
+    verbose = verbose
+  )
+}
 
 #' @title Deprecated function \code{render_graph}
 #' @description Use \code{\link{render_drake_graph}()} instead.

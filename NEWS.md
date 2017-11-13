@@ -25,6 +25,7 @@
     - `gather()` => `gather_plan()`
     - `plot_graph()` => `vis_drake_graph()`
     - `read_config()` => `read_drake_config()`
+    - `read_graph()` => `read_drake_graph()`
     - `render_graph()` => `render_drake_graph()`
     - `session()` => `drake_session()`
     - `summaries()` => `plan_summaries()`

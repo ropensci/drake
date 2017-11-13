@@ -225,7 +225,7 @@ read_plan <- function(path = getwd(), search = TRUE,
   read_drake_config(path = path, search = search, cache = cache)$plan
 }
 
-#' @title Function \code{read_graph}
+#' @title Function \code{read_drake_graph}
 #' @description Read the igraph-style dependency graph of your targets
 #' from your last attempted call to \code{\link{make}()}.
 #' For better graphing utilities, see \code{\link{vis_drake_graph}()}
@@ -251,10 +251,10 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the igraph network from the cache.
-#' g <- read_graph()
+#' g <- read_drake_graph()
 #' class(g) # "igraph"
 #' }
-read_graph <- function(path = getwd(), search = TRUE,
+read_drake_graph <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = TRUE,
   ...
