@@ -184,8 +184,8 @@ type_of_cache()
 and debug your work.
 ```r
 check_plan()
-config()
-read_config()
+drake_config()
+read_drake_config()
 diagnose()
 dependency_profile()
 in_progress()

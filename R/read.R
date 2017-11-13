@@ -153,7 +153,7 @@ load_target <- function(target, cache, envir, verbose){
   assign(x = target, value = value, envir = envir)
 }
 
-#' @title Function \code{read_config}
+#' @title Function \code{read_drake_config}
 #' @description Read all the configuration parameters
 #' from your last attempted call to \code{\link{make}()}.
 #' These include the workflow plan
@@ -176,9 +176,9 @@ load_target <- function(target, cache, envir, verbose){
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the master internal configuration list from the cache.
-#' read_config()
+#' read_drake_config()
 #' }
-read_config <- function(path = getwd(), search = TRUE,
+read_drake_config <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = TRUE
 ){
@@ -222,7 +222,7 @@ read_plan <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = TRUE
 ){
-  read_config(path = path, search = search, cache = cache)$plan
+  read_drake_config(path = path, search = search, cache = cache)$plan
 }
 
 #' @title Function \code{read_graph}
@@ -259,6 +259,6 @@ read_graph <- function(path = getwd(), search = TRUE,
   verbose = TRUE,
   ...
 ){
-  config <- read_config(path = path, search = search, cache = cache)
+  config <- read_drake_config(path = path, search = search, cache = cache)
   return(config$graph)
 }

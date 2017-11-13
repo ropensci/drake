@@ -4,7 +4,7 @@ dbug <- function() {
   envir <- dbug_envir(envir)
   dbug_files()
   plan <- dbug_plan()
-  config(plan = plan, targets = plan$target,
+  drake_config(plan = plan, targets = plan$target,
     envir = envir, parallelism = scenario$parallelism,
     jobs = scenario$jobs, verbose = FALSE
   )

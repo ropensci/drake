@@ -270,7 +270,7 @@ make <- function(
       call. = FALSE
     )
   }
-  config <- config(
+  config <- drake_config(
     plan = plan,
     targets = targets,
     envir = envir,
@@ -295,7 +295,7 @@ make <- function(
     trigger = trigger,
     skip_imports = skip_imports
   )
-  store_config(config = config)
+  store_drake_config(config = config)
   initialize_session(config = config)
   if (imports_only){
     make_imports(config = config)
@@ -316,7 +316,7 @@ make <- function(
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.
-#' con <- config(my_plan) # Generate the master internal configuration list.
+#' con <- drake_config(my_plan) # Generate the master internal configuration list.
 #' # Just cache the imports, do not build any targets.
 #' make_imports(config = con)
 #' }

@@ -26,19 +26,19 @@ check_plan <- function(
   verbose = TRUE
 ){
   force(envir)
-  config <- config(
+  config <- drake_config(
     plan = plan,
     targets = targets,
     envir = envir,
     verbose = verbose,
     cache = cache
   )
-  check_config(config)
+  check_drake_config(config)
   check_strings(config$plan)
   invisible(plan)
 }
 
-check_config <- function(config) {
+check_drake_config <- function(config) {
   stopifnot(is.data.frame(config$plan))
   if (!all(c("target", "command") %in% colnames(config$plan)))
     stop("The columns of your workflow plan data frame ",

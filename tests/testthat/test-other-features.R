@@ -66,7 +66,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_with_dir("check_config() via check_plan() and make()", {
+test_with_dir("check_drake_config() via check_plan() and make()", {
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
   expect_error(check_plan(y, envir = config$envir))

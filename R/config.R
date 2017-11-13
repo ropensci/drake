@@ -1,4 +1,4 @@
-#' @title Function config
+#' @title Function drake_config
 #' @description Compute the internal runtime parameter list of
 #' \code{\link{make}()}. This could save time if you are planning
 #' multiple function calls of functions like \code{\link{outdated}()}
@@ -45,7 +45,7 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
-#' con <- config(my_plan) # Construct the master internal configuration list.
+#' con <- drake_config(my_plan) # Construct the master internal configuration list.
 #' # These functions are faster than otherwise
 #' # because they use the configuration list.
 #' outdated(config = con) # Which targets are out of date?
@@ -57,7 +57,7 @@
 #' # Get the underlying node/edge data frames of the graph.
 #' dataframes_graph(config = con)
 #' }
-config <- function(
+drake_config <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
@@ -128,7 +128,7 @@ config <- function(
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
   ) %>%
     quick_inventory
-  check_config(config = config)
+  check_drake_config(config = config)
   config
 }
 
@@ -154,7 +154,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
 #' # Create a master internal configuration list with prework.
-#' con <- config(my_plan, prework = c("library(knitr)", "x <- 1"))
+#' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
 #' # Do the prework. Usually done at the beginning of `make()`,
 #' # and for distributed computing backends like "future_lapply",
 #' # right before each target is built.
@@ -211,7 +211,7 @@ possible_targets <- function(plan = workplan()) {
   c(as.character(plan$output), as.character(plan$target))
 }
 
-store_config <- function(config) {
+store_drake_config <- function(config) {
   save_these <- setdiff(names(config), "envir")  # envir could get massive.
   lightly_parallelize(
     save_these,

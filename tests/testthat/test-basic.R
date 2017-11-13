@@ -8,7 +8,7 @@ test_with_dir("basic example works", {
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
-  config <- config(my_plan, envir = e,
+  config <- drake_config(my_plan, envir = e,
     jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
 
@@ -103,7 +103,7 @@ test_with_dir("basic example works", {
   expect_true(is.character(file_hash(
     target = "'report.Rmd'", config = con, size_cutoff = -1)))
 
-  config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config <- drake_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
 
   expect_equal(outdated(my_plan, envir = e, jobs = jobs,
@@ -122,7 +122,7 @@ test_with_dir("basic example works", {
     d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d)
   }
-  config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config <- drake_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(
     sort(outdated(my_plan, envir = e, jobs = jobs,
@@ -142,7 +142,7 @@ test_with_dir("basic example works", {
     config = config), 4)
 
   testrun(config)
-  config <- config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
+  config <- drake_config(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, config = config)),
     character(0))

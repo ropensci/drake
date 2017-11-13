@@ -147,6 +147,103 @@ check <- function(
   )
 }
 
+#' @title Deprecated function config
+#' @description Use \code{\link{drake_config}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{drake_config}}
+#' @export
+#' @keywords internal
+#' @return The master internal configuration list of a project.
+#' @seealso \code{\link{drake_config}}
+#' @param plan same as for \code{\link{make}}
+#' @param targets same as for \code{\link{make}}
+#' @param envir same as for \code{\link{make}}
+#' @param verbose same as for \code{\link{make}}
+#' @param hook same as for \code{\link{make}}
+#' @param parallelism same as for \code{\link{make}}
+#' @param jobs same as for \code{\link{make}}
+#' @param packages same as for \code{\link{make}}
+#' @param prework same as for \code{\link{make}}
+#' @param prepend same as for \code{\link{make}}
+#' @param command same as for \code{\link{make}}
+#' @param args same as for \code{\link{make}}
+#' @param recipe_command same as for \code{\link{make}}
+#' @param cache same as for \code{\link{make}}
+#' @param timeout same as for \code{\link{make}}
+#' @param cpu same as for \code{\link{make}}
+#' @param elapsed same as for \code{\link{make}}
+#' @param retries same as for \code{\link{make}}
+#' @param force same as for \code{\link{make}}
+#' @param clear_progress same as for \code{\link{drake_config}}
+#' @param graph same as for \code{\link{drake_config}}
+#' @param trigger same as for \code{\link{make}}
+#' @param skip_imports same as for \code{\link{drake_config}}
+#' @examples
+#' # See ?drake_config for the examples.
+config <- function(
+  plan = workplan(),
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  verbose = TRUE,
+  hook = default_hook,
+  cache = drake::get_cache(verbose = verbose, force = force),
+  parallelism = drake::default_parallelism(),
+  jobs = 1,
+  packages = rev(.packages()),
+  prework = character(0),
+  prepend = character(0),
+  command = drake::default_Makefile_command(),
+  args = drake::default_Makefile_args(
+    jobs = jobs,
+    verbose = verbose
+  ),
+  recipe_command = drake::default_recipe_command(),
+  timeout = Inf,
+  cpu = timeout,
+  elapsed = timeout,
+  retries = 0,
+  force = FALSE,
+  clear_progress = FALSE,
+  graph = NULL,
+  trigger = "any",
+  skip_imports = FALSE
+){
+  .Deprecated(
+    "evaluate",
+    package = "drake",
+    msg = paste(
+      "drake::evaluate() is deprecated",
+      "due to possible name conflicts.",
+      "Use drake_drake_config() instead."
+    )
+  )
+  drake_config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    hook = hook,
+    cache = cache,
+    parallelism = parallelism,
+    jobs = jobs,
+    packages = packages,
+    prework = prework,
+    prepend = prepend,
+    command = command,
+    args = args,
+    recipe_command = recipe_command,
+    timeout = timeout,
+    cpu = cpu,
+    elapsed = elapsed,
+    retries = retries,
+    force = force,
+    clear_progress = clear_progress,
+    graph = graph,
+    trigger = trigger,
+    skip_imports = skip_imports
+  )
+}
+
 #' @title Deprecated function \code{default_system2_args}
 #' @description Use \code{\link{default_Makefile_args}()} instead.
 #' @details Deprecated on 2017-10.
@@ -465,6 +562,40 @@ plot_graph <- function(
     ... = ...
   )
 }
+
+#' @title Deprecated function read_config
+#' @description Use \code{\link{read_drake_config}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{read_drake_config}}
+#' @export
+#' @keywords internal
+#' @return The master internal configuration list of a project.
+#' @param path same as \code{\link{read_drake_config}()}
+#' @param search same as \code{\link{read_drake_config}()}
+#' @param cache same as \code{\link{read_drake_config}()}
+#' @param verbose same as \code{\link{read_drake_config}()}
+read_config <- function(
+  path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE
+){
+  .Deprecated(
+    "read_config",
+    package = "drake",
+    msg = paste(
+      "drake::read_config() is deprecated",
+      "due to possible name conflicts.",
+      "Use read_drake_config() instead."
+    )
+  )
+  read_drake_config(
+    path = path,
+    search = search,
+    cache = cache,
+    verbose = verbose
+  )
+}
+
 
 #' @title Deprecated function \code{render_graph}
 #' @description Use \code{\link{render_drake_graph}()} instead.

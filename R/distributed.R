@@ -20,7 +20,7 @@ finish_distributed <- function(config){
 }
 
 build_distributed <- function(target, cache_path){
-  config <- recover_config(cache_path = cache_path)
+  config <- recover_drake_config(cache_path = cache_path)
   do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
   meta_list <- meta_list(targets = target, config = config)
@@ -40,9 +40,9 @@ build_distributed <- function(target, cache_path){
   invisible()
 }
 
-recover_config <- function(cache_path){
+recover_drake_config <- function(cache_path){
   cache <- this_cache(cache_path, verbose = FALSE)
-  config <- read_config(cache = cache)
+  config <- read_drake_config(cache = cache)
   if (identical(globalenv(), config$envir)){
     dir <- cache_path
     file <- globalenv_file(dir)

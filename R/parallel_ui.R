@@ -250,7 +250,7 @@ max_useful_jobs <- function(
 ){
   force(envir)
   if (is.null(config)){
-    config <- config(
+    config <- drake_config(
       plan = plan,
       targets = targets,
       envir = envir,

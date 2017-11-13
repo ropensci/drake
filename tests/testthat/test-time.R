@@ -15,7 +15,7 @@ test_with_dir("build times works if no targets are built", {
   expect_equal(cached(), character(0))
   expect_equal(nrow(build_times(search = FALSE)), 0)
   my_plan <- workplan(x = 1)
-  con <- config(my_plan, verbose = FALSE)
+  con <- drake_config(my_plan, verbose = FALSE)
   make_imports(con)
   expect_equal(nrow(build_times(search = FALSE)), 0)
 })
@@ -81,7 +81,7 @@ test_with_dir("time predictions: incomplete targets", {
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
-  config <- config(my_plan, envir = e,
+  config <- drake_config(my_plan, envir = e,
     jobs = 1, verbose = FALSE)
   make_imports(config)
 
@@ -199,7 +199,7 @@ test_with_dir("timing predictions with realistic build", {
   load_basic_example(envir = e)
   my_plan <- e$my_plan
   my_plan$command <- paste("Sys.sleep(0.001);", my_plan$command)
-  config <- config(my_plan, envir = e, parallelism = "mclapply",
+  config <- drake_config(my_plan, envir = e, parallelism = "mclapply",
     jobs = 1, verbose = FALSE)
   config <- testrun(config)
   config$envir$reg2 <- function(d){

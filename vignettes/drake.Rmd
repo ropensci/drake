@@ -181,8 +181,8 @@ and debug your work.
 
 ```{r debugdrakermd, eval = FALSE}
 check_plan()
-config()
-read_config()
+drake_config()
+read_drake_config()
 diagnose()
 dependency_profile()
 in_progress()

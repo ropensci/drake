@@ -30,7 +30,7 @@ is to set up PSOCK clusters efficiently.
 # Populate your workspace and write 'report.Rmd'.
 load_basic_example()
 # Create the master internal configuration list.
-config <- config(my_plan)
+config <- drake_config(my_plan)
 # Compute metadata on 'small', including a hash/fingerprint
 # of the dependencies.
 meta_list <- list(

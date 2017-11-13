@@ -19,7 +19,7 @@ test_with_dir("try to find a non-existent project", {
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
-  expect_error(tmp <- read_config(search = FALSE))
+  expect_error(tmp <- read_drake_config(search = FALSE))
   expect_error(tmp <- drake_session(search = FALSE))
 })
 
@@ -92,7 +92,7 @@ test_with_dir("cache functions work", {
       final = "finished"))
 
   # config
-  newconfig <- read_config(search = FALSE)
+  newconfig <- read_drake_config(search = FALSE)
   expect_equal(newconfig$short_hash_algo, default_short_hash_algo())
   expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
@@ -189,7 +189,7 @@ test_with_dir("cache functions work", {
     file.path(scratch, cache_dir))
 
   # config
-  newconfig <- read_config(search = TRUE, path = s)
+  newconfig <- read_drake_config(search = TRUE, path = s)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_plan(search = TRUE, path = s), config$plan)
   expect_equal(class(read_graph(search = TRUE, path = s)),
