@@ -22,7 +22,8 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{verbose}{logical, whether to print console messages}
 
-\item{...}{arguments to \code{visNetwork()} via \code{\link{vis_drake_graph}()}}
+\item{...}{arguments to \code{visNetwork()} via
+\code{\link{vis_drake_graph}()}}
 }
 \value{
 An \code{igraph} object representing the dependency

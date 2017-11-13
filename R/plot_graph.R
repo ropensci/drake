@@ -257,8 +257,9 @@ vis_drake_graph <- function(
 #' # of nodes, edges, and legend nodes.
 #' graph <- dataframes_graph(my_plan)
 #' # You can pass the data frames right to render_drake_graph()
-#' # (as in vis_drake_graph()) or you can create your own custom visNewtork graph.
-#' render_drake_graph(graph, width = '100%') # The width is passed to visNetwork.
+#' # (as in vis_drake_graph()) or you can create
+#' # your own custom visNewtork graph.
+#' render_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
 #' }
 render_drake_graph <- function(
   graph_dataframes, file = character(0),

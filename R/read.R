@@ -244,7 +244,8 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose logical, whether to print console messages
-#' @param ... arguments to \code{visNetwork()} via \code{\link{vis_drake_graph}()}
+#' @param ... arguments to \code{visNetwork()} via
+#' \code{\link{vis_drake_graph}()}
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.

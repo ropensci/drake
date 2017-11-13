@@ -11,7 +11,8 @@
 #' not just the imports.
 #' @export
 #' @return The master internal configuration list of a project.
-#' @seealso \code{\link{workplan}}, \code{\link{make}}, \code{\link{vis_drake_graph}}
+#' @seealso \code{\link{workplan}}, \code{\link{make}},
+#' \code{\link{vis_drake_graph}}
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}

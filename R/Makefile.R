@@ -69,7 +69,8 @@ build_recipe <- function(target, recipe_command,
     cache_path <- cache_value_macro
   }
   if (is_file(target)){
-    target <- paste0("drake::as_drake_filename(\"", eply::unquote(target), "\")")
+    target <- paste0("drake::as_drake_filename(\"",
+      eply::unquote(target), "\")")
   } else{
     target <- eply::quotes(
       eply::unquote(target), single = FALSE)
@@ -77,7 +78,8 @@ build_recipe <- function(target, recipe_command,
   r_recipe <- paste0("drake::mk(target = ", target,
     ", cache_path = \"", cache_path, "\")")
   if (!safe_grepl(r_recipe_wildcard(), recipe_command)){
-    recipe_command <- paste0(recipe_command, " '", r_recipe_wildcard(), "'")
+    recipe_command <- paste0(recipe_command, " '",
+      r_recipe_wildcard(), "'")
   }
   gsub(r_recipe_wildcard(), r_recipe, recipe_command)
 }

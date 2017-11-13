@@ -146,8 +146,8 @@ test_with_dir("basic example works", {
     verbose = FALSE)
   expect_equal(sort(outdated(my_plan, envir = e, config = config)),
     character(0))
-  tmp <- vis_drake_graph(my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+  tmp <- vis_drake_graph(my_plan, envir = e, jobs = jobs,
+    parallelism = parallelism, verbose = FALSE)
   tmp <- dataframes_graph(my_plan, envir = e, jobs = jobs,
     parallelism = parallelism, verbose = FALSE)
   expect_true(is.data.frame(tmp$nodes))

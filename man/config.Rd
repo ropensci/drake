@@ -101,5 +101,6 @@ dataframes_graph(config = con)
 }
 }
 \seealso{
-\code{\link{workplan}}, \code{\link{make}}, \code{\link{vis_drake_graph}}
+\code{\link{workplan}}, \code{\link{make}},
+\code{\link{vis_drake_graph}}
 }
