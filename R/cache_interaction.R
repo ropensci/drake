@@ -216,7 +216,11 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' @export
 #' @seealso \code{\link{get_cache}}, \code{\link{cached}}
 #' @param targets Character vector, names of the targets to rescue.
-#' Defaults to everything so that the whole cache is rescued.
+#' As with many other drake utility functions, the word \code{target}
+#' is defined generally in this case, encompassing imports
+#' as well as true targets.
+#' If \code{targets} is \code{NULL}, everything in the
+#' cache is rescued.
 #' @param path same as for \code{\link{get_cache}()}
 #' @param search same as for \code{\link{get_cache}()}
 #' @param verbose same as for \code{\link{get_cache}()}

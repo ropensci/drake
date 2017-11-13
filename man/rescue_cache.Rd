@@ -10,7 +10,11 @@ rescue_cache(targets = NULL, path = getwd(), search = TRUE,
 }
 \arguments{
 \item{targets}{Character vector, names of the targets to rescue.
-Defaults to everything so that the whole cache is rescued.}
+As with many other drake utility functions, the word \code{target}
+is defined generally in this case, encompassing imports
+as well as true targets.
+If \code{targets} is \code{NULL}, everything in the
+cache is rescued.}
 
 \item{path}{same as for \code{\link{get_cache}()}}
 
