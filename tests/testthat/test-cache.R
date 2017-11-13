@@ -125,6 +125,8 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(i, bla, list = c("final", "run"),
     search = FALSE)), sort(c(i = TRUE, bla = FALSE, final = TRUE,
     run = FALSE)))
+  expect_true(
+    inherits(rescue_cache(search = FALSE, targets = "final"), "storr"))
   expect_true(inherits(rescue_cache(search = FALSE), "storr"))
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
 
