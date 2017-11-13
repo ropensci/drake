@@ -110,4 +110,19 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
     )
   )
   expect_equal(sort(cached()), sort(con$plan$target))
+
+  # If the imports are already cached, the targets built with
+  # skip_imports = TRUE should be up to date.
+  make(con$plan, verbose = FALSE, envir = con$envir)
+  clean(list = con$plan$target, verbose = FALSE)
+  suppressMessages(
+    con <- make(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      hook = silencer_hook,
+      skip_imports = TRUE
+    )
+  )
+  out <- outdated(con$plan, envir = con$envir, verbose = FALSE)
+  expect_equal(out, character(0))
 })

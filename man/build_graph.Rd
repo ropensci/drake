@@ -4,7 +4,8 @@
 \alias{build_graph}
 \title{Deprecated function \code{build_graph}}
 \usage{
-build_graph(x)
+build_graph(plan = workplan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{plan}{Same as for \code{\link{build_drake_graph}()}.}
@@ -16,8 +17,6 @@ build_graph(x)
 \item{verbose}{Same as for \code{\link{build_drake_graph}()}.}
 
 \item{jobs}{Same as for \code{\link{build_drake_graph}()}.}
-
-\item{skip_imports}{Same as for \code{\link{build_drake_graph}()}.}
 }
 \value{
 The same return value as \code{\link{build_drake_graph}()}.

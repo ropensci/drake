@@ -25,11 +25,6 @@
 #' of the dependency graph. A light \code{mclapply}-based
 #' parallelism is used if your operating system is not Windows.
 #'
-#' @param skip_imports logical, whether to totally neglect to
-#' process the imports and jump straight to the targets. This can be useful
-#' if your imports are massive and you just want to test your project,
-#' but it is bad practice for reproducible data analysis.
-#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
@@ -42,17 +37,12 @@ build_drake_graph <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = TRUE,
-  jobs = 1,
-  skip_imports = FALSE
+  jobs = 1
 ){
   force(envir)
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
-  if (skip_imports){
-    imports <- list()
-  } else {
-    imports <- as.list(envir)
-  }
+  imports <- as.list(envir)
   assert_unique_names(
     imports = names(imports),
     targets = plan$target,
@@ -76,12 +66,7 @@ build_drake_graph <- function(
     config = list(verbose = verbose)
   )
   command_deps <- lightly_parallelize(
-    plan$command, command_dependencies, jobs = jobs) %>%
-    filter_out_imports(
-      plan = plan,
-      skip_imports = skip_imports,
-      jobs = jobs
-    )
+    plan$command, command_dependencies, jobs = jobs)
   names(command_deps) <- plan$target
   dependency_list <- c(command_deps, import_deps)
   keys <- names(dependency_list)
@@ -173,20 +158,25 @@ prune_drake_graph <- function(
     unlist() %>%
     unique() %>%
     setdiff(x = igraph::V(graph)$name)
-  delete_vertices(graph, v = ignore)
+  delete_vertices(graph = graph, v = ignore)
 }
 
-filter_out_imports <- function(command_deps, plan, skip_imports, jobs){
-  if (!skip_imports){
-    return(command_deps)
+exclude_imports_if <- function(config){
+  if (!length(config$skip_imports)){
+    config$skip_imports <- FALSE
   }
-  lightly_parallelize(
-    command_deps,
-    function(x){
-      intersect(x, plan$target)
-    },
-    jobs = jobs
+  if (!config$skip_imports){
+    return(config)
+  }
+  delete_these <- setdiff(
+    V(config$graph_remaining_targets)$name,
+    config$plan$target
   )
+  config$graph_remaining_targets <- delete_vertices(
+    graph = config$graph_remaining_targets,
+    v = delete_these
+  )
+  config
 }
 
 assert_unique_names <- function(imports, targets, envir, verbose){

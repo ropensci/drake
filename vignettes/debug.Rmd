@@ -167,7 +167,7 @@ make(my_plan, trigger = "any") # Nothing changes!
 
 # Skipping imports
 
-Similar to triggers, another way to speed testing is to skip the imports entirely. However, *you should only use this for testing purposes* because it puts your targets out of sync with your imports. In other words, `outdated()` will almost certainly flag any targets you build this way.. Hence, your work is no longer reproducible, and `drake` is reduced to an ordinary unopinionated job scheduler.
+Similar to triggers, another way to speed testing is to skip the imports entirely. However, *you should only use this for testing purposes*. If some of your imports are not already cached and up to date, any built targets will be out of sync. In other words, you risk false positive findings in `outdated()`, and your project may no longer be reproducibly interconnected.
 
 ```{r skipimports}
 clean(verbose = FALSE)

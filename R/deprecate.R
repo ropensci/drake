@@ -90,10 +90,15 @@ backend <- function(...){
 #' @param envir Same as for \code{\link{build_drake_graph}()}.
 #' @param verbose Same as for \code{\link{build_drake_graph}()}.
 #' @param jobs Same as for \code{\link{build_drake_graph}()}.
-#' @param skip_imports Same as for \code{\link{build_drake_graph}()}.
 #' @examples
 #' # See ?as_drake_filename for examples.
-build_graph <- function(x){
+build_graph <- function(
+  plan = workplan(),
+  targets = drake::possible_targets(plan),
+  envir = parent.frame(),
+  verbose = TRUE,
+  jobs = 1
+){
   .Deprecated(
     "backend",
     package = "drake",
@@ -103,7 +108,10 @@ build_graph <- function(x){
       "Use build_drake_graph() instead."
     )
   )
-  build_drake_graph(x)
+  build_drake_graph(
+    plan = plan, targets = targets, envir = envir, verbose = verbose,
+    jobs = jobs
+  )
 }
 
 #' @title Deprecated function \code{check}

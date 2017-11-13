@@ -7,6 +7,7 @@ run_parallel_backend <- function(config){
 
 run_parallel <- function(config, worker) {
   config$graph_remaining_targets <- config$graph
+  config <- exclude_imports_if(config)
   while (length(V(config$graph_remaining_targets))){
     config <- parallel_stage(worker = worker, config = config)
   }

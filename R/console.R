@@ -99,7 +99,7 @@ console_skipped_imports <- function(){
   color(
     paste(
       "Skipped the imports.",
-      "Targets are almost surely out of date."
+      "If some imports are not already cached, targets could be out of date."
     ),
     colors["trigger"]
   ) %>%
