@@ -244,7 +244,7 @@ You can call `make(..., timeout = 10)` to time out all each target after 10 seco
 
 ## Triggers and skipped imports
 
-With alternate [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and the [option to skip imports](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#skipping-imports), you can sacrifice reproducibility to gain speed. However, these options throw the dependency network out of sync. You should only use them for testing and debugging, never for production.
+With alternate [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and the [option to skip imports](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#skipping-imports), you can sacrifice reproducibility to gain speed. However, these options can throw the dependency network out of sync. You should only use them for testing and debugging, never for production.
 
 ## Dependencies are not tracked in some edge cases.
 

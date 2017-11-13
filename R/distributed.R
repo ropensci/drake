@@ -8,7 +8,7 @@ prepare_distributed <- function(config){
     )
   }
   config$cache$set(key = "envir", value = config$envir, namespace = "config")
-  attempts <- outdated(config = config)
+  attempts <- outdated(config = config, make_imports = !config$skip_imports)
   log_attempts(targets = attempts, config = config)
   invisible()
 }

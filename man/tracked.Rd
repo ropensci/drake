@@ -5,8 +5,7 @@
 \title{Function \code{tracked}}
 \usage{
 tracked(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), jobs = 1, verbose = TRUE,
-  skip_imports = FALSE)
+  envir = parent.frame(), jobs = 1, verbose = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -24,11 +23,6 @@ parallelism is used if your operating system is not Windows.}
 
 \item{verbose}{logical, whether to print
 progress messages to the console.}
-
-\item{skip_imports}{logical, whether to totally neglect to
-process the imports and jump straight to the targets. This can be useful
-if your imports are massive and you just want to test your project,
-but it is bad practice for reproducible data analysis.}
 }
 \value{
 A character vector with the names of reproducibly-tracked targets.

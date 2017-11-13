@@ -113,8 +113,7 @@ drake_config <- function(
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
     graph <- build_drake_graph(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, jobs = jobs,
-      skip_imports = skip_imports)
+      envir = envir, verbose = verbose, jobs = jobs)
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }

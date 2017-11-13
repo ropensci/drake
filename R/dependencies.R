@@ -132,10 +132,6 @@ dependency_profile <- function(target, config){
 #' parallelism is used if your operating system is not Windows.
 #' @param verbose logical, whether to print
 #' progress messages to the console.
-#' @param skip_imports logical, whether to totally neglect to
-#' process the imports and jump straight to the targets. This can be useful
-#' if your imports are massive and you just want to test your project,
-#' but it is bad practice for reproducible data analysis.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
@@ -147,13 +143,12 @@ tracked <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,
-  verbose = TRUE,
-  skip_imports = FALSE
+  verbose = TRUE
 ){
   force(envir)
   graph <- build_drake_graph(
     plan = plan, targets = targets, envir = envir,
-    jobs = jobs, verbose = verbose, skip_imports = skip_imports
+    jobs = jobs, verbose = verbose
   )
   V(graph)$name
 }
