@@ -57,6 +57,11 @@ test_with_dir("cache functions work", {
   }
 
   testrun(config)
+  x <- cached()
+  expect_true(length(x) > 0)
+  drake_gc()
+  y <- cached()
+  expect_equal(sort(x), sort(y))
 
   # targets
   all <- sort(c("'input.rds'",
