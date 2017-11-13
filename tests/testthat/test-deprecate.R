@@ -60,3 +60,15 @@ test_with_dir("generative templating deprecation", {
   expect_warning(
     summaries(summary_types, analyses, datasets))
 })
+
+test_with_dir("deprecated graphing functions", {
+  pl <- workplan(a = 1)
+  expect_warning(build_graph(pl))
+  expect_warning(out <- plot_graph(pl))
+  df <- dataframes_graph(pl)
+  expect_warning(out <- render_graph(df))
+})
+
+test_with_dir("deprecate misc utilities", {
+  expect_warning(as_file("x"))
+})

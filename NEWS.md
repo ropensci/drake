@@ -13,11 +13,15 @@
 - Delete long-deprecated functions `prune()` and `status()`.
 - Deprecate and rename functions:
     - `analyses()` => `plan_analyses()`
+    - `as_file()` => `as_drake_filename()`
     - `backend()` => `future::plan()`
+    - `build_graph()` => `build_drake_graph()`
     - `check()` => `check_plan()`
     - `evaluate()` => `evaluate_plan()`
     - `expand()` => `expand_plan()`
     - `gather()` => `gather_plan()`
+    - `plot_graph()` => `vis_drake_graph()`
+    - `render_graph()` => `render_drake_graph()`
     - `session()` => `drake_session()`
     - `summaries()` => `plan_summaries()`
 - Disallow `output` and `code` as names in the workflow plan data frame. Use `target` and `command` instead. This naming switch has been formally deprecated for several months prior.

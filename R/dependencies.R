@@ -151,7 +151,7 @@ tracked <- function(
   skip_imports = FALSE
 ){
   force(envir)
-  graph <- build_graph(
+  graph <- build_drake_graph(
     plan = plan, targets = targets, envir = envir,
     jobs = jobs, verbose = verbose, skip_imports = skip_imports
   )

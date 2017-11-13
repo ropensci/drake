@@ -76,7 +76,7 @@ The master internal configuration list of a project.
 Compute the internal runtime parameter list of
 \code{\link{make}()}. This could save time if you are planning
 multiple function calls of functions like \code{\link{outdated}()}
-or \code{\link{plot_graph}()}. Drake needs to import and cache files
+or \code{\link{vis_drake_graph}()}. Drake needs to import and cache files
 and objects to compute the configuration list, which in turn
 supports user-side functions to help with visualization and parallelism.
 The result differs from
@@ -95,11 +95,12 @@ missed(config = con) # Which imports are missing?
 # In make(..., jobs = n), it would be silly to set `n` higher than this:
 max_useful_jobs(config = con)
 # Show a visNetwork graph
-plot_graph(config = con)
+vis_drake_graph(config = con)
 # Get the underlying node/edge data frames of the graph.
 dataframes_graph(config = con)
 }
 }
 \seealso{
-\code{\link{workplan}}, \code{\link{make}}, \code{\link{plot_graph}}
+\code{\link{workplan}}, \code{\link{make}},
+\code{\link{vis_drake_graph}}
 }

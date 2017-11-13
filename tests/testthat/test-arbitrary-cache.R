@@ -109,7 +109,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(length(o1) > length(o2))
   expect_false(file.exists(default_cache_path()))
 
-  p <- plot_graph(my_plan, envir = envir,
+  p <- vis_drake_graph(my_plan, envir = envir,
     cache = cache, verbose = FALSE, file = "graph.html")
   expect_false(file.exists(default_cache_path()))
 

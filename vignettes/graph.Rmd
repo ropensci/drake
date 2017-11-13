@@ -31,7 +31,7 @@ Initially, your entire project is out of date.
 ```{r graphoutdated}
 library(drake)
 load_basic_example()
-plot_graph(my_plan)
+vis_drake_graph(my_plan)
 ```
 
 <iframe
@@ -45,7 +45,7 @@ In the previous graph, all the targets were out of date. But after a `make()`, w
 
 ```{r graphmake}
 make(my_plan, jobs = 4, verbose = FALSE)
-plot_graph(my_plan)
+vis_drake_graph(my_plan)
 ```
 
 <iframe
@@ -62,7 +62,7 @@ reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-plot_graph(my_plan)
+vis_drake_graph(my_plan)
 ```
 
 <iframe
@@ -73,10 +73,10 @@ style="border: none; box-shadow: none">
 
 # Subgraphs
 
-Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual `subset` of nodes to show. However, with the `subset` argument, `plot_graph()` is prone to losing intermediate nodes and thus dropping edges.
+Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual `subset` of nodes to show. However, with the `subset` argument, `vis_drake_graph()` is prone to losing intermediate nodes and thus dropping edges.
 
 ```{r subsetgraph}
-plot_graph(my_plan, subset = c("regression2_small", "'report.md'"))
+vis_drake_graph(my_plan, subset = c("regression2_small", "'report.md'"))
 ```
 
 <iframe
@@ -88,7 +88,7 @@ style="border: none; box-shadow: none">
 The other subgraph functionality is much better at preserving connectedness. Use `targets_only` to ignore the imports.
 
 ```{r targetsonly}
-plot_graph(my_plan, targets_only = TRUE)
+vis_drake_graph(my_plan, targets_only = TRUE)
 ```
 
 <iframe
@@ -101,7 +101,7 @@ style="border: none; box-shadow: none">
 Similarly, you can just show downstream nodes.
 
 ```{r fromout}
-plot_graph(my_plan, from = c("regression2_small", "regression2_large"))
+vis_drake_graph(my_plan, from = c("regression2_small", "regression2_large"))
 ```
 
 <iframe
@@ -114,7 +114,7 @@ style="border: none; box-shadow: none">
 Or upstream ones.
 
 ```{r fromin}
-plot_graph(my_plan, from = "small", mode = "in")
+vis_drake_graph(my_plan, from = "small", mode = "in")
 ```
 
 <iframe
@@ -127,7 +127,7 @@ In fact, let's just take a small neighborhood around a target in both directions
 
 
 ```{r fromall}
-plot_graph(my_plan, from = "small", mode = "all", order = 1)
+vis_drake_graph(my_plan, from = "small", mode = "all", order = 1)
 ```
 
 <iframe
@@ -161,7 +161,7 @@ small_plan
 ```
 
 ```{r plotgraphusualsmall}
-plot_graph(small_plan)
+vis_drake_graph(small_plan)
 ```
 
 <iframe
@@ -174,7 +174,7 @@ However, for any kind of distributed `parallelism` option such as `"Makefile"` o
 
 ```{r plotgraphsmalldistributed}
 
-plot_graph(small_plan, parallelism = "future_lapply")
+vis_drake_graph(small_plan, parallelism = "future_lapply")
 ```
 
 <iframe
@@ -198,5 +198,5 @@ The help file of `parallelism_choices()` is particularly detailed.
 
 # Finer control
 
-We have only scratched the surface of `plot_graph()`, there is much more functionality documented in the help file (`?plot_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
+We have only scratched the surface of `vis_drake_graph()`, there is much more functionality documented in the help file (`?vis_drake_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
 

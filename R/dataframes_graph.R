@@ -6,7 +6,7 @@
 #' one for edges, and one for
 #' the legend nodes. The list also contains the
 #' default title of the graph.
-#' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}}
+#' @seealso \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}}
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
 #'
@@ -117,7 +117,7 @@
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
 #' # Get a list of data frames representing the nodes, edges,
-#' # and legend nodes of the visNetwork graph from plot_graph().
+#' # and legend nodes of the visNetwork graph from vis_drake_graph().
 #' raw_graph <- dataframes_graph(my_plan)
 #' # Choose a subset of the graph.
 #' smaller_raw_graph <- dataframes_graph(

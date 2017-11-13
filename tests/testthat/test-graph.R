@@ -1,13 +1,13 @@
 drake_context("graph")
 
 test_with_dir("Supplied graph is not an igraph.", {
-  expect_error(prune_graph(12345, to = "node"))
+  expect_error(prune_drake_graph(12345, to = "node"))
 })
 
 test_with_dir("graph does not fail if input file is binary", {
   x <- workplan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
-  expect_silent(out <- plot_graph(x, verbose = FALSE))
+  expect_silent(out <- vis_drake_graph(x, verbose = FALSE))
   unlink("input.rds", force = TRUE)
 })
 
@@ -37,9 +37,9 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
 
 test_with_dir("graph functions work", {
   config <- dbug()
-  expect_equal(class(build_graph(config$plan, verbose = FALSE)), "igraph")
+  expect_equal(class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
-  tmp <- plot_graph(plan = config$plan, envir = config$envir,
+  tmp <- vis_drake_graph(plan = config$plan, envir = config$envir,
                     verbose = FALSE)
   dev.off()
   unlink("Rplots.pdf", force = TRUE)
@@ -51,7 +51,7 @@ test_with_dir("graph functions work", {
 
 test_with_dir("Supplied graph is pruned.", {
   load_basic_example()
-  graph <- build_graph(my_plan)
+  graph <- build_drake_graph(my_plan)
   con <- config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
   include <- c("small", "simulate", "data.frame", "rpois",

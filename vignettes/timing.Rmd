@@ -114,7 +114,7 @@ Then, `drake` simply takes the targets from the slowest job in each parallelizab
 
 ```{r faketiminggraph, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
-plot_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe

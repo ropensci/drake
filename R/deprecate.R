@@ -1,4 +1,4 @@
-#' @title Function \code{analyses}
+#' @title Deprecated function \code{analyses}
 #' @description Use \code{\link{plan_analyses}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
@@ -20,6 +20,29 @@ analyses <- function(plan, datasets){
     )
   )
   plan_analyses(plan = plan, datasets = datasets)
+}
+
+#' @title Deprecated function \code{as_file}
+#' @description Use \code{\link{as_drake_filename}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @keywords internal
+#' @seealso \code{\link{as_drake_filename}}
+#' @return The same return value as \code{\link{as_drake_filename}()}.
+#' @param x Same as for \code{\link{as_drake_filename}()}.
+#' @examples
+#' # See ?as_drake_filename for examples.
+as_file <- function(x){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::as_file() is deprecated",
+      "due to possible name conflicts.",
+      "Use as_drake_filename() instead."
+    )
+  )
+  as_drake_filename(x)
 }
 
 #' @title Deprecated function \code{backend}
@@ -53,6 +76,34 @@ backend <- function(...){
     )
   )
   future::plan(...)
+}
+
+#' @title Deprecated function \code{build_graph}
+#' @description Use \code{\link{build_drake_graph}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @keywords internal
+#' @seealso \code{\link{build_drake_graph}}
+#' @return The same return value as \code{\link{build_drake_graph}()}.
+#' @param plan Same as for \code{\link{build_drake_graph}()}.
+#' @param targets Same as for \code{\link{build_drake_graph}()}.
+#' @param envir Same as for \code{\link{build_drake_graph}()}.
+#' @param verbose Same as for \code{\link{build_drake_graph}()}.
+#' @param jobs Same as for \code{\link{build_drake_graph}()}.
+#' @param skip_imports Same as for \code{\link{build_drake_graph}()}.
+#' @examples
+#' # See ?as_drake_filename for examples.
+build_graph <- function(x){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::build_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use build_drake_graph() instead."
+    )
+  )
+  build_drake_graph(x)
 }
 
 #' @title Deprecated function \code{check}
@@ -302,6 +353,171 @@ plan <- function(
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
+}
+
+#' @title Deprecated function \code{plot_graph}
+#' @description Use \code{\link{vis_drake_graph}()} instead.
+#' @details Deprecated on 2017-10.
+#' @seealso \code{\link{vis_drake_graph}}
+#' @export
+#' @keywords internal
+#' @return Same as for \code{\link{vis_drake_graph}()}.
+#' @param plan Same as for \code{\link{vis_drake_graph}()}.
+#' @param envir Same as for \code{\link{vis_drake_graph}()}.
+#' @param hook Same as for \code{\link{vis_drake_graph}()}.
+#' @param cache Same as for \code{\link{vis_drake_graph}()}.
+#' @param jobs Same as for \code{\link{vis_drake_graph}()}.
+#' @param packages Same as for \code{\link{vis_drake_graph}()}.
+#' @param prework Same as for \code{\link{vis_drake_graph}()}.
+#' @param verbose Same as for \code{\link{vis_drake_graph}()}.
+#' @param config Same as for \code{\link{vis_drake_graph}()}.
+#' @param file Same as for \code{\link{vis_drake_graph}()}.
+#' @param build_times Same as for \code{\link{vis_drake_graph}()}.
+#' @param digits Same as for \code{\link{vis_drake_graph}()}.
+#' @param targets_only Same as for \code{\link{vis_drake_graph}()}.
+#' @param split_columns Same as for \code{\link{vis_drake_graph}()}.
+#' @param font_size Same as for \code{\link{vis_drake_graph}()}.
+#' @param layout Same as for \code{\link{vis_drake_graph}()}.
+#' @param main Same as for \code{\link{vis_drake_graph}()}.
+#' @param direction Same as for \code{\link{vis_drake_graph}()}.
+#' @param hover Same as for \code{\link{vis_drake_graph}()}.
+#' @param navigationButtons Same as for \code{\link{vis_drake_graph}()}. # nolint
+#' @param from Same as for \code{\link{vis_drake_graph}()}.
+#' @param mode Same as for \code{\link{vis_drake_graph}()}.
+#' @param order Same as for \code{\link{vis_drake_graph}()}.
+#' @param subset Same as for \code{\link{vis_drake_graph}()}.
+#' @param ncol_legend Same as for \code{\link{vis_drake_graph}()}.
+#' @param make_imports Same as for \code{\link{vis_drake_graph}()}.
+#' @param from_scratch Same as for \code{\link{vis_drake_graph}()}.
+#' @param ... Same as for \code{\link{vis_drake_graph}()}.
+#' @examples
+#' # See ?vis_drake_graph for examples.
+plot_graph <- function(
+  plan = workplan(), targets = drake::possible_targets(plan),
+  envir = parent.frame(), verbose = TRUE,
+  hook = default_hook,
+  cache = drake::get_cache(verbose = verbose),
+  jobs = 1,
+  parallelism = drake::default_parallelism(),
+  packages = rev(.packages()),
+  prework = character(0),
+  config = NULL,
+  file = character(0),
+  selfcontained = FALSE,
+  build_times = TRUE,
+  digits = 3,
+  targets_only = FALSE,
+  split_columns = FALSE,
+  font_size = 20,
+  layout = "layout_with_sugiyama",
+  main = NULL,
+  direction = "LR",
+  hover = TRUE,
+  navigationButtons = TRUE, # nolint
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  ncol_legend = 1,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  ...
+){
+  .Deprecated(
+    "plot_graph",
+    package = "drake",
+    msg = paste(
+      "drake::plot_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use vis_drake_graph() instead."
+    )
+  )
+  vis_drake_graph(
+    plan = plan,
+    envir = envir,
+    verbose = verbose,
+    hook = hook,
+    cache = cache,
+    jobs = jobs,
+    parallelism = parallelism,
+    packages = packages,
+    prework = prework,
+    config = config,
+    file = file,
+    selfcontained = selfcontained,
+    build_times = build_times,
+    digits = digits,
+    targets_only = targets_only,
+    split_columns = split_columns,
+    font_size = font_size,
+    layout = layout,
+    main = main,
+    direction = direction,
+    hover = hover,
+    navigationButtons = navigationButtons, # nolint
+    from = from,
+    mode = mode,
+    order = order,
+    subset = subset,
+    ncol_legend = ncol_legend,
+    make_imports = make_imports,
+    from_scratch = from_scratch,
+    ... = ...
+  )
+}
+
+#' @title Deprecated function \code{render_graph}
+#' @description Use \code{\link{render_drake_graph}()} instead.
+#' @details Deprecated on 2017-10.
+#' @seealso \code{\link{render_drake_graph}}
+#' @export
+#' @keywords internal
+#' @return Same as for \code{\link{render_drake_graph}()}.
+#' @param graph_dataframes Same as for \code{\link{render_drake_graph}()}.
+#' @param file Same as for \code{\link{render_drake_graph}()}.
+#' @param layout Same as for \code{\link{render_drake_graph}()}.
+#' @param direction Same as for \code{\link{render_drake_graph}()}.
+#' @param hover Same as for \code{\link{render_drake_graph}()}.
+#' @param main Same as for \code{\link{render_drake_graph}()}.
+#' @param selfcontained Same as for \code{\link{render_drake_graph}()}.
+#' @param navigationButtons Same as for \code{\link{render_drake_graph}()}. # nolint
+#' @param ncol_legend Same as for \code{\link{render_drake_graph}()}.
+#' @param ... Same as for \code{\link{render_drake_graph}()}.
+#' @examples
+#' # See ?render_drake_graph for examples.
+render_graph <- function(
+  graph_dataframes,
+  file = character(0),
+  layout = "layout_with_sugiyama",
+  direction = "LR",
+  hover = TRUE,
+  main = graph_dataframes$default_title,
+  selfcontained = FALSE,
+  navigationButtons = TRUE, # nolint
+  ncol_legend = 1,
+  ...
+){
+  .Deprecated(
+    "render_graph",
+    package = "drake",
+    msg = paste(
+      "drake::render_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use render_drake_graph() instead."
+    )
+  )
+  render_drake_graph(
+    graph_dataframes = graph_dataframes,
+    file = file,
+    layout = layout,
+    direction = direction,
+    hover = hover,
+    main = main,
+    selfcontained = selfcontained,
+    navigationButtons = navigationButtons, # nolint
+    ncol_legend = ncol_legend,
+    ... = ...
+  )
 }
 
 #' @title Deprecated function \code{session}

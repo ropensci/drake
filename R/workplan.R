@@ -64,10 +64,10 @@ workplan <- function(
   sanitize_plan(plan)
 }
 
-#' @title Function \code{as_file}
+#' @title Function \code{as_drake_filename}
 #' @description Converts an ordinary character string
 #' into a filename understandable by drake. In other words,
-#' \code{as_file(x)} just wraps single quotes around \code{x}.
+#' \code{as_drake_filename(x)} just wraps single quotes around \code{x}.
 #' @export
 #' @return A single-quoted character string: i.e., a filename
 #' understandable by drake.
@@ -76,8 +76,8 @@ workplan <- function(
 #' single quotes on both ends).
 #' @examples
 #' # Wraps the string in single quotes.
-#' as_file("my_file.rds") # "'my_file.rds'"
-as_file <- function(x){
+#' as_drake_filename("my_file.rds") # "'my_file.rds'"
+as_drake_filename <- function(x){
   eply::quotes(x, single = TRUE)
 }
 

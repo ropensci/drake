@@ -3,7 +3,7 @@
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
 #' @seealso \code{\link{missed}}, \code{\link{workplan}},
-#' \code{\link{make}}, \code{\link{plot_graph}}
+#' \code{\link{make}}, \code{\link{vis_drake_graph}}
 #' @return Character vector of the names of outdated targets.
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}

@@ -119,7 +119,7 @@ default_parallelism <- function() {
 #' @return A numeric scalar, the maximum number of useful jobs for
 #' \code{\link{make}(..., jobs = ...)}.
 #'
-#' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}},
+#' @seealso \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}},
 #' \code{\link{shell_file}}
 #'
 #' @param plan workflow plan data frame, same as for function
@@ -204,7 +204,7 @@ default_parallelism <- function() {
 #' # in parallelizable stages. The maximum number of useful jobs
 #' # is determined by the number and kind of targets/imports
 #' # in the columns.
-#' plot_graph(my_plan)
+#' vis_drake_graph(my_plan)
 #' # Should be 8 because everythign is out of date.
 #' max_useful_jobs(my_plan) # 8
 #' # Take into account targets and imported files.
@@ -214,7 +214,7 @@ default_parallelism <- function() {
 #' # Exclude all imported objects.
 #' max_useful_jobs(my_plan, imports = 'none') # 8
 #' make(my_plan) # Run the project, build the targets.
-#' plot_graph(my_plan) # Everything is up to date.
+#' vis_drake_graph(my_plan) # Everything is up to date.
 #' # Ignore the targets already built.
 #' max_useful_jobs(my_plan) # 1
 #' max_useful_jobs(my_plan, imports = 'files') # 1
@@ -226,7 +226,7 @@ default_parallelism <- function() {
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
-#' plot_graph(my_plan)
+#' vis_drake_graph(my_plan)
 #' # We have different numbers of max useful jobs.
 #' # By default, the output takes into account which
 #' # targets are out of date. To disable, consider

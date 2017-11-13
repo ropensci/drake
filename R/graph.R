@@ -1,11 +1,11 @@
-#' @title Function \code{build_graph}
+#' @title Function \code{build_drake_graph}
 #' @description Make a graph of the dependency structure of your workplan.
 #' @details This function returns an igraph object representing how
 #' the targets in your workplan depend on each other.
 #' (\code{help(package = "igraph")}). To plot the graph, call
 #' to \code{\link{plot.igraph}()} on your graph, or just use
-#' \code{\link{plot_graph}()} from the start.
-#' @seealso \code{\link{plot_graph}}
+#' \code{\link{vis_drake_graph}()} from the start.
+#' @seealso \code{\link{vis_drake_graph}}
 #' @export
 #' @return An igraph object representing
 #' the workflow plan dependency network.
@@ -34,10 +34,10 @@
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
 #' # Make the igraph network connecting all the targets and imports.
-#' g <- build_graph(my_plan)
+#' g <- build_drake_graph(my_plan)
 #' class(g) # "igraph"
 #' }
-build_graph <- function(
+build_drake_graph <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
@@ -100,16 +100,16 @@ build_graph <- function(
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)
-  graph <- prune_graph(graph = graph, to = targets, jobs = jobs)
+  graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   if (!is_dag(graph)){
     stop("Workflow is circular (chicken and egg dilemma).")
   }
   return(graph)
 }
 
-#' @title Function prune_graph
+#' @title Function prune_drake_graph
 #' @export
-#' @seealso \code{\link{build_graph}}, \code{\link{config}},
+#' @seealso \code{\link{build_drake_graph}}, \code{\link{config}},
 #' \code{\link{make}}
 #' @description Prune an igraph object. Igraph objects are used
 #' internally to represent the dependency network of your workflow.
@@ -129,16 +129,16 @@ build_graph <- function(
 #' load_basic_example() # Load the canonical example.
 #' # Build the igraph object representing the workflow dependency network.
 #' # You could also use config(my_plan)$graph
-#' graph <- build_graph(my_plan)
+#' graph <- build_drake_graph(my_plan)
 #' # The default plotting is not the greatest,
 #' # but you will get the idea.
 #' plot(graph)
 #' # Prune the graph: that is, remove the nodes downstream
 #' # from 'small' and 'large'
-#' pruned <- prune_graph(graph = graph, to = c("small", "large"))
+#' pruned <- prune_drake_graph(graph = graph, to = c("small", "large"))
 #' plot(pruned)
 #' }
-prune_graph <- function(
+prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
 ){
   if (!inherits(graph, "igraph")){

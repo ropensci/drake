@@ -70,13 +70,13 @@ configure_nodes <- function(config){
 
 #' @title Function default_graph_title
 #' @description Default title of the graph for
-#' \code{\link{plot_graph}()}.
+#' \code{\link{vis_drake_graph}()}.
 #' @export
-#' @seealso \code{\link{dataframes_graph}}, \code{\link{plot_graph}}
+#' @seealso \code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
 #' @param parallelism Mode of parallelism intended for the workplan.
 #' See \code{\link{parallelism_choices}()}.
 #' @param split_columns logical, whether the columns were split
-#' in \code{\link{dataframes_graph}()} or \code{\link{plot_graph}()}
+#' in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
 #' with the \code{split_columns} argument.
 #' @examples
 #' default_graph_title()
@@ -261,17 +261,17 @@ subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
 #' @title Function legend_nodes
 #' @export
 #' @seealso \code{\link{drake_palette}()},
-#' \code{\link{plot_graph}()},
+#' \code{\link{vis_drake_graph}()},
 #' \code{\link{dataframes_graph}()}
 #' @description Output a \code{visNetwork}-friendly
 #' data frame of nodes. It tells you what
 #' the colors and shapes mean
-#' in \code{\link{plot_graph}()}.
+#' in \code{\link{vis_drake_graph}()}.
 #' @param font_size font size of the node label text
-#' @return A data frame of legend nodes for \code{\link{plot_graph}()}.
+#' @return A data frame of legend nodes for \code{\link{vis_drake_graph}()}.
 #' @examples
 #' \dontrun{
-#' # Show the legend nodes used in plot_graph().
+#' # Show the legend nodes used in vis_drake_graph().
 #' # For example, you may want to inspect the color palette more closely.
 #' visNetwork::visNetwork(nodes = legend_nodes())
 #' }

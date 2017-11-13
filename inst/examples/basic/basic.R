@@ -107,7 +107,7 @@ my_plan <- rbind(report, my_datasets, my_analyses, results)
 #####################################
 
 # Graph the dependency structure of your workflow
-# plot_graph(my_plan) # plots an interactive web app via visNetwork. #nolint optional
+# vis_drake_graph(my_plan) # plots an interactive web app via visNetwork. #nolint optional
 workflow_graph <- build_graph(my_plan) # igraph object
 
 # Check for circularities, missing input files, etc.
@@ -135,7 +135,7 @@ clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 
 # All the targets in the plan are "outdated" because we have not made them yet.
 outdated(my_plan, verbose = FALSE)
-# plot_graph(my_plan) # Show how the pieces of your workflow are connected #nolint: optional
+# vis_drake_graph(my_plan) # Show how the pieces of your workflow are connected #nolint: optional
 missed(my_plan) # Nothing should be missing from your workspace.
 
 make(my_plan) # Run your project.
@@ -148,7 +148,7 @@ build_times()
 ls() # Should contain the non-file dependencies of the last target(s).
 progress() # See also in_progress()
 outdated(my_plan, verbose = FALSE) # Everything is up to date
-# plot_graph(my_plan) # The red nodes from before turned green. #nolint: optional
+# vis_drake_graph(my_plan) # The red nodes from before turned green. #nolint: optional
 # session() # get the sessionInfo() of the last call to make() #nolint: optional
 
 # see also: loadd(), cached(), imported(), and built()
@@ -163,7 +163,7 @@ reg2 <- function(d){
   lm(y ~ x3, data = d)
 }
 outdated(my_plan) # The targets depending on reg2() are now out of date...
-# plot_graph(my_plan) # ...which is indicated in the graph. #nolint: optional
+# vis_drake_graph(my_plan) # ...which is indicated in the graph. #nolint: optional
 
 make(my_plan) # Drake only runs targets that depend on reg2().
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{analyses}
 \alias{analyses}
-\title{Function \code{analyses}}
+\title{Deprecated function \code{analyses}}
 \usage{
 analyses(plan, datasets)
 }

@@ -1,7 +1,7 @@
 #' @title Function \code{make}
 #' @description Run your project (build the targets).
 #' @seealso \code{\link{workplan}}, \code{\link{workplan}},
-#' \code{\link{backend}}, \code{\link{plot_graph}},
+#' \code{\link{backend}}, \code{\link{vis_drake_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
 #' \code{\link{default_hook}}, \code{\link{silencer_hook}},
 #' \code{\link{triggers}}
@@ -69,7 +69,7 @@
 #' See \code{future::future.options} for environment variables that
 #' control the number of \code{future_lapply()} jobs for building targets.
 #' For example, you might use \code{options(mc.cores = max_jobs)}.
-#' See \code{\link{max_useful_jobs}()} or \code{\link{plot_graph}()}
+#' See \code{\link{max_useful_jobs}()} or \code{\link{vis_drake_graph}()}
 #' to help figure out what the number of jobs should be.
 #' Windows users should not set \code{jobs > 1} if
 #' \code{parallelism} is \code{"mclapply"} because
@@ -184,7 +184,7 @@
 #'
 #' @param graph An \code{igraph} object from the previous \code{make()}.
 #' Supplying a pre-built graph could save time.
-#' The graph is constructed by \code{\link{build_graph}()}.
+#' The graph is constructed by \code{\link{build_drake_graph}()}.
 #' You can also get one from \code{\link{config}(my_plan)$graph}.
 #' Overrides \code{skip_imports}.
 #'
@@ -212,10 +212,10 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' outdated(my_plan) # Some targets depend on reg2().
-#' plot_graph(my_plan) # See how they fit in an interactive graph.
+#' vis_drake_graph(my_plan) # See how they fit in an interactive graph.
 #' make(my_plan) # Rebuild just the outdated targets.
 #' outdated(my_plan) # Everything is up to date again.
-#' plot_graph(my_plan) # The colors changed in the graph.
+#' vis_drake_graph(my_plan) # The colors changed in the graph.
 #' clean() # Start from scratch.
 #' # Rerun with "Makefile" parallelism with at most 4 jobs.
 #' make(my_plan, parallelism = "Makefile", jobs = 4)
