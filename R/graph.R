@@ -100,14 +100,14 @@ build_drake_graph <- function(
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)
-  graph <- prune_graph(graph = graph, to = targets, jobs = jobs)
+  graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   if (!is_dag(graph)){
     stop("Workflow is circular (chicken and egg dilemma).")
   }
   return(graph)
 }
 
-#' @title Function prune_graph
+#' @title Function prune_drake_graph
 #' @export
 #' @seealso \code{\link{build_drake_graph}}, \code{\link{config}},
 #' \code{\link{make}}
@@ -135,10 +135,10 @@ build_drake_graph <- function(
 #' plot(graph)
 #' # Prune the graph: that is, remove the nodes downstream
 #' # from 'small' and 'large'
-#' pruned <- prune_graph(graph = graph, to = c("small", "large"))
+#' pruned <- prune_drake_graph(graph = graph, to = c("small", "large"))
 #' plot(pruned)
 #' }
-prune_graph <- function(
+prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
 ){
   if (!inherits(graph, "igraph")){

@@ -1,7 +1,7 @@
 drake_context("graph")
 
 test_with_dir("Supplied graph is not an igraph.", {
-  expect_error(prune_graph(12345, to = "node"))
+  expect_error(prune_drake_graph(12345, to = "node"))
 })
 
 test_with_dir("graph does not fail if input file is binary", {

@@ -63,4 +63,5 @@ test_with_dir("generative templating deprecation", {
 
 test_with_dir("deprecate misc utilities", {
   expect_warning(as_file("x"))
+  expect_warning(build_graph(workplan(a = 1)))
 })
