@@ -199,6 +199,9 @@ make(my_plan) # Only the new work is run.
 # to remove individual targets.
 clean() # report.html and report.md are removed, but report.Rmd stays.
 
+# Garbage collection
+drake_gc() # Also consider clean(garbage_collection = TRUE)
+
 ###############################################
 ### ONE R SESSION WITH 2 PARALLEL PROCESSES ###
 ###############################################

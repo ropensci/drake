@@ -374,11 +374,12 @@ my_plan
 make(my_plan)
 ```
 
-If you ever need to erase your work, use `clean()`. Any targets removed from the cache will have to be rebuilt on the next call to `make()`, so be careful.
+If you ever need to erase your work, use `clean()`. Any targets removed from the cache will have to be rebuilt on the next call to `make()`, so be careful. You may notice that by default, the size of the cache does not go down very much. To purge old data, you could use `clean(garbage_collection = TRUE)`. To do garbage collection without removing any important targets, use `drake_gc()`.
 
 ```{r cleanup}
 clean(small, reg1) # uncaches individual targets and imported objects
 clean() # cleans all targets out of the cache
+drake_gc() # Just garbage collection.
 clean(destroy = TRUE) # removes the cache entirely
 ```
 
