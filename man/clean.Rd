@@ -59,13 +59,14 @@ See the \code{gc()} method for \code{storr} caches.}
 Invisibly return \code{NULL}.
 }
 \description{
-Cleans up all work done by \code{\link{make}()}.
+Cleans up work done by \code{\link{make}()}.
 }
 \details{
 By default, \code{clean()} removes references to cached data.
 To deep-clean the data to free up storage/memory, use
 \code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
-but it purges data with no remaining references.
+but it purges data with no remaining references. To just do garbage
+collection without cleaning, see \code{\link{drake_gc}()}.
 Also, for \code{clean()}, you must be in your project's working directory
 or a subdirectory of it.
 \code{clean(search = TRUE)} searches upwards in your folder structure
@@ -106,5 +107,5 @@ clean(destroy = TRUE)
 }
 }
 \seealso{
-\code{\link{prune}}, \code{\link{make}},
+\code{\link{drake_gc}}, \code{\link{make}}
 }

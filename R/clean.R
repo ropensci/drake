@@ -1,10 +1,11 @@
 #' @title Function \code{clean}
-#' @description Cleans up all work done by \code{\link{make}()}.
+#' @description Cleans up work done by \code{\link{make}()}.
 #' @details
 #' By default, \code{clean()} removes references to cached data.
 #' To deep-clean the data to free up storage/memory, use
 #' \code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
-#' but it purges data with no remaining references.
+#' but it purges data with no remaining references. To just do garbage
+#' collection without cleaning, see \code{\link{drake_gc}()}.
 #' Also, for \code{clean()}, you must be in your project's working directory
 #' or a subdirectory of it.
 #' \code{clean(search = TRUE)} searches upwards in your folder structure
@@ -15,7 +16,7 @@
 #' which includes
 #' file targets as well as the entire drake cache. Only use \code{clean()}
 #' if you're sure you won't lose anything important.
-#' @seealso \code{\link{prune}}, \code{\link{make}},
+#' @seealso \code{\link{drake_gc}}, \code{\link{make}}
 #' @export
 #' @return Invisibly return \code{NULL}.
 #'
@@ -123,6 +124,53 @@ clean <- function(
     uncache(targets = targets, cache = cache, jobs = jobs)
   }
   if (garbage_collection){
+    cache$gc()
+  }
+  invisible()
+}
+
+
+#' @title Function drake_gc()
+#' @description Do garbage collection on the cache
+#' @seealso \code{\link{clean}}
+#' @export
+#' @return\code{NULL}
+#' @param path file path to the folder containing the cache.
+#' Yes, this is the parent directory containing the cache,
+#' not the cache itself, and it assumes the cache is in the
+#' `.drake` folder. If you are looking for a different cache
+#' with a known folder different from `.drake`, use
+#' the \code{\link{this_cache}()} function.
+#' @param search logical, whether to search back in the file system
+#' for the cache.
+#' @param verbose logical, whether to print the location of the cache
+#' @param force logical, whether to load the cache
+#' despite any back compatibility issues with the
+#' running version of drake.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # At this point, check the size of the '.drake/' cache folder.
+#' # Clean without garbage collection.
+#' clean(garbage_collection = FALSE)
+#' # The '.drake/' cache folder is still about the same size.
+#' drake_gc() # Do garbage collection on the cache.
+#' # The '.drake/' cache folder should have gotten much smaller.
+#' }
+drake_gc <- function(
+  path = getwd(),
+  search = TRUE,
+  verbose = TRUE,
+  force = FALSE
+){
+  cache <- get_cache(
+    path = path,
+    search = search,
+    verbose = verbose,
+    force = force
+  )
+  if (!is.null(cache)){
     cache$gc()
   }
   invisible()

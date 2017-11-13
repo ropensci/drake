@@ -228,6 +228,7 @@ test_with_dir("cache functions work", {
     garbage_collection = TRUE)
   expect_true(all(setdiff(all, "final") %in% cached(path = s,
     search = T)))
+  drake_gc(path = s, search = T)
   clean(path = s, search = TRUE, garbage_collection = FALSE)
   expect_equal(cached(path = s, search = T), character(0))
   where <- file.path(scratch, cache_dir)
@@ -236,6 +237,7 @@ test_with_dir("cache functions work", {
   expect_true(file.exists(where))
   clean(path = s, search = TRUE, destroy = TRUE)
   expect_false(file.exists(where))
+  expect_silent(drake_gc()) # Cache does not exist
 
   setwd(scratch)
   unlink("searchfrom", recursive = TRUE, force = TRUE)
