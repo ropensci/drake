@@ -84,7 +84,7 @@ Single-quote the file targets after `evaluate_plan()`.
 files$target <- paste0(
   files$target, ".csv"
 ) %>%
-  as_file
+  as_drake_filename
 ```
 
 Put the workflow plan together.
@@ -106,7 +106,7 @@ workplan(
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `plot_graph()` and `build_drake_graph()` to see the dependency structure of your project.
 
 # Execution environment and files
 

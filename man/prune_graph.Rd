@@ -34,7 +34,7 @@ remove the vertices after \code{to} from the graph.
 load_basic_example() # Load the canonical example.
 # Build the igraph object representing the workflow dependency network.
 # You could also use config(my_plan)$graph
-graph <- build_graph(my_plan)
+graph <- build_drake_graph(my_plan)
 # The default plotting is not the greatest,
 # but you will get the idea.
 plot(graph)
@@ -45,6 +45,6 @@ plot(pruned)
 }
 }
 \seealso{
-\code{\link{build_graph}}, \code{\link{config}},
+\code{\link{build_drake_graph}}, \code{\link{config}},
 \code{\link{make}}
 }

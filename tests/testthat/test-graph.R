@@ -37,7 +37,7 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
 
 test_with_dir("graph functions work", {
   config <- dbug()
-  expect_equal(class(build_graph(config$plan, verbose = FALSE)), "igraph")
+  expect_equal(class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
   tmp <- plot_graph(plan = config$plan, envir = config$envir,
                     verbose = FALSE)
@@ -51,7 +51,7 @@ test_with_dir("graph functions work", {
 
 test_with_dir("Supplied graph is pruned.", {
   load_basic_example()
-  graph <- build_graph(my_plan)
+  graph <- build_drake_graph(my_plan)
   con <- config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
   include <- c("small", "simulate", "data.frame", "rpois",

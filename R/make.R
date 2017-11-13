@@ -184,7 +184,7 @@
 #'
 #' @param graph An \code{igraph} object from the previous \code{make()}.
 #' Supplying a pre-built graph could save time.
-#' The graph is constructed by \code{\link{build_graph}()}.
+#' The graph is constructed by \code{\link{build_drake_graph}()}.
 #' You can also get one from \code{\link{config}(my_plan)$graph}.
 #' Overrides \code{skip_imports}.
 #'

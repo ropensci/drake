@@ -145,6 +145,6 @@ max_useful_jobs(my_plan, imports = 'none') # 4
 }
 }
 \seealso{
-\code{\link{plot_graph}}, \code{\link{build_graph}},
+\code{\link{plot_graph}}, \code{\link{build_drake_graph}},
 \code{\link{shell_file}}
 }

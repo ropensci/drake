@@ -6,7 +6,7 @@
 #' one for edges, and one for
 #' the legend nodes. The list also contains the
 #' default title of the graph.
-#' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}}
+#' @seealso \code{\link{plot_graph}}, \code{\link{build_drake_graph}}
 #' @param plan workflow plan data frame, same as for function
 #' \code{\link{make}()}.
 #'

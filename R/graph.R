@@ -1,4 +1,4 @@
-#' @title Function \code{build_graph}
+#' @title Function \code{build_drake_graph}
 #' @description Make a graph of the dependency structure of your workplan.
 #' @details This function returns an igraph object representing how
 #' the targets in your workplan depend on each other.
@@ -34,10 +34,10 @@
 #' \dontrun{
 #' load_basic_example() # Load the canonical example for drake.
 #' # Make the igraph network connecting all the targets and imports.
-#' g <- build_graph(my_plan)
+#' g <- build_drake_graph(my_plan)
 #' class(g) # "igraph"
 #' }
-build_graph <- function(
+build_drake_graph <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
@@ -109,7 +109,7 @@ build_graph <- function(
 
 #' @title Function prune_graph
 #' @export
-#' @seealso \code{\link{build_graph}}, \code{\link{config}},
+#' @seealso \code{\link{build_drake_graph}}, \code{\link{config}},
 #' \code{\link{make}}
 #' @description Prune an igraph object. Igraph objects are used
 #' internally to represent the dependency network of your workflow.
@@ -129,7 +129,7 @@ build_graph <- function(
 #' load_basic_example() # Load the canonical example.
 #' # Build the igraph object representing the workflow dependency network.
 #' # You could also use config(my_plan)$graph
-#' graph <- build_graph(my_plan)
+#' graph <- build_drake_graph(my_plan)
 #' # The default plotting is not the greatest,
 #' # but you will get the idea.
 #' plot(graph)

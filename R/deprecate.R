@@ -1,4 +1,4 @@
-#' @title Function \code{analyses}
+#' @title Deprecated function \code{analyses}
 #' @description Use \code{\link{plan_analyses}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
@@ -20,6 +20,29 @@ analyses <- function(plan, datasets){
     )
   )
   plan_analyses(plan = plan, datasets = datasets)
+}
+
+#' @title Deprecated function \code{as_file}
+#' @description Use \code{\link{as_drake_filename}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @keywords internal
+#' @seealso \code{\link{as_drake_filename}}
+#' @return The same return value as \code{\link{as_drake_filename}()}.
+#' @param x Same as for \code{\link{as_drake_filename}()}.
+#' @examples
+#' # See ?as_drake_filename for examples.
+as_file <- function(x){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::as_file() is deprecated",
+      "due to possible name conflicts.",
+      "Use as_drake_filename() instead."
+    )
+  )
+  as_drake_filename(x)
 }
 
 #' @title Deprecated function \code{backend}
@@ -53,6 +76,34 @@ backend <- function(...){
     )
   )
   future::plan(...)
+}
+
+#' @title Deprecated function \code{build_graph}
+#' @description Use \code{\link{build_drake_graph}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @export
+#' @keywords internal
+#' @seealso \code{\link{build_drake_graph}}
+#' @return The same return value as \code{\link{build_drake_graph}()}.
+#' @param plan Same as for \code{\link{build_drake_graph}()}.
+#' @param targets Same as for \code{\link{build_drake_graph}()}.
+#' @param envir Same as for \code{\link{build_drake_graph}()}.
+#' @param verbose Same as for \code{\link{build_drake_graph}()}.
+#' @param jobs Same as for \code{\link{build_drake_graph}()}.
+#' @param skip_imports Same as for \code{\link{build_drake_graph}()}.
+#' @examples
+#' # See ?as_drake_filename for examples.
+build_graph <- function(x){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::build_graph() is deprecated",
+      "due to possible name conflicts.",
+      "Use build_drake_graph() instead."
+    )
+  )
+  build_drake_graph(x)
 }
 
 #' @title Deprecated function \code{check}

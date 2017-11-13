@@ -183,5 +183,5 @@ plot_graph(
 }
 }
 \seealso{
-\code{\link{build_graph}}
+\code{\link{build_drake_graph}}
 }

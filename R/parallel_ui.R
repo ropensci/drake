@@ -119,7 +119,7 @@ default_parallelism <- function() {
 #' @return A numeric scalar, the maximum number of useful jobs for
 #' \code{\link{make}(..., jobs = ...)}.
 #'
-#' @seealso \code{\link{plot_graph}}, \code{\link{build_graph}},
+#' @seealso \code{\link{plot_graph}}, \code{\link{build_drake_graph}},
 #' \code{\link{shell_file}}
 #'
 #' @param plan workflow plan data frame, same as for function

@@ -4,7 +4,7 @@
 #' To save time for repeated plotting, this function is divided into
 #' \code{\link{dataframes_graph}()} and \code{\link{render_graph}()}.
 #' @export
-#' @seealso \code{\link{build_graph}}
+#' @seealso \code{\link{build_drake_graph}}
 #' @return A visNetwork graph.
 #'
 #' @param plan workflow plan data frame, same as for function

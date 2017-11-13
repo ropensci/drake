@@ -110,7 +110,7 @@ config <- function(
   )
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
-    graph <- build_graph(plan = plan, targets = targets,
+    graph <- build_drake_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs,
       skip_imports = skip_imports)
   } else {

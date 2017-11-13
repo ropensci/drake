@@ -69,7 +69,7 @@ build_recipe <- function(target, recipe_command,
     cache_path <- cache_value_macro
   }
   if (is_file(target)){
-    target <- paste0("drake::as_file(\"", eply::unquote(target), "\")")
+    target <- paste0("drake::as_drake_filename(\"", eply::unquote(target), "\")")
   } else{
     target <- eply::quotes(
       eply::unquote(target), single = FALSE)

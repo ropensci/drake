@@ -13,7 +13,9 @@
 - Delete long-deprecated functions `prune()` and `status()`.
 - Deprecate and rename functions:
     - `analyses()` => `plan_analyses()`
+    - `as_file()` => `as_drake_filename()`
     - `backend()` => `future::plan()`
+    - `build_graph()` => `build_drake_graph()`
     - `check()` => `check_plan()`
     - `evaluate()` => `evaluate_plan()`
     - `expand()` => `expand_plan()`

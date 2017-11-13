@@ -60,3 +60,7 @@ test_with_dir("generative templating deprecation", {
   expect_warning(
     summaries(summary_types, analyses, datasets))
 })
+
+test_with_dir("deprecate misc utilities", {
+  expect_warning(as_file("x"))
+})

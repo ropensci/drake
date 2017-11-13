@@ -155,5 +155,5 @@ visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
 }
 }
 \seealso{
-\code{\link{plot_graph}}, \code{\link{build_graph}}
+\code{\link{plot_graph}}, \code{\link{build_drake_graph}}
 }
