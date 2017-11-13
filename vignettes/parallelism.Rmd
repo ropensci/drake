@@ -194,11 +194,11 @@ future::plan(list(batchjobs_sge, multiprocess))
 make(my_plan, parallelism = "future_lapply")
 ```
 
-For parallelism on clusters and job schedulers, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). It is your responsibility to configure these files for your job scheduler. You can find some examples on the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `examples_drake()` to view your options, and then `example_drake()` to write the files for an example.
+For parallelism on clusters and job schedulers, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). It is your responsibility to configure these files for your job scheduler. You can find some examples on the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `drake_examples()` to view your options, and then `drake_example()` to write the files for an example.
 
 ```{r writexamples, eval = FALSE}
-example_drake("sge")   # Sun/Univa Grid Engine workflow and supporting files
-example_drake("slurm") # SLURM workflow and supporting files
+drake_example("sge")   # Sun/Univa Grid Engine workflow and supporting files
+drake_example("slurm") # SLURM workflow and supporting files
 ```
 
 

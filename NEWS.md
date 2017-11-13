@@ -17,10 +17,15 @@
     - `backend()` => `future::plan()`
     - `build_graph()` => `build_drake_graph()`
     - `check()` => `check_plan()`
+    - `config()` => `drake_config()`
     - `evaluate()` => `evaluate_plan()`
+    - `example_drake()` => `drake_example()`
+    - `examples_drake()` => `drake_examples()`
     - `expand()` => `expand_plan()`
     - `gather()` => `gather_plan()`
     - `plot_graph()` => `vis_drake_graph()`
+    - `read_config()` => `read_drake_config()`
+    - `read_graph()` => `read_drake_graph()`
     - `render_graph()` => `render_drake_graph()`
     - `session()` => `drake_session()`
     - `summaries()` => `plan_summaries()`

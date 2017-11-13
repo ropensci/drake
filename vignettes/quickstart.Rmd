@@ -46,8 +46,8 @@ error$calls              # Call stack / traceback
 Dive deeper into the built-in examples.
 
 ```{r noeval2, eval = FALSE}
-example_drake("basic") # Write the code files.
-examples_drake() # List the other examples.
+drake_example("basic") # Write the code files.
+drake_examples() # List the other examples.
 vignette("quickstart") # This vignette
 ```
 
@@ -134,7 +134,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-See also `dataframes_graph()`, `render_drake_graph()`, and `config()` for faster and more customized regraphing.
+See also `dataframes_graph()`, `render_drake_graph()`, and `drake_config()` for faster and more customized regraphing.
 
 You can also check the dependencies of individual targets.
 
@@ -305,7 +305,7 @@ drake_session() # of the last call to make()
 The next time you run `make(my_plan)`, nothing will be built because drake knows everything is up to date.
 
 ```{r uptodateinvig}
-config <- make(my_plan) # Will use config later. See also config().
+config <- make(my_plan) # Will use config later. See also drake_config().
 ```
 
 But if you change one of your functions, commands, or other dependencies, drake will update the affected parts of the workflow. Let's say we want to change the quadratic term to a cubic term in our `reg2()` function.

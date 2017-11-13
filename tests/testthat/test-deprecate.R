@@ -4,12 +4,14 @@ test_with_dir("deprecation: future", {
   expect_warning(backend())
 })
 
-test_with_dir("deprecation: make()", {
+test_with_dir("deprecation: make() and config()", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   expect_warning(make(workplan(x = 1), return_config = TRUE,
     verbose = FALSE))
   expect_warning(make(workplan(x = 1), clear_progress = TRUE,
     verbose = FALSE))
+  expect_warning(read_config())
+  expect_warning(config(workplan(x = 1)))
 })
 
 test_with_dir("deprecation: cache functions", {
@@ -18,6 +20,7 @@ test_with_dir("deprecation: cache functions", {
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
   expect_warning(session())
+  expect_warning(read_graph())
 })
 
 test_with_dir("workplan deprecation", {
@@ -67,6 +70,11 @@ test_with_dir("deprecated graphing functions", {
   expect_warning(out <- plot_graph(pl))
   df <- dataframes_graph(pl)
   expect_warning(out <- render_graph(df))
+})
+
+test_with_dir("deprecated example(s)_drake functions", {
+  expect_warning(example_drake())
+  expect_warning(examples_drake())
 })
 
 test_with_dir("deprecate misc utilities", {

@@ -52,7 +52,7 @@ migrate_drake_project <- function(
   dir.create(backup)
   file.copy(from = path, to = backup, recursive = TRUE)
   message("Migrating cache at", path, "for your system's drake.")
-  config <- read_config(cache = cache)
+  config <- read_drake_config(cache = cache)
   config$cache <- cache
   config$parallelism <- "mclapply"
   config$jobs <- safe_jobs(jobs)
@@ -64,7 +64,7 @@ migrate_drake_project <- function(
     as.character %>%
     sort
   config$cache$clear(namespace = "depends")
-  store_config(config = config)
+  store_drake_config(config = config)
   run_mclapply(config = config)
   message("Checking for outdated targets.")
   config$hook <- empty_hook

@@ -99,7 +99,7 @@ build_recipe <- function(target, recipe_command,
 #' # These examples peer into the internals of drake,
 #' # but are not really of practical use for most users.
 #' load_basic_example() # Load drake's canonical example.
-#' con <- config(my_plan) # Construct the internal configuration list.
+#' con <- drake_config(my_plan) # Construct the internal configuration list.
 #' # Prepare to use a distributed computing parallel backend
 #' # such as "Makefile" or "future_lapply".
 #' drake:::prepare_distributed(config = con)
@@ -114,7 +114,7 @@ mk <- function(
   cache_path = drake::default_cache_path()
 ){
   build_distributed(target = target, cache_path = cache_path)
-  config <- recover_config(cache_path)
+  config <- recover_drake_config(cache_path)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(config$old_hash, new_hash)){
     file <- time_stamp_file(target = target, config = config)

@@ -150,7 +150,7 @@ dataframes_graph <- function(
 ) {
   force(envir)
   if (is.null(config)){
-    config <- config(plan = plan, targets = targets,
+    config <- drake_config(plan = plan, targets = targets,
       envir = envir, verbose = verbose,
       hook = hook, cache = cache,
       parallelism = parallelism, jobs = jobs,

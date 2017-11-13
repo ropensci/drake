@@ -72,7 +72,7 @@ test_with_dir("Null cases in legacy functions", {
   write_v4.3.0_project() # nolint
   cache <- this_cache(force = TRUE)
   cache$set(key = "'report.md'", value = Inf, namespace = "filemtime")
-  config <- read_config(cache = cache)
+  config <- read_drake_config(cache = cache)
   expect_true(is.na(legacy_self_hash(target = "ok123", config = config)))
   x <- legacy_file_hash(target = "'report.md'", config = config,
     size_cutoff = -1)

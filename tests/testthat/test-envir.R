@@ -29,7 +29,7 @@ test_with_dir("prune_envir in full build", {
 
   # set up a workspace to test prune_envir()
   # set verbose to TRUE to see log of loading
-  config <- config(
+  config <- drake_config(
     plan,
     targets = plan$target,
     envir = new.env(parent = globalenv()),

@@ -25,11 +25,11 @@ This vignette is a guide to debugging and testing `drake` projects. Please also 
 
 # The configuration list
 
-Most of `drake`'s functions rely on a central `config` list. An understanding of `config` will help you grasp the internals. `make()` and `config()` both return the `config` list. Unlike `make()`, `config()`'s return value is visible, and its only purpose is to construct your `config`.
+Most of `drake`'s functions rely on a central `config` list. An understanding of `config` will help you grasp the internals. `make()` and `drake_config()` both return the `config` list. Unlike `make()`, `drake_config()`'s return value is visible, and its only purpose is to construct your `config`.
 
 ```{r debugconfig}
 load_basic_example()
-config <- config(my_plan)
+config <- drake_config(my_plan)
 sort(names(config))
 ```
 
@@ -44,13 +44,13 @@ The fields of `config` mostly arguments to `make()` and are documented there. Th
 Early in `make()`, the `config` list is stored in the cache. You can retrieve it with
 
 ```{r readconfig, eval = FALSE}
-read_config()
+read_drake_config()
 ```
 
 and you can access parts of it with some companion functions.
 
 ```{r readcompanions, eval = FALSE}
-read_graph()
+read_drake_graph()
 read_plan()
 ```
 
@@ -271,14 +271,14 @@ The `load_basic_example()` function loads the [basic example](https://github.com
 `Drake` [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) to help get you started. To see your choices, use
 
 ```{r examplesdrakedebug}
-examples_drake()
+drake_examples()
 ```
 
-To write the files for an example, use `example_drake()`.
+To write the files for an example, use `drake_example()`.
 
 ```{r examplesdrake, eval = FALSE}
-example_drake("basic")
-example_drake("slurm")
+drake_example("basic")
+drake_example("slurm")
 ```
 
 In most cases, all you need to do is run the R code provided.

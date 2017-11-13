@@ -26,7 +26,7 @@ Users should not need to invoke this function directly.
 # These examples peer into the internals of drake,
 # but are not really of practical use for most users.
 load_basic_example() # Load drake's canonical example.
-con <- config(my_plan) # Construct the internal configuration list.
+con <- drake_config(my_plan) # Construct the internal configuration list.
 # Prepare to use a distributed computing parallel backend
 # such as "Makefile" or "future_lapply".
 drake:::prepare_distributed(config = con)

@@ -25,7 +25,7 @@ is to set up PSOCK clusters efficiently.
 \dontrun{
 load_basic_example() # Load drake's canonical example.
 # Create a master internal configuration list with prework.
-con <- config(my_plan, prework = c("library(knitr)", "x <- 1"))
+con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
 # Do the prework. Usually done at the beginning of `make()`,
 # and for distributed computing backends like "future_lapply",
 # right before each target is built.

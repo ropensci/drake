@@ -33,7 +33,7 @@ remove the vertices after \code{to} from the graph.
 \dontrun{
 load_basic_example() # Load the canonical example.
 # Build the igraph object representing the workflow dependency network.
-# You could also use config(my_plan)$graph
+# You could also use drake_config(my_plan)$graph
 graph <- build_drake_graph(my_plan)
 # The default plotting is not the greatest,
 # but you will get the idea.

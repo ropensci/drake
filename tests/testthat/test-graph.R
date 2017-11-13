@@ -24,7 +24,7 @@ test_with_dir("circular non-DAG workplans quit in error", {
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {
   con <- dbug()
-  con2 <- config(workplan(a = 1), verbose = FALSE)
+  con2 <- drake_config(workplan(a = 1), verbose = FALSE)
   expect_warning(
     make(
       plan = con$plan,
@@ -52,7 +52,7 @@ test_with_dir("graph functions work", {
 test_with_dir("Supplied graph is pruned.", {
   load_basic_example()
   graph <- build_drake_graph(my_plan)
-  con <- config(my_plan, targets = c("small", "large"), graph = graph)
+  con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
   include <- c("small", "simulate", "data.frame", "rpois",
                "stats::rnorm", "large")
@@ -65,7 +65,7 @@ test_with_dir("different graphical arrangements for distributed parallelism", {
   e <- new.env()
   x <- workplan(a = 1, b = f(2))
   e$f <- function(x) x
-  con <- config(x, envir = e, verbose = FALSE)
+  con <- drake_config(x, envir = e, verbose = FALSE)
   expect_equal(1, max_useful_jobs(x, envir = e, config = con,
                                   parallelism = "mclapply", jobs = 1))
   expect_equal(1, max_useful_jobs(x, envir = e, config = con,
