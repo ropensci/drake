@@ -514,7 +514,7 @@ render_graph <- function(
     hover = hover,
     main = main,
     selfcontained = selfcontained,
-    navigationButtons = navigationButtons,
+    navigationButtons = navigationButtons, # nolint
     ncol_legend = ncol_legend,
     ... = ...
   )
