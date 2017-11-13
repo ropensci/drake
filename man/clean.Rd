@@ -6,7 +6,7 @@
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
   search = TRUE, cache = NULL, verbose = TRUE, jobs = 1,
-  force = FALSE)
+  force = FALSE, garbage_collection = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
@@ -46,6 +46,14 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{force}{logical, whether to try to clean the cache
 even though the project may not be back compatible with the
 current version of drake.}
+
+\item{garbage_collection}{logical, whether to call
+\code{cache$gc()} to do garbage collection.
+If \code{TRUE}, cached data with no remaining references
+will be removed.
+This will slow down \code{clean()}, but the cache
+could take up far less space afterwards.
+See the \code{gc()} method for \code{storr} caches.}
 }
 \value{
 Invisibly return \code{NULL}.
@@ -54,7 +62,11 @@ Invisibly return \code{NULL}.
 Cleans up all work done by \code{\link{make}()}.
 }
 \details{
-You must be in your project's working directory
+By default, \code{clean()} removes references to cached data.
+To deep-clean the data to free up storage/memory, use
+\code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
+but it purges data with no remaining references.
+Also, for \code{clean()}, you must be in your project's working directory
 or a subdirectory of it.
 \code{clean(search = TRUE)} searches upwards in your folder structure
 for the drake cache and acts on the first one it sees. Use
@@ -81,6 +93,12 @@ make(my_plan)
 # Remove all the targets and imports.
 # On non-Windows machines, parallelize over at most 2 jobs.
 clean(jobs = 2)
+# Make the targets again.
+make(my_plan)
+# Garbage collection removes data whose references are no longer present.
+# It is slow, but you should enable it if you want to reduce the
+# size of the cache.
+clean(garbage_collection = TRUE)
 # All the targets and imports are gone.
 cached()
 # Completely remove the entire cache (default: '.drake/' folder).

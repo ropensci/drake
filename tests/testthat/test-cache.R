@@ -224,10 +224,11 @@ test_with_dir("cache functions work", {
 
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
-  clean(final, path = s, search = TRUE, jobs = 2)
+  clean(final, path = s, search = TRUE, jobs = 2,
+    garbage_collection = TRUE)
   expect_true(all(setdiff(all, "final") %in% cached(path = s,
     search = T)))
-  clean(path = s, search = TRUE)
+  clean(path = s, search = TRUE, garbage_collection = FALSE)
   expect_equal(cached(path = s, search = T), character(0))
   where <- file.path(scratch, cache_dir)
   expect_true(file.exists(where))
