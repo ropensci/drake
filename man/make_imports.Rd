@@ -19,7 +19,8 @@ just make the imports
 \examples{
 \dontrun{
 load_basic_example() # Load the canonical example.
-con <- drake_config(my_plan) # Generate the master internal configuration list.
+# Generate the master internal configuration list.
+con <- drake_config(my_plan)
 # Just cache the imports, do not build any targets.
 make_imports(config = con)
 }

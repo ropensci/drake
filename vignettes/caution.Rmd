@@ -342,12 +342,12 @@ On Windows, do not use `make(..., parallelism = "mclapply", jobs = n)` with `n` 
 
 ## Configuring [future](https://github.com/HenrikBengtsson/future)/[batchtools](https://github.com/mllg/batchtools)-based distributed computing on clusters
 
-The `"future_lapply"` backend unlocks a large array of distributed computing options on serious computing clusters. However, it is your responsibility to configure your workflow for your specific job scheduler. In particular, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). You can find some examples of these files in the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `examples_drake()` to view your options, and then `example_drake()` to write the files for an example.
+The `"future_lapply"` backend unlocks a large array of distributed computing options on serious computing clusters. However, it is your responsibility to configure your workflow for your specific job scheduler. In particular, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). You can find some examples of these files in the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). See `drake_examples()` to view your options, and then `drake_example()` to write the files for an example.
 
 ```{r writexamples, eval = FALSE}
-example_drake("sge")    # Sun/Univa Grid Engine workflow and supporting files
-example_drake("slurm")  # SLURM
-example_drake("torque") # TORQUE
+drake_example("sge")    # Sun/Univa Grid Engine workflow and supporting files
+drake_example("slurm")  # SLURM
+drake_example("torque") # TORQUE
 ```
 
 Unfortunately, there is no one-size-fits-all `*.tmpl` configuration file for any job scheduler, so we cannot guarantee that the above examples will work for you out of the box. To learn how to configure the files to suit your needs, you should make sure you understand how to use your job scheduler and [batchtools](https://github.com/mllg/batchtools).

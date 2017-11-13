@@ -87,7 +87,8 @@ not just the imports.
 \examples{
 \dontrun{
 load_basic_example() # Load drake's canonical example.
-con <- drake_config(my_plan) # Construct the master internal configuration list.
+# Construct the master internal configuration list.
+con <- drake_config(my_plan)
 # These functions are faster than otherwise
 # because they use the configuration list.
 outdated(config = con) # Which targets are out of date?

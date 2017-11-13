@@ -271,14 +271,14 @@ The `load_basic_example()` function loads the [basic example](https://github.com
 `Drake` [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) to help get you started. To see your choices, use
 
 ```{r examplesdrakedebug}
-examples_drake()
+drake_examples()
 ```
 
-To write the files for an example, use `example_drake()`.
+To write the files for an example, use `drake_example()`.
 
 ```{r examplesdrake, eval = FALSE}
-example_drake("basic")
-example_drake("slurm")
+drake_example("basic")
+drake_example("slurm")
 ```
 
 In most cases, all you need to do is run the R code provided.

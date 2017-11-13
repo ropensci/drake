@@ -30,7 +30,7 @@ Loads the basic example into your workspace
 Also writes/overwrites the file \code{report.Rmd}.
 For a thorough walkthrough of how to set up this example, see the
 quickstart vignette: \code{vignette('quickstart')}. Alternatively,
-call \code{\link{example_drake}('basic')} to generate an R script
+call \code{\link{drake_example}('basic')} to generate an R script
 that builds up this example step by step.
 }
 \examples{

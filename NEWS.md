@@ -19,6 +19,8 @@
     - `check()` => `check_plan()`
     - `config()` => `drake_config()`
     - `evaluate()` => `evaluate_plan()`
+    - `example_drake()` => `drake_example()`
+    - `examples_drake()` => `drake_examples()`
     - `expand()` => `expand_plan()`
     - `gather()` => `gather_plan()`
     - `plot_graph()` => `vis_drake_graph()`

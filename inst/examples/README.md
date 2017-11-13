@@ -1,6 +1,6 @@
 # Drake examples
 
-These are the `drake` examples managed by functions `example_drake()` and `examples_drake()`. To add your own example, simply make a new folder in `inst/examples` and put your files inside. For example, you might create a folder called `inst/examples/new_example`. Then, when the user calls `example_drake("new_example")`, your `new_example` and its contents will be copied to the user's working directory. Also, `"new_example"` will be listed in `examples_drake()`.
+These are the `drake` examples managed by functions `drake_example()` and `drake_examples()`. To add your own example, simply make a new folder in `inst/examples` and put your files inside. For example, you might create a folder called `inst/examples/new_example`. Then, when the user calls `drake_example("new_example")`, your `new_example` and its contents will be copied to the user's working directory. Also, `"new_example"` will be listed in `drake_examples()`.
 
 Examples so far:
 - `basic`: An extended basic exmaple, like the [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd).

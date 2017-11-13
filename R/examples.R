@@ -1,27 +1,27 @@
-#' @title Function \code{example_drake}
+#' @title Function \code{drake_example}
 #' @description Copy a folder of code files for a
 #' drake example to the current working directory.
-#' Call \code{example_drake('basic')} to generate the code files from the
+#' Call \code{drake_example('basic')} to generate the code files from the
 #' quickstart vignette: \code{vignette('quickstart')}.
-#' To see the names of all the examples, run \code{\link{examples_drake}}.
-#' @seealso \code{\link{examples_drake}}, \code{\link{make}}
+#' To see the names of all the examples, run \code{\link{drake_examples}}.
+#' @seealso \code{\link{drake_examples}}, \code{\link{make}}
 #' @export
 #' @return \code{NULL}
 #' @param example name of the example.
 #' To see all the available example names,
-#' run \code{\link{examples_drake}}.
+#' run \code{\link{drake_examples}}.
 #' @param destination character scalar, file path, where
 #' to write the folder containing the code files for the example.
 #' @examples
 #' \dontrun{
-#' examples_drake() # List all the drake examples.
+#' drake_examples() # List all the drake examples.
 #' # Sets up the same example as the quickstart vignette.
-#' example_drake("basic")
+#' drake_example("basic")
 #' # Sets up the SLURM example.
-#' example_drake("slurm")
+#' drake_example("slurm")
 #' }
-example_drake <- function(
-  example = drake::examples_drake(),
+drake_example <- function(
+  example = drake::drake_examples(),
   destination = getwd()
 ){
   example <- match.arg(example)
@@ -34,22 +34,22 @@ example_drake <- function(
   invisible()
 }
 
-#' @title Function \code{examples_drake}
+#' @title Function \code{drake_examples}
 #' @description List the names of all the drake examples.
 #' The \code{'basic'} example is the one from the
 #' quickstart vignette: \code{vignette('quickstart')}.
 #' @export
-#' @seealso \code{\link{example_drake}}, \code{\link{make}}
+#' @seealso \code{\link{drake_example}}, \code{\link{make}}
 #' @return Names of all the drake examples.
 #' @examples
 #' \dontrun{
-#' examples_drake() # List all the drake examples.
+#' drake_examples() # List all the drake examples.
 #' # Sets up the same example as the quickstart vignette.
-#' example_drake("basic")
+#' drake_example("basic")
 #' # Sets up the SLURM example.
-#' example_drake("slurm")
+#' drake_example("slurm")
 #' }
-examples_drake <- function() {
+drake_examples <- function() {
   list.dirs(system.file("examples", package = "drake", mustWork = TRUE),
     full.names = FALSE, recursive = FALSE)
 }

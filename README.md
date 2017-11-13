@@ -94,8 +94,8 @@ vis_drake_graph(my_plan)  # The graph also shows what is up to date.
 Dive deeper into the built-in examples.
 
 ```r
-example_drake("basic") # Write the code files of the canonical tutorial.
-examples_drake()       # List the other examples.
+drake_example("basic") # Write the code files of the canonical tutorial.
+drake_examples()       # List the other examples.
 vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
@@ -106,8 +106,8 @@ vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignet
 ```r
 load_basic_example()
 drake_tip()
-examples_drake()
-example_drake()
+drake_examples()
+drake_example()
 ```
 
 set up your workflow plan data frame,

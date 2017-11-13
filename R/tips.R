@@ -18,7 +18,7 @@ drake_tip <- function() {
     "Predict the runtime of the next make() with predict_runtime().
      See also build_times() and rate_limiting_times().",
 
-    "Use example_drake('basic') to generate code files
+    "Use drake_example('basic') to generate code files
      for a minimal drake example walkthrough.",
 
     "See the vignettes at

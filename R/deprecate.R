@@ -331,6 +331,56 @@ evaluate <- function(
   )
 }
 
+#' @title Function \code{example_drake}
+#' @description Use \code{\link{drake_example}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{drake_example}}
+#' @export
+#' @keywords internal
+#' @return \code{NULL}
+#' @param example Same as for \code{\link{drake_example}()}
+#' @param destination Same as for \code{\link{drake_example}()}
+#' @examples
+#' # See ?drake_example for examples.
+example_drake <- function(
+  example = drake::drake_examples(),
+  destination = getwd()
+){
+  .Deprecated(
+    "example_drake",
+    package = "drake",
+    msg = paste(
+      "drake::example_drake() is deprecated.",
+      "Use drake_example() instead."
+    )
+  )
+  drake_example(
+    example = example,
+    destination = destination
+  )
+}
+
+#' @title Function \code{examples_drake}
+#' @description Use \code{\link{drake_examples}()} instead.
+#' @details Deprecated on 2017-11-12.
+#' @seealso \code{\link{drake_examples}}
+#' @export
+#' @keywords internal
+#' @return Names of all the drake examples.
+#' @examples
+#' # See ?drake_examples for the examples.
+examples_drake <- function() {
+  .Deprecated(
+    "example_drake",
+    package = "drake",
+    msg = paste(
+      "drake::example_drake() is deprecated.",
+      "Use drake_example() instead."
+    )
+  )
+  drake_examples()
+}
+
 #' @title Deprecated function expand
 #' @description Use \code{\link{expand_plan}()} instead.
 #' @details Deprecated on 2017-11-12.

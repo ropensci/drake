@@ -46,8 +46,8 @@ error$calls              # Call stack / traceback
 Dive deeper into the built-in examples.
 
 ```{r noeval2, eval = FALSE}
-example_drake("basic") # Write the code files.
-examples_drake() # List the other examples.
+drake_example("basic") # Write the code files.
+drake_examples() # List the other examples.
 vignette("quickstart") # This vignette
 ```
 

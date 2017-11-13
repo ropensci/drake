@@ -71,6 +71,11 @@ test_with_dir("deprecated graphing functions", {
   expect_warning(out <- render_graph(df))
 })
 
+test_with_dir("deprecated example(s)_drake functions", {
+  expect_warning(example_drake())
+  expect_warning(examples_drake())
+})
+
 test_with_dir("deprecate misc utilities", {
   expect_warning(as_file("x"))
 })
