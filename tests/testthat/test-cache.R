@@ -240,6 +240,7 @@ test_with_dir("cache functions work", {
   clean(path = s, search = TRUE, destroy = TRUE)
   expect_false(file.exists(where))
 
-  setwd(scratch)
+  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
+  eval(parse(text = "setwd(scratch)"))
   unlink("searchfrom", recursive = TRUE, force = TRUE)
 })
