@@ -45,7 +45,7 @@
 deps <- function(x){
   if (is.function(x)){
     out <- function_dependencies(x)
-  } else if (is_file(x) & file.exists(file <- eply::unquote(x))){
+  } else if (is_file(x) & file.exists(file <- drake::drake_unquote(x))){
     out <- knitr_deps(x)
   } else if (is.character(x)){
     out <- command_dependencies(x)
@@ -102,7 +102,7 @@ dependency_profile <- function(target, config){
   cached_file_modification_time <- safe_get(
     key = target, namespace = "mtimes", config = config)
   current_file_modification_time <- ifelse(is_file(target),
-    file.mtime(eply::unquote(target)), NA)
+    file.mtime(drake::drake_unquote(target)), NA)
 
   out <- list(
     cached_command = cached_command,
@@ -178,7 +178,7 @@ command_dependencies <- function(command){
     unlist()
   files <- extract_filenames(command)
   if (length(files)){
-    files <- eply::quotes(files, single = TRUE)
+    files <- drake::drake_quotes(files, single = TRUE)
   }
   knitr <- find_knitr_doc(command) %>%
     knitr_deps

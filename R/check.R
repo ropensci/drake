@@ -66,7 +66,7 @@ missing_input_files <- function(config) {
   missing_files <- V(config$graph)$name %>%
     setdiff(y = config$plan$target) %>%
     Filter(f = is_file) %>%
-    unquote %>%
+    drake_unquote %>%
     Filter(f = function(x) !file.exists(x))
   if (length(missing_files))
     warning("missing input files:\n", multiline_message(missing_files),
@@ -75,7 +75,7 @@ missing_input_files <- function(config) {
 }
 
 warn_bad_symbols <- function(x) {
-  x <- unquote(x)
+  x <- drake_unquote(x)
   bad <- which(!is_parsable(x)) %>% names
   if (!length(bad))
     return(invisible())
@@ -101,7 +101,7 @@ check_strings <- function(plan) {
   for (target in seq_len(length(x))) {
     message("\ntarget: ", names(x)[target])
     message("strings in command:\n",
-      multiline_message(eply::quotes(x[[target]],
+      multiline_message(drake::drake_quotes(x[[target]],
       single = FALSE)), sep = "")
   }
 }

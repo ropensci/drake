@@ -33,7 +33,6 @@
 #' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest
-#' @importFrom eply quotes strings unquote
 #' @importFrom evaluate try_capture_stack
 #' @importFrom future future_lapply plan
 #' @importFrom grDevices col2rgb rgb

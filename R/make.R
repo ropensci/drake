@@ -64,11 +64,6 @@
 #' \code{\link{drake_example}("basic")}
 #'
 #' @param jobs number of parallel processes or jobs to run.
-#' For \code{"future_lapply"} parallelism, \code{jobs}
-#' only applies to the imports.
-#' See \code{future::future.options} for environment variables that
-#' control the number of \code{future_lapply()} jobs for building targets.
-#' For example, you might use \code{options(mc.cores = max_jobs)}.
 #' See \code{\link{max_useful_jobs}()} or \code{\link{vis_drake_graph}()}
 #' to help figure out what the number of jobs should be.
 #' Windows users should not set \code{jobs > 1} if
@@ -76,6 +71,17 @@
 #' \code{\link{mclapply}()} is based on forking. Windows users
 #' who use \code{parallelism == "Makefile"} will need to
 #' download and install Rtools.
+#'
+#' For \code{"future_lapply"} parallelism, \code{jobs}
+#' only applies to the imports.
+#' To set the max number of jobs for \code{"future_lapply"}
+#' parallelism, set the \code{workers}
+#' argument where it exists: for example, call
+#' \code{future::plan(multisession(workers = 4))},
+#' then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
+#' You might also try \code{options(mc.cores = jobs)},
+#' or see \code{?future::future::.options}
+#' for environment variables that set the max number of jobs.
 #'
 #' If \code{parallelism} is \code{"Makefile"},  Makefile-level parallelism is
 #' only used for targets in your workflow plan data frame, not imports.  To

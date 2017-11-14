@@ -222,7 +222,7 @@ config <- function(
     msg = paste(
       "drake::evaluate() is deprecated",
       "due to possible name conflicts.",
-      "Use drake_drake_config() instead."
+      "Use drake_config() instead."
     )
   )
   drake_config(
@@ -502,7 +502,7 @@ plan <- function(
   )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){
-    plan$target <- eply::quotes(plan$target, single = TRUE)
+    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
   if (strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
@@ -864,7 +864,7 @@ workflow <- function(
   )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){
-    plan$target <- eply::quotes(plan$target, single = TRUE)
+    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
   if (strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])

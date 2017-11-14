@@ -93,7 +93,7 @@ default_graph_title <- function(
 }
 
 file_hover_text <- Vectorize(function(quoted_file, targets){
-  unquoted_file <- unquote(quoted_file)
+  unquoted_file <- drake_unquote(quoted_file)
   if (quoted_file %in% targets | !file.exists(unquoted_file))
     return(quoted_file)
   tryCatch({
@@ -149,7 +149,7 @@ missing_import <- function(x, envir) {
     FALSE
   },
   error = function(e) TRUE)
-  missing_file <- is_file(x) & !file.exists(unquote(x))
+  missing_file <- is_file(x) & !file.exists(drake_unquote(x))
   missing_object | missing_file
 }
 

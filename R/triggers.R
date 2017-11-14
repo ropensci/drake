@@ -129,7 +129,7 @@ file_trigger <- function(target, meta, config){
   if (!is_file(target)){
     return(FALSE)
   }
-  if (!file.exists(unquote(target))){
+  if (!file.exists(drake_unquote(target))){
     return(TRUE)
   }
   tryCatch(

@@ -77,7 +77,7 @@ check_built_file <- function(target){
   if (!is_file(target)){
     return()
   }
-  if (!file.exists(eply::unquote(target))){
+  if (!file.exists(drake::drake_unquote(target))){
     warning(
       "File target ", target, " was built,\n",
       "but the file itself does not exist.",
@@ -153,8 +153,11 @@ store_object <- function(target, value, config) {
 store_file <- function(target, meta, config) {
   config$cache$set(key = target, value = "file",
     namespace = "type")
-  config$cache$set(key = target, value = file.mtime(eply::unquote(target)),
-    namespace = "mtimes")
+  config$cache$set(
+    key = target,
+    value = file.mtime(drake::drake_unquote(target)),
+    namespace = "mtimes"
+  )
   hash <- ifelse(
     meta$imported,
     meta$file,
