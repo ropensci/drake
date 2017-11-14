@@ -80,15 +80,15 @@ install_github("wlandau-lilly/drake", build = TRUE)        # Development version
 
 ```r
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd.
-vis_drake_graph(my_plan)  # Click, drag, pan, hover. See arguments 'from' and 'to'.
-outdated(my_plan)    # Which targets need to be (re)built?
-missed(my_plan)      # Are you missing anything from your workspace?
-check_plan(my_plan)  # Are you missing files? Is your workflow plan okay?
-make(my_plan)        # Run the workflow.
-diagnose(large)      # View error info if the target "large" failed to build.
-outdated(my_plan)    # Everything is up to date.
-vis_drake_graph(my_plan)  # The graph also shows what is up to date.
+load_basic_example()     # Also (over)writes report.Rmd.
+vis_drake_graph(my_plan) # Click, drag, pan, hover. See arguments 'from' and 'to'.
+outdated(my_plan)        # Which targets need to be (re)built?
+missed(my_plan)          # Are you missing anything from your workspace?
+check_plan(my_plan)      # Are you missing files? Is your workflow plan okay?
+make(my_plan)            # Run the workflow.
+diagnose(large)          # View error info if the target "large" failed to build.
+outdated(my_plan)        # Everything is up to date.
+vis_drake_graph(my_plan) # The graph also shows what is up to date.
 ```
 
 Dive deeper into the built-in examples.
@@ -96,7 +96,7 @@ Dive deeper into the built-in examples.
 ```r
 drake_example("basic") # Write the code files of the canonical tutorial.
 drake_examples()       # List the other examples.
-vignette("quickstart") # Same as https://cran.r-project.org/package=drake/vignettes/quickstart.html
+vignette("quickstart") # https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
 # Useful functions
@@ -201,18 +201,17 @@ There is room to improve the conversation and the landscape of reproducibility i
 ```r
 library(drake)
 load_basic_example()
-outdated(my_plan) # Which targets need to be (re)built?
-make(my_plan)     # Build what needs to be built.
-outdated(my_plan) # Everything is up to date.
-# Change one of your functions.
-reg2 <- function(d){
+outdated(my_plan)        # Which targets need to be (re)built?
+make(my_plan)            # Build what needs to be built.
+outdated(my_plan)        # Everything is up to date.
+reg2 <- function(d){     # Change one of your functions.
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan)   # Some targets depend on reg2().
+outdated(my_plan)        # Some targets depend on reg2().
 vis_drake_graph(my_plan) # See arguments 'from' and 'to'.
-make(my_plan)       # Rebuild just the outdated targets.
-outdated(my_plan)   # Everything is up to date again.
+make(my_plan)            # Rebuild just the outdated targets.
+outdated(my_plan)        # Everything is up to date again.
 vis_drake_graph(my_plan) # The colors changed in the graph.
 ```
 
