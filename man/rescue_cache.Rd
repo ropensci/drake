@@ -4,11 +4,18 @@
 \alias{rescue_cache}
 \title{Function rescue_cache}
 \usage{
-rescue_cache(path = getwd(), search = TRUE, verbose = TRUE,
-  force = FALSE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose, force = force), jobs = 1)
+rescue_cache(targets = NULL, path = getwd(), search = TRUE,
+  verbose = TRUE, force = FALSE, cache = drake::get_cache(path = path,
+  search = search, verbose = verbose, force = force), jobs = 1)
 }
 \arguments{
+\item{targets}{Character vector, names of the targets to rescue.
+As with many other drake utility functions, the word \code{target}
+is defined generally in this case, encompassing imports
+as well as true targets.
+If \code{targets} is \code{NULL}, everything in the
+cache is rescued.}
+
 \item{path}{same as for \code{\link{get_cache}()}}
 
 \item{search}{same as for \code{\link{get_cache}()}}
@@ -37,6 +44,9 @@ load_basic_example() # Load the canonical example.
 make(my_plan) # Run the project, build targets. This creates the cache.
 # Remove dangling cache files that could cause errors.
 rescue_cache(jobs = 2)
+# Alternatively, just rescue targets 'small' and 'large'.
+# Rescuing specific targets is usually faster.
+rescue_cache(targets = c("small", "large"))
 }
 }
 \seealso{

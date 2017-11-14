@@ -138,6 +138,7 @@ tracked()
 interact with the cache,
 ```r
 clean()
+drake_gc()
 cached()
 imported()
 built()

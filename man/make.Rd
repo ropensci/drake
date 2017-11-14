@@ -248,7 +248,7 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 }
 \seealso{
 \code{\link{workplan}}, \code{\link{workplan}},
-\code{\link{backend}}, \code{\link{vis_drake_graph}},
+\code{\link{vis_drake_graph}},
 \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
 \code{\link{default_hook}}, \code{\link{silencer_hook}},
 \code{\link{triggers}}

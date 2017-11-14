@@ -134,6 +134,7 @@ interact with the cache,
 
 ```{r cachedrakermd, eval = FALSE}
 clean()
+drake_gc()
 cached()
 imported()
 built()

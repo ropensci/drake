@@ -1,6 +1,12 @@
 #' @title Function \code{clean}
-#' @description Cleans up all work done by \code{\link{make}()}.
-#' @details You must be in your project's working directory
+#' @description Cleans up work done by \code{\link{make}()}.
+#' @details
+#' By default, \code{clean()} removes references to cached data.
+#' To deep-clean the data to free up storage/memory, use
+#' \code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
+#' but it purges data with no remaining references. To just do garbage
+#' collection without cleaning, see \code{\link{drake_gc}()}.
+#' Also, for \code{clean()}, you must be in your project's working directory
 #' or a subdirectory of it.
 #' \code{clean(search = TRUE)} searches upwards in your folder structure
 #' for the drake cache and acts on the first one it sees. Use
@@ -10,7 +16,7 @@
 #' which includes
 #' file targets as well as the entire drake cache. Only use \code{clean()}
 #' if you're sure you won't lose anything important.
-#' @seealso \code{\link{prune}}, \code{\link{make}},
+#' @seealso \code{\link{drake_gc}}, \code{\link{make}}
 #' @export
 #' @return Invisibly return \code{NULL}.
 #'
@@ -52,6 +58,14 @@
 #' even though the project may not be back compatible with the
 #' current version of drake.
 #'
+#' @param garbage_collection logical, whether to call
+#' \code{cache$gc()} to do garbage collection.
+#' If \code{TRUE}, cached data with no remaining references
+#' will be removed.
+#' This will slow down \code{clean()}, but the cache
+#' could take up far less space afterwards.
+#' See the \code{gc()} method for \code{storr} caches.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -68,6 +82,12 @@
 #' # Remove all the targets and imports.
 #' # On non-Windows machines, parallelize over at most 2 jobs.
 #' clean(jobs = 2)
+#' # Make the targets again.
+#' make(my_plan)
+#' # Garbage collection removes data whose references are no longer present.
+#' # It is slow, but you should enable it if you want to reduce the
+#' # size of the cache.
+#' clean(garbage_collection = TRUE)
 #' # All the targets and imports are gone.
 #' cached()
 #' # Completely remove the entire cache (default: '.drake/' folder).
@@ -82,7 +102,8 @@ clean <- function(
   cache = NULL,
   verbose = TRUE,
   jobs = 1,
-  force = FALSE
+  force = FALSE,
+  garbage_collection = FALSE
 ){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
@@ -101,6 +122,56 @@ clean <- function(
     )
   } else {
     uncache(targets = targets, cache = cache, jobs = jobs)
+  }
+  if (garbage_collection){
+    cache$gc()
+  }
+  invisible()
+}
+
+
+#' @title Function drake_gc()
+#' @description Do garbage collection on the cache
+#' @seealso \code{\link{clean}}
+#' @export
+#' @return\code{NULL}
+#' @param path file path to the folder containing the cache.
+#' Yes, this is the parent directory containing the cache,
+#' not the cache itself, and it assumes the cache is in the
+#' `.drake` folder. If you are looking for a different cache
+#' with a known folder different from `.drake`, use
+#' the \code{\link{this_cache}()} function.
+#' @param search logical, whether to search back in the file system
+#' for the cache.
+#' @param verbose logical, whether to print the location of the cache
+#' @param force logical, whether to load the cache
+#' despite any back compatibility issues with the
+#' running version of drake.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # At this point, check the size of the '.drake/' cache folder.
+#' # Clean without garbage collection.
+#' clean(garbage_collection = FALSE)
+#' # The '.drake/' cache folder is still about the same size.
+#' drake_gc() # Do garbage collection on the cache.
+#' # The '.drake/' cache folder should have gotten much smaller.
+#' }
+drake_gc <- function(
+  path = getwd(),
+  search = TRUE,
+  verbose = TRUE,
+  force = FALSE
+){
+  cache <- get_cache(
+    path = path,
+    search = search,
+    verbose = verbose,
+    force = force
+  )
+  if (!is.null(cache)){
+    cache$gc()
   }
   invisible()
 }

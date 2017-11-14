@@ -59,6 +59,13 @@ test_with_dir("cache functions work", {
 
   testrun(config)
 
+  # drake_gc() should not remove any important targets/imports.
+  x <- cached()
+  expect_true(length(x) > 0)
+  drake_gc()
+  y <- cached()
+  expect_equal(sort(x), sort(y))
+
   # targets
   all <- sort(c("'input.rds'",
     "'intermediatefile.rds'", "a",
@@ -119,6 +126,8 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(i, bla, list = c("final", "run"),
     search = FALSE)), sort(c(i = TRUE, bla = FALSE, final = TRUE,
     run = FALSE)))
+  expect_true(
+    inherits(rescue_cache(search = FALSE, targets = "final"), "storr"))
   expect_true(inherits(rescue_cache(search = FALSE), "storr"))
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
 
@@ -228,10 +237,12 @@ test_with_dir("cache functions work", {
 
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
-  clean(final, path = s, search = TRUE, jobs = 2)
+  clean(final, path = s, search = TRUE, jobs = 2,
+    garbage_collection = TRUE)
   expect_true(all(setdiff(all, "final") %in% cached(path = s,
     search = T)))
-  clean(path = s, search = TRUE)
+  drake_gc(path = s, search = T)
+  clean(path = s, search = TRUE, garbage_collection = FALSE)
   expect_equal(cached(path = s, search = T), character(0))
   where <- file.path(scratch, cache_dir)
   expect_true(file.exists(where))
@@ -239,6 +250,7 @@ test_with_dir("cache functions work", {
   expect_true(file.exists(where))
   clean(path = s, search = TRUE, destroy = TRUE)
   expect_false(file.exists(where))
+  expect_silent(drake_gc()) # Cache does not exist
 
   # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
   eval(parse(text = "setwd(scratch)"))

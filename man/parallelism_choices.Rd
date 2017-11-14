@@ -40,7 +40,7 @@ units of execution.
  opens up a whole trove of parallel backends
  powered by the \code{future} and \code{future.batchtools}
  packages. First, set the parallel backend globally using
- \code{\link{backend}()} (or equivalently, \code{future::plan()}).
+ \code{future::plan()}.
  Then, apply the backend to your workplan
  using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
  But be warned: the environment for each target needs to be set up

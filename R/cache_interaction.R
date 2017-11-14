@@ -215,6 +215,12 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' @return The rescued drake/storr cache.
 #' @export
 #' @seealso \code{\link{get_cache}}, \code{\link{cached}}
+#' @param targets Character vector, names of the targets to rescue.
+#' As with many other drake utility functions, the word \code{target}
+#' is defined generally in this case, encompassing imports
+#' as well as true targets.
+#' If \code{targets} is \code{NULL}, everything in the
+#' cache is rescued.
 #' @param path same as for \code{\link{get_cache}()}
 #' @param search same as for \code{\link{get_cache}()}
 #' @param verbose same as for \code{\link{get_cache}()}
@@ -228,8 +234,12 @@ is_built_or_imported_file <- Vectorize(function(target, cache) {
 #' make(my_plan) # Run the project, build targets. This creates the cache.
 #' # Remove dangling cache files that could cause errors.
 #' rescue_cache(jobs = 2)
+#' # Alternatively, just rescue targets 'small' and 'large'.
+#' # Rescuing specific targets is usually faster.
+#' rescue_cache(targets = c("small", "large"))
 #' }
 rescue_cache <- function(
+  targets = NULL,
   path = getwd(), search = TRUE, verbose = TRUE, force = FALSE,
   cache = drake::get_cache(
     path = path, search = search, verbose = verbose, force = force),
@@ -239,8 +249,12 @@ rescue_cache <- function(
     return(invisible())
   }
   for (namespace in cache$list_namespaces()){
-    tmp <- lightly_parallelize(
-      X = cache$list(namespace = namespace),
+    X <- cache$list(namespace = namespace)
+    if (!is.null(targets)){
+      X <- intersect(X, targets)
+    }
+    lightly_parallelize(
+      X = X,
       FUN = rescue_del,
       jobs = jobs,
       cache = cache,
@@ -257,4 +271,5 @@ rescue_del <- function(key, cache, namespace){
       cache$del(key = key, namespace = namespace)
     }
   )
+  invisible()
 }
