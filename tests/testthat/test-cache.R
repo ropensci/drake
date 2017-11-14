@@ -30,7 +30,7 @@ test_with_dir("try to rescue non-existent stuff", {
 })
 
 test_with_dir("cache functions work", {
-  # May have been loaded in a globalenv() testing scenario
+  # May have been loaded in a globalenv() testing scenario # nolint
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
   rm(list = remove_these, envir = globalenv())
 
@@ -40,7 +40,8 @@ test_with_dir("cache functions work", {
   if (!file.exists(scratch)){
     dir.create(scratch) # Will move up a level later.
   }
-  setwd(scratch)
+  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
+  eval(parse(text = "setwd(scratch)"))
   owd <- getwd()
   expect_equal(character(0), cached(search = FALSE), imported(search = FALSE),
     built(search = FALSE))
@@ -149,7 +150,8 @@ test_with_dir("cache functions work", {
     dir.create("searchfrom")
     dir.create(file.path("searchfrom", "here"))
   }
-  setwd("..")
+  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
+  eval(parse(text = "setwd('..')"))
   expect_equal(getwd(), first_wd)
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
@@ -211,7 +213,8 @@ test_with_dir("cache functions work", {
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
 
-  setwd(scratch)
+  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
+  eval(parse(text = "setwd(scratch)"))
   pdf(NULL)
   tmp <- read_drake_graph(search = FALSE)
   tmp <- capture.output(dev.off())
@@ -220,7 +223,8 @@ test_with_dir("cache functions work", {
   null_graph()
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
-  setwd("..")
+  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
+  eval(parse(text = "setwd('..')"))
 
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
