@@ -28,7 +28,7 @@ knitr_deps <- function(target){
   if (!length(target)){
     return(character(0))
   }
-  file <- unquote(target)
+  file <- drake_unquote(target)
   if (!file.exists(file)){
     warning(
       "dynamic report '", file,
@@ -141,7 +141,7 @@ is_function_call <- function(
 ){
   package <- match.arg(package)
   what <- match.arg(what)
-  eply::unquote(deparse(expr[[1]])) %in%
+  drake::drake_unquote(deparse(expr[[1]])) %in%
     paste0(c("", paste0(package, c("::", ":::"))), what)
 }
 

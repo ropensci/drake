@@ -154,7 +154,7 @@ remove_file_target <- function(target, cache){
       cache = cache
     )
   ){
-    unquote(target) %>%
+    drake_unquote(target) %>%
       unlink(recursive = TRUE, force = TRUE)
   }
 }

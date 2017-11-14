@@ -56,7 +56,7 @@ workplan <- function(
   )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){
-    plan$target <- eply::quotes(plan$target, single = TRUE)
+    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
   if (strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
@@ -78,7 +78,7 @@ workplan <- function(
 #' # Wraps the string in single quotes.
 #' as_drake_filename("my_file.rds") # "'my_file.rds'"
 as_drake_filename <- function(x){
-  eply::quotes(x, single = TRUE)
+  drake::drake_quotes(x, single = TRUE)
 }
 
 wide_deparse <- function(x){

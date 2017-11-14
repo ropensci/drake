@@ -266,7 +266,7 @@ legacy_self_hash <- Vectorize(function(target, config) {
 
 legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (is_file(target)) {
-    filename <- eply::unquote(target)
+    filename <- drake::drake_unquote(target)
   } else {
     return(as.character(NA))
   }
@@ -309,7 +309,7 @@ legacy_file_current <- function(target, hashes, config){
   if (!is_file(target)){
     return(TRUE)
   }
-  if (!file.exists(unquote(target))){
+  if (!file.exists(drake_unquote(target))){
     return(FALSE)
   }
   out <- config$cache$get(target)

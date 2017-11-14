@@ -47,8 +47,12 @@ units of execution.
  from scratch, so this backend type is higher overhead than either
  \code{mclapply} or \code{parLapply}.
  Also, the \code{jobs} argument only applies to the imports.
- for the max number of jobs to use for building targets,
- use options(mc.cores = jobs), or see \code{?future::future::.options}
+ To set the max number of jobs, set the \code{workers}
+ argument where it exists. For example, call
+ \code{future::plan(multisession(workers = 4))},
+ then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
+ You might also try options(mc.cores = jobs),
+ or see \code{?future::future::.options}
  for environment variables that set the max number of jobs.
  }
 

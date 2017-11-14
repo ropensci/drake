@@ -48,7 +48,7 @@ test_with_dir("files inside directories can be timestamped", {
       `'t1/t2'` = "dir.create(\"t1\"); saveRDS(1, file.path(\"t1\", \"t2\"))"
     )
   )
-  plan$target[1] <- file <- eply::quotes(file.path("t1",
+  plan$target[1] <- file <- drake::drake_quotes(file.path("t1",
     "t2"), single = TRUE)
   config <- drake_config(plan = plan, targets = plan$target[1],
     parallelism = "parLapply", verbose = FALSE,
@@ -58,13 +58,13 @@ test_with_dir("files inside directories can be timestamped", {
   run_Makefile(config, run = FALSE)
   expect_silent(mk(config$plan$target[1], cache_path = path))
   expect_true(file.exists("t1"))
-  expect_true(file.exists(eply::unquote(file)))
+  expect_true(file.exists(drake::drake_unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
 
   expect_silent(make(config$plan, verbose = FALSE))
   expect_true(file.exists("t1"))
-  expect_true(file.exists(eply::unquote(file)))
+  expect_true(file.exists(drake::drake_unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
 })
@@ -103,11 +103,11 @@ test_with_dir("basic Makefile stuff works", {
   expect_equal(stamps, stamps2)
 
   targ <- "'intermediatefile.rds'"
-  expect_false(file.exists(eply::unquote(targ)))
+  expect_false(file.exists(drake::drake_unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
   mk(targ, cache_path = cache_path)
   expect_equal(unname(progress(list = targ)), "finished")
-  expect_true(file.exists(eply::unquote(targ)))
+  expect_true(file.exists(drake::drake_unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
   mk(targ, cache_path = cache_path) # Verify behavior when target is current
   expect_equal(unname(progress(list = targ)), "not built or imported")

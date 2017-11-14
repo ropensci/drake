@@ -62,7 +62,7 @@ self_hash <- Vectorize(function(target, config) {
 
 rehash_file <- function(target, config) {
   digest::digest(
-    object = eply::unquote(target),
+    object = drake::drake_unquote(target),
     algo = config$long_hash_algo,
     file = TRUE,
     serialize = FALSE
@@ -80,7 +80,7 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
 
 file_hash <- function(target, config, size_cutoff = 1e5) {
   if (is_file(target)) {
-    filename <- eply::unquote(target)
+    filename <- drake::drake_unquote(target)
   } else {
     return(as.character(NA))
   }

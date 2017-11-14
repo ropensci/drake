@@ -42,7 +42,7 @@ test_with_dir("plan set 3", {
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "literals", file_targets = TRUE)
   y <- data.frame(
-    target = eply::quotes(letters[1:4], single = TRUE),
+    target = drake::drake_quotes(letters[1:4], single = TRUE),
     command = c("c", "\"c\"", "d", "readRDS('e')"),
     stringsAsFactors = F)
   expect_equal(x, y)
@@ -55,7 +55,7 @@ test_with_dir("plan set 4", {
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "filenames", file_targets = TRUE)
   y <- data.frame(
-    target = eply::quotes(letters[1:4], single = TRUE),
+    target = drake::drake_quotes(letters[1:4], single = TRUE),
     command = c("c", "'c'", "d", "readRDS('e')"), stringsAsFactors = F)
   expect_equal(x, y)
   expect_warning(check_plan(x, verbose = FALSE))
