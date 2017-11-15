@@ -205,6 +205,9 @@
 #' but it is bad practice for reproducible data analysis.
 #' This argument is overridden if you supply your own \code{graph} argument.
 #'
+#' @param skip_safety_checks logical, whether to skip the safety checks
+#' on your workflow. Use at your own peril.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -258,7 +261,8 @@ make <- function(
   return_config = NULL,
   graph = NULL,
   trigger = "any",
-  skip_imports = FALSE
+  skip_imports = FALSE,
+  skip_safety_checks = FALSE
 ){
   force(envir)
 
@@ -299,7 +303,8 @@ make <- function(
     force = force,
     graph = graph,
     trigger = trigger,
-    skip_imports = skip_imports
+    skip_imports = skip_imports,
+    skip_safety_checks = skip_safety_checks
   )
   store_drake_config(config = config)
   initialize_session(config = config)

@@ -42,6 +42,8 @@
 #' if your imports are massive and you just want to test your project,
 #' but it is bad practice for reproducible data analysis.
 #' This argument is overridden if you supply your own \code{graph} argument.
+#' @param skip_safety_checks logical, whether to skip the safety checks
+#' on your workflow to save time. Use at your own peril.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -84,7 +86,8 @@ drake_config <- function(
   clear_progress = FALSE,
   graph = NULL,
   trigger = "any",
-  skip_imports = FALSE
+  skip_imports = FALSE,
+  skip_safety_checks = FALSE
 ){
   force(envir)
   seed <- get_valid_seed()
@@ -124,8 +127,10 @@ drake_config <- function(
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    seed = seed, trigger = trigger, skip_imports = skip_imports,
-    timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
+    seed = seed, trigger = trigger,
+    timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
+    skip_imports = skip_imports,
+    skip_safety_checks = skip_safety_checks
   )
   check_drake_config(config = config)
   config

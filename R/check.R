@@ -39,6 +39,9 @@ check_plan <- function(
 }
 
 check_drake_config <- function(config) {
+  if (config$skip_safety_checks){
+    return(invisible())
+  }
   stopifnot(is.data.frame(config$plan))
   if (!all(c("target", "command") %in% colnames(config$plan)))
     stop("The columns of your workflow plan data frame ",

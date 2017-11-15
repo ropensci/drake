@@ -14,7 +14,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
-  trigger = "any", skip_imports = FALSE)
+  trigger = "any", skip_imports = FALSE, skip_safety_checks = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -210,6 +210,9 @@ process the imports and jump straight to the targets. This can be useful
 if your imports are massive and you just want to test your project,
 but it is bad practice for reproducible data analysis.
 This argument is overridden if you supply your own \code{graph} argument.}
+
+\item{skip_safety_checks}{logical, whether to skip the safety checks
+on your workflow. Use at your own peril.}
 }
 \value{
 The master internal configuration list, mostly

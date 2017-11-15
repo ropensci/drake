@@ -1,5 +1,12 @@
 drake_context("edge cases")
 
+test_with_dir("config without safety checks", {
+  x <- workplan(file = readRDS("my_file.rds"))
+  expect_warning(tmp <- config(x, verbose = FALSE))
+  expect_silent(
+    tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
+})
+
 test_with_dir("error handlers", {
   expect_equal(error_na(1), NA)
   expect_false(error_false(1))

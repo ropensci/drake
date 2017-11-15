@@ -14,7 +14,7 @@ drake_config(plan = workplan(), targets = drake::possible_targets(plan),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
   clear_progress = FALSE, graph = NULL, trigger = "any",
-  skip_imports = FALSE)
+  skip_imports = FALSE, skip_safety_checks = FALSE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -68,6 +68,9 @@ process the imports and jump straight to the targets. This can be useful
 if your imports are massive and you just want to test your project,
 but it is bad practice for reproducible data analysis.
 This argument is overridden if you supply your own \code{graph} argument.}
+
+\item{skip_safety_checks}{logical, whether to skip the safety checks
+on your workflow to save time. Use at your own peril.}
 }
 \value{
 The master internal configuration list of a project.
