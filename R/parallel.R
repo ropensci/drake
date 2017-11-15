@@ -7,7 +7,7 @@ run_parallel_backend <- function(config){
 
 run_parallel <- function(config, worker) {
   config$graph_remaining_targets <- config$graph
-  config <- exclude_imports_if(config)
+  config <- exclude_imports_if(config = config)
   while (length(V(config$graph_remaining_targets))){
     config <- parallel_stage(worker = worker, config = config)
   }
@@ -17,7 +17,6 @@ run_parallel <- function(config, worker) {
 parallel_stage <- function(worker, config) {
   candidates <- next_targets(
     config$graph_remaining_targets, jobs = config$jobs)
-  config <- quick_inventory(config)
   meta_list <- meta_list(targets = candidates, config = config)
   build_these <- Filter(candidates,
     f = function(target)
@@ -32,6 +31,24 @@ parallel_stage <- function(worker, config) {
   config$graph_remaining_targets <-
     delete_vertices(config$graph_remaining_targets, v = candidates)
   invisible(config)
+}
+
+exclude_imports_if <- function(config){
+  if (!length(config$skip_imports)){
+    config$skip_imports <- FALSE
+  }
+  if (!config$skip_imports){
+    return(config)
+  }
+  delete_these <- setdiff(
+    V(config$graph_remaining_targets)$name,
+    config$plan$target
+  )
+  config$graph_remaining_targets <- delete_vertices(
+    graph = config$graph_remaining_targets,
+    v = delete_these
+  )
+  config
 }
 
 next_targets <- function(graph_remaining_targets, jobs = 1){

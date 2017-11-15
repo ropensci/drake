@@ -267,7 +267,6 @@ max_useful_jobs <- function(
       prework = prework
     )
   }
-  config <- quick_inventory(config)
   nodes <- dataframes_graph(plan = config$plan, config = config,
     split_columns = FALSE, make_imports = make_imports,
     from_scratch = from_scratch)$nodes

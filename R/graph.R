@@ -161,24 +161,6 @@ prune_drake_graph <- function(
   delete_vertices(graph = graph, v = ignore)
 }
 
-exclude_imports_if <- function(config){
-  if (!length(config$skip_imports)){
-    config$skip_imports <- FALSE
-  }
-  if (!config$skip_imports){
-    return(config)
-  }
-  delete_these <- setdiff(
-    V(config$graph_remaining_targets)$name,
-    config$plan$target
-  )
-  config$graph_remaining_targets <- delete_vertices(
-    graph = config$graph_remaining_targets,
-    v = delete_these
-  )
-  config
-}
-
 assert_unique_names <- function(imports, targets, envir, verbose){
   if (anyDuplicated(targets)){
     duplicated <- which(table(targets) > 1) %>%

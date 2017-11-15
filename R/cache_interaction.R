@@ -273,3 +273,11 @@ rescue_del <- function(key, cache, namespace){
   )
   invisible()
 }
+
+file_target_exists <- function(target, config){
+  config$cache$exists(key = target, namespace = "mtimes")
+}
+
+target_exists <- function(target, config){
+  config$cache$exists(key = target, namespace = "kernels")
+}

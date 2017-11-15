@@ -44,9 +44,9 @@ recover_drake_config <- function(cache_path){
   cache <- this_cache(cache_path, verbose = FALSE)
   config <- read_drake_config(cache = cache)
   if (identical(globalenv(), config$envir)){
-    dir <- cache_path
+    dir <- cache_path(cache = cache)
     file <- globalenv_file(dir)
     load(file = file, envir = config$envir)
   }
-  thorough_inventory(config)
+  config
 }

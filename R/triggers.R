@@ -153,7 +153,7 @@ should_build <- function(target, meta_list, config){
 }
 
 should_build_target <- function(target, meta, config){
-  if (!(target %in% config$inventory$kernels)){
+  if (!target_exists(target = target, config = config)){
     return(TRUE)
   }
   do_build <- FALSE

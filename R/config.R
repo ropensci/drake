@@ -126,8 +126,7 @@ drake_config <- function(
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed, trigger = trigger, skip_imports = skip_imports,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries
-  ) %>%
-    quick_inventory
+  )
   check_drake_config(config = config)
   config
 }
@@ -167,28 +166,6 @@ do_prework <- function(config, verbose_packages) {
   for (code in config$prework) wrapper(eval(parse(text = code),
     envir = config$envir))
   invisible()
-}
-
-quick_inventory <- function(config) {
-  namespaces <- c(
-    "kernels",
-    "mtimes",
-    "readd"
-  )
-  do_inventory(namespaces = namespaces, config = config)
-}
-
-thorough_inventory <- function(config) {
-  namespaces <- cache_namespaces(default = config$cache$default_namespace)
-  do_inventory(namespaces = namespaces, config = config)
-}
-
-do_inventory <- function(namespaces = cache_namespaces(), config){
-  config$inventory <- list()
-  for (namespace in namespaces){
-    config$inventory[[namespace]] <- config$cache$list(namespace = namespace)
-  }
-  config
 }
 
 #' @title Function \code{possible_targets}

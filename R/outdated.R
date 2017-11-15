@@ -73,7 +73,6 @@ outdated <-  function(
   if (make_imports){
     make_imports(config = config)
   }
-  config <- quick_inventory(config)
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   meta_list <- meta_list(targets = all_targets, config = config)
   rebuild <- Filter(

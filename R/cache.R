@@ -371,9 +371,9 @@ drake_version <- function(session_info = sessionInfo()){ # nolint
 }
 
 safe_get <- function(key, namespace, config){
-  ifelse(
-    key %in% config$cache$list(namespace = namespace),
-    config$cache$get(key = key, namespace = namespace),
+  if (config$cache$exists(key = key, namespace = namespace)){
+    config$cache$get(key = key, namespace = namespace)
+  } else {
     NA
-  )
+  }
 }
