@@ -1,6 +1,6 @@
 #' @title Function \code{make}
 #' @description Run your project (build the targets).
-#' @seealso \code{\link{make_from_config}},
+#' @seealso \code{\link{make_with_config}},
 #' \code{\link{workplan}}, \code{\link{workplan}},
 #' \code{\link{vis_drake_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
@@ -307,10 +307,10 @@ make <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks
   )
-  make_from_config(config = config)
+  make_with_config(config = config)
 }
 
-#' @title Function make_from_config
+#' @title Function make_with_config
 #' @description Run \code{\link{make}()},
 #' on an existing internal configuration list
 #' that you can get from \code{\link{drake_config}()}.
@@ -323,9 +323,9 @@ make <- function(
 #' load_basic_example() # Load the canonical example
 #' # The following lines are the same as make(my_plan)
 #' config <- drake_config(my_plan) # Create the internal config list.
-#' make_from_config(config = config) # Run the project, build the targets.
+#' make_with_config(config = config) # Run the project, build the targets.
 #' }
-make_from_config <- function(config){
+make_with_config <- function(config){
   store_drake_config(config = config)
   initialize_session(config = config)
   if (config$imports_only){

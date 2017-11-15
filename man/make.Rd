@@ -250,7 +250,7 @@ make(my_plan, parallelism = "Makefile", jobs = 4,
 }
 }
 \seealso{
-\code{\link{make_from_config}},
+\code{\link{make_with_config}},
 \code{\link{workplan}}, \code{\link{workplan}},
 \code{\link{vis_drake_graph}},
 \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
