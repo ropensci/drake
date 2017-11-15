@@ -144,6 +144,8 @@ clean <- function(
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 #' @param verbose logical, whether to print the location of the cache
+#' @param cache the \code{drake}/\code{storr} cache object itself,
+#' if available.
 #' @param force logical, whether to load the cache
 #' despite any back compatibility issues with the
 #' running version of drake.
@@ -162,14 +164,17 @@ drake_gc <- function(
   path = getwd(),
   search = TRUE,
   verbose = TRUE,
+  cache = NULL,
   force = FALSE
 ){
-  cache <- get_cache(
-    path = path,
-    search = search,
-    verbose = verbose,
-    force = force
-  )
+  if (is.null(cache)){
+    cache <- get_cache(
+      path = path,
+      search = search,
+      verbose = verbose,
+      force = force
+    )
+  }
   if (!is.null(cache)){
     cache$gc()
   }

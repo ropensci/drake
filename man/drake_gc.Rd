@@ -4,7 +4,8 @@
 \alias{drake_gc}
 \title{Function drake_gc()}
 \usage{
-drake_gc(path = getwd(), search = TRUE, verbose = TRUE, force = FALSE)
+drake_gc(path = getwd(), search = TRUE, verbose = TRUE, cache = NULL,
+  force = FALSE)
 }
 \arguments{
 \item{path}{file path to the folder containing the cache.
@@ -18,6 +19,9 @@ the \code{\link{this_cache}()} function.}
 for the cache.}
 
 \item{verbose}{logical, whether to print the location of the cache}
+
+\item{cache}{the \code{drake}/\code{storr} cache object itself,
+if available.}
 
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the
