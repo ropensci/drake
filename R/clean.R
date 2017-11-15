@@ -248,7 +248,7 @@ drake_gc <- function(
 #' @return The rescued drake/storr cache.
 #' @export
 #' @seealso \code{\link{get_cache}}, \code{\link{cached}},
-#' \code{\link{drake_gc}}
+#' \code{\link{drake_gc}}, \code{\link{clean}}
 #' @param targets Character vector, names of the targets to rescue.
 #' As with many other drake utility functions, the word \code{target}
 #' is defined generally in this case, encompassing imports
@@ -263,7 +263,8 @@ drake_gc <- function(
 #' @param jobs number of jobs for light parallelism
 #' (disabled on Windows)
 #' @param garbage_collection logical, whether to do garbage collection
-#' as a final step. See \code{\link{drake_gc}}
+#' as a final step. See \code{\link{drake_gc}} and \code{\link{clean}}
+#' for details.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.
@@ -280,7 +281,7 @@ rescue_cache <- function(
   cache = drake::get_cache(
     path = path, search = search, verbose = verbose, force = force),
   jobs = 1,
-  garbage_collection = TRUE
+  garbage_collection = FALSE
 ){
   if (is.null(cache)){
     return(invisible())

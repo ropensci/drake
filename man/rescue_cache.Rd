@@ -7,7 +7,7 @@
 rescue_cache(targets = NULL, path = getwd(), search = TRUE,
   verbose = TRUE, force = FALSE, cache = drake::get_cache(path = path,
   search = search, verbose = verbose, force = force), jobs = 1,
-  garbage_collection = TRUE)
+  garbage_collection = FALSE)
 }
 \arguments{
 \item{targets}{Character vector, names of the targets to rescue.
@@ -31,7 +31,8 @@ cache is rescued.}
 (disabled on Windows)}
 
 \item{garbage_collection}{logical, whether to do garbage collection
-as a final step. See \code{\link{drake_gc}}}
+as a final step. See \code{\link{drake_gc}} and \code{\link{clean}}
+for details.}
 }
 \value{
 The rescued drake/storr cache.
@@ -55,5 +56,5 @@ rescue_cache(targets = c("small", "large"))
 }
 \seealso{
 \code{\link{get_cache}}, \code{\link{cached}},
-\code{\link{drake_gc}}
+\code{\link{drake_gc}}, \code{\link{clean}}
 }
