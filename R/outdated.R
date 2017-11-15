@@ -75,18 +75,21 @@ outdated <-  function(
   }
   all_targets <- intersect(V(config$graph)$name, config$plan$target)
   meta_list <- meta_list(targets = all_targets, config = config)
-  rebuild <- Filter(
-    x = all_targets,
-    f = function(target){
+  is_outdated <- lightly_parallelize(
+    all_targets,
+    function(target){
       meta <- meta_list[[target]]
       should_build_target(target = target, meta = meta, config = config)
-    }
-  )
-  if (!length(rebuild)){
+    },
+    jobs = jobs
+  ) %>%
+    unlist
+  outdated_targets <- all_targets[is_outdated]
+  if (!length(outdated_targets)){
     return(character(0))
   } else{
     lightly_parallelize(
-      rebuild,
+      outdated_targets,
       function(vertex){
         subcomponent(config$graph, v = vertex, mode = "out")$name
       },
