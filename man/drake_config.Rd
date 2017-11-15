@@ -14,7 +14,7 @@ drake_config(plan = workplan(), targets = drake::possible_targets(plan),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
   clear_progress = FALSE, graph = NULL, trigger = "any",
-  skip_imports = FALSE, skip_safety_checks = FALSE)
+  imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -63,6 +63,9 @@ Overrides \code{skip_imports}.}
 
 \item{trigger}{same as for \code{\link{make}}}
 
+\item{imports_only}{logical, whether to skip building the targets
+in \code{plan} and just import objects and files.}
+
 \item{skip_imports}{logical, whether to totally neglect to
 process the imports and jump straight to the targets. This can be useful
 if your imports are massive and you just want to test your project,
@@ -105,6 +108,6 @@ dataframes_graph(config = con)
 }
 }
 \seealso{
-\code{\link{workplan}}, \code{\link{make}},
-\code{\link{vis_drake_graph}}
+\code{\link{make_from_config}}, \code{\link{make}},
+\code{\link{workplan}}, \code{\link{vis_drake_graph}}
 }

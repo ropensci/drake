@@ -1,6 +1,7 @@
 #' @title Function \code{make}
 #' @description Run your project (build the targets).
-#' @seealso \code{\link{workplan}}, \code{\link{workplan}},
+#' @seealso \code{\link{make_from_config}},
+#' \code{\link{workplan}}, \code{\link{workplan}},
 #' \code{\link{vis_drake_graph}},
 #' \code{\link{max_useful_jobs}}, \code{\link{shell_file}},
 #' \code{\link{default_hook}}, \code{\link{silencer_hook}},
@@ -265,7 +266,6 @@ make <- function(
   skip_safety_checks = FALSE
 ){
   force(envir)
-
   if (!is.null(return_config)){
     warning(
       "The return_config argument to make() is deprecated. ",
@@ -303,12 +303,32 @@ make <- function(
     force = force,
     graph = graph,
     trigger = trigger,
+    imports_only = imports_only,
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks
   )
+  make_from_config(config = config)
+}
+
+#' @title Function make_from_config
+#' @description Run \code{\link{make}()},
+#' on an existing internal configuration list
+#' that you can get from \code{\link{drake_config}()}.
+#' @export
+#' @seealso \code{\link{make}}, \code{\link{drake_config}}
+#' @return An output internal configuration list
+#' @param config An input internal configuration list
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example
+#' # The following lines are the same as make(my_plan)
+#' config <- drake_config(my_plan) # Create the internal config list.
+#' make_from_config(config = config) # Run the project, build the targets.
+#' }
+make_from_config <- function(config){
   store_drake_config(config = config)
   initialize_session(config = config)
-  if (imports_only){
+  if (config$imports_only){
     make_imports(config = config)
     return(invisible(config))
   }

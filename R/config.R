@@ -11,8 +11,8 @@
 #' not just the imports.
 #' @export
 #' @return The master internal configuration list of a project.
-#' @seealso \code{\link{workplan}}, \code{\link{make}},
-#' \code{\link{vis_drake_graph}}
+#' @seealso \code{\link{make_from_config}}, \code{\link{make}},
+#' \code{\link{workplan}}, \code{\link{vis_drake_graph}}
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}
@@ -37,6 +37,8 @@
 #' @param graph igraph object representing the workflow plan network.
 #' Overrides \code{skip_imports}.
 #' @param trigger same as for \code{\link{make}}
+#' @param imports_only logical, whether to skip building the targets
+#' in \code{plan} and just import objects and files.
 #' @param skip_imports logical, whether to totally neglect to
 #' process the imports and jump straight to the targets. This can be useful
 #' if your imports are massive and you just want to test your project,
@@ -86,6 +88,7 @@ drake_config <- function(
   clear_progress = FALSE,
   graph = NULL,
   trigger = "any",
+  imports_only = FALSE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE
 ){
@@ -129,7 +132,7 @@ drake_config <- function(
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed, trigger = trigger,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
-    skip_imports = skip_imports,
+    imports_only = imports_only, skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks
   )
   check_drake_config(config = config)
