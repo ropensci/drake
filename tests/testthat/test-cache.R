@@ -128,7 +128,10 @@ test_with_dir("cache functions work", {
     run = FALSE)))
   expect_true(
     inherits(rescue_cache(search = FALSE, targets = "final"), "storr"))
-  expect_true(inherits(rescue_cache(search = FALSE), "storr"))
+  expect_true(inherits(
+    rescue_cache(search = FALSE, garbage_collection = FALSE), "storr"))
+  expect_true(inherits(
+    rescue_cache(search = FALSE, garbage_collection = TRUE), "storr"))
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
 
   # find your project
