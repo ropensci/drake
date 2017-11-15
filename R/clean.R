@@ -129,58 +129,6 @@ clean <- function(
   invisible()
 }
 
-
-#' @title Function drake_gc()
-#' @description Do garbage collection on the cache
-#' @seealso \code{\link{clean}}
-#' @export
-#' @return\code{NULL}
-#' @param path file path to the folder containing the cache.
-#' Yes, this is the parent directory containing the cache,
-#' not the cache itself, and it assumes the cache is in the
-#' `.drake` folder. If you are looking for a different cache
-#' with a known folder different from `.drake`, use
-#' the \code{\link{this_cache}()} function.
-#' @param search logical, whether to search back in the file system
-#' for the cache.
-#' @param verbose logical, whether to print the location of the cache
-#' @param cache the \code{drake}/\code{storr} cache object itself,
-#' if available.
-#' @param force logical, whether to load the cache
-#' despite any back compatibility issues with the
-#' running version of drake.
-#' @examples
-#' \dontrun{
-#' load_basic_example() # Load drake's canonical example.
-#' make(my_plan) # Run the project, build the targets.
-#' # At this point, check the size of the '.drake/' cache folder.
-#' # Clean without garbage collection.
-#' clean(garbage_collection = FALSE)
-#' # The '.drake/' cache folder is still about the same size.
-#' drake_gc() # Do garbage collection on the cache.
-#' # The '.drake/' cache folder should have gotten much smaller.
-#' }
-drake_gc <- function(
-  path = getwd(),
-  search = TRUE,
-  verbose = TRUE,
-  cache = NULL,
-  force = FALSE
-){
-  if (is.null(cache)){
-    cache <- get_cache(
-      path = path,
-      search = search,
-      verbose = verbose,
-      force = force
-    )
-  }
-  if (!is.null(cache)){
-    cache$gc()
-  }
-  invisible()
-}
-
 clean_everything <- function(
   destroy,
   cache,
@@ -239,4 +187,129 @@ uncache_single <- function(target, cache, namespace, list){
   if (target %in% list){
     cache$del(target, namespace = namespace)
   }
+}
+
+#' @title Function drake_gc()
+#' @description Do garbage collection on the cache
+#' @seealso \code{\link{clean}}
+#' @export
+#' @return\code{NULL}
+#' @param path file path to the folder containing the cache.
+#' Yes, this is the parent directory containing the cache,
+#' not the cache itself, and it assumes the cache is in the
+#' `.drake` folder. If you are looking for a different cache
+#' with a known folder different from `.drake`, use
+#' the \code{\link{this_cache}()} function.
+#' @param search logical, whether to search back in the file system
+#' for the cache.
+#' @param verbose logical, whether to print the location of the cache
+#' @param cache the \code{drake}/\code{storr} cache object itself,
+#' if available.
+#' @param force logical, whether to load the cache
+#' despite any back compatibility issues with the
+#' running version of drake.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # At this point, check the size of the '.drake/' cache folder.
+#' # Clean without garbage collection.
+#' clean(garbage_collection = FALSE)
+#' # The '.drake/' cache folder is still about the same size.
+#' drake_gc() # Do garbage collection on the cache.
+#' # The '.drake/' cache folder should have gotten much smaller.
+#' }
+drake_gc <- function(
+  path = getwd(),
+  search = TRUE,
+  verbose = TRUE,
+  cache = NULL,
+  force = FALSE
+){
+  if (is.null(cache)){
+    cache <- get_cache(
+      path = path,
+      search = search,
+      verbose = verbose,
+      force = force
+    )
+  }
+  if (!is.null(cache)){
+    cache$gc()
+  }
+  invisible()
+}
+
+#' @title Function rescue_cache
+#' @description Sometimes, \code{storr} caches may have
+#' dangling orphaned files that prevent you from loading or cleaning.
+#' This function tries to remove those files so you can use the
+#' cache normally again.
+#' @return The rescued drake/storr cache.
+#' @export
+#' @seealso \code{\link{get_cache}}, \code{\link{cached}}
+#' @param targets Character vector, names of the targets to rescue.
+#' As with many other drake utility functions, the word \code{target}
+#' is defined generally in this case, encompassing imports
+#' as well as true targets.
+#' If \code{targets} is \code{NULL}, everything in the
+#' cache is rescued.
+#' @param path same as for \code{\link{get_cache}()}
+#' @param search same as for \code{\link{get_cache}()}
+#' @param verbose same as for \code{\link{get_cache}()}
+#' @param force same as for \code{\link{get_cache}()}
+#' @param cache a `storr` cache object
+#' @param jobs number of jobs for light parallelism
+#' (disabled on Windows)
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build targets. This creates the cache.
+#' # Remove dangling cache files that could cause errors.
+#' rescue_cache(jobs = 2)
+#' # Alternatively, just rescue targets 'small' and 'large'.
+#' # Rescuing specific targets is usually faster.
+#' rescue_cache(targets = c("small", "large"))
+#' }
+rescue_cache <- function(
+  targets = NULL,
+  path = getwd(), search = TRUE, verbose = TRUE, force = FALSE,
+  cache = drake::get_cache(
+    path = path, search = search, verbose = verbose, force = force),
+  jobs = 1
+){
+  if (is.null(cache)){
+    return(invisible())
+  }
+  for (namespace in cache$list_namespaces()){
+    X <- cache$list(namespace = namespace)
+    if (!is.null(targets)){
+      X <- intersect(X, targets)
+    }
+    lightly_parallelize(
+      X = X,
+      FUN = rescue_del,
+      jobs = jobs,
+      cache = cache,
+      namespace = namespace
+    )
+  }
+  cache$gc()
+  invisible(cache)
+}
+
+rescue_del <- function(key, cache, namespace){
+  tryCatch(
+    touch_storr_object(key = key, cache = cache, namespace = namespace),
+    error = function(e){
+      cache$del(key = key, namespace = namespace)
+    }
+  )
+  invisible(NULL)
+}
+
+touch_storr_object <- function(key, cache, namespace){
+  hash <- cache$get_hash(key = key, namespace = namespace)
+  value <- cache$driver$get_object(hash = hash)
+  invisible(NULL)
 }
