@@ -1,5 +1,6 @@
 # Release 5.0.0
 
+- Major speed improvement: dispense with internal inventories and rely on `cache$exists()` instead.
 - Let the user define a trigger for each target to customize when `make()` decides to build targets.
 - Document triggers and other debugging/testing tools in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 - Restructure the internals of the `storr` cache in a way that is not back-compatible with projects from versions 4.4.0 and earlier. The main change is to make more intelligent use of `storr` namespaces, improving speed and opening up possibilities for new features. If you attempt to run drake >= 5.0.0 on a project from drake <= 4.0.0, drake will stop you before any damage to the cache is done, and you will be instructed how to migrate your project to the new drake.
@@ -32,6 +33,7 @@
 - Disallow `output` and `code` as names in the workflow plan data frame. Use `target` and `command` instead. This naming switch has been formally deprecated for several months prior.
 - Deprecate the ..analysis.. and ..dataset.. wildcards in favor of analysis__ and dataset__, respectively. The new wildcards are stylistically better an pass linting checks.
 - Add new functions `drake_quotes()`, `drake_unquote()`, and `drake_strings()` to remove the silly dependence on the `eply` package.
+- Add a `skip_safety_checks` flag to `make()` and `drake_config()`. Increases speed.
 
 # Changes in release 4.4.0
 
