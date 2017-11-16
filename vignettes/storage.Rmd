@@ -98,10 +98,11 @@ long_hash(cache)
 For new projects, use `new_cache()` to set the hashes of the default cache.
 
 ```{r default_cache_reset}
-cache_path(cache) # default cache from before
-clean(destroy = TRUE) # start from scratch to reset both hash algorithms
+cache_path(cache) # Default cache from before.
+# Start from scratch to reset both hash algorithms.
+clean(destroy = TRUE)
 tmp <- new_cache(
-  path = default_cache_path(), # the `.drake/` folder
+  path = default_cache_path(), # The `.drake/` folder.
   short_hash_algo = "crc32",
   long_hash_algo = "sha1"
 )

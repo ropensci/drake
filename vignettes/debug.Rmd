@@ -180,7 +180,7 @@ make(my_plan, skip_imports = TRUE)
 Some bugs may cause your code to keep running indefinitely. In other cases, you may want to retry failed targets to look ahead to other parts of your workflow. For this type of control, see the `timeout`, `cpu`, `elapsed`, and `retries` argument to `make()`.
 
 ```{r timeoutretry}
-clean()
+clean(verbose = FALSE)
 f <- function(...){
   Sys.sleep(1)
 }
@@ -198,7 +198,7 @@ withr::with_message_sink(
 To customize these settings separately for each target, define new `timeout`, `cpu`, `elapsed`, or `retries` columns in your workflow plan. These columns override the analogous arguments to `make()`.
 
 ```{r timeoutretry2}
-clean()
+clean(verbose = FALSE)
 debug_plan$timeout <- c(1e-3, 2e-3)
 debug_plan$retries <- 1:2
 debug_plan
