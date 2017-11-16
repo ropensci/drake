@@ -76,7 +76,7 @@ console_up_to_date <- function(config){
   if (!config$verbose){
     return(invisible())
   }
-  any_attempted <- length(config$cache$list(namespace = "attempts"))
+  any_attempted <- get_attempt_flag(config = config)
   default_triggers <- using_default_triggers(config)
   if (!any_attempted && default_triggers && !config$skip_imports){
     console_all_up_to_date()

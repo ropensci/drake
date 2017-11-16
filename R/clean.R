@@ -150,11 +150,12 @@ uncache <- function(targets, cache, jobs){
     return()
   }
   files <- Filter(x = targets, f = is_file)
+  plan <- read_plan(cache = cache)
   lightly_parallelize(
     X = targets,
     FUN = remove_file_target,
     jobs = jobs,
-    cache = cache
+    plan = plan
   )
   namespaces <- cache_namespaces(default = cache$default_namespace)
   for (namespace in namespaces){
@@ -170,12 +171,12 @@ uncache <- function(targets, cache, jobs){
   invisible()
 }
 
-remove_file_target <- function(target, cache){
+remove_file_target <- function(target, plan){
   if (
     is_file(target) &&
     !is_imported(
       target = target,
-      cache = cache
+      plan = plan
     )
   ){
     drake_unquote(target) %>%

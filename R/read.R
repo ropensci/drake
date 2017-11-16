@@ -131,7 +131,8 @@ loadd <- function(
     targets <- cache$list(namespace = "readd")
   }
   if (imported_only){
-    targets <- imported_only(targets = targets, cache = cache)
+    plan <- read_plan(cache = cache)
+    targets <- imported_only(targets = targets, plan = plan)
   }
   if (!length(targets)){
     stop("no targets to load.")

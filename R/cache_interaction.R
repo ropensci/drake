@@ -86,8 +86,10 @@ is_cached <- function(targets, no_imported_objects, cache) {
 
 list_cache <- function(no_imported_objects, cache) {
   targets <- cache$list(namespace = "readd")
-  if (no_imported_objects)
-    targets <- no_imported_objects(targets = targets, cache = cache)
+  if (no_imported_objects){
+    plan <- read_plan(cache = cache)
+    targets <- no_imported_objects(targets = targets, plan = plan)
+  }
   targets
 }
 
@@ -122,10 +124,11 @@ built <- function(
   if (is.null(cache)){
     return(character(0))
   }
+  plan <- read_plan(cache = cache)
   cache$list(namespace = "readd") %>%
     Filter(
       f = function(target){
-        !is_imported(target = target, cache = cache)
+        !is_imported(target = target, plan = plan)
       }
     )
 }
@@ -164,8 +167,11 @@ imported <- function(
   if (is.null(cache)){
     return(character(0))
   }
+  plan <- read_plan(cache = cache)
   targets <- cache$list(namespace = "readd") %>%
-    Filter(f = function(target) is_imported(target = target, cache = cache))
+    Filter(f = function(target){
+      is_imported(target = target, plan = plan)
+    })
   if (files_only)
     targets <- Filter(targets, f = is_file)
   targets
@@ -182,27 +188,24 @@ targets_from_dots <- function(dots, list) {
   .Primitive("c")(names, list) %>% unique
 }
 
-imported_only <- function(targets, cache) {
+imported_only <- function(targets, plan) {
   Filter(targets, f = function(target) is_imported(target = target,
-    cache = cache))
+    plan = plan))
 }
 
-no_imported_objects <- function(targets, cache) {
+no_imported_objects <- function(targets, plan) {
   Filter(targets,
     f = function(target) is_built_or_imported_file(target = target,
-      cache = cache))
+      plan = plan))
 }
 
-is_imported <- Vectorize(function(target, cache) {
-  if (!(target %in% cache$list(namespace = "imported"))){
-    return(FALSE)
-  }
-  cache$get(target, namespace = "imported")
+is_imported <- Vectorize(function(target, plan) {
+  !(target %in% plan$target)
 },
 "target", SIMPLIFY = TRUE)
 
-is_built_or_imported_file <- Vectorize(function(target, cache) {
-  imported <- is_imported(target = target, cache = cache)
+is_built_or_imported_file <- Vectorize(function(target, plan) {
+  imported <- is_imported(target = target, plan = plan)
   !imported | (imported & is_file(target))
 },
 "target", SIMPLIFY = TRUE)

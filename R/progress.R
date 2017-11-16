@@ -201,10 +201,11 @@ progress <- function(
 list_progress <- function(no_imported_objects, cache){
   all_marked <- cache$list(namespace = "progress")
   all_progress <- get_progress(target = all_marked, cache = cache)
+  plan <- read_plan(cache = cache)
   abridged_marked <- Filter(
     all_marked,
     f = function(target){
-      is_built_or_imported_file(target = target, cache = cache)
+      is_built_or_imported_file(target = target, plan = plan)
     }
   )
   abridged_progress <- all_progress[abridged_marked]

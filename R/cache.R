@@ -14,15 +14,18 @@ cache_namespaces <- function(
 ){
   c(
     default,
-    "attempts",
+    "build_times",
     "commands",
+    "config",
     "depends",
-    "imported",
+    "errors",
     "kernels",
     "mtimes",
+    "progress",
     "readd",
-    "type"
-  )
+    "session"
+  ) %>%
+    sort
 }
 
 #' @title Function cache_path

@@ -29,10 +29,10 @@ load_basic_example() # Load drake's canonical example.
 con <- drake_config(my_plan) # Construct the internal configuration list.
 # Prepare to use a distributed computing parallel backend
 # such as "Makefile" or "future_lapply".
-drake:::prepare_distributed(config = con)
+build_these <- drake:::prepare_distributed(config = con)
 # Write the dummy timestamp files usually written at the beginning
 # of make(..., parallelism = "Makefile").
-time_stamps(config = con)
+time_stamps(build_these = build_these, config = con)
 # Use mk() to build a target. Usually called inside a Makefile recipe.
 mk(target = "small", cache_path = default_cache_path())
 }

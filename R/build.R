@@ -122,8 +122,6 @@ store_target <- function(target, value, meta, build_time, config) {
     namespace = "commands")
   config$cache$set(key = target, value = meta$depends,
     namespace = "depends")
-  config$cache$set(key = target, value = meta$imported,
-    namespace = "imported")
   config$cache$set(key = target, value = "finished",
     namespace = "progress")
   if (is_file(target)) {
@@ -142,8 +140,6 @@ store_target <- function(target, value, meta, build_time, config) {
 }
 
 store_object <- function(target, value, config) {
-  config$cache$set(key = target, value = "object",
-    namespace = "type")
   storr_hash <- config$cache$set(
     key = target, value = value, namespace = "readd")
   config$cache$driver$set_hash(
@@ -151,8 +147,6 @@ store_object <- function(target, value, config) {
 }
 
 store_file <- function(target, meta, config) {
-  config$cache$set(key = target, value = "file",
-    namespace = "type")
   config$cache$set(
     key = target,
     value = file.mtime(drake::drake_unquote(target)),
@@ -171,8 +165,6 @@ store_file <- function(target, meta, config) {
 
 store_function <- function(target, value, meta, config
 ){
-  config$cache$set(key = target, value = "function",
-    namespace = "type")
   config$cache$set(key = target, value = value, namespace = "readd")
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
@@ -189,10 +181,3 @@ store_function <- function(target, value, meta, config
 functionize <- function(command) {
   paste0("(function(){\n", command, "\n})()")
 }
-
-log_attempts <- Vectorize(function(targets, config){
-  config$cache$set(
-    key = targets, value = targets, namespace = "attempts")
-  invisible()
-},
-"targets")
