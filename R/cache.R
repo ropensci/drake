@@ -22,7 +22,6 @@ cache_namespaces <- function(
     "kernels",
     "mtimes",
     "progress",
-    "readd",
     "session"
   ) %>%
     sort
@@ -83,7 +82,7 @@ cache_path <- function(cache = NULL){
 #' make(my_plan) # Run the project, build the targets.
 #' x <- get_cache() # Now, there is a cache.
 #' # List the objects readable from the cache with readd().
-#' x$list(namespace = "readd")
+#' x$list() # Or x$list(namespace = x$default_namespace)
 #' }
 get_cache <- function(
   path = getwd(),

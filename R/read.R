@@ -48,7 +48,7 @@ readd <- function(
   if (!character_only){
     target <- as.character(substitute(target))
   }
-  cache$get(target, namespace = "readd")
+  cache$get(target, namespace = cache$default_namespace)
 }
 
 #' @title Function \code{loadd}
@@ -128,7 +128,7 @@ loadd <- function(
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (!length(targets)){
-    targets <- cache$list(namespace = "readd")
+    targets <- cache$list(namespace = cache$default_namespace)
   }
   if (imported_only){
     plan <- read_plan(cache = cache)

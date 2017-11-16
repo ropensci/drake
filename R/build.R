@@ -134,16 +134,19 @@ store_target <- function(target, value, meta, build_time, config) {
     store_object(target = target, value = value,
       config = config)
   }
-  hash <- config$cache$get_hash(key = target, namespace = "readd")
-  config$cache$driver$set_hash(
-    key = target, namespace = config$cache$default_namespace, hash = hash)
 }
 
 store_object <- function(target, value, config) {
-  storr_hash <- config$cache$set(
-    key = target, value = value, namespace = "readd")
+  hash <- config$cache$set(
+    key = target,
+    value = value,
+    namespace = config$cache$default_namespace
+  )
   config$cache$driver$set_hash(
-    key = target, namespace = "kernels", hash = storr_hash)
+    key = target,
+    namespace = "kernels",
+    hash = hash
+  )
 }
 
 store_file <- function(target, meta, config) {
@@ -152,20 +155,30 @@ store_file <- function(target, meta, config) {
     value = file.mtime(drake::drake_unquote(target)),
     namespace = "mtimes"
   )
-  hash <- ifelse(
+  value <- ifelse(
     meta$imported,
     meta$file,
     rehash_file(target = target, config = config)
   )
-  storr_hash <- config$cache$set(
-    key = target, value = hash, namespace = "readd")
+  hash <- config$cache$set(
+    key = target,
+    value = value,
+    namespace = config$cache$default_namespace
+  )
   config$cache$driver$set_hash(
-    key = target, namespace = "kernels", hash = storr_hash)
+    key = target,
+    namespace = "kernels",
+    hash = hash
+  )
 }
 
 store_function <- function(target, value, meta, config
 ){
-  config$cache$set(key = target, value = value, namespace = "readd")
+  config$cache$set(
+    key = target,
+    value = value,
+    namespace = config$cache$default_namespace
+  )
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
   if (meta$imported){

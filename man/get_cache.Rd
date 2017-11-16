@@ -37,7 +37,7 @@ load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 x <- get_cache() # Now, there is a cache.
 # List the objects readable from the cache with readd().
-x$list(namespace = "readd")
+x$list() # Or x$list(namespace = x$default_namespace)
 }
 }
 \seealso{
