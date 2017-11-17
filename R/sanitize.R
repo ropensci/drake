@@ -8,7 +8,7 @@ sanitize_plan <- function(plan){
   if (!is.null(plan$trigger)){
     assert_legal_triggers(plan$trigger)
   }
-  plan
+  plan[nchar(plan$target) > 0, ]
 }
 
 workplan_columns <- function(){

@@ -34,6 +34,7 @@
 - Deprecate the ..analysis.. and ..dataset.. wildcards in favor of analysis__ and dataset__, respectively. The new wildcards are stylistically better an pass linting checks.
 - Add new functions `drake_quotes()`, `drake_unquote()`, and `drake_strings()` to remove the silly dependence on the `eply` package.
 - Add a `skip_safety_checks` flag to `make()` and `drake_config()`. Increases speed.
+- In `sanitize_plan()`, remove rows with blank targets "".
 
 # Changes in release 4.4.0
 
