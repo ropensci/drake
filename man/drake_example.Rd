@@ -4,15 +4,21 @@
 \alias{drake_example}
 \title{Function \code{drake_example}}
 \usage{
-drake_example(example = drake::drake_examples(), destination = getwd())
+drake_example(example = drake::drake_examples(), to = getwd(),
+  destination = NULL, overwrite = FALSE)
 }
 \arguments{
 \item{example}{name of the example.
 To see all the available example names,
 run \code{\link{drake_examples}}.}
 
-\item{destination}{character scalar, file path, where
+\item{to}{Character scalar, file path, where
 to write the folder containing the code files for the example.}
+
+\item{destination}{Deprecated, use \code{to} instead.}
+
+\item{overwrite}{Logical, whether to overwrite an existing folder
+with the same name as the drake example.}
 }
 \value{
 \code{NULL}
@@ -34,5 +40,6 @@ drake_example("slurm")
 }
 }
 \seealso{
-\code{\link{drake_examples}}, \code{\link{make}}
+\code{\link{drake_examples}}, \code{\link{make}},
+\code{\link{shell_file}}, \code{\link{batchtools_drake_tmpl_file}}
 }

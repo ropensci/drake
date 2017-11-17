@@ -54,6 +54,7 @@
 - Increase efficiency of internal preprocessing via `lightly_parallelize()` and `lightly_parallelize_atomic()`. Now, processing happens faster, and only over the unique values of a vector.
 - Add a new `storr` namespace called `imports` to be used in `is_imported()`. That way, the whole object need not be read to `clean()` is. `clean()` is much faster and safer.
 - Add a new `make_with_config()` function to do the work of `make()` on an existing internal configuration list from `drake_config()`.
+- Add a new function `batchtools_drake_tmpl_file()` to write a `batchtools` template file from one of the examples (`drake_example()`), if one exists.
 
 # 2017-10-17
 

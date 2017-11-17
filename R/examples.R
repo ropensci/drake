@@ -4,14 +4,18 @@
 #' Call \code{drake_example('basic')} to generate the code files from the
 #' quickstart vignette: \code{vignette('quickstart')}.
 #' To see the names of all the examples, run \code{\link{drake_examples}}.
-#' @seealso \code{\link{drake_examples}}, \code{\link{make}}
+#' @seealso \code{\link{drake_examples}}, \code{\link{make}},
+#' \code{\link{shell_file}}, \code{\link{batchtools_drake_tmpl_file}}
 #' @export
 #' @return \code{NULL}
 #' @param example name of the example.
 #' To see all the available example names,
 #' run \code{\link{drake_examples}}.
-#' @param destination character scalar, file path, where
+#' @param to Character scalar, file path, where
 #' to write the folder containing the code files for the example.
+#' @param destination Deprecated, use \code{to} instead.
+#' @param overwrite Logical, whether to overwrite an existing folder
+#' with the same name as the drake example.
 #' @examples
 #' \dontrun{
 #' drake_examples() # List all the drake examples.
@@ -22,15 +26,22 @@
 #' }
 drake_example <- function(
   example = drake::drake_examples(),
-  destination = getwd()
+  to = getwd(),
+  destination = NULL,
+  overwrite = FALSE
 ){
+  if (!is.null(destination)){
+    warning(
+      "The 'destination' argument of drake_example() is deprecated. ",
+      "Use 'to' instead."
+    )
+    to <- destination
+  }
   example <- match.arg(example)
   dir <- system.file(file.path("examples", example), package = "drake",
     mustWork = TRUE)
-  if (file.exists(example))
-    stop("There is already a file or folder named ", example,
-      ".", sep = "")
-  file.copy(from = dir, to = destination, recursive = TRUE)
+  file.copy(from = dir, to = to,
+    overwrite = overwrite, recursive = TRUE)
   invisible()
 }
 
