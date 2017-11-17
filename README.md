@@ -126,7 +126,7 @@ explore the dependency network,
 ```r
 outdated()
 missed()
-vis_drake_graph() # Now with subgraph functionality.
+vis_drake_graph() # Same as drake_graph()
 dataframes_graph()
 render_drake_graph()
 read_drake_graph()

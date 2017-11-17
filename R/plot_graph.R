@@ -4,6 +4,7 @@
 #' To save time for repeated plotting, this function is divided into
 #' \code{\link{dataframes_graph}()} and \code{\link{render_drake_graph}()}.
 #' @export
+#' @aliases drake_graph
 #' @seealso \code{\link{build_drake_graph}}
 #' @return A visNetwork graph.
 #'
@@ -203,6 +204,8 @@ vis_drake_graph <- function(
     navigationButtons = navigationButtons, # nolint
     hover = hover, main = main, ncol_legend = ncol_legend, ...)
 }
+
+drake_graph <- vis_drake_graph
 
 #' @title Function \code{render_drake_graph}
 #' @description render a graph from the data frames

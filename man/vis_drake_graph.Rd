@@ -2,6 +2,7 @@
 % Please edit documentation in R/plot_graph.R
 \name{vis_drake_graph}
 \alias{vis_drake_graph}
+\alias{drake_graph}
 \title{Function \code{vis_drake_graph}}
 \usage{
 vis_drake_graph(plan = workplan(), targets = drake::possible_targets(plan),

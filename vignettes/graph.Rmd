@@ -21,7 +21,7 @@ knitr::opts_chunk$set(eval = FALSE)
 ```
 
 
-`Drake` has powerful visuals to help you understand and plan your workflow. The workflow plan graph is interactive. Click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
+`Drake` has powerful visuals to help you understand and plan your workflow. You can generate an interactive workflow plan graph with either `drake_graph()` or `vis_drake_graph()`. Then click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
 
 
 # Dependency reactivity
@@ -31,7 +31,7 @@ Initially, your entire project is out of date.
 ```{r graphoutdated}
 library(drake)
 load_basic_example()
-vis_drake_graph(my_plan)
+vis_drake_graph(my_plan) # Same as drake_graph()
 ```
 
 <iframe
