@@ -42,7 +42,7 @@ batchtools_drake_tmpl_file <- function(
     stop("No template files found for the ", example, " example.")
   }
   file <- file.path(dir, template_files[1])
-  file.copy(from = dir, to = to,
+  file.copy(from = file, to = to,
     overwrite = overwrite, recursive = TRUE)
   invisible()
 }
