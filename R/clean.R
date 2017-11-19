@@ -160,7 +160,7 @@ uncache <- function(targets, cache, jobs){
     jobs = jobs,
     plan = plan
   )
-  namespaces <- cache_namespaces(default = cache$default_namespace)
+  namespaces <- cleaned_namespaces(default = cache$default_namespace)
   for (namespace in namespaces){
     lightly_parallelize(
       X = targets,

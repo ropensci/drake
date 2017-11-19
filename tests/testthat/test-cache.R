@@ -1,5 +1,12 @@
 drake_context("cache")
 
+test_with_dir("Cache namespaces", {
+  x <- cache_namespaces()
+  y <- cleaned_namespaces()
+  expect_true(all(y %in% x))
+  expect_false(all(x %in% y))
+})
+
 test_with_dir("clean() works if there is no cache already", {
   clean(list = "no_cache")
   expect_false(file.exists(default_cache_path()))

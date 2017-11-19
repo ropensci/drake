@@ -1,7 +1,7 @@
 #' @title Function cache_namespaces
 #' @export
 #' @seealso \code{\link{make}}
-#' @return A character vector of storr namespaces used for drake.
+#' @return A character vector of \code{storr} namespaces used for drake.
 #' @description List the important \code{storr} cache namespaces
 #' that need to be inventoried periodically in a call to \code{\link{make}()}.
 #' Ordinary users do not need to worry about this function.
@@ -13,16 +13,38 @@ cache_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ){
   c(
-    default,
+    cleaned_namespaces(default = default),
     "build_times",
-    "commands",
     "config",
-    "depends",
     "errors",
-    "kernels",
-    "mtimes",
     "progress",
     "session"
+  ) %>%
+    sort
+}
+
+#' @title Function cleaned_namespaces
+#' @description List the \code{storr} namespaces that are cleaned
+#' during a call to \code{\link{clean}()}. All these
+#' namespaces store target-level data, but not all
+#' target-level namespaces are cleaned during
+#' \code{\link{clean}()}.
+#' @export
+#' @seealso \code{\link{cache_namespaces}}, \code{\link{clean}}
+#' @return A character vector of \code{storr} namespaces
+#' that are cleaned during \code{\link{clean}()}.
+#' @param default Name of the default \code{storr} namespace.
+#' @examples
+#' cleaned_namespaces()
+cleaned_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+){
+  c(
+    default,
+    "commands",
+    "depends",
+    "kernels",
+    "mtimes"
   ) %>%
     sort
 }

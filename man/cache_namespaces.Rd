@@ -10,7 +10,7 @@ cache_namespaces(default = storr::storr_environment()$default_namespace)
 \item{default}{name of the default \code{storr} namespace}
 }
 \value{
-A character vector of storr namespaces used for drake.
+A character vector of \code{storr} namespaces used for drake.
 }
 \description{
 List the important \code{storr} cache namespaces
