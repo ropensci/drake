@@ -13,242 +13,94 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-![](logo-vignettes.png)
-
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
+unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
 
-# Data frames in R for [Make](http://kbroman.org/minimal_make/)
+Reproducibility carries an implicit promise that alleged results of a computation are up to date with the dependencies. In other words, the final tables, figures, and reports should match the data and code that generated them. This form of internal consistency is nontrivial for medium to large projects, where dependencies change frequently but the results take a long time to refresh. In fact, dependency awareness is arguably just as important as [scientific replicability](http://www.nature.com/news/1-500-scientists-lift-the-lid-on-reproducibility-1.19970), [literate programming](https://www.r-bloggers.com/reproducible-research-training-wheels-and-knitr/), and [version control](https://nicercode.github.io/git/why.html). However, few tools in R properly address the need, and it is a glaring blind spot in most conversations around reproducibility in the R and Statistics communities.
 
-Drake is a workflow manager and build system for
+# Reproducibility with drake
 
-1. [Reproducibility](https://CRAN.R-project.org/view=ReproducibleResearch).
-2. [High-performance computing](https://CRAN.R-project.org/view=HighPerformanceComputing).
+![](logo-vignettes.png)
 
-Organize your work in a data frame.
+Enter the [`drake` package](https://github.com/wlandau-lilly/drake), one of the only [pipeline toolkits](https://github.com/pditommaso/awesome-pipeline) available in R. `Drake` detects the dependencies of intermediate steps, links everything together in a [network graph](https://cran.r-project.org/web/packages/drake/vignettes/graph.html#dependency-reactivity), fingerprints the available data, and rebuilds only the pieces that are out of date or missing. For a demonstration, we turn to the built-in basic example.
 
-```{r firstintroindrake}
-library(drake)
-load_basic_example() # Also (over)writes report.Rmd.
-my_plan              # Each target is a file (single-quoted) or object.
-```
-
-Then `make()` it to build all your targets.
-
-```{r makedrakenoevalrmd, eval = FALSE}
-make(my_plan) # Run the commands to build the targets.
-```
-
-If a target fails, diagnose it.
-
-```{r diagnose, eval = FALSE}
-failed()                 # Targets that failed in the most recent `make()`
-diagnose()               # Targets that failed in any previous `make()`
-error <- diagnose(large) # Most recent verbose error log of `large`
-str(error)               # Object of class "error"
-error$calls              # Call stack / traceback
-```
-
-# Installation
-
-You can choose among different versions of `drake`:
-
-```{r devinstall, eval = FALSE}
-install.packages("drake")    # Latest CRAN release.
-install.packages("devtools") # For installing from GitHub.
-# Choose a GitHub release.
-devtools::install_github(
-  "wlandau-lilly/drake@v4.4.0",
-  build = TRUE
-)
-# Install the development version.
-install_github("wlandau-lilly/drake", build = TRUE) # dev version
-```
-
-- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
-- For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
-
-# Quickstart
-
-```{r quickstartdrakermd, eval = FALSE}
-library(drake)
-load_basic_example()     # Also (over)writes report.Rmd.
-vis_drake_graph(my_plan) # Hover, click, drag, zoom, pan.
-outdated(my_plan)        # Which targets need to be (re)built?
-missed(my_plan)          # Are you missing anything from your workspace?
-check_plan(my_plan)      # Is your workflow plan okay? Missing files?
-make(my_plan)            # Run the workflow.
-diagnose(large)          # Error info if the target "large" failed to build.
-outdated(my_plan)        # Everything is up to date.
-vis_drake_graph(my_plan) # The graph also shows what is up to date.
-```
-
-Dive deeper into the built-in examples.
-
-```{r examplesdrakermd, eval = FALSE}
-drake_example("basic") # Write the code files of the canonical tutorial.
-drake_examples()       # List the other examples.
-vignette("quickstart") # https://cran.r-project.org/package=drake/vignettes
-```
-
-# Useful functions
-
-`make()`, `workplan()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
-
-```{r learndrakermd, eval = FALSE}
+```{r reproducibilitydemo}
 load_basic_example()
-drake_tip()
-drake_examples()
-drake_example()
 ```
 
-set up your workflow plan,
+The intermediate components of the project, or "targets", are declared in an ordinary data frame.
 
-```{r plandrakermd, eval = FALSE}
-plan_analyses()
-plan_summaries()
-evaluate_plan()
-expand_plan()
-gather_plan()
-wildcard() # from the wildcard package
+```{r myplandrakevig}
+my_plan
 ```
 
-explore the dependency network,
+The [visNetwork graph](http://datastorm-open.github.io/visNetwork/) below is interactive, so you can hover, click, drag, zoom, and pan.
 
-```{r draakedepsdrakermd, eval = FALSE}
-outdated()
-missed()
-vis_drake_graph() # Same as drake_graph()
-dataframes_graph()
-render_drake_graph()
-read_drake_graph()
-deps()
-knitr_deps
-tracked()
+```{r drakevisgraph, eval = FALSE}
+vis_drake_graph(my_plan)
 ```
 
-interact with the cache,
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/2211b300/images/outdated.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
 
-```{r cachedrakermd, eval = FALSE}
-clean()
-drake_gc()
-cached()
-imported()
-built()
-readd()
-loadd()
-find_project()
-find_cache()
+All the targets are out of date because nothing has been built yet.
+
+```{r outdateddrake}
+outdated(my_plan, verbose = FALSE)
 ```
 
-make use of recorded build times,
+To build the project, `make()` executes the commands from the workflow plan in the [correct order](https://en.wikipedia.org/wiki/Topological_sorting).
 
-```{r timesdrakermd, eval = FALSE}
-build_times()
-predict_runtime()
-rate_limiting_times()
+```{r firstmakedrake}
+make(my_plan)
 ```
 
-speed up your project with parallel computing,
+Now, everything is up to date. In the next `make()`, there is no work to do.
 
-```{r speeddrakermd, eval = FALSE}
-make() # with jobs > 2
-max_useful_jobs()
-parallelism_choices()
-shell_file()
+```{r makeuptodatedrake}
+make(my_plan)
 ```
 
-finely tune the caching and hashing,
+If you nontrivially change a command, imported function, or other dependency, `make()` does the minimum amount of work necessary to bring your project up to date again. Below, `make()` skips the targets that depend on `reg1()`.
 
-```{r hashcachedrakermd, eval = FALSE}
-available_hash_algos()
-cache_path()
-cache_types()
-configure_cache()
-default_long_hash_algo()
-default_short_hash_algo()
-long_hash()
-short_hash()
-new_cache()
-recover_cache()
-this_cache()
-type_of_cache()
-```
-
-and debug your work.
-
-```{r debugdrakermd, eval = FALSE}
-check_plan()
-drake_config()
-read_drake_config()
-diagnose()
-dependency_profile()
-in_progress()
-progress()
-rescue_cache()
-drake_session()
-```
-
-# Reproducibility
-
-There is room to improve the conversation and the landscape of reproducibility in the R and Statistics communities. At a more basic level than scientific replicability, literate programming, and version control, reproducibility carries an implicit promise that alleged computational results really do match the generating code. To reinforce this promise, drake fingerprints and watches dependencies and output, skipping computations that are already up to date.
-
-```{r reproducibilitydrakermd, eval = FALSE}
-library(drake)
-load_basic_example()
-outdated(my_plan)        # Which targets need to be (re)built?
-make(my_plan)            # Build what needs to be built.
-outdated(my_plan)        # Everything is up to date.
-# Change one of your functions.
+```{r reg2makedrake}
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan)        # Some targets depend on reg2().
-vis_drake_graph(my_plan) # Set targets_only to TRUE for smaller graphs.
-make(my_plan)            # Rebuild just the outdated targets.
-outdated(my_plan)        # Everything is up to date again.
-vis_drake_graph(my_plan) # The colors changed in the graph.
+make(my_plan)
 ```
-
-Similarly to imported functions like `reg2()`, `drake` reacts to changes in
-
-1. Other imported functions, whether user-defined or from packages.
-1. For imported functions from your environment, any nested functions also in your environment or from packages.
-1. Commands in your workflow plan data frame.
-1. Global variables mentioned in the commands or imported functions.
-1. Upstream targets.
-1. For [dynamic knitr reports](https://yihui.name/knitr/) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, `report.md`).
-
-With alternate [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and the [option to skip imports](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#skipping-imports), you can sacrifice reproducibility to gain speed. However, these options can throw the dependency network out of sync. You should only use them for testing and debugging, never for production.
-
-```{r triggermissingdrake, eval = FALSE}
-make(..., skip_imports = TRUE, trigger = "missing")
-```
-
-Using other tools, you can enhance reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
 # High-performance computing
 
-Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the intermediate steps of your workflow in a dependency web. This network is the key to drake's parallel computing. For example, consider the network graph of the basic example.
+In addition to reproducibility, `drake` tries to make high-performance computing easy and accessible. Parallel processing is as straightforward as setting the maximum number of simultaneous parallel workers, or `jobs`.
 
-```{r basicgraph}
-library(drake)
-load_basic_example()
-make(my_plan, jobs = 2, verbose = FALSE) # Parallelize with 2 jobs.
-# Change one of your functions.
-reg2 <- function(d){
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
-}
+```{r jobsdrake, eval = FALSE}
+make(my_plan, jobs = 2)
 ```
 
-```{r fakegraphdrakermd, eval = FALSE}
-# Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
-vis_drake_graph(my_plan, width = "100%", height = "500px")
+`Drake` can even recommend the maximum number of useful jobs. The `max_useful_jobs()` function takes into account which targets will be skipped in the next `make()`.
+
+```{r maxusefuljobs}
+max_useful_jobs(my_plan, verbose = FALSE)
+reg2 <- function(d){
+  d$x4 <- d$x ^ 4
+  lm(y ~ x4, data = d)
+}
+max_useful_jobs(my_plan, verbose = FALSE)
+```
+
+To make its recommendation, `max_useful_jobs()`, relies on `drake`'s approach to [implicit parallelism](https://www.computerhope.com/jargon/i/implicit-parallelism.htm).
+
+```{r reg2graphdrake, eval = FALSE}
+vis_drake_graph(my_plan)
 ```
 
 <iframe
@@ -257,18 +109,50 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
+The columns in the graph represent parallelizable stages. All the objects in a column are conditionally independent given their dependencies. In `make()`, the columns are processed sequentially from left to right, and everything within an individual column is parallelized over the available `jobs`. Assuming the targets are rate-limiting (as opposed to the imports), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, and it would be superfluous to use more than 4 `jobs`.
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs. See function `max_useful_jobs()` to suggest the number of jobs, taking into account which targets are already up to date.
+`Drake` supports a [vast arsenal](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd#parallel-backends) of parallel computing backends. You can leverage the spare cores on your laptop's processor or scale up to serious distributed computing on a cluster. You can list the supported backends with `parallellism_choices()`.
 
-As for the implementation, you can choose from a vast arsenal of parallel backends, from local multicore computing to [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools)-powered distributed computing compatible with most formal job schedulers. Please see the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for details.
-
-```{r drakermdhpcvignette, eval = FALSE}
-vignette("parallelism")
+```{r parallelchoicesdrake}
+parallelism_choices()
 ```
+
+and make use of a backend with the `parallelism` argument.
+
+```{r declareparalleldrake, eval = FALSE}
+make(my_plan, parallelism = "mclapply", jobs = 2)
+```
+
+You can configure the `"future_lapply"` and `"Makefile"` backends for formal job schedulers such as [SLURM](https://slurm.schedmd.com/), [TORQUE](www.adaptivecomputing.com/products/open-source/torque/), and the [Sun/Univa Grid Engine](http://www.univa.com/products/). For `"future_lapply"` parallelism, use the backend's `workers` argument for the targets and `make()`'s `jobs` argument for the imports. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for more detailed instructions.
+
+```{r exampleconfiguredrake, eval = FALSE}
+library(future.batchtools)
+future::plan(
+  batchtools_slurm(
+    template = "batchtools.slurm.tmpl",
+    workers = 8
+  )
+)
+make(my_plan, parallelism = "future_lapply", jobs = 4)
+```
+
+With the `drake_example()` function, you can write [example files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) to get you started. Most of the examples focus on the available high-performance computing options. See `drake_examples()` for your choices.
+
+```{r drakeexamplesdrake}
+drake_examples()
+```
+
+# Learn more
+
+[Drake's README](https://github.com/wlandau-lilly/drake/blob/master/README.md) has installation instructions and pointers to useful functions. There are also [several specialized vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), which are also [rendered on CRAN](https://cran.r-project.org/package=drake/vignettes/).
 
 # Acknowledgements and related work
 
-Many thanks to these people for contributing amazing ideas and code patches early in the development of `drake` and its predecessors [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator).
+The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](http://kbroman.org/minimal_make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make".
+
+Today, there is a [whole ecosystem of pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), mostly written in Python. Of all the toolkits in the list, [Rich FitzJohn](http://richfitz.github.io/)'s [remake package](https://github.com/richfitz/remake) is by far the most important for `drake`. `Drake` stands squarely on the shoulders of [remake](https://github.com/richfitz/remake), borrowing the funtamental concepts and extending them in a fresh implementation with a convenient interface and high-performance computing.
+
+Many thanks to the following people for contributing amazing ideas and code patches early in the development of `drake` and its predecessors [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator).
 
 - [Alex Axthelm](https://github.com/AlexAxthelm)
 - [Chan-Yub Park](https://github.com/mrchypark)
@@ -280,35 +164,8 @@ Many thanks to these people for contributing amazing ideas and code patches earl
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
-Special thanks to [Jarad](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
-
-The original idea of a time-saving reproducible build system extends back decades to [GNU Make](http://kbroman.org/minimal_make/), which today helps [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied-language programmers. More recently, [Rich FitzJohn](http://richfitz.github.io/) created [remake](https://github.com/richfitz/remake), a breakthrough reimagining of [Make](http://kbroman.org/minimal_make/) for R and the most important inspiration for drake. Drake is a fresh reinterpretation of some of  [remake](https://github.com/richfitz/remake)'s pioneering fundamental concepts, scaled up for computationally-demanding workflows. There are [many other pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), but few are R-focused.
-
-In the sphere of reproducibility, drake and [remake](https://github.com/richfitz/remake) are examples of non-literate programming tools (as opposed to literate programming tools such as [knitr](https://CRAN.R-project.org/package=knitr)). Counterparts include [R.cache](https://CRAN.R-project.org/package=R.cache), [archivist](https://CRAN.R-project.org/package=archivist), [trackr](https://github.com/gmbecker/recordr), and [memoise](https://CRAN.R-project.org/package=memoise). See the [reproducible research CRAN task view](https://CRAN.R-project.org/view=ReproducibleResearch) for a more comprehensive list. Drake differentiates itself from these tools with its ability to track the relationships among cached objects and its extensive high-performance computing functionality.
-
-# Documentation
-
-The [CRAN page](https://CRAN.R-project.org/package=drake) links to multiple rendered vignettes.
-
-```{r vignettesdrakermd, eval = FALSE}
-vignette(package = "drake") # List the vignettes.
-vignette("caution")         # Avoid common pitfalls.
-vignette("debug")           # Debugging and testing.
-vignette("drake")           # High-level intro.
-vignette("graph")           # Visualilze the workflow graph.
-vignette("quickstart")      # Walk through a simple example.
-vignette("parallelism")     # High-performance computing.
-vignette("storage")         # Learn how drake stores your stuff.
-vignette("timing")          # Build times, runtime predictions
-```
-
-# Help and troubleshooting
-
-Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/wlandau-lilly/drake) for instructions.
-
-# Contributing
-
-Bug reports, suggestions, and code are welcome. Please see [.github/CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/.github/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
+/github.com/pditommaso/awesome-pipeline), but few are R-focused.
 
 ```{r rmfiles_main, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
