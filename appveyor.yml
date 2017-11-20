@@ -17,7 +17,6 @@ environment:
     USE_RTOOLS: true
 
 build_script:
-  - travis-tool.sh install_r stringi
   - travis-tool.sh install_deps
 
 test_script:
