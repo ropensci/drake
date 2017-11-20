@@ -81,7 +81,7 @@ outdated <-  function(
       meta <- meta_list[[target]]
       should_build_target(target = target, meta = meta, config = config)
     },
-    jobs = jobs
+    jobs = config$jobs
   ) %>%
     unlist
   outdated_targets <- all_targets[is_outdated]
@@ -93,7 +93,7 @@ outdated <-  function(
       function(vertex){
         subcomponent(config$graph, v = vertex, mode = "out")$name
       },
-      jobs = jobs
+      jobs = config$jobs
     ) %>%
     unlist() %>%
     unique() %>%
