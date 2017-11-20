@@ -247,12 +247,23 @@ hashes <- function(target, config) {
 }
 
 legacy_dependency_hash <- function(target, config) {
-  command <- get_command(target = target, config = config)
+  command <- legacy_get_command(target = target, config = config)
   stopifnot(length(command) == 1)
   dependencies(target, config) %>%
     legacy_self_hash(config = config) %>%
     c(command) %>%
     digest::digest(algo = config$long_hash_algo)
+}
+
+legacy_get_command <- function(target, config){
+  config$plan$command[config$plan$target == target] %>% legacy_tidy
+}
+
+legacy_tidy <- function(x){
+  parse(text = x) %>%
+    as.character %>%
+    paste(collapse = "\n") %>%
+    braces
 }
 
 legacy_self_hash <- Vectorize(function(target, config) {
