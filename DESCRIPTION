@@ -30,6 +30,7 @@ Imports:
   crayon,
   evaluate,
   digest,
+  formatR,
   future,
   grDevices,
   igraph,

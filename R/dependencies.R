@@ -282,9 +282,16 @@ is_not_file <- function(x){
   !is_file(x)
 }
 
-tidy <- function(x) {
-  parse(text = x) %>%
-    as.character %>%
+tidy_command <- function(x) {
+  formatR::tidy_source(
+    text = x,
+    comment = FALSE,
+    blank = FALSE,
+    arrow = TRUE,
+    brace.newline = FALSE,
+    output = FALSE,
+    width.cutoff = 119
+  )$text.tidy %>%
     paste(collapse = "\n") %>%
     braces
 }
@@ -294,5 +301,6 @@ braces <- function(x) {
 }
 
 get_command <- function(target, config) {
-  config$plan$command[config$plan$target == target] %>% tidy
+  config$plan$command[config$plan$target == target] %>%
+    tidy_command
 }

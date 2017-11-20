@@ -8,6 +8,11 @@ test_with_dir("config and make without safety checks", {
   expect_silent(check_drake_config(config = tmp))
 })
 
+test_with_dir("Strings stay strings, not symbols", {
+  x <- workplan(a = "A", strings_in_dots = "literals")
+  expect_silent(make(x, verbose = FALSE))
+})
+
 test_with_dir("error handlers", {
   expect_equal(error_na(1), NA)
   expect_false(error_false(1))

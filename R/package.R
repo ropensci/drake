@@ -34,6 +34,7 @@
 #' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom evaluate try_capture_stack
+#' @importFrom formatR tidy_source
 #' @importFrom future future_lapply plan
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices delete_vertices edge
