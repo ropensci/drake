@@ -284,12 +284,14 @@ is_not_file <- function(x){
 
 tidy_command <- function(x) {
   formatR::tidy_source(
-    text = x,
+    source = NULL,
     comment = FALSE,
     blank = FALSE,
     arrow = TRUE,
     brace.newline = FALSE,
+    indent = 4,
     output = FALSE,
+    text = x,
     width.cutoff = 119
   )$text.tidy %>%
     paste(collapse = "\n") %>%
