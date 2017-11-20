@@ -326,6 +326,7 @@ make <- function(
 #' make_with_config(config = config) # Run the project, build the targets.
 #' }
 make_with_config <- function(config){
+  check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
   if (config$imports_only){

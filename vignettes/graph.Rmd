@@ -18,6 +18,11 @@ vignette: >
 ```{r, echo = FALSE}
 suppressMessages(suppressWarnings(library(drake)))
 knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
 ```
 
 
@@ -157,6 +162,7 @@ f <- function(x){
   x
 }
 small_plan <- workplan(a = 1, b = f(2))
+
 small_plan
 ```
 
@@ -187,6 +193,7 @@ You can list the distributed backends quickly, or you can read the [parallelism 
 
 ```{r listbackendsgraph, eval = TRUE}
 parallelism_choices()
+
 parallelism_choices(distributed_only = TRUE)
 ```
 

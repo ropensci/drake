@@ -15,12 +15,18 @@ vignette: >
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
+suppressMessages(suppressWarnings(library(magrittr)))
 unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
 ```
 
-Reproducibility carries an implicit promise that alleged results of a computation are up to date with the dependencies. In other words, the final tables, figures, and reports should match the data and code that generated them. This form of internal consistency is nontrivial for medium to large projects, where dependencies change frequently but the results take a long time to refresh. In fact, dependency awareness is arguably just as important as [scientific replicability](http://www.nature.com/news/1-500-scientists-lift-the-lid-on-reproducibility-1.19970), [literate programming](https://www.r-bloggers.com/reproducible-research-training-wheels-and-knitr/), and [version control](https://nicercode.github.io/git/why.html). However, few tools in R properly address the need, and it is a glaring blind spot in most conversations around reproducibility in the R and Statistics communities.
+Reproducibility carries an implicit promise that alleged results of a computation are up to date with the dependencies. In other words, the final tables, figures, and reports should match the data and code that generated them. This form of internal consistency is nontrivial for medium to large projects, where dependencies change frequently but the results take a long time to refresh. In fact, dependency awareness is arguably just as important as [scientific replicability](http://www.nature.com/news/1-500-scientists-lift-the-lid-on-reproducibility-1.19970), [literate programming](https://www.r-bloggers.com/reproducible-research-training-wheels-and-knitr/), and [version control](https://nicercode.github.io/git/why.html). However, few tools in R properly address the need, and it is a conspicuous blind spot in most discussions about reproducibility in the R and Statistics communities.
 
 # Reproducibility with drake
 
@@ -36,6 +42,32 @@ The intermediate components of the project, or "targets", are declared in an ord
 
 ```{r myplandrakevig}
 my_plan
+```
+
+There are [several functions](https://github.com/wlandau-lilly/drake/blob/master/README.md#useful-functions) to help you generate the workflow plan. No need to write every row by hand.
+
+```{r workplangeneration}
+library(magrittr)
+dataset_plan <- workplan(
+  small = simulate(5),
+  large = simulate(50)
+)
+dataset_plan
+
+analysis_methods <- workplan(
+  regression = regNUMBER(dataset__)
+) %>%
+  evaluate_plan(wildcard = "NUMBER", values = 1:2)
+analysis_methods
+
+analysis_plan <- plan_analyses(
+  plan = analysis_methods,
+  datasets = dataset_plan
+)
+analysis_plan
+
+whole_plan <- rbind(dataset_plan, analysis_plan)
+whole_plan
 ```
 
 The [visNetwork graph](http://datastorm-open.github.io/visNetwork/) below is interactive, so you can hover, click, drag, zoom, and pan.
@@ -89,11 +121,15 @@ make(my_plan, jobs = 2)
 `Drake` can even recommend the maximum number of useful jobs. The `max_useful_jobs()` function takes into account which targets will be skipped in the next `make()`.
 
 ```{r maxusefuljobs}
+# Everything is already up to date.
 max_useful_jobs(my_plan, verbose = FALSE)
+
 reg2 <- function(d){
   d$x4 <- d$x ^ 4
   lm(y ~ x4, data = d)
 }
+
+# The targets that depend on reg2() are now outdated.
 max_useful_jobs(my_plan, verbose = FALSE)
 ```
 
@@ -141,10 +177,6 @@ With the `drake_example()` function, you can write [example files](https://githu
 ```{r drakeexamplesdrake}
 drake_examples()
 ```
-
-# Learn more
-
-[Drake's README](https://github.com/wlandau-lilly/drake/blob/master/README.md) has installation instructions and pointers to useful functions. There are also [several specialized vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), which are also [rendered on CRAN](https://cran.r-project.org/package=drake/vignettes/).
 
 # Acknowledgements and related work
 

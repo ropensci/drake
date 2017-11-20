@@ -19,6 +19,11 @@ suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
 ```
 
 This vignette is a guide to debugging and testing `drake` projects. Please also see the ["caution" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/caution.Rmd), which addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version.
@@ -30,6 +35,7 @@ Most of `drake`'s functions rely on a central `config` list. An understanding of
 ```{r debugconfig}
 load_basic_example()
 config <- drake_config(my_plan)
+
 sort(names(config))
 ```
 
@@ -51,6 +57,7 @@ and you can access parts of it with some companion functions.
 
 ```{r readcompanions, eval = FALSE}
 read_drake_graph()
+
 read_plan()
 ```
 
@@ -63,6 +70,7 @@ The workflow plan data frame is your responsibility, and it takes effort and car
 ```{r checkdebug}
 load_basic_example()
 my_plan
+
 check_plan(my_plan) # No issues.
 ```
 
@@ -90,7 +98,9 @@ Programmatically, several functions can help you check immediate dependencies.
 
 ```{r checkdepsdebug}
 deps(reg2)
+
 deps(my_plan$command[1]) # File dependencies like report.Rmd are single-quoted.
+
 deps(my_plan$command[nrow(my_plan)])
 ```
 
@@ -98,6 +108,7 @@ List all the reproducibly-tracked objects and files, including imports and targe
 
 ```{r trackeddebug}
 tracked(my_plan, targets = "small")
+
 tracked(my_plan)
 ```
 
@@ -126,8 +137,11 @@ reg2 <- function(d) {
   lm(y ~ x3, data = d)
 }
 outdated(my_plan, verbose = FALSE)
+
 dependency_profile(target = "regression2_small", config = config)
+
 config$cache$get_hash(key = "small") # same
+
 config$cache$get_hash(key = "reg2") # different
 ```
 
@@ -156,8 +170,10 @@ You can set separate triggers for individual targets with a `trigger` column in 
 my_plan$trigger <- "command"
 my_plan$trigger[1] <- "file"
 my_plan
+
 # Change an imported dependency:
 reg2
+
 reg2 <- function(d) {
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
@@ -172,6 +188,7 @@ Similar to triggers, another way to speed testing is to skip the imports entirel
 ```{r skipimports}
 clean(verbose = FALSE)
 my_plan$trigger <- NULL
+
 make(my_plan, skip_imports = TRUE)
 ```
 
@@ -186,12 +203,10 @@ f <- function(...){
 }
 debug_plan <- workplan(x = 1, y = f(x))
 debug_plan
+
 withr::with_message_sink(
-  new = stdout(),
-  code = try(
-    make(debug_plan, timeout = 1e-3, retries = 2),
-    silent = FALSE
-  )
+  stdout(),
+  make(debug_plan, timeout = 1e-3, retries = 2)
 )
 ```
 
@@ -201,13 +216,12 @@ To customize these settings separately for each target, define new `timeout`, `c
 clean(verbose = FALSE)
 debug_plan$timeout <- c(1e-3, 2e-3)
 debug_plan$retries <- 1:2
+
 debug_plan
+
 withr::with_message_sink(
   new = stdout(),
-  try(
-    make(debug_plan, timeout = Inf, retries = 0),
-    silent = FALSE
-  )
+  make(debug_plan, timeout = Inf, retries = 0)
 )
 ```
 
@@ -220,21 +234,27 @@ When targets fail, it may be difficult to diagnose the problem, especially if yo
 
 ```{r diagnosedebug}
 diagnose(verbose = FALSE)
+
 f <- function(){
   stop("unusual error")
 }
 bad_plan <- workplan(my_target = f())
+
+bad_plan
+
 withr::with_message_sink(
   new = stdout(),
-  try(
-    make(bad_plan),
-    silent = FALSE
-  )
+  make(bad_plan)
 )
+
 failed(verbose = FALSE) # from the last make() only
+
 diagnose(verbose = FALSE) # from all previous make()'s
+
 error <- diagnose(my_target, verbose = FALSE)
+
 str(error)
+
 error$calls # View the traceback.
 ```
 
@@ -244,14 +264,23 @@ After your project is at least somewhat built, you can inspect and read your res
 
 ```{r debriefdebug}
 make(my_plan, verbose = FALSE)
+
 drake_session(verbose = FALSE)
+
 cached(verbose = FALSE)
+
 built(verbose = FALSE)
+
 imported(verbose = FALSE)
+
 loadd(large, verbose = FALSE)
+
 head(large)
+
 readd(small, verbose = FALSE)
+
 progress(verbose = FALSE)
+
 in_progress(verbose = FALSE) # Unfinished targets
 ```
 
@@ -259,6 +288,7 @@ There are functions to help you locate the project's cache.
 
 ```{r finddebug}
 find_project()
+
 find_cache()
 ```
 
@@ -287,5 +317,3 @@ In most cases, all you need to do is run the R code provided.
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
-
-

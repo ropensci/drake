@@ -19,6 +19,11 @@ suppressMessages(suppressWarnings(library(future)))
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
 ```
 
 `Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and stay tuned for an explanation.
@@ -94,10 +99,11 @@ max_useful_jobs(my_plan, imports = "none") # 4
 
 ```{r hpcchoices, eval = TRUE}
 parallelism_choices()
+
 parallelism_choices(distributed_only = TRUE)
 ```
 
-```{r hpcmoredocs, eval = FALSE}
+```{r hpcmoredocs, eval = TRUE}
 ?parallelism_choices  # Read an explanation of each backend.
 default_parallelism() # "parLapply" on Windows, "mclapply" everywhere else
 ```
@@ -123,9 +129,10 @@ default_parallelism() # "parLapply" on Windows, "mclapply" everywhere else
 
 The `future` package unlocks a wide array of powerful parallel backends. The idea is to set up a `future` backend in advance (with `drake::future::plan()` or `future::plan()`) and then call `make(parallelism = "future_lapply")`.
 
-```{r sequential}
+```{r sequential, eval = TRUE}
 library(future)
-future::plan() # same as future::plan()
+future::plan()
+
 future::plan(multicore)
 future::plan()
 ```
@@ -192,7 +199,7 @@ You can even nest parallelism strategies together. In the following example, tar
 ```{r hybridparallelism, eval = FALSE}
 future::plan(
   list(
-    batchjobs_sge(template = "sge-simple.tmpl"), 
+    batchtools_sge(template = "sge-simple.tmpl"),
     multiprocess
   )
 )
@@ -257,6 +264,7 @@ For finer control over the build process, use the `recipe_command` argument. By 
 
 ```{r defaultrecipecommandfunction}
 default_recipe_command()
+
 r_recipe_wildcard()
 ```
 
@@ -283,6 +291,7 @@ Use the `Makefile_recipe()` function to show and tweak `Makefile` recipes in adv
 
 ```{r makefilerecipefunction}
 Makefile_recipe()
+
 Makefile_recipe(
   recipe_command = "R -e 'R_RECIPE' -q",
   target = "this_target",

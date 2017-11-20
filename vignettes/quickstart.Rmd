@@ -19,6 +19,11 @@ vignette: >
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
 ```
 
 # Quick examples
@@ -140,7 +145,9 @@ You can also check the dependencies of individual targets.
 
 ```{r checkdeps}
 deps(reg2)
+
 deps(my_plan$command[1]) # Files like report.Rmd are single-quoted.
+
 deps(my_plan$command[nrow(my_plan)])
 ```
 
@@ -148,6 +155,7 @@ List all the reproducibly-tracked objects and files, including imports and targe
 
 ```{r tracked}
 tracked(my_plan, targets = "small")
+
 tracked(my_plan)
 ```
 
@@ -228,13 +236,20 @@ If your workflow does not fit the rigid datasets/analyses/summaries framework, c
 ```{r more_expansions_and_plans}
 df <- workplan(data = simulate(center = MU, scale = SIGMA))
 df
+
 df <- expand_plan(df, values = c("rep1", "rep2"))
 df
+
 evaluate_plan(df, wildcard = "MU", values = 1:2)
+
 evaluate_plan(df, wildcard = "MU", values = 1:2, expand = FALSE)
+
 evaluate_plan(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1)), expand = FALSE)
+
 evaluate_plan(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
+
 gather_plan(df)
+
 gather_plan(df, target = "my_summaries", gather = "rbind")
 ```
 
@@ -244,6 +259,7 @@ You may want to check for outdated or missing targets/imports first.
 
 ```{r firstmake}
 outdated(my_plan, verbose = FALSE) # Targets that need to be (re)built.
+
 missed(my_plan, verbose = FALSE) # Checks your workspace.
 ```
 
@@ -261,6 +277,7 @@ ls()
 
 ```{r plotgraphfirstmake}
 outdated(my_plan, verbose = FALSE) # Everything is up to date.
+
 build_times(digits = 4) # How long did it take to make each target?
 ```
 
@@ -289,16 +306,26 @@ Use `readd()` and `loadd()` to load more targets. (They are cached in the hidden
 
 ```{r cache}
 readd(coef_regression2_large)
+
 loadd(small)
+
 head(small)
+
 rm(small)
 cached(small, large)
+
 cached()
+
 built()
+
 imported()
+
 head(read_plan())
+
 head(progress()) # See also in_progress()
+
 progress(large)
+
 drake_session() # of the last call to make()
 ```
 
@@ -327,7 +354,9 @@ outdated(my_plan, verbose = FALSE)
 
 ```{r depprofile}
 dependency_profile(target = "regression2_small", config = config)
+
 config$cache$get_hash(key = "small") # same
+
 config$cache$get_hash(key = "reg2") # different
 ```
 

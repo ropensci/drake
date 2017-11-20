@@ -18,6 +18,11 @@ vignette: >
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
 ```
 
 # Build times
@@ -28,7 +33,9 @@ Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), `drake` records h
 library(drake)
 load_basic_example()
 make(my_plan, jobs = 2, verbose = FALSE) # See also max_useful_jobs(my_plan).
+
 build_times(digits = 8) # From the cache.
+
 build_times(digits = 8, targets_only = TRUE)
 ```
 
@@ -66,6 +73,7 @@ reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
+
 predict_runtime(
   my_plan,
   digits = 8,
@@ -85,6 +93,7 @@ predict_runtime(
   verbose = FALSE,
   targets_only = TRUE
 )
+
 predict_runtime(
   my_plan,
   future_jobs = 2,
@@ -93,6 +102,7 @@ predict_runtime(
   verbose = FALSE,
   targets_only = TRUE
 )
+
 predict_runtime(
   my_plan,
   future_jobs = 4,
@@ -133,6 +143,7 @@ rate_limiting_times(
   verbose = FALSE,
   targets_only = TRUE
 )
+
 rate_limiting_times(
   my_plan,
   future_jobs = 2,
@@ -141,6 +152,7 @@ rate_limiting_times(
   verbose = FALSE,
   targets_only = TRUE
 )
+
 rate_limiting_times(
   my_plan,
   future_jobs = 4,

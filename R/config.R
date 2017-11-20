@@ -123,7 +123,7 @@ drake_config <- function(
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
-  config <- list(
+  list(
     plan = plan, targets = targets, envir = envir, cache = cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
@@ -135,8 +135,6 @@ drake_config <- function(
     imports_only = imports_only, skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks
   )
-  check_drake_config(config = config)
-  config
 }
 
 add_packages_to_prework <- function(packages, prework) {
