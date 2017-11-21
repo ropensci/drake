@@ -32,7 +32,7 @@ Reproducibility carries an implicit promise that alleged results of a computatio
 
 ![](logo-vignettes.png)
 
-Enter the [`drake` package](https://github.com/wlandau-lilly/drake), one of the only [pipeline toolkits](https://github.com/pditommaso/awesome-pipeline) available in R. `Drake` detects the dependencies of intermediate steps, links everything together in a [network graph](https://cran.r-project.org/web/packages/drake/vignettes/graph.html#dependency-reactivity), fingerprints the available data, and rebuilds only the pieces that are out of date or missing. For a demonstration, we turn to the built-in basic example.
+Enter the [`drake` package](https://github.com/wlandau-lilly/drake), one of the only [pipeline toolkits](https://github.com/pditommaso/awesome-pipeline) available in R. `Drake` detects the dependencies of intermediate steps, links everything together in a [network graph](https://cran.r-project.org/package=drake/vignettes/graph.html#dependency-reactivity), fingerprints the available data, and rebuilds only the pieces that are out of date or missing. For a demonstration, we turn to the built-in basic example.
 
 ```{r reproducibilitydemo}
 load_basic_example()
