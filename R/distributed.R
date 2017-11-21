@@ -26,17 +26,23 @@ build_distributed <- function(target, cache_path){
   config <- recover_drake_config(cache_path = cache_path)
   do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
-  meta_list <- meta_list(targets = target, config = config)
+  console_many_targets(
+    targets = target,
+    pattern = "check",
+    color = "check",
+    config = config
+  )
+  meta <- meta(target = target, config = config, store = TRUE)
   config$old_hash <- self_hash(target = target, config = config)
   do_build <- should_build_target(
     target = target,
-    meta = meta_list[[target]],
+    meta = meta,
     config = config
   )
   if (do_build){
     drake_build(
       target = target,
-      meta_list = meta_list,
+      meta = meta,
       config = config
     )
   }

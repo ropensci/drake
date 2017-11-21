@@ -4,13 +4,13 @@
 \alias{drake_build}
 \title{Internal function drake_build}
 \usage{
-drake_build(target, meta_list, config)
+drake_build(target, meta, config)
 }
 \arguments{
 \item{target}{name of the target}
 
-\item{meta_list}{list of metadata that tell which
-targets are up to date}
+\item{meta}{list of metadata that tell which
+targets are up to date (from \code{drake:::meta()}).}
 
 \item{config}{internal configuration list}
 }
@@ -33,13 +33,11 @@ load_basic_example()
 config <- drake_config(my_plan)
 # Compute metadata on 'small', including a hash/fingerprint
 # of the dependencies.
-meta_list <- list(
-  small = drake:::meta(target = "small", config = config)
-)
+meta <- drake:::meta(target = "small", config = config)
 # Should not yet include 'small'.
 cached()
 # Build 'small'
-drake_build(target = "small", meta_list = meta_list, config = config)
+drake_build(target = "small", meta = meta, config = config)
 # Should now include 'small'
 cached()
 readd(small)

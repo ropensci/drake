@@ -17,7 +17,7 @@ run_parallel <- function(config, worker) {
 parallel_stage <- function(worker, config) {
   candidates <- next_targets(
     config$graph_remaining_targets, jobs = config$jobs)
-  meta_list <- meta_list(targets = candidates, config = config)
+  meta_list <- meta_list(targets = candidates, config = config, store = TRUE)
   build_these <- Filter(candidates,
     f = function(target)
       should_build(target = target, meta_list = meta_list, config = config))

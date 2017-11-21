@@ -113,7 +113,7 @@ mk <- function(
   target = character(0),
   cache_path = drake::default_cache_path()
 ){
-  build_distributed(target = target, cache_path = cache_path)
+  old_hash <- build_distributed(target = target, cache_path = cache_path)
   config <- recover_drake_config(cache_path)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(config$old_hash, new_hash)){

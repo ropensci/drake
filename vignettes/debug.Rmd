@@ -58,7 +58,7 @@ and you can access parts of it with some companion functions.
 ```{r readcompanions, eval = FALSE}
 read_drake_graph()
 
-read_plan()
+read_drake_plan()
 ```
 
 # Plan your work.

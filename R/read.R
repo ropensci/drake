@@ -146,7 +146,7 @@ loadd <- function(
     targets <- cache$list(namespace = cache$default_namespace)
   }
   if (imported_only){
-    plan <- read_plan(cache = cache)
+    plan <- read_drake_plan(cache = cache)
     targets <- imported_only(targets = targets, plan = plan)
   }
   if (!length(targets)){
@@ -191,6 +191,8 @@ load_target <- function(target, cache, envir, verbose){
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
+#' @param jobs number of jobs for light parallelism.
+#' Supports 1 job only on Windows.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -198,28 +200,35 @@ load_target <- function(target, cache, envir, verbose){
 #' # Retrieve the master internal configuration list from the cache.
 #' read_drake_config()
 #' }
-read_drake_config <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+read_drake_config <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = TRUE,
+  jobs = 1
 ){
+  if (is.null(cache)) {
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
   keys <- cache$list(namespace = "config")
-  out <- lapply(
+  out <- lightly_parallelize(
     X = keys,
     FUN = function(item){
       cache$get(key = item, namespace = "config")
-    }
+    },
+    jobs = jobs
   )
   names(out) <- keys
   out
 }
 
-#' @title Function \code{read_plan}
+#' @title Function \code{read_drake_plan}
 #' @description Read the workflow plan
 #' from your last attempted call to \code{\link{make}()}.
-#' @seealso \code{\link{read_config}}
+#' @seealso \code{\link{read_drake_config}}
 #' @export
 #' @return A workflow plan data frame.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
@@ -236,13 +245,25 @@ read_drake_config <- function(path = getwd(), search = TRUE,
 #' \dontrun{
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build the targets.
-#' read_plan() # Retrieve the workflow plan data frame from the cache.
+#' read_drake_plan() # Retrieve the workflow plan data frame from the cache.
 #' }
-read_plan <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+read_drake_plan <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
   verbose = TRUE
 ){
-  read_drake_config(path = path, search = search, cache = cache)$plan
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  if (cache$exists(key = "plan", namespace = "config")){
+    cache$get(key = "plan", namespace = "config")
+  } else {
+    workplan()
+  }
 }
 
 #' @title Function \code{read_drake_graph}
@@ -250,7 +271,7 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' from your last attempted call to \code{\link{make}()}.
 #' For better graphing utilities, see \code{\link{vis_drake_graph}()}
 #' and related functions.
-#' @seealso \code{\link{vis_drake_graph}}, \code{\link{read_config}}
+#' @seealso \code{\link{vis_drake_graph}}, \code{\link{read_drake_config}}
 #' @export
 #' @return An \code{igraph} object representing the dependency
 #' network of the workflow.
@@ -274,11 +295,86 @@ read_plan <- function(path = getwd(), search = TRUE,
 #' g <- read_drake_graph()
 #' class(g) # "igraph"
 #' }
-read_drake_graph <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+read_drake_graph <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
   verbose = TRUE,
   ...
 ){
-  config <- read_drake_config(path = path, search = search, cache = cache)
-  return(config$graph)
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  if (cache$exists(key = "graph", namespace = "config")){
+    cache$get(key = "graph", namespace = "config")
+  } else {
+    make_empty_graph()
+  }
+}
+
+#' @title Function \code{read_drake_meta}
+#' @description For each target, read the information from
+#' \code{drake:::meta()} stored from the last \code{\link{make}()}.
+#' This metadata was computed right before the target was built,
+#' and it was used in \code{drake:::should_build_target})
+#' to decide whether to build or skip the target.
+#' @seealso \code{\link{make}}
+#' @export
+#' @return The cached master internal configuration list
+#' of the last \code{\link{make}()}.
+#' @param targets character vector, names of the targets
+#' to get metadata. If \code{NULL}, all metadata is collected.
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#' If \code{cache} is supplied,
+#' the \code{path} and \code{search} arguments are ignored.
+#' @param path Root directory of the drake project,
+#' or if \code{search} is \code{TRUE}, either the
+#' project root or a subdirectory of the project.
+#' @param search logical. If \code{TRUE}, search parent directories
+#' to find the nearest drake cache. Otherwise, look in the
+#' current working directory only.
+#' @param verbose whether to print console messages
+#' @param jobs number of jobs for light parallelism.
+#' Supports 1 job only on Windows.
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' # Retrieve the build decision metadata for one target.
+#' read_drake_meta(targets = "small")
+#' # Retrieve the build decision metadata for all targets,
+#' # parallelizing over 2 jobs.
+#' read_drake_meta(jobs = 2)
+#' }
+read_drake_meta <- function(
+  targets = NULL,
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = TRUE,
+  jobs = 1
+){
+  if (is.null(cache)) {
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)) {
+    stop("cannot find drake cache.")
+  }
+  if (is.null(targets)){
+    targets <- cache$list(namespace = "meta")
+  } else {
+    targets <- intersect(targets, cache$list(namespace = "meta"))
+  }
+  out <- lightly_parallelize(
+    X = targets,
+    FUN = function(target){
+      cache$get(key = target, namespace = "meta")
+    },
+    jobs = jobs
+  )
+  names(out) <- targets
+  out
 }

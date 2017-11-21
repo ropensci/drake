@@ -4,8 +4,7 @@
 \alias{read_drake_graph}
 \title{Function \code{read_drake_graph}}
 \usage{
-read_drake_graph(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
   verbose = TRUE, ...)
 }
 \arguments{
@@ -46,5 +45,5 @@ class(g) # "igraph"
 }
 }
 \seealso{
-\code{\link{vis_drake_graph}}, \code{\link{read_config}}
+\code{\link{vis_drake_graph}}, \code{\link{read_drake_config}}
 }

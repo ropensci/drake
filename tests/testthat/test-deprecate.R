@@ -10,7 +10,6 @@ test_with_dir("deprecation: make() and config()", {
     verbose = FALSE))
   expect_warning(make(workplan(x = 1), clear_progress = TRUE,
     verbose = FALSE))
-  expect_warning(read_config())
   expect_warning(config(workplan(x = 1)))
 })
 
@@ -20,7 +19,9 @@ test_with_dir("deprecation: cache functions", {
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
   expect_warning(session())
+  expect_warning(read_config())
   expect_warning(read_graph())
+  expect_warning(read_plan())
 })
 
 test_with_dir("workplan deprecation", {

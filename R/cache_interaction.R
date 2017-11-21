@@ -87,7 +87,7 @@ is_cached <- function(targets, no_imported_objects, cache) {
 list_cache <- function(no_imported_objects, cache) {
   targets <- cache$list(namespace = cache$default_namespace)
   if (no_imported_objects){
-    plan <- read_plan(cache = cache)
+    plan <- read_drake_plan(cache = cache)
     targets <- no_imported_objects(targets = targets, plan = plan)
   }
   targets
@@ -124,7 +124,7 @@ built <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  plan <- read_plan(cache = cache)
+  plan <- read_drake_plan(cache = cache)
   cache$list(namespace = cache$default_namespace) %>%
     Filter(
       f = function(target){
@@ -167,7 +167,7 @@ imported <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  plan <- read_plan(cache = cache)
+  plan <- read_drake_plan(cache = cache)
   targets <- cache$list(namespace = cache$default_namespace) %>%
     Filter(f = function(target){
       is_imported(target = target, plan = plan)

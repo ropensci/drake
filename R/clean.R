@@ -153,7 +153,7 @@ uncache <- function(targets, cache, jobs){
     return()
   }
   files <- Filter(x = targets, f = is_file)
-  plan <- read_plan(cache = cache)
+  plan <- read_drake_plan(cache = cache)
   lightly_parallelize(
     X = targets,
     FUN = remove_file_target,

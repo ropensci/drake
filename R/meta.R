@@ -1,17 +1,20 @@
-meta_list <- function(targets, config) {
+meta_list <- function(targets, config, store = FALSE) {
   console_many_targets(targets = targets,
     pattern = "check", color = "check",
     config = config)
   out <- lightly_parallelize(
-    X = targets, FUN = meta,
-    jobs = config$jobs, config = config
+    X = targets,
+    FUN = meta,
+    jobs = config$jobs,
+    config = config,
+    store = store
   )
   names(out) <- lapply(out, "[[", "target") %>%
     unlist
   out
 }
 
-meta <- function(target, config) {
+meta <- function(target, config, store = FALSE) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),
@@ -28,6 +31,13 @@ meta <- function(target, config) {
   }
   if (trigger %in% triggers_with_file()){
     meta$file <- file_hash(target = target, config = config)
+  }
+  if (store){
+    config$cache$set(
+      key = target,
+      value = meta,
+      namespace = "meta"
+    )
   }
   meta
 }

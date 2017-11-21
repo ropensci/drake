@@ -6,8 +6,8 @@
 #' is to set up PSOCK clusters efficiently.
 #' @return The value of the target right after it is built.
 #' @param target name of the target
-#' @param meta_list list of metadata that tell which
-#' targets are up to date
+#' @param meta list of metadata that tell which
+#' targets are up to date (from \code{drake:::meta()}).
 #' @param config internal configuration list
 #' @examples
 #' \dontrun{
@@ -19,31 +19,37 @@
 #' config <- drake_config(my_plan)
 #' # Compute metadata on 'small', including a hash/fingerprint
 #' # of the dependencies.
-#' meta_list <- list(
-#'   small = drake:::meta(target = "small", config = config)
-#' )
+#' meta <- drake:::meta(target = "small", config = config)
 #' # Should not yet include 'small'.
 #' cached()
 #' # Build 'small'
-#' drake_build(target = "small", meta_list = meta_list, config = config)
+#' drake_build(target = "small", meta = meta, config = config)
 #' # Should now include 'small'
 #' cached()
 #' readd(small)
 #' }
-drake_build <- function(target, meta_list, config){
+drake_build <- function(target, meta, config){
   config$hook(
     build_in_hook(
       target = target,
-      meta_list = meta_list,
+      meta = meta,
       config = config
     )
   )
 }
 
-build_in_hook <- function(target, meta_list, config) {
+drake_build_worker <- function(target, meta_list, config){
+  drake_build(
+    target = target,
+    meta = meta_list[[target]],
+    config = config
+  )
+}
+
+build_in_hook <- function(target, meta, config) {
   start <- proc.time()
   meta <- finish_meta(
-    target = target, meta = meta_list[[target]], config = config)
+    target = target, meta = meta, config = config)
   config$cache$set(key = target, value = "in progress",
     namespace = "progress")
   console(imported = meta$imported, target = target, config = config)

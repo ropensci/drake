@@ -691,6 +691,42 @@ read_graph <- function(
   )
 }
 
+#' @title Deprecated function \code{read_plan}
+#' @description Use \code{\link{read_drake_plan}()} instead.
+#' @details Deprecated on 2017-11-21.
+#' @seealso \code{\link{read_drake_plan}}.
+#' @export
+#' @keywords internal
+#' @return An workflow plan data frame.
+#' @param cache Same as for \code{\link{read_drake_plan}()}.
+#' @param path Same as for \code{\link{read_drake_plan}()}.
+#' @param search Same as for \code{\link{read_drake_plan}()}.
+#' @param verbose Same as for \code{\link{read_drake_plan}()}.
+#' @param ... Same as for \code{\link{read_drake_plan}()}.
+#' @examples
+#' # See ?read_drake_plan for the examples.
+read_plan <- function(
+  path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = TRUE, ...
+){
+  .Deprecated(
+    "read_plan",
+    package = "drake",
+    msg = paste(
+      "drake::read_plan() is deprecated",
+      "due to possible name conflicts.",
+      "Use read_drake_plan() instead."
+    )
+  )
+  read_drake_plan(
+    path = path,
+    search = search,
+    cache = cache,
+    verbose = verbose
+  )
+}
+
 #' @title Deprecated function \code{render_graph}
 #' @description Use \code{\link{render_drake_graph}()} instead.
 #' @details Deprecated on 2017-10.

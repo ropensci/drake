@@ -27,7 +27,12 @@ test_with_dir("try to find a non-existent project", {
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
   expect_error(tmp <- read_drake_config(search = FALSE))
+  expect_error(tmp <- read_drake_plan(search = FALSE))
+  expect_error(tmp <- read_drake_graph(search = FALSE))
+  expect_error(tmp <- read_drake_meta(search = FALSE))
   expect_error(tmp <- drake_session(search = FALSE))
+  dummy <- new_cache()
+  expect_silent(read_drake_graph(cache = dummy))
 })
 
 test_with_dir("try to rescue non-existent stuff", {
@@ -111,8 +116,13 @@ test_with_dir("cache functions work", {
   expect_equal(newconfig$short_hash_algo, default_short_hash_algo())
   expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
-  expect_equal(read_plan(search = FALSE), config$plan)
-  expect_equal(class(read_drake_graph(search = FALSE)), "igraph")
+  expect_equal(read_drake_plan(search = FALSE), config$plan)
+  expect_true(inherits(read_drake_graph(search = FALSE), "igraph"))
+  expect_true(is.list(
+    tmp <- read_drake_meta(targets = "final", search = FALSE)))
+  expect_equal(names(tmp), "final")
+  expect_true(is.list(tmp <- read_drake_meta(search = FALSE)))
+  expect_true(length(tmp) > 1)
 
   # imported , built, cached, diagnose, rescue
   expect_equal(diagnose(search = FALSE), character(0))
@@ -212,7 +222,7 @@ test_with_dir("cache functions work", {
   # config
   newconfig <- read_drake_config(search = TRUE, path = s)
   expect_true(is.list(newconfig) & length(newconfig) > 1)
-  expect_equal(read_plan(search = TRUE, path = s), config$plan)
+  expect_equal(read_drake_plan(search = TRUE, path = s), config$plan)
   expect_equal(class(read_drake_graph(search = TRUE, path = s)),
     "igraph")
 

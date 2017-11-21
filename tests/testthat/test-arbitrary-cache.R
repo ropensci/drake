@@ -135,8 +135,8 @@ test_with_dir("arbitrary storr in-memory cache", {
     read_drake_graph(cache = cache, verbose = FALSE)), "igraph")
   expect_false(file.exists(default_cache_path()))
 
-  expect_error(read_plan(verbose = FALSE))
-  expect_true(is.data.frame(read_plan(cache = cache, verbose = FALSE)))
+  expect_error(read_drake_plan(verbose = FALSE))
+  expect_true(is.data.frame(read_drake_plan(cache = cache, verbose = FALSE)))
   expect_false(file.exists(default_cache_path()))
 
   expect_error(readd(small, verbose = FALSE))

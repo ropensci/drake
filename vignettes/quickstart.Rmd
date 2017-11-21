@@ -320,7 +320,7 @@ built()
 
 imported()
 
-head(read_plan())
+head(read_drake_plan())
 
 head(progress()) # See also in_progress()
 
