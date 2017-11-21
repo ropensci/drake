@@ -5,8 +5,8 @@
 \title{Function \code{cached}}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
-  search = search, verbose = verbose), verbose = TRUE)
+  path = getwd(), search = TRUE, cache = NULL, verbose = TRUE,
+  namespace = NULL)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -39,6 +39,9 @@ Ignored if a \code{cache} is supplied.}
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{whether to print console messages}
+
+\item{namespace}{character scalar, name of the storr namespace
+to use for listing objects}
 }
 \value{
 Either a named logical indicating whether the given
@@ -63,7 +66,17 @@ cached(list = 'reg1') # Is 'reg1' in the cache?
 cached(no_imported_objects = TRUE)
 # List all targets and imports in the cache.
 cached()
-# For file targets/imports, only the fingerprints/hashes are stored.
+# Clean the main data.
+clean()
+# The targets and imports are gone.
+cached()
+# But there is still metadata.
+build_times()
+cached(namespace = "build_times")
+# Clear that too.
+clean(purge = TRUE)
+cached(namespace = "build_times")
+build_times()
 }
 }
 \seealso{

@@ -44,6 +44,9 @@
 #'
 #' @param verbose whether to print console messages
 #'
+#' @param namespace character scalar, name of the storr namespace
+#' to use for listing objects
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -54,38 +57,57 @@
 #' cached(no_imported_objects = TRUE)
 #' # List all targets and imports in the cache.
 #' cached()
-#' # For file targets/imports, only the fingerprints/hashes are stored.
+#' # Clean the main data.
+#' clean()
+#' # The targets and imports are gone.
+#' cached()
+#' # But there is still metadata.
+#' build_times()
+#' cached(namespace = "build_times")
+#' # Clear that too.
+#' clean(purge = TRUE)
+#' cached(namespace = "build_times")
+#' build_times()
 #' }
 cached <- function(
   ...,
-  list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  list = character(0),
+  no_imported_objects = FALSE,
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = TRUE,
+  namespace = NULL
 ){
   if (is.null(cache)){
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)){
     return(character(0))
+  }
+  if (is.null(namespace)){
+    namespace <- cache$default_namespace
   }
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (!length(targets))
     list_cache(no_imported_objects = no_imported_objects,
-      cache = cache)
+      cache = cache, namespace = namespace)
   else
     is_cached(targets = targets, no_imported_objects = no_imported_objects,
-      cache = cache)
+      cache = cache, namespace = namespace)
 }
 
-is_cached <- function(targets, no_imported_objects, cache) {
+is_cached <- function(targets, no_imported_objects, cache, namespace) {
   if (no_imported_objects)
     targets <- no_imported_objects(targets = targets, cache = cache)
-  inclusion <- targets %in% cache$list(namespace = cache$default_namespace)
+  inclusion <- targets %in% cache$list(namespace = namespace)
   names(inclusion) <- targets
   inclusion
 }
 
-list_cache <- function(no_imported_objects, cache) {
-  targets <- cache$list(namespace = cache$default_namespace)
+list_cache <- function(no_imported_objects, cache, namespace) {
+  targets <- cache$list(namespace = namespace)
   if (no_imported_objects){
     plan <- read_drake_plan(cache = cache)
     targets <- no_imported_objects(targets = targets, plan = plan)

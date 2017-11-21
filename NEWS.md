@@ -38,6 +38,7 @@
 - Add a `skip_safety_checks` flag to `make()` and `drake_config()`. Increases speed.
 - In `sanitize_plan()`, remove rows with blank targets "".
 - Add a `purge` argument to `clean()` to optionally remove all target-level information.
+- Add a `namespace` argument to `cached()` so users can inspect individual `storr` namespaces.
 
 # Changes in release 4.4.0
 
