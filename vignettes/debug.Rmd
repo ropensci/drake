@@ -241,10 +241,16 @@ When targets fail, it may be difficult to diagnose the problem, especially if yo
 ```{r diagnosedebug}
 diagnose(verbose = FALSE)
 
-f <- function(){
-  stop("unusual error")
+f <- function(x){
+  if (x < 0){
+    stop("unusual error")
+  }
 }
-bad_plan <- workplan(my_target = f())
+bad_plan <- workplan(
+  a = 12,
+  b = -a,
+  my_target = f(b)
+)
 
 bad_plan
 
@@ -262,6 +268,21 @@ error <- diagnose(my_target, verbose = FALSE)
 str(error)
 
 error$calls # View the traceback.
+```
+
+To figure out what went wrong, you should try to build the failed target interactively. To do that, you must load the target's dependencies in your workspace, which you can easily do with `loadd(my_target, deps = TRUE)`.
+
+```{r loaddeps}
+# Pretend we just opened a new R session.
+library(drake)
+try(rm(b), silent = TRUE)
+
+# my_target depends on b.
+"b" %in% ls()
+
+loadd(my_target, deps = TRUE)
+
+"b" %in% ls()
 ```
 
 # Debrief a build session.
