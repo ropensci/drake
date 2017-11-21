@@ -3,7 +3,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   run = TRUE,
   debug = FALSE
 ){
-  build_these <- prepare_distributed(config = config)
+  config <- prepare_distributed(config = config)
   with_output_sink(
     new = "Makefile",
     code = {
@@ -11,7 +11,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
       makefile_rules(config)
     }
   )
-  time_stamps(build_these = build_these, config = config)
+  time_stamps(config = config)
   error_code <- ifelse(
     run,
     system2(command = config$command, args = config$args),
@@ -155,4 +155,15 @@ default_Makefile_args <- function(jobs, verbose){
 #' default_Makefile_command()
 default_Makefile_command <- function(){
   "make"
+}
+
+cache_macro <- "DRAKE_CACHE"
+cache_value_macro <- paste0("$(", cache_macro, ")")
+
+globalenv_file <- function(cache_path){
+  file.path(cache_path, "globalenv.RData")
+}
+
+to_unix_path <- function(x){
+  gsub("\\\\", "/", x)
 }

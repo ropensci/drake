@@ -8,9 +8,12 @@ prepare_distributed <- function(config){
     )
   }
   config$cache$set(key = "envir", value = config$envir, namespace = "config")
-  build_these <- outdated(config = config, make_imports = !config$skip_imports)
-  increment_attempt_flag(targets = build_these, config = config)
-  invisible(build_these)
+  config$outdated_targets <- outdated(
+    config = config,
+    make_imports = !config$skip_imports
+  )
+  increment_attempt_flag(targets = config$outdated_targets, config = config)
+  invisible(config)
 }
 
 finish_distributed <- function(config){
