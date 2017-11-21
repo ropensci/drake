@@ -225,6 +225,13 @@ test_with_dir("cache functions work", {
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
 
+  # load dependencies
+  e <- new.env()
+  deps <- c("nextone", "yourinput")
+  expect_false(any(deps %in% ls(envir = e)))
+  loadd(combined, deps = TRUE, path = s, search = TRUE, envir = e)
+  expect_true(all(deps %in% ls(envir = e)))
+
   # Read the graph
   pdf(NULL)
   tmp <- dbug()

@@ -94,7 +94,18 @@ readd <- function(
 #' just set jobs to be an integer greater than 1. On Windows,
 #' \code{jobs} is automatically demoted to 1.
 #'
-#' @param verbose whether to print console messages
+#' @param verbose logical, whether to print console messages
+#'
+#' @param deps logical, whether to load the dependencies of the targets
+#' instead of the targets themselves. This is useful if you know your
+#' target failed and you want to debug the command in an interactive
+#' session with the dependencies in your workspace.
+#' One caveat: to find the dependencies,
+#' \code{\link{loadd}()} uses information that was stored
+#' in a \code{\link{drake_config}()} list and cached
+#' during the last \code{\link{make}()}.
+#' That means you need to have already called \code{\link{make}()}
+#' if you set \code{deps} to \code{TRUE}.
 #'
 #' @examples
 #' \dontrun{
@@ -105,9 +116,12 @@ readd <- function(
 #' # For many targets, you can parallelize loadd()
 #' # using the 'jobs' argument.
 #' loadd(list = c("small", "large"), jobs = 2)
-#' loadd(imported_only = TRUE) # Load all the imported objects/functions.
-#' # Load everything, including built targets. Be sure your computer
-#' # has enough memory.
+#' # Load the dependencies of the target, coef_regression2_small
+#' loadd(coef_regression2_small, deps = TRUE)
+#' # Load all the imported objects/functions.
+#' loadd(imported_only = TRUE)
+#' # Load everything, including built targets.
+#' # Be sure your computer has enough memory.
 #' loadd()
 #' }
 loadd <- function(
@@ -119,7 +133,8 @@ loadd <- function(
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   envir = parent.frame(),
   jobs = 1,
-  verbose = TRUE
+  verbose = TRUE,
+  deps = FALSE
 ){
   if (is.null(cache)){
     stop("cannot find drake cache.")
@@ -136,6 +151,10 @@ loadd <- function(
   }
   if (!length(targets)){
     stop("no targets to load.")
+  }
+  if (deps){
+    config <- read_drake_config(cache = cache)
+    targets <- dependencies(targets = targets, config = config)
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
