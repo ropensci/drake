@@ -2,9 +2,12 @@ drake_context("cache")
 
 test_with_dir("Cache namespaces", {
   x <- cache_namespaces()
-  y <- cleaned_namespaces()
+  y <- target_namespaces()
+  z <- cleaned_namespaces()
   expect_true(all(y %in% x))
+  expect_true(all(z %in% y))
   expect_false(all(x %in% y))
+  expect_false(all(y %in% z))
 })
 
 test_with_dir("clean() works if there is no cache already", {
@@ -269,6 +272,16 @@ test_with_dir("cache functions work", {
   expect_true(all(setdiff(all, "final") %in% cached(path = s,
     search = T)))
   drake_gc(path = s, search = T)
+
+  # Test purging
+  meta_list <- read_drake_meta(search = TRUE, path = s)
+  expect_true("final" %in% names(meta_list))
+  clean(final, path = s, search = TRUE, jobs = 2,
+    garbage_collection = TRUE, purge = TRUE)
+  meta_list <- read_drake_meta(search = TRUE, path = s)
+  expect_false("final" %in% names(meta_list))
+
+  # More cleaning checks
   clean(path = s, search = TRUE, garbage_collection = FALSE)
   expect_equal(cached(path = s, search = T), character(0))
   where <- file.path(scratch, cache_dir)

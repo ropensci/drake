@@ -6,7 +6,7 @@
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
   search = TRUE, cache = NULL, verbose = TRUE, jobs = 1,
-  force = FALSE, garbage_collection = FALSE)
+  force = FALSE, garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)
@@ -54,6 +54,9 @@ will be removed.
 This will slow down \code{clean()}, but the cache
 could take up far less space afterwards.
 See the \code{gc()} method for \code{storr} caches.}
+
+\item{purge}{logical, whether to remove objects from
+metadata namespaces such as "meta", "build_times", and "errors".}
 }
 \value{
 Invisibly return \code{NULL}.
@@ -102,6 +105,13 @@ make(my_plan)
 clean(garbage_collection = TRUE)
 # All the targets and imports are gone.
 cached()
+# But there is still cached metadata.
+names(read_drake_meta())
+build_times()
+# To make even more room, use the "purge" flag.
+clean(purge = TRUE)
+names(read_drake_meta())
+build_times()
 # Completely remove the entire cache (default: '.drake/' folder).
 clean(destroy = TRUE)
 }

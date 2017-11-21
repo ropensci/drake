@@ -151,6 +151,12 @@ config$cache$get_hash(key = "reg2") # different
 
 In `drake`, the "kernel" of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see `drake:::store_function()`).
 
+The internal functions `drake:::meta()` and `drake:::meta_list()` compute the metadata on each target that `drake` uses to decide which targets to build and which to skip (via `drake:::should_build_target()`). To help with debugging and testing, `drake` stores the metadata computed right before each target's possible build. You can view it with `read_drake_meta()`.
+
+```{r readdrakemeta}
+str(head(read_drake_meta()))
+```
+
 # Test with triggers.
 
 To track dependencies and make decisions about what needs building, `make()` store the fingerprint, or hash, of each target. Hashing is great for detecting the right changes in targets, but if all you want to do is test and debug a workflow, the full rigor can be time-consuming.

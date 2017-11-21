@@ -37,6 +37,7 @@
 - Add new functions `drake_quotes()`, `drake_unquote()`, and `drake_strings()` to remove the silly dependence on the `eply` package.
 - Add a `skip_safety_checks` flag to `make()` and `drake_config()`. Increases speed.
 - In `sanitize_plan()`, remove rows with blank targets "".
+- Add a `purge` argument to `clean()` to optionally remove all target-level information.
 
 # Changes in release 4.4.0
 

@@ -66,6 +66,9 @@
 #' could take up far less space afterwards.
 #' See the \code{gc()} method for \code{storr} caches.
 #'
+#' @param purge logical, whether to remove objects from
+#' metadata namespaces such as "meta", "build_times", and "errors".
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -90,6 +93,13 @@
 #' clean(garbage_collection = TRUE)
 #' # All the targets and imports are gone.
 #' cached()
+#' # But there is still cached metadata.
+#' names(read_drake_meta())
+#' build_times()
+#' # To make even more room, use the "purge" flag.
+#' clean(purge = TRUE)
+#' names(read_drake_meta())
+#' build_times()
 #' # Completely remove the entire cache (default: '.drake/' folder).
 #' clean(destroy = TRUE)
 #' }
@@ -103,7 +113,8 @@ clean <- function(
   verbose = TRUE,
   jobs = 1,
   force = FALSE,
-  garbage_collection = FALSE
+  garbage_collection = FALSE,
+  purge = FALSE
 ){
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
@@ -114,14 +125,9 @@ clean <- function(
   if (is.null(cache)){
     return(invisible())
   }
-  if (!length(targets)) {
-    clean_everything(
-      destroy = destroy,
-      cache = cache,
-      jobs = jobs
-    )
-  } else {
-    uncache(targets = targets, cache = cache, jobs = jobs)
+  uncache(targets = targets, cache = cache, jobs = jobs, purge = purge)
+  if (destroy){
+    cache$destroy()
   }
   if (garbage_collection){
     cache$gc()
@@ -129,48 +135,43 @@ clean <- function(
   invisible()
 }
 
-clean_everything <- function(
-  destroy,
-  cache,
-  jobs
-){
-  empty(cache = cache, jobs = jobs)
-  if (destroy) {
-    cache$destroy()
-  }
-}
-
-empty <- function(cache, jobs){
-  uncache(
-    targets = cache$list(namespace = cache$default_namespace),
-    cache = cache,
-    jobs = jobs
-  )
-}
-
-uncache <- function(targets, cache, jobs){
+uncache <- function(targets, cache, jobs, purge){
   if (is.null(cache)){
     return()
   }
   files <- Filter(x = targets, f = is_file)
   plan <- read_drake_plan(cache = cache)
   lightly_parallelize(
-    X = targets,
+    X = files,
     FUN = remove_file_target,
     jobs = jobs,
     plan = plan
   )
-  namespaces <- cleaned_namespaces(default = cache$default_namespace)
+  if (purge){
+    namespaces <- target_namespaces(default = cache$default_namespace)
+  } else {
+    namespaces <- cleaned_namespaces(default = cache$default_namespace)
+  }
   for (namespace in namespaces){
+    cached <- cache$list(namespace = namespace)
+    if (!length(targets)){
+      remove_these <- cached
+    } else {
+      remove_these <- intersect(targets, cached)
+    }
     lightly_parallelize(
-      X = targets,
+      X = remove_these,
       FUN = uncache_single,
       jobs = jobs,
       cache = cache,
-      namespace = namespace,
-      list = cache$list(namespace = namespace)
+      namespace = namespace
     )
   }
+  invisible()
+}
+
+uncache_single <- function(target, cache, namespace){
+  cache$del(target, namespace = namespace)
   invisible()
 }
 
@@ -184,12 +185,6 @@ remove_file_target <- function(target, plan){
   ){
     drake_unquote(target) %>%
       unlink(recursive = TRUE, force = TRUE)
-  }
-}
-
-uncache_single <- function(target, cache, namespace, list){
-  if (target %in% list){
-    cache$del(target, namespace = namespace)
   }
 }
 
