@@ -6,7 +6,7 @@
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose), envir = parent.frame(), jobs = 1, verbose = 2,
+  verbose = verbose), envir = parent.frame(), jobs = 1, verbose = 1,
   deps = FALSE)
 }
 \arguments{

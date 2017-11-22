@@ -4,7 +4,7 @@
 \alias{rescue_cache}
 \title{Function rescue_cache}
 \usage{
-rescue_cache(targets = NULL, path = getwd(), search = TRUE, verbose = 2,
+rescue_cache(targets = NULL, path = getwd(), search = TRUE, verbose = 1,
   force = FALSE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose, force = force), jobs = 1, garbage_collection = FALSE)
 }

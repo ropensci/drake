@@ -4,7 +4,7 @@
 \alias{drake_gc}
 \title{Function drake_gc()}
 \usage{
-drake_gc(path = getwd(), search = TRUE, verbose = 2, cache = NULL,
+drake_gc(path = getwd(), search = TRUE, verbose = 1, cache = NULL,
   force = FALSE)
 }
 \arguments{

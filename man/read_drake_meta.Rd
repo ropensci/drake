@@ -5,7 +5,7 @@
 \title{Function \code{read_drake_meta}}
 \usage{
 read_drake_meta(targets = NULL, path = getwd(), search = TRUE,
-  cache = NULL, verbose = 2, jobs = 1)
+  cache = NULL, verbose = 1, jobs = 1)
 }
 \arguments{
 \item{targets}{character vector, names of the targets

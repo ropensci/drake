@@ -5,7 +5,7 @@
 \title{Function \code{read_drake_config}}
 \usage{
 read_drake_config(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 2, jobs = 1)
+  verbose = 1, jobs = 1)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

@@ -5,7 +5,7 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = 2, jobs = 1, force = FALSE,
+  search = TRUE, cache = NULL, verbose = 1, jobs = 1, force = FALSE,
   garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{

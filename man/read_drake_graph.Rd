@@ -5,7 +5,7 @@
 \title{Function \code{read_drake_graph}}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 2, ...)
+  verbose = 1, ...)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

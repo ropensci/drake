@@ -20,8 +20,8 @@ check_plan(plan = workplan(), targets = drake::possible_targets(plan),
 
 \item{verbose}{logical or numeric, control printing to the console.
 Set to 0 (or \code{FALSE}) to print nothing,
-1 (or \code{TRUE}) to print everything,
-or 2 to print everything except progress on individual imports.}
+1 (or \code{TRUE}) to print everything except progress on individual imports,
+or 2 to print everything,}
 }
 \value{
 Invisibly return \code{plan}.

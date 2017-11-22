@@ -5,7 +5,7 @@
 \title{Function outdated}
 \usage{
 outdated(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 2, hook = default_hook,
+  envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0), graph = NULL,
