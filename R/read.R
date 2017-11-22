@@ -180,6 +180,9 @@ load_target <- function(target, cache, envir, verbose){
     verbose = verbose
   )
   assign(x = target, value = value, envir = envir)
+  local <- environment()
+  rm(value, envir = local)
+  invisible()
 }
 
 #' @title Function \code{read_drake_config}
