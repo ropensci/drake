@@ -35,7 +35,7 @@ test_with_dir("console", {
   config$verbose <- TRUE
   expect_silent(console(imported = TRUE, target = "myinput",
     config = config))
-  config$verbose = 2
+  config$verbose <- 2
   expect_message(console(imported = FALSE, target = "myinput",
     config = config))
   expect_message(console(imported = TRUE, target = "myinput",
