@@ -10,7 +10,10 @@
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See \code{\link{new_cache}()}
-#' @param verbose logical, whether to log progress to the console.
+#' @param verbose logical or numeric, control printing to the console.
+#' Set to 0 (or \code{FALSE}) to print nothing,
+#' 1 (or \code{TRUE}) to print everything,
+#' or 2 to print everything except progress on individual imports.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.

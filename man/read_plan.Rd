@@ -5,7 +5,7 @@
 \title{Deprecated function \code{read_plan}}
 \usage{
 read_plan(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = TRUE, ...)
+  path, search = search, verbose = verbose), verbose = 2, ...)
 }
 \arguments{
 \item{path}{Same as for \code{\link{read_drake_plan}()}.}

@@ -4,7 +4,7 @@
 \alias{new_cache}
 \title{Function new_cache}
 \usage{
-new_cache(path = drake::default_cache_path(), verbose = TRUE,
+new_cache(path = drake::default_cache_path(), verbose = 2,
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(), ...)

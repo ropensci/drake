@@ -96,7 +96,7 @@ build_graph <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = TRUE,
+  verbose = 2,
   jobs = 1
 ){
   .Deprecated(
@@ -192,7 +192,7 @@ config <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = TRUE,
+  verbose = 2,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(),
@@ -549,7 +549,7 @@ plan <- function(
 #' # See ?vis_drake_graph for examples.
 plot_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE,
+  envir = parent.frame(), verbose = 2,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   jobs = 1,
@@ -672,7 +672,7 @@ read_config <- function(
 read_graph <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE, ...
+  verbose = 2, ...
 ){
   .Deprecated(
     "read_graph",
@@ -708,7 +708,7 @@ read_graph <- function(
 read_plan <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE, ...
+  verbose = 2, ...
 ){
   .Deprecated(
     "read_plan",

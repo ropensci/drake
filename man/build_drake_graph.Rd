@@ -6,7 +6,7 @@
 \usage{
 build_drake_graph(plan = workplan(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, jobs = 1)
+  verbose = 2, jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function

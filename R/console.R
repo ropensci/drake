@@ -17,6 +17,9 @@ console_missing <- function(target, config){
 }
 
 console_import <- function(target, config){
+  if (round(config$verbose) == 2){
+    return()
+  }
   pattern <- "import"
   text <- paste(pattern, target)
   finish_console(text = text, pattern = pattern, verbose = config$verbose)

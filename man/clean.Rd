@@ -5,8 +5,8 @@
 \title{Function \code{clean}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = TRUE, jobs = 1,
-  force = FALSE, garbage_collection = FALSE, purge = FALSE)
+  search = TRUE, cache = NULL, verbose = 2, jobs = 1, force = FALSE,
+  garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache, as names (unquoted)

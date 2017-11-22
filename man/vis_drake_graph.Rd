@@ -6,7 +6,7 @@
 \title{Function \code{vis_drake_graph}}
 \usage{
 vis_drake_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = default_hook,
+  envir = parent.frame(), verbose = 2, hook = default_hook,
   cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), config = NULL, file = character(0),

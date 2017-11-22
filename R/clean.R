@@ -110,7 +110,7 @@ clean <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE,
+  verbose = 2,
   jobs = 1,
   force = FALSE,
   garbage_collection = FALSE,
@@ -221,7 +221,7 @@ remove_file_target <- function(target, plan){
 drake_gc <- function(
   path = getwd(),
   search = TRUE,
-  verbose = TRUE,
+  verbose = 2,
   cache = NULL,
   force = FALSE
 ){
@@ -276,7 +276,7 @@ drake_gc <- function(
 #' }
 rescue_cache <- function(
   targets = NULL,
-  path = getwd(), search = TRUE, verbose = TRUE, force = FALSE,
+  path = getwd(), search = TRUE, verbose = 2, force = FALSE,
   cache = drake::get_cache(
     path = path, search = search, verbose = verbose, force = force),
   jobs = 1,

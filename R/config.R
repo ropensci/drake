@@ -66,7 +66,7 @@ drake_config <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = TRUE,
+  verbose = 2,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(),

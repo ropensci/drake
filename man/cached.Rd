@@ -5,7 +5,7 @@
 \title{Function \code{cached}}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE, cache = NULL, verbose = TRUE,
+  path = getwd(), search = TRUE, cache = NULL, verbose = 2,
   namespace = NULL)
 }
 \arguments{

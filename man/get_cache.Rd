@@ -4,7 +4,7 @@
 \alias{get_cache}
 \title{Function get_cache}
 \usage{
-get_cache(path = getwd(), search = TRUE, verbose = TRUE, force = FALSE)
+get_cache(path = getwd(), search = TRUE, verbose = 2, force = FALSE)
 }
 \arguments{
 \item{path}{file path to the folder containing the cache.

@@ -5,7 +5,7 @@
 \title{Function \code{make}}
 \usage{
 make(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, hook = default_hook,
+  envir = parent.frame(), verbose = 2, hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0),
@@ -40,8 +40,10 @@ Wherever necessary, objects and functions are imported
 from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
 
-\item{verbose}{logical, whether to print progress to the console.
-Skipped objects are not printed.}
+\item{verbose}{logical or numeric, control printing to the console.
+Set to 0 (or \code{FALSE}) to print nothing,
+1 (or \code{TRUE}) to print everything,
+or 2 to print everything except progress on individual imports.}
 
 \item{hook}{function with at least one argument.
 The hook is as a wrapper around the code that drake uses

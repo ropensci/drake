@@ -36,7 +36,7 @@ build_drake_graph <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = TRUE,
+  verbose = 2,
   jobs = 1
 ){
   force(envir)

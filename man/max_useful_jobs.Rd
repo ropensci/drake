@@ -6,7 +6,7 @@
 \usage{
 max_useful_jobs(plan = workplan(), from_scratch = FALSE,
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = TRUE, hook = default_hook, cache = drake::get_cache(verbose =
+  verbose = 2, hook = default_hook, cache = drake::get_cache(verbose =
   verbose), jobs = 1, parallelism = drake::default_parallelism(),
   packages = rev(.packages()), prework = character(0), config = NULL,
   imports = c("files", "all", "none"), make_imports = TRUE)
@@ -26,7 +26,10 @@ useful jobs as if the workplan were to run from scratch
 \code{\link{make}()}. \code{config$envir} is ignored in favor of
 \code{envir}.}
 
-\item{verbose}{logical, whether to output messages to the console.}
+\item{verbose}{logical or numeric, control printing to the console.
+Set to 0 (or \code{FALSE}) to print nothing,
+1 (or \code{TRUE}) to print everything,
+or 2 to print everything except progress on individual imports.}
 
 \item{hook}{same as for \code{\link{make}}}
 

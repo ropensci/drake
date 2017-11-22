@@ -165,7 +165,7 @@
 #' }
 vis_drake_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE,
+  envir = parent.frame(), verbose = 2,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   jobs = 1, parallelism = drake::default_parallelism(),

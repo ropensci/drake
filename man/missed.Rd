@@ -5,7 +5,7 @@
 \title{Function \code{missed}}
 \usage{
 missed(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = TRUE, jobs = 1,
+  envir = parent.frame(), verbose = 2, jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),
   prework = character(0), graph = NULL, config = NULL)
 }

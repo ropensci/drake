@@ -133,7 +133,7 @@ loadd <- function(
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   envir = parent.frame(),
   jobs = 1,
-  verbose = TRUE,
+  verbose = 2,
   deps = FALSE
 ){
   if (is.null(cache)){
@@ -155,6 +155,13 @@ loadd <- function(
   if (deps){
     config <- read_drake_config(cache = cache)
     targets <- dependencies(targets = targets, config = config)
+    exists <- lightly_parallelize(
+      X = targets,
+      FUN = cache$exists,
+      jobs = jobs
+    ) %>%
+      unlist
+    targets <- targets[exists]
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
@@ -171,6 +178,9 @@ load_target <- function(target, cache, envir, verbose){
     verbose = verbose
   )
   assign(x = target, value = value, envir = envir)
+  local <- environment()
+  rm(value, envir = local)
+  invisible()
 }
 
 #' @title Function \code{read_drake_config}
@@ -204,7 +214,7 @@ read_drake_config <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE,
+  verbose = 2,
   jobs = 1
 ){
   if (is.null(cache)) {
@@ -299,7 +309,7 @@ read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE,
+  verbose = 2,
   ...
 ){
   if (is.null(cache)){
@@ -354,7 +364,7 @@ read_drake_meta <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE,
+  verbose = 2,
   jobs = 1
 ){
   if (is.null(cache)) {
