@@ -156,8 +156,14 @@ loadd <- function(
   }
   if (deps){
     config <- read_drake_config(cache = cache)
-    targets <- dependencies(targets = targets, config = config) %>%
-      Filter(f = cache$exists)
+    targets <- dependencies(targets = targets, config = config)
+    exists <- lightly_parallelize(
+      X = targets,
+      FUN = cache$exists,
+      jobs = jobs
+    ) %>%
+      unlist
+    targets <- targets[exists]
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
