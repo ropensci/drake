@@ -39,6 +39,7 @@
 - In `sanitize_plan()`, remove rows with blank targets "".
 - Add a `purge` argument to `clean()` to optionally remove all target-level information.
 - Add a `namespace` argument to `cached()` so users can inspect individual `storr` namespaces.
+- Change `verbose` to numeric: 0 = print nothing, 1 = print progress on imports only, 2 = print everything.
 
 # Changes in release 4.4.0
 

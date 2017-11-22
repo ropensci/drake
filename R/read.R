@@ -133,7 +133,7 @@ loadd <- function(
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   envir = parent.frame(),
   jobs = 1,
-  verbose = 2,
+  verbose = 1,
   deps = FALSE
 ){
   if (is.null(cache)){
@@ -214,7 +214,7 @@ read_drake_config <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 2,
+  verbose = 1,
   jobs = 1
 ){
   if (is.null(cache)) {
@@ -309,7 +309,7 @@ read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 2,
+  verbose = 1,
   ...
 ){
   if (is.null(cache)){
@@ -364,7 +364,7 @@ read_drake_meta <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 2,
+  verbose = 1,
   jobs = 1
 ){
   if (is.null(cache)) {

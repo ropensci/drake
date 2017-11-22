@@ -76,7 +76,7 @@ cached <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 2,
+  verbose = 1,
   namespace = NULL
 ){
   if (is.null(cache)){

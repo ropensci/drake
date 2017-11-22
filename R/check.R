@@ -12,8 +12,8 @@
 #' @param cache optional drake cache. See \code{\link{new_cache}()}
 #' @param verbose logical or numeric, control printing to the console.
 #' Set to 0 (or \code{FALSE}) to print nothing,
-#' 1 (or \code{TRUE}) to print everything,
-#' or 2 to print everything except progress on individual imports.
+#' 1 (or \code{TRUE}) to print everything except progress on individual imports,
+#' or 2 to print everything,
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.

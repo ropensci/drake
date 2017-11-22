@@ -58,7 +58,7 @@ cache_path <- function(cache = NULL){
 get_cache <- function(
   path = getwd(),
   search = TRUE,
-  verbose = 2,
+  verbose = 1,
   force = FALSE
 ){
   if (search){
@@ -146,7 +146,7 @@ this_cache <- function(
 #' ls(e) # Storr populates the environment for use in an in-memory cache.
 new_cache <- function(
   path = drake::default_cache_path(),
-  verbose = 2,
+  verbose = 1,
   type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(),

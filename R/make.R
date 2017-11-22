@@ -37,8 +37,8 @@
 #'
 #' @param verbose logical or numeric, control printing to the console.
 #' Set to 0 (or \code{FALSE}) to print nothing,
-#' 1 (or \code{TRUE}) to print everything,
-#' or 2 to print everything except progress on individual imports.
+#' 1 (or \code{TRUE}) to print everything except progress on individual imports,
+#' or 2 to print everything,
 #'
 #' @param hook function with at least one argument.
 #' The hook is as a wrapper around the code that drake uses
@@ -240,7 +240,7 @@ make <- function(
   plan = workplan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = 2,
+  verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(),

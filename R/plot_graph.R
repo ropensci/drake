@@ -44,7 +44,10 @@
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
 #'
-#' @param verbose logical, whether to output messages to the console.
+#' @param verbose logical or numeric, control printing to the console.
+#' Set to 0 (or \code{FALSE}) to print nothing,
+#' 1 (or \code{TRUE}) to print everything except progress on individual imports,
+#' or 2 to print everything,
 #'
 #' @param hook same as for \code{\link{make}}
 #'
@@ -165,7 +168,7 @@
 #' }
 vis_drake_graph <- function(
   plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 2,
+  envir = parent.frame(), verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
   jobs = 1, parallelism = drake::default_parallelism(),

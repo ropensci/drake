@@ -17,7 +17,7 @@ console_missing <- function(target, config){
 }
 
 console_import <- function(target, config){
-  if (round(config$verbose) == 2){
+  if (round(config$verbose) < 2){
     return()
   }
   pattern <- "import"
