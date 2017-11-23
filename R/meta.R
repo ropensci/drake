@@ -18,7 +18,7 @@ meta <- function(target, config, store = FALSE) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),
-    missing = target_exists(target = target, config = config)
+    missing = !target_exists(target = target, config = config)
   )
   trigger <- get_trigger(target = target, config = config)
   # Need to make sure meta includes all these

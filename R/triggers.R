@@ -167,14 +167,14 @@ should_build <- function(target, meta_list, config){
 }
 
 should_build_target <- function(target, meta, config){
-  if (!target_exists(target = target, config = config)){
+  if (meta$missing){
     return(TRUE)
   }
-  do_build <- FALSE
   trigger <- get_trigger(target = target, config = config)
   if (trigger == "always"){
     return(TRUE)
   }
+  do_build <- FALSE
   if (trigger %in% triggers_with_command()){
     do_build <- do_build ||
       command_trigger(target = target, meta = meta, config = config)

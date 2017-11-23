@@ -70,24 +70,15 @@ test_with_dir("triggers work as expected", {
     con$plan, trigger = "command",
     envir = con$envir, verbose = TRUE)
   expect_equal(justbuilt(con), character(0))
-})
 
-test_with_dir("'missing' and 'always' triggers", {
-  # 'missing' trigger brings targets up to date.
-  con <- dbug()
-  con <- make(
-    con$plan, trigger = "missing", parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = FALSE)
-  expect_equal(sort(justbuilt(con)), sort(con$plan$target))
-  expect_true(all(con$plan$trigger == "missing"))
+  # 'always' trigger rebuilts up-to-date targets
+  con$plan$trigger <- "any"
+  con <- make(con$plan, envir = con$envir)
   out <- outdated(
     plan = con$plan,
     envir = con$envir
   )
   expect_equal(out, character(0))
-
-  # 'always' trigger rebuilts up-to-date targets
-  con$plan$trigger <- "any"
   con$plan$trigger[con$plan$target == "final"] <- "always"
   con2 <- make(
     con$plan, parallelism = con$parallelism,
@@ -95,17 +86,22 @@ test_with_dir("'missing' and 'always' triggers", {
   expect_equal(justbuilt(con2), "final")
 })
 
-test_with_dir("Depends brings targets up to date", {
-  con <- dbug()
-  con$plan$trigger <- "depends"
-  con <- make(
-    con$plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = FALSE)
-  con2 <-  make(
-    con$plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = FALSE)
-  expect_equal(sort(justbuilt(con2)), character(0))
-  expect_equal(outdated(config = con2), character(0))
+test_with_dir("all triggers bring targets up to date", {
+  for (trigger in triggers()){
+    clean(destroy = TRUE)
+    con <- dbug()
+    con$plan$trigger <- trigger
+    con <- make(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = FALSE)
+    expect_equal(sort(justbuilt(con)), sort(con$plan$target))
+    con$plan$trigger <- NULL
+    out <- outdated(
+      plan = con$plan,
+      envir = con$envir
+    )
+    expect_equal(out, character(0))
+  }
 })
 
 # Similar enough to the triggers to include here:
