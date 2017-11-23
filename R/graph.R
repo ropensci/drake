@@ -167,8 +167,9 @@ assert_unique_names <- function(imports, targets, envir, verbose){
       names()
     stop(
       "Duplicate targets in workflow plan:\n",
-      multiline_message(duplicated)
-      )
+      multiline_message(duplicated),
+      call. = FALSE
+    )
   }
   common <- intersect(imports, targets)
   if (verbose & length(common)){
