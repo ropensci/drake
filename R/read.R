@@ -96,8 +96,10 @@ readd <- function(
 #'
 #' @param verbose logical, whether to print console messages
 #'
-#' @param deps logical, whether to load the dependencies of the targets
-#' instead of the targets themselves. This is useful if you know your
+#' @param deps logical, whether to load any cached
+#' dependencies of the targets
+#' instead of the targets themselves.
+#' This is useful if you know your
 #' target failed and you want to debug the command in an interactive
 #' session with the dependencies in your workspace.
 #' One caveat: to find the dependencies,
