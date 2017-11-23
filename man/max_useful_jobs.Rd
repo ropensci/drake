@@ -26,10 +26,7 @@ useful jobs as if the workplan were to run from scratch
 \code{\link{make}()}. \code{config$envir} is ignored in favor of
 \code{envir}.}
 
-\item{verbose}{logical or numeric, control printing to the console.
-Set to 0 (or \code{FALSE}) to print nothing,
-1 (or \code{TRUE}) to print everything except progress on individual imports,
-or 2 to print everything,}
+\item{verbose}{same as for \code{\link{make}()}}
 
 \item{hook}{same as for \code{\link{make}}}
 

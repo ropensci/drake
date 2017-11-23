@@ -58,65 +58,66 @@ batchtools_drake_tmpl_file <- function(
 #' the following values of \code{x} to distribute targets over parallel
 #' units of execution.
 #' \describe{
-#'  \item{'parLapply'}{launches multiple processes in a single R session
-#'  using \code{parallel::\link{parLapply}()}.
-#'  This is single-node, (potentially) multicore computing.
-#'  It requires more overhead than the \code{'mclapply'} option,
-#'  but it works on Windows. If \code{jobs} is \code{1} in
-#'  \code{\link{make}()}, then no 'cluster' is created and
-#'  no parallelism is used.}
+#'   \item{'parLapply'}{launches multiple processes in a single R session
+#'   using \code{parallel::\link{parLapply}()}.
+#'   This is single-node, (potentially) multicore computing.
+#'   It requires more overhead than the \code{'mclapply'} option,
+#'   but it works on Windows. If \code{jobs} is \code{1} in
+#'   \code{\link{make}()}, then no 'cluster' is created and
+#'   no parallelism is used.}
 #'
-#'  \item{'mclapply'}{uses multiple processes in a single R session.
-#'  This is single-node, (potentially) multicore computing.
-#'  Does not work on Windows for \code{jobs > 1}
-#'  because \code{\link{mclapply}()} is based on forking.}
+#'   \item{'mclapply'}{uses multiple processes in a single R session.
+#'   This is single-node, (potentially) multicore computing.
+#'   Does not work on Windows for \code{jobs > 1}
+#'   because \code{\link{mclapply}()} is based on forking.}
 #'
-#'  \item{'future_lapply'}{
-#'  opens up a whole trove of parallel backends
-#'  powered by the \code{future} and \code{future.batchtools}
-#'  packages. First, set the parallel backend globally using
-#'  \code{future::plan()}.
-#'  Then, apply the backend to your workplan
-#'  using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
-#'  But be warned: the environment for each target needs to be set up
-#'  from scratch, so this backend type is higher overhead than either
-#'  \code{mclapply} or \code{parLapply}.
-#'  Also, the \code{jobs} argument only applies to the imports.
-#'  To set the max number of jobs, set the \code{workers}
-#'  argument where it exists. For example, call
-#'  \code{future::plan(multisession(workers = 4))},
-#'  then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
-#'  You might also try options(mc.cores = jobs),
-#'  or see \code{?future::future::.options}
-#'  for environment variables that set the max number of jobs.
-#'  }
+#'   \item{'future_lapply'}{
+#'   opens up a whole trove of parallel backends
+#'   powered by the \code{future} and \code{future.batchtools}
+#'   packages. First, set the parallel backend globally using
+#'   \code{future::plan()}.
+#'   Then, apply the backend to your workplan
+#'   using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
+#'   But be warned: the environment for each target needs to be set up
+#'   from scratch, so this backend type is higher overhead than either
+#'   \code{mclapply} or \code{parLapply}.
+#'   Also, the \code{jobs} argument only applies to the imports.
+#'   To set the max number of jobs, set the \code{workers}
+#'   argument where it exists. For example, call
+#'   \code{future::plan(multisession(workers = 4))},
+#'   then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
+#'   You might also try options(mc.cores = jobs),
+#'   or see \code{?future::future::.options}
+#'   for environment variables that set the max number of jobs.
+#'   }
 #'
-#'  \item{'Makefile'}{uses multiple R sessions
-#'  by creating and running a Makefile.
-#'  For distributed computing on a cluster or supercomputer,
-#'  try \code{\link{make}(..., parallelism = 'Makefile',
-#'  prepend = 'SHELL=./shell.sh')}.
-#'  You need an auxiliary \code{shell.sh} file for this,
-#'  and \code{\link{shell_file}()}
-#'  writes an example.
+#'   \item{'Makefile'}{uses multiple R sessions
+#'   by creating and running a Makefile.
+#'   For distributed computing on a cluster or supercomputer,
+#'   try \code{\link{make}(..., parallelism = 'Makefile',
+#'   prepend = 'SHELL=./shell.sh')}.
+#'   You need an auxiliary \code{shell.sh} file for this,
+#'   and \code{\link{shell_file}()}
+#'   writes an example.
 #'
-#'  Here, Makefile-level parallelism is only used for
-#'  targets in your workflow plan
-#'  data frame, not imports. To process imported objects and files,
-#'  drake selects the best parallel
-#'  backend for your system and uses
-#'  the number of jobs you give to the \code{jobs}
-#'  argument to \code{\link{make}()}.
-#'  To use at most 2 jobs for imports and at most 4 jobs
-#'  for targets, run
-#'  \code{make(..., parallelism = 'Makefile', jobs = 2, args = '--jobs=4')}
+#'   Here, Makefile-level parallelism is only used for
+#'   targets in your workflow plan
+#'   data frame, not imports. To process imported objects and files,
+#'   drake selects the best parallel
+#'   backend for your system and uses
+#'   the number of jobs you give to the \code{jobs}
+#'   argument to \code{\link{make}()}.
+#'   To use at most 2 jobs for imports and at most 4 jobs
+#'   for targets, run
+#'   \code{make(..., parallelism = 'Makefile', jobs = 2, args = '--jobs=4')}
 #'
-#'  Caution: the Makefile generated by
-#'  \code{\link{make}(..., parallelism = 'Makefile')}
-#'  is NOT standalone. DO NOT run it outside of
-#' \code{\link{make}()} or \code{\link{make}()}.
-#'  Also, Windows users will need to download and install Rtools.
-#' }}
+#'   Caution: the Makefile generated by
+#'   \code{\link{make}(..., parallelism = 'Makefile')}
+#'   is NOT standalone. DO NOT run it outside of
+#'   \code{\link{make}()} or \code{\link{make}()}.
+#'   Also, Windows users will need to download and install Rtools.
+#'   }
+#' }
 #'
 #' @param distributed_only logical, whether to return only
 #' the distributed backend types, such as \code{Makefile} and
@@ -189,10 +190,7 @@ default_parallelism <- function() {
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor of
 #' \code{envir}.
 #'
-#' @param verbose logical or numeric, control printing to the console.
-#' Set to 0 (or \code{FALSE}) to print nothing,
-#' 1 (or \code{TRUE}) to print everything except progress on individual imports,
-#' or 2 to print everything,
+#' @param verbose same as for \code{\link{make}()}
 #'
 #' @param hook same as for \code{\link{make}}
 #'

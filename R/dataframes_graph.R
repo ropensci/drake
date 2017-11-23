@@ -43,10 +43,7 @@
 #' \code{\link{make}()}. \code{config$envir} is ignored in favor
 #' of \code{envir}.
 #'
-#' @param verbose logical or numeric, control printing to the console.
-#' Set to 0 (or \code{FALSE}) to print nothing,
-#' 1 (or \code{TRUE}) to print everything except progress on individual imports,
-#' or 2 to print everything,
+#' @param verbose same as for \code{\link{make}()}
 #'
 #' @param hook same as for \code{\link{make}}
 #'

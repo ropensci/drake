@@ -11,13 +11,16 @@ console <- function(imported, target, config) {
 }
 
 console_missing <- function(target, config){
+  if (config$verbose < 2){
+    return()
+  }
   pattern <- "missing"
   text <- paste(pattern, target)
   finish_console(text = text, pattern = pattern, verbose = config$verbose)
 }
 
 console_import <- function(target, config){
-  if (config$verbose < 2){
+  if (config$verbose < 3){
     return()
   }
   pattern <- "import"
