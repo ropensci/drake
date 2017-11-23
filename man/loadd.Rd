@@ -43,8 +43,10 @@ just set jobs to be an integer greater than 1. On Windows,
 
 \item{verbose}{logical, whether to print console messages}
 
-\item{deps}{logical, whether to load the dependencies of the targets
-instead of the targets themselves. This is useful if you know your
+\item{deps}{logical, whether to load any cached
+dependencies of the targets
+instead of the targets themselves.
+This is useful if you know your
 target failed and you want to debug the command in an interactive
 session with the dependencies in your workspace.
 One caveat: to find the dependencies,
