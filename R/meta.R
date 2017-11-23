@@ -22,7 +22,8 @@ meta <- function(target, config, store = FALSE) {
   )
   trigger <- get_trigger(target = target, config = config)
   # Need to make sure meta includes all these
-  # fields by the beginning of build_in_hook().
+  # fields at the beginning of build_in_hook(),
+  # but only after drake decides to actually build the target.
   if (trigger %in% triggers_with_command()){
     meta$command <- get_command(target = target, config = config)
   }

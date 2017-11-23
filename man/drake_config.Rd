@@ -13,8 +13,9 @@ drake_config(plan = workplan(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  clear_progress = FALSE, graph = NULL, trigger = "any",
-  imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE)
+  clear_progress = FALSE, graph = NULL,
+  trigger = drake::default_trigger(), imports_only = FALSE,
+  skip_imports = FALSE, skip_safety_checks = FALSE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}

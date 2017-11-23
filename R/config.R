@@ -87,7 +87,7 @@ drake_config <- function(
   force = FALSE,
   clear_progress = FALSE,
   graph = NULL,
-  trigger = "any",
+  trigger = drake::default_trigger(),
   imports_only = FALSE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE

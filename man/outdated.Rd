@@ -9,7 +9,7 @@ outdated(plan = workplan(), targets = drake::possible_targets(plan),
   cache = drake::get_cache(verbose = verbose),
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0), graph = NULL,
-  config = NULL, make_imports = TRUE)
+  config = NULL, make_imports = TRUE, trigger = drake::default_trigger())
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -50,6 +50,8 @@ and objects from the user's workspace to determine
 which targets are up to date. If \code{FALSE}, the computation
 is faster, but all the relevant information is drawn from the cache
 and may be out of date.}
+
+\item{trigger}{same as for \code{\link{make}}}
 }
 \value{
 Character vector of the names of outdated targets.
@@ -58,6 +60,14 @@ Character vector of the names of outdated targets.
 Check which targets are out of date and need to be rebuilt.
 IMPORTANT: you must be in the root directory of your project.
 }
+\details{
+\code{outdated()} is sensitive to the alternative triggers
+described at
+\url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+For example, even if \code{outdated(...)} shows everything up to date,
+\code{outdated(..., trigger = "always")} will show
+all targets out of date.
+}
 \examples{
 \dontrun{
 load_basic_example() # Load the canonical example of drake.
@@ -65,6 +75,9 @@ outdated(my_plan) # Which targets are out of date?
 make(my_plan) # Run the projects, build the targets.
 # Now, everything should be up to date (no targets listed).
 outdated(my_plan)
+# outdated() is sensitive to triggers.
+# See the "debug" vignette for more on triggers.
+outdated(my_plan, trigger = "always")
 }
 }
 \seealso{

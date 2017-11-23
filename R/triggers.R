@@ -65,11 +65,25 @@
 triggers <- function(){
   c(
     "any",
+    "always",
     "command",
     "depends",
     "file",
     "missing"
-  )
+  ) %>%
+    sort
+}
+
+#' @title Function default_trigger
+#' @description Return the default trigger.
+#' @export
+#' @seealso \code{\link{triggers}}, \code{\link{make}}
+#' @return A character scalar naming the default trigger.
+#' @examples
+#' default_trigger()
+#' # See ?triggers for more examples.
+default_trigger <- function(){
+  "any"
 }
 
 triggers_with_command <- function(){
@@ -158,6 +172,9 @@ should_build_target <- function(target, meta, config){
   }
   do_build <- FALSE
   trigger <- get_trigger(target = target, config = config)
+  if (trigger == "always"){
+    return(TRUE)
+  }
   if (trigger %in% triggers_with_command()){
     do_build <- do_build ||
       command_trigger(target = target, meta = meta, config = config)
@@ -176,6 +193,6 @@ should_build_target <- function(target, meta, config){
 using_default_triggers <- function(config){
   default_plan_triggers <-
     is.null(config$plan$trigger) ||
-    all(config$plan$trigger == "any")
-  default_plan_triggers && config$trigger == "any"
+    all(config$plan$trigger == default_trigger())
+  default_plan_triggers && config$trigger == default_trigger()
 }

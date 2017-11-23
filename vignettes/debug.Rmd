@@ -168,15 +168,16 @@ clean(verbose = FALSE) # Start from scratch
 make(my_plan, trigger = "missing")
 ```
 
-You can choose from a variety of triggers.
+You can choose from any of the following triggers for all targets or for each target separately..
 
-- `any`: Build the target if any of the other triggers activate (default).
+- `always`: Always build the target regardless of the circumstance, even if the target is already up to date. 
+- `any`: Apply all the triggers below (default). In other words, trigger a build if the `command` trigger, `depends` trigger, `file` trigger, or `missing` trigger is activated.
 - `command`: Build if the workflow plan command has changed since last time the target was built. Also built if `missing` is triggered.
 - `depends`: Build if any of the target's dependencies has changed since the last `make()`. Also build if `missing` is triggered.
 - `file`: Build if the target is a file and that output file is either missing or corrupted. Also build if `missing` is triggered.
 - `missing`: Build if the target itself is missing. Always applies.
 
-You can set separate triggers for individual targets with a `trigger` column in the workflow plan data frame. This overrides the `trigger` argument to `make()`
+To define triggers for individual targets, define an optional `trigger` column in the workflow plan data frame. Entries in this column override the `trigger` argument to `make()`
 
 ```{r indivtrigger}
 my_plan$trigger <- "command"
@@ -192,6 +193,8 @@ reg2 <- function(d) {
 }
 make(my_plan, trigger = "any") # Nothing changes!
 ```
+
+The `outdated()` function responds to triggers. For example, even if `outdated(my_plan)` shows all targets up to date, `outdated(my_plan, trigger = "always")` will claim that all the targets are outdated.
 
 # Skipping imports
 

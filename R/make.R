@@ -263,7 +263,7 @@ make <- function(
   force = FALSE,
   return_config = NULL,
   graph = NULL,
-  trigger = "any",
+  trigger = drake::default_trigger(),
   skip_imports = FALSE,
   skip_safety_checks = FALSE
 ){

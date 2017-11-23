@@ -15,7 +15,7 @@ test_with_dir("triggers work as expected", {
   cmd <- con$plan$command[con$plan$target == "combined"]
   con$plan$command[con$plan$target == "combined"] <-
     "nextone + yourinput + 1"
-  for (trigger in setdiff(triggers(), triggers_with_command())){
+  for (trigger in setdiff(triggers(), c("always", triggers_with_command()))){
     con$plan$trigger <- trigger
     expect_equal(outdated(config = con), character(0))
   }
@@ -29,7 +29,7 @@ test_with_dir("triggers work as expected", {
   # Destroy a file target.
   file.rename("intermediatefile.rds", "tmp")
   check_file <- function(con){
-    for (trigger in setdiff(triggers(), triggers_with_file())){
+    for (trigger in setdiff(triggers(), c("always", triggers_with_file()))){
       con$plan$trigger <- trigger
       expect_equal(outdated(config = con), character(0))
     }
@@ -43,7 +43,9 @@ test_with_dir("triggers work as expected", {
 
   # Restore the file target.
   file.rename("tmp", "intermediatefile.rds")
-  for (trigger in triggers()){
+  con$plan$trigger <- "always"
+  expect_equal(sort(outdated(config = con)), sort(con$plan$target))
+  for (trigger in setdiff(triggers(), "always")){
     con$plan$trigger <- trigger
     expect_equal(outdated(config = con), character(0))
   }
@@ -70,7 +72,8 @@ test_with_dir("triggers work as expected", {
   expect_equal(justbuilt(con), character(0))
 })
 
-test_with_dir("'missing' trigger brings targets up to date", {
+test_with_dir("'missing' and 'always' triggers", {
+  # 'missing' trigger brings targets up to date.
   con <- dbug()
   con <- make(
     con$plan, trigger = "missing", parallelism = con$parallelism,
@@ -82,6 +85,14 @@ test_with_dir("'missing' trigger brings targets up to date", {
     envir = con$envir
   )
   expect_equal(out, character(0))
+
+  # 'always' trigger rebuilts up-to-date targets
+  con$plan$trigger <- "any"
+  con$plan$trigger[con$plan$target == "final"] <- "always"
+  con2 <- make(
+    con$plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs, verbose = FALSE)
+  expect_equal(justbuilt(con2), "final")
 })
 
 test_with_dir("Depends brings targets up to date", {

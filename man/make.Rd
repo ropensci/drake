@@ -14,7 +14,8 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
-  trigger = "any", skip_imports = FALSE, skip_safety_checks = FALSE)
+  trigger = drake::default_trigger(), skip_imports = FALSE,
+  skip_safety_checks = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.

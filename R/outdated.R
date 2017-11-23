@@ -1,6 +1,12 @@
 #' @title Function outdated
 #' @description Check which targets are out of date and need to be rebuilt.
 #' IMPORTANT: you must be in the root directory of your project.
+#' @details \code{outdated()} is sensitive to the alternative triggers
+#' described at
+#' \url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+#' For example, even if \code{outdated(...)} shows everything up to date,
+#' \code{outdated(..., trigger = "always")} will show
+#' all targets out of date.
 #' @export
 #' @seealso \code{\link{missed}}, \code{\link{workplan}},
 #' \code{\link{make}}, \code{\link{vis_drake_graph}}
@@ -31,6 +37,7 @@
 #' which targets are up to date. If \code{FALSE}, the computation
 #' is faster, but all the relevant information is drawn from the cache
 #' and may be out of date.
+#' @param trigger same as for \code{\link{make}}
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the canonical example of drake.
@@ -38,6 +45,9 @@
 #' make(my_plan) # Run the projects, build the targets.
 #' # Now, everything should be up to date (no targets listed).
 #' outdated(my_plan)
+#' # outdated() is sensitive to triggers.
+#' # See the "debug" vignette for more on triggers.
+#' outdated(my_plan, trigger = "always")
 #' }
 outdated <-  function(
   plan = workplan(),
@@ -52,7 +62,8 @@ outdated <-  function(
   prework = character(0),
   graph = NULL,
   config = NULL,
-  make_imports = TRUE
+  make_imports = TRUE,
+  trigger = drake::default_trigger()
 ){
   force(envir)
   if (is.null(config)){
@@ -67,7 +78,8 @@ outdated <-  function(
       jobs = jobs,
       packages = packages,
       prework = prework,
-      graph = graph
+      graph = graph,
+      trigger = trigger
     )
   }
   if (make_imports){
