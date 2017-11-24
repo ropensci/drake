@@ -18,9 +18,15 @@ parallel_stage <- function(worker, config) {
   candidates <- next_targets(
     config$graph_remaining_targets, jobs = config$jobs)
   meta_list <- meta_list(targets = candidates, config = config, store = TRUE)
-  build_these <- Filter(candidates,
-    f = function(target)
-      should_build(target = target, meta_list = meta_list, config = config))
+  should_build <- lightly_parallelize(
+    X = candidates,
+    FUN = should_build,
+    jobs = config$jobs,
+    meta_list = meta_list,
+    config = config
+  ) %>%
+    unlist
+  build_these <- candidates[should_build]
   intersect(build_these, config$plan$target) %>%
     increment_attempt_flag(config = config)
   meta_list <- meta_list[build_these]
