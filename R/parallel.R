@@ -15,22 +15,31 @@ run_parallel <- function(config, worker) {
 }
 
 parallel_stage <- function(worker, config) {
-  candidates <- leaf_nodes(graph = config$graph_remaining_targets)
-  meta_list <- meta_list(targets = candidates, config = config, store = TRUE)
-  should_build <- lightly_parallelize(
-    X = candidates,
-    FUN = should_build,
-    jobs = config$jobs,
-    meta_list = meta_list,
-    config = config
-  ) %>%
-    unlist
-  build_these <- candidates[should_build]
-  intersect(build_these, config$plan$target) %>%
+  while (TRUE){
+    candidates <- leaf_nodes(graph = config$graph_remaining_targets)
+    meta_list <- meta_list(targets = candidates, config = config, store = TRUE)
+    do_build <- lightly_parallelize(
+      X = candidates,
+      FUN = should_build,
+      jobs = config$jobs,
+      meta_list = meta_list,
+      config = config
+    ) %>%
+      unlist
+    if (!all(do_build)){
+      config$graph_remaining_targets <- delete_vertices(
+        graph = config$graph_remaining_targets,
+        v = candidates[!do_build]
+      )
+    } else {
+      break
+    }
+  }
+  intersect(candidates, config$plan$target) %>%
     increment_attempt_flag(config = config)
-  meta_list <- meta_list[build_these]
-  if (length(build_these)){
-    worker(targets = build_these, meta_list = meta_list,
+  meta_list <- meta_list[candidates]
+  if (length(candidates)){
+    worker(targets = candidates, meta_list = meta_list,
       config = config)
   }
   config$graph_remaining_targets <-
