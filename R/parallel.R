@@ -15,8 +15,7 @@ run_parallel <- function(config, worker) {
 }
 
 parallel_stage <- function(worker, config) {
-  candidates <- next_targets(
-    config$graph_remaining_targets, jobs = config$jobs)
+  candidates <- leaf_nodes(graph = config$graph_remaining_targets)
   meta_list <- meta_list(targets = candidates, config = config, store = TRUE)
   should_build <- lightly_parallelize(
     X = candidates,
@@ -57,19 +56,9 @@ exclude_imports_if <- function(config){
   config
 }
 
-next_targets <- function(graph_remaining_targets, jobs = 1){
-  number_dependencies <- lightly_parallelize(
-    X = V(graph_remaining_targets),
-    FUN = function(x){
-      adjacent_vertices(graph_remaining_targets, x, mode = "in") %>%
-        unlist() %>%
-        length()
-    },
-    jobs = jobs
-  ) %>%
-    unlist
-  which(!number_dependencies) %>%
-    names()
+leaf_nodes <- function(graph){
+  is_leaf <- igraph::degree(graph, mode = "in") == 0
+  V(graph)[is_leaf]$name
 }
 
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {

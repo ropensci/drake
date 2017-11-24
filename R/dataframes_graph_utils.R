@@ -161,7 +161,7 @@ resolve_levels <- function(config) {
     keep_these <- setdiff(V(graph)$name, rownames(nodes))
     graph_remaining_targets <- delete_vertices(graph, v = keep_these)
     while (length(V(graph_remaining_targets))) {
-      candidates <- next_targets(graph_remaining_targets, jobs = jobs)
+      candidates <- leaf_nodes(graph = graph_remaining_targets)
       if (length(candidates)){
         nodes[candidates, "level"] <- level
         level <- level + 1
