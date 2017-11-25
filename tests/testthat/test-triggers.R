@@ -74,10 +74,7 @@ test_with_dir("triggers work as expected", {
   # 'always' trigger rebuilts up-to-date targets
   con$plan$trigger <- "any"
   con <- make(con$plan, envir = con$envir)
-  out <- outdated(
-    plan = con$plan,
-    envir = con$envir
-  )
+  out <- outdated(con)
   expect_equal(out, character(0))
   con$plan$trigger[con$plan$target == "final"] <- "always"
   con2 <- make(
@@ -96,10 +93,7 @@ test_with_dir("all triggers bring targets up to date", {
       envir = con$envir, jobs = con$jobs, verbose = FALSE)
     expect_equal(sort(justbuilt(con)), sort(con$plan$target))
     con$plan$trigger <- NULL
-    out <- outdated(
-      plan = con$plan,
-      envir = con$envir
-    )
+    out <- outdated(con)
     expect_equal(out, character(0))
   }
 })
@@ -130,6 +124,6 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
       skip_imports = TRUE
     )
   )
-  out <- outdated(con$plan, envir = con$envir, verbose = FALSE)
+  out <- outdated(con)
   expect_equal(out, character(0))
 })
