@@ -205,6 +205,8 @@ load_target <- function(target, cache, envir, verbose){
 #' @param verbose whether to print console messages
 #' @param jobs number of jobs for light parallelism.
 #' Supports 1 job only on Windows.
+#' @param envir Optional environment to fill in if
+#' \code{config$envir} was not cached. Defaults to your workspace.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -217,8 +219,10 @@ read_drake_config <- function(
   search = TRUE,
   cache = NULL,
   verbose = 1,
-  jobs = 1
+  jobs = 1,
+  envir = parent.frame()
 ){
+  force(envir)
   if (is.null(cache)) {
     cache <- get_cache(path = path, search = search, verbose = verbose)
   }
@@ -234,6 +238,9 @@ read_drake_config <- function(
     jobs = jobs
   )
   names(out) <- keys
+  if (is.null(config$envir)){
+    config$envir <- envir
+  }
   out
 }
 
