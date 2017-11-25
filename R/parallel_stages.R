@@ -51,6 +51,14 @@ parallel_stages <- function(config, from_scratch = FALSE){
   config$execution_graph <- targets_graph
   resolve_parallel_stages(config = config)
   out <- read_parallel_stages(config = config)
+  if (!length(out)){
+    return(data.frame(
+      item = character(0),
+      imported = logical(0),
+      file = logical(0),
+      stage = numeric(0)
+    ))
+  }
   also_outdated <- downstream_nodes(
     from = out$item[!out$imported],
     graph = config$graph,
