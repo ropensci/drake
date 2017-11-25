@@ -1,5 +1,22 @@
 drake_context("graph")
 
+test_with_dir("drake searches past outdated targets for parallel stages", {
+  plan <- workplan(
+    a = 1,
+    b = a,
+    d = b,
+    e = d,
+    c = a,
+    f = c
+  )
+  config <- make(plan, targets = c("a", "b", "c", "d"))
+  config <- drake_config(plan)
+  vis_drake_graph(config)
+  stages <- parallel_stages(config)
+  expect_equal(sort(stages$item), c("e", "f"))
+  expect_equal(length(unique(stages$stage)), 1)
+})
+
 test_with_dir("Supplied graph is not an igraph.", {
   expect_error(prune_drake_graph(12345, to = "node"))
 })
