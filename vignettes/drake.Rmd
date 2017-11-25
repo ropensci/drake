@@ -85,7 +85,8 @@ style="border: none; box-shadow: none">
 All the targets are out of date because nothing has been built yet.
 
 ```{r outdateddrake}
-outdated(my_plan, verbose = FALSE)
+config <- drake_config(my_plan, verbose = FALSE) # Master configuration list
+outdated(config)
 ```
 
 To build the project, `make()` executes the commands from the workflow plan in the [correct order](https://en.wikipedia.org/wiki/Topological_sorting).
@@ -122,7 +123,8 @@ make(my_plan, jobs = 2)
 
 ```{r maxusefuljobs}
 # Everything is already up to date.
-max_useful_jobs(my_plan, verbose = FALSE)
+config <- drake_config(my_plan, verbose = FALSE)
+max_useful_jobs(config)
 
 reg2 <- function(d){
   d$x4 <- d$x ^ 4
@@ -130,13 +132,13 @@ reg2 <- function(d){
 }
 
 # The targets that depend on reg2() are now outdated.
-max_useful_jobs(my_plan, verbose = FALSE)
+max_useful_jobs(config)
 ```
 
 To make its recommendation, `max_useful_jobs()`, relies on `drake`'s approach to [implicit parallelism](https://www.computerhope.com/jargon/i/implicit-parallelism.htm).
 
 ```{r reg2graphdrake, eval = FALSE}
-vis_drake_graph(my_plan)
+vis_drake_graph(config)
 ```
 
 <iframe
