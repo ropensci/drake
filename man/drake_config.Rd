@@ -75,6 +75,8 @@ This argument is overridden if you supply your own \code{graph} argument.}
 
 \item{skip_safety_checks}{logical, whether to skip the safety checks
 on your workflow to save time. Use at your own peril.}
+
+\item{store_meta}{same as for \code{\link{make}}}
 }
 \value{
 The master internal configuration list of a project.

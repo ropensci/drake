@@ -1,13 +1,3 @@
-run_max_useful_jobs <- function(config){
-  do_prework(config = config, verbose_packages = TRUE)
-  run_parallel(config = config, worker = worker_mclapply)
-}
-
-worker_max_useful_jobs <- function(targets, meta_list, config){
-  
-  browser()
-}
-
 #' @title Function \code{max_useful_jobs}
 #' @description Get the maximum number of useful jobs in the next call
 #' to \code{make(..., jobs = YOUR_CHOICE)}.
@@ -141,45 +131,16 @@ worker_max_useful_jobs <- function(targets, meta_list, config){
 #' max_useful_jobs(my_plan, imports = 'none') # 4
 #' }
 max_useful_jobs <- function(
-  plan = workplan(), from_scratch = FALSE,
-  targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1,
-  hook = default_hook,
-  cache = drake::get_cache(verbose = verbose),
-  jobs = 1, parallelism = drake::default_parallelism(),
-  packages = rev(.packages()), prework = character(0), config = NULL,
-  imports = c("files", "all", "none"),
-  make_imports = TRUE
+  config = NULL,
+  imports = c("files", "all", "none")
 ){
-  force(envir)
-  if (is.null(config)){
-    config <- drake_config(
-      plan = plan,
-      targets = targets,
-      envir = envir,
-      verbose = verbose,
-      hook = hook,
-      cache = cache,
-      parallelism = parallelism,
-      jobs = jobs,
-      packages = packages,
-      prework = prework
-    )
-  }
-  config$execution_graph <- imports_graph(config = config)
-  run_max_useful_jobs(config = config)
-  config$execution_graph <- targets_graph(config = config)
-  run_max_useful_jobs(config = config)
-  
-  nodes <- dataframes_graph(plan = config$plan, config = config,
-    split_columns = FALSE, make_imports = make_imports,
-    from_scratch = from_scratch)$nodes
+  nodes <- real_stages(config = config)
   imports <- match.arg(imports)
-  just_targets <- intersect(nodes$id, config$plan$target)
-  just_files <- Filter(x = nodes$id, f = is_file)
+  just_targets <- intersect(nodes$target, config$plan$target)
+  just_files <- Filter(x = nodes$target, f = is_file)
   targets_and_files <- union(just_targets, just_files)
   if (imports == "none"){
-    nodes <- nodes[just_targets, ]
+    nodes <- nodes[nodes$import, ]
   } else if (imports == "files"){
     nodes <- nodes[targets_and_files, ]
   }

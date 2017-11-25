@@ -91,7 +91,8 @@ drake_config <- function(
   trigger = drake::default_trigger(),
   imports_only = FALSE,
   skip_imports = FALSE,
-  skip_safety_checks = FALSE
+  skip_safety_checks = FALSE,
+  store_meta = TRUE
 ){
   force(envir)
   seed <- get_valid_seed()

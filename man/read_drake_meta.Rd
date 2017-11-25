@@ -34,7 +34,8 @@ of the last \code{\link{make}()}.
 }
 \description{
 For each target, read the information from
-\code{drake:::meta()} stored from the last \code{\link{make}()}.
+\code{drake:::meta()} stored from the last
+\code{\link{make}(..., store_meta = TRUE)}.
 This metadata was computed right before the target was built,
 and it was used in \code{drake:::should_build_target})
 to decide whether to build or skip the target.

@@ -14,6 +14,7 @@ cache_namespaces <- function(
   c(
     target_namespaces(default = default),
     "config",
+    "max_useful_jobs",
     "session"
   ) %>%
     sort

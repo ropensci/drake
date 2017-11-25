@@ -15,7 +15,7 @@ make(plan = workplan(), targets = drake::possible_targets(plan),
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
   trigger = drake::default_trigger(), skip_imports = FALSE,
-  skip_safety_checks = FALSE)
+  skip_safety_checks = FALSE, store_meta = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -221,6 +221,10 @@ This argument is overridden if you supply your own \code{graph} argument.}
 
 \item{skip_safety_checks}{logical, whether to skip the safety checks
 on your workflow. Use at your own peril.}
+
+\item{store_meta}{logical, whether to store target metadata
+so you can read it later with \code{\link{read_drake_meta}()}.
+Useful for debugging.}
 }
 \value{
 The master internal configuration list, mostly
