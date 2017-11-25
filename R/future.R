@@ -6,9 +6,10 @@ run_future_lapply <- function(config){
 
 worker_future_lapply <- function(targets, meta_list, config){
   targets <- intersect(targets, config$plan$target)
-  if (!length(targets)){
-    return()
-  }
+  # Probably will not encounter this, but it is better to have:
+  if (!length(targets)){ # nocov
+    return()             # nocov
+  }                      # nocov
   future::future_lapply(
     x = targets,
     FUN = build_distributed,

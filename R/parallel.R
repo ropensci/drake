@@ -21,9 +21,11 @@ parallel_stage <- function(worker, config) {
     new_leaves <- leaf_nodes(graph = config$execution_graph) %>%
       setdiff(y = build_these) %>%
       sort
-    if (identical(old_leaves, new_leaves)){
-      break
-    }
+    # Probably will not encounter this, but it prevents
+    # an infinite loop:
+    if (identical(old_leaves, new_leaves)){ # nocov
+      break                                 # nocov
+    }                                       # nocov
     meta_list <- c(
       meta_list,
       meta_list(targets = new_leaves, config = config, store = TRUE)
