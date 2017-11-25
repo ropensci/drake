@@ -24,10 +24,10 @@ test_with_dir("storr_environment is a cache type", {
   expect_equal(long_hash(x), default_long_hash_algo())
   expect_error(drake_session(cache = x))
   pln <- workplan(y = 1)
-  make(pln, cache = x, verbose = FALSE)
+  config <- make(pln, cache = x, verbose = FALSE)
   expect_equal(cached(cache = x), "y")
   expect_false(file.exists(default_cache_path()))
-  expect_equal(outdated(pln, cache = x, verbose = FALSE), character(0))
+  expect_equal(outdated(config), character(0))
   expect_false(file.exists(default_cache_path()))
 })
 
@@ -53,7 +53,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   jobs <- 1
   envir <- eval(parse(text = get_testing_scenario()$envir))
   cache <- storr::storr_environment(hash_algorithm = "murmur32")
-  load_basic_example(envir = envir)
+  load_basic_example(envir = envir, cache = cache)
   my_plan <- envir$my_plan
   con <- make(
     my_plan,
@@ -71,13 +71,8 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_equal(short_hash(con$cache), "murmur32")
   expect_equal(long_hash(con$cache), default_long_hash_algo())
 
-  x <- predict_runtime(
-    plan = my_plan, envir = envir, cache = cache, verbose = FALSE
-  )
-  y <- rate_limiting_times(
-    plan = my_plan, envir = envir, cache = cache, from_scratch = TRUE,
-    verbose = FALSE
-  )
+  x <- predict_runtime(con)
+  y <- rate_limiting_times(con, from_scratch = TRUE)
   expect_true(length(x) > 0)
   expect_true(nrow(y) > 0)
 
@@ -102,22 +97,15 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(nrow(build_times(cache = cache)) > 0)
   expect_false(file.exists(default_cache_path()))
 
-  o1 <- outdated(my_plan, envir = envir, verbose = FALSE)
-  unlink(default_cache_path(), recursive = TRUE)
-  o2 <- outdated(my_plan, jobs = 2, cache = cache,
-    envir = envir, verbose = FALSE)
-  expect_true(length(o1) > length(o2))
+  o1 <- outdated(con)
+  expect_equal(length(o1), 7)
   expect_false(file.exists(default_cache_path()))
 
-  p <- vis_drake_graph(my_plan, envir = envir,
-    cache = cache, verbose = FALSE, file = "graph.html")
+  p <- vis_drake_graph(con, file = "graph.html")
   expect_false(file.exists(default_cache_path()))
 
-  m1 <- max_useful_jobs(my_plan, envir = envir, verbose = FALSE)
-  unlink(default_cache_path(), recursive = TRUE)
-  m2 <- max_useful_jobs(my_plan, envir = envir, verbose = FALSE, cache = cache)
-  expect_equal(m1, 8)
-  expect_equal(m2, 4)
+  m1 <- max_useful_jobs(con)
+  expect_equal(m1, 4)
   expect_false(file.exists(default_cache_path()))
 
   p1 <- progress(verbose = FALSE)

@@ -4,14 +4,19 @@
 \alias{predict_runtime}
 \title{Function predict_runtime}
 \usage{
-predict_runtime(config, future_jobs = 1, from_scratch = FALSE,
-  targets_only = FALSE, digits = 3)
+predict_runtime(config, targets = NULL, future_jobs = 1,
+  from_scratch = FALSE, targets_only = FALSE, digits = 3)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced by both \code{\link{make}()} and
 \code{\link{drake_config}()}.}
+
+\item{targets}{Character vector, names of targets.
+Predict the runtime of building these targets
+plus dependencies.
+Defaults to all targets.}
 
 \item{future_jobs}{hypothetical number of jobs
 assumed for the predicted runtime.
@@ -49,6 +54,14 @@ predict_runtime(config, digits = 4) # Everything is up to date.
 predict_runtime(config, digits = 4, from_scratch = TRUE) # 1 job
 # Assumes you clean() out your project and start from scratch with 2 jobs.
 predict_runtime(config, future_jobs = 2, digits = 4, from_scratch = TRUE)
+# Predict the runtime of just building targets
+# "small" and "large".
+predict_runtime(
+  config,
+  targets = c("small", "large"),
+  from_scratch = TRUE,
+  digits = 4
+)
 }
 }
 \seealso{

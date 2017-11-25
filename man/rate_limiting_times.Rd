@@ -4,14 +4,19 @@
 \alias{rate_limiting_times}
 \title{Function rate_limiting_times}
 \usage{
-rate_limiting_times(config, from_scratch = FALSE, targets_only = FALSE,
-  future_jobs = 1, digits = 3)
+rate_limiting_times(config, targets = NULL, from_scratch = FALSE,
+  targets_only = FALSE, future_jobs = 1, digits = 3)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
 produced by both \code{\link{make}()} and
 \code{\link{drake_config}()}.}
+
+\item{targets}{Character vector, names of targets.
+Find the rate-limiting times for building these targets
+plus dependencies.
+Defaults to all targets.}
 
 \item{from_scratch}{logical, whether to assume
 next hypothetical call to \code{\link{make}()}
@@ -66,6 +71,14 @@ rate_limiting_times(config, from_scratch  = TRUE, digits = 4)
 rate_limiting_times(
   config,
   future_jobs = 2,
+  from_scratch = TRUE,
+  digits = 4
+)
+# Find the rate-limiting times of just building targets
+# "small" and "large".
+rate_limiting_times(
+  config,
+  targets = c("small", "large"),
   from_scratch = TRUE,
   digits = 4
 )

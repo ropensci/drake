@@ -12,6 +12,7 @@
 #' Defaults to your workspace.
 #' For an insulated workspace,
 #' set \code{envir = new.env(parent = globalenv())}.
+#' @param cache Optional \code{storr} cache to use.
 #' @param report_file where to write the report file \code{report.Rmd}.
 #' @param to deprecated, where to write the dynamic report source file
 #' \code{report.Rmd}
@@ -36,7 +37,10 @@
 #' unlink('report.Rmd')
 #' }
 load_basic_example <- function(
-  envir = parent.frame(), report_file = "report.Rmd", overwrite = FALSE,
+  envir = parent.frame(),
+  cache = NULL,
+  report_file = "report.Rmd",
+  overwrite = FALSE,
   to = report_file
 ){
   if (to != report_file){
@@ -112,5 +116,5 @@ load_basic_example <- function(
     warning("Overwriting file 'report.Rmd'.")
   }
   file.copy(from = report, to = report_file, overwrite = overwrite)
-  invisible(drake_config(plan = my_plan, envir = envir))
+  invisible(drake_config(plan = my_plan, envir = envir, cache = cache))
 }
