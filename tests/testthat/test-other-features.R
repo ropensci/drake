@@ -46,11 +46,9 @@ test_with_dir("missed() works", {
   remove_these <- intersect(ls(envir = globalenv()), c("f", "g"))
   rm(list = remove_these, envir = globalenv())
   o <- dbug()
-  expect_equal(character(0), missed(o$plan, envir = o$envir,
-    verbose = F))
+  expect_equal(character(0), missed(o))
   rm(list = c("f", "g"), envir = o$envir)
-  expect_equal(sort(c("f", "g")), sort(missed(o$plan, envir = o$envir,
-    verbose = F)))
+  expect_equal(sort(c("f", "g")), sort(missed(o)))
 })
 
 test_with_dir(".onLoad() warns correctly and .onAttach() works", {

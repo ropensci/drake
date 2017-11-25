@@ -77,11 +77,11 @@ outdated <-  function(config, make_imports = TRUE){
 #' }
 missed <- function(config = NULL){
   graph <- config$graph
-  imports <- setdiff(V(graph)$name, plan$target)
+  imports <- setdiff(V(graph)$name, config$plan$target)
   missing <- Filter(
     x = imports,
     f = function(x){
-      missing_import(x, envir = envir)
+      missing_import(x, envir = config$envir)
     }
   )
   if (!length(missing)){
