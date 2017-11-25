@@ -68,8 +68,9 @@ test_with_dir("generative templating deprecation", {
 test_with_dir("deprecated graphing functions", {
   pl <- workplan(a = 1)
   expect_warning(build_graph(pl))
-  expect_warning(out <- plot_graph(pl))
-  df <- dataframes_graph(pl)
+  con <- drake_config(plan = pl)
+  expect_warning(out <- plot_graph(config = con))
+  df <- dataframes_graph(config = con)
   expect_warning(out <- render_graph(df))
 })
 
