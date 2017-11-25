@@ -55,7 +55,7 @@ test_with_dir("namespaced workplan works", {
     base:::c(x, 1)
   }
   x <- workplan(a = base::list(f(1)))
-  make(
+  config <- make(
     x,
     envir = envir,
     jobs = scenarios$jobs,
@@ -70,7 +70,7 @@ test_with_dir("namespaced workplan works", {
   expect_true(all(cached(list = ns)))
   expect_true(all(ns %in% imported()))
   expect_equal(
-    outdated(x, envir = envir, verbose = FALSE),
+    outdated(config),
     character(0)
   )
 })

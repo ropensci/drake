@@ -18,6 +18,9 @@
 #' \code{report.Rmd}
 #' @param overwrite logical, whether to overwrite an
 #' existing file \code{report.Rmd}
+#' @param verbose logical, whether to print console messages.
+#' @param force logical, whether to force the loading of a
+#' non-back-compatible cache from a previous version of drake.
 #' @examples
 #' \dontrun{
 #' # Populate your workspace and write 'report.Rmd'.
@@ -41,7 +44,9 @@ load_basic_example <- function(
   cache = NULL,
   report_file = "report.Rmd",
   overwrite = FALSE,
-  to = report_file
+  to = report_file,
+  verbose = TRUE,
+  force = FALSE
 ){
   if (to != report_file){
     warning(
@@ -116,5 +121,11 @@ load_basic_example <- function(
     warning("Overwriting file 'report.Rmd'.")
   }
   file.copy(from = report, to = report_file, overwrite = overwrite)
-  invisible(drake_config(plan = envir$my_plan, envir = envir, cache = cache))
+  invisible(drake_config(
+    plan = envir$my_plan,
+    envir = envir,
+    cache = cache,
+    force = force,
+    verbose = verbose
+  ))
 }

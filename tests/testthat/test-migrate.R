@@ -14,11 +14,11 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_true(inherits(get_cache(force = TRUE), "storr"))
   expect_true(inherits(this_cache(force = TRUE), "storr"))
   expect_true(inherits(recover_cache(force = TRUE), "storr"))
-  load_basic_example()
-  expect_error(outdated(my_plan))
+  config <- load_basic_example(force = TRUE)
+  expect_true(length(outdated(config)) > 0)
   expect_error(make(my_plan, verbose = FALSE))
   make(my_plan, verbose = FALSE, force = TRUE)
-  expect_equal(outdated(my_plan, verbose = FALSE), character(0))
+  expect_equal(outdated(config), character(0))
   expect_true(length(cached()) > 0)
   clean()
   expect_true(length(cached()) == 0)
@@ -58,9 +58,9 @@ test_with_dir("migrate_drake_project() a partially outdated cache", {
   cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate_drake_project(path = "old", jobs = 2))
   out <- c("'report.md'", plan$target[grep("small", plan$target)])
-  load_basic_example()
-  out2 <- outdated(plan, cache = cache)
-#  expect_equal(sort(out), sort(out2)) # r-lib/covr#289 # nolint
+  config <- load_basic_example(cache = cache)
+  out2 <- outdated(config = config)
+  # expect_equal(sort(out), sort(out2)) # r-lib/covr#289 # nolint
 })
 
 test_with_dir("migration_result()", {
