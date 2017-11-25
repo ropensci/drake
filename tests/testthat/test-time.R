@@ -150,7 +150,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 15)
+  expect_true(nrow(x) >= 14 & nrow(x) < 27)
   expect_silent(
     x <- rate_limiting_times(
       config,
