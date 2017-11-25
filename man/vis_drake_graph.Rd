@@ -5,66 +5,17 @@
 \alias{drake_graph}
 \title{Function \code{vis_drake_graph}}
 \usage{
-vis_drake_graph(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1, hook = default_hook,
-  cache = drake::get_cache(verbose = verbose), jobs = 1,
-  parallelism = drake::default_parallelism(), packages = rev(.packages()),
-  prework = character(0), config = NULL, file = character(0),
-  selfcontained = FALSE, build_times = TRUE, digits = 3,
-  targets_only = FALSE, split_columns = FALSE, font_size = 20,
-  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
-  hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, ncol_legend = 1,
-  make_imports = TRUE, from_scratch = FALSE, ...)
+vis_drake_graph(config, file = character(0), selfcontained = FALSE,
+  build_times = TRUE, digits = 3, targets_only = FALSE,
+  split_columns = FALSE, font_size = 20, layout = "layout_with_sugiyama",
+  main = NULL, direction = "LR", hover = TRUE, navigationButtons = TRUE,
+  from = NULL, mode = c("out", "in", "all"), order = NULL,
+  subset = NULL, ncol_legend = 1, make_imports = TRUE,
+  from_scratch = FALSE, ...)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function
-\code{\link{make}()}.}
-
-\item{targets}{names of targets to build, same as for function
-\code{\link{make}()}.}
-
-\item{envir}{environment to import from, same as for function
-\code{\link{make}()}. \code{config$envir} is ignored in favor
-of \code{envir}.}
-
-\item{verbose}{same as for \code{\link{make}()}}
-
-\item{hook}{same as for \code{\link{make}}}
-
-\item{cache}{optional drake cache. See code{\link{new_cache}()}. If
-The \code{cache} argument is ignored if a non-null \code{config}
-argument is supplied.}
-
-\item{jobs}{The \code{outdated()} function is called internally,
-and it needs to import objects and examine your
-input files to see what has been updated. This could take some time,
-and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs
-to use for faster computation.}
-
-\item{parallelism}{Choice of parallel backend to speed up the computation.
-Execution order in \code{\link{make}()} is slightly different when
-\code{parallelism} equals \code{'Makefile'} because in that case,
-all the imports are imported before any target is built.
-Thus, the arrangement in the graph is different for Makefile parallelism.
-See \code{?parallelism_choices} for details.}
-
-\item{packages}{same as for \code{\link{make}()}.}
-
-\item{prework}{same as for \code{\link{make}()}.}
-
-\item{config}{option internal runtime parameter list of
-\code{\link{make}(...)},
-produced with \code{\link{config}()}.
-\code{Config} overrides all arguments except
-\code{file}, \code{selfcontained}, \code{build_times},
-\code{digits}, \code{targets_only}, \code{split_columns},
-\code{font_size}, \code{layout}, \code{main}, \code{direction},
-\code{hover}, \code{navigationButtons}, and \code{...}.
-Computing \code{config}
-in advance could save time if you plan multiple calls to
-\code{outdated()}.}
+\item{config}{Master configuration list produced by both
+\code{\link{make}()} and \code{\link{drake_config}()}.}
 
 \item{file}{Name of HTML file to save the graph.
 If \code{NULL} or \code{character(0)},
@@ -170,14 +121,14 @@ To save time for repeated plotting, this function is divided into
 }
 \examples{
 \dontrun{
-load_basic_example() # Load drake's canonical example.
+config <- load_basic_example() # Load drake's canonical example.
 # Plot the network graph representation of the workflow.
-vis_drake_graph(my_plan, width = '100\%') # The width is passed to visNetwork
-make(my_plan) # Run the project, build the targets.
-vis_drake_graph(my_plan) # The red nodes from before are now green.
+vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
+config <- make(my_plan) # Run the project, build the targets.
+vis_drake_graph(config) # The red nodes from before are now green.
 # Plot a subgraph of the workflow.
 vis_drake_graph(
-  my_plan,
+  config,
   from = c("small", "reg2"),
   to = "summ_regression2_small"
 )

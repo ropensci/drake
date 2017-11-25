@@ -8,16 +8,7 @@ max_useful_jobs(config, imports = c("files", "all", "none"))
 }
 \arguments{
 \item{config}{internal configuration list of \code{\link{make}(...)},
-produced also with \code{\link{config}()}.
-\code{config$envir} is ignored.
-Otherwise, if not \code{NULL}, \code{config}
-overrides all the other arguments except
-\code{imports} and \code{from_scratch}.
-For example,
-\code{plan} is replaced with \code{config$plan}.
-Computing \code{\link{config}}
-in advance could save time if you plan multiple calls to
-\code{dataframes_graph()}.}
+produced also with \code{\link{drake_config}()}.}
 
 \item{imports}{Set the \code{imports} argument to change your
 assumptions about how fast objects/files are imported.
@@ -33,54 +24,6 @@ Possible values:
  \item{'none'}{: Ignore all the imports and just focus on the max number
    of useful jobs for parallelizing targets.}
 }}
-
-\item{plan}{workflow plan data frame, same as for function
-\code{\link{make}()}.}
-
-\item{from_scratch}{logical, whether to compute the max
-useful jobs as if the workplan were to run from scratch
-(with all targets out of date).}
-
-\item{targets}{names of targets to build, same as for function
-\code{\link{make}()}.}
-
-\item{envir}{environment to import from, same as for function
-\code{\link{make}()}. \code{config$envir} is ignored in favor of
-\code{envir}.}
-
-\item{verbose}{same as for \code{\link{make}()}}
-
-\item{hook}{same as for \code{\link{make}}}
-
-\item{cache}{optional drake cache. See code{\link{new_cache}()}. If
-The \code{cache} argument is ignored if a non-null
-\code{config} argument is supplied.}
-
-\item{jobs}{The \code{outdated()} function is called internally,
-and it needs to import objects and examine your
-input files to see what has been updated. This could take some time,
-and parallel computing may be needed
-to speed up the process. The \code{jobs} argument is number of parallel jobs
-to use for faster computation.}
-
-\item{parallelism}{Choice of parallel backend to speed up the computation.
-Execution order in \code{\link{make}()} is slightly different
-when \code{parallelism} equals \code{'Makefile'}
-because in that case, all the imports are
-imported before any target is built.
-Thus, \code{max_useful_jobs()} may give a
-different answer for Makefile parallelism.
-See \code{?parallelism_choices} for details.}
-
-\item{packages}{same as for \code{\link{make}}}
-
-\item{prework}{same as for \code{\link{make}}}
-
-\item{make_imports}{logical, whether to import external files
-and objects from the user's workspace to determine
-which targets are up to date. If \code{FALSE}, the computation
-is faster, but all the relevant information is drawn from the cache
-and may be out of date.}
 }
 \value{
 A numeric scalar, the maximum number of useful jobs for
@@ -143,5 +86,5 @@ max_useful_jobs(config = config_from_scratch, imports = 'none') # 8
 }
 \seealso{
 \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}},
-\code{\link{shell_file}}
+\code{\link{shell_file}}, \code{\link{drake_config}()}
 }

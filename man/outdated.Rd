@@ -4,54 +4,19 @@
 \alias{outdated}
 \title{Function outdated}
 \usage{
-outdated(plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1, hook = default_hook,
-  cache = drake::get_cache(verbose = verbose),
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0), graph = NULL,
-  config = NULL, make_imports = TRUE, trigger = drake::default_trigger())
+outdated(config, make_imports = TRUE)
 }
 \arguments{
-\item{plan}{same as for \code{\link{make}}}
-
-\item{targets}{same as for \code{\link{make}}}
-
-\item{envir}{same as for \code{\link{make}}. Overrides
-\code{config$envir}.}
-
-\item{verbose}{same as for \code{\link{make}}}
-
-\item{hook}{same as for \code{\link{make}}}
-
-\item{cache}{optional drake cache. See code{\link{new_cache}()}.
-The \code{cache} argument is ignored if a
-non-null \code{config} argument is supplied.}
-
-\item{parallelism}{same as for \code{\link{make}}}
-
-\item{jobs}{same as for \code{\link{make}}}
-
-\item{packages}{same as for \code{\link{make}}}
-
-\item{prework}{same as for \code{\link{make}}}
-
-\item{graph}{same as for \code{\link{make}}}
-
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
-produced with \code{\link{config}()}.
+produced with \code{\link{config}()}.}
+
+\item{make_imports}{logical, whether to make the imports first.
+Set to \code{FALSE} to save some time and risk obselete output.
 \code{config$envir} is ignored.
 Overrides all the other arguments if not \code{NULL}.
 For example,
 \code{plan} is replaced with \code{config$plan}.}
-
-\item{make_imports}{logical, whether to import external files
-and objects from the user's workspace to determine
-which targets are up to date. If \code{FALSE}, the computation
-is faster, but all the relevant information is drawn from the cache
-and may be out of date.}
-
-\item{trigger}{same as for \code{\link{make}}}
 }
 \value{
 Character vector of the names of outdated targets.
@@ -70,14 +35,15 @@ all targets out of date.
 }
 \examples{
 \dontrun{
-load_basic_example() # Load the canonical example of drake.
-outdated(my_plan) # Which targets are out of date?
-make(my_plan) # Run the projects, build the targets.
+config <- load_basic_example() # Load the canonical example of drake.
+outdated(config = config) # Which targets are out of date?
+config <- make(my_plan) # Run the projects, build the targets.
 # Now, everything should be up to date (no targets listed).
-outdated(my_plan)
+outdated(config = config)
 # outdated() is sensitive to triggers.
 # See the "debug" vignette for more on triggers.
-outdated(my_plan, trigger = "always")
+config$trigger <- "always"
+outdated(config = config)
 }
 }
 \seealso{

@@ -22,7 +22,7 @@ existing file \code{report.Rmd}}
 \code{report.Rmd}}
 }
 \value{
-The workflow plan data frame of the basic example.
+A \code{\link{drake_config}()} configuration list.
 }
 \description{
 Loads the basic example into your workspace
