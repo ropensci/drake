@@ -8,11 +8,8 @@
 #' @seealso \code{\link{build_drake_graph}}
 #' @return A visNetwork graph.
 #'
-#' @param plan workflow plan data frame, same as for function
-#' \code{\link{make}()}.
-#'
-#' @param targets names of targets to build, same as for function
-#' \code{\link{make}()}.
+#' @param config Master configuration list produced by both
+#' \code{\link{make}()} and \code{\link{drake_config}()}.
 #'
 #' @param from Optional character vector of target/import names.
 #' If \code{from} is nonempty,
@@ -39,36 +36,6 @@
 #' Be advised: edges are only kept for adjacent nodes in \code{subset}.
 #' If you do not select all the intermediate nodes,
 #' edges will drop from the graph.
-#'
-#' @param envir environment to import from, same as for function
-#' \code{\link{make}()}. \code{config$envir} is ignored in favor
-#' of \code{envir}.
-#'
-#' @param verbose same as for \code{\link{make}()}
-#'
-#' @param hook same as for \code{\link{make}}
-#'
-#' @param cache optional drake cache. See code{\link{new_cache}()}. If
-#' The \code{cache} argument is ignored if a non-null \code{config}
-#' argument is supplied.
-#'
-#' @param jobs The \code{outdated()} function is called internally,
-#' and it needs to import objects and examine your
-#' input files to see what has been updated. This could take some time,
-#' and parallel computing may be needed
-#' to speed up the process. The \code{jobs} argument is number of parallel jobs
-#' to use for faster computation.
-#'
-#' @param parallelism Choice of parallel backend to speed up the computation.
-#' Execution order in \code{\link{make}()} is slightly different when
-#' \code{parallelism} equals \code{'Makefile'} because in that case,
-#' all the imports are imported before any target is built.
-#' Thus, the arrangement in the graph is different for Makefile parallelism.
-#' See \code{?parallelism_choices} for details.
-#'
-#' @param packages same as for \code{\link{make}()}.
-#'
-#' @param prework same as for \code{\link{make}()}.
 #'
 #' @param file Name of HTML file to save the graph.
 #' If \code{NULL} or \code{character(0)},
@@ -119,18 +86,6 @@
 #' when you hover over a node with the mouse. For imports, the label does not
 #' change with hovering.
 #'
-#' @param config option internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced with \code{\link{config}()}.
-#' \code{Config} overrides all arguments except
-#' \code{file}, \code{selfcontained}, \code{build_times},
-#' \code{digits}, \code{targets_only}, \code{split_columns},
-#' \code{font_size}, \code{layout}, \code{main}, \code{direction},
-#' \code{hover}, \code{navigationButtons}, and \code{...}.
-#' Computing \code{config}
-#' in advance could save time if you plan multiple calls to
-#' \code{outdated()}.
-#'
 #' @param main title of the graph
 #'
 #' @param ncol_legend number of columns in the legend nodes
@@ -151,26 +106,20 @@
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example() # Load drake's canonical example.
+#' config <- load_basic_example() # Load drake's canonical example.
 #' # Plot the network graph representation of the workflow.
-#' vis_drake_graph(my_plan, width = '100%') # The width is passed to visNetwork
-#' make(my_plan) # Run the project, build the targets.
-#' vis_drake_graph(my_plan) # The red nodes from before are now green.
+#' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
+#' config <- make(my_plan) # Run the project, build the targets.
+#' vis_drake_graph(config) # The red nodes from before are now green.
 #' # Plot a subgraph of the workflow.
 #' vis_drake_graph(
-#'   my_plan,
+#'   config,
 #'   from = c("small", "reg2"),
 #'   to = "summ_regression2_small"
 #' )
 #' }
 vis_drake_graph <- function(
-  plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1,
-  hook = default_hook,
-  cache = drake::get_cache(verbose = verbose),
-  jobs = 1, parallelism = drake::default_parallelism(),
-  packages = rev(.packages()), prework = character(0),
-  config = NULL,
+  config,
   file = character(0), selfcontained = FALSE,
   build_times = TRUE, digits = 3, targets_only = FALSE,
   split_columns = FALSE, font_size = 20,
@@ -184,17 +133,19 @@ vis_drake_graph <- function(
   from_scratch = FALSE,
   ...
 ){
-  force(envir)
   raw_graph <- dataframes_graph(
-    plan = plan, targets = targets,
-    envir = envir, verbose = verbose, hook = hook, cache = cache,
-    jobs = jobs, parallelism = parallelism,
-    packages = packages, prework = prework,
-    build_times = build_times, digits = digits,
-    targets_only = targets_only, split_columns = split_columns,
-    config = config, font_size = font_size,
-    from = from, mode = mode, order = order, subset = subset,
-    make_imports = make_imports, from_scratch = from_scratch
+    config = config,
+    from = from,
+    mode = mode,
+    order = order,
+    subset = subset,
+    build_times = build_times,
+    digits = digits,
+    targets_only = targets_only,
+    split_columns = split_columns,
+    font_size = font_size,
+    make_imports = make_imports,
+    from_scratch = from_scratch
   )
   if (is.null(main)){
     main <- raw_graph$default_title

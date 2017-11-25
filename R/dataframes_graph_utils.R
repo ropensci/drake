@@ -145,6 +145,7 @@ resolve_levels <- function(config) { # nolint
   stages <- parallel_stages(config)
   rownames(stages) <- stages$item
   config$nodes$levels <- stages[rownames(config$nodes), "stage"]
+  config$nodes
 }
 
 # https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r

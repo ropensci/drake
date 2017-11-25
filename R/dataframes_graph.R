@@ -61,6 +61,9 @@
 #' will be made from scratch on the next \code{\link{make}()}.
 #' Makes all targets outdated, but keeps information about
 #' build progress in previous \code{\link{make}()}s.
+#' 
+#' @param make_imports logical, whether to make the imports first.
+#' Set to \code{FALSE} to increase speed and risk using obselete information.
 #'
 #' @examples
 #' \dontrun{
@@ -95,7 +98,8 @@ dataframes_graph <- function(
   targets_only = FALSE,
   split_columns = FALSE,
   font_size = 20,
-  from_scratch = FALSE
+  from_scratch = FALSE,
+  make_imports = TRUE
 ) {
   if (!length(V(config$graph)$name)){
     return(null_graph())
@@ -106,7 +110,7 @@ dataframes_graph <- function(
   if (from_scratch){
     config$outdated <- config$plan$target
   } else {
-    config$outdated <- outdated(config = config)
+    config$outdated <- outdated(config = config, make_imports = make_imports)
   }
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
