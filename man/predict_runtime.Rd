@@ -30,6 +30,8 @@ already up to date and therefore skipped.}
 \item{targets_only}{logical, whether to factor in
 just the targets into the calculations or use the
 build times for everything, including the imports}
+
+\item{digits}{number of digits for rounding the time}
 }
 \value{
 A \code{lubridate} \code{Duration} object

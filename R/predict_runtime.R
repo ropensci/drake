@@ -47,6 +47,7 @@
 #' @param future_jobs hypothetical number of jobs
 #' assumed for the predicted runtime.
 #' assuming this number of jobs.
+#' @param digits number of digits for rounding the time
 predict_runtime <- function(
   config,
   targets = NULL,
