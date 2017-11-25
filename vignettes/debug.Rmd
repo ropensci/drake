@@ -57,7 +57,6 @@ and you can access parts of it with some companion functions.
 
 ```{r readcompanions, eval = FALSE}
 read_drake_graph()
-
 read_drake_plan()
 ```
 
@@ -80,7 +79,8 @@ After quality-checking your plan, you should check that you understand how the s
 
 ```{r demoplotgraphdebug, eval = FALSE}
 # Hover, click, drag, zoom, and pan. See args 'from' and 'to'.
-vis_drake_graph(my_plan, width = "100%", height = "500px")
+config <- drake_config(my_plan)
+vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -117,26 +117,27 @@ tracked(my_plan)
 `missed()` reports import dependencies missing from your environment
 
 ```{r misseddebug}
-missed(my_plan, verbose = FALSE) # Nothing is missing right now.
+config <- drake_config(my_plan, verbose = FALSE)
+missed(config) # Nothing is missing right now.
 ```
 
 `outdated()` reports any targets that are outdated, plus any downstream targets that depend on them.
 
 ```{r outdateddebug}
-outdated(my_plan, verbose = FALSE)
+outdated(config)
 ```
 
 To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument.
 
 ```{r depprofiledebug}
-my_plan <- load_basic_example()
+load_basic_example()
 config <- make(my_plan, verbose = FALSE)
 # Change a dependency.
 reg2 <- function(d) {
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan, verbose = FALSE)
+outdated(config)
 
 dependency_profile(target = "regression2_small", config = config)
 
@@ -165,7 +166,7 @@ Fortunately, you can change the triggers that tell `drake` to (re)build the targ
 
 ```{r rushdebug}
 clean(verbose = FALSE) # Start from scratch
-make(my_plan, trigger = "missing")
+config <- make(my_plan, trigger = "missing")
 ```
 
 You can choose from any of the following triggers for all targets or for each target separately..

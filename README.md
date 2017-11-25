@@ -80,15 +80,15 @@ install_github("wlandau-lilly/drake", build = TRUE)        # Development version
 
 ```r
 library(drake)
-load_basic_example()     # Also (over)writes report.Rmd.
-vis_drake_graph(my_plan) # Click, drag, pan, hover. See arguments 'from' and 'to'.
-outdated(my_plan)        # Which targets need to be (re)built?
-missed(my_plan)          # Are you missing anything from your workspace?
-check_plan(my_plan)      # Are you missing files? Is your workflow plan okay?
-make(my_plan)            # Run the workflow.
-diagnose(large)          # View error info if the target "large" failed to build.
-outdated(my_plan)        # Everything is up to date.
-vis_drake_graph(my_plan) # The graph also shows what is up to date.
+config <- load_basic_example() # Also (over)writes report.Rmd. See drake_config().
+vis_drake_graph(config)        # Click, drag, pan, hover. See arguments 'from' and 'to'.
+outdated(config)               # Which targets need to be (re)built?
+missed(config)                 # Are you missing anything from your workspace?
+check_plan(my_plan)            # Are you missing files? Is your workflow plan okay?
+config <- make(my_plan)        # Run the workflow.
+diagnose(large)                # View error info if the target "large" failed to build.
+outdated(config)               # Everything is up to date.
+vis_drake_graph(config)        # The graph also shows what is up to date.
 ```
 
 Dive deeper into the built-in examples.
@@ -201,19 +201,19 @@ There is room to improve the conversation and the landscape of reproducibility i
 
 ```r
 library(drake)
-load_basic_example()
-outdated(my_plan)        # Which targets need to be (re)built?
-make(my_plan)            # Build what needs to be built.
-outdated(my_plan)        # Everything is up to date.
-reg2 <- function(d){     # Change one of your functions.
+config <- load_basic_example()
+outdated(config)        # Which targets need to be (re)built?
+config <- make(my_plan) # Build what needs to be built.
+outdated(config)        # Everything is up to date.
+reg2 <- function(d){    # Change one of your functions.
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan)        # Some targets depend on reg2().
-vis_drake_graph(my_plan) # See arguments 'from' and 'to'.
-make(my_plan)            # Rebuild just the outdated targets.
-outdated(my_plan)        # Everything is up to date again.
-vis_drake_graph(my_plan) # The colors changed in the graph.
+outdated(config)        # Some targets depend on reg2().
+vis_drake_graph(config) # See arguments 'from' and 'to'.
+config <- make(my_plan) # Rebuild just the outdated targets.
+outdated(config)        # Everything is up to date again.
+vis_drake_graph(config) # The colors changed in the graph.
 ```
 
 Similarly to imported functions like `reg2()`, `drake` reacts to changes in
@@ -240,7 +240,7 @@ Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the inte
 ```{r basicgraph}
 library(drake)
 load_basic_example()
-make(my_plan, jobs = 2) # See also max_useful_jobs(my_plan).
+config <- make(my_plan, jobs = 2) # See also max_useful_jobs(my_plan).
 # Change a dependency.
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
@@ -248,7 +248,7 @@ reg2 <- function(d){
 }
 # Run vis_drake_graph() yourself for interactivity.
 # Then hover, click, drag, pan, and zoom.
-vis_drake_graph(my_plan, width = "100%")
+vis_drake_graph(config, width = "100%")
 ```
 
 ![](./images/graph.png)
