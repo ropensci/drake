@@ -31,7 +31,7 @@ resolve_real_stages <- function(config){
 
 worker_real_stages <- function(targets, meta_list, config){
   imports <- setdiff(targets, config$plan$target)
-  if (any(imports)){
+  if (length(imports)){
     worker_mclapply(
       targets = imports,
       meta_list = meta_list,

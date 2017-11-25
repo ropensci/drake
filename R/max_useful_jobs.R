@@ -121,11 +121,11 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' vis_drake_graph(config = config)
-#' # We have different numbers of max useful jobs.
-#' # By default, the output takes into account which
+#' # We have a different number for max useful jobs.
+#' max_useful_jobs(config = config) # 4
+#' # By default, max_useful_jobs() takes into account which
 #' # targets are out of date. To assume you are building from scratch,
 #' # consider using the "always" trigger.
-#' max_useful_jobs(config = config) # 4
 #' config_from_scratch <- config
 #' config_from_scratch$trigger <- "always"
 #' max_useful_jobs(config = config_from_scratch, imports = 'files') # 8
