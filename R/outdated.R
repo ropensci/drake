@@ -100,16 +100,8 @@ outdated <-  function(
   if (!length(outdated_targets)){
     return(character(0))
   } else{
-    lightly_parallelize(
-      outdated_targets,
-      function(vertex){
-        subcomponent(config$graph, v = vertex, mode = "out")$name
-      },
-      jobs = config$jobs
-    ) %>%
-    unlist() %>%
-    unique() %>%
-    sort()
+    downstream_nodes(
+      from = outdated_targets, graph = config$graph, jobs = config$jobs)
   }
 }
 

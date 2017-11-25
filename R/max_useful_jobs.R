@@ -129,8 +129,8 @@
 #' config_from_scratch <- config
 #' config_from_scratch$trigger <- "always"
 #' max_useful_jobs(config = config_from_scratch, imports = 'files') # 8
-#' max_useful_jobs(config = config, imports = 'all') # 9
-#' max_useful_jobs(config = config, imports = 'none') # 4
+#' max_useful_jobs(config = config_from_scratch, imports = 'all') # 9
+#' max_useful_jobs(config = config_from_scratch, imports = 'none') # 8
 #' }
 max_useful_jobs <- function(
   config,

@@ -198,3 +198,19 @@ trim_graph <- function(config){
     do.call(what = igraph::union)
   config
 }
+
+downstream_nodes <- function(from, graph, jobs){
+  if (!length(from)){
+    return(character(0))
+  }
+  lightly_parallelize(
+    X = from,
+    FUN = function(node){
+      subcomponent(graph, v = node, mode = "out")$name
+    },
+    jobs = jobs
+  ) %>%
+    unlist() %>%
+    unique() %>%
+    sort()
+}
