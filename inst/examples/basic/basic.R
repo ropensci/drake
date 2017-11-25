@@ -133,12 +133,17 @@ tracked(my_plan)
 # Start off with a clean workspace (optional).
 clean() # Cleans out the hidden cache in the .drake/ folder if it exists.
 
-# All the targets in the plan are "outdated" because we have not made them yet.
-outdated(my_plan, verbose = FALSE)
-# vis_drake_graph(my_plan) # Show how the pieces of your workflow are connected #nolint: optional
-missed(my_plan) # Nothing should be missing from your workspace.
+# Get a drake config list so you can use
+# other utility functions
+config <- drake_config(my_plan, verbose = FALSE)
 
-make(my_plan) # Run your project.
+# All the targets in the plan are "outdated" because we have not made them yet.
+outdated(config)
+# vis_drake_graph(my_plan) # Show how the pieces of your workflow are connected #nolint: optional
+missed(config) # Nothing should be missing from your workspace.
+
+# Run your project.
+config <- make(my_plan) # Return an updated config list
 # The non-file dependencies of your last target are already loaded
 # in your workspace.
 
@@ -147,7 +152,7 @@ build_times()
 
 ls() # Should contain the non-file dependencies of the last target(s).
 progress() # See also in_progress()
-outdated(my_plan, verbose = FALSE) # Everything is up to date
+outdated(config) # Everything is up to date
 # vis_drake_graph(my_plan) # The red nodes from before turned green. #nolint: optional
 # session() # get the sessionInfo() of the last call to make() #nolint: optional
 
@@ -155,14 +160,14 @@ outdated(my_plan, verbose = FALSE) # Everything is up to date
 readd(coef_regression2_large) # Read target from the cache.
 
 # Everything is up to date.
-make(my_plan)
+config <- make(my_plan)
 
 # Change to a cubic term and rerun.
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
-outdated(my_plan) # The targets depending on reg2() are now out of date...
+outdated(config) # The targets depending on reg2() are now out of date...
 # vis_drake_graph(my_plan) # ...which is indicated in the graph. #nolint: optional
 
 make(my_plan) # Drake only runs targets that depend on reg2().
@@ -173,7 +178,7 @@ reg2 <- function(d){
   d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d) # I indented here.
 }
-outdated(my_plan) # Everything is still up to date.
+outdated(config) # Everything is still up to date.
 
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
@@ -188,11 +193,11 @@ new_simulation <- function(n){
 # except for formulas and function definitions.
 additions <- workplan(
   new_data = new_simulation(36) + sqrt(10)
-  )
+)
 
 # Add the new work
 my_plan <- rbind(my_plan, additions)
-make(my_plan) # Only the new work is run.
+config <- make(my_plan) # Only the new work is run.
 
 # Clean up and start over next time.
 # Use clean(small), clean(list = "large"), etc.
@@ -208,9 +213,10 @@ drake_gc() # Also consider clean(garbage_collection = TRUE)
 
 # How many parallel jobs might be useful?
 # At what point would it be ridiculous to add more jobs?
-max_useful_jobs(my_plan)
+max_useful_jobs(config)
+clean()
 
-make(my_plan, jobs = 2) # parallelism == "parLapply" for Windows
+config <- make(my_plan, jobs = 2) # parallelism == "parLapply" for Windows
 # make(my_plan, parallelism = "mclapply", jobs = 2) # Not for Windows #nolint: optional
 readd(coef_regression2_large) # see also: loadd(), cached()
 
