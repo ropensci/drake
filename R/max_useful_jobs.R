@@ -32,7 +32,7 @@
 #'  \item{'none'}{: Ignore all the imports and just focus on the max number
 #'    of useful jobs for parallelizing targets.}
 #' }
-#' 
+#'
 #' @param from_scratch logical, whether to assume
 #' the next \code{\link{make}()} will run from scratch
 #' so that all targets are attempted.

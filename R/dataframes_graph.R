@@ -61,7 +61,7 @@
 #' will be made from scratch on the next \code{\link{make}()}.
 #' Makes all targets outdated, but keeps information about
 #' build progress in previous \code{\link{make}()}s.
-#' 
+#'
 #' @param make_imports logical, whether to make the imports first.
 #' Set to \code{FALSE} to increase speed and risk using obselete information.
 #'

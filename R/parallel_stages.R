@@ -70,7 +70,7 @@ parallel_stages <- function(config, from_scratch = FALSE){
     graph = targets_graph,
     v = delete_these
   )
-  config$trigger = "always"
+  config$trigger <- "always"
   resolve_parallel_stages(config = config)
   out <- read_parallel_stages(config = config)
   config$stages_cache$clear()

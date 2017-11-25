@@ -129,7 +129,7 @@ predict_runtime <- function(
 #' \code{\link{make}(...)},
 #' produced by both \code{\link{make}()} and
 #' \code{\link{drake_config}()}.
-#' 
+#'
 #' @param targets Character vector, names of targets.
 #' Find the rate-limiting times for building these targets
 #' plus dependencies.
@@ -189,7 +189,12 @@ rate_limiting_times <- function(
   nodes <- parallel_stages(config = config)
   times <- times[nodes$item, ]
   times$stage <- nodes$stage
-  out <- ddply(times, "stage", rate_limiting_at_stage, future_jobs = future_jobs) %>%
+  out <- ddply(
+    times,
+    "stage",
+    rate_limiting_at_stage,
+    future_jobs = future_jobs
+  ) %>%
     round_times(digits = digits) %>%
     unname_rows
   out[!is.na(out$item), ]

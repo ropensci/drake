@@ -139,7 +139,7 @@ test_with_dir("time predictions: incomplete targets", {
     min_df
   )
   expect_equal(nrow(x), 6)
-  
+
   config <- drake_config(plan = con$plan, envir = con$envir, verbose = FALSE)
   testrun(config)
   expect_silent(

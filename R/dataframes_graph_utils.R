@@ -141,7 +141,7 @@ missing_import <- function(x, envir) {
 }
 
 resolve_levels <- function(config) { # nolint
-  config$trigger = "always"
+  config$trigger <- "always"
   stages <- parallel_stages(config)
   rownames(stages) <- stages$item
   config$nodes$level <- stages[rownames(config$nodes), "stage"]
