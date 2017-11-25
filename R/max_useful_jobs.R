@@ -13,61 +13,10 @@
 #' \code{\link{make}(..., jobs = ...)}.
 #'
 #' @seealso \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}},
-#' \code{\link{shell_file}}
-#'
-#' @param plan workflow plan data frame, same as for function
-#' \code{\link{make}()}.
-#'
-#' @param from_scratch logical, whether to compute the max
-#' useful jobs as if the workplan were to run from scratch
-#' (with all targets out of date).
-#'
-#' @param targets names of targets to build, same as for function
-#' \code{\link{make}()}.
-#'
-#' @param envir environment to import from, same as for function
-#' \code{\link{make}()}. \code{config$envir} is ignored in favor of
-#' \code{envir}.
-#'
-#' @param verbose same as for \code{\link{make}()}
-#'
-#' @param hook same as for \code{\link{make}}
-#'
-#' @param cache optional drake cache. See code{\link{new_cache}()}. If
-#' The \code{cache} argument is ignored if a non-null
-#' \code{config} argument is supplied.
-#'
-#' @param jobs The \code{outdated()} function is called internally,
-#' and it needs to import objects and examine your
-#' input files to see what has been updated. This could take some time,
-#' and parallel computing may be needed
-#' to speed up the process. The \code{jobs} argument is number of parallel jobs
-#' to use for faster computation.
-#'
-#' @param parallelism Choice of parallel backend to speed up the computation.
-#' Execution order in \code{\link{make}()} is slightly different
-#' when \code{parallelism} equals \code{'Makefile'}
-#' because in that case, all the imports are
-#' imported before any target is built.
-#' Thus, \code{max_useful_jobs()} may give a
-#' different answer for Makefile parallelism.
-#' See \code{?parallelism_choices} for details.
-#'
-#' @param packages same as for \code{\link{make}}
-#'
-#' @param prework same as for \code{\link{make}}
+#' \code{\link{shell_file}}, \code{\link{drake_config}()}
 #'
 #' @param config internal configuration list of \code{\link{make}(...)},
-#' produced also with \code{\link{config}()}.
-#' \code{config$envir} is ignored.
-#' Otherwise, if not \code{NULL}, \code{config}
-#' overrides all the other arguments except
-#' \code{imports} and \code{from_scratch}.
-#' For example,
-#' \code{plan} is replaced with \code{config$plan}.
-#' Computing \code{\link{config}}
-#' in advance could save time if you plan multiple calls to
-#' \code{dataframes_graph()}.
+#' produced also with \code{\link{drake_config}()}.
 #'
 #' @param imports Set the \code{imports} argument to change your
 #' assumptions about how fast objects/files are imported.
@@ -83,12 +32,6 @@
 #'  \item{'none'}{: Ignore all the imports and just focus on the max number
 #'    of useful jobs for parallelizing targets.}
 #' }
-#'
-#' @param make_imports logical, whether to import external files
-#' and objects from the user's workspace to determine
-#' which targets are up to date. If \code{FALSE}, the computation
-#' is faster, but all the relevant information is drawn from the cache
-#' and may be out of date.
 #'
 #' @examples
 #' \dontrun{

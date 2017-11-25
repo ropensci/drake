@@ -7,11 +7,8 @@
 #' the legend nodes. The list also contains the
 #' default title of the graph.
 #' @seealso \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}}
-#' @param plan workflow plan data frame, same as for function
-#' \code{\link{make}()}.
-#'
-#' @param targets names of targets to build, same as for function
-#' \code{\link{make}()}.
+#' @param config a \code{\link{drake_config}()} configuration list.
+#' You can get one as a return value from \code{\link{make}()} as well.
 #'
 #' @param from Optional collection of target/import names.
 #' If \code{from} is nonempty,
@@ -37,45 +34,7 @@
 #' Applied after \code{from}, \code{mode}, and \code{order}.
 #' Be advised: edges are only kept for adjacent nodes in \code{subset}.
 #' If you do not select all the intermediate nodes,
-#' edges will drop from the graph.
-#'
-#' @param envir environment to import from, same as for function
-#' \code{\link{make}()}. \code{config$envir} is ignored in favor
-#' of \code{envir}.
-#'
-#' @param verbose same as for \code{\link{make}()}
-#'
-#' @param hook same as for \code{\link{make}}
-#'
-#' @param cache optional drake cache. Only used if the \code{config}
-#' argument is \code{NULL} (default). See code{\link{new_cache}()}.
-#'
-#' @param jobs The \code{outdated()} function is called internally,
-#' and it needs to import objects and examine your
-#' input files to see what has been updated. This could take some time,
-#' and parallel computing may be needed
-#' to speed up the process. The \code{jobs} argument is number of parallel jobs
-#' to use for faster computation.
-#'
-#' @param parallelism Choice of parallel backend to speed up the computation.
-#' Execution order in \code{\link{make}()} is slightly different when
-#' \code{parallelism} equals \code{'Makefile'}
-#' because in that case, all the imports are imported
-#' before any target is built.
-#' Thus, the arrangement in the graph is different for Makefile parallelism.
-#' See \code{?parallelism_choices} for details.
-#'
-#' @param font_size numeric, font size of the node labels in the graph
-#'
-#' @param packages same as for \code{\link{make}}
-#'
-#' @param prework same as for \code{\link{make}}
-#'
-#' @param build_times logical, whether to show the \code{\link{build_times}()}
-#' of the targets and imports, if available.
-#' These are just elapsed times from \code{system.time()}.
-#'
-#' @param digits number of digits for rounding the build times
+#' edges will drop from the graph.=
 #'
 #' @param targets_only logical,
 #' whether to skip the imports and only include the
@@ -90,23 +49,13 @@
 #' there may be more conditional independence than the graph
 #' indicates.)
 #'
-#' @param config option internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced with \code{\link{config}()}.
-#' \code{config$envir} is ignored.
-#' Otherwise, computing this
-#' in advance could save time if you plan multiple calls to
-#' \code{dataframes_graph()}.
-#' If not \code{NULL},
-#' \code{config} overrides all arguments except
-#' \code{build_times}, \code{digits}, \code{targets_only},
-#' \code{split_columns}, and \code{font_size}.
+#' @param font_size numeric, font size of the node labels in the graph
 #'
-#' @param make_imports logical, whether to import external files
-#' and objects from the user's workspace to determine
-#' which targets are up to date. If \code{FALSE}, the computation
-#' is faster, but all the relevant information is drawn from the cache
-#' and may be out of date.
+#' @param build_times logical, whether to show the \code{\link{build_times}()}
+#' of the targets and imports, if available.
+#' These are just elapsed times from \code{system.time()}.
+#'
+#' @param digits number of digits for rounding the build times
 #'
 #' @param from_scratch logical, whether to assume all the targets
 #' will be made from scratch on the next \code{\link{make}()}.
@@ -115,13 +64,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' load_basic_example() # Load drake's canonical example.
+#' config <- load_basic_example() # Load drake's canonical example.
 #' # Get a list of data frames representing the nodes, edges,
 #' # and legend nodes of the visNetwork graph from vis_drake_graph().
-#' raw_graph <- dataframes_graph(my_plan)
+#' raw_graph <- dataframes_graph(config = config)
 #' # Choose a subset of the graph.
 #' smaller_raw_graph <- dataframes_graph(
-#'   my_plan,
+#'   config = config,
 #'   from = c("small", "reg2"),
 #'   mode = "in"
 #' )
@@ -136,37 +85,28 @@
 #'   visHierarchicalLayout(direction = 'UD')
 #' }
 dataframes_graph <- function(
-  plan = workplan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1,
-  hook = default_hook,
-  cache = drake::get_cache(verbose = verbose), jobs = 1,
-  parallelism = drake::default_parallelism(), packages = rev(.packages()),
-  prework = character(0), build_times = TRUE, digits = 3,
+  config,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  build_times = TRUE,
+  digits = 3,
   targets_only = FALSE,
-  split_columns = FALSE, font_size = 20, config = NULL,
-  from = NULL, mode = c("out", "in", "all"), order = NULL, subset = NULL,
-  make_imports = TRUE,
+  split_columns = FALSE,
+  font_size = 20,
   from_scratch = FALSE
 ) {
-  force(envir)
-  if (is.null(config)){
-    config <- drake_config(plan = plan, targets = targets,
-      envir = envir, verbose = verbose,
-      hook = hook, cache = cache,
-      parallelism = parallelism, jobs = jobs,
-      packages = packages, prework = prework)
-  }
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }
-
   config$plan <- sanitize_plan(plan = config$plan)
   config$targets <- sanitize_targets(
     plan = config$plan, targets = config$targets)
   if (from_scratch){
     config$outdated <- config$plan$target
   } else {
-    config$outdated <- outdated(config = config, make_imports = make_imports)
+    config$outdated <- outdated(config = config)
   }
 
   network_data <- visNetwork::toVisNetworkData(config$graph)

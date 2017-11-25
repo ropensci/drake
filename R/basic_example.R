@@ -7,7 +7,7 @@
 #' call \code{\link{drake_example}('basic')} to generate an R script
 #' that builds up this example step by step.
 #' @export
-#' @return The workflow plan data frame of the basic example.
+#' @return A \code{\link{drake_config}()} configuration list.
 #' @param envir The environment to load the example into.
 #' Defaults to your workspace.
 #' For an insulated workspace,
@@ -112,5 +112,5 @@ load_basic_example <- function(
     warning("Overwriting file 'report.Rmd'.")
   }
   file.copy(from = report, to = report_file, overwrite = overwrite)
-  invisible(envir$my_plan)
+  invisible(drake_config(plan = my_plan, envir = envir))
 }

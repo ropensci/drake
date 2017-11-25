@@ -37,7 +37,8 @@
 #' parallel_stages(config = config)
 #' }
 parallel_stages <- function(config){
-  config$cache$clear(namespace = "parallel_stages")
+  config$stages_cache <- storr::storr_environment()
+  config$stages_cache$clear()
   config$execution_graph <- imports_graph(config = config)
   resolve_parallel_stages(config = config)
   targets_graph <- targets_graph(config = config)
@@ -58,7 +59,7 @@ parallel_stages <- function(config){
   config$trigger = "always"
   resolve_parallel_stages(config = config)
   out <- read_parallel_stages(config = config)
-  config$cache$clear(namespace = "parallel_stages")
+  config$stages_cache$clear()
   out[order(out$stage, decreasing = FALSE), ]
 }
 
@@ -77,10 +78,10 @@ worker_parallel_stages <- function(targets, meta_list, config){
       config = config
     )
   }
-  if (!config$cache$exists(key = "stage", namespace = "parallel_stages")){
-    config$cache$set(key = "stage", value = 1, namespace = "parallel_stages")
+  if (!config$stages_cache$exists(key = "stage")){
+    config$stages_cache$set(key = "stage", value = 1)
   }
-  stage <- config$cache$get(key = "stage", namespace = "parallel_stages")
+  stage <- config$stages_cache$get(key = "stage")
   out <- data.frame(
     item = targets,
     imported = !targets %in% config$plan$target,
@@ -88,22 +89,21 @@ worker_parallel_stages <- function(targets, meta_list, config){
     stage = stage,
     stringsAsFactors = FALSE
   )
-  config$cache$set(key = "stage", value = stage + 1, namespace = "parallel_stages")
-  config$cache$set(
+  config$stages_cache$set(key = "stage", value = stage + 1)
+  config$stages_cache$set(
     key = paste0("stage", stage),
-    value = out,
-    namespace = "parallel_stages"
+    value = out
   )
   invisible()
 }
 
 read_parallel_stages <- function(config){
-  keys <- config$cache$list(namespace = "parallel_stages") %>%
+  keys <- config$stages_cache$list() %>%
     setdiff(y = "stage")
   out <- lightly_parallelize(
     X = keys,
     FUN = function(key){
-      config$cache$get(key = key, namespace = "parallel_stages")
+      config$stages_cache$get(key = key)
     },
     jobs = config$jobs
   ) %>%

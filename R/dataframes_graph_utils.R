@@ -140,54 +140,11 @@ missing_import <- function(x, envir) {
   missing_object | missing_file
 }
 
-resolve_levels_subgraph <- function(config) {
-  with(config, {
-    stopifnot(is_dag(graph))
-    level <- 1
-    nodes$level <- NA
-    keep_these <- setdiff(V(graph)$name, rownames(nodes))
-    graph_remaining_targets <- delete_vertices(graph, v = keep_these)
-    while (length(V(graph_remaining_targets))) {
-      candidates <- leaf_nodes(graph = graph_remaining_targets)
-      if (length(candidates)){
-        nodes[candidates, "level"] <- level
-        level <- level + 1
-      }
-      graph_remaining_targets <-
-        delete_vertices(graph_remaining_targets, v = candidates)
-    }
-    nodes
-  })
-}
-
 resolve_levels <- function(config) { # nolint
-  with(config, {
-    targets <- intersect(plan$target, nodes$id)
-    imports <- setdiff(nodes$id, targets)
-    if (!length(targets) | !length(imports)){
-      return(resolve_levels_subgraph(config))
-    }
-    graph_imports <- delete_vertices(graph, v = targets)
-    graph_targets <- delete_vertices(graph, v = imports)
-    nodes_imports <- nodes[nodes$id %in% imports, ]
-    nodes_targets <- nodes[nodes$id %in% targets, ]
-    nodes_imports <- resolve_levels_subgraph(
-      config = list(
-        nodes = nodes_imports,
-        graph = graph_imports,
-        jobs = config$jobs
-      )
-    )
-    nodes_targets <- resolve_levels_subgraph(
-      config = list(
-        nodes = nodes_targets,
-        graph = graph_targets,
-        jobs = config$jobs
-      )
-    )
-    nodes_imports$level <- nodes_imports$level - max(nodes_imports$level)
-    rbind(nodes_imports, nodes_targets)
-  })
+  config$trigger = "always"
+  stages <- parallel_stages(config)
+  rownames(stages) <- stages$item
+  config$nodes$levels <- stages[rownames(config$nodes), "stage"]
 }
 
 # https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r
