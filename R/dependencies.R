@@ -278,6 +278,10 @@ is_file <- function(x){
   safe_grepl("^'", x) & safe_grepl("'$", x)
 }
 
+is_existing_file <- function(x){
+  is_file(x) & file.exists(drake_unquote(x, deep = TRUE))
+}
+
 is_not_file <- function(x){
   !is_file(x)
 }

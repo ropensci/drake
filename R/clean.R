@@ -139,14 +139,7 @@ uncache <- function(targets, cache, jobs, purge){
   if (is.null(cache)){
     return()
   }
-  files <- Filter(x = targets, f = is_file)
   plan <- read_drake_plan(cache = cache)
-  lightly_parallelize(
-    X = files,
-    FUN = remove_file_target,
-    jobs = jobs,
-    plan = plan
-  )
   if (purge){
     namespaces <- target_namespaces(default = cache$default_namespace)
   } else {
@@ -159,6 +152,13 @@ uncache <- function(targets, cache, jobs, purge){
     } else {
       remove_these <- intersect(targets, cached)
     }
+    files <- Filter(x = remove_these, f = is_existing_file)
+    lightly_parallelize(
+      X = files,
+      FUN = remove_file_target,
+      jobs = jobs,
+      plan = plan
+    )
     lightly_parallelize(
       X = remove_these,
       FUN = uncache_single,
@@ -186,6 +186,7 @@ remove_file_target <- function(target, plan){
     drake_unquote(target) %>%
       unlink(recursive = TRUE, force = TRUE)
   }
+  invisible()
 }
 
 #' @title Function drake_gc()
