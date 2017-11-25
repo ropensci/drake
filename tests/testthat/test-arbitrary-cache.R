@@ -132,7 +132,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_false(file.exists(default_cache_path()))
 
   expect_error(loadd(large, verbose = FALSE))
-  expect_error(nrow(large))
   expect_silent(loadd(large, cache = cache, verbose = FALSE))
   expect_true(nrow(large) > 0)
   rm(large)
