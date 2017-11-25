@@ -370,11 +370,15 @@ make_with_config <- function(config){
 #' make_targets(config = con)
 #' }
 make_imports <- function(config){
-  delete_these <- intersect(config$plan$target, V(config$graph)$name)
-  config$execution_graph <- delete_vertices(config$graph, v = delete_these)
+  config$execution_graph <- imports_graph(config = config)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
   invisible(config)
+}
+
+imports_graph <- function(config){
+  delete_these <- intersect(config$plan$target, V(config$graph)$name)
+  delete_vertices(config$graph, v = delete_these)
 }
 
 #' @title Function make_targets
@@ -396,11 +400,15 @@ make_imports <- function(config){
 #' make_targets(config = con)
 #' }
 make_targets <- function(config){
-  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
-  config$execution_graph <- delete_vertices(config$graph, v = delete_these)
+  config$execution_graph <- targets_graph(config = config)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
+}
+
+targets_graph <- function(config){
+  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
+  delete_vertices(config$graph, v = delete_these)
 }
 
 initialize_session <- function(config){

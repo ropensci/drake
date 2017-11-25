@@ -4,7 +4,8 @@ run_max_useful_jobs <- function(config){
 }
 
 worker_max_useful_jobs <- function(targets, meta_list, config){
-
+  
+  browser()
 }
 
 #' @title Function \code{max_useful_jobs}
@@ -165,6 +166,11 @@ max_useful_jobs <- function(
       prework = prework
     )
   }
+  config$execution_graph <- imports_graph(config = config)
+  run_max_useful_jobs(config = config)
+  config$execution_graph <- targets_graph(config = config)
+  run_max_useful_jobs(config = config)
+  
   nodes <- dataframes_graph(plan = config$plan, config = config,
     split_columns = FALSE, make_imports = make_imports,
     from_scratch = from_scratch)$nodes
