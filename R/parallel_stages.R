@@ -17,6 +17,9 @@
 #' (according to the \code{stage} column).
 #' @param config An configuration list output by
 #' \code{\link{make}()} or \code{\link{drake_config}()}.
+#' @param from_scratch logical, whether to assume
+#' that the next \code{\link{make}()} will run from scratch
+#' so that all targets are attempted.
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load the basic example.
@@ -36,7 +39,10 @@
 #' }
 #' parallel_stages(config = config)
 #' }
-parallel_stages <- function(config){
+parallel_stages <- function(config, from_scratch = FALSE){
+  if (from_scratch){
+    config$trigger <- "always"
+  }
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
   config$execution_graph <- imports_graph(config = config)

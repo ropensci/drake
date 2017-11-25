@@ -5,7 +5,7 @@
 \title{Function \code{read_drake_config}}
 \usage{
 read_drake_config(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 1, jobs = 1)
+  verbose = 1, jobs = 1, envir = parent.frame())
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -24,6 +24,9 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{jobs}{number of jobs for light parallelism.
 Supports 1 job only on Windows.}
+
+\item{envir}{Optional environment to fill in if
+\code{config$envir} was not cached. Defaults to your workspace.}
 }
 \value{
 The cached master internal configuration list

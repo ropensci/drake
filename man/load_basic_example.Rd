@@ -4,14 +4,16 @@
 \alias{load_basic_example}
 \title{Function \code{load_basic_example}}
 \usage{
-load_basic_example(envir = parent.frame(), report_file = "report.Rmd",
-  overwrite = FALSE, to = report_file)
+load_basic_example(envir = parent.frame(), cache = NULL,
+  report_file = "report.Rmd", overwrite = FALSE, to = report_file)
 }
 \arguments{
 \item{envir}{The environment to load the example into.
 Defaults to your workspace.
 For an insulated workspace,
 set \code{envir = new.env(parent = globalenv())}.}
+
+\item{cache}{Optional \code{storr} cache to use.}
 
 \item{report_file}{where to write the report file \code{report.Rmd}.}
 

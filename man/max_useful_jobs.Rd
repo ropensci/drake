@@ -4,7 +4,8 @@
 \alias{max_useful_jobs}
 \title{Function \code{max_useful_jobs}}
 \usage{
-max_useful_jobs(config, imports = c("files", "all", "none"))
+max_useful_jobs(config, imports = c("files", "all", "none"),
+  from_scratch = FALSE)
 }
 \arguments{
 \item{config}{internal configuration list of \code{\link{make}(...)},
@@ -24,6 +25,10 @@ Possible values:
  \item{'none'}{: Ignore all the imports and just focus on the max number
    of useful jobs for parallelizing targets.}
 }}
+
+\item{from_scratch}{logical, whether to assume
+the next \code{\link{make}()} will run from scratch
+so that all targets are attempted.}
 }
 \value{
 A numeric scalar, the maximum number of useful jobs for
@@ -77,11 +82,9 @@ max_useful_jobs(config = config) # 4
 # By default, max_useful_jobs() takes into account which
 # targets are out of date. To assume you are building from scratch,
 # consider using the "always" trigger.
-config_from_scratch <- config
-config_from_scratch$trigger <- "always"
-max_useful_jobs(config = config_from_scratch, imports = 'files') # 8
-max_useful_jobs(config = config_from_scratch, imports = 'all') # 9
-max_useful_jobs(config = config_from_scratch, imports = 'none') # 8
+max_useful_jobs(config, from_scratch = TRUE, imports = 'files') # 8
+max_useful_jobs(config, from_scratch = TRUE, imports = 'all') # 9
+max_useful_jobs(config, from_scratch = TRUE, imports = 'none') # 8
 }
 }
 \seealso{

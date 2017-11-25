@@ -4,11 +4,15 @@
 \alias{parallel_stages}
 \title{Function parallel_stages}
 \usage{
-parallel_stages(config)
+parallel_stages(config, from_scratch = FALSE)
 }
 \arguments{
 \item{config}{An configuration list output by
 \code{\link{make}()} or \code{\link{drake_config}()}.}
+
+\item{from_scratch}{logical, whether to assume
+that the next \code{\link{make}()} will run from scratch
+so that all targets are attempted.}
 }
 \value{
 A data frame of information spelling out how
