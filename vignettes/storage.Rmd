@@ -144,7 +144,7 @@ long_hash(config$cache) # sha256 is the default_long_hash_algo()
 You can change the long hash algorithm without throwing away the cache, but the project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and its supporting files.
 
 ```{r more_cache}
-outdated(my_plan, verbose = FALSE) # empty
+outdated(config) # empty
 
 config$cache <- configure_cache(
   config$cache,
@@ -156,7 +156,8 @@ config$cache <- configure_cache(
 Below, the targets become outdated because the existing hash keys do not match the new hash algorithm.
 
 ```{r newhashmorecache}
-outdated(my_plan, verbose = FALSE)
+config <- drake_config(my_plan, verbose = FALSE, cache = config$cache)
+outdated(config)
 
 config <- make(my_plan, verbose = FALSE)
 

@@ -32,10 +32,11 @@ Inspect and run your project.
 
 ```{r quickstartquickstart, eval = FALSE}
 library(drake)
-load_basic_example() # Also (over)writes report.Rmd.
-vis_drake_graph(my_plan) # Hover, click, drag, zoom, pan.
-make(my_plan) # Run the workflow.
-outdated(my_plan) # Check that everything is already up to date.
+load_basic_example()            # Also (over)writes report.Rmd.
+config <- drake_config(my_plan) # Master configuration list
+vis_drake_graph(config)         # Hover, click, drag, zoom, pan.
+make(my_plan)                   # Run the workflow.
+outdated(config)                # Everything is up to date.
 ```
 
 Debug errors.
@@ -130,7 +131,8 @@ Each row is an intermediate step, and each **command** generates a **target**. A
 
 ```{r graph1quick, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
-vis_drake_graph(my_plan, width = "100%", height = "500px")
+config <- drake_config(my_plan)
+vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -258,9 +260,10 @@ gather_plan(df, target = "my_summaries", gather = "rbind")
 You may want to check for outdated or missing targets/imports first.
 
 ```{r firstmake}
-outdated(my_plan, verbose = FALSE) # Targets that need to be (re)built.
+config <- drake_config(my_plan, verbose = FALSE)
+outdated(config) # Targets that need to be (re)built.
 
-missed(my_plan, verbose = FALSE) # Checks your workspace.
+missed(config) # Checks your workspace.
 ```
 
 Then just `make(my_plan)`.
@@ -276,7 +279,7 @@ ls()
 ```
 
 ```{r plotgraphfirstmake}
-outdated(my_plan, verbose = FALSE) # Everything is up to date.
+outdated(config) # Everything is up to date.
 
 build_times(digits = 4) # How long did it take to make each target?
 ```
@@ -287,7 +290,7 @@ In the new graph, the red nodes from before are now green.
 
 ```{r graph2quick, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
-vis_drake_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -299,7 +302,7 @@ style="border: none; box-shadow: none">
 Optionally, get `visNetwork` nodes and edges so you can make your own plot with `visNetwork` or `render_drake_graph()`.
 
 ```{r dfgraph2quick, eval = FALSE}
-dataframes_graph(my_plan)
+dataframes_graph(config)
 ```
 
 Use `readd()` and `loadd()` to load more targets. (They are cached in the hidden `.drake/` folder using [storr](https://CRAN.R-project.org/package=storr)). Other functions interact and view the cache.
@@ -347,7 +350,7 @@ reg2 <- function(d) {
 The targets depending on `reg2()` need to be rebuilt and everything else is left alone.
 
 ```{r plotwithreg2}
-outdated(my_plan, verbose = FALSE)
+outdated(config)
 ```
 
 **Advanced**: To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`.
@@ -363,7 +366,7 @@ config$cache$get_hash(key = "reg2") # different
 ```{r graph3quick, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
 # Same as drake_graph():
-vis_drake_graph(my_plan, width = "100%", height = "500px")
+vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
@@ -384,7 +387,7 @@ reg2 <- function(d) {
   d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d) # I indented here.
 }
-outdated(my_plan, verbose = FALSE) # Everything is up to date.
+outdated(config) # Everything is up to date.
 ```
 
 Need to add new work on the fly? Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.

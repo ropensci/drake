@@ -46,10 +46,10 @@ For `drake` version 4.1.0 and earlier, `build_times()` just measures the elapsed
 Drake uses these times to predict the runtime of the next `make()`. At the moment, everything is up to date, so a hypothetical next `make()` should be fast. Here, we only factor in the times of the targets (excluding the imports using `targets_only = TRUE`).
 
 ```{r predict_runtime}
+config <- drake_config(my_plan, verbose = FALSE)
 predict_runtime(
-  my_plan,
+  config,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 ```
@@ -58,10 +58,9 @@ But you can also predict the elapsed time of a full runthrough scratch (after `c
 
 ```{r predict_runtime_scratch}
 predict_runtime(
-  my_plan,
+  config,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 ```
@@ -75,9 +74,8 @@ reg2 <- function(d){
 }
 
 predict_runtime(
-  my_plan,
+  config,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 ```
@@ -86,29 +84,26 @@ We can also factor in parallelism using the `future_jobs` argument.
 
 ```{r future_jobs}
 predict_runtime(
-  my_plan,
+  config,
   future_jobs = 1,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 
 predict_runtime(
-  my_plan,
+  config,
   future_jobs = 2,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 
 predict_runtime(
-  my_plan,
+  config,
   future_jobs = 4,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 ```
@@ -120,7 +115,7 @@ To predict the next runtime with multiple parallel jobs, drake makes some assump
 1. The outdated targets are spread out evenly over the available jobs. (All targets are used if `from_scratch` is `TRUE`)
 1. One job gets all the slowest targets (pessimistic scenario).
 
-Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a column in the workflow graph.
+Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a usually a column in the workflow graph.
 
 ```{r faketiminggraph, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
@@ -137,28 +132,25 @@ You can explore the rate-limiting targets.
 
 ```{r rate_limiting_targets}
 rate_limiting_times(
-  my_plan,
+  config,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 
 rate_limiting_times(
-  my_plan,
+  config,
   future_jobs = 2,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 
 rate_limiting_times(
-  my_plan,
+  config,
   future_jobs = 4,
   from_scratch = TRUE,
   digits = 8,
-  verbose = FALSE,
   targets_only = TRUE
 )
 ```
