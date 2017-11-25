@@ -5,7 +5,8 @@
 \title{Function \code{load_basic_example}}
 \usage{
 load_basic_example(envir = parent.frame(), cache = NULL,
-  report_file = "report.Rmd", overwrite = FALSE, to = report_file)
+  report_file = "report.Rmd", overwrite = FALSE, to = report_file,
+  verbose = TRUE, force = FALSE)
 }
 \arguments{
 \item{envir}{The environment to load the example into.
@@ -22,6 +23,11 @@ existing file \code{report.Rmd}}
 
 \item{to}{deprecated, where to write the dynamic report source file
 \code{report.Rmd}}
+
+\item{verbose}{logical, whether to print console messages.}
+
+\item{force}{logical, whether to force the loading of a
+non-back-compatible cache from a previous version of drake.}
 }
 \value{
 A \code{\link{drake_config}()} configuration list.
