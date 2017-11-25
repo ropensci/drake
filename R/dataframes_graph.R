@@ -147,7 +147,7 @@ dataframes_graph <- function(
   if (targets_only) {
     config <- subset_nodes_edges(
       config = config,
-      keep = intersect(targets, config$nodes$id)
+      keep = intersect(config$targets, config$nodes$id)
     )
   }
   if (split_columns){
