@@ -33,7 +33,7 @@ worker_real_stages <- function(targets, meta_list, config){
   imports <- setdiff(targets, config$plan$target)
   if (any_imports){
     worker_mclapply(
-      targets = targets,
+      targets = imports,
       meta_list = meta_list,
       config = config
     )
