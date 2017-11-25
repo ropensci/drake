@@ -18,6 +18,14 @@
 #' predict_runtime(config, digits = 4, from_scratch = TRUE) # 1 job
 #' # Assumes you clean() out your project and start from scratch with 2 jobs.
 #' predict_runtime(config, future_jobs = 2, digits = 4, from_scratch = TRUE)
+#' # Predict the runtime of just building targets
+#' # "small" and "large".
+#' predict_runtime(
+#'   config,
+#'   targets = c("small", "large"),
+#'   from_scratch = TRUE,
+#'   digits = 4
+#' )
 #' }
 #' @return A \code{lubridate} \code{Duration} object
 #' with the predicted runtime of the next \code{\link{make}()}.
@@ -25,6 +33,10 @@
 #' \code{\link{make}(...)},
 #' produced by both \code{\link{make}()} and
 #' \code{\link{drake_config}()}.
+#' @param targets Character vector, names of targets.
+#' Predict the runtime of building these targets
+#' plus dependencies.
+#' Defaults to all targets.
 #' @param from_scratch logical, whether to predict a
 #' \code{\link{make}()} build from scratch or to
 #' take into account the fact that some targets may be
@@ -37,6 +49,7 @@
 #' assuming this number of jobs.
 predict_runtime <- function(
   config,
+  targets = NULL,
   future_jobs = 1,
   from_scratch = FALSE,
   targets_only = FALSE,
@@ -45,6 +58,7 @@ predict_runtime <- function(
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   times <- rate_limiting_times(
     config = config,
+    targets = targets,
     from_scratch = from_scratch,
     targets_only = targets_only,
     future_jobs = future_jobs,
@@ -98,6 +112,14 @@ predict_runtime <- function(
 #'   from_scratch = TRUE,
 #'   digits = 4
 #' )
+#' # Find the rate-limiting times of just building targets
+#' # "small" and "large".
+#' rate_limiting_times(
+#'   config,
+#'   targets = c("small", "large"),
+#'   from_scratch = TRUE,
+#'   digits = 4
+#' )
 #' }
 #'
 #' @return A data frame of times of the worst-case scenario
@@ -107,6 +129,11 @@ predict_runtime <- function(
 #' \code{\link{make}(...)},
 #' produced by both \code{\link{make}()} and
 #' \code{\link{drake_config}()}.
+#' 
+#' @param targets Character vector, names of targets.
+#' Find the rate-limiting times for building these targets
+#' plus dependencies.
+#' Defaults to all targets.
 #'
 #' @param from_scratch logical, whether to assume
 #' next hypothetical call to \code{\link{make}()}
@@ -122,11 +149,18 @@ predict_runtime <- function(
 #' @param digits number of digits for rounding the times.
 rate_limiting_times <- function(
   config,
+  targets = NULL,
   from_scratch = FALSE,
   targets_only = FALSE,
   future_jobs = 1,
   digits = 3
 ){
+  if (!is.null(targets)){
+    config$from <- config$targets <- targets
+    config$mode <- "in"
+    config$order <- numeric(0)
+    config <- trim_graph(config)
+  }
   times <- build_times(
     cache = config$cache,
     digits = Inf,
