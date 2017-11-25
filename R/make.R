@@ -336,19 +336,20 @@ make_with_config <- function(config){
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
-  if (config$imports_only){
+  if (!config$skip_imports && config$parallelism != "Makefile"){
     make_imports(config = config)
-    return(invisible(config))
   }
-  run_parallel_backend(config = config)
-  console_up_to_date(config = config)
+  if (!config$imports_only){
+    make_targets(config = config)
+  }
   return(invisible(config))
 }
 
 #' @title Function make_imports
 #' @description just make the imports
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{config}}
+#' @seealso \code{\link{make}}, \code{\link{config}},
+#' \code{\link{make_targets}}
 #' @return The master internal configuration list
 #' used by \code{\link{make}()}.
 #' @param config a configuration list returned by \code{\link{config}()}
@@ -359,12 +360,40 @@ make_with_config <- function(config){
 #' con <- drake_config(my_plan)
 #' # Just cache the imports, do not build any targets.
 #' make_imports(config = con)
+#' # Just make the targets
+#' make_targets(config = con)
 #' }
 make_imports <- function(config){
   delete_these <- intersect(config$plan$target, V(config$graph)$name)
-  config$graph <- delete_vertices(config$graph, v = delete_these)
+  config$execution_graph <- delete_vertices(config$graph, v = delete_these)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
+  invisible(config)
+}
+
+#' @title Function make_targets
+#' @description just make the proper targets with commands
+#' @export
+#' @seealso \code{\link{make}}, \code{\link{config}},
+#' \code{\link{make_imports}}
+#' @return The master internal configuration list
+#' used by \code{\link{make}()}.
+#' @param config a configuration list returned by \code{\link{config}()}
+#' @examples
+#' \dontrun{
+#' load_basic_example() # Load the canonical example.
+#' # Generate the master internal configuration list.
+#' con <- drake_config(my_plan)
+#' # Just cache the imports, do not build any targets.
+#' make_imports(config = con)
+#' # Just make the targets
+#' make_targets(config = con)
+#' }
+make_targets <- function(config){
+  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
+  config$execution_graph <- delete_vertices(config$graph, v = delete_these)
+  run_parallel_backend(config = config)
+  console_up_to_date(config = config)
   invisible(config)
 }
 

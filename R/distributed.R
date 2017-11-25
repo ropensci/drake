@@ -8,12 +8,7 @@ prepare_distributed <- function(config){
     )
   }
   config$cache$set(key = "envir", value = config$envir, namespace = "config")
-  config$outdated_targets <- outdated(
-    config = config,
-    make_imports = !config$skip_imports
-  )
-  increment_attempt_flag(targets = config$outdated_targets, config = config)
-  invisible(config)
+  invisible()
 }
 
 finish_distributed <- function(config){
@@ -22,30 +17,26 @@ finish_distributed <- function(config){
   unlink(file, force = TRUE)
 }
 
-build_distributed <- function(target, cache_path){
+build_distributed <- function(target, meta_list, cache_path){
   config <- recover_drake_config(cache_path = cache_path)
   do_prework(config = config, verbose_packages = FALSE)
   prune_envir(targets = target, config = config)
-  console_many_targets(
-    targets = target,
-    pattern = "check",
-    color = "check",
-    config = config
-  )
-  meta <- meta(target = target, config = config, store = TRUE)
-  config$old_hash <- self_hash(target = target, config = config)
-  do_build <- should_build_target(
-    target = target,
-    meta = meta,
-    config = config
-  )
-  if (do_build){
-    drake_build(
+  if (is.null(meta_list)){
+    meta_list <- meta_list(targets = target, config = config, store = TRUE)
+    do_build <- should_build_target(
       target = target,
-      meta = meta,
+      meta = meta_list[[target]],
       config = config
     )
+    if (!do_build){
+      return(invisible())
+    }
   }
+  drake_build(
+    target = target,
+    meta = meta_list[[target]],
+    config = config
+  )
   invisible()
 }
 

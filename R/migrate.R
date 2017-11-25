@@ -60,6 +60,7 @@ migrate_drake_project <- function(
   config$envir <- new.env(parent = globalenv())
   config$verbose <- TRUE
   config$trigger <- "any"
+  config$execution_graph <- config$graph
   config$outdated <- legacy_outdated(config) %>%
     as.character %>%
     sort

@@ -44,9 +44,9 @@ test_with_dir("graph functions work", {
   dev.off()
   unlink("Rplots.pdf", force = TRUE)
   expect_true(is.character(default_graph_title(
-    parallelism = parallelism_choices()[1], split_columns = FALSE)))
+    split_columns = FALSE)))
   expect_true(is.character(default_graph_title(
-    parallelism = parallelism_choices()[1], split_columns = TRUE)))
+    split_columns = TRUE)))
 })
 
 test_with_dir("Supplied graph is pruned.", {
@@ -61,20 +61,20 @@ test_with_dir("Supplied graph is pruned.", {
   expect_false(any(exclude %in% vertices))
 })
 
-test_with_dir("different graphical arrangements for distributed parallelism", {
+test_with_dir("same graphical arrangements for distributed parallelism", {
   e <- new.env()
   x <- workplan(a = 1, b = f(2))
   e$f <- function(x) x
   con <- drake_config(x, envir = e, verbose = FALSE)
-  expect_equal(1, max_useful_jobs(x, envir = e, config = con,
-                                  parallelism = "mclapply", jobs = 1))
-  expect_equal(1, max_useful_jobs(x, envir = e, config = con,
-                                  parallelism = "parLapply", jobs = 1))
+  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
+    parallelism = "mclapply", jobs = 1))
+  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
+    parallelism = "parLapply", jobs = 1))
   con$parallelism <- "Makefile"
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-                                  parallelism = "Makefile", jobs = 1))
+    parallelism = "Makefile", jobs = 1))
   expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-                                  parallelism = "future_lapply", jobs = 1))
+    parallelism = "future_lapply", jobs = 1))
   y <- workplan(a = 1, b = 2)
   tmp <- dataframes_graph(y, parallelism = "Makefile", verbose = FALSE)
   expect_true(is.list(tmp))

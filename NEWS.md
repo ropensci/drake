@@ -1,5 +1,6 @@
 # Release 5.0.0
 
+- Always process all the imports before building any targets. This is part of the solution to #168: if imports and targets are processed together, the full power of parallelism is taken away from the targets. Also, the way parallelism happens is now consistent for all parallel backends.
 - Major speed improvement: dispense with internal inventories and rely on `cache$exists()` instead.
 - Let the user define a trigger for each target to customize when `make()` decides to build targets.
 - Document triggers and other debugging/testing tools in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).

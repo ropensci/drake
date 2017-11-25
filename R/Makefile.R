@@ -3,7 +3,15 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   run = TRUE,
   debug = FALSE
 ){
-  config <- prepare_distributed(config = config)
+  prepare_distributed(config = config)
+  config$outdated_targets <- outdated(
+    config = config,
+    make_imports = !config$skip_imports
+  )
+  set_attempt_flag(
+    flag = length(config$outdated_targets),
+    config = config
+  )
   with_output_sink(
     new = "Makefile",
     code = {
@@ -113,8 +121,13 @@ mk <- function(
   target = character(0),
   cache_path = drake::default_cache_path()
 ){
-  old_hash <- build_distributed(target = target, cache_path = cache_path)
   config <- recover_drake_config(cache_path)
+  old_hash <- self_hash(target = target, config = config)
+  build_distributed(
+    target = target,
+    meta_list = NULL,
+    cache_path = cache_path
+  )
   new_hash <- self_hash(target = target, config = config)
   if (!identical(config$old_hash, new_hash)){
     file <- time_stamp_file(target = target, config = config)

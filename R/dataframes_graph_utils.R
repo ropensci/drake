@@ -16,13 +16,6 @@ append_build_times <- function(config) {
   })
 }
 
-arrange_nodes <- function(config){
-  if (config$parallelism %in% parallelism_choices(distributed_only = TRUE))
-    resolve_levels_distributed(config = config)
-  else
-    resolve_levels(config = config)
-}
-
 shrink_levels <- function(nodes){
   nodes <- nodes[order(nodes$level), ]
   nodes$level <- c(0, cumsum(diff(nodes$level) > 0))
@@ -60,7 +53,7 @@ configure_nodes <- function(config){
     config[[elt]] <- intersect(config[[elt]], config$nodes$id)
   }
   config$nodes <- categorize_nodes(config = config)
-  config$nodes <- arrange_nodes(config = config)
+  config$nodes <- resolve_levels(config = config)
   config$nodes <- style_nodes(config = config)
   if (config$build_times){
     config$nodes <- append_build_times(config = config)
@@ -73,19 +66,13 @@ configure_nodes <- function(config){
 #' \code{\link{vis_drake_graph}()}.
 #' @export
 #' @seealso \code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
-#' @param parallelism Mode of parallelism intended for the workplan.
-#' See \code{\link{parallelism_choices}()}.
 #' @param split_columns logical, whether the columns were split
 #' in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
 #' with the \code{split_columns} argument.
 #' @examples
 #' default_graph_title()
-default_graph_title <- function(
-  parallelism = drake::parallelism_choices(distributed_only = FALSE),
-  split_columns = FALSE
-){
-  parallelism <- match.arg(parallelism)
-  out <- paste("Workflow graph:", parallelism, "parallelism")
+default_graph_title <- function(split_columns = FALSE){
+  out <- "Workflow graph"
   if (split_columns){
     out <- paste(out, "with split columns")
   }
@@ -153,7 +140,7 @@ missing_import <- function(x, envir) {
   missing_object | missing_file
 }
 
-resolve_levels <- function(config) {
+resolve_levels_subgraph <- function(config) {
   with(config, {
     stopifnot(is_dag(graph))
     level <- 1
@@ -173,25 +160,25 @@ resolve_levels <- function(config) {
   })
 }
 
-resolve_levels_distributed <- function(config) { # nolint
+resolve_levels <- function(config) { # nolint
   with(config, {
     targets <- intersect(plan$target, nodes$id)
     imports <- setdiff(nodes$id, targets)
     if (!length(targets) | !length(imports)){
-      return(resolve_levels(config))
+      return(resolve_levels_subgraph(config))
     }
     graph_imports <- delete_vertices(graph, v = targets)
     graph_targets <- delete_vertices(graph, v = imports)
     nodes_imports <- nodes[nodes$id %in% imports, ]
     nodes_targets <- nodes[nodes$id %in% targets, ]
-    nodes_imports <- resolve_levels(
+    nodes_imports <- resolve_levels_subgraph(
       config = list(
         nodes = nodes_imports,
         graph = graph_imports,
         jobs = config$jobs
       )
     )
-    nodes_targets <- resolve_levels(
+    nodes_targets <- resolve_levels_subgraph(
       config = list(
         nodes = nodes_targets,
         graph = graph_targets,

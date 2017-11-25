@@ -219,6 +219,5 @@ dataframes_graph <- function(
 
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
-    default_title = default_graph_title(
-      parallelism = config$parallelism, split_columns = split_columns))
+    default_title = default_graph_title(split_columns = split_columns))
 }

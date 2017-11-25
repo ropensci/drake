@@ -6,9 +6,8 @@ run_parallel_backend <- function(config){
 }
 
 run_parallel <- function(config, worker) {
-  config$graph_remaining_targets <- config$graph
   config <- exclude_imports_if(config = config)
-  while (length(V(config$graph_remaining_targets))){
+  while (length(V(config$execution_graph))){
     config <- parallel_stage(worker = worker, config = config)
   }
   invisible()
@@ -17,9 +16,14 @@ run_parallel <- function(config, worker) {
 parallel_stage <- function(worker, config) {
   build_these <- character(0)
   meta_list <- list()
+  old_leaves <- NULL
   while (TRUE){
-    new_leaves <- leaf_nodes(graph = config$graph_remaining_targets) %>%
-      setdiff(y = build_these)
+    new_leaves <- leaf_nodes(graph = config$execution_graph) %>%
+      setdiff(y = build_these) %>%
+      sort
+    if (identical(old_leaves, new_leaves)){
+      break
+    }
     meta_list <- c(
       meta_list,
       meta_list(targets = new_leaves, config = config, store = TRUE)
@@ -35,13 +39,14 @@ parallel_stage <- function(worker, config) {
     build_these <- c(build_these, new_leaves[do_build])
     if (!all(do_build)){
       trim_these <- new_leaves[!do_build]
-      config$graph_remaining_targets <- delete_vertices(
-        graph = config$graph_remaining_targets,
+      config$execution_graph <- delete_vertices(
+        graph = config$execution_graph,
         v = trim_these
       )
     } else {
       break
     }
+    old_leaves <- new_leaves
   }
   intersect(build_these, config$plan$target) %>%
     increment_attempt_flag(config = config)
@@ -49,8 +54,8 @@ parallel_stage <- function(worker, config) {
     worker(targets = build_these, meta_list = meta_list,
       config = config)
   }
-  config$graph_remaining_targets <-
-    delete_vertices(config$graph_remaining_targets, v = build_these)
+  config$execution_graph <-
+    delete_vertices(config$execution_graph, v = build_these)
   invisible(config)
 }
 
@@ -62,11 +67,11 @@ exclude_imports_if <- function(config){
     return(config)
   }
   delete_these <- setdiff(
-    V(config$graph_remaining_targets)$name,
+    V(config$execution_graph)$name,
     config$plan$target
   )
-  config$graph_remaining_targets <- delete_vertices(
-    graph = config$graph_remaining_targets,
+  config$execution_graph <- delete_vertices(
+    graph = config$execution_graph,
     v = delete_these
   )
   config
