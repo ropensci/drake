@@ -293,20 +293,15 @@ rate_limiting_times <- function(
       unique
     times <- times[outdated, ]
   }
-  if (!nrow(times)){
-    return(cbind(times, stage = numeric(0)))
-  }
   if (targets_only){
     times <- times[times$type == "target", ]
   }
   if (!nrow(times)){
     return(cbind(times, stage = numeric(0)))
   }
-  keep_these <- setdiff(keys, rownames(times))
-  graph <- delete_vertices(config$graph, v = keep_these)
-  config$nodes <- times
-  times <- resolve_levels(config = config)
-  colnames(times) <- gsub("^level$", "stage", colnames(times))
+  nodes <- real_stages(config = config)
+  times <- times[nodes$item, ]
+  times$stage <- nodes$stage
   ddply(times, "stage", rate_limiting_at_stage, future_jobs = future_jobs) %>%
     round_times(digits = digits) %>%
     unname_rows
