@@ -1,5 +1,13 @@
 # Release 5.0.0
 
+- Several functions now require an explicit `config` argument, which you can get from
+`drake_config()` or `make()`. Examples:
+    - outdated()
+    - missed()
+    - rate_limiting_times()
+    - predict_runtime()
+    - vis_drake_graph()
+    - dataframes_graph()
 - Always process all the imports before building any targets. This is part of the solution to #168: if imports and targets are processed together, the full power of parallelism is taken away from the targets. Also, the way parallelism happens is now consistent for all parallel backends.
 - Major speed improvement: dispense with internal inventories and rely on `cache$exists()` instead.
 - Let the user define a trigger for each target to customize when `make()` decides to build targets.
