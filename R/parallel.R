@@ -23,7 +23,7 @@ parallel_stage <- function(worker, config) {
       sort
     # Probably will not encounter this, but it prevents
     # an infinite loop:
-    if (identical(old_leaves, new_leaves)){ # nocov
+    if (identical(old_leaves, new_leaves)){ # nocov # nolint
       break                                 # nocov
     }                                       # nocov
     meta_list <- c(
