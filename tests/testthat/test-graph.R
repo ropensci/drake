@@ -7,7 +7,8 @@ test_with_dir("Supplied graph is not an igraph.", {
 test_with_dir("graph does not fail if input file is binary", {
   x <- workplan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
-  expect_silent(out <- vis_drake_graph(x, verbose = FALSE))
+  con <- drake_config(x, verbose = FALSE)
+  expect_silent(out <- vis_drake_graph(con))
   unlink("input.rds", force = TRUE)
 })
 
@@ -39,8 +40,7 @@ test_with_dir("graph functions work", {
   config <- dbug()
   expect_equal(class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
-  tmp <- vis_drake_graph(plan = config$plan, envir = config$envir,
-                    verbose = FALSE)
+  tmp <- vis_drake_graph(config)
   dev.off()
   unlink("Rplots.pdf", force = TRUE)
   expect_true(is.character(default_graph_title(
@@ -55,7 +55,7 @@ test_with_dir("Supplied graph is pruned.", {
   con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
   include <- c("small", "simulate", "data.frame", "rpois",
-               "stats::rnorm", "large")
+    "stats::rnorm", "large")
   exclude <- setdiff(my_plan$target, include)
   expect_true(all(include %in% vertices))
   expect_false(any(exclude %in% vertices))
@@ -66,16 +66,12 @@ test_with_dir("same graphical arrangements for distributed parallelism", {
   x <- workplan(a = 1, b = f(2))
   e$f <- function(x) x
   con <- drake_config(x, envir = e, verbose = FALSE)
-  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "mclapply", jobs = 1))
-  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "parLapply", jobs = 1))
+  expect_equal(2, max_useful_jobs(config = con))
+  expect_equal(2, max_useful_jobs(config = con))
   con$parallelism <- "Makefile"
-  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "Makefile", jobs = 1))
-  expect_equal(2, max_useful_jobs(x, envir = e, config = con,
-    parallelism = "future_lapply", jobs = 1))
+  expect_equal(2, max_useful_jobs(config = con))
+  expect_equal(2, max_useful_jobs(config = con))
   y <- workplan(a = 1, b = 2)
-  tmp <- dataframes_graph(y, parallelism = "Makefile", verbose = FALSE)
+  tmp <- dataframes_graph(config = con)
   expect_true(is.list(tmp))
 })
