@@ -37,12 +37,14 @@ test_with_dir("basic example works", {
     targets_only = TRUE, split_columns = TRUE)
   tmp6 <- dataframes_graph(config = config, build_times = TRUE,
     targets_only = TRUE, split_columns = TRUE)
+  tmp7 <- dataframes_graph(config = config, build_times = TRUE,
+    targets_only = TRUE, split_columns = TRUE, from_scratch = TRUE)
   expect_warning(
-    tmp7 <- dataframes_graph(config = config, build_times = FALSE,
+    tmp8 <- dataframes_graph(config = config, build_times = FALSE,
       from = c("small", "not_found"))
   )
   expect_error(
-    tmp8 <- dataframes_graph(config = config, build_times = FALSE,
+    tmp9 <- dataframes_graph(config = config, build_times = FALSE,
       from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)
