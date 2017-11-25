@@ -19,7 +19,7 @@ test_with_dir("future package functionality", {
     )
   )
   expect_equal(
-    outdated(e$my_plan, envir = e, verbose = FALSE),
+    outdated(config),
     character(0)
   )
 })
