@@ -15,7 +15,7 @@ drake_config(plan = workplan(), targets = drake::possible_targets(plan),
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
   clear_progress = FALSE, graph = NULL,
   trigger = drake::default_trigger(), imports_only = FALSE,
-  skip_imports = FALSE, skip_safety_checks = FALSE)
+  skip_imports = FALSE, skip_safety_checks = FALSE, store_meta = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}

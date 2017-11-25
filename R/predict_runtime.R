@@ -299,7 +299,7 @@ rate_limiting_times <- function(
   if (!nrow(times)){
     return(cbind(times, stage = numeric(0)))
   }
-  nodes <- real_stages(config = config)
+  nodes <- parallel_stages(config = config)
   times <- times[nodes$item, ]
   times$stage <- nodes$stage
   ddply(times, "stage", rate_limiting_at_stage, future_jobs = future_jobs) %>%

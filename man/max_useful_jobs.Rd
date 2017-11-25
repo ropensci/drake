@@ -4,14 +4,36 @@
 \alias{max_useful_jobs}
 \title{Function \code{max_useful_jobs}}
 \usage{
-max_useful_jobs(plan = workplan(), from_scratch = FALSE,
-  targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = 1, hook = default_hook, cache = drake::get_cache(verbose =
-  verbose), jobs = 1, parallelism = drake::default_parallelism(),
-  packages = rev(.packages()), prework = character(0), config = NULL,
-  imports = c("files", "all", "none"), make_imports = TRUE)
+max_useful_jobs(config, imports = c("files", "all", "none"))
 }
 \arguments{
+\item{config}{internal configuration list of \code{\link{make}(...)},
+produced also with \code{\link{config}()}.
+\code{config$envir} is ignored.
+Otherwise, if not \code{NULL}, \code{config}
+overrides all the other arguments except
+\code{imports} and \code{from_scratch}.
+For example,
+\code{plan} is replaced with \code{config$plan}.
+Computing \code{\link{config}}
+in advance could save time if you plan multiple calls to
+\code{dataframes_graph()}.}
+
+\item{imports}{Set the \code{imports} argument to change your
+assumptions about how fast objects/files are imported.
+Possible values:
+\itemize{
+ \item{'all'}{: Factor all imported files/objects into
+   calculating the max useful number of jobs.
+   Note: this is not appropriate for
+   \code{make(.., parallelism = 'Makefile')} because imports
+   are processed sequentially for the Makefile option.}
+ \item{'files'}{: Factor all imported files into the calculation,
+   but ignore all the other imports.}
+ \item{'none'}{: Ignore all the imports and just focus on the max number
+   of useful jobs for parallelizing targets.}
+}}
+
 \item{plan}{workflow plan data frame, same as for function
 \code{\link{make}()}.}
 
@@ -54,33 +76,6 @@ See \code{?parallelism_choices} for details.}
 
 \item{prework}{same as for \code{\link{make}}}
 
-\item{config}{internal configuration list of \code{\link{make}(...)},
-produced also with \code{\link{config}()}.
-\code{config$envir} is ignored.
-Otherwise, if not \code{NULL}, \code{config}
-overrides all the other arguments except
-\code{imports} and \code{from_scratch}.
-For example,
-\code{plan} is replaced with \code{config$plan}.
-Computing \code{\link{config}}
-in advance could save time if you plan multiple calls to
-\code{dataframes_graph()}.}
-
-\item{imports}{Set the \code{imports} argument to change your
-assumptions about how fast objects/files are imported.
-Possible values:
-\itemize{
- \item{'all'}{: Factor all imported files/objects into
-   calculating the max useful number of jobs.
-   Note: this is not appropriate for
-   \code{make(.., parallelism = 'Makefile')} because imports
-   are processed sequentially for the Makefile option.}
- \item{'files'}{: Factor all imported files into the calculation,
-   but ignore all the other imports.}
- \item{'none'}{: Ignore all the imports and just focus on the max number
-   of useful jobs for parallelizing targets.}
-}}
-
 \item{make_imports}{logical, whether to import external files
 and objects from the user's workspace to determine
 which targets are up to date. If \code{FALSE}, the computation
@@ -106,42 +101,44 @@ IMPORTANT: you must be in the root directory of your project.
 \examples{
 \dontrun{
 load_basic_example() # Load drake's canonical example.
+config <- drake_config(my_plan) # Standard drake configuration list.
 # Look at the graph. The work proceeds column by column
 # in parallelizable stages. The maximum number of useful jobs
 # is determined by the number and kind of targets/imports
 # in the columns.
-vis_drake_graph(my_plan)
+vis_drake_graph(config = config)
 # Should be 8 because everythign is out of date.
-max_useful_jobs(my_plan) # 8
+max_useful_jobs(config = config) # 8
 # Take into account targets and imported files.
-max_useful_jobs(my_plan, imports = 'files') # 8
+max_useful_jobs(config = config, imports = 'files') # 8
 # Include imported R objects too.
-max_useful_jobs(my_plan, imports = 'all') # 10
+max_useful_jobs(config = config, imports = 'all') # 9
 # Exclude all imported objects.
-max_useful_jobs(my_plan, imports = 'none') # 8
-make(my_plan) # Run the project, build the targets.
-vis_drake_graph(my_plan) # Everything is up to date.
+max_useful_jobs(config = config, imports = 'none') # 8
+config <- make(my_plan) # Run the project, build the targets.
+vis_drake_graph(config = config) # Everything is up to date.
 # Ignore the targets already built.
-max_useful_jobs(my_plan) # 1
-max_useful_jobs(my_plan, imports = 'files') # 1
+max_useful_jobs(config = config) # 1
+max_useful_jobs(config = config, imports = 'files') # 1
 # Imports are never really skipped in make().
-max_useful_jobs(my_plan, imports = 'all') # 9
-max_useful_jobs(my_plan, imports = 'none') # 0
+max_useful_jobs(config = config, imports = 'all') # 9
+max_useful_jobs(config = config, imports = 'none') # 0
 # Change a function so some targets are now out of date.
 reg2 = function(d){
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
-vis_drake_graph(my_plan)
-# We have different numbers of max useful jobs.
-# By default, the output takes into account which
-# targets are out of date. To disable, consider
-# using the from_scratch argument.
-max_useful_jobs(my_plan) # 4
-max_useful_jobs(my_plan, from_scratch = TRUE) # 8
-max_useful_jobs(my_plan, imports = 'files') # 4
-max_useful_jobs(my_plan, imports = 'all') # 9
-max_useful_jobs(my_plan, imports = 'none') # 4
+vis_drake_graph(config = config)
+# We have a different number for max useful jobs.
+max_useful_jobs(config = config) # 4
+# By default, max_useful_jobs() takes into account which
+# targets are out of date. To assume you are building from scratch,
+# consider using the "always" trigger.
+config_from_scratch <- config
+config_from_scratch$trigger <- "always"
+max_useful_jobs(config = config_from_scratch, imports = 'files') # 8
+max_useful_jobs(config = config_from_scratch, imports = 'all') # 9
+max_useful_jobs(config = config_from_scratch, imports = 'none') # 8
 }
 }
 \seealso{

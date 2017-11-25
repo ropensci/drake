@@ -136,7 +136,7 @@ max_useful_jobs <- function(
   config,
   imports = c("files", "all", "none")
 ){
-  nodes <- real_stages(config = config)
+  nodes <- parallel_stages(config = config)
   imports <- match.arg(imports)
   if (imports == "none"){
     nodes <- nodes[!nodes$imported, ]
