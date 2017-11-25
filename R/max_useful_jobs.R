@@ -124,11 +124,11 @@
 #' # We have different numbers of max useful jobs.
 #' # By default, the output takes into account which
 #' # targets are out of date. To assume you are building from scratch,
-#' consider using the "always" trigger.
+#' # consider using the "always" trigger.
 #' max_useful_jobs(config = config) # 4
-#' config_always <- config
+#' config_from_scratch <- config
 #' config_from_scratch$trigger <- "always"
-#' max_useful_jobs(config = config_from_scratch, imports = 'files') # 4
+#' max_useful_jobs(config = config_from_scratch, imports = 'files') # 8
 #' max_useful_jobs(config = config, imports = 'all') # 9
 #' max_useful_jobs(config = config, imports = 'none') # 4
 #' }
