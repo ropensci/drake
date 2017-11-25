@@ -205,6 +205,7 @@ vis_drake_graph <- function(
     hover = hover, main = main, ncol_legend = ncol_legend, ...)
 }
 
+#' @export
 drake_graph <- vis_drake_graph
 
 #' @title Function \code{render_drake_graph}
