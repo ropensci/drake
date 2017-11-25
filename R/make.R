@@ -216,6 +216,10 @@
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #' on your workflow. Use at your own peril.
 #'
+#' @param store_meta logical, whether to store target metadata
+#' so you can read it later with \code{\link{read_drake_meta}()}.
+#' Useful for debugging.
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -270,7 +274,8 @@ make <- function(
   graph = NULL,
   trigger = drake::default_trigger(),
   skip_imports = FALSE,
-  skip_safety_checks = FALSE
+  skip_safety_checks = FALSE,
+  store_meta = TRUE
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -312,7 +317,8 @@ make <- function(
     trigger = trigger,
     imports_only = imports_only,
     skip_imports = skip_imports,
-    skip_safety_checks = skip_safety_checks
+    skip_safety_checks = skip_safety_checks,
+    store_meta = store_meta
   )
   make_with_config(config = config)
 }

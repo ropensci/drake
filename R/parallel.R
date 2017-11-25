@@ -28,7 +28,11 @@ parallel_stage <- function(worker, config) {
     }                                       # nocov
     meta_list <- c(
       meta_list,
-      meta_list(targets = new_leaves, config = config, store = TRUE)
+      meta_list(
+        targets = new_leaves,
+        config = config,
+        store = config$store_meta
+      )
     )
     do_build <- lightly_parallelize(
       X = new_leaves,

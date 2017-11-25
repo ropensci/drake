@@ -46,6 +46,7 @@
 #' This argument is overridden if you supply your own \code{graph} argument.
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #' on your workflow to save time. Use at your own peril.
+#' @param store_meta same as for \code{\link{make}}
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -133,7 +134,7 @@ drake_config <- function(
     seed = seed, trigger = trigger,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
     imports_only = imports_only, skip_imports = skip_imports,
-    skip_safety_checks = skip_safety_checks
+    skip_safety_checks = skip_safety_checks, store_meta = store_meta
   )
 }
 
