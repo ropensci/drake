@@ -93,63 +93,60 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
+#' config <- drake_config(my_plan) # Standard drake configuration list.
 #' # Look at the graph. The work proceeds column by column
 #' # in parallelizable stages. The maximum number of useful jobs
 #' # is determined by the number and kind of targets/imports
 #' # in the columns.
-#' vis_drake_graph(my_plan)
+#' vis_drake_graph(config = config)
 #' # Should be 8 because everythign is out of date.
-#' max_useful_jobs(my_plan) # 8
+#' max_useful_jobs(config = config) # 8
 #' # Take into account targets and imported files.
-#' max_useful_jobs(my_plan, imports = 'files') # 8
+#' max_useful_jobs(config = config, imports = 'files') # 8
 #' # Include imported R objects too.
-#' max_useful_jobs(my_plan, imports = 'all') # 10
+#' max_useful_jobs(config = config, imports = 'all') # 9
 #' # Exclude all imported objects.
-#' max_useful_jobs(my_plan, imports = 'none') # 8
-#' make(my_plan) # Run the project, build the targets.
-#' vis_drake_graph(my_plan) # Everything is up to date.
+#' max_useful_jobs(config = config, imports = 'none') # 8
+#' config <- make(my_plan) # Run the project, build the targets.
+#' vis_drake_graph(config = config) # Everything is up to date.
 #' # Ignore the targets already built.
-#' max_useful_jobs(my_plan) # 1
-#' max_useful_jobs(my_plan, imports = 'files') # 1
+#' max_useful_jobs(config = config) # 1
+#' max_useful_jobs(config = config, imports = 'files') # 1
 #' # Imports are never really skipped in make().
-#' max_useful_jobs(my_plan, imports = 'all') # 9
-#' max_useful_jobs(my_plan, imports = 'none') # 0
+#' max_useful_jobs(config = config, imports = 'all') # 9
+#' max_useful_jobs(config = config, imports = 'none') # 0
 #' # Change a function so some targets are now out of date.
 #' reg2 = function(d){
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
-#' vis_drake_graph(my_plan)
+#' vis_drake_graph(config = config)
 #' # We have different numbers of max useful jobs.
 #' # By default, the output takes into account which
-#' # targets are out of date. To disable, consider
-#' # using the from_scratch argument.
-#' max_useful_jobs(my_plan) # 4
-#' max_useful_jobs(my_plan, from_scratch = TRUE) # 8
-#' max_useful_jobs(my_plan, imports = 'files') # 4
-#' max_useful_jobs(my_plan, imports = 'all') # 9
-#' max_useful_jobs(my_plan, imports = 'none') # 4
+#' # targets are out of date. To assume you are building from scratch,
+#' consider using the "always" trigger.
+#' max_useful_jobs(config = config) # 4
+#' config_always <- config
+#' config_from_scratch$trigger <- "always"
+#' max_useful_jobs(config = config_from_scratch, imports = 'files') # 4
+#' max_useful_jobs(config = config, imports = 'all') # 9
+#' max_useful_jobs(config = config, imports = 'none') # 4
 #' }
 max_useful_jobs <- function(
-  config = NULL,
+  config,
   imports = c("files", "all", "none")
 ){
   nodes <- real_stages(config = config)
   imports <- match.arg(imports)
-  just_targets <- intersect(nodes$target, config$plan$target)
-  just_files <- Filter(x = nodes$target, f = is_file)
-  targets_and_files <- union(just_targets, just_files)
   if (imports == "none"){
-    nodes <- nodes[nodes$import, ]
+    nodes <- nodes[!nodes$imported, ]
   } else if (imports == "files"){
-    nodes <- nodes[targets_and_files, ]
+    nodes <- nodes[!nodes$imported | nodes$file, ]
   }
-  if (!from_scratch){
-    nodes <- nodes[nodes$status != "up to date", ]
-  }
-  if (!nrow(nodes))
+  if (!nrow(nodes)){
     return(0)
-  dlply(nodes, "level", nrow) %>%
+  }
+  dlply(nodes, "stage", nrow) %>%
     unlist %>%
     max
 }
