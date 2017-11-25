@@ -137,12 +137,7 @@ test_with_dir("use two differnt file system caches", {
     jobs = jobs
   )
 
-  o1 <- outdated(
-    my_plan,
-    envir = envir,
-    verbose = FALSE,
-    cache = cache
-  )
+  o1 <- outdated(con)
 
   expect_equal(o1, character(0))
   expect_equal(
@@ -168,12 +163,9 @@ test_with_dir("use two differnt file system caches", {
     short_hash_algo = "murmur32",
     long_hash_algo = "crc32"
   )
-  o2 <- outdated(
-    my_plan,
-    envir = envir,
-    verbose = FALSE,
-    cache = cache2
-  )
+  con2 <- con
+  con2$cache <- cache2
+  o2 <- outdated(con2)
   con2 <- make(
     my_plan,
     cache = cache2,
@@ -182,12 +174,7 @@ test_with_dir("use two differnt file system caches", {
     parallelism = parallelism,
     jobs = jobs
   )
-  o3 <- outdated(
-    my_plan,
-    envir = envir,
-    verbose = FALSE,
-    cache = cache2
-  )
+  o3 <- outdated(con2)
   expect_equal(o2, targ)
   expect_equal(o3, character(0))
   expect_equal(
