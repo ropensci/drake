@@ -16,8 +16,8 @@ test_with_dir("examples are listed and written", {
 })
 
 test_with_dir("overwrites of report.Rmd handled correctly", {
-  expect_silent(load_basic_example(overwrite = TRUE))
-  expect_silent(load_basic_example(overwrite = FALSE))
+  load_basic_example(overwrite = TRUE)
+  load_basic_example(overwrite = FALSE)
   expect_warning(load_basic_example(overwrite = TRUE))
   expect_warning(load_basic_example(to = "a", report_file = "b"))
   expect_true(file.exists("b"))
