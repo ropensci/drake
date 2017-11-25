@@ -238,8 +238,8 @@ read_drake_config <- function(
     jobs = jobs
   )
   names(out) <- keys
-  if (is.null(config$envir)){
-    config$envir <- envir
+  if (is.null(out$envir)){
+    out$envir <- envir
   }
   out
 }

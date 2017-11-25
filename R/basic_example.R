@@ -116,5 +116,5 @@ load_basic_example <- function(
     warning("Overwriting file 'report.Rmd'.")
   }
   file.copy(from = report, to = report_file, overwrite = overwrite)
-  invisible(drake_config(plan = my_plan, envir = envir, cache = cache))
+  invisible(drake_config(plan = envir$my_plan, envir = envir, cache = cache))
 }
