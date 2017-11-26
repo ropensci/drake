@@ -62,6 +62,7 @@ migrate_drake_project <- function(
   config$trigger <- "any"
   config$execution_graph <- config$graph
   config$store_meta <- TRUE
+  config$lazy_load <- FALSE
   config$outdated <- legacy_outdated(config) %>%
     as.character %>%
     sort
