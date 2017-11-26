@@ -2,7 +2,7 @@ drake_context("lazy load")
 
 test_with_dir("no overt errors lazy load for the debug example", {
   config <- dbug()
-  config$verbose <- TRUE
+  config$verbose <- FALSE
   config$lazy_load <- TRUE
   expect_equal(sort(outdated(config)), sort(config$plan$target))
 
@@ -38,7 +38,7 @@ test_with_dir("lazy loading is actually lazy", {
     jobs = config$jobs,
     targets = "combined",
     envir = config$envir,
-    verbose = TRUE
+    verbose = FALSE
   )
   loaded <- c(
     "a", "b", "c", "f", "g", "h", "i", "j", "nextone", "yourinput"
@@ -52,7 +52,7 @@ test_with_dir("lazy loading is actually lazy", {
     jobs = config$jobs,
     targets = "combined",
     envir = config$envir,
-    verbose = TRUE
+    verbose = FALSE
   )
   loaded <- c(loaded, "combined", "nextone") %>%
     setdiff(y = "myinput")
