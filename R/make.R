@@ -371,7 +371,7 @@ make_with_config <- function(config){
   store_drake_config(config = config)
   initialize_session(config = config)
   do_prework(config = config, verbose_packages = config$verbose)
-  if (!config$skip_imports && config$parallelism != "Makefile"){
+  if (!config$skip_imports){
     make_imports(config = config)
   }
   if (!config$imports_only){
