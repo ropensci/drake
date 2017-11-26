@@ -30,7 +30,12 @@ test_with_dir("no overt errors lazy load for the debug example", {
 })
 
 test_with_dir("lazy loading is actually lazy", {
+  lazily_loaded <- c("nextone", "yourinput")
+  eagerly_loaded <- "combined"
   config <- dbug()
+  unload_these <- c(lazily_loaded, eagerly_loaded) %>%
+    intersect(y = ls(envir = config$envir))
+  remove(list = unload_these, envir = config$envir)
   config <- make(
     lazy_load = TRUE,
     plan = config$plan,
@@ -38,10 +43,9 @@ test_with_dir("lazy loading is actually lazy", {
     envir = config$envir,
     verbose = FALSE
   )
-  loaded <- c(
-    "a", "b", "c", "f", "g", "h", "i", "j", "nextone", "yourinput"
-  )
-  expect_equal(sort(loaded), sort(ls(envir = config$envir)))
+  loaded <- ls(envir = config$envir)
+  expect_true(all(lazily_loaded %in% loaded))
+  expect_false(any(eagerly_loaded %in% loaded))
   clean()
   config <- make(
     lazy_load = FALSE,
@@ -50,7 +54,7 @@ test_with_dir("lazy loading is actually lazy", {
     envir = config$envir,
     verbose = FALSE
   )
-  loaded <- c(loaded, "combined", "nextone") %>%
-    setdiff(y = "myinput")
-  expect_equal(sort(loaded), sort(ls(envir = config$envir)))
+  loaded <- ls(envir = config$envir)
+  expect_true(all(lazily_loaded %in% loaded))
+  expect_true(all(eagerly_loaded %in% loaded))
 })
