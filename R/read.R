@@ -209,6 +209,7 @@ eager_load_target <- function(target, cache, envir, verbose){
 }
 
 lazy_load_target <- function(target, cache, envir, verbose){
+  eval_env <- environment()
   delayedAssign(
     x = target,
     value = readd(
@@ -217,7 +218,7 @@ lazy_load_target <- function(target, cache, envir, verbose){
       cache = cache,
       verbose = verbose
     ),
-    eval.env = envir,
+    eval.env = eval_env,
     assign.env = envir
   )
 }

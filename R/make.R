@@ -222,7 +222,8 @@
 #'
 #' @param config optional master configuration list created by
 #' \code{\link{drake_config}()}. Using one could cut out some
-#' superfluous overhead.
+#' superfluous overhead. Overrides all other arguments
+#' if supplied
 #' 
 #' @param lazy_load logical. If \code{FALSE},
 #' drake prunes the execution environment before every

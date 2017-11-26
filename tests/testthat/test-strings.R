@@ -3,7 +3,7 @@ drake_context("strings")
 # All tests in this file are taken from eply:
 # https://github.com/wlandau-lilly/eply
 
-test_that("Functions drake_quotes() and drake_unquote() are correct.", {
+test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
   expect_equal(drake_quotes(), "\"\"")
   expect_equal(drake_quotes(single = T), "\'\'")
   expect_equal(drake_quotes(drake_strings(x, y)), c("\"x\"", "\"y\""))
@@ -43,7 +43,7 @@ test_that("Functions drake_quotes() and drake_unquote() are correct.", {
   expect_equal(drake_unquote(x, deep = T), z)
 })
 
-test_that("Function drake_strings() is correct.", {
+test_with_dir("Function drake_strings() is correct.", {
   expect_equal(character(0), drake_strings())
   expect_equal("1", drake_strings(1))
   expect_equal(
