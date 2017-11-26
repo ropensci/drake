@@ -232,7 +232,10 @@ Useful for debugging.}
 superfluous overhead. Overrides all other arguments
 if supplied}
 
-\item{lazy_load}{logical. If \code{FALSE},
+\item{lazy_load}{logical.
+Should always be set to \code{FALSE} for \code{"parLapply"}
+parallelism and \code{jobs} greater than 1.
+If \code{lazy_load} is \code{FALSE},
 drake prunes the execution environment before every
 parallelizable stages, removing all superfluous targets
 and then loading any dependencies it will need
