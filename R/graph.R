@@ -214,3 +214,26 @@ downstream_nodes <- function(from, graph, jobs){
     unique() %>%
     sort()
 }
+
+leaf_nodes <- function(graph){
+  is_leaf <- igraph::degree(graph, mode = "in") == 0
+  V(graph)[is_leaf]$name
+}
+
+exclude_imports_if <- function(config){
+  if (!length(config$skip_imports)){
+    config$skip_imports <- FALSE
+  }
+  if (!config$skip_imports){
+    return(config)
+  }
+  delete_these <- setdiff(
+    V(config$execution_graph)$name,
+    config$plan$target
+  )
+  config$execution_graph <- delete_vertices(
+    graph = config$execution_graph,
+    v = delete_these
+  )
+  config
+}

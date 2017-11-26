@@ -119,3 +119,56 @@ read_parallel_stages <- function(config){
   ) %>%
     do.call(what = "rbind")
 }
+
+parallel_stage <- function(worker, config) {
+  build_these <- character(0)
+  meta_list <- list()
+  old_leaves <- NULL
+  while (TRUE){
+    new_leaves <- leaf_nodes(graph = config$execution_graph) %>%
+      setdiff(y = build_these) %>%
+      sort
+    # Probably will not encounter this, but it prevents
+    # an infinite loop:
+    if (identical(old_leaves, new_leaves)){ # nocov # nolint
+      break                                 # nocov
+    }                                       # nocov
+    meta_list <- c(
+      meta_list,
+      meta_list(
+        targets = new_leaves,
+        config = config,
+        store = config$store_meta
+      )
+    )
+    do_build <- lightly_parallelize(
+      X = new_leaves,
+      FUN = should_build,
+      jobs = config$jobs,
+      meta_list = meta_list,
+      config = config
+    ) %>%
+      unlist
+    build_these <- c(build_these, new_leaves[do_build])
+    if (!all(do_build)){
+      trim_these <- new_leaves[!do_build]
+      config$execution_graph <- delete_vertices(
+        graph = config$execution_graph,
+        v = trim_these
+      )
+    } else {
+      break
+    }
+    old_leaves <- new_leaves
+  }
+  intersect(build_these, config$plan$target) %>%
+    increment_attempt_flag(config = config)
+  if (length(build_these)){
+    worker(targets = build_these, meta_list = meta_list,
+           config = config)
+  }
+  config$execution_graph <-
+    delete_vertices(config$execution_graph, v = build_these)
+  invisible(config)
+}
+
