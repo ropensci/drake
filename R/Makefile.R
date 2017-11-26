@@ -4,14 +4,6 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   debug = FALSE
 ){
   prepare_distributed(config = config)
-  config$outdated_targets <- outdated(
-    config = config,
-    make_imports = !config$skip_imports
-  )
-  set_attempt_flag(
-    flag = length(config$outdated_targets),
-    config = config
-  )
   with_output_sink(
     new = "Makefile",
     code = {

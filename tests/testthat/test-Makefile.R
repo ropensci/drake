@@ -94,6 +94,7 @@ test_with_dir("basic Makefile stuff works", {
     time_stamp(
      c(
         "combined",
+        "final",
         "myinput",
         "nextone",
         "yourinput"

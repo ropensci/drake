@@ -3,8 +3,9 @@ time_stamps <- function(config){
   stamp_dir <- time_stamp_dir(cache_path)
   dir_empty(stamp_dir)
   write_time_stamp_template(cache_path)
-  targets <- intersect(V(config$graph)$name, config$plan$target)
-  stamp_these <- setdiff(targets, config$outdated_targets)
+  build_these <- next_stage(config = config)
+  set_attempt_flag(flag = length(build_these), config = config)
+  stamp_these <- setdiff(config$plan$target, build_these)
   lightly_parallelize(
     stamp_these, write_time_stamp, jobs = config$jobs, config = config)
   return(invisible())
