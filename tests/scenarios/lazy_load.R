@@ -9,7 +9,7 @@ scenarios <- Filter(
     !should_skip(x)
   }
 )
-for (scenario in scenarios[-1:-3]){
+for (scenario in scenarios){
   set_testing_scenario(scenario = scenario)
   cat(get_testing_scenario_name(), "\n")
   source(test_file)
