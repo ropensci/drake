@@ -63,7 +63,7 @@
 #' build progress in previous \code{\link{make}()}s.
 #'
 #' @param make_imports logical, whether to make the imports first.
-#' Set to \code{FALSE} to increase speed and risk using obselete information.
+#' Set to \code{FALSE} to increase speed and risk using obsolete information.
 #'
 #' @examples
 #' \dontrun{

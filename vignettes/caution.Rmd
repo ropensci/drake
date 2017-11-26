@@ -255,6 +255,21 @@ make(
 
 You may need to adapt this last workaround, depending on the structure of the package, `yourProject`.
 
+## The `lazy_load` flag does not work with `"parLapply"` parallelism.
+
+Ordinarily, `drake` prunes the execution environment at every parallelizable stage. That is, it loads all the dependencies and unloads anything superfluous for entire batches of targets. This approach may not be memory efficient enough for some applications, so there is an option to delay the loading of dependencies using the `lazy_load` argument to `make()` (powered by `delayedAssign()`). There are two major risks.
+
+1. `make(..., lazy_load = TRUE, parallelism = "parLapply", jobs = 2)` does not work. If you want to use local multisession parallelism with multiple jobs and lazy loading, try `"future_lapply"` parallelism instead.
+
+    ```{r lazyloadfuture, eval = FALSE}
+    library(future)
+    future::plan(multisession)
+    load_basic_example()
+    make(my_plan, lazy_load = TRUE, parallelism = "future_lapply")
+    ```
+
+2. Delayed evaluation may cause the same dependencies to be loaded multiple times, and these duplicated loads could be slow.
+
 ## Timeouts may be unreliable.
 
 You can call `make(..., timeout = 10)` to time out all each target after 10 seconds. However, timeouts rely on [R.utils::withTimeout()](https://github.com/HenrikBengtsson/R.utils/issues/74), which in turn relies on `setTimeLimit()`. These functions are the best that R can offer right now, but they have [known issues](https://github.com/HenrikBengtsson/R.utils/issues/74), and the timeout may fail to take effect for certain environments.

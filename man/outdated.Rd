@@ -12,7 +12,7 @@ outdated(config, make_imports = TRUE)
 produced with \code{\link{config}()}.}
 
 \item{make_imports}{logical, whether to make the imports first.
-Set to \code{FALSE} to save some time and risk obselete output.
+Set to \code{FALSE} to save some time and risk obsolete output.
 \code{config$envir} is ignored.
 Overrides all the other arguments if not \code{NULL}.
 For example,

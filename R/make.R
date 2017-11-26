@@ -228,6 +228,9 @@
 #' @param lazy_load logical.
 #' Should always be set to \code{FALSE} for \code{"parLapply"}
 #' parallelism and \code{jobs} greater than 1.
+#' For local multi-session parallelism and lazy loading, try
+#' \code{library(future); future::plan(multisession)} and then
+#' \code{make(..., parallelism = "future_lapply", lazy_load = TRUE)}.
 #' If \code{lazy_load} is \code{FALSE},
 #' drake prunes the execution environment before every
 #' parallelizable stages, removing all superfluous targets

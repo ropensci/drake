@@ -66,7 +66,7 @@ Makes all targets outdated, but keeps information about
 build progress in previous \code{\link{make}()}s.}
 
 \item{make_imports}{logical, whether to make the imports first.
-Set to \code{FALSE} to increase speed and risk using obselete information.}
+Set to \code{FALSE} to increase speed and risk using obsolete information.}
 }
 \value{
 A list of three data frames: one for nodes,
