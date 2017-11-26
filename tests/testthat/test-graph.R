@@ -11,10 +11,10 @@ test_with_dir("drake searches past outdated targets for parallel stages", {
   )
   config <- make(plan, targets = c("a", "b", "c", "d"))
   config <- drake_config(plan)
-  vis_drake_graph(config)
   stages <- parallel_stages(config)
   expect_equal(sort(stages$item), c("e", "f"))
   expect_equal(length(unique(stages$stage)), 1)
+  expect_equal(sort(next_stage(config)), sort(c("e", "f")))
 })
 
 test_with_dir("Supplied graph is not an igraph.", {
