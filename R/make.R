@@ -223,6 +223,18 @@
 #' @param config optional master configuration list created by
 #' \code{\link{drake_config}()}. Using one could cut out some
 #' superfluous overhead.
+#' 
+#' @param lazy_load logical. If \code{FALSE},
+#' drake prunes the execution environment before every
+#' parallelizable stages, removing all superfluous targets
+#' and then loading any dependencies it will need
+#' for the targets in the current parallelizable stage.
+#' In other words, drake prepares the environment in advance
+#' for all the whole collection of targets in the stage.
+#' If \code{lazy_load} is \code{TRUE}, drake assigns
+#' promises to load any dependencies at the last minute.
+#' Lazy loading may be more memory efficient in some use cases, but
+#' it may duplicate the loading of dependencies, costing time.
 #'
 #' @examples
 #' \dontrun{
@@ -280,7 +292,8 @@ make <- function(
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   store_meta = TRUE,
-  config = NULL
+  config = NULL,
+  lazy_load = FALSE
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -324,7 +337,8 @@ make <- function(
       imports_only = imports_only,
       skip_imports = skip_imports,
       skip_safety_checks = skip_safety_checks,
-      store_meta = store_meta
+      store_meta = store_meta,
+      lazy_load = lazy_load
     )
   }
   make_with_config(config = config)
