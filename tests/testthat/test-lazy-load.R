@@ -35,8 +35,6 @@ test_with_dir("lazy loading is actually lazy", {
     lazy_load = TRUE,
     plan = config$plan,
     targets = "combined",
-    parallelism = config$parallelism,
-    jobs = config$jobs,
     envir = config$envir,
     verbose = TRUE
   )
@@ -49,8 +47,6 @@ test_with_dir("lazy loading is actually lazy", {
     lazy_load = FALSE,
     plan = config$plan,
     targets = "combined",
-    parallelism = config$parallelism,
-    jobs = config$jobs,
     envir = config$envir,
     verbose = TRUE
   )
