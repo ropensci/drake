@@ -34,8 +34,6 @@ test_with_dir("lazy loading is actually lazy", {
   config <- make(
     lazy_load = TRUE,
     plan = config$plan,
-    parallelism = config$parallelism,
-    jobs = config$jobs,
     targets = "combined",
     envir = config$envir,
     verbose = FALSE
@@ -48,8 +46,6 @@ test_with_dir("lazy loading is actually lazy", {
   config <- make(
     lazy_load = FALSE,
     plan = config$plan,
-    parallelism = config$parallelism,
-    jobs = config$jobs,
     targets = "combined",
     envir = config$envir,
     verbose = FALSE
