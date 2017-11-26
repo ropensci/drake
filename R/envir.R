@@ -1,5 +1,8 @@
 assign_to_envir <- Vectorize(
   function(target, value, config){
+    if (config$lazy_load){
+      return()
+    }
     if (is_file(target) | !(target %in% config$plan$target)){
       return()
     }
@@ -34,13 +37,15 @@ prune_envir <- function(targets, config){
     rm(list = discard_these, envir = config$envir)
   }
   if (length(load_these)){
-    console_many_targets(
-      load_these,
-      pattern = "load",
-      config = config
-    )
+    if (!config$lazy_load){
+      console_many_targets(
+        load_these,
+        pattern = "load",
+        config = config
+      )
+    }
     loadd(list = load_these, envir = config$envir, cache = config$cache,
-          verbose = FALSE)
+      verbose = FALSE, lazy = config$lazy_load)
   }
   invisible()
 }

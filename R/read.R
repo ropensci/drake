@@ -109,6 +109,10 @@ readd <- function(
 #' That means you need to have already called \code{\link{make}()}
 #' if you set \code{deps} to \code{TRUE}.
 #'
+#' @param lazy logical, whether to lazy load with
+#' \code{delayedAssign()} rather than the more eager
+#' \code{assign()}. 
+#'
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
@@ -136,7 +140,8 @@ loadd <- function(
   envir = parent.frame(),
   jobs = 1,
   verbose = 1,
-  deps = FALSE
+  deps = FALSE,
+  lazy = FALSE
 ){
   if (is.null(cache)){
     stop("cannot find drake cache.")
@@ -167,12 +172,30 @@ loadd <- function(
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
-    envir = envir, verbose = verbose
+    envir = envir, verbose = verbose, lazy = lazy
   )
   invisible()
 }
 
-load_target <- function(target, cache, envir, verbose){
+load_target <- function(target, cache, envir, verbose, lazy){
+  if (lazy){
+    lazy_load_target(
+      target = target,
+      cache = cache,
+      envir = envir,
+      verbose = verbose
+    )
+  } else {
+    eager_load_target(
+      target = target,
+      cache = cache,
+      envir = envir,
+      verbose = verbose
+    )
+  }
+}
+
+eager_load_target <- function(target, cache, envir, verbose){
   value <- readd(
     target,
     character_only = TRUE,
@@ -183,6 +206,20 @@ load_target <- function(target, cache, envir, verbose){
   local <- environment()
   rm(value, envir = local)
   invisible()
+}
+
+lazy_load_target <- function(target, cache, envir, verbose){
+  delayedAssign(
+    x = target,
+    value = readd(
+      target,
+      character_only = TRUE,
+      cache = cache,
+      verbose = verbose
+    ),
+    eval.env = envir,
+    assign.env = envir
+  )
 }
 
 #' @title Function \code{read_drake_config}
