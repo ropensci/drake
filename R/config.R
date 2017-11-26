@@ -212,4 +212,5 @@ store_drake_config <- function(config) {
     },
     jobs = config$jobs
   )
+  invisible()
 }

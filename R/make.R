@@ -370,6 +370,7 @@ make_with_config <- function(config){
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
+  do_prework(config = config, verbose_packages = config$verbose)
   if (!config$skip_imports && config$parallelism != "Makefile"){
     make_imports(config = config)
   }
