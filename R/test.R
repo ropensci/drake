@@ -11,7 +11,7 @@ testrun <- function(config) {
       jobs = config$jobs,
       packages = config$packages, prework = config$prework,
       prepend = config$prepend, command = config$command,
-      cache = config$cache
+      cache = config$cache, lazy_load = config$lazy_load
     )
   )
 }
