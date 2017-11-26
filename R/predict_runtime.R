@@ -187,9 +187,7 @@ rate_limiting_times <- function(
   if (from_scratch){
     config$trigger <- "always"
   }
-  nodes <- parallel_stages(config = config)
-  times <- times[nodes$item, ]
-  times$stage <- nodes$stage
+  times <- append_stages_to_times(x = times, config = config)
   out <- ddply(
     times,
     "stage",
@@ -199,6 +197,16 @@ rate_limiting_times <- function(
     round_times(digits = digits) %>%
     unname_rows
   out[!is.na(out$item), ]
+}
+
+append_stages_to_times <- function(x, config){
+  nodes <- parallel_stages(config = config)
+  rownames(nodes) <- nodes$item
+  items <- intersect(nodes$item, x$item)
+  nodes <- nodes[items, ]
+  x <- x[items, ]
+  x$stage <- nodes$stage
+  x
 }
 
 rate_limiting_at_stage <- function(stage, future_jobs){
