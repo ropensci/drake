@@ -40,7 +40,7 @@
 #' parallel_stages(config = config)
 #' }
 parallel_stages <- function(config, from_scratch = FALSE){
-  do_prework(config = config, verbose_packages = TRUE)
+  do_prework(config = config, verbose_packages = config$verbose)
   config$store_meta <- FALSE
   if (from_scratch){
     config$trigger <- "always"
@@ -120,6 +120,35 @@ read_parallel_stages <- function(config){
     do.call(what = "rbind")
 }
 
+#' @title Function next_stage
+#' @description List the targets that will be made in the
+#' first parallel stage in the next call to \code{\link{make}}
+#' @seealso \code{\link{make}}, \code{\link{drake_config}}
+#' @export
+#' @return A character vector of the targets to be made
+#' in the first parallel stage of the next call to \code{\link{make}}.
+#' @param config A master configuration list produced by
+#' \code{\link{drake_config}()} or \code{\link{make}()}
+#' @examples
+#' \dontrun{
+#' config <- load_basic_example() # drake's canonical example
+#' next_stage(config = config)    # "small" and "large"
+#' }
+next_stage <- function(config){
+  config$execution_graph <- targets_graph(config = config)
+  parallel_stage(worker = worker_next_stage, config = config)
+  targets <- tryCatch(
+    config$cache$get(key = "next_stage", namespace = "session"),
+    error = error_character0
+  )
+  config$cache$del(key = "next_stage", namespace = "session")
+  targets
+}
+
+worker_next_stage <- function(targets, meta_list, config){
+  config$cache$set(key = "next_stage", value = targets, namespace = "session")
+}
+
 parallel_stage <- function(worker, config) {
   build_these <- character(0)
   meta_list <- list()
@@ -171,4 +200,3 @@ parallel_stage <- function(worker, config) {
     delete_vertices(config$execution_graph, v = build_these)
   invisible(config)
 }
-

@@ -33,27 +33,20 @@
 #' outdated(config = config)
 #' }
 outdated <-  function(config, make_imports = TRUE){
+  do_prework(config = config, verbose_packages = config$verbose)
   if (make_imports){
     make_imports(config = config)
   }
-  all_targets <- intersect(V(config$graph)$name, config$plan$target)
-  meta_list <- meta_list(targets = all_targets, config = config)
-  is_outdated <- lightly_parallelize(
-    all_targets,
-    function(target){
-      meta <- meta_list[[target]]
-      should_build_target(target = target, meta = meta, config = config)
-    },
+  first_targets <- next_stage(config = config)
+  later_targets <- downstream_nodes(
+    from = first_targets,
+    graph = config$graph,
     jobs = config$jobs
-  ) %>%
-    unlist
-  outdated_targets <- all_targets[is_outdated]
-  if (!length(outdated_targets)){
-    return(character(0))
-  } else{
-    downstream_nodes(
-      from = outdated_targets, graph = config$graph, jobs = config$jobs)
-  }
+  ) 
+  c(first_targets, later_targets) %>%
+    as.character %>%
+    unique %>%
+    sort
 }
 
 #' @title Function \code{missed}
