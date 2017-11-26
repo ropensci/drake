@@ -224,7 +224,7 @@
 #' \code{\link{drake_config}()}. Using one could cut out some
 #' superfluous overhead. Overrides all other arguments
 #' if supplied
-#' 
+#'
 #' @param lazy_load logical.
 #' Should always be set to \code{FALSE} for \code{"parLapply"}
 #' parallelism and \code{jobs} greater than 1.

@@ -42,7 +42,7 @@ outdated <-  function(config, make_imports = TRUE){
     from = first_targets,
     graph = config$graph,
     jobs = config$jobs
-  ) 
+  )
   c(first_targets, later_targets) %>%
     as.character %>%
     unique %>%

@@ -111,7 +111,7 @@ readd <- function(
 #'
 #' @param lazy logical, whether to lazy load with
 #' \code{delayedAssign()} rather than the more eager
-#' \code{assign()}. 
+#' \code{assign()}.
 #'
 #' @examples
 #' \dontrun{
