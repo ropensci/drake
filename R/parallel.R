@@ -13,24 +13,6 @@ run_parallel <- function(config, worker) {
   invisible()
 }
 
-exclude_imports_if <- function(config){
-  if (!length(config$skip_imports)){
-    config$skip_imports <- FALSE
-  }
-  if (!config$skip_imports){
-    return(config)
-  }
-  delete_these <- setdiff(
-    V(config$execution_graph)$name,
-    config$plan$target
-  )
-  config$execution_graph <- delete_vertices(
-    graph = config$execution_graph,
-    v = delete_these
-  )
-  config
-}
-
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
   jobs <- safe_jobs(jobs)
   if (is.atomic(X)){
