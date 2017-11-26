@@ -129,11 +129,11 @@ mk <- function(
     cache_path = cache_path
   )
   new_hash <- self_hash(target = target, config = config)
-  if (!identical(config$old_hash, new_hash)){
+  if (!identical(old_hash, new_hash)){
     file <- time_stamp_file(target = target, config = config)
     file_overwrite(file)
   }
-  return(invisible())
+  invisible()
 }
 
 #' @title Function \code{default_Makefile_args}
