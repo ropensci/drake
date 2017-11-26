@@ -7,7 +7,7 @@
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose), envir = parent.frame(), jobs = 1, verbose = 1,
-  deps = FALSE)
+  deps = FALSE, lazy = FALSE)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -55,6 +55,10 @@ in a \code{\link{drake_config}()} list and cached
 during the last \code{\link{make}()}.
 That means you need to have already called \code{\link{make}()}
 if you set \code{deps} to \code{TRUE}.}
+
+\item{lazy}{logical, whether to lazy load with
+\code{delayedAssign()} rather than the more eager
+\code{assign()}.}
 }
 \value{
 \code{NULL}

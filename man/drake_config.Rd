@@ -15,7 +15,8 @@ drake_config(plan = workplan(), targets = drake::possible_targets(plan),
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
   clear_progress = FALSE, graph = NULL,
   trigger = drake::default_trigger(), imports_only = FALSE,
-  skip_imports = FALSE, skip_safety_checks = FALSE, store_meta = TRUE)
+  skip_imports = FALSE, skip_safety_checks = FALSE, store_meta = TRUE,
+  lazy_load = FALSE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -77,6 +78,8 @@ This argument is overridden if you supply your own \code{graph} argument.}
 on your workflow to save time. Use at your own peril.}
 
 \item{store_meta}{same as for \code{\link{make}}}
+
+\item{lazy_load}{same as for \code{\link{make}}}
 }
 \value{
 The master internal configuration list of a project.
