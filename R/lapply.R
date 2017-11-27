@@ -1,5 +1,4 @@
 run_lapply <- function(config){
-  do_prework(config = config, verbose_packages = config$verbose)
   run_parallel(config = config, worker = worker_lapply)
 }
 
