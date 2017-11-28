@@ -48,10 +48,10 @@ migrate_drake_project <- function(
   }
   version <- drake_session(cache = cache)$otherPkgs$drake$Version # nolint
   backup <- backup_cache_path(path = path, old = version)
-  message("Backing up", path, "to a backup cache at ", backup)
+  message("Backing up ", path, " to a backup cache at ", backup)
   dir.create(backup)
   file.copy(from = path, to = backup, recursive = TRUE)
-  message("Migrating cache at", path, "for your system's drake.")
+  message("Migrating cache at ", path, " for your system's drake.")
   config <- read_drake_config(cache = cache)
   config$cache <- cache
   config$parallelism <- "mclapply"
