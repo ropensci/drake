@@ -140,7 +140,7 @@ next_stage <- function(config){
   config$execution_graph <- targets_graph(config = config)
   parallel_stage(worker = worker_next_stage, config = config)
   tryCatch(
-    config$stages_cache$get(key = "next_stage", namespace = "session"),
+    config$stages_cache$get(key = "next_stage"),
     error = error_character0
   )
 }
@@ -148,8 +148,7 @@ next_stage <- function(config){
 worker_next_stage <- function(targets, meta_list, config){
   config$stages_cache$set(
     key = "next_stage",
-    value = targets,
-    namespace = "session"
+    value = targets
   )
 }
 
