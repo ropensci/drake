@@ -135,18 +135,22 @@ read_parallel_stages <- function(config){
 #' next_stage(config = config)    # "small" and "large"
 #' }
 next_stage <- function(config){
+  config$stages_cache <- storr::storr_environment()
+  config$stages_cache$clear()
   config$execution_graph <- targets_graph(config = config)
   parallel_stage(worker = worker_next_stage, config = config)
-  targets <- tryCatch(
-    config$cache$get(key = "next_stage", namespace = "session"),
+  tryCatch(
+    config$stages_cache$get(key = "next_stage", namespace = "session"),
     error = error_character0
   )
-  config$cache$del(key = "next_stage", namespace = "session")
-  targets
 }
 
 worker_next_stage <- function(targets, meta_list, config){
-  config$cache$set(key = "next_stage", value = targets, namespace = "session")
+  config$stages_cache$set(
+    key = "next_stage",
+    value = targets,
+    namespace = "session"
+  )
 }
 
 parallel_stage <- function(worker, config) {

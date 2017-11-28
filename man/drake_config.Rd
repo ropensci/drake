@@ -86,15 +86,23 @@ The master internal configuration list of a project.
 }
 \description{
 Compute the internal runtime parameter list of
-\code{\link{make}()}. This could save time if you are planning
-multiple function calls of functions like \code{\link{outdated}()}
-or \code{\link{vis_drake_graph}()}. Drake needs to import and cache files
-and objects to compute the configuration list, which in turn
-supports user-side functions to help with visualization and parallelism.
-The result differs from
-\code{\link{make}(..., imports_only = TRUE)}
-in that the graph includes both the targets and the imports,
-not just the imports.
+\code{\link{make}()}.
+}
+\details{
+This list is used internally, and you will need it
+for functions like \code{\link{outdated}()} and
+\code{\link{vis_drake_graph}()}. It is meant to be specific to
+a single call to \code{\link{make}()}, and you should not modify
+it by hand afterwards. If you later plan to call \code{\link{make}()}
+with different arguments (especially \code{targets}),
+you should refresh the config list with another call to
+\code{\link{drake_config}()}. For changes to the
+\code{targets} argument
+specifically, it is important to recompute the config list
+to make sure the internal workflow network has all the targets you need.
+Modifying the \code{targets} element afterwards will have no effect
+and it could lead to false negative results from
+\code{\link{outdated}()}
 }
 \examples{
 \dontrun{

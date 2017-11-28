@@ -24,7 +24,10 @@
 #' easy ways to generate large workflow plan data frames.
 #'
 #' @param targets character string, names of targets to build.
-#' Dependencies are built too.
+#' Dependencies are built too. Together, the \code{plan} and
+#' \code{targets} comprise the workflow network
+#' (i.e. the \code{graph} argument).
+#' Changing either will change the network.
 #'
 #' @param envir environment to use. Defaults to the current
 #' workspace, so you should not need to worry about this

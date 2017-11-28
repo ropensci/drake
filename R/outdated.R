@@ -7,22 +7,29 @@
 #' For example, even if \code{outdated(...)} shows everything up to date,
 #' \code{outdated(..., trigger = "always")} will show
 #' all targets out of date.
+#' You must use a fresh \code{config} argument with an up-to-date
+#' \code{config$targets} element that was never modified by hand.
+#' If needed, rerun \code{\link{drake_config}()} early and often.
+#' See the details in the help file for \code{\link{drake_config}()}.
 #' @export
 #' @seealso \code{\link{missed}}, \code{\link{workplan}},
 #' \code{\link{make}}, \code{\link{vis_drake_graph}}
 #' @return Character vector of the names of outdated targets.
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
-#' produced with \code{\link{config}()}.
+#' produced with \code{\link{drake_config}()}.
+#' You must use a fresh \code{config} argument with an up-to-date
+#' \code{config$targets} element that was never modified by hand.
+#' If needed, rerun \code{\link{drake_config}()} early and often.
+#' See the details in the help file for \code{\link{drake_config}()}.
 #' @param make_imports logical, whether to make the imports first.
 #' Set to \code{FALSE} to save some time and risk obsolete output.
-#' \code{config$envir} is ignored.
-#' Overrides all the other arguments if not \code{NULL}.
-#' For example,
-#' \code{plan} is replaced with \code{config$plan}.
 #' @examples
 #' \dontrun{
-#' config <- load_basic_example() # Load the canonical example of drake.
+#' load_basic_example() # Load the canonical example of drake.
+#' # Recopute the config list early and often to have the
+#' # most current information. Do not modify the config list by hand.
+#' config <- drake_config(my_plan)
 #' outdated(config = config) # Which targets are out of date?
 #' config <- make(my_plan) # Run the projects, build the targets.
 #' # Now, everything should be up to date (no targets listed).
