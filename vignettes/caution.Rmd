@@ -113,7 +113,7 @@ workplan(
 
 However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `workplan(f = function(x){x + 1})` or `workplan(f = y ~ x)` in some use cases, but be careful. Rather than using commands for this, it is better to define functions and formulas in your workspace before calling `make()`. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `vis_drake_graph()` and `build_drake_graph()` to see the dependency structure of your project.
 
-# Execution environment and files
+# Execution
 
 ## Install `drake` properly.
 
@@ -196,9 +196,10 @@ deps(my_plan$command[1])
 
 Here, `x` is a mere side effect of the command, and it will not be reproducibly tracked. And if you add a proper target called `x` to the workflow plan data frame, the results of your analysis may not be correct. Side effects of commands can be unpredictable, so please try to minimize them. It is a good practice to write your commands as function calls. Nested function calls are okay.
 
-## Do not change your working directory.
+## Refresh the `drake_config()` list early and often.
 
-During the execution workflow of a drake project, please do not change your working directory (with `setwd()`, for example). At the very least, if you do change your working directory during a command in your workflow plan, please return to the original working directory before the command is completed. Drake relies on a hidden cache (the `.drake/` folder) at the root of your project, so navigating to a different folder may confuse drake.
+The master configuration list returned by `drake_config()` is used internally, and you will need it for functions like `outdated()` and `vis_drake_graph}()`. The config list corresponds to a single call to `make()` with a specific set of arguments, and you should not modify it by hand afterwards. If you later plan to call `make()` with different arguments (especially `targets`), you should refresh the config list with another call
+`drake_config()`. For the `targets` argument specifically, this makes sure the internal workflow plan network includes all the targets you need.  Modifying the `targets` element afterwards will have no effect and could lead to false negative results from `outdated()`.
 
 ## Take special precautions if your `drake` project is a package.
 
