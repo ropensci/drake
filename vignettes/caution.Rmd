@@ -196,7 +196,7 @@ deps(my_plan$command[1])
 
 Here, `x` is a mere side effect of the command, and it will not be reproducibly tracked. And if you add a proper target called `x` to the workflow plan data frame, the results of your analysis may not be correct. Side effects of commands can be unpredictable, so please try to minimize them. It is a good practice to write your commands as function calls. Nested function calls are okay.
 
-## Refresh the `drake_config()` early and often.
+## Refresh the `drake_config()` list early and often.
 
 The master configuration list returned by `drake_config()` is used internally, and you will need it for functions like `outdated()` and `vis_drake_graph}()`. The config list corresponds to a single call to `make()` with a specific set of arguments, and you should not modify it by hand afterwards. If you later plan to call `make()` with different arguments (especially `targets`), you should refresh the config list with another call
 `drake_config()`. For the `targets` argument specifically, this makes sure the internal workflow plan network includes all the targets you need.  Modifying the `targets` element afterwards will have no effect and could lead to false negative results from `outdated()`.
