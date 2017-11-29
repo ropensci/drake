@@ -93,7 +93,7 @@ backend <- function(...){
 #' @examples
 #' # See ?as_drake_filename for examples.
 build_graph <- function(
-  plan = workplan(),
+  plan = plan_drake(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -131,7 +131,7 @@ build_graph <- function(
 #' default_system2_args(jobs = 1, verbose = TRUE)
 #' }
 check <- function(
-  plan = workplan(),
+  plan = plan_drake(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
@@ -189,7 +189,7 @@ check <- function(
 #' @examples
 #' # See ?drake_config for the examples.
 config <- function(
-  plan = workplan(),
+  plan = plan_drake(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -453,18 +453,18 @@ gather <- function(
 }
 
 #' @title Deprecated function \code{plan}
-#' @description Use \code{\link{workplan}()} instead.
+#' @description Use \code{\link{plan_drake}()} instead.
 #' @details Deprecated on 2017-10.
-#' @seealso \code{\link{workplan}}
+#' @seealso \code{\link{plan_drake}}
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... Same as for \code{\link{workplan}()}.
-#' @param list Same as for \code{\link{workplan}()}.
-#' @param file_targets Same as for \code{\link{workplan}()}.
-#' @param strings_in_dots Same as for \code{\link{workplan}()}.
+#' @param ... Same as for \code{\link{plan_drake}()}.
+#' @param list Same as for \code{\link{plan_drake}()}.
+#' @param file_targets Same as for \code{\link{plan_drake}()}.
+#' @param strings_in_dots Same as for \code{\link{plan_drake}()}.
 #' @examples
-#' # See ?workplan for examples.
+#' # See ?plan_drake for examples.
 plan <- function(
   ...,
   list = character(0),
@@ -477,7 +477,7 @@ plan <- function(
     msg = paste(
       "drake::plan() is deprecated due to a",
       "conflict with future::plan().",
-      "Use workplan() instead."
+      "Use plan_drake() instead."
     )
   )
   strings_in_dots <- match.arg(strings_in_dots)
@@ -548,7 +548,7 @@ plan <- function(
 #' @examples
 #' # See ?vis_drake_graph for examples.
 plot_graph <- function(
-  plan = workplan(), targets = drake::possible_targets(plan),
+  plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
@@ -861,12 +861,12 @@ summaries <- function(
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... same as for \code{drake::\link{workplan}()}
-#' @param list same as for \code{drake::\link{workplan}()}
-#' @param file_targets same as for \code{drake::\link{workplan}()}
-#' @param strings_in_dots same as for \code{drake::\link{workplan}()}
+#' @param ... same as for \code{drake::\link{plan_drake}()}
+#' @param list same as for \code{drake::\link{plan_drake}()}
+#' @param file_targets same as for \code{drake::\link{plan_drake}()}
+#' @param strings_in_dots same as for \code{drake::\link{plan_drake}()}
 #' @examples
-#' # See ?workplan for examples.
+#' # See ?plan_drake for examples.
 workflow <- function(
   ...,
   list = character(0),
@@ -876,7 +876,62 @@ workflow <- function(
   .Deprecated(
     "workflow",
     package = "drake",
-    msg = "workflow() is deprecated. Use workplan() instead."
+    msg = "workflow() is deprecated. Use plan_drake() instead."
+  )
+  strings_in_dots <- match.arg(strings_in_dots)
+  dots <- match.call(expand.dots = FALSE)$...
+  commands_dots <- lapply(dots, wide_deparse)
+  names(commands_dots) <- names(dots)
+  commands <- c(commands_dots, list)
+  targets <- names(commands)
+  commands <- as.character(commands)
+  if (!length(commands)){
+    return(
+      data.frame(
+        target = character(0),
+        command = character(0)
+      )
+    )
+  }
+  plan <- data.frame(
+    target = targets,
+    command = commands,
+    stringsAsFactors = FALSE
+  )
+  from_dots <- plan$target %in% names(commands_dots)
+  if (file_targets){
+    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
+  }
+  if (strings_in_dots == "filenames"){
+    plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
+  }
+  sanitize_plan(plan)
+}
+
+#' @title Function \code{workplan}
+#' @description Turns a named collection of command/target pairs into
+#' a workflow plan data frame for \code{\link{make}} and
+#' \code{\link{check}}.
+#' @details Deprecated on 2017-11-29
+#' @export
+#' @keywords internal
+#' @return A data frame of targets and commands.
+#' @param ... same as for \code{drake::\link{plan_drake}()}
+#' @param list same as for \code{drake::\link{plan_drake}()}
+#' @param file_targets same as for \code{drake::\link{plan_drake}()}
+#' @param strings_in_dots same as for \code{drake::\link{plan_drake}()}
+#' @examples
+#' # See ?plan_drake for examples.
+workplan <- function(
+  ...,
+  list = character(0),
+  file_targets = FALSE,
+  strings_in_dots = c("filenames", "literals")
+){
+  .Deprecated(
+    "plan_drake",
+    package = "drake",
+    msg = "plan_drake() is deprecated. Use plan_drake() instead."
   )
   strings_in_dots <- match.arg(strings_in_dots)
   dots <- match.call(expand.dots = FALSE)$...

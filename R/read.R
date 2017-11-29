@@ -2,7 +2,7 @@
 #' @description Read a drake target object from the cache.
 #' Does not delete the item from the cache.
 #' @seealso \code{\link{loadd}}, \code{\link{cached}},
-#' \code{\link{built}}, \code{link{imported}}, \code{\link{workplan}},
+#' \code{\link{built}}, \code{link{imported}}, \code{\link{plan_drake}},
 #' \code{\link{make}}
 #' @export
 #' @return The cached value of the \code{target}.
@@ -59,7 +59,7 @@ readd <- function(
 #' (or all the imported objects if in addition
 #' imported_only is \code{TRUE}).
 #' @seealso \code{\link{cached}}, \code{\link{built}},
-#' \code{\link{imported}}, \code{\link{workplan}}, \code{\link{make}},
+#' \code{\link{imported}}, \code{\link{plan_drake}}, \code{\link{make}},
 #' @export
 #' @return \code{NULL}
 #'
@@ -319,7 +319,7 @@ read_drake_plan <- function(
   if (cache$exists(key = "plan", namespace = "config")){
     cache$get(key = "plan", namespace = "config")
   } else {
-    workplan()
+    plan_drake()
   }
 }
 

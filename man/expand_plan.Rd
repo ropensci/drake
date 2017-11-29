@@ -21,7 +21,7 @@ This generates multiple replicates of targets with the same commands.
 }
 \examples{
 # Create the part of the workflow plan for the datasets.
-datasets <- workplan(
+datasets <- plan_drake(
   small = simulate(5),
   large = simulate(50))
 # Create replicates. If you want repeat targets,

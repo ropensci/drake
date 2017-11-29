@@ -1,6 +1,6 @@
 #' @title Function triggers
 #' @export
-#' @seealso \code{\link{workplan}}, \code{\link{make}}
+#' @seealso \code{\link{plan_drake}}, \code{\link{make}}
 #' @description List the available triggers.
 #' @return A character vector with the names of the available triggers.
 #' @details By default, \code{make()}
@@ -103,7 +103,7 @@ get_trigger <- function(target, config){
   if (!(target %in% plan$target)){
     return("any")
   }
-  workplan_override(
+  plan_drake_override(
     target = target,
     field = "trigger",
     config = config

@@ -7,7 +7,7 @@
 #' \code{\link{loadd}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{loadd}},
-#' \code{\link{workplan}}, \code{\link{make}}
+#' \code{\link{plan_drake}}, \code{\link{make}}
 #' @export
 #' @return Either a named logical indicating whether the given
 #' targets or cached or a character vector listing all cached

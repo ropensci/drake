@@ -4,7 +4,7 @@
 \alias{build_graph}
 \title{Deprecated function \code{build_graph}}
 \usage{
-build_graph(plan = workplan(), targets = drake::possible_targets(plan),
+build_graph(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, jobs = 1)
 }
 \arguments{

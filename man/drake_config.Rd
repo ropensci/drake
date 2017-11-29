@@ -4,7 +4,7 @@
 \alias{drake_config}
 \title{Function drake_config}
 \usage{
-drake_config(plan = workplan(), targets = drake::possible_targets(plan),
+drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(), jobs = 1,
@@ -123,5 +123,5 @@ dataframes_graph(config = con)
 }
 \seealso{
 \code{\link{make_with_config}}, \code{\link{make}},
-\code{\link{workplan}}, \code{\link{vis_drake_graph}}
+\code{\link{plan_drake}}, \code{\link{vis_drake_graph}}
 }

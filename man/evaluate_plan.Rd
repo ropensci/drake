@@ -9,7 +9,7 @@ evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by
-\code{ink{workplan}}}
+\code{ink{plan_drake}}}
 
 \item{rules}{Named list with wildcards as names and vectors of
 replacements
@@ -52,11 +52,11 @@ as names and vectors of possible values as list elements.
 }
 \examples{
 # Create the part of the workflow plan for the datasets.
-datasets <- workplan(
+datasets <- plan_drake(
   small = simulate(5),
   large = simulate(50))
 # Create a template workflow plan for the analyses.
-methods <- workplan(
+methods <- plan_drake(
   regression1 = reg1(dataset__),
   regression2 = reg2(dataset__))
 # Evaluate the wildcards in the template
@@ -75,6 +75,6 @@ my_plan
 # Workflow plans can have multiple wildcards.
 # Each combination of wildcard values will be used
 # Except when expand is FALSE.
-x <- workplan(draws = rnorm(mean = Mean, sd = Sd))
+x <- plan_drake(draws = rnorm(mean = Mean, sd = Sd))
 evaluate_plan(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 }

@@ -25,7 +25,7 @@ message_sink_hook({
   stop(5678)
 })
 # Create a new workflow plan.
-x <- workplan(loud = cat(1234), bad = stop(5678))
+x <- plan_drake(loud = cat(1234), bad = stop(5678))
 # Run the project. All messages should be suppressed.
 make(x, hook = message_sink_hook)
 }

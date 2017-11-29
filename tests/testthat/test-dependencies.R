@@ -22,7 +22,7 @@ test_with_dir(
   expect_false(is_vectorized(f))
   expect_false(is_vectorized("char"))
   expect_equal(sort(deps(f)), sort(c("g", "saveRDS")))
-  my_plan <- workplan(
+  my_plan <- plan_drake(
     x = 1 + some_object,
     my_target = x + readRDS("tracked_input_file.rds"),
     return_value = f(x, y, g(z + w)))
@@ -75,7 +75,7 @@ test_with_dir("Vectorized nested functions work", {
   e$y <- 7
   config <- dbug()
   config$envir <- e
-  config$plan <- workplan(a = f(1:10))
+  config$plan <- plan_drake(a = f(1:10))
   config$targets <- "a"
   expect_equal(deps(e$f), "g")
   expect_equal(deps(e$g), "y")

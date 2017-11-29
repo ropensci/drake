@@ -38,7 +38,7 @@ load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 failed() # Should show that no targets failed.
 # Build a workflow plan doomed to fail:
-bad_plan <- workplan(x = function_doesnt_exist())
+bad_plan <- plan_drake(x = function_doesnt_exist())
 make(bad_plan) # error
 failed() # "x"
 diagnose(x) # Retrieve the cached error log of x.
@@ -47,5 +47,5 @@ diagnose(x) # Retrieve the cached error log of x.
 \seealso{
 \code{\link{diagnose}}, \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
 }

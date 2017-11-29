@@ -46,15 +46,15 @@ my_plan
 
 There are [several functions](https://github.com/wlandau-lilly/drake/blob/master/README.md#useful-functions) to help you generate the workflow plan. No need to write every row by hand.
 
-```{r workplangeneration}
+```{r plan_drakegeneration}
 library(magrittr)
-dataset_plan <- workplan(
+dataset_plan <- plan_drake(
   small = simulate(5),
   large = simulate(50)
 )
 dataset_plan
 
-analysis_methods <- workplan(
+analysis_methods <- plan_drake(
   regression = regNUMBER(dataset__)
 ) %>%
   evaluate_plan(wildcard = "NUMBER", values = 1:2)

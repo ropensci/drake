@@ -18,7 +18,7 @@
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso \code{\link{make_with_config}}, \code{\link{make}},
-#' \code{\link{workplan}}, \code{\link{vis_drake_graph}}
+#' \code{\link{plan_drake}}, \code{\link{vis_drake_graph}}
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}
@@ -71,7 +71,7 @@
 #' dataframes_graph(config = con)
 #' }
 drake_config <- function(
-  plan = workplan(),
+  plan = plan_drake(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -200,7 +200,7 @@ do_prework <- function(config, verbose_packages) {
 #' # `targets` argument to make(). You may choose any subset.
 #' possible_targets(my_plan)
 #' }
-possible_targets <- function(plan = workplan()) {
+possible_targets <- function(plan = plan_drake()) {
   plan <- sanitize_plan(plan)
   c(as.character(plan$output), as.character(plan$target))
 }

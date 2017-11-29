@@ -4,7 +4,7 @@
 \alias{possible_targets}
 \title{Function \code{possible_targets}}
 \usage{
-possible_targets(plan = workplan())
+possible_targets(plan = plan_drake())
 }
 \arguments{
 \item{plan}{workflow plan data frame}

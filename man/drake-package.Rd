@@ -4,10 +4,10 @@
 \name{drake-package}
 \alias{drake-package}
 \alias{drake}
-\title{Drake is a workplan manager and build system,
+\title{Drake is a plan_drake manager and build system,
 a scalable solution for reproducibility and high-performance computing.}
 \description{
-Drake is a workplan manager and build system,
+Drake is a plan_drake manager and build system,
 a scalable solution for reproducibility and high-performance computing.
 }
 \examples{

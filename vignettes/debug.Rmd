@@ -217,7 +217,7 @@ clean(verbose = FALSE)
 f <- function(...){
   Sys.sleep(1)
 }
-debug_plan <- workplan(x = 1, y = f(x))
+debug_plan <- plan_drake(x = 1, y = f(x))
 debug_plan
 
 withr::with_message_sink(
@@ -256,7 +256,7 @@ f <- function(x){
     stop("unusual error")
   }
 }
-bad_plan <- workplan(
+bad_plan <- plan_drake(
   a = 12,
   b = -a,
   my_target = f(b)

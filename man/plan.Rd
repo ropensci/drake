@@ -8,27 +8,27 @@ plan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{Same as for \code{\link{workplan}()}.}
+\item{...}{Same as for \code{\link{plan_drake}()}.}
 
-\item{list}{Same as for \code{\link{workplan}()}.}
+\item{list}{Same as for \code{\link{plan_drake}()}.}
 
-\item{file_targets}{Same as for \code{\link{workplan}()}.}
+\item{file_targets}{Same as for \code{\link{plan_drake}()}.}
 
-\item{strings_in_dots}{Same as for \code{\link{workplan}()}.}
+\item{strings_in_dots}{Same as for \code{\link{plan_drake}()}.}
 }
 \value{
 A data frame of targets and commands.
 }
 \description{
-Use \code{\link{workplan}()} instead.
+Use \code{\link{plan_drake}()} instead.
 }
 \details{
 Deprecated on 2017-10.
 }
 \examples{
-# See ?workplan for examples.
+# See ?plan_drake for examples.
 }
 \seealso{
-\code{\link{workplan}}
+\code{\link{plan_drake}}
 }
 \keyword{internal}

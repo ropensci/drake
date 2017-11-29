@@ -1,16 +1,16 @@
 drake_context("envir")
 
 test_with_dir("prune_envir in full build", {
-  # workplan with lots of nested deps This will fail if
+  # plan_drake with lots of nested deps This will fail if
   # prune_envir() doesn't work.
-  datasets <- workplan(x = 1, y = 2, z = 3)
-  methods <- workplan(
+  datasets <- plan_drake(x = 1, y = 2, z = 3)
+  methods <- plan_drake(
     a = dataset__,
     b = dataset__,
     c = dataset__
   )
   analyses <- plan_analyses(methods, datasets)
-  heuristics <- workplan(
+  heuristics <- plan_drake(
     s = c(dataset__, analysis__),
     t = analysis__)
   summaries <- plan_summaries(
@@ -19,7 +19,7 @@ test_with_dir("prune_envir in full build", {
     analyses = analyses,
     gather = c("rbind", "rbind")
   )
-  output <- workplan(
+  output <- plan_drake(
     final1 = mean(s) + mean(t),
     final2 = mean(s) - mean(t),
     waitforme = c(a_x, c_y, s_b_x, t_a_z),

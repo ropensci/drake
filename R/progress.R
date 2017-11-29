@@ -2,7 +2,7 @@
 #' @description Load the \code{\link{sessionInfo}()}
 #' of the last call to \code{\link{make}()}.
 #' @seealso \code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
 #' @export
 #' @return \code{\link{sessionInfo}()} of the last
 #' call to \code{\link{make}()}
@@ -39,7 +39,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #' \code{\link{make}()} quit unexpectedly.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
 #' @export
 #' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
@@ -77,7 +77,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' for ordinary error messages printed to the console.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
 #' @export
 #' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
@@ -96,7 +96,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' make(my_plan) # Run the project, build the targets.
 #' failed() # Should show that no targets failed.
 #' # Build a workflow plan doomed to fail:
-#' bad_plan <- workplan(x = function_doesnt_exist())
+#' bad_plan <- plan_drake(x = function_doesnt_exist())
 #' make(bad_plan) # error
 #' failed() # "x"
 #' diagnose(x) # Retrieve the cached error log of x.
@@ -119,7 +119,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' Skipped objects are not listed.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{workplan}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
 #' @export
 #'
 #' @return The build progress of each target reached by

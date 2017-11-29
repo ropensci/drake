@@ -186,7 +186,7 @@ short_hash(faster_cache)
 
 long_hash(faster_cache)
 
-new_plan <- workplan(
+new_plan <- plan_drake(
   simple = 1 + 1
 )
 
@@ -228,7 +228,7 @@ Some caches store your data in the computer's memory rather than saved files. `D
 
 ```{r memory_caches}
 memory_cache <- storr_environment()
-other_plan <- workplan(
+other_plan <- plan_drake(
   some_data = rnorm(50),
   more_data = rpois(75, lambda = 10),
   result = mean(c(some_data, more_data))

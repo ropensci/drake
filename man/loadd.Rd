@@ -91,5 +91,5 @@ loadd()
 }
 \seealso{
 \code{\link{cached}}, \code{\link{built}},
-\code{\link{imported}}, \code{\link{workplan}}, \code{\link{make}},
+\code{\link{imported}}, \code{\link{plan_drake}}, \code{\link{make}},
 }

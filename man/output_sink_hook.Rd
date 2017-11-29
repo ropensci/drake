@@ -25,7 +25,7 @@ output_sink_hook({
   stop(5678)
 })
 # Create a new workflow plan.
-x <- workplan(loud = cat(1234), bad = stop(5678))
+x <- plan_drake(loud = cat(1234), bad = stop(5678))
 # Run the project. Standard output (via cat() and print())
 # should be suppressed, but messages should persist.
 make(x, hook = output_sink_hook)

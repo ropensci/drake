@@ -1,8 +1,8 @@
-drake_context("workplan")
+drake_context("plan_drake")
 
 test_with_dir("empty plan", {
   expect_equal(
-    workplan(),
+    plan_drake(),
     data.frame(
       target = character(0),
       command = character(0)
@@ -11,7 +11,7 @@ test_with_dir("empty plan", {
 })
 
 test_with_dir("plan set 1", {
-  x <- workplan(
+  x <- plan_drake(
     a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"))
@@ -24,7 +24,7 @@ test_with_dir("plan set 1", {
 })
 
 test_with_dir("plan set 2", {
-  x <- workplan(a = c,
+  x <- plan_drake(a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "literals")
@@ -36,7 +36,7 @@ test_with_dir("plan set 2", {
 })
 
 test_with_dir("plan set 3", {
-  x <- workplan(
+  x <- plan_drake(
     a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"),
@@ -49,7 +49,7 @@ test_with_dir("plan set 3", {
 })
 
 test_with_dir("plan set 4", {
-  x <- workplan(
+  x <- plan_drake(
     a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"),
@@ -61,9 +61,9 @@ test_with_dir("plan set 4", {
   expect_warning(check_plan(x, verbose = FALSE))
 })
 
-test_with_dir("workplan() trims outer whitespace in target names", {
-  x <- workplan(list = c(` a` = 1, `b \t\n` = 2))
-  y <- workplan(a = 1, b = 2)
+test_with_dir("plan_drake() trims outer whitespace in target names", {
+  x <- plan_drake(list = c(` a` = 1, `b \t\n` = 2))
+  y <- plan_drake(a = 1, b = 2)
   expect_equal(x$target, y$target)
 })
 

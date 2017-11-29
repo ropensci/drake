@@ -1,7 +1,7 @@
 drake_context("console")
 
 test_with_dir("console_up_to_date", {
-  pl <- workplan(a = 1)
+  pl <- plan_drake(a = 1)
   con <- make(pl, verbose = FALSE)
   expect_silent(console_up_to_date(con))
   con$verbose <- TRUE

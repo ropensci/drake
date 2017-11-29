@@ -1,4 +1,4 @@
-#' @title Function \code{workplan}
+#' @title Function \code{plan_drake}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
 #' \code{\link{check}}.
@@ -17,18 +17,32 @@
 #' argument to control the quoting in \code{...}.
 #' @export
 #' @return A data frame of targets and commands.
-#' @param ... same as for \code{drake::\link{workplan}()}
-#' @param list same as for \code{drake::\link{workplan}()}
-#' @param file_targets same as for \code{drake::\link{workplan}()}
-#' @param strings_in_dots same as for \code{drake::\link{workplan}()}
+#' @param ... A collection of symbols/targets
+#' with commands assigned to them. See the examples for details.
+#' @param list A named list of targets, where the values
+#' are commands.
+#' @param file_targets logical, whether the targets should be
+#' (single-quoted) external file targets.
+#' @param strings_in_dots Character scalar,
+#' how to treat quoted character strings in the commands
+#' specified through \code{...}.
+#' Set to \code{"filenames"} to treat all these strings as
+#' external file targets/imports (single-quoted),
+#' or to \code{"literals"} to treat them all as literal
+#' strings (double-quoted).
+#' Unfortunately, because of how R deparses code,
+#' you cannot simply leave literal quotes alone in the
+#' \code{...} argument. R will either convert all these quotes
+#' to single quotes or double quotes. Literal quotes in the
+#' \code{list} argument are left alone.
 #' @examples
 #' # Create example workflow plan data frames for make()
-#' workplan(small = simulate(5), large = simulate(50))
-#' workplan(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' workplan(data = readRDS("my_data.rds"))
-#' workplan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
+#' plan_drake(small = simulate(5), large = simulate(50))
+#' plan_drake(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' plan_drake(data = readRDS("my_data.rds"))
+#' plan_drake(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
 #'   strings_in_dots = "literals")
-workplan <- function(
+plan_drake <- function(
   ...,
   list = character(0),
   file_targets = FALSE,
@@ -85,7 +99,7 @@ wide_deparse <- function(x){
   paste(deparse(x), collapse = "")
 }
 
-workplan_override <- function(target, field, config){
+plan_drake_override <- function(target, field, config){
   in_plan <- config$plan[[field]]
   if (is.null(in_plan)){
     return(config[[field]])

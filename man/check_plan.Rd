@@ -4,13 +4,13 @@
 \alias{check_plan}
 \title{Function \code{check_plan}}
 \usage{
-check_plan(plan = workplan(), targets = drake::possible_targets(plan),
+check_plan(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
   verbose = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
-\code{\link{workplan}()}.}
+\code{\link{plan_drake}()}.}
 
 \item{targets}{character vector of targets to make}
 
@@ -37,5 +37,5 @@ check_plan(my_plan) # check_plan() tells you that 'report.Rmd' is missing.
 }
 }
 \seealso{
-\code{ink{workplan}}, \code{\link{make}}
+\code{ink{plan_drake}}, \code{\link{make}}
 }

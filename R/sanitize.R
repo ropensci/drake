@@ -1,5 +1,5 @@
 sanitize_plan <- function(plan){
-  for (field in workplan_columns()){
+  for (field in plan_drake_columns()){
     if (!is.null(plan[[field]])){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
@@ -11,7 +11,7 @@ sanitize_plan <- function(plan){
   plan[nchar(plan$target) > 0, ]
 }
 
-workplan_columns <- function(){
+plan_drake_columns <- function(){
   c(
     "cpu",
     "command",

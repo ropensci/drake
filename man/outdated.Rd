@@ -54,6 +54,6 @@ outdated(config = config)
 }
 }
 \seealso{
-\code{\link{missed}}, \code{\link{workplan}},
+\code{\link{missed}}, \code{\link{plan_drake}},
 \code{\link{make}}, \code{\link{vis_drake_graph}}
 }

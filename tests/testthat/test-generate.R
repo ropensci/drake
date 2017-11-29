@@ -1,14 +1,14 @@
 drake_context("generate")
 
 test_with_dir("empty generative args", {
-  x <- workplan(a = 1, b = FUNCTION())
+  x <- plan_drake(a = 1, b = FUNCTION())
   expect_equal(evaluate_plan(x), x)
   expect_equal(evaluations(x), x)
   expect_equal(expand_plan(x), x)
 })
 
 test_with_dir("evaluate, expand, and gather", {
-  df <- workplan(data = simulate(center = MU, scale = SIGMA))
+  df <- plan_drake(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
@@ -84,8 +84,8 @@ test_with_dir("evaluate, expand, and gather", {
 })
 
 test_with_dir("analyses and summaries", {
-  datasets <- workplan(small = simulate(5), large = simulate(50))
-  methods <- workplan(
+  datasets <- plan_drake(small = simulate(5), large = simulate(50))
+  methods <- plan_drake(
     regression1 = reg1(dataset__),
     regression2 = reg2(dataset__)
   )
@@ -106,10 +106,10 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(analyses, x)
 
-  m2 <- workplan(regression1 = reg1(n), regression2 = reg2(n))
+  m2 <- plan_drake(regression1 = reg1(n), regression2 = reg2(n))
   expect_equal(plan_analyses(m2, data = datasets), m2)
 
-  no_analyses <- workplan(
+  no_analyses <- plan_drake(
     summ = summary(dataset__),
     coef = coefficients(dataset__)
   )
@@ -119,7 +119,7 @@ test_with_dir("analyses and summaries", {
     )
   )
 
-  summary_types <- workplan(
+  summary_types <- plan_drake(
     summ = summary(analysis__),
     coef = coefficients(analysis__)
   )
@@ -149,7 +149,7 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(results, x)
 
-  summary_types <- workplan(
+  summary_types <- plan_drake(
     summ = summary(analysis__, dataset__),
     coef = coefficients(analysis__)
   )
@@ -206,7 +206,7 @@ test_with_dir("analyses and summaries", {
 
   newtypes <- rbind(
     summary_types,
-    workplan(
+    plan_drake(
       other = myother(dataset__)
     )
   )

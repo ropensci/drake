@@ -4,7 +4,7 @@
 \alias{build_drake_graph}
 \title{Function \code{build_drake_graph}}
 \usage{
-build_drake_graph(plan = workplan(),
+build_drake_graph(plan = plan_drake(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = 1, jobs = 1)
 }
@@ -29,11 +29,11 @@ An igraph object representing
 the workflow plan dependency network.
 }
 \description{
-Make a graph of the dependency structure of your workplan.
+Make a graph of the dependency structure of your plan_drake.
 }
 \details{
 This function returns an igraph object representing how
-the targets in your workplan depend on each other.
+the targets in your plan_drake depend on each other.
 (\code{help(package = "igraph")}). To plot the graph, call
 to \code{\link{plot.igraph}()} on your graph, or just use
 \code{\link{vis_drake_graph}()} from the start.

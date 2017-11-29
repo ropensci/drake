@@ -101,7 +101,7 @@ vignette("quickstart") # https://cran.r-project.org/package=drake/vignettes/quic
 
 # Useful functions
 
-`make()`, `workplan()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
+`make()`, `plan_drake()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
 
 ```r
 load_basic_example()
@@ -113,7 +113,7 @@ drake_example()
 set up your workflow plan data frame,
 
 ```r
-workplan()
+plan_drake()
 plan_analyses()
 plan_summaries()
 evaluate_plan()

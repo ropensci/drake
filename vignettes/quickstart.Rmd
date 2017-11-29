@@ -172,7 +172,7 @@ check_plan(my_plan)
 The data frame `my_plan` would be a pain to write by hand, so `drake` has functions to help you.
 
 ```{r datasets}
-my_datasets <- workplan(
+my_datasets <- plan_drake(
   small = simulate(5),
   large = simulate(50))
 my_datasets
@@ -187,7 +187,7 @@ expand_plan(my_datasets, values = c("rep1", "rep2"))
 Each dataset is analyzed multiple ways.
 
 ```{r methods}
-methods <- workplan(
+methods <- plan_drake(
   regression1 = reg1(dataset__), # nolint
   regression2 = reg2(dataset__)) # nolint
 methods
@@ -203,7 +203,7 @@ my_analyses
 Next, we summarize each analysis of each dataset using summary statistics and regression coefficients.
 
 ```{r summaries}
-summary_types <- workplan(
+summary_types <- plan_drake(
   summ = suppressWarnings(summary(analysis__)), # nolint
   coef = coefficients(analysis__)) # nolint
 summary_types
@@ -218,7 +218,7 @@ The `gather` feature groups summaries into a smaller number of more manageable t
 For the dynamic report, we have to make sure the files are single-quoted. Single quotes denote file targets and file imports, and double quotes denote literal strings that should not be treated as dependencies where they are mentioned. Also, `knit()` needs to be somewhere visible in the workflow plan command so that `drake` knows to dig into the active code chunks of `'report.Rmd'` and look for dependencies mentioned in calls to `loadd()` and `readd()`.
 
 ```{r reportplan}
-report <- workplan(
+report <- plan_drake(
   report.md = knit('report.Rmd', quiet = TRUE), # nolint
   file_targets = TRUE, strings_in_dots = "filenames")
 report
@@ -236,7 +236,7 @@ my_plan
 If your workflow does not fit the rigid datasets/analyses/summaries framework, check out functions `expand_plan()`, `evaluate_plan()`, and `gather_plan()`.
 
 ```{r more_expansions_and_plans}
-df <- workplan(data = simulate(center = MU, scale = SIGMA))
+df <- plan_drake(data = simulate(center = MU, scale = SIGMA))
 df
 
 df <- expand_plan(df, values = c("rep1", "rep2"))
@@ -397,7 +397,7 @@ new_simulation <- function(n){
   data.frame(x = rnorm(n), y = rnorm(n))
 }
 
-additions <- workplan(
+additions <- plan_drake(
   new_data = new_simulation(36) + sqrt(10))
 additions
 

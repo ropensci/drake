@@ -1,7 +1,7 @@
 drake_context("edge cases")
 
 test_with_dir("config and make without safety checks", {
-  x <- workplan(file = readRDS("my_file.rds"))
+  x <- plan_drake(file = readRDS("my_file.rds"))
   expect_warning(tmp <- config(x, verbose = FALSE))
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
@@ -9,7 +9,7 @@ test_with_dir("config and make without safety checks", {
 })
 
 test_with_dir("Strings stay strings, not symbols", {
-  x <- workplan(a = "A", strings_in_dots = "literals")
+  x <- plan_drake(a = "A", strings_in_dots = "literals")
   expect_silent(make(x, verbose = FALSE))
 })
 
@@ -20,7 +20,7 @@ test_with_dir("error handlers", {
 })
 
 test_with_dir("error when file target names do not match actual filenames", {
-  x <- workplan(y = 1, file_targets = TRUE)
+  x <- plan_drake(y = 1, file_targets = TRUE)
   expect_warning(expect_error(make(x, verbose = FALSE)))
 })
 
@@ -66,7 +66,7 @@ test_with_dir("target conflicts with previous import", {
 })
 
 test_with_dir("can use semicolons and multi-line commands", {
-  plan <- workplan(list = c(x = "a<-1; a", y = "b<-2\nb"))
+  plan <- plan_drake(list = c(x = "a<-1; a", y = "b<-2\nb"))
   make(plan, verbose = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(cached(x, y, search = FALSE)))
@@ -77,7 +77,7 @@ test_with_dir("true targets can be functions", {
   generator <- function() return(function(x) {
     x + 1
   })
-  plan <- workplan(myfunction = generator(), output = myfunction(1))
+  plan <- plan_drake(myfunction = generator(), output = myfunction(1))
   config <- make(plan, verbose = FALSE)
   expect_equal(readd(output), 2)
   expect_true(

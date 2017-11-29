@@ -24,7 +24,7 @@ dbug_envir <- function(envir) {
 }
 
 dbug_plan <- function() {
-  workplan(list = c(
+  plan_drake(list = c(
     `'intermediatefile.rds'` = "saveRDS(combined, \"intermediatefile.rds\")",
     yourinput = "f(1+1)",
     nextone = "myinput + g(7)",

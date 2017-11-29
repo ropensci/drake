@@ -46,7 +46,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
   )
 })
 
-test_with_dir("namespaced workplan works", {
+test_with_dir("namespaced plan_drake works", {
   scenarios <- get_testing_scenario()
   envir <- dbug()$envir
   rm(list = ls(envir), envir = envir)
@@ -54,7 +54,7 @@ test_with_dir("namespaced workplan works", {
     x <- nchar(digest::digest(sqrt(x)))
     base:::c(x, 1)
   }
-  x <- workplan(a = base::list(f(1)))
+  x <- plan_drake(a = base::list(f(1)))
   config <- make(
     x,
     envir = envir,

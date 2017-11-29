@@ -30,5 +30,5 @@ find_cache()
 }
 }
 \seealso{
-\code{\link{workplan}}, \code{\link{make}}
+\code{\link{plan_drake}}, \code{\link{make}}
 }

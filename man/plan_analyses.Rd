@@ -26,11 +26,11 @@ analyze multiple datasets using multiple methods of analysis.
 }
 \examples{
 # Create the piece of the workflow plan for the datasets.
-datasets <- workplan(
+datasets <- plan_drake(
   small = simulate(5),
   large = simulate(50))
 # Create a template for the analysis methods.
-methods <- workplan(
+methods <- plan_drake(
   regression1 = reg1(dataset__),
   regression2 = reg2(dataset__))
 # Evaluate the wildcards to create the part of the workflow plan
@@ -43,5 +43,5 @@ my_plan
 }
 \seealso{
 \code{\link{plan_summaries}},
- \code{\link{make}}, \code{\link{workplan}}
+ \code{\link{make}}, \code{\link{plan_drake}}
 }

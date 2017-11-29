@@ -72,7 +72,7 @@ predict_runtime <- function(
 
 #' @title Function rate_limiting_times
 #' @description Return a data frame of elapsed build times of
-#' the rate-limiting targets of a \code{\link{make}()} workplan.
+#' the rate-limiting targets of a \code{\link{make}()} plan_drake.
 #' @export
 #'
 #' @details The \code{stage} column of the returned data frame
