@@ -931,7 +931,7 @@ workplan <- function(
   .Deprecated(
     "plan_drake",
     package = "drake",
-    msg = "plan_drake() is deprecated. Use plan_drake() instead."
+    msg = "workplan() is deprecated. Use plan_drake() instead."
   )
   strings_in_dots <- match.arg(strings_in_dots)
   dots <- match.call(expand.dots = FALSE)$...
