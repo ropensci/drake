@@ -26,25 +26,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-Reproducibility carries an implicit promise that alleged results of a computation are up to date with the dependencies. In other words, the final tables, figures, and reports should match the data and code that generated them. This form of internal consistency is nontrivial for medium to large projects, where dependencies change frequently but the results take a long time to refresh. In fact, dependency awareness is arguably just as important as [scientific replicability](http://www.nature.com/news/1-500-scientists-lift-the-lid-on-reproducibility-1.19970), [literate programming](https://www.r-bloggers.com/reproducible-research-training-wheels-and-knitr/), and [version control](https://nicercode.github.io/git/why.html). However, few tools in R properly address the need, and it is a conspicuous blind spot in most discussions about reproducibility in the R and Statistics communities.
-
-# Reproducibility with drake
-
 ![](logo-vignettes.png)
 
-Enter the [`drake` package](https://github.com/wlandau-lilly/drake), one of the only [pipeline toolkits](https://github.com/pditommaso/awesome-pipeline) available in R. `Drake` detects the dependencies of intermediate steps, links everything together in a [network graph](https://cran.r-project.org/package=drake/vignettes/graph.html#dependency-reactivity), fingerprints the available data, and rebuilds only the pieces that are out of date or missing. For a demonstration, we turn to the built-in basic example.
+Reproducibility carries the promise that your output matches your input. Your tables, figures, reports, and intermediate objects should stay up to date with all the underlying data and code. To ensure internal consistency, `drake` detects and refreshes the outdated components of your project. The same solution unlocks powerful high-performance computing functionality.
 
-```{r reproducibilitydemo}
-load_basic_example()
-```
+# Reproducibility with `drake`
 
-The intermediate components of the project, or "targets", are declared in an ordinary data frame.
+Outline your project as a data frame of targets.
 
 ```{r myplandrakevig}
+load_basic_example(verbose = FALSE)
 my_plan
 ```
 
-There are [several functions](https://github.com/wlandau-lilly/drake/blob/master/README.md#useful-functions) to help you generate the workflow plan. No need to write every row by hand.
+Wildcard templating generates these data frames at scale.
 
 ```{r plan_drakegeneration}
 library(magrittr)
@@ -70,7 +65,7 @@ whole_plan <- rbind(dataset_plan, analysis_plan)
 whole_plan
 ```
 
-The [visNetwork graph](http://datastorm-open.github.io/visNetwork/) below is interactive, so you can hover, click, drag, zoom, and pan.
+Using static code analysis, `drake` detects the dependencies of all your targets. The result is an interactive network diagram.
 
 ```{r drakevisgraph, eval = FALSE}
 vis_drake_graph(my_plan)
@@ -82,50 +77,76 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-All the targets are out of date because nothing has been built yet.
+At this point, all your targets are out of date because the project is new.
 
 ```{r outdateddrake}
 config <- drake_config(my_plan, verbose = FALSE) # Master configuration list
 outdated(config)
 ```
 
-To build the project, `make()` executes the commands from the workflow plan in the [correct order](https://en.wikipedia.org/wiki/Topological_sorting).
+The `make()` function traverses the network and builds the targets that require updates.
 
 ```{r firstmakedrake}
 make(my_plan)
 ```
 
-Now, everything is up to date. In the next `make()`, there is no work to do.
+The project is now up to date, so the next `make()` does nothing.
 
 ```{r makeuptodatedrake}
 make(my_plan)
 ```
 
-If you nontrivially change a command, imported function, or other dependency, `make()` does the minimum amount of work necessary to bring your project up to date again. Below, `make()` skips the targets that depend on `reg1()`.
+But a nontrivial change in `reg2()` triggers updates to all the affected downstream targets.
 
 ```{r reg2makedrake}
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
+
 make(my_plan)
 ```
 
 # High-performance computing
 
-In addition to reproducibility, `drake` tries to make high-performance computing easy and accessible. Parallel processing is as straightforward as setting the maximum number of simultaneous parallel workers, or `jobs`.
+Local parallel processing is easy..
 
 ```{r jobsdrake, eval = FALSE}
 make(my_plan, jobs = 2)
 ```
 
-`Drake` can even recommend the maximum number of useful jobs. The `max_useful_jobs()` function takes into account which targets will be skipped in the next `make()`.
+Choose from the available parallel backends.
+
+```{r parallelchoices}
+parallelism_choices()
+```
+
+```{r makeparLapply, eval = FALSE}
+make(my_plan, parallelism = "parLapply", jobs = 4)
+```
+
+`Drake` integrates with [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) to unlock a multitude of local and distributed computing options. Deployment to a [SLURM](https://slurm.schedmd.com) cluster, for example, is straightforward.
+
+```{r exampleconfiguredrake, eval = FALSE}
+library(future.batchtools)
+batchtools_drake_tmpl_file("slurm")
+future::plan(
+  batchtools_slurm(
+    template = "batchtools.slurm.tmpl",
+    workers = 8
+  )
+)
+make(my_plan, parallelism = "future_lapply", jobs = 4)
+```
+
+`Drake` even helps you scale the parallel processing.
 
 ```{r maxusefuljobs}
 # Everything is already up to date.
 config <- drake_config(my_plan, verbose = FALSE)
 max_useful_jobs(config)
 
+# Change a dependency.
 reg2 <- function(d){
   d$x4 <- d$x ^ 4
   lm(y ~ x4, data = d)
@@ -147,38 +168,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The columns in the graph represent parallelizable stages. All the objects in a column are conditionally independent given their dependencies. In `make()`, the columns are processed sequentially from left to right, and everything within an individual column is parallelized over the available `jobs`. (This is not a hard and fast rule: `drake` includes targets further ahead if some targets in the current column are already up to date.) Assuming the targets are rate-limiting (as opposed to the imports), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, and it would be superfluous to use more than 4 `jobs`.
-
-`Drake` supports a [vast arsenal](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd#parallel-backends) of parallel computing backends. You can leverage the spare cores on your laptop's processor or scale up to serious distributed computing on a cluster. You can list the supported backends with `parallellism_choices()`.
-
-```{r parallelchoicesdrake}
-parallelism_choices()
-```
-
-and make use of a backend with the `parallelism` argument.
-
-```{r declareparalleldrake, eval = FALSE}
-make(my_plan, parallelism = "mclapply", jobs = 2)
-```
-
-You can configure the `"future_lapply"` and `"Makefile"` backends for formal job schedulers such as [SLURM](https://slurm.schedmd.com/), [TORQUE](www.adaptivecomputing.com/products/open-source/torque/), and the [Sun/Univa Grid Engine](http://www.univa.com/products/). For `"future_lapply"` parallelism, use the backend's `workers` argument for the targets and `make()`'s `jobs` argument for the imports. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for more detailed instructions.
-
-```{r exampleconfiguredrake, eval = FALSE}
-library(future.batchtools)
-future::plan(
-  batchtools_slurm(
-    template = "batchtools.slurm.tmpl",
-    workers = 8
-  )
-)
-make(my_plan, parallelism = "future_lapply", jobs = 4)
-```
-
-With the `drake_example()` function, you can write [example files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) to get you started. Most of the examples focus on the available high-performance computing options. See `drake_examples()` for your choices.
-
-```{r drakeexamplesdrake}
-drake_examples()
-```
+Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage.
 
 # Acknowledgements and related work
 
