@@ -129,7 +129,7 @@ make(my_plan, parallelism = "parLapply", jobs = 4)
 
 ```{r exampleconfiguredrake, eval = FALSE}
 library(future.batchtools)
-batchtools_drake_tmpl_file("slurm")
+drake_batchtools_tmpl_file("slurm")
 future::plan(
   batchtools_slurm(
     template = "batchtools.slurm.tmpl",

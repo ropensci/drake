@@ -33,6 +33,6 @@ shell_file()
 }
 \seealso{
 \code{\link{make}}, \code{\link{max_useful_jobs}},
-\code{\link{parallelism_choices}}, \code{\link{batchtools_drake_tmpl_file}},
+\code{\link{parallelism_choices}}, \code{\link{drake_batchtools_tmpl_file}},
 \code{\link{drake_example}}, \code{\link{drake_examples}}
 }

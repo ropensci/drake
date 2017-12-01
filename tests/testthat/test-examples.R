@@ -11,8 +11,8 @@ test_with_dir("examples are listed and written", {
     unlink(i, recursive = TRUE, force = TRUE)
   }
   expect_warning(drake_example(destination = getwd()))
-  expect_silent(batchtools_drake_tmpl_file("slurm"))
-  expect_error(batchtools_drake_tmpl_file("basic"))
+  expect_silent(drake_batchtools_tmpl_file("slurm"))
+  expect_error(drake_batchtools_tmpl_file("basic"))
 })
 
 test_with_dir("overwrites of report.Rmd handled correctly", {

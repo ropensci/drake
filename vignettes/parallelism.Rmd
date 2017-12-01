@@ -219,8 +219,8 @@ drake_example("slurm") # SLURM workflow and supporting files
 To just write the [batchtools](https://github.com/mllg/batchtools) `*.tmpl` for an example, use
 
 ```{r writexampletmpl, eval = FALSE}
-batchtools_drake_tmpl_file("sge")   # Writes sge-simple.tmpl
-batchtools_drake_tmpl_file("slurm") # Writes batchtools.slurm.tmpl
+drake_batchtools_tmpl_file("sge")   # Writes sge-simple.tmpl
+drake_batchtools_tmpl_file("slurm") # Writes batchtools.slurm.tmpl
 ```
 
 Be sure to heed the previously-mentioned cautionary note about deploying too many jobs. In `"future_lapply"` parallelism, the `jobs` argument is totally ignored. In at least some cases, you can limit the maximum number of jobs to 2 by calling `options(mc.cores = 2)` before `make()`. Depending on the `future` backend you select with `future::plan()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.

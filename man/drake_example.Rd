@@ -41,5 +41,5 @@ drake_example("slurm")
 }
 \seealso{
 \code{\link{drake_examples}}, \code{\link{make}},
-\code{\link{shell_file}}, \code{\link{batchtools_drake_tmpl_file}}
+\code{\link{shell_file}}, \code{\link{drake_batchtools_tmpl_file}}
 }

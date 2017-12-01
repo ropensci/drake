@@ -5,7 +5,7 @@
 #' quickstart vignette: \code{vignette('quickstart')}.
 #' To see the names of all the examples, run \code{\link{drake_examples}}.
 #' @seealso \code{\link{drake_examples}}, \code{\link{make}},
-#' \code{\link{shell_file}}, \code{\link{batchtools_drake_tmpl_file}}
+#' \code{\link{shell_file}}, \code{\link{drake_batchtools_tmpl_file}}
 #' @export
 #' @return \code{NULL}
 #' @param example name of the example.

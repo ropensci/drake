@@ -1,4 +1,4 @@
-#' @title Function \code{batchtools_drake_tmpl_file}
+#' @title Function \code{drake_batchtools_tmpl_file}
 #' @description Write the batchtools template file
 #' from one of the examples. If there are multiple files,
 #' only the first one (alphabetically) is written.
@@ -19,7 +19,7 @@
 #' # List the drake examples. Only some have template files.
 #' drake_examples()
 #' # Write the batchtools template file from the SLURM example.
-#' batchtools_drake_tmpl_file("slurm") # Writes batchtools.slurm.tmpl.
+#' drake_batchtools_tmpl_file("slurm") # Writes batchtools.slurm.tmpl.
 #' # Find batchtools.slurm.tmpl with the rest of the example's files.
 #' drake_example("slurm") # Writes a new 'slurm' folder with more files.
 #' # Run the basic example with a
@@ -28,7 +28,7 @@
 #' future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl"))
 #' make(my_plan, parallelism = "future_lapply")
 #' }
-batchtools_drake_tmpl_file <- function(
+drake_batchtools_tmpl_file <- function(
   example = drake::drake_examples(),
   to = getwd(),
   overwrite = FALSE
@@ -166,7 +166,7 @@ default_parallelism <- function() {
 #' Use this option to run your project in parallel on a computing cluster
 #' or supercomputer.
 #' @seealso \code{\link{make}}, \code{\link{max_useful_jobs}},
-#' \code{\link{parallelism_choices}}, \code{\link{batchtools_drake_tmpl_file}},
+#' \code{\link{parallelism_choices}}, \code{\link{drake_batchtools_tmpl_file}},
 #' \code{\link{drake_example}}, \code{\link{drake_examples}}
 #' @export
 #' @return The return value of the call to \code{file.copy()} that
