@@ -1,25 +1,31 @@
 sanitize_plan <- function(plan){
-  for (field in plan_drake_columns()){
+  for (field in plan_drake_character_columns()){
     if (!is.null(plan[[field]])){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
   }
-  plan <- as.data.frame(plan, stringsAsFactors = FALSE)
-  if (!is.null(plan$trigger)){
-    assert_legal_triggers(plan$trigger)
+  if (!is.null(plan[["trigger"]])){
+    assert_legal_triggers(plan[["trigger"]])
   }
   plan[nchar(plan$target) > 0, ]
 }
 
+plan_drake_character_columns <- function(){
+  c(
+    "command",
+    "target",
+    "trigger"
+  )
+}
+
 plan_drake_columns <- function(){
   c(
+    plan_drake_character_columns(),
     "cpu",
-    "command",
     "elapsed",
+    "evaluator",
     "retries",
-    "target",
-    "timeout",
-    "trigger"
+    "timeout"
   )
 }
 

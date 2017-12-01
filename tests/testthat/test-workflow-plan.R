@@ -1,4 +1,4 @@
-drake_context("plan_drake")
+drake_context("workflow plan")
 
 test_with_dir("empty plan", {
   expect_equal(

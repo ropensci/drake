@@ -202,7 +202,7 @@ do_prework <- function(config, verbose_packages) {
 #' }
 possible_targets <- function(plan = plan_drake()) {
   plan <- sanitize_plan(plan)
-  c(as.character(plan$output), as.character(plan$target))
+  as.character(plan$target)
 }
 
 store_drake_config <- function(config) {

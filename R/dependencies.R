@@ -85,7 +85,7 @@ deps <- function(x){
 #'   namespace = "kernels")
 #' }
 dependency_profile <- function(target, config){
-  config$plan$trigger <- NULL
+  config$plan[["trigger"]] <- NULL
   cached_command <- safe_get(key = target, namespace = "commands",
     config = config)
   current_command <- get_command(target = target, config = config)

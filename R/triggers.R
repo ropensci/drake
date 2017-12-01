@@ -45,9 +45,9 @@
 #' triggers()
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
-#' my_plan$trigger <- "command"
+#' my_plan[["trigger"]] <- "command"
 #' # You can have different triggers for different targets.
-#' my_plan$trigger[1] <- "file"
+#' my_plan[["trigger"]][1] <- "file"
 #' make(my_plan) # Run the project, build the targets.
 #' # Change an imported dependency function.
 #' reg2 <- function(d) {
@@ -59,7 +59,7 @@
 #' make(my_plan)
 #' # You can use a global trigger if your workflow plan
 #' # does not have a 'trigger' column.
-#' my_plan$trigger <- NULL # Would override the global trigger.
+#' my_plan[["trigger"]] <- NULL # Would override the global trigger.
 #' make(my_plan, trigger = "missing") # Just build missing targets.
 #' }
 triggers <- function(){
@@ -192,7 +192,7 @@ should_build_target <- function(target, meta, config){
 
 using_default_triggers <- function(config){
   default_plan_triggers <-
-    is.null(config$plan$trigger) ||
-    all(config$plan$trigger == default_trigger())
+    is.null(config$plan[["trigger"]]) ||
+    all(config$plan[["trigger"]] == default_trigger())
   default_plan_triggers && config$trigger == default_trigger()
 }
