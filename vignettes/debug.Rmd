@@ -162,23 +162,23 @@ str(head(read_drake_meta()))
 
 To track dependencies and make decisions about what needs building, `make()` store the fingerprint, or hash, of each target. Hashing is great for detecting the right changes in targets, but if all you want to do is test and debug a workflow, the full rigor can be time-consuming.
 
-Fortunately, you can change the triggers that tell `drake` to (re)build the target. Below, `drake` disregards outdatedness and just builds the targets that are missing. Notice that no imports are formally processed (except to build the internal dependency network).
+Fortunately, you can change the triggers that tell `drake` when to (re)build each target. Below, `drake` disregards outdatedness and just builds the targets that are missing.
 
 ```{r rushdebug}
 clean(verbose = FALSE) # Start from scratch
 config <- make(my_plan, trigger = "missing")
 ```
 
-You can choose from any of the following triggers for all targets or for each target separately..
+You can choose from any of the following triggers for all targets or for each target individually.
 
 - `always`: Always build the target regardless of the circumstance, even if the target is already up to date. 
 - `any`: Apply all the triggers below (default). In other words, trigger a build if the `command` trigger, `depends` trigger, `file` trigger, or `missing` trigger is activated.
-- `command`: Build if the workflow plan command has changed since last time the target was built. Also built if `missing` is triggered.
-- `depends`: Build if any of the target's dependencies has changed since the last `make()`. Also build if `missing` is triggered.
-- `file`: Build if the target is a file and that output file is either missing or corrupted. Also build if `missing` is triggered.
-- `missing`: Build if the target itself is missing. Always applies.
+- `command`: Build if the workflow plan command changed since the last `make()` or the target is missing.
+- `depends`: Build if any of the target's dependencies changed since the last `make()` or if the target is missing.
+- `file`: Build if the target is an output file and the file is either missing or corrupted. Also build if the file's hash is missing from the cache.
+- `missing`: Build if and only if the target is missing.
 
-To define triggers for individual targets, define an optional `trigger` column in the workflow plan data frame. Entries in this column override the `trigger` argument to `make()`
+To select triggers for individual targets, create an optional `trigger` column in the workflow plan data frame. Entries in this column override the `trigger` argument to `make()`
 
 ```{r indivtrigger}
 my_plan$trigger <- "command"
@@ -199,7 +199,7 @@ The `outdated()` function responds to triggers. For example, even if `outdated(m
 
 # Skipping imports
 
-Similar to triggers, another way to speed testing is to skip the imports entirely. However, *you should only use this for testing purposes*. If some of your imports are not already cached and up to date, any built targets will be out of sync. In other words, you risk false positive findings in `outdated()`, and your project may no longer be reproducibly interconnected.
+Similar to triggers, you can also to skip the processing of imported objects and files. However, *you should only use this for testing purposes*. If some of your imports are not already cached and up to date, any built targets will be out of sync. In other words, `outdated()` is more likely to be wrong, and your project may no longer be reproducible.
 
 ```{r skipimports}
 clean(verbose = FALSE)
@@ -210,7 +210,7 @@ make(my_plan, skip_imports = TRUE)
 
 # Impose timeouts and retries
 
-Some bugs may cause your code to keep running indefinitely. In other cases, you may want to retry failed targets to look ahead to other parts of your workflow. For this type of control, see the `timeout`, `cpu`, `elapsed`, and `retries` argument to `make()`.
+See the `timeout`, `cpu`, `elapsed`, and `retries` argument to `make()`.
 
 ```{r timeoutretry}
 clean(verbose = FALSE)
@@ -226,7 +226,7 @@ withr::with_message_sink(
 )
 ```
 
-To customize these settings separately for each target, define new `timeout`, `cpu`, `elapsed`, or `retries` columns in your workflow plan. These columns override the analogous arguments to `make()`.
+To tailor these settings to each individual target, create new `timeout`, `cpu`, `elapsed`, or `retries` columns in your workflow plan. These columns override the analogous arguments to `make()`.
 
 ```{r timeoutretry2}
 clean(verbose = FALSE)
@@ -243,10 +243,10 @@ withr::with_message_sink(
 
 # Diagnose failures.
 
-When targets fail, it may be difficult to diagnose the problem, especially if you are using `drake`'s powerful [high-performance computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd). Fortunately, `drake` records
+`Drake` records
 
 1. which targets failed in the last `make()`, and
-1. the most recent error log of every target.
+1. the most recent error log of each target.
 
 ```{r diagnosedebug}
 diagnose(verbose = FALSE)
@@ -280,7 +280,7 @@ str(error)
 error$calls # View the traceback.
 ```
 
-To figure out what went wrong, you should try to build the failed target interactively. To do that, you must load the target's dependencies in your workspace, which you can easily do with `loadd(my_target, deps = TRUE)`.
+To figure out what went wrong, you could try to build the failed target interactively. To do that, you must load the target's dependencies in your workspace, which you can easily do with `loadd(my_target, deps = TRUE)`.
 
 ```{r loaddeps}
 # Pretend we just opened a new R session.
@@ -333,9 +333,9 @@ For more information on the cache, see the [storage vignette](https://github.com
 
 # Start tinkering.
 
-The `load_basic_example()` function loads the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic) right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. All you need to do is call `make(my_plan)` to build it.
+The `load_basic_example()` function loads the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic) right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only `make(my_plan)` is left to you.
 
-`Drake` [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) to help get you started. To see your choices, use
+`Drake` has [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). To see your choices, use
 
 ```{r examplesdrakedebug}
 drake_examples()
@@ -347,8 +347,6 @@ To write the files for an example, use `drake_example()`.
 drake_example("basic")
 drake_example("slurm")
 ```
-
-In most cases, all you need to do is run the R code provided.
 
 ```{r rmfiles_debug, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
