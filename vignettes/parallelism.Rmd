@@ -26,11 +26,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-`Drake` has extensive high-performance computing support, from local multicore computing on your laptop to serious supercomputing across multiple nodes of a large cluster. In `make()`, just set the `jobs` argument to something greater than 1. That unlocks local multicore parallelism. For large-scale distributed parallelism, set `parallelism` to `"Makefile"` and stay tuned for an explanation.
+`Drake` has extensive high-performance computing support, from local multicore parallelism to serious distributed computing across multiple nodes of a cluster. Control it with the `parallelism` and `jobs` arguments to `make()`, and use `future::plan()` if `parallelism` is `"future_lapply"`.
 
-# The approach
+# The concept
 
-`Drake`'s approach to parallelism relies on the network graph of the targets and imports.
+`Drake`'s approach to parallelism relies on the network graph representation of a project.
 
 ```{r hpcplotgraph, eval = FALSE}
 clean()
@@ -51,21 +51,17 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right. The items are built or imported column by column in sequence, and up-to-date targets are skipped. (This is not a hard and fast rule: `drake` includes targets further ahead if some targets in the current column are already up to date.) Within each column, the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
-
-
+The nodes in each column above are conditionally independent given the dependencies on the left. So in general, the targets and imports are processed column by column from left to right, and everything within a column is executed in parallel. When some targets are already up to date, `drake` searches ahead in the graph to maximize the number of outdated targets in each parallelizable stage.
 
 # How many parallel jobs should you use?
 
 ## Not too many!
 
-Be mindful of the maximum number of simultaneous parallel jobs you deploy. At best, too many jobs is poor etiquette on a system with many users and limited resources. At worst, too many jobs will crash a system. The `jobs` argument to `make()` sets the maximum number of simultaneous jobs in most cases, but not all.
+Be mindful of the maximum number of simultaneous parallel jobs you deploy. Consequences of greed and carelessness range from poor etiquette to system crashes. In most cases, the `jobs` argument to `make()` sets the maximum number of simultaneous jobs, but it does not apply to the parallel execution of targets when `parallelism` is `"future_lapply"`. If you use `"future_lapply"` parallelism, please see the  `workers` argument to most supporting functions passed to `future::plan()` (for example, `future::plan(multisession(workers = 2))`). Depending on the [future](https://github.com/HenrikBengtsson/future) backend you select with `future::plan()` or `future::plan()`, you might also make use of one of the other environment variables listed in `?future::future.options`.
 
-For most of `drake`'s parallel backends, `jobs` sets the maximum number of simultaneous parallel jobs. However, there are ways to break the pattern. For example, `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")` uses at most 2 jobs for the imports and at most 4 jobs for the targets. (In `make()`, `args` overrides `jobs` for the targets). For `make(..., parallelism = "future_lapply")`, the `jobs` argument is ignored altogether. Instead, you should set the `workers` argument where it is available (for example, `future::plan(mutlisession(workers = 2))` or `future::plan(future.batchtools::batchtools_local(workers = 2))`) in the preparations before `make()`. Alternatively, you might limit the max number of jobs by setting `options(mc.cores = 2)` before calling `make()`. Depending on the `future` backend you select with `future::plan()` or `future::plan()`, you might make use of one of the other environment variables listed in `?future::future.options`.
+## Drake can report the maximum number of useful simultaneous jobs
 
-## Drake can suggest a maximum number of useful jobs
-
-For `drake`, the max useful jobs is the maximum number of targets in any parallelizable stage. Unless `from_scratch` is `TRUE` in `max_useful_jobs()`, all up-to-date targets are ignored.
+The `max_useful_jobs()` function analyzes your project and recommends a maximum value for the `jobs` argument to the next `make()` (or the `workers` argument to a backend function in [future](https://github.com/HenrikBengtsson/future)). 
 
 ```{r hpcquick, eval = FALSE}
 library(drake)
@@ -98,7 +94,7 @@ max_useful_jobs(config, imports = "none") # 4
 
 # Parallel backends
 
-`Drake` has multiple parallel backends, i.e. separate mechanisms for achieving parallelism. Some are low-overhead and limited, others are high-overhead and scalable. Just set the `parallelism` argument of `Make` to choose a backend. The best choice usually depends on your project's scale and stage of deployment.
+`Drake` has multiple parallel backends, i.e. separate mechanisms for achieving parallelism. Some are low-overhead and limited, others are high-overhead and scalable. Just set the `parallelism` argument of `Make` to choose a backend. The best choice usually depends on your project's intended scale and stage of deployment.
 
 ```{r hpcchoices, eval = TRUE}
 parallelism_choices()
@@ -171,7 +167,7 @@ make(my_plan, parallelism = "future_lapply")
 This approach should allow you to deploy targets to a [Docker container](https://www.docker.com/what-container).
 
 ```{r ownclusterdocker, eval = FALSE}
-## Setup of Docker worker running rocker and r-base
+## Setup of Docker worker running rocker and r-base # nolint
 ## (requires installation of future package)
 cl <- future::makeClusterPSOCK(
   "localhost",
