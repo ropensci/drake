@@ -62,7 +62,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The nodes in each column above are conditionally independent given the dependencies on the left. So in general, the targets and imports are processed column by column from left to right, and everything within a column is executed in parallel. When some targets are already up to date, `drake` searches ahead in the graph to maximize the number of outdated targets in each parallelizable stage.
+The nodes in each column above are conditionally independent given the dependencies to the left. So in general, the targets and imports are processed column by column from left to right, and everything within a column is executed in parallel. When some targets are already up to date, `drake` searches ahead in the graph to maximize the number of outdated targets in each parallelizable stage.
 
 To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function. All the targets/imports in a stage are processed in parallel before moving on to the next stage.
 

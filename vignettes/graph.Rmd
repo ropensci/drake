@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 ```
 
 
-`Drake` has powerful visuals to help you understand and plan your workflow. You can generate an interactive workflow plan graph with either `drake_graph()` or `vis_drake_graph()`. Then click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
+`Drake` has powerful visuals to help you plan your project. You can generate an interactive workflow network with either `drake_graph()` or `vis_drake_graph()`. Then click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
 
 
 # Dependency reactivity
@@ -47,7 +47,7 @@ style="border: none; box-shadow: none">
 </iframe>
 
 
-In the previous graph, all the targets were out of date. But after a `make()`, we will be all caught up, and the graph will show you.
+After `make()`, the whole project is all caught up.
 
 ```{r graphmake}
 config <- make(my_plan, jobs = 4, verbose = FALSE)
@@ -61,7 +61,7 @@ style="border: none; box-shadow: none">
 </iframe>
 
 
-But when you change a dependency, you throw some targets out of date until you call `make(my_plan)` again.
+But when you change a dependency, some targets are out of date until the next `make(my_plan)`.
 
 ```{r reg2graphvisual}
 reg2 <- function(d){
@@ -79,7 +79,7 @@ style="border: none; box-shadow: none">
 
 # Subgraphs
 
-Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual `subset` of nodes to show. However, with the `subset` argument, `vis_drake_graph()` is prone to losing intermediate nodes and thus dropping edges.
+Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual `subset` of nodes. However, with the `subset` argument, `vis_drake_graph()` may drop intermediate nodes and edges.
 
 ```{r subsetgraph}
 vis_drake_graph(config, subset = c("regression2_small", "'report.md'"))
@@ -91,7 +91,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The other subgraph functionality is much better at preserving connectedness. Use `targets_only` to ignore the imports.
+The rest of the subgraph functionality preserves connectedness. Use `targets_only` to ignore the imports.
 
 ```{r targetsonly}
 vis_drake_graph(config, targets_only = TRUE)
@@ -129,7 +129,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-In fact, let's just take a small neighborhood around a target in both directions.
+In fact, let us just take a small neighborhood around a target in both directions.
 
 
 ```{r fromall}
@@ -142,7 +142,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The `report.md` node is drawn in somewhat, but it is still the farthest right in order to communicate `drake`'s parallel computing strategy. 
+The `report.md` node is drawn in somewhat, but it is still the farthest to the right in order to communicate `drake`'s parallel computing strategy. 
 
 # Parallel computing laid bare
 
@@ -154,10 +154,11 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-When you call `make(my_plan, jobs = 4)`, the work proceeds in chronological order from left to right in the above graph. The items are built or imported column by column in sequence, and up-to-date targets are skipped. (This is not a hard and fast rule: `drake` includes targets further ahead if some targets in the current column are already up to date.) Within each column (or parallelizable stage), the targets/objects are all independent of each other conditional on the previous steps, so they are distributed over the 4 available parallel jobs/workers. Assuming the targets are rate-limiting (as opposed to imported objects), the next `make(..., jobs = 4)` should be faster than `make(..., jobs = 1)`, but it would be superfluous to use more than 4 jobs.
+The nodes in each column above are conditionally independent given the dependencies to the left. So in general, the targets and imports are processed column by column from left to right, and everything within a column is executed in parallel. When some targets are already up to date, `drake` searches ahead in the graph to maximize the number of outdated targets in each parallelizable stage.
+
+To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function. All the targets/imports in a stage are processed in parallel before moving on to the next stage.
 
 
 # Finer control
 
-We have only scratched the surface of `vis_drake_graph()`, there is much more functionality documented in the help file (`?vis_drake_graph`). In addition, `dataframes_graph()` outputs a list of nodes, edges, and legend nodes that you can modify and then feed right into your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
-
+We have only scratched the surface of `vis_drake_graph()`. The help files (`?vis_drake_graph`) document much more functionality. In particular, the `dataframes_graph()` and `render_drake_graph()` functions let you customize your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).
