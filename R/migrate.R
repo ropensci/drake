@@ -148,6 +148,8 @@ migrate_hook <- function(code){
     config$cache$get(key = target, namespace = "build_times"),
     error = null_proc_time
   )
+  config$cache$set(key = target, value = build_time,
+    namespace = "build_times")
   value <- tryCatch(
     legacy_readd(target = target, cache = config$cache),
     error = error_na
@@ -157,7 +159,7 @@ migrate_hook <- function(code){
     return()
   }
   store_target(target = target, value = value, meta = meta,
-    build_time = build_time, config = config)
+    config = config)
 }
 
 error_na <- function(e){

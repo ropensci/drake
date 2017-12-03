@@ -43,7 +43,7 @@ For `drake` version 4.1.0 and earlier, `build_times()` just measures the elapsed
 
 # Predicting runtime
 
-Drake uses these times to predict the runtime of the next `make()`. At the moment, everything is up to date, so a hypothetical next `make()` should be fast. Here, we only factor in the times of the targets (excluding the imports using `targets_only = TRUE`).
+Drake uses these times to predict the runtime of the next `make()`. At this moment, everything is up to date in the current example, so the next `make()` should be fast. Here, we only factor in the times of the targets (excluding the imports using `targets_only = TRUE`).
 
 ```{r predict_runtime}
 config <- drake_config(my_plan, verbose = FALSE)
@@ -54,7 +54,7 @@ predict_runtime(
 )
 ```
 
-But you can also predict the elapsed time of a full runthrough scratch (after `clean()`).
+But you can also predict the elapsed time of a full runthrough scratch (either after `clean()` or with `make(..., trigger = "always")`).
 
 ```{r predict_runtime_scratch}
 predict_runtime(
@@ -65,7 +65,7 @@ predict_runtime(
 )
 ```
 
-Let's change a dependency to make some targets out of date. Now, even though `from_scatch` is `FALSE`, the next `make()` should take some time.
+Suppose we change a dependency to make some targets out of date. Now, even though `from_scatch` is `FALSE`, the next `make()` should take some time.
 
 ```{r changedep_timing}
 reg2 <- function(d){
@@ -80,7 +80,7 @@ predict_runtime(
 )
 ```
 
-We can also factor in parallelism using the `future_jobs` argument.
+We can also factor in parallelism using the `future_jobs` argument, which is just `jobs` for a hypothetical next `make()`.
 
 ```{r future_jobs}
 predict_runtime(
@@ -110,12 +110,12 @@ predict_runtime(
 
 # Rate-limiting targets
 
-To predict the next runtime with multiple parallel jobs, drake makes some assumptions.
+To predict the next runtime with multiple parallel jobs, `drake` makes some assumptions.
 
-1. The outdated targets are spread out evenly over the available jobs. (All targets are used if `from_scratch` is `TRUE`)
+1. The outdated targets are spread out evenly over the available jobs.
 1. One job gets all the slowest targets (pessimistic scenario).
 
-Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a usually a column in the workflow graph, but if there are up-to-date targets in a column, `drake` skips ahead to try to fit as many conditionally independent targets as possible in a stage.
+Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a usually a column in the workflow graph, but if there are up-to-date targets in a column, `drake` skips ahead to try to fit as many targets as possible in a stage.
 
 ```{r faketiminggraph, eval = FALSE}
 # Hover, click, drag, zoom, and pan.
@@ -128,7 +128,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-You can explore the rate-limiting targets.
+You can explore the rate-limiting targets
 
 ```{r rate_limiting_targets}
 rate_limiting_times(
@@ -153,6 +153,12 @@ rate_limiting_times(
   digits = 8,
   targets_only = TRUE
 )
+```
+
+and the parallelizable stages in general.
+
+```{r timingstages}
+parallel_stages(config, from_scratch = TRUE)
 ```
 
 # A word of caution
