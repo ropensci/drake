@@ -35,12 +35,12 @@ knitr::opts_chunk$set(
 
 # Storage basics
 
-When you run `make()`, `drake` puts your imports and output targets in a hidden cache, or storage location.
+When you run `make()`, `drake` stores your imports and output targets in a hidden cache.
 
 
 ```{r basic_storage}
 library(drake)
-load_basic_example()
+load_basic_example(verbose = FALSE)
 config <- make(my_plan, verbose = FALSE)
 ```
 
@@ -69,14 +69,14 @@ cache <- get_cache() # Get the default cache from the last build.
 
 class(cache)
 
-cache$list() # functionality from storr
+cache$list() # Functionality from storr
 
-cache$get("small") # functionality from storr
+cache$get("small") # Functionality from storr
 ```
 
 # Hash algorithms
 
-The key to [storr](https://github.com/richfitz/storr)'s internals is the concept of  [hashing](https://en.wikipedia.org/wiki/Hash_function). [Storr](https://github.com/richfitz/storr) uses hashes to label what they store, and `drake` leverages these hashes to figure out what is up to date and what needs to be (re)built. A hash is like a fingerprint for a piece of data, so the hash should change if the dataset changes. Regardless of the data's size, the hash always has same number of characters.
+The concept of [hashing](https://en.wikipedia.org/wiki/Hash_function) is central to [storr](https://github.com/richfitz/storr)'s internals. [Storr](https://github.com/richfitz/storr) uses hashes to label stored objects, and `drake` leverages these hashes to figure out which targets are up to date and which ones are outdated. A hash is like a target's fingerprint, so the hash changes when the target changes. Regardless of the target's size, the hash is always the same number of characters.
 
 ```{r hashes}
 library(digest) # package for hashing objects and files
@@ -88,7 +88,7 @@ digest(smaller_data) # compute the hash
 digest(larger_data)
 ```
 
-However, different hash algorithms vary in output length.
+However, different hash algorithms vary in length.
 
 ```{r compare_algo_lengths}
 digest(larger_data, algo = "sha512")
@@ -102,10 +102,10 @@ digest(larger_data, algo = "murmur32")
 
 # Which hash algorithm should you choose?
 
-Hashing is expensive, and unsurprisingly, shorter hashes are usually faster to compute. So why not always use `murmur32`? One reason is the risk of collisions: when two different objects have the same hash. In general, shorter hashes have higher risks of collisions. We want our fingerprints to be unique. On the other hand, a longer hash is not always the answer. Besides speed, the decision depends on how we use the output. `Drake` and [storr](https://github.com/richfitz/storr) both use hash keys as names for internal cache files, and in general, file names should respect the 260-character cap on Windows file paths. That is why `drake` uses a shorter hash algorithm for internal cache-related file names and a longer hash algorithm for everything else.
+Hashing is expensive, and unsurprisingly, shorter hashes are usually faster to compute. So why not always use `murmur32`? One reason is the risk of collisions: that is, when two different objects have the same hash. In general, shorter hashes have more frequent collisions. On the other hand, a longer hash is not always the answer. Besides the loss of speed, `drake` and [storr](https://github.com/richfitz/storr) sometimes use hash keys as file names, and long hashes could violate the 260-character cap on Windows file paths. That is why `drake` uses a shorter hash algorithm for internal cache-related file names and a longer hash algorithm for everything else.
 
 ```{r justified_hash_choices}
-default_short_hash_algo() # for drake
+default_short_hash_algo()
 
 default_long_hash_algo()
 
@@ -116,7 +116,7 @@ long_hash(cache)
 
 # Select the hash algorithms of the default cache
 
-For new projects, use `new_cache()` to set the hashes of the default cache.
+For new projects, use `new_cache()` to set the hash algorithms of the default cache.
 
 ```{r default_cache_reset}
 cache_path(cache) # Default cache from before.
@@ -141,7 +141,7 @@ short_hash(config$cache) # xxhash64 is the default_short_hash_algo()
 long_hash(config$cache) # sha256 is the default_long_hash_algo()
 ```
 
-You can change the long hash algorithm without throwing away the cache, but the project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and its supporting files.
+You can change the long hash algorithm without throwing away the cache, but your project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and all its supporting files.
 
 ```{r more_cache}
 outdated(config) # empty
@@ -169,7 +169,7 @@ long_hash(config$cache) # different from before
 
 # More on custom caches
 
-You do not need to use the default cache whose files are at `default_cache_path()` (`.drake/`). However, if you use a different file system, such as the custom `faster_cache/` folder below, you will need to manually supply the cache to all functions that require one.
+You do not need to use the default cache at the `default_cache_path()` (`.drake/`). However, if you use a different file system, such as the custom `faster_cache/` folder below, you will need to manually supply the cache to all functions that require one.
 
 ```{r, custom cache}
 faster_cache <- new_cache(
@@ -199,7 +199,7 @@ readd(simple, cache = faster_cache)
 
 # Recovering the cache
 
-You can recover an old cache from the file system. You could use `storr::storr_rds()` directly if you know the short hash algorithm, but `this_cache()` and `recover_cache()` are safer for `drake`.
+You can recover an old cache from the file system. You could use `storr::storr_rds()` directly if you know the short hash algorithm, but `this_cache()` and `recover_cache()` are safer for `drake`. `get_cache()` is similar, but it has a slightly different interface.
 
 ```{r oldcachenoeval, eval = FALSE}
 old_cache <- this_cache("faste_cache") # Get a cache you know exists...
@@ -220,11 +220,11 @@ cached(cache = my_storr)
 readd(simple, cache = my_storr)
 ```
 
-`Drake` supports [storr_rds()](https://github.com/richfitz/storr) caches. Other caches may be possible, but they should have a `storr`-like API and [namespace support](https://github.com/richfitz/storr/blob/master/vignettes/storr.Rmd#namespaces).
+`Drake` supports arbitrary [storr](https://github.com/richfitz/storr) caches such as `storr_rds()` and `storr_environment()`. Other caches may be possible, but they should have a `storr`-like API and [namespace support](https://github.com/richfitz/storr/blob/master/vignettes/storr.Rmd#namespaces).
 
 # In-memory caches
 
-Some caches store your data in the computer's memory rather than saved files. `Drake` can make use of these in-memory caches, but not with any kind of parallel computing. In other words, when you call `make()`, the `parallelism` argument cannot be `"Makefile"` and `jobs` must be `1` (default). Also, keep in mind that unless you save your workspace, your in-memory cache will disappear when you close your R session.
+Some caches store your data in the computer's memory rather than saved files. `Drake` can make use of these in-memory caches, but not with most forms of parallel computing. In other words, when you call `make()`, the `parallelism` argument must be `"mclapply"` or `jobs` must be `1`. Also, unless you save your workspace, your in-memory cache will disappear when you close your R session.
 
 ```{r memory_caches}
 memory_cache <- storr_environment()
@@ -263,7 +263,7 @@ For new in-memory caches, please use `new_cache()` rather than `get_cache()` or 
 
 # Cleaning up
 
-If you want to start from scratch, you can `clean()` the cache. Use the `destroy` argument to remove it completely. `cache$del()` and `cache$destroy()` are also options, but they leave output file targets dangling. By contrast, `clean(destroy = TRUE)` removes file targets generated by `drake::make()`.
+If you want to start from scratch, you can `clean()` the cache. Use the `destroy` argument to remove it completely. `cache$del()` and `cache$destroy()` are also options, but they leave output file targets dangling. By contrast, `clean(destroy = TRUE)` removes file targets generated by `drake::make()`. `drake_gc()` and `clean(..., garbage_collection = TRUE)` do garbage collection, and `clean(purge = TRUE)` removes all target-level data, not just the final output values.
 
 ```{r cleaning_up}
 clean(small, large)
