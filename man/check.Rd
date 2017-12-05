@@ -29,9 +29,7 @@ Use \code{\link{check_plan}()} instead.
 Deprecated on 2017-11-12.
 }
 \examples{
-\dontrun{
-default_system2_args(jobs = 1, verbose = TRUE)
-}
+# See ?check_plan for examples.
 }
 \seealso{
 \code{\link{check_plan}}

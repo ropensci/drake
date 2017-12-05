@@ -1,3 +1,18 @@
+#' @title Internal function store_drake_config
+#' @description Do the preparatory work
+#' for \code{\link{make}()} with a distributed computing
+#' backend (see the \code{parallelism} argument).
+#' @export
+#' @keywords internal
+#' @param config Internal configuration list from
+#' \code{\link{drake_config}()}.
+#' @return Nothing.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- drake_config(my_plan)
+#' prepare_distributed(config = config)
+#' }
 prepare_distributed <- function(config){
   this_cache_path <- cache_path(config$cache)
   if (identical(globalenv(), config$envir)){

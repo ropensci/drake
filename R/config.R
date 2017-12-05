@@ -205,6 +205,20 @@ possible_targets <- function(plan = plan_drake()) {
   as.character(plan$target)
 }
 
+#' @title Internal function store_drake_config
+#' @description Store an internal configuration list
+#' from \code{\link{drake_config}()}.
+#' @export
+#' @keywords internal
+#' @param config Internal configuration list
+#' @return Nothing.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- drake_config(my_plan)
+#' store_drake_config(config = config)
+#' read_drake_config()
+#' }
 store_drake_config <- function(config) {
   save_these <- setdiff(names(config), "envir")  # envir could get massive.
   lightly_parallelize(

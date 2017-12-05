@@ -23,11 +23,12 @@
 #' make(my_plan, jobs = 2) # Distribute over 2 parallel jobs.
 #' clean() # Restart from scratch.
 #' # Parallelize over at most 4 separate R sessions.
-#' make(my_plan, jobs = 4, parallelism = "Makefile")
+#' # Requires Rtools on Windows.
+#' # make(my_plan, jobs = 4, parallelism = "Makefile") # nolint
 #' # Everything is already up to date.
-#' make(my_plan, jobs = 4, parallelism = "Makefile")
+#' # make(my_plan, jobs = 4, parallelism = "Makefile") # nolint
 #' clean(destroy = TRUE) # Totally remove the cache.
-#' unlink(c("Makefile", "report.Rmd")) # Clean up the remaining files.
+#' unlink("report.Rmd") # Clean up the remaining files.
 #' }
 #' @references \url{https://github.com/wlandau-lilly/drake}
 #' @importFrom codetools findGlobals

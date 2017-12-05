@@ -57,6 +57,7 @@ as_file <- function(x){
 #' \dontrun{
 #' load_basic_example() # Load the canonical example
 #' # Choose future's multicore parallel backend.
+#' library(future)
 #' future::plan(multicore) # Instead of backend(). Avoid drake::plan().
 #' # Run the project, build the targets.
 #' # Future knows that you chose the multicore backend.
@@ -127,9 +128,7 @@ build_graph <- function(
 #' @param cache Same as for \code{\link{check_plan}()}.
 #' @param verbose Same as for \code{\link{check_plan}()}.
 #' @examples
-#' \dontrun{
-#' default_system2_args(jobs = 1, verbose = TRUE)
-#' }
+#' # See ?check_plan for examples.
 check <- function(
   plan = plan_drake(),
   targets = drake::possible_targets(plan),
@@ -262,9 +261,7 @@ config <- function(
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
 #' @examples
-#' \dontrun{
-#' default_system2_args(jobs = 1, verbose = TRUE)
-#' }
+#' # See ?default_Makefile_args for examples.
 default_system2_args <- function(jobs, verbose){
   .Deprecated(
     "default_system2_args",
@@ -632,6 +629,8 @@ plot_graph <- function(
 #' @param search same as \code{\link{read_drake_config}()}
 #' @param cache same as \code{\link{read_drake_config}()}
 #' @param verbose same as \code{\link{read_drake_config}()}
+#' @examples
+#' # See ?read_drake_config for examples.
 read_config <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),

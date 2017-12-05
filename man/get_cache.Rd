@@ -31,6 +31,7 @@ Search for and return a drake file system cache.
 }
 \examples{
 \dontrun{
+clean(destroy = TRUE)
 # No cache is available.
 get_cache() # NULL
 load_basic_example() # Load drake's canonical example.

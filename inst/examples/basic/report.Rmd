@@ -1,5 +1,5 @@
 ---
-title: Example Report
+title: "Example Report"
 author: You
 output: html_document
 ---

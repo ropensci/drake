@@ -249,27 +249,30 @@
 #' @examples
 #' \dontrun{
 #' load_basic_example() # Load drake's canonical example.
-#' outdated(my_plan) # Which targets need to be (re)built?
-#' my_jobs = max_useful_jobs(my_plan) # Depends on what is up to date.
-#' make(my_plan, jobs = my_jobs) # Build what needs to be built.
-#' outdated(my_plan) # Everything is up to date.
+#' config <- drake_config(my_plan)
+#' outdated(config) # Which targets need to be (re)built?
+#' my_jobs = max_useful_jobs(config) # Depends on what is up to date.
+#' make(my_plan, jobs = 2) # Build what needs to be built.
+#' outdated(config) # Everything is up to date.
 #' # Change one of your imported function dependencies.
 #' reg2 = function(d){
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
-#' outdated(my_plan) # Some targets depend on reg2().
-#' vis_drake_graph(my_plan) # See how they fit in an interactive graph.
+#' outdated(config) # Some targets depend on reg2().
+#' vis_drake_graph(config) # See how they fit in an interactive graph.
 #' make(my_plan) # Rebuild just the outdated targets.
-#' outdated(my_plan) # Everything is up to date again.
-#' vis_drake_graph(my_plan) # The colors changed in the graph.
+#' outdated(config) # Everything is up to date again.
+#' vis_drake_graph(config) # The colors changed in the graph.
 #' clean() # Start from scratch.
 #' # Rerun with "Makefile" parallelism with at most 4 jobs.
-#' make(my_plan, parallelism = "Makefile", jobs = 4)
+#' # Requires Rtools on Windows.
+#' # make(my_plan, parallelism = "Makefile", jobs = 4) # nolint
 #' clean() # Start from scratch.
 #' # Specify your own Makefile recipe.
-#' make(my_plan, parallelism = "Makefile", jobs = 4,
-#'   recipe_command = "R -q -e")
+#' # Requires Rtools on Windows.
+#' # make(my_plan, parallelism = "Makefile", jobs = 4, # nolint
+#' #   recipe_command = "R -q -e") # nolint
 #' }
 make <- function(
   plan = plan_drake(),

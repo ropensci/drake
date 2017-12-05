@@ -10,14 +10,18 @@
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' # Test out the silencer hook on its own.
-#' silencer_hook({
-#'   cat(1234)
-#'   stop(5678)
-#' })
+#' try(
+#'   silencer_hook({
+#'     cat(1234)
+#'     stop(5678)
+#'   }),
+#'   silent = FALSE
+#' )
 #' # Make a new workflow plan.
 #' x <- plan_drake(loud = cat(1234), bad = stop(5678))
 #' # Test out the silencer hook on a drake project.
-#' make(x, hook = silencer_hook) # All output should be suppressed.
+#' # All output should be suppressed.
+#' try(make(x, hook = silencer_hook), silent = FALSE)
 #' }
 silencer_hook <- function(code){
   output_sink_hook(
@@ -38,14 +42,17 @@ silencer_hook <- function(code){
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' # Test out the message sink hook on its own.
-#' message_sink_hook({
-#'   cat(1234)
-#'   stop(5678)
-#' })
+#' try(
+#'   message_sink_hook({
+#'     cat(1234)
+#'     stop(5678)
+#'   }),
+#'   silent = FALSE
+#' )
 #' # Create a new workflow plan.
 #' x <- plan_drake(loud = cat(1234), bad = stop(5678))
 #' # Run the project. All messages should be suppressed.
-#' make(x, hook = message_sink_hook)
+#' try(make(x, hook = message_sink_hook), silent = FALSE)
 #' }
 message_sink_hook <- function(code){
   message <- file(paste0("message", Sys.getpid(), ".txt"), "w")
@@ -68,15 +75,18 @@ message_sink_hook <- function(code){
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' # Test out the output sink hook on its own.
-#' output_sink_hook({
-#'   cat(1234)
-#'   stop(5678)
-#' })
+#' try(
+#'   output_sink_hook({
+#'     cat(1234)
+#'     stop(5678)
+#'   }),
+#'   silent = FALSE
+#' )
 #' # Create a new workflow plan.
 #' x <- plan_drake(loud = cat(1234), bad = stop(5678))
 #' # Run the project. Standard output (via cat() and print())
 #' # should be suppressed, but messages should persist.
-#' make(x, hook = output_sink_hook)
+#' try(make(x, hook = output_sink_hook), silent = FALSE)
 #' }
 output_sink_hook <- function(code){
   output <- paste0("output", Sys.getpid(), ".txt")

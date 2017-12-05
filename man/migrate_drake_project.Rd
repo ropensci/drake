@@ -51,7 +51,8 @@ migrate_drake_project()
 make(my_plan) # Everything is still up to date!
 # Outdated objects from before migration
 # should remain out of date afterwards.
-outdated(my_plan)
+config <- drake_config(my_plan)
+outdated(config)
 }
 }
 \seealso{

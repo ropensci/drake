@@ -38,8 +38,11 @@ type of cache in \code{\link{cache_types}()}.
 }
 \examples{
 \dontrun{
+clean(destroy = TRUE)
+unlink("not_hidden", recursive = TRUE)
 cache1 <- new_cache() # Creates a new hidden '.drake' folder.
 cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
+clean(destroy = TRUE, cache = cache2)
 }
 # Create a storr_environment() cache from a custom environment.
 e <- new.env() # Create a new environment.

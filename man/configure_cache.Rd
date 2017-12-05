@@ -43,6 +43,7 @@ to prepare the cache to be called from \code{\link{make}()}.
 }
 \examples{
 \dontrun{
+clean(destroy = TRUE)
 load_basic_example() # Load drake's canonical example into the workspace.
 config <- make(my_plan) # Run the project, build all the targets.
 # Locate the drake/storr cache of the project

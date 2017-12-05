@@ -25,8 +25,8 @@
 #' # Run the basic example with a
 #' # SLURM-powered parallel backend. Requires SLURM.
 #' library(future.batchtools)
-#' future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl"))
-#' make(my_plan, parallelism = "future_lapply")
+#' # future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl")) # nolint
+#' # make(my_plan, parallelism = "future_lapply") # nolint
 #' }
 drake_batchtools_tmpl_file <- function(
   example = drake::drake_examples(),

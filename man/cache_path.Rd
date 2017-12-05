@@ -21,6 +21,7 @@ caches.
 }
 \examples{
 \dontrun{
+clean(destroy = TRUE)
 # Get/create a new drake/storr cache.
 cache <- recover_cache()
 # Show the file path of the cache.

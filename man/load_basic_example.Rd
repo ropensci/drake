@@ -51,7 +51,8 @@ deps(reg1)
 deps(my_plan$command[1])
 deps(my_plan$command[4])
 # Plot the interactive network visualization of the workflow.
-vis_drake_graph(my_plan)
+config <- drake_config(my_plan)
+vis_drake_graph(config)
 # Run the workflow to build all the targets in the plan.
 make(my_plan)
 # Remove the whole cache.

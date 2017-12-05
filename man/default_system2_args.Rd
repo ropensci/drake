@@ -21,9 +21,7 @@ Use \code{\link{default_Makefile_args}()} instead.
 Deprecated on 2017-10.
 }
 \examples{
-\dontrun{
-default_system2_args(jobs = 1, verbose = TRUE)
-}
+# See ?default_Makefile_args for examples.
 }
 \seealso{
 \code{\link{default_Makefile_args}}

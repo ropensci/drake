@@ -210,7 +210,8 @@ drake_graph <- vis_drake_graph
 #' load_basic_example() # Load the canonical example for drake.
 #' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
-#' graph <- dataframes_graph(my_plan)
+#' config <- drake_config(my_plan) # Internal configuration list
+#' graph <- dataframes_graph(config)
 #' # You can pass the data frames right to render_drake_graph()
 #' # (as in vis_drake_graph()) or you can create
 #' # your own custom visNewtork graph.

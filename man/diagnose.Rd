@@ -57,7 +57,7 @@ f <- function(){
 bad_plan <- plan_drake(my_target = f())
 # Running the project should generate an error
 # when trying to build 'my_target'.
-make(bad_plan)
+try(make(bad_plan), silent = FALSE)
 failed() # List the failed targets from the last make() (my_target).
 # List targets that failed at one point or another
 # over the course of the project (my_target).

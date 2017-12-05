@@ -27,7 +27,8 @@ Do not use for in-memory caches such as
 }
 \examples{
 \dontrun{
-x <- this_cache() # The cache does not exist yet.
+clean(destroy = TRUE)
+try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 y <- this_cache() # Now, there is a cache.

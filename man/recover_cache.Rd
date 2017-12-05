@@ -43,6 +43,7 @@ For internal use only.
 }
 \examples{
 \dontrun{
+clean(destroy = TRUE)
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build all the targets.
 x <- recover_cache(".drake") # Recover the project's storr cache.

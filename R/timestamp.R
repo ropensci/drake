@@ -1,3 +1,18 @@
+#' @title Internal function time_stamps
+#' @description Write dummy timestamps for Makefiles
+#' @details Used internally with
+#' \code{\link{make}(..., parallelism = "Makefile")}
+#' @export
+#' @keywords internal
+#' @param config Internal master configuration list
+#' produced by \code{\link{drake_config}}.
+#' @examples
+#' \dontrun{
+#' load_basic_example()
+#' config <- drake_config(my_plan) # Master internal configuration list
+#' time_stamps(config)
+#' # Now look in '.drake/ts' for dummy timestamp files.
+#' } 
 time_stamps <- function(config){
   cache_path <- cache_path(config$cache)
   stamp_dir <- time_stamp_dir(cache_path)

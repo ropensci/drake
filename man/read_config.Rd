@@ -25,6 +25,9 @@ Use \code{\link{read_drake_config}()} instead.
 \details{
 Deprecated on 2017-11-12.
 }
+\examples{
+# See ?read_drake_config for examples.
+}
 \seealso{
 \code{\link{read_drake_config}}
 }

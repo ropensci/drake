@@ -37,7 +37,8 @@
 #' make(my_plan) # Everything is still up to date!
 #' # Outdated objects from before migration
 #' # should remain out of date afterwards.
-#' outdated(my_plan)
+#' config <- drake_config(my_plan)
+#' outdated(config)
 #' }
 migrate_drake_project <- function(
   path = drake::default_cache_path(), jobs = 1

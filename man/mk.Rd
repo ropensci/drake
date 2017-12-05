@@ -26,14 +26,17 @@ Users should not need to invoke this function directly.
 # These examples peer into the internals of drake,
 # but are not really of practical use for most users.
 load_basic_example() # Load drake's canonical example.
-con <- drake_config(my_plan) # Construct the internal configuration list.
+config <- drake_config(my_plan) # Internal configuration list.
 # Prepare to use a distributed computing parallel backend
 # such as "Makefile" or "future_lapply".
-build_these <- drake:::prepare_distributed(config = con)
+# The following happens during make().
+store_drake_config(config = config)
+prepare_distributed(config = config)
 # Write the dummy timestamp files usually written at the beginning
 # of make(..., parallelism = "Makefile").
-time_stamps(build_these = build_these, config = con)
+time_stamps(config = config)
 # Use mk() to build a target. Usually called inside a Makefile recipe.
 mk(target = "small", cache_path = default_cache_path())
 }
 }
+\keyword{internal}

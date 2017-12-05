@@ -39,7 +39,7 @@ make(my_plan) # Run the project, build the targets.
 failed() # Should show that no targets failed.
 # Build a workflow plan doomed to fail:
 bad_plan <- plan_drake(x = function_doesnt_exist())
-make(bad_plan) # error
+try(make(bad_plan), silent = TRUE) # error
 failed() # "x"
 diagnose(x) # Retrieve the cached error log of x.
 }
