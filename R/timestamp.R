@@ -15,7 +15,7 @@
 #' time_stamps(config)
 #' # Now look in '.drake/ts' for dummy timestamp files.
 #' })
-#' } 
+#' }
 time_stamps <- function(config){
   cache_path <- cache_path(config$cache)
   stamp_dir <- time_stamp_dir(cache_path)
