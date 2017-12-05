@@ -36,6 +36,7 @@ parallel stages during the next \code{\link{make}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the basic example.
 config <- drake_config(my_plan) # Get a configuration list.
 # Parallel stages for the next make().
@@ -52,6 +53,7 @@ reg2 = function(d){
   lm(y ~ x3, data = d)
 }
 parallel_stages(config = config)
+})
 }
 }
 \seealso{

@@ -19,10 +19,12 @@
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # Show the build times for the basic example.
 #' load_basic_example() # Load the example.
 #' make(my_plan) # Build all the targets.
 #' build_times() # Show how long it took to build each target.
+#' })
 #' }
 build_times <- function(
   path = getwd(),

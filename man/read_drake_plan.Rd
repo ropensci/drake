@@ -31,9 +31,11 @@ from your last attempted call to \code{\link{make}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example.
 make(my_plan) # Run the project, build the targets.
 read_drake_plan() # Retrieve the workflow plan data frame from the cache.
+})
 }
 }
 \seealso{

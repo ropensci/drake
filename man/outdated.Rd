@@ -39,6 +39,7 @@ See the details in the help file for \code{\link{drake_config}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example of drake.
 # Recopute the config list early and often to have the
 # most current information. Do not modify the config list by hand.
@@ -51,6 +52,7 @@ outdated(config = config)
 # See the "debug" vignette for more on triggers.
 config$trigger <- "always"
 outdated(config = config)
+})
 }
 }
 \seealso{

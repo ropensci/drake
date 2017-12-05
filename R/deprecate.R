@@ -55,6 +55,7 @@ as_file <- function(x){
 #' @param ... Arguments to \code{future::plan()}.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example
 #' # Choose future's multicore parallel backend.
 #' library(future)
@@ -62,6 +63,7 @@ as_file <- function(x){
 #' # Run the project, build the targets.
 #' # Future knows that you chose the multicore backend.
 #' make(my_plan, parallelism = "future_lapply")
+#' })
 #' }
 backend <- function(...){
   .Deprecated(

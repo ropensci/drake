@@ -40,6 +40,7 @@ it backed up your old project.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # With drake 4.3.0:
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the old project.
@@ -53,6 +54,7 @@ make(my_plan) # Everything is still up to date!
 # should remain out of date afterwards.
 config <- drake_config(my_plan)
 outdated(config)
+})
 }
 }
 \seealso{

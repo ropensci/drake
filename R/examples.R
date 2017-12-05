@@ -18,11 +18,13 @@
 #' with the same name as the drake example.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' drake_examples() # List all the drake examples.
 #' # Sets up the same example as the quickstart vignette.
 #' drake_example("basic")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
+#' })
 #' }
 drake_example <- function(
   example = drake::drake_examples(),
@@ -54,11 +56,13 @@ drake_example <- function(
 #' @return Names of all the drake examples.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' drake_examples() # List all the drake examples.
 #' # Sets up the same example as the quickstart vignette.
 #' drake_example("basic")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
+#' })
 #' }
 drake_examples <- function() {
   list.dirs(system.file("examples", package = "drake", mustWork = TRUE),

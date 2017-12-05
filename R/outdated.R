@@ -26,6 +26,7 @@
 #' Set to \code{FALSE} to save some time and risk obsolete output.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example of drake.
 #' # Recopute the config list early and often to have the
 #' # most current information. Do not modify the config list by hand.
@@ -38,6 +39,7 @@
 #' # See the "debug" vignette for more on triggers.
 #' config$trigger <- "always"
 #' outdated(config = config)
+#' })
 #' }
 outdated <-  function(config, make_imports = TRUE){
   do_prework(config = config, verbose_packages = config$verbose)
@@ -70,10 +72,12 @@ outdated <-  function(config, make_imports = TRUE){
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' config <- load_basic_example() # Load the canonical example.
 #' missed(config) # All the imported files and objects should be present.
 #' rm(reg1) # Remove an import dependency from you workspace.
 #' missed(config) # Should report that reg1 is missing.
+#' })
 #' }
 missed <- function(config = NULL){
   graph <- config$graph

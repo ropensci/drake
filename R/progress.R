@@ -18,9 +18,11 @@
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' drake_session() # Retrieve the cached sessionInfo() of the last make().
+#' })
 #' }
 drake_session <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -54,10 +56,12 @@ drake_session <- function(path = getwd(), search = TRUE,
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Kill before targets finish.
 #' # If you interrupted make(), some targets will probably be listed:
 #' in_progress()
+#' })
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -92,6 +96,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' failed() # Should show that no targets failed.
@@ -100,6 +105,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' try(make(bad_plan), silent = TRUE) # error
 #' failed() # "x"
 #' diagnose(x) # Retrieve the cached error log of x.
+#' })
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -156,6 +162,7 @@ failed <- function(path = getwd(), search = TRUE,
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Watch the changing progress() as make() is running.
@@ -163,6 +170,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' progress(small, large) # Just see the progress of some targets.
 #' progress(list = c("small", "large")) # Same as above.
 #' progress(no_imported_objects = TRUE) # Ignore imported R objects.
+#' })
 #' }
 progress <- function(
   ...,

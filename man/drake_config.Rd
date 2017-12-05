@@ -106,6 +106,7 @@ and it could lead to false negative results from
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 # Construct the master internal configuration list.
 con <- drake_config(my_plan)
@@ -119,6 +120,7 @@ max_useful_jobs(config = con)
 vis_drake_graph(config = con)
 # Get the underlying node/edge data frames of the graph.
 dataframes_graph(config = con)
+})
 }
 }
 \seealso{

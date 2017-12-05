@@ -27,10 +27,12 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Make the igraph network connecting all the targets and imports.
 #' g <- build_drake_graph(my_plan)
 #' class(g) # "igraph"
+#' })
 #' }
 build_drake_graph <- function(
   plan = plan_drake(),
@@ -111,6 +113,7 @@ build_drake_graph <- function(
 #' @param jobs Number of jobs for light parallelism (on non-Windows machines).
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' # Build the igraph object representing the workflow dependency network.
 #' # You could also use drake_config(my_plan)$graph
@@ -122,6 +125,7 @@ build_drake_graph <- function(
 #' # from 'small' and 'large'
 #' pruned <- prune_drake_graph(graph = graph, to = c("small", "large"))
 #' plot(pruned)
+#' })
 #' }
 prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1

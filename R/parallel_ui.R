@@ -15,6 +15,7 @@
 #' same name.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' # List the drake examples. Only some have template files.
 #' drake_examples()
@@ -27,6 +28,7 @@
 #' library(future.batchtools)
 #' # future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl")) # nolint
 #' # make(my_plan, parallelism = "future_lapply") # nolint
+#' })
 #' }
 drake_batchtools_tmpl_file <- function(
   example = drake::drake_examples(),
@@ -176,10 +178,12 @@ default_parallelism <- function() {
 #' destination file with the same name
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # Write shell.sh to your working directory.
 #' # Read the parallelism vignette to learn how it is used
 #' # in Makefile parallelism.
 #' shell_file()
+#' })
 #' }
 shell_file <- function(
   path = "shell.sh",

@@ -71,6 +71,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # List objects in the cache, excluding R objects
@@ -102,6 +103,7 @@
 #' build_times()
 #' # Completely remove the entire cache (default: '.drake/' folder).
 #' clean(destroy = TRUE)
+#' })
 #' }
 clean <- function(
   ...,
@@ -210,6 +212,7 @@ remove_file_target <- function(target, plan){
 #' running version of drake.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # At this point, check the size of the '.drake/' cache folder.
@@ -218,6 +221,7 @@ remove_file_target <- function(target, plan){
 #' # The '.drake/' cache folder is still about the same size.
 #' drake_gc() # Do garbage collection on the cache.
 #' # The '.drake/' cache folder should have gotten much smaller.
+#' })
 #' }
 drake_gc <- function(
   path = getwd(),
@@ -267,6 +271,7 @@ drake_gc <- function(
 #' for details.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build targets. This creates the cache.
 #' # Remove dangling cache files that could cause errors.
@@ -274,6 +279,7 @@ drake_gc <- function(
 #' # Alternatively, just rescue targets 'small' and 'large'.
 #' # Rescuing specific targets is usually faster.
 #' rescue_cache(targets = c("small", "large"))
+#' })
 #' }
 rescue_cache <- function(
   targets = NULL,

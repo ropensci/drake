@@ -37,6 +37,22 @@ nobuild <- function(config) {
   expect_true(length(justbuilt(config)) < 1)
 }
 
+#' @title Internal function test_with_dir
+#' @description Run a test in a way that quarantines
+#' the side effects from your workspace and file system.
+#' @export
+#' @keywords internal
+#' @return nothing
+#' @param desc character, description of the test
+#' @param ... code to test
+#' @examples
+#' \dontrun{
+#' test_with_dir(
+#'   "Write a file to a temporary folder",
+#'   writeLines("hello", "world.txt")
+#' )
+#' file.exists("world.txt") # FALSE
+#' }
 test_with_dir <- function(desc, ...){
   new <- tempfile()
   dir_empty(new)

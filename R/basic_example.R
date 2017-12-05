@@ -23,6 +23,7 @@
 #' non-back-compatible cache from a previous version of drake.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_basic_example()
 #' # Check the dependencies of an imported function.
@@ -39,6 +40,7 @@
 #' clean(destroy = TRUE)
 #' # Clean up the imported file.
 #' unlink('report.Rmd')
+#' })
 #' }
 load_basic_example <- function(
   envir = parent.frame(),

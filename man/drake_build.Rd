@@ -25,6 +25,7 @@ is to set up PSOCK clusters efficiently.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # This example is not really a user-side demonstration.
 # It just walks through a dive into the internals.
 # Populate your workspace and write 'report.Rmd'.
@@ -41,5 +42,6 @@ drake_build(target = "small", meta = meta, config = config)
 # Should now include 'small'
 cached()
 readd(small)
+})
 }
 }

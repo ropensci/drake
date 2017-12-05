@@ -34,6 +34,7 @@ for ordinary error messages printed to the console.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 failed() # Should show that no targets failed.
@@ -42,6 +43,7 @@ bad_plan <- plan_drake(x = function_doesnt_exist())
 try(make(bad_plan), silent = TRUE) # error
 failed() # "x"
 diagnose(x) # Retrieve the cached error log of x.
+})
 }
 }
 \seealso{

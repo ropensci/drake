@@ -39,6 +39,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' diagnose() # List all the targets with recorded error logs.
 #' # Define a function doomed to failure.
 #' f <- function(){
@@ -58,6 +59,7 @@
 #' error <- diagnose(my_target)
 #' str(error) # See what's inside the error log.
 #' error$calls # View the traceback. (See the traceback() function).
+#' })
 #' }
 diagnose <- function(
   target = NULL,

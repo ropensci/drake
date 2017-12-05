@@ -25,6 +25,7 @@
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' readd(reg1) # Return imported object 'reg1' from the cache.
@@ -32,6 +33,7 @@
 #' readd("large", character_only = TRUE) # Return 'large' from the cache.
 #' # For external files, only the fingerprint/hash is stored.
 #' readd("'report.md'")
+#' })
 #' }
 readd <- function(
   target,
@@ -115,6 +117,7 @@ readd <- function(
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the projects, build the targets.
 #' loadd(small) # Load target 'small' into your workspace.
@@ -129,6 +132,7 @@ readd <- function(
 #' # Load everything, including built targets.
 #' # Be sure your computer has enough memory.
 #' loadd()
+#' })
 #' }
 loadd <- function(
   ...,
@@ -247,10 +251,12 @@ lazy_load_target <- function(target, cache, envir, verbose){
 #' \code{config$envir} was not cached. Defaults to your workspace.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the master internal configuration list from the cache.
 #' read_drake_config()
+#' })
 #' }
 read_drake_config <- function(
   path = getwd(),
@@ -300,9 +306,11 @@ read_drake_config <- function(
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' read_drake_plan() # Retrieve the workflow plan data frame from the cache.
+#' })
 #' }
 read_drake_plan <- function(
   path = getwd(),
@@ -346,11 +354,13 @@ read_drake_plan <- function(
 #' \code{\link{vis_drake_graph}()}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the igraph network from the cache.
 #' g <- read_drake_graph()
 #' class(g) # "igraph"
+#' })
 #' }
 read_drake_graph <- function(
   path = getwd(),
@@ -399,6 +409,7 @@ read_drake_graph <- function(
 #' Supports 1 job only on Windows.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the build decision metadata for one target.
@@ -406,6 +417,7 @@ read_drake_graph <- function(
 #' # Retrieve the build decision metadata for all targets,
 #' # parallelizing over 2 jobs.
 #' read_drake_meta(jobs = 2)
+#' })
 #' }
 read_drake_meta <- function(
   targets = NULL,

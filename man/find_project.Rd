@@ -22,11 +22,13 @@ Only works if the cache is a file system in a folder named \code{.drake}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the target.
 # Find the root directory of the current drake project.
 # Search up through parent directories if necessary.
 find_cache()
+})
 }
 }
 \seealso{

@@ -31,6 +31,7 @@ Search for and return a drake file system cache.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
 # No cache is available.
 get_cache() # NULL
@@ -39,6 +40,7 @@ make(my_plan) # Run the project, build the targets.
 x <- get_cache() # Now, there is a cache.
 # List the objects readable from the cache with readd().
 x$list() # Or x$list(namespace = x$default_namespace)
+})
 }
 }
 \seealso{

@@ -95,6 +95,7 @@ build_recipe <- function(target, recipe_command,
 #' @param cache_path path to the drake cache
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # This function is meant to be part of Makefile recipes for
 #' # make(..., parallelism = "Makefile").
 #' # These examples peer into the internals of drake,
@@ -111,6 +112,7 @@ build_recipe <- function(target, recipe_command,
 #' time_stamps(config = config)
 #' # Use mk() to build a target. Usually called inside a Makefile recipe.
 #' mk(target = "small", cache_path = default_cache_path())
+#' })
 #' }
 mk <- function(
   target = character(0),

@@ -18,9 +18,11 @@ The default \code{hook} argument to \code{\link{make}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical drake example.
 # Everything gets built normally.
 make(my_plan, hook = default_hook)
 cached() # List the cached targets and imports.
+})
 }
 }

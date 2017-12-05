@@ -20,9 +20,11 @@ backend (see the \code{parallelism} argument).
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example()
 config <- drake_config(my_plan)
 prepare_distributed(config = config)
+})
 }
 }
 \keyword{internal}

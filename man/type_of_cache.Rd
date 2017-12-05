@@ -25,10 +25,12 @@ are supported.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # Get the type of the cache
 # located in the (default) '.drake' folder.
 type_of_cache(".drake") # storr_rds
+})
 }
 }

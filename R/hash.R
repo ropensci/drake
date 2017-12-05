@@ -19,6 +19,7 @@ available_hash_algos <- function(){
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project and return the internal master configuration list.
 #' config <- make(my_plan)
@@ -26,6 +27,7 @@ available_hash_algos <- function(){
 #' cache <- config$cache
 #' # Get the long hash algorithm of the cache.
 #' long_hash(cache)
+#' })
 #' }
 long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
@@ -48,6 +50,7 @@ long_hash <- function(
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project and return the internal master configuration list.
 #' config <- make(my_plan)
@@ -55,6 +58,7 @@ long_hash <- function(
 #' cache <- config$cache
 #' # Get the short hash algorithm of the cache.
 #' short_hash(cache)
+#' })
 #' }
 short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
@@ -108,6 +112,7 @@ short_hash <- function(
 #' @examples
 #' default_short_hash_algo()
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project and return the internal master configuration list.
 #' config <- make(my_plan)
@@ -115,6 +120,7 @@ short_hash <- function(
 #' cache <- config$cache
 #' # Get the default short hash algorithm of an existing cache.
 #' default_short_hash_algo(cache)
+#' })
 #' }
 default_short_hash_algo <- function(cache = NULL) {
   out <- "xxhash64"
@@ -173,6 +179,7 @@ default_short_hash_algo <- function(cache = NULL) {
 #' @examples
 #' default_long_hash_algo()
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project and return the internal master configuration list.
 #' config <- make(my_plan)
@@ -180,6 +187,7 @@ default_short_hash_algo <- function(cache = NULL) {
 #' cache <- config$cache
 #' # Get the default long hash algorithm of an existing cache.
 #' default_long_hash_algo(cache)
+#' })
 #' }
 default_long_hash_algo <- function(cache = NULL) {
   out <- "sha256"

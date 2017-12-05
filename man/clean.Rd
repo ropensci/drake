@@ -83,6 +83,7 @@ if you're sure you won't lose anything important.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # List objects in the cache, excluding R objects
@@ -114,6 +115,7 @@ names(read_drake_meta())
 build_times()
 # Completely remove the entire cache (default: '.drake/' folder).
 clean(destroy = TRUE)
+})
 }
 }
 \seealso{

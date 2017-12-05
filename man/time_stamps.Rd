@@ -22,10 +22,12 @@ Used internally with
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example()
 config <- drake_config(my_plan) # Master internal configuration list
 time_stamps(config)
 # Now look in '.drake/ts' for dummy timestamp files.
+})
 } 
 }
 \keyword{internal}

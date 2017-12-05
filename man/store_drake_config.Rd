@@ -18,10 +18,12 @@ from \code{\link{drake_config}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example()
 config <- drake_config(my_plan)
 store_drake_config(config = config)
 read_drake_config()
+})
 }
 }
 \keyword{internal}

@@ -32,9 +32,11 @@ of the last call to \code{\link{make}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 drake_session() # Retrieve the cached sessionInfo() of the last make().
+})
 }
 }
 \seealso{

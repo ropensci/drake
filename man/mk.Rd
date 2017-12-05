@@ -21,6 +21,7 @@ Users should not need to invoke this function directly.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # This function is meant to be part of Makefile recipes for
 # make(..., parallelism = "Makefile").
 # These examples peer into the internals of drake,
@@ -37,6 +38,7 @@ prepare_distributed(config = config)
 time_stamps(config = config)
 # Use mk() to build a target. Usually called inside a Makefile recipe.
 mk(target = "small", cache_path = default_cache_path())
+})
 }
 }
 \keyword{internal}

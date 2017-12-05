@@ -80,6 +80,7 @@ so you can plot your own custom \code{visNetwork}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 config <- load_basic_example() # Load drake's canonical example.
 # Get a list of data frames representing the nodes, edges,
 # and legend nodes of the visNetwork graph from vis_drake_graph().
@@ -99,6 +100,7 @@ library(magrittr)
 library(visNetwork)
 visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
   visHierarchicalLayout(direction = 'UD')
+})
 }
 }
 \seealso{

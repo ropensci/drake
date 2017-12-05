@@ -20,8 +20,10 @@ first parallel stage in the next call to \code{\link{make}}
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 config <- load_basic_example() # drake's canonical example
 next_stage(config = config)    # "small" and "large"
+})
 }
 }
 \seealso{

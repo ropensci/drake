@@ -49,9 +49,11 @@ deps(my_plan$command[1])
 deps(my_plan$command[2])
 deps(my_plan$command[3])
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Loads the basic example and writes 'report.Rmd'.
 # Dependencies of the knitr-generated targets like 'report.md'
 # include targets/imports referenced with `readd()` or `loadd()`.
 deps("'report.Rmd'")
+})
 }
 }

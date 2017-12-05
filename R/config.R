@@ -56,6 +56,7 @@
 #' @param lazy_load same as for \code{\link{make}}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' # Construct the master internal configuration list.
 #' con <- drake_config(my_plan)
@@ -69,6 +70,7 @@
 #' vis_drake_graph(config = con)
 #' # Get the underlying node/edge data frames of the graph.
 #' dataframes_graph(config = con)
+#' })
 #' }
 drake_config <- function(
   plan = plan_drake(),
@@ -168,6 +170,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' package startup messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' # Create a master internal configuration list with prework.
 #' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
@@ -176,6 +179,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' # right before each target is built.
 #' do_prework(config = con, verbose_packages = TRUE)
 #' identical(x, 1) # Should be TRUE.
+#' })
 #' }
 do_prework <- function(config, verbose_packages) {
   wrapper <- ifelse(verbose_packages, invisible,
@@ -195,10 +199,12 @@ do_prework <- function(config, verbose_packages) {
 #' @param plan workflow plan data frame
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical drake example.
 #' # List the possible targets you could choose for the
 #' # `targets` argument to make(). You may choose any subset.
 #' possible_targets(my_plan)
+#' })
 #' }
 possible_targets <- function(plan = plan_drake()) {
   plan <- sanitize_plan(plan)
@@ -214,10 +220,12 @@ possible_targets <- function(plan = plan_drake()) {
 #' @return Nothing.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example()
 #' config <- drake_config(my_plan)
 #' store_drake_config(config = config)
 #' read_drake_config()
+#' })
 #' }
 store_drake_config <- function(config) {
   save_these <- setdiff(names(config), "envir")  # envir could get massive.

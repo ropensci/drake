@@ -35,6 +35,7 @@ Do garbage collection on the cache
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # At this point, check the size of the '.drake/' cache folder.
@@ -43,6 +44,7 @@ clean(garbage_collection = FALSE)
 # The '.drake/' cache folder is still about the same size.
 drake_gc() # Do garbage collection on the cache.
 # The '.drake/' cache folder should have gotten much smaller.
+})
 }
 }
 \seealso{

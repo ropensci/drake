@@ -57,11 +57,13 @@ default_cache_type <- function(){
 #' @param path Path to the file system cache.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' # Get the type of the cache
 #' # located in the (default) '.drake' folder.
 #' type_of_cache(".drake") # storr_rds
+#' })
 #' }
 type_of_cache <- function(path = drake::default_cache_path()){
   if (!file.exists(path)){

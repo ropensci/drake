@@ -31,6 +31,7 @@ remove the vertices after \code{to} from the graph.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example.
 # Build the igraph object representing the workflow dependency network.
 # You could also use drake_config(my_plan)$graph
@@ -42,6 +43,7 @@ plot(graph)
 # from 'small' and 'large'
 pruned <- prune_drake_graph(graph = graph, to = c("small", "large"))
 plot(pruned)
+})
 }
 }
 \seealso{

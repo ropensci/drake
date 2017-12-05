@@ -19,6 +19,7 @@ an example \code{hook} argument to
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # Test out the silencer hook on its own.
 try(
   silencer_hook({
@@ -32,6 +33,7 @@ x <- plan_drake(loud = cat(1234), bad = stop(5678))
 # Test out the silencer hook on a drake project.
 # All output should be suppressed.
 try(make(x, hook = silencer_hook), silent = FALSE)
+})
 }
 }
 \seealso{

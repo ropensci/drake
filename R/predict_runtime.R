@@ -12,6 +12,7 @@
 #' \code{\link{make}}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' config <- make(my_plan) # Run the project, build the targets.
 #' predict_runtime(config, digits = 4) # Everything is up to date.
@@ -26,6 +27,7 @@
 #'   from_scratch = TRUE,
 #'   digits = 4
 #' )
+#' })
 #' }
 #' @return A \code{lubridate} \code{Duration} object
 #' with the predicted runtime of the next \code{\link{make}()}.
@@ -101,6 +103,7 @@ predict_runtime <- function(
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' config <- make(my_plan) # Run the project, build the targets.
 #' rate_limiting_times(config) # Everything is up to date.
@@ -121,6 +124,7 @@ predict_runtime <- function(
 #'   from_scratch = TRUE,
 #'   digits = 4
 #' )
+#' })
 #' }
 #'
 #' @return A data frame of times of the worst-case scenario

@@ -37,10 +37,12 @@
 #' deps(my_plan$command[2])
 #' deps(my_plan$command[3])
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Loads the basic example and writes 'report.Rmd'.
 #' # Dependencies of the knitr-generated targets like 'report.md'
 #' # include targets/imports referenced with `readd()` or `loadd()`.
 #' deps("'report.Rmd'")
+#' })
 #' }
 deps <- function(x){
   if (is.function(x)){
@@ -72,6 +74,7 @@ deps <- function(x){
 #' \code{\link{config}} or \code{\link{make}}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical exmaple.
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
@@ -83,6 +86,7 @@ deps <- function(x){
 #' # Should agree with `$hashes_of_dependencies`.
 #' con$cache$get_hash("simulate",
 #'   namespace = "kernels")
+#' })
 #' }
 dependency_profile <- function(target, config){
   config$plan[["trigger"]] <- NULL
@@ -133,9 +137,11 @@ dependency_profile <- function(target, config){
 #' progress messages to the console.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # List all the targets/imports that are reproducibly tracked.
 #' tracked(my_plan)
+#' })
 #' }
 tracked <- function(
   plan = plan_drake(),

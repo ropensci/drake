@@ -27,6 +27,7 @@ Do not use for in-memory caches such as
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
 try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 load_basic_example() # Load drake's canonical example.
@@ -35,5 +36,6 @@ y <- this_cache() # Now, there is a cache.
 z <- this_cache(".drake") # Same as above.
 manual <- new_cache("manual_cache") # Make a new cache.
 manual2 <- get_cache("manual_cache") # Get the new cache.
+})
 }
 }

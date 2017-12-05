@@ -9,6 +9,7 @@
 #' you want to know
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
 #' # Get/create a new drake/storr cache.
 #' cache <- recover_cache()
@@ -17,6 +18,7 @@
 #' # In-memory caches do not have file paths.
 #' mem <- new_cache(type = "storr_environment") # or just storr_environment()
 #' cache_path(cache = mem)
+#' })
 #' }
 cache_path <- function(cache = NULL){
   if (is.null(cache)){
@@ -48,6 +50,7 @@ cache_path <- function(cache = NULL){
 #' running version of drake.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
 #' # No cache is available.
 #' get_cache() # NULL
@@ -56,6 +59,7 @@ cache_path <- function(cache = NULL){
 #' x <- get_cache() # Now, there is a cache.
 #' # List the objects readable from the cache with readd().
 #' x$list() # Or x$list(namespace = x$default_namespace)
+#' })
 #' }
 get_cache <- function(
   path = getwd(),
@@ -85,6 +89,7 @@ get_cache <- function(
 #' @param verbose, whether to print the file path of the cache.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
 #' try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 #' load_basic_example() # Load drake's canonical example.
@@ -93,6 +98,7 @@ get_cache <- function(
 #' z <- this_cache(".drake") # Same as above.
 #' manual <- new_cache("manual_cache") # Make a new cache.
 #' manual2 <- get_cache("manual_cache") # Get the new cache.
+#' })
 #' }
 this_cache <- function(
   path = drake::default_cache_path(), force = FALSE, verbose = TRUE
@@ -138,6 +144,7 @@ this_cache <- function(
 #' \code{\link{make}()}
 #' @param ... other arguments to the cache constructor
 #' @examples
+#' test_with_dir("Quarantine side effects.", {
 #' \dontrun{
 #' clean(destroy = TRUE)
 #' unlink("not_hidden", recursive = TRUE)
@@ -150,6 +157,7 @@ this_cache <- function(
 #' ls(e) # Emtpy.
 #' y <- new_cache(type = "storr_environment", envir = e)
 #' ls(e) # Storr populates the environment for use in an in-memory cache.
+#' })
 new_cache <- function(
   path = drake::default_cache_path(),
   verbose = 1,
@@ -208,10 +216,12 @@ new_cache <- function(
 #' @param verbose logical, whether to print the file path of the cache.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build all the targets.
 #' x <- recover_cache(".drake") # Recover the project's storr cache.
+#' })
 #' }
 recover_cache <- function(
   path = drake::default_cache_path(),
@@ -278,6 +288,7 @@ default_cache_path <- function(){
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
 #' load_basic_example() # Load drake's canonical example into the workspace.
 #' config <- make(my_plan) # Run the project, build all the targets.
@@ -293,6 +304,7 @@ default_cache_path <- function(){
 #' )
 #' long_hash(cache) # Show the new long hash algorithm.
 #' make(my_plan) # Changing the long hash puts the targets out of date.
+#' })
 #' }
 configure_cache <- function(
   cache = drake::get_cache(verbose = verbose),

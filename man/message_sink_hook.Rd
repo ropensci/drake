@@ -19,6 +19,7 @@ an example \code{hook} argument to
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # Test out the message sink hook on its own.
 try(
   message_sink_hook({
@@ -31,6 +32,7 @@ try(
 x <- plan_drake(loud = cat(1234), bad = stop(5678))
 # Run the project. All messages should be suppressed.
 try(make(x, hook = message_sink_hook), silent = FALSE)
+})
 }
 }
 \seealso{

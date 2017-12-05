@@ -19,10 +19,12 @@ that you can get from \code{\link{drake_config}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example
 # The following lines are the same as make(my_plan)
 config <- drake_config(my_plan) # Create the internal config list.
 make_with_config(config = config) # Run the project, build the targets.
+})
 }
 }
 \seealso{

@@ -39,6 +39,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' config <- drake_config(my_plan) # Standard drake configuration list.
 #' # Look at the graph. The work proceeds column by column
@@ -76,6 +77,7 @@
 #' max_useful_jobs(config, from_scratch = TRUE, imports = 'files') # 8
 #' max_useful_jobs(config, from_scratch = TRUE, imports = 'all') # 9
 #' max_useful_jobs(config, from_scratch = TRUE, imports = 'none') # 8
+#' })
 #' }
 max_useful_jobs <- function(
   config,

@@ -43,6 +43,7 @@ that builds up this example step by step.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # Populate your workspace and write 'report.Rmd'.
 load_basic_example()
 # Check the dependencies of an imported function.
@@ -59,5 +60,6 @@ make(my_plan)
 clean(destroy = TRUE)
 # Clean up the imported file.
 unlink('report.Rmd')
+})
 }
 }

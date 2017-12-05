@@ -54,6 +54,7 @@ function lists the available triggers:
 \examples{
 triggers()
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 my_plan[["trigger"]] <- "command"
 # You can have different triggers for different targets.
@@ -71,6 +72,7 @@ make(my_plan)
 # does not have a 'trigger' column.
 my_plan[["trigger"]] <- NULL # Would override the global trigger.
 make(my_plan, trigger = "missing") # Just build missing targets.
+})
 }
 }
 \seealso{

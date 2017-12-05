@@ -28,6 +28,7 @@ only the first one (alphabetically) is written.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example.
 # List the drake examples. Only some have template files.
 drake_examples()
@@ -40,6 +41,7 @@ drake_example("slurm") # Writes a new 'slurm' folder with more files.
 library(future.batchtools)
 # future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl")) # nolint
 # make(my_plan, parallelism = "future_lapply") # nolint
+})
 }
 }
 \seealso{

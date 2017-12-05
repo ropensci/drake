@@ -26,6 +26,7 @@ of the returned list should agree: for example,
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical exmaple.
 con <- make(my_plan) # Run the project, build the targets.
 # Get some example dependency profiles of targets.
@@ -37,6 +38,7 @@ dependency_profile("large", config = con)
 # Should agree with `$hashes_of_dependencies`.
 con$cache$get_hash("simulate",
   namespace = "kernels")
+})
 }
 }
 \seealso{

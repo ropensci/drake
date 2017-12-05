@@ -37,6 +37,7 @@ Make a new drake cache. Could be any
 type of cache in \code{\link{cache_types}()}.
 }
 \examples{
+test_with_dir("Quarantine side effects.", {
 \dontrun{
 clean(destroy = TRUE)
 unlink("not_hidden", recursive = TRUE)
@@ -49,6 +50,7 @@ e <- new.env() # Create a new environment.
 ls(e) # Emtpy.
 y <- new_cache(type = "storr_environment", envir = e)
 ls(e) # Storr populates the environment for use in an in-memory cache.
+})
 }
 \seealso{
 \code{\link{default_short_hash_algo}},

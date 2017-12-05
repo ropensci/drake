@@ -13,10 +13,14 @@
 #' @param verbose same as for \code{\link{make}()}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' check_plan(my_plan) # Check the workflow plan dataframe for obvious errors.
 #' unlink('report.Rmd') # Remove an import file mentioned in the plan.
-#' check_plan(my_plan) # check_plan() tells you that 'report.Rmd' is missing.
+#' # If you un-suppress the warnings, check_plan()
+#' # will tell you that 'report.Rmd' is missing.
+#' suppressWarnings(check_plan(my_plan))
+#' })
 #' }
 check_plan <- function(
   plan = plan_drake(),

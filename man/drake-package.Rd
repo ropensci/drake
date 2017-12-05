@@ -12,6 +12,7 @@ a scalable solution for reproducibility and high-performance computing.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 library(drake)
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Build everything.
@@ -35,6 +36,7 @@ clean() # Restart from scratch.
 # make(my_plan, jobs = 4, parallelism = "Makefile") # nolint
 clean(destroy = TRUE) # Totally remove the cache.
 unlink("report.Rmd") # Clean up the remaining files.
+})
 }
 }
 \references{

@@ -33,8 +33,10 @@ are reproducibly tracked.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example for drake.
 # List all the targets/imports that are reproducibly tracked.
 tracked(my_plan)
+})
 }
 }

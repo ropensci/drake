@@ -17,13 +17,15 @@
 #' source text of the document.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example of drake.
 #' knitr_deps("'report.Rmd'") # Files must be single-quoted.
 #' # Find the dependencies of the compiled output target, 'report.md'.
 #' knitr_deps("report.Rmd")
 #' make(my_plan) # Run the project.
 #' # Work only on the Rmd source, not the output.
-#' # knitr_deps("'report.md'") # error # nolint
+#' try(knitr_deps("'report.md'"), silent = FALSE) # error
+#' })
 #' }
 knitr_deps <- function(target){
   if (!length(target)){

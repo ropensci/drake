@@ -25,10 +25,12 @@ or supercomputer.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 # Write shell.sh to your working directory.
 # Read the parallelism vignette to learn how it is used
 # in Makefile parallelism.
 shell_file()
+})
 }
 }
 \seealso{

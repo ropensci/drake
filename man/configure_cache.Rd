@@ -43,6 +43,7 @@ to prepare the cache to be called from \code{\link{make}()}.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
 load_basic_example() # Load drake's canonical example into the workspace.
 config <- make(my_plan) # Run the project, build all the targets.
@@ -58,6 +59,7 @@ cache <- configure_cache(
 )
 long_hash(cache) # Show the new long hash algorithm.
 make(my_plan) # Changing the long hash puts the targets out of date.
+})
 }
 }
 \seealso{

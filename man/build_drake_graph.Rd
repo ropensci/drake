@@ -40,10 +40,12 @@ to \code{\link{plot.igraph}()} on your graph, or just use
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example for drake.
 # Make the igraph network connecting all the targets and imports.
 g <- build_drake_graph(my_plan)
 class(g) # "igraph"
+})
 }
 }
 \seealso{

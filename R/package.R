@@ -6,6 +6,7 @@
 #' @author William Michael Landau \email{will.landau@@lilly.com}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' library(drake)
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Build everything.
@@ -29,6 +30,7 @@
 #' # make(my_plan, jobs = 4, parallelism = "Makefile") # nolint
 #' clean(destroy = TRUE) # Totally remove the cache.
 #' unlink("report.Rmd") # Clean up the remaining files.
+#' })
 #' }
 #' @references \url{https://github.com/wlandau-lilly/drake}
 #' @importFrom codetools findGlobals

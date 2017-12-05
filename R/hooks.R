@@ -9,6 +9,7 @@
 #' of \code{\link{make}()}.
 #' @param code code to run to build the target.
 #' @examples \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # Test out the silencer hook on its own.
 #' try(
 #'   silencer_hook({
@@ -22,6 +23,7 @@
 #' # Test out the silencer hook on a drake project.
 #' # All output should be suppressed.
 #' try(make(x, hook = silencer_hook), silent = FALSE)
+#' })
 #' }
 silencer_hook <- function(code){
   output_sink_hook(
@@ -41,6 +43,7 @@ silencer_hook <- function(code){
 #' of \code{\link{make}()}.
 #' @param code code to run to build the target.
 #' @examples \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # Test out the message sink hook on its own.
 #' try(
 #'   message_sink_hook({
@@ -53,6 +56,7 @@ silencer_hook <- function(code){
 #' x <- plan_drake(loud = cat(1234), bad = stop(5678))
 #' # Run the project. All messages should be suppressed.
 #' try(make(x, hook = message_sink_hook), silent = FALSE)
+#' })
 #' }
 message_sink_hook <- function(code){
   message <- file(paste0("message", Sys.getpid(), ".txt"), "w")
@@ -74,6 +78,7 @@ message_sink_hook <- function(code){
 #' of \code{\link{make}()}.
 #' @param code code to run to build the target.
 #' @examples \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' # Test out the output sink hook on its own.
 #' try(
 #'   output_sink_hook({
@@ -87,6 +92,7 @@ message_sink_hook <- function(code){
 #' # Run the project. Standard output (via cat() and print())
 #' # should be suppressed, but messages should persist.
 #' try(make(x, hook = output_sink_hook), silent = FALSE)
+#' })
 #' }
 output_sink_hook <- function(code){
   output <- paste0("output", Sys.getpid(), ".txt")
@@ -105,10 +111,12 @@ output_sink_hook <- function(code){
 #' For \code{empty_hook}, this code does not actually get executed.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Run the project with the empty hook.
 #' make(my_plan, hook = empty_hook) # Nothing gets built!
 #' cached() # character(0) # nolint
+#' })
 #' }
 empty_hook <- function(code){
   invisible()
@@ -122,10 +130,12 @@ empty_hook <- function(code){
 #' @param code Placeholder for the code to build a target/import.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical drake example.
 #' # Everything gets built normally.
 #' make(my_plan, hook = default_hook)
 #' cached() # List the cached targets and imports.
+#' })
 #' }
 default_hook <- function(code){
   force(code)

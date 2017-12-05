@@ -248,6 +248,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' config <- drake_config(my_plan)
 #' outdated(config) # Which targets need to be (re)built?
@@ -273,6 +274,7 @@
 #' # Requires Rtools on Windows.
 #' # make(my_plan, parallelism = "Makefile", jobs = 4, # nolint
 #' #   recipe_command = "R -q -e") # nolint
+#' })
 #' }
 make <- function(
   plan = plan_drake(),
@@ -367,10 +369,12 @@ make <- function(
 #' @param config An input internal configuration list
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example
 #' # The following lines are the same as make(my_plan)
 #' config <- drake_config(my_plan) # Create the internal config list.
 #' make_with_config(config = config) # Run the project, build the targets.
+#' })
 #' }
 make_with_config <- function(config){
   check_drake_config(config = config)
@@ -396,6 +400,7 @@ make_with_config <- function(config){
 #' @param config a configuration list returned by \code{\link{config}()}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' # Generate the master internal configuration list.
 #' con <- drake_config(my_plan)
@@ -403,6 +408,7 @@ make_with_config <- function(config){
 #' make_imports(config = con)
 #' # Just make the targets
 #' make_targets(config = con)
+#' })
 #' }
 make_imports <- function(config){
   config$execution_graph <- imports_graph(config = config)
@@ -426,6 +432,7 @@ imports_graph <- function(config){
 #' @param config a configuration list returned by \code{\link{config}()}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' # Generate the master internal configuration list.
 #' con <- drake_config(my_plan)
@@ -433,6 +440,7 @@ imports_graph <- function(config){
 #' make_imports(config = con)
 #' # Just make the targets
 #' make_targets(config = con)
+#' })
 #' }
 make_targets <- function(config){
   config$execution_graph <- targets_graph(config = config)

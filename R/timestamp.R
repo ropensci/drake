@@ -9,10 +9,12 @@
 #' produced by \code{\link{drake_config}}.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example()
 #' config <- drake_config(my_plan) # Master internal configuration list
 #' time_stamps(config)
 #' # Now look in '.drake/ts' for dummy timestamp files.
+#' })
 #' } 
 time_stamps <- function(config){
   cache_path <- cache_path(config$cache)

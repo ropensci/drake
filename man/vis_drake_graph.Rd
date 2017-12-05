@@ -121,6 +121,7 @@ To save time for repeated plotting, this function is divided into
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 config <- load_basic_example() # Load drake's canonical example.
 # Plot the network graph representation of the workflow.
 vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
@@ -132,6 +133,7 @@ vis_drake_graph(
   from = c("small", "reg2"),
   to = "summ_regression2_small"
 )
+})
 }
 }
 \seealso{

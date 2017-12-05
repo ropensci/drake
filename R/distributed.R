@@ -9,9 +9,11 @@
 #' @return Nothing.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example()
 #' config <- drake_config(my_plan)
 #' prepare_distributed(config = config)
+#' })
 #' }
 prepare_distributed <- function(config){
   this_cache_path <- cache_path(config$cache)

@@ -21,6 +21,7 @@ Deprecated on 2017-11-12.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example
 # Choose future's multicore parallel backend.
 library(future)
@@ -28,6 +29,7 @@ future::plan(multicore) # Instead of backend(). Avoid drake::plan().
 # Run the project, build the targets.
 # Future knows that you chose the multicore backend.
 make(my_plan, parallelism = "future_lapply")
+})
 }
 }
 \keyword{internal}

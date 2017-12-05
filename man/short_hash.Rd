@@ -22,6 +22,7 @@ See \code{?\link{default_long_hash_algo}()}
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example for drake.
 # Run the project and return the internal master configuration list.
 config <- make(my_plan)
@@ -29,6 +30,7 @@ config <- make(my_plan)
 cache <- config$cache
 # Get the short hash algorithm of the cache.
 short_hash(cache)
+})
 }
 }
 \seealso{

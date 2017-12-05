@@ -106,6 +106,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' config <- load_basic_example() # Load drake's canonical example.
 #' # Plot the network graph representation of the workflow.
 #' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
@@ -117,6 +118,7 @@
 #'   from = c("small", "reg2"),
 #'   to = "summ_regression2_small"
 #' )
+#' })
 #' }
 vis_drake_graph <- function(
   config,
@@ -207,6 +209,7 @@ drake_graph <- vis_drake_graph
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example for drake.
 #' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
@@ -216,6 +219,7 @@ drake_graph <- vis_drake_graph
 #' # (as in vis_drake_graph()) or you can create
 #' # your own custom visNewtork graph.
 #' render_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
+#' })
 #' }
 render_drake_graph <- function(
   graph_dataframes, file = character(0),

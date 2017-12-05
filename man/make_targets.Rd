@@ -18,6 +18,7 @@ just make the proper targets with commands
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example.
 # Generate the master internal configuration list.
 con <- drake_config(my_plan)
@@ -25,6 +26,7 @@ con <- drake_config(my_plan)
 make_imports(config = con)
 # Just make the targets
 make_targets(config = con)
+})
 }
 }
 \seealso{

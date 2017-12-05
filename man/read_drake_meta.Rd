@@ -42,6 +42,7 @@ to decide whether to build or skip the target.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # Retrieve the build decision metadata for one target.
@@ -49,6 +50,7 @@ read_drake_meta(targets = "small")
 # Retrieve the build decision metadata for all targets,
 # parallelizing over 2 jobs.
 read_drake_meta(jobs = 2)
+})
 }
 }
 \seealso{

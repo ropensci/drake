@@ -49,6 +49,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build all the targets.
 #' cached(list = 'reg1') # Is 'reg1' in the cache?
@@ -68,6 +69,7 @@
 #' clean(purge = TRUE)
 #' cached(namespace = "build_times")
 #' build_times()
+#' })
 #' }
 cached <- function(
   ...,
@@ -133,10 +135,12 @@ list_cache <- function(no_imported_objects, cache, namespace) {
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build all the targets.
 #' built() # List all the cached targets (built objects and files).
 #' # For file targets, only the fingerprints/hashes are stored.
+#' })
 #' }
 built <- function(
   path = getwd(), search = TRUE,
@@ -176,10 +180,12 @@ built <- function(
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' imported() # List all the imported objects/files in the cache.
 #' # For imported files, only the fingerprints/hashes are stored.
+#' })
 #' }
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,

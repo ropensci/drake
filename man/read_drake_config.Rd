@@ -39,10 +39,12 @@ These include the workflow plan
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # Retrieve the master internal configuration list from the cache.
 read_drake_config()
+})
 }
 }
 \seealso{

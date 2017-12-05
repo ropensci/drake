@@ -264,6 +264,7 @@ Run your project (build the targets).
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 config <- drake_config(my_plan)
 outdated(config) # Which targets need to be (re)built?
@@ -289,6 +290,7 @@ clean() # Start from scratch.
 # Requires Rtools on Windows.
 # make(my_plan, parallelism = "Makefile", jobs = 4, # nolint
 #   recipe_command = "R -q -e") # nolint
+})
 }
 }
 \seealso{

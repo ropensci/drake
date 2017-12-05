@@ -62,6 +62,7 @@ will warn you and tell you which targets have missing times.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 config <- make(my_plan) # Run the project, build the targets.
 rate_limiting_times(config) # Everything is up to date.
@@ -82,6 +83,7 @@ rate_limiting_times(
   from_scratch = TRUE,
   digits = 4
 )
+})
 }
 
 }

@@ -41,6 +41,7 @@ Does not delete the item from the cache.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 readd(reg1) # Return imported object 'reg1' from the cache.
@@ -48,6 +49,7 @@ readd(small) # Return targets 'small' from the cache.
 readd("large", character_only = TRUE) # Return 'large' from the cache.
 # For external files, only the fingerprint/hash is stored.
 readd("'report.md'")
+})
 }
 }
 \seealso{

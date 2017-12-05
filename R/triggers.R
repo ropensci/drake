@@ -44,6 +44,7 @@
 #' @examples
 #' triggers()
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load drake's canonical example.
 #' my_plan[["trigger"]] <- "command"
 #' # You can have different triggers for different targets.
@@ -61,6 +62,7 @@
 #' # does not have a 'trigger' column.
 #' my_plan[["trigger"]] <- NULL # Would override the global trigger.
 #' make(my_plan, trigger = "missing") # Just build missing targets.
+#' })
 #' }
 triggers <- function(){
   c(

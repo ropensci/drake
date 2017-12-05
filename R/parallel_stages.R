@@ -22,6 +22,7 @@
 #' so that all targets are attempted.
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' load_basic_example() # Load the basic example.
 #' config <- drake_config(my_plan) # Get a configuration list.
 #' # Parallel stages for the next make().
@@ -38,6 +39,7 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' parallel_stages(config = config)
+#' })
 #' }
 parallel_stages <- function(config, from_scratch = FALSE){
   do_prework(config = config, verbose_packages = config$verbose)
@@ -131,8 +133,10 @@ read_parallel_stages <- function(config){
 #' \code{\link{drake_config}()} or \code{\link{make}()}
 #' @examples
 #' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
 #' config <- load_basic_example() # drake's canonical example
 #' next_stage(config = config)    # "small" and "large"
+#' })
 #' }
 next_stage <- function(config){
   config$stages_cache <- storr::storr_environment()

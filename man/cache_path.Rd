@@ -21,6 +21,7 @@ caches.
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
 # Get/create a new drake/storr cache.
 cache <- recover_cache()
@@ -29,5 +30,6 @@ cache_path(cache = cache)
 # In-memory caches do not have file paths.
 mem <- new_cache(type = "storr_environment") # or just storr_environment()
 cache_path(cache = mem)
+})
 }
 }

@@ -35,10 +35,12 @@ List all the imported objects in the drake cache
 }
 \examples{
 \dontrun{
+test_with_dir("Quarantine side effects.", {
 load_basic_example() # Load the canonical example.
 make(my_plan) # Run the project, build the targets.
 imported() # List all the imported objects/files in the cache.
 # For imported files, only the fingerprints/hashes are stored.
+})
 }
 }
 \seealso{
