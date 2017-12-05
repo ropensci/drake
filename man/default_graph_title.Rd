@@ -11,6 +11,10 @@ default_graph_title(split_columns = FALSE)
 in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
 with the \code{split_columns} argument.}
 }
+\value{
+a character scalar with the default graph title for
+\code{\link{vis_drake_graph}()}.
+}
 \description{
 Default title of the graph for
 \code{\link{vis_drake_graph}()}.
@@ -21,3 +25,4 @@ default_graph_title()
 \seealso{
 \code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
 }
+\keyword{internal}

@@ -10,6 +10,9 @@ time_stamps(config)
 \item{config}{Internal master configuration list
 produced by \code{\link{drake_config}}.}
 }
+\value{
+nothing
+}
 \description{
 Write dummy timestamps for Makefiles
 }

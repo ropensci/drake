@@ -4,6 +4,7 @@
 #' \code{\link{make}(..., parallelism = "Makefile")}
 #' @export
 #' @keywords internal
+#' @return nothing
 #' @param config Internal master configuration list
 #' produced by \code{\link{drake_config}}.
 #' @examples

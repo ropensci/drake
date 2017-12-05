@@ -65,7 +65,10 @@ configure_nodes <- function(config){
 #' @description Default title of the graph for
 #' \code{\link{vis_drake_graph}()}.
 #' @export
+#' @keywords internal
 #' @seealso \code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
+#' @return a character scalar with the default graph title for
+#' \code{\link{vis_drake_graph}()}.
 #' @param split_columns logical, whether the columns were split
 #' in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
 #' with the \code{split_columns} argument.
