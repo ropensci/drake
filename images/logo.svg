@@ -17,7 +17,7 @@
    viewBox="463.3604569420035 86 457.04710017574695 527.7680140597539"
    sketchjs:version="5.1.37"
    id="svg2"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="logo.svg">
   <metadata
      id="metadata25">
@@ -42,15 +42,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1536"
-     inkscape:window-height="804"
+     inkscape:window-width="1920"
+     inkscape:window-height="1019"
      id="namedview21"
      showgrid="false"
-     inkscape:zoom="1"
-     inkscape:cx="223.13524"
-     inkscape:cy="277.96695"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:zoom="3.3476562"
+     inkscape:cx="181.91237"
+     inkscape:cy="110.68574"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2"
      showguides="false" />
@@ -76,12 +76,13 @@
      x="313.25171"
      y="851.97162"
      id="text4241"
-     transform="matrix(0.86775334,-0.49699511,0.49699511,0.86775334,0,0)"><tspan
+     transform="matrix(0.86775334,-0.49699511,0.49699511,0.86775334,0,0)"
+     sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan4243"
        x="313.25171"
        y="851.97162"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ffffff">github.com/wlandau-lilly/drake</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ffffff">github.com/ropensci/drake</tspan></text>
   <path
      d="m 692.00544,107.16818 210.3534,121.37799 0,242.69368 -210.3534,121.37799 -210.3534,-121.37799 0,-242.69368 z m 0,-21.150175 -228.645,131.936585 0,263.87684 228.645,131.93658 228.645,-131.93658 0,-263.87684 z"
      id="path4"
