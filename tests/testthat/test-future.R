@@ -13,7 +13,8 @@ test_with_dir("future package functionality", {
           envir = e,
           parallelism = "future_lapply",
           jobs = 1,
-          verbose = FALSE
+          verbose = FALSE,
+          session_info = FALSE
         )
       }
     )

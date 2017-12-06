@@ -54,6 +54,7 @@
 #' on your workflow to save time. Use at your own peril.
 #' @param store_meta same as for \code{\link{make}}
 #' @param lazy_load same as for \code{\link{make}}
+#' @param session_info same as for \code{\link{make}}
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -102,7 +103,8 @@ drake_config <- function(
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   store_meta = TRUE,
-  lazy_load = FALSE
+  lazy_load = FALSE,
+  session_info = TRUE
 ){
   force(envir)
   seed <- get_valid_seed()
@@ -146,7 +148,7 @@ drake_config <- function(
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
     imports_only = imports_only, skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks, store_meta = store_meta,
-    lazy_load = lazy_load
+    lazy_load = lazy_load, session_info = session_info
   )
 }
 

@@ -61,25 +61,26 @@ test_with_dir("triggers work as expected", {
   con$plan$trigger <- NULL
   con <- make(
     con$plan, trigger = "missing",
-    envir = con$envir, verbose = TRUE)
+    envir = con$envir, verbose = TRUE, session_info = FALSE)
   expect_equal(justbuilt(con), character(0))
 
   # Global trigger is overridden
   con$plan$trigger <- "missing"
   con <- make(
     con$plan, trigger = "command",
-    envir = con$envir, verbose = TRUE)
+    envir = con$envir, verbose = TRUE, session_info = FALSE)
   expect_equal(justbuilt(con), character(0))
 
   # 'always' trigger rebuilts up-to-date targets
   con$plan$trigger <- "any"
-  con <- make(con$plan, envir = con$envir)
+  con <- make(con$plan, envir = con$envir, session_info = FALSE)
   out <- outdated(con)
   expect_equal(out, character(0))
   con$plan$trigger[con$plan$target == "final"] <- "always"
   con2 <- make(
     con$plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs, verbose = FALSE)
+    envir = con$envir, jobs = con$jobs, verbose = FALSE,
+    session_info = FALSE)
   expect_equal(justbuilt(con2), "final")
 })
 
@@ -90,7 +91,8 @@ test_with_dir("all triggers bring targets up to date", {
     con$plan$trigger <- trigger
     con <- make(
       con$plan, parallelism = con$parallelism,
-      envir = con$envir, jobs = con$jobs, verbose = FALSE)
+      envir = con$envir, jobs = con$jobs, verbose = FALSE,
+      session_info = FALSE)
     expect_equal(sort(justbuilt(con)), sort(con$plan$target))
     con$plan$trigger <- NULL
     out <- outdated(con)
@@ -107,21 +109,22 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
       hook = silencer_hook,
-      skip_imports = TRUE
+      skip_imports = TRUE,
+      session_info = FALSE
     )
   )
   expect_equal(sort(cached()), sort(con$plan$target))
 
   # If the imports are already cached, the targets built with
   # skip_imports = TRUE should be up to date.
-  make(con$plan, verbose = FALSE, envir = con$envir)
+  make(con$plan, verbose = FALSE, envir = con$envir, session_info = FALSE)
   clean(list = con$plan$target, verbose = FALSE)
   suppressMessages(
     con <- make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
       hook = silencer_hook,
-      skip_imports = TRUE
+      skip_imports = TRUE, session_info = FALSE
     )
   )
   out <- outdated(con)

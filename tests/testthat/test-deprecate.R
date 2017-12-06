@@ -7,18 +7,17 @@ test_with_dir("deprecation: future", {
 test_with_dir("deprecation: make() and config()", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   expect_warning(make(plan_drake(x = 1), return_config = TRUE,
-    verbose = FALSE))
+    verbose = FALSE, session_info = FALSE))
   expect_warning(make(plan_drake(x = 1), clear_progress = TRUE,
-    verbose = FALSE))
+    verbose = FALSE, session_info = FALSE))
   expect_warning(config(plan_drake(x = 1)))
 })
 
 test_with_dir("deprecation: cache functions", {
   plan <- plan_drake(x = 1)
-  expect_silent(make(plan, verbose = FALSE))
+  expect_silent(make(plan, verbose = FALSE, session_info = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
-  expect_warning(session())
   expect_warning(read_config())
   expect_warning(read_graph())
   expect_warning(read_plan())
@@ -42,6 +41,7 @@ test_with_dir("drake version checks in previous caches", {
   plan <- plan_drake(x = 1)
   expect_silent(make(plan, verbose = FALSE))
   x <- get_cache()
+  expect_warning(session())
   x$del(key = "initial_drake_version", namespace = "session")
   expect_false("initial_drake_version" %in% x$list(namespace = "session"))
   set_initial_drake_version(cache = x)

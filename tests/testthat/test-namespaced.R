@@ -60,7 +60,8 @@ test_with_dir("namespaced plan_drake works", {
     envir = envir,
     jobs = scenarios$jobs,
     parallelism = scenarios$parallelism,
-    verbose = FALSE
+    verbose = FALSE,
+    session_info = FALSE
   )
   fromcache <- readd("base::list", character_only = TRUE)
   expect_equal(fromcache(1, "a"), list(1, "a"))

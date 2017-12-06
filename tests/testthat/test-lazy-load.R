@@ -44,7 +44,8 @@ test_with_dir("lazy loading is actually lazy", {
     plan = config$plan,
     targets = "combined",
     envir = config$envir,
-    verbose = FALSE
+    verbose = FALSE,
+    session_info = FALSE
   )
   loaded <- ls(envir = config$envir)
   expect_true(all(lazily_loaded %in% loaded))
@@ -55,7 +56,8 @@ test_with_dir("lazy loading is actually lazy", {
     plan = config$plan,
     targets = "combined",
     envir = config$envir,
-    verbose = FALSE
+    verbose = FALSE,
+    session_info = FALSE
   )
   loaded <- ls(envir = config$envir)
   expect_true(all(lazily_loaded %in% loaded))

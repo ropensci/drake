@@ -45,25 +45,25 @@ test_with_dir("shell_file() writes correctly", {
 test_with_dir("mclapply and lapply", {
   config <- dbug()
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 1, parallelism = "mclapply")
+    jobs = 1, parallelism = "mclapply", session_info = FALSE)
   expect_true(is.numeric(readd(final)))
   clean()
 
   # should demote to 1 job on Windows
   suppressWarnings(
     make(plan = config$plan, envir = config$envir, verbose = FALSE,
-      jobs = 2, parallelism = "mclapply")
+      jobs = 2, parallelism = "mclapply", session_info = FALSE)
   )
   expect_true(is.numeric(readd(final)))
   clean()
 
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 2, parallelism = "parLapply")
+    jobs = 2, parallelism = "parLapply", session_info = FALSE)
   expect_true(is.numeric(readd(final)))
   clean()
 
   make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 1, parallelism = "parLapply")
+    jobs = 1, parallelism = "parLapply", session_info = FALSE)
   expect_true(is.numeric(readd(final)))
 })
 

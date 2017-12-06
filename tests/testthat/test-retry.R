@@ -32,7 +32,7 @@ test_with_dir("retries", {
   make(
     pl, parallelism = parallelism, jobs = jobs,
     envir = e, retries = 10, verbose = FALSE,
-    hook = silencer_hook
+    hook = silencer_hook, session_info = FALSE
   )
   debrief_retries()
 
@@ -44,7 +44,7 @@ test_with_dir("retries", {
   make(
     pl, parallelism = parallelism, jobs = jobs,
     envir = e, retries = 0, verbose = FALSE,
-    hook = silencer_hook
+    hook = silencer_hook, session_info = FALSE
   )
   debrief_retries()
 })
@@ -65,7 +65,8 @@ test_with_dir("timeouts", {
       pl,
       envir = e,
       verbose = TRUE,
-      hook = silencer_hook
+      hook = silencer_hook,
+      session_info = FALSE
     )
   )
   expect_true(cached(x))
@@ -80,7 +81,8 @@ test_with_dir("timeouts", {
         verbose = TRUE,
         hook = silencer_hook,
         timeout = 1e-3,
-        retries = 2
+        retries = 2,
+        session_info = FALSE
       )
     )
   )

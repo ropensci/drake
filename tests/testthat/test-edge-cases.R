@@ -10,7 +10,7 @@ test_with_dir("config and make without safety checks", {
 
 test_with_dir("Strings stay strings, not symbols", {
   x <- plan_drake(a = "A", strings_in_dots = "literals")
-  expect_silent(make(x, verbose = FALSE))
+  expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
 test_with_dir("error handlers", {
@@ -21,7 +21,7 @@ test_with_dir("error handlers", {
 
 test_with_dir("error when file target names do not match actual filenames", {
   x <- plan_drake(y = 1, file_targets = TRUE)
-  expect_warning(expect_error(make(x, verbose = FALSE)))
+  expect_warning(expect_error(make(x, verbose = FALSE, session_info = FALSE)))
 })
 
 test_with_dir("clean a nonexistent cache", {
@@ -37,7 +37,7 @@ test_with_dir("stringsAsFactors can be TRUE", {
     stringsAsFactors = TRUE)
   expect_true(is.factor(myplan$target))
   expect_true(is.factor(myplan$command))
-  make(myplan, verbose = FALSE)
+  make(myplan, verbose = FALSE, session_info = FALSE)
   expect_equal(readd(a), "helloworld")
 })
 
@@ -67,7 +67,7 @@ test_with_dir("target conflicts with previous import", {
 
 test_with_dir("can use semicolons and multi-line commands", {
   plan <- plan_drake(list = c(x = "a<-1; a", y = "b<-2\nb"))
-  make(plan, verbose = FALSE)
+  make(plan, verbose = FALSE, session_info = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(cached(x, y, search = FALSE)))
   expect_equal(cached(search = FALSE), c("x", "y"))
@@ -78,7 +78,7 @@ test_with_dir("true targets can be functions", {
     x + 1
   })
   plan <- plan_drake(myfunction = generator(), output = myfunction(1))
-  config <- make(plan, verbose = FALSE)
+  config <- make(plan, verbose = FALSE, session_info = FALSE)
   expect_equal(readd(output), 2)
   expect_true(
     is.character(

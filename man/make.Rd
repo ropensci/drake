@@ -16,7 +16,7 @@ make(plan = plan_drake(), targets = drake::possible_targets(plan),
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
   trigger = drake::default_trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, store_meta = TRUE, config = NULL,
-  lazy_load = FALSE)
+  lazy_load = FALSE, session_info = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -252,6 +252,12 @@ If \code{lazy_load} is \code{TRUE}, drake assigns
 promises to load any dependencies at the last minute.
 Lazy loading may be more memory efficient in some use cases, but
 it may duplicate the loading of dependencies, costing time.}
+
+\item{session_info}{logical, whether to save the \code{sessionInfo()}
+to the cache. This behavior is recommended for serious \code{\link{make}()}s
+for the sake of reproducibility. This argument only exists to
+speed up tests. Apparently, \code{sessionInfo()} is a bottleneck
+for small \code{\link{make}()}s.}
 }
 \value{
 The master internal configuration list, mostly

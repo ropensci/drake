@@ -51,6 +51,7 @@
 - Add a `namespace` argument to `cached()` so users can inspect individual `storr` namespaces.
 - Change `verbose` to numeric: 0 = print nothing, 1 = print progress on imports only, 2 = print everything.
 - Add a new `next_stage()` function to report the targets to be made in the next parallelizable stage.
+- Add a new `session_info` argument to `make()`. Apparently, `sessionInfo()` is a bottleneck for small `make()`s, so there is now an option to suppress it. This is mostly for the sake of speeding up unit tests.
 
 # Changes in release 4.4.0
 

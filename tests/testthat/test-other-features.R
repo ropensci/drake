@@ -25,7 +25,7 @@ test_with_dir("shapes", {
 
 test_with_dir("make() with imports_only", {
   expect_silent(make(plan_drake(x = 1), imports_only = TRUE,
-    verbose = FALSE))
+    verbose = FALSE, session_info = FALSE))
   expect_false(cached(x))
 })
 
@@ -33,7 +33,7 @@ test_with_dir("in_progress() works", {
   expect_equal(in_progress(), character(0))
   bad_plan <- plan_drake(x = function_doesnt_exist())
   expect_error(tmp <- capture.output({
-      make(bad_plan, verbose = FALSE)
+      make(bad_plan, verbose = FALSE, session_info = FALSE)
     },
     type = "message")
   )
@@ -68,17 +68,23 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
   expect_error(check_plan(y, envir = config$envir))
-  expect_error(make(y, envir = config$envir))
+  expect_error(make(y, envir = config$envir, session_info = FALSE))
   y <- data.frame(target = character(0), command = character(0))
   expect_error(check_plan(y, envir = config$envir))
-  expect_error(make(y, envir = config$envir))
+  expect_error(make(y, envir = config$envir, session_info = FALSE))
   expect_error(
     check_plan(config$plan, targets = character(0), envir = config$envir))
   expect_error(
-    make(config$plan, targets = character(0), envir = config$envir))
+    make(
+      config$plan,
+      targets = character(0),
+      envir = config$envir,
+      session_info = FALSE
+    )
+  )
   y <- plan_drake(x = 1, y = 2)
   y$bla <- "bluh"
-  expect_warning(make(y))
+  expect_warning(make(y, session_info = FALSE))
 })
 
 test_with_dir("targets can be partially specified", {

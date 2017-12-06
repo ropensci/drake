@@ -8,8 +8,20 @@ test_with_dir("available hash algos", {
 
 test_with_dir("illegal hashes", {
   x <- plan_drake(a = 1)
-  expect_error(make(x, short_hash_algo = "no_such_algo_aslkdjfoiewlk"))
-  expect_error(make(x, long_hash_algo = "no_such_algo_aslkdjfoiewlk"))
+  expect_error(
+    make(
+      x,
+      short_hash_algo = "no_such_algo_aslkdjfoiewlk",
+      session_info = FALSE
+    )
+  )
+  expect_error(
+    make(
+      x,
+      long_hash_algo = "no_such_algo_aslkdjfoiewlk",
+      session_info = FALSE
+    )
+  )
 })
 
 test_with_dir("stress test file hash", {

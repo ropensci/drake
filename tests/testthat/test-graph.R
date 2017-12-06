@@ -9,7 +9,7 @@ test_with_dir("drake searches past outdated targets for parallel stages", {
     c = a,
     f = c
   )
-  config <- make(plan, targets = c("a", "b", "c", "d"))
+  config <- make(plan, targets = c("a", "b", "c", "d"), session_info = FALSE)
   config <- drake_config(plan)
   stages <- parallel_stages(config)
   expect_equal(sort(stages$item), c("e", "f"))
@@ -37,7 +37,7 @@ test_with_dir("null graph", {
 test_with_dir("circular non-DAG plan_drakes quit in error", {
   p <- plan_drake(a = b, b = c, c = a)
   expect_error(tmp <- capture.output(check_plan(p)))
-  expect_error(make(p, verbose = FALSE))
+  expect_error(make(p, verbose = FALSE, session_info = FALSE))
 })
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {
@@ -48,7 +48,8 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
       plan = con$plan,
       envir = con$envir,
       graph = con2$graph,
-      verbose = FALSE
+      verbose = FALSE,
+      session_info = FALSE
     )
   )
 })

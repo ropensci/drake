@@ -16,7 +16,7 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_true(inherits(recover_cache(force = TRUE), "storr"))
   config <- load_basic_example(force = TRUE)
   expect_true(length(outdated(config)) > 0)
-  expect_error(make(my_plan, verbose = FALSE))
+  expect_error(make(my_plan, verbose = FALSE, session_info = FALSE))
   make(my_plan, verbose = FALSE, force = TRUE)
   expect_equal(outdated(config), character(0))
   expect_true(length(cached()) > 0)
@@ -38,7 +38,7 @@ test_with_dir("migrate_drake_project() an up to date cache", {
   cache <- this_cache(path = "old", force = TRUE)
   expect_true(migrate_drake_project(path = "old", jobs = 2))
   load_basic_example()
-  config <- make(my_plan, cache = cache)
+  config <- make(my_plan, cache = cache, session_info = FALSE)
  # expect_equal(justbuilt(config = config), character(0)) # r-lib/covr#289 # nolint
   clean(cache = cache)
   expect_equal(cached(cache = cache), character(0))

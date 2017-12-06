@@ -107,7 +107,8 @@ test_with_dir("totally off the default cache", {
     cache = con$cache,
     verbose = FALSE,
     parallelism = get_testing_scenario()$parallelism,
-    jobs = get_testing_scenario()$jobs
+    jobs = get_testing_scenario()$jobs,
+    session_info = FALSE
   )
   expect_false(file.exists(default_cache_path()))
 })
@@ -134,7 +135,8 @@ test_with_dir("use two differnt file system caches", {
     envir = envir,
     verbose = FALSE,
     parallelism = parallelism,
-    jobs = jobs
+    jobs = jobs,
+    session_info = FALSE
   )
 
   o1 <- outdated(con)
@@ -172,7 +174,8 @@ test_with_dir("use two differnt file system caches", {
     envir = envir,
     verbose = FALSE,
     parallelism = parallelism,
-    jobs = jobs
+    jobs = jobs,
+    session_info = FALSE
   )
   o3 <- outdated(con2)
   expect_equal(o2, targ)
