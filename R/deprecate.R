@@ -221,7 +221,7 @@ config <- function(
     "evaluate",
     package = "drake",
     msg = paste(
-      "drake::evaluate() is deprecated",
+      "drake::config() is deprecated",
       "due to possible name conflicts.",
       "Use drake_config() instead."
     )
