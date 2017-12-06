@@ -369,8 +369,8 @@ drake_version <- function(session_info = NULL){ # nolint
     return(packageVersion("drake"))
   }
   all_pkgs <- c(
-    session_info$otherPkgs,
-    session_info$loadedOnly
+    session_info$otherPkgs, # nolint
+    session_info$loadedOnly # nolint
   )
   all_pkgs$drake$Version # nolint
 }
