@@ -22,12 +22,12 @@ test_with_dir("build times works if no targets are built", {
 
 test_with_dir("build time the same after superfluous make", {
   x <- plan_drake(y = Sys.sleep(0.25))
-  c1 <- make(x, verbose = FALSE)
+  c1 <- make(x, verbose = FALSE, session_info = FALSE)
   expect_equal(justbuilt(c1), "y")
   b1 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b1)))
 
-  c2 <- make(x, verbose = FALSE)
+  c2 <- make(x, verbose = FALSE, session_info = FALSE)
   expect_equal(justbuilt(c2), character(0))
   b2 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b2)))
@@ -48,7 +48,7 @@ test_with_dir("empty time predictions", {
       min_df
   )
   expect_equal(nrow(x), 0)
-  config <- make(my_plan, verbose = FALSE)
+  config <- make(my_plan, verbose = FALSE, session_info = FALSE)
   x <- rate_limiting_times(config) %>%
     min_df
   expect_equal(nrow(x), 0)

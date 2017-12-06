@@ -70,14 +70,14 @@ test_with_dir("plan_drake() trims outer whitespace in target names", {
 test_with_dir("make() and check_plan() trim outer whitespace in target names", {
   x <- data.frame(target = c("a\n", "  b", "c ", "\t  d   "),
     command = 1)
-  expect_silent(make(x, verbose = FALSE))
+  expect_silent(make(x, verbose = FALSE, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
   stat <- c(a = "finished", b = "finished", c = "finished",
     d = "finished")
   expect_equal(progress(), stat)
 
   expect_warning(make(x, verbose = FALSE, targets = c("a",
-    "nobody_home")))
+    "nobody_home"), session_info = FALSE))
 
   x <- data.frame(target = c("a", " a"), command = 1)
   expect_error(check_plan(x, verbose = FALSE))
@@ -89,7 +89,7 @@ test_with_dir("make() plays nicely with tibbles", {
   }
   x <- tibble::tribble(~target, ~command, "nothing", 1)
   expect_silent(check_plan(x, verbose = FALSE))
-  expect_silent(make(x, verbose = FALSE))
+  expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
 test_with_dir("check_plan() finds bad symbols", {

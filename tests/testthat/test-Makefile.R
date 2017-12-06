@@ -62,7 +62,7 @@ test_with_dir("files inside directories can be timestamped", {
   unlink("t1", recursive = TRUE, force = TRUE)
   expect_false(file.exists("t1"))
 
-  expect_silent(make(config$plan, verbose = FALSE))
+  expect_silent(make(config$plan, verbose = FALSE, session_info = FALSE))
   expect_true(file.exists("t1"))
   expect_true(file.exists(drake::drake_unquote(file)))
   unlink("t1", recursive = TRUE, force = TRUE)
@@ -72,7 +72,7 @@ test_with_dir("files inside directories can be timestamped", {
 test_with_dir("basic Makefile stuff works", {
   config <- dbug()
   make(config$plan, targets = "combined", envir = config$envir,
-    verbose = FALSE)
+    verbose = FALSE, session_info = FALSE)
   config$verbose <- FALSE
   cache_path <- cache_path(config$cache)
   initialize_session(config = config)
@@ -125,7 +125,7 @@ test_with_dir("Makefile stuff in globalenv()", {
   drake_TESTGLOBAL_config <- make(
     drake_TESTGLOBAL_plan,
     envir = globalenv(),
-    verbose = FALSE
+    verbose = FALSE, session_info = FALSE
   )
   store_drake_config(drake_TESTGLOBAL_config)
   run_Makefile(drake_TESTGLOBAL_config, run = FALSE, debug = TRUE)
@@ -215,7 +215,7 @@ test_with_dir("packages are loaded in prework", {
   suppressWarnings(make(plan = config$plan, targets = config$targets,
     envir = config$envir, verbose = FALSE, parallelism = scenario$parallelism,
     jobs = scenario$jobs, prework = config$prework, prepend = config$prepend,
-    command = config$command
+    command = config$command, session_info = FALSE
   ))
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")

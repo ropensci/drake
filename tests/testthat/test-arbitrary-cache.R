@@ -24,7 +24,7 @@ test_with_dir("storr_environment is a cache type", {
   expect_equal(long_hash(x), default_long_hash_algo())
   expect_error(drake_session(cache = x))
   pln <- plan_drake(y = 1)
-  config <- make(pln, cache = x, verbose = FALSE)
+  config <- make(pln, cache = x, verbose = FALSE, session_info = FALSE)
   expect_equal(cached(cache = x), "y")
   expect_false(file.exists(default_cache_path()))
   expect_equal(outdated(config), character(0))

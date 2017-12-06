@@ -17,12 +17,13 @@ test_with_dir("clean() works if there is no cache already", {
 
 test_with_dir("corrupt cache", {
   x <- plan_drake(a = 1)
-  make(x, verbose = FALSE)
+  make(x, verbose = FALSE, session_info = FALSE)
   path <- file.path(default_cache_path(), "config", "hash_algorithm")
   expect_true(file.exists(path))
   unlink(path)
   expect_false(file.exists(path))
-  expect_warning(expect_error(make(x, verbose = FALSE)))
+  expect_warning(expect_error(
+    make(x, verbose = FALSE, session_info = FALSE)))
 })
 
 test_with_dir("try to find a non-existent project", {
@@ -72,6 +73,7 @@ test_with_dir("cache functions work", {
     envir <- environment()
   }
 
+  config$session_info <- TRUE
   testrun(config)
 
   # drake_gc() should not remove any important targets/imports.

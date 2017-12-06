@@ -2,11 +2,12 @@ drake_context("console")
 
 test_with_dir("console_up_to_date", {
   pl <- plan_drake(a = 1)
-  con <- make(pl, verbose = FALSE)
+  con <- make(pl, verbose = FALSE, session_info = FALSE)
   expect_silent(console_up_to_date(con))
   con$verbose <- TRUE
   expect_silent(console_up_to_date(con))
-  con <- make(pl, verbose = FALSE)
+  con$cache$clear(namespace = "session")
+  con <- make(pl, verbose = FALSE, session_info = FALSE)
   con$verbose <- TRUE
   expect_message(console_up_to_date(con))
 })
