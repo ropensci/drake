@@ -343,15 +343,20 @@ configure_cache <- function(
 }
 
 set_initial_drake_version <- function(cache){
-  keys <- cache$list(namespace = "session")
-  if ("initial_drake_version" %in% keys){
+  if (cache$exists(
+    key = "initial_drake_version",
+    namespace = "session"
+  )){
     return()
-  } else if ("sessionInfo" %in% keys){
+  } else if (cache$exists(
+    key = "sessionInfo",
+    namespace = "session"
+  )){
     last_session <- drake_session(cache = cache)
   } else {
-    last_session <- sessionInfo()
+    last_session <- NULL
   }
-  version <- drake_version(last_session)
+  version <- drake_version(session_info = last_session)
   cache$set(
     key = "initial_drake_version",
     value = version,
@@ -359,8 +364,15 @@ set_initial_drake_version <- function(cache){
   )
 }
 
-drake_version <- function(session_info = sessionInfo()){ # nolint
-  session_info$otherPkgs$drake$Version # nolint
+drake_version <- function(session_info = NULL){ # nolint
+  if (!length(session_info)){
+    return(packageVersion("drake"))
+  }
+  all_pkgs <- c(
+    session_info$otherPkgs,
+    session_info$loadedOnly
+  )
+  all_pkgs$drake$Version # nolint
 }
 
 safe_get <- function(key, namespace, config){
