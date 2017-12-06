@@ -6,6 +6,8 @@ cache: packages
 
 # Added manually by Will Landau
 
+warnings_are_errors: true
+
 r_packages:
   - covr
   - lintr
@@ -14,10 +16,10 @@ r_packages:
 script:
   - |
     R CMD build .
-    travis_wait 20 R CMD check drake*tar.gz
+    travis_wait 20 R CMD check drake*tar.gz --no-tests
+    travis_wait 20 Rscript -e 'covr::codecov()'
 
 after_success:
-  - travis_wait 20 Rscript -e 'covr::codecov()'
   - Rscript -e 'lintr::lint_package()'
 
 after_failure:
