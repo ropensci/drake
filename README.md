@@ -74,7 +74,7 @@ install_github("wlandau-lilly/drake@v4.4.0", build = TRUE) # Choose a GitHub tag
 install_github("wlandau-lilly/drake", build = TRUE)        # Development version.
 ```
 
-- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which muliple R sessions initialize and then try to `require(drake)`.
+- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
 - For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 # Quickstart
 
@@ -221,7 +221,7 @@ Similarly to imported functions like `reg2()`, `drake` reacts to changes in
 1. Other imported functions, whether user-defined or from packages.
 1. For imported functions from your environment, any nested functions also in your environment or from packages.
 1. Commands in your workflow plan data frame.
-1. Global varibles mentioned in the commands or imported functions.
+1. Global variables mentioned in the commands or imported functions.
 1. Upstream targets.
 1. For [dynamic knitr reports](https://yihui.name/knitr) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
 
