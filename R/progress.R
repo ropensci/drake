@@ -160,6 +160,8 @@ failed <- function(path = getwd(), search = TRUE,
 #'
 #' @param verbose whether to print console messages
 #'
+#' @param jobs number of jobs/workers for parallel processing
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -180,7 +182,8 @@ progress <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   # deprecate imported_files_only
   if (length(imported_files_only)){
@@ -198,23 +201,27 @@ progress <- function(
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (!length(targets)){
-    return(list_progress(
+    return(
+      list_progress(
         no_imported_objects = no_imported_objects,
-        cache = cache
-        ))
+        cache = cache,
+        jobs = jobs
+      )
+    )
   }
   return(get_progress(targets, cache))
 }
 
-list_progress <- function(no_imported_objects, cache){
+list_progress <- function(no_imported_objects, cache, jobs){
   all_marked <- cache$list(namespace = "progress")
   all_progress <- get_progress(target = all_marked, cache = cache)
   plan <- read_drake_plan(cache = cache)
-  abridged_marked <- Filter(
+  abridged_marked <- parallel_filter(
     all_marked,
     f = function(target){
       is_built_or_imported_file(target = target, plan = plan)
-    }
+    },
+    jobs = jobs
   )
   abridged_progress <- all_progress[abridged_marked]
   if (no_imported_objects){

@@ -6,7 +6,7 @@
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE, cache = NULL, verbose = 1,
-  namespace = NULL)
+  namespace = NULL, jobs = 1)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -42,6 +42,8 @@ If supplied, \code{path} and \code{search} are ignored.}
 
 \item{namespace}{character scalar, name of the storr namespace
 to use for listing objects}
+
+\item{jobs}{number of jobs/workers for parallel processing}
 }
 \value{
 Either a named logical indicating whether the given

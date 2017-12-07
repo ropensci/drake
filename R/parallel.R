@@ -13,6 +13,11 @@ run_parallel <- function(config, worker) {
   invisible()
 }
 
+parallel_filter <- function(x, f, jobs = 1, ...){
+  index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...)
+  x[as.logical(index)]
+}
+
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
   jobs <- safe_jobs(jobs)
   if (is.atomic(X)){

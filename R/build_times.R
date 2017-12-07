@@ -45,7 +45,7 @@ build_times <- function(
     jobs = 1,
     cache = cache
   ) %>%
-    Filter(f = is.data.frame) %>%
+    parallel_filter(f = is.data.frame, jobs = jobs) %>%
     do.call(what = rbind) %>%
     rbind(empty_times()) %>%
     round_times(digits = digits) %>%

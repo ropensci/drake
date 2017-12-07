@@ -154,7 +154,8 @@ uncache <- function(targets, cache, jobs, purge){
     } else {
       remove_these <- intersect(targets, cached)
     }
-    files <- Filter(x = remove_these, f = is_existing_file)
+    files <- parallel_filter(
+      x = remove_these, f = is_existing_file, jobs = jobs)
     lightly_parallelize(
       X = files,
       FUN = remove_file_target,

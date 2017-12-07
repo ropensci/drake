@@ -47,6 +47,8 @@
 #' @param namespace character scalar, name of the storr namespace
 #' to use for listing objects
 #'
+#' @param jobs number of jobs/workers for parallel processing
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -79,7 +81,8 @@ cached <- function(
   search = TRUE,
   cache = NULL,
   verbose = 1,
-  namespace = NULL
+  namespace = NULL,
+  jobs = 1
 ){
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search, verbose = verbose)
@@ -94,25 +97,26 @@ cached <- function(
   targets <- targets_from_dots(dots, list)
   if (!length(targets))
     list_cache(no_imported_objects = no_imported_objects,
-      cache = cache, namespace = namespace)
+      cache = cache, namespace = namespace, jobs = jobs)
   else
     is_cached(targets = targets, no_imported_objects = no_imported_objects,
-      cache = cache, namespace = namespace)
+      cache = cache, namespace = namespace, jobs = jobs)
 }
 
-is_cached <- function(targets, no_imported_objects, cache, namespace) {
+is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
   if (no_imported_objects)
-    targets <- no_imported_objects(targets = targets, cache = cache)
+    targets <- no_imported_objects(
+      targets = targets, cache = cache, jobs = jobs)
   inclusion <- targets %in% cache$list(namespace = namespace)
   names(inclusion) <- targets
   inclusion
 }
 
-list_cache <- function(no_imported_objects, cache, namespace) {
+list_cache <- function(no_imported_objects, cache, namespace, jobs){
   targets <- cache$list(namespace = namespace)
   if (no_imported_objects){
     plan <- read_drake_plan(cache = cache)
-    targets <- no_imported_objects(targets = targets, plan = plan)
+    targets <- no_imported_objects(targets = targets, plan = plan, jobs = jobs)
   }
   targets
 }
@@ -133,6 +137,7 @@ list_cache <- function(no_imported_objects, cache, namespace) {
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
+#' @param jobs number of jobs/workers for parallel processing
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -145,17 +150,19 @@ list_cache <- function(no_imported_objects, cache, namespace) {
 built <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   if (is.null(cache)){
     return(character(0))
   }
   plan <- read_drake_plan(cache = cache)
   cache$list(namespace = cache$default_namespace) %>%
-    Filter(
+    parallel_filter(
       f = function(target){
         !is_imported(target = target, plan = plan)
-      }
+      },
+      jobs = jobs
     )
 }
 
@@ -178,6 +185,7 @@ built <- function(
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
+#' @param jobs number of jobs/workers for parallel processing
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -190,18 +198,22 @@ built <- function(
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   if (is.null(cache)){
     return(character(0))
   }
   plan <- read_drake_plan(cache = cache)
   targets <- cache$list(namespace = cache$default_namespace) %>%
-    Filter(f = function(target){
-      is_imported(target = target, plan = plan)
-    })
+    parallel_filter(
+      f = function(target){
+        is_imported(target = target, plan = plan)
+      },
+      jobs = jobs
+    )
   if (files_only)
-    targets <- Filter(targets, f = is_file)
+    targets <- parallel_filter(targets, f = is_file, jobs = jobs)
   targets
 }
 
@@ -216,15 +228,24 @@ targets_from_dots <- function(dots, list) {
   .Primitive("c")(names, list) %>% unique
 }
 
-imported_only <- function(targets, plan) {
-  Filter(targets, f = function(target) is_imported(target = target,
-    plan = plan))
+imported_only <- function(targets, plan, jobs) {
+  parallel_filter(
+    x = targets,
+    f = function(target){
+      is_imported(target = target, plan = plan)
+    },
+    jobs = jobs
+  )
 }
 
-no_imported_objects <- function(targets, plan) {
-  Filter(targets,
-    f = function(target) is_built_or_imported_file(target = target,
-      plan = plan))
+no_imported_objects <- function(targets, plan, jobs) {
+  parallel_filter(
+    x = targets,
+    f = function(target){
+      is_built_or_imported_file(target = target, plan = plan)
+    },
+    jobs = jobs
+  )
 }
 
 is_imported <- Vectorize(function(target, plan) {

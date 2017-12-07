@@ -6,7 +6,7 @@
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE)
+  verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only
@@ -26,6 +26,8 @@ current working directory only.}
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{whether to print console messages}
+
+\item{jobs}{number of jobs/workers for parallel processing}
 }
 \value{
 Character vector naming the imports in the cache.

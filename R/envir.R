@@ -26,7 +26,7 @@ prune_envir <- function(targets, config){
     config = config
   )
   discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
-    filter_non_files(jobs = config$jobs) %>%
+    parallel_filter(f = is_not_file, jobs = config$jobs) %>%
     intersect(y = already_loaded)
   if (length(discard_these)){
     console_many_targets(
@@ -52,16 +52,6 @@ prune_envir <- function(targets, config){
 
 nonfile_target_dependencies <- function(targets, config){
   deps <- dependencies(targets = targets, config = config)
-  out <- filter_non_files(x = deps, jobs = config$jobs)
+  out <- parallel_filter(x = deps, f = is_not_file, jobs = config$jobs)
   intersect(out, config$plan$target)
-}
-
-filter_non_files <- function(x, jobs){
-  non_files <- lightly_parallelize(
-    X = x,
-    FUN = is_not_file,
-    jobs = jobs
-  ) %>%
-    as.logical
-  x[non_files]
 }

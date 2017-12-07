@@ -127,11 +127,18 @@ dataframes_graph <- function(
   config$imports <- setdiff(config$nodes$id, config$plan$target)
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
-  config$files <- Filter(x = config$nodes$id, f = is_file)
-  config$functions <- Filter(x = config$imports,
-    f = function(x) can_get_function(x, envir = config$envir))
-  config$missing <- Filter(x = config$imports,
-    f = function(x) missing_import(x, envir = config$envir))
+  config$files <- parallel_filter(
+    x = config$nodes$id, f = is_file, jobs = config$jobs)
+  config$functions <- parallel_filter(
+    x = config$imports,
+    f = function(x) can_get_function(x, envir = config$envir),
+    jobs = config$jobs
+  )
+  config$missing <- parallel_filter(
+    x = config$imports,
+    f = function(x) missing_import(x, envir = config$envir),
+    jobs = config$jobs
+  )
   config$font_size <- font_size
   config$build_times <- build_times
   config$digits <- digits

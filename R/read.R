@@ -158,7 +158,7 @@ loadd <- function(
   }
   if (imported_only){
     plan <- read_drake_plan(cache = cache)
-    targets <- imported_only(targets = targets, plan = plan)
+    targets <- imported_only(targets = targets, plan = plan, jobs = jobs)
   }
   if (!length(targets)){
     stop("no targets to load.")

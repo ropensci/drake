@@ -7,7 +7,7 @@
 progress(..., list = character(0), no_imported_objects = FALSE,
   imported_files_only = logical(0), path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE)
+  verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -38,6 +38,8 @@ If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
 
 \item{verbose}{whether to print console messages}
+
+\item{jobs}{number of jobs/workers for parallel processing}
 }
 \value{
 The build progress of each target reached by
