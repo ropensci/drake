@@ -11,6 +11,7 @@
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See \code{\link{new_cache}()}
 #' @param verbose same as for \code{\link{make}()}
+#' @param jobs number of jobs/workers for light parallelism
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -27,7 +28,8 @@ check_plan <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   force(envir)
   config <- drake_config(
@@ -35,10 +37,11 @@ check_plan <- function(
     targets = targets,
     envir = envir,
     verbose = verbose,
-    cache = cache
+    cache = cache,
+    jobs = jobs
   )
   check_drake_config(config)
-  check_strings(config$plan)
+  check_strings(config$plan, jobs = jobs)
   invisible(plan)
 }
 
@@ -91,16 +94,22 @@ warn_bad_symbols <- function(x) {
   invisible()
 }
 
-check_strings <- function(plan) {
+check_strings <- function(plan, jobs) {
   x <- stri_extract_all_regex(plan$command, "(?<=\").*?(?=\")")
   names(x) <- plan$target
   x <- x[!is.na(x)]
   if (!length(x))
     return()
-  x <- lapply(x, function(y) {
-    if (length(y) > 2)
-      return(y[seq(from = 1, to = length(y), by = 2)]) else return(y)
-  })
+  x <- lightly_parallelize(
+    X = x,
+    FUN = function(y) {
+      if (length(y) > 2)
+        return(y[seq(from = 1, to = length(y), by = 2)])
+      else
+        return(y)
+    },
+    jobs = jobs
+  )
   message("Double-quoted strings were found in plan$command.\n",
     "Should these be single-quoted instead?\n",
     "Remember: single-quoted strings are file target dependencies\n",

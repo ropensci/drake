@@ -17,6 +17,7 @@
 #' @param cache optional drake cache. If supplied,
 #' the \code{path} and \code{search} arguments are ignored.
 #' @param verbose whether to print console messages
+#' @param jobs number of parallel jobs/workers for light parallelism.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -32,14 +33,16 @@ build_times <- function(
   digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   if (is.null(cache)){
     return(empty_times())
   }
-  out <- lapply(
-    cache$list(namespace = "build_times"),
-    fetch_runtime,
+  out <- lightly_parallelize(
+    X = cache$list(namespace = "build_times"),
+    FUN = fetch_runtime,
+    jobs = 1,
     cache = cache
   ) %>%
     Filter(f = is.data.frame) %>%

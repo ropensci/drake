@@ -6,7 +6,7 @@
 \usage{
 build_times(path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
-  targets_only = FALSE, verbose = TRUE)
+  targets_only = FALSE, verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -26,6 +26,8 @@ the \code{path} and \code{search} arguments are ignored.}
 build times of the targets (exclude the imports).}
 
 \item{verbose}{whether to print console messages}
+
+\item{jobs}{number of parallel jobs/workers for light parallelism.}
 }
 \value{
 A data frame of times, each from \code{\link{system.time}()}.

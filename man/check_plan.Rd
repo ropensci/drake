@@ -6,7 +6,7 @@
 \usage{
 check_plan(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
-  verbose = TRUE)
+  verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
@@ -19,6 +19,8 @@ check_plan(plan = plan_drake(), targets = drake::possible_targets(plan),
 \item{cache}{optional drake cache. See \code{\link{new_cache}()}}
 
 \item{verbose}{same as for \code{\link{make}()}}
+
+\item{jobs}{number of jobs/workers for light parallelism}
 }
 \value{
 Invisibly return \code{plan}.
