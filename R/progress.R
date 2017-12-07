@@ -209,12 +209,16 @@ progress <- function(
       )
     )
   }
-  return(get_progress(targets, cache))
+  get_progress(targets = targets, cache = cache, jobs = jobs)
 }
 
 list_progress <- function(no_imported_objects, cache, jobs){
   all_marked <- cache$list(namespace = "progress")
-  all_progress <- get_progress(target = all_marked, cache = cache)
+  all_progress <- get_progress(
+    targets = all_marked,
+    cache = cache,
+    jobs = jobs
+  )
   plan <- read_drake_plan(cache = cache)
   abridged_marked <- parallel_filter(
     all_marked,
@@ -235,15 +239,25 @@ list_progress <- function(no_imported_objects, cache, jobs){
   return(out)
 }
 
-get_progress <- Vectorize(
-  function(target, cache){
-    if (target %in% cache$list("progress")){
-      cache$get(key = target, namespace = "progress")
-    } else{
-      "not built or imported"
-    }
-  },
-  "target",
-  SIMPLIFY = TRUE,
-  USE.NAMES = TRUE
-)
+get_progress <- function(targets, cache, jobs){
+  if (!length(targets)){
+    return(character(0))
+  }
+  out <- lightly_parallelize(
+    X = targets,
+    FUN = get_progress_single,
+    jobs = jobs,
+    cache = cache
+  ) %>%
+    unlist
+  names(out) <- targets
+  out
+}
+
+get_progress_single <- function(target, cache){
+  if (cache$exists(key = target, namespace = "progress")){
+    cache$get(key = target, namespace = "progress")
+  } else{
+    "not built or imported"
+  }
+}

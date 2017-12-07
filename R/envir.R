@@ -9,7 +9,7 @@ assign_to_envir <- Vectorize(
     assign(x = target, value = value, envir = config$envir)
   },
   c("target", "value")
-  )
+)
 
 prune_envir <- function(targets, config){
   downstream <- downstream_nodes(
