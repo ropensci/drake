@@ -1,15 +1,27 @@
-assign_to_envir <- Vectorize(
-  function(target, value, config){
-    if (config$lazy_load){
-      return()
-    }
-    if (is_file(target) | !(target %in% config$plan$target)){
-      return()
-    }
-    assign(x = target, value = value, envir = config$envir)
-  },
-  c("target", "value")
-)
+assign_to_envir <- function(targets, values, config){
+  if (config$lazy_load){
+    return()
+  }
+  lightly_parallelize(
+    X = seq_along(targets),
+    FUN = assign_to_envir_single,
+    jobs = config$jobs,
+    targets = targets,
+    values = values,
+    config = config
+  )
+  invisible()
+}
+
+assign_to_envir_single <- function(index, targets, values, config){
+  target <- targets[index]
+  value <- values[[index]]
+  if (is_file(target) | !(target %in% config$plan$target)){
+    return()
+  }
+  assign(x = target, value = value, envir = config$envir)
+  invisible()
+}
 
 prune_envir <- function(targets, config){
   downstream <- downstream_nodes(

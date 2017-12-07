@@ -12,7 +12,7 @@ worker_mclapply <- function(targets, meta_list, config){
     config = config,
     mc.cores = jobs
   )
-  assign_to_envir(target = targets, value = values, config = config)
+  assign_to_envir(targets = targets, values = values, config = config)
 }
 
 warn_mclapply_windows <- function(

@@ -10,5 +10,5 @@ worker_lapply <- function(targets, meta_list, config){
     meta_list = meta_list,
     config = config
   )
-  assign_to_envir(target = targets, value = values, config = config)
+  assign_to_envir(targets = targets, values = values, config = config)
 }

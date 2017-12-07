@@ -32,8 +32,8 @@ worker_parLapply <- function(targets, meta_list, config) { # nolint
     config = config
   )
   assign_to_envir_parLapply( # nolint
-    target = targets,
-    value = values,
+    targets = targets,
+    values = values,
     config = config
   )
 }
@@ -46,9 +46,9 @@ prune_envir_parLapply <- function(targets = targets, config = config) { # nolint
 }
 
 assign_to_envir_parLapply <- # nolint
-  function(target, value, config) {
-  assign_to_envir(target = target, value = value, config = config)
+  function(targets, values, config) {
+  assign_to_envir(targets = targets, values = values, config = config)
   if (identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = assign_to_envir,
-      target = target, value = value, config = config)
+      targets = targets, values = values, config = config)
 }
