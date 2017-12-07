@@ -4,7 +4,7 @@
 \alias{missed}
 \title{Function \code{missed}}
 \usage{
-missed(config = NULL)
+missed(config)
 }
 \arguments{
 \item{config}{internal runtime parameter list of

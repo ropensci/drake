@@ -79,17 +79,18 @@ outdated <-  function(config, make_imports = TRUE){
 #' missed(config) # Should report that reg1 is missing.
 #' })
 #' }
-missed <- function(config = NULL){
-  graph <- config$graph
-  imports <- setdiff(V(graph)$name, config$plan$target)
-  missing <- Filter(
-    x = imports,
-    f = function(x){
+missed <- function(config){
+  imports <- setdiff(V(config$graph)$name, config$plan$target)
+  is_missing <- lightly_parallelize(
+    X = imports,
+    FUN = function(x){
       missing_import(x, envir = config$envir)
-    }
-  )
-  if (!length(missing)){
+    },
+    jobs = config$jobs
+  ) %>%
+    as.logical
+  if (!any(is_missing)){
     return(character(0))
   }
-  return(missing)
+  imports[is_missing]
 }
