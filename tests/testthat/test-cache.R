@@ -128,7 +128,6 @@ test_with_dir("cache functions work", {
   expect_equal(names(tmp), "final")
   expect_true(is.list(tmp <- read_drake_meta(search = FALSE)))
   expect_true(length(tmp) > 1)
-
   # imported , built, cached, diagnose, rescue
   expect_equal(diagnose(search = FALSE), character(0))
   expect_equal(imported(files_only = FALSE, search = FALSE),

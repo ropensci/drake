@@ -107,7 +107,14 @@ is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
   if (no_imported_objects)
     targets <- no_imported_objects(
       targets = targets, cache = cache, jobs = jobs)
-  inclusion <- targets %in% cache$list(namespace = namespace)
+  inclusion <- lightly_parallelize(
+    X = targets,
+    FUN = function(target){
+      cache$exists(key = target, namespace = namespace)
+    },
+    jobs = jobs
+  ) %>%
+    unlist
   names(inclusion) <- targets
   inclusion
 }

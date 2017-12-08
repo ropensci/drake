@@ -5,12 +5,12 @@
 \alias{drake-package}
 \alias{drake}
 \title{Drake is a pipeline toolkit
-(\url{https://github.com/pditommaso/awesome-pipeline}) 
+(\url{https://github.com/pditommaso/awesome-pipeline})
 and a scalable, R-focused solution for reproducibility
 and high-performance computing.}
 \description{
 Drake is a pipeline toolkit
-(\url{https://github.com/pditommaso/awesome-pipeline}) 
+(\url{https://github.com/pditommaso/awesome-pipeline})
 and a scalable, R-focused solution for reproducibility
 and high-performance computing.
 }

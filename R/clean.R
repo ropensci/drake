@@ -148,11 +148,16 @@ uncache <- function(targets, cache, jobs, purge){
     namespaces <- cleaned_namespaces(default = cache$default_namespace)
   }
   for (namespace in namespaces){
-    cached <- cache$list(namespace = namespace)
     if (!length(targets)){
-      remove_these <- cached
+      remove_these <- cache$list(namespace = namespace)
     } else {
-      remove_these <- intersect(targets, cached)
+      remove_these <- parallel_filter(
+        x = targets,
+        f = function(target){
+          cache$exists(key = target, namespace = namespace)
+        },
+        jobs = jobs
+      )
     }
     files <- parallel_filter(
       x = remove_these, f = is_existing_file, jobs = jobs)

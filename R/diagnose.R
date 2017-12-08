@@ -75,15 +75,10 @@ diagnose <- function(
   if (!character_only){
     target <- as.character(substitute(target))
   }
-  targets <- cache$list(namespace = "errors") %>%
-    sort
-  if (!length(targets)){
-    return(character(0))
-  }
   if (!length(target)){
-    return(targets)
+    return(cache$list(namespace = "errors"))
   }
-  if (!(target %in% targets)){
+  if (!cache$exists(key = target, namespace = "errors")){
     stop("No diagnostic information for target ", target, ".")
   }
   cache$get(key = target, namespace = "errors")

@@ -33,7 +33,7 @@ long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = TRUE
 ){
-  if (!("long_hash_algo" %in% cache$list(namespace = "config"))){
+  if (!cache$exists(key = "long_hash_algo", namespace = "config")){
     return(NULL)
   }
   cache$get("long_hash_algo", namespace = "config")
@@ -64,7 +64,7 @@ short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = verbose
 ){
-  if (!("short_hash_algo" %in% cache$list(namespace = "config"))){
+  if (!cache$exists(key = "short_hash_algo", namespace = "config")){
     return(NULL)
   }
   chosen_algo <- cache$get("short_hash_algo", namespace = "config")
@@ -128,7 +128,7 @@ default_short_hash_algo <- function(cache = NULL) {
   if (is.null(cache)){
     return(out)
   }
-  if ("short_hash_algo" %in% cache$list(namespace = "config")){
+  if (cache$exists(key = "short_hash_algo", namespace = "config")){
     out <- cache$get(
       key = "short_hash_algo",
       namespace = "config"
@@ -196,7 +196,7 @@ default_long_hash_algo <- function(cache = NULL) {
   if (is.null(cache)){
     return(out)
   }
-  if ("long_hash_algo" %in% cache$list(namespace = "config")){
+  if (cache$exists(key = "long_hash_algo", namespace = "config")){
     out <- cache$get(
       key = "long_hash_algo",
       namespace = "config"

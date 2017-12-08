@@ -321,15 +321,16 @@ configure_cache <- function(
   if (clear_progress){
     cache$clear(namespace = "progress")
   }
-  config_keys <- cache$list(namespace = "config")
-  if (overwrite_hash_algos | !("short_hash_algo" %in% config_keys)){
+  short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
+  long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")
+  if (overwrite_hash_algos | !short_exists){
     cache$set(
       key = "short_hash_algo",
       value = short_hash_algo,
       namespace = "config"
     )
   }
-  if (overwrite_hash_algos | !("long_hash_algo" %in% config_keys)){
+  if (overwrite_hash_algos | !long_exists){
     cache$set(
       key = "long_hash_algo",
       value = long_hash_algo,

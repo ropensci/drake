@@ -436,7 +436,13 @@ read_drake_meta <- function(
   if (is.null(targets)){
     targets <- cache$list(namespace = "meta")
   } else {
-    targets <- intersect(targets, cache$list(namespace = "meta"))
+    targets <- parallel_filter(
+      x = targets,
+      f = function(target){
+        cache$exists(key = target, namespace = "meta")
+      },
+      jobs = jobs
+    )
   }
   out <- lightly_parallelize(
     X = targets,
