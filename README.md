@@ -274,13 +274,11 @@ Many thanks to the following people for contributing amazing ideas and code patc
 - [Daniel Falster](https://github.com/dfalster)
 - [Eric Nantz](https://github.com/enantz-lilly)
 - [Henrik Bengtsson](https://github.com/HenrikBengtsson)
-- [Jarad Niemi](http://www.jarad.me/)
 - [Jasper Clarkberg](https://github.com/dapperjapper)
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
 Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
-/github.com/pditommaso/awesome-pipeline), but few are R-focused.
 
 # Documentation
 
