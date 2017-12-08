@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{configure_cache}
 \alias{configure_cache}
-\title{Function configure_cache}
+\title{Function \code{configure_cache}}
 \usage{
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),

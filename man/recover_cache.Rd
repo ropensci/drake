@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{recover_cache}
 \alias{recover_cache}
-\title{Function recover_cache}
+\title{Function \code{recover_cache}}
 \usage{
 recover_cache(path = drake::default_cache_path(),
   type = drake::default_cache_type(),

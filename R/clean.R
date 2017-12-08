@@ -192,7 +192,7 @@ remove_file_target <- function(target, plan){
   invisible()
 }
 
-#' @title Function drake_gc()
+#' @title Function \code{drake_gc}
 #' @description Do garbage collection on the cache
 #' @seealso \code{\link{clean}}
 #' @export
@@ -245,7 +245,7 @@ drake_gc <- function(
   invisible()
 }
 
-#' @title Function rescue_cache
+#' @title Function \code{rescue_cache}
 #' @description Sometimes, \code{storr} caches may have
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the

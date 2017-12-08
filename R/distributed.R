@@ -1,4 +1,4 @@
-#' @title Internal function store_drake_config
+#' @title Internal function \code{store_drake_config}
 #' @description Do the preparatory work
 #' for \code{\link{make}()} with a distributed computing
 #' backend (see the \code{parallelism} argument).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataframes_graph_utils.R
 \name{default_graph_title}
 \alias{default_graph_title}
-\title{Function default_graph_title}
+\title{Function \code{default_graph_title}}
 \usage{
 default_graph_title(split_columns = FALSE)
 }

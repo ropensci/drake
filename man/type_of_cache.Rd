@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_types.R
 \name{type_of_cache}
 \alias{type_of_cache}
-\title{Experimental function type_of_cache}
+\title{Experimental function \code{type_of_cache}}
 \usage{
 type_of_cache(path = drake::default_cache_path())
 }
@@ -19,9 +19,7 @@ with known file systems.
 }
 \details{
 Experimental function for a possible
-new feature in the future.
-It will come in handy if/when multiple cache types
-are supported.
+new future features.
 }
 \examples{
 \dontrun{
@@ -30,7 +28,7 @@ load_basic_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
 # Get the type of the cache
 # located in the (default) '.drake' folder.
-type_of_cache(".drake") # storr_rds
+type_of_cache(".drake") # NULL, signaling "storr_rds"
 })
 }
 }

@@ -1,4 +1,4 @@
-#' @title Function silencer_hook
+#' @title Function \code{silencer_hook}
 #' @description an example \code{hook} argument to
 #' \code{make()} that redirects output and error messages
 #  to separate files.
@@ -33,7 +33,7 @@ silencer_hook <- function(code){
   )
 }
 
-#' @title Function message_sink_hook
+#' @title Function \code{message_sink_hook}
 #' @description an example \code{hook} argument to
 #' \code{make()} that redirects error messages to files.
 #' @export
@@ -68,7 +68,7 @@ message_sink_hook <- function(code){
   force(code)
 }
 
-#' @title Function output_sink_hook
+#' @title Function \code{output_sink_hook}
 #' @description an example \code{hook} argument to
 #' \code{make()} that redirects output messages to files.
 #' @export
@@ -101,7 +101,7 @@ output_sink_hook <- function(code){
   force(code)
 }
 
-#' @title Function empty_hook
+#' @title Function \code{empty_hook}
 #' @description a \code{hook} argument to \code{\link{make}()}
 #' for which no targets get built and no imports get resolved
 #' @export
@@ -122,7 +122,7 @@ empty_hook <- function(code){
   invisible()
 }
 
-#' @title Function default_hook
+#' @title Function \code{default_hook}
 #' @description The default \code{hook} argument to \code{\link{make}()}.
 #' @export
 #' @return A function that you can supply to the \code{hook} argument

@@ -1,7 +1,6 @@
-#' @title Function knitr_deps
+#' @title Function \code{knitr_deps}
 #' @export
-#' @seealso \code{\link{knitr_deps}},
-#' \code{\link{deps}},
+#' @seealso \code{\link{deps}},
 #' \code{\link{make}}, \code{\link{load_basic_example}}
 #' @description Find the dependencies of a dynamic report. To
 #' enable drake to watch for these dependencies, your plan_drake

@@ -1,4 +1,4 @@
-#' @title Function parallel_stages
+#' @title Function \code{parallel_stages}
 #' @description Get information on the parallelizable stages
 #' of targets for a workflow.
 #' @details Usually, \code{\link{make}()} divides the targets
@@ -122,7 +122,7 @@ read_parallel_stages <- function(config){
     do.call(what = "rbind")
 }
 
-#' @title Function next_stage
+#' @title Function \code{next_stage}
 #' @description List the targets that will be made in the
 #' first parallel stage in the next call to \code{\link{make}}
 #' @seealso \code{\link{make}}, \code{\link{drake_config}}

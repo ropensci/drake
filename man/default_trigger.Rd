@@ -2,7 +2,7 @@
 % Please edit documentation in R/triggers.R
 \name{default_trigger}
 \alias{default_trigger}
-\title{Function default_trigger}
+\title{Function \code{default_trigger}}
 \usage{
 default_trigger()
 }

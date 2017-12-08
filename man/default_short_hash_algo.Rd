@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{default_short_hash_algo}
 \alias{default_short_hash_algo}
-\title{Default short hash algorithm for \code{make()}}
+\title{Function \code{default_short_hash_algo}}
 \usage{
 default_short_hash_algo(cache = NULL)
 }
@@ -17,6 +17,7 @@ hash algorithm that drake picks for you.}
 A character vector naming a hash algorithm.
 }
 \description{
+Return the default short hash algorithm for \code{make()}.
 Hashing is advanced. Most users
 do not need to know about this function.
 }

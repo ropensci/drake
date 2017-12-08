@@ -2,7 +2,7 @@
 % Please edit documentation in R/hooks.R
 \name{message_sink_hook}
 \alias{message_sink_hook}
-\title{Function message_sink_hook}
+\title{Function \code{message_sink_hook}}
 \usage{
 message_sink_hook(code)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make_with_config}
 \alias{make_with_config}
-\title{Function make_with_config}
+\title{Function \code{make_with_config}}
 \usage{
 make_with_config(config)
 }

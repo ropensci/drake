@@ -2,7 +2,7 @@
 % Please edit documentation in R/outdated.R
 \name{outdated}
 \alias{outdated}
-\title{Function outdated}
+\title{Function \code{outdated}}
 \usage{
 outdated(config, make_imports = TRUE)
 }

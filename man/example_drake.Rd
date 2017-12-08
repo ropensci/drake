@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{example_drake}
 \alias{example_drake}
-\title{Function \code{example_drake}}
+\title{Deprecated function \code{example_drake}}
 \usage{
 example_drake(example = drake::drake_examples(), destination = getwd())
 }

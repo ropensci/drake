@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean.R
 \name{drake_gc}
 \alias{drake_gc}
-\title{Function drake_gc()}
+\title{Function \code{drake_gc}}
 \usage{
 drake_gc(path = getwd(), search = TRUE, verbose = 1, cache = NULL,
   force = FALSE)

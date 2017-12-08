@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{read_config}
 \alias{read_config}
-\title{Deprecated function read_config}
+\title{Deprecated function \code{read_config}}
 \usage{
 read_config(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = TRUE)

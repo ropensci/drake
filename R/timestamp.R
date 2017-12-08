@@ -1,4 +1,4 @@
-#' @title Internal function time_stamps
+#' @title Internal function \code{time_stamps}
 #' @description Write dummy timestamps for Makefiles
 #' @details Used internally with
 #' \code{\link{make}(..., parallelism = "Makefile")}

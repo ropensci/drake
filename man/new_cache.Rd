@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{new_cache}
 \alias{new_cache}
-\title{Function new_cache}
+\title{Function \code{new_cache}}
 \usage{
 new_cache(path = drake::default_cache_path(), verbose = 1,
   type = drake::default_cache_type(),

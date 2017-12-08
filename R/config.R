@@ -1,4 +1,4 @@
-#' @title Function drake_config
+#' @title Function \code{drake_config}
 #' @description Compute the internal runtime parameter list of
 #' \code{\link{make}()}.
 #' @details This list is used internally, and you will need it
@@ -160,8 +160,9 @@ add_packages_to_prework <- function(packages, prework) {
     packages, ")", sep = "") %>% c(prework)
 }
 
-#' @title Internal function do_prework
+#' @title Internal function \code{do_prework}
 #' @export
+#' @keywords internal
 #' @description Run the \code{prework} of a \code{\link{make}()}.
 #' For internal use only.
 #' the only reason this function is exported
@@ -213,9 +214,10 @@ possible_targets <- function(plan = plan_drake()) {
   as.character(plan$target)
 }
 
-#' @title Internal function store_drake_config
+#' @title Internal function \code{store_drake_config}
 #' @description Store an internal configuration list
 #' from \code{\link{drake_config}()}.
+#' Exported for demonstration and tinkering purposes.
 #' @export
 #' @keywords internal
 #' @param config Internal configuration list

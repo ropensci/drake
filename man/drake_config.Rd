@@ -2,7 +2,7 @@
 % Please edit documentation in R/config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Function drake_config}
+\title{Function \code{drake_config}}
 \usage{
 drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,

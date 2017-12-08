@@ -1,4 +1,4 @@
-#' @title Function cache_path
+#' @title Function \code{cache_path}
 #' @export
 #' @description Returns the file path
 #' where the cache is stored. Currently
@@ -30,7 +30,7 @@ cache_path <- function(cache = NULL){
   }
 }
 
-#' @title Function get_cache
+#' @title Function \code{get_cache}
 #' @description Search for and return a drake file system cache.
 #' @seealso \code{\link{this_cache}}, \code{\link{new_cache}},
 #' \code{\link{recover_cache}}, \code{\link{config}}
@@ -75,7 +75,7 @@ get_cache <- function(
   this_cache(path = path, force = force, verbose = verbose)
 }
 
-#' @title Function this_cache
+#' @title Function \code{this_cache}
 #' @export
 #' @description Get a known drake file system cache
 #' at the exact specified file path
@@ -121,7 +121,7 @@ this_cache <- function(
   cache
 }
 
-#' @title Function new_cache
+#' @title Function \code{new_cache}
 #' @description Make a new drake cache. Could be any
 #' type of cache in \code{\link{cache_types}()}.
 #' @export
@@ -190,7 +190,7 @@ new_cache <- function(
   cache
 }
 
-#' @title Function recover_cache
+#' @title Function \code{recover_cache}
 #' @export
 #' @seealso \code{\link{new_cache}}, \code{\link{this_cache}},
 #' \code{\link{get_cache}}
@@ -244,7 +244,7 @@ recover_cache <- function(
   cache
 }
 
-#' @title Function default_cache_path
+#' @title Function \code{default_cache_path}
 #' @export
 #' @description Return the default file path of the drake/storr cache.
 #' @return Default file path of the drake/storr cache.
@@ -254,7 +254,7 @@ default_cache_path <- function(){
   file.path(getwd(), ".drake")
 }
 
-#' @title Function configure_cache
+#' @title Function \code{configure_cache}
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}}

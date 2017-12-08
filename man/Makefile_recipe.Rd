@@ -2,7 +2,7 @@
 % Please edit documentation in R/recipe.R
 \name{Makefile_recipe}
 \alias{Makefile_recipe}
-\title{Function Makefile_recipe}
+\title{Function \code{Makefile_recipe}}
 \usage{
 Makefile_recipe(recipe_command = drake::default_recipe_command(),
   target = "your_target", cache_path = drake::default_cache_path())

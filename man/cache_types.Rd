@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_types.R
 \name{cache_types}
 \alias{cache_types}
-\title{Function cache_types}
+\title{Function \code{cache_types}}
 \usage{
 cache_types()
 }

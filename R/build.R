@@ -1,5 +1,6 @@
-#' @title Internal function drake_build
+#' @title Internal function \code{drake_build}
 #' @export
+#' @keywords internal
 #' @description Function to build a target or import.
 #' For internal use only.
 #' the only reason this function is exported

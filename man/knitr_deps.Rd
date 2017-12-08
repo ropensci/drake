@@ -2,7 +2,7 @@
 % Please edit documentation in R/knitr.R
 \name{knitr_deps}
 \alias{knitr_deps}
-\title{Function knitr_deps}
+\title{Function \code{knitr_deps}}
 \usage{
 knitr_deps(target)
 }
@@ -40,7 +40,6 @@ try(knitr_deps("'report.md'"), silent = FALSE) # error
 }
 }
 \seealso{
-\code{\link{knitr_deps}},
 \code{\link{deps}},
 \code{\link{make}}, \code{\link{load_basic_example}}
 }

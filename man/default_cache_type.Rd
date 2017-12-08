@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_types.R
 \name{default_cache_type}
 \alias{default_cache_type}
-\title{Function default_cache_type}
+\title{Function \code{default_cache_type}}
 \usage{
 default_cache_type()
 }

@@ -94,7 +94,7 @@ build_drake_graph <- function(
   return(graph)
 }
 
-#' @title Function prune_drake_graph
+#' @title Function \code{prune_drake_graph}
 #' @export
 #' @seealso \code{\link{build_drake_graph}}, \code{\link{config}},
 #' \code{\link{make}}

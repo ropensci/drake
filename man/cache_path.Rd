@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{cache_path}
 \alias{cache_path}
-\title{Function cache_path}
+\title{Function \code{cache_path}}
 \usage{
 cache_path(cache = NULL)
 }

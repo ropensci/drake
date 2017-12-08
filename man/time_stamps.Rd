@@ -2,7 +2,7 @@
 % Please edit documentation in R/timestamp.R
 \name{time_stamps}
 \alias{time_stamps}
-\title{Internal function time_stamps}
+\title{Internal function \code{time_stamps}}
 \usage{
 time_stamps(config)
 }

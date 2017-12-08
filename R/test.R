@@ -38,7 +38,7 @@ nobuild <- function(config) {
   expect_true(length(justbuilt(config)) < 1)
 }
 
-#' @title Internal function test_with_dir
+#' @title Internal function \code{test_with_dir}
 #' @description Run a test in a way that quarantines
 #' the side effects from your workspace and file system.
 #' @export

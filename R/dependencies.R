@@ -1,4 +1,4 @@
-#' @title Function deps
+#' @title Function \code{deps}
 #' @description List the dependencies of a function or workflow plan command.
 #' Or, if the argument is a single-quoted string that points to
 #' a dynamic knitr report, the dependencies of the expected compiled
@@ -57,7 +57,7 @@ deps <- function(x){
   clean_dependency_list(out)
 }
 
-#' @title Function dependency_profile
+#' @title Function \code{dependency_profile}
 #' @description Return the detailed dependency profile
 #' of the target. Useful for debugging.
 #' For up to date targets, like elements

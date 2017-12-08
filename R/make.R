@@ -367,7 +367,7 @@ make <- function(
   make_with_config(config = config)
 }
 
-#' @title Function make_with_config
+#' @title Function \code{make_with_config}
 #' @description Run \code{\link{make}()},
 #' on an existing internal configuration list
 #' that you can get from \code{\link{drake_config}()}.
@@ -398,7 +398,7 @@ make_with_config <- function(config){
   return(invisible(config))
 }
 
-#' @title Function make_imports
+#' @title Function \code{make_imports}
 #' @description just make the imports
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{config}},
@@ -430,7 +430,7 @@ imports_graph <- function(config){
   delete_vertices(config$graph, v = delete_these)
 }
 
-#' @title Function make_targets
+#' @title Function \code{make_targets}
 #' @description just make the proper targets with commands
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{config}},

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{available_hash_algos}
 \alias{available_hash_algos}
-\title{Function available_hash_algos}
+\title{Function \code{available_hash_algos}}
 \usage{
 available_hash_algos()
 }

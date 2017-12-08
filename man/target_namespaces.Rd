@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_namespaces.R
 \name{target_namespaces}
 \alias{target_namespaces}
-\title{Function target_namespaces}
+\title{Function \code{target_namespaces}}
 \usage{
 target_namespaces(default = storr::storr_environment()$default_namespace)
 }

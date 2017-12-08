@@ -2,7 +2,7 @@
 % Please edit documentation in R/hooks.R
 \name{silencer_hook}
 \alias{silencer_hook}
-\title{Function silencer_hook}
+\title{Function \code{silencer_hook}}
 \usage{
 silencer_hook(code)
 }

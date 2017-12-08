@@ -1,4 +1,4 @@
-#' @title Function cache_namespaces
+#' @title Function \code{cache_namespaces}
 #' @export
 #' @seealso \code{\link{make}}
 #' @return A character vector of \code{storr} namespaces used for drake.
@@ -19,7 +19,7 @@ cache_namespaces <- function(
     sort
 }
 
-#' @title Function cleaned_namespaces
+#' @title Function \code{cleaned_namespaces}
 #' @description List the \code{storr} namespaces that are cleaned
 #' during a call to \code{\link{clean}()}. All these
 #' namespaces store target-level data, but not all
@@ -45,7 +45,7 @@ cleaned_namespaces <- function(
     sort
 }
 
-#' @title Function target_namespaces
+#' @title Function \code{target_namespaces}
 #' @export
 #' @seealso \code{\link{make}}
 #' @return A character vector of \code{storr} namespaces that store

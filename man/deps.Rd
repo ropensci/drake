@@ -2,7 +2,7 @@
 % Please edit documentation in R/dependencies.R
 \name{deps}
 \alias{deps}
-\title{Function deps}
+\title{Function \code{deps}}
 \usage{
 deps(x)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dependencies.R
 \name{dependency_profile}
 \alias{dependency_profile}
-\title{Function dependency_profile}
+\title{Function \code{dependency_profile}}
 \usage{
 dependency_profile(target, config)
 }

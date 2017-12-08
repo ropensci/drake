@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_namespaces.R
 \name{cleaned_namespaces}
 \alias{cleaned_namespaces}
-\title{Function cleaned_namespaces}
+\title{Function \code{cleaned_namespaces}}
 \usage{
 cleaned_namespaces(default = storr::storr_environment()$default_namespace)
 }

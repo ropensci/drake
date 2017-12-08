@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{evaluate}
 \alias{evaluate}
-\title{Deprecated function evaluate}
+\title{Deprecated function \code{evaluate}}
 \usage{
 evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
   expand = TRUE)

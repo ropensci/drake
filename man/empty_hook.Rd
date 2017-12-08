@@ -2,7 +2,7 @@
 % Please edit documentation in R/hooks.R
 \name{empty_hook}
 \alias{empty_hook}
-\title{Function empty_hook}
+\title{Function \code{empty_hook}}
 \usage{
 empty_hook(code)
 }

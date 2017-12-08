@@ -1,4 +1,4 @@
-#' @title Function migrate_drake_project
+#' @title Function \code{migrate_drake_project}
 #' @export
 #' @seealso \code{\link{rescue_cache}}, \code{\link{make}}
 #' @param path Full path to the cache
@@ -45,6 +45,10 @@
 migrate_drake_project <- function(
   path = drake::default_cache_path(), jobs = 1
 ){
+  message(
+    "Note: drake project migration will be removed ",
+    "by the year 2020, probably by the year 2019."
+  )
   cache <- should_migrate(path = path)
   if (is.null(cache)){
     return(invisible(TRUE))

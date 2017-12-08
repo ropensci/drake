@@ -2,7 +2,7 @@
 % Please edit documentation in R/triggers.R
 \name{triggers}
 \alias{triggers}
-\title{Function triggers}
+\title{Function \code{triggers}}
 \usage{
 triggers()
 }

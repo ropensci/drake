@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{config}
 \alias{config}
-\title{Deprecated function config}
+\title{Deprecated function \code{config}}
 \usage{
 config(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,

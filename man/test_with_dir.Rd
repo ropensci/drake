@@ -2,7 +2,7 @@
 % Please edit documentation in R/test.R
 \name{test_with_dir}
 \alias{test_with_dir}
-\title{Internal function test_with_dir}
+\title{Internal function \code{test_with_dir}}
 \usage{
 test_with_dir(desc, ...)
 }

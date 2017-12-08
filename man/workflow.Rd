@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{workflow}
 \alias{workflow}
-\title{Function \code{workflow}}
+\title{Deprecated function \code{workflow}}
 \usage{
 workflow(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))

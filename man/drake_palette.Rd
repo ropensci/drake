@@ -2,7 +2,7 @@
 % Please edit documentation in R/color.R
 \name{drake_palette}
 \alias{drake_palette}
-\title{Function palette}
+\title{Function \code{drake_palette}}
 \usage{
 drake_palette()
 }

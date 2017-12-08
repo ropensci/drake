@@ -2,7 +2,7 @@
 % Please edit documentation in R/parallel_ui.R
 \name{shell_file}
 \alias{shell_file}
-\title{Function shell_file}
+\title{Function \code{shell_file}}
 \usage{
 shell_file(path = "shell.sh", overwrite = FALSE)
 }

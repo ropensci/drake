@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{get_cache}
 \alias{get_cache}
-\title{Function get_cache}
+\title{Function \code{get_cache}}
 \usage{
 get_cache(path = getwd(), search = TRUE, verbose = 1, force = FALSE)
 }

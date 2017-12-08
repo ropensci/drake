@@ -2,7 +2,7 @@
 % Please edit documentation in R/hooks.R
 \name{output_sink_hook}
 \alias{output_sink_hook}
-\title{Function output_sink_hook}
+\title{Function \code{output_sink_hook}}
 \usage{
 output_sink_hook(code)
 }

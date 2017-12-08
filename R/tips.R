@@ -1,4 +1,4 @@
-#' @title Function drake_tip
+#' @title Function \code{drake_tip}
 #' @description Output a random tip about drake.
 #' Tips are usually related to news and usage.
 #' @export

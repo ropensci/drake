@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_runtime.R
 \name{predict_runtime}
 \alias{predict_runtime}
-\title{Function predict_runtime}
+\title{Function \code{predict_runtime}}
 \usage{
 predict_runtime(config, targets = NULL, future_jobs = 1,
   from_scratch = FALSE, targets_only = FALSE, digits = 3)

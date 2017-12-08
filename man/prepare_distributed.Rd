@@ -2,7 +2,7 @@
 % Please edit documentation in R/distributed.R
 \name{prepare_distributed}
 \alias{prepare_distributed}
-\title{Internal function store_drake_config}
+\title{Internal function \code{store_drake_config}}
 \usage{
 prepare_distributed(config)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/config.R
 \name{store_drake_config}
 \alias{store_drake_config}
-\title{Internal function store_drake_config}
+\title{Internal function \code{store_drake_config}}
 \usage{
 store_drake_config(config)
 }
@@ -15,6 +15,7 @@ Nothing.
 \description{
 Store an internal configuration list
 from \code{\link{drake_config}()}.
+Exported for demonstration and tinkering purposes.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/config.R
 \name{do_prework}
 \alias{do_prework}
-\title{Internal function do_prework}
+\title{Internal function \code{do_prework}}
 \usage{
 do_prework(config, verbose_packages)
 }
@@ -35,3 +35,4 @@ identical(x, 1) # Should be TRUE.
 })
 }
 }
+\keyword{internal}

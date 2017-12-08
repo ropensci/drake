@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataframes_graph_utils.R
 \name{legend_nodes}
 \alias{legend_nodes}
-\title{Function legend_nodes}
+\title{Function \code{legend_nodes}}
 \usage{
 legend_nodes(font_size = 20)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hooks.R
 \name{default_hook}
 \alias{default_hook}
-\title{Function default_hook}
+\title{Function \code{default_hook}}
 \usage{
 default_hook(code)
 }

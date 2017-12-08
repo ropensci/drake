@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make_targets}
 \alias{make_targets}
-\title{Function make_targets}
+\title{Function \code{make_targets}}
 \usage{
 make_targets(config)
 }

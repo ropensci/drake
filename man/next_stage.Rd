@@ -2,7 +2,7 @@
 % Please edit documentation in R/parallel_stages.R
 \name{next_stage}
 \alias{next_stage}
-\title{Function next_stage}
+\title{Function \code{next_stage}}
 \usage{
 next_stage(config)
 }

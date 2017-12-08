@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{workplan}
 \alias{workplan}
-\title{Function \code{workplan}}
+\title{Deprecated function \code{workplan}}
 \usage{
 workplan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))

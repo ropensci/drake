@@ -1,5 +1,7 @@
-#' Drake is a plan_drake manager and build system,
-#' a scalable solution for reproducibility and high-performance computing.
+#' Drake is a pipeline toolkit
+#' (\url{https://github.com/pditommaso/awesome-pipeline}) 
+#' and a scalable, R-focused solution for reproducibility
+#' and high-performance computing.
 #' @docType package
 #' @name drake-package
 #' @aliases drake

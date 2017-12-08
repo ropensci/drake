@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{short_hash}
 \alias{short_hash}
-\title{Function short_hash}
+\title{Function \code{short_hash}}
 \usage{
 short_hash(cache = drake::get_cache(verbose = verbose), verbose = verbose)
 }

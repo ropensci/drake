@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{dataset_wildcard}
 \alias{dataset_wildcard}
-\title{Function dataset_wildcard}
+\title{Function \code{dataset_wildcard}}
 \usage{
 dataset_wildcard()
 }

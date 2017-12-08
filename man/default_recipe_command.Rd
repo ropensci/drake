@@ -2,7 +2,7 @@
 % Please edit documentation in R/recipe.R
 \name{default_recipe_command}
 \alias{default_recipe_command}
-\title{default_recipe_command}
+\title{Function \code{default_recipe_command}}
 \usage{
 default_recipe_command()
 }

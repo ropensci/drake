@@ -2,7 +2,7 @@
 % Please edit documentation in R/recipe.R
 \name{r_recipe_wildcard}
 \alias{r_recipe_wildcard}
-\title{r_recipe_wildcard}
+\title{Function \code{r_recipe_wildcard}}
 \usage{
 r_recipe_wildcard()
 }

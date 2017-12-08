@@ -161,7 +161,7 @@ default_parallelism <- function() {
     unname
 }
 
-#' @title Function shell_file
+#' @title Function \code{shell_file}
 #' @description Write an example \code{shell.sh} file required by
 #' \code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}
 #' and do a `chmod +x` to enable execution.

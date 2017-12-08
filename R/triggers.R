@@ -1,4 +1,4 @@
-#' @title Function triggers
+#' @title Function \code{triggers}
 #' @export
 #' @seealso \code{\link{plan_drake}}, \code{\link{make}}
 #' @description List the available triggers.
@@ -76,7 +76,7 @@ triggers <- function(){
     sort
 }
 
-#' @title Function default_trigger
+#' @title Function \code{default_trigger}
 #' @description Return the default trigger.
 #' @export
 #' @seealso \code{\link{triggers}}, \code{\link{make}}

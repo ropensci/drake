@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_runtime.R
 \name{rate_limiting_times}
 \alias{rate_limiting_times}
-\title{Function rate_limiting_times}
+\title{Function \code{rate_limiting_times}}
 \usage{
 rate_limiting_times(config, targets = NULL, from_scratch = FALSE,
   targets_only = FALSE, future_jobs = 1, digits = 3)

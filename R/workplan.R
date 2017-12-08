@@ -78,27 +78,6 @@ plan_drake <- function(
   sanitize_plan(plan)
 }
 
-#' @title Function \code{as_drake_filename}
-#' @description Converts an ordinary character string
-#' into a filename understandable by drake. In other words,
-#' \code{as_drake_filename(x)} just wraps single quotes around \code{x}.
-#' @export
-#' @return A single-quoted character string: i.e., a filename
-#' understandable by drake.
-#' @param x character string to be turned into a filename
-#' understandable by drake (i.e., a string with literal
-#' single quotes on both ends).
-#' @examples
-#' # Wraps the string in single quotes.
-#' as_drake_filename("my_file.rds") # "'my_file.rds'"
-as_drake_filename <- function(x){
-  drake::drake_quotes(x, single = TRUE)
-}
-
-wide_deparse <- function(x){
-  paste(deparse(x), collapse = "")
-}
-
 plan_drake_override <- function(target, field, config){
   in_plan <- config$plan[[field]]
   if (is.null(in_plan)){

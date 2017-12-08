@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_types.R
 \name{in_memory_cache_types}
 \alias{in_memory_cache_types}
-\title{Function in_memory_cache_types}
+\title{Function \code{in_memory_cache_types}}
 \usage{
 in_memory_cache_types()
 }

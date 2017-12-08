@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean.R
 \name{rescue_cache}
 \alias{rescue_cache}
-\title{Function rescue_cache}
+\title{Function \code{rescue_cache}}
 \usage{
 rescue_cache(targets = NULL, path = getwd(), search = TRUE, verbose = 1,
   force = FALSE, cache = drake::get_cache(path = path, search = search,

@@ -61,7 +61,7 @@ configure_nodes <- function(config){
   hover_text(config = config)
 }
 
-#' @title Function default_graph_title
+#' @title Function \code{default_graph_title}
 #' @description Default title of the graph for
 #' \code{\link{vis_drake_graph}()}.
 #' @export
@@ -206,7 +206,7 @@ subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
   config
 }
 
-#' @title Function legend_nodes
+#' @title Function \code{legend_nodes}
 #' @export
 #' @seealso \code{\link{drake_palette}()},
 #' \code{\link{vis_drake_graph}()},

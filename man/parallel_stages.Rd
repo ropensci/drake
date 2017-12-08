@@ -2,7 +2,7 @@
 % Please edit documentation in R/parallel_stages.R
 \name{parallel_stages}
 \alias{parallel_stages}
-\title{Function parallel_stages}
+\title{Function \code{parallel_stages}}
 \usage{
 parallel_stages(config, from_scratch = FALSE)
 }

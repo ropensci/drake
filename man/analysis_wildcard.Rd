@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{analysis_wildcard}
 \alias{analysis_wildcard}
-\title{Function analysis_wildcard}
+\title{Function \code{analysis_wildcard}}
 \usage{
 analysis_wildcard()
 }

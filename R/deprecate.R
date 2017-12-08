@@ -156,7 +156,7 @@ check <- function(
   )
 }
 
-#' @title Deprecated function config
+#' @title Deprecated function \code{config}
 #' @description Use \code{\link{drake_config}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{drake_config}}
@@ -299,7 +299,7 @@ deprecate_wildcard <- function(plan, old, replacement){
   plan
 }
 
-#' @title Deprecated function evaluate
+#' @title Deprecated function \code{evaluate}
 #' @description Use \code{\link{evaluate_plan}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
@@ -338,7 +338,7 @@ evaluate <- function(
   )
 }
 
-#' @title Function \code{example_drake}
+#' @title Deprecated function \code{example_drake}
 #' @description Use \code{\link{drake_example}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{drake_example}}
@@ -367,7 +367,7 @@ example_drake <- function(
   )
 }
 
-#' @title Function \code{examples_drake}
+#' @title Deprecated function \code{examples_drake}
 #' @description Use \code{\link{drake_examples}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{drake_examples}}
@@ -388,7 +388,7 @@ examples_drake <- function() {
   drake_examples()
 }
 
-#' @title Deprecated function expand
+#' @title Deprecated function \code{expand}
 #' @description Use \code{\link{expand_plan}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
@@ -620,7 +620,7 @@ plot_graph <- function(
   )
 }
 
-#' @title Deprecated function read_config
+#' @title Deprecated function \code{read_config}
 #' @description Use \code{\link{read_drake_config}()} instead.
 #' @details Deprecated on 2017-11-12.
 #' @seealso \code{\link{read_drake_config}}
@@ -854,7 +854,7 @@ summaries <- function(
   )
 }
 
-#' @title Function \code{workflow}
+#' @title Deprecated function \code{workflow}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
 #' \code{\link{check}}.
@@ -909,7 +909,7 @@ workflow <- function(
   sanitize_plan(plan)
 }
 
-#' @title Function \code{workplan}
+#' @title Deprecated function \code{workplan}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
 #' \code{\link{check}}.

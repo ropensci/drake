@@ -1,4 +1,4 @@
-#' @title Function predict_runtime
+#' @title Function \code{predict_runtime}
 #' @description Predict the elapsed runtime of the next call to `make()`.
 #' This function simply sums the elapsed build times.
 #' from \code{\link{rate_limiting_times}()}.
@@ -72,7 +72,7 @@ predict_runtime <- function(
     to_build_duration
 }
 
-#' @title Function rate_limiting_times
+#' @title Function \code{rate_limiting_times}
 #' @description Return a data frame of elapsed build times of
 #' the rate-limiting targets of a \code{\link{make}()} plan_drake.
 #' @export

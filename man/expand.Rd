@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{expand}
 \alias{expand}
-\title{Deprecated function expand}
+\title{Deprecated function \code{expand}}
 \usage{
 expand(plan, values = NULL)
 }

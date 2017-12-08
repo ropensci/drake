@@ -22,7 +22,7 @@ colors <- c(
   other = "#888888"
 )
 
-#' @title Function palette
+#' @title Function \code{drake_palette}
 #' @export
 #' @description show color palette for drake.
 #' Used in both the console and \code{\link{vis_drake_graph}()}

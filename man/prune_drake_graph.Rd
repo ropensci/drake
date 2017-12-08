@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{prune_drake_graph}
 \alias{prune_drake_graph}
-\title{Function prune_drake_graph}
+\title{Function \code{prune_drake_graph}}
 \usage{
 prune_drake_graph(graph, to = igraph::V(graph)$name, jobs = 1)
 }

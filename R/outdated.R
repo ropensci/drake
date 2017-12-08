@@ -1,4 +1,4 @@
-#' @title Function outdated
+#' @title Function \code{outdated}
 #' @description Check which targets are out of date and need to be rebuilt.
 #' IMPORTANT: you must be in the root directory of your project.
 #' @details \code{outdated()} is sensitive to the alternative triggers

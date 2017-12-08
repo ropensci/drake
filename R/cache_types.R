@@ -1,4 +1,4 @@
-#' @title Function cache_types
+#' @title Function \code{cache_types}
 #' @description List the supported drake cache types.
 #' @export
 #' @return Character vector naming the supported cache types.
@@ -15,7 +15,7 @@ cache_types <- function(){
   )
 }
 
-#' @title Function in_memory_cache_types
+#' @title Function \code{in_memory_cache_types}
 #' @description List the supported drake in-memory cache types.
 #' @export
 #' @return Character vector naming the supported
@@ -32,7 +32,7 @@ in_memory_cache_types <- function(){
   )
 }
 
-#' @title Function default_cache_type
+#' @title Function \code{default_cache_type}
 #' @description Names the default type of drake cache.
 #' @export
 #' @return Default drake cache type.
@@ -44,15 +44,13 @@ default_cache_type <- function(){
   cache_types()[1]
 }
 
-#' @title Experimental function type_of_cache
+#' @title Experimental function \code{type_of_cache}
 #' @export
 #' @description Try to get the type of a drake
 #' file system cache. Only works on known caches
 #' with known file systems.
 #' @details Experimental function for a possible
-#' new feature in the future.
-#' It will come in handy if/when multiple cache types
-#' are supported.
+#' new future features.
 #' @return Type of the cache at the specified path.
 #' @param path Path to the file system cache.
 #' @examples
@@ -62,14 +60,13 @@ default_cache_type <- function(){
 #' make(my_plan) # Run the project, build the targets.
 #' # Get the type of the cache
 #' # located in the (default) '.drake' folder.
-#' type_of_cache(".drake") # storr_rds
+#' type_of_cache(".drake") # NULL, signaling "storr_rds"
 #' })
 #' }
 type_of_cache <- function(path = drake::default_cache_path()){
   if (!file.exists(path)){
     return(NULL)
   }
-  # NULL means the same thing as the default "storr_rds",
-  # currently the only supported file system cache type.
+  # NULL means the same thing as the default "storr_rds".
   NULL
 }

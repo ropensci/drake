@@ -1,4 +1,4 @@
-#' @title Function available_hash_algos
+#' @title Function \code{available_hash_algos}
 #' @export
 #' @description List the available hash algorithms.
 #' @return A character vector of names of available hash algorithms.
@@ -8,7 +8,7 @@ available_hash_algos <- function(){
   eval(formals(digest::digest)$algo)
 }
 
-#' @title Function long_hash
+#' @title Function \code{long_hash}
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}}
@@ -39,7 +39,7 @@ long_hash <- function(
   cache$get("long_hash_algo", namespace = "config")
 }
 
-#' @title Function short_hash
+#' @title Function \code{short_hash}
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}}
@@ -72,10 +72,11 @@ short_hash <- function(
   cache$get("short_hash_algo", namespace = "config")
 }
 
-#' @title Default short hash algorithm for \code{make()}
+#' @title Function \code{default_short_hash_algo}
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
-#' @description Hashing is advanced. Most users
+#' @description Return the default short hash algorithm for \code{make()}.
+#' Hashing is advanced. Most users
 #' do not need to know about this function.
 #' @details
 #' The short algorithm must be among \code{\link{available_hash_algos}{}},
@@ -139,10 +140,11 @@ default_short_hash_algo <- function(cache = NULL) {
   out
 }
 
-#' @title Default long hash algorithm for \code{make()}
+#' @title Function \code{default_long_hash_algo}
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
-#' @description Hashing is advanced. Most users
+#' @description Return the default long hash algorithm for \code{make()}.
+#' Hashing is advanced. Most users
 #' do not need to know about this function.
 #' @details
 #' The long algorithm must be among \code{\link{available_hash_algos}{}},

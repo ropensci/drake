@@ -1,4 +1,4 @@
-#' @title Function Makefile_recipe
+#' @title Function \code{Makefile_recipe}
 #' @export
 #' @seealso \code{\link{default_recipe_command}},
 #' \code{\link{r_recipe_wildcard}}, \code{\link{make}}
@@ -82,7 +82,7 @@ Makefile_recipe <- function( # nolint
     message()
 }
 
-#' @title default_recipe_command
+#' @title Function \code{default_recipe_command}
 #' @export
 #' @seealso \code{\link{Makefile_recipe}}
 #' @description Gives the default
@@ -96,7 +96,7 @@ default_recipe_command <- function(){
   paste0("Rscript -e '", r_recipe_wildcard(), "'")
 }
 
-#' @title r_recipe_wildcard
+#' @title Function \code{r_recipe_wildcard}
 #' @export
 #' @seealso \code{\link{default_recipe_command}}
 #' @description Gives the R recipe wildcard

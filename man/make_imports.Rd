@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make_imports}
 \alias{make_imports}
-\title{Function make_imports}
+\title{Function \code{make_imports}}
 \usage{
 make_imports(config)
 }

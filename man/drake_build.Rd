@@ -2,7 +2,7 @@
 % Please edit documentation in R/build.R
 \name{drake_build}
 \alias{drake_build}
-\title{Internal function drake_build}
+\title{Internal function \code{drake_build}}
 \usage{
 drake_build(target, meta, config)
 }
@@ -45,3 +45,4 @@ readd(small)
 })
 }
 }
+\keyword{internal}

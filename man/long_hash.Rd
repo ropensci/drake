@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{long_hash}
 \alias{long_hash}
-\title{Function long_hash}
+\title{Function \code{long_hash}}
 \usage{
 long_hash(cache = drake::get_cache(verbose = verbose), verbose = TRUE)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{default_cache_path}
 \alias{default_cache_path}
-\title{Function default_cache_path}
+\title{Function \code{default_cache_path}}
 \usage{
 default_cache_path()
 }

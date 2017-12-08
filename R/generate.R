@@ -1,4 +1,4 @@
-#' @title Function analysis_wildcard
+#' @title Function \code{analysis_wildcard}
 #' @description Show the analysis wildcard
 #' used in \code{\link{plan_summaries}()}.
 #' @export
@@ -10,7 +10,7 @@ analysis_wildcard <- function(){
   "analysis__"
 }
 
-#' @title Function dataset_wildcard
+#' @title Function \code{dataset_wildcard}
 #' @description Show the dataset wildcard
 #' used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
 #' @export
