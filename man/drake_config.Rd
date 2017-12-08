@@ -31,6 +31,8 @@ drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
 
 \item{cache}{same as for \code{\link{make}}}
 
+\item{fetch_cache}{same as for \code{\link{make}}}
+
 \item{parallelism}{same as for \code{\link{make}}}
 
 \item{jobs}{same as for \code{\link{make}}}

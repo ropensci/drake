@@ -171,6 +171,15 @@
 #' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
 #' and \code{\link{recover_cache}()}
 #'
+#' @param fetch_cache character vector containing lines of code.
+#' The purpose of this code is to fetch the \code{storr} cache
+#' with a command like \code{storr_rds()} or \code{storr_dbi()},
+#' but customized.
+#' This is necessary if you are using both custom caches
+#' and distributed parallelism (\code{parallelism = "future_lapply"}
+#' or \code{"Makefile"}) because the distributed R sessions
+#' need to know how to load the cache.
+#'
 #' @param timeout Seconds of overall time to allow before imposing
 #' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
 #' Assign target-level timeout times with an optional \code{timeout}

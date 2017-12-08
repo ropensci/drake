@@ -25,6 +25,11 @@ despite any back compatibility issues with the
 running version of drake.}
 
 \item{verbose}{logical, whether to print the file path of the cache.}
+
+\item{fetch_cache}{character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{storr_rds()} or \code{storr_dbi()},
+but customized.}
 }
 \value{
 A drake/storr cache.

@@ -14,6 +14,9 @@ is a file system cache.}
 
 \item{verbose}{logical, whether to print out the path of the cache.}
 
+\item{type}{deprecated argument. Once stood for cache type.
+Use \code{storr} to customize your caches instead.}
+
 \item{short_hash_algo}{short hash algorithm for the cache.
 See \code{\link{default_short_hash_algo}()} and
 \code{\link{make}()}}

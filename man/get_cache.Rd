@@ -23,6 +23,11 @@ for the cache.}
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the
 running version of drake.}
+
+\item{fetch_cache}{character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{storr_rds()} or \code{storr_dbi()},
+but customized.}
 }
 \value{
 A drake/storr cache, if available. \code{NULL} otherwise.

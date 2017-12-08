@@ -48,6 +48,10 @@ cache_path <- function(cache = NULL){
 #' @param force logical, whether to load the cache
 #' despite any back compatibility issues with the
 #' running version of drake.
+#' @param fetch_cache character vector containing lines of code.
+#' The purpose of this code is to fetch the \code{storr} cache
+#' with a command like \code{storr_rds()} or \code{storr_dbi()},
+#' but customized.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -91,6 +95,10 @@ get_cache <- function(
 #' despite any back compatibility issues with the
 #' running version of drake.
 #' @param verbose, whether to print the file path of the cache.
+#' @param fetch_cache character vector containing lines of code.
+#' The purpose of this code is to fetch the \code{storr} cache
+#' with a command like \code{storr_rds()} or \code{storr_dbi()},
+#' but customized.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -129,7 +137,6 @@ this_cache <- function(
   cache
 }
 
-#' @export
 drake_fetch_rds <- function(path){
   if (!file.exists(path)) {
     return(NULL)
@@ -153,6 +160,8 @@ drake_fetch_rds <- function(path){
 #' @param path file path to the cache if the cache
 #' is a file system cache.
 #' @param verbose logical, whether to print out the path of the cache.
+#' @param type deprecated argument. Once stood for cache type.
+#' Use \code{storr} to customize your caches instead.
 #' @param short_hash_algo short hash algorithm for the cache.
 #' See \code{\link{default_short_hash_algo}()} and
 #' \code{\link{make}()}
@@ -221,6 +230,10 @@ new_cache <- function(
 #' despite any back compatibility issues with the
 #' running version of drake.
 #' @param verbose logical, whether to print the file path of the cache.
+#' @param fetch_cache character vector containing lines of code.
+#' The purpose of this code is to fetch the \code{storr} cache
+#' with a command like \code{storr_rds()} or \code{storr_dbi()},
+#' but customized.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

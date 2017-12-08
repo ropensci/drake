@@ -33,6 +33,7 @@
 #' @param args same as for \code{\link{make}}
 #' @param recipe_command same as for \code{\link{make}}
 #' @param cache same as for \code{\link{make}}
+#' @param fetch_cache same as for \code{\link{make}}
 #' @param timeout same as for \code{\link{make}}
 #' @param cpu same as for \code{\link{make}}
 #' @param elapsed same as for \code{\link{make}}
