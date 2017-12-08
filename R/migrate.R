@@ -131,10 +131,10 @@ assert_compatible_cache <- function(cache){
     "preserves the statuses of your targets (up to date vs outdated). ",
     "But in case of errors, ",
     "migrate_drake_project() first backs up '", path, "' to '",
-    newpath, "'. Alternatively, ",
-    "you can revert to a back-compatible version ",
-    " of drake with 'devtools::install_version(\"drake\", \"4.4.0\")' ",
-    " or just run your project from scratch as is with ",
+    newpath, "'. As an alternative, ",
+    "you can revert to drake <= 4.4.0 ",
+    " using 'devtools::install_version(\"drake\", \"4.4.0\")' ",
+    " or just overwrite your project from scratch using ",
     "make(..., force = TRUE).",
     call. = FALSE
   )
