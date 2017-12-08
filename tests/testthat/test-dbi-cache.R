@@ -1,4 +1,4 @@
-drake_context("arbitrary cache")
+drake_context("memory cache")
 
 test_with_dir("storr_environment is usable", {
   x <- storr_environment(hash_algorithm = "murmur32") %>%
