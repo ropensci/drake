@@ -9,10 +9,8 @@ test_with_dir("cache_path finding", {
 
 test_with_dir("fancy cache features, bad paths", {
   saveRDS(1, file = "exists")
-  expect_error(x <- new_cache("exists"))
-  expect_equal(type_of_cache("not_found"), NULL)
+  suppressWarnings(expect_error(x <- new_cache("exists")))
   expect_silent(tmp <- uncache(target = "targ", cache = NULL))
-  expect_equal(get_storr_rds_cache("not_found"), NULL)
 })
 
 test_with_dir("null hashes", {

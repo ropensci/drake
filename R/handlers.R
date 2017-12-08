@@ -9,3 +9,7 @@ error_false <- function(e){
 error_na <- function(e){
   NA
 }
+
+error_null <- function(e){
+  NULL
+}

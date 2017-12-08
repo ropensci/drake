@@ -16,7 +16,7 @@
 #' # Show the file path of the cache.
 #' cache_path(cache = cache)
 #' # In-memory caches do not have file paths.
-#' mem <- new_cache(type = "storr_environment") # or just storr_environment()
+#' mem <- storr_environment()
 #' cache_path(cache = mem)
 #' })
 #' }
@@ -65,14 +65,18 @@ get_cache <- function(
   path = getwd(),
   search = TRUE,
   verbose = 1,
-  force = FALSE
+  force = FALSE,
+  fetch_cache = NULL
 ){
   if (search){
     path <- find_cache(path = path)
   } else {
     path <- default_cache_path()
   }
-  this_cache(path = path, force = force, verbose = verbose)
+  this_cache(
+    path = path, force = force, verbose = verbose,
+    fetch_cache = fetch_cache
+  )
 }
 
 #' @title Function \code{this_cache}
@@ -101,19 +105,23 @@ get_cache <- function(
 #' })
 #' }
 this_cache <- function(
-  path = drake::default_cache_path(), force = FALSE, verbose = TRUE
+  path = drake::default_cache_path(), force = FALSE, verbose = TRUE,
+  fetch_cache = NULL
 ){
   if (is.null(path) || !file.exists(path)){
     return(NULL)
   }
   console_cache(path = path, verbose = verbose)
-  type <- type_of_cache(path)
-  if (is.null(type)) {
-    type <- default_cache_type()
+  if (is.null(fetch_cache)){
+    cache <- drake_fetch_rds(path)
+  } else {
+    cache <- eval(parse(text = fetch_cache))
   }
-  cache_fetcher <- paste0("get_", type, "_cache")
-  cache <- get(cache_fetcher, envir = getNamespace("drake"))(
-    path = path
+  configure_cache(
+    cache = cache,
+    long_hash_algo = "md5",
+    overwrite_hash_algos = FALSE,
+    clear_progress = FALSE
   )
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -121,21 +129,30 @@ this_cache <- function(
   cache
 }
 
+#' @export
+drake_fetch_rds <- function(path){
+  if (!file.exists(path)) {
+    return(NULL)
+  }
+  hash_algo_file <- file.path(path, "config", "hash_algorithm")
+  hash_algo <- scan(hash_algo_file, quiet = TRUE, what = character())
+  storr::storr_rds(
+    path = path,
+    mangle_key = TRUE,
+    hash_algorithm = hash_algo
+  )
+}
+
 #' @title Function \code{new_cache}
-#' @description Make a new drake cache. Could be any
-#' type of cache in \code{\link{cache_types}()}.
+#' @description Make a new \code{storr_rds()} \code{drake} cache.
 #' @export
 #' @return A newly created drake cache as a storr object.
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}},
-#' \code{\link{make}}, \code{\link{cache_types}},
-#' \code{\link{in_memory_cache_types}}
+#' \code{\link{make}}
 #' @param path file path to the cache if the cache
 #' is a file system cache.
 #' @param verbose logical, whether to print out the path of the cache.
-#' @param type character scalar, type of the drake cache.
-#' Must be among the list of supported caches
-#' in \code{\link{cache_types}()}.
 #' @param short_hash_algo short hash algorithm for the cache.
 #' See \code{\link{default_short_hash_algo}()} and
 #' \code{\link{make}()}
@@ -152,32 +169,25 @@ this_cache <- function(
 #' cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 #' clean(destroy = TRUE, cache = cache2)
 #' }
-#' # Create a storr_environment() cache from a custom environment.
-#' e <- new.env() # Create a new environment.
-#' ls(e) # Emtpy.
-#' y <- new_cache(type = "storr_environment", envir = e)
-#' ls(e) # Storr populates the environment for use in an in-memory cache.
 #' })
 new_cache <- function(
   path = drake::default_cache_path(),
   verbose = 1,
-  type = drake::default_cache_type(),
+  type = NULL,
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(),
   ...
 ){
-  if (type %in% in_memory_cache_types()){
-    path <- NULL
-  } else if (file.exists(path)){
-    stop("Cannot create new cache at ", path, ". File already exists.")
+  if (!is.null(type)){
+    warning(
+      "The 'type' argument of new_cache() is deprecated. ",
+      "Please see the storage vignette for the new cache interface."
+    )
   }
-  type <- match.arg(type, choices = cache_types())
-  cache_constructor <- paste0("new_", type, "_cache")
-  cache <- get(cache_constructor, envir = getNamespace("drake"))(
+  cache <- storr::storr_rds(
     path = path,
-    short_hash_algo = short_hash_algo,
-    long_hash_algo = long_hash_algo,
-    ...
+    mangle_key = TRUE,
+    hash_algorithm = short_hash_algo
   )
   configure_cache(
     cache = cache,
@@ -207,9 +217,6 @@ new_cache <- function(
 #' @param long_hash_algo long hash algorithm for the cache.
 #' See \code{\link{default_long_hash_algo}()} and
 #' \code{\link{make}()}
-#' @param type character scalar, type of the drake cache.
-#' Must be among the list of supported caches
-#' in \code{\link{cache_types}()}.
 #' @param force logical, whether to load the cache
 #' despite any back compatibility issues with the
 #' running version of drake.
@@ -225,20 +232,23 @@ new_cache <- function(
 #' }
 recover_cache <- function(
   path = drake::default_cache_path(),
-  type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(),
   force = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  fetch_cache = NULL
 ){
-  cache <- this_cache(path = path, force = force, verbose = verbose)
+  cache <- this_cache(
+    path = path, force = force, verbose = verbose,
+    fetch_cache = fetch_cache
+  )
   if (is.null(cache)){
     cache <- new_cache(
       path = path,
       verbose = verbose,
       short_hash_algo = short_hash_algo,
       long_hash_algo = long_hash_algo,
-      type = type
+      fetch_cache = fetch_cache
     )
   }
   cache

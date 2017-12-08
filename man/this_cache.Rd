@@ -5,7 +5,7 @@
 \title{Function \code{this_cache}}
 \usage{
 this_cache(path = drake::default_cache_path(), force = FALSE,
-  verbose = TRUE)
+  verbose = TRUE, fetch_cache = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
