@@ -287,26 +287,6 @@ rescue_cache()
 drake_session()
 ```
 
-
-# Acknowledgements and related work
-
-The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](http://kbroman.org/minimal_make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make".
-
-Today, there is a [whole ecosystem of pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), mostly written in Python. Of all the toolkits in the list, [Rich FitzJohn](http://richfitz.github.io/)'s [remake package](https://github.com/richfitz/remake) is by far the most important for `drake`. `Drake` stands squarely on the shoulders of [remake](https://github.com/richfitz/remake), borrowing the fundamental concepts and extending them in a fresh implementation with a convenient interface and high-performance computing.
-
-Many thanks to the following people for contributing amazing ideas and code patches early in the development of `drake` and its predecessors [parallelRemake](https://github.com/wlandau/parallelRemake) and [remakeGenerator](https://github.com/wlandau/remakeGenerator).
-
-- [Alex Axthelm](https://github.com/AlexAxthelm)
-- [Chan-Yub Park](https://github.com/mrchypark)
-- [Daniel Falster](https://github.com/dfalster)
-- [Eric Nantz](https://github.com/enantz-lilly)
-- [Henrik Bengtsson](https://github.com/HenrikBengtsson)
-- [Jasper Clarkberg](https://github.com/dapperjapper)
-- [Kendon Bell](https://github.com/kendonB)
-- [Kirill M&uuml;ller](https://github.com/krlmlr)
-
-Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
-
 # Documentation
 
 `Drake` has [multiple vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), and the [CRAN page](https://CRAN.R-project.org/package=drake) links to rendered versions.
@@ -330,3 +310,24 @@ Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob
 # Contributing
 
 Bug reports, suggestions, and code are welcome. Please see [CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
+
+# Related work
+
+The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](http://kbroman.org/minimal_make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make".
+
+Today, there is a [whole ecosystem of pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), mostly written in Python. Of all the toolkits in the list, [Rich FitzJohn](http://richfitz.github.io/)'s [remake package](https://github.com/richfitz/remake) is by far the most important for `drake`. `Drake` stands squarely on the shoulders of [remake](https://github.com/richfitz/remake), borrowing the fundamental concepts and extending them in a fresh implementation with a convenient interface and high-performance computing.
+
+# Acknowledgements
+
+Many thanks to [Julia Lowndes](https://github.com/jules32) and [Ben Marwick](https://github.com/benmarwick) for [reviewing drake for rOpenSci](https://github.com/ropensci/onboarding/issues/156). Thanks also to the following people for contributing early in development.
+
+- [Alex Axthelm](https://github.com/AlexAxthelm)
+- [Chan-Yub Park](https://github.com/mrchypark)
+- [Daniel Falster](https://github.com/dfalster)
+- [Eric Nantz](https://github.com/enantz-lilly)
+- [Henrik Bengtsson](https://github.com/HenrikBengtsson)
+- [Jasper Clarkberg](https://github.com/dapperjapper)
+- [Kendon Bell](https://github.com/kendonB)
+- [Kirill M&uuml;ller](https://github.com/krlmlr)
+
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
