@@ -15,6 +15,8 @@ Thumbs.db
 \.lintr$
 cran-comments.md
 cran-comments.html
+CONTRIBUTING.md
+CONTRIBUTING.html
 LICENSE
 NEWS.md
 README.md
