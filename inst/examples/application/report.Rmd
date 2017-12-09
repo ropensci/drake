@@ -89,6 +89,6 @@ There are two main disadvantages to this approach.
 # References 
 
 - Baltagi, Badi H (2003). Econometric analysis of panel data, John Wiley and sons, http://www.wiley.com/legacy/wileychi/baltagi/.
-- Balttagi, B. H. and N. Pinnoi (1995). "Public capital stock and state productivity growth: further evidence", Empirical Economics, 20, 351–359.
+- Baltagi, B. H. and N. Pinnoi (1995). "Public capital stock and state productivity growth: further evidence", Empirical Economics, 20, 351–359.
 - Munnell, A. (1990). "Why has productivity growth declined? Productivity and public investment"", New England Economic Review, 3–22.
 - Yves Croissant (2016). Ecdat: Data Sets for Econometrics. R package version 0.3-1. https://CRAN.R-project.org/package=Ecdat.
