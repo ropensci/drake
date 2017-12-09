@@ -37,7 +37,7 @@ Which factors are most associated with the productivity of a US State?
 
 # Data
 
-The `Produc` dataset from the [Ecdat pacakge](https://cran.r-project.org/package=Ecdat) contains data on the Gross State Product from 1970 to 1986. It has the following variables. See the references later in this report for more details.
+The `Produc` dataset from the [Ecdat package](https://cran.r-project.org/package=Ecdat) contains data on the Gross State Product from 1970 to 1986. It has the following variables. See the references later in this report for more details.
 
 - `gsp`: gross state product.
 - `state`: the state.
@@ -69,7 +69,7 @@ library(knitr)
 library(ggplot2)
 ```
 
-Next, set up our workflow plan data frame in pieces. We start with the models.
+Next, set up our workflow plan data frame in pieces. We start with the models. Each model has 3 predictors, and we try all 84 possible models.
 
 ```{r mastermodels}
 predictors <- setdiff(colnames(Produc), "gsp")
