@@ -183,11 +183,9 @@ head(results[order(results$rmspe, decreasing = FALSE), ])
 
 # Comparison with Make
 
-If we were using [Make](https://www.gnu.org/software/make/) for this project, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this sketch.
+If we were using [Make](https://www.gnu.org/software/make/) for this project, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this pseudo-code sketch.
 
-<pre><code>#!/bin/bash
-
-models = model_state_year_pcap model_state_year_hwy ... # 84 of these
+<pre><code>models = model_state_year_pcap model_state_year_hwy ... # 84 of these
 
 model_%
     Rscript -e 'saveRDS(lm(...), ...)'
