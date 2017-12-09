@@ -303,6 +303,7 @@ drake_session()
 
 ```r
 vignette(package = "drake") # List the vignettes.
+vignette("application")     # A practical example of drake in action.
 vignette("caution")         # Avoid common pitfalls.
 vignette("debug")           # Debugging and testing.
 vignette("drake")           # High-level intro.
