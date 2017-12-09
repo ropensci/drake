@@ -325,34 +325,39 @@ Bug reports, suggestions, and code are welcome. Please see [CONTRIBUTING.md](htt
 
 ## GNU Make
 
-The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](https://www.gnu.org/software/make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make". [Make](http://kbroman.org/minimal_make/) is used widely to drive reproducible research. Below are some examples from [Karl Broman's website](http://kbroman.org/minimal_make/).
+The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](https://www.gnu.org/software/make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make". [Make](http://kbroman.org/minimal_make/) is used widely in reproducible research. Below are some examples from [Karl Broman's website](http://kbroman.org/minimal_make/).
 
 - Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/master/Makefile.
 - Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202. https://doi.org/10.1534/g3.111.001818. Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/master/Makefile.
 - Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. https://doi.org/10.1534/genetics.111.132647. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/master/Makefile.
-- Broman, Karl W and Kim, Sungjin and Sen, Śaunak and Ané, Cécile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. https://doi.org/10.1534/genetics.112.142448. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
+- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. https://doi.org/10.1534/genetics.112.142448. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
 
 There are several reasons for R users to prefer `drake` instead.
 
-- It is difficult to scale up. With [Make](http://kbroman.org/minimal_make/), you must write a potentially large [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile) by hand. But with `drake`, you can use [wildcard templating]() to automatically generate massive collections of targets with minimal code.
+- `Drake` already has a [Make](http://kbroman.org/minimal_make/)-powered parallel backend. Just run `make(..., parallelism = "Makefile", jobs = 2)` to enjoy most of the original benefits of [Make](http://kbroman.org/minimal_make/) itself.
+- Improved scalability. With [Make](http://kbroman.org/minimal_make/), you must write a potentially large and cumbersome [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile) by hand. But with `drake`, you can use [wildcard templating](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan) to automatically generate massive collections of targets with minimal code.
+- Lower overhead for light-weight tasks. For each [Make](http://kbroman.org/minimal_make/) target that uses R, a brand new R session must spawn. For projects with thousands of small targets, that means more time may be spent loading R sessions than doing the actual work. With `make(..., parallelism = "mclapply, jobs = 4")`, `drake` launches 4 persistent workers up front and efficiently processes the targets in R.
+- Convenient organization of output. With [Make](http://kbroman.org/minimal_make/), the user must save each target as a file. `Drake` saves all the results for you automatically in a [storr cache](https://github.com/richfitz/storr) so you do not have to micromanage the results.
 
-#### Remake
 
-[Drake](https://github.com/wlandau-lilly/drake) overlaps with its direct predecessor, [remake](https://github.com/richfitz/remake). In fact, [drake](https://github.com/wlandau-lilly/drake) owes its core ideas to [remake](https://github.com/richfitz/remake) and @richfitz, and [explicit acknowledgements are in the documentation](https://github.com/wlandau-lilly/drake#acknowledgements-and-related-work). However, [drake](https://github.com/wlandau-lilly/drake) surpasses [remake](https://github.com/richfitz/remake) in several important ways, including but not limited to the following.
+## Remake
+
+[Drake](https://github.com/wlandau-lilly/drake) overlaps with its direct predecessor, [remake](https://github.com/richfitz/remake). In fact, [drake](https://github.com/wlandau-lilly/drake) owes its core ideas to [remake](https://github.com/richfitz/remake) and [Rich Fitzjohn](https://github.com/richfitz/remake). [Remake](https://github.com/richfitz/remake)'s development repository lists several [real-world applications](https://github.com/richfitz/remake/blob/master/README.md#real-world-examples). [Drake](https://github.com/wlandau-lilly/drake) surpasses [remake](https://github.com/richfitz/remake) in several important ways, including but not limited to the following.
 
 1. **High-performance computing**. [Remake](https://github.com/richfitz/remake) has no native parallel computing support. [Drake](https://github.com/wlandau-lilly/drake), on the other hand, has a [vast arsenal](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) of parallel computing options, from local multicore computing to serious distributed computing. Thanks to [future](github.com/HenrikBengtsson/future), [future.batchtools](github.com/HenrikBengtsson/future.batchtools), and [batchtools](github.com/mllg/batchtools), it is straightforward to configure a [drake](https://github.com/wlandau-lilly/drake) project for most popular job schedulers, such as [SLURM](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/slurm), [TORQUE](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/torque), and the [Sun/Univa Grid Engine](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/sge), as well as systems contained in [Docker images](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/Docker-psock).
-1. **A friendly interface**. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow. In [drake](https://github.com/wlandau-lilly/drake), this configuration is based on data frames that built-in [wildcard templating functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan)  easily generates at scale.
+1. **A friendly interface**. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow, which leads to the same scalability problems as [Make](https://www.gnu.org/software/make/). [Drake](https://github.com/wlandau-lilly/drake)'s data-frame-based interface and [wildcard templating functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan)  easily generates at scale.
 1. **Thorough documentation**. [Drake](https://github.com/wlandau-lilly/drake) contains [eight vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), a [comprehensive README](https://github.com/wlandau-lilly/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) that users can write with `drake::example_drake()`.
-1. **Active maintenance**. [Drake](https://github.com/wlandau-lilly/drake) is actively developed and maintained, and [issues](https://github.com/wlandau-lilly/drake/issues) are usually solved promptly.  
+1. **Active maintenance**. [Drake](https://github.com/wlandau-lilly/drake) is actively developed and maintained, and [issues](https://github.com/wlandau-lilly/drake/issues) are usually solved promptly.
+1. **Presence on CRAN**. At the time of writing, [drake](https://github.com/wlandau-lilly/drake) is [available on CRAN](https://cran.r-project.org/web/packages/drake/index.html), but [remake](https://github.com/richfitz/remake) is not.
 
-#### Factual's drake
+## Factual's drake
 
 [Factual's drake](https://github.com/Factual/drake) is similar in concept, but the development effort is completely unrelated to the [R package of the same name](https://github.com/wlandau-lilly/drake).
 
 
-#### Other pipeline toolkits
+## Other pipeline toolkits
 
-There are many [other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), and [the drake package](https://github.com/wlandau-lilly/drake) distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and parallel computing flexibility.
+There are [countless other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline). The `drake` package distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and [wide selection of parallel computing backends](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd#parallel-backends).
 
 # Acknowledgements
 
@@ -367,4 +372,4 @@ Many thanks to [Julia Lowndes](https://github.com/jules32) and [Ben Marwick](htt
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
-Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am grateful that he succeeded.

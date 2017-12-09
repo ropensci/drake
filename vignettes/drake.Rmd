@@ -201,7 +201,7 @@ Many thanks to [Julia Lowndes](https://github.com/jules32) and [Ben Marwick](htt
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
-Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am glad he succeeded.
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am grateful that he succeeded.
 
 ```{r rmfiles_main, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
