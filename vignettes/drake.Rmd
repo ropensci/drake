@@ -60,7 +60,7 @@ make(my_plan)
 
 # Stay reproducible.
 
-The R community likes to emphasize reproducibility. Most people think that means [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
+The R community likes to emphasize reproducibility, which one could interpret to mean [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
 
 ```{r drakemake2}
 make(my_plan)
