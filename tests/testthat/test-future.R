@@ -24,3 +24,10 @@ test_with_dir("future package functionality", {
     character(0)
   )
 })
+
+test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
+  config <- dbug()
+  config$cache_path <- "nope"
+  prepare_distributed(config)
+  expect_true(file.exists("nope"))
+})

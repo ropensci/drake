@@ -8,16 +8,20 @@ test_with_dir("storr_dbi is usable", {
     mydb <- DBI::dbConnect(RSQLite::SQLite(), "my-db.sqlite")
     cache <- storr::storr_dbi(
       "dattbl", "keystbl", con = mydb, hash_algorithm = "murmur32")
-    cache <- configure_cache(
+    configure_cache(
       cache = cache,
       long_hash_algo = "sha1",
       overwrite_hash_algos = TRUE
     )
   })
+  
   cache <- eval(parse(text = fetch_cache))
+  cache2 <- this_cache(fetch_cache = fetch_cache)
   expect_equal(cache$list(), character(0))
+  expect_equal(cache2$list(), character(0))
   on.exit(cache$driver$disconnect())
-
+  on.exit(cache2$driver$disconnect())
+  
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   e$mydb <- mydb

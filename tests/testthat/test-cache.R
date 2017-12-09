@@ -15,7 +15,9 @@ test_with_dir("clean() works if there is no cache already", {
   expect_false(file.exists(default_cache_path()))
 })
 
-test_with_dir("corrupt cache", {
+test_with_dir("bad/corrupt caches", {
+  expect_null(drake_fetch_rds("sldkfjlke"))
+  expect_warning(new_cache(type = "nope"))
   x <- plan_drake(a = 1)
   make(x, verbose = FALSE, session_info = FALSE)
   path <- file.path(default_cache_path(), "config", "hash_algorithm")

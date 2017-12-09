@@ -116,14 +116,17 @@ this_cache <- function(
   path = drake::default_cache_path(), force = FALSE, verbose = TRUE,
   fetch_cache = NULL
 ){
-  if (is.null(path) || !file.exists(path)){
+  usual_path_missing <- is.null(path) || !file.exists(path)
+  if (usual_path_missing & is.null(fetch_cache)){
     return(NULL)
   }
-  console_cache(path = path, verbose = verbose)
+  if (!is.null(path)){
+    console_cache(path = path, verbose = verbose)
+  }
   if (is.null(fetch_cache)){
     cache <- drake_fetch_rds(path)
   } else {
-    cache <- eval(parse(text = fetch_cache))
+    cache <- eval(parse(text = functionize(fetch_cache)))
   }
   configure_cache(
     cache = cache,
