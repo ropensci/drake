@@ -33,6 +33,7 @@
 #' @param args same as for \code{\link{make}}
 #' @param recipe_command same as for \code{\link{make}}
 #' @param cache same as for \code{\link{make}}
+#' @param fetch_cache same as for \code{\link{make}}
 #' @param timeout same as for \code{\link{make}}
 #' @param cpu same as for \code{\link{make}}
 #' @param elapsed same as for \code{\link{make}}
@@ -80,6 +81,7 @@ drake_config <- function(
   verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
+  fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = rev(.packages()),
@@ -119,7 +121,8 @@ drake_config <- function(
     prework = prework
   )
   if (is.null(cache)) {
-    cache <- recover_cache(force = force, verbose = verbose)
+    cache <- recover_cache(
+      force = force, verbose = verbose, fetch_cache = fetch_cache)
   }
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -137,8 +140,13 @@ drake_config <- function(
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
+  cache_path <- cache_path(cache)
+  if (is.null(cache_path)){
+    cache_path <- default_cache_path()
+  }
   list(
-    plan = plan, targets = targets, envir = envir, cache = cache,
+    plan = plan, targets = targets, envir = envir,
+    cache = cache, cache_path = cache_path, fetch_cache = fetch_cache,
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,

@@ -5,17 +5,12 @@
 \title{Function \code{recover_cache}}
 \usage{
 recover_cache(path = drake::default_cache_path(),
-  type = drake::default_cache_type(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(), force = FALSE,
-  verbose = TRUE)
+  verbose = TRUE, fetch_cache = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
-
-\item{type}{character scalar, type of the drake cache.
-Must be among the list of supported caches
-in \code{\link{cache_types}()}.}
 
 \item{short_hash_algo}{short hash algorithm for the cache.
 See \code{\link{default_short_hash_algo}()} and
@@ -30,6 +25,11 @@ despite any back compatibility issues with the
 running version of drake.}
 
 \item{verbose}{logical, whether to print the file path of the cache.}
+
+\item{fetch_cache}{character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{storr_rds()} or \code{storr_dbi()},
+but customized.}
 }
 \value{
 A drake/storr cache.

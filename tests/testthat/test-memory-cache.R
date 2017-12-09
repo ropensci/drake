@@ -1,27 +1,14 @@
-drake_context("arbitrary cache")
+drake_context("memory cache")
 
-test_with_dir("storr_environment is a cache type", {
-  expect_true("storr_environment" %in% cache_types())
-  expect_error(tmp <- new_cache(type = "not found"))
-  expect_error(
-    x <- new_cache(type = "storr_environment",
-      short_hash_algo = "murmur32",
-      long_hash_algo = "not found"
+test_with_dir("storr_environment is usable", {
+  x <- storr_environment(hash_algorithm = "murmur32") %>%
+    configure_cache(
+      long_hash_algo = "sha1",
+      overwrite_hash_algos = TRUE
     )
-  )
-  file.create(default_cache_path())
-  x <- new_cache(type = "storr_environment",
-    short_hash_algo = "murmur32",
-    long_hash_algo = "sha1"
-  )
-  unlink(default_cache_path(), recursive = TRUE)
   expect_false(file.exists(default_cache_path()))
   expect_equal(short_hash(x), "murmur32")
   expect_equal(long_hash(x), "sha1")
-  x <- new_cache(type = "storr_environment")
-  expect_false(file.exists(default_cache_path()))
-  expect_equal(short_hash(x), default_short_hash_algo())
-  expect_equal(long_hash(x), default_long_hash_algo())
   expect_error(drake_session(cache = x))
   pln <- plan_drake(y = 1)
   config <- make(pln, cache = x, verbose = FALSE, session_info = FALSE)
@@ -29,22 +16,6 @@ test_with_dir("storr_environment is a cache type", {
   expect_false(file.exists(default_cache_path()))
   expect_equal(outdated(config), character(0))
   expect_false(file.exists(default_cache_path()))
-})
-
-test_with_dir("possibly superfluous function get_storr_environment_cache", {
-  tmp <- get_storr_environment_cache(
-    short_hash_algo = "md5",
-    long_hash_algo = "md5"
-  )
-  expect_true("storr" %in% class(tmp))
-})
-
-test_with_dir("can get_cache() a storr_environment", {
-  e <- new.env()
-  y <- new_cache(type = "storr_environment", envir = e,
-    short_hash_algo = "crc32"
-  )
-  expect_equal(e$hash_algorithm, "crc32")
 })
 
 test_with_dir("arbitrary storr in-memory cache", {

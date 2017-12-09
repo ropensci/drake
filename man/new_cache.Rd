@@ -4,8 +4,7 @@
 \alias{new_cache}
 \title{Function \code{new_cache}}
 \usage{
-new_cache(path = drake::default_cache_path(), verbose = 1,
-  type = drake::default_cache_type(),
+new_cache(path = drake::default_cache_path(), verbose = 1, type = NULL,
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(), ...)
 }
@@ -15,9 +14,8 @@ is a file system cache.}
 
 \item{verbose}{logical, whether to print out the path of the cache.}
 
-\item{type}{character scalar, type of the drake cache.
-Must be among the list of supported caches
-in \code{\link{cache_types}()}.}
+\item{type}{deprecated argument. Once stood for cache type.
+Use \code{storr} to customize your caches instead.}
 
 \item{short_hash_algo}{short hash algorithm for the cache.
 See \code{\link{default_short_hash_algo}()} and
@@ -33,8 +31,7 @@ See \code{\link{default_long_hash_algo}()} and
 A newly created drake cache as a storr object.
 }
 \description{
-Make a new drake cache. Could be any
-type of cache in \code{\link{cache_types}()}.
+Make a new \code{storr_rds()} \code{drake} cache.
 }
 \examples{
 test_with_dir("Quarantine side effects.", {
@@ -45,16 +42,10 @@ cache1 <- new_cache() # Creates a new hidden '.drake' folder.
 cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 clean(destroy = TRUE, cache = cache2)
 }
-# Create a storr_environment() cache from a custom environment.
-e <- new.env() # Create a new environment.
-ls(e) # Emtpy.
-y <- new_cache(type = "storr_environment", envir = e)
-ls(e) # Storr populates the environment for use in an in-memory cache.
 })
 }
 \seealso{
 \code{\link{default_short_hash_algo}},
 \code{\link{default_long_hash_algo}},
-\code{\link{make}}, \code{\link{cache_types}},
-\code{\link{in_memory_cache_types}}
+\code{\link{make}}
 }

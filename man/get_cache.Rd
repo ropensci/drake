@@ -4,7 +4,8 @@
 \alias{get_cache}
 \title{Function \code{get_cache}}
 \usage{
-get_cache(path = getwd(), search = TRUE, verbose = 1, force = FALSE)
+get_cache(path = getwd(), search = TRUE, verbose = 1, force = FALSE,
+  fetch_cache = NULL)
 }
 \arguments{
 \item{path}{file path to the folder containing the cache.
@@ -22,6 +23,11 @@ for the cache.}
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the
 running version of drake.}
+
+\item{fetch_cache}{character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{storr_rds()} or \code{storr_dbi()},
+but customized. This feature is experimental.}
 }
 \value{
 A drake/storr cache, if available. \code{NULL} otherwise.

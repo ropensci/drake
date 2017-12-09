@@ -171,6 +171,15 @@
 #' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
 #' and \code{\link{recover_cache}()}
 #'
+#' @param fetch_cache character vector containing lines of code.
+#' The purpose of this code is to fetch the \code{storr} cache
+#' with a command like \code{storr_rds()} or \code{storr_dbi()},
+#' but customized. This feature is experimental. It will turn out
+#' to be necessary if you are using both custom non-RDS caches
+#' and distributed parallelism (\code{parallelism = "future_lapply"}
+#' or \code{"Makefile"}) because the distributed R sessions
+#' need to know how to load the cache.
+#'
 #' @param timeout Seconds of overall time to allow before imposing
 #' a timeout on a target. Passed to \code{R.utils::withTimeout()}.
 #' Assign target-level timeout times with an optional \code{timeout}
@@ -289,6 +298,7 @@ make <- function(
   verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
+  fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
   packages = rev(.packages()),
@@ -349,6 +359,7 @@ make <- function(
       recipe_command = recipe_command,
       clear_progress = TRUE,
       cache = cache,
+      fetch_cache = fetch_cache,
       timeout = timeout,
       cpu = cpu,
       elapsed = elapsed,

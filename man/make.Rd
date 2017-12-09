@@ -7,8 +7,8 @@
 make(plan = plan_drake(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0),
+  fetch_cache = NULL, parallelism = drake::default_parallelism(),
+  jobs = 1, packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), clear_progress = NULL,
@@ -75,6 +75,15 @@ and \code{function(code){message("Avoiding the code")}} is a bad hook.}
 \item{cache}{drake cache as created by \code{\link{new_cache}()}.
 See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
 and \code{\link{recover_cache}()}}
+
+\item{fetch_cache}{character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{storr_rds()} or \code{storr_dbi()},
+but customized. This feature is experimental. It will turn out
+to be necessary if you are using both custom non-RDS caches
+and distributed parallelism (\code{parallelism = "future_lapply"}
+or \code{"Makefile"}) because the distributed R sessions
+need to know how to load the cache.}
 
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link{parallelism_choices}()}.

@@ -1,5 +1,10 @@
 drake_context("console")
 
+test_with_dir("console_cache", {
+  expect_message(console_cache("12345", verbose = TRUE))
+  expect_message(console_cache(NULL, verbose = TRUE))
+})
+
 test_with_dir("console_up_to_date", {
   pl <- plan_drake(a = 1)
   con <- make(pl, verbose = FALSE, session_info = FALSE)

@@ -206,7 +206,7 @@ old_cache <- this_cache("faste_cache") # Get a cache you know exists...
 recovered <- recover_cache("faster_cache") # or create a new one if missing.
 ```
 
-# More on [storr](https://github.com/richfitz/storr) caches
+# Custom [storr](https://github.com/richfitz/storr) caches
 
 If you want bypass `drake` and generate a cache directly from [storr](https://github.com/richfitz/storr), it is best to do so right from the beginning.
 
@@ -220,11 +220,7 @@ cached(cache = my_storr)
 readd(simple, cache = my_storr)
 ```
 
-`Drake` supports arbitrary [storr](https://github.com/richfitz/storr) caches such as `storr_rds()` and `storr_environment()`. Other caches may be possible, but they should have a `storr`-like API and [namespace support](https://github.com/richfitz/storr/blob/master/vignettes/storr.Rmd#namespaces).
-
-# In-memory caches
-
-Some caches store your data in the computer's memory rather than saved files. `Drake` can make use of these in-memory caches, but not with most forms of parallel computing. In other words, when you call `make()`, the `parallelism` argument must be `"mclapply"` or `jobs` must be `1`. Also, unless you save your workspace, your in-memory cache will disappear when you close your R session.
+In addition to `storr_rds()`, `drake` supports in-memory caches created from `storr_environment()`. However, parallel computing is not supported these caches. The `jobs` argument must be 1, and the `parallelism` argument must be either `"mclapply"` or `"parLapply"`. (It is sufficient to leave the default values alone.)
 
 ```{r memory_caches}
 memory_cache <- storr_environment()
@@ -241,25 +237,26 @@ cached(cache = memory_cache)
 readd(result, cache = memory_cache)
 ```
 
-# Cache types
+In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, this feature is currently experimental, and it crashes when parallel processing is activated. And if the underlying database groups multiple targets together in the same file, simultaneous writes will almost surely cause race conditions, so `storr_dbi()` might not be an appropriate `drake` cache anyway. In addition, single-quoted keys do not currently play nicely with `storr_dbi()` caches, as [documented in the storr issue tracker](https://github.com/richfitz/storr/issues/60). That means you cannot use file targets.
 
-`Drake` has functions to help you create caches with known supported types.
+```{r dbi_caches, eval = FALSE}
+# Requires the DBI and RSQLite packages.
 
-```{r cache_types}
-default_cache_type()
+mydb <- DBI::dbConnect(RSQLite::SQLite(), "my-db.sqlite")
+cache <- storr::storr_dbi(
+  tbl_data = "data",
+  tbl_keys = "keys",
+  con = mydb
+)
 
-cache_types()
+load_basic_example()
+unlink(".drake", recursive = TRUE)
 
-in_memory_cache_types()
+# https://github.com/richfitz/storr/issues/60
+my_plan <- my_plan[my_plan$target != "'report.md'", ]
 
-env <- new.env()
-my_type <- new_cache(type = "storr_environment")
-my_type_2 <- new_cache(type = "storr_environment", envir = env)
-
-ls(env)
+make(my_plan, cache = cache)
 ```
-
-For new in-memory caches, please use `new_cache()` rather than `get_cache()` or `recover_cache()`.
 
 # Cleaning up
 
