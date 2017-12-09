@@ -14,14 +14,14 @@ test_with_dir("storr_dbi is usable", {
       overwrite_hash_algos = TRUE
     )
   })
-  
+
   cache <- eval(parse(text = fetch_cache))
   cache2 <- this_cache(fetch_cache = fetch_cache)
   expect_equal(cache$list(), character(0))
   expect_equal(cache2$list(), character(0))
   on.exit(cache$driver$disconnect())
   on.exit(cache2$driver$disconnect())
-  
+
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   e$mydb <- mydb

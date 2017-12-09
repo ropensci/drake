@@ -416,9 +416,9 @@ fork_kill_zombies <- function(){
 
 # Storage
 
-## Storage customization pitfalls
+## Cache customization is limited
 
-The [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake`, particularly hashing and custom caches. Please do not try to change the short hash algorithm of an existing cache, and beware in-memory caches for distributed computing and persistent projects.
+The [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake`. As [explained here](storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd#Custom-storr-caches), you can plug custom [storr](https://github.com/richfitz/storr) caches into `make()`. However, `storr_rds()`/`driver_rds()` are currently the only safe options. In addition, please do not try to change the short hash algorithm of an existing cache.
 
 ## Runtime predictions
 
