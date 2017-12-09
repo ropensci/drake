@@ -1,0 +1,83 @@
+library(drake)
+library(Ecdat) # econometrics datasets
+library(knitr)
+library(ggplot2)
+
+data(Produc) # Gross State Product
+head(Produc) # ?Produc
+
+# We want to predict "gsp" based on the other variables.
+predictors <- setdiff(colnames(Produc), "gsp")
+
+# Try all combinations of three covariates.
+combos <- t(combn(predictors, 3))
+head(combos)
+
+# Use these combinations to generate
+# a workflow pland data frame for drake.
+# First, we apply the models to the datasets.
+targets <- apply(combos, 1, paste, collapse = "_")
+
+commands <- apply(combos, 1, function(row){
+  covariates <- paste(row, collapse = " + ")
+  formula <- paste0("as.formula(\"gsp ~ ", covariates, "\")")
+  command <- paste0("lm(", formula, ", data = Produc)")
+})
+
+model_plan <- data.frame(target = targets, command = commands)
+
+# Judge the models based on the root mean squared prediction error (RMSPE)
+commands <- paste0("get_rmspe(", targets, ", data = Produc)")
+targets <- paste0("rmspe_", targets)
+rmspe_plan <- data.frame(target = targets, command = commands)
+
+# We need to define a function to get the RMSPE.
+get_rmspe <- function(lm_fit, data){
+  y <- data$gsp
+  yhat <- predict(lm_fit, data = data)
+  terms <- attr(summary(lm_fit)$terms, "term.labels")
+  data.frame(
+    rmspe = sqrt(mean((y - yhat)^2)), # nolint
+    X1 = terms[1],
+    X2 = terms[2],
+    X3 = terms[3]
+  )
+}
+
+# Aggregate all the results together.
+rmspe_results_plan <- gather_plan(
+  plan = rmspe_plan,
+  target = "rmspe",
+  gather = "rbind"
+)
+
+# Plan some final output.
+output_plan <- plan_drake(
+  rmspe.pdf = ggsave(filename = "rmspe.pdf", plot = plot_rmspe(rmspe)),
+  report.md = knit("report.Rmd", quiet = TRUE),
+  file_targets = TRUE,
+  strings_in_dots = "literals"
+)
+
+# We need a function to generate the plot.
+plot_rmspe <- function(rmspe){
+  ggplot(rmspe) +
+    geom_histogram(aes(x = rmspe), bins = 30)
+}
+
+# Put together the whole plan.
+whole_plan <- rbind(model_plan, rmspe_plan, rmspe_results_plan, output_plan)
+
+# Run the project.
+# View the results rmspe.pdf and report.md
+make(whole_plan, jobs = 2, verbose = 3)
+
+# Rendering the final output requires pandoc,
+# so I did not include it in the workflow plan.
+# rmarkdown::render("report.md") # nolint
+
+# Inspect the results
+rmspe <- readd(rmspe)
+
+# See the best models.
+head(rmspe[order(rmspe$rmspe), ])

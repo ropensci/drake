@@ -3,6 +3,7 @@
 These are the `drake` examples managed by functions `drake_example()` and `drake_examples()`. To add your own example, simply make a new folder in `inst/examples` and put your files inside. For example, you might create a folder called `inst/examples/new_example`. Then, when the user calls `drake_example("new_example")`, your `new_example` and its contents will be copied to the user's working directory. Also, `"new_example"` will be listed in `drake_examples()`.
 
 Examples so far:
+- `application`: A concrete example of `drake` in action. It is fabricated, but it demonstrates how `drake` plays out in the real world.
 - `basic`: An extended basic exmaple, like the [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd).
 - `Docker-psock`: demonstrates how to deploy targets to a [Docker container](https://www.docker.com/what-container) using a specialized PSOCK cluster.
 - `Makefile-cluster`: uses [Makefiles](https://www.gnu.org/software/make/) to deploy targets to a generic cluster (configurable).

@@ -1,0 +1,94 @@
+---
+title: "A practical example of drake in action"
+author: "William Michael Landau"
+output: html_document
+---
+
+```{r setup, echo = FALSE}
+suppressPackageStartupMessages(library(drake))
+suppressPackageStartupMessages(library(Ecdat))
+```
+
+# Research question
+
+Which factors are most associated with the productivity of a US State?
+
+# Data
+
+The `Produc` dataset from the [Ecdat pacakge](https://cran.r-project.org/package=Ecdat) contains data on the Gross State Product from 1970 to 1986. It has the following variables. See the references later in this report for more details.
+
+- `gsp`: gross state product.
+- `state`: the state.
+- `year`: the year.
+- `pcap`: private capital stock.
+- `hwy`: highway and streets.
+- `water`: water and sewer facilities.
+- `util`: other public buildings and structures.
+- `pc`: public capital.
+- `emp`: labor input measured by the employment in non-agricultural payrolls.
+- `unemp`: state unemployment rate.
+
+```{r data}
+library(Ecdat)
+data(Produc)
+head(Produc)
+```
+
+# Analysis
+
+The goal of the analysis is to find the covariates in the data that best predict gross state product. We attempt to predict `gsp` using the rest of the variables in `Produc`. Each model is a multiple regression of `gsp` on three covariates, and we apply all 84 such models. For simplicity, we rank the models based on their root mean squared prediction errors. The script `run.R` executes the analyses and knits this report.
+
+# Results
+
+Here are the root mean squared prediction errors of all the models.
+
+```{r rmspeplot}
+results <- readd(rmspe)
+
+loadd(plot_rmspe)
+
+library(ggplot2)
+plot_rmspe(rmspe = results)
+```
+
+And here are the best models.
+
+```{r bestmodels}
+head(results[order(results$rmspe), ])
+```
+
+# Comparison with Make
+
+If we were using [Make](https://www.gnu.org/software/make/) for this project, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this sketch.
+
+<pre><code>#!/bin/bash
+
+models = model_state_year_pcap model_state_year_hwy ... # 84 of these
+
+model_%
+    Rscript -e 'saveRDS(lm(...), ...)'
+
+rmspe_%: model_%
+    Rscript -e 'saveRDS(get_rmspe(...), ...)'
+
+rmspe: rmspe_%
+    Rscript -e 'saveRDS(rbind(...), ...)'
+
+rmspe.pdf: rmspe
+    Rscript -e 'ggsave(plot_rmspe(rmspe), "rmspe.pdf")'
+
+report.md: report.Rmd
+    Rscript -e 'knitr::knit("report.Rmd")'
+</code></pre>
+
+There are two main disadvantages to this approach.
+
+1. You would need to write the names of the 84 `models` to the top of the `Makefile"`.
+2. Every target requires a new call to `Rscript`. Given the speed of `lm()`, more time would be spent initializing R sessions than doing the actual work.
+
+# References 
+
+- Baltagi, Badi H (2003). Econometric analysis of panel data, John Wiley and sons, http://www.wiley.com/legacy/wileychi/baltagi/.
+- Balttagi, B. H. and N. Pinnoi (1995). "Public capital stock and state productivity growth: further evidence", Empirical Economics, 20, 351–359.
+- Munnell, A. (1990). "Why has productivity growth declined? Productivity and public investment"", New England Economic Review, 3–22.
+- Yves Croissant (2016). Ecdat: Data Sets for Econometrics. R package version 0.3-1. https://CRAN.R-project.org/package=Ecdat.

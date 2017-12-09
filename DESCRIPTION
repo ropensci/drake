@@ -50,15 +50,16 @@ Imports:
   visNetwork,
   withr
 Suggests: 
-    abind,
-    DBI,
-    future.batchtools,
-    MASS,
-    methods,
-    RSQLite,
-    rmarkdown,
-    tibble,
-    knitr
+  abind,
+  DBI,
+  Ecdat,
+  future.batchtools,
+  MASS,
+  methods,
+  RSQLite,
+  rmarkdown,
+  tibble,
+  knitr
 VignetteBuilder: knitr
 URL: https://github.com/wlandau-lilly/drake
 BugReports: https://github.com/wlandau-lilly/drake/issues
