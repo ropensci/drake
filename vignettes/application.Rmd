@@ -2,7 +2,10 @@
 title: "A concrete example of drake in action"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{application}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,8 +13,10 @@ vignette: >
 ---
 
 ```{r, echo = F}
-suppressMessages(suppressWarnings(library(drake)))
-suppressMessages(suppressWarnings(library(magrittr)))
+suppressPackageStartupMessages(library(drake))
+suppressPackageStartupMessages(library(Ecdat))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(knitr))
 unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
@@ -22,8 +27,199 @@ knitr::opts_chunk$set(
 )
 ```
 
+![](logo-vignettes.png)
+
+To generate the [code files for this example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/application), run `drake_example("application")`. Then, walk through `run.R` yourself.
+
+# Research question
+
+Which factors are most associated with the productivity of a US State?
+
+# Data
+
+The `Produc` dataset from the [Ecdat pacakge](https://cran.r-project.org/package=Ecdat) contains data on the Gross State Product from 1970 to 1986. It has the following variables. See the references later in this report for more details.
+
+- `gsp`: gross state product.
+- `state`: the state.
+- `year`: the year.
+- `pcap`: private capital stock.
+- `hwy`: highway and streets.
+- `water`: water and sewer facilities.
+- `util`: other public buildings and structures.
+- `pc`: public capital.
+- `emp`: labor input measured by the employment in non-agricultural payrolls.
+- `unemp`: state unemployment rate.
+
+```{r masterdata}
+library(Ecdat)
+data(Produc)
+head(Produc)
+```
+
+# Analysis
+
+The goal of the analysis is to find the covariates in the data that best predict gross state product. We attempt to predict `gsp` using the rest of the variables in `Produc`. Each model is a multiple regression of `gsp` on three covariates, and we apply all 84 such models. For simplicity, we rank the models based on their root mean squared prediction errors.
+
+First, we load the packages we need. `Drake` is aware of all the packages you load with `library()` or `require()`.
+
+```{r masterpkgs}
+library(drake)
+library(Ecdat) # econometrics datasets
+library(knitr)
+library(ggplot2)
+```
+
+Next, set up our workflow plan data frame in pieces. We start with the models.
+
+```{r mastermodels}
+predictors <- setdiff(colnames(Produc), "gsp")
+combos <- t(combn(predictors, 3))
+head(combos)
+targets <- apply(combos, 1, paste, collapse = "_")
+commands <- apply(combos, 1, function(row){
+  covariates <- paste(row, collapse = " + ")
+  formula <- paste0("as.formula(\"gsp ~ ", covariates, "\")")
+  command <- paste0("lm(", formula, ", data = Produc)")
+})
+model_plan <- data.frame(target = targets, command = commands)
+
+head(model_plan)
+```
+
+Next, we make a plan to judge each model based on its root mean squared prediction error (RMSPE).
+
+```{r masterrmspe_plan}
+commands <- paste0("get_rmspe(", targets, ", data = Produc)")
+targets <- paste0("rmspe_", targets)
+rmspe_plan <- data.frame(target = targets, command = commands)
+
+head(rmspe_plan)
+```
+
+We need to define a function to get the RMSPE for each model.
+
+```{r masterget_rmspe}
+get_rmspe <- function(lm_fit, data){
+  y <- data$gsp
+  yhat <- predict(lm_fit, data = data)
+  terms <- attr(summary(lm_fit)$terms, "term.labels")
+  data.frame(
+    rmspe = sqrt(mean((y - yhat)^2)), # nolint
+    X1 = terms[1],
+    X2 = terms[2],
+    X3 = terms[3]
+  )
+}
+```
+
+In our current plan, RMSPE is distributed over 84 targets (one for each model). Let's plan to combine them all together in a single data frame.
+
+```{r masterrbindplan}
+rmspe_results_plan <- gather_plan(
+  plan = rmspe_plan,
+  target = "rmspe",
+  gather = "rbind"
+)
+```
+
+At the end, let's generate a pdf plot of the RMSPE scores and a [knitr](https://yihui.name/knitr/) report.
+
+```{r masterknitrreport}
+output_plan <- plan_drake(
+  rmspe.pdf = ggsave(filename = "rmspe.pdf", plot = plot_rmspe(rmspe)),
+  report.md = knit("report.Rmd", quiet = TRUE),
+  file_targets = TRUE,
+  strings_in_dots = "literals"
+)
+```
+
+At this point, we can gather together the whole workflow plan.
+
+```{r wholeplan}
+whole_plan <- rbind(model_plan, rmspe_plan, rmspe_results_plan, output_plan)
+```
+
+Before we run the project, we need to define the `plot_rmspe()` function.
+
+```{r defineplotrmspe}
+plot_rmspe <- function(rmspe){
+  ggplot(rmspe) +
+    geom_histogram(aes(x = rmspe), bins = 30)
+}
+```
+
+We also need the [report.Rmd file](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/application/report.Rmd) for this example.
+
+```{r copyreport}
+local <- file.path("examples", "application", "report.Rmd")
+path <- system.file(path = local, package = "drake", mustWork = TRUE)
+file.copy(from = path, to = "report.Rmd", overwrite = TRUE)
+```
+
+Now, we can run the project
+
+```{r appmake}
+make(whole_plan, verbose = FALSE)
+```
+
+# Results
+
+Here are the root mean squared prediction errors of all the models.
+
+```{r masterrmspeplot}
+results <- readd(rmspe)
+
+loadd(plot_rmspe)
+
+library(ggplot2)
+plot_rmspe(rmspe = results)
+```
+
+And here are the best models.
+
+```{r masterbestmodels}
+head(results[order(results$rmspe, decreasing = FALSE), ])
+```
+
+# Comparison with Make
+
+If we were using [Make](https://www.gnu.org/software/make/) for this project, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this sketch.
+
+<pre><code>#!/bin/bash
+
+models = model_state_year_pcap model_state_year_hwy ... # 84 of these
+
+model_%
+    Rscript -e 'saveRDS(lm(...), ...)'
+
+rmspe_%: model_%
+    Rscript -e 'saveRDS(get_rmspe(...), ...)'
+
+rmspe: rmspe_%
+    Rscript -e 'saveRDS(rbind(...), ...)'
+
+rmspe.pdf: rmspe
+    Rscript -e 'ggsave(plot_rmspe(rmspe), "rmspe.pdf")'
+
+report.md: report.Rmd
+    Rscript -e 'knitr::knit("report.Rmd")'
+</code></pre>
+
+There are two main disadvantages to this approach.
+
+1. You would need to write the names of the 84 `models` to the top of the `Makefile"`.
+2. Every target requires a new call to `Rscript`. Given the speed of `lm()`, more time would be spent initializing R sessions than doing the actual work.
+
+# References 
+
+- Baltagi, Badi H (2003). Econometric analysis of panel data, John Wiley and sons, http://www.wiley.com/legacy/wileychi/baltagi/.
+- Balttagi, B. H. and N. Pinnoi (1995). "Public capital stock and state productivity growth: further evidence", Empirical Economics, 20, 351–359.
+- Munnell, A. (1990). "Why has productivity growth declined? Productivity and public investment"", New England Economic Review, 3–22.
+- Yves Croissant (2016). Ecdat: Data Sets for Econometrics. R package version 0.3-1. https://CRAN.R-project.org/package=Ecdat.
+
 
 ```{r rmfiles_main, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
-unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+unlink(
+  c("Makefile", "report.Rmd", "figure", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```

@@ -54,7 +54,7 @@ plot_rmspe(rmspe = results)
 And here are the best models.
 
 ```{r bestmodels}
-head(results[order(results$rmspe), ])
+head(results[order(results$rmspe, decreasing = FALSE), ])
 ```
 
 # Comparison with Make

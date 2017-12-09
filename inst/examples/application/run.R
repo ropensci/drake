@@ -68,6 +68,13 @@ plot_rmspe <- function(rmspe){
 # Put together the whole plan.
 whole_plan <- rbind(model_plan, rmspe_plan, rmspe_results_plan, output_plan)
 
+# Optionally, visualize the interactive workflow graph.
+# config <- drake_config(whole_plan) # nolint
+# vis_drake_graph(config) # nolint
+
+# Just see the dependencies of the report.
+# vis_drake_graph(config, from = "'report.md'", mode = "in", order = 1) # nolint
+
 # Run the project.
 # View the results rmspe.pdf and report.md
 make(whole_plan, jobs = 2, verbose = 3)
@@ -80,4 +87,4 @@ make(whole_plan, jobs = 2, verbose = 3)
 rmspe <- readd(rmspe)
 
 # See the best models.
-head(rmspe[order(rmspe$rmspe), ])
+head(rmspe[order(rmspe$rmspe, decreasing = FALSE), ])
