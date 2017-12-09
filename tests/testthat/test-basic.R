@@ -9,7 +9,8 @@ test_with_dir("basic example works", {
   load_basic_example(envir = e)
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
-    jobs = jobs, parallelism = parallelism)
+    jobs = jobs, parallelism = parallelism,
+    verbose = FALSE)
 
   expect_true(is.list(dependency_profile(
     target = "'report.md'", config = config)))
