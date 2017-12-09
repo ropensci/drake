@@ -54,6 +54,7 @@ Suggests:
   DBI,
   Ecdat,
   future.batchtools,
+  ggplot2,
   MASS,
   methods,
   RSQLite,
