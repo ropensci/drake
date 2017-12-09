@@ -51,7 +51,7 @@ cache_path <- function(cache = NULL){
 #' @param fetch_cache character vector containing lines of code.
 #' The purpose of this code is to fetch the \code{storr} cache
 #' with a command like \code{storr_rds()} or \code{storr_dbi()},
-#' but customized.
+#' but customized. This feature is experimental.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -98,7 +98,7 @@ get_cache <- function(
 #' @param fetch_cache character vector containing lines of code.
 #' The purpose of this code is to fetch the \code{storr} cache
 #' with a command like \code{storr_rds()} or \code{storr_dbi()},
-#' but customized.
+#' but customized. This feature is experimental.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

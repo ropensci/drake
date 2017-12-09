@@ -174,8 +174,8 @@
 #' @param fetch_cache character vector containing lines of code.
 #' The purpose of this code is to fetch the \code{storr} cache
 #' with a command like \code{storr_rds()} or \code{storr_dbi()},
-#' but customized.
-#' This is necessary if you are using both custom caches
+#' but customized. This feature is experimental. It will turn out
+#' to be necessary if you are using both custom non-RDS caches
 #' and distributed parallelism (\code{parallelism = "future_lapply"}
 #' or \code{"Makefile"}) because the distributed R sessions
 #' need to know how to load the cache.
