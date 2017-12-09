@@ -1,3 +1,5 @@
+# Data frames in R for [Make](http://kbroman.org/minimal_make/)
+
 <p align="center">
   <img src="./images/logo-readme.png" alt="">
 </p>
@@ -12,12 +14,100 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
 [![codecov.io](https://codecov.io/github/wlandau-lilly/drake/coverage.svg?branch=master)](https://codecov.io/github/wlandau-lilly/drake?branch=master)
 
-# Data frames in R for [Make](http://kbroman.org/minimal_make/)
+# What gets done stays done.
 
-Drake is a workflow manager and build system for
+Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
 
-1. [Reproducibility](https://CRAN.R-project.org/view=ReproducibleResearch).
-2. [High-performance computing](https://CRAN.R-project.org/view=HighPerformanceComputing).
+1. Deploy your code.
+2. Wait for it to finish.
+3. Discover an issue.
+4. Repeat from scratch.
+
+But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is solid.
+
+```r
+load_basic_example()
+
+# First round.
+make(my_plan) 
+
+## target large
+## target small
+## target regression1_large
+## target regression1_small
+## target regression2_large
+## target regression2_small
+## target coef_regression1_large
+## target coef_regression1_small
+## target coef_regression2_large
+## target coef_regression2_small
+## target summ_regression1_large
+## target summ_regression1_small
+## target summ_regression2_large
+## target summ_regression2_small
+## target 'report.md'
+
+# Change some code.
+reg2 <- function(d){    
+  d$x4 <- d$x ^ 4
+  lm(y ~ x4, data = d)
+}
+
+# Less work for the second round.
+make(my_plan)
+
+## target regression2_large
+## target regression2_small
+## target coef_regression2_large
+## target coef_regression2_small
+## target summ_regression2_large
+## target summ_regression2_small
+## target 'report.md'
+
+# No work if nothing changed.
+make(my_plan)
+
+## All targets are already up to date.
+```
+
+# Stay reproducible.
+
+The R community likes to emphasize reproducibility. Most people think it means [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
+
+```r
+make(my_plan)
+
+## All targets are already up to date.
+
+config <- drake_config(my_plan)
+outdated(config)
+
+## character(0)
+```
+
+# Agressively scale up.
+
+Not every project can run in one R session on your laptop. Some projects require multiple cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, your analyses depend on your datasets, and not everything can run at the same time. `Drake` automatically links your work together a network graph to figure out what it can process in parallel.
+
+```r
+# Change some code.
+reg2 <- function(d){    
+  d$x3 <- d$x ^ 3
+  lm(y ~ x3, data = d)
+}
+
+# Plot an interactive graph.
+config <- drake_config(my_plan)
+vis_drake_graph(config)
+```
+
+![](./images/graph.png)
+
+Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function.
+
+Parallel backends range from local multicore computing to serious [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/blob/master/README.md)-powered distributed computing on a cluster. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for details.
+
+# How it works
 
 Organize your work in a data frame.
 
@@ -62,21 +152,7 @@ str(error)               # Object of class "error"
 error$calls              # Call stack / traceback
 ```
 
-# Installation
-
-You can choose among different versions of `drake`:
-
-```r
-install.packages("drake")                                  # Latest CRAN release.
-install.packages("devtools")                               # For installing from GitHub.
-library(devtools)
-install_github("wlandau-lilly/drake@v4.4.0", build = TRUE) # Choose a GitHub tag/release.
-install_github("wlandau-lilly/drake", build = TRUE)        # Development version.
-```
-
-- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
-- For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
-# Quickstart
+Try out this quickstart yourself.
 
 ```r
 library(drake)
@@ -98,6 +174,22 @@ drake_example("basic") # Write the code files of the canonical tutorial.
 drake_examples()       # List the other examples.
 vignette("quickstart") # https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
+
+# Installation
+
+You can choose among different versions of `drake`:
+
+```r
+install.packages("drake")                                  # Latest CRAN release.
+install.packages("devtools")                               # For installing from GitHub.
+library(devtools)
+install_github("wlandau-lilly/drake@v4.4.0", build = TRUE) # Choose a GitHub tag/release.
+install_github("wlandau-lilly/drake", build = TRUE)        # Development version.
+```
+
+- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
+- For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
+
 
 # Useful functions
 
@@ -195,71 +287,6 @@ rescue_cache()
 drake_session()
 ```
 
-# Reproducibility 
-
-Reproducibility carries the promise that your output matches your input. Your tables, figures, reports, and intermediate objects should stay up to date with all the underlying data and code. To ensure internal consistency, `drake` detects and refreshes the outdated components of your project.
-
-```r
-library(drake)
-config <- load_basic_example()
-outdated(config)        # Which targets need to be (re)built?
-config <- make(my_plan) # Build what needs to be built.
-outdated(config)        # Everything is up to date.
-reg2 <- function(d){    # Change one of your functions.
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
-}
-outdated(config)        # Some targets depend on reg2().
-vis_drake_graph(config) # See arguments 'from' and 'to'.
-config <- make(my_plan) # Rebuild just the outdated targets.
-outdated(config)        # Everything is up to date again.
-vis_drake_graph(config) # The colors changed in the graph.
-```
-
-Similarly to imported functions like `reg2()`, `drake` reacts to changes in
-
-1. Other imported functions, whether user-defined or from packages.
-1. For imported functions from your environment, any nested functions also in your environment or from packages.
-1. Commands in your workflow plan data frame.
-1. Global variables mentioned in the commands or imported functions.
-1. Upstream targets.
-1. For [dynamic knitr reports](https://yihui.name/knitr) (with `knit('your_report.Rmd')` as a command in your workflow plan data frame), targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, 'report.md').
-
-With alternate [triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and the [option to skip imports](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#skipping-imports), you can sacrifice reproducibility to gain speed. However, these options throw the dependency network out of sync. You should only use them for testing and debugging, never for production.
-
-```r
-make(..., skip_imports = TRUE, trigger = "missing")
-```
-
-Using different tools, you can enhance reproducibility beyond the scope of `drake`. [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
-
-# High-performance computing
-
-Similarly to [Make](https://www.gnu.org/software/make/), drake arranges the intermediate steps of your workflow in a dependency network. This graph is the key to `drake`'s approach to high-performance computing.
-
-```{r basicgraph}
-library(drake)
-load_basic_example()
-config <- make(my_plan, jobs = 2) # See also max_useful_jobs(my_plan).
-# Change a dependency.
-reg2 <- function(d){
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
-}
-# Run vis_drake_graph() yourself for interactivity.
-# Then hover, click, drag, pan, and zoom.
-vis_drake_graph(config, width = "100%")
-```
-
-![](./images/graph.png)
-
-Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function.
-
-Parallel computing backends range from local multicore computing to [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools)-powered distributed computing. Please see the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for details.
-
-```r
-vignette("parallelism") 
-```
 
 # Acknowledgements and related work
 
