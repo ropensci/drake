@@ -1,0 +1,29 @@
+---
+title: "A concrete example of drake in action"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{application}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+suppressMessages(suppressWarnings(library(magrittr)))
+unlink(".drake", recursive = TRUE)
+clean(destroy = TRUE, verbose = FALSE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
+```
+
+
+```{r rmfiles_main, echo = FALSE}
+clean(destroy = TRUE, verbose = FALSE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
