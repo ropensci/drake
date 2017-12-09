@@ -302,4 +302,4 @@ Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob
 
 # Contributing
 
-Bug reports, suggestions, and code are welcome. Please see [.github/CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/.github/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
+Bug reports, suggestions, and code are welcome. Please see [CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
