@@ -23,7 +23,7 @@ Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.o
 3. Discover an issue.
 4. Restart from scratch.
 
-But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steadier and smoother.
+But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steady and smooth.
 
 ```r
 load_basic_example()
