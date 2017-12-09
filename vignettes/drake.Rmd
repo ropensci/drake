@@ -32,12 +32,12 @@ knitr::opts_chunk$set(
 
 Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
 
-1. Deploy your code.
+1. Launch the code.
 2. Wait for it to finish.
 3. Discover an issue.
-4. Repeat from scratch.
+4. Restart from scratch.
 
-But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is solid.
+But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steadier and smoother.
 
 ```{r drakemake}
 load_basic_example()
@@ -60,7 +60,7 @@ make(my_plan)
 
 # Stay reproducible.
 
-The R community likes to emphasize reproducibility. Most people think it means [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
+The R community likes to emphasize reproducibility. Most people think that means [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
 
 ```{r drakemake2}
 make(my_plan)
@@ -71,7 +71,7 @@ outdated(config)
 
 # Aggressively scale up.
 
-Not every project can run in one R session on your laptop. Some projects need more speed or computing power. Some require a few local cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, your analyses depend on your datasets, and some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic.
+Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for all the details.
 
 ```{r implicitparallel, eval = FALSE}
 # Use the spare cores on your local machine.
@@ -84,7 +84,7 @@ batchtools_slurm(template = "batchtools.slurm.tmpl", workers = 100)
 make(my_plan, parallelism = "future_lapply")
 ```
 
-During parallel processing, the targets wait for their dependencies because `drake` uses a network graph.
+The network graph allows `drake` to wait for dependencies regardless of scale.
 
 ```{r visgraphdrake, eval = FALSE}
 # Change some code.
@@ -108,9 +108,9 @@ Within each column above, the nodes are conditionally independent given their de
 
 Parallel backends range from local multicore computing to serious [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/blob/master/README.md)-powered distributed computing on a cluster. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for details.
 
-# How it works
+# Where to begin
 
-Outline your project as a data frame of targets.
+Outline your project in a data frame of targets.
 
 ```{r myplandrakevig}
 # Remove work from the previous example.
@@ -187,12 +187,6 @@ reg2 <- function(d){
 
 make(my_plan)
 ```
-
-# Related work
-
-The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](http://kbroman.org/minimal_make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make".
-
-Today, there is a [whole ecosystem of pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), mostly written in Python. Of all the toolkits in the list, [Rich FitzJohn](http://richfitz.github.io/)'s [remake package](https://github.com/richfitz/remake) is by far the most important for `drake`. `Drake` stands squarely on the shoulders of [remake](https://github.com/richfitz/remake), borrowing the fundamental concepts and extending them in a fresh implementation with a convenient interface and high-performance computing.
 
 # Acknowledgements
 

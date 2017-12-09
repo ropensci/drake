@@ -1,4 +1,4 @@
-# Data frames in R for [Make](http://kbroman.org/minimal_make/)
+# Data frames in R for [Make](https://www.gnu.org/software/make/)
 
 <p align="center">
   <img src="./images/logo-readme.png" alt="">
@@ -18,12 +18,12 @@
 
 Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
 
-1. Deploy your code.
+1. Launch the code.
 2. Wait for it to finish.
 3. Discover an issue.
-4. Repeat from scratch.
+4. Restart from scratch.
 
-But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is solid.
+But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steadier and smoother.
 
 ```r
 load_basic_example()
@@ -72,7 +72,7 @@ make(my_plan)
 
 # Stay reproducible.
 
-The R community likes to emphasize reproducibility. Most people think it means [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
+The R community likes to emphasize reproducibility. Most people think that means [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
 
 ```r
 make(my_plan)
@@ -87,7 +87,7 @@ outdated(config)
 
 # Aggressively scale up.
 
-Not every project can run in one R session on your laptop. Some projects need more speed or computing power. Some require a few local cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, your analyses depend on your datasets, and some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic.
+Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for all the details.
 
 ```r
 # Use the spare cores on your local machine.
@@ -100,8 +100,7 @@ batchtools_slurm(template = "batchtools.slurm.tmpl", workers = 100)
 make(my_plan, parallelism = "future_lapply")
 ```
 
-During parallel processing, the targets wait for their dependencies because `drake` uses a network graph.
-
+The network graph allows `drake` to wait for dependencies regardless of scale.
 
 ```r
 # Change some code.
@@ -119,11 +118,24 @@ vis_drake_graph(config)
 
 Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function.
 
-Parallel backends range from local multicore computing to serious [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/blob/master/README.md)-powered distributed computing on a cluster. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for details.
+# Installation
 
-# How it works
+You can choose among different versions of `drake`:
 
-Organize your work in a data frame.
+```r
+install.packages("drake")                                  # Latest CRAN release.
+install.packages("devtools")                               # For installing from GitHub.
+library(devtools)
+install_github("wlandau-lilly/drake@v4.4.0", build = TRUE) # Choose a GitHub tag/release.
+install_github("wlandau-lilly/drake", build = TRUE)        # Development version.
+```
+
+- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
+- For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
+
+# Where to begin
+
+Outline your work in a data frame.
 
 ```r
 library(drake)
@@ -189,25 +201,9 @@ drake_examples()       # List the other examples.
 vignette("quickstart") # https://cran.r-project.org/package=drake/vignettes/quickstart.html
 ```
 
-# Installation
+# Handy functions
 
-You can choose among different versions of `drake`:
-
-```r
-install.packages("drake")                                  # Latest CRAN release.
-install.packages("devtools")                               # For installing from GitHub.
-library(devtools)
-install_github("wlandau-lilly/drake@v4.4.0", build = TRUE) # Choose a GitHub tag/release.
-install_github("wlandau-lilly/drake", build = TRUE)        # Development version.
-```
-
-- You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
-- For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
-
-
-# Useful functions
-
-`make()`, `plan_drake()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about drake,
+`make()`, `plan_drake()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about `drake`,
 
 ```r
 load_basic_example()
@@ -327,9 +323,36 @@ Bug reports, suggestions, and code are welcome. Please see [CONTRIBUTING.md](htt
 
 # Related work
 
-The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](http://kbroman.org/minimal_make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make".
+## GNU Make
 
-Today, there is a [whole ecosystem of pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), mostly written in Python. Of all the toolkits in the list, [Rich FitzJohn](http://richfitz.github.io/)'s [remake package](https://github.com/richfitz/remake) is by far the most important for `drake`. `Drake` stands squarely on the shoulders of [remake](https://github.com/richfitz/remake), borrowing the fundamental concepts and extending them in a fresh implementation with a convenient interface and high-performance computing.
+The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](https://www.gnu.org/software/make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make". [Make](http://kbroman.org/minimal_make/) is used widely to drive reproducible research. Below are some examples from [Karl Broman's website](http://kbroman.org/minimal_make/).
+
+- Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/master/Makefile.
+- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202. https://doi.org/10.1534/g3.111.001818. Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/master/Makefile.
+- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. https://doi.org/10.1534/genetics.111.132647. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/master/Makefile.
+- Broman, Karl W and Kim, Sungjin and Sen, Śaunak and Ané, Cécile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. https://doi.org/10.1534/genetics.112.142448. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
+
+There are several reasons for R users to prefer `drake` instead.
+
+- It is difficult to scale up. With [Make](http://kbroman.org/minimal_make/), you must write a potentially large [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile) by hand. But with `drake`, you can use [wildcard templating]() to automatically generate massive collections of targets with minimal code.
+
+#### Remake
+
+[Drake](https://github.com/wlandau-lilly/drake) overlaps with its direct predecessor, [remake](https://github.com/richfitz/remake). In fact, [drake](https://github.com/wlandau-lilly/drake) owes its core ideas to [remake](https://github.com/richfitz/remake) and @richfitz, and [explicit acknowledgements are in the documentation](https://github.com/wlandau-lilly/drake#acknowledgements-and-related-work). However, [drake](https://github.com/wlandau-lilly/drake) surpasses [remake](https://github.com/richfitz/remake) in several important ways, including but not limited to the following.
+
+1. **High-performance computing**. [Remake](https://github.com/richfitz/remake) has no native parallel computing support. [Drake](https://github.com/wlandau-lilly/drake), on the other hand, has a [vast arsenal](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) of parallel computing options, from local multicore computing to serious distributed computing. Thanks to [future](github.com/HenrikBengtsson/future), [future.batchtools](github.com/HenrikBengtsson/future.batchtools), and [batchtools](github.com/mllg/batchtools), it is straightforward to configure a [drake](https://github.com/wlandau-lilly/drake) project for most popular job schedulers, such as [SLURM](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/slurm), [TORQUE](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/torque), and the [Sun/Univa Grid Engine](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/sge), as well as systems contained in [Docker images](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/Docker-psock).
+1. **A friendly interface**. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow. In [drake](https://github.com/wlandau-lilly/drake), this configuration is based on data frames that built-in [wildcard templating functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan)  easily generates at scale.
+1. **Thorough documentation**. [Drake](https://github.com/wlandau-lilly/drake) contains [eight vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), a [comprehensive README](https://github.com/wlandau-lilly/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) that users can write with `drake::example_drake()`.
+1. **Active maintenance**. [Drake](https://github.com/wlandau-lilly/drake) is actively developed and maintained, and [issues](https://github.com/wlandau-lilly/drake/issues) are usually solved promptly.  
+
+#### Factual's drake
+
+[Factual's drake](https://github.com/Factual/drake) is similar in concept, but the development effort is completely unrelated to the [R package of the same name](https://github.com/wlandau-lilly/drake).
+
+
+#### Other pipeline toolkits
+
+There are many [other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline), and [the drake package](https://github.com/wlandau-lilly/drake) distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and parallel computing flexibility.
 
 # Acknowledgements
 
