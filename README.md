@@ -100,7 +100,7 @@ batchtools_slurm(template = "batchtools.slurm.tmpl", workers = 100)
 make(my_plan, parallelism = "future_lapply")
 ```
 
-The network graph allows `drake` to wait for dependencies regardless of scale.
+The network graph allows `drake` to wait for dependencies.
 
 ```r
 # Change some code.
