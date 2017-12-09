@@ -85,9 +85,23 @@ outdated(config)
 ## character(0)
 ```
 
-# Agressively scale up.
+# Aggressively scale up.
 
-Not every project can run in one R session on your laptop. Some projects require multiple cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, your analyses depend on your datasets, and not everything can run at the same time. `Drake` automatically links your work together a network graph to figure out what it can process in parallel.
+Not every project can run in one R session on your laptop. Some projects need more speed or computing power. Some require a few local cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, your analyses depend on your datasets, and some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic.
+
+```r
+# Use the spare cores on your local machine.
+make(my_plan, jobs = 4)
+
+# Scale up to a supercomputer.
+drake_batchtools_tmpl_file("slurm") # https://slurm.schedmd.com/
+library(future.batchtools)
+batchtools_slurm(template = "batchtools.slurm.tmpl", workers = 100)
+make(my_plan, parallelism = "future_lapply")
+```
+
+During parallel processing, the targets wait for their dependencies because `drake` uses a network graph.
+
 
 ```r
 # Change some code.
