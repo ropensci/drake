@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 # Why use drake
 
-`Drake` saves time. It detects your old results and only refreshes the pieces that are out of date or missing. In other words, your data analysis project does the minimum work required to keep the results consistent with the code and data they came from. The time you spend learning `drake` will pay off when you no longer have to rerun everything from scratch. The time savings are even greater if you turn on the [parallel computing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), which is friendly, comprehensive, and compatible with small and large projects alike.  `Drake` is more dependable, R-focused, scalable, well-documented, and actively maintained than [other tools with similar functionality](#similar-work).
+`Drake` saves time. It detects your old results and only refreshes the pieces that are out of date or missing. In other words, your data science project does the minimum work required to keep the results consistent with the code and data they came from. The time you spend learning `drake` will pay off when you no longer have to rerun everything from scratch. The time savings are even greater if you turn on the [parallel computing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), which is friendly, comprehensive, and compatible with small and large projects alike.  `Drake` is more dependable, R-focused, scalable, well-documented, and actively maintained than [other tools with similar functionality](#similar-work).
 
 # What gets done stays done.
 
