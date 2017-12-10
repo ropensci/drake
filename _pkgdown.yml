@@ -1,0 +1,164 @@
+url: https://github.com/wlandau-lilly/drake
+navbar:
+  title: drake
+  type: default
+  left:
+  - icon: fa-home fa-lg
+    href: index.html
+  - text: Get Started
+    href: articles/drake.html
+  - text: Reference
+    href: reference/index.html
+  - text: Articles
+    menu:
+    - text: A practical example of drake in action
+      href: articles/application.html
+    - text: Caution
+      href: articles/caution.html
+    - text: Debugging and testing drake projects
+      href: articles/debug.html
+    - text: Graphs with drake
+      href: articles/graph.html
+    - text: Parallel computing
+      href: articles/parallelism.html
+    - text: Quickstart
+      href: articles/quickstart.html
+    - text: Storage
+      href: articles/storage.html
+    - text: Time logging
+      href: articles/timing.html
+  - text: News
+    href: news/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/wlandau-lilly/drake
+articles:
+- title: General vignettes
+  contents:
+  - '`application`'
+  - '`caution`'
+  - '`drake`'
+  - '`quickstart`'
+- title: Specialized walkthroughs
+  contents:
+  - '`debug`'
+  - '`graph`'
+  - '`parallelism`'
+  - '`storage`'
+  - '`timing`'
+reference:
+- title: Basic
+  contents:
+  - '`drake_config`'
+  - '`make_imports`'
+  - '`make`'
+  - '`make_targets`'
+  - '`make_with_config`'
+- title: Cache configuration
+  - '`available_hash_algos`'
+  - '`cache_namespaces`'
+  - '`cache_path`'
+  - '`cleaned_namespaces`'
+  - '`configure_cache`'
+  - '`default_cache_path`'
+  - '`default_long_hash_algo`'
+  - '`default_short_hash_algo`'
+  - '`long_hash`'
+  - '`new_cache`'
+  - '`recover_cache`'
+  - '`short_hash`'
+  - '`target_namespaces`'
+  - '`this_cache`'
+- title: Cache usage
+  contents:
+  - '`built`'
+  - '`cached`'
+  - '`clean`'
+  - '`drake_gc`'
+  - '`drake_session`'
+  - '`failed`'
+  - '`find_cache`'
+  - '`find_project`'
+  - '`get_cache`'
+  - '`imported`'
+  - '`in_progress`'
+  - '`loadd`'
+  - '`progress`'
+  - '`read_drake_config`'
+  - '`read_drake_graph`'
+  - '`read_drake_meta`'
+  - '`read_drake_plan`'
+  - '`readd`'
+  - '`rescue_cache`'
+- title: Debugging and testing
+  contents:
+  - '`check_plan`'
+  - '`default_trigger`'
+  - '`dependency_profile`'
+  - '`deps`'
+  - '`diagnose`'
+  - '`knitr_deps`'
+  - '`migrate_drake_project`'
+  - '`missed`'
+  - '`outdated`'
+  - '`possible_targets`'
+  - '`tracked`'
+  - '`triggers`'
+- title: Help
+  contents:
+  - '`drake_example`'
+  - '`drake_examples`'
+  - '`drake-package`'
+  - '`drake_tip`'
+  - '`load_basic_example`'
+- title: High-performance computing
+  contents:
+  - '`default_Makefile_args`'
+  - '`default_Makefile_command`'
+  - '`default_parallelism`'
+  - '`default_recipe_command`'
+  - '`drake_batchtools_tmpl_file`'
+  - '`Makefile_recipe`'
+  - '`max_useful_jobs`'
+  - '`next_stage`'
+  - '`parallelism_choices`'
+  - '`parallel_stages`'
+  - '`r_recipe_wildcard`'
+  - '`shell_file`'
+- title: Hooks
+  contents:
+  - '`default_hook`'
+  - '`empty_hook`'
+  - '`message_sink_hook`'
+  - '`output_sink_hook`'
+  - '`silencer_hook`'
+- title: Network graphs and visualization
+  contents:
+  - '`build_drake_graph`'
+  - '`drake_palette`'
+  - '`dataframes_graph`'
+  - '`legend_nodes`'
+  - '`prune_drake_graph`'
+  - '`render_drake_graph`'
+  - '`vis_drake_graph`'
+- title: String utilities
+  contents:
+  - '`as_drake_filename`'
+  - '`drake_quotes`'
+  - '`drake_strings`'
+  - '`drake_unquote`'
+- title: Timing
+  contents:
+  - '`build_times`'
+  - '`predict_runtime`'
+  - '`rate_limiting_times`'
+- title: Workflow plan data frames
+  contents:
+  - '`analysis_wildcard`'
+  - '`dataset_wildcard`'
+  - '`evaluate_plan`'
+  - '`expand_plan`'
+  - '`gather_plan`'
+  - '`plan_analyses`'
+  - '`plan_drake`'
+  - '`plan_summaries`'
