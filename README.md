@@ -16,7 +16,7 @@
 
 # Why use drake
 
-`Drake` saves time. It notices any previous work you did and only refreshes the pieces that are out of date or missing. That way, your data analysis project **thinks before it acts**, and your results stay consistent with the code and data they came from. The time you spend learning `drake` will pay off when you no longer have to rerun your work from scratch. The time savings are even greater if you turn on the [parallel computing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), which is friendly, comprehensive, and compatible with small and large projects alike.  `Drake` is more dependable, R-focused, scalable, well-documented, and actively maintained than [other tools with similar functionality](#similar-work).
+`Drake` saves time. It notices any previous work you did and only refreshes the pieces that are out of date or missing. That way, your data analysis project **thinks before it acts**, and it expends just the right amount of effort to keep your results consistent with the code and data they came from. The time you spend learning `drake` will pay off when you no longer have to rerun your work from scratch. The time savings are even greater if you turn on the [parallel computing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), which is friendly, comprehensive, and compatible with small and large projects alike.  `Drake` is more dependable, R-focused, scalable, well-documented, and actively maintained than [other tools with similar functionality](#similar-work).
 
 # What gets done stays done.
 
