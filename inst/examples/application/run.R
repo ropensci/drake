@@ -1,3 +1,8 @@
+# See the application.Rmd vignette
+# for an explanation of the data analysis workflow
+# in this file.
+# https://github.com/wlandau-lilly/drake/blob/master/vignettes/application.Rmd
+
 library(drake)
 library(Ecdat) # econometrics datasets
 library(knitr)
@@ -14,7 +19,9 @@ combos <- t(combn(predictors, 3))
 head(combos)
 
 # Use these combinations to generate
-# a workflow pland data frame for drake.
+# a workflow plan data frame for drake.
+# We generate the plan in stages.
+
 # First, we apply the models to the datasets.
 targets <- apply(combos, 1, paste, collapse = "_")
 
@@ -83,8 +90,9 @@ make(whole_plan, jobs = 2, verbose = 3)
 # so I did not include it in the workflow plan.
 # rmarkdown::render("report.md") # nolint
 
-# Inspect the results
+# Read the results from the drake cache.
 rmspe <- readd(rmspe)
 
-# See the best models.
+# See the best models. The best variables
+# are in the top row under `X1`, `X2`, and `X3`.`
 head(rmspe[order(rmspe$rmspe, decreasing = FALSE), ])
