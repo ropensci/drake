@@ -1,4 +1,4 @@
-# Data frames in R for [Make](https://www.gnu.org/software/make/)
+# drake: stay reproducible and save time
 
 <p align="center">
   <img src="./images/logo-readme.png" alt="">
@@ -14,6 +14,10 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
 [![codecov.io](https://codecov.io/github/wlandau-lilly/drake/coverage.svg?branch=master)](https://codecov.io/github/wlandau-lilly/drake?branch=master)
 
+# Why use drake
+
+`Drake` saves time. It notices any previous work you did and only refreshes the pieces that are out of date or missing. That way, your data analysis project **thinks before it acts**, and your results stay consistent with the code and data they came from. The time you spend learning `drake` will pay off when you no longer have to rerun your work from scratch. The time savings are even greater if you turn on the [parallel computing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), which is friendly, comprehensive, and compatible with small and large projects alike.  `Drake` is more dependable, R-focused, scalable, well-documented, and actively maintained than [other tools with similar functionality](#similar-work).
+
 # What gets done stays done.
 
 Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
@@ -23,12 +27,13 @@ Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.o
 3. Discover an issue.
 4. Restart from scratch.
 
-But `drake` tracks changes. When you update your code or data, `drake` figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steady and smooth.
+`Drake` is more discerning. When you update your code or data, it notices the changes. It figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steady and smooth.
 
 ```r
+library(drake)
 load_basic_example()
 
-# First round.
+# First round: builds 15 targets.
 make(my_plan) 
 
 ## target large
@@ -47,7 +52,7 @@ make(my_plan)
 ## target summ_regression2_small
 ## target 'report.md'
 
-# Change some code.
+# Change some of your code.
 reg2 <- function(d){    
   d$x4 <- d$x ^ 4
   lm(y ~ x4, data = d)
@@ -133,186 +138,19 @@ install_github("wlandau-lilly/drake", build = TRUE)        # Development version
 - You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
 - For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 
-# Where to begin
-
-Outline your work in a data frame.
-
-```r
-library(drake)
-load_basic_example()
-my_plan
-```
-
-```r
-##                    target                                      command
-## 1             'report.md'             knit('report.Rmd', quiet = TRUE)
-## 2                   small                                  simulate(5)
-## 3                   large                                 simulate(50)
-## 4       regression1_small                                  reg1(small)
-## 5       regression1_large                                  reg1(large)
-## 6       regression2_small                                  reg2(small)
-## 7       regression2_large                                  reg2(large)
-## 8  summ_regression1_small suppressWarnings(summary(regression1_small))
-## 9  summ_regression1_large suppressWarnings(summary(regression1_large))
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small))
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large))
-## 12 coef_regression1_small              coefficients(regression1_small)
-## 13 coef_regression1_large              coefficients(regression1_large)
-## 14 coef_regression2_small              coefficients(regression2_small)
-## 15 coef_regression2_large              coefficients(regression2_large)
-```
-
-Then `make()` it to build all your targets.
-
-```r
-make(my_plan)
-```
-
-If a target fails, diagnose it.
-
-```r
-failed()                 # Targets that failed in the most recent `make()`
-diagnose()               # Targets that failed in any previous `make()`
-error <- diagnose(large) # Most recent verbose error log of `large`
-str(error)               # Object of class "error"
-error$calls              # Call stack / traceback
-```
-
-Try out this quickstart yourself.
-
-```r
-library(drake)
-config <- load_basic_example() # Also (over)writes report.Rmd. See drake_config().
-vis_drake_graph(config)        # Click, drag, pan, hover. See arguments 'from' and 'to'.
-outdated(config)               # Which targets need to be (re)built?
-missed(config)                 # Are you missing anything from your workspace?
-check_plan(my_plan)            # Are you missing files? Is your workflow plan okay?
-config <- make(my_plan)        # Run the workflow.
-diagnose(large)                # View error info if the target "large" failed to build.
-outdated(config)               # Everything is up to date.
-vis_drake_graph(config)        # The graph also shows what is up to date.
-```
-
-Dive deeper into the built-in examples.
-
-```r
-drake_example("basic") # Write the code files of the canonical tutorial.
-drake_examples()       # List the other examples.
-vignette("quickstart") # https://cran.r-project.org/package=drake/vignettes/quickstart.html
-```
-
-# Handy functions
-
-`make()`, `plan_drake()`, `failed()`, and `diagnose()` are the most important functions. Beyond that, there are functions to learn about `drake`,
-
-```r
-load_basic_example()
-drake_tip()
-drake_examples()
-drake_example()
-```
-
-set up your workflow plan data frame,
-
-```r
-plan_drake()
-plan_analyses()
-plan_summaries()
-evaluate_plan()
-expand_plan()
-gather_plan()
-wildcard() # From the wildcard package.
-```
-
-explore the dependency network,
-```r
-outdated()
-missed()
-vis_drake_graph() # Same as drake_graph().
-dataframes_graph()
-render_drake_graph()
-read_drake_graph()
-deps()
-knitr_deps()
-tracked()
-```
-
-interact with the cache,
-```r
-clean()
-drake_gc()
-cached()
-imported()
-built()
-readd()
-loadd()
-find_project()
-find_cache()
-```
-
-make use of recorded build times,
-
-```r
-build_times()
-predict_runtime()
-rate_limiting_times()
-```
-
-speed up your project with parallel computing,
-
-```r
-make() # with jobs > 2
-max_useful_jobs()
-parallelism_choices()
-shell_file()
-```
-
-finely tune the caching and hashing,
-
-```r
-available_hash_algos()
-cache_path()
-cache_types()
-configure_cache()
-default_long_hash_algo()
-default_short_hash_algo()
-long_hash()
-short_hash()
-new_cache()
-recover_cache()
-this_cache()
-type_of_cache()
-```
-
-and debug your work.
-```r
-check_plan()
-drake_config()
-read_drake_config()
-diagnose()
-dependency_profile()
-in_progress()
-progress()
-rescue_cache()
-drake_session()
-```
-
 # Documentation
 
-`Drake` has [multiple vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), and the [CRAN page](https://CRAN.R-project.org/package=drake) links to rendered versions.
+`Drake` has a [documentation website](https://wlandau-lilly.github.io/drake/). The [reference section](https://wlandau-lilly.github.io/drake/reference/index.html) organizes the functions by purpose,  and the articles are tutorials taken from the [package vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes).
 
-```r
-vignette(package = "drake") # List the vignettes.
-vignette("application")     # A practical example of drake in action.
-vignette("caution")         # Avoid common pitfalls.
-vignette("debug")           # Debugging and testing.
-vignette("drake")           # High-level intro.
-vignette("graph")           # Visualilze the workflow graph.
-vignette("quickstart")      # Walk through a simple example.
-vignette("parallelism")     # High-performance computing.
-vignette("storage")         # Learn how drake stores your stuff.
-vignette("timing")          # Build times, runtime predictions
-```
+- [Get started](https://wlandau-lilly.github.io/drake/articles/drake.html)
+- [A practical example of drake in action](https://wlandau-lilly.github.io/drake/articles/application.html)
+- [Quickstart](https://wlandau-lilly.github.io/drake/articles/quickstart.html)
+- [Caution](https://wlandau-lilly.github.io/drake/articles/caution.html)
+- [Debugging and testing drake projects](https://wlandau-lilly.github.io/drake/articles/debug.html)
+- [Graphs with drake](https://wlandau-lilly.github.io/drake/articles/graph.html)
+- [Parallel computing](https://wlandau-lilly.github.io/drake/articles/parallelism.html)
+- [Time logging](https://wlandau-lilly.github.io/drake/articles/timing.html)
+- [Storage](https://wlandau-lilly.github.io/drake/articles/storage.html)
 
 # Help and troubleshooting
 
@@ -322,7 +160,7 @@ Please refer to [TROUBLESHOOTING.md](https://github.com/wlandau-lilly/drake/blob
 
 Bug reports, suggestions, and code are welcome. Please see [CONTRIBUTING.md](https://github.com/wlandau-lilly/drake/blob/master/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/wlandau-lilly/drake/blob/master/CONDUCT.md).
 
-# Related work
+# Similar work
 
 ## GNU Make
 

@@ -15,18 +15,18 @@ navbar:
       href: articles/application.html
     - text: Caution
       href: articles/caution.html
-    - text: Debugging and testing drake projects
-      href: articles/debug.html
-    - text: Graphs with drake
-      href: articles/graph.html
-    - text: Parallel computing
-      href: articles/parallelism.html
     - text: Quickstart
       href: articles/quickstart.html
-    - text: Storage
-      href: articles/storage.html
+    - text: Debugging and testing drake projects
+      href: articles/debug.html      
+    - text: Graphs with drake
+      href: articles/graph.html      
+    - text: Parallel computing
+      href: articles/parallelism.html
     - text: Time logging
       href: articles/timing.html
+    - text: Storage
+      href: articles/storage.html
   - text: News
     href: news/index.html
   right:
