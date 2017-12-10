@@ -13,8 +13,6 @@ navbar:
     menu:
     - text: A practical example of drake in action
       href: articles/application.html
-    - text: Caution
-      href: articles/caution.html
     - text: Quickstart
       href: articles/quickstart.html
     - text: Debugging and testing drake projects
@@ -27,6 +25,8 @@ navbar:
       href: articles/timing.html
     - text: Storage
       href: articles/storage.html
+    - text: Caution
+      href: articles/caution.html
   - text: News
     href: news/index.html
   right:
