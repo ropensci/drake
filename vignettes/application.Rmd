@@ -212,8 +212,8 @@ report.md: report.Rmd
 
 There are two main disadvantages to this approach.
 
-1. You would need to write the names of the 84 `models` to the top of the `Makefile"`.
-2. Every target requires a new call to `Rscript`. Given the speed of `lm()`, more time would be spent initializing R sessions than doing the actual work.
+1. You would need to write the names of the 84 `models` to the top of the `Makefile`.
+2. Every target requires a new call to `Rscript`, which means that more time would be spent initializing R sessions than doing the actual work.
 
 # References 
 
