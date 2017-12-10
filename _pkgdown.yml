@@ -135,6 +135,7 @@ reference:
   - '`readd`'
   - '`rescue_cache`'
 - title: Cache configuration
+  contents:
   - '`available_hash_algos`'
   - '`cache_namespaces`'
   - '`cache_path`'
