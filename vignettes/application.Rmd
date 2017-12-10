@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 ![](logo-vignettes.png)
 
-The following data analysis workflow a toy example, but it is based on real data, and it demonstrates the utility of `drake` in real-world projects. If you with to tinker it with yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/application), with `drake_example("application")`. Then, walk through `run.R` yourself.
+The following data analysis workflow is a toy example, but it is based on real data, and it demonstrates the utility of `drake` in real-world projects. If you with to tinker it with yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/application), with `drake_example("application")`. Then, walk through `run.R` yourself.
 
 # Objective and methods
 
