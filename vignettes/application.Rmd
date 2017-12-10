@@ -190,7 +190,7 @@ head(results[order(results$rmspe, decreasing = FALSE), ])
 
 # Comparison with Make
 
-If we were using [Make](https://www.gnu.org/software/make/) for this project, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this pseudo-code sketch.
+If we were using [Make](https://www.gnu.org/software/make/) instead of `drake` with the same set of targets, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this pseudo-code sketch.
 
 <pre><code>models = model_state_year_pcap model_state_year_hwy ... # 84 of these
 
