@@ -20,7 +20,7 @@
 
 # What gets done stays done.
 
-Too many data analysis projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
+Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
 
 1. Launch the code.
 2. Wait for it to finish.
