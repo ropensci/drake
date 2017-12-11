@@ -192,7 +192,7 @@ head(results[order(results$rmspe, decreasing = FALSE), ])
 
 If we were using [Make](https://www.gnu.org/software/make/) instead of `drake` with the same set of targets, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this pseudo-code sketch.
 
-<pre><code>models = model_state_year_pcap model_state_year_hwy ... # 84 of these
+<pre><code>models = model_state_year_pcap.rds model_state_year_hwy.rds ... # 84 of these
 
 model_%
     Rscript -e 'saveRDS(lm(...), ...)'
@@ -200,28 +200,28 @@ model_%
 rmspe_%: model_%
     Rscript -e 'saveRDS(get_rmspe(...), ...)'
 
-rmspe: rmspe_%
+rmspe.rds: rmspe_%
     Rscript -e 'saveRDS(rbind(...), ...)'
 
-rmspe.pdf: rmspe
-    Rscript -e 'ggsave(plot_rmspe(rmspe), "rmspe.pdf")'
+rmspe.pdf: rmspe.rds
+    Rscript -e 'ggplot2::ggsave(plot_rmspe(readRDS("rmspe.rds")), "rmspe.pdf")'
 
 report.md: report.Rmd
     Rscript -e 'knitr::knit("report.Rmd")'
 </code></pre>
 
-There are two main disadvantages to this approach.
+There are three main disadvantages to this approach.
 
-1. You would need to write the names of the 84 `models` to the top of the `Makefile`.
-2. Every target requires a new call to `Rscript`, which means that more time would be spent initializing R sessions than doing the actual work.
+1. Every target requires a new call to `Rscript`, which means that more time is spent initializing R sessions than doing the actual work.
+2. The user must micromanage nearly one hundred output files (in this case, `*.rds` files), which is cumbersome, messy, and inconvenient. `Drake`, on the other hand, automatically manages storage using a [storr cache](https://github.com/richfitz/storr).
+3. The user needs to write the names of the 84 `models` near the top of the `Makefile`, which is less convenient than maintaining a data frame in R.
 
 # References 
 
 - Baltagi, Badi H (2003). Econometric analysis of panel data, John Wiley and sons, http://www.wiley.com/legacy/wileychi/baltagi/.
-- Baltagi, B. H. and N. Pinnoi (1995). "Public capital stock and state productivity growth: further evidence", Empirical Economics, 20, 351–359.
-- Munnell, A. (1990). "Why has productivity growth declined? Productivity and public investment"", New England Economic Review, 3–22.
+- Baltagi, B. H. and N. Pinnoi (1995). "Public capital stock and state productivity growth: further evidence", Empirical Economics, 20, 351-359.
+- Munnell, A. (1990). "Why has productivity growth declined? Productivity and public investment"", New England Economic Review, 3-22.
 - Yves Croissant (2016). Ecdat: Data Sets for Econometrics. R package version 0.3-1. https://CRAN.R-project.org/package=Ecdat.
-
 
 ```{r rmfiles_main, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
