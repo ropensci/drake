@@ -62,7 +62,6 @@ target_namespaces <- function(
 ){
   c(
     cleaned_namespaces(default = default),
-    "build_times",
     "errors",
     "meta",
     "progress"
