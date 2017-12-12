@@ -1,7 +1,7 @@
 drake_context("graph")
 
 test_with_dir("drake searches past outdated targets for parallel stages", {
-  plan <- plan_drake(
+  plan <- drake_plan(
     a = 1,
     b = a,
     d = b,
@@ -22,7 +22,7 @@ test_with_dir("Supplied graph is not an igraph.", {
 })
 
 test_with_dir("graph does not fail if input file is binary", {
-  x <- plan_drake(y = readRDS("input.rds"))
+  x <- drake_plan(y = readRDS("input.rds"))
   saveRDS(as.list(mtcars), "input.rds")
   con <- drake_config(x, verbose = FALSE)
   expect_silent(out <- vis_drake_graph(con))
@@ -34,15 +34,15 @@ test_with_dir("null graph", {
   expect_equal(x, null_graph())
 })
 
-test_with_dir("circular non-DAG plan_drakes quit in error", {
-  p <- plan_drake(a = b, b = c, c = a)
+test_with_dir("circular non-DAG drake_plans quit in error", {
+  p <- drake_plan(a = b, b = c, c = a)
   expect_error(tmp <- capture.output(check_plan(p)))
   expect_error(make(p, verbose = FALSE, session_info = FALSE))
 })
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {
   con <- dbug()
-  con2 <- drake_config(plan_drake(a = 1), verbose = FALSE)
+  con2 <- drake_config(drake_plan(a = 1), verbose = FALSE)
   expect_warning(
     make(
       plan = con$plan,
@@ -81,7 +81,7 @@ test_with_dir("Supplied graph is pruned.", {
 
 test_with_dir("same graphical arrangements for distributed parallelism", {
   e <- new.env()
-  x <- plan_drake(a = 1, b = f(2))
+  x <- drake_plan(a = 1, b = f(2))
   e$f <- function(x) x
   con <- drake_config(x, envir = e, verbose = FALSE)
   expect_equal(2, max_useful_jobs(config = con))
@@ -89,7 +89,7 @@ test_with_dir("same graphical arrangements for distributed parallelism", {
   con$parallelism <- "Makefile"
   expect_equal(2, max_useful_jobs(config = con))
   expect_equal(2, max_useful_jobs(config = con))
-  y <- plan_drake(a = 1, b = 2)
+  y <- drake_plan(a = 1, b = 2)
   tmp <- dataframes_graph(config = con)
   expect_true(is.list(tmp))
 })

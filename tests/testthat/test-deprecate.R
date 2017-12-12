@@ -6,13 +6,13 @@ test_with_dir("deprecation: future", {
 
 test_with_dir("deprecation: make() and config()", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
-  expect_warning(make(plan_drake(x = 1), return_config = TRUE,
+  expect_warning(make(drake_plan(x = 1), return_config = TRUE,
     verbose = FALSE, session_info = FALSE))
-  expect_warning(config(plan_drake(x = 1)))
+  expect_warning(config(drake_plan(x = 1)))
 })
 
 test_with_dir("deprecation: cache functions", {
-  plan <- plan_drake(x = 1)
+  plan <- drake_plan(x = 1)
   expect_silent(make(plan, verbose = FALSE, session_info = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
@@ -21,22 +21,24 @@ test_with_dir("deprecation: cache functions", {
   expect_warning(read_plan())
 })
 
-test_with_dir("plan_drake deprecation", {
+test_with_dir("drake_plan deprecation", {
   pl1 <- expect_warning(drake::plan(x = 1, y = x))
-  pl2 <- plan_drake(x = 1, y = x)
+  pl2 <- drake_plan(x = 1, y = x)
+  pl3 <- expect_warning(plan_drake(x = 1, y = x))
+  expect_equal(pl2, pl3)
   expect_warning(drake::plan())
   expect_warning(drake::plan(x = y, file_targets = TRUE))
   expect_warning(drake::workflow())
   expect_warning(drake::workplan())
   expect_warning(drake::workflow(x = y, file_targets = TRUE))
   expect_warning(drake::workplan(x = y, file_targets = TRUE))
-  expect_warning(check(plan_drake(a = 1)))
+  expect_warning(check(drake_plan(a = 1)))
 })
 
 test_with_dir("drake version checks in previous caches", {
   # We need to be able to set the drake version
   # to check back compatibility.
-  plan <- plan_drake(x = 1)
+  plan <- drake_plan(x = 1)
   expect_silent(make(plan, verbose = FALSE))
   x <- get_cache()
   expect_warning(session())
@@ -47,18 +49,18 @@ test_with_dir("drake version checks in previous caches", {
 })
 
 test_with_dir("generative templating deprecation", {
-  expect_warning(drake::evaluate(plan_drake()))
-  expect_warning(drake::expand(plan_drake()))
-  expect_warning(drake::gather(plan_drake()))
-  datasets <- plan_drake(
+  expect_warning(drake::evaluate(drake_plan()))
+  expect_warning(drake::expand(drake_plan()))
+  expect_warning(drake::gather(drake_plan()))
+  datasets <- drake_plan(
     small = simulate(5),
     large = simulate(50))
-  methods <- plan_drake(
+  methods <- drake_plan(
     regression1 = reg1(..dataset..), # nolint
     regression2 = reg2(..dataset..)) # nolint
   expect_warning(
     analyses <- analyses(methods, datasets = datasets))
-  summary_types <- plan_drake(
+  summary_types <- drake_plan(
     summ = summary(..analysis..), # nolint
     coef = coefficients(..analysis..)) # nolint
   expect_warning(
@@ -66,7 +68,7 @@ test_with_dir("generative templating deprecation", {
 })
 
 test_with_dir("deprecated graphing functions", {
-  pl <- plan_drake(a = 1)
+  pl <- drake_plan(a = 1)
   expect_warning(build_graph(pl))
   con <- drake_config(plan = pl)
   expect_warning(out <- plot_graph(config = con))

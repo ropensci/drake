@@ -4,7 +4,7 @@
 \alias{config}
 \title{Deprecated function \code{config}}
 \usage{
-config(plan = plan_drake(), targets = drake::possible_targets(plan),
+config(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   parallelism = drake::default_parallelism(), jobs = 1,

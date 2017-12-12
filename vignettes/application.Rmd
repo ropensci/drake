@@ -130,7 +130,7 @@ rmspe_results_plan <- gather_plan(
 At the end, let's generate a pdf plot of the RMSPE scores and a [knitr](https://yihui.name/knitr/) report.
 
 ```{r masterknitrreport}
-output_plan <- plan_drake(
+output_plan <- drake_plan(
   rmspe.pdf = ggsave(filename = "rmspe.pdf", plot = plot_rmspe(rmspe)),
   report.md = knit("report.Rmd", quiet = TRUE),
   file_targets = TRUE,

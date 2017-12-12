@@ -76,5 +76,5 @@ make(my_plan, trigger = "missing") # Just build missing targets.
 }
 }
 \seealso{
-\code{\link{plan_drake}}, \code{\link{make}}
+\code{\link{drake_plan}}, \code{\link{make}}
 }

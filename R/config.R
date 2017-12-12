@@ -18,7 +18,7 @@
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso \code{\link{make_with_config}}, \code{\link{make}},
-#' \code{\link{plan_drake}}, \code{\link{vis_drake_graph}}
+#' \code{\link{drake_plan}}, \code{\link{vis_drake_graph}}
 #' @param plan same as for \code{\link{make}}
 #' @param targets same as for \code{\link{make}}
 #' @param envir same as for \code{\link{make}}
@@ -74,7 +74,7 @@
 #' })
 #' }
 drake_config <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -216,7 +216,7 @@ do_prework <- function(config, verbose_packages) {
 #' possible_targets(my_plan)
 #' })
 #' }
-possible_targets <- function(plan = plan_drake()) {
+possible_targets <- function(plan = drake_plan()) {
   plan <- sanitize_plan(plan)
   as.character(plan$target)
 }

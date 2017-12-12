@@ -39,7 +39,7 @@ dataset_wildcard <- function(){
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan workflow plan data frame, similar to one produced by
-#' \code{ink{plan_drake}}
+#' \code{ink{drake_plan}}
 #'
 #' @param rules Named list with wildcards as names and vectors of
 #' replacements
@@ -64,11 +64,11 @@ dataset_wildcard <- function(){
 #'
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
-#' datasets <- plan_drake(
+#' datasets <- drake_plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' # Create a template workflow plan for the analyses.
-#' methods <- plan_drake(
+#' methods <- drake_plan(
 #'   regression1 = reg1(dataset__),
 #'   regression2 = reg2(dataset__))
 #' # Evaluate the wildcards in the template
@@ -87,7 +87,7 @@ dataset_wildcard <- function(){
 #' # Workflow plans can have multiple wildcards.
 #' # Each combination of wildcard values will be used
 #' # Except when expand is FALSE.
-#' x <- plan_drake(draws = rnorm(mean = Mean, sd = Sd))
+#' x <- drake_plan(draws = rnorm(mean = Mean, sd = Sd))
 #' evaluate_plan(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
 evaluate_plan <- function(
   plan,
@@ -161,7 +161,7 @@ evaluations <- function(
 #' the names of the new targets.
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
-#' datasets <- plan_drake(
+#' datasets <- drake_plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' # Create replicates. If you want repeat targets,
@@ -194,7 +194,7 @@ expand_plan <- function(plan, values = NULL){
 #' \code{\link{rbind}(...)}, or similar.
 #' @examples
 #' # Workflow plan for datasets:
-#' datasets <- plan_drake(
+#' datasets <- drake_plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' # Create a new target that brings the datasets together.
@@ -225,7 +225,7 @@ gather_plan <- function(
 #' @description Generate a workflow plan data frame to
 #' analyze multiple datasets using multiple methods of analysis.
 #' @seealso \code{\link{plan_summaries}},
-#'  \code{\link{make}}, \code{\link{plan_drake}}
+#'  \code{\link{make}}, \code{\link{drake_plan}}
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.
 #' @param plan workflow plan data frame of analysis methods.
@@ -238,11 +238,11 @@ gather_plan <- function(
 #' to make the datasets.
 #' @examples
 #' # Create the piece of the workflow plan for the datasets.
-#' datasets <- plan_drake(
+#' datasets <- drake_plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' # Create a template for the analysis methods.
-#' methods <- plan_drake(
+#' methods <- drake_plan(
 #'   regression1 = reg1(dataset__),
 #'   regression2 = reg2(dataset__))
 #' # Evaluate the wildcards to create the part of the workflow plan
@@ -269,7 +269,7 @@ plan_analyses <- function(plan, datasets){
 #' @description Generate a workflow plan data frame for summarizing
 #' multiple analyses of multiple datasets multiple ways.
 #' @seealso \code{\link{plan_analyses}}, \code{\link{make}},
-#' \code{\link{plan_drake}}
+#' \code{\link{drake_plan}}
 #' @export
 #' @return An evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.
@@ -286,18 +286,18 @@ plan_analyses <- function(plan, datasets){
 #' for more.
 #' @examples
 #' # Create the part of the workflow plan data frame for the datasets.
-#' datasets <- plan_drake(
+#' datasets <- drake_plan(
 #'   small = simulate(5),
 #'   large = simulate(50))
 #' # Create a template workflow plan containing the analysis methods.
-#' methods <- plan_drake(
+#' methods <- drake_plan(
 #'   regression1 = reg1(dataset__),
 #'   regression2 = reg2(dataset__))
 #' # Generate the part of the workflow plan to analyze the datasets.
 #' analyses <- plan_analyses(methods, datasets = datasets)
 #' # Create a template workflow plan dataset with the
 #' # types of summaries you want.
-#' summary_types <- plan_drake(
+#' summary_types <- drake_plan(
 #'   summ = summary(analysis__),
 #'   coef = coefficients(analysis__))
 #' # Evaluate the appropriate wildcards to encode the summary targets.

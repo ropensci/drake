@@ -18,7 +18,7 @@ test_with_dir("clean() works if there is no cache already", {
 test_with_dir("bad/corrupt caches, no progress", {
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
-  x <- plan_drake(a = 1)
+  x <- drake_plan(a = 1)
   make(x, verbose = FALSE, session_info = FALSE, log_progress = FALSE)
   expect_equal(get_cache()$list(namespace = "progress"), character(0))
   clean()

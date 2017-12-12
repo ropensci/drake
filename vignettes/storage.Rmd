@@ -186,7 +186,7 @@ short_hash(faster_cache)
 
 long_hash(faster_cache)
 
-new_plan <- plan_drake(
+new_plan <- drake_plan(
   simple = 1 + 1
 )
 
@@ -224,7 +224,7 @@ In addition to `storr_rds()`, `drake` supports in-memory caches created from `st
 
 ```{r memory_caches}
 memory_cache <- storr_environment()
-other_plan <- plan_drake(
+other_plan <- drake_plan(
   some_data = rnorm(50),
   more_data = rpois(75, lambda = 10),
   result = mean(c(some_data, more_data))

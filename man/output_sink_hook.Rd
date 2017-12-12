@@ -29,7 +29,7 @@ try(
   silent = FALSE
 )
 # Create a new workflow plan.
-x <- plan_drake(loud = cat(1234), bad = stop(5678))
+x <- drake_plan(loud = cat(1234), bad = stop(5678))
 # Run the project. Standard output (via cat() and print())
 # should be suppressed, but messages should persist.
 try(make(x, hook = output_sink_hook), silent = FALSE)

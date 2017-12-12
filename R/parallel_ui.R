@@ -78,7 +78,7 @@ drake_batchtools_tmpl_file <- function(
 #'   powered by the \code{future} and \code{future.batchtools}
 #'   packages. First, set the parallel backend globally using
 #'   \code{future::plan()}.
-#'   Then, apply the backend to your plan_drake
+#'   Then, apply the backend to your drake_plan
 #'   using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
 #'   But be warned: the environment for each target needs to be set up
 #'   from scratch, so this backend type is higher overhead than either

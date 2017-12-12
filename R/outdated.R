@@ -12,7 +12,7 @@
 #' If needed, rerun \code{\link{drake_config}()} early and often.
 #' See the details in the help file for \code{\link{drake_config}()}.
 #' @export
-#' @seealso \code{\link{missed}}, \code{\link{plan_drake}},
+#' @seealso \code{\link{missed}}, \code{\link{drake_plan}},
 #' \code{\link{make}}, \code{\link{vis_drake_graph}}
 #' @return Character vector of the names of outdated targets.
 #' @param config option internal runtime parameter list of
@@ -59,7 +59,7 @@ outdated <-  function(config, make_imports = TRUE){
 }
 
 #' @title Function \code{missed}
-#' @description Report any import objects required by your plan_drake
+#' @description Report any import objects required by your drake_plan
 #' plan but missing from your workspace.
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export

@@ -86,5 +86,5 @@ build_times()
 \seealso{
 \code{\link{built}}, \code{\link{imported}},
 \code{\link{readd}}, \code{\link{loadd}},
-\code{\link{plan_drake}}, \code{\link{make}}
+\code{\link{drake_plan}}, \code{\link{make}}
 }

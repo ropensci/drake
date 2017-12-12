@@ -50,10 +50,10 @@ A common pitfall is using the `evaluate_plan()` function to expand wildcards aft
 
 ```{r filethenevaluate}
 library(magrittr) # for the pipe operator %>%
-plan_drake(
+drake_plan(
   data = readRDS("data_DATASIZE__rds")
 ) %>%
-  rbind(drake::plan_drake(
+  rbind(drake::drake_plan(
     file.csv = write.csv(
       data_DATASIZE__, # nolint
       "file_DATASIZE__csv"
@@ -70,13 +70,13 @@ The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are 
 
 ```{r correctevaldatasize}
 rules <- list(DATASIZE__ = c("small", "large"))
-datasets <- plan_drake(data = readRDS("data_DATASIZE__rds")) %>%
+datasets <- drake_plan(data = readRDS("data_DATASIZE__rds")) %>%
   evaluate_plan(rules = rules)
 ```
 
 Plan the CSV files separately.
 ```{r correctevaldatasize2}
-files <- plan_drake(
+files <- drake_plan(
   file = write.csv(data_DATASIZE__, "file_DATASIZE__csv"), # nolint
   strings_in_dots = "literals"
 ) %>%
@@ -102,16 +102,16 @@ For finer control over target names in cases like this, you may want to use the 
 
 ## Commands are NOT perfectly flexible.
 
-In your workflow plan data frame (produced by `plan_drake()` and accepted by `make()`), your commands can usually be flexible R expressions.
+In your workflow plan data frame (produced by `drake_plan()` and accepted by `make()`), your commands can usually be flexible R expressions.
 
 ```{r tidyplancaution}
-plan_drake(
+drake_plan(
   target1 = 1 + 1 - sqrt(sqrt(3)),
   target2 = my_function(web_scraped_data) %>% my_tidy
 )
 ```
 
-However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `plan_drake(f = function(x){x + 1})` or `plan_drake(f = y ~ x)` in some use cases, but be careful. It is generally to define functions and formulas in your workspace and then let `make()` import them. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `vis_drake_graph()` and `build_drake_graph()` to see the dependency structure of your project.
+However, please try to avoid formulas and function definitions in your commands. You may be able to get away with `drake_plan(f = function(x){x + 1})` or `drake_plan(f = y ~ x)` in some use cases, but be careful. It is generally to define functions and formulas in your workspace and then let `make()` import them. (Alternatively, use the `envir` argument to `make()` to tightly control which imported functions are available.) Use the `check_plan()` function to help screen and quality-control your workflow plan data frame, use `tracked()` to see the items that are reproducibly tracked, and use `vis_drake_graph()` and `build_drake_graph()` to see the dependency structure of your project.
 
 # Execution
 
@@ -135,7 +135,7 @@ f <- function(){
   stop("unusual error")
 }
 
-bad_plan <- plan_drake(target = f())
+bad_plan <- drake_plan(target = f())
 
 withr::with_message_sink(
   stdout(),
@@ -173,7 +173,7 @@ eval(
   ),
   envir = envir
 )
-myplan <- plan_drake(out = f(1:3))
+myplan <- drake_plan(out = f(1:3))
 
 make(myplan, envir = envir)
 

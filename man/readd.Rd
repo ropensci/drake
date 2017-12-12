@@ -57,6 +57,6 @@ readd("'report.md'")
 }
 \seealso{
 \code{\link{loadd}}, \code{\link{cached}},
-\code{\link{built}}, \code{link{imported}}, \code{\link{plan_drake}},
+\code{\link{built}}, \code{link{imported}}, \code{\link{drake_plan}},
 \code{\link{make}}
 }

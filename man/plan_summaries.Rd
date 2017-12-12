@@ -32,18 +32,18 @@ multiple analyses of multiple datasets multiple ways.
 }
 \examples{
 # Create the part of the workflow plan data frame for the datasets.
-datasets <- plan_drake(
+datasets <- drake_plan(
   small = simulate(5),
   large = simulate(50))
 # Create a template workflow plan containing the analysis methods.
-methods <- plan_drake(
+methods <- drake_plan(
   regression1 = reg1(dataset__),
   regression2 = reg2(dataset__))
 # Generate the part of the workflow plan to analyze the datasets.
 analyses <- plan_analyses(methods, datasets = datasets)
 # Create a template workflow plan dataset with the
 # types of summaries you want.
-summary_types <- plan_drake(
+summary_types <- drake_plan(
   summ = summary(analysis__),
   coef = coefficients(analysis__))
 # Evaluate the appropriate wildcards to encode the summary targets.
@@ -58,5 +58,5 @@ my_plan
 }
 \seealso{
 \code{\link{plan_analyses}}, \code{\link{make}},
-\code{\link{plan_drake}}
+\code{\link{drake_plan}}
 }

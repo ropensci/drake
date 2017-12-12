@@ -15,7 +15,7 @@ produced by both \code{\link{drake_config}()} and \code{\link{make}()}.}
 Character vector of names of missing objects and files.
 }
 \description{
-Report any import objects required by your plan_drake
+Report any import objects required by your drake_plan
 plan but missing from your workspace.
 IMPORTANT: you must be in the root directory of your project.
 }

@@ -34,7 +34,7 @@
     - `examples_drake()` => `drake_examples()`
     - `expand()` => `expand_plan()`
     - `gather()` => `gather_plan()`
-    - `plan()`, `workflow()`, `workplan()` => `plan_drake()`
+    - `plan()`, `workflow()`, `workplan()` => `drake_plan()`
     - `plot_graph()` => `vis_drake_graph()`
     - `read_config()` => `read_drake_config()`
     - `read_graph()` => `read_drake_graph()`

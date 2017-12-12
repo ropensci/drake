@@ -1,5 +1,5 @@
 sanitize_plan <- function(plan){
-  for (field in plan_drake_character_columns()){
+  for (field in drake_plan_character_columns()){
     if (!is.null(plan[[field]])){
       plan[[field]] <- str_trim(plan[[field]], side = "both")
     }
@@ -10,7 +10,7 @@ sanitize_plan <- function(plan){
   plan[nchar(plan$target) > 0, ]
 }
 
-plan_drake_character_columns <- function(){
+drake_plan_character_columns <- function(){
   c(
     "command",
     "target",
@@ -18,9 +18,9 @@ plan_drake_character_columns <- function(){
   )
 }
 
-plan_drake_columns <- function(){
+drake_plan_columns <- function(){
   c(
-    plan_drake_character_columns(),
+    drake_plan_character_columns(),
     "cpu",
     "elapsed",
     "evaluator",

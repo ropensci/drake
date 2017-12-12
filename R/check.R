@@ -2,11 +2,11 @@
 #' @description Check a workflow plan, etc. for obvious
 #' errors such as circular dependencies and
 #' missing input files.
-#' @seealso \code{ink{plan_drake}}, \code{\link{make}}
+#' @seealso \code{ink{drake_plan}}, \code{\link{make}}
 #' @export
 #' @return Invisibly return \code{plan}.
 #' @param plan workflow plan data frame, possibly from
-#' \code{\link{plan_drake}()}.
+#' \code{\link{drake_plan}()}.
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See \code{\link{new_cache}()}
@@ -24,7 +24,7 @@
 #' })
 #' }
 check_plan <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
@@ -62,7 +62,7 @@ check_drake_config <- function(config) {
 }
 
 assert_standard_columns <- function(config){
-  x <- setdiff(colnames(config$plan), plan_drake_columns())
+  x <- setdiff(colnames(config$plan), drake_plan_columns())
   if (length(x)){
     warning(
       "Non-standard columns in workflow plan:\n",

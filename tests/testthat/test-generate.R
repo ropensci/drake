@@ -1,14 +1,14 @@
 drake_context("generate")
 
 test_with_dir("empty generative args", {
-  x <- plan_drake(a = 1, b = FUNCTION())
+  x <- drake_plan(a = 1, b = FUNCTION())
   expect_equal(evaluate_plan(x), x)
   expect_equal(evaluations(x), x)
   expect_equal(expand_plan(x), x)
 })
 
 test_with_dir("evaluate, expand, and gather", {
-  df <- plan_drake(data = simulate(center = MU, scale = SIGMA))
+  df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
@@ -84,8 +84,8 @@ test_with_dir("evaluate, expand, and gather", {
 })
 
 test_with_dir("analyses and summaries", {
-  datasets <- plan_drake(small = simulate(5), large = simulate(50))
-  methods <- plan_drake(
+  datasets <- drake_plan(small = simulate(5), large = simulate(50))
+  methods <- drake_plan(
     regression1 = reg1(dataset__),
     regression2 = reg2(dataset__)
   )
@@ -106,10 +106,10 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(analyses, x)
 
-  m2 <- plan_drake(regression1 = reg1(n), regression2 = reg2(n))
+  m2 <- drake_plan(regression1 = reg1(n), regression2 = reg2(n))
   expect_equal(plan_analyses(m2, data = datasets), m2)
 
-  no_analyses <- plan_drake(
+  no_analyses <- drake_plan(
     summ = summary(dataset__),
     coef = coefficients(dataset__)
   )
@@ -119,7 +119,7 @@ test_with_dir("analyses and summaries", {
     )
   )
 
-  summary_types <- plan_drake(
+  summary_types <- drake_plan(
     summ = summary(analysis__),
     coef = coefficients(analysis__)
   )
@@ -149,7 +149,7 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(results, x)
 
-  summary_types <- plan_drake(
+  summary_types <- drake_plan(
     summ = summary(analysis__, dataset__),
     coef = coefficients(analysis__)
   )
@@ -206,7 +206,7 @@ test_with_dir("analyses and summaries", {
 
   newtypes <- rbind(
     summary_types,
-    plan_drake(
+    drake_plan(
       other = myother(dataset__)
     )
   )

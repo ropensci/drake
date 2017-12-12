@@ -19,7 +19,7 @@
 #'   silent = FALSE
 #' )
 #' # Make a new workflow plan.
-#' x <- plan_drake(loud = cat(1234), bad = stop(5678))
+#' x <- drake_plan(loud = cat(1234), bad = stop(5678))
 #' # Test out the silencer hook on a drake project.
 #' # All output should be suppressed.
 #' try(make(x, hook = silencer_hook), silent = FALSE)
@@ -53,7 +53,7 @@ silencer_hook <- function(code){
 #'   silent = FALSE
 #' )
 #' # Create a new workflow plan.
-#' x <- plan_drake(loud = cat(1234), bad = stop(5678))
+#' x <- drake_plan(loud = cat(1234), bad = stop(5678))
 #' # Run the project. All messages should be suppressed.
 #' try(make(x, hook = message_sink_hook), silent = FALSE)
 #' })
@@ -88,7 +88,7 @@ message_sink_hook <- function(code){
 #'   silent = FALSE
 #' )
 #' # Create a new workflow plan.
-#' x <- plan_drake(loud = cat(1234), bad = stop(5678))
+#' x <- drake_plan(loud = cat(1234), bad = stop(5678))
 #' # Run the project. Standard output (via cat() and print())
 #' # should be suppressed, but messages should persist.
 #' try(make(x, hook = output_sink_hook), silent = FALSE)

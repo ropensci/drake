@@ -1,5 +1,5 @@
 #' @title Function \code{vis_drake_graph}
-#' @description Plot the dependency structure of your plan_drake.
+#' @description Plot the dependency structure of your drake_plan.
 #' IMPORTANT: you must be in the root directory of your project.
 #' To save time for repeated plotting, this function is divided into
 #' \code{\link{dataframes_graph}()} and \code{\link{render_drake_graph}()}.

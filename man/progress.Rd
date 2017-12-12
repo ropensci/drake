@@ -68,5 +68,5 @@ progress(no_imported_objects = TRUE) # Ignore imported R objects.
 \seealso{
 \code{\link{diagnose}}, \code{\link{session}},
 \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
 }

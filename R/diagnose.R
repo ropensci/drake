@@ -10,7 +10,7 @@
 #' for ordinary error messages printed to the console.
 #' @seealso
 #' \code{\link{failed}}, \code{\link{progress}},
-#' \code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
+#' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
 #' @export
 #' @return Either a character vector of target names or an object
 #' of class \code{"error"}.
@@ -46,7 +46,7 @@
 #'   stop("unusual error")
 #' }
 #' # Create a workflow plan doomed to failure.
-#' bad_plan <- plan_drake(my_target = f())
+#' bad_plan <- drake_plan(my_target = f())
 #' # Running the project should generate an error
 #' # when trying to build 'my_target'.
 #' try(make(bad_plan), silent = FALSE)

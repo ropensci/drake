@@ -82,9 +82,9 @@ load_basic_example <- function(
     simulate <- knit <- my_knit <- report_dependencies <-
     reg1 <- reg2 <- coef_regression2_small <- NULL
 
-  datasets <- plan_drake(small = simulate(5), large = simulate(50))
+  datasets <- drake_plan(small = simulate(5), large = simulate(50))
 
-  methods <- plan_drake(list = c(
+  methods <- drake_plan(list = c(
     regression1 = "reg1(dataset__)",
     regression2 = "reg2(dataset__)"))
 
@@ -92,25 +92,25 @@ load_basic_example <- function(
   #   values = datasets$output).
   analyses <- plan_analyses(methods, datasets = datasets)
 
-  summary_types <- plan_drake(list = c(
+  summary_types <- drake_plan(list = c(
     summ = "suppressWarnings(summary(analysis__))",
     coef = "coefficients(analysis__)"))
 
   # plan_summaries() also uses evaluate_plan(): once with expand = TRUE,
   # once with expand = FALSE
-  # skip 'gather' (plan_drake my_plan is more readable)
+  # skip 'gather' (drake_plan my_plan is more readable)
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
 
   # External file targets and dependencies should be
   # single-quoted.  Use double quotes to remove any special
   # meaning from character strings.  Single quotes inside
   # imported functions are ignored, so this mechanism only
-  # works inside the plan_drake my_plan data frame.  WARNING:
+  # works inside the drake_plan my_plan data frame.  WARNING:
   # drake cannot track entire directories (folders).
-  report <- plan_drake(report.md = knit("report.Rmd", quiet = TRUE),
+  report <- drake_plan(report.md = knit("report.Rmd", quiet = TRUE),
     file_targets = TRUE, strings_in_dots = "filenames")
 
-  # Row order doesn't matter in the plan_drake my_plan.
+  # Row order doesn't matter in the drake_plan my_plan.
   envir$my_plan <- rbind(report, datasets,
     analyses, results)
 

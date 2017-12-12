@@ -7,7 +7,7 @@ test_with_dir("available hash algos", {
 })
 
 test_with_dir("illegal hashes", {
-  x <- plan_drake(a = 1)
+  x <- drake_plan(a = 1)
   expect_error(
     make(
       x,

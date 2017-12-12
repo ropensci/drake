@@ -96,7 +96,7 @@ backend <- function(...){
 #' @examples
 #' # See ?as_drake_filename for examples.
 build_graph <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -132,7 +132,7 @@ build_graph <- function(
 #' @examples
 #' # See ?check_plan for examples.
 check <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
@@ -190,7 +190,7 @@ check <- function(
 #' @examples
 #' # See ?drake_config for the examples.
 config <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -452,18 +452,18 @@ gather <- function(
 }
 
 #' @title Deprecated function \code{plan}
-#' @description Use \code{\link{plan_drake}()} instead.
+#' @description Use \code{\link{drake_plan}()} instead.
 #' @details Deprecated on 2017-10.
-#' @seealso \code{\link{plan_drake}}
+#' @seealso \code{\link{drake_plan}}
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... Same as for \code{\link{plan_drake}()}.
-#' @param list Same as for \code{\link{plan_drake}()}.
-#' @param file_targets Same as for \code{\link{plan_drake}()}.
-#' @param strings_in_dots Same as for \code{\link{plan_drake}()}.
+#' @param ... Same as for \code{\link{drake_plan}()}.
+#' @param list Same as for \code{\link{drake_plan}()}.
+#' @param file_targets Same as for \code{\link{drake_plan}()}.
+#' @param strings_in_dots Same as for \code{\link{drake_plan}()}.
 #' @examples
-#' # See ?plan_drake for examples.
+#' # See ?drake_plan for examples.
 plan <- function(
   ...,
   list = character(0),
@@ -476,7 +476,64 @@ plan <- function(
     msg = paste(
       "drake::plan() is deprecated due to a",
       "conflict with future::plan().",
-      "Use plan_drake() instead."
+      "Use drake_plan() instead."
+    )
+  )
+  strings_in_dots <- match.arg(strings_in_dots)
+  dots <- match.call(expand.dots = FALSE)$...
+  commands_dots <- lapply(dots, wide_deparse)
+  names(commands_dots) <- names(dots)
+  commands <- c(commands_dots, list)
+  targets <- names(commands)
+  commands <- as.character(commands)
+  if (!length(commands)){
+    return(
+      data.frame(
+        target = character(0),
+        command = character(0)
+      )
+    )
+  }
+  plan <- data.frame(
+    target = targets,
+    command = commands,
+    stringsAsFactors = FALSE
+  )
+  from_dots <- plan$target %in% names(commands_dots)
+  if (file_targets){
+    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
+  }
+  if (strings_in_dots == "filenames"){
+    plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
+  }
+  sanitize_plan(plan)
+}
+
+#' @title Deprecated function \code{plan_drake}
+#' @description Use \code{\link{drake_plan}()} instead.
+#' @details Deprecated on 2017-12-12.
+#' @seealso \code{\link{drake_plan}}
+#' @export
+#' @keywords internal
+#' @return A data frame of targets and commands.
+#' @param ... Same as for \code{\link{drake_plan}()}.
+#' @param list Same as for \code{\link{drake_plan}()}.
+#' @param file_targets Same as for \code{\link{drake_plan}()}.
+#' @param strings_in_dots Same as for \code{\link{drake_plan}()}.
+#' @examples
+#' # See ?drake_plan for examples.
+plan_drake <- function(
+  ...,
+  list = character(0),
+  file_targets = FALSE,
+  strings_in_dots = c("filenames", "literals")
+){
+  .Deprecated(
+    "plan_drake",
+    package = "drake",
+    msg = paste(
+      "plan_drake() is deprecated.",
+      "Use drake_plan() instead."
     )
   )
   strings_in_dots <- match.arg(strings_in_dots)
@@ -547,7 +604,7 @@ plan <- function(
 #' @examples
 #' # See ?vis_drake_graph for examples.
 plot_graph <- function(
-  plan = plan_drake(), targets = drake::possible_targets(plan),
+  plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose),
@@ -862,12 +919,12 @@ summaries <- function(
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... same as for \code{drake::\link{plan_drake}()}
-#' @param list same as for \code{drake::\link{plan_drake}()}
-#' @param file_targets same as for \code{drake::\link{plan_drake}()}
-#' @param strings_in_dots same as for \code{drake::\link{plan_drake}()}
+#' @param ... same as for \code{drake::\link{drake_plan}()}
+#' @param list same as for \code{drake::\link{drake_plan}()}
+#' @param file_targets same as for \code{drake::\link{drake_plan}()}
+#' @param strings_in_dots same as for \code{drake::\link{drake_plan}()}
 #' @examples
-#' # See ?plan_drake for examples.
+#' # See ?drake_plan for examples.
 workflow <- function(
   ...,
   list = character(0),
@@ -877,7 +934,7 @@ workflow <- function(
   .Deprecated(
     "workflow",
     package = "drake",
-    msg = "workflow() is deprecated. Use plan_drake() instead."
+    msg = "workflow() is deprecated. Use drake_plan() instead."
   )
   strings_in_dots <- match.arg(strings_in_dots)
   dots <- match.call(expand.dots = FALSE)$...
@@ -917,12 +974,12 @@ workflow <- function(
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... same as for \code{drake::\link{plan_drake}()}
-#' @param list same as for \code{drake::\link{plan_drake}()}
-#' @param file_targets same as for \code{drake::\link{plan_drake}()}
-#' @param strings_in_dots same as for \code{drake::\link{plan_drake}()}
+#' @param ... same as for \code{drake::\link{drake_plan}()}
+#' @param list same as for \code{drake::\link{drake_plan}()}
+#' @param file_targets same as for \code{drake::\link{drake_plan}()}
+#' @param strings_in_dots same as for \code{drake::\link{drake_plan}()}
 #' @examples
-#' # See ?plan_drake for examples.
+#' # See ?drake_plan for examples.
 workplan <- function(
   ...,
   list = character(0),
@@ -930,9 +987,9 @@ workplan <- function(
   strings_in_dots = c("filenames", "literals")
 ){
   .Deprecated(
-    "plan_drake",
+    "drake_plan",
     package = "drake",
-    msg = "workplan() is deprecated. Use plan_drake() instead."
+    msg = "workplan() is deprecated. Use drake_plan() instead."
   )
   strings_in_dots <- match.arg(strings_in_dots)
   dots <- match.call(expand.dots = FALSE)$...

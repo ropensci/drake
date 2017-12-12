@@ -170,7 +170,7 @@ check_plan(my_plan)
 The workflow plan data frame `my_plan` would be a pain to write by hand, so `drake` has functions to help you.
 
 ```{r datasets}
-my_datasets <- plan_drake(
+my_datasets <- drake_plan(
   small = simulate(5),
   large = simulate(50))
 my_datasets
@@ -185,7 +185,7 @@ expand_plan(my_datasets, values = c("rep1", "rep2"))
 Each dataset is analyzed multiple ways.
 
 ```{r methods}
-methods <- plan_drake(
+methods <- drake_plan(
   regression1 = reg1(dataset__), # nolint
   regression2 = reg2(dataset__)) # nolint
 methods
@@ -201,7 +201,7 @@ my_analyses
 Next, we summarize each analysis of each dataset using summary statistics and regression coefficients.
 
 ```{r summaries}
-summary_types <- plan_drake(
+summary_types <- drake_plan(
   summ = suppressWarnings(summary(analysis__)), # nolint
   coef = coefficients(analysis__)) # nolint
 summary_types
@@ -216,7 +216,7 @@ The `gather` feature reduces a collection of targets to a single target. The res
 For the dynamic report `'report.Rmd'`/`'report.md'`, be sure the file names are single-quoted. Single quotes denote file targets/imports, and double quotes denote literal strings that should not be treated as dependencies. To tell `drake` to look for the other dependencies of `'report.md'`, be sure the source file `'report.Rmd'` exists and `knit()` is in the workflow plan command. That way, `drake` searches the active code chunks in `'report.Rmd'` for any targets/imports mentioned in calls to `loadd()` and `readd()`.
 
 ```{r reportplan}
-report <- plan_drake(
+report <- drake_plan(
   report.md = knit('report.Rmd', quiet = TRUE), # nolint
   file_targets = TRUE, strings_in_dots = "filenames")
 report
@@ -234,7 +234,7 @@ my_plan
 If your workflow does not fit the rigid datasets/analyses/summaries framework, consider using functions `expand_plan()`, `evaluate_plan()`, and `gather_plan()`.
 
 ```{r more_expansions_and_plans}
-df <- plan_drake(data = simulate(center = MU, scale = SIGMA))
+df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
 df
 
 df <- expand_plan(df, values = c("rep1", "rep2"))
@@ -397,7 +397,7 @@ new_simulation <- function(n){
   data.frame(x = rnorm(n), y = rnorm(n))
 }
 
-additions <- plan_drake(
+additions <- drake_plan(
   new_data = new_simulation(36) + sqrt(10))
 additions
 

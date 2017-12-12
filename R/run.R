@@ -1,6 +1,6 @@
 run_command <- function(target, command, seed, config){
   retries <- 0
-  max_retries <- plan_drake_override(
+  max_retries <- drake_plan_override(
     target = target,
     field = "retries",
     config = config
@@ -60,7 +60,7 @@ resolve_timeouts <- function(target, config){
   timeouts <- lapply(
     X = keys,
     FUN = function(field){
-      plan_drake_override(
+      drake_plan_override(
         target = target,
         field = field,
         config = config

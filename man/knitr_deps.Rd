@@ -15,7 +15,7 @@ A character vector of the names of dependencies.
 }
 \description{
 Find the dependencies of a dynamic report. To
-enable drake to watch for these dependencies, your plan_drake
+enable drake to watch for these dependencies, your drake_plan
 plan command to compile this report must make direct use of
 \code{knitr::knit()}.
 That is, it must look something like \code{knit('your_report.Rmd')}

@@ -4,13 +4,13 @@
 \alias{check_plan}
 \title{Function \code{check_plan}}
 \usage{
-check_plan(plan = plan_drake(), targets = drake::possible_targets(plan),
+check_plan(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
   verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
-\code{\link{plan_drake}()}.}
+\code{\link{drake_plan}()}.}
 
 \item{targets}{character vector of targets to make}
 
@@ -43,5 +43,5 @@ suppressWarnings(check_plan(my_plan))
 }
 }
 \seealso{
-\code{ink{plan_drake}}, \code{\link{make}}
+\code{ink{drake_plan}}, \code{\link{make}}
 }

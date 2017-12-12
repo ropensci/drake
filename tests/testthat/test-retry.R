@@ -18,7 +18,7 @@ test_with_dir("retries", {
       stop("this error is deliberate and expected.")
     }
   }
-  pl <- plan_drake(x = f())
+  pl <- drake_plan(x = f())
   expect_equal(diagnose(), character(0))
 
   debrief_retries <- function(){

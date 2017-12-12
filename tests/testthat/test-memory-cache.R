@@ -10,7 +10,7 @@ test_with_dir("storr_environment is usable", {
   expect_equal(short_hash(x), "murmur32")
   expect_equal(long_hash(x), "sha1")
   expect_error(drake_session(cache = x))
-  pln <- plan_drake(y = 1)
+  pln <- drake_plan(y = 1)
   config <- make(pln, cache = x, verbose = FALSE, session_info = FALSE)
   expect_equal(cached(cache = x), "y")
   expect_false(file.exists(default_cache_path()))

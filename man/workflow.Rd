@@ -8,13 +8,13 @@ workflow(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"))
 }
 \arguments{
-\item{...}{same as for \code{drake::\link{plan_drake}()}}
+\item{...}{same as for \code{drake::\link{drake_plan}()}}
 
-\item{list}{same as for \code{drake::\link{plan_drake}()}}
+\item{list}{same as for \code{drake::\link{drake_plan}()}}
 
-\item{file_targets}{same as for \code{drake::\link{plan_drake}()}}
+\item{file_targets}{same as for \code{drake::\link{drake_plan}()}}
 
-\item{strings_in_dots}{same as for \code{drake::\link{plan_drake}()}}
+\item{strings_in_dots}{same as for \code{drake::\link{drake_plan}()}}
 }
 \value{
 A data frame of targets and commands.
@@ -28,6 +28,6 @@ a workflow plan data frame for \code{\link{make}} and
 Deprecated on 2017-10
 }
 \examples{
-# See ?plan_drake for examples.
+# See ?drake_plan for examples.
 }
 \keyword{internal}

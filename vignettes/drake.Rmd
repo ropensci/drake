@@ -127,15 +127,15 @@ my_plan
 
 Wildcard templating generates these data frames at scale.
 
-```{r plan_drakegeneration}
+```{r drake_plangeneration}
 library(magrittr)
-dataset_plan <- plan_drake(
+dataset_plan <- drake_plan(
   small = simulate(5),
   large = simulate(50)
 )
 dataset_plan
 
-analysis_methods <- plan_drake(
+analysis_methods <- drake_plan(
   regression = regNUMBER(dataset__) # nolint
 ) %>%
   evaluate_plan(wildcard = "NUMBER", values = 1:2)

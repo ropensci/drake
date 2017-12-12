@@ -26,7 +26,7 @@ a collection of existing targets in another workflow plan data frame.
 }
 \examples{
 # Workflow plan for datasets:
-datasets <- plan_drake(
+datasets <- drake_plan(
   small = simulate(5),
   large = simulate(50))
 # Create a new target that brings the datasets together.

@@ -37,7 +37,7 @@ rate-limiting targets in each parallelizable stage.
 }
 \description{
 Return a data frame of elapsed build times of
-the rate-limiting targets of a \code{\link{make}()} plan_drake.
+the rate-limiting targets of a \code{\link{make}()} drake_plan.
 }
 \details{
 The \code{stage} column of the returned data frame

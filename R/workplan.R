@@ -1,4 +1,4 @@
-#' @title Function \code{plan_drake}
+#' @title Function \code{drake_plan}
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for \code{\link{make}} and
 #' \code{\link{check}}.
@@ -37,12 +37,12 @@
 #' \code{list} argument are left alone.
 #' @examples
 #' # Create example workflow plan data frames for make()
-#' plan_drake(small = simulate(5), large = simulate(50))
-#' plan_drake(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' plan_drake(data = readRDS("my_data.rds"))
-#' plan_drake(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
+#' drake_plan(small = simulate(5), large = simulate(50))
+#' drake_plan(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' drake_plan(data = readRDS("my_data.rds"))
+#' drake_plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
 #'   strings_in_dots = "literals")
-plan_drake <- function(
+drake_plan <- function(
   ...,
   list = character(0),
   file_targets = FALSE,
@@ -78,7 +78,7 @@ plan_drake <- function(
   sanitize_plan(plan)
 }
 
-plan_drake_override <- function(target, field, config){
+drake_plan_override <- function(target, field, config){
   in_plan <- config$plan[[field]]
   if (is.null(in_plan)){
     return(config[[field]])

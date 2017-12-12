@@ -25,7 +25,7 @@
 #' # will be ignored.
 #' deps(f)
 #' # Define a workflow plan data frame that uses your function f().
-#' my_plan <- plan_drake(
+#' my_plan <- drake_plan(
 #'   x = 1 + some_object,
 #'   my_target = x + readRDS('tracked_input_file.rds'),
 #'   return_value = f(x, y, g(z + w))
@@ -158,7 +158,7 @@ dependency_profile <- function(target, config){
 #' })
 #' }
 tracked <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,

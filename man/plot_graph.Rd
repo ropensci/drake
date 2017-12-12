@@ -4,7 +4,7 @@
 \alias{plot_graph}
 \title{Deprecated function \code{plot_graph}}
 \usage{
-plot_graph(plan = plan_drake(), targets = drake::possible_targets(plan),
+plot_graph(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose), jobs = 1,
   parallelism = drake::default_parallelism(), packages = rev(.packages()),

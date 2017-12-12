@@ -29,7 +29,7 @@ try(
   silent = FALSE
 )
 # Make a new workflow plan.
-x <- plan_drake(loud = cat(1234), bad = stop(5678))
+x <- drake_plan(loud = cat(1234), bad = stop(5678))
 # Test out the silencer hook on a drake project.
 # All output should be suppressed.
 try(make(x, hook = silencer_hook), silent = FALSE)

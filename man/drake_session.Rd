@@ -41,5 +41,5 @@ drake_session() # Retrieve the cached sessionInfo() of the last make().
 }
 \seealso{
 \code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{plan_drake}}, \code{\link{make}}
+\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
 }

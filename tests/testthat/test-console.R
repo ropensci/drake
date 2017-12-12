@@ -6,7 +6,7 @@ test_with_dir("console_cache", {
 })
 
 test_with_dir("console_up_to_date", {
-  pl <- plan_drake(a = 1)
+  pl <- drake_plan(a = 1)
   con <- make(pl, verbose = FALSE, session_info = FALSE)
   expect_silent(console_up_to_date(con))
   con$verbose <- TRUE

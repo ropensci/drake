@@ -1,7 +1,7 @@
 #' @title Function \code{build_drake_graph}
-#' @description Make a graph of the dependency structure of your plan_drake.
+#' @description Make a graph of the dependency structure of your drake_plan.
 #' @details This function returns an igraph object representing how
-#' the targets in your plan_drake depend on each other.
+#' the targets in your drake_plan depend on each other.
 #' (\code{help(package = "igraph")}). To plot the graph, call
 #' to \code{\link{plot.igraph}()} on your graph, or just use
 #' \code{\link{vis_drake_graph}()} from the start.
@@ -35,7 +35,7 @@
 #' })
 #' }
 build_drake_graph <- function(
-  plan = plan_drake(),
+  plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,

@@ -4,7 +4,7 @@
 \alias{check}
 \title{Deprecated function \code{check}}
 \usage{
-check(plan = plan_drake(), targets = drake::possible_targets(plan),
+check(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
   verbose = TRUE)
 }

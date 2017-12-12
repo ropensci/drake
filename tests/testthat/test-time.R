@@ -1,7 +1,7 @@
 drake_context("time")
 
 test_with_dir("can ignore a bad time", {
-  x <- plan_drake(a = 1, b = 2)
+  x <- drake_plan(a = 1, b = 2)
   make(x, verbose = FALSE)
   cache <- get_cache()
   expect_equal(nrow(build_times()), 2)
@@ -35,14 +35,14 @@ test_with_dir("proc_time runtimes can be fetched", {
 test_with_dir("build times works if no targets are built", {
   expect_equal(cached(), character(0))
   expect_equal(nrow(build_times(search = FALSE)), 0)
-  my_plan <- plan_drake(x = 1)
+  my_plan <- drake_plan(x = 1)
   con <- drake_config(my_plan, verbose = FALSE)
   make_imports(con)
   expect_equal(nrow(build_times(search = FALSE)), 0)
 })
 
 test_with_dir("build time the same after superfluous make", {
-  x <- plan_drake(y = Sys.sleep(0.25))
+  x <- drake_plan(y = Sys.sleep(0.25))
   c1 <- make(x, verbose = FALSE, session_info = FALSE)
   expect_equal(justbuilt(c1), "y")
   b1 <- build_times(search = FALSE)
@@ -62,7 +62,7 @@ test_with_dir("empty time predictions", {
     df
   }
 
-  my_plan <- plan_drake(y = 1)
+  my_plan <- drake_plan(y = 1)
   config <- drake_config(my_plan)
   expect_warning(
     x <- rate_limiting_times(config) %>%
