@@ -25,7 +25,6 @@ test_with_dir("drake_plan deprecation", {
   pl1 <- expect_warning(drake::plan(x = 1, y = x))
   pl2 <- drake_plan(x = 1, y = x)
   pl3 <- expect_warning(plan_drake(x = 1, y = x))
-  expect_true(is.data.frame(pl3))
   expect_warning(drake::plan())
   expect_warning(drake::plan_drake())
   expect_warning(drake::workflow())
