@@ -13,9 +13,8 @@ drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  clear_progress = FALSE, graph = NULL,
-  trigger = drake::default_trigger(), imports_only = FALSE,
-  skip_imports = FALSE, skip_safety_checks = FALSE, store_meta = TRUE,
+  log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
+  imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = FALSE, session_info = TRUE)
 }
 \arguments{
@@ -59,7 +58,7 @@ drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
 
 \item{force}{same as for \code{\link{make}}}
 
-\item{clear_progress}{logical, whether to clear
+\item{log_progress}{logical, whether to clear
 the cached progress of the targets readable by}
 
 \item{graph}{igraph object representing the workflow plan network.
@@ -78,8 +77,6 @@ This argument is overridden if you supply your own \code{graph} argument.}
 
 \item{skip_safety_checks}{logical, whether to skip the safety checks
 on your workflow to save time. Use at your own peril.}
-
-\item{store_meta}{same as for \code{\link{make}}}
 
 \item{lazy_load}{same as for \code{\link{make}}}
 

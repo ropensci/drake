@@ -43,7 +43,6 @@
 #' }
 parallel_stages <- function(config, from_scratch = FALSE){
   do_prework(config = config, verbose_packages = config$verbose)
-  config$store_meta <- FALSE
   if (from_scratch){
     config$trigger <- "always"
   }
@@ -173,8 +172,7 @@ parallel_stage <- function(worker, config) {
       meta_list,
       meta_list(
         targets = new_leaves,
-        config = config,
-        store = config$store_meta
+        config = config
       )
     )
     do_build <- lightly_parallelize(

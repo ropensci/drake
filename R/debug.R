@@ -7,7 +7,8 @@ dbug <- function() {
   drake_config(plan = plan, targets = plan$target,
     envir = envir, parallelism = scenario$parallelism,
     jobs = scenario$jobs, verbose = FALSE,
-    session_info = FALSE
+    session_info = FALSE,
+    log_progress = TRUE
   )
 }
 

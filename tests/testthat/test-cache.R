@@ -15,11 +15,15 @@ test_with_dir("clean() works if there is no cache already", {
   expect_false(file.exists(default_cache_path()))
 })
 
-test_with_dir("bad/corrupt caches", {
+test_with_dir("bad/corrupt caches, no progress", {
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
   x <- plan_drake(a = 1)
-  make(x, verbose = FALSE, session_info = FALSE)
+  make(x, verbose = FALSE, session_info = FALSE, log_progress = FALSE)
+  expect_equal(get_cache()$list(namespace = "progress"), character(0))
+  clean()
+  make(x, verbose = FALSE, session_info = FALSE, log_progress = TRUE)
+  expect_equal(get_cache()$list(namespace = "progress"), "a")
   path <- file.path(default_cache_path(), "config", "hash_algorithm")
   expect_true(file.exists(path))
   unlink(path)
@@ -28,7 +32,7 @@ test_with_dir("bad/corrupt caches", {
     make(x, verbose = FALSE, session_info = FALSE)))
 })
 
-test_with_dir("try to find a non-existent project", {
+test_with_dir("non-existent caches", {
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
@@ -45,6 +49,33 @@ test_with_dir("try to rescue non-existent stuff", {
   expect_null(rescue_cache())
   cache <- storr_rds("dummy_cache")
   expect_silent(rescue_del(key = "no_key", cache = cache, namespace = "none"))
+})
+
+test_with_dir("subspaces", {
+  lst <- list_subspace(
+    subspace = "y", namespace = "x", cache = NULL, jobs = 1)
+  expect_equal(lst, character(0))
+  x <- storr::storr_rds("test")
+  lst <- list_subspace(
+    subspace = "y", namespace = "x", cache = x, jobs = 1)
+  expect_equal(lst, character(0))
+  set_in_subspace(
+    key = "a",
+    value = 1,
+    namespace = "x",
+    subspace = "y",
+    cache = x
+  )
+  set_in_subspace(
+    key = "b",
+    value = 2,
+    namespace = "x",
+    subspace = "y",
+    cache = x
+  )
+  lst <- list_subspace(
+    subspace = "y", namespace = "x", cache = x, jobs = 1)
+  expect_equal(sort(lst), c("a", "b"))
 })
 
 test_with_dir("cache functions work", {
@@ -98,7 +129,7 @@ test_with_dir("cache functions work", {
   # build_times
   x <- config$cache
   bt <- build_times(search = FALSE, targets_only = FALSE)
-  expect_equal(sort(x$list(namespace = "build_times")), sort(cached()))
+  expect_equal(sort(x$list(namespace = "meta")), sort(cached()))
   expect_equal(sort(bt$item), all)
   expect_length(bt, 5) # 5 columns
   n1 <- nrow(bt)

@@ -30,6 +30,8 @@ with projects built with a later version of drake.
 The \code{migrate_drake_project()} function converts
 an old cache to a format compatible with the version of drake
 installed on your system.
+Important note: build times and other non-essential metadata
+are lost during migration.
 A migration is successful if the transition preserves target status:
 that is, outdated targets remain outdated and up to date targets
 remain up to date. At the end, \code{migrate_drake_project()}

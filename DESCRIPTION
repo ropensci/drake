@@ -1,6 +1,6 @@
 Package: drake
 Title: Data Frames in R for Make
-Version: 4.4.1.9001
+Version: 4.4.1.9002
 Authors@R: c(
   person(
     family = "Landau",

@@ -265,11 +265,3 @@ is_built_or_imported_file <- Vectorize(function(target, plan) {
   !imported | (imported & is_file(target))
 },
 "target", SIMPLIFY = TRUE)
-
-file_target_exists <- function(target, config){
-  config$cache$exists(key = target, namespace = "mtimes")
-}
-
-target_exists <- function(target, config){
-  config$cache$exists(key = target, namespace = "kernels")
-}

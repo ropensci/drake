@@ -90,23 +90,33 @@ deps <- function(x){
 #' }
 dependency_profile <- function(target, config){
   config$plan[["trigger"]] <- NULL
-  cached_command <- safe_get(key = target, namespace = "commands",
-    config = config)
+  cached_command <- get_from_subspace(
+    key = target,
+    subspace = "command",
+    namespace = "meta",
+    cache = config$cache
+  )
   current_command <- get_command(target = target, config = config)
-
   deps <- dependencies(target, config)
   hashes_of_dependencies <- self_hash(target = deps, config = config)
   current_dependency_hash <- digest::digest(hashes_of_dependencies,
     algo = config$long_hash_algo)
-  cached_dependency_hash <- safe_get(key = target, namespace = "depends",
-    config = config)
+  cached_dependency_hash <- get_from_subspace(
+    key = target,
+    subspace = "depends",
+    namespace = "meta",
+    cache = config$cache
+  )
   names(hashes_of_dependencies) <- deps
-
-  cached_file_modification_time <- safe_get(
-    key = target, namespace = "mtimes", config = config)
-  current_file_modification_time <- ifelse(is_file(target),
-    file.mtime(drake::drake_unquote(target)), NA)
-
+  cached_file_modification_time <- get_from_subspace(
+    key = target,
+    subspace = "mtime",
+    namespace = "meta",
+    cache = config$cache
+  )
+  current_file_modification_time <- suppressWarnings(
+    file.mtime(drake::drake_unquote(target))
+  )
   out <- list(
     cached_command = cached_command,
     current_command = current_command,

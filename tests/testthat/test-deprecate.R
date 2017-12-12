@@ -8,8 +8,6 @@ test_with_dir("deprecation: make() and config()", {
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   expect_warning(make(plan_drake(x = 1), return_config = TRUE,
     verbose = FALSE, session_info = FALSE))
-  expect_warning(make(plan_drake(x = 1), clear_progress = TRUE,
-    verbose = FALSE, session_info = FALSE))
   expect_warning(config(plan_drake(x = 1)))
 })
 

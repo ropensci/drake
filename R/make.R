@@ -163,9 +163,14 @@
 #' @param recipe_command Character scalar, command for the
 #' Makefile recipe for each target.
 #'
-#' @param clear_progress logical, whether to clear the saved record of
-#' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
-#' before anything is imported or built.
+#' @param log_progress logical, whether to log the progress
+#' of individual targets as they are being built. Progress logging
+#' creates a lot of little files in the cache, and it may make builds
+#' a tiny bit slower. So you may see gains in storage efficiency
+#' and speed with
+#' \code{make(..., log_progress = FALSE)}. But be warned that
+#' \code{\link{progress}()} and \code{\link{in_progress}()}
+#' will no longer work if you do that.
 #'
 #' @param cache drake cache as created by \code{\link{new_cache}()}.
 #' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
@@ -227,10 +232,6 @@
 #'
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #' on your workflow. Use at your own peril.
-#'
-#' @param store_meta logical, whether to store target metadata
-#' so you can read it later with \code{\link{read_drake_meta}()}.
-#' Useful for debugging.
 #'
 #' @param config optional master configuration list created by
 #' \code{\link{drake_config}()}. Using one could cut out some
@@ -310,7 +311,7 @@ make <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  clear_progress = NULL,
+  log_progress = TRUE,
   imports_only = FALSE,
   timeout = Inf,
   cpu = NULL,
@@ -322,7 +323,6 @@ make <- function(
   trigger = drake::default_trigger(),
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
-  store_meta = TRUE,
   config = NULL,
   lazy_load = FALSE,
   session_info = TRUE
@@ -332,13 +332,6 @@ make <- function(
     warning(
       "The return_config argument to make() is deprecated. ",
       "Now, an internal configuration list is always invisibly returned.",
-      call. = FALSE
-    )
-  }
-  if (!is.null(clear_progress)){
-    warning(
-      "The clear_progress argument to make() is deprecated. ",
-      "Progress is always cleared.",
       call. = FALSE
     )
   }
@@ -357,7 +350,7 @@ make <- function(
       command = command,
       args = args,
       recipe_command = recipe_command,
-      clear_progress = TRUE,
+      log_progress = log_progress,
       cache = cache,
       fetch_cache = fetch_cache,
       timeout = timeout,
@@ -370,7 +363,6 @@ make <- function(
       imports_only = imports_only,
       skip_imports = skip_imports,
       skip_safety_checks = skip_safety_checks,
-      store_meta = store_meta,
       lazy_load = lazy_load,
       session_info = session_info
     )

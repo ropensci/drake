@@ -126,18 +126,24 @@ assert_legal_triggers <- function(x){
 
 command_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$command))
-  !identical(
-    config$cache$get(target, namespace = "commands"),
-    meta$command
+  command <- get_from_subspace(
+    key = target,
+    subspace = "command",
+    namespace = "meta",
+    cache = config$cache
   )
+  !identical(command, meta$command)
 }
 
 depends_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$depends))
-  !identical(
-    config$cache$get(target, namespace = "depends"),
-    meta$depends
+  depends <- get_from_subspace(
+    key = target,
+    subspace = "depends",
+    namespace = "meta",
+    cache = config$cache
   )
+  !identical(depends, meta$depends)
 }
 
 file_trigger <- function(target, meta, config){

@@ -13,7 +13,7 @@ config(plan = plan_drake(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  clear_progress = FALSE, graph = NULL, trigger = "any",
+  log_progress = FALSE, graph = NULL, trigger = "any",
   skip_imports = FALSE)
 }
 \arguments{
@@ -55,7 +55,7 @@ config(plan = plan_drake(), targets = drake::possible_targets(plan),
 
 \item{force}{same as for \code{\link{make}}}
 
-\item{clear_progress}{same as for \code{\link{drake_config}}}
+\item{log_progress}{same as for \code{\link{drake_config}}}
 
 \item{graph}{same as for \code{\link{drake_config}}}
 

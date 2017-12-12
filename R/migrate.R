@@ -17,6 +17,8 @@
 #' The \code{migrate_drake_project()} function converts
 #' an old cache to a format compatible with the version of drake
 #' installed on your system.
+#' Important note: build times and other non-essential metadata
+#' are lost during migration.
 #' A migration is successful if the transition preserves target status:
 #' that is, outdated targets remain outdated and up to date targets
 #' remain up to date. At the end, \code{migrate_drake_project()}
@@ -64,8 +66,8 @@ migrate_drake_project <- function(
   config$verbose <- TRUE
   config$trigger <- "any"
   config$execution_graph <- config$graph
-  config$store_meta <- TRUE
   config$lazy_load <- FALSE
+  config$log_progress <- FALSE
   config$session_info <- TRUE
   config$outdated <- legacy_outdated(config) %>%
     as.character %>%
@@ -148,12 +150,6 @@ migrate_hook <- function(code){
   env <- parent.frame()
   target <- env$target
   config <- env$config
-  build_time <- tryCatch(
-    config$cache$get(key = target, namespace = "build_times"),
-    error = null_proc_time
-  )
-  config$cache$set(key = target, value = build_time,
-    namespace = "build_times")
   value <- tryCatch(
     legacy_readd(target = target, cache = config$cache),
     error = error_na
@@ -163,7 +159,7 @@ migrate_hook <- function(code){
     return()
   }
   store_target(target = target, value = value, meta = meta,
-    config = config)
+    start = NA, config = config)
 }
 
 error_na <- function(e){

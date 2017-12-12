@@ -132,7 +132,7 @@ this_cache <- function(
     cache = cache,
     long_hash_algo = "md5",
     overwrite_hash_algos = FALSE,
-    clear_progress = FALSE
+    log_progress = FALSE
   )
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -205,7 +205,7 @@ new_cache <- function(
     cache = cache,
     short_hash_algo = short_hash_algo,
     long_hash_algo = long_hash_algo,
-    clear_progress = FALSE,
+    log_progress = FALSE,
     overwrite_hash_algos = FALSE
   )
   console_cache(path = cache_path(cache), verbose = verbose)
@@ -303,7 +303,7 @@ default_cache_path <- function(){
 #' argument in \code{digest::digest()}.
 #' See \code{?\link{default_long_hash_algo}} for more.
 #'
-#' @param clear_progress logical, whether to clear the recorded
+#' @param log_progress logical, whether to clear the recorded
 #' build progress if this cache was used for previous calls to
 #' \code{\link{make}()}
 #'
@@ -312,6 +312,8 @@ default_cache_path <- function(){
 #'
 #' @param verbose whether to print console messages
 #'
+#' @param jobs number of jobs for parallel processing
+#' 
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -336,16 +338,17 @@ configure_cache <- function(
   cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  clear_progress = FALSE,
+  log_progress = FALSE,
   overwrite_hash_algos = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   short_hash_algo <- match.arg(short_hash_algo,
     choices = available_hash_algos())
   long_hash_algo <- match.arg(long_hash_algo,
     choices = available_hash_algos())
-  if (clear_progress){
-    cache$clear(namespace = "progress")
+  if (log_progress){
+    clear_progress(cache = cache, jobs = jobs)
   }
   short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
   long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")
@@ -367,6 +370,17 @@ configure_cache <- function(
   check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
   set_initial_drake_version(cache)
   cache
+}
+
+clear_progress <- function(cache, jobs){
+  lightly_parallelize(
+    X = cache$list(),
+    FUN = function(target){
+      cache$del(key = target, namespace = "progress")
+    },
+    jobs = jobs
+  )
+  invisible()
 }
 
 set_initial_drake_version <- function(cache){
@@ -409,3 +423,9 @@ safe_get <- function(key, namespace, config){
     NA
   }
 }
+
+kernel_exists <- function(target, config){
+  config$cache$exists(key = target, namespace = "kernels")
+}
+
+target_exists <- kernel_exists

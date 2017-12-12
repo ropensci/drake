@@ -6,8 +6,8 @@
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose), envir = parent.frame(), jobs = 1, verbose = 1,
-  deps = FALSE, lazy = FALSE)
+  verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
+  verbose = 1, deps = FALSE, lazy = FALSE)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -31,6 +31,9 @@ current working directory only.}
 \item{cache}{optional drake cache. See code{\link{new_cache}()}.
 If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
+
+\item{namespace}{character scalar,
+name of an optional storr namespace to load from.}
 
 \item{envir}{environment to load objects into. Defaults to the
 calling environment (current workspace).}

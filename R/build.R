@@ -53,8 +53,11 @@ build_in_hook <- function(target, meta, config) {
   start <- proc.time()
   meta <- finish_meta(
     target = target, meta = meta, config = config)
-  config$cache$set(key = target, value = "in progress",
-    namespace = "progress")
+  set_progress(
+    target = target,
+    value = "in progress",
+    config = config
+  )
   console(imported = meta$imported, target = target, config = config)
   if (meta$imported) {
     value <- imported_target(target = target, meta = meta,
@@ -63,10 +66,11 @@ build_in_hook <- function(target, meta, config) {
     value <- build_target(target = target,
       meta = meta, config = config)
   }
+  if (is_file(target)){
+    meta$mtime <- file.mtime(drake::drake_unquote(target))
+  }
   store_target(target = target, value = value, meta = meta,
-    config = config)
-  store_build_time(
-    target = target, start = start, meta = meta, config = config)
+    start = start, config = config)
   value
 }
 

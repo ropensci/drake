@@ -1,4 +1,4 @@
-meta_list <- function(targets, config, store = FALSE) {
+meta_list <- function(targets, config) {
   console_many_targets(targets = targets,
     pattern = "check", color = "check",
     config = config)
@@ -6,15 +6,14 @@ meta_list <- function(targets, config, store = FALSE) {
     X = targets,
     FUN = meta,
     jobs = config$jobs,
-    config = config,
-    store = store
+    config = config
   )
   names(out) <- lapply(out, "[[", "target") %>%
     unlist
   out
 }
 
-meta <- function(target, config, store = FALSE) {
+meta <- function(target, config) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),
@@ -32,13 +31,6 @@ meta <- function(target, config, store = FALSE) {
   }
   if (trigger %in% triggers_with_file()){
     meta$file <- file_hash(target = target, config = config)
-  }
-  if (store){
-    config$cache$set(
-      key = target,
-      value = meta,
-      namespace = "meta"
-    )
   }
   meta
 }
@@ -63,7 +55,7 @@ dependency_hash <- function(target, config) {
 }
 
 self_hash <- Vectorize(function(target, config) {
-  if (target_exists(target = target, config = config)) {
+  if (kernel_exists(target = target, config = config)) {
     config$cache$get_hash(target, namespace = "kernels")
   } else {
     as.character(NA)
@@ -98,8 +90,18 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(
-    file_target_exists(target = target, config = config),
-    config$cache$get(key = target, namespace = "mtimes"),
+    exists_in_subspace(
+      key = target,
+      subspace = "mtime",
+      namespace = "meta",
+      cache = config$cache
+    ),
+    get_from_subspace(
+      key = target,
+      subspace = "mtime",
+      namespace = "meta",
+      cache = config$cache
+    ),
     -Inf
   )
   new_mtime <- file.mtime(filename)

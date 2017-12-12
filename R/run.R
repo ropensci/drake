@@ -78,8 +78,11 @@ resolve_timeouts <- function(target, config){
 }
 
 give_up <- function(target, config){
-  config$cache$set(key = target, value = "failed",
-    namespace = "progress")
+  set_progress(
+    target = target,
+    value = "failed",
+    config = config
+  )
   text <- paste("fail", target)
   if (config$verbose){
     finish_console(text = text, pattern = "fail", verbose = config$verbose)
