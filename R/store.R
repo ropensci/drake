@@ -15,6 +15,7 @@ store_target <- function(target, value, meta, config) {
     store_object(target = target, value = value,
                  config = config)
   }
+  config$cache$set(key = target, value = meta, namespace = "meta")
 }
 
 store_object <- function(target, value, config) {

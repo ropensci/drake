@@ -53,7 +53,6 @@
 #' This argument is overridden if you supply your own \code{graph} argument.
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #' on your workflow to save time. Use at your own peril.
-#' @param store_meta same as for \code{\link{make}}
 #' @param lazy_load same as for \code{\link{make}}
 #' @param session_info same as for \code{\link{make}}
 #' @examples
@@ -104,7 +103,6 @@ drake_config <- function(
   imports_only = FALSE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
-  store_meta = TRUE,
   lazy_load = FALSE,
   session_info = TRUE
 ){
@@ -155,7 +153,7 @@ drake_config <- function(
     seed = seed, trigger = trigger,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
     imports_only = imports_only, skip_imports = skip_imports,
-    skip_safety_checks = skip_safety_checks, store_meta = store_meta,
+    skip_safety_checks = skip_safety_checks,
     lazy_load = lazy_load, session_info = session_info
   )
 }

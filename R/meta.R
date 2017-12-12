@@ -1,4 +1,4 @@
-meta_list <- function(targets, config, store = FALSE) {
+meta_list <- function(targets, config) {
   console_many_targets(targets = targets,
     pattern = "check", color = "check",
     config = config)
@@ -6,15 +6,14 @@ meta_list <- function(targets, config, store = FALSE) {
     X = targets,
     FUN = meta,
     jobs = config$jobs,
-    config = config,
-    store = store
+    config = config
   )
   names(out) <- lapply(out, "[[", "target") %>%
     unlist
   out
 }
 
-meta <- function(target, config, store = FALSE) {
+meta <- function(target, config) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),
@@ -32,13 +31,6 @@ meta <- function(target, config, store = FALSE) {
   }
   if (trigger %in% triggers_with_file()){
     meta$file <- file_hash(target = target, config = config)
-  }
-  if (store){
-    config$cache$set(
-      key = target,
-      value = meta,
-      namespace = "meta"
-    )
   }
   meta
 }

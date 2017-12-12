@@ -228,10 +228,6 @@
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #' on your workflow. Use at your own peril.
 #'
-#' @param store_meta logical, whether to store target metadata
-#' so you can read it later with \code{\link{read_drake_meta}()}.
-#' Useful for debugging.
-#'
 #' @param config optional master configuration list created by
 #' \code{\link{drake_config}()}. Using one could cut out some
 #' superfluous overhead. Overrides all other arguments
@@ -322,7 +318,6 @@ make <- function(
   trigger = drake::default_trigger(),
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
-  store_meta = TRUE,
   config = NULL,
   lazy_load = FALSE,
   session_info = TRUE
@@ -370,7 +365,6 @@ make <- function(
       imports_only = imports_only,
       skip_imports = skip_imports,
       skip_safety_checks = skip_safety_checks,
-      store_meta = store_meta,
       lazy_load = lazy_load,
       session_info = session_info
     )

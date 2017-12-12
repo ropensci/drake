@@ -385,7 +385,7 @@ read_drake_graph <- function(
 #' @title Function \code{read_drake_meta}
 #' @description For each target, read the information from
 #' \code{drake:::meta()} stored from the last
-#' \code{\link{make}(..., store_meta = TRUE)}.
+#' \code{\link{make}()}.
 #' This metadata was computed right before the target was built,
 #' and it was used in \code{drake:::should_build_target})
 #' to decide whether to build or skip the target.
