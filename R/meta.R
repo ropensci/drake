@@ -131,5 +131,5 @@ set_in_meta <- function(key, value, metaspace, cache){
     meta <- list(key, value)
     names(meta) <- c("target", metaspace)
     cache$set(key = key, value = meta, namespace = "meta")
-  } 
+  }
 }

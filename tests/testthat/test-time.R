@@ -6,7 +6,7 @@ test_with_dir("proc_time runtimes can be fetched", {
   t <- system.time({
     z <- 1
   })
-  cache$set(key = key, value = t, namespace = "build_times")
+  set_in_meta(key = key, value = t, metaspace = "build_times", cache = cache)
   y <- fetch_runtime(key = key, cache = cache)
   expect_true(nrow(y) > 0)
 })
