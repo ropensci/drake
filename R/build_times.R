@@ -40,7 +40,7 @@ build_times <- function(
     return(empty_times())
   }
   out <- lightly_parallelize(
-    X = cache$list(namespace = "build_times"),
+    X = cache$list(namespace = "meta"),
     FUN = fetch_runtime,
     jobs = 1,
     cache = cache
@@ -59,7 +59,7 @@ build_times <- function(
 }
   
 fetch_runtime <- function(key, cache){
-  x <- cache$get(key = key, namespace = "build_times")
+  x <- get_from_meta(key = key, metaspace = "build_times", cache = cache)
   if (class(x) == "proc_time"){
     x <- runtime_entry(runtime = x, target = key, imported = NA)
   }
@@ -114,3 +114,10 @@ to_build_duration <- function(x){
 }
 
 time_columns <- c("elapsed", "user", "system")
+
+append_times_to_meta <- function(target, start, meta, config){
+  build_times <- (proc.time() - start) %>%
+    runtime_entry(target = target, imported = meta$imported)
+  meta$build_times <- build_times
+  meta
+}

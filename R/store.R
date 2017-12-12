@@ -1,4 +1,4 @@
-store_target <- function(target, value, meta, config) {
+store_target <- function(target, value, meta, start, config) {
   config$cache$set(key = target, value = meta$command,
                    namespace = "commands")
   config$cache$set(key = target, value = meta$depends,
@@ -15,6 +15,8 @@ store_target <- function(target, value, meta, config) {
     store_object(target = target, value = value,
                  config = config)
   }
+  meta <- append_times_to_meta(
+    target = target, start = start, meta = meta, config = config)
   config$cache$set(key = target, value = meta, namespace = "meta")
 }
 
@@ -67,11 +69,4 @@ store_function <- function(target, value, meta, config){
   }
   config$cache$set(key = target, value = string,
                    namespace = "kernels")
-}
-
-store_build_time <- function(target, start, meta, config){
-  build_time <- (proc.time() - start) %>%
-    runtime_entry(target = target, imported = meta$imported)
-  config$cache$set(key = target, value = build_time,
-                   namespace = "build_times")
 }

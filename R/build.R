@@ -64,9 +64,7 @@ build_in_hook <- function(target, meta, config) {
       meta = meta, config = config)
   }
   store_target(target = target, value = value, meta = meta,
-    config = config)
-  store_build_time(
-    target = target, start = start, meta = meta, config = config)
+    start = start, config = config)
   value
 }
 
