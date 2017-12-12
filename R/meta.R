@@ -90,8 +90,18 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(
-    exists_in_meta(key = target, metaspace = "mtime", cache = config$cache),
-    get_from_meta(key = target, metaspace = "mtime", cache = config$cache),
+    exists_in_subspace(
+      key = target,
+      subspace = "mtime",
+      namespace = "meta",
+      cache = config$cache
+    ),
+    get_from_subspace(
+      key = target,
+      subspace = "mtime",
+      namespace = "meta",
+      cache = config$cache
+    ),
     -Inf
   )
   new_mtime <- file.mtime(filename)
@@ -104,32 +114,5 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
     rehash_file(target = target, config = config)
   } else {
     config$cache$get(key = target, namespace = "kernels")
-  }
-}
-
-get_from_meta <- function(key, metaspace, cache){
-  if (!inherits(cache, "storr")){
-    stop("cache is missing.")
-  }
-  meta <- safe_get(key = key, namespace = "meta", config = list(cache = cache))
-  if (metaspace %in% names(meta)){
-    meta[[metaspace]]
-  } else {
-    NULL
-  }
-}
-
-set_in_meta <- function(key, value, metaspace, cache){
-  if (!inherits(cache, "storr")){
-    stop("cache is missing.")
-  }
-  if (cache$exists(key = key, namespace = "meta")){
-    meta <- cache$get(key = key, namespace = "meta")
-    meta[[metaspace]] <- value
-    cache$set(key = key, value = meta, namespace = "meta")
-  } else {
-    meta <- list(key, value)
-    names(meta) <- c("target", metaspace)
-    cache$set(key = key, value = meta, namespace = "meta")
   }
 }

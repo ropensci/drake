@@ -59,7 +59,12 @@ build_times <- function(
 }
   
 fetch_runtime <- function(key, cache){
-  x <- get_from_meta(key = key, metaspace = "build_times", cache = cache)
+  x <- get_from_subspace(
+    key = key,
+    subspace = "build_times",
+    namespace = "meta",
+    cache = cache
+  )
   if (any(is.na(x))){
     return(empty_times())
   }
