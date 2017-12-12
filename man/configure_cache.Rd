@@ -34,6 +34,8 @@ build progress if this cache was used for previous calls to
 the hash algorithms in the cache with any user-specified ones.}
 
 \item{verbose}{whether to print console messages}
+
+\item{jobs}{number of jobs for parallel processing}
 }
 \value{
 A drake/storr cache.

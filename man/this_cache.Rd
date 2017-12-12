@@ -20,8 +20,6 @@ running version of drake.}
 The purpose of this code is to fetch the \code{storr} cache
 with a command like \code{storr_rds()} or \code{storr_dbi()},
 but customized. This feature is experimental.}
-
-\item{jobs}{number of jobs for parallel processing}
 }
 \value{
 A drake/storr cache at the specified path, if it exists.

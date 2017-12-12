@@ -99,7 +99,6 @@ get_cache <- function(
 #' The purpose of this code is to fetch the \code{storr} cache
 #' with a command like \code{storr_rds()} or \code{storr_dbi()},
 #' but customized. This feature is experimental.
-#' @param jobs number of jobs for parallel processing
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -313,6 +312,8 @@ default_cache_path <- function(){
 #'
 #' @param verbose whether to print console messages
 #'
+#' @param jobs number of jobs for parallel processing
+#' 
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
