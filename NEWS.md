@@ -12,7 +12,7 @@
 - Major speed improvement: dispense with internal inventories and rely on `cache$exists()` instead.
 - Let the user define a trigger for each target to customize when `make()` decides to build targets.
 - Document triggers and other debugging/testing tools in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
-- Restructure the internals of the `storr` cache in a way that is not back-compatible with projects from versions 4.4.0 and earlier. The main change is to make more intelligent use of `storr` namespaces, improving speed and opening up possibilities for new features. If you attempt to run drake >= 5.0.0 on a project from drake <= 4.0.0, drake will stop you before any damage to the cache is done, and you will be instructed how to migrate your project to the new drake.
+- Restructure the internals of the `storr` cache in a way that is not back-compatible with projects from versions 4.4.0 and earlier. The main change is to make more intelligent use of `storr` namespaces, improving efficiency (both time and storage) and opening up possibilities for new features. If you attempt to run drake >= 5.0.0 on a project from drake <= 4.0.0, drake will stop you before any damage to the cache is done, and you will be instructed how to migrate your project to the new drake.
 - Use `formatR::tidy_source()` instead of `parse()` in `tidy_command()` (originally `tidy()` in `R/dependencies.R`). Previously, `drake` was having problems with an edge case: as a command, the literal string `"A"` was interpreted as the symbol `A` after tidying. With `tidy_source()`, literal quoted strings stay literal quoted strings in commands. This may put some targets out of date in old projects, yet another loss of back compatibility in version 5.0.0.
 - Speed up clean() by refactoring the cache inventory and using light parallelism.
 - Implement `rescue_cache()`, exposed to the user and used in `clean()`. This function removes dangling orphaned files in the cache so that a broken cache can be cleaned and used in the usual ways once more.
@@ -52,6 +52,7 @@
 - Change `verbose` to numeric: 0 = print nothing, 1 = print progress on imports only, 2 = print everything.
 - Add a new `next_stage()` function to report the targets to be made in the next parallelizable stage.
 - Add a new `session_info` argument to `make()`. Apparently, `sessionInfo()` is a bottleneck for small `make()`s, so there is now an option to suppress it. This is mostly for the sake of speeding up unit tests.
+- Add a new `log_progress` argument to `make()` to suppress progress logging. This increases storage efficiency and speeds some projects up a tiny bit.
 
 # Changes in release 4.4.0
 
@@ -70,10 +71,8 @@
 - Warn when overwriting an existing `report.Rmd` in `load_basic_example()`.
 - Tell the user the location of the cache using a console message. Happens on every call to `get_cache(..., verbose = TRUE)`.
 - Increase efficiency of internal preprocessing via `lightly_parallelize()` and `lightly_parallelize_atomic()`. Now, processing happens faster, and only over the unique values of a vector.
-- Add a new `storr` namespace called `imports` to be used in `is_imported()`. That way, the whole object need not be read to `clean()` is. `clean()` is much faster and safer.
 - Add a new `make_with_config()` function to do the work of `make()` on an existing internal configuration list from `drake_config()`.
 - Add a new function `drake_batchtools_tmpl_file()` to write a `batchtools` template file from one of the examples (`drake_example()`), if one exists.
-- Add a new `cleaned_namespaces()` function to show which `storr` namespaces are cleaned in `clean()`.
 
 # 2017-10-17
 

@@ -237,7 +237,7 @@ cached(cache = memory_cache)
 readd(result, cache = memory_cache)
 ```
 
-In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, this feature is currently experimental, and it crashes when parallel processing is activated. And if the underlying database groups multiple targets together in the same file, simultaneous writes will almost surely cause race conditions, so `storr_dbi()` might not be an appropriate `drake` cache anyway. In addition, single-quoted keys do not currently play nicely with `storr_dbi()` caches, as [documented in the storr issue tracker](https://github.com/richfitz/storr/issues/60). That means you cannot use file targets.
+In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, this feature is currently experimental. Also, some `storr_dbi()` caches use a single file as a database, which causes race conditions. Only `storr_rds()` caches should be used with parallel computing. In addition, single-quoted keys do not currently play nicely with `storr_dbi()` caches, as [documented in the storr issue tracker](https://github.com/richfitz/storr/issues/60). That means you cannot use file targets.
 
 ```{r dbi_caches, eval = FALSE}
 # Requires the DBI and RSQLite packages.

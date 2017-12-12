@@ -165,7 +165,7 @@
 #'
 #' @param log_progress logical, whether to log the progress
 #' of individual targets as they are being built. Progress logging
-#' creates a lot of littel files in the cache, and it may make builds
+#' creates a lot of little files in the cache, and it may make builds
 #' a tiny bit slower. So you may see gains in storage efficiency
 #' and speed with
 #' \code{make(..., log_progress = FALSE)}. But be warned that
