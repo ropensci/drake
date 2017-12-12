@@ -64,6 +64,10 @@ deps <- function(x){
 #' of the returned list should agree: for example,
 #' \code{cached_dependency_hash} and
 #' \code{current_dependency_hash}.
+#' @details The dependency profile is based on cached metadata
+#' taken \emph{just before} the target was built, not
+#' immediately afterwards. If the metadata seems
+#' out of date, that is the reason why.
 #' @return A list of information that drake takes into account
 #' when examining the dependencies of the target.
 #' @export

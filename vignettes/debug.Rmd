@@ -127,7 +127,7 @@ missed(config) # Nothing is missing right now.
 outdated(config)
 ```
 
-To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument.
+To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument. The dependency profile is based on the metadata cached *just before* the target was built, not immediately afterwards. If the metadata seems out of date, that is the reason why.
 
 ```{r depprofiledebug}
 load_basic_example()
