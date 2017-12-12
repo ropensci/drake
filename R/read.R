@@ -22,6 +22,8 @@
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
 #' If \code{cache} is supplied,
 #' the \code{path} and \code{search} arguments are ignored.
+#' @param namespace character scalar,
+#' name of an optional storr namespace to read from.
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
@@ -41,8 +43,9 @@ readd <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  namespace = NULL,
   verbose = TRUE
-  ){
+){
   # if the cache is null after trying get_cache:
   if (is.null(cache)){
     stop("cannot find drake cache.")
@@ -50,7 +53,10 @@ readd <- function(
   if (!character_only){
     target <- as.character(substitute(target))
   }
-  cache$get(target, namespace = cache$default_namespace)
+  if (is.null(namespace)){
+    namespace <- cache$default_namespace
+  }
+  cache$get(target, namespace = namespace)
 }
 
 #' @title Function \code{loadd}
@@ -86,6 +92,9 @@ readd <- function(
 #' @param search logical. If \code{TRUE}, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
+#'
+#' @param namespace character scalar,
+#' name of an optional storr namespace to load from.
 #'
 #' @param envir environment to load objects into. Defaults to the
 #' calling environment (current workspace).
@@ -141,6 +150,7 @@ loadd <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
   verbose = 1,
@@ -176,16 +186,18 @@ loadd <- function(
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
-    envir = envir, verbose = verbose, lazy = lazy
+    namespace = namespace, envir = envir,
+    verbose = verbose, lazy = lazy
   )
   invisible()
 }
 
-load_target <- function(target, cache, envir, verbose, lazy){
+load_target <- function(target, cache, namespace, envir, verbose, lazy){
   if (lazy){
     lazy_load_target(
       target = target,
       cache = cache,
+      namespace = namespace,
       envir = envir,
       verbose = verbose
     )
@@ -193,17 +205,19 @@ load_target <- function(target, cache, envir, verbose, lazy){
     eager_load_target(
       target = target,
       cache = cache,
+      namespace = namespace,
       envir = envir,
       verbose = verbose
     )
   }
 }
 
-eager_load_target <- function(target, cache, envir, verbose){
+eager_load_target <- function(target, cache, namespace, envir, verbose){
   value <- readd(
     target,
     character_only = TRUE,
     cache = cache,
+    namespace = namespace,
     verbose = verbose
   )
   assign(x = target, value = value, envir = envir)
@@ -212,7 +226,7 @@ eager_load_target <- function(target, cache, envir, verbose){
   invisible()
 }
 
-lazy_load_target <- function(target, cache, envir, verbose){
+lazy_load_target <- function(target, cache, namespace, envir, verbose){
   eval_env <- environment()
   delayedAssign(
     x = target,
@@ -220,6 +234,7 @@ lazy_load_target <- function(target, cache, envir, verbose){
       target,
       character_only = TRUE,
       cache = cache,
+      namespace = namespace,
       verbose = verbose
     ),
     eval.env = eval_env,

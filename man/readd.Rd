@@ -6,7 +6,7 @@
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE)
+  namespace = NULL, verbose = TRUE)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE},
@@ -29,6 +29,9 @@ current working directory only.}
 \item{cache}{optional drake cache. See code{\link{new_cache}()}.
 If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
+
+\item{namespace}{character scalar,
+name of an optional storr namespace to read from.}
 
 \item{verbose}{whether to print console messages}
 }
