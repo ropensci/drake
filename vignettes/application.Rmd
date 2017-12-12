@@ -21,9 +21,7 @@ unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  error = TRUE,
-  warning = TRUE
+  collapse = TRUE
 )
 ```
 
@@ -57,7 +55,7 @@ The `Produc` dataset from the [Ecdat package](https://cran.r-project.org/package
 - `emp`: labor input measured by the employment in non-agricultural payrolls.
 - `unemp`: state unemployment rate.
 
-```{r masterdata}
+```{r masterdata2}
 library(Ecdat)
 data(Produc)
 head(Produc)
