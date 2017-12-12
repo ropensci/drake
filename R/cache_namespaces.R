@@ -59,8 +59,9 @@ target_namespaces <- function(
 ){
   c(
     cleaned_namespaces(default = default),
-    "logs",
-    "meta"
+    "errors",
+    "meta",
+    "progress"
   ) %>%
     sort
 }
