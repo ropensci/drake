@@ -124,7 +124,8 @@ to_build_duration <- function(x){
 time_columns <- c("elapsed", "user", "system")
 
 append_times_to_meta <- function(target, start, meta, config){
-  if (any(is.na(start))){
+  bad_start <- !length(start) || is.na(start[1])
+  if (bad_start){
     return(meta)
   }
   build_times <- (proc.time() - start) %>%
