@@ -65,11 +65,11 @@ reference:
   contents:
   - '`analysis_wildcard`'
   - '`dataset_wildcard`'
+  - '`drake_plan`'
   - '`evaluate_plan`'
   - '`expand_plan`'
   - '`gather_plan`'
   - '`plan_analyses`'
-  - '`plan_drake`'
   - '`plan_summaries`'
 - title: Network graphs and visualization
   contents:
