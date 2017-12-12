@@ -60,6 +60,9 @@ build_times <- function(
   
 fetch_runtime <- function(key, cache){
   x <- get_from_meta(key = key, metaspace = "build_times", cache = cache)
+  if (any(is.na(x))){
+    return(empty_times())
+  }
   if (class(x) == "proc_time"){
     x <- runtime_entry(runtime = x, target = key, imported = NA)
   }

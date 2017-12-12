@@ -37,10 +37,7 @@ cleaned_namespaces <- function(
 ){
   c(
     default,
-    "commands",
-    "depends",
-    "kernels",
-    "mtimes"
+    "kernels"
   ) %>%
     sort
 }

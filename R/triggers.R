@@ -127,7 +127,7 @@ assert_legal_triggers <- function(x){
 command_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$command))
   !identical(
-    config$cache$get(target, namespace = "commands"),
+    get_from_meta(key = target, metaspace = "command", cache = config$cache),
     meta$command
   )
 }
@@ -135,7 +135,7 @@ command_trigger <- function(target, meta, config){
 depends_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$depends))
   !identical(
-    config$cache$get(target, namespace = "depends"),
+    get_from_meta(key = target, metaspace = "depends", cache = config$cache),
     meta$depends
   )
 }

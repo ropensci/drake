@@ -1,8 +1,4 @@
 store_target <- function(target, value, meta, start, config) {
-  config$cache$set(key = target, value = meta$command,
-                   namespace = "commands")
-  config$cache$set(key = target, value = meta$depends,
-                   namespace = "depends")
   config$cache$set(key = target, value = "finished",
                    namespace = "progress")
   if (is_file(target)) {

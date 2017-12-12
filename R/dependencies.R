@@ -90,16 +90,16 @@ deps <- function(x){
 #' }
 dependency_profile <- function(target, config){
   config$plan[["trigger"]] <- NULL
-  cached_command <- safe_get(key = target, namespace = "commands",
-    config = config)
+  cached_command <- get_from_meta(
+    key = target, metaspace = "command", cache = config$cache)
   current_command <- get_command(target = target, config = config)
 
   deps <- dependencies(target, config)
   hashes_of_dependencies <- self_hash(target = deps, config = config)
   current_dependency_hash <- digest::digest(hashes_of_dependencies,
     algo = config$long_hash_algo)
-  cached_dependency_hash <- safe_get(key = target, namespace = "depends",
-    config = config)
+  cached_dependency_hash <- get_from_meta(
+    key = target, metaspace = "depends", cache = config$cache)
   names(hashes_of_dependencies) <- deps
 
   cached_file_modification_time <- safe_get(

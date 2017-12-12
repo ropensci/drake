@@ -62,23 +62,21 @@ test_with_dir("scratch build with custom filesystem cache.", {
   # clean removes imported functions and cleans up 'functions'
   # namespace
   expect_true(cached(f, cache = cache))
-  for (n in c(cache$default_namespace, "depends", "kernels")) {
+  for (n in c(cache$default_namespace, "kernels")) {
     expect_true("f" %in% config$cache$list(namespace = n))
   }
   clean(f, cache = cache)
-  for (n in c(cache$default_namespace, "depends", "kernels")) {
+  for (n in c(cache$default_namespace, "kernels")) {
     expect_false("f" %in% config$cache$list(namespace = n))
   }
 
   clean(destroy = FALSE, cache = cache)
   expect_equal(config$cache$list(), character(0))
-  expect_equal(config$cache$list("depends"), character(0))
-  expect_equal(config$cache$list("reporducibly_tracked"), character(0))
+  expect_equal(config$cache$list("kernels"), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_false(file.exists(default_cache_path()))
   expect_true(file.exists(path))
-  expect_equal(config$cache$list("file_modification_times"), character(0))
 
   meta_list <- read_drake_meta(cache = cache)
   expect_true(length(meta_list) > 0)
@@ -87,7 +85,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   meta_list <- read_drake_meta(cache = cache)
   expect_true(length(meta_list) == 0)
   expect_true(length(cached(cache = cache, namespace = "meta")) == 0)
-
+  
   clean(destroy = TRUE, cache = cache)
   expect_false(file.exists(path))
 })
