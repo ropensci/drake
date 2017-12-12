@@ -99,6 +99,7 @@ get_cache <- function(
 #' The purpose of this code is to fetch the \code{storr} cache
 #' with a command like \code{storr_rds()} or \code{storr_dbi()},
 #' but customized. This feature is experimental.
+#' @param jobs number of jobs for parallel processing
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -338,14 +339,15 @@ configure_cache <- function(
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
   clear_progress = FALSE,
   overwrite_hash_algos = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  jobs = 1
 ){
   short_hash_algo <- match.arg(short_hash_algo,
     choices = available_hash_algos())
   long_hash_algo <- match.arg(long_hash_algo,
     choices = available_hash_algos())
   if (clear_progress){
-    cache$clear(namespace = "progress")
+    clear_progress(cache = cache, jobs = jobs)
   }
   short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
   long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")
@@ -367,6 +369,17 @@ configure_cache <- function(
   check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
   set_initial_drake_version(cache)
   cache
+}
+
+clear_progress <- function(cache, jobs){
+  lightly_parallelize(
+    X = cache$list(),
+    FUN = function(target){
+      cache$del(key = target, namespace = "progress")
+    },
+    jobs = jobs
+  )
+  invisible()
 }
 
 set_initial_drake_version <- function(cache){

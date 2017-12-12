@@ -165,7 +165,9 @@
 #'
 #' @param clear_progress logical, whether to clear the saved record of
 #' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
-#' before anything is imported or built.
+#' before anything is imported or built. Setting to \code{FALSE} could
+#' speed up \code{make()} a tiny bit, but then \code{\link{progress}()}
+#' will give false results.
 #'
 #' @param cache drake cache as created by \code{\link{new_cache}()}.
 #' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
@@ -306,7 +308,7 @@ make <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  clear_progress = NULL,
+  clear_progress = TRUE,
   imports_only = FALSE,
   timeout = Inf,
   cpu = NULL,
@@ -330,13 +332,6 @@ make <- function(
       call. = FALSE
     )
   }
-  if (!is.null(clear_progress)){
-    warning(
-      "The clear_progress argument to make() is deprecated. ",
-      "Progress is always cleared.",
-      call. = FALSE
-    )
-  }
   if (is.null(config)){
     config <- drake_config(
       plan = plan,
@@ -352,7 +347,7 @@ make <- function(
       command = command,
       args = args,
       recipe_command = recipe_command,
-      clear_progress = TRUE,
+      clear_progress = clear_progress,
       cache = cache,
       fetch_cache = fetch_cache,
       timeout = timeout,

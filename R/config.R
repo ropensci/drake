@@ -129,7 +129,8 @@ drake_config <- function(
   cache <- configure_cache(
     cache = cache,
     clear_progress = clear_progress,
-    overwrite_hash_algos = FALSE
+    overwrite_hash_algos = FALSE,
+    jobs = jobs
   )
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){

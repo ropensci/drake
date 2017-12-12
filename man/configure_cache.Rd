@@ -7,7 +7,8 @@
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  clear_progress = FALSE, overwrite_hash_algos = FALSE, verbose = TRUE)
+  clear_progress = FALSE, overwrite_hash_algos = FALSE, verbose = TRUE,
+  jobs = 1)
 }
 \arguments{
 \item{cache}{cache to configure}
