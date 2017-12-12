@@ -13,10 +13,9 @@ drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  clear_progress = FALSE, graph = NULL,
-  trigger = drake::default_trigger(), imports_only = FALSE,
-  skip_imports = FALSE, skip_safety_checks = FALSE, lazy_load = FALSE,
-  session_info = TRUE)
+  log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
+  imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
+  lazy_load = FALSE, session_info = TRUE)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -59,7 +58,7 @@ drake_config(plan = plan_drake(), targets = drake::possible_targets(plan),
 
 \item{force}{same as for \code{\link{make}}}
 
-\item{clear_progress}{logical, whether to clear
+\item{log_progress}{logical, whether to clear
 the cached progress of the targets readable by}
 
 \item{graph}{igraph object representing the workflow plan network.

@@ -67,6 +67,7 @@ migrate_drake_project <- function(
   config$trigger <- "any"
   config$execution_graph <- config$graph
   config$lazy_load <- FALSE
+  config$log_progress <- FALSE
   config$session_info <- TRUE
   config$outdated <- legacy_outdated(config) %>%
     as.character %>%

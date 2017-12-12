@@ -1,6 +1,9 @@
 store_target <- function(target, value, meta, start, config) {
-  config$cache$set(key = target, value = "finished",
-                   namespace = "progress")
+  set_progress(
+    target = target,
+    value = "finished",
+    config = config
+  )
   if (is_file(target)) {
     store_file(target = target, meta = meta,
                config = config)

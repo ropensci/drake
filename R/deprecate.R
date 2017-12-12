@@ -183,7 +183,7 @@ check <- function(
 #' @param elapsed same as for \code{\link{make}}
 #' @param retries same as for \code{\link{make}}
 #' @param force same as for \code{\link{make}}
-#' @param clear_progress same as for \code{\link{drake_config}}
+#' @param log_progress same as for \code{\link{drake_config}}
 #' @param graph same as for \code{\link{drake_config}}
 #' @param trigger same as for \code{\link{make}}
 #' @param skip_imports same as for \code{\link{drake_config}}
@@ -212,7 +212,7 @@ config <- function(
   elapsed = timeout,
   retries = 0,
   force = FALSE,
-  clear_progress = FALSE,
+  log_progress = FALSE,
   graph = NULL,
   trigger = "any",
   skip_imports = FALSE
@@ -246,7 +246,7 @@ config <- function(
     elapsed = elapsed,
     retries = retries,
     force = force,
-    clear_progress = clear_progress,
+    log_progress = log_progress,
     graph = graph,
     trigger = trigger,
     skip_imports = skip_imports

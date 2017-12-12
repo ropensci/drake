@@ -7,7 +7,7 @@
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  clear_progress = FALSE, overwrite_hash_algos = FALSE, verbose = TRUE,
+  log_progress = FALSE, overwrite_hash_algos = FALSE, verbose = TRUE,
   jobs = 1)
 }
 \arguments{
@@ -26,7 +26,7 @@ which is just the collection of algorithms available to the `algo`
 argument in \code{digest::digest()}.
 See \code{?\link{default_long_hash_algo}} for more.}
 
-\item{clear_progress}{logical, whether to clear the recorded
+\item{log_progress}{logical, whether to clear the recorded
 build progress if this cache was used for previous calls to
 \code{\link{make}()}}
 

@@ -133,7 +133,7 @@ this_cache <- function(
     cache = cache,
     long_hash_algo = "md5",
     overwrite_hash_algos = FALSE,
-    clear_progress = FALSE
+    log_progress = FALSE
   )
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -206,7 +206,7 @@ new_cache <- function(
     cache = cache,
     short_hash_algo = short_hash_algo,
     long_hash_algo = long_hash_algo,
-    clear_progress = FALSE,
+    log_progress = FALSE,
     overwrite_hash_algos = FALSE
   )
   console_cache(path = cache_path(cache), verbose = verbose)
@@ -304,7 +304,7 @@ default_cache_path <- function(){
 #' argument in \code{digest::digest()}.
 #' See \code{?\link{default_long_hash_algo}} for more.
 #'
-#' @param clear_progress logical, whether to clear the recorded
+#' @param log_progress logical, whether to clear the recorded
 #' build progress if this cache was used for previous calls to
 #' \code{\link{make}()}
 #'
@@ -337,7 +337,7 @@ configure_cache <- function(
   cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  clear_progress = FALSE,
+  log_progress = FALSE,
   overwrite_hash_algos = FALSE,
   verbose = TRUE,
   jobs = 1
@@ -346,7 +346,7 @@ configure_cache <- function(
     choices = available_hash_algos())
   long_hash_algo <- match.arg(long_hash_algo,
     choices = available_hash_algos())
-  if (clear_progress){
+  if (log_progress){
     clear_progress(cache = cache, jobs = jobs)
   }
   short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")

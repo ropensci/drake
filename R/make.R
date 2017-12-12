@@ -163,11 +163,14 @@
 #' @param recipe_command Character scalar, command for the
 #' Makefile recipe for each target.
 #'
-#' @param clear_progress logical, whether to clear the saved record of
-#' progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
-#' before anything is imported or built. Setting to \code{FALSE} could
-#' speed up \code{make()} a tiny bit, but then \code{\link{progress}()}
-#' will give false results.
+#' @param log_progress logical, whether to log the progress
+#' of individual targets as they are being built. Progress logging
+#' creates a lot of littel files in the cache, and it may make builds
+#' a tiny bit slower. So you may see gains in storage efficiency
+#' and speed with
+#' \code{make(..., log_progress = FALSE)}. But be warned that
+#' \code{\link{progress}()} and \code{\link{in_progress}()}
+#' will no longer work if you do that.
 #'
 #' @param cache drake cache as created by \code{\link{new_cache}()}.
 #' See also \code{\link{get_cache}()}, \code{\link{this_cache}()},
@@ -308,7 +311,7 @@ make <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  clear_progress = TRUE,
+  log_progress = TRUE,
   imports_only = FALSE,
   timeout = Inf,
   cpu = NULL,
@@ -347,7 +350,7 @@ make <- function(
       command = command,
       args = args,
       recipe_command = recipe_command,
-      clear_progress = clear_progress,
+      log_progress = log_progress,
       cache = cache,
       fetch_cache = fetch_cache,
       timeout = timeout,

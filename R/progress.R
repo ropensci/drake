@@ -261,3 +261,14 @@ get_progress_single <- function(target, cache){
     "not built or imported"
   }
 }
+
+set_progress <- function(target, value, config){
+  if (!config$log_progress){
+    return()
+  }
+  config$cache$set(
+    key = target,
+    value = value,
+    namespace = "progress"
+  )
+}

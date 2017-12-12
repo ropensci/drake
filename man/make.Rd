@@ -11,7 +11,7 @@ make(plan = plan_drake(), targets = drake::possible_targets(plan),
   jobs = 1, packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(), clear_progress = TRUE,
+  recipe_command = drake::default_recipe_command(), log_progress = TRUE,
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
   trigger = drake::default_trigger(), skip_imports = FALSE,
@@ -180,11 +180,14 @@ wherever possible.}
 \item{recipe_command}{Character scalar, command for the
 Makefile recipe for each target.}
 
-\item{clear_progress}{logical, whether to clear the saved record of
-progress seen by \code{\link{progress}()} and \code{\link{in_progress}()}
-before anything is imported or built. Setting to \code{FALSE} could
-speed up \code{make()} a tiny bit, but then \code{\link{progress}()}
-will give false results.}
+\item{log_progress}{logical, whether to log the progress
+of individual targets as they are being built. Progress logging
+creates a lot of littel files in the cache, and it may make builds
+a tiny bit slower. So you may see gains in storage efficiency
+and speed with
+\code{make(..., log_progress = FALSE)}. But be warned that
+\code{\link{progress}()} and \code{\link{in_progress}()}
+will no longer work if you do that.}
 
 \item{imports_only}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
