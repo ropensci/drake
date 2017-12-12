@@ -17,7 +17,12 @@ list_subspace <- function(subspace, namespace, cache, jobs){
   parallel_filter(
     x = cache$list(namespace = namespace),
     f = function(key){
-      exists_in_subspace(key = key, subspace = subspace, cache = cache)
+      exists_in_subspace(
+        key = key,
+        subspace = subspace,
+        namespace = namespace,
+        cache = cache
+      )
     },
     jobs = jobs
   )

@@ -28,7 +28,7 @@ test_with_dir("bad/corrupt caches", {
     make(x, verbose = FALSE, session_info = FALSE)))
 })
 
-test_with_dir("try to find a non-existent project", {
+test_with_dir("non-existent caches", {
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
@@ -45,6 +45,30 @@ test_with_dir("try to rescue non-existent stuff", {
   expect_null(rescue_cache())
   cache <- storr_rds("dummy_cache")
   expect_silent(rescue_del(key = "no_key", cache = cache, namespace = "none"))
+})
+
+test_with_dir("subspaces", {
+  x <- storr::storr_rds("test")
+  lst <- list_subspace(
+    subspace = "y", namespace = "x", cache = x, jobs = 1)
+  expect_equal(lst, character(0))
+  set_in_subspace(
+    key = "a",
+    value = 1,
+    namespace = "x",
+    subspace = "y",
+    cache = x
+  )
+  set_in_subspace(
+    key = "b",
+    value = 2,
+    namespace = "x",
+    subspace = "y",
+    cache = x
+  )
+  lst <- list_subspace(
+    subspace = "y", namespace = "x", cache = x, jobs = 1)
+  expect_equal(sort(lst), c("a", "b"))
 })
 
 test_with_dir("cache functions work", {

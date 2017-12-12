@@ -57,7 +57,7 @@ build_times <- function(
   }
   out
 }
-  
+
 fetch_runtime <- function(key, cache){
   x <- get_from_subspace(
     key = key,
@@ -65,7 +65,7 @@ fetch_runtime <- function(key, cache){
     namespace = "meta",
     cache = cache
   )
-  if (any(is.na(x))){
+  if (is_bad_time(x)){
     return(empty_times())
   }
   if (class(x) == "proc_time"){
@@ -124,12 +124,15 @@ to_build_duration <- function(x){
 time_columns <- c("elapsed", "user", "system")
 
 append_times_to_meta <- function(target, start, meta, config){
-  bad_start <- !length(start) || is.na(start[1])
-  if (bad_start){
+  if (is_bad_time(start)){
     return(meta)
   }
   build_times <- (proc.time() - start) %>%
     runtime_entry(target = target, imported = meta$imported)
   meta$build_times <- build_times
   meta
+}
+
+is_bad_time <- function(x){
+  !length(x) || is.na(x[1])
 }

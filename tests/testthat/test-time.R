@@ -1,5 +1,20 @@
 drake_context("time")
 
+test_with_dir("can ignore a bad time", {
+  x <- plan_drake(a = 1, b = 2)
+  make(x, verbose = FALSE)
+  cache <- get_cache()
+  expect_equal(nrow(build_times()), 2)
+  set_in_subspace(
+    key = "a",
+    subspace = "build_times",
+    namespace = "meta",
+    value = NA,
+    cache = cache
+  )
+  expect_equal(nrow(build_times()), 1)
+})
+
 test_with_dir("proc_time runtimes can be fetched", {
   cache <- storr::storr_rds("cache")
   key <- "x"
