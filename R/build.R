@@ -63,6 +63,9 @@ build_in_hook <- function(target, meta, config) {
     value <- build_target(target = target,
       meta = meta, config = config)
   }
+  if (is_file(target)){
+    meta$mtime <- file.mtime(drake::drake_unquote(target))
+  }
   store_target(target = target, value = value, meta = meta,
     start = start, config = config)
   value

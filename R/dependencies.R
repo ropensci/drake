@@ -102,8 +102,8 @@ dependency_profile <- function(target, config){
     key = target, metaspace = "depends", cache = config$cache)
   names(hashes_of_dependencies) <- deps
 
-  cached_file_modification_time <- safe_get(
-    key = target, namespace = "mtimes", config = config)
+  cached_file_modification_time <- get_from_meta(
+    key = target, metaspace = "mtime", cache = config$cache)
   current_file_modification_time <- ifelse(is_file(target),
     file.mtime(drake::drake_unquote(target)), NA)
 

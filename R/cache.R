@@ -409,3 +409,9 @@ safe_get <- function(key, namespace, config){
     NA
   }
 }
+
+kernel_exists <- function(target, config){
+  config$cache$exists(key = target, namespace = "kernels")
+}
+
+target_exists <- kernel_exists

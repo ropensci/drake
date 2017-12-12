@@ -55,7 +55,7 @@ dependency_hash <- function(target, config) {
 }
 
 self_hash <- Vectorize(function(target, config) {
-  if (target_exists(target = target, config = config)) {
+  if (kernel_exists(target = target, config = config)) {
     config$cache$get_hash(target, namespace = "kernels")
   } else {
     as.character(NA)
@@ -90,8 +90,8 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(
-    file_target_exists(target = target, config = config),
-    config$cache$get(key = target, namespace = "mtimes"),
+    exists_in_meta(key = target, metaspace = "mtime", cache = config$cache),
+    get_from_meta(key = target, metaspace = "mtime", cache = config$cache),
     -Inf
   )
   new_mtime <- file.mtime(filename)

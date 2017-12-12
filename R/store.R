@@ -30,11 +30,6 @@ store_object <- function(target, value, config) {
 }
 
 store_file <- function(target, meta, config) {
-  config$cache$set(
-    key = target,
-    value = file.mtime(drake::drake_unquote(target)),
-    namespace = "mtimes"
-  )
   value <- ifelse(
     meta$imported,
     meta$file,
