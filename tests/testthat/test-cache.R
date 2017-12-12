@@ -52,6 +52,9 @@ test_with_dir("try to rescue non-existent stuff", {
 })
 
 test_with_dir("subspaces", {
+  lst <- list_subspace(
+    subspace = "y", namespace = "x", cache = NULL, jobs = 1)
+  expect_equal(lst, character(0))
   x <- storr::storr_rds("test")
   lst <- list_subspace(
     subspace = "y", namespace = "x", cache = x, jobs = 1)
