@@ -101,12 +101,11 @@ dependency_profile <- function(target, config){
   cached_dependency_hash <- get_from_meta(
     key = target, metaspace = "depends", cache = config$cache)
   names(hashes_of_dependencies) <- deps
-
   cached_file_modification_time <- get_from_meta(
     key = target, metaspace = "mtime", cache = config$cache)
-  current_file_modification_time <- ifelse(is_file(target),
-    file.mtime(drake::drake_unquote(target)), NA)
-
+  current_file_modification_time <- suppressWarnings(
+    file.mtime(drake::drake_unquote(target))
+  )
   out <- list(
     cached_command = cached_command,
     current_command = current_command,
