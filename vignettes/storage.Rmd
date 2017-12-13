@@ -237,24 +237,17 @@ cached(cache = memory_cache)
 readd(result, cache = memory_cache)
 ```
 
-In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, this feature is currently experimental. Also, some `storr_dbi()` caches use a single file as a database, which causes race conditions. Only `storr_rds()` caches should be used with parallel computing. In addition, single-quoted keys do not currently play nicely with `storr_dbi()` caches, as [documented in the storr issue tracker](https://github.com/richfitz/storr/issues/60). That means you cannot use file targets.
+In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, this feature is currently experimental. Also, some `storr_dbi()` caches use a single file as a database, which causes race conditions. Only `storr_rds()` caches should be used with parallel computing. The following example requires the `DBI` and `RSQLite` packages.
 
 ```{r dbi_caches, eval = FALSE}
-# Requires the DBI and RSQLite packages.
-
 mydb <- DBI::dbConnect(RSQLite::SQLite(), "my-db.sqlite")
 cache <- storr::storr_dbi(
   tbl_data = "data",
   tbl_keys = "keys",
   con = mydb
 )
-
 load_basic_example()
 unlink(".drake", recursive = TRUE)
-
-# https://github.com/richfitz/storr/issues/60
-my_plan <- my_plan[my_plan$target != "'report.md'", ]
-
 make(my_plan, cache = cache)
 ```
 
