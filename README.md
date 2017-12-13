@@ -14,9 +14,9 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/wlandau-lilly/drake?branch=master&svg=true)](https://ci.appveyor.com/project/wlandau-lilly/drake)
 [![codecov.io](https://codecov.io/github/wlandau-lilly/drake/coverage.svg?branch=master)](https://codecov.io/github/wlandau-lilly/drake?branch=master)
 
-# Why use drake
+# Why use drake?
 
-For data science projects, `drake` keeps the results consistent with the underlying code and data. On each runthrough, `drake` detects any existing output and refreshes the pieces that are outdated or missing. Not every execution restarts from scratch, and reproducibility is assured. With extensive [implicit parallel computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) and a user-friendly R-focused interface, `drake` surpasses the analogous functionality in similar tools such as [knitr](https://github.com/yihui/knitr), [Make](www.gnu.org/software/make/), and [remake](https://github.com/richfitz/remake).
+For data science projects in R, `drake` keeps the results consistent with the underlying data and code. On each runthrough, `drake` detects any existing output and refreshes the pieces that are outdated or missing.  Not every execution needs to start from scratch, and reproducibility is assured. With a user-friendly R-focused interface and extensive [implicit parallel computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd), `drake` surpasses the analogous functionality in similar tools such as [knitr](https://github.com/yihui/knitr), [Make](www.gnu.org/software/make/), and [remake](https://github.com/richfitz/remake).
 
 # What gets done stays done.
 
