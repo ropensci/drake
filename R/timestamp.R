@@ -17,7 +17,7 @@
 #' })
 #' }
 time_stamps <- function(config){
-  cache_path <- cache_path(config$cache)
+  cache_path <- config$cache_path
   stamp_dir <- time_stamp_dir(cache_path)
   dir_empty(stamp_dir)
   write_time_stamp_template(cache_path)

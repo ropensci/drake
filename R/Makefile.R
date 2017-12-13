@@ -27,7 +27,7 @@ makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
   }
-  cache_path <- cache_path(config$cache) %>%
+  cache_path <- config$cache_path %>%
     to_unix_path
   cat(cache_macro, "=", cache_path, "\n\n", sep = "")
   cat(

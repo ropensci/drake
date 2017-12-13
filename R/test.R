@@ -12,7 +12,8 @@ testrun <- function(config) {
       packages = config$packages, prework = config$prework,
       prepend = config$prepend, command = config$command,
       cache = config$cache, lazy_load = config$lazy_load,
-      session_info = config$session_info
+      session_info = config$session_info,
+      fetch_cache = config$fetch_cache
     )
   )
 }
