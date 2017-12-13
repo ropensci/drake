@@ -16,7 +16,7 @@
 
 # Why use drake
 
-For data science projects, `drake` keeps the results consistent with the underlying code and data. On each runthrough, `drake` detects any existing output and refreshes the pieces that are outdated or missing. Not every execution starts from scratch, and reproducibility is assured. With extensive [implicit parallel computing funcionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) and a user-friendly R-focused interface, `drake` surpasses the analogous functionality in similar tools such as [knitr](https://github.com/yihui/knitr), [Make](www.gnu.org/software/make/), and [remake](https://github.com/richfitz/remake).
+For data science projects, `drake` keeps the results consistent with the underlying code and data. On each runthrough, `drake` detects any existing output and refreshes the pieces that are outdated or missing. Not every execution starts from scratch, and reproducibility is assured. With extensive [implicit parallel computing functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) and a user-friendly R-focused interface, `drake` surpasses the analogous functionality in similar tools such as [knitr](https://github.com/yihui/knitr), [Make](www.gnu.org/software/make/), and [remake](https://github.com/richfitz/remake).
 
 # What gets done stays done.
 
