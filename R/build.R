@@ -51,8 +51,6 @@ drake_build_worker <- function(target, meta_list, config){
 
 build_in_hook <- function(target, meta, config) {
   start <- proc.time()
-  meta <- finish_meta(
-    target = target, meta = meta, config = config)
   set_progress(
     target = target,
     value = "in progress",
@@ -60,21 +58,18 @@ build_in_hook <- function(target, meta, config) {
   )
   console(imported = meta$imported, target = target, config = config)
   if (meta$imported) {
-    value <- imported_target(target = target, meta = meta,
+    value <- imported_target(target = target,
       config = config)
   } else {
     value <- build_target(target = target,
-      meta = meta, config = config)
-  }
-  if (is_file(target)){
-    meta$mtime <- file.mtime(drake::drake_unquote(target))
+      config = config)
   }
   store_target(target = target, value = value, meta = meta,
     start = start, config = config)
   value
 }
 
-build_target <- function(target, meta, config) {
+build_target <- function(target, config) {
   command <- get_command(target = target, config = config) %>%
     functionize
   seed <- list(seed = config$seed, target = target) %>%
@@ -99,9 +94,9 @@ check_built_file <- function(target){
   }
 }
 
-imported_target <- function(target, meta, config) {
+imported_target <- function(target, config) {
   if (is_file(target)) {
-    return(meta$file)
+    return(NA)
   } else if (target %in% ls(config$envir, all.names = TRUE)) {
     value <- config$envir[[target]]
   } else {

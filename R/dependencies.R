@@ -64,10 +64,6 @@ deps <- function(x){
 #' of the returned list should agree: for example,
 #' \code{cached_dependency_hash} and
 #' \code{current_dependency_hash}.
-#' @details The dependency profile is based on cached metadata
-#' taken \emph{just before} the target was built, not
-#' immediately afterwards. If the metadata seems
-#' out of date, that is the reason why.
 #' @return A list of information that drake takes into account
 #' when examining the dependencies of the target.
 #' @export
@@ -93,40 +89,25 @@ deps <- function(x){
 #' })
 #' }
 dependency_profile <- function(target, config){
+  if (!config$cache$exists(key = target, namespace = "meta")){
+    stop("no recorded metadata for target ", target, ".")
+  }
   config$plan[["trigger"]] <- NULL
-  cached_command <- get_from_subspace(
-    key = target,
-    subspace = "command",
-    namespace = "meta",
-    cache = config$cache
-  )
-  current_command <- get_command(target = target, config = config)
+  meta <- config$cache$get(key = target, namespace = "meta")
   deps <- dependencies(target, config)
   hashes_of_dependencies <- self_hash(target = deps, config = config)
   current_dependency_hash <- digest::digest(hashes_of_dependencies,
     algo = config$long_hash_algo)
-  cached_dependency_hash <- get_from_subspace(
-    key = target,
-    subspace = "depends",
-    namespace = "meta",
-    cache = config$cache
-  )
   names(hashes_of_dependencies) <- deps
-  cached_file_modification_time <- get_from_subspace(
-    key = target,
-    subspace = "mtime",
-    namespace = "meta",
-    cache = config$cache
-  )
-  current_file_modification_time <- suppressWarnings(
-    file.mtime(drake::drake_unquote(target))
-  )
   out <- list(
-    cached_command = cached_command,
-    current_command = current_command,
-    cached_file_modification_time = cached_file_modification_time,
-    current_file_modification_time = current_file_modification_time,
-    cached_dependency_hash = cached_dependency_hash,
+    cached_command = meta$command,
+    current_command = get_command(target = target, config = config),
+    cached_file_modification_time = meta$mtime,
+    current_file_modification_time = suppressWarnings(
+      file.mtime(drake::drake_unquote(target))
+    ),
+    file_hash = meta$file,
+    cached_dependency_hash = meta$depends,
     current_dependency_hash = current_dependency_hash,
     hashes_of_dependencies = hashes_of_dependencies
   )

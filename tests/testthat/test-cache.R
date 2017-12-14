@@ -1,5 +1,13 @@
 drake_context("cache")
 
+test_with_dir("dependency profile", {
+  config <- make(drake_plan(a = 1))
+  expect_error(dependency_profile(
+    target = "notfound", config = config))
+  expect_true(is.list(dependency_profile(
+    target = "a", config = config)))
+})
+
 test_with_dir("Cache namespaces", {
   x <- cache_namespaces()
   y <- target_namespaces()

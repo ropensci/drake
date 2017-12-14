@@ -12,10 +12,6 @@ test_with_dir("basic example works", {
     jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
 
-  expect_true(is.list(dependency_profile(
-    target = "'report.md'", config = config)))
-  expect_true(is.list(dependency_profile(
-    target = "'report.Rmd'", config = config)))
   tmp <- vis_drake_graph(config = config)
   expect_false(file.exists("Makefile"))
 

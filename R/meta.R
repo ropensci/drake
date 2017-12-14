@@ -36,14 +36,27 @@ meta <- function(target, config) {
 }
 
 finish_meta <- function(target, meta, config){
+  if (is_file(target)) {
+    # Keep an updated modification time for each file.
+    meta$mtime <- file.mtime(drake::drake_unquote(target))
+    # If the target is a file output, then we know
+    # it needs to be rehashed.
+    if (!meta$imported){
+      meta$file <- rehash_file(target = target, config = config)
+    }
+  }
+  # If the user selected a non-default trigger,
+  # some of these fields might not be populated.
+  # Empty fields need to be filled so that the target
+  # can appear up to date in the next make().
+  if (is.null(meta$file)){
+    meta$file <- file_hash(target = target, config = config)
+  }
   if (is.null(meta$command)){
     meta$command <- get_command(target = target, config = config)
   }
   if (is.null(meta$depends)){
     meta$depends <- dependency_hash(target = target, config = config)
-  }
-  if (is.null(meta$file)){
-    meta$file <- file_hash(target = target, config = config)
   }
   meta
 }
