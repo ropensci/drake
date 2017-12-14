@@ -319,12 +319,12 @@ test_with_dir("cache functions work", {
   drake_gc(path = s, search = T)
 
   # Test purging
-  meta_list <- read_drake_meta(search = TRUE, path = s)
-  expect_true("final" %in% names(meta_list))
+  prog <- progress(search = TRUE, path = s)
+  expect_true("final" %in% names(prog))
   clean(final, path = s, search = TRUE, jobs = 2,
     garbage_collection = TRUE, purge = TRUE)
-  meta_list <- read_drake_meta(search = TRUE, path = s)
-  expect_false("final" %in% names(meta_list))
+  prog <- progress(search = TRUE, path = s)
+  expect_false("final" %in% names(prog))
 
   # More cleaning checks
   clean(path = s, search = TRUE, garbage_collection = FALSE)

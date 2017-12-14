@@ -19,9 +19,9 @@ prepare_distributed <- function(config){
   if (!file.exists(config$cache_path)){
     dir.create(config$cache_path)
   }
-  saveRDS(
-    config$fetch_cache,
-    file = file.path(config$cache_path, "fetch_cache.rds")
+  writeLines(
+    text = as.character(config$fetch_cache),
+    con = file.path(config$cache_path, fetch_cache_file)
   )
   if (identical(globalenv(), config$envir)){
     save(
@@ -65,7 +65,8 @@ build_distributed <- function(target, meta_list, cache_path){
 
 recover_drake_config <- function(cache_path){
   fetch_cache <- tryCatch(
-    readRDS(file.path(cache_path, "fetch_cache.rds")),
+    readLines(con = file.path(cache_path, fetch_cache_file)) %>%
+      paste0(collapse = "\n"),
     error = error_null
   )
   cache <- this_cache(cache_path, verbose = FALSE, fetch_cache = fetch_cache)
@@ -77,3 +78,5 @@ recover_drake_config <- function(cache_path){
   }
   config
 }
+
+fetch_cache_file <- "fetch_cache.R"

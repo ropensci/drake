@@ -37,7 +37,8 @@ cleaned_namespaces <- function(
 ){
   c(
     default,
-    "kernels"
+    "kernels",
+    "meta"
   ) %>%
     sort
 }
@@ -60,7 +61,6 @@ target_namespaces <- function(
   c(
     cleaned_namespaces(default = default),
     "errors",
-    "meta",
     "progress"
   ) %>%
     sort

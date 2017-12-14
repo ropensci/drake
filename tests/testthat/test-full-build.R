@@ -78,14 +78,6 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_false(file.exists(default_cache_path()))
   expect_true(file.exists(path))
 
-  meta_list <- read_drake_meta(cache = cache)
-  expect_true(length(meta_list) > 0)
-  expect_true(length(cached(cache = cache, namespace = "meta")) > 0)
-  clean(purge = TRUE, cache = cache)
-  meta_list <- read_drake_meta(cache = cache)
-  expect_true(length(meta_list) == 0)
-  expect_true(length(cached(cache = cache, namespace = "meta")) == 0)
-
   clean(destroy = TRUE, cache = cache)
   expect_false(file.exists(path))
 })

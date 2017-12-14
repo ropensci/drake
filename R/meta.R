@@ -123,7 +123,8 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
     new_mtime = new_mtime,
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
-  if (do_rehash){
+  old_hash_exists <- config$cache$exists(key = target, namespace = "kernels")
+  if (do_rehash || !old_hash_exists){
     rehash_file(target = target, config = config)
   } else {
     config$cache$get(key = target, namespace = "kernels")

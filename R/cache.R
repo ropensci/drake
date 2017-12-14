@@ -123,10 +123,11 @@ this_cache <- function(
   if (!is.null(path)){
     console_cache(path = path, verbose = verbose)
   }
-  if (is.null(fetch_cache)){
-    cache <- drake_fetch_rds(path)
-  } else {
+  fetch_cache <- as.character(fetch_cache)
+  if (length(fetch_cache) && nchar(fetch_cache)){
     cache <- eval(parse(text = functionize(fetch_cache)))
+  } else {
+    cache <- drake_fetch_rds(path)
   }
   configure_cache(
     cache = cache,
@@ -313,7 +314,7 @@ default_cache_path <- function(){
 #' @param verbose whether to print console messages
 #'
 #' @param jobs number of jobs for parallel processing
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
