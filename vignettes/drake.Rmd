@@ -200,9 +200,9 @@ make(my_plan)
 The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](https://www.gnu.org/software/make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make". [Make](http://kbroman.org/minimal_make/) is used widely in reproducible research. Below are some examples from [Karl Broman's website](http://kbroman.org/minimal_make/).
 
 - Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/master/Makefile.
-- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202. https://doi.org/10.1534/g3.111.001818. Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/master/Makefile.
-- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. https://doi.org/10.1534/genetics.111.132647. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/master/Makefile.
-- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. https://doi.org/10.1534/genetics.112.142448. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
+- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202. Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/master/Makefile.
+- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/master/Makefile.
+- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
 
 There are several reasons for R users to prefer `drake` instead.
 
@@ -220,7 +220,7 @@ There are several reasons for R users to prefer `drake` instead.
 1. A friendly interface. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow, which leads to the same scalability problems as [Make](https://www.gnu.org/software/make/). [Drake](https://github.com/wlandau-lilly/drake)'s data-frame-based interface and [wildcard templating functionality](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan)  easily generates at scale.
 1. Thorough documentation. [Drake](https://github.com/wlandau-lilly/drake) contains [Nine vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes), a [comprehensive README](https://github.com/wlandau-lilly/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) that users can write with `drake::example_drake()`.
 1. Active maintenance. [Drake](https://github.com/wlandau-lilly/drake) is actively developed and maintained, and [issues](https://github.com/wlandau-lilly/drake/issues) are usually solved promptly.
-1. Presence on CRAN. At the time of writing, [drake](https://github.com/wlandau-lilly/drake) is [available on CRAN](https://cran.r-project.org/web/packages/drake/index.html), but [remake](https://github.com/richfitz/remake) is not.
+1. Presence on CRAN. At the time of writing, [drake](https://github.com/wlandau-lilly/drake) is [available on CRAN](https://cran.r-project.org/package=drake), but [remake](https://github.com/richfitz/remake) is not.
 
 
 ## Memoise
