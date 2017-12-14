@@ -42,6 +42,7 @@ con$cache$get_hash("simulate",
 }
 }
 \seealso{
+\code{\link{read_drake_meta}},
 \code{\link{deps}}, \code{\link{make}},
 \code{\link{config}}
 }

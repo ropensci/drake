@@ -67,7 +67,8 @@ deps <- function(x){
 #' @return A list of information that drake takes into account
 #' when examining the dependencies of the target.
 #' @export
-#' @seealso \code{\link{deps}}, \code{\link{make}},
+#' @seealso \code{\link{read_drake_meta}},
+#' \code{\link{deps}}, \code{\link{make}},
 #' \code{\link{config}}
 #' @param target name of the target
 #' @param config configuration list output by

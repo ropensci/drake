@@ -166,7 +166,10 @@ test_with_dir("cache functions work", {
   expect_true(inherits(read_drake_graph(search = FALSE), "igraph"))
   expect_true(is.list(
     tmp <- read_drake_meta(targets = "final", search = FALSE)))
-  expect_equal(names(tmp), "final")
+  expect_true(is.list(
+    tmp <- read_drake_meta(
+      targets = c("final", "yourinput"), search = FALSE)))
+  expect_equal(sort(names(tmp)), sort(c("final", "yourinput")))
   expect_true(is.list(tmp <- read_drake_meta(search = FALSE)))
   expect_true(length(tmp) > 1)
   # imported , built, cached, diagnose, rescue

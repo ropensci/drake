@@ -40,7 +40,8 @@ Target metadata is computed
 with \code{drake:::meta()} and then
 \code{drake:::finish_meta()}. This metadata corresponds
 to the state of the target immediately after it was built
-or imported in the last \code{\link{make}()}.
+or imported in the last \code{\link{make}()} that
+did not skip it.
 The exception to this is the \code{$missing} element
 of the metadata, which indicates if the target/import
 was missing just \emph{before} it was built.
@@ -59,5 +60,5 @@ read_drake_meta(jobs = 2)
 }
 }
 \seealso{
-\code{\link{make}}
+\code{\link{dependency_profile}}, \code{\link{make}}
 }
