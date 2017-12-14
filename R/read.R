@@ -398,12 +398,15 @@ read_drake_graph <- function(
 }
 
 #' @title Function \code{read_drake_meta}
-#' @description For each target, read the information from
-#' \code{drake:::meta()} stored from the last
-#' \code{\link{make}()}.
-#' This metadata was computed right before the target was built,
-#' and it was used in \code{drake:::should_build_target})
-#' to decide whether to build or skip the target.
+#' @description Read a target's metadata.
+#' @details Target metadata is computed
+#' with \code{drake:::meta()} and then
+#' \code{drake:::finish_meta()}. This metadata corresponds
+#' to the state of the target immediately after it was built
+#' or imported in the last \code{\link{make}()}.
+#' The exception to this is the \code{$missing} element
+#' of the metadata, which indicates if the target/import
+#' was missing just \emph{before} it was built.
 #' @seealso \code{\link{make}}
 #' @export
 #' @return The cached master internal configuration list
