@@ -71,7 +71,6 @@ default_graph_title <- function(split_columns = FALSE){
   out
 }
 
-
 file_hover_text <- Vectorize(function(quoted_file, targets){
   unquoted_file <- drake_unquote(quoted_file)
   if (quoted_file %in% targets | !file.exists(unquoted_file))

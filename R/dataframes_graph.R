@@ -114,7 +114,7 @@ dataframes_graph <- function(
   config$split_columns <- split_columns
   config <- get_raw_node_category_data(config)
   config$stages <- graphing_parallel_stages(config)
-  
+
   subset <- parse_graph_subset_arg(
     subset = subset,
     targets_only = targets_only,
@@ -127,17 +127,17 @@ dataframes_graph <- function(
     order = order,
     subset = subset
   )
-  
+
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
-  
+
   config$edges <- network_data$edges
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
   }
-  
+
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(split_columns = split_columns))
