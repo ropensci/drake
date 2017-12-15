@@ -185,22 +185,21 @@ assert_unique_names <- function(imports, targets, envir, verbose){
   remove(list = common, envir = envir)
 }
 
-trim_graph <- function(config){
-  if (!length(config$from)){
-    return(config)
+get_neighborhood <- function(graph, from, mode, order){
+  if (!length(order)){
+    order <- length(V(graph))
   }
-  config <- sanitize_from(config)
-  if (!length(config$order)){
-    config$order <- length(V(config$graph))
+  if (length(from)){
+    from <- sanitize_nodes(nodes = from, choices = V(graph)$name)
+    graph <- igraph::make_ego_graph(
+      graph = graph,
+      order = order,
+      nodes = from,
+      mode = mode
+    ) %>%
+      do.call(what = igraph::union)
   }
-  config$graph <- igraph::make_ego_graph(
-    graph = config$graph,
-    order = config$order,
-    nodes = config$from,
-    mode = config$mode
-  ) %>%
-    do.call(what = igraph::union)
-  config
+  graph
 }
 
 downstream_nodes <- function(from, graph, jobs){
@@ -240,4 +239,12 @@ exclude_imports_if <- function(config){
     v = delete_these
   )
   config
+}
+
+subset_graph <- function(graph, subset){
+  if (!length(subset)){
+    return(graph)
+  }
+  subset <- intersect(subset, V(graph)$name)
+  igraph::induced_subgraph(graph = graph, vids = subset)
 }

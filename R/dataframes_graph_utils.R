@@ -1,6 +1,3 @@
-# For hover text
-hover_text_length <- 250
-
 append_build_times <- function(config) {
   with(config, {
     time_data <- build_times(digits = digits, cache = config$cache)
@@ -14,12 +11,6 @@ append_build_times <- function(config) {
       paste(nodes[timed, "label"], time_labels, sep = "\n")
     nodes
   })
-}
-
-shrink_levels <- function(nodes){
-  nodes <- nodes[order(nodes$level), ]
-  nodes$level <- c(0, cumsum(diff(nodes$level) > 0))
-  nodes
 }
 
 can_get_function <- function(x, envir) {
@@ -45,19 +36,17 @@ categorize_nodes <- function(config) {
 }
 
 configure_nodes <- function(config){
-  elts <- c(
-    "failed", "functions", "in_progress", "missing",
-    "outdated", "targets"
-  )
-  for (elt in elts){
-    config[[elt]] <- intersect(config[[elt]], config$nodes$id)
-  }
+  rownames(config$nodes) <- config$nodes$label
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
   config$nodes <- style_nodes(config = config)
   if (config$build_times){
     config$nodes <- append_build_times(config = config)
   }
+  if (config$split_columns){
+    config$nodes <- split_node_columns(nodes = config$nodes)
+  }
+  config$nodes <- shrink_levels(config$nodes)
   hover_text(config = config)
 }
 
@@ -108,9 +97,32 @@ function_hover_text <- Vectorize(function(function_name, envir){
 },
 "function_name")
 
-target_hover_text <- function(targets, plan) {
-  plan[plan$target %in% targets, "command"] %>%
-    wrap_text %>% crop_text(length = hover_text_length)
+get_raw_node_category_data <- function(config){
+  all_labels <- V(config$graph)$name
+  config$outdated <- resolve_graph_outdated(config = config)
+  config$imports <- setdiff(all_labels, config$plan$target)
+  config$in_progress <- in_progress(cache = config$cache)
+  config$failed <- failed(cache = config$cache)
+  config$files <- parallel_filter(
+    x = all_labels, f = is_file, jobs = config$jobs)
+  config$functions <- parallel_filter(
+    x = config$imports,
+    f = function(x) can_get_function(x, envir = config$envir),
+    jobs = config$jobs
+  )
+  config$missing <- parallel_filter(
+    x = config$imports,
+    f = function(x) missing_import(x, envir = config$envir),
+    jobs = config$jobs
+  )
+  config
+}
+
+graphing_parallel_stages <- function(config){
+  config$trigger <- "always"
+  stages <- parallel_stages(config)
+  rownames(stages) <- stages$item
+  stages
 }
 
 hover_text <- function(config) {
@@ -127,84 +139,7 @@ hover_text <- function(config) {
   })
 }
 
-null_graph <- function() {
-  nodes <- data.frame(id = 1, label = "Nothing to plot.")
-  visNetwork::visNetwork(
-    nodes = nodes, edges = data.frame(from = NA, to = NA))
-}
-
-missing_import <- function(x, envir) {
-  missing_object <- !is_file(x) & is.null(envir[[x]]) & tryCatch({
-    flexible_get(x)
-    FALSE
-  },
-  error = function(e) TRUE)
-  missing_file <- is_file(x) & !file.exists(drake_unquote(x))
-  missing_object | missing_file
-}
-
-resolve_levels <- function(config) { # nolint
-  config$trigger <- "always"
-  stages <- parallel_stages(config)
-  rownames(stages) <- stages$item
-  config$nodes$level <- stages[rownames(config$nodes), "stage"]
-  config$nodes
-}
-
-# https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r
-split_levels <- function(old_levels, max_reps){
-  n_nodes <- length(old_levels)
-  n_levels <- floor(n_nodes / max_reps) + (n_nodes %% max_reps > 0)
-  index <- seq_along(old_levels)
-  new_levels <- split(index, sort(index %% n_levels)) %>%
-    lapply(FUN = function(substage){
-      rep(max(substage), length(substage))
-    }) %>%
-    unlist %>%
-    unname
-  new_levels <- new_levels - min(new_levels)
-  new_levels / (max(new_levels) + 1) + min(old_levels)
-}
-
-split_node_columns <- function(nodes){
-  max_reps <- nrow(nodes) %>%
-    sqrt %>%
-    ceiling
-  out <- ddply(nodes, "level", function(stage){
-    stage$level <- split_levels(
-      old_levels = stage$level, max_reps = max_reps)
-    stage
-  })
-  rownames(out) <- out$id
-  out$level <- as.integer(as.factor(out$level))
-  out
-}
-
-style_nodes <- function(config) {
-  with(config, {
-    nodes$font.size <- font_size # nolint
-    nodes[nodes$status == "imported", "color"] <- color_of("import_node")
-    nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
-    nodes[nodes$status == "failed", "color"] <- color_of("failed")
-    nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
-    nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
-    nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
-    nodes[nodes$type == "object", "shape"] <- shape_of("object")
-    nodes[nodes$type == "file", "shape"] <- shape_of("file")
-    nodes[nodes$type == "function", "shape"] <- shape_of("funct")
-    nodes
-  })
-}
-
-subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
-  keep <- sanitize_nodes(nodes = keep, choices = choices)
-  config$nodes <- config$nodes[keep, ]
-  config$edges <-
-    config$edges[
-      config$edges$from %in% keep &
-      config$edges$to %in% keep, ]
-  config
-}
+hover_text_length <- 250
 
 #' @title Function \code{legend_nodes}
 #' @export
@@ -255,4 +190,109 @@ legend_nodes <- function(font_size = 20) {
   )
   out$id <- seq_len(nrow(out))
   out
+}
+
+missing_import <- function(x, envir) {
+  missing_object <- !is_file(x) & is.null(envir[[x]]) & tryCatch({
+    flexible_get(x)
+    FALSE
+  },
+  error = function(e) TRUE)
+  missing_file <- is_file(x) & !file.exists(drake_unquote(x))
+  missing_object | missing_file
+}
+
+null_graph <- function() {
+  nodes <- data.frame(id = 1, label = "Nothing to plot.")
+  visNetwork::visNetwork(
+    nodes = nodes,
+    edges = data.frame(from = NA, to = NA),
+    main = "Nothing to plot."
+  )
+}
+
+resolve_graph_outdated <- function(config){
+  if (config$from_scratch){
+    config$outdated <- config$plan$target
+  } else {
+    config$outdated <- outdated(
+      config = config,
+      make_imports = config$make_imports
+    )
+  }
+}
+
+resolve_levels <- function(config) { # nolint
+  with(config, {
+    stages <- stages[nodes$id, ]
+    nodes$level <- stages[rownames(nodes), "stage"]
+    nodes
+  })
+}
+
+shrink_levels <- function(nodes){
+  nodes <- nodes[order(nodes$level), ]
+  nodes$level <- c(0, cumsum(diff(nodes$level) > 0))
+  nodes
+}
+
+# https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r
+split_levels <- function(old_levels, max_reps){
+  n_nodes <- length(old_levels)
+  n_levels <- floor(n_nodes / max_reps) + (n_nodes %% max_reps > 0)
+  index <- seq_along(old_levels)
+  new_levels <- split(index, sort(index %% n_levels)) %>%
+    lapply(FUN = function(substage){
+      rep(max(substage), length(substage))
+    }) %>%
+    unlist %>%
+    unname
+  new_levels <- new_levels - min(new_levels)
+  new_levels / (max(new_levels) + 1) + min(old_levels)
+}
+
+split_node_columns <- function(nodes){
+  max_reps <- nrow(nodes) %>%
+    sqrt %>%
+    ceiling
+  out <- ddply(nodes, "level", function(stage){
+    stage$level <- split_levels(
+      old_levels = stage$level, max_reps = max_reps)
+    stage
+  })
+  rownames(out) <- out$id
+  out$level <- as.integer(as.factor(out$level))
+  out
+}
+
+style_nodes <- function(config) {
+  with(config, {
+    nodes$font.size <- font_size # nolint
+    nodes[nodes$status == "imported", "color"] <- color_of("import_node")
+    nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
+    nodes[nodes$status == "failed", "color"] <- color_of("failed")
+    nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
+    nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
+    nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
+    nodes[nodes$type == "object", "shape"] <- shape_of("object")
+    nodes[nodes$type == "file", "shape"] <- shape_of("file")
+    nodes[nodes$type == "function", "shape"] <- shape_of("funct")
+    nodes
+  })
+}
+
+target_hover_text <- function(targets, plan) {
+  plan[plan$target %in% targets, "command"] %>%
+    wrap_text %>% crop_text(length = hover_text_length)
+}
+
+trim_node_categories <- function(config){
+  elts <- c(
+    "failed", "files", "functions", "in_progress", "missing",
+    "outdated", "targets"
+  )
+  for (elt in elts){
+    config[[elt]] <- intersect(config[[elt]], config$nodes$id)
+  }
+  config
 }

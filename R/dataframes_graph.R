@@ -106,69 +106,38 @@ dataframes_graph <- function(
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }
-  config$plan <- sanitize_plan(plan = config$plan)
-  config$targets <- sanitize_targets(
-    plan = config$plan, targets = config$targets)
-  if (from_scratch){
-    config$outdated <- config$plan$target
-  } else {
-    config$outdated <- outdated(config = config, make_imports = make_imports)
+  config$build_times <- build_times
+  config$digits <- digits
+  config$font_size <- font_size
+  config$from_scratch <- from_scratch
+  config$make_imports <- make_imports
+  config$split_columns <- split_columns
+  config <- get_raw_node_category_data(config)
+  config$stages <- graphing_parallel_stages(config)
+
+  config$graph <- get_neighborhood(
+    graph = config$graph,
+    from = from,
+    mode = match.arg(mode),
+    order = order
+  )
+  config$graph <- subset_graph(graph = config$graph, subset = subset)
+  if (targets_only){
+    config$graph <- subset_graph(
+      graph = config$graph,
+      subset = config$plan$target
+    )
   }
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
-  rownames(config$nodes) <- config$nodes$label
+  config <- trim_node_categories(config)
+  config$nodes <- configure_nodes(config = config)
 
   config$edges <- network_data$edges
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
   }
-
-  config$imports <- setdiff(config$nodes$id, config$plan$target)
-  config$in_progress <- in_progress(cache = config$cache)
-  config$failed <- failed(cache = config$cache)
-  config$files <- parallel_filter(
-    x = config$nodes$id, f = is_file, jobs = config$jobs)
-  config$functions <- parallel_filter(
-    x = config$imports,
-    f = function(x) can_get_function(x, envir = config$envir),
-    jobs = config$jobs
-  )
-  config$missing <- parallel_filter(
-    x = config$imports,
-    f = function(x) missing_import(x, envir = config$envir),
-    jobs = config$jobs
-  )
-  config$font_size <- font_size
-  config$build_times <- build_times
-  config$digits <- digits
-
-  config$nodes <- configure_nodes(config = config)
-  config$from <- from
-  config$mode <- match.arg(mode)
-  config$order <- order
-  config <- trim_graph(config)
-  config <- subset_nodes_edges(
-    config = config,
-    keep = V(config$graph)$name
-  )
-
-  if (targets_only) {
-    config <- subset_nodes_edges(
-      config = config,
-      keep = intersect(config$targets, config$nodes$id)
-    )
-  }
-  if (split_columns){
-    config$nodes <- split_node_columns(nodes = config$nodes)
-  }
-  if (length(subset)){
-    config <- subset_nodes_edges(
-      config = config,
-      keep = subset
-    )
-  }
-  config$nodes <- shrink_levels(config$nodes)
 
   list(nodes = config$nodes, edges = config$edges,
     legend_nodes = legend_nodes(font_size = font_size),
