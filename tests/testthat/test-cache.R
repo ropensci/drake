@@ -41,6 +41,7 @@ test_with_dir("bad/corrupt caches, no progress", {
 })
 
 test_with_dir("non-existent caches", {
+  check_storr_short_hash(NULL, "BLAH")
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
