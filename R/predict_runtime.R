@@ -161,10 +161,13 @@ rate_limiting_times <- function(
   digits = 3
 ){
   if (!is.null(targets)){
-    config$from <- config$targets <- targets
-    config$mode <- "in"
-    config$order <- numeric(0)
-    config <- trim_graph(config)
+    config$targets <- targets
+    config$graph <- get_neighborhood(
+      graph = config$graph,
+      from = config$targets,
+      mode = "in",
+      order = numeric(0)
+    )
   }
   times <- build_times(
     cache = config$cache,

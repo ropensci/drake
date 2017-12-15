@@ -56,7 +56,8 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
 
 test_with_dir("graph functions work", {
   config <- dbug()
-  expect_equal(class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
+  expect_equal(
+    class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
   tmp <- vis_drake_graph(config)
   dev.off()
@@ -92,4 +93,69 @@ test_with_dir("same graphical arrangements for distributed parallelism", {
   y <- drake_plan(a = 1, b = 2)
   tmp <- dataframes_graph(config = con)
   expect_true(is.list(tmp))
+})
+
+test_with_dir("graphing args are not ignored (basic example)", {
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+
+  load_basic_example(envir = e)
+  my_plan <- e$my_plan
+  config <- drake_config(my_plan, envir = e,
+                         jobs = jobs, parallelism = parallelism,
+                         verbose = FALSE)
+
+  tmp <- vis_drake_graph(config = config)
+  expect_false(file.exists("Makefile"))
+
+  # Different graph configurations should be checked manually.
+  tmp <- dataframes_graph(config = config, build_times = FALSE)
+  tmpcopy <- dataframes_graph(config = config,
+    make_imports = FALSE, build_times = FALSE)
+  tmp0 <- dataframes_graph(config = config, build_times = FALSE,
+    subset = c("small", "regression2_large"))
+  tmp1 <- dataframes_graph(config = config, build_times = FALSE,
+    from = "small")
+  tmp2 <- dataframes_graph(config = config, build_times = FALSE,
+    from = "small", targets_only = TRUE)
+  tmp3 <- dataframes_graph(config = config, build_times = FALSE,
+    targets_only = TRUE)
+  tmp4 <- dataframes_graph(config = config, build_times = FALSE,
+    split_columns = TRUE)
+  tmp5 <- dataframes_graph(config = config, build_times = FALSE,
+    targets_only = TRUE, split_columns = TRUE)
+  tmp6 <- dataframes_graph(config = config, build_times = TRUE,
+    targets_only = TRUE, split_columns = TRUE)
+  tmp7 <- dataframes_graph(config = config, build_times = TRUE,
+    targets_only = TRUE, split_columns = TRUE, from_scratch = TRUE)
+  expect_warning(
+    tmp8 <- dataframes_graph(config = config, build_times = FALSE,
+                             from = c("small", "not_found"))
+  )
+  expect_error(
+    tmp9 <- dataframes_graph(config = config, build_times = FALSE,
+                             from = "not_found")
+  )
+  expect_equal(nrow(tmp0$nodes), 2)
+  expect_true(identical(tmp$nodes, tmpcopy$nodes))
+  expect_false(identical(tmp$nodes, tmp0$nodes))
+  expect_false(identical(tmp$nodes, tmp1$nodes))
+  expect_false(identical(tmp$nodes, tmp2$nodes))
+  expect_false(identical(tmp$nodes, tmp3$nodes))
+  expect_false(identical(tmp$nodes, tmp4$nodes))
+  expect_false(identical(tmp$nodes, tmp5$nodes))
+  expect_false(identical(tmp$nodes, tmp6$nodes))
+
+  expect_false(file.exists("Makefile"))
+  expect_true(is.data.frame(tmp$nodes))
+  expect_equal(sort(outdated(config = config)),
+               sort(c(my_plan$target)))
+  expect_false(file.exists("Makefile"))
+
+  file <- "graph.html"
+  expect_false(file.exists(file))
+  vis_drake_graph(config = config, file = file)
+  expect_true(file.exists(file))
 })

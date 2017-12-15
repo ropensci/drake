@@ -211,16 +211,6 @@ null_graph <- function() {
   )
 }
 
-parse_graph_subset_arg <- function(subset, targets_only, config){
-  if (is.null(subset)){
-    return(NULL)
-  }
-  if (targets_only){
-    subset <- intersect(subset, config$plan$target)
-  }
-  subset
-}
-
 resolve_graph_outdated <- function(config){
   if (config$from_scratch){
     config$outdated <- config$plan$target

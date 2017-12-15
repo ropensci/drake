@@ -185,7 +185,7 @@ assert_unique_names <- function(imports, targets, envir, verbose){
   remove(list = common, envir = envir)
 }
 
-trim_graph <- function(graph, from, mode, order, subset){
+get_neighborhood <- function(graph, from, mode, order){
   if (!length(order)){
     order <- length(V(graph))
   }
@@ -198,10 +198,6 @@ trim_graph <- function(graph, from, mode, order, subset){
       mode = mode
     ) %>%
       do.call(what = igraph::union)
-  }
-  if (length(subset)){
-    subset <- intersect(subset, V(graph)$name)
-    graph <- igraph::induced_subgraph(graph = graph, vids = subset)
   }
   graph
 }
@@ -243,4 +239,12 @@ exclude_imports_if <- function(config){
     v = delete_these
   )
   config
+}
+
+subset_graph <- function(graph, subset){
+  if (!length(subset)){
+    return(graph)
+  }
+  subset <- intersect(subset, V(graph)$name)
+  igraph::induced_subgraph(graph = graph, vids = subset)
 }

@@ -237,7 +237,12 @@ cached(cache = memory_cache)
 readd(result, cache = memory_cache)
 ```
 
-In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, this feature is currently experimental. Also, some `storr_dbi()` caches use a single file as a database, which causes race conditions. Only `storr_rds()` caches should be used with parallel computing. The following example requires the `DBI` and `RSQLite` packages.
+In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, if you use such caches, please heed the following.
+
+1. Be sure you have [storr](https://github.com/richfitz/storr) version 1.1.3 or greater installed.
+1. Do not use parallel computing. In other words, leave the `parallelism` and `jobs` arguments to `make()` as the defaults. This is because `storr_dbi()` caches have a small number of files internally, so several parallel processes could try to write to the same file at the same time. So far, only `storr_rds()` caches (default) were designed for use with parallel computing.
+
+The following example requires the `DBI` and `RSQLite` packages.
 
 ```{r dbi_caches, eval = FALSE}
 mydb <- DBI::dbConnect(RSQLite::SQLite(), "my-db.sqlite")

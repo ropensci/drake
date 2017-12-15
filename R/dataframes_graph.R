@@ -115,18 +115,19 @@ dataframes_graph <- function(
   config <- get_raw_node_category_data(config)
   config$stages <- graphing_parallel_stages(config)
 
-  subset <- parse_graph_subset_arg(
-    subset = subset,
-    targets_only = targets_only,
-    config = config
-  )
-  config$graph <- trim_graph(
+  config$graph <- get_neighborhood(
     graph = config$graph,
     from = from,
     mode = match.arg(mode),
-    order = order,
-    subset = subset
+    order = order
   )
+  config$graph <- subset_graph(graph = config$graph, subset = subset)
+  if (targets_only){
+    config$graph <- subset_graph(
+      graph = config$graph,
+      subset = config$plan$target
+    )
+  }
 
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
