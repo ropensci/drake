@@ -2,8 +2,7 @@
 
 <p align="center">
   <img src="./images/logo-readme.png" alt="">
-</p>
-<br/>
+</p><br/>
 
 [![rOpenSci Onboarding](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/drake)](http://cran.r-project.org/package=drake)
