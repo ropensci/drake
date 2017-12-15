@@ -185,22 +185,25 @@ assert_unique_names <- function(imports, targets, envir, verbose){
   remove(list = common, envir = envir)
 }
 
-trim_graph <- function(config){
-  if (!length(config$from)){
-    return(config)
+trim_graph <- function(graph, from, mode, order, subset){
+  if (!length(order)){
+    order <- length(V(graph))
   }
-  config <- sanitize_from(config)
-  if (!length(config$order)){
-    config$order <- length(V(config$graph))
+  if (length(from)){
+    from <- sanitize_nodes(nodes = from, choices = V(graph)$name)
+    graph <- igraph::make_ego_graph(
+      graph = graph,
+      order = order,
+      nodes = from,
+      mode = mode
+    ) %>%
+      do.call(what = igraph::union)
   }
-  config$graph <- igraph::make_ego_graph(
-    graph = config$graph,
-    order = config$order,
-    nodes = config$from,
-    mode = config$mode
-  ) %>%
-    do.call(what = igraph::union)
-  config
+  if (length(subset)){
+    subset <- intersect(subset, V(graph)$name)
+    graph <- igraph::induced_subgraph(graph = graph, vids = subset)
+  }
+  graph
 }
 
 downstream_nodes <- function(from, graph, jobs){

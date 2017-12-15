@@ -43,7 +43,7 @@
 #' @importFrom future future_lapply plan
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices delete_vertices degree edge
-#' is_dag make_empty_graph plot.igraph subcomponent V vertex
+#' induced_subgraph is_dag make_empty_graph plot.igraph subcomponent V vertex
 #' @importFrom knitr knit
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
