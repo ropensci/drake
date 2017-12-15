@@ -281,16 +281,6 @@ style_nodes <- function(config) {
   })
 }
 
-subset_nodes_edges <- function(config, keep, choices = V(config$graph)$name){
-  keep <- sanitize_nodes(nodes = keep, choices = choices)
-  config$nodes <- config$nodes[keep, ]
-  config$edges <-
-    config$edges[
-      config$edges$from %in% keep &
-      config$edges$to %in% keep, ]
-  config
-}
-
 target_hover_text <- function(targets, plan) {
   plan[plan$target %in% targets, "command"] %>%
     wrap_text %>% crop_text(length = hover_text_length)

@@ -35,15 +35,6 @@ sanitize_targets <- function(plan, targets){
   sanitize_nodes(nodes = targets, choices = plan$target)
 }
 
-sanitize_from <- function(config){
-  choices <- V(config$graph)$name
-  if (length(config$from)){
-    config$from <-
-      sanitize_nodes(nodes = config$from, choices = choices)
-  }
-  config
-}
-
 sanitize_nodes <- function(nodes, choices){
   if (!any(nodes %in% choices)){
     stop(
