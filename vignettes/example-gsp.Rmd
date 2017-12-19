@@ -189,7 +189,7 @@ And here are the best models. The best variables are in the top row under `X1`, 
 head(results[order(results$rmspe, decreasing = FALSE), ])
 ```
 
-# Comparison with Make
+# Comparison with GNU Make
 
 If we were using [Make](https://www.gnu.org/software/make/) instead of `drake` with the same set of targets, the analogous [Makefile](https://www.gnu.org/software/make/) would look something like this pseudo-code sketch.
 
