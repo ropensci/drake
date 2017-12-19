@@ -1,6 +1,26 @@
-# See the example-gsp.Rmd vignette
-# for an explanation of the data analysis workflow
-# in this file.
+# The following data analysis workflow shows off
+# `drake`'s ability to generate lots of reproducibly-tracked
+# tasks with ease.
+# The same technique would be cumbersome, even intractable,
+# with GNU Make (https://www.gnu.org/software/make/).
+#
+# The goal is to search for factors closely associated with
+# the productivity of states in the USA around the 1970s and 1980s.
+# For the sake of simplicity, we use gross state product as a metric
+# of productivity, and we restrict ourselves to
+# multiple linear regression models with three variables.
+# For each of the 84 possible models, we fit the data and then
+# evaluate the root mean squared prediction error (RMSPE).
+#
+# RMSPE = sqrt(mean((y - yhat)^2))
+#
+# Here, `y` is the vector of observed gross state products in the data,
+# and `yhat` is the vector of predicted gross state products
+# under one of the models.
+# We take the best variables to be
+# the triplet in the model with the lowest RMSPE.
+#
+# Also see the example-gsp.Rmd vignette:
 # https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-gsp.Rmd
 
 library(drake)
