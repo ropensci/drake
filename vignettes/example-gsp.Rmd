@@ -1,5 +1,6 @@
 ---
-title: "A practical example of drake in action"
+title: "Example: gross state products"
+subtitle: "Generate lots of tasks with ease."
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +8,7 @@ output:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{application}
+  %\VignetteIndexEntry{example-gsp}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -27,7 +28,9 @@ knitr::opts_chunk$set(
 
 ![](logo-vignettes.png)
 
-The following data analysis workflow is a toy example, but it is based on real data, and it demonstrates the utility of `drake` in real-world projects. If you wish to tinker with it yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/application) with `drake_example("application")` and then step through `run.R`.
+The following data analysis workflow shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease. The same technique would be cumbersome, even intractable, with [GNU Make](https://www.gnu.org/software/make/).
+
+If you wish to tinker with the example yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/application) with `drake_example("application")` and then step through `run.R`.
 
 # Objective and methods
 
