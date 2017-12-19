@@ -11,8 +11,8 @@ navbar:
     href: reference/index.html
   - text: Articles
     menu:
-    - text: A practical example of drake in action
-      href: articles/application.html
+    - text: "Example: gross state products"
+      href: articles/example-gsp.html
     - text: Quickstart
       href: articles/quickstart.html
     - text: Debugging and testing drake projects
@@ -36,7 +36,7 @@ articles:
 - title: General vignettes
   contents:
   - '`drake`'
-  - '`application`'
+  - '`example-gsp`'
   - '`quickstart`'
   - '`caution`'
 - title: Specialized walkthroughs
