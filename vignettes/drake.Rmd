@@ -249,7 +249,7 @@ There are [countless other successful pipeline toolkits](https://github.com/pdit
 
 # Acknowledgements
 
-Many thanks to [Julia Lowndes](https://github.com/jules32) and [Ben Marwick](https://github.com/benmarwick) for [reviewing drake for rOpenSci](https://github.com/ropensci/onboarding/issues/156). Thanks also to the following people for contributing early in development.
+Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https://github.com/benmarwick), and [Jeroen Ooms](https://github.com/jeroen) for [reviewing drake for rOpenSci](https://github.com/ropensci/onboarding/issues/156), and to [Maëlle Salmon](https://github.com/maelle) for such active involvement as the editor. Thanks also to the following people for contributing early in development.
 
 - [Alex Axthelm](https://github.com/AlexAxthelm)
 - [Chan-Yub Park](https://github.com/mrchypark)
