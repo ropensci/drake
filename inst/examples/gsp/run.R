@@ -12,7 +12,7 @@
 # For each of the 84 possible models, we fit the data and then
 # evaluate the root mean squared prediction error (RMSPE).
 #
-# RMSPE = sqrt(mean((y - yhat)^2))
+# RMSPE = sqrt(mean((y - yhat)^2)) # nolint
 #
 # Here, `y` is the vector of observed gross state products in the data,
 # and `yhat` is the vector of predicted gross state products
