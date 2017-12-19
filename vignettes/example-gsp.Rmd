@@ -159,7 +159,7 @@ plot_rmspe <- function(rmspe){
 We also need the [report.Rmd file](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/application/report.Rmd) for this example.
 
 ```{r copyreport}
-local <- file.path("examples", "application", "report.Rmd")
+local <- file.path("examples", "gsp", "report.Rmd")
 path <- system.file(path = local, package = "drake", mustWork = TRUE)
 file.copy(from = path, to = "report.Rmd", overwrite = TRUE)
 ```
