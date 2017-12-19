@@ -6,20 +6,24 @@ Authors@R: c(
     family = "Landau",
     given = c("William", "Michael"),
     email = "will.landau@lilly.com",
-    role = c("aut", "cre")),
+    role = c("aut", "cre")
+  ),
   person(
     family = "Axthelm",
     given = "Alex",
     email = "aaxthelm@che.IN.gov",
-    role = "ctb"),
+    role = "ctb"
+  ),
   person(
     family = "Clarkberg",
     given = "Jasper",
     email = "jasper@clarkberg.org",
-    role = "ctb"),
+    role = "ctb"
+  ),
   person(
     family = "Eli Lilly and Company",
-    role = "cph"))
+    role = "cph"
+  ))
 Description: A solution for reproducible code and 
   high-performance computing.
 License: GPL-3

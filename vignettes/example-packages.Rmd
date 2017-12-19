@@ -1,0 +1,21 @@
+---
+title: "Example: R package download trends"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{example-packages}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This analysis explores some trends in R package downloads over time. The data change often, but `drake` makes sure the project does not restart from scratch.
+
+Currently, this vignette is only a stub. The full content will appear in early 2018.
