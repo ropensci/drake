@@ -1,7 +1,7 @@
-# See the application.Rmd vignette
+# See the example-gsp.Rmd vignette
 # for an explanation of the data analysis workflow
 # in this file.
-# https://github.com/wlandau-lilly/drake/blob/master/vignettes/application.Rmd
+# https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-gsp.Rmd
 
 library(drake)
 library(Ecdat) # econometrics datasets
