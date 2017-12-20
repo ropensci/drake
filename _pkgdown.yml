@@ -11,6 +11,8 @@ navbar:
     href: reference/index.html
   - text: Articles
     menu:
+    - text: "Example: R package download trends"
+      href: articles/example-packages.html
     - text: "Example: gross state products"
       href: articles/example-gsp.html
     - text: Quickstart
@@ -36,6 +38,7 @@ articles:
 - title: General vignettes
   contents:
   - '`drake`'
+  - '`example-packages`'
   - '`example-gsp`'
   - '`quickstart`'
   - '`caution`'
