@@ -154,7 +154,7 @@ Now, we run the project to download the data and analyze it.
 The results will be summarized in the knitted report, `report.md`,
 but you can also read the results directly from the cache.
 
-```{r firstmakepackages, fig.width = 7, fig.height = 5}
+```{r firstmakepackages, fig.width = 7, fig.height = 4}
 make(whole_plan)
 
 readd(averages_recent)

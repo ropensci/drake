@@ -7,6 +7,11 @@ output: html_document
 ```{r setuppackagesreport, echo = FALSE}
 suppressPackageStartupMessages(library(drake))
 suppressPackageStartupMessages(library(Ecdat))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 7,
+  fig.height = 4
+)
 ```
 
 This analysis explores some trends in R package downloads over time. It showcases a project where the underlying data changes often, but `drake` makes sure the project does not need to run from scratch.
