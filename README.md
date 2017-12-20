@@ -142,6 +142,7 @@ install_github("wlandau-lilly/drake", build = TRUE)        # Development version
 `Drake` has a [documentation website](https://wlandau-lilly.github.io/drake/). The [reference section](https://wlandau-lilly.github.io/drake/reference/index.html) organizes the functions by purpose,  and the articles are tutorials taken from the [package vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes).
 
 - [Get started](https://wlandau-lilly.github.io/drake/articles/drake.html)
+- [Example: R package download trends](https://wlandau-lilly.github.io/drake/articles/example-packages.html)
 - [Example: gross state products](https://wlandau-lilly.github.io/drake/articles/example-gsp.html)
 - [Quickstart](https://wlandau-lilly.github.io/drake/articles/quickstart.html)
 - [Caution](https://wlandau-lilly.github.io/drake/articles/caution.html)
