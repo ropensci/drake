@@ -9,6 +9,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+![](logo-vignettes.png)
+
 ```{r setup, include = FALSE}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
@@ -193,7 +195,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/838afe71/images/packages.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/ca770db5/images/packages.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
