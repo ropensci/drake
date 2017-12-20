@@ -86,6 +86,8 @@ whole_plan <- rbind(
 # so the data need constant updating.
 # We use triggers to make sure the recent data is always downloaded
 # on every make().
+# For more on triggers, see the vignette on debugging and testing:
+# https://wlandau-lilly.github.io/drake/articles/debug.htmll#test-with-triggers-
 
 whole_plan$trigger = "any"
 whole_plan$trigger[whole_plan$target == "recent"] = "always"
@@ -104,6 +106,13 @@ readd(plot_recent)
 # needs to be built.
 
 make(whole_plan)
+
+# To visualize this behavior, plot the dependency network.
+# Target `recent` and everything dependeing on it is always
+# out of date because of the `"always"` trigger.
+
+config <- drake_config(whole_plan)
+vis_drake_graph(config)
 
 # If you rerun the project tomorrow,
 # the download counts will have been updated, so make()
