@@ -55,3 +55,20 @@ vis_drake_graph(
 
 clean(destroy = TRUE)
 unlink("report.Rmd")
+
+# For the "packages" example.
+
+library(magrittr)
+reportfile <- file.path("examples", "packages", "report.Rmd") %>%
+  system.file(package = "drake", mustWork = TRUE)
+file.copy(reportfile, getwd())
+runfile <- file.path("examples", "packages", "run.R") %>%
+  system.file(package = "drake", mustWork = TRUE)
+source(runfile)
+vis_drake_graph(
+  config, file = "pacakges.html", selfcontained = TRUE,
+  width = "100%", height = "500px"
+)
+
+clean(destroy = TRUE)
+unlink(c("figure", "report.Rmd"), recursive = TRUE)
