@@ -9,8 +9,8 @@
 
 library(drake)
 library(cranlogs)
-library(knitr)
 library(ggplot2)
+library(knitr)
 library(plyr)
 
 # We want to explore the daily downloads from these packages.
