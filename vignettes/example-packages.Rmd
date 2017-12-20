@@ -152,6 +152,8 @@ like `package_list` instead of a formal target.
 ```{r packagestriggers}
 whole_plan$trigger <- "any" # default trigger
 whole_plan$trigger[whole_plan$target == "recent"] <- "always"
+
+whole_plan
 ```
 
 Now, we run the project to download the data and analyze it.
