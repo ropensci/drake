@@ -66,7 +66,7 @@ runfile <- file.path("examples", "packages", "run.R") %>%
   system.file(package = "drake", mustWork = TRUE)
 source(runfile)
 vis_drake_graph(
-  config, file = "pacakges.html", selfcontained = TRUE,
+  config, file = "packages.html", selfcontained = TRUE,
   width = "100%", height = "500px"
 )
 
