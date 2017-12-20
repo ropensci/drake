@@ -21,9 +21,7 @@ suppressPackageStartupMessages(library(knitr))
 unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
-knitr::opts_chunk$set(
-  collapse = TRUE
-)
+knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 ![](logo-vignettes.png)
