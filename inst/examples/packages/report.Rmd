@@ -14,9 +14,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-This analysis explores some trends in R package downloads over time. It showcases a project where the underlying data changes often, but `drake` makes sure the project does not need to run from scratch.
+This small data analysis project explores some trends in R package downloads over time. The datasets are downloaded using the [cranlogs package](https://github.com/metacran/cranlogs).
 
-See the [example-packages.Rmd vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-packages.Rmd) for details. If you wish to tinker with the example yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/packages) with `drake_example("packages")` and then step through `run.R`. This `report.Rmd` file does not stand on its own. It is meant to be called through `run.R`. In fact, the `run.R` file has instructions (comments) to walk you through the project.
+```{r cranlogsintrovignette}
+library(cranlogs)
+cran_downloads(packages = "dplyr", when = "last-week")
+```
+
+Above, each count is the number of times `dplyr` was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With `drake`, we can bring all our work up to date without restarting everything from scratch. 
+
+See the [example-packages.Rmd vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-packages.Rmd) for the details. If you wish to tinker with this example yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/packages) with `drake_example("packages")` and then step through `run.R`. This `report.Rmd` file does not stand on its own. It is meant to be called through `run.R`. In fact, the `run.R` file has instructions (comments) to walk you through the project.
 
 # Results
 

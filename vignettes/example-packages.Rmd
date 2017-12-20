@@ -34,7 +34,7 @@ file.copy(reportfile, getwd())
 
 This small data analysis project explores some trends in R package downloads over time. The datasets are downloaded using the [cranlogs package](https://github.com/metacran/cranlogs).
 
-```{r cranlogsintro}
+```{r cranlogsintroreport}
 library(cranlogs)
 cran_downloads(packages = "dplyr", when = "last-week")
 ```
