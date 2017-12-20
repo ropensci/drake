@@ -119,8 +119,7 @@ get_raw_node_category_data <- function(config){
 }
 
 graphing_parallel_stages <- function(config){
-  config$trigger <- "always"
-  stages <- parallel_stages(config)
+  stages <- parallel_stages(config, from_scratch = TRUE)
   rownames(stages) <- stages$item
   stages
 }

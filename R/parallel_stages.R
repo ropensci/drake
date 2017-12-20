@@ -45,6 +45,7 @@ parallel_stages <- function(config, from_scratch = FALSE){
   do_prework(config = config, verbose_packages = config$verbose)
   if (from_scratch){
     config$trigger <- "always"
+    config$plan$trigger <- "always"
   }
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()

@@ -16,6 +16,4 @@ knitr::opts_chunk$set(
 )
 ```
 
-This analysis explores some trends in R package downloads over time. The data change often, but `drake` makes sure the project does not restart from scratch.
-
-Currently, this vignette is only a stub. The full content will appear in early 2018.
+This analysis explores some trends in R package downloads over time. 
