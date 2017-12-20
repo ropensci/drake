@@ -1,9 +1,11 @@
-# This analysis explores some trends in R package downloads over time.
-# The data change often, but drake makes sure
-# the project does not restart from scratch.
+# This data analysis project explores some trends
+# in R package downloads over time.
+# The data change often, and drake makes sure
+# the project does not restart from scratch
+# on a typical runthrough.
 #
 # Also see the example-packages.Rmd vignette,
-# https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-packages.Rmd
+# https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-packages.Rmd # nolint
 
 library(drake)
 library(cranlogs)
@@ -35,7 +37,7 @@ data_plan <- drake_plan(
 )
 
 # We want to summarize each set of
-# the download statistics a couple different ways.
+# download statistics a couple different ways.
 
 output_types <- drake_plan(
   averages = make_my_table(dataset__),
@@ -56,8 +58,8 @@ make_my_plot <- function(downloads){
     geom_line(aes(x = date, y = count, group = package, color = package))
 }
 
-# Below, the symbols `recent` and `older`
-# each substitute in for the `dataset__` wildcard.
+# Below, the targets `recent` and `older`
+# each take turns substituting the `dataset__` wildcard.
 # Thus, `output_plan` has four rows.
 
 output_plan <- plan_analyses(
@@ -75,6 +77,8 @@ report_plan <- drake_plan(
 
 # And we complete the workflow plan data frame by
 # concatenating the results together.
+# Drake analyzes the plan to figure out the dependency network,
+# so row order does not matter.
 
 whole_plan <- rbind(
   data_plan,
@@ -82,15 +86,13 @@ whole_plan <- rbind(
   report_plan
 )
 
-# The most recent downloads are from the last month,
-# so the data need constant updating.
-# We use triggers to make sure the recent data is always downloaded
-# on every make().
+# The latest download data needs to be refreshed every day, so we use
+# triggers to force `recent` to always build.
 # For more on triggers, see the vignette on debugging and testing:
-# https://wlandau-lilly.github.io/drake/articles/debug.htmll#test-with-triggers-
+# https://wlandau-lilly.github.io/drake/articles/debug.htmll#test-with-triggers- # nolint
 
-whole_plan$trigger = "any"
-whole_plan$trigger[whole_plan$target == "recent"] = "always"
+whole_plan$trigger <- "any" # default trigger
+whole_plan$trigger[whole_plan$target == "recent"] <- "always"
 
 # Now, we run the project to download the data and analyze it.
 # The results will be summarized in the knitted report, `report.md`,
@@ -102,20 +104,20 @@ readd(plot_recent)
 
 # Because we used triggers, each make() rebuilds the `recent`
 # data frame to get the latest download numbers for today.
-# If the data did not change from last time, nothing else
-# needs to be built.
+# If the new data are the same as last time
+# and nothing else changed,
+# drake skips the other targets.
 
 make(whole_plan)
 
-# To visualize this behavior, plot the dependency network.
-# Target `recent` and everything dependeing on it is always
+# To visualize the build behavior, plot the dependency network.
+# Target `recent` and everything depending on it is always
 # out of date because of the `"always"` trigger.
-
-config <- drake_config(whole_plan)
-vis_drake_graph(config)
-
 # If you rerun the project tomorrow,
 # the download counts will have been updated, so make()
 # will refresh `averages_recent`, `plot_recent`, and
 # `'report.md'`. Targets `averages_older` and `plot_older`
 # are unaffected, so drake will skip them.
+
+config <- drake_config(whole_plan)
+vis_drake_graph(config)

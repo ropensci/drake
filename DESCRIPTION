@@ -55,7 +55,7 @@ Imports:
   withr
 Suggests: 
   abind,
-  cranlogs
+  cranlogs,
   DBI,
   Ecdat,
   future.batchtools,

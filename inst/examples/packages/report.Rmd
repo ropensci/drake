@@ -4,7 +4,7 @@ author: "William Michael Landau"
 output: html_document
 ---
 
-```{r setup, echo = FALSE}
+```{r setuppackagesreport, echo = FALSE}
 suppressPackageStartupMessages(library(drake))
 suppressPackageStartupMessages(library(Ecdat))
 ```
