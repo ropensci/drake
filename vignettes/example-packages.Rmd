@@ -144,6 +144,8 @@ whole_plan
 The latest download data needs to be refreshed every day, so we use
 triggers to force `recent` to always build.
 For more on triggers, see the [vignette on debugging and testing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
+Instead of triggers, we could have just made `recent` a global variable
+like `package_list` instead of a formal target.
 
 ```{r packagestriggers}
 whole_plan$trigger <- "any" # default trigger
