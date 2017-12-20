@@ -7,6 +7,7 @@ Examples so far:
 - `Docker-psock`: demonstrates how to deploy targets to a [Docker container](https://www.docker.com/what-container) using a specialized PSOCK cluster.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `Makefile-cluster`: uses [Makefiles](https://www.gnu.org/software/make/) to deploy targets to a generic cluster (configurable).
+- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
 - `sge`: uses `"future_lapply"` parallelism to deploy targets to a [Sun/Univa Grid Engine](https://supcom.hgc.jp/english/utili_info/manual/uge.html) cluster. Other clusters are similar. See the [batchtools/inst/templates](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools/inst/templates](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) for more example `*.tmpl` template files.
 - `slurm`: similar to `sge`, but for [SLURM](https://slurm.schedmd.com).
 - `torque`: similar to `sge`, but for [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/).
