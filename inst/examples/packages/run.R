@@ -1,11 +1,30 @@
-# This data analysis project explores some trends
+################
+### OVERVIEW ###
+################
+#
+# This small data analysis project explores some trends
 # in R package downloads over time.
-# The data change often, and drake makes sure
-# the project does not restart from scratch
-# on a typical runthrough.
+# The datasets are downloaded using the cranlogs package
+# (https://github.com/metacran/cranlogs).
+
+library(cranlogs)
+cran_downloads(packages = "dplyr", when = "last-week")
+
+# Above, each count is the number of times `dplyr`
+# was downloaded from the RStudio CRAN mirror on the given day.
+# To stay up to date with the latest download statistics,
+# we need to refresh the data frequently.
+# With `drake`, we can bring all our work up to date
+# without restarting everything from scratch.
 #
 # Also see the example-packages.Rmd vignette,
 # https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-packages.Rmd # nolint
+
+################
+### ANALYSIS ###
+################
+
+# Drake knows about the packages you load with library() or require().
 
 library(drake)
 library(cranlogs)

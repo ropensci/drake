@@ -30,9 +30,18 @@ reportfile <- file.path("examples", "packages", "report.Rmd") %>%
 file.copy(reportfile, getwd())
 ```
 
-This data analysis project explores some trends in R package downloads over time.
-The data change often, and `drake` makes sure the project does not restart from scratch
-on a typical runthrough. 
+# Overview
+
+This small data analysis project explores some trends in R package downloads over time. The datasets are downloaded using the [cranlogs package](https://github.com/metacran/cranlogs).
+
+```{r cranlogsintro}
+library(cranlogs)
+cran_downloads(packages = "dplyr", when = "last-week")
+```
+
+Above, each count is the number of times `dplyr` was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With `drake`, we can bring all our work up to date without restarting everything from scratch. 
+
+# Analysis
 
 First, we load the required packages. `Drake` knows about the packages you install and load.
 
@@ -132,7 +141,6 @@ concatenating the results together.
 `Drake` analyzes the plan to figure out the dependency network,
 so row order does not matter.
 
-
 ```{r packageswhole_plan}
 whole_plan <- rbind(
   data_plan,
@@ -147,7 +155,7 @@ The latest download data needs to be refreshed every day, so we use
 triggers to force `recent` to always build.
 For more on triggers, see the [vignette on debugging and testing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
 Instead of triggers, we could have just made `recent` a global variable
-like `package_list` instead of a formal target.
+like `package_list` instead of a formal target in `whole_plan`.
 
 ```{r packagestriggers}
 whole_plan$trigger <- "any" # default trigger
@@ -174,9 +182,9 @@ readd(plot_older)
 
 Because we used triggers, each `make()` rebuilds the `recent`
 target to get the latest download numbers for today.
-If the new data are the same as last time 
-and nothing else changed,
-drake skips the other targets.
+If the newly-downloaded data are the same as last time 
+and nothing else changes,
+`drake` skips all the other targets.
 
 ```{r packagessecondmake}
 make(whole_plan)
@@ -186,10 +194,10 @@ To visualize the build behavior, plot the dependency network.
 Target `recent` and everything depending on it is always
 out of date because of the `"always"` trigger.
 If you rerun the project tomorrow,
-the download counts will have been updated, so `make()`
-will refresh `averages_recent`, `plot_recent`, and
+the `recent` dataset will have shifted one day forward,
+so `make()` will refresh `averages_recent`, `plot_recent`, and
 `'report.md'`. Targets `averages_older` and `plot_older`
-are unaffected, so `drake` will skip them.
+should be unaffected, so `drake` will skip them.
 
 ```{r plotpackagesgraph, eval = FALSE}
 config <- drake_config(whole_plan)
