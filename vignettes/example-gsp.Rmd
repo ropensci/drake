@@ -28,7 +28,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 The following data analysis workflow shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease. The same technique would be cumbersome, even intractable, with [GNU Make](https://www.gnu.org/software/make/).
 
-If you wish to tinker with the example yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/application) with `drake_example("application")` and then step through `run.R`.
+If you wish to tinker with the example yourself, you can generate the [underlying code files](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/gsp) with `drake_example("gsp")` and then step through `run.R`.
 
 # Objective and methods
 
@@ -154,7 +154,7 @@ plot_rmspe <- function(rmspe){
 }
 ```
 
-We also need the [report.Rmd file](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/application/report.Rmd) for this example.
+We also need the [report.Rmd file](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/gsp/report.Rmd) for this example.
 
 ```{r copyreport}
 local <- file.path("examples", "gsp", "report.Rmd")
