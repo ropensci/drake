@@ -1,5 +1,6 @@
 ---
 title: "Example: R package download trends"
+subtitle: "Refresh your project without restarting from scratch."
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
