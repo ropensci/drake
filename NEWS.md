@@ -1,4 +1,4 @@
-# Release 5.0.0
+# Version 5.0.0
 
 - Several functions now require an explicit `config` argument, which you can get from
 `drake_config()` or `make()`. Examples:
@@ -55,7 +55,7 @@
 - Add a new `log_progress` argument to `make()` to suppress progress logging. This increases storage efficiency and speeds some projects up a tiny bit.
 - Add an optional `namespace` argument to `loadd()` and `readd()`. You can now load and read from non-default `storr` namespaces.
 
-# Changes in release 4.4.0
+# Version 4.4.0
 
 - Extend `plot_graph()` to display subcomponents. Check out arguments `from`, `mode`, `order`, and `subset`. The [graphing vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/graph.Rmd) has demonstrations.
 - Add `"future_lapply"` parallelism: parallel backends supported by the [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) packages. See `?backend` for examples and the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
@@ -75,7 +75,7 @@
 - Add a new `make_with_config()` function to do the work of `make()` on an existing internal configuration list from `drake_config()`.
 - Add a new function `drake_batchtools_tmpl_file()` to write a `batchtools` template file from one of the examples (`drake_example()`), if one exists.
 
-# 2017-10-17
+# Version 4.3.0: 2017-10-17
 
 Version 4.3.0 has:
 - [Reproducible random numbers](https://github.com/wlandau-lilly/drake/pull/56)
@@ -83,19 +83,15 @@ Version 4.3.0 has:
 - More vignettes
 - Bugfixes
 
-# 2017-09-29
+# Version 4.2.0: 2017-09-29
 
 Version 4.2.0 will be released today. There are several improvements to code style and performance. In addition, there are new features such as cache/hash externalization and runtime prediction. See the new storage and timing vignettes for details. This release has automated checks for back-compatibility with existing projects, and I also did manual back compatibility checks on serious projects.
 
-# 2017-05-03
+# Version 3.0.0: 2017-05-03
 
 Version 3.0.0 is coming out. It manages environments more intelligently so that the behavior of `make()` is more consistent with evaluating your code in an interactive session.
 
-# 2017-02-28
+# Version 1.0.1: 2017-02-28
 
 Version 1.0.1 is on CRAN! I'm already working on a massive update, though. 2.0.0 is cleaner and more powerful.
 
-
-# 2017-02-20
-
-Version 1.0.1 will be the first submission to CRAN.
