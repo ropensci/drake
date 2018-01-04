@@ -26,13 +26,31 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 3. Discover an issue.
 4. Restart from scratch.
 
-`Drake` is more discerning. When you update your code or data, it notices the changes. It figures out exactly what needs building, and it builds it in the correct order. The next runthrough is shorter, and your progress is steady and smooth.
+But `drake` automatically
+
+1. Launches the parts that changed since the last runthrough.
+2. Skips the rest.
 
 ```r
 library(drake)
-load_basic_example()
 
-# First round: builds 15 targets.
+# Drake comes with a basic example.
+load_basic_example(verbose = FALSE)
+
+# The `my_plan` data frame lists the steps of a data analysis workflow.
+# Drake's `make()` function runs the commands to build the targets
+# in the correct order.
+head(my_plan)
+
+##              target                          command
+## 1       'report.md' knit('report.Rmd', quiet = TRUE)
+## 2             small                      simulate(5)
+## 3             large                     simulate(50)
+## 4 regression1_small                      reg1(small)
+## 5 regression1_large                      reg1(large)
+## 6 regression2_small                      reg2(small)
+
+# First round: drake builds all 15 targets.
 make(my_plan) 
 
 ## target large
@@ -51,13 +69,16 @@ make(my_plan)
 ## target summ_regression2_small
 ## target 'report.md'
 
-# Change some of your code.
+# If you change the reg2() function,
+# all the regression2 targets are out of date,
+# which in turn affects 'report.md'.
 reg2 <- function(d){    
   d$x4 <- d$x ^ 4
   lm(y ~ x4, data = d)
 }
 
-# Less work for the second round.
+# Second round: drake only rebuilds the targets
+# that depend on the things you changed.
 make(my_plan)
 
 ## target regression2_large
@@ -68,7 +89,7 @@ make(my_plan)
 ## target summ_regression2_small
 ## target 'report.md'
 
-# No work if nothing changed.
+# If nothing important changed, drake rebuilds nothing.
 make(my_plan)
 
 ## All targets are already up to date.
@@ -141,7 +162,23 @@ install_github("wlandau-lilly/drake") # Development version.
 
 # Documentation
 
-`Drake` has a [documentation website](https://wlandau-lilly.github.io/drake/). The [reference section](https://wlandau-lilly.github.io/drake/reference/index.html) organizes the functions by purpose,  and the articles below are tutorials taken from the [package vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes). For more context and history, listen to a full-length interview about `drake` in [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
+`Drake` has a [documentation website](https://wlandau-lilly.github.io/drake/). The [reference section](https://wlandau-lilly.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
+
+|   |   |
+|-----|------------------------------------------------------------|
+| `drake_plan()` | Create a workflow data frame (like `my_plan`). |
+| `make()` | Build your project. |
+| `loadd()` | Load one or more built targets into your R session. |
+| `readd()` | Read and return a built target. |
+| `drake_config()` | Create a master configuration list for other user-side functions. |
+| `vis_drake_graph()` | Show an interactive visual network representation of your workflow. |
+| `outdated()` | See which targets will be built in the next `make()`. |
+| `deps()` | Check the dependencies of a command or function. |
+| `failed()` | List the targets that failed to build in the last `make()`. |
+| `diagnose()` | Return the complete error log of a target that failed. |
+<br>
+
+The articles below are tutorials taken from the [package vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes).
 
 - [Get started](https://wlandau-lilly.github.io/drake/articles/drake.html)
 - [Example: R package download trends](https://wlandau-lilly.github.io/drake/articles/example-packages.html)
@@ -153,6 +190,8 @@ install_github("wlandau-lilly/drake") # Development version.
 - [Parallel computing](https://wlandau-lilly.github.io/drake/articles/parallelism.html)
 - [Time logging](https://wlandau-lilly.github.io/drake/articles/timing.html)
 - [Storage](https://wlandau-lilly.github.io/drake/articles/storage.html)
+
+For context and history, you can listen to a full-length interview about `drake` in [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
 
 # Help and troubleshooting
 
