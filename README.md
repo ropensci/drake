@@ -100,7 +100,7 @@ make(my_plan, jobs = 4)
 # Scale up to a supercomputer.
 drake_batchtools_tmpl_file("slurm") # https://slurm.schedmd.com/
 library(future.batchtools)
-batchtools_slurm(template = "batchtools.slurm.tmpl", workers = 100)
+future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl", workers = 100)
 make(my_plan, parallelism = "future_lapply")
 ```
 

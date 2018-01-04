@@ -200,7 +200,7 @@ The [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) pa
 ```{r futurebatchtools, eval = FALSE}
 library(future.batchtools)
 drake_batchtools_tmpl_file("slurm") # Write batchtools.slurm.tmpl.
-batchtools_slurm(template = "batchtools.slurm.tmpl", workers = 16)
+future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl", workers = 16)
 make(my_plan, parallelism = "future_lapply")
 ```
 
@@ -399,7 +399,7 @@ For large workflows, downsizing and debugging tools become super important. See 
 
 ## Zombies
 
-Some parallel backends, particularly `mclapply` and `future::multicore`, may create zombie processes. Zombie children are not usually harmful, but you may wish to kill them yourself. The following function by [Carl Boneri](https://github.com/CarlBoneri) should work on Unix-like systems. For a discussion, see [drake issue 116](https://github.com/wlandau-lilly/drake/issues/116).
+In versions of R prior to 3.5.0, some parallel backends, particularly `mclapply` and `future::multicore`, may create zombie processes. Zombie children are not usually harmful, but you may wish to kill them yourself. The following function by [Carl Boneri](https://github.com/CarlBoneri) should work on Unix-like systems. For a discussion, see [drake issue 116](https://github.com/wlandau-lilly/drake/issues/116).
 
 ```{r cautionzombies, eval = FALSE}
 fork_kill_zombies <- function(){
