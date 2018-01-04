@@ -164,7 +164,7 @@ install_github("wlandau-lilly/drake") # Development version.
 
 `Drake` has a [documentation website](https://wlandau-lilly.github.io/drake/). The [reference section](https://wlandau-lilly.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
 
-|   |   |
+| Function | Purpose |
 |-----|------------------------------------------------------------|
 | `drake_plan()` | Create a workflow data frame (like `my_plan`). |
 | `make()` | Build your project. |
