@@ -214,7 +214,7 @@ You can even nest parallelism strategies together. In the following example, tar
 drake_batchtools_tmpl_file("sge") # Write sge-simple.tmpl.
 future::plan(
   list(
-    batchtools_sge(template = "sge-simple.tmpl"),
+    tweak(batchtools_sge, template = "sge-simple.tmpl"),
     multiprocess
   )
 )
