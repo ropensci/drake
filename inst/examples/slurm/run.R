@@ -6,7 +6,11 @@ library(future.batchtools)
 library(drake)
 
 # Use future::plan(multicore) instead for a dry run.
-future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl"))
+future::plan(
+  batchtools_slurm,
+  template = "batchtools.slurm.tmpl",
+  workers = 4
+)
 
 load_basic_example()
 make(

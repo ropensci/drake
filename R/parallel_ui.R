@@ -26,7 +26,7 @@
 #' # Run the basic example with a
 #' # SLURM-powered parallel backend. Requires SLURM.
 #' library(future.batchtools)
-#' # future::plan(batchtools_slurm(template = "batchtools.slurm.tmpl")) # nolint
+#' # future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl") # nolint
 #' # make(my_plan, parallelism = "future_lapply") # nolint
 #' })
 #' }

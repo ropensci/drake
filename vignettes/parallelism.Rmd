@@ -200,7 +200,11 @@ The [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) pa
 ```{r futurebatchtools, eval = FALSE}
 library(future.batchtools)
 drake_batchtools_tmpl_file("slurm") # Write batchtools.slurm.tmpl.
-future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl", workers = 16)
+future::plan(
+  batchtools_slurm,
+  template = "batchtools.slurm.tmpl",
+  workers = 16
+)
 make(my_plan, parallelism = "future_lapply")
 ```
 
