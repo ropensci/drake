@@ -7,6 +7,7 @@ sanitize_plan <- function(plan){
   if (!is.null(plan[["trigger"]])){
     assert_legal_triggers(plan[["trigger"]])
   }
+  plan$target <- repair_target_names(plan$target)
   plan[nchar(plan$target) > 0, ]
 }
 
@@ -31,7 +32,7 @@ drake_plan_columns <- function(){
 
 sanitize_targets <- function(plan, targets){
   plan <- sanitize_plan(plan)
-  targets <- str_trim(targets, side = "both")
+  targets <- repair_target_names(targets)
   sanitize_nodes(nodes = targets, choices = plan$target)
 }
 
@@ -54,4 +55,23 @@ sanitize_nodes <- function(nodes, choices){
   }
   intersect(nodes, choices) %>%
     unique
+}
+
+repair_target_names <- function(x){
+  illegals <- c(
+    ":", "\\+", "\\-", "\\*", "\\^",
+    "\\(", "\\)", "\\[", "\\]", "^_"
+  ) %>%
+    paste(collapse = "|")
+  non_files <- x[is_not_file(x)]
+  if (any(grepl(illegals, non_files))){
+    warning("replacing illegal symbols in target names with '_'.")
+  } else {
+    return(x)
+  }
+  x <- str_trim(x, side = "both")
+  x[is_not_file(x)] <- gsub(illegals, "_", x[is_not_file(x)])
+  x <- gsub("^_", "", x)
+  x[!nchar(x)] <- "X"
+  make.unique(x, sep = "_")
 }

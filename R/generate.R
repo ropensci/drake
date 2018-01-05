@@ -130,7 +130,7 @@ evaluate_plan <- function(
   out[[minor]] <- NULL
   out[[major]] <- NULL
   rownames(out) <- NULL
-  return(out)
+  sanitize_plan(out)
 }
 
 evaluations <- function(
@@ -181,7 +181,7 @@ expand_plan <- function(plan, values = NULL){
   values <- rep(values, times = nrows)
   plan$target <- paste(plan$target, values, sep = "_")
   rownames(plan) <- NULL
-  return(plan)
+  sanitize_plan(plan)
 }
 
 #' @title Write commands to combine several targets into one

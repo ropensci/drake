@@ -102,3 +102,49 @@ test_with_dir("check_plan() finds bad symbols", {
     command = 1)
   expect_silent(o <- check_plan(x, verbose = FALSE))
 })
+
+test_with_dir("illegal target names get fixed", {
+  pl <- data.frame(
+    target = c("_a", "a^", "a*", "a-"),
+    command = 1,
+    stringsAsFactors = FALSE
+  )
+  cache <- storr::storr_environment()
+  expect_warning(
+    con <- make(pl, cache = cache, session_info = FALSE)
+  )
+  expect_equal(
+    sort(con$plan$target),
+    sort(con$targets),
+    sort(cached(cache = cache)),
+    sort(c("a", "a_", "a__1", "a__2"))
+  )
+})
+
+test_with_dir("issue 187 on Github (from Kendon Bell)", {
+  test <- drake_plan(test = run_it(wc__))
+  out <- expect_warning(
+    evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
+  )
+  out2 <- data.frame(
+    target = c("test_1_4", "test_5_8", "test_9_12"),
+    command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)"),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(out, out2)
+})
+
+test_with_dir("file names with weird characters do not get mangled", {
+  out <- data.frame(
+    target = c("'is:a:file'", "not:a:file"),
+    command = as.character(1:2),
+    stringsAsFactors = FALSE
+  )
+  out2 <- expect_warning(sanitize_plan(out))
+  out3 <- data.frame(
+    target = c("'is:a:file'", "not_a_file"),
+    command = as.character(1:2),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(out2, out3)
+})
