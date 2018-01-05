@@ -148,10 +148,13 @@ Within each column above, the nodes are conditionally independent given their de
 You can choose among different versions of `drake`:
 
 ```r
-install.packages("drake")             # Latest CRAN release.
-install.packages("devtools")          # For installing from GitHub.
+# Install a stable release drake from CRAN.
+install.packages("drake")
+
+# Alternatively, install the development version from GitHub.
+install.packages("devtools")
 library(devtools)
-install_github("wlandau-lilly/drake") # Development version.
+install_github("wlandau-lilly/drake")
 ```
 
 - You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
