@@ -2,7 +2,8 @@
 % Please edit documentation in R/dataframes_graph.R
 \name{dataframes_graph}
 \alias{dataframes_graph}
-\title{Function \code{dataframes_graph}}
+\title{Create the underlying node and edge data frames
+behind \code{\link{vis_drake_graph}()}.}
 \usage{
 dataframes_graph(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, build_times = TRUE, digits = 3,
@@ -75,8 +76,8 @@ the legend nodes. The list also contains the
 default title of the graph.
 }
 \description{
-Get the information about nodes, edges, and the legend/key
-so you can plot your own custom \code{visNetwork}.
+With the returned data frames,
+you can plot your own custom \code{visNetwork} graph.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,8 @@
 % Please edit documentation in R/make.R
 \name{make_with_config}
 \alias{make_with_config}
-\title{Function \code{make_with_config}}
+\title{Run \code{\link{make}()},
+on an existing internal configuration list.}
 \usage{
 make_with_config(config)
 }
@@ -13,9 +14,8 @@ make_with_config(config)
 An output internal configuration list
 }
 \description{
-Run \code{\link{make}()},
-on an existing internal configuration list
-that you can get from \code{\link{drake_config}()}.
+Use \code{\link{drake_config}()}
+to create the \code{config} argument.
 }
 \examples{
 \dontrun{

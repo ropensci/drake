@@ -2,7 +2,8 @@
 % Please edit documentation in R/progress.R
 \name{failed}
 \alias{failed}
-\title{Function \code{failed}}
+\title{List the targets that failed in the last call
+to \code{\link{make}()}.}
 \usage{
 failed(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = TRUE)
@@ -26,8 +27,6 @@ the \code{path} and \code{search} arguments are ignored.}
 A character vector of target names.
 }
 \description{
-List the targets that failed in the last call
-to \code{\link{make}()}.
 Together, functions \code{failed} and
 \code{\link{diagnose}()} should eliminate the strict need
 for ordinary error messages printed to the console.

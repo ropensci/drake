@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate.R
 \name{dataset_wildcard}
 \alias{dataset_wildcard}
-\title{Function \code{dataset_wildcard}}
+\title{Show the dataset wildcard
+used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.}
 \usage{
 dataset_wildcard()
 }
@@ -11,8 +12,7 @@ The dataset wildcard used in
 \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
 }
 \description{
-Show the dataset wildcard
-used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+Used to generate workflow plan data frames.
 }
 \examples{
 # See ?plan_analyses for examples

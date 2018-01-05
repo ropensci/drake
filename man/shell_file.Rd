@@ -2,7 +2,8 @@
 % Please edit documentation in R/parallel_ui.R
 \name{shell_file}
 \alias{shell_file}
-\title{Function \code{shell_file}}
+\title{Write an example \code{shell.sh} file required by
+\code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}.}
 \usage{
 shell_file(path = "shell.sh", overwrite = FALSE)
 }
@@ -17,11 +18,8 @@ The return value of the call to \code{file.copy()} that
 wrote the shell file.
 }
 \description{
-Write an example \code{shell.sh} file required by
-\code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}
-and do a `chmod +x` to enable execution.
-Use this option to run your project in parallel on a computing cluster
-or supercomputer.
+This function also does a `chmod +x`
+to enable execute permissions.
 }
 \examples{
 \dontrun{

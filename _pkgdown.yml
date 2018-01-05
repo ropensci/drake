@@ -94,7 +94,6 @@ reference:
   - '`migrate_drake_project`'
   - '`missed`'
   - '`outdated`'
-  - '`possible_targets`'
   - '`tracked`'
   - '`triggers`'
 - title: High-performance computing

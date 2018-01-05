@@ -1,6 +1,7 @@
-#' @title Function \code{dataframes_graph}
-#' @description Get the information about nodes, edges, and the legend/key
-#' so you can plot your own custom \code{visNetwork}.
+#' @title Create the underlying node and edge data frames
+#' behind \code{\link{vis_drake_graph}()}.
+#' @description With the returned data frames,
+#' you can plot your own custom \code{visNetwork} graph.
 #' @export
 #' @return A list of three data frames: one for nodes,
 #' one for edges, and one for

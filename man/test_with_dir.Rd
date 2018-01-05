@@ -2,7 +2,8 @@
 % Please edit documentation in R/test.R
 \name{test_with_dir}
 \alias{test_with_dir}
-\title{Internal function \code{test_with_dir}}
+\title{Run a unit test in a way that quarantines
+the side effects from your workspace and file system.}
 \usage{
 test_with_dir(desc, ...)
 }
@@ -15,8 +16,9 @@ test_with_dir(desc, ...)
 nothing
 }
 \description{
-Run a test in a way that quarantines
-the side effects from your workspace and file system.
+Typical users of drake should not need this function.
+It is exported so it can be used to quarantine the side effects
+of the examples in the help files.
 }
 \examples{
 \dontrun{

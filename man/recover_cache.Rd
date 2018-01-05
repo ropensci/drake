@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{recover_cache}
 \alias{recover_cache}
-\title{Function \code{recover_cache}}
+\title{Load an existing drake files system cache if it exists
+or create a new one otherwise.}
 \usage{
 recover_cache(path = drake::default_cache_path(),
   short_hash_algo = drake::default_short_hash_algo(),
@@ -35,11 +36,8 @@ but customized.}
 A drake/storr cache.
 }
 \description{
-Load an existing drake files system cache if it exists
-and create a new one otherwise.
-Do not use for in-memory caches such as
-\code{storr_environment()}.
-For internal use only.
+Does not work with
+in-memory caches such as \code{storr_environment()}.
 }
 \examples{
 \dontrun{

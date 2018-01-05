@@ -2,7 +2,8 @@
 % Please edit documentation in R/Makefile.R
 \name{default_Makefile_args}
 \alias{default_Makefile_args}
-\title{Function \code{default_Makefile_args}}
+\title{Return the default value of the
+\code{args} argument to \code{\link{make}()}.}
 \usage{
 default_Makefile_args(jobs, verbose)
 }

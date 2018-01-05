@@ -2,7 +2,9 @@
 % Please edit documentation in R/cache_namespaces.R
 \name{target_namespaces}
 \alias{target_namespaces}
-\title{Function \code{target_namespaces}}
+\title{For drake caches,
+list the \code{storr} cache namespaces
+that store target-level information.}
 \usage{
 target_namespaces(default = storr::storr_environment()$default_namespace)
 }
@@ -14,8 +16,6 @@ A character vector of \code{storr} namespaces that store
 target-level information.
 }
 \description{
-List the \code{storr} cache namespaces
-that store target-level information.
 Ordinary users do not need to worry about this function.
 It is just another window into \code{drake}'s internals.
 }

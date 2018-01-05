@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean.R
 \name{clean}
 \alias{clean}
-\title{Function \code{clean}}
+\title{Remove targets/imports from the cache.}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
   search = TRUE, cache = NULL, verbose = 1, jobs = 1, force = FALSE,
@@ -62,7 +62,7 @@ metadata namespaces such as "meta", "build_times", and "errors".}
 Invisibly return \code{NULL}.
 }
 \description{
-Cleans up work done by \code{\link{make}()}.
+Cleans up the work done by \code{\link{make}()}.
 }
 \details{
 By default, \code{clean()} removes references to cached data.

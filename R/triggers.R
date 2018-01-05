@@ -1,7 +1,9 @@
-#' @title Function \code{triggers}
+#' @title List the available drake triggers.
 #' @export
 #' @seealso \code{\link{drake_plan}}, \code{\link{make}}
-#' @description List the available triggers.
+#' @description Triggers are target-level rules
+#' that tell \code{\link{make}()} how to know if a target
+#' is outdated or up to date.
 #' @return A character vector with the names of the available triggers.
 #' @details By default, \code{make()}
 #' builds targets that need updating and
@@ -76,8 +78,10 @@ triggers <- function(){
     sort
 }
 
-#' @title Function \code{default_trigger}
-#' @description Return the default trigger.
+#' @title Return the default trigger.
+#' @description Triggers are target-level rules
+#' that tell \code{\link{make}()} how to check if
+#' target is up to date or outdated.
 #' @export
 #' @seealso \code{\link{triggers}}, \code{\link{make}}
 #' @return A character scalar naming the default trigger.

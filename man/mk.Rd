@@ -2,7 +2,8 @@
 % Please edit documentation in R/Makefile.R
 \name{mk}
 \alias{mk}
-\title{Function \code{mk}}
+\title{Build a target inside a \code{Makefile}
+during \code{make(..., parallelism = "Makefile")}.}
 \usage{
 mk(target = character(0), cache_path = drake::default_cache_path())
 }
@@ -15,9 +16,7 @@ mk(target = character(0), cache_path = drake::default_cache_path())
 \code{NULL}
 }
 \description{
-Internal drake function to be called
-inside Makefiles only. Makes a single target.
-Users should not need to invoke this function directly.
+Users should not need to call this function directly.
 }
 \examples{
 \dontrun{

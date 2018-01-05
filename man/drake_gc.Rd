@@ -2,7 +2,7 @@
 % Please edit documentation in R/clean.R
 \name{drake_gc}
 \alias{drake_gc}
-\title{Function \code{drake_gc}}
+\title{Do garbage collection on the drake cache.}
 \usage{
 drake_gc(path = getwd(), search = TRUE, verbose = 1, cache = NULL,
   force = FALSE)
@@ -31,7 +31,10 @@ running version of drake.}
 \code{NULL}
 }
 \description{
-Do garbage collection on the cache
+The cache is a key-value store.
+By default, the \code{\link{clean}()} function removes
+values, but not keys.
+Garbage collection removes the remaining dangling files.
 }
 \examples{
 \dontrun{

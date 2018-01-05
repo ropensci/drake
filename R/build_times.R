@@ -1,6 +1,5 @@
-#' @title Function \code{build_times}
-#' @description List all the build times.
-#' This does not include the amount of time
+#' @title List the time it took to build each target/import.
+#' @description Listed times do not include the amount of time
 #' spent loading and saving objects!
 #' @seealso \code{\link{built}}
 #' @export

@@ -2,7 +2,8 @@
 % Please edit documentation in R/dataframes_graph_utils.R
 \name{default_graph_title}
 \alias{default_graph_title}
-\title{Function \code{default_graph_title}}
+\title{Return the default title of the graph for
+\code{\link{vis_drake_graph}()}.}
 \usage{
 default_graph_title(split_columns = FALSE)
 }
@@ -16,8 +17,7 @@ a character scalar with the default graph title for
 \code{\link{vis_drake_graph}()}.
 }
 \description{
-Default title of the graph for
-\code{\link{vis_drake_graph}()}.
+For internal use only.
 }
 \examples{
 default_graph_title()

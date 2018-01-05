@@ -2,7 +2,8 @@
 % Please edit documentation in R/hooks.R
 \name{silencer_hook}
 \alias{silencer_hook}
-\title{Function \code{silencer_hook}}
+\title{An example \code{hook} argument to
+\code{make()} that redirects output and error messages}
 \usage{
 silencer_hook(code)
 }
@@ -14,8 +15,7 @@ A function that you can supply to the \code{hook} argument
 of \code{\link{make}()}.
 }
 \description{
-an example \code{hook} argument to
-\code{make()} that redirects output and error messages
+Most users do not need to micromanage hooks.
 }
 \examples{
 \dontrun{

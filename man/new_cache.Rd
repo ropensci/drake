@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{new_cache}
 \alias{new_cache}
-\title{Function \code{new_cache}}
+\title{Make a new \code{drake} cache.}
 \usage{
 new_cache(path = drake::default_cache_path(), verbose = 1, type = NULL,
   short_hash_algo = drake::default_short_hash_algo(),
@@ -31,7 +31,8 @@ See \code{\link{default_long_hash_algo}()} and
 A newly created drake cache as a storr object.
 }
 \description{
-Make a new \code{storr_rds()} \code{drake} cache.
+Uses the \code{storr_rds()} function
+from the \code{storr} package.
 }
 \examples{
 test_with_dir("Quarantine side effects.", {

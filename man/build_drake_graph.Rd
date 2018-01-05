@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{build_drake_graph}
 \alias{build_drake_graph}
-\title{Function \code{build_drake_graph}}
+\title{Create the \code{igraph} dependency network of your project.}
 \usage{
 build_drake_graph(plan = drake_plan(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
@@ -29,11 +29,9 @@ An igraph object representing
 the workflow plan dependency network.
 }
 \description{
-Make a graph of the dependency structure of your drake_plan.
-}
-\details{
 This function returns an igraph object representing how
-the targets in your drake_plan depend on each other.
+the targets in your workflow plan data frame
+depend on each other.
 (\code{help(package = "igraph")}). To plot the graph, call
 to \code{\link{plot.igraph}()} on your graph, or just use
 \code{\link{vis_drake_graph}()} from the start.

@@ -1,6 +1,6 @@
-#' @title Function \code{check_plan}
-#' @description Check a workflow plan, etc. for obvious
-#' errors such as circular dependencies and
+#' @title Check a workflow plan data frame for obvious errors.
+#' @description Possible obvious errors include
+#' circular dependencies and
 #' missing input files.
 #' @seealso \code{ink{drake_plan}}, \code{\link{make}}
 #' @export

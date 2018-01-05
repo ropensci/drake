@@ -2,7 +2,8 @@
 % Please edit documentation in R/dependencies.R
 \name{deps}
 \alias{deps}
-\title{Function \code{deps}}
+\title{List the dependencies of a function, workflow plan command,
+or knitr report source file.}
 \usage{
 deps(x)
 }
@@ -16,8 +17,12 @@ Files wrapped in single quotes.
 The other names listed are functions or generic R objects.
 }
 \description{
-List the dependencies of a function or workflow plan command.
-Or, if the argument is a single-quoted string that points to
+Intended for debugging and checking your project.
+The dependency structure of the components of your analysis
+decides which targets are built and when.
+}
+\details{
+If the argument is a single-quoted string that points to
 a dynamic knitr report, the dependencies of the expected compiled
 output will be given. For example, \code{deps("'report.Rmd'")}
 will return target names found in calls to \code{\link{loadd}()}

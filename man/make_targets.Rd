@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make_targets}
 \alias{make_targets}
-\title{Function \code{make_targets}}
+\title{Just build the targets.}
 \usage{
 make_targets(config)
 }
@@ -14,7 +14,9 @@ The master internal configuration list
 used by \code{\link{make}()}.
 }
 \description{
-just make the proper targets with commands
+Targets are the workflow steps listed
+in your workflow plan data frame.
+(See \code{\link{drake_plan}()}.)
 }
 \examples{
 \dontrun{

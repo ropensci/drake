@@ -1,6 +1,9 @@
-#' @title Function \code{deps}
-#' @description List the dependencies of a function or workflow plan command.
-#' Or, if the argument is a single-quoted string that points to
+#' @title List the dependencies of a function, workflow plan command,
+#' or knitr report source file.
+#' @description Intended for debugging and checking your project.
+#' The dependency structure of the components of your analysis
+#' decides which targets are built and when.
+#' @details If the argument is a single-quoted string that points to
 #' a dynamic knitr report, the dependencies of the expected compiled
 #' output will be given. For example, \code{deps("'report.Rmd'")}
 #' will return target names found in calls to \code{\link{loadd}()}
@@ -57,9 +60,9 @@ deps <- function(x){
   clean_dependency_list(out)
 }
 
-#' @title Function \code{dependency_profile}
-#' @description Return the detailed dependency profile
-#' of the target. Useful for debugging.
+#' @title Return the detailed dependency profile
+#' of the target.
+#' @description Useful for debugging.
 #' For up to date targets, like elements
 #' of the returned list should agree: for example,
 #' \code{cached_dependency_hash} and
@@ -109,9 +112,10 @@ dependency_profile <- function(target, config){
   out[!is.na(out)]
 }
 
-#' @title Function \code{tracked}
-#' @description Print out which objects, functions, files, targets, etc.
-#' are reproducibly tracked.
+#' @title List the targets and imports
+#' that are reproducibly tracked.
+#' @description In other words, list all the nodes
+#' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
 #' @param plan workflow plan data frame, same as for function

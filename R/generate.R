@@ -1,6 +1,6 @@
-#' @title Function \code{analysis_wildcard}
-#' @description Show the analysis wildcard
+#' @title Show the analysis wildcard
 #' used in \code{\link{plan_summaries}()}.
+#' @description Used to generate workflow plan data frames.
 #' @export
 #' @seealso \code{\link{plan_summaries}()}
 #' @return The analysis wildcard used in \code{\link{plan_summaries}()}.
@@ -10,9 +10,9 @@ analysis_wildcard <- function(){
   "analysis__"
 }
 
-#' @title Function \code{dataset_wildcard}
-#' @description Show the dataset wildcard
+#' @title Show the dataset wildcard
 #' used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+#' @description Used to generate workflow plan data frames.
 #' @export
 #' @seealso \code{\link{plan_analyses}()}
 #' @return The dataset wildcard used in
@@ -23,7 +23,8 @@ dataset_wildcard <- function(){
   "dataset__"
 }
 
-#' @title Function \code{evaluate_plan}
+#' @title Use wildcard templating to create a
+#' workflow plan data frame from a template data frame.
 #' @description The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
@@ -151,9 +152,10 @@ evaluations <- function(
   return(plan)
 }
 
-#' @title Function \code{expand_plan}
-#' @description Expands a workflow plan data frame by duplicating rows.
-#' This generates multiple replicates of targets with the same commands.
+#' @title Create replicates of targets.
+#' @description Duplicates the rows of a workflow plan data frame.
+#' Prefixes are appended to the new target names
+#' so targets still have unique names.
 #' @export
 #' @return An expanded workflow plan data frame (with replicated targets).
 #' @param plan workflow plan data frame
@@ -180,8 +182,9 @@ expand_plan <- function(plan, values = NULL){
   return(plan)
 }
 
-#' @title Function \code{gather_plan}
-#' @description Create a new workflow plan data frame with a single new
+#' @title Write commands to combine several targets into one
+#' or more overarching targets.
+#' @description Creates a new workflow plan data frame with a single new
 #' target. This new target is a list, vector, or other aggregate of
 #' a collection of existing targets in another workflow plan data frame.
 #' @export
@@ -221,9 +224,10 @@ gather_plan <- function(
   )
 }
 
-#' @title Function \code{plan_analyses}
-#' @description Generate a workflow plan data frame to
+#' @title Generate a workflow plan data frame to
 #' analyze multiple datasets using multiple methods of analysis.
+#' @description Uses wildcards to create a new
+#' workflow plan data frame from a template data frame.
 #' @seealso \code{\link{plan_summaries}},
 #'  \code{\link{make}}, \code{\link{drake_plan}}
 #' @export
@@ -265,9 +269,10 @@ plan_analyses <- function(plan, datasets){
   )
 }
 
-#' @title Function \code{plan_summaries}
-#' @description Generate a workflow plan data frame for summarizing
+#' @title Generate a workflow plan data frame for summarizing
 #' multiple analyses of multiple datasets multiple ways.
+#' @description Uses wildcards to create a new
+#' workflow plan data frame from a template data frame.
 #' @seealso \code{\link{plan_analyses}}, \code{\link{make}},
 #' \code{\link{drake_plan}}
 #' @export

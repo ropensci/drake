@@ -1,5 +1,5 @@
-#' @title Function \code{clean}
-#' @description Cleans up work done by \code{\link{make}()}.
+#' @title Remove targets/imports from the cache.
+#' @description Cleans up the work done by \code{\link{make}()}.
 #' @details
 #' By default, \code{clean()} removes references to cached data.
 #' To deep-clean the data to free up storage/memory, use
@@ -197,8 +197,11 @@ remove_file_target <- function(target, plan){
   invisible()
 }
 
-#' @title Function \code{drake_gc}
-#' @description Do garbage collection on the cache
+#' @title Do garbage collection on the drake cache.
+#' @description The cache is a key-value store.
+#' By default, the \code{\link{clean}()} function removes
+#' values, but not keys.
+#' Garbage collection removes the remaining dangling files.
 #' @seealso \code{\link{clean}}
 #' @export
 #' @return\code{NULL}
@@ -250,7 +253,8 @@ drake_gc <- function(
   invisible()
 }
 
-#' @title Function \code{rescue_cache}
+#' @title Try to repair a drake cache that is prone
+#' to throwing \code{storr}-related errors.
 #' @description Sometimes, \code{storr} caches may have
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the

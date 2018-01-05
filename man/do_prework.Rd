@@ -2,7 +2,8 @@
 % Please edit documentation in R/config.R
 \name{do_prework}
 \alias{do_prework}
-\title{Internal function \code{do_prework}}
+\title{Do the prework in the \code{prework}
+argument to \code{\link{make}()}.}
 \usage{
 do_prework(config, verbose_packages)
 }
@@ -16,10 +17,10 @@ package startup messages}
 Inivisibly returns \code{NULL}.
 }
 \description{
-Run the \code{prework} of a \code{\link{make}()}.
 For internal use only.
-the only reason this function is exported
-is to set up PSOCK clusters efficiently.
+The only reason this function is exported
+is to set up parallel socket (PSOCK) clusters
+without too much fuss.
 }
 \examples{
 \dontrun{

@@ -1,6 +1,8 @@
-#' @title Function \code{drake_session}
-#' @description Load the \code{\link{sessionInfo}()}
+#' @title Return the \code{\link{sessionInfo}()}
 #' of the last call to \code{\link{make}()}.
+#' @description By default, session info is saved
+#' during \code{\link{make}()} to ensure reproducibility.
+#' Your loaded packages and their versions are recorded, for example.
 #' @seealso \code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
 #' @export
@@ -34,11 +36,10 @@ drake_session <- function(path = getwd(), search = TRUE,
   return(cache$get("sessionInfo", namespace = "session"))
 }
 
-#' @title Function \code{in_progress}
-#' @description List the targets that either
-#' (1) are currently being built if \code{\link{make}()} is running, or
-#' (2) were in the process of being built if the previous call to
-#' \code{\link{make}()} quit unexpectedly.
+#' @title List the targets that either
+#' (1) are currently being built during a \code{\link{make}()}, or
+#' (2) were being built if the last \code{\link{make}()} quit unexpectedly.
+#' @description Similar to \code{\link{progress}()}.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},
 #' \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
@@ -73,10 +74,9 @@ in_progress <- function(path = getwd(), search = TRUE,
     as.character()
 }
 
-#' @title Function \code{failed}
-#' @description List the targets that failed in the last call
+#' @title List the targets that failed in the last call
 #' to \code{\link{make}()}.
-#' Together, functions \code{failed} and
+#' @description Together, functions \code{failed} and
 #' \code{\link{diagnose}()} should eliminate the strict need
 #' for ordinary error messages printed to the console.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},
@@ -117,10 +117,9 @@ failed <- function(path = getwd(), search = TRUE,
     as.character()
 }
 
-#' @title Function \code{progress}
-#' @description Get the build progress (overall or individual targets)
-#' of the last call to \code{\link{make}()}.
-#' Objects that drake imported, built, or attempted
+#' @title Get the build progress of your targets
+#' during a \code{\link{make}()}.
+#' @description Objects that drake imported, built, or attempted
 #' to build are listed as \code{"finished"} or \code{"in progress"}.
 #' Skipped objects are not listed.
 #' @seealso \code{\link{diagnose}}, \code{\link{session}},

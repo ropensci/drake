@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate.R
 \name{plan_summaries}
 \alias{plan_summaries}
-\title{Function \code{plan_summaries}}
+\title{Generate a workflow plan data frame for summarizing
+multiple analyses of multiple datasets multiple ways.}
 \usage{
 plan_summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 }
@@ -27,8 +28,8 @@ for computing summaries of analyses and datasets.
 analyses of multiple datasets in multiple ways.
 }
 \description{
-Generate a workflow plan data frame for summarizing
-multiple analyses of multiple datasets multiple ways.
+Uses wildcards to create a new
+workflow plan data frame from a template data frame.
 }
 \examples{
 # Create the part of the workflow plan data frame for the datasets.

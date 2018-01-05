@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{long_hash}
 \alias{long_hash}
-\title{Function \code{long_hash}}
+\title{Get the long hash algorithm of a drake cache.}
 \usage{
 long_hash(cache = drake::get_cache(verbose = verbose), verbose = TRUE)
 }
@@ -15,10 +15,9 @@ long_hash(cache = drake::get_cache(verbose = verbose), verbose = TRUE)
 A character vector naming a hash algorithm.
 }
 \description{
-Get the long hash algorithm of a drake cache.
-}
-\details{
-See \code{?\link{default_long_hash_algo}()}
+See the advanced storage tutorial
+at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+for details.
 }
 \examples{
 \dontrun{

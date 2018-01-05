@@ -2,7 +2,8 @@
 % Please edit documentation in R/predict_runtime.R
 \name{rate_limiting_times}
 \alias{rate_limiting_times}
-\title{Function \code{rate_limiting_times}}
+\title{Return a data frame of elapsed build times of
+the rate-limiting targets of a drake project.}
 \usage{
 rate_limiting_times(config, targets = NULL, from_scratch = FALSE,
   targets_only = FALSE, future_jobs = 1, digits = 3)
@@ -36,8 +37,9 @@ A data frame of times of the worst-case scenario
 rate-limiting targets in each parallelizable stage.
 }
 \description{
-Return a data frame of elapsed build times of
-the rate-limiting targets of a \code{\link{make}()} drake_plan.
+This function produces a conservative
+estimate for \code{\link{predict_runtime}()}
+for when parallel computing is used in \code{\link{make}()}.
 }
 \details{
 The \code{stage} column of the returned data frame

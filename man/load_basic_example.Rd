@@ -2,7 +2,8 @@
 % Please edit documentation in R/basic_example.R
 \name{load_basic_example}
 \alias{load_basic_example}
-\title{Function \code{load_basic_example}}
+\title{Load the basic example into your workspace
+(or environment of choice).}
 \usage{
 load_basic_example(envir = parent.frame(), cache = NULL,
   report_file = "report.Rmd", overwrite = FALSE, to = report_file,
@@ -33,9 +34,8 @@ non-back-compatible cache from a previous version of drake.}
 A \code{\link{drake_config}()} configuration list.
 }
 \description{
-Loads the basic example into your workspace
-(or the environment you specify).
-Also writes/overwrites the file \code{report.Rmd}.
+This function also writes/overwrites
+the file, \code{report.Rmd}.
 For a thorough walkthrough of how to set up this example, see the
 quickstart vignette: \code{vignette('quickstart')}. Alternatively,
 call \code{\link{drake_example}('basic')} to generate an R script

@@ -1,8 +1,6 @@
-#' @title Function \code{find_cache}
-#' @description Return the file path of the nearest drake
-#' cache (searching upwards for directories containing a drake cache).
-#' Only works if the cache is a file system in a
-#' hidden folder named \code{.drake}.
+#' @title Search up the file system for the nearest drake cache.
+#' @description Only works if the cache is a file system in a
+#' hidden folder named \code{.drake} (default).
 #' @seealso \code{\link{drake_plan}}, \code{\link{make}},
 #' @export
 #' @return File path of the nearest drake cache or \code{NULL}
@@ -34,11 +32,10 @@ find_cache <- function(
   file.path(path, directory)
 }
 
-#' @title Function \code{find_project}
-#' @description Return the file path of the nearest drake
-#' project (searching upwards for directories
-#' containing a drake cache).
-#' Only works if the cache is a file system in a folder named \code{.drake}.
+#' @title Search up the file system
+#' for the nearest root path of a drake project.
+#' @description Only works if the cache is a file system
+#' in a folder named \code{.drake} (default).
 #' @export
 #' @seealso \code{\link{drake_plan}}, \code{\link{make}}
 #' @return File path of the nearest drake project or \code{NULL}

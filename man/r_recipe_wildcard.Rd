@@ -2,7 +2,8 @@
 % Please edit documentation in R/recipe.R
 \name{r_recipe_wildcard}
 \alias{r_recipe_wildcard}
-\title{Function \code{r_recipe_wildcard}}
+\title{Show the R recipe wildcard
+for \code{\link{make}(..., parallelism = "Makefile")}.}
 \usage{
 r_recipe_wildcard()
 }
@@ -10,12 +11,7 @@ r_recipe_wildcard()
 The R recipe wildcard.
 }
 \description{
-Gives the R recipe wildcard
-for Makefiles.
-}
-\details{
-See the help file of \code{\link{Makefile_recipe}}
-for details and examples.
+Relevant to \code{"Makefile"} parallelism only.
 }
 \examples{
 r_recipe_wildcard()

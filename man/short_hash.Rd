@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{short_hash}
 \alias{short_hash}
-\title{Function \code{short_hash}}
+\title{Get the short hash algorithm of a drake cache.}
 \usage{
 short_hash(cache = drake::get_cache(verbose = verbose), verbose = verbose)
 }
@@ -15,10 +15,9 @@ short_hash(cache = drake::get_cache(verbose = verbose), verbose = verbose)
 A character vector naming a hash algorithm.
 }
 \description{
-Get the short hash algorithm of a drake cache.
-}
-\details{
-See \code{?\link{default_long_hash_algo}()}
+See the advanced storage tutorial
+at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+for details.
 }
 \examples{
 \dontrun{

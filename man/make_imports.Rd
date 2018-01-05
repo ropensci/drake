@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make_imports}
 \alias{make_imports}
-\title{Function \code{make_imports}}
+\title{Just make the imports.}
 \usage{
 make_imports(config)
 }
@@ -14,7 +14,11 @@ The master internal configuration list
 used by \code{\link{make}()}.
 }
 \description{
-just make the imports
+Imports are non-targets that the targets
+in your workflow plan data frame (see \code{\link{drake_plan}()})
+may depend on.
+Imports could be files in storage, functions, or generic objects
+in your workspace or environment.
 }
 \examples{
 \dontrun{

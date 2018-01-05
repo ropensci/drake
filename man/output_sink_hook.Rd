@@ -2,7 +2,8 @@
 % Please edit documentation in R/hooks.R
 \name{output_sink_hook}
 \alias{output_sink_hook}
-\title{Function \code{output_sink_hook}}
+\title{An example \code{hook} argument to
+\code{make()} that redirects output messages to files.}
 \usage{
 output_sink_hook(code)
 }
@@ -14,8 +15,7 @@ A function that you can supply to the \code{hook} argument
 of \code{\link{make}()}.
 }
 \description{
-an example \code{hook} argument to
-\code{make()} that redirects output messages to files.
+Most users do not need to micromanage hooks.
 }
 \examples{
 \dontrun{

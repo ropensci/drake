@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate.R
 \name{plan_analyses}
 \alias{plan_analyses}
-\title{Function \code{plan_analyses}}
+\title{Generate a workflow plan data frame to
+analyze multiple datasets using multiple methods of analysis.}
 \usage{
 plan_analyses(plan, datasets)
 }
@@ -21,8 +22,8 @@ to make the datasets.}
 An evaluated workflow plan data frame of analysis targets.
 }
 \description{
-Generate a workflow plan data frame to
-analyze multiple datasets using multiple methods of analysis.
+Uses wildcards to create a new
+workflow plan data frame from a template data frame.
 }
 \examples{
 # Create the piece of the workflow plan for the datasets.

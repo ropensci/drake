@@ -2,7 +2,7 @@
 % Please edit documentation in R/triggers.R
 \name{default_trigger}
 \alias{default_trigger}
-\title{Function \code{default_trigger}}
+\title{Return the default trigger.}
 \usage{
 default_trigger()
 }
@@ -10,7 +10,9 @@ default_trigger()
 A character scalar naming the default trigger.
 }
 \description{
-Return the default trigger.
+Triggers are target-level rules
+that tell \code{\link{make}()} how to check if
+target is up to date or outdated.
 }
 \examples{
 default_trigger()

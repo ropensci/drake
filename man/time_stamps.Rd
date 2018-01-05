@@ -2,7 +2,8 @@
 % Please edit documentation in R/timestamp.R
 \name{time_stamps}
 \alias{time_stamps}
-\title{Internal function \code{time_stamps}}
+\title{Write dummy timestamp files for
+\code{\link{make}(..., parallelism = "Makefile")}.}
 \usage{
 time_stamps(config)
 }
@@ -14,11 +15,11 @@ produced by \code{\link{drake_config}}.}
 nothing
 }
 \description{
-Write dummy timestamps for Makefiles
-}
-\details{
-Used internally with
-\code{\link{make}(..., parallelism = "Makefile")}
+For \code{"Makefile"} parallelism,
+dummy timestamp files tell the Makefile
+which targets need to be built and which can be skipped.
+This function is for internal use only. It is only exported
+to flesh out some of the examples in the help files.
 }
 \examples{
 \dontrun{

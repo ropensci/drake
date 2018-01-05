@@ -1,9 +1,8 @@
-#' @title Function \code{cache_path}
+#' @title Return the file path where the cache is stored,
+#' if applicable.
 #' @export
-#' @description Returns the file path
-#' where the cache is stored. Currently
-#' only works with \code{storr} file system
-#' caches.
+#' @description Currently only works with
+#' \code{storr::storr_rds} file system caches.
 #' @return File path where the cache is stored.
 #' @param cache the cache whose file path
 #' you want to know
@@ -30,12 +29,14 @@ cache_path <- function(cache = NULL){
   }
 }
 
-#' @title Function \code{get_cache}
-#' @description Search for and return a drake file system cache.
+#' @title Get the drake cache, optionally searching up the file system.
+#' @description Only works if the cache
+#' is in a folder called \code{.drake/}.
 #' @seealso \code{\link{this_cache}}, \code{\link{new_cache}},
 #' \code{\link{recover_cache}}, \code{\link{config}}
 #' @export
-#' @return A drake/storr cache, if available. \code{NULL} otherwise.
+#' @return A drake/storr cache in a folder called \code{.drake/},
+#' if available. \code{NULL} otherwise.
 #' @param path file path to the folder containing the cache.
 #' Yes, this is the parent directory containing the cache,
 #' not the cache itself, and it assumes the cache is in the
@@ -83,12 +84,10 @@ get_cache <- function(
   )
 }
 
-#' @title Function \code{this_cache}
+#' @title Get the cache at the exact file path specified.
 #' @export
-#' @description Get a known drake file system cache
-#' at the exact specified file path
-#' Do not use for in-memory caches such as
-#' \code{storr_environment()}.
+#' @description This function does not apply to
+#' in-memory caches such as \code{storr_environment()}.
 #' @return A drake/storr cache at the specified path, if it exists.
 #' @param path file path of the cache
 #' @param force logical, whether to load the cache
@@ -154,8 +153,9 @@ drake_fetch_rds <- function(path){
   )
 }
 
-#' @title Function \code{new_cache}
-#' @description Make a new \code{storr_rds()} \code{drake} cache.
+#' @title  Make a new \code{drake} cache.
+#' @description Uses the \code{storr_rds()} function
+#' from the \code{storr} package.
 #' @export
 #' @return A newly created drake cache as a storr object.
 #' @seealso \code{\link{default_short_hash_algo}},
@@ -213,15 +213,14 @@ new_cache <- function(
   cache
 }
 
-#' @title Function \code{recover_cache}
+#' @title Load an existing drake files system cache if it exists
+#' or create a new one otherwise.
 #' @export
 #' @seealso \code{\link{new_cache}}, \code{\link{this_cache}},
 #' \code{\link{get_cache}}
-#' @description Load an existing drake files system cache if it exists
-#' and create a new one otherwise.
-#' Do not use for in-memory caches such as
-#' \code{storr_environment()}.
-#' For internal use only.
+#' @description
+#' Does not work with
+#' in-memory caches such as \code{storr_environment()}.
 #' @return A drake/storr cache.
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
@@ -271,9 +270,9 @@ recover_cache <- function(
   cache
 }
 
-#' @title Function \code{default_cache_path}
+#' @title Return the default file path of the drake/storr cache.
 #' @export
-#' @description Return the default file path of the drake/storr cache.
+#' @description Applies to file system caches only.
 #' @return Default file path of the drake/storr cache.
 #' @examples
 #' default_cache_path()
@@ -281,11 +280,11 @@ default_cache_path <- function(){
   file.path(getwd(), ".drake")
 }
 
-#' @title Function \code{configure_cache}
+#' @title Configure the hash algorithms, etc. of a drake cache.
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}}
-#' @description configure a cache for drake. This is
+#' @description The purpose of this function is
 #' to prepare the cache to be called from \code{\link{make}()}.
 #' @return A drake/storr cache.
 #'

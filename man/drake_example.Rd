@@ -2,7 +2,7 @@
 % Please edit documentation in R/examples.R
 \name{drake_example}
 \alias{drake_example}
-\title{Function \code{drake_example}}
+\title{Save the source code files of a drake example.}
 \usage{
 drake_example(example = drake::drake_examples(), to = getwd(),
   destination = NULL, overwrite = FALSE)

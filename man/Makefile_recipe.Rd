@@ -2,7 +2,9 @@
 % Please edit documentation in R/recipe.R
 \name{Makefile_recipe}
 \alias{Makefile_recipe}
-\title{Function \code{Makefile_recipe}}
+\title{For \code{\link{make}(..., parallelism = "Makefile")},
+see what your \code{Makefile} recipes
+will look like in advance.}
 \usage{
 Makefile_recipe(recipe_command = drake::default_recipe_command(),
   target = "your_target", cache_path = drake::default_cache_path())
@@ -25,8 +27,7 @@ just shows the literal path to the cache.}
 A character scalar with a Makefile recipe.
 }
 \description{
-See what your \code{Makefile} recipes
-will look like in advance.
+Relevant to \code{"Makefile"} parallelism only.
 }
 \details{
 Makefile recipes to build targets are customizable.

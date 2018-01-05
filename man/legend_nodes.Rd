@@ -2,7 +2,8 @@
 % Please edit documentation in R/dataframes_graph_utils.R
 \name{legend_nodes}
 \alias{legend_nodes}
-\title{Function \code{legend_nodes}}
+\title{Create the nodes data frame used in the legend
+of \code{\link{vis_drake_graph}()}.}
 \usage{
 legend_nodes(font_size = 20)
 }

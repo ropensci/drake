@@ -2,7 +2,7 @@
 % Please edit documentation in R/check.R
 \name{check_plan}
 \alias{check_plan}
-\title{Function \code{check_plan}}
+\title{Check a workflow plan data frame for obvious errors.}
 \usage{
 check_plan(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
@@ -26,8 +26,8 @@ check_plan(plan = drake_plan(), targets = drake::possible_targets(plan),
 Invisibly return \code{plan}.
 }
 \description{
-Check a workflow plan, etc. for obvious
-errors such as circular dependencies and
+Possible obvious errors include
+circular dependencies and
 missing input files.
 }
 \examples{

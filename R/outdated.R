@@ -1,6 +1,6 @@
-#' @title Function \code{outdated}
-#' @description Check which targets are out of date and need to be rebuilt.
-#' IMPORTANT: you must be in the root directory of your project.
+#' @title List the targets that are out of date.
+#' @description Outdated targets will be rebuilt in the next
+#' \code{\link{make}()}.
 #' @details \code{outdated()} is sensitive to the alternative triggers
 #' described at
 #' \url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
@@ -58,10 +58,10 @@ outdated <-  function(config, make_imports = TRUE){
     sort
 }
 
-#' @title Function \code{missed}
-#' @description Report any import objects required by your drake_plan
+#' @title Report any import objects required by your drake_plan
 #' plan but missing from your workspace.
-#' IMPORTANT: you must be in the root directory of your project.
+#' @description Checks your workspace/environment and
+#' file system.
 #' @export
 #' @seealso \code{\link{outdated}}
 #' @return Character vector of names of missing objects and files.

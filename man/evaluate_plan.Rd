@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate.R
 \name{evaluate_plan}
 \alias{evaluate_plan}
-\title{Function \code{evaluate_plan}}
+\title{Use wildcard templating to create a
+workflow plan data frame from a template data frame.}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
   expand = TRUE)

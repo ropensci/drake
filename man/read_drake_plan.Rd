@@ -2,7 +2,8 @@
 % Please edit documentation in R/read.R
 \name{read_drake_plan}
 \alias{read_drake_plan}
-\title{Function \code{read_drake_plan}}
+\title{Read the workflow plan
+from your last attempted call to \code{\link{make}()}.}
 \usage{
 read_drake_plan(path = getwd(), search = TRUE, cache = NULL,
   verbose = TRUE)
@@ -26,8 +27,7 @@ the \code{path} and \code{search} arguments are ignored.}
 A workflow plan data frame.
 }
 \description{
-Read the workflow plan
-from your last attempted call to \code{\link{make}()}.
+Uses the cache.
 }
 \examples{
 \dontrun{

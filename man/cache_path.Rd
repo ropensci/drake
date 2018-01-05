@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{cache_path}
 \alias{cache_path}
-\title{Function \code{cache_path}}
+\title{Return the file path where the cache is stored,
+if applicable.}
 \usage{
 cache_path(cache = NULL)
 }
@@ -14,10 +15,8 @@ you want to know}
 File path where the cache is stored.
 }
 \description{
-Returns the file path
-where the cache is stored. Currently
-only works with \code{storr} file system
-caches.
+Currently only works with
+\code{storr::storr_rds} file system caches.
 }
 \examples{
 \dontrun{

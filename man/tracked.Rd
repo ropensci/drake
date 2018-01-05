@@ -2,7 +2,8 @@
 % Please edit documentation in R/dependencies.R
 \name{tracked}
 \alias{tracked}
-\title{Function \code{tracked}}
+\title{List the targets and imports
+that are reproducibly tracked.}
 \usage{
 tracked(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), jobs = 1, verbose = TRUE)
@@ -28,8 +29,8 @@ progress messages to the console.}
 A character vector with the names of reproducibly-tracked targets.
 }
 \description{
-Print out which objects, functions, files, targets, etc.
-are reproducibly tracked.
+In other words, list all the nodes
+in your project's dependency network.
 }
 \examples{
 \dontrun{

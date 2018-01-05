@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{read_drake_meta}
 \alias{read_drake_meta}
-\title{Function \code{read_drake_meta}}
+\title{Read the metadata of a target or import.}
 \usage{
 read_drake_meta(targets = NULL, path = getwd(), search = TRUE,
   cache = NULL, verbose = 1, jobs = 1)
@@ -33,7 +33,9 @@ The cached master internal configuration list
 of the last \code{\link{make}()}.
 }
 \description{
-Read a target's metadata.
+The metadata helps determine if the
+target is up to date or outdated. The metadata of imports
+is used to compute the metadata of targets.
 }
 \details{
 Target metadata is computed

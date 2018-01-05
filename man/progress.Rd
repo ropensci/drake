@@ -2,7 +2,8 @@
 % Please edit documentation in R/progress.R
 \name{progress}
 \alias{progress}
-\title{Function \code{progress}}
+\title{Get the build progress of your targets
+during a \code{\link{make}()}.}
 \usage{
 progress(..., list = character(0), no_imported_objects = FALSE,
   imported_files_only = logical(0), path = getwd(), search = TRUE,
@@ -46,8 +47,6 @@ The build progress of each target reached by
 the current \code{\link{make}()} so far.
 }
 \description{
-Get the build progress (overall or individual targets)
-of the last call to \code{\link{make}()}.
 Objects that drake imported, built, or attempted
 to build are listed as \code{"finished"} or \code{"in progress"}.
 Skipped objects are not listed.

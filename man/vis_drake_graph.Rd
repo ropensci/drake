@@ -3,7 +3,8 @@
 \name{vis_drake_graph}
 \alias{vis_drake_graph}
 \alias{drake_graph}
-\title{Function \code{vis_drake_graph}}
+\title{Show an interactive visual network representation
+of your drake project.}
 \usage{
 vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   build_times = TRUE, digits = 3, targets_only = FALSE,
@@ -114,9 +115,8 @@ build progress in previous \code{\link{make}()}s.}
 A visNetwork graph.
 }
 \description{
-Plot the dependency structure of your drake_plan.
-IMPORTANT: you must be in the root directory of your project.
-To save time for repeated plotting, this function is divided into
+To save time for repeated plotting,
+this function is divided into
 \code{\link{dataframes_graph}()} and \code{\link{render_drake_graph}()}.
 }
 \examples{

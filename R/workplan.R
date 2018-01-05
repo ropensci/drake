@@ -1,7 +1,10 @@
-#' @title Function \code{drake_plan}
-#' @description Turns a named collection of command/target pairs into
-#' a workflow plan data frame for \code{\link{make}} and
-#' \code{\link{check}}.
+#' @title Create a workflow plan data frame
+#' for the \code{plan} argument of \code{\link{make}}.
+#' @description Turns a named collection of target/command pairs into
+#' a workflow plan data frame for \code{\link{make}()} and
+#' \code{\link{check}()}. You can give the commands
+#' as named expressions, or you can use the \code{list}
+#' argument to supply them as character strings.
 #' @details A workflow plan data frame is a data frame
 #' with a \code{target} column and a \code{command} column.
 #' Targets are the objects and files that drake generates,

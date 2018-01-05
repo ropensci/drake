@@ -22,10 +22,10 @@ colors <- c(
   other = "#888888"
 )
 
-#' @title Function \code{drake_palette}
+#' @title Show drake's color palette.
 #' @export
-#' @description show color palette for drake.
-#' Used in both the console and \code{\link{vis_drake_graph}()}
+#' @description This function is
+#' used in both the console and \code{\link{vis_drake_graph}()}
 #' Your console must have the crayon package enabled.
 #' @details This palette applies to console output
 #' (internal functions \code{console()} and

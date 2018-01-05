@@ -2,7 +2,8 @@
 % Please edit documentation in R/diagnose.R
 \name{diagnose}
 \alias{diagnose}
-\title{Function \code{diagnose}}
+\title{Get the last stored error log of a target
+that failed to build, or list the targets with error logs.}
 \usage{
 diagnose(target = NULL, character_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
@@ -36,8 +37,7 @@ Either a character vector of target names or an object
 of class \code{"error"}.
 }
 \description{
-Get the last stored error of a target
-that failed to build. This target could be a
+The specified target could be a
 completely failed target or a target
 that failed initially, retried, then succeeded.
 If no target is given, then \code{diagnose()} simply

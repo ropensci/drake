@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make}
 \alias{make}
-\title{Function \code{make}}
+\title{Run your project (build the outdated targets).}
 \usage{
 make(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
@@ -276,7 +276,8 @@ constructed along the way. See \code{\link{config}()}
 for more details.
 }
 \description{
-Run your project (build the targets).
+This is the central, most important function
+of the drake package.
 }
 \examples{
 \dontrun{

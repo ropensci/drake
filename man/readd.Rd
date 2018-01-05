@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{readd}
 \alias{readd}
-\title{Function \code{readd}}
+\title{Read and return a drake target or import from the cache.}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -39,7 +39,6 @@ name of an optional storr namespace to read from.}
 The cached value of the \code{target}.
 }
 \description{
-Read a drake target object from the cache.
 Does not delete the item from the cache.
 }
 \examples{

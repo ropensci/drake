@@ -2,7 +2,8 @@
 % Please edit documentation in R/hooks.R
 \name{empty_hook}
 \alias{empty_hook}
-\title{Function \code{empty_hook}}
+\title{A \code{hook} argument to \code{\link{make}()}
+for which no targets get built and no imports get processed.}
 \usage{
 empty_hook(code)
 }
@@ -15,8 +16,8 @@ A function that you can supply to the \code{hook} argument
 of \code{\link{make}()}.
 }
 \description{
-a \code{hook} argument to \code{\link{make}()}
-for which no targets get built and no imports get resolved
+This hook forces \code{\link{make}()}
+to essentially do nothing.
 }
 \examples{
 \dontrun{

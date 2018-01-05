@@ -2,7 +2,7 @@
 % Please edit documentation in R/parallel_ui.R
 \name{parallelism_choices}
 \alias{parallelism_choices}
-\title{Function \code{parallelism_choices}}
+\title{List the types of supported parallel computing in drake.}
 \usage{
 parallelism_choices(distributed_only = FALSE)
 }
@@ -16,7 +16,8 @@ Character vector listing the types of parallel
 computing supported.
 }
 \description{
-List the types of supported parallel computing.
+These are the possible values of the
+\code{parallelism} argument to \code{\link{make}()}.
 }
 \details{
 Run \code{make(..., parallelism = x, jobs = n)} for any of

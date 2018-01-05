@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate.R
 \name{expand_plan}
 \alias{expand_plan}
-\title{Function \code{expand_plan}}
+\title{Create replicates of targets.}
 \usage{
 expand_plan(plan, values = NULL)
 }
@@ -16,8 +16,9 @@ the names of the new targets.}
 An expanded workflow plan data frame (with replicated targets).
 }
 \description{
-Expands a workflow plan data frame by duplicating rows.
-This generates multiple replicates of targets with the same commands.
+Duplicates the rows of a workflow plan data frame.
+Prefixes are appended to the new target names
+so targets still have unique names.
 }
 \examples{
 # Create the part of the workflow plan for the datasets.

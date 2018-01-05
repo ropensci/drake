@@ -2,7 +2,8 @@
 % Please edit documentation in R/config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Function \code{drake_config}}
+\title{Create the internal runtime parameter list
+used internally in \code{\link{make}()}.}
 \usage{
 drake_config(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
@@ -86,12 +87,8 @@ on your workflow to save time. Use at your own peril.}
 The master internal configuration list of a project.
 }
 \description{
-Compute the internal runtime parameter list of
-\code{\link{make}()}.
-}
-\details{
-This list is used internally, and you will need it
-for functions like \code{\link{outdated}()} and
+This configuration list
+is also required for functions such as \code{\link{outdated}()} and
 \code{\link{vis_drake_graph}()}. It is meant to be specific to
 a single call to \code{\link{make}()}, and you should not modify
 it by hand afterwards. If you later plan to call \code{\link{make}()}

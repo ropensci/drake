@@ -1,7 +1,7 @@
-#' @title Function \code{silencer_hook}
-#' @description an example \code{hook} argument to
+#' @title An example \code{hook} argument to
 #' \code{make()} that redirects output and error messages
 #  to separate files.
+#' @description Most users do not need to micromanage hooks.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{message_sink_hook}},
 #' \code{\link{output_sink_hook}}
@@ -33,9 +33,9 @@ silencer_hook <- function(code){
   )
 }
 
-#' @title Function \code{message_sink_hook}
-#' @description an example \code{hook} argument to
+#' @title An example \code{hook} argument to
 #' \code{make()} that redirects error messages to files.
+#' @description Most users do not need to micromanage hooks.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{silencer_hook}},
 #' \code{\link{output_sink_hook}}
@@ -68,9 +68,9 @@ message_sink_hook <- function(code){
   force(code)
 }
 
-#' @title Function \code{output_sink_hook}
-#' @description an example \code{hook} argument to
+#' @title An example \code{hook} argument to
 #' \code{make()} that redirects output messages to files.
+#' @description Most users do not need to micromanage hooks.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{silencer_hook}},
 #' \code{\link{message_sink_hook}}
@@ -101,9 +101,10 @@ output_sink_hook <- function(code){
   force(code)
 }
 
-#' @title Function \code{empty_hook}
-#' @description a \code{hook} argument to \code{\link{make}()}
-#' for which no targets get built and no imports get resolved
+#' @title A \code{hook} argument to \code{\link{make}()}
+#' for which no targets get built and no imports get processed.
+#' @description This hook forces \code{\link{make}()}
+#' to essentially do nothing.
 #' @export
 #' @return A function that you can supply to the \code{hook} argument
 #' of \code{\link{make}()}.
@@ -122,8 +123,8 @@ empty_hook <- function(code){
   invisible()
 }
 
-#' @title Function \code{default_hook}
-#' @description The default \code{hook} argument to \code{\link{make}()}.
+#' @title Default \code{hook} argument to \code{\link{make}()}.
+#' @description Most users do not need to micromanage hooks.
 #' @export
 #' @return A function that you can supply to the \code{hook} argument
 #' of \code{\link{make}()}.

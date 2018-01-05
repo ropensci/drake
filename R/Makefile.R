@@ -84,10 +84,9 @@ build_recipe <- function(target, recipe_command,
   gsub(r_recipe_wildcard(), r_recipe, recipe_command)
 }
 
-#' @title Function \code{mk}
-#' @description Internal drake function to be called
-#' inside Makefiles only. Makes a single target.
-#' Users should not need to invoke this function directly.
+#' @title Build a target inside a \code{Makefile}
+#' during \code{make(..., parallelism = "Makefile")}.
+#' @description Users should not need to call this function directly.
 #' @export
 #' @keywords internal
 #' @return \code{NULL}
@@ -133,7 +132,8 @@ mk <- function(
   invisible()
 }
 
-#' @title Function \code{default_Makefile_args}
+#' @title Return the default value of the
+#' \code{args} argument to \code{\link{make}()}.
 #' @description For \code{make(..., parallelism = "Makefile")},
 #' this function configures the default
 #' arguments to \code{\link{system2}()}.
@@ -154,9 +154,9 @@ default_Makefile_args <- function(jobs, verbose){
   return(out)
 }
 
-#' @title Function \code{default_Makefile_command}
-#' @description Give the default \code{command}
-#' argument to \code{\link{make}()}. Relevant for
+#' @title Give the default \code{command}
+#' argument to \code{\link{make}()}.
+#' @description Relevant for
 #' \code{"Makefile"} parallelism only.
 #' @return A character scalar naming a Linux/Unix command
 #' to run a Makefile.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/strings.R
 \name{drake_quotes}
 \alias{drake_quotes}
-\title{Function \code{drake_quotes}}
+\title{Put quotes around each element of a character vector.}
 \usage{
 drake_quotes(x = NULL, single = FALSE)
 }
@@ -16,7 +16,10 @@ and double quotes otherwise.}
 character vector with quotes around it
 }
 \description{
-Put quotes around each element of a character vector.
+Quotes are important in drake.
+In workflow plan data frame commands,
+single-quoted targets denote physical files,
+and double-quoted strings are treated as ordinary string literals.
 }
 \examples{
 # Single-quote this string.

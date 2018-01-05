@@ -1,6 +1,7 @@
-#' @title Function \code{parallel_stages}
-#' @description Get information on the parallelizable stages
-#' of targets for a workflow.
+#' @title Show how \code{\link{make}()} will build your targets
+#' in successive parallelizable stages.
+#' @description The stages determine the order in which
+#' \code{\link{make}()} builds the targets.
 #' @details Usually, \code{\link{make}()} divides the targets
 #' and imports into parallelizable stages strictly according
 #' to the columns in \code{\link{vis_drake_graph}()}.
@@ -11,7 +12,8 @@
 #' of information on how targets and imports will be divided into
 #' parallel stages during the next \code{\link{make}()}.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{make_with_config}}
+#' @seealso \code{\link{next_stage}},
+#' \code{\link{make}}, \code{\link{make_with_config}}
 #' @return A data frame of information spelling out how
 #' targets are divided into parallelizable stages
 #' (according to the \code{stage} column).
@@ -122,10 +124,12 @@ read_parallel_stages <- function(config){
     do.call(what = "rbind")
 }
 
-#' @title Function \code{next_stage}
-#' @description List the targets that will be made in the
-#' first parallel stage in the next call to \code{\link{make}}
-#' @seealso \code{\link{make}}, \code{\link{drake_config}}
+#' @title List the targets that will be built in the
+#' first parallelizable stage of the next call to \code{\link{make}}.
+#' @description Similar to the first stage in the output of
+#' \code{\link{parallel_stages}()}.
+#' @seealso \code{\link{parallel_stages}},
+#' \code{\link{make}}, \code{\link{drake_config}}
 #' @export
 #' @return A character vector of the targets to be made
 #' in the first parallel stage of the next call to \code{\link{make}}.

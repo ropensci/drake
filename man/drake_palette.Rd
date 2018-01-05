@@ -2,7 +2,7 @@
 % Please edit documentation in R/color.R
 \name{drake_palette}
 \alias{drake_palette}
-\title{Function \code{drake_palette}}
+\title{Show drake's color palette.}
 \usage{
 drake_palette()
 }
@@ -11,8 +11,8 @@ There is a console message,
 but the actual return value is \code{NULL}.
 }
 \description{
-show color palette for drake.
-Used in both the console and \code{\link{vis_drake_graph}()}
+This function is
+used in both the console and \code{\link{vis_drake_graph}()}
 Your console must have the crayon package enabled.
 }
 \details{

@@ -2,7 +2,8 @@
 % Please edit documentation in R/dependencies.R
 \name{dependency_profile}
 \alias{dependency_profile}
-\title{Function \code{dependency_profile}}
+\title{Return the detailed dependency profile
+of the target.}
 \usage{
 dependency_profile(target, config)
 }
@@ -17,8 +18,7 @@ A list of information that drake takes into account
 when examining the dependencies of the target.
 }
 \description{
-Return the detailed dependency profile
-of the target. Useful for debugging.
+Useful for debugging.
 For up to date targets, like elements
 of the returned list should agree: for example,
 \code{cached_dependency_hash} and

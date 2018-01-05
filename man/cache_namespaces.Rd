@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_namespaces.R
 \name{cache_namespaces}
 \alias{cache_namespaces}
-\title{Function \code{cache_namespaces}}
+\title{List all the \code{storr} cache namespaces used by drake.}
 \usage{
 cache_namespaces(default = storr::storr_environment()$default_namespace)
 }
@@ -13,7 +13,6 @@ cache_namespaces(default = storr::storr_environment()$default_namespace)
 A character vector of \code{storr} namespaces used for drake.
 }
 \description{
-List all the \code{storr} cache namespaces used by drake.
 Ordinary users do not need to worry about this function.
 It is just another window into \code{drake}'s internals.
 }

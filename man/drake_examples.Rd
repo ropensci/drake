@@ -2,7 +2,7 @@
 % Please edit documentation in R/examples.R
 \name{drake_examples}
 \alias{drake_examples}
-\title{Function \code{drake_examples}}
+\title{List the names of all the drake examples.}
 \usage{
 drake_examples()
 }
@@ -10,9 +10,10 @@ drake_examples()
 Names of all the drake examples.
 }
 \description{
-List the names of all the drake examples.
 The \code{'basic'} example is the one from the
 quickstart vignette: \code{vignette('quickstart')}.
+All are in the \code{inst/examples/} folder
+of the package source code.
 }
 \examples{
 \dontrun{

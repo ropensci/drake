@@ -1,7 +1,10 @@
-#' @title Internal function \code{time_stamps}
-#' @description Write dummy timestamps for Makefiles
-#' @details Used internally with
-#' \code{\link{make}(..., parallelism = "Makefile")}
+#' @title Write dummy timestamp files for
+#' \code{\link{make}(..., parallelism = "Makefile")}.
+#' @description For \code{"Makefile"} parallelism,
+#' dummy timestamp files tell the Makefile
+#' which targets need to be built and which can be skipped.
+#' This function is for internal use only. It is only exported
+#' to flesh out some of the examples in the help files.
 #' @export
 #' @keywords internal
 #' @return nothing

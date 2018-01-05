@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate.R
 \name{analysis_wildcard}
 \alias{analysis_wildcard}
-\title{Function \code{analysis_wildcard}}
+\title{Show the analysis wildcard
+used in \code{\link{plan_summaries}()}.}
 \usage{
 analysis_wildcard()
 }
@@ -10,8 +11,7 @@ analysis_wildcard()
 The analysis wildcard used in \code{\link{plan_summaries}()}.
 }
 \description{
-Show the analysis wildcard
-used in \code{\link{plan_summaries}()}.
+Used to generate workflow plan data frames.
 }
 \examples{
 # See ?plan_analyses for examples

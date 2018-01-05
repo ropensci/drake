@@ -1,7 +1,8 @@
-#' @title Function \code{predict_runtime}
-#' @description Predict the elapsed runtime of the next call to `make()`.
-#' This function simply sums the elapsed build times.
+#' @title Predict the elapsed runtime of the next call to `make()`.
+#' @description This function simply sums the elapsed build times.
 #' from \code{\link{rate_limiting_times}()}.
+#' To date, the accuracy/precision of the results
+#' has not yet been confirmed by performance studies.
 #' @details For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
 #' by \code{\link{make}()}). Otherwise, \code{predict_runtime()}
@@ -72,9 +73,11 @@ predict_runtime <- function(
     to_build_duration
 }
 
-#' @title Function \code{rate_limiting_times}
-#' @description Return a data frame of elapsed build times of
-#' the rate-limiting targets of a \code{\link{make}()} drake_plan.
+#' @title Return a data frame of elapsed build times of
+#' the rate-limiting targets of a drake project.
+#' @description This function produces a conservative
+#' estimate for \code{\link{predict_runtime}()}
+#' for when parallel computing is used in \code{\link{make}()}.
 #' @export
 #'
 #' @details The \code{stage} column of the returned data frame

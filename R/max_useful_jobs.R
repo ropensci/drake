@@ -1,9 +1,8 @@
-#' @title Function \code{max_useful_jobs}
-#' @description Get the maximum number of useful jobs in the next call
+#' @title Determine the maximum number of useful jobs in the next call
 #' to \code{make(..., jobs = YOUR_CHOICE)}.
-#' @details Any additional jobs more than \code{max_useful_jobs(...)}
-#' will be superfluous, and could even slow you down for
-#' \code{make(..., parallelism = 'parLapply')}. Set
+#' @description Any additional jobs more than \code{max_useful_jobs(...)}
+#' should be superfluous, and could even slow you down for
+#' \code{make(..., parallelism = 'parLapply')}.
 #' Set the \code{imports} argument to change your assumptions about
 #' how fast objects/files are imported.
 #' IMPORTANT: you must be in the root directory of your project.

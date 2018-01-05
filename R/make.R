@@ -1,5 +1,6 @@
-#' @title Function \code{make}
-#' @description Run your project (build the targets).
+#' @title Run your project (build the outdated targets).
+#' @description This is the central, most important function
+#' of the drake package.
 #' @seealso \code{\link{make_with_config}},
 #' \code{\link{drake_plan}}, \code{\link{drake_plan}},
 #' \code{\link{vis_drake_graph}},
@@ -370,10 +371,10 @@ make <- function(
   make_with_config(config = config)
 }
 
-#' @title Function \code{make_with_config}
-#' @description Run \code{\link{make}()},
-#' on an existing internal configuration list
-#' that you can get from \code{\link{drake_config}()}.
+#' @title Run \code{\link{make}()},
+#' on an existing internal configuration list.
+#' @description Use \code{\link{drake_config}()}
+#' to create the \code{config} argument.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{drake_config}}
 #' @return An output internal configuration list
@@ -401,8 +402,12 @@ make_with_config <- function(config){
   return(invisible(config))
 }
 
-#' @title Function \code{make_imports}
-#' @description just make the imports
+#' @title Just make the imports.
+#' @description Imports are non-targets that the targets
+#' in your workflow plan data frame (see \code{\link{drake_plan}()})
+#' may depend on.
+#' Imports could be files in storage, functions, or generic objects
+#' in your workspace or environment.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{config}},
 #' \code{\link{make_targets}}
@@ -433,8 +438,10 @@ imports_graph <- function(config){
   delete_vertices(config$graph, v = delete_these)
 }
 
-#' @title Function \code{make_targets}
-#' @description just make the proper targets with commands
+#' @title Just build the targets.
+#' @description Targets are the workflow steps listed
+#' in your workflow plan data frame.
+#' (See \code{\link{drake_plan}()}.)
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{config}},
 #' \code{\link{make_imports}}

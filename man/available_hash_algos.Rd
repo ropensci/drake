@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{available_hash_algos}
 \alias{available_hash_algos}
-\title{Function \code{available_hash_algos}}
+\title{List the available hash algorithms for drake caches.}
 \usage{
 available_hash_algos()
 }
@@ -10,7 +10,9 @@ available_hash_algos()
 A character vector of names of available hash algorithms.
 }
 \description{
-List the available hash algorithms.
+See the advanced storage tutorial
+at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+for details.
 }
 \examples{
 available_hash_algos()

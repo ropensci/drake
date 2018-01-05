@@ -1,8 +1,7 @@
-#' @title Function \code{drake_config}
-#' @description Compute the internal runtime parameter list of
-#' \code{\link{make}()}.
-#' @details This list is used internally, and you will need it
-#' for functions like \code{\link{outdated}()} and
+#' @title Create the internal runtime parameter list
+#' used internally in \code{\link{make}()}.
+#' @description This configuration list
+#' is also required for functions such as \code{\link{outdated}()} and
 #' \code{\link{vis_drake_graph}()}. It is meant to be specific to
 #' a single call to \code{\link{make}()}, and you should not modify
 #' it by hand afterwards. If you later plan to call \code{\link{make}()}
@@ -167,13 +166,14 @@ add_packages_to_prework <- function(packages, prework) {
     packages, ")", sep = "") %>% c(prework)
 }
 
-#' @title Internal function \code{do_prework}
+#' @title Do the prework in the \code{prework}
+#' argument to \code{\link{make}()}.
 #' @export
 #' @keywords internal
-#' @description Run the \code{prework} of a \code{\link{make}()}.
-#' For internal use only.
-#' the only reason this function is exported
-#' is to set up PSOCK clusters efficiently.
+#' @description For internal use only.
+#' The only reason this function is exported
+#' is to set up parallel socket (PSOCK) clusters
+#' without too much fuss.
 #' @return Inivisibly returns \code{NULL}.
 #' @param config internal configuration list
 #' @param verbose_packages logical, whether to print
@@ -199,11 +199,12 @@ do_prework <- function(config, verbose_packages) {
   invisible()
 }
 
-#' @title Function \code{possible_targets}
-#' @description internal function, returns the list of
-#' possible targets that you can select with the \code{targets}
-#' argument to \code{\link{make}()}.
+#' @title List the possible targets for the \code{targets}
+#' argument to \code{\link{make}()}, given a workflow plan
+#' data frame.
+#' @description Intended for internal use only.
 #' @seealso \code{\link{make}}
+#' @keywords internal
 #' @export
 #' @return Character vector of possible targets given the workflow plan.
 #' @param plan workflow plan data frame
@@ -221,10 +222,10 @@ possible_targets <- function(plan = drake_plan()) {
   as.character(plan$target)
 }
 
-#' @title Internal function \code{store_drake_config}
-#' @description Store an internal configuration list
+#' @title Store an internal configuration list
 #' from \code{\link{drake_config}()}.
-#' Exported for demonstration and tinkering purposes.
+#' @description Exported for demonstration and tinkering purposes
+#' only. Not meant to be called by the user.
 #' @export
 #' @keywords internal
 #' @param config Internal configuration list

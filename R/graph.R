@@ -1,7 +1,7 @@
-#' @title Function \code{build_drake_graph}
-#' @description Make a graph of the dependency structure of your drake_plan.
-#' @details This function returns an igraph object representing how
-#' the targets in your drake_plan depend on each other.
+#' @title Create the \code{igraph} dependency network of your project.
+#' @description This function returns an igraph object representing how
+#' the targets in your workflow plan data frame
+#' depend on each other.
 #' (\code{help(package = "igraph")}). To plot the graph, call
 #' to \code{\link{plot.igraph}()} on your graph, or just use
 #' \code{\link{vis_drake_graph}()} from the start.
@@ -94,11 +94,11 @@ build_drake_graph <- function(
   return(graph)
 }
 
-#' @title Function \code{prune_drake_graph}
+#' @title Prune the dependency network of your project.
 #' @export
 #' @seealso \code{\link{build_drake_graph}}, \code{\link{config}},
 #' \code{\link{make}}
-#' @description Prune an igraph object. Igraph objects are used
+#' @description \code{igraph} objects are used
 #' internally to represent the dependency network of your workflow.
 #' See \code{\link{config}(my_plan)$graph} from the basic example.
 #' @details For a supplied graph, take the subgraph of all combined

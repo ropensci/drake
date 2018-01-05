@@ -2,7 +2,8 @@
 % Please edit documentation in R/progress.R
 \name{drake_session}
 \alias{drake_session}
-\title{Function \code{drake_session}}
+\title{Return the \code{\link{sessionInfo}()}
+of the last call to \code{\link{make}()}.}
 \usage{
 drake_session(path = getwd(), search = TRUE, cache = drake::get_cache(path
   = path, search = search, verbose = verbose), verbose = TRUE)
@@ -27,8 +28,9 @@ the \code{path} and \code{search} arguments are ignored.}
 call to \code{\link{make}()}
 }
 \description{
-Load the \code{\link{sessionInfo}()}
-of the last call to \code{\link{make}()}.
+By default, session info is saved
+during \code{\link{make}()} to ensure reproducibility.
+Your loaded packages and their versions are recorded, for example.
 }
 \examples{
 \dontrun{

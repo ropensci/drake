@@ -2,7 +2,8 @@
 % Please edit documentation in R/outdated.R
 \name{missed}
 \alias{missed}
-\title{Function \code{missed}}
+\title{Report any import objects required by your drake_plan
+plan but missing from your workspace.}
 \usage{
 missed(config)
 }
@@ -15,9 +16,8 @@ produced by both \code{\link{drake_config}()} and \code{\link{make}()}.}
 Character vector of names of missing objects and files.
 }
 \description{
-Report any import objects required by your drake_plan
-plan but missing from your workspace.
-IMPORTANT: you must be in the root directory of your project.
+Checks your workspace/environment and
+file system.
 }
 \examples{
 \dontrun{

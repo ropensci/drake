@@ -2,7 +2,8 @@
 % Please edit documentation in R/migrate.R
 \name{migrate_drake_project}
 \alias{migrate_drake_project}
-\title{Function \code{migrate_drake_project}}
+\title{Reconfigure an old project (built with drake <= 4.4.0)
+to be compatible with later versions of drake.}
 \usage{
 migrate_drake_project(path = drake::default_cache_path(), jobs = 1)
 }

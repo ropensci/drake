@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_times.R
 \name{build_times}
 \alias{build_times}
-\title{Function \code{build_times}}
+\title{List the time it took to build each target/import.}
 \usage{
 build_times(path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
@@ -33,8 +33,7 @@ build times of the targets (exclude the imports).}
 A data frame of times, each from \code{\link{system.time}()}.
 }
 \description{
-List all the build times.
-This does not include the amount of time
+Listed times do not include the amount of time
 spent loading and saving objects!
 }
 \examples{

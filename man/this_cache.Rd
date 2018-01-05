@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{this_cache}
 \alias{this_cache}
-\title{Function \code{this_cache}}
+\title{Get the cache at the exact file path specified.}
 \usage{
 this_cache(path = drake::default_cache_path(), force = FALSE,
   verbose = TRUE, fetch_cache = NULL)
@@ -25,10 +25,8 @@ but customized. This feature is experimental.}
 A drake/storr cache at the specified path, if it exists.
 }
 \description{
-Get a known drake file system cache
-at the exact specified file path
-Do not use for in-memory caches such as
-\code{storr_environment()}.
+This function does not apply to
+in-memory caches such as \code{storr_environment()}.
 }
 \examples{
 \dontrun{

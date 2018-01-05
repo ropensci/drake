@@ -1,9 +1,8 @@
-#' @title Function \code{cache_namespaces}
+#' @title List all the \code{storr} cache namespaces used by drake.
 #' @export
 #' @seealso \code{\link{make}}
 #' @return A character vector of \code{storr} namespaces used for drake.
-#' @description List all the \code{storr} cache namespaces used by drake.
-#' Ordinary users do not need to worry about this function.
+#' @description Ordinary users do not need to worry about this function.
 #' It is just another window into \code{drake}'s internals.
 #' @param default name of the default \code{storr} namespace
 #' @examples
@@ -19,9 +18,10 @@ cache_namespaces <- function(
     sort
 }
 
-#' @title Function \code{cleaned_namespaces}
-#' @description List the \code{storr} namespaces that are cleaned
-#' during a call to \code{\link{clean}()}. All these
+#' @title For drake caches,
+#' list the \code{storr} namespaces that are cleaned
+#' during a call to \code{\link{clean}()}.
+#' @description All these
 #' namespaces store target-level data, but not all
 #' target-level namespaces are cleaned during
 #' \code{\link{clean}()}.
@@ -43,14 +43,14 @@ cleaned_namespaces <- function(
     sort
 }
 
-#' @title Function \code{target_namespaces}
+#' @title For drake caches,
+#' list the \code{storr} cache namespaces
+#' that store target-level information.
 #' @export
 #' @seealso \code{\link{make}}
 #' @return A character vector of \code{storr} namespaces that store
 #' target-level information.
-#' @description List the \code{storr} cache namespaces
-#' that store target-level information.
-#' Ordinary users do not need to worry about this function.
+#' @description Ordinary users do not need to worry about this function.
 #' It is just another window into \code{drake}'s internals.
 #' @param default name of the default \code{storr} namespace
 #' @examples

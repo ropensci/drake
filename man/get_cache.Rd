@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{get_cache}
 \alias{get_cache}
-\title{Function \code{get_cache}}
+\title{Get the drake cache, optionally searching up the file system.}
 \usage{
 get_cache(path = getwd(), search = TRUE, verbose = 1, force = FALSE,
   fetch_cache = NULL)
@@ -30,10 +30,12 @@ with a command like \code{storr_rds()} or \code{storr_dbi()},
 but customized. This feature is experimental.}
 }
 \value{
-A drake/storr cache, if available. \code{NULL} otherwise.
+A drake/storr cache in a folder called \code{.drake/},
+if available. \code{NULL} otherwise.
 }
 \description{
-Search for and return a drake file system cache.
+Only works if the cache
+is in a folder called \code{.drake/}.
 }
 \examples{
 \dontrun{

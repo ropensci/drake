@@ -1,9 +1,10 @@
-#' @title Function \code{Makefile_recipe}
+#' @title For \code{\link{make}(..., parallelism = "Makefile")},
+#' see what your \code{Makefile} recipes
+#' will look like in advance.
 #' @export
 #' @seealso \code{\link{default_recipe_command}},
 #' \code{\link{r_recipe_wildcard}}, \code{\link{make}}
-#' @description See what your \code{Makefile} recipes
-#' will look like in advance.
+#' @description Relevant to \code{"Makefile"} parallelism only.
 #' @return A character scalar with a Makefile recipe.
 #'
 #' @param recipe_command The Makefile recipe command.
@@ -82,12 +83,11 @@ Makefile_recipe <- function( # nolint
     message()
 }
 
-#' @title Function \code{default_recipe_command}
+#' @title Show the default
+#' recipe command for \code{\link{make}(..., parallelism = "Makefile")}.
 #' @export
 #' @seealso \code{\link{Makefile_recipe}}
-#' @description Gives the default
-#' recipe command for Makefile parallelism.
-#' @details See the help file of \code{\link{Makefile_recipe}}
+#' @description See the help file of \code{\link{Makefile_recipe}}
 #' for details and examples.
 #' @return A character scalar with the default recipe command.
 #' @examples
@@ -96,13 +96,11 @@ default_recipe_command <- function(){
   paste0("Rscript -e '", r_recipe_wildcard(), "'")
 }
 
-#' @title Function \code{r_recipe_wildcard}
+#' @title Show the R recipe wildcard
+#' for \code{\link{make}(..., parallelism = "Makefile")}.
 #' @export
 #' @seealso \code{\link{default_recipe_command}}
-#' @description Gives the R recipe wildcard
-#' for Makefiles.
-#' @details See the help file of \code{\link{Makefile_recipe}}
-#' for details and examples.
+#' @description Relevant to \code{"Makefile"} parallelism only.
 #' @return The R recipe wildcard.
 #' @examples
 #' r_recipe_wildcard()

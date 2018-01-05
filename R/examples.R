@@ -1,4 +1,4 @@
-#' @title Function \code{drake_example}
+#' @title Save the source code files of a drake example.
 #' @description Copy a folder of code files for a
 #' drake example to the current working directory.
 #' Call \code{drake_example('basic')} to generate the code files from the
@@ -47,10 +47,11 @@ drake_example <- function(
   invisible()
 }
 
-#' @title Function \code{drake_examples}
-#' @description List the names of all the drake examples.
-#' The \code{'basic'} example is the one from the
+#' @title List the names of all the drake examples.
+#' @description The \code{'basic'} example is the one from the
 #' quickstart vignette: \code{vignette('quickstart')}.
+#' All are in the \code{inst/examples/} folder
+#' of the package source code.
 #' @export
 #' @seealso \code{\link{drake_example}}, \code{\link{make}}
 #' @return Names of all the drake examples.

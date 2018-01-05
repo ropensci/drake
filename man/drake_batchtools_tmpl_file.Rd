@@ -2,7 +2,8 @@
 % Please edit documentation in R/parallel_ui.R
 \name{drake_batchtools_tmpl_file}
 \alias{drake_batchtools_tmpl_file}
-\title{Function \code{drake_batchtools_tmpl_file}}
+\title{Write the batchtools template file
+from one of the built-in drake examples.}
 \usage{
 drake_batchtools_tmpl_file(example = drake::drake_examples(), to = getwd(),
   overwrite = FALSE)
@@ -22,8 +23,7 @@ same name.}
 but a batchtools template file is written.
 }
 \description{
-Write the batchtools template file
-from one of the examples. If there are multiple files,
+If there are multiple template files in the example,
 only the first one (alphabetically) is written.
 }
 \examples{

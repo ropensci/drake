@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{loadd}
 \alias{loadd}
-\title{Function \code{loadd}}
+\title{Load multiple targets or imports from the drake cache.}
 \usage{
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
@@ -67,7 +67,7 @@ if you set \code{deps} to \code{TRUE}.}
 \code{NULL}
 }
 \description{
-Load object(s) from the drake cache into the
+Loads the object(s) into the
 current workspace (or \code{envir} if given). Defaults
 to loading the whole cache if arguments \code{...}
 and \code{list} are not set

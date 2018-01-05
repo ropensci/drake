@@ -39,9 +39,11 @@ nobuild <- function(config) {
   expect_true(length(justbuilt(config)) < 1)
 }
 
-#' @title Internal function \code{test_with_dir}
-#' @description Run a test in a way that quarantines
+#' @title Run a unit test in a way that quarantines
 #' the side effects from your workspace and file system.
+#' @description Typical users of drake should not need this function.
+#' It is exported so it can be used to quarantine the side effects
+#' of the examples in the help files.
 #' @export
 #' @keywords internal
 #' @return nothing

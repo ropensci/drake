@@ -2,7 +2,8 @@
 % Please edit documentation in R/parallel_stages.R
 \name{parallel_stages}
 \alias{parallel_stages}
-\title{Function \code{parallel_stages}}
+\title{Show how \code{\link{make}()} will build your targets
+in successive parallelizable stages.}
 \usage{
 parallel_stages(config, from_scratch = FALSE)
 }
@@ -20,8 +21,8 @@ targets are divided into parallelizable stages
 (according to the \code{stage} column).
 }
 \description{
-Get information on the parallelizable stages
-of targets for a workflow.
+The stages determine the order in which
+\code{\link{make}()} builds the targets.
 }
 \details{
 Usually, \code{\link{make}()} divides the targets
@@ -57,5 +58,6 @@ parallel_stages(config = config)
 }
 }
 \seealso{
+\code{\link{next_stage}},
 \code{\link{make}}, \code{\link{make_with_config}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/outdated.R
 \name{outdated}
 \alias{outdated}
-\title{Function \code{outdated}}
+\title{List the targets that are out of date.}
 \usage{
 outdated(config, make_imports = TRUE)
 }
@@ -22,8 +22,8 @@ Set to \code{FALSE} to save some time and risk obsolete output.}
 Character vector of the names of outdated targets.
 }
 \description{
-Check which targets are out of date and need to be rebuilt.
-IMPORTANT: you must be in the root directory of your project.
+Outdated targets will be rebuilt in the next
+\code{\link{make}()}.
 }
 \details{
 \code{outdated()} is sensitive to the alternative triggers

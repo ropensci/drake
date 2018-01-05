@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_ui.R
 \name{built}
 \alias{built}
-\title{Function \code{built}}
+\title{List all the built targets (non-imports) in the cache.}
 \usage{
 built(path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
   search = search, verbose = verbose), verbose = TRUE, jobs = 1)
@@ -27,8 +27,8 @@ If supplied, \code{path} and \code{search} are ignored.}
 Character vector naming the built targets in the cache.
 }
 \description{
-List all the built (non-imported) objects in the drake
-cache.
+Targets are listed in the workflow plan
+data frame (see \code{\link{drake_plan}()}.
 }
 \examples{
 \dontrun{

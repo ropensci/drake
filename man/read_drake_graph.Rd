@@ -2,7 +2,8 @@
 % Please edit documentation in R/read.R
 \name{read_drake_graph}
 \alias{read_drake_graph}
-\title{Function \code{read_drake_graph}}
+\title{Read the igraph dependency network
+from your last attempted call to \code{\link{make}()}.}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1, ...)
@@ -30,9 +31,8 @@ An \code{igraph} object representing the dependency
 network of the workflow.
 }
 \description{
-Read the igraph-style dependency graph of your targets
-from your last attempted call to \code{\link{make}()}.
-For better graphing utilities, see \code{\link{vis_drake_graph}()}
+For more user-friendly graphing utilities,
+see \code{\link{vis_drake_graph}()}
 and related functions.
 }
 \examples{

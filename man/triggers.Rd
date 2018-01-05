@@ -2,7 +2,7 @@
 % Please edit documentation in R/triggers.R
 \name{triggers}
 \alias{triggers}
-\title{Function \code{triggers}}
+\title{List the available drake triggers.}
 \usage{
 triggers()
 }
@@ -10,7 +10,9 @@ triggers()
 A character vector with the names of the available triggers.
 }
 \description{
-List the available triggers.
+Triggers are target-level rules
+that tell \code{\link{make}()} how to know if a target
+is outdated or up to date.
 }
 \details{
 By default, \code{make()}

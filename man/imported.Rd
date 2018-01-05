@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_ui.R
 \name{imported}
 \alias{imported}
-\title{Function \code{imported}}
+\title{List all the imports in the drake cache.}
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -33,7 +33,10 @@ If supplied, \code{path} and \code{search} are ignored.}
 Character vector naming the imports in the cache.
 }
 \description{
-List all the imported objects in the drake cache
+An import is a non-target object processed
+by \code{\link{make}()}. Targets in the workflow
+plan data frame (see \code{\link{drake_config}()}
+may depend on imports.
 }
 \examples{
 \dontrun{

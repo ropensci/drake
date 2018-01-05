@@ -1,6 +1,6 @@
-#' @title Function \code{diagnose}
-#' @description Get the last stored error of a target
-#' that failed to build. This target could be a
+#' @title Get the last stored error log of a target
+#' that failed to build, or list the targets with error logs.
+#' @description The specified target could be a
 #' completely failed target or a target
 #' that failed initially, retried, then succeeded.
 #' If no target is given, then \code{diagnose()} simply

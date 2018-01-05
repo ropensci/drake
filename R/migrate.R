@@ -1,4 +1,5 @@
-#' @title Function \code{migrate_drake_project}
+#' @title Reconfigure an old project (built with drake <= 4.4.0)
+#' to be compatible with later versions of drake.
 #' @export
 #' @seealso \code{\link{rescue_cache}}, \code{\link{make}}
 #' @param path Full path to the cache

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hash.R
 \name{default_long_hash_algo}
 \alias{default_long_hash_algo}
-\title{Function \code{default_long_hash_algo}}
+\title{Return the default long hash algorithm for \code{make()}.}
 \usage{
 default_long_hash_algo(cache = NULL)
 }
@@ -17,9 +17,9 @@ hash algorithm that drake picks for you.}
 A character vector naming a hash algorithm.
 }
 \description{
-Return the default long hash algorithm for \code{make()}.
-Hashing is advanced. Most users
-do not need to know about this function.
+See the advanced storage tutorial
+at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+for details.
 }
 \details{
 The long algorithm must be among \code{\link{available_hash_algos}{}},

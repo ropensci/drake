@@ -1,10 +1,6 @@
-#' @title Function \code{cached}
-#' @description Check whether targets are in the cache.
-#' If no targets are specified with \code{...} or \code{list},
-#' then \code{cached()} lists
-#' all the items in the drake cache.
-#' Read/load a cached item with \code{\link{readd}()} or
-#' \code{\link{loadd}()}.
+#' @title Enumerate cached targets or check if a target is cached.
+#' @description Read/load a cached item with \code{\link{readd}()}
+#' or \code{\link{loadd}()}.
 #' @seealso \code{\link{built}}, \code{\link{imported}},
 #' \code{\link{readd}}, \code{\link{loadd}},
 #' \code{\link{drake_plan}}, \code{\link{make}}
@@ -128,9 +124,9 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs){
   targets
 }
 
-#' @title Function \code{built}
-#' @description List all the built (non-imported) objects in the drake
-#' cache.
+#' @title List all the built targets (non-imports) in the cache.
+#' @description Targets are listed in the workflow plan
+#' data frame (see \code{\link{drake_plan}()}.
 #' @seealso \code{\link{cached}}, \code{\link{loadd}},
 #' \code{link{imported}}
 #' @export
@@ -173,8 +169,11 @@ built <- function(
     )
 }
 
-#' @title Function \code{imported}
-#' @description List all the imported objects in the drake cache
+#' @title List all the imports in the drake cache.
+#' @description An import is a non-target object processed
+#' by \code{\link{make}()}. Targets in the workflow
+#' plan data frame (see \code{\link{drake_config}()}
+#' may depend on imports.
 #' @seealso \code{\link{cached}}, \code{\link{loadd}},
 #' \code{\link{built}}
 #' @export

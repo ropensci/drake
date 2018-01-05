@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{prune_drake_graph}
 \alias{prune_drake_graph}
-\title{Function \code{prune_drake_graph}}
+\title{Prune the dependency network of your project.}
 \usage{
 prune_drake_graph(graph, to = igraph::V(graph)$name, jobs = 1)
 }
@@ -20,7 +20,7 @@ A pruned igraph object representing the dependency network
 of the workflow.
 }
 \description{
-Prune an igraph object. Igraph objects are used
+\code{igraph} objects are used
 internally to represent the dependency network of your workflow.
 See \code{\link{config}(my_plan)$graph} from the basic example.
 }

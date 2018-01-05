@@ -50,9 +50,9 @@ configure_nodes <- function(config){
   hover_text(config = config)
 }
 
-#' @title Function \code{default_graph_title}
-#' @description Default title of the graph for
+#' @title Return the default title of the graph for
 #' \code{\link{vis_drake_graph}()}.
+#' @description For internal use only.
 #' @export
 #' @keywords internal
 #' @seealso \code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
@@ -140,7 +140,8 @@ hover_text <- function(config) {
 
 hover_text_length <- 250
 
-#' @title Function \code{legend_nodes}
+#' @title Create the nodes data frame used in the legend
+#' of \code{\link{vis_drake_graph}()}.
 #' @export
 #' @seealso \code{\link{drake_palette}()},
 #' \code{\link{vis_drake_graph}()},

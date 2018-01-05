@@ -2,7 +2,8 @@
 % Please edit documentation in R/find.R
 \name{find_project}
 \alias{find_project}
-\title{Function \code{find_project}}
+\title{Search up the file system
+for the nearest root path of a drake project.}
 \usage{
 find_project(path = getwd())
 }
@@ -15,10 +16,8 @@ File path of the nearest drake project or \code{NULL}
 if no drake project is found.
 }
 \description{
-Return the file path of the nearest drake
-project (searching upwards for directories
-containing a drake cache).
-Only works if the cache is a file system in a folder named \code{.drake}.
+Only works if the cache is a file system
+in a folder named \code{.drake} (default).
 }
 \examples{
 \dontrun{

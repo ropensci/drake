@@ -2,7 +2,8 @@
 % Please edit documentation in R/read.R
 \name{read_drake_config}
 \alias{read_drake_config}
-\title{Function \code{read_drake_config}}
+\title{Read the cached \code{\link{drake_config}()}
+list from the last \code{\link{make}()}.}
 \usage{
 read_drake_config(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1, jobs = 1, envir = parent.frame())
@@ -33,9 +34,8 @@ The cached master internal configuration list
 of the last \code{\link{make}()}.
 }
 \description{
-Read all the configuration parameters
-from your last attempted call to \code{\link{make}()}.
-These include the workflow plan
+See \code{\link{drake_config}()} for more information
+about drake's internal runtime configuration parameter list.
 }
 \examples{
 \dontrun{

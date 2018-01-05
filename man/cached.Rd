@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_ui.R
 \name{cached}
 \alias{cached}
-\title{Function \code{cached}}
+\title{Enumerate cached targets or check if a target is cached.}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE, cache = NULL, verbose = 1,
@@ -51,12 +51,8 @@ targets or cached or a character vector listing all cached
 items, depending on whether any targets are specified
 }
 \description{
-Check whether targets are in the cache.
-If no targets are specified with \code{...} or \code{list},
-then \code{cached()} lists
-all the items in the drake cache.
-Read/load a cached item with \code{\link{readd}()} or
-\code{\link{loadd}()}.
+Read/load a cached item with \code{\link{readd}()}
+or \code{\link{loadd}()}.
 }
 \examples{
 \dontrun{

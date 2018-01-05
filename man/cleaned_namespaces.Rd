@@ -2,7 +2,9 @@
 % Please edit documentation in R/cache_namespaces.R
 \name{cleaned_namespaces}
 \alias{cleaned_namespaces}
-\title{Function \code{cleaned_namespaces}}
+\title{For drake caches,
+list the \code{storr} namespaces that are cleaned
+during a call to \code{\link{clean}()}.}
 \usage{
 cleaned_namespaces(default = storr::storr_environment()$default_namespace)
 }
@@ -14,8 +16,7 @@ A character vector of \code{storr} namespaces
 that are cleaned during \code{\link{clean}()}.
 }
 \description{
-List the \code{storr} namespaces that are cleaned
-during a call to \code{\link{clean}()}. All these
+All these
 namespaces store target-level data, but not all
 target-level namespaces are cleaned during
 \code{\link{clean}()}.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/strings.R
 \name{drake_strings}
 \alias{drake_strings}
-\title{Function \code{drake_strings}}
+\title{Turn valid expressions into character strings.}
 \usage{
 drake_strings(...)
 }
@@ -13,7 +13,8 @@ drake_strings(...)
 a character vector
 }
 \description{
-Turn valid expressions into character strings.
+This function may be useful for
+constructing workflow plan data frames.
 }
 \examples{
 # Turn symbols into strings.

@@ -1,6 +1,5 @@
-#' @title Function \code{readd}
-#' @description Read a drake target object from the cache.
-#' Does not delete the item from the cache.
+#' @title Read and return a drake target or import from the cache.
+#' @description Does not delete the item from the cache.
 #' @seealso \code{\link{loadd}}, \code{\link{cached}},
 #' \code{\link{built}}, \code{link{imported}}, \code{\link{drake_plan}},
 #' \code{\link{make}}
@@ -59,8 +58,8 @@ readd <- function(
   cache$get(target, namespace = namespace)
 }
 
-#' @title Function \code{loadd}
-#' @description Load object(s) from the drake cache into the
+#' @title Load multiple targets or imports from the drake cache.
+#' @description Loads the object(s) into the
 #' current workspace (or \code{envir} if given). Defaults
 #' to loading the whole cache if arguments \code{...}
 #' and \code{list} are not set
@@ -242,10 +241,10 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
   )
 }
 
-#' @title Function \code{read_drake_config}
-#' @description Read all the configuration parameters
-#' from your last attempted call to \code{\link{make}()}.
-#' These include the workflow plan
+#' @title Read the cached \code{\link{drake_config}()}
+#' list from the last \code{\link{make}()}.
+#' @description See \code{\link{drake_config}()} for more information
+#' about drake's internal runtime configuration parameter list.
 #' @seealso \code{\link{make}}
 #' @export
 #' @return The cached master internal configuration list
@@ -303,9 +302,9 @@ read_drake_config <- function(
   out
 }
 
-#' @title Function \code{read_drake_plan}
-#' @description Read the workflow plan
+#' @title Read the workflow plan
 #' from your last attempted call to \code{\link{make}()}.
+#' @description Uses the cache.
 #' @seealso \code{\link{read_drake_config}}
 #' @export
 #' @return A workflow plan data frame.
@@ -346,10 +345,10 @@ read_drake_plan <- function(
   }
 }
 
-#' @title Function \code{read_drake_graph}
-#' @description Read the igraph-style dependency graph of your targets
+#' @title Read the igraph dependency network
 #' from your last attempted call to \code{\link{make}()}.
-#' For better graphing utilities, see \code{\link{vis_drake_graph}()}
+#' @description For more user-friendly graphing utilities,
+#' see \code{\link{vis_drake_graph}()}
 #' and related functions.
 #' @seealso \code{\link{vis_drake_graph}}, \code{\link{read_drake_config}}
 #' @export
@@ -397,8 +396,10 @@ read_drake_graph <- function(
   }
 }
 
-#' @title Function \code{read_drake_meta}
-#' @description Read a target's metadata.
+#' @title Read the metadata of a target or import.
+#' @description The metadata helps determine if the
+#' target is up to date or outdated. The metadata of imports
+#' is used to compute the metadata of targets.
 #' @details Target metadata is computed
 #' with \code{drake:::meta()} and then
 #' \code{drake:::finish_meta()}. This metadata corresponds

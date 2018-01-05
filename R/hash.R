@@ -1,6 +1,8 @@
-#' @title Function \code{available_hash_algos}
+#' @title List the available hash algorithms for drake caches.
 #' @export
-#' @description List the available hash algorithms.
+#' @description See the advanced storage tutorial
+#' at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+#' for details.
 #' @return A character vector of names of available hash algorithms.
 #' @examples
 #' available_hash_algos()
@@ -8,12 +10,13 @@ available_hash_algos <- function(){
   eval(formals(digest::digest)$algo)
 }
 
-#' @title Function \code{long_hash}
+#' @title Get the long hash algorithm of a drake cache.
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}}
-#' @description Get the long hash algorithm of a drake cache.
-#' @details See \code{?\link{default_long_hash_algo}()}
+#' @description  See the advanced storage tutorial
+#' at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+#' for details.
 #' @return A character vector naming a hash algorithm.
 #' @param cache drake cache
 #' @param verbose whether to print console messages
@@ -39,12 +42,13 @@ long_hash <- function(
   cache$get("long_hash_algo", namespace = "config")
 }
 
-#' @title Function \code{short_hash}
+#' @title Get the short hash algorithm of a drake cache.
 #' @export
 #' @seealso \code{\link{default_short_hash_algo}},
 #' \code{\link{default_long_hash_algo}}
-#' @description Get the short hash algorithm of a drake cache.
-#' @details See \code{?\link{default_long_hash_algo}()}
+#' @description See the advanced storage tutorial
+#' at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+#' for details.
 #' @return A character vector naming a hash algorithm.
 #' @param cache drake cache
 #' @param verbose whether to print console messages
@@ -72,12 +76,12 @@ short_hash <- function(
   cache$get("short_hash_algo", namespace = "config")
 }
 
-#' @title Function \code{default_short_hash_algo}
+#' @title Return the default short hash algorithm for \code{make()}.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
-#' @description Return the default short hash algorithm for \code{make()}.
-#' Hashing is advanced. Most users
-#' do not need to know about this function.
+#' @description See the advanced storage tutorial
+#' at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+#' for details.
 #' @details
 #' The short algorithm must be among \code{\link{available_hash_algos}{}},
 #' which is just the collection of algorithms available to the `algo`
@@ -140,12 +144,12 @@ default_short_hash_algo <- function(cache = NULL) {
   out
 }
 
-#' @title Function \code{default_long_hash_algo}
+#' @title Return the default long hash algorithm for \code{make()}.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
-#' @description Return the default long hash algorithm for \code{make()}.
-#' Hashing is advanced. Most users
-#' do not need to know about this function.
+#' @description See the advanced storage tutorial
+#' at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+#' for details.
 #' @details
 #' The long algorithm must be among \code{\link{available_hash_algos}{}},
 #' which is just the collection of algorithms available to the `algo`

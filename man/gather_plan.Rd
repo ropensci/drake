@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate.R
 \name{gather_plan}
 \alias{gather_plan}
-\title{Function \code{gather_plan}}
+\title{Write commands to combine several targets into one
+or more overarching targets.}
 \usage{
 gather_plan(plan = NULL, target = "target", gather = "list")
 }
@@ -20,7 +21,7 @@ A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
-Create a new workflow plan data frame with a single new
+Creates a new workflow plan data frame with a single new
 target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame.
 }

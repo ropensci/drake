@@ -2,7 +2,8 @@
 % Please edit documentation in R/strings.R
 \name{as_drake_filename}
 \alias{as_drake_filename}
-\title{Function \code{as_drake_filename}}
+\title{Converts an ordinary character string
+into a filename understandable by drake.}
 \usage{
 as_drake_filename(x)
 }
@@ -16,9 +17,11 @@ A single-quoted character string: i.e., a filename
 understandable by drake.
 }
 \description{
-Converts an ordinary character string
-into a filename understandable by drake. In other words,
-\code{as_drake_filename(x)} just wraps single quotes around \code{x}.
+This function simply wraps single quotes around \code{x}.
+Quotes are important in drake.
+In workflow plan data frame commands,
+single-quoted targets denote physical files,
+and double-quoted strings are treated as ordinary string literals.
 }
 \examples{
 # Wraps the string in single quotes.

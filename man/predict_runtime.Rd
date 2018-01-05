@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_runtime.R
 \name{predict_runtime}
 \alias{predict_runtime}
-\title{Function \code{predict_runtime}}
+\title{Predict the elapsed runtime of the next call to `make()`.}
 \usage{
 predict_runtime(config, targets = NULL, future_jobs = 1,
   from_scratch = FALSE, targets_only = FALSE, digits = 3)
@@ -38,9 +38,10 @@ A \code{lubridate} \code{Duration} object
 with the predicted runtime of the next \code{\link{make}()}.
 }
 \description{
-Predict the elapsed runtime of the next call to `make()`.
 This function simply sums the elapsed build times.
 from \code{\link{rate_limiting_times}()}.
+To date, the accuracy/precision of the results
+has not yet been confirmed by performance studies.
 }
 \details{
 For the results to make sense, the previous build times

@@ -2,7 +2,8 @@
 % Please edit documentation in R/strings.R
 \name{drake_unquote}
 \alias{drake_unquote}
-\title{Function \code{drake_unquote}}
+\title{Remove leading and trailing
+escaped quotes from character strings.}
 \usage{
 drake_unquote(x = NULL, deep = FALSE)
 }
@@ -19,8 +20,10 @@ or trailing escaped quotes around
 the elements
 }
 \description{
-Remove leading and trailing
-escaped quotes from character strings.
+Quotes are important in drake.
+In workflow plan data frame commands,
+single-quoted targets denote physical files,
+and double-quoted strings are treated as ordinary string literals.
 }
 \examples{
 x <- "'abcd'"

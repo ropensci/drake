@@ -1,6 +1,6 @@
-#' @title Function \code{drake_batchtools_tmpl_file}
-#' @description Write the batchtools template file
-#' from one of the examples. If there are multiple files,
+#' @title Write the batchtools template file
+#' from one of the built-in drake examples.
+#' @description If there are multiple template files in the example,
 #' only the first one (alphabetically) is written.
 #' @export
 #' @seealso \code{\link{drake_examples}}, \code{\link{drake_example}},
@@ -49,8 +49,9 @@ drake_batchtools_tmpl_file <- function(
   invisible()
 }
 
-#' @title Function \code{parallelism_choices}
-#' @description List the types of supported parallel computing.
+#' @title List the types of supported parallel computing in drake.
+#' @description These are the possible values of the
+#' \code{parallelism} argument to \code{\link{make}()}.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{shell_file}}
 #' @return Character vector listing the types of parallel
@@ -146,11 +147,10 @@ parallelism_choices <- function(distributed_only = FALSE) {
   }
 }
 
-#' @title Function \code{default_parallelism}
-#' @description Show the default parallelism for \code{\link{make}()}
-#' on your system:
-#' \code{'parLapply'} for Windows machines and \code{'mclapply'}
-#' for other platforms.
+#' @title Show the default \code{parallelism} argument
+#' to \code{\link{make}()} for your system.
+#' @description Returns \code{'parLapply'} for Windows machines
+#' and \code{'mclapply'} for other platforms.
 #' @export
 #' @seealso \code{\link{make}}, \code{\link{shell_file}}
 #' @return The default parallelism option for your system.
@@ -161,12 +161,10 @@ default_parallelism <- function() {
     unname
 }
 
-#' @title Function \code{shell_file}
-#' @description Write an example \code{shell.sh} file required by
-#' \code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}
-#' and do a `chmod +x` to enable execution.
-#' Use this option to run your project in parallel on a computing cluster
-#' or supercomputer.
+#' @title Write an example \code{shell.sh} file required by
+#' \code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}.
+#' @description This function also does a `chmod +x`
+#' to enable execute permissions.
 #' @seealso \code{\link{make}}, \code{\link{max_useful_jobs}},
 #' \code{\link{parallelism_choices}}, \code{\link{drake_batchtools_tmpl_file}},
 #' \code{\link{drake_example}}, \code{\link{drake_examples}}

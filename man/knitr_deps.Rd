@@ -2,7 +2,7 @@
 % Please edit documentation in R/knitr.R
 \name{knitr_deps}
 \alias{knitr_deps}
-\title{Function \code{knitr_deps}}
+\title{Find the drake dependencies of a dynamic knitr report target.}
 \usage{
 knitr_deps(target)
 }
@@ -14,12 +14,13 @@ source text of the document.}
 A character vector of the names of dependencies.
 }
 \description{
-Find the dependencies of a dynamic report. To
-enable drake to watch for these dependencies, your drake_plan
-plan command to compile this report must make direct use of
-\code{knitr::knit()}.
-That is, it must look something like \code{knit('your_report.Rmd')}
-in your workflow plan data frame.
+To enable drake to watch for the dependencies
+of a knitr report, the command in your workflow plan data frame
+must call \code{knitr::knit()} directly.
+In other words,
+the command must look something like
+\code{knit('your_report.Rmd')} or
+\code{knit('your_report.Rmd', quiet = TRUE)}.
 }
 \details{
 Drake looks for dependencies in the document by

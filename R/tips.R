@@ -1,6 +1,5 @@
-#' @title Function \code{drake_tip}
-#' @description Output a random tip about drake.
-#' Tips are usually related to news and usage.
+#' @title Output a random tip about drake.
+#' @description Tips are usually related to news and usage.
 #' @export
 #' @return A character scalar with a tip on how to use drake.
 #' @examples

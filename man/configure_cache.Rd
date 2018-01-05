@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{configure_cache}
 \alias{configure_cache}
-\title{Function \code{configure_cache}}
+\title{Configure the hash algorithms, etc. of a drake cache.}
 \usage{
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
@@ -41,7 +41,7 @@ the hash algorithms in the cache with any user-specified ones.}
 A drake/storr cache.
 }
 \description{
-configure a cache for drake. This is
+The purpose of this function is
 to prepare the cache to be called from \code{\link{make}()}.
 }
 \examples{

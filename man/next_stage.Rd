@@ -2,7 +2,8 @@
 % Please edit documentation in R/parallel_stages.R
 \name{next_stage}
 \alias{next_stage}
-\title{Function \code{next_stage}}
+\title{List the targets that will be built in the
+first parallelizable stage of the next call to \code{\link{make}}.}
 \usage{
 next_stage(config)
 }
@@ -15,8 +16,8 @@ A character vector of the targets to be made
 in the first parallel stage of the next call to \code{\link{make}}.
 }
 \description{
-List the targets that will be made in the
-first parallel stage in the next call to \code{\link{make}}
+Similar to the first stage in the output of
+\code{\link{parallel_stages}()}.
 }
 \examples{
 \dontrun{
@@ -27,5 +28,6 @@ next_stage(config = config)    # "small" and "large"
 }
 }
 \seealso{
+\code{\link{parallel_stages}},
 \code{\link{make}}, \code{\link{drake_config}}
 }

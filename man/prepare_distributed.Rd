@@ -2,7 +2,9 @@
 % Please edit documentation in R/distributed.R
 \name{prepare_distributed}
 \alias{prepare_distributed}
-\title{Internal function \code{store_drake_config}}
+\title{Do the preparatory work
+for \code{\link{make}()} with a distributed computing
+backend (see the \code{parallelism} argument of \code{\link{make}()}).}
 \usage{
 prepare_distributed(config)
 }
@@ -14,9 +16,8 @@ prepare_distributed(config)
 Nothing.
 }
 \description{
-Do the preparatory work
-for \code{\link{make}()} with a distributed computing
-backend (see the \code{parallelism} argument).
+For internal use only. Exported to flesh out some
+of the more advanced examples.
 }
 \examples{
 \dontrun{

@@ -1,8 +1,11 @@
 # All functions in this file are taken from eply:
 # https://github.com/wlandau-lilly/eply
 
-#' @title Function \code{drake_quotes}
-#' @description Put quotes around each element of a character vector.
+#' @title Put quotes around each element of a character vector.
+#' @description Quotes are important in drake.
+#' In workflow plan data frame commands,
+#' single-quoted targets denote physical files,
+#' and double-quoted strings are treated as ordinary string literals.
 #' @seealso \code{\link{drake_unquote}}, \code{\link{drake_strings}}
 #' @export
 #' @return character vector with quotes around it
@@ -23,9 +26,12 @@ drake_quotes <- function(x = NULL, single = FALSE){
   }
 }
 
-#' @title Function \code{drake_unquote}
-#' @description Remove leading and trailing
+#' @title Remove leading and trailing
 #' escaped quotes from character strings.
+#' @description Quotes are important in drake.
+#' In workflow plan data frame commands,
+#' single-quoted targets denote physical files,
+#' and double-quoted strings are treated as ordinary string literals.
 #' @seealso \code{\link{drake_quotes}}, \code{\link{drake_strings}}
 #' @export
 #' @return character vector without leading
@@ -47,8 +53,9 @@ drake_unquote <- function(x = NULL, deep = FALSE){
   }
 }
 
-#' @title Function \code{drake_strings}
-#' @description Turn valid expressions into character strings.
+#' @title Turn valid expressions into character strings.
+#' @description This function may be useful for
+#' constructing workflow plan data frames.
 #' @seealso \code{\link{drake_quotes}}, \code{\link{drake_unquote}}
 #' @export
 #' @return a character vector
@@ -64,10 +71,13 @@ drake_strings <- function(...){
   out
 }
 
-#' @title Function \code{as_drake_filename}
-#' @description Converts an ordinary character string
-#' into a filename understandable by drake. In other words,
-#' \code{as_drake_filename(x)} just wraps single quotes around \code{x}.
+#' @title Converts an ordinary character string
+#' into a filename understandable by drake.
+#' @description This function simply wraps single quotes around \code{x}.
+#' Quotes are important in drake.
+#' In workflow plan data frame commands,
+#' single-quoted targets denote physical files,
+#' and double-quoted strings are treated as ordinary string literals.
 #' @export
 #' @return A single-quoted character string: i.e., a filename
 #' understandable by drake.

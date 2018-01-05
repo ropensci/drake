@@ -2,7 +2,7 @@
 % Please edit documentation in R/build.R
 \name{drake_build}
 \alias{drake_build}
-\title{Internal function \code{drake_build}}
+\title{Build/process a single target or import.}
 \usage{
 drake_build(target, meta, config)
 }
@@ -18,10 +18,10 @@ targets are up to date (from \code{drake:::meta()}).}
 The value of the target right after it is built.
 }
 \description{
-Function to build a target or import.
 For internal use only.
 the only reason this function is exported
-is to set up PSOCK clusters efficiently.
+is to set up parallel socket (PSOCK) clusters
+without much of a fuss.
 }
 \examples{
 \dontrun{

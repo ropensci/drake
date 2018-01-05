@@ -1,7 +1,8 @@
-#' @title Internal function \code{store_drake_config}
-#' @description Do the preparatory work
+#' @title Do the preparatory work
 #' for \code{\link{make}()} with a distributed computing
-#' backend (see the \code{parallelism} argument).
+#' backend (see the \code{parallelism} argument of \code{\link{make}()}).
+#' @description For internal use only. Exported to flesh out some
+#' of the more advanced examples.
 #' @export
 #' @keywords internal
 #' @param config Internal configuration list from

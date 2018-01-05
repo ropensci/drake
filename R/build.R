@@ -1,10 +1,10 @@
-#' @title Internal function \code{drake_build}
+#' @title Build/process a single target or import.
 #' @export
 #' @keywords internal
-#' @description Function to build a target or import.
-#' For internal use only.
+#' @description For internal use only.
 #' the only reason this function is exported
-#' is to set up PSOCK clusters efficiently.
+#' is to set up parallel socket (PSOCK) clusters
+#' without much of a fuss.
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which
