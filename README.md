@@ -156,9 +156,9 @@ install_github("wlandau-lilly/drake") # Development version.
 
 - You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
 - For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
-- If you want to build [the vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes) when you install the development version, you must 
-    1. Set the `build` argument to `TRUE` in `install_github()`.
-    2. Install all the packages in the `Suggests:` field of the [DESCRIPTION file](https://github.com/wlandau-lilly/drake/blob/master/DESCRIPTION), including [cranlogs](https://cran.r-project.org/package=cranlogs) and [Ecdat](https://cran.r-project.org/package=Ecdat). All these packages are available through the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org), and you can install them with `install.packages()`.
+- If you want to build [the vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes) when you install the development version, you must
+    1. Install all the packages in the `Suggests:` field of the [DESCRIPTION file](https://github.com/wlandau-lilly/drake/blob/master/DESCRIPTION), including [cranlogs](https://cran.r-project.org/package=cranlogs) and [Ecdat](https://cran.r-project.org/package=Ecdat). All these packages are available through the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org), and you can install them with `install.packages()`.
+    2. Set the `build` argument to `TRUE` in `install_github()`.
 
 # Documentation
 
