@@ -28,7 +28,7 @@ dataset_wildcard <- function(){
 #' @description The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
-#' possible values using \code{evaluate}.
+#' possible values using \code{evaluate_plan}.
 #' @details Specify a single wildcard with the \code{wildcard}
 #' and \code{values} arguments. In each command, the text in
 #' \code{wildcard} will be replaced by each value in \code{values}
@@ -40,7 +40,7 @@ dataset_wildcard <- function(){
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan workflow plan data frame, similar to one produced by
-#' \code{ink{drake_plan}}
+#' \code{\link{drake_plan}}
 #'
 #' @param rules Named list with wildcards as names and vectors of
 #' replacements
