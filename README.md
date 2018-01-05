@@ -148,7 +148,7 @@ Within each column above, the nodes are conditionally independent given their de
 You can choose among different versions of `drake`:
 
 ```r
-# Install a stable release drake from CRAN.
+# Install the latest stable release from CRAN.
 install.packages("drake")
 
 # Alternatively, install the development version from GitHub.
