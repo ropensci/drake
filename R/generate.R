@@ -103,6 +103,7 @@ evaluate_plan <- function(
   if (is.null(wildcard) | is.null(values)){
     return(plan)
   }
+  values <- as.character(values)
   matches <- grepl(wildcard, plan$command, fixed = TRUE)
   if (!any(matches)){
     return(plan)
@@ -176,6 +177,7 @@ expand_plan <- function(plan, values = NULL){
   nrows <- nrow(plan)
   repeat_targets <- rep(seq_len(nrows), each = length(values))
   plan <- plan[repeat_targets, ]
+  values <- as.character(values)
   values <- rep(values, times = nrows)
   plan$target <- paste(plan$target, values, sep = "_")
   rownames(plan) <- NULL
