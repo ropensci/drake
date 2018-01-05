@@ -9,7 +9,7 @@ Thumbs.db
 *.out
 *.snm
 *.Rout
-*.Rproj
+.Rproj*
 *.synctex.gz
 *.toc
 *.vrb

@@ -24,8 +24,8 @@ Authors@R: c(
     family = "Eli Lilly and Company",
     role = "cph"
   ))
-Description: A solution for reproducible code and 
-  high-performance computing.
+Description: An R-focused pipeline toolkit
+  for reproducible code and high-performance computing.
 License: GPL-3
 Depends:
   R (>= 3.2.0)
