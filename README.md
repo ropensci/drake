@@ -164,16 +164,16 @@ install_github("wlandau-lilly/drake") # Development version.
 
 `Drake` has a [documentation website](https://wlandau-lilly.github.io/drake/). The [reference section](https://wlandau-lilly.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
 
-- `drake_plan()` $-$ Create a workflow data frame (like `my_plan`).
-- `make()` $-$ Build your project.
-- `loadd()` $-$ Load one or more built targets into your R session.
-- `readd()` $-$ Read and return a built target.
-- `drake_config()` $-$ Create a master configuration list for other user-side functions.
-- `vis_drake_graph()` $-$ Show an interactive visual network representation of your workflow.
-- `outdated()` $-$ See which targets will be built in the next `make()`.
-- `deps()` $-$ Check the dependencies of a command or function.
-- `failed()` $-$ List the targets that failed to build in the last `make()`.
-- `diagnose()` $-$ Return the complete error log of a target that failed.
+- `drake_plan()`: create a workflow data frame (like `my_plan`).
+- `make()`: build your project.
+- `loadd()`: load one or more built targets into your R session.
+- `readd()`: read and return a built target.
+- `drake_config()`: create a master configuration list for other user-side functions.
+- `vis_drake_graph()`: show an interactive visual network representation of your workflow.
+- `outdated()`: see which targets will be built in the next `make()`.
+- `deps()`: check the dependencies of a command or function.
+- `failed()`: list the targets that failed to build in the last `make()`.
+- `diagnose()`: return the complete error log of a target that failed.
 
 The articles below are tutorials taken from the [package vignettes](https://github.com/wlandau-lilly/drake/tree/master/vignettes).
 
