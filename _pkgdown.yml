@@ -63,6 +63,7 @@ reference:
   - '`drake_config`'
   - '`make_imports`'
   - '`make`'
+  - '`drake_build`'
   - '`make_targets`'
   - '`make_with_config`'
 - title: Workflow plan data frames
@@ -91,6 +92,7 @@ reference:
   - '`dependency_profile`'
   - '`deps`'
   - '`diagnose`'
+  - '`drake_meta`'
   - '`knitr_deps`'
   - '`migrate_drake_project`'
   - '`missed`'

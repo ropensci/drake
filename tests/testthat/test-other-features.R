@@ -1,5 +1,15 @@
 drake_context("other features")
 
+test_with_dir("drake_build can build a target by itself w/o input metadata", {
+  pl <- drake_plan(a = 1, b = 2)
+  con <- drake_config(plan = pl, session_info = FALSE)
+  o <- drake_build(target = "b", config = con)
+  x <- cached()
+  expect_equal(x, "b")
+  o <- make(pl)
+  expect_equal(justbuilt(o), "a")
+})
+
 test_with_dir("colors and shapes", {
   expect_message(drake_palette())
   expect_is(color_of("target"), "character")

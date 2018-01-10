@@ -155,7 +155,7 @@ migrate_hook <- function(code){
     legacy_readd(target = target, cache = config$cache),
     error = error_na
   )
-  meta <- meta(target = target, config = config)
+  meta <- drake_meta(target = target, config = config)
   if (target %in% config$outdated){
     return()
   }

@@ -4,15 +4,15 @@
 \alias{drake_build}
 \title{Build/process a single target or import.}
 \usage{
-drake_build(target, meta, config)
+drake_build(target, config, meta = NULL)
 }
 \arguments{
 \item{target}{name of the target}
 
-\item{meta}{list of metadata that tell which
-targets are up to date (from \code{drake:::meta()}).}
-
 \item{config}{internal configuration list}
+
+\item{meta}{list of metadata that tell which
+targets are up to date (from \code{drake_meta()}).}
 }
 \value{
 The value of the target right after it is built.
@@ -32,13 +32,16 @@ test_with_dir("Quarantine side effects.", {
 load_basic_example()
 # Create the master internal configuration list.
 config <- drake_config(my_plan)
-# Compute metadata on 'small', including a hash/fingerprint
-# of the dependencies.
-meta <- drake:::meta(target = "small", config = config)
+# Optionally, compute metadata on 'small',
+# including a hash/fingerprint
+# of the dependencies. If meta is not supplied,
+# drake_build() computes it automatically.
+meta <- drake_meta(target = "small", config = config)
 # Should not yet include 'small'.
 cached()
-# Build 'small'
-drake_build(target = "small", meta = meta, config = config)
+# Build 'small'.
+# Equivalent to just drake_build(target = "small", config = config).
+drake_build(target = "small", config = config, meta = meta)
 # Should now include 'small'
 cached()
 readd(small)

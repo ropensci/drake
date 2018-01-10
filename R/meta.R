@@ -4,7 +4,7 @@ meta_list <- function(targets, config) {
     config = config)
   out <- lightly_parallelize(
     X = targets,
-    FUN = meta,
+    FUN = drake_meta,
     jobs = config$jobs,
     config = config
   )
@@ -13,7 +13,55 @@ meta_list <- function(targets, config) {
   out
 }
 
-meta <- function(target, config) {
+#' @title Compute the metadata of a target or import.
+#' @description The metadata helps determine if the
+#' target is up to date or outdated. The metadata of imports
+#' is used to compute the metadata of targets.
+#' @details Target metadata is computed
+#' with \code{drake_meta()} and then
+#' \code{drake:::finish_meta()}.
+#' This metadata corresponds
+#' to the state of the target immediately after it was built
+#' or imported in the last \code{\link{make}()} that
+#' did not skip it.
+#' The exception to this is the \code{$missing} element
+#' of the metadata, which indicates if the target/import
+#' was missing just \emph{before} it was built.
+#' @seealso \code{\link{dependency_profile}}, \code{\link{make}}
+#' @export
+#' @return A list of metadata on a target. Does not include
+#' the file modification time if the target is a file.
+#' That piece is provided later in \code{\link{make}()} by
+#' \code{drake:::finish_meta}.
+#' @param target Character scalar, name of the target
+#' to get metadata.
+#' @param config Master internal configuration list produced
+#' by \code{\link{drake_config}()}.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' # This example is not really a user-side demonstration.
+#' # It just walks through a dive into the internals.
+#' # Populate your workspace and write 'report.Rmd'.
+#' load_basic_example()
+#' # Create the master internal configuration list.
+#' config <- drake_config(my_plan)
+#' # Optionally, compute metadata on 'small',
+#' # including a hash/fingerprint
+#' # of the dependencies. If meta is not supplied,
+#' # drake_build() computes it automatically.
+#' meta <- drake_meta(target = "small", config = config)
+#' # Should not yet include 'small'.
+#' cached()
+#' # Build 'small'.
+#' # Equivalent to just drake_build(target = "small", config = config).
+#' drake_build(target = "small", config = config, meta = meta)
+#' # Should now include 'small'
+#' cached()
+#' readd(small)
+#' })
+#' }
+drake_meta <- function(target, config) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),

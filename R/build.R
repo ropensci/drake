@@ -8,7 +8,7 @@
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which
-#' targets are up to date (from \code{drake:::meta()}).
+#' targets are up to date (from \code{drake_meta()}).
 #' @param config internal configuration list
 #' @examples
 #' \dontrun{
@@ -19,19 +19,25 @@
 #' load_basic_example()
 #' # Create the master internal configuration list.
 #' config <- drake_config(my_plan)
-#' # Compute metadata on 'small', including a hash/fingerprint
-#' # of the dependencies.
-#' meta <- drake:::meta(target = "small", config = config)
+#' # Optionally, compute metadata on 'small',
+#' # including a hash/fingerprint
+#' # of the dependencies. If meta is not supplied,
+#' # drake_build() computes it automatically.
+#' meta <- drake_meta(target = "small", config = config)
 #' # Should not yet include 'small'.
 #' cached()
-#' # Build 'small'
-#' drake_build(target = "small", meta = meta, config = config)
+#' # Build 'small'.
+#' # Equivalent to just drake_build(target = "small", config = config).
+#' drake_build(target = "small", config = config, meta = meta)
 #' # Should now include 'small'
 #' cached()
 #' readd(small)
 #' })
 #' }
-drake_build <- function(target, meta, config){
+drake_build <- function(target, config, meta = NULL){
+  if (is.null(meta)){
+    meta <- drake_meta(target = target, config = config)
+  }
   config$hook(
     build_in_hook(
       target = target,
@@ -66,7 +72,7 @@ build_in_hook <- function(target, meta, config) {
   }
   store_target(target = target, value = value, meta = meta,
     start = start, config = config)
-  value
+  invisible(value)
 }
 
 build_target <- function(target, config) {

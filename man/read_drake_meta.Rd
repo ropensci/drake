@@ -39,8 +39,9 @@ is used to compute the metadata of targets.
 }
 \details{
 Target metadata is computed
-with \code{drake:::meta()} and then
-\code{drake:::finish_meta()}. This metadata corresponds
+with \code{drake_meta()} and then
+\code{drake:::finish_meta()}.
+This metadata corresponds
 to the state of the target immediately after it was built
 or imported in the last \code{\link{make}()} that
 did not skip it.
