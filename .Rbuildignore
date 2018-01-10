@@ -41,4 +41,6 @@ vignettes/.*_files
 ^.*\.yml$
 ^CONDUCT\.md$
 ^docs$
+^pkgdown\.R$
 ^_pkgdown\.yml$
+^/lrlhps/users/c240390/drake/docs$
