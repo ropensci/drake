@@ -1,4 +1,5 @@
 url: https://github.com/wlandau-lilly/drake
+templates_path: inst/pkgdown
 navbar:
   title: drake
   type: default
