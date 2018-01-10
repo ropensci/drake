@@ -127,7 +127,7 @@ missed(config) # Nothing is missing right now.
 outdated(config)
 ```
 
-To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument.
+To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument. The same is true for `drake_meta()`, another alternative.
 
 ```{r depprofiledebug}
 load_basic_example()
@@ -140,6 +140,8 @@ reg2 <- function(d) {
 outdated(config)
 
 dependency_profile(target = "regression2_small", config = config)
+
+drake_meta(target = "regression2_small", config = config)
 
 config$cache$get_hash(key = "small", namespace = "kernels") # same
 
@@ -280,12 +282,14 @@ str(error)
 error$calls # View the traceback.
 ```
 
-To figure out what went wrong, you could try to build the failed target interactively. To do that, you must load the target's dependencies in your workspace, which you can easily do with `loadd(my_target, deps = TRUE)`.
+To figure out what went wrong, you could try to build the failed target interactively. To do that, you must load the target's dependencies in your workspace, which you can easily do with `loadd(my_target, deps = TRUE)`. Then, build it on its own with `drake_build()`.
 
 ```{r loaddeps}
 # Pretend we just opened a new R session.
 library(drake)
-try(rm(b), silent = TRUE)
+
+# Unloads target `b`.
+config <- drake_config(plan = bad_plan)
 
 # my_target depends on b.
 "b" %in% ls()
@@ -293,6 +297,20 @@ try(rm(b), silent = TRUE)
 loadd(my_target, deps = TRUE)
 
 "b" %in% ls()
+
+# Try to build my_target until the error is fixed.
+# Skip all that pesky work checking dependencies.
+drake_build(target = "my_target", config = config)
+
+diagnose(my_target)$message
+
+f
+
+# Aha! The error was in f(). Let's fix it and try again.
+f <- function(x){
+  return(x)
+}
+drake_build(target = "my_target", config = config)
 ```
 
 # Debrief a build session.
