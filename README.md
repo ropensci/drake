@@ -240,15 +240,15 @@ However, memoization does not go far enough. The return value of a function depe
 
 Much of the R community uses [knitr](https://yihui.name/knitr/) for reproducible research. The idea is to intersperse code chunks in an [R Markdown](http://rmarkdown.rstudio.com/) or `*.Rnw` file and then generate a dynamic report that weaves together code, output, and prose. However, [knitr](https://yihui.name/knitr/) is not designed to be a serious [pipeline toolkit](https://github.com/pditommaso/awesome-pipeline), and it should not be the primary computational engine for medium to large data analysis projects.
 
-1. [Knitr](https://yihui.name/knitr/) scales far worse than [Make](https://www.gnu.org/software/make/) or [remake](https://github.com/richfitz/remake). [Knitr](https://yihui.name/knitr/) is designed to consolidate output and prose, so it intentionally lacks the necessary modularity.
+1. [Knitr](https://yihui.name/knitr/) scales far worse than [Make](https://www.gnu.org/software/make/) or [remake](https://github.com/richfitz/remake). [Knitr](https://yihui.name/knitr/) is designed to consolidate output and prose, so it intentionally lacks the essential modularity.
 1. There is no obvious high-performance computing support.
 1. While there is a way to skip chunks that are already up to date (with code chunk options `cache` and `autodep`), this functionality is not the focus of [knitr](https://yihui.name/knitr/). It is deactivated by default, and [remake](https://github.com/richfitz/remake) and `drake` are more dependable ways to skip work that is already up to date.
 
 However, [knitr](https://yihui.name/knitr/) is an amazing tool for annotating and sharing final results. As with the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic), we recommend executing the bulk of the workflow with `drake` and waiting until the very end to weave small summaries into a [knitr](https://yihui.name/knitr/) report. The intended usage of [remake](https://github.com/richfitz/remake) is similar.
 
-## Factual's drake
+## Factual's Drake
 
-[Factual's drake](https://github.com/Factual/drake) is similar in concept, but the development effort is completely unrelated to the [R package of the same name](https://github.com/wlandau-lilly/drake).
+[Factual's Drake](https://github.com/Factual/drake) is similar in concept, but the development effort is completely unrelated to the [R package of the same name](https://github.com/wlandau-lilly/drake).
 
 ## Other pipeline toolkits
 
