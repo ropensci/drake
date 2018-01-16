@@ -84,8 +84,10 @@ test_with_dir("make() and check_plan() trim outer whitespace in target names", {
 })
 
 test_with_dir("make() plays nicely with tibbles", {
-  if (!("tibble" %in% rownames(installed.packages()))){
-    skip("Package tibble not installed.")
+  for (pkg in c("pillar", "tibble")){
+    if (!(pkg %in% rownames(installed.packages()))){
+      skip("tibble or a tibble dependency is not installed.")
+    }
   }
   x <- tibble::tribble(~target, ~command, "nothing", 1)
   expect_silent(check_plan(x, verbose = FALSE))

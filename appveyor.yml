@@ -46,4 +46,4 @@ environment:
     WARNINGS_ARE_ERRORS: 1
 
   matrix:
-    - R_VERSION: oldrel
+    - R_VERSION: release
