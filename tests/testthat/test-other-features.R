@@ -1,5 +1,17 @@
 drake_context("other features")
 
+test_with_dir("cache log files and make()", {
+  x <- drake_plan(a = 1)
+  make(x, session_info = FALSE)
+  expect_false(file.exists("drake_cache.log"))
+  make(x, session_info = FALSE)
+  expect_false(file.exists("drake_cache.log"))
+  make(x, session_info = FALSE, cache_log_file = TRUE)
+  expect_true(file.exists("drake_cache.log"))
+  make(x, session_info = FALSE, cache_log_file = "my.log")
+  expect_true(file.exists("my.log"))
+})
+
 test_with_dir("drake_build can build a target by itself w/o input metadata", {
   pl <- drake_plan(a = 1, b = 2)
   con <- drake_config(plan = pl, session_info = FALSE)

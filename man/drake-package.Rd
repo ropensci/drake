@@ -26,6 +26,8 @@ reg2 = function(d){ # Change one of your functions.
   lm(y ~ x3, data = d)
 }
 make(my_plan) # Only the pieces depending on reg2() get rebuilt.
+# Write a flat text log file this time.
+make(my_plan, cache_log_file = TRUE)
 # Read/load from the cache.
 readd(small)
 loadd(large)

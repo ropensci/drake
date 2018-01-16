@@ -16,7 +16,7 @@ drake_config(plan = drake_plan(), targets = drake::possible_targets(plan),
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
   log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
   imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
-  lazy_load = FALSE, session_info = TRUE)
+  lazy_load = FALSE, session_info = TRUE, cache_log_file = NULL)
 }
 \arguments{
 \item{plan}{same as for \code{\link{make}}}
@@ -82,6 +82,8 @@ on your workflow to save time. Use at your own peril.}
 \item{lazy_load}{same as for \code{\link{make}}}
 
 \item{session_info}{same as for \code{\link{make}}}
+
+\item{cache_log_file}{same as for \code{\link{make}}}
 }
 \value{
 The master internal configuration list of a project.

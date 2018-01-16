@@ -263,6 +263,18 @@
 #' speed up tests. Apparently, \code{sessionInfo()} is a bottleneck
 #' for small \code{\link{make}()}s.
 #'
+#' @param cache_log_file Name of the cache log file to write.
+#' If \code{TRUE}, the default file name is used (\code{drake_cache.log}).
+#' If \code{NULL}, no file is written.
+#' If activated, this option uses
+#' \code{\link{drake_cache_log_file}()} to write a flat text file
+#' to represent the state of the cache
+#' (fingerprints of all the targets and imports).
+#' If you put the log file under version control, your commit history
+#' will give you an easy representation of how your results change
+#' over time as the rest of your project changes. Hopefully,
+#' this is a step in the right direction for data reproducibility.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -281,6 +293,7 @@
 #' vis_drake_graph(config) # See how they fit in an interactive graph.
 #' make(my_plan) # Rebuild just the outdated targets.
 #' outdated(config) # Everything is up to date again.
+#' make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
 #' vis_drake_graph(config) # The colors changed in the graph.
 #' clean() # Start from scratch.
 #' # Rerun with "Makefile" parallelism with at most 4 jobs.
@@ -326,7 +339,8 @@ make <- function(
   skip_safety_checks = FALSE,
   config = NULL,
   lazy_load = FALSE,
-  session_info = TRUE
+  session_info = TRUE,
+  cache_log_file = NULL
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -365,7 +379,8 @@ make <- function(
       skip_imports = skip_imports,
       skip_safety_checks = skip_safety_checks,
       lazy_load = lazy_load,
-      session_info = session_info
+      session_info = session_info,
+      cache_log_file = cache_log_file
     )
   }
   make_with_config(config = config)
@@ -399,6 +414,11 @@ make_with_config <- function(config){
   if (!config$imports_only){
     make_targets(config = config)
   }
+  drake_cache_log_file(
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs
+  )
   return(invisible(config))
 }
 

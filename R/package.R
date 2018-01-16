@@ -18,6 +18,8 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' make(my_plan) # Only the pieces depending on reg2() get rebuilt.
+#' # Write a flat text log file this time.
+#' make(my_plan, cache_log_file = TRUE)
 #' # Read/load from the cache.
 #' readd(small)
 #' loadd(large)
@@ -58,7 +60,7 @@
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom utils capture.output compareVersion installed.packages
-#' packageVersion read.csv sessionInfo type.convert unzip
+#' packageVersion read.csv sessionInfo type.convert unzip write.table
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #' visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink
