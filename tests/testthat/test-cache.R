@@ -41,6 +41,7 @@ test_with_dir("bad/corrupt caches, no progress", {
 })
 
 test_with_dir("non-existent caches", {
+  expect_equal(0, nrow(drake_hash_log()))
   check_storr_short_hash(NULL, "BLAH")
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
@@ -117,6 +118,14 @@ test_with_dir("cache functions work", {
 
   config$session_info <- TRUE
   testrun(config)
+
+  # drake_hash_log() # nolint
+  all_hashes <- drake_hash_log()
+  some_hashes <- drake_hash_log(targets_only = TRUE)
+  expect_equal(ncol(all_hashes), ncol(some_hashes))
+  n_a <- nrow(all_hashes)
+  n_s <- nrow(some_hashes)
+  expect_true(n_a > n_s && n_s > 0)
 
   # drake_gc() should not remove any important targets/imports.
   x <- cached()

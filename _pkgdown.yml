@@ -124,6 +124,7 @@ reference:
   - '`cached`'
   - '`clean`'
   - '`drake_gc`'
+  - '`drake_hash_log`'
   - '`drake_session`'
   - '`failed`'
   - '`find_cache`'
