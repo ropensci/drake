@@ -59,14 +59,14 @@ vignette("quickstart") # This vignette
 
 # Set up the basic example
 
-Let's establish the building blocks of a data analysis workflow.
+Before you run your project, you need to set up the workspace. In other words, you need to gather the "imports": functions, pre-loaded data objects, and saved files that you want to be available before the real work begins.
 
 ```{r libs}
-library(knitr)
+library(knitr) # Drake knows which packages you load.
 library(drake)
 ```
 
-First, we will generate a few datasets.
+We need a function to simulate datasets.
 
 ```{r sim}
 simulate <- function(n){
@@ -77,7 +77,7 @@ simulate <- function(n){
 }
 ```
 
-Then, we will analyze each dataset with multiple analysis methods.
+We also need functions to analyze the datasets we simulate.
 
 ```{r reg}
 reg1 <- function(d){
@@ -90,7 +90,7 @@ reg2 <- function(d){
 }
 ```
 
-We need the source file `report.Rmd` for the final report.
+We want to summarize the final results in an R Markdown report, so we need the following `report.Rmd` source file.
 
 ```{r file}
 lines <- c(
@@ -118,9 +118,21 @@ lines <- c(
 writeLines(lines, "report.Rmd")
 ```
 
+Now, all our imports are set up. When the real work begins, `drake` will import functions and data objects from your R session environment
+
+```{r robjimportsquickstart}
+ls()
+```
+
+and saved files from your file system.
+
+```{r filesystemimportsquickstart}
+list.files()
+```
+
 # The workflow plan data frame
 
-The workflow plan lists the intermediate steps of your project.
+Now that your workspace of imports is prepared, we can outline the real work step by step in a workflow plan data frame.
 
 ```{r previewmyplan}
 load_basic_example()

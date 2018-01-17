@@ -37,7 +37,22 @@ library(drake)
 # Drake comes with a basic example.
 load_basic_example(verbose = FALSE)
 
-# The `my_plan` data frame lists the steps of a data analysis workflow.
+# Your workspace starts with a bunch of "imports":
+# functions, pre-loaded data objects, and saved files
+# available before the real work begins.
+
+# Drake looks for data objects in your R session environment
+ls()
+
+## [1] "my_plan"  "reg1"     "reg2"     "simulate"
+
+# and saved files in your file system.
+list.files()
+
+## [1] "report.Rmd"
+
+# The real work is outlined step by step in the `my_plan` data frame.
+# The steps are called "targets", and they depend on the imports.
 # Drake's `make()` function runs the commands to build the targets
 # in the correct order.
 head(my_plan)

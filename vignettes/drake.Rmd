@@ -30,13 +30,26 @@ knitr::opts_chunk$set(
 
 This tutorial is the abridged version of the [quickstart vignette](https://wlandau-lilly.github.io/drake/articles/quickstart.html). For more information, see the [documentation website](https://wlandau-lilly.github.io/drake/).
 
-Outline your project in a data frame of targets.
+```{r precleangetstarteddrake, echo = FALSE}
+# Remove any previous work.
+clean(destroy = TRUE)
+```
+
+Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.
+
+```{r drakeimportdrakermd}
+load_basic_example(verbose = FALSE)
+
+# Drake looks for data objects and functions in your R session environment
+ls()
+
+# and saved files in your file system.
+list.files()
+```
+
+Your real work is outlined in a data frame of data analysis steps called "targets". The targets depend on the imports, and `drake` will figure out how they are all connected.
 
 ```{r myplandrakevig}
-# Remove work from the previous example.
-clean(destroy = TRUE)
-
-load_basic_example(verbose = FALSE)
 my_plan
 ```
 
