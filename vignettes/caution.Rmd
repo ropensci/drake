@@ -295,11 +295,11 @@ command <- "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
 deps(command)
 ```
 
-## Dynamic reports
+## Dynamic R Markdown / `knitr` reports
 
 In [dynamic knitr reports](https://yihui.name/knitr/), `drake` automatically looks for active code chunks and learns dependencies from calls to `loadd()` and `readd()`. This behavior activates when
 
-1. the appropriate command in your command has an explicit reference to `knit()`, and
+1. the appropriate command in your command has an explicit reference to `knit()` or `render()` (from the `rmarkdown` package), and
 1. the `*.Rmd`/`*.Rnw` source file already exists before `make()`.
 
 ```{r knitrdeps1}
@@ -311,6 +311,8 @@ Above, the [R Markdown report](http://rmarkdown.rstudio.com/lesson-1.html) loads
 
 ```{r knitr2}
 deps("knit('report.Rmd')")
+
+deps("render('report.Rmd')")
 
 deps("'report.Rmd'") # These are actually dependencies of 'report.md' (output)
 ```
@@ -327,6 +329,10 @@ loadd(list = var)
 loadd()
 loadd(imports_only = TRUE)
 ```
+
+## The `knit()` and `render()` functions
+
+Functions `knit()` and `render()` are special. When you explicitly mention them in a command for a target, you are signaling to `drake` that you have a dynamic report (like an R Markdown `*.Rmd` file). Drake assumes you are using `knit()` from the `knitr` package and `render()` from the `rmarkdown` package. Thus, unless you know exactly what you are doing, **please do not define your own custom `knitr()` or `render()` functions or load different versions of these functions from other packages.** 
 
 ## Functions produced by `Vectorize()`
 
