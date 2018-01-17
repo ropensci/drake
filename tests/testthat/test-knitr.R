@@ -28,9 +28,12 @@ test_with_dir("knitr_deps() works", {
   expect_equal(0, length(knitr_deps(character(0))))
   load_basic_example()
   x <- knitr_deps("report.Rmd")
-  expect_equal(sort(x), sort(c(
+  y <- deps("knit('report.Rmd')")
+  z <- deps("render('report.Rmd')")
+  real_deps <- c(
     "small", "coef_regression2_small", "large"
-  )))
+  )
+  expect_equal(sort(x), sort(real_deps))
   expect_equal("targ", find_knitr_targets(function(x){
     readd(targ)
   }))
@@ -44,18 +47,32 @@ test_with_dir("find_knitr_doc() works", {
     "other(f)",
     "knittles(f('file.Rmd'))",
     "other::knit('file.Rmd')",
-    "drake:::knit('file.Rmd')"
+    "drake:::knit('file.Rmd')",
+    "render",
+    "render()",
+    "rendermania(f('file.Rmd'))",
+    "other::render('file.Rmd')",
+    "drake:::render('file.Rmd')"
   )
   true <- list(
     "knit('file.Rmd')",
-    "knitr::knit('file.Rmd')",
+    "knitr::knit(input = 'file.Rmd')",
     "knitr:::knit('file.Rmd')",
     function(x){
       knit("file.Rmd")
     },
     "f(g(knit('file.Rmd', output = 'file.md', quiet = TRUE)))",
     "f(g(knit(output = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))",
-    "f(g(knit(output = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
+    "f(g(knit(output = 'file.md', quiet = TRUE, 'file.Rmd') + 5))",
+    "render(input = 'file.Rmd')",
+    "rmarkdown::render('file.Rmd')",
+    "rmarkdown:::render('file.Rmd')",
+    function(x){
+      render("file.Rmd")
+    },
+    "f(g(render('file.Rmd', output_file = 'file.md', quiet = TRUE)))",
+    "f(g(render(output_file = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))", # nolint
+    "f(g(render(output_file = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
   )
   for (cmd in false){
     expect_equal(find_knitr_doc(cmd), character(0))
@@ -65,13 +82,30 @@ test_with_dir("find_knitr_doc() works", {
   }
 })
 
+test_with_dir("edge cases finding knitr docs", {
+  expect_equal(find_knitr_doc("knit(a, b)"), "a")
+  expect_equal(find_knitr_doc("knit(quiet = TRUE)"), character(0))
+  expect_equal(deps("knit(quiet = TRUE)"), "knit")
+})
+
+test_with_dir("knitr file deps from commands and functions", {
+  load_basic_example()
+  expect_equal(sort(deps("'report.Rmd'")), sort(c(
+    "coef_regression2_small", "large", "small"
+  )))
+  f <- function(x){
+    knit(x)
+  }
+  expect_equal(deps(f), "knit")
+})
+
 test_with_dir("misc knitr", {
   o <- get_specific_arg(list(a = parse(text = "1 <- 2")), name = "a")
   expect_equal(o, character(0))
   f <- function()
   expect_silent(o <- doc_of_function_call(knit))
   f <- function(x){
-    knit("file.Rmd")
+    knitr::knit("file.Rmd")
   }
   doc_of_function_call(f)
   expect_equal(doc_of_function_call(as.expression(1)), character(0))

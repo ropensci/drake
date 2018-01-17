@@ -89,4 +89,22 @@ test_with_dir("basic example works", {
     verbose = FALSE)
   expect_equal(sort(outdated(config = config)),
     character(0))
+
+  # knitr file deps
+  # Included here instead of test-knitr.R because report.md already exists.
+  x <- drake_plan(
+    a = knitr::knit('report.Rmd'), # nolint
+    b = knitr::knit('report.md'), # nolint
+    c = knitr::knit("nonfile"),
+    d = rmarkdown::render('report.Rmd'), # nolint
+    e = rmarkdown::render('report.md'), # nolint
+    f = rmarkdown::render("nonfile")
+  )
+  suppressWarnings(con <- drake_config(plan = x))
+  for (target in c("a", "d")){
+    expect_true("small" %in% dependencies(target = target, config = con))
+  }
+  for (target in c("b", "c", "e", "f")){
+    expect_false("small" %in% dependencies(target = target, config = con))
+  }
 })

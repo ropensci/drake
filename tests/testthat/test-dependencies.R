@@ -31,15 +31,6 @@ test_with_dir(
     sort(c("'tracked_input_file.rds'", "readRDS", "x")))
   expect_equal(sort(deps(my_plan$command[3])), sort(c("f", "g", "w",
     "x", "y", "z")))
-
-  load_basic_example()
-  expect_equal(sort(deps("'report.Rmd'")), sort(c(
-    "coef_regression2_small", "large", "small"
-  )))
-  f <- function(x){
-    knit(x)
-  }
-  expect_equal(deps(f), "knit")
 })
 
 test_with_dir("tracked() works", {

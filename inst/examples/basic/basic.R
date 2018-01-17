@@ -86,7 +86,8 @@ results <- plan_summaries(
 # only works inside the workflow my_plan data frame.
 # WARNING: drake cannot track entire directories (folders).
 report <- workplan(
-  # As long as `knit()` is visible in your workflow plan command,
+  # As long as `knit()`, `knitr::knit()`, `render()`, or `rmarkdown::render()`
+  # is visible in your workflow plan command,
   # drake will dig into the active code chunks of your `report.Rmd`
   # and find the dependencies of `report.md` in the arguments of
   # calls to loadd() and readd().

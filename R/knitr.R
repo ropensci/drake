@@ -34,13 +34,23 @@ knitr_deps <- function(target){
   file <- drake_unquote(target)
   if (!file.exists(file)){
     warning(
-      "dynamic report '", file,
+      "knitr/rmarkdown report '", file,
       "' does not exist and cannot be inspected for dependencies.",
       call. = FALSE
     )
     return(character(0))
   }
-  fragments <- get_tangled_frags(file)
+  fragments <- tryCatch({
+      get_tangled_frags(file)
+    },
+    error = function(e){
+      warning(
+        "Could not parse file '", file,
+        "'. Drake dependencies could not be extracted from code chunks."
+      )
+      character(0)
+    }
+  )
   sort(find_knitr_targets(fragments))
 }
 
@@ -58,7 +68,10 @@ find_knitr_doc <- function(expr, result = character(0)){
   if (is.function(expr)){
     result <- find_knitr_doc(body(expr), result = result)
   } else if (is.call(expr) & length(expr) > 1){
-    if (is_function_call(expr, package = "knitr", what = "knit")){
+    does_knitting <-
+      is_function_call(expr, package = "knitr", what = "knit") ||
+      is_function_call(expr, package = "rmarkdown", what = "render")
+    if (does_knitting){
       result <- doc_of_function_call(expr)
     } else {
       result <- lapply(as.list(expr), find_knitr_doc,
@@ -84,7 +97,11 @@ doc_of_function_call <- function(expr){
   if (!is.null(args$input)){
     as.character(args$input)
   } else {
-    input_index <- min(which(!nchar(names(args))))
+    unnamed <- which(!nchar(names(args)))
+    if (!length(unnamed)){
+      return(character(0))
+    }
+    input_index <- min(unnamed)
     as.character(args[[input_index]])
   }
 }
@@ -139,8 +156,8 @@ analyze_readd <- function(expr){
 
 is_function_call <- function(
   expr,
-  package = c("drake", "knitr"),
-  what = c("knit", "loadd", "readd")
+  package = c("drake", "knitr", "rmarkdown"),
+  what = c("loadd", "readd", "knit", "render")
 ){
   package <- match.arg(package)
   what <- match.arg(what)
