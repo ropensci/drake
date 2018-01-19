@@ -43,5 +43,4 @@ vignettes/.*_files
 ^docs$
 ^pkgdown\.R$
 ^_pkgdown\.yml$
-^/lrlhps/users/c240390/drake/docs$
 ^/tmp/Rtmp4WLu7Q/file4aa52fa3f966$
