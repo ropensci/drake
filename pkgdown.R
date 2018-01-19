@@ -6,10 +6,10 @@ if (!file.exists(dest)){
 site_dir <- tempdir()
 index_file <- file.path(site_dir, "index.html")
 
-pkgdown::build_site(pkg = dir, path = site_dir)
+tmp <- pkgdown::build_site(pkg = dir, path = site_dir)
 x <- readLines(index_file)
 icon <- file.path(dir, "images", "icon.ico")
-file.copy(from = icon, to = site_dir, overwrite = TRUE)
+tmp <- file.copy(from = icon, to = site_dir, overwrite = TRUE)
 
 from <- "<p><img src=.*images/graph.png.*></p>"
 to <- "<iframe
