@@ -66,14 +66,6 @@ test_with_dir("target conflicts with previous import", {
     "combined", "f", "final", "yourinput")))
 })
 
-test_with_dir("can use semicolons and multi-line commands", {
-  plan <- drake_plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
-  make(plan, verbose = FALSE, session_info = FALSE)
-  expect_false(any(c("a", "b") %in% ls()))
-  expect_true(all(cached(x, y, search = FALSE)))
-  expect_equal(cached(search = FALSE), c("x", "y"))
-})
-
 test_with_dir("true targets can be functions", {
   generator <- function() return(function(x) {
     x + 1

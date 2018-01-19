@@ -41,7 +41,23 @@
 #' @examples
 #' # Create example workflow plan data frames for make()
 #' drake_plan(small = simulate(5), large = simulate(50))
+#' # Commands can be multi-line code chunks.
+#' small_plan <- drake_plan(
+#'   small_target = {
+#'     local_object <- 1 + 1
+#'     2 + sqrt(local_object)
+#'   }
+#' )
+#' make(small_plan)
+#' cached()
+#' readd(small_target)
+#' # local_object only applies to the code chunk.
+#' ls() # your environment is protected (local_object not found)
+#' # For tighter control over commands, use the `list` argument.
 #' drake_plan(list = c(x = "1 + 1", y = "sqrt(x)"))
+#' # This becomes important for file targets,
+#' # which you must put in single quotes.
+#' # (Double quotes are for string literals.)
 #' drake_plan(data = readRDS("my_data.rds"))
 #' drake_plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
 #'   strings_in_dots = "literals")

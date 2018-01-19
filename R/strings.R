@@ -92,5 +92,5 @@ as_drake_filename <- function(x){
 }
 
 wide_deparse <- function(x){
-  paste(deparse(x), collapse = "")
+  paste(deparse(x), collapse = "\n")
 }

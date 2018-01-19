@@ -150,3 +150,25 @@ test_with_dir("file names with weird characters do not get mangled", {
   )
   expect_equal(out2, out3)
 })
+
+test_with_dir("can use semicolons for multi-line commands", {
+  plan <- drake_plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
+  make(plan, verbose = FALSE, session_info = FALSE)
+  expect_false(any(c("a", "b") %in% ls()))
+  expect_true(all(cached(x, y, search = FALSE)))
+  expect_equal(cached(search = FALSE), c("x", "y"))
+})
+
+test_with_dir("can use braces for multi-line commands", {
+  small_plan <- drake_plan(
+    small_target = {
+      local_object <- 1 + 1
+      2 + local_object
+    }
+  )
+  make(small_plan, session_info = FALSE)
+  expect_true("small_target" %in% cached())
+  expect_false("local_object_target" %in% cached())
+  expect_equal(readd(small_target), 4)
+  expect_false("local_object" %in% ls())
+})
