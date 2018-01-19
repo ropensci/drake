@@ -48,9 +48,11 @@
 #'     2 + sqrt(local_object)
 #'   }
 #' )
+#' \dontrun{
 #' make(small_plan)
 #' cached()
 #' readd(small_target)
+#' }
 #' # local_object only applies to the code chunk.
 #' ls() # your environment is protected (local_object not found)
 #' # For tighter control over commands, use the `list` argument.
