@@ -52,9 +52,9 @@
 #' make(small_plan)
 #' cached()
 #' readd(small_target)
-#' }
 #' # local_object only applies to the code chunk.
 #' ls() # your environment is protected (local_object not found)
+#' }
 #' # For tighter control over commands, use the `list` argument.
 #' drake_plan(list = c(x = "1 + 1", y = "sqrt(x)"))
 #' # This becomes important for file targets,
