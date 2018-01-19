@@ -29,4 +29,4 @@ x <- gsub(pattern = from, replacement = to, x = x)
 
 writeLines(text = x, con = index_file)
 from <- list.files(site_dir, all.files = TRUE, full.names = TRUE)
-file.copy(from = from, to = dest, overwrite = TRUE, recursive = TRUE)[
+file.copy(from = from, to = dest, overwrite = TRUE, recursive = TRUE)
