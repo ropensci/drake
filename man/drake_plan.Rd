@@ -66,6 +66,7 @@ small_plan <- drake_plan(
     2 + sqrt(local_object)
   }
 )
+small_plan
 \dontrun{
 make(small_plan)
 cached()

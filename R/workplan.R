@@ -48,6 +48,7 @@
 #'     2 + sqrt(local_object)
 #'   }
 #' )
+#' small_plan
 #' \dontrun{
 #' make(small_plan)
 #' cached()

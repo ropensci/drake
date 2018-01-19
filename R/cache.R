@@ -174,15 +174,15 @@ drake_fetch_rds <- function(path){
 #' \code{\link{make}()}
 #' @param ... other arguments to the cache constructor
 #' @examples
-#' test_with_dir("Quarantine side effects.", {
 #' \dontrun{
-#' clean(destroy = TRUE)
-#' unlink("not_hidden", recursive = TRUE)
+#' test_with_dir("Quarantine new_cache() side effects.", {
+#' clean(destroy = TRUE) # Should not be necessary.
+#' unlink("not_hidden", recursive = TRUE) # Should not be necessary.
 #' cache1 <- new_cache() # Creates a new hidden '.drake' folder.
 #' cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
 #' clean(destroy = TRUE, cache = cache2)
-#' }
 #' })
+#' }
 new_cache <- function(
   path = drake::default_cache_path(),
   verbose = 1,
