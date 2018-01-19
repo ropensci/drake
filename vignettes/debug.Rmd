@@ -320,7 +320,7 @@ After your project is at least somewhat built, you can inspect and read your res
 ```{r debriefdebug}
 make(my_plan, verbose = FALSE)
 
-drake_session(verbose = FALSE)
+# drake_session(verbose = FALSE) # Prints the sessionInfo() of the last make(). # nolint
 
 cached(verbose = FALSE)
 

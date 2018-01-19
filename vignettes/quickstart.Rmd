@@ -339,7 +339,7 @@ head(progress()) # See also in_progress()
 
 progress(large)
 
-drake_session() # of the last call to make()
+# drake_session() # sessionInfo() of the last make() # nolint
 ```
 
 The next time you run `make(my_plan)`, nothing will build because `drake` knows everything is already up to date.
