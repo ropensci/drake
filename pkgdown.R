@@ -6,7 +6,7 @@ if (!file.exists(dest)){
 site_dir <- tempdir()
 index_file <- file.path(site_dir, "index.html")
 
-tmp <- pkgdown::build_site(pkg = dir, path = site_dir)
+tmp <- pkgdown::build_site(pkg = dir, path = site_dir, preview = FALSE)
 x <- readLines(index_file)
 icon <- file.path(dir, "images", "icon.ico")
 tmp <- file.copy(from = icon, to = site_dir, overwrite = TRUE)
