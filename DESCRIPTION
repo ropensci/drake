@@ -36,6 +36,7 @@ Imports:
   digest,
   formatR,
   future,
+  future.apply,
   grDevices,
   igraph,
   knitr,
