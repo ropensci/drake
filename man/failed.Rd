@@ -34,7 +34,7 @@ for ordinary error messages printed to the console.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the project, build the targets.
 failed() # Should show that no targets failed.
 # Build a workflow plan doomed to fail:

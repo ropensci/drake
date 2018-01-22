@@ -33,7 +33,7 @@ in-memory caches such as \code{storr_environment()}.
 test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
 try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the project, build the targets.
 y <- this_cache() # Now, there is a cache.
 z <- this_cache(".drake") # Same as above.

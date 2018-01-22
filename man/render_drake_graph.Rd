@@ -62,7 +62,7 @@ call more often.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example for drake.
+load_basic_example() # Get the code with drake_example("basic").
 # Instead of jumpting right to vis_drake_graph(), get the data frames
 # of nodes, edges, and legend nodes.
 config <- drake_config(my_plan) # Internal configuration list

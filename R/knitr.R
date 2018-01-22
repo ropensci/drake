@@ -18,7 +18,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example of drake.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' knitr_deps("'report.Rmd'") # Files must be single-quoted.
 #' # Find the dependencies of the compiled output target, 'report.md'.
 #' knitr_deps("report.Rmd")

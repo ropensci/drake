@@ -1,11 +1,11 @@
-#' @title Load the basic example into your workspace
-#' (or environment of choice).
-#' @description This function also writes/overwrites
-#' the file, \code{report.Rmd}.
+#' @title Load the basic example from \code{drake_example("basic")}
+#' @description 
 #' For a thorough walkthrough of how to set up this example, see the
 #' quickstart vignette: \code{vignette('quickstart')}. Alternatively,
 #' call \code{\link{drake_example}('basic')} to generate an R script
 #' that builds up this example step by step.
+#' @details This function also writes/overwrites
+#' the file, \code{report.Rmd}.
 #' @export
 #' @return A \code{\link{drake_config}()} configuration list.
 #' @param envir The environment to load the example into.
@@ -25,7 +25,7 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' # Populate your workspace and write 'report.Rmd'.
-#' load_basic_example()
+#' load_basic_example() # Get the code: drake_example("basic")
 #' # Check the dependencies of an imported function.
 #' deps(reg1)
 #' # Check the dependencies of commands in the workflow plan.

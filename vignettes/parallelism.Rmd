@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
 
 ```{r hiddenhpcpreplotgraph, eval = TRUE, echo = FALSE, message = FALSE}
 clean()
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 config <- make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
 # Change a dependency.
 reg2 <- function(d) {

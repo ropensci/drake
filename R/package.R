@@ -10,7 +10,7 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' library(drake)
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Build everything.
 #' make(my_plan) # Nothing is done because everything is already up to date.
 #' reg2 = function(d){ # Change one of your functions.

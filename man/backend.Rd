@@ -22,7 +22,7 @@ Deprecated on 2017-11-12.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example
+load_basic_example() # Get the code with drake_example("basic").
 # Choose future's multicore parallel backend.
 library(future)
 future::plan(multicore) # Instead of backend(). Avoid drake::plan().

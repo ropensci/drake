@@ -29,7 +29,7 @@ only the first one (alphabetically) is written.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 # List the drake examples. Only some have template files.
 drake_examples()
 # Write the batchtools template file from the SLURM example.

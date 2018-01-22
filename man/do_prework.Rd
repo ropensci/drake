@@ -25,7 +25,7 @@ without too much fuss.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 # Create a master internal configuration list with prework.
 con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
 # Do the prework. Usually done at the beginning of `make()`,

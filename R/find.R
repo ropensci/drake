@@ -11,7 +11,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the target.
 #' # Find the file path of the project's cache.
 #' # Search up through parent directories if necessary.
@@ -45,7 +45,7 @@ find_cache <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the target.
 #' # Find the root directory of the current drake project.
 #' # Search up through parent directories if necessary.

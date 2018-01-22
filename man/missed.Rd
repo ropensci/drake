@@ -22,7 +22,7 @@ file system.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-config <- load_basic_example() # Load the canonical example.
+config <- load_basic_example() # Get the code with drake_example("basic").
 missed(config) # All the imported files and objects should be present.
 rm(reg1) # Remove an import dependency from you workspace.
 missed(config) # Should report that reg1 is missing.

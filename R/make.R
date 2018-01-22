@@ -278,7 +278,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' config <- drake_config(my_plan)
 #' outdated(config) # Which targets need to be (re)built?
 #' my_jobs = max_useful_jobs(config) # Depends on what is up to date.
@@ -397,7 +397,7 @@ make <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # The following lines are the same as make(my_plan)
 #' config <- drake_config(my_plan) # Create the internal config list.
 #' make_with_config(config = config) # Run the project, build the targets.
@@ -437,7 +437,7 @@ make_with_config <- function(config){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # Generate the master internal configuration list.
 #' con <- drake_config(my_plan)
 #' # Just cache the imports, do not build any targets.
@@ -471,7 +471,7 @@ imports_graph <- function(config){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # Generate the master internal configuration list.
 #' con <- drake_config(my_plan)
 #' # Just cache the imports, do not build any targets.

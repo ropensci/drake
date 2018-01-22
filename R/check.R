@@ -15,7 +15,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' check_plan(my_plan) # Check the workflow plan dataframe for obvious errors.
 #' unlink('report.Rmd') # Remove an import file mentioned in the plan.
 #' # If you un-suppress the warnings, check_plan()

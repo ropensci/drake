@@ -22,7 +22,7 @@ Similar to the first stage in the output of
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-config <- load_basic_example() # drake's canonical example
+config <- load_basic_example() # Get the code with drake_example("basic").
 next_stage(config = config)    # "small" and "large"
 })
 }

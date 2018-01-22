@@ -77,7 +77,7 @@ imported_only is \code{TRUE}).
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the projects, build the targets.
 loadd(small) # Load target 'small' into your workspace.
 small

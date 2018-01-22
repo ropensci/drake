@@ -32,7 +32,7 @@ Uses the cache.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the project, build the targets.
 read_drake_plan() # Retrieve the workflow plan data frame from the cache.
 })

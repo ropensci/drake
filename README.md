@@ -35,6 +35,7 @@ But `drake` automatically
 library(drake)
 
 # Drake comes with a basic example.
+# Get the code with drake_example("basic").
 load_basic_example(verbose = FALSE)
 
 # Your workspace starts with a bunch of "imports":

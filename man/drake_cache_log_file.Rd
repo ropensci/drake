@@ -52,7 +52,7 @@ is a step toward better data versioning tools.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 # Load drake's canonical example.
-load_basic_example()
+load_basic_example() # Get the code with drake_example()
 # Run the project and save a flat text log file.
 make(my_plan)
 drake_cache_log_file() # writes drake_cache.log

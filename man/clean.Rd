@@ -84,7 +84,7 @@ if you're sure you won't lose anything important.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the project, build the targets.
 # List objects in the cache, excluding R objects
 # imported from your workspace.

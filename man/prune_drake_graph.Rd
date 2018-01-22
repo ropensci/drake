@@ -32,7 +32,7 @@ remove the vertices after \code{to} from the graph.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 # Build the igraph object representing the workflow dependency network.
 # You could also use drake_config(my_plan)$graph
 graph <- build_drake_graph(my_plan)

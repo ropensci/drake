@@ -31,7 +31,7 @@ Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), `drake` records h
 
 ```{r timing_intro}
 library(drake)
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan, jobs = 2, verbose = FALSE) # See also max_useful_jobs(my_plan).
 
 build_times(digits = 8) # From the cache.

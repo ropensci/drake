@@ -52,7 +52,7 @@ will warn you and tell you which targets have missing times.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 config <- make(my_plan) # Run the project, build the targets.
 predict_runtime(config, digits = 4) # Everything is up to date.
 predict_runtime(config, digits = 4, from_scratch = TRUE) # 1 job

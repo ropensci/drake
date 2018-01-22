@@ -21,7 +21,7 @@ in your workflow plan data frame.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 # Generate the master internal configuration list.
 con <- drake_config(my_plan)
 # Just cache the imports, do not build any targets.

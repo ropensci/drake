@@ -54,7 +54,7 @@ Skipped objects are not listed.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the project, build the targets.
 # Watch the changing progress() as make() is running.
 progress() # List all the targets reached so far.

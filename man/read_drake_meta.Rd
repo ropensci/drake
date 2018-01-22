@@ -52,7 +52,7 @@ was missing just \emph{before} it was built.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Run the project, build the targets.
 # Retrieve the build decision metadata for one target.
 read_drake_meta(targets = "small")

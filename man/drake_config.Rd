@@ -107,7 +107,7 @@ and it could lead to false negative results from
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 # Construct the master internal configuration list.
 con <- drake_config(my_plan)
 # These functions are faster than otherwise

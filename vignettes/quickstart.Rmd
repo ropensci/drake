@@ -32,7 +32,7 @@ Inspect and run your project.
 
 ```{r quickstartquickstart, eval = FALSE}
 library(drake)
-load_basic_example()            # Also (over)writes report.Rmd.
+load_basic_example()            # Get the code with drake_example("basic").
 config <- drake_config(my_plan) # Master configuration list
 vis_drake_graph(config)         # Hover, click, drag, zoom, pan.
 make(my_plan)                   # Run the workflow.
@@ -135,7 +135,7 @@ list.files()
 Now that your workspace of imports is prepared, we can outline the real work step by step in a workflow plan data frame.
 
 ```{r previewmyplan}
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 my_plan
 ```
 

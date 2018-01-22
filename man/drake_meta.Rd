@@ -42,7 +42,7 @@ test_with_dir("Quarantine side effects.", {
 # This example is not really a user-side demonstration.
 # It just walks through a dive into the internals.
 # Populate your workspace and write 'report.Rmd'.
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 # Create the master internal configuration list.
 config <- drake_config(my_plan)
 # Optionally, compute metadata on 'small',

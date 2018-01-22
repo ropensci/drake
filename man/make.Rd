@@ -294,7 +294,7 @@ of the drake package.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 config <- drake_config(my_plan)
 outdated(config) # Which targets need to be (re)built?
 my_jobs = max_useful_jobs(config) # Depends on what is up to date.

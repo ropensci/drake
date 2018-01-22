@@ -49,7 +49,7 @@ to avoid collisions.
 default_long_hash_algo()
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load the canonical example for drake.
+load_basic_example() # Get the code with drake_example("basic").
 # Run the project and return the internal master configuration list.
 config <- make(my_plan)
 # Locate the storr cache.

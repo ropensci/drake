@@ -58,7 +58,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # Construct the master internal configuration list.
 #' con <- drake_config(my_plan)
 #' # These functions are faster than otherwise
@@ -184,7 +184,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # Create a master internal configuration list with prework.
 #' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
 #' # Do the prework. Usually done at the beginning of `make()`,
@@ -214,7 +214,7 @@ do_prework <- function(config, verbose_packages) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical drake example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # List the possible targets you could choose for the
 #' # `targets` argument to make(). You may choose any subset.
 #' possible_targets(my_plan)
@@ -236,7 +236,7 @@ possible_targets <- function(plan = drake_plan()) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example()
+#' load_basic_example() # Get the code with drake_example("basic").
 #' config <- drake_config(my_plan)
 #' store_drake_config(config = config)
 #' read_drake_config()

@@ -35,7 +35,7 @@ Initially, your entire project is out of date.
 
 ```{r graphoutdated}
 library(drake)
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 config <- drake_config(my_plan)
 vis_drake_graph(config) # Same as drake_graph()
 ```

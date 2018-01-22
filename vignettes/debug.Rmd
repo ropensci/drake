@@ -33,7 +33,7 @@ This vignette is a guide to debugging and testing `drake` projects. Please also 
 Most of `drake`'s functions rely on a central `config` list. An understanding of `config` will help you grasp the internals. `make()` and `drake_config()` both return the `config` list. Unlike `make()`, `drake_config()`'s return value is visible, and its only purpose is to construct your `config`.
 
 ```{r debugconfig}
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 config <- drake_config(my_plan)
 
 sort(names(config))
@@ -67,7 +67,7 @@ read_drake_plan()
 The workflow plan data frame is your responsibility, and it takes effort and care. Fortunately, functions in `drake` can help. You can check the plan for formatting issues, missing input files, etc. with the `check_plan()` function.
 
 ```{r checkdebug}
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 my_plan
 
 check_plan(my_plan) # No issues.
@@ -130,7 +130,7 @@ outdated(config)
 To find out why a target is out of date, you can load the [storr](https://github.com/richfitz/storr)-based cache and compare the appropriate hash keys to the output of `dependency_profile()`. To use `dependency_profile()`, be sure to supply the master configuration list as the `config` argument. The same is true for `drake_meta()`, another alternative.
 
 ```{r depprofiledebug}
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 config <- make(my_plan, verbose = FALSE)
 # Change a dependency.
 reg2 <- function(d) {
@@ -351,7 +351,7 @@ For more information on the cache, see the [storage vignette](https://github.com
 
 # Start tinkering.
 
-The `load_basic_example()` function loads the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic) right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only `make(my_plan)` is left to you.
+The `load_basic_example()` function loads the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic) from `drake_example("basic")` right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only `make(my_plan)` is left to you.
 
 `Drake` has [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). To see your choices, use
 

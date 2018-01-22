@@ -46,7 +46,7 @@ IMPORTANT: you must be in the root directory of your project.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_basic_example() # Get the code with drake_example("basic").
 config <- drake_config(my_plan) # Standard drake configuration list.
 # Look at the graph. The work proceeds column by column
 # in parallelizable stages. The maximum number of useful jobs

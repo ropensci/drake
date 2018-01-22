@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 ![](logo-vignettes.png)
 
-This tutorial is the abridged version of the [quickstart vignette](https://wlandau-lilly.github.io/drake/articles/quickstart.html). For more information, see the [documentation website](https://wlandau-lilly.github.io/drake/).
+This tutorial is the abridged version of the [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd). For more information, see the [documentation website](https://wlandau-lilly.github.io/drake/), which includes the [rendered online version of the quickstart vignette](https://wlandau-lilly.github.io/drake/articles/quickstart.html).
 
 ```{r precleangetstarteddrake, echo = FALSE}
 # Remove any previous work.
@@ -38,7 +38,7 @@ clean(destroy = TRUE)
 Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.
 
 ```{r drakeimportdrakermd}
-load_basic_example(verbose = FALSE)
+load_basic_example(verbose = FALSE) # Get the code with drake_example("basic").
 
 # Drake looks for data objects and functions in your R session environment
 ls()

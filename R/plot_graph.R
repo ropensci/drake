@@ -107,7 +107,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' config <- load_basic_example() # Load drake's canonical example.
+#' config <- load_basic_example() # Get the code with drake_example("basic").
 #' # Plot the network graph representation of the workflow.
 #' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
 #' config <- make(my_plan) # Run the project, build the targets.
@@ -212,7 +212,7 @@ drake_graph <- vis_drake_graph
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example for drake.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
 #' config <- drake_config(my_plan) # Internal configuration list

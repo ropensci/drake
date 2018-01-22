@@ -27,7 +27,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the targets.
 #' readd(reg1) # Return imported object 'reg1' from the cache.
 #' readd(small) # Return targets 'small' from the cache.
@@ -126,7 +126,7 @@ readd <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the projects, build the targets.
 #' loadd(small) # Load target 'small' into your workspace.
 #' small
@@ -266,7 +266,7 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the master internal configuration list from the cache.
 #' read_drake_config()
@@ -321,7 +321,7 @@ read_drake_config <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the targets.
 #' read_drake_plan() # Retrieve the workflow plan data frame from the cache.
 #' })
@@ -369,7 +369,7 @@ read_drake_plan <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the igraph network from the cache.
 #' g <- read_drake_graph()
@@ -431,7 +431,7 @@ read_drake_graph <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the build decision metadata for one target.
 #' read_drake_meta(targets = "small")

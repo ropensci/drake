@@ -40,7 +40,7 @@ When you run `make()`, `drake` stores your imports and output targets in a hidde
 
 ```{r basic_storage}
 library(drake)
-load_basic_example(verbose = FALSE)
+load_basic_example(verbose = FALSE) # Get the code with drake_example("basic").
 config <- make(my_plan, verbose = FALSE)
 ```
 
@@ -251,7 +251,7 @@ cache <- storr::storr_dbi(
   tbl_keys = "keys",
   con = mydb
 )
-load_basic_example()
+load_basic_example() # Get the code with drake_example("basic").
 unlink(".drake", recursive = TRUE)
 make(my_plan, cache = cache)
 ```

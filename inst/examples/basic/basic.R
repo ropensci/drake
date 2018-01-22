@@ -48,7 +48,7 @@ reg2 <- function(d){
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
 # call load_basic_example().
 
-my_datasets <- workplan(
+my_datasets <- drake_plan(
   small = simulate(5),
   large = simulate(50)
 )
@@ -56,7 +56,7 @@ my_datasets <- workplan(
 # Optionally, get replicates with expand(my_datasets,
 #   values = c("rep1", "rep2")).
 
-methods <- workplan(
+methods <- drake_plan(
   regression1 = reg1(dataset__),
   regression2 = reg2(dataset__)
 )
@@ -65,7 +65,7 @@ methods <- workplan(
 #   values = my_datasets$target)
 my_analyses <- plan_analyses(methods, datasets = my_datasets)
 
-summary_types <- workplan(
+summary_types <- drake_plan(
   # Perfect regression fits can happen.
   summ = suppressWarnings(summary(analysis__)),
   coef = coefficients(analysis__)
@@ -85,7 +85,7 @@ results <- plan_summaries(
 # Single quotes inside imported functions are ignored, so this mechanism
 # only works inside the workflow my_plan data frame.
 # WARNING: drake cannot track entire directories (folders).
-report <- workplan(
+report <- drake_plan(
   # As long as `knit()`, `knitr::knit()`, `render()`, or `rmarkdown::render()`
   # is visible in your workflow plan command,
   # drake will dig into the active code chunks of your `report.Rmd`
@@ -192,7 +192,7 @@ new_simulation <- function(n){
 
 # Any R expression can be a command
 # except for formulas and function definitions.
-additions <- workplan(
+additions <- drake_plan(
   new_data = new_simulation(36) + sqrt(10)
 )
 

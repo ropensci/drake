@@ -25,7 +25,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the basic example.
+#' load_basic_example() # Get the code with drake_example("basic").
 #' config <- drake_config(my_plan) # Get a configuration list.
 #' # Parallel stages for the next make().
 #' parallel_stages(config = config)
@@ -138,7 +138,7 @@ read_parallel_stages <- function(config){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' config <- load_basic_example() # drake's canonical example
+#' config <- load_basic_example() # Get the code with drake_example("basic").
 #' next_stage(config = config)    # "small" and "large"
 #' })
 #' }
