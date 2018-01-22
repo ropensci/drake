@@ -126,6 +126,8 @@ outdated(config)
 ## character(0)
 ```
 
+In other words, you have **tangible evidence** that someone else could re-create your output using your code and data. And if some targets are out of date, just run `make()` again restore reproducibility fast.
+
 # Aggressively scale up.
 
 Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic. See the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for all the details.
