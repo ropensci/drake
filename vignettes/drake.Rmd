@@ -35,6 +35,8 @@ This tutorial is the abridged version of the [quickstart vignette](https://githu
 clean(destroy = TRUE)
 ```
 
+# A taste of `drake`
+
 Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.
 
 ```{r drakeimportdrakermd}
@@ -125,3 +127,23 @@ make(my_plan)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
+
+# Built-in example projects
+
+`Drake` has [built-in example projects](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). You can generate the code files for an example with `drake_example()`, and you can list the available examples with `drake_examples()`. For instance, `drake_example("gsp")` generates the R script and R Markdown report for the built-in econometrics data analysis project. See below for the currently supported examples.
+
+## Learn how to use `drake`.
+
+- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
+- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+- `basic`: An old tutorial for walking though `drake`'s core functionality. The walkthrough is based on a small fabricated project that you can load with `load_basic_example()`. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
+
+## High-performance computing
+
+- `Docker-psock`: demonstrates how to deploy targets to a [Docker container](https://www.docker.com/what-container) using a specialized PSOCK cluster.
+- `Makefile-cluster`: uses [Makefiles](https://www.gnu.org/software/make/) to deploy targets to a generic cluster (configurable).
+- `sge`: uses `"future_lapply"` parallelism to deploy targets to a [Sun/Univa Grid Engine](https://supcom.hgc.jp/english/utili_info/manual/uge.html) cluster. Other clusters are similar. See the [batchtools/inst/templates](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools/inst/templates](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) for more example `*.tmpl` template files.
+- `slurm`: similar to `sge`, but for [SLURM](https://slurm.schedmd.com).
+- `torque`: similar to `sge`, but for [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/).
+
+Regarding the high-performance computing examples, there is no one-size-fits-all `*.tmpl` configuration file for any job scheduler, so we cannot guarantee that the above examples will work for you out of the box. To learn how to configure the files to suit your needs, you should make sure you understand how to use your job scheduler and [batchtools](https://github.com/mllg/batchtools).

@@ -207,6 +207,12 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Time logging](https://wlandau-lilly.github.io/drake/articles/timing.html)
 - [Storage](https://wlandau-lilly.github.io/drake/articles/storage.html)
 
+`Drake` also has built-in example projects with code files [available here](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. Here are the beginner-oriented examples to help you learn `drake`.
+
+- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
+- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+- `basic`: An old tutorial for walking though `drake`'s core functionality. The walkthrough is based on a small fabricated project that you can load with `load_basic_example()`. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
+
 For context and history, you can listen to a full-length interview about `drake` in [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
 
 # Help and troubleshooting

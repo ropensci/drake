@@ -1,9 +1,10 @@
 #' @title Load the basic example from \code{drake_example("basic")}
-#' @description 
-#' For a thorough walkthrough of how to set up this example, see the
-#' quickstart vignette: \code{vignette('quickstart')}. Alternatively,
-#' call \code{\link{drake_example}('basic')} to generate an R script
-#' that builds up this example step by step.
+#' @description Use \code{\link{drake_example}('basic')} to get the code
+#' for the basic example. The included R script is a detailed,
+#' heavily-commented walkthrough. The quickstart vignette at
+#' \url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd} # nolint
+#' and \url{https://wlandau-lilly.github.io/drake/articles/quickstart.html}
+#' also walks through the basic example.
 #' @details This function also writes/overwrites
 #' the file, \code{report.Rmd}.
 #' @export
