@@ -11,11 +11,16 @@
 ############
 #
 # Is there an association between the weight and the fuel efficiency of cars?
-# To find out, we use the mtcars dataset.
 #
 ####################
 # GENERAL APPROACH #
 ####################
+#
+# To answer the question, we use the `mtcars` dataset
+# from the `datasets` package.
+# The `mtcars` data originally came from the 1974 Motor Trend US magazine,
+# and it contains design and performance data on 32 models of automobile.
+# Type `?mtcars` for more information.
 #
 # `mtcars$mpg` is the fuel efficiency in miles per gallon,
 # and `mtcars$wt` is the weight in tons. `mpg` and `wt`
