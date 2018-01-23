@@ -128,14 +128,14 @@ outdated(config)
 ## character(0)
 ```
 
-With everything up to date, you have **tangible evidence** of reproducibility. `Drake` told you that the results **faithfully show** what the code is producing. You are much more confident that you have everything you need to verify the original author's claims. In fact, it may no longer be necessary to re-run the code and regenerate the final answers. But in case you want to be extra thorough, it is easy to begin from scratch and see for yourself.
+With everything up to date, you have **tangible evidence** of reproducibility. `Drake` told you that the results **faithfully show** what the code is producing. You are much more confident that you have everything you need to compute all the output yourself. Now, you can re-run the project with confidence.
 
 ```r
 clean()       # Remove the original author's results.
 make(my_plan) # Independently re-create the results from the code and input data.
 ```
 
-With even more evidence and more confidence, you can begin to independently replicate the code if there is a need.
+At this point, with even more evidence and even more confidence, you can take the time to independently replicate the whole analysis if necessary.
 
 # Aggressively scale up.
 
