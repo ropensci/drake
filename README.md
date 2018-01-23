@@ -113,7 +113,9 @@ make(my_plan)
 
 # Stay reproducible.
 
-The R community likes to emphasize reproducibility, which one could interpret to mean [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from. Ordinarily, you might have to rerun everything from scratch just to be sure. But with `drake`, you can just check that all your targets are up to date.
+The R community likes to emphasize reproducibility, which one could interpret to mean [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from.
+
+Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, noting that the datasets are available and the documentation is thorough. But could you re-create the results yourself without the help of the original author? With `drake`, this is easy to check.
 
 ```r
 make(my_plan)
@@ -126,7 +128,14 @@ outdated(config)
 ## character(0)
 ```
 
-In other words, you have **tangible evidence** that someone else could re-create your output using your code and data. And if some targets are out of date, just run `make()` again restore reproducibility fast.
+With everything up to date, you have **tangible evidence** of reproducibility. `Drake` told you that the results **faithfully show** what the code is producing. You are much more confident that you have everything you need to verify the original author's claims. In fact, it may no longer be necessary to re-run the code and regenerate the final answers. But in case you want to be extra thorough, it is easy to begin from scratch and see for yourself.
+
+```r
+clean()       # Remove the original author's results.
+make(my_plan) # Independently re-create the results from the code and input data.
+```
+
+With even more evidence and more confidence, you can begin to independently replicate the code if there is a need.
 
 # Aggressively scale up.
 
