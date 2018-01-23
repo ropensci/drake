@@ -84,8 +84,13 @@ summarize_results <- function(){
   "Summarize the results."
 }
 
+files <- c("data.csv", "get_data.R", "analyze_data.R", "summarize_data.R")
+for (file in files){
+  file.create(file)
+}
+
 my_plan <- drake_plan(
-  my_data = get_data(),
+  my_data = get_data('data.csv'), # nolint
   my_analysis = analyze_data(my_data),
   my_summaries = summarize_results(my_data, my_analysis)
 )
@@ -95,11 +100,6 @@ vis_drake_graph(
   config, file = "good-commands.html", selfcontained = TRUE,
   width = "100%", height = "500px"
 )
-
-files <- c("get_data.R", "analyze_data.R", "summarize_data.R")
-for (file in files){
-  file.create(file)
-}
 
 my_plan <- drake_plan(
   my_data = source('get_data.R'), # nolint
