@@ -97,7 +97,7 @@ my_plan <- drake_plan(
 )  
 config <- drake_config(my_plan)
 vis_drake_graph(
-  config, file = "bad_commands.html", selfcontained = TRUE,
+  config, file = "bad-commands.html", selfcontained = TRUE,
   width = "100%", height = "500px"
 )
 
