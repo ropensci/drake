@@ -40,19 +40,19 @@ source("my_functions.R")
 Then, set up your workflow plan data frame.
 
 ```{r storecode1}
-my_plan <- drake_plan(
+good_plan <- drake_plan(
   my_data = get_data(),
   my_analysis = analyze_data(my_data),
   my_summaries = summarize_results(my_data, my_analysis)
 )
 
-my_plan
+good_plan
 ```
 
 `Drake` knows that `my_analysis` depends on `my_data` because `my_data` is an argument to `analyze_data()`, which is part of the command for `my_analysis`.
 
 ```{r visgood, eval = FALSE}
-config <- drake_config(my_plan)
+config <- drake_config(good_plan)
 vis_drake_graph(config)
 ```
 
@@ -65,7 +65,7 @@ style="border: none; box-shadow: none">
 Now, you can call `make()` to build the targets.
 
 ```{r makestorecode, eval = FALSE}
-make(my_plan)
+make(good_plan)
 ```
 
 If your commands are really long, just put them in larger functions. `Drake` analyzes imported functions for non-file dependencies.
@@ -81,20 +81,20 @@ Some people are accustomed to dividing their work into R scripts and then callin
 If you migrate to `drake`, you may be tempted to set up a workflow plan like this.
 
 ```{r badsource}
-my_plan <- drake_plan(
+bad_plan <- drake_plan(
   my_data = source('get_data.R'),           # nolint
   my_analysis = source('analyze_data.R'),   # nolint
   my_summaries = source('summarize_data.R') # nolint
 )
 
-my_plan
+bad_plan
 ```
 
 
 But now, the dependency structure of your work is broken. Your R script files are dependencies, but since `my_data` is not mentioned in a function or command, `drake` does not know that `my_analysis` depends on it.
 
 ```{r visbad, eval = FALSE}
-config <- drake_config(my_plan)
+config <- drake_config(bad_plan)
 vis_drake_graph(config)
 ```
 
@@ -107,7 +107,7 @@ style="border: none; box-shadow: none">
 Dangers:
 
 1. `my_analysis` will not update when `my_data` changes.
-2. In `make(my_plan, jobs = 2)`, `drake` will try to build `my_data` and `my_analysis` at the same time even though `my_data` must be built first.
+2. In `make(bad_plan, jobs = 2)`, `drake` will try to build `my_data` and `my_analysis` at the same time even though `my_data` must be built first.
 
 In addition, this `source()`-based approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
 
