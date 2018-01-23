@@ -1,17 +1,24 @@
 ---
-title: "Example Report"
+title: "Final results report for the basic example"
 author: You
 output: html_document
 ---
 
-In the basic example,
-targets `small`, `coef_regression2_small`, and `large`
-are dependencies of the knitted output, `report.md`.
+This report serves as a final summary of the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic). If your work does not require an R Markdown report, you can do away with this file entirely.
+
+Our workflow originally began with two simulated datasets, `small` and `large`.
 
 ```{r example_chunk}
 library(drake)
 readd(small)
-readd(coef_regression2_small)
 loadd(large)
 head(large)
 ```
+
+Then, we proceeded to analyze and summarize the datasets. One of the summaries is a set of regression coefficients we obtained from analyzing the `small` dataset.
+
+```{r second_example_chunk}
+readd(coef_regression2_small)
+```
+
+Because of the calls to `readd()` and `loadd()`, `drake` knows that `small`, `large`, and `coef_regression2_small` are dependencies of this R Markdown report. This dependency relationship is what causes the report to be processed at the very end.

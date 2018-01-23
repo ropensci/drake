@@ -93,29 +93,15 @@ reg2 <- function(d){
 We want to summarize the final results in an R Markdown report, so we need the following `report.Rmd` source file.
 
 ```{r file}
-lines <- c(
-  "---",
-  "title: Example Report",
-  "author: You",
-  "output: html_document",
-  "---",
-  "",
-  "Look how I read outputs from the drake cache.",
-  "Drake notices that `small`, `coef_regression2_small`,",
-  "and `large` are dependencies of the",
-  "future compiled output report file target, `report.md`.",
-  "Just be sure that the workflow plan command for the target `'report.md'`",
-  "has an explicit call to `knit()`, something like `knit('report.Rmd')` or",
-  "`knitr::knit(input = 'report.Rmd', quiet = TRUE)`.",
-  "",
-  "```{r example_chunk}",
-  "library(drake)",
-  "readd(small)",
-  "readd(coef_regression2_small)",
-  "loadd(large)",
-  "head(large)",
-  "```")
-writeLines(lines, "report.Rmd")
+path <- file.path("examples", "basic", "report.Rmd")
+report_file <- system.file(path, package = "drake", mustWork = TRUE)
+file.copy(from = report_file, to = getwd(), overwrite = TRUE)
+```
+
+Here are the contents of the report. It will serve as a final summary of our work, and we will process it at the very end.
+
+```{r readlinesofreport}
+cat(readLines("report.Rmd"), sep = "\n")
 ```
 
 Now, all our imports are set up. When the real work begins, `drake` will import functions and data objects from your R session environment
