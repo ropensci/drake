@@ -99,7 +99,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/63d33ea8/images/bad-commands.html"
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/c07f8d2e/images/bad-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -109,7 +109,7 @@ Dangers:
 1. `my_analysis` will not update when `my_data` changes.
 2. In `make(my_plan, jobs = 2)`, `drake` will try to build `my_data` and `my_analysis` at the same time even though `my_data` must be built first.
 
-In addition, this approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
+In addition, this `source()`-based approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
 
 # R Markdown and knitr reports
 
