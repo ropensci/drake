@@ -1,6 +1,6 @@
 ---
 title: "Quickstart"
-subtitle: "quickstart example for drake"
+subtitle: "a walk through drake's basic example"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
