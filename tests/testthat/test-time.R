@@ -115,7 +115,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 4)
+  expect_equal(nrow(x), 5)
   expect_warning(
     x <- rate_limiting_times(
       config,
@@ -159,7 +159,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 6)
+  expect_equal(nrow(x), 7)
 
   config <- drake_config(plan = con$plan, envir = con$envir, verbose = FALSE)
   testrun(config)

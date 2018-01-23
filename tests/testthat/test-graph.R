@@ -73,8 +73,7 @@ test_with_dir("Supplied graph is pruned.", {
   graph <- build_drake_graph(my_plan)
   con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
-  include <- c("small", "simulate", "data.frame", "rpois",
-    "stats::rnorm", "large")
+  include <- c("small", "simulate", "data.frame", "sample.int", "large")
   exclude <- setdiff(my_plan$target, include)
   expect_true(all(include %in% vertices))
   expect_false(any(exclude %in% vertices))

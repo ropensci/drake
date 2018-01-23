@@ -33,14 +33,22 @@ non-back-compatible cache from a previous version of drake.}
 A \code{\link{drake_config}()} configuration list.
 }
 \description{
+Is there an association between
+the weight and the fuel efficiency of cars?
+To find out, we use the mtcars dataset.
+The mtcars dataset itself only has 32 rows,
+so we generate two larger bootstrapped datasets
+and then analyze them with regression models.
+Finally, we summarize the regression models
+to see if there is an association.
+}
+\details{
 Use \code{\link{drake_example}('basic')} to get the code
 for the basic example. The included R script is a detailed,
 heavily-commented walkthrough. The quickstart vignette at
 \url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd} # nolint
 and \url{https://wlandau-lilly.github.io/drake/articles/quickstart.html}
 also walks through the basic example.
-}
-\details{
 This function also writes/overwrites
 the file, \code{report.Rmd}.
 }
@@ -59,6 +67,10 @@ config <- drake_config(my_plan)
 vis_drake_graph(config)
 # Run the workflow to build all the targets in the plan.
 make(my_plan)
+# For the reg2() model on the small dataset,
+# the p-value is so small that there may be an association
+# between weight and fuel efficiency after all.
+readd(coef_regression2_small)
 # Remove the whole cache.
 clean(destroy = TRUE)
 # Clean up the imported file.

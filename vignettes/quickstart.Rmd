@@ -1,6 +1,6 @@
 ---
 title: "Quickstart"
-subtitle: "a walk through drake's basic example"
+subtitle: "A walk through drake's basic example"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -57,6 +57,16 @@ drake_examples()       # List the other examples.
 vignette("quickstart") # This vignette
 ```
 
+# The motivation of the basic example
+
+Is there an association between the weight and the fuel efficiency of cars? To find out, we use the mtcars dataset.
+
+```{r mtcars}
+head(mtcars)
+```
+
+Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.
+
 # Set up the basic example
 
 Before you run your project, you need to set up the workspace. In other words, you need to gather the "imports": functions, pre-loaded data objects, and saved files that you want to be available before the real work begins.
@@ -66,24 +76,31 @@ library(knitr) # Drake knows which packages you load.
 library(drake)
 ```
 
-We need a function to simulate datasets.
+We need a function to bootstrap larger datasets from `mtcars`.
 
 ```{r sim}
 simulate <- function(n){
+  # Pick a random set of cars to bootstrap from the mtcars data.
+  index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
+  data <- mtcars[index, ]
+
+  # x is the car's weight, and y is the fuel efficiency.
   data.frame(
-    x = stats::rnorm(n),
-    y = rpois(n, 1)
+    x = data$wt,
+    y = data$mpg
   )
 }
 ```
 
-We also need functions to analyze the datasets we simulate.
+We also need functions to apply the regression models we need for detecting associations.
 
 ```{r reg}
+# Is fuel efficiency linearly related to weight?
 reg1 <- function(d){
   lm(y ~ + x, data = d)
 }
 
+# Is fuel efficiency related to the SQUARE of the weight?
 reg2 <- function(d){
   d$x2 <- d$x ^ 2
   lm(y ~ x2, data = d)
@@ -98,7 +115,7 @@ report_file <- system.file(path, package = "drake", mustWork = TRUE)
 file.copy(from = report_file, to = getwd(), overwrite = TRUE)
 ```
 
-Here are the contents of the report. It will serve as a final summary of our work, and we will process it at the very end.
+Here are the contents of the report. It will serve as a final summary of our work, and we will process it at the very end. Admittedly, some of the text spoils the punch line.
 
 ```{r readlinesofreport}
 cat(readLines("report.Rmd"), sep = "\n")
@@ -165,12 +182,12 @@ check_plan(my_plan)
 
 # Generate the workflow plan
 
-The workflow plan data frame `my_plan` would be a pain to write by hand, so `drake` has functions to help you.
+The workflow plan data frame `my_plan` would be a pain to write by hand, so `drake` has functions to help you. Here are the commands to generate the bootstrapped datasets.
 
 ```{r datasets}
 my_datasets <- drake_plan(
-  small = simulate(5),
-  large = simulate(50))
+  small = simulate(48),
+  large = simulate(64))
 my_datasets
 ```
 
@@ -180,28 +197,29 @@ For multiple replicates:
 expand_plan(my_datasets, values = c("rep1", "rep2"))
 ```
 
-Each dataset is analyzed multiple ways.
+Here is a template for applying our regression models to our bootstrapped datasets.
 
 ```{r methods}
 methods <- drake_plan(
-  regression1 = reg1(dataset__), # nolint
-  regression2 = reg2(dataset__)) # nolint
+  regression1 = reg1(dataset__),
+  regression2 = reg2(dataset__))
 methods
 ```
 
-We evaluate the `dataset__` wildcard.
+We evaluate the `dataset__` wildcard to generate all the regression commands we need.
 
 ```{r analyses}
 my_analyses <- plan_analyses(methods, data = my_datasets)
 my_analyses
 ```
 
-Next, we summarize each analysis of each dataset using summary statistics and regression coefficients.
+Next, we summarize each analysis of each dataset. We calculate descriptive statistics on the residuals, and we collect the regression coefficients and their p-values.
 
 ```{r summaries}
 summary_types <- drake_plan(
-  summ = suppressWarnings(summary(analysis__)), # nolint
-  coef = coefficients(analysis__)) # nolint
+  summ = suppressWarnings(summary(analysis__$residuals)),
+  coef = suppressWarnings(summary(analysis__))$coefficients
+)
 summary_types
 
 results <- plan_summaries(summary_types, analyses = my_analyses,
@@ -266,6 +284,12 @@ Then just `make(my_plan)`.
 
 ```{r firstmakeforreal}
 make(my_plan)
+```
+
+For the `reg2()` model on the small dataset, the p-value on `x2` is so small that there may be an association between weight and fuel efficiency after all.
+
+```{r getmtcarsanswer}
+readd(coef_regression2_small)
 ```
 
 The non-file dependencies of your last target are already loaded in your workspace.
@@ -334,7 +358,7 @@ The next time you run `make(my_plan)`, nothing will build because `drake` knows 
 config <- make(my_plan) # Will use config later. See also drake_config().
 ```
 
-But if you change one of your functions, commands, or other dependencies, drake will update the affected targets. Suppose we change the quadratic term to a cubic term in `reg2()`.
+But if you change one of your functions, commands, or other dependencies, drake will update the affected targets. Suppose we change the quadratic term to a cubic term in `reg2()`. We might want to do this if we suspect a cubic relationship between tons and miles per gallon.
 
 ```{r changereg2invignette}
 reg2 <- function(d) {

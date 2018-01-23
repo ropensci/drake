@@ -2,11 +2,31 @@
 ### PURPOSE ###
 ###############
 #
-# Show how to use drake to reproducibly manage
-# and accelerate a data analysis workflow.
+# The purpose of this example is to walk through
+# drake's main functionality using a simple example
+# data analysis workflow.
 #
-# Enter vignette("quickstart") for a walkthrough
-# of this code.
+############
+# QUESTION #
+############
+#
+# Is there an association between the weight and the fuel efficiency of cars?
+# To find out, we use the mtcars dataset.
+#
+####################
+# GENERAL APPROACH #
+####################
+#
+# `mtcars$mpg` is the fuel efficiency in miles per gallon,
+# and `mtcars$wt` is the weight in tons. `mpg` and `wt`
+# will become `x` and `y`, respectively.
+#
+# Since we only have 32 rows in the mtcars dataset,
+# we will create bigger datasets by resampling
+# the rows with replacement (bootstrapping).
+# Then, we will apply a couple of regression models
+# and ask how well we can use a car's weight
+# to model its fuel efficiency.
 #
 ###################################
 ### LOAD PACKAGES AND FUNCTIONS ###
@@ -20,19 +40,27 @@ library(drake)
 
 clean() # remove any previous drake output
 
-# User-defined functions
+# The simulate() function bootstraps cars from the mtcars dataset.
 simulate <- function(n){
+  # Pick a random set of cars to bootstrap from the mtcars data.
+  index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
+  data <- mtcars[index, ]
+
+  # x is the car's weight, and y is the fuel efficiency.
   data.frame(
-    # Drake tracks calls like `pkg::fn()` (namespaced functions).
-    x = stats::rnorm(n),
-    y = rpois(n, 1)
+    x = data$wt,
+    y = data$mpg
   )
 }
 
+# Try a couple different regression models.
+
+# Is fuel efficiency linearly related to weight?
 reg1 <- function(d){
   lm(y ~ + x, data = d)
 }
 
+# Is fuel efficiency related to the SQUARE of the weight?
 reg2 <- function(d){
   d$x2 <- d$x ^ 2
   lm(y ~ x2, data = d)
@@ -48,29 +76,43 @@ reg2 <- function(d){
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
 # call load_basic_example().
 
+# We write drake commands to generate our two bootstrapped datasets.
 my_datasets <- drake_plan(
-  small = simulate(5),
-  large = simulate(50)
+  small = simulate(48),
+  large = simulate(64)
 )
 
 # Optionally, get replicates with expand(my_datasets,
 #   values = c("rep1", "rep2")).
+# Bootstrapping involves randomness, so this is good practice
+# in real life. But this is a miniaturized workflow,
+# so we will not use replicates here.
 
+# This is a wildcard template for generating more commands.
+# These new commands will apply our regression models
+# to each of the datasets in turn.
 methods <- drake_plan(
   regression1 = reg1(dataset__),
   regression2 = reg2(dataset__)
 )
 
-# same as evaluate(methods, wildcard = "..dataset..",
+# Here, we use the template to expand the `methods` template
+# over the datasets we will analyze.
+# Same as evaluate(methods, wildcard = "..dataset..",
 #   values = my_datasets$target)
 my_analyses <- plan_analyses(methods, datasets = my_datasets)
 
+# Now, we summarize each regression fit of each bootstrapped dataset.
+# We will look at these summaries to figure out if fuel efficiency
+# and weight are related somehow.
+# Again, this is a template. Later we will expand it over the
+# available regression models.
 summary_types <- drake_plan(
-  # Perfect regression fits can happen.
-  summ = suppressWarnings(summary(analysis__)),
-  coef = coefficients(analysis__)
+  summ = suppressWarnings(summary(analysis__$residuals)), # Summarize the RESIDUALS of the model fit. # nolint
+  coef = suppressWarnings(summary(analysis__))$coefficients # Coefficinents with p-values # nolint
 )
 
+# Here, we expand the commands to summarize each analysis in turn.
 # summaries() also uses evaluate(): once with expand = TRUE,
 #   once with expand = FALSE
 results <- plan_summaries(
@@ -108,7 +150,8 @@ my_plan <- rbind(report, my_datasets, my_analyses, results)
 #####################################
 
 # Graph the dependency structure of your workflow
-# vis_drake_graph(my_plan) # plots an interactive web app via visNetwork. #nolint optional
+# config <- drake_config(my_plan) # nolint
+# vis_drake_graph(config) # plots an interactive web app via visNetwork. #nolint optional
 workflow_graph <- build_drake_graph(my_plan) # igraph object
 
 # Check for circularities, missing input files, etc.
@@ -157,19 +200,21 @@ outdated(config) # Everything is up to date
 # vis_drake_graph(my_plan) # The red nodes from before turned green. #nolint: optional
 # session() # get the sessionInfo() of the last call to make() #nolint: optional
 
-# see also: loadd(), cached(), imported(), and built()
-readd(coef_regression2_large) # Read target from the cache.
+# Since the p-value on x2 is so low,
+# we can say that 
+readd(coef_regression2_large) # see also: loadd(), cached(), imported(), and built() # nolint
 
 # Everything is up to date.
 config <- make(my_plan)
 
-# Change to a cubic term and rerun.
+# What if we want to explore a cubic term?
+# What if we want to know if fuel efficiency is associated with weight cubed?
 reg2 <- function(d){
   d$x3 <- d$x ^ 3
   lm(y ~ x3, data = d)
 }
 outdated(config) # The targets depending on reg2() are now out of date...
-# vis_drake_graph(my_plan) # ...which is indicated in the graph. #nolint: optional
+# vis_drake_graph(config) # ...which is indicated in the graph. #nolint: optional
 
 make(my_plan) # Drake only runs targets that depend on reg2().
 
@@ -186,6 +231,10 @@ outdated(config) # Everything is still up to date.
 #########################################
 
 # Just write more functions and add rows to your workflow plan.
+# This function represents a null case.
+# In other words, what would our methods discover if
+# there were really no true relationship between weight and fuel efficiency?
+# Our methods should detect no relationship.
 new_simulation <- function(n){
   data.frame(x = rnorm(n), y = rnorm(n))
 }
