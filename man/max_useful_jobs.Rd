@@ -2,7 +2,7 @@
 % Please edit documentation in R/max_useful_jobs.R
 \name{max_useful_jobs}
 \alias{max_useful_jobs}
-\title{Determine the maximum number of useful jobs in the next call
+\title{Suggest an upper bound on the jobs in the next call
 to \code{make(..., jobs = YOUR_CHOICE)}.}
 \usage{
 max_useful_jobs(config, imports = c("files", "all", "none"),
@@ -36,9 +36,13 @@ A numeric scalar, the maximum number of useful jobs for
 \code{\link{make}(..., jobs = ...)}.
 }
 \description{
+The best number of \code{jobs}
+should be somewhere between 1 and \code{max_useful_jobs(...)}.
 Any additional jobs more than \code{max_useful_jobs(...)}
 should be superfluous, and could even slow you down for
 \code{make(..., parallelism = 'parLapply')}.
+}
+\details{
 Set the \code{imports} argument to change your assumptions about
 how fast objects/files are imported.
 IMPORTANT: you must be in the root directory of your project.

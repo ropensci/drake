@@ -38,8 +38,9 @@ A \code{lubridate} \code{Duration} object
 with the predicted runtime of the next \code{\link{make}()}.
 }
 \description{
-This function simply sums the elapsed build times.
-from \code{\link{rate_limiting_times}()}.
+This function simply sums the elapsed build times
+from \code{\link{rate_limiting_times}()}, and this
+feature is experimental.
 To date, the accuracy/precision of the results
 has not yet been confirmed by performance studies.
 }

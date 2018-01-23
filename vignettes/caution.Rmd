@@ -364,6 +364,21 @@ In your workflow plan, you can use single quotes to assert that some targets/imp
 
 # High-performance computing
 
+## The practical utility of parallel computing
+
+`Drake` claims that it can
+
+1. Build and cache your targets in parallel (in stages).
+2. Build and cache your targets in the correct order, finishing dependencies before starting targets that depend on them.
+3. Deploy your targets to the parallel backend of your choice.
+
+However, the practical efficiency of the parallel computing functionality remains to be verified rigorously. Serious performance studies will be part of future work that has not yet been conducted at the time of writing. In addition, each project has its own best parallel computing set up, and the user needs to optimize it on a case-by-case basis. Some general considerations include the following.
+
+- The high overhead and high scalability of distributed computing versus the low overhead and low scalability of local multicore computing.
+- The high memory usage of local multicore computing, especially `"mclapply"` parallelism, as opposed to distributed computing, which can spread the memory demands over the available nodes on a cluster.
+- The marginal gains of increasing the number of jobs indefinitely, especially in the case of local multicore computing if the number of cores is low.
+
+
 ## Maximum number of simultaneous jobs
 
 Be mindful of the maximum number of simultaneous parallel jobs you deploy. At best, too many jobs is poor etiquette on a system with many users and limited resources. At worst, too many jobs will crash a system. The `jobs` argument to `make()` sets the maximum number of simultaneous jobs in most cases, but not all.

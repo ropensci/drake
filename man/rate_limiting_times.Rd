@@ -40,6 +40,10 @@ rate-limiting targets in each parallelizable stage.
 This function produces a conservative
 estimate for \code{\link{predict_runtime}()}
 for when parallel computing is used in \code{\link{make}()}.
+This feature is experimental.
+The accuracy, precision, and utility of these supposedly
+rate-limiting times has not been confirmed by rigorous
+performance studies.
 }
 \details{
 The \code{stage} column of the returned data frame
