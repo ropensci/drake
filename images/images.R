@@ -72,7 +72,17 @@ vis_drake_graph(
 
 
 # For the best practices vignette
-get_data <- analyze_data <- summarize_results <- function(){}
+get_data <- function(){
+  "Get the data."
+}
+
+analyze_data <- function(){
+  "Analyze the data."
+}
+
+summarize_results <- function(){
+  "Summarize the results."
+}
 
 my_plan <- drake_plan(
   my_data = get_data(),
@@ -90,12 +100,12 @@ files <- c("get_data.R", "analyze_data.R", "summarize_data.R")
 for (file in files){
   file.create(file)
 }
-  
+
 my_plan <- drake_plan(
-  my_data = source('get_data.R'),
-  my_analysis = source('analyze_data.R'),
-  my_summaries = source('summarize_data.R')
-)  
+  my_data = source('get_data.R'), # nolint
+  my_analysis = source('analyze_data.R'), # nolint
+  my_summaries = source('summarize_data.R') # nolint
+)
 config <- drake_config(my_plan)
 vis_drake_graph(
   main = "Bad workflow plan",
