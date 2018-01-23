@@ -1,11 +1,19 @@
 #' @title Load the basic example from \code{drake_example("basic")}
-#' @description Use \code{\link{drake_example}('basic')} to get the code
+#' @description Is there an association between
+#' the weight and the fuel efficiency of cars?
+#' To find out, we use the mtcars dataset.
+#' The mtcars dataset itself only has 32 rows,
+#' so we generate two larger bootstrapped datasets
+#' and then analyze them with regression models.
+#' Finally, we summarize the regression models
+#' to see if there is an association.
+#' @details Use \code{\link{drake_example}('basic')} to get the code
 #' for the basic example. The included R script is a detailed,
 #' heavily-commented walkthrough. The quickstart vignette at
 #' \url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd} # nolint
 #' and \url{https://wlandau-lilly.github.io/drake/articles/quickstart.html}
 #' also walks through the basic example.
-#' @details This function also writes/overwrites
+#' This function also writes/overwrites
 #' the file, \code{report.Rmd}.
 #' @export
 #' @return A \code{\link{drake_config}()} configuration list.
@@ -37,6 +45,10 @@
 #' vis_drake_graph(config)
 #' # Run the workflow to build all the targets in the plan.
 #' make(my_plan)
+#' # For the reg2() model on the small dataset,
+#' # the p-value is so small that there may be an association
+#' # between weight and fuel efficiency after all.
+#' readd(coef_regression2_small)
 #' # Remove the whole cache.
 #' clean(destroy = TRUE)
 #' # Clean up the imported file.
@@ -61,16 +73,27 @@ load_basic_example <- function(
 
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   eval(parse(text = "base::require(knitr, quietly = TRUE)"))
+  mtcars <- get("mtcars")
 
-  # User-defined functions
-  envir$simulate <- function(n) {
-    data.frame(x = stats::rnorm(n), y = rpois(n, 1))
+  # Bootstrapped datasets from mtcars.
+  envir$simulate <- function(n){
+    # Pick a random set of cars to bootstrap from the mtcars data.
+    index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
+    data <- mtcars[index, ]
+
+    # x is the car's weight, and y is the fuel efficiency.
+    data.frame(
+      x = data$wt,
+      y = data$mpg
+    )
   }
 
+  # Is there a linear relationship between weight and fuel efficiency?
   envir$reg1 <- function(d) {
     lm(y ~ +x, data = d)
   }
 
+  # Is there a QUADRATIC relationship between weight and fuel efficiency?
   envir$reg2 <- function(d) {
     d$x2 <- d$x ^ 2
     lm(y ~ x2, data = d)
@@ -79,23 +102,25 @@ load_basic_example <- function(
   # construct workflow plan
 
   # remove 'undefinded globals' errors in R CMD check
-  large <- small <-
+  dataset__ <- analysis__ <- large <- small <-
     simulate <- knit <- my_knit <- report_dependencies <-
     reg1 <- reg2 <- coef_regression2_small <- NULL
 
-  datasets <- drake_plan(small = simulate(5), large = simulate(50))
+  datasets <- drake_plan(small = simulate(48), large = simulate(64))
 
-  methods <- drake_plan(list = c(
-    regression1 = "reg1(dataset__)",
-    regression2 = "reg2(dataset__)"))
+  methods <- drake_plan(
+    regression1 = reg1(dataset__),
+    regression2 = reg2(dataset__)
+  )
 
   # Same as evaluate_plan(methods, wildcard = 'dataset__',
   #   values = datasets$output).
   analyses <- plan_analyses(methods, datasets = datasets)
 
-  summary_types <- drake_plan(list = c(
-    summ = "suppressWarnings(summary(analysis__))",
-    coef = "coefficients(analysis__)"))
+  summary_types <- drake_plan(
+    summ = suppressWarnings(summary(analysis__$residuals)), # Summarize the RESIDUALS of the model fit. # nolint
+    coef = suppressWarnings(summary(analysis__))$coefficients # Coefficinents with p-values # nolint
+  )
 
   # plan_summaries() also uses evaluate_plan(): once with expand = TRUE,
   # once with expand = FALSE

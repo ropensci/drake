@@ -4,7 +4,7 @@ These are the `drake` examples managed by functions `drake_example()` and `drake
 
 # Learn how to use `drake`.
 
-- `basic`: An old tutorial for walking though `drake`'s core functionality. The walkthrough is based on a small fabricated project that you can load with `load_basic_example()`. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
+- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
 

@@ -35,7 +35,17 @@ This tutorial is the abridged version of the [quickstart vignette](https://githu
 clean(destroy = TRUE)
 ```
 
-# A taste of `drake`
+# The motivation of the basic example
+
+Is there an association between the weight and the fuel efficiency of cars? To find out, we use the mtcars dataset.
+
+```{r mtcars}
+head(mtcars)
+```
+
+Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.
+
+# A taste of `drake`'s basic example
 
 Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.
 
@@ -106,7 +116,13 @@ The `make()` function traverses the network and builds the targets that require 
 make(my_plan)
 ```
 
-The project is now up to date, so the next `make()` does nothing.
+For the `reg2()` model on the small dataset, the p-value on `x2` is so small that there may be an association between weight and fuel efficiency after all.
+
+```{r getmtcarsanswer}
+readd(coef_regression2_small)
+```
+
+The project is currently up to date, so the next `make()` does nothing.
 
 ```{r makeuptodatedrake}
 make(my_plan)
@@ -134,9 +150,10 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 ## Learn how to use `drake`.
 
-- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
-- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
-- `basic`: An old tutorial for walking though `drake`'s core functionality. The walkthrough is based on a small fabricated project that you can load with `load_basic_example()`. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
+- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
+- `gsp`: A more concrete, practical example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
+- `packages`: A concrete, practical example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+
 
 ## High-performance computing
 

@@ -27,7 +27,7 @@ Then, we fit a couple regression models to the `small` and `large` to try to det
 readd(coef_regression2_small)
 ```
 
-Since the p-value on `x2` is so small, it appears that there *is* an association between weight and fuel efficiency.
+Since the p-value on `x2` is so small, there may be an association between weight and fuel efficiency after all.
 
 # A note on knitr reports in drake projects.
 
