@@ -56,6 +56,7 @@
 - Add an optional `namespace` argument to `loadd()` and `readd()`. You can now load and read from non-default `storr` namespaces.
 - Add `drake_cache_log()`, `drake_cache_log_file()`, and `make(..., cache_log_file = TRUE)` as options to track changes to targets/imports in the drake cache.
 - Detect knitr code chunk dependencies in response to commands with `rmarkdown::render()`, not just `knit()`.
+- Add a new general best practices vignette to clear up misconceptions about how to use `drake` properly.
 
 # Version 4.4.0
 

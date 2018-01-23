@@ -42,6 +42,10 @@ Versions of `drake` after 4.4.0 have different caching internals. That means if 
 
 # Workflow plans
 
+## Externalizing commands in R script files
+
+It is common practice to divide the work of a project into multiple R files, but if you do this, you will not get the most out of `drake`. Please see the [best practices vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/best_practices.Rmd) for more details.
+
 ## Beware unparsable symbols in your workflow plan.
 
 In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check_plan(my_plan)` to screen for illegal symbols and other problem areas.

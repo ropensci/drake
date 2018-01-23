@@ -1,0 +1,143 @@
+---
+title: "General best practices for drake projects"
+author: "William Michael Landau"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{best_practices}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+![](logo-vignettes.png)
+
+```{r cautionstart, echo = F}
+suppressMessages(suppressWarnings(library(drake)))
+suppressMessages(suppressWarnings(library(magrittr)))
+clean(destroy = TRUE, verbose = FALSE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  error = TRUE,
+  warning = TRUE
+)
+```
+
+This vignette describes general best practices for creating, configuring, and running `drake` projects.
+
+# Where to put your code
+
+It is best to write your code as a bunch of functions. You can save those functions in R scripts and then `source()` them before doing anything else.
+
+```{r sourcefunctions, eval = FALSE}
+# Load functions get_data(), analyze_data, and summarize_results()
+source("my_functions.R")
+```
+
+Then, set up your workflow plan data frame.
+
+```{r storecode1}
+my_plan <- drake_plan(
+  my_data = get_data(),
+  my_analysis = analyze_data(my_data),
+  my_summaries = summarize_results(my_data, my_analysis)
+)
+
+my_plan
+```
+
+`Drake` knows that `my_analysis` depends on `my_data` because `my_data` is an argument to `analyze_data()`, which is part of the command for `my_analysis`.
+
+```{r visbad, eval = FALSE}
+config <- drake_config(my_plan)
+vis_drake_graph(config)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/bd8a086f/images/good-commands.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+Now, you can call `make()` to build the targets.
+
+```{r makestorecode, eval = FALSE}
+make(my_plan)
+```
+
+If your commands are really long, just put them in larger functions. `Drake` analyzes imported functions for non-file dependencies.
+
+## Remember: your commands are code chunks, not R scripts
+
+Some people are accustomed to dividing their work into R scripts and then calling `source()` to run each step of the analysis. For example you might have the following files.
+
+- `get_data.R`
+- `analyze_data.R`
+- `summarize_results.R`
+
+If you migrate to `drake`, you may be tempted to set up a workflow plan like this.
+
+```{r badsource}
+my_plan <- drake_plan(
+  my_data = source('get_data.R'),           # nolint
+  my_analysis = source('analyze_data.R'),   # nolint
+  my_summaries = source('summarize_data.R') # nolint
+)
+
+my_plan
+```
+
+
+But now, the dependency structure of your work is broken. Your R script files are dependencies, but since `my_data` is not mentioned in a function or command, `drake` does not know that `my_analysis` depends on it.
+
+```{r visbad, eval = FALSE}
+config <- drake_config(my_plan)
+vis_drake_graph(config)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/bd8a086f/images/bad-commands.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+Dangers:
+
+1. `my_analysis` will not update when `my_data` changes.
+2. In `make(my_plan, jobs = 2)`, `drake` will try to build `my_data` and `my_analysis` at the same time even though `my_data` must be built first.
+
+In addition, this approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
+
+# R Markdown and knitr reports
+
+`Drake` makes special exceptions for R Markdown reports and other [knitr](https://github.com/yihui/knitr) reports such as `*.Rmd` and `*.Rnw` files. Not every `drake` project needs them, but it is good practice to use them to summarize the final results of a project once all the other targets have already been built. The basic example, for instance, has an R Markdown report. `report.Rmd` is knitted to build `report.md`, which summarizes the final results.
+
+```{r revisitbasic}
+# Load all the functions and the workflow plan data frame, my_plan.
+load_basic_example() # Get the code with drake_example("basic").
+```
+
+To see where `report.md` will be built, look to the right of the workflow graph.
+
+```{r revisitbasicgraph, eval = FALSE}
+config <- drake_config(my_plan)
+vis_drake_graph(config)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/wlandau-lilly/drake/bd8a086f/images/outdated.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/basic/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/basic/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the workflow graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/basic/report.Rmd) to produce the target file `report.md`.
+
+[knitr](https://github.com/yihui/knitr) reports are the only kind of file that `drake` analyzes for dependencies. It does not give R scripts the same special treatment.
+
+```{r rmfiles_caution, echo = FALSE}
+clean(destroy = TRUE, verbose = FALSE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```

@@ -18,6 +18,8 @@ navbar:
       href: articles/example-gsp.html
     - text: Quickstart
       href: articles/quickstart.html
+    - text: "General best practices for drake projects"
+      href: articles/best-practices.html
     - text: Debugging and testing drake projects
       href: articles/debug.html      
     - text: Graphs with drake

@@ -70,5 +70,40 @@ vis_drake_graph(
   width = "100%", height = "500px"
 )
 
+
+# For the best practices vignette
+get_data <- analyze_data <- summarize_results <- function(){}
+
+my_plan <- drake_plan(
+  my_data = get_data(),
+  my_analysis = analyze_data(my_data),
+  my_summaries = summarize_results(my_data, my_analysis)
+)
+config <- drake_config(my_plan)
+vis_drake_graph(
+  config, file = "good-commands.html", selfcontained = TRUE,
+  width = "100%", height = "500px"
+)
+
+files <- c("get_data.R", "analyze_data.R", "summarize_data.R")
+for (file in files){
+  file.create(file)
+}
+  
+my_plan <- drake_plan(
+  my_data = source('get_data.R'),
+  my_analysis = source('analyze_data.R'),
+  my_summaries = source('summarize_data.R')
+)  
+config <- drake_config(my_plan)
+vis_drake_graph(
+  config, file = "bad_commands.html", selfcontained = TRUE,
+  width = "100%", height = "500px"
+)
+
+for (file in files){
+  file.remove(file)
+}
+
 clean(destroy = TRUE)
 unlink(c("figure", "report.Rmd"), recursive = TRUE)
