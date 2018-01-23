@@ -4,21 +4,31 @@ author: You
 output: html_document
 ---
 
-This report serves as a final summary of the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic). If your work does not require an R Markdown report, you can do away with this file entirely.
+# The weight and fuel efficiency of cars
 
-Our workflow originally began with two simulated datasets, `small` and `large`.
+Is there an association between the weight and the fuel efficiency of cars? To find out, we use the mtcars dataset.
+
+```{r mtcars}
+head(mtcars)
+```
+
+Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generated two larger bootstrapped datasets. We called them `small` and `large`.
 
 ```{r example_chunk}
 library(drake)
-readd(small)
-loadd(large)
+head(readd(small)) # 48 rows
+loadd(large)       # 64 rows
 head(large)
 ```
 
-Then, we proceeded to analyze and summarize the datasets. One of the summaries is a set of regression coefficients we obtained from analyzing the `small` dataset.
+Then, we fit a couple regression models to the `small` and `large` to try to detect an association between `wt` and `mpg`. Here are the coefficients and p-values from one of the model fits.
 
 ```{r second_example_chunk}
 readd(coef_regression2_small)
 ```
+
+Since the p-value on `x2` is so small, it appears that there *is* an association between weight and fuel efficiency.
+
+# A note on knitr reports in drake projects.
 
 Because of the calls to `readd()` and `loadd()`, `drake` knows that `small`, `large`, and `coef_regression2_small` are dependencies of this R Markdown report. This dependency relationship is what causes the report to be processed at the very end.

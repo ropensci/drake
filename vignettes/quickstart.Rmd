@@ -1,6 +1,6 @@
 ---
 title: "Quickstart"
-subtitle: "a walk through drake's basic example"
+subtitle: "A walk through drake's basic example"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -56,6 +56,10 @@ drake_example("basic") # Write the code files.
 drake_examples()       # List the other examples.
 vignette("quickstart") # This vignette
 ```
+
+# The motivation of the basic example
+
+
 
 # Set up the basic example
 
