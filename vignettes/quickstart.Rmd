@@ -61,7 +61,7 @@ vignette("quickstart") # This vignette
 
 Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
 
-```{r mtcars}
+```{r mtcarsquickstart}
 # ?mtcars # more info
 head(mtcars)
 ```
