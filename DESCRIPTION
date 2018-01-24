@@ -26,6 +26,12 @@ Authors@R: c(
     role = "ctb"
   ),
   person(
+    family = "Slaughter",
+    given = "Peter",
+    email = "slaughter@nceas.ucsb.edu",
+    role = "rev"
+  ),
+  person(
     family = "Eli Lilly and Company",
     role = "cph"
   ))
