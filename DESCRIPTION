@@ -1,6 +1,11 @@
 Package: drake
 Title: Data Frames in R for Make
+Description: An R-focused pipeline toolkit
+  for reproducible code and high-performance computing.
 Version: 4.4.1.9002
+License: GPL-3
+URL: https://github.com/wlandau-lilly/drake
+BugReports: https://github.com/wlandau-lilly/drake/issues
 Authors@R: c(
   person(
     family = "Landau",
@@ -24,9 +29,6 @@ Authors@R: c(
     family = "Eli Lilly and Company",
     role = "cph"
   ))
-Description: An R-focused pipeline toolkit
-  for reproducible code and high-performance computing.
-License: GPL-3
 Depends:
   R (>= 3.2.0)
 Imports:
@@ -67,7 +69,4 @@ Suggests:
   rmarkdown,
   tibble
 VignetteBuilder: knitr
-URL: https://github.com/wlandau-lilly/drake
-BugReports: https://github.com/wlandau-lilly/drake/issues
-Language: en-US
 RoxygenNote: 6.0.1
