@@ -29,6 +29,14 @@ cache_path <- function(cache = NULL){
   }
 }
 
+force_cache_path <- function(cache = NULL){
+  path <- cache_path(cache)
+  if (is.null(path)){
+    path <- default_cache_path()
+  }
+  path
+}
+
 #' @title Get the drake cache, optionally searching up the file system.
 #' @description Only works if the cache
 #' is in a folder called \code{.drake/}.

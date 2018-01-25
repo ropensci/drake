@@ -140,10 +140,7 @@ drake_config <- function(
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
-  cache_path <- cache_path(cache)
-  if (is.null(cache_path)){
-    cache_path <- default_cache_path()
-  }
+  cache_path <- force_cache_path(cache)
   list(
     plan = plan, targets = targets, envir = envir,
     cache = cache, cache_path = cache_path, fetch_cache = fetch_cache,

@@ -299,6 +299,9 @@ read_drake_config <- function(
   if (is.null(out$envir)){
     out$envir <- envir
   }
+  # The file system of the original config$cache could have moved.
+  out$cache <- cache
+  cache_path <- force_cache_path(cache)
   out
 }
 
