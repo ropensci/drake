@@ -115,7 +115,9 @@ make(my_plan)
 
 The R community likes to emphasize reproducibility, which one could interpret to mean [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from.
 
-Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, noting that the datasets are available and the documentation is thorough. But could you re-create the results yourself without the help of the original author? With `drake`, this is easy to check.
+## Concrete evidence of re-creatability
+
+Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, noting that the datasets are available and the documentation is thorough. But could you re-create the results yourself without the help of the original author? With `drake`, it is quick and easy to check.
 
 ```r
 make(my_plan)
@@ -128,14 +130,20 @@ outdated(config)
 ## character(0)
 ```
 
-With everything up to date, you have **tangible evidence** of reproducibility. `Drake` told you that the results **faithfully show** what the code is producing. You are much more confident that you have everything you need to compute all the output yourself. Now, you can re-run the project with confidence.
+With everything up to date, you have **tangible evidence** of reproducibility. The results are re-creatable from the starting materials. They **faithfully show** what the code is producing. You have everything you need to reproduce all the output all by yourself.
+
+## Ease of re-creatability
+
+When it comes time in your review to actually re-run the project, you have much more confidence. Starting over from scratch is trivially easy.
 
 ```r
 clean()       # Remove the original author's results.
 make(my_plan) # Independently re-create the results from the code and input data.
 ```
 
-At this point, with even more evidence and even more confidence, you can take the time to independently replicate the whole analysis if necessary.
+## Blinded and unbiased independent replication
+
+At this point, with even more evidence and even more confidence, you can take the time to independently replicate the original code base if necessary. And since you only needed `make()` up until now, you did not need to peek at any revealing pieces of the author's code.You can stay blinded and unbiased as you reimplement the original author's methodology.
 
 # Aggressively scale up.
 
