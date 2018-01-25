@@ -115,7 +115,7 @@ make(my_plan)
 
 The R community emphasizes reproducibility. [Scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control) are traditional themes. But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from.
 
-## Evidence of re-creatability
+## Evidence
 
 Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results without the help of the original author? With `drake`, it is quick and easy to find out.
 
@@ -132,7 +132,7 @@ outdated(config)
 
 With everything up to date, you have **tangible evidence** of reproducibility. You know the results are re-creatable from the starting materials. They **faithfully show** what the code is producing. You have everything you need to reproduce all the output by yourself.
 
-## Ease of re-creatability
+## Ease
 
 When it comes time to actually rerun the entire project, you have much more confidence. Starting over from scratch is trivially easy.
 
@@ -141,7 +141,7 @@ clean()       # Remove the original author's results.
 make(my_plan) # Independently re-create the results from the code and input data.
 ```
 
-## Blinded and unbiased independent replication
+## Blinded, unbiased replication
 
 With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you only needed to know about basic `drake` functions such as `make()`, so there was no need to peek at any revealing pieces of the code. You can stay blinded and unbiased as you reimplement the original author's methodology.
 
