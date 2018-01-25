@@ -117,7 +117,7 @@ The R community likes to emphasize reproducibility, which one could interpret to
 
 ## Evidence of re-creatability
 
-Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results yourself without the help of the original author? With `drake`, it is quick and easy to find out.
+Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results without the help of the original author? With `drake`, it is quick and easy to find out.
 
 ```r
 make(my_plan)
