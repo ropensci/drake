@@ -117,7 +117,7 @@ The R community likes to emphasize reproducibility, which one could interpret to
 
 ## Concrete evidence of re-creatability
 
-Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, noting that the datasets are available and the documentation is thorough. But could you re-create the results yourself without the help of the original author? With `drake`, it is quick and easy to check.
+Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results yourself without the help of the original author? With `drake`, it is quick and easy to find out.
 
 ```r
 make(my_plan)
@@ -130,11 +130,11 @@ outdated(config)
 ## character(0)
 ```
 
-With everything up to date, you have **tangible evidence** of reproducibility. The results are re-creatable from the starting materials. They **faithfully show** what the code is producing. You have everything you need to reproduce all the output all by yourself.
+With everything up to date, you have **tangible evidence** of reproducibility. The results are re-creatable from the starting materials. They **faithfully show** what the code is producing. You have everything you need to reproduce all the output by yourself.
 
 ## Ease of re-creatability
 
-When it comes time in your review to actually re-run the project, you have much more confidence. Starting over from scratch is trivially easy.
+When it comes time to actually re-run the entire project, you have much more confidence. Starting over from scratch is trivially easy.
 
 ```r
 clean()       # Remove the original author's results.
@@ -143,7 +143,7 @@ make(my_plan) # Independently re-create the results from the code and input data
 
 ## Blinded and unbiased independent replication
 
-At this point, with even more evidence and even more confidence, you can take the time to independently replicate the original code base if necessary. And since you only needed `make()` up until now, you did not need to peek at any revealing pieces of the author's code.You can stay blinded and unbiased as you reimplement the original author's methodology.
+At this point, with even more evidence and even more confidence, you can take the time to independently replicate the original code base if necessary. So far, you only needed to know about `make()`, so there was no need to peek at any revealing pieces of the author's code. You can stay blinded and unbiased as you reimplement the original author's methodology.
 
 # Aggressively scale up.
 
