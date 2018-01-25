@@ -113,7 +113,7 @@ make(my_plan)
 
 # Reproducibility with confidence
 
-The R community likes to emphasize reproducibility, an umbrella term that often covers [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from.
+The R community emphasizes reproducibility. [Scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control) are traditional themes. But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from.
 
 ## Evidence of re-creatability
 
