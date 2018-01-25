@@ -57,7 +57,7 @@ vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/reg2.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -235,7 +235,7 @@ future::plan(
 make(my_plan, parallelism = "future_lapply")
 ```
 
-For parallelism on clusters and job schedulers, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). It is your responsibility to configure these files for your job scheduler. You can find some examples on the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/wlandau-lilly/drake/tree/master/inst/examples) as well. See `drake_examples()` to view your options, and then `drake_example()` to write the files for an example.
+For parallelism on clusters and job schedulers, special [batchtools](https://github.com/mllg/batchtools) `*.tmpl` configuration files are required, and the technique is described in the documentation of [batchtools](https://github.com/mllg/batchtools). It is your responsibility to configure these files for your job scheduler. You can find some examples on the `inst/templates` folders of the [batchtools](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) GitHub repositories. `Drake` has some [built-in prepackaged example workflows](https://github.com/ropensci/drake/tree/master/inst/examples) as well. See `drake_examples()` to view your options, and then `drake_example()` to write the files for an example.
 
 ```{r writexamples, eval = FALSE}
 drake_example("sge")   # Sun/Univa Grid Engine workflow and supporting files
@@ -400,24 +400,24 @@ Finally, to deploy your work, just save the call to `make()` in an R script (say
 
 # Drake as an ordinary job scheduler
 
-If you do not care about reproducibility and you want `drake` to be an ordinary job scheduler, consider using [alternative triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers).
+If you do not care about reproducibility and you want `drake` to be an ordinary job scheduler, consider using [alternative triggers](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers).
 
 ```{r triggerparallel, eval = FALSE}
 load_basic_example()
 make(my_plan, trigger = "missing") # Also consider "always".
 ```
 
-Above, `drake` only builds the missing targets. This skips much of the [time-consuming hashing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd#hash-algorithms) that ordinarily detects which targets are out of date.
+Above, `drake` only builds the missing targets. This skips much of the [time-consuming hashing](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd#hash-algorithms) that ordinarily detects which targets are out of date.
 
 # Final thoughts
 
 ## Debugging
 
-For large workflows, downsizing and debugging tools become super important. See the ["debug" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd) for help on diagnosing problems with a workflow. [Triggers](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and [cached error logs](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#diagnose-failures) especially speed the development and testing process.
+For large workflows, downsizing and debugging tools become super important. See the ["debug" vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd) for help on diagnosing problems with a workflow. [Triggers](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and [cached error logs](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#diagnose-failures) especially speed the development and testing process.
 
 ## Zombies
 
-In versions of R prior to 3.5.0, some parallel backends, particularly `mclapply` and `future::multicore`, may create zombie processes. This issue is fixed in R versions 3.5.0 and later. Zombie children are not usually harmful, but you may wish to kill them yourself. The following function by [Carl Boneri](https://github.com/CarlBoneri) should work on Unix-like systems. For a discussion, see [drake issue 116](https://github.com/wlandau-lilly/drake/issues/116).
+In versions of R prior to 3.5.0, some parallel backends, particularly `mclapply` and `future::multicore`, may create zombie processes. This issue is fixed in R versions 3.5.0 and later. Zombie children are not usually harmful, but you may wish to kill them yourself. The following function by [Carl Boneri](https://github.com/CarlBoneri) should work on Unix-like systems. For a discussion, see [drake issue 116](https://github.com/ropensci/drake/issues/116).
 
 ```{r cautionzombies, eval = FALSE}
 fork_kill_zombies <- function(){
@@ -437,7 +437,7 @@ fork_kill_zombies <- function(){
 
 ## More resources
 
-See the [timing vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/timing.Rmd) for explanations of functions `rate_limiting_times()` and `predict_runtime()`, which can help predict the possible speed gains of having multiple independent jobs. If you suspect `drake` itself is slowing down your project, you may want to read the storage vignette to learn how to set the hashing algorithms of your project.
+See the [timing vignette](https://github.com/ropensci/drake/blob/master/vignettes/timing.Rmd) for explanations of functions `rate_limiting_times()` and `predict_runtime()`, which can help predict the possible speed gains of having multiple independent jobs. If you suspect `drake` itself is slowing down your project, you may want to read the storage vignette to learn how to set the hashing algorithms of your project.
 
 
 ```{r endofline_quickstart, echo = F}

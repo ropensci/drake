@@ -58,7 +58,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/good-commands.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/good-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -99,7 +99,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/bad-commands.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/bad-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -130,12 +130,12 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/outdated.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/basic/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/basic/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the workflow graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/wlandau-lilly/drake/blob/master/inst/examples/basic/report.Rmd) to produce the target file `report.md`.
+`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the workflow graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) to produce the target file `report.md`.
 
 [knitr](https://github.com/yihui/knitr) reports are the only kind of file that `drake` analyzes for dependencies. It does not give R scripts the same special treatment.
 

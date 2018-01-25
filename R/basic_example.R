@@ -10,8 +10,8 @@
 #' @details Use \code{\link{drake_example}('basic')} to get the code
 #' for the basic example. The included R script is a detailed,
 #' heavily-commented walkthrough. The quickstart vignette at
-#' \url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd} # nolint
-#' and \url{https://wlandau-lilly.github.io/drake/articles/quickstart.html}
+#' \url{https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd} # nolint
+#' and \url{https://ropensci.github.io/drake/articles/quickstart.html}
 #' also walks through the basic example.
 #' This function also writes/overwrites
 #' the file, \code{report.Rmd}.

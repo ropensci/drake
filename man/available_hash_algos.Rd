@@ -11,7 +11,7 @@ A character vector of names of available hash algorithms.
 }
 \description{
 See the advanced storage tutorial
-at \url{https://wlandau-lilly.github.io/drake/articles/storage.html}
+at \url{https://ropensci.github.io/drake/articles/storage.html}
 for details.
 }
 \examples{

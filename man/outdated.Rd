@@ -28,7 +28,7 @@ Outdated targets will be rebuilt in the next
 \details{
 \code{outdated()} is sensitive to the alternative triggers
 described at
-\url{https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+\url{https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
 For example, even if \code{outdated(...)} shows everything up to date,
 \code{outdated(..., trigger = "always")} will show
 all targets out of date.

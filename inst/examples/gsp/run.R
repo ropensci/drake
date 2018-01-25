@@ -21,7 +21,7 @@
 # the triplet in the model with the lowest RMSPE.
 #
 # Also see the example-gsp.Rmd vignette:
-# https://github.com/wlandau-lilly/drake/blob/master/vignettes/example-gsp.Rmd
+# https://github.com/ropensci/drake/blob/master/vignettes/example-gsp.Rmd
 
 library(drake)
 library(Ecdat) # econometrics datasets

@@ -1,7 +1,7 @@
 drake_context("strings")
 
 # All tests in this file are taken from eply:
-# https://github.com/wlandau-lilly/eply
+# https://github.com/ropensci/eply
 
 test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
   expect_equal(drake_quotes(), "\"\"")

@@ -11,14 +11,14 @@
 - Always process all the imports before building any targets. This is part of the solution to #168: if imports and targets are processed together, the full power of parallelism is taken away from the targets. Also, the way parallelism happens is now consistent for all parallel backends.
 - Major speed improvement: dispense with internal inventories and rely on `cache$exists()` instead.
 - Let the user define a trigger for each target to customize when `make()` decides to build targets.
-- Document triggers and other debugging/testing tools in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
+- Document triggers and other debugging/testing tools in the new [debug vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd).
 - Restructure the internals of the `storr` cache in a way that is not back-compatible with projects from versions 4.4.0 and earlier. The main change is to make more intelligent use of `storr` namespaces, improving efficiency (both time and storage) and opening up possibilities for new features. If you attempt to run drake >= 5.0.0 on a project from drake <= 4.0.0, drake will stop you before any damage to the cache is done, and you will be instructed how to migrate your project to the new drake.
 - Use `formatR::tidy_source()` instead of `parse()` in `tidy_command()` (originally `tidy()` in `R/dependencies.R`). Previously, `drake` was having problems with an edge case: as a command, the literal string `"A"` was interpreted as the symbol `A` after tidying. With `tidy_source()`, literal quoted strings stay literal quoted strings in commands. This may put some targets out of date in old projects, yet another loss of back compatibility in version 5.0.0.
 - Speed up clean() by refactoring the cache inventory and using light parallelism.
 - Implement `rescue_cache()`, exposed to the user and used in `clean()`. This function removes dangling orphaned files in the cache so that a broken cache can be cleaned and used in the usual ways once more.
 - Change the default `cpu` and `elapsed` arguments of `make()` to `NULL`. This solves an elusive bug in how drake imposes timeouts.
 - Allow users to set target-level timeouts (overall, cpu, and elapsed) with columns in the workflow plan data frame.
-- Document timeouts and retries in the new [debug vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
+- Document timeouts and retries in the new [debug vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd).
 - Add a new `graph` argument to functions `make()`, `outdated()`, and `missed()`.
 - Export a new `prune_graph()` function for igraph objects.
 - Delete long-deprecated functions `prune()` and `status()`.
@@ -60,8 +60,8 @@
 
 # Version 4.4.0
 
-- Extend `plot_graph()` to display subcomponents. Check out arguments `from`, `mode`, `order`, and `subset`. The [graphing vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/graph.Rmd) has demonstrations.
-- Add `"future_lapply"` parallelism: parallel backends supported by the [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) packages. See `?backend` for examples and the [parallelism vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/parallelism.Rmd) for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
+- Extend `plot_graph()` to display subcomponents. Check out arguments `from`, `mode`, `order`, and `subset`. The [graphing vignette](https://github.com/ropensci/drake/blob/master/vignettes/graph.Rmd) has demonstrations.
+- Add `"future_lapply"` parallelism: parallel backends supported by the [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) packages. See `?backend` for examples and the [parallelism vignette](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd) for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
 - Cache diagnostic information of targets that fail and retrieve diagnostic info with `diagnose()`.
 - Add an optional `hook` argument to `make()` to wrap around `build()`. That way, users can more easily control the side effects of distributed jobs. For example, to redirect error messages to a file in `make(..., parallelism = "Makefile", jobs = 2, hook = my_hook)`, `my_hook` should be something like `function(code){withr::with_message_sink("messages.txt", code)}`.
 - Remove console logging for "parLapply" parallelism. `Drake` was previously using the `outfile` argument for PSOCK clusters to generate output that could not be caught by `capture.output()`. It was a hack that should have been removed before.
@@ -81,8 +81,8 @@
 # Version 4.3.0: 2017-10-17
 
 Version 4.3.0 has:
-- [Reproducible random numbers](https://github.com/wlandau-lilly/drake/pull/56)
-- [Automatic detection of knitr dependencies](https://github.com/wlandau-lilly/drake/issues/9)
+- [Reproducible random numbers](https://github.com/ropensci/drake/pull/56)
+- [Automatic detection of knitr dependencies](https://github.com/ropensci/drake/issues/9)
 - More vignettes
 - Bugfixes
 

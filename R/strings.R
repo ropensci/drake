@@ -1,5 +1,5 @@
 # All functions in this file are taken from eply:
-# https://github.com/wlandau-lilly/eply
+# https://github.com/ropensci/eply
 
 #' @title Put quotes around each element of a character vector.
 #' @description Quotes are important in drake.

@@ -154,7 +154,7 @@ whole_plan
 
 The latest download data needs to be refreshed every day, so we use
 triggers to force `recent` to always build.
-For more on triggers, see the [vignette on debugging and testing](https://github.com/wlandau-lilly/drake/blob/master/vignettes/debug.Rmd).
+For more on triggers, see the [vignette on debugging and testing](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd).
 Instead of triggers, we could have just made `recent` a global variable
 like `package_list` instead of a formal target in `whole_plan`.
 
@@ -206,7 +206,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/packages.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/packages.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>

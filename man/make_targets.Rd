@@ -29,7 +29,7 @@ and \code{\link{make_imports}()} just makes the imports.
 Most users should just use \code{\link{make}()}
 instead of either \code{\link{make_imports}()} or
 \code{\link{make_targets}()}.
-See \url{https://wlandau-lilly.github.io/drake/}
+See \url{https://ropensci.github.io/drake/}
 for the full documentation of drake,
 including multiple in-depth tutorials.
 }

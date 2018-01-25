@@ -13,7 +13,7 @@ tmp <- file.copy(from = icon, to = site_dir, overwrite = TRUE)
 
 from <- "<p><img src=.*images/graph.png.*></p>"
 to <- "<iframe
-  src = 'https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/reg2.html'
+  src = 'https://cdn.rawgit.com/ropensci/drake/0b76e536/images/reg2.html'
   width = '100%' height = '600px' allowtransparency='true'
   style='border: none; box-shadow: none'>
   </iframe>"

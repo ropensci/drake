@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 ![](logo-vignettes.png)
 
-This tutorial is the abridged version of the [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd). For more information, see the [documentation website](https://wlandau-lilly.github.io/drake/), which includes the [rendered online version of the quickstart vignette](https://wlandau-lilly.github.io/drake/articles/quickstart.html).
+This tutorial is the abridged version of the [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd). For more information, see the [documentation website](https://ropensci.github.io/drake/), which includes the [rendered online version of the quickstart vignette](https://ropensci.github.io/drake/articles/quickstart.html).
 
 ```{r precleangetstarteddrake, echo = FALSE}
 # Remove any previous work.
@@ -99,7 +99,7 @@ vis_drake_graph(my_plan)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/outdated.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -147,11 +147,11 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 
 # Built-in example projects
 
-`Drake` has [built-in example projects](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). You can generate the code files for an example with `drake_example()`, and you can list the available examples with `drake_examples()`. For instance, `drake_example("gsp")` generates the R script and R Markdown report for the built-in econometrics data analysis project. See below for the currently supported examples.
+`Drake` has [built-in example projects](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the code files for an example with `drake_example()`, and you can list the available examples with `drake_examples()`. For instance, `drake_example("gsp")` generates the R script and R Markdown report for the built-in econometrics data analysis project. See below for the currently supported examples.
 
 ## Learn how to use `drake`.
 
-- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
+- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example. 
 - `gsp`: A more concrete, practical example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `packages`: A concrete, practical example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
 

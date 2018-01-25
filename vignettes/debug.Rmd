@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is a guide to debugging and testing `drake` projects. Please also see the ["caution" vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/caution.Rmd), which addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/wlandau-lilly/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version.
+This vignette is a guide to debugging and testing `drake` projects. Please also see the ["caution" vignette](https://github.com/ropensci/drake/blob/master/vignettes/caution.Rmd), which addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/ropensci/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version.
 
 # The configuration list
 
@@ -43,9 +43,9 @@ The fields of `config` mostly arguments to `make()` and are documented there. Th
 
 - `graph`: An [igraph](https://github.com/igraph/rigraph) object with the directed acyclic graph (DAG) of the workflow.
 - `inventory`: A running list of the cached objects in each `storr` namespace. Maintaining this list helps avoid repeated calls to `config$cache$list()`, which increases speed.
-- `long_hash_algo`: Name of the long hash algorithm used throughout `make()`. Used to generate hash keys that *will not* become the names of files. See the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) for details.
+- `long_hash_algo`: Name of the long hash algorithm used throughout `make()`. Used to generate hash keys that *will not* become the names of files. See the [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd) for details.
 - `seed`: The random number generator seed taken from the user's R session. Each target is built reproducibly using a deterministic function of this seed, and the build does not change the seed outside the scope of the target's command.
-- `short_hash_algo`: Name of the short hash algorithm used throughout `make()`. Used to generate hash keys that could become names of files. See the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd) for details.
+- `short_hash_algo`: Name of the short hash algorithm used throughout `make()`. Used to generate hash keys that could become names of files. See the [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd) for details.
 
 Early in `make()`, the `config` list is stored in the cache. You can retrieve it with
 
@@ -84,7 +84,7 @@ vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/wlandau-lilly/drake/0b76e536/images/outdated.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -347,13 +347,13 @@ find_project()
 find_cache()
 ```
 
-For more information on the cache, see the [storage vignette](https://github.com/wlandau-lilly/drake/blob/master/vignettes/storage.Rmd).
+For more information on the cache, see the [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd).
 
 # Start tinkering.
 
-The `load_basic_example()` function loads the [basic example](https://github.com/wlandau-lilly/drake/tree/master/inst/examples/basic) from `drake_example("basic")` right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only `make(my_plan)` is left to you.
+The `load_basic_example()` function loads the [basic example](https://github.com/ropensci/drake/tree/master/inst/examples/basic) from `drake_example("basic")` right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only `make(my_plan)` is left to you.
 
-`Drake` has [many more built-in examples](https://github.com/wlandau-lilly/drake/tree/master/inst/examples). To see your choices, use
+`Drake` has [many more built-in examples](https://github.com/ropensci/drake/tree/master/inst/examples). To see your choices, use
 
 ```{r examplesdrakedebug}
 drake_examples()

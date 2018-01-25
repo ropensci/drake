@@ -1,4 +1,4 @@
-url: https://github.com/wlandau-lilly/drake
+url: https://github.com/ropensci/drake
 templates_path: inst/pkgdown/templates
 navbar:
   title: drake
@@ -36,7 +36,7 @@ navbar:
     href: news/index.html
   right:
   - icon: fa-github fa-lg
-    href: https://github.com/wlandau-lilly/drake
+    href: https://github.com/ropensci/drake
 articles:
 - title: General vignettes
   contents:

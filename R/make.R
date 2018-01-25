@@ -3,7 +3,7 @@
 #' of the drake package. It runs all the steps of your
 #' workflow in the correct order, skipping any work
 #' that is already up to date.
-#' See \url{https://wlandau-lilly.github.io/drake/}
+#' See \url{https://ropensci.github.io/drake/}
 #' for the full documentation, which includes multiple in-depth tutorials.
 #' @seealso \code{\link{make_with_config}},
 #' \code{\link{drake_plan}}, \code{\link{drake_plan}},
@@ -442,7 +442,7 @@ make_with_config <- function(config){
 #' Most users should just use \code{\link{make}()}
 #' instead of either \code{\link{make_imports}()} or
 #' \code{\link{make_targets}()}.
-#' See \url{https://wlandau-lilly.github.io/drake/}
+#' See \url{https://ropensci.github.io/drake/}
 #' for the full documentation of drake,
 #' including multiple in-depth tutorials.
 #' @export
@@ -491,7 +491,7 @@ imports_graph <- function(config){
 #' Most users should just use \code{\link{make}()}
 #' instead of either \code{\link{make_imports}()} or
 #' \code{\link{make_targets}()}.
-#' See \url{https://wlandau-lilly.github.io/drake/}
+#' See \url{https://ropensci.github.io/drake/}
 #' for the full documentation of drake,
 #' including multiple in-depth tutorials.
 #' @export
