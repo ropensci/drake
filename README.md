@@ -143,7 +143,7 @@ make(my_plan) # Independently re-create the results from the code and input data
 
 ## Blinded and unbiased independent replication
 
-With even more evidence and even more confidence, you can take the time to independently replicate the original code base if necessary. Up until this point, you only needed to know about basic `drake` functions such as `make()`, so there was no need to peek at any revealing pieces of the author's code. You can stay blinded and unbiased as you reimplement the original author's methodology.
+With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you only needed to know about basic `drake` functions such as `make()`, so there was no need to peek at any revealing pieces of the code. You can stay blinded and unbiased as you reimplement the original author's methodology.
 
 # Aggressively scale up.
 
