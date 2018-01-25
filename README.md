@@ -111,7 +111,7 @@ make(my_plan)
 ## All targets are already up to date.
 ```
 
-# Stay reproducible.
+# Reproducibility with confidence
 
 The R community likes to emphasize reproducibility, which one could interpret to mean [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), or version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data it came from.
 

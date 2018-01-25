@@ -289,7 +289,11 @@ for more details.
 }
 \description{
 This is the central, most important function
-of the drake package.
+of the drake package. It runs all the steps of your
+workflow in the correct order, skipping any work
+that is already up to date.
+See \url{https://wlandau-lilly.github.io/drake/}
+for the full documentation, which includes multiple in-depth tutorials.
 }
 \examples{
 \dontrun{

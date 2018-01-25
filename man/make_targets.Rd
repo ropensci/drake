@@ -14,9 +14,24 @@ The master internal configuration list
 used by \code{\link{make}()}.
 }
 \description{
-Targets are the workflow steps listed
-in your workflow plan data frame.
-(See \code{\link{drake_plan}()}.)
+\code{\link{make}()} is the central, most important function
+of the drake package. \code{\link{make}()} runs all the steps of your
+workflow in the correct order, skipping any work
+that is already up to date. During \code{\link{make}()},
+there are two kinds of processing steps: "imports",
+which are pre-existing functions and input data files
+that are loaded or checked, and targets, which are
+serious reproducibly-tracked data analysis steps
+that have commands in your workflow plan data frame.
+The \code{\link{make_targets}()} function just makes the targets
+(skipping any targets that are already up to date)
+and \code{\link{make_imports}()} just makes the imports.
+Most users should just use \code{\link{make}()}
+instead of either \code{\link{make_imports}()} or
+\code{\link{make_targets}()}.
+See \url{https://wlandau-lilly.github.io/drake/}
+for the full documentation of drake,
+including multiple in-depth tutorials.
 }
 \examples{
 \dontrun{
