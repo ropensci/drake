@@ -1,5 +1,6 @@
 # Version 5.0.0
 
+- Transfer `drake` to rOpenSci: https://github.com/ropensci/drake
 - Several functions now require an explicit `config` argument, which you can get from
 `drake_config()` or `make()`. Examples:
     - outdated()
