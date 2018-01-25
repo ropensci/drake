@@ -44,7 +44,7 @@ Versions of `drake` after 4.4.0 have different caching internals. That means if 
 
 ## Externalizing commands in R script files
 
-It is common practice to divide the work of a project into multiple R files, but if you do this, you will not get the most out of `drake`. Please see the [best practices vignette](https://github.com/ropensci/drake/blob/master/vignettes/best_practices.Rmd) for more details.
+It is common practice to divide the work of a project into multiple R files, but if you do this, you will not get the most out of `drake`. Please see the [best practices vignette](https://github.com/ropensci/drake/blob/master/vignettes/best-practices.Rmd) for more details.
 
 ## Beware unparsable symbols in your workflow plan.
 
