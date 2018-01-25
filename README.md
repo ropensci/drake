@@ -130,7 +130,7 @@ outdated(config)
 ## character(0)
 ```
 
-With everything up to date, you have **tangible evidence** of reproducibility. You know the results are re-creatable from the starting materials. They **faithfully show** what the code is producing. You have everything you need to reproduce all the output by yourself.
+With everything up to date, you have **tangible evidence** of reproducibility. You know the results are re-creatable from the starting materials. They **faithfully show** what the code is producing. Given the right [package environment](https://rstudio.github.io/packrat/) and [system configuration](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html), you have everything you need to reproduce all the output by yourself.
 
 ## Ease
 
