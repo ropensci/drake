@@ -134,7 +134,7 @@ With everything up to date, you have **tangible evidence** of reproducibility. Y
 
 ## Ease of re-creatability
 
-When it comes time to actually re-run the entire project, you have much more confidence. Starting over from scratch is trivially easy.
+When it comes time to actually rerun the entire project, you have much more confidence. Starting over from scratch is trivially easy.
 
 ```r
 clean()       # Remove the original author's results.
