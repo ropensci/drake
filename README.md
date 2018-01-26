@@ -1,7 +1,7 @@
 # drake: save time and stay reproducible
 
 <p align="center">
-  <img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="">
+  <img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="" style = "width: 300px;">
 </p><br/>
 
 [![rOpenSci Onboarding](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156)
