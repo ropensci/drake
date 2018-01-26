@@ -304,7 +304,7 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Alex Axthelm](https://github.com/AlexAxthelm)
 - [Chan-Yub Park](https://github.com/mrchypark)
 - [Daniel Falster](https://github.com/dfalster)
-- [Eric Nantz](https://github.com/enantz-lilly)
+- [Eric Nantz](https://github.com/thercast)
 - [Henrik Bengtsson](https://github.com/HenrikBengtsson)
 - [Ian Watson](https://github.com/IanAWatson)
 - [Jasper Clarkberg](https://github.com/dapperjapper)
