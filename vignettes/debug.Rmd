@@ -332,7 +332,7 @@ loadd(large, verbose = FALSE)
 
 head(large)
 
-readd(small, verbose = FALSE)
+head(readd(small, verbose = FALSE))
 
 progress(verbose = FALSE)
 
