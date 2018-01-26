@@ -26,6 +26,12 @@ Authors@R: c(
     role = "ctb"
   ),
   person(
+    family = "Marwick",
+    given = "Ben",
+    email = "bmarwick@uw.edu",
+    role = "rev"
+  ),
+  person(
     family = "Slaughter",
     given = "Peter",
     email = "slaughter@nceas.ucsb.edu",
