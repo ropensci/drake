@@ -6,6 +6,9 @@
 # drake's main functionality using a simple example
 # data analysis workflow.
 #
+# This script is meant to stand on its own, separate from the other R scripts.
+# It does, however, depend on the included report.Rmd file.
+#
 ############
 # QUESTION #
 ############
