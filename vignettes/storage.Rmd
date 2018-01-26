@@ -49,7 +49,7 @@ You can explore your cached data using functions like `loadd()`, `readd()`, and 
 ```{r explore_basic}
 head(cached())
 
-readd(small)
+head(readd(small))
 
 loadd(large)
 
@@ -71,7 +71,7 @@ class(cache)
 
 cache$list() # Functionality from storr
 
-cache$get("small") # Functionality from storr
+head(cache$get("small")) # Functionality from storr
 ```
 
 # Hash algorithms
