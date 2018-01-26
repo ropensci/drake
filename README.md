@@ -11,7 +11,7 @@
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 [![Travis-CI Build Status](https://travis-ci.org/ropensci/drake.svg?branch=master)](https://travis-ci.org/ropensci/drake)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ropensci/drake?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/drake)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true)](https://ci.appveyor.com/project/ropensci/drake)
 [![codecov.io](https://codecov.io/github/ropensci/drake/coverage.svg?branch=master)](https://codecov.io/github/ropensci/drake?branch=master)
 
 # Why use drake?
@@ -306,6 +306,7 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Daniel Falster](https://github.com/dfalster)
 - [Eric Nantz](https://github.com/enantz-lilly)
 - [Henrik Bengtsson](https://github.com/HenrikBengtsson)
+- [Ian Watson](https://github.com/IanAWatson)
 - [Jasper Clarkberg](https://github.com/dapperjapper)
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
