@@ -6,8 +6,13 @@
 # drake's main functionality using a simple example
 # data analysis workflow.
 #
-# This script is meant to stand on its own, separate from the other R scripts.
-# It does, however, depend on the included report.Rmd file.
+# This script is meant to stand on its own, depending only on
+# the included report.Rmd file.
+# It is meant to walk you through the example step by step.
+# The other files show you how to set up the example
+# as a serious drake project.
+# To run the project as a serious workflow, just run make.R.
+# Then, read the output report.md file.
 #
 ############
 # QUESTION #

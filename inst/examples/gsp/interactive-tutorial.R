@@ -4,7 +4,14 @@
 # The same technique would be cumbersome, even intractable,
 # with GNU Make (https://www.gnu.org/software/make/).
 #
-# The goal is to search for factors closely associated with
+# This file is an interactive tutorial that only depends
+# on the included report.Rmd file.
+# It is meant to walk you through the analysis step by step.
+# The other files show how to set up this example
+# as a serious drake project. Run make.R to deploy it
+# as a serious workflow.
+#
+# The goal of the example is to search for factors closely associated with
 # the productivity of states in the USA around the 1970s and 1980s.
 # For the sake of simplicity, we use gross state product as a metric
 # of productivity, and we restrict ourselves to

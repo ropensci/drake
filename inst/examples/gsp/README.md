@@ -1,0 +1,1 @@
+This example project analyzes an econometrics dataset to try to find which factors are most strongly associated with gross state product. Except for `interactive-tutorial.R`, the files here show how to set up a `drake` project. Run `make.R` to run or update the whole workflow, and read the output `report.md` file to see the results.
