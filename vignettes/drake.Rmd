@@ -40,7 +40,7 @@ clean(destroy = TRUE)
 Write the code files to your workspace.
 
 ```{r getthequickstartcode, eval = FALSE}
-example_drake("basic")
+drake_example("basic")
 ```
 
 The new `basic` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example.
