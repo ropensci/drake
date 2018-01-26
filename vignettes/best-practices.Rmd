@@ -31,6 +31,24 @@ This vignette describes general best practices for creating, configuring, and ru
 
 # Where to put your code
 
+## Examples
+
+For examples of how to structure your code files, see the beginner oriented example projects:
+
+- [basic](https://github.com/ropensci/drake/tree/master/inst/examples/basic)
+- [gsp](https://github.com/ropensci/drake/tree/master/inst/examples/gsp)
+- [packages](https://github.com/ropensci/drake/tree/master/inst/examples/packages)
+
+Write the code directly with the `drake_example()` function.
+
+```{r exampledrakewritingbestpractices, eval = FALSE}
+drake_example("basic")
+drake_example("gsp")
+drake_example("packages")
+``` 
+
+## Generalities
+
 It is best to write your code as a bunch of functions. You can save those functions in R scripts and then `source()` them before doing anything else.
 
 ```{r sourcefunctions, eval = FALSE}
