@@ -4,8 +4,10 @@
   <img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="" style = "width: 300px;">
 </p><br/>
 
-[![DOI](https://zenodo.org/badge/82609103.svg)](https://zenodo.org/badge/latestdoi/82609103)
-[![rOpenSci Onboarding](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00550/status.svg)](https://doi.org/10.21105/joss.00550)
+[![DOI](https://zenodo.org/badge/82609103.svg)](https://zenodo.org/badge/latestdoi/8260910\
+3)
+[![rOpenSci](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/drake)](http://cran.r-project.org/package=drake)
 [![CRAN downloads](http://cranlogs.r-pkg.org/badges/drake)](http://cran.rstudio.com/package=drake)
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
