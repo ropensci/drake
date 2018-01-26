@@ -181,7 +181,7 @@ Within each column above, the nodes are conditionally independent given their de
 
 # Installation
 
-You can choose among different versions of `drake`:
+You can choose among different versions of `drake`.
 
 ```r
 # Install the latest stable release from CRAN.
