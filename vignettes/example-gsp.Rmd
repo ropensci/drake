@@ -30,6 +30,16 @@ The following data analysis workflow shows off `drake`'s ability to generate lot
 
 If you wish to tinker with the example yourself, you can generate the [underlying code files](https://github.com/ropensci/drake/tree/master/inst/examples/gsp) with `drake_example("gsp")` and then step through `run.R`.
 
+# Get the code.
+
+Write the code files to your workspace.
+
+```{r getthequickstartcode, eval = FALSE}
+example_drake("gsp")
+```
+
+The new `gsp` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example.
+
 # Objective and methods
 
 The goal is to search for factors closely associated with the productivity of states in the USA around the 1970s and 1980s. For the sake of simplicity, we use gross state product as a metric of productivity, and we restrict ourselves to multiple linear regression models with three variables. For each of the 84 possible models, we fit the data and then evaluate the root mean squared prediction error (RMSPE).

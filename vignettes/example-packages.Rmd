@@ -31,6 +31,17 @@ reportfile <- file.path("examples", "packages", "report.Rmd") %>%
 file.copy(reportfile, getwd())
 ```
 
+# Get the code.
+
+Write the code files to your workspace.
+
+```{r getthequickstartcode, eval = FALSE}
+example_drake("packages")
+```
+
+The new `packages` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example.
+
+
 # Overview
 
 This small data analysis project explores some trends in R package downloads over time. The datasets are downloaded using the [cranlogs package](https://github.com/metacran/cranlogs).

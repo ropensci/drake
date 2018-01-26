@@ -1,11 +1,3 @@
-###############
-### PURPOSE ###
-###############
-#
-# The purpose of this example is to walk through
-# drake's main functionality using a simple example
-# data analysis workflow.
-#
 # This script is meant to stand on its own, depending only on
 # the included report.Rmd file.
 # It is meant to walk you through the example step by step.
@@ -13,6 +5,14 @@
 # as a serious drake project.
 # To run the project as a serious workflow, just run make.R.
 # Then, read the output report.md file.
+#
+###############
+### PURPOSE ###
+###############
+#
+# The purpose of this example is to walk through
+# drake's main functionality using a simple example
+# data analysis workflow.
 #
 ############
 # QUESTION #

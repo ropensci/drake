@@ -1,0 +1,1 @@
+This example project explores R package download trends, and it is paired with [this online tutorial vignette](https://ropensci.github.io/drake/articles/example-packages.html). Except for `interactive-tutorial.R`, the files here show how to set up a `drake` project. Run `make.R` to run or update the whole workflow, and read the output `report.md` file to see the results.

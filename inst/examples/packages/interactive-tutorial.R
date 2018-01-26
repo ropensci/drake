@@ -1,3 +1,10 @@
+# This file is an interactive tutorial that only depends
+# on the included report.Rmd file.
+# It is meant to walk you through the analysis step by step.
+# The other files show how to set up this example
+# as a serious drake project. Run make.R to deploy it
+# as a serious workflow.
+#
 ################
 ### OVERVIEW ###
 ################
