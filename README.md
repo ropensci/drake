@@ -311,3 +311,5 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
 Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am grateful that he succeeded.
+
+[![ropensci_footer](images/ropensci_footer.png)](https://ropensci.org)
