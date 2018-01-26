@@ -1,5 +1,5 @@
 ---
-title: "drake: an R-focused pipeline toolkit for reproducibility and high-performance computing"
+title: "The drake R package: a pipeline toolkit for reproducibility and high-performance computing"
 tags:
   - R
   - reproducibility
