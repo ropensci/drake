@@ -5,7 +5,7 @@
 #' @docType package
 #' @name drake-package
 #' @aliases drake
-#' @author William Michael Landau \email{will.landau@@lilly.com}
+#' @author William Michael Landau \email{will.landau@@gmail.com}
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

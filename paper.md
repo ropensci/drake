@@ -10,7 +10,7 @@ tags:
 authors:
   - name: William Michael Landau
     orcid: 0000-0003-1878-3253
-    email: will.landau@lilly.com
+    email: will.landau@gmail.com
     affiliation: 1
 affiliations:
   - name: Eli Lilly and Company

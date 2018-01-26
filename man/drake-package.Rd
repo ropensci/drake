@@ -49,5 +49,5 @@ unlink("report.Rmd") # Clean up the remaining files.
 \url{https://github.com/ropensci/drake}
 }
 \author{
-William Michael Landau \email{will.landau@lilly.com}
+William Michael Landau \email{will.landau@gmail.com}
 }
