@@ -1,3 +1,5 @@
+<img src="https://cdn.rawgit.com/ropensci/drake/86cefc58/images/infographic.svg" alt="infographic">
+
 | Release | Usage | Development |
 |:--------|:------|:------------|
 | [![JOSS](http://joss.theoj.org/papers/10.21105/joss.00550/status.svg)](https://doi.org/10.21105/joss.00550) | [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true)](https://ci.appveyor.com/project/ropensci/drake) |

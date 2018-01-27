@@ -10,12 +10,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1000"
-   height="500"
-   viewBox="0 0 1000 500.00001"
+   height="400"
+   viewBox="0 0 1000 400.00001"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="why.svg">
+   sodipodi:docname="infographic-font.svg">
   <defs
      id="defs4">
     <style
@@ -34,15 +34,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.16"
-     inkscape:cx="506.61996"
+     inkscape:cx="388.51651"
      inkscape:cy="278.62069"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1055"
-     inkscape:window-x="1920"
+     inkscape:window-height="1019"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="true" />
@@ -62,7 +62,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-552.36222)">
+     transform="translate(0,-652.36222)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -73,84 +73,84 @@
          sodipodi:role="line"
          id="tspan3338"
          x="308.57144"
-         y="338.07648"></tspan></text>
+         y="338.07648" /></text>
     <rect
        style="fill:#1c366b;fill-opacity:1"
        id="rect3359"
        width="1000"
-       height="500"
+       height="400"
        x="0"
-       y="552.36218" />
+       y="652.36218" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="190.18211"
-       y="926.61224"
+       x="190.14308"
+       y="962.48724"
        id="text3361"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3363"
-         x="190.18211"
-         y="926.61224"
-         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:35px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:35px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold'"
+         x="190.14308"
+         y="962.48724"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold'"
    id="tspan3408">Speed</tspan> the work</tspan><tspan
          sodipodi:role="line"
-         x="190.18211"
-         y="970.36224"
-         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:35px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"
+         x="190.14308"
+         y="996.86224"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan3365">you need.</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="499.53186"
-       y="926.61224"
+       x="499.63177"
+       y="962.48724"
        id="text3361-5"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="499.53186"
-         y="926.61224"
-         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:35px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"
+         x="499.63177"
+         y="962.48724"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan3365-0"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:35px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold'"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold'"
    id="tspan3410">Skip </tspan>the work</tspan><tspan
          sodipodi:role="line"
-         x="499.53186"
-         y="970.36224"
-         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:35px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"
+         x="499.63177"
+         y="996.86224"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan3400">you don't.</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="821.11432"
-       y="926.64722"
+       x="818.77264"
+       y="962.51471"
        id="text3361-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="821.11432"
-         y="926.64722"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:35px;font-family:montserrat;-inkscape-font-specification:'montserrat Bold';text-align:center;text-anchor:middle;fill:#ffffff"
+         x="818.77264"
+         y="962.51471"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:'montserrat Bold';text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan3365-6">Stamp <tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35px;font-family:montserrat;-inkscape-font-specification:montserrat"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat"
    id="tspan3416">for</tspan></tspan><tspan
          sodipodi:role="line"
-         x="821.11432"
-         y="970.39722"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35px;font-family:montserrat;-inkscape-font-specification:montserrat;text-align:center;text-anchor:middle;fill:#ffffff"
+         x="818.77264"
+         y="996.88971"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat;text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan3404">reproducibility.</tspan></text>
     <g
        style="clip-rule:evenodd;fill:#ffffff;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="g3424"
-       transform="matrix(0.25062657,0,0,0.25062657,148.12513,652.36222)">
+       transform="matrix(0.25062657,0,0,0.25062657,142.516,702.36222)">
       <polygon
          style="fill:#ffffff"
          class="fil0"
-         points="0,389 198,336 93,798 383,166 187,219 263,0 93,0 "
+         points="93,798 383,166 187,219 263,0 93,0 0,389 198,336 "
          id="polygon3426" />
     </g>
     <g
        id="g3445"
-       transform="matrix(1.6282048,0,0,1.6282048,739.81532,670.95198)"
+       transform="matrix(1.6282048,0,0,1.6282048,737.95636,720.95198)"
        style="fill:#ffffff">
       <path
          style="fill:#ffffff"
@@ -161,7 +161,7 @@
     <g
        style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1"
        id="g3471"
-       transform="matrix(1.1918696,0,0,1.1918716,401.858,676.40215)">
+       transform="matrix(1.1918696,0,0,1.1918716,401.858,726.40215)">
       <g
          style="fill:#ffffff"
          transform="translate(-5443,-2493)"
