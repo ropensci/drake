@@ -25,13 +25,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Cautionary notes and edge cases
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
 This vignette addresses `drake`'s known edge cases, pitfalls, and weaknesses that might not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/ropensci/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version of `drake`. For a guide to debugging and testing `drake` projects, please refer to the separate ["debug" vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd).
-
-<div style = "clear:both"></div>
 
 # Projects built with drake <= 4.4.0 are not back compatible with drake > 4.4.0.
 

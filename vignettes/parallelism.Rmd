@@ -24,13 +24,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# High-performance computing with drake
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
 `Drake` has extensive high-performance computing support, from local multicore parallelism to serious distributed computing across multiple nodes of a cluster. Control it with the `parallelism` and `jobs` arguments to `make()`, and use `future::plan()` if `parallelism` is `"future_lapply"`.
-
-<div style = "clear:both"></div>
 
 # The concept
 

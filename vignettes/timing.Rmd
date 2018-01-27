@@ -23,13 +23,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Build times
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
 Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), `drake` records how long it takes to build each target. For large projects that take hours or days to run, this feature becomes important for planning and execution.
-
-<div style = "clear:both"></div>
 
 ```{r timing_intro}
 library(drake)

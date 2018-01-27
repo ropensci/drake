@@ -29,13 +29,7 @@ reportfile <- file.path("examples", "packages", "report.Rmd") %>%
 file.copy(reportfile, getwd())
 ```
 
-# Example: R package download trends
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
-This built-in example explores R package download trends using the `cranlogs` package.
-
-<div style = "clear:both"></div>
+This vignette explores R package download trends using the `cranlogs` package.
 
 # Get the code.
 

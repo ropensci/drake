@@ -31,13 +31,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Storage
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
 `Drake`'s `make()` function generates your project's output, and `drake` takes storing this output seriously. This guide explains how `drake` caches and hashes its data, and describes customization options that can increase convenience and speed.
-
-<div style = "clear:both"></div>
 
 # Storage basics
 

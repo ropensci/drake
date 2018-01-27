@@ -26,13 +26,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Where to begin with drake
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
 This tutorial is the abridged version of the [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd). For more information, see the [documentation website](https://ropensci.github.io/drake/), which includes the [rendered online version of the quickstart vignette](https://ropensci.github.io/drake/articles/quickstart.html).
-
-<div style = "clear:both"></div>
 
 # Get the code.
 

@@ -25,13 +25,7 @@ knitr::opts_chunk$set(
 tmp <- file.create("data.csv")
 ```
 
-# General best practices
-
-<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
-
 This vignette describes general best practices for creating, configuring, and running `drake` projects. It answers frequently asked questions and clears up common misconceptions, and it will continuously develop in response to community feedback.
-
-<div style = "clear:both"></div>
 
 # How to organize your files
 
