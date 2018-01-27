@@ -1,4 +1,4 @@
-drake <img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" align="right" alt="logo" width="100" style = "border: none;">
+The drake R package <img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" align="right" alt="logo" width="125" style = "border: none;">
 ======================================================
 
 | Release | Usage | Development |
