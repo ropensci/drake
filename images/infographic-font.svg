@@ -34,15 +34,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.88"
-     inkscape:cx="566.57076"
+     inkscape:cx="410.88894"
      inkscape:cy="278.62069"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1019"
-     inkscape:window-x="0"
+     inkscape:window-height="1055"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="true" />
@@ -95,8 +95,8 @@
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#ffffff"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:montserrat;-inkscape-font-specification:montserrat"
            id="tspan4158"><tspan
-   style="-inkscape-font-specification:'montserrat Bold';font-family:montserrat;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"
-   id="tspan4159">Scale</tspan> the work</tspan></tspan><tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:montserrat;-inkscape-font-specification:'montserrat Bold'"
+   id="tspan4159">Scale</tspan> up the work</tspan></tspan><tspan
          sodipodi:role="line"
          x="190.14308"
          y="996.86224"
@@ -143,16 +143,6 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat;text-align:center;text-anchor:middle;fill:#ffffff"
          id="tspan3404">reproducibility.</tspan></text>
     <g
-       style="clip-rule:evenodd;fill:#ffffff;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
-       id="g3424"
-       transform="matrix(0.25062657,0,0,0.25062657,142.516,702.36222)">
-      <polygon
-         style="fill:#ffffff"
-         class="fil0"
-         points="93,798 383,166 187,219 263,0 93,0 0,389 198,336 "
-         id="polygon3426" />
-    </g>
-    <g
        id="g3445"
        transform="matrix(1.6282048,0,0,1.6282048,737.95636,720.95198)"
        style="fill:#ffffff">
@@ -162,20 +152,48 @@
          d="m 76.961,54.103 c 0,14.866 -12.095,26.961 -26.961,26.961 -14.866,0 -26.961,-12.095 -26.961,-26.961 0,-13.299 9.682,-24.372 22.365,-26.561 l 0,7.806 27.199,-15.704 -27.199,-15.707 0,8.462 C 24.422,14.695 8.039,32.519 8.039,54.103 c 0,23.137 18.824,41.96 41.961,41.96 23.138,0 41.961,-18.823 41.961,-41.961 l -15,0 z"
          id="path3447" />
     </g>
-    <g
-       style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1"
-       id="g3471"
-       transform="matrix(1.1918696,0,0,1.1918716,401.858,726.40215)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4189"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion4191"><rect
+           id="rect4193"
+           width="26.136364"
+           height="203.40909"
+           x="103.40909"
+           y="-186.36363" /></flowRegion><flowPara
+         id="flowPara4195"></flowPara></flowRoot>    <g
+       transform="matrix(5.7692308,0,0,5.7692308,-3182,-3553.407)"
+       id="g4206"
+       style="fill:#ffffff">
       <g
-         style="fill:#ffffff"
-         transform="translate(-5443,-2493)"
-         id="g3473">
-        <path
-           inkscape:connector-curvature="0"
-           d="m 5605.7394,2504.894 -11.111,-10.034 c -1.679,-1.514 -4.264,-1.382 -5.78,0.295 l -84.505,93.568 -43.877,-39.627 c -1.674,-1.513 -4.263,-1.383 -5.78,0.295 l -10.035,11.11 c -0.727,0.805 -1.105,1.867 -1.049,2.951 0.055,1.084 0.538,2.101 1.344,2.829 l 57.938,52.326 c 0.555,0.501 1.25,0.817 1.984,0.946 0.3,0.07 0.608,0.105 0.92,0.105 0.067,0 0.135,-10e-4 0.202,-0.01 1.086,-0.053 2.107,-0.537 2.835,-1.344 l 97.209,-107.635 c 0.727,-0.805 1.105,-1.867 1.049,-2.951 -0.055,-1.083 -0.538,-2.101 -1.344,-2.829"
-           id="path3475"
+         id="g4208"
+         style="fill:#ffffff">
+        <polygon
+           points="584,742 584,747 593,747 593,756 598,756 598,742 "
+           id="polygon4210"
+           style="fill:#ffffff" />
+        <polygon
+           points="578,748 578,753 587,753 587,762 592,762 592,748 "
+           id="polygon4212"
+           style="fill:#ffffff" />
+        <rect
+           x="572"
+           y="754"
+           width="14"
+           height="14"
+           id="rect4214"
            style="fill:#ffffff" />
       </g>
+    </g>
+    <g
+       id="g4266"
+       transform="matrix(3.7406484,0,0,3.7406484,375.4362,672.74875)"
+       style="fill:#ffffff">
+      <polygon
+         points="59.2,19.2 54,14.6 27.8,44.5 12.2,29.5 7.4,34.6 28.2,54.7 "
+         id="polygon4268"
+         style="fill:#ffffff" />
     </g>
   </g>
 </svg>
