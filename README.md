@@ -292,6 +292,8 @@ There are [countless other successful pipeline toolkits](https://github.com/pdit
 
 # Acknowledgements
 
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. He originally set me down the path that led to `drake`.
+
 Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https://github.com/benmarwick), and [Peter Slaughter](https://github.com/gothub) for [reviewing drake for rOpenSci](https://github.com/ropensci/onboarding/issues/156), and to [Maëlle Salmon](https://github.com/maelle) for such active involvement as the editor. Thanks also to the following people for contributing early in development.
 
 - [Alex Axthelm](https://github.com/AlexAxthelm)
@@ -303,8 +305,6 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Jasper Clarkberg](https://github.com/dapperjapper)
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
-
-Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. It took several months to convince me, and I am grateful that he succeeded.
 
 Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/images/image-credit.md).
 
