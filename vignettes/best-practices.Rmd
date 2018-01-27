@@ -12,8 +12,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-![](logo-vignettes.png)
-
 ```{r cautionstart, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
@@ -27,9 +25,15 @@ knitr::opts_chunk$set(
 tmp <- file.create("data.csv")
 ```
 
-This vignette describes general best practices for creating, configuring, and running `drake` projects.
+# General best practices
 
-# Where to put your code
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
+
+This vignette describes general best practices for creating, configuring, and running `drake` projects. It answers frequently asked questions and clears up common misconceptions, and it will continuously develop in response to community feedback.
+
+<div style = "clear:both"></div>
+
+# How to organize your files
 
 ## Examples
 
@@ -47,7 +51,7 @@ drake_example("gsp")
 drake_example("packages")
 ``` 
 
-## Generalities
+## Where do you put your code?
 
 It is best to write your code as a bunch of functions. You can save those functions in R scripts and then `source()` them before doing anything else.
 
@@ -131,9 +135,9 @@ Dangers:
 
 In addition, this `source()`-based approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
 
-# R Markdown and knitr reports
+## R Markdown and knitr reports
 
-`Drake` makes special exceptions for R Markdown reports and other [knitr](https://github.com/yihui/knitr) reports such as `*.Rmd` and `*.Rnw` files. Not every `drake` project needs them, but it is good practice to use them to summarize the final results of a project once all the other targets have already been built. The basic example, for instance, has an R Markdown report. `report.Rmd` is knitted to build `report.md`, which summarizes the final results.
+For a serious project, you should use `drake`'s `make()` function outside `knitr`. In other words, you should treat R Markdown reports and other `knitr` documents as targets and imports, not as a way to run `make()`. Viewed as targets, `drake` makes special exceptions for R Markdown reports and other [knitr](https://github.com/yihui/knitr) reports such as `*.Rmd` and `*.Rnw` files. Not every `drake` project needs them, but it is good practice to use them to summarize the final results of a project once all the other targets have already been built. The basic example, for instance, has an R Markdown report. `report.Rmd` is knitted to build `report.md`, which summarizes the final results.
 
 ```{r revisitbasic}
 # Load all the functions and the workflow plan data frame, my_plan.

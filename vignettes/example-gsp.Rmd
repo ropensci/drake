@@ -24,9 +24,13 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-![](logo-vignettes.png)
+# Example: gross state products
+
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
 
 The following data analysis workflow shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease. The same technique would be cumbersome, even intractable, with [GNU Make](https://www.gnu.org/software/make/).
+
+<div style = "clear:both"></div>
 
 # Get the code.
 

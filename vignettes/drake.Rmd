@@ -26,14 +26,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-![](logo-vignettes.png)
+# Where to begin with drake
+
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
 
 This tutorial is the abridged version of the [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd). For more information, see the [documentation website](https://ropensci.github.io/drake/), which includes the [rendered online version of the quickstart vignette](https://ropensci.github.io/drake/articles/quickstart.html).
 
-```{r precleangetstarteddrake, echo = FALSE}
-# Remove any previous work.
-clean(destroy = TRUE)
-```
+<div style = "clear:both"></div>
 
 # Get the code.
 
@@ -47,7 +46,6 @@ The new `basic` folder now includes a file structure of a serious `drake` projec
 hub.com/ropensci/drake/tree/master/inst/examples/basic).
 
 
-
 # The motivation of the basic example
 
 Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
@@ -59,7 +57,7 @@ head(mtcars)
 
 Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.
 
-# A taste of `drake`'s basic example
+# A taste of the basic example
 
 Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.
 

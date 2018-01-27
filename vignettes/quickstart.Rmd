@@ -1,6 +1,6 @@
 ---
-title: "Quickstart"
-subtitle: "A walk through drake's basic example"
+title: "Quickstart guide"
+subtitle: "A thorough walk through drake's basic example"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -13,8 +13,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-![](logo-vignettes.png)
-
 ```{r suppression, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 clean(destroy = TRUE, verbose = FALSE)
@@ -25,6 +23,14 @@ knitr::opts_chunk$set(
   warning = TRUE
 )
 ```
+
+# Quickstart guide
+
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
+
+This vignette is a quickstart guide that relies on `drake`'s basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
+
+<div style = "clear:both"></div>
 
 # Get the code.
 

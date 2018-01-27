@@ -12,8 +12,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-![](logo-vignettes.png)
-
 ```{r debugstart, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
@@ -26,7 +24,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Debugging and testing drake projects
+
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
+
 This vignette is a guide to debugging and testing `drake` projects. Please also see the ["caution" vignette](https://github.com/ropensci/drake/blob/master/vignettes/caution.Rmd), which addresses `drake`'s known edge cases, pitfalls, and weaknesses that may or may not be fixed in future releases. For the most up-to-date information on unhandled edge cases, please visit the [issue tracker](https://github.com/ropensci/drake/issues), where you can submit your own bug reports as well. Be sure to search the closed issues too, especially if you are not using the most up-to-date development version.
+
+<div style = "clear:both"></div>
 
 # The configuration list
 

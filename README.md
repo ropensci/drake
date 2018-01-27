@@ -1,23 +1,17 @@
-# drake: save time and stay reproducible
+| Release     | Usage       | Development       |
+| ------------- | ------------------- | --------------- |
+| [![JOSS](http://joss.theoj.org/papers/10.21105/joss.00550/status.svg)](https://doi.org/10.21105/joss.00550) | [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true)](https://ci.appveyor.com/project/ropensci/drake) |
+| [![rOpenSci](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156) | [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-blue.svg)](https://cran.r-project.org/) | [![Travis](https://travis-ci.org/ropensci/drake.svg?branch=master)](https://travis-ci.org/ropensci/drake) |
+| [![CRAN](http://www.r-pkg.org/badges/version/drake)](http://cran.r-project.org/package=drake) | [![downloads](http://cranlogs.r-pkg.org/badges/drake)](http://cran.rstudio.com/package=drake) | [![Codecov](https://codecov.io/github/ropensci/drake/coverage.svg?branch=master)](https://codecov.io/github/ropensci/drake?branch=master) |
+|[![Zenodo](https://zenodo.org/badge/82609103.svg)](https://zenodo.org/badge/latestdoi/82609103) | |
 
-<p align="center">
-  <img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="" style = "width: 300px;">
-</p><br/>
+# Save time and stay reproducible.
 
-[![DOI](http://joss.theoj.org/papers/10.21105/joss.00550/status.svg)](https://doi.org/10.21105/joss.00550)
-[![DOI](https://zenodo.org/badge/82609103.svg)](https://zenodo.org/badge/latestdoi/82609103)
-[![rOpenSci](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/drake)](http://cran.r-project.org/package=drake)
-[![CRAN downloads](http://cranlogs.r-pkg.org/badges/drake)](http://cran.rstudio.com/package=drake)
-[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-[![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
-[![Travis-CI Build Status](https://travis-ci.org/ropensci/drake.svg?branch=master)](https://travis-ci.org/ropensci/drake)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true)](https://ci.appveyor.com/project/ropensci/drake)
-[![codecov.io](https://codecov.io/github/ropensci/drake/coverage.svg?branch=master)](https://codecov.io/github/ropensci/drake?branch=master)
-
-# Why use drake?
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" align="right" alt="logo" width="200" style = "border: none; float: right; margin-left: 50px">
 
 The `drake` R package is a workflow manager and computational engine for data science projects. Its primary objective is to keep results up to date with the underlying code and data. When it runs a project, `drake` detects any pre-existing output and refreshes the pieces that are outdated or missing. Not every runthrough starts from scratch, and the final answers are reproducible. With a user-friendly R-focused interface, [comprehensive documentation](https://ropensci.github.io/drake/), and [extensive implicit parallel computing support](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd), `drake` surpasses the analogous functionality in similar tools such as  [Make](www.gnu.org/software/make/), [remake](https://github.com/richfitz/remake), [memoise](https://github.com/r-lib/memoise), and [knitr](https://github.com/yihui/knitr).
+
+<div style = "clear:both"></div>
 
 # What gets done stays done.
 

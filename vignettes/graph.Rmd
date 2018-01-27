@@ -13,8 +13,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-![](logo-vignettes.png)
-
 ```{r, echo = FALSE}
 suppressMessages(suppressWarnings(library(drake)))
 knitr::opts_chunk$set(eval = FALSE)
@@ -25,9 +23,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Graphs with drake
+
+<img src="https://cdn.rawgit.com/ropensci/drake/3b8e6ac4/images/logo.svg" alt="logo" width="150" style = "border: none; float: right; margin-left: 50px">
 
 `Drake` has powerful visuals to help you plan your project. You can generate an interactive workflow network with either `drake_graph()` or `vis_drake_graph()`. Then click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.
 
+<div style = "clear:both"></div>
 
 # Dependency reactivity
 
