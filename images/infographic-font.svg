@@ -34,7 +34,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.88"
-     inkscape:cx="410.88894"
+     inkscape:cx="255.20712"
      inkscape:cy="278.62069"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -125,7 +125,7 @@
          id="tspan3400">you don't.</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:montserrat;-inkscape-font-specification:montserrat;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="818.77264"
        y="962.51471"
        id="text3361-8"
@@ -133,10 +133,10 @@
          sodipodi:role="line"
          x="818.77264"
          y="962.51471"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:'montserrat Bold';text-align:center;text-anchor:middle;fill:#ffffff"
-         id="tspan3365-6">Stamp <tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat"
-   id="tspan3416">for</tspan></tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat;text-align:center;text-anchor:middle;fill:#ffffff"
+         id="tspan3365-6"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:montserrat;-inkscape-font-specification:'montserrat Bold'"
+   id="tspan4164">See</tspan> evidence of</tspan><tspan
          sodipodi:role="line"
          x="818.77264"
          y="996.88971"
@@ -162,7 +162,7 @@
            height="203.40909"
            x="103.40909"
            y="-186.36363" /></flowRegion><flowPara
-         id="flowPara4195"></flowPara></flowRoot>    <g
+         id="flowPara4195" /></flowRoot>    <g
        transform="matrix(5.7692308,0,0,5.7692308,-3182,-3553.407)"
        id="g4206"
        style="fill:#ffffff">
