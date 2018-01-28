@@ -45,6 +45,8 @@ drake_example("gsp")
 drake_example("packages")
 ``` 
 
+In practice, you do not need to organize your files the way the examples do, but it does happen to be a reasonable way of doing things.
+
 ## Where do you put your code?
 
 It is best to write your code as a bunch of functions. You can save those functions in R scripts and then `source()` them before doing anything else.
