@@ -1,6 +1,7 @@
 # Version 5.0.2
 
-- Restructured `drake_example("basic")`, `drake_example("gsp")`, and `drake_example("packages")` to demonstrate how to set up the files for serious `drake` projects. More guidance was needed in light of [this issue](https://github.com/ropensci/drake/issues/193).
+- Restructure `drake_example("basic")`, `drake_example("gsp")`, and `drake_example("packages")` to demonstrate how to set up the files for serious `drake` projects. More guidance was needed in light of [this issue](https://github.com/ropensci/drake/issues/193).
+- Improve the examples of `drake_plan()` in the help file (`?drake_plan`).
 
 # Version 5.0.0
 
