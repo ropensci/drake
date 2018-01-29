@@ -49,21 +49,33 @@
 #'   }
 #' )
 #' small_plan
-#' \dontrun{
-#' make(small_plan)
-#' cached()
-#' readd(small_target)
+#' cache <- storr::storr_environment() # Avoid writing files in examples.
+#' make(small_plan, cache = cache) # Most users don't need the cache argument.
+#' cached(cache = cache)
+#' readd(small_target, cache = cache)
 #' # local_object only applies to the code chunk.
 #' ls() # your environment is protected (local_object not found)
-#' }
+#' rm(small_target)
 #' # For tighter control over commands, use the `list` argument.
-#' drake_plan(list = c(x = "1 + 1", y = "sqrt(x)"))
-#' # This becomes important for file targets,
-#' # which you must put in single quotes.
-#' # (Double quotes are for string literals.)
-#' drake_plan(data = readRDS("my_data.rds"))
-#' drake_plan(my_file.rds = saveRDS(1+1, "my_file.rds"), file_targets = TRUE,
-#'   strings_in_dots = "literals")
+#' # Single quotes are file names, double quotes are oridinary strings.
+#' # To actually run the little example workflow below,
+#' # you need a file called `my_file.xlsx``
+#' # with an Excel sheet called `second_sheet`.
+#' # You also need to install the xlsx package.
+#' drake_plan(
+#'   list = c(
+#'     dataset = "readxl::read_excel(path = 'my_file.xlsx', sheet = \"second_sheet\")" # nolint
+#'   )
+#' )
+#' # Output targets can also be files,
+#' # but the target names must have single quotes around them.
+#' mtcars_plan <- drake_plan(
+#'   output_file.csv = write.csv(mtcars, "output_file.csv"),
+#'   file_targets = TRUE,
+#'   strings_in_dots = "literals"
+#' )
+#' mtcars_plan
+#' # make(mtcars_plan) # Would write output_file.csv. # nolint
 drake_plan <- function(
   ...,
   list = character(0),
