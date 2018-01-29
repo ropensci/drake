@@ -34,7 +34,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.88"
-     inkscape:cx="470.07131"
+     inkscape:cx="314.38949"
      inkscape:cy="278.62069"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -54,7 +54,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -77,13 +77,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#1c366b;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="156.3438"
+       x="181.3438"
        y="987.48724"
        id="text3361"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3363"
-         x="156.3438"
+         x="181.3438"
          y="987.48724"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Medium';text-align:center;text-anchor:middle;fill:#1c366b;fill-opacity:1"><tspan
            id="tspan4165"
@@ -91,7 +91,7 @@
            style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:montserrat;-inkscape-font-specification:'montserrat Medium';fill:#1c366b;fill-opacity:1"
            id="tspan4158"> up the</tspan></tspan><tspan
          sodipodi:role="line"
-         x="156.3438"
+         x="181.3438"
          y="1021.8622"
          style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:'montserrat Medium';text-align:center;text-anchor:middle;fill:#1c366b;fill-opacity:1"
          id="tspan3365">work you need.</tspan></text>
@@ -119,12 +119,12 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:montserrat;-inkscape-font-specification:montserrat;letter-spacing:0px;word-spacing:0px;fill:#1c366b;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="838.78357"
+       x="813.78357"
        y="987.48724"
        id="text3361-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="838.78357"
+         x="813.78357"
          y="987.48724"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat;text-align:center;text-anchor:middle;fill:#1c366b;fill-opacity:1"
          id="tspan3365-6"><tspan
@@ -133,7 +133,7 @@
            style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:montserrat;-inkscape-font-specification:'montserrat Medium'"
            id="tspan4167"> evidence of</tspan></tspan><tspan
          sodipodi:role="line"
-         x="838.78357"
+         x="813.78357"
          y="1021.8622"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:montserrat;-inkscape-font-specification:montserrat;text-align:center;text-anchor:middle;fill:#1c366b;fill-opacity:1"
          id="tspan3404"><tspan
@@ -141,7 +141,7 @@
            id="tspan4169">reproducibility.</tspan></tspan></text>
     <g
        id="g3445"
-       transform="matrix(1.6282048,0,0,1.6282048,758.23235,760.95196)"
+       transform="matrix(1.6282024,0,0,1.6282048,733.23188,770.95193)"
        style="fill:#1c366b;fill-opacity:1">
       <path
          style="fill:#1c366b;fill-opacity:1"
@@ -161,18 +161,18 @@
            y="-186.36363"
            style="fill:#1c366b;fill-opacity:1" /></flowRegion><flowPara
          id="flowPara4195" /></flowRoot>    <g
-       transform="matrix(5.7692308,0,0,5.7692308,-3219.214,-3513.407)"
+       transform="matrix(5.7692308,0,0,5.7692308,-3194.214,-3503.407)"
        id="g4206"
        style="fill:#1c366b;fill-opacity:1">
       <g
          id="g4208"
          style="fill:#1c366b;fill-opacity:1">
         <polygon
-           points="598,756 598,742 584,742 584,747 593,747 593,756 "
+           points="584,742 584,747 593,747 593,756 598,756 598,742 "
            id="polygon4210"
            style="fill:#1c366b;fill-opacity:1" />
         <polygon
-           points="592,762 592,748 578,748 578,753 587,753 587,762 "
+           points="578,748 578,753 587,753 587,762 592,762 592,748 "
            id="polygon4212"
            style="fill:#1c366b;fill-opacity:1" />
         <rect
@@ -186,10 +186,10 @@
     </g>
     <g
        id="g4266"
-       transform="matrix(3.7406484,0,0,3.7406484,375.4312,712.74873)"
+       transform="matrix(3.7406484,0,0,3.7406484,375.4312,722.7487)"
        style="fill:#1c366b;fill-opacity:1">
       <polygon
-         points="12.2,29.5 7.4,34.6 28.2,54.7 59.2,19.2 54,14.6 27.8,44.5 "
+         points="7.4,34.6 28.2,54.7 59.2,19.2 54,14.6 27.8,44.5 12.2,29.5 "
          id="polygon4268"
          style="fill:#1c366b;fill-opacity:1" />
     </g>
