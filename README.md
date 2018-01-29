@@ -1,4 +1,4 @@
-<img src="https://cdn.rawgit.com/ropensci/drake/ef06d4b7/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://cdn.rawgit.com/ropensci/drake/3bec195f/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 
 | Release | Usage | Development |
 |:--------|:------|:------------|
