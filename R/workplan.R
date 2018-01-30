@@ -38,6 +38,10 @@
 #' \code{...} argument. R will either convert all these quotes
 #' to single quotes or double quotes. Literal quotes in the
 #' \code{list} argument are left alone.
+#' @param tidy_evaluation logical, whether to use tidy evaluation
+#' such as quasiquotation
+#' when evaluating commands passed through the free-form
+#' \code{...} argument.
 #' @examples
 #' # Create example workflow plan data frames for make()
 #' drake_plan(small = simulate(5), large = simulate(50))
@@ -80,12 +84,19 @@
 #' # drake_plan() uses tidy evaluation to figure out your commands.
 #' # For example, it respects the quasiquotation operator `!!`
 #' # when it figures out what your code should be.
-#' # Suppress this with the `list` argument.
+#' # Suppress this with `tidy_evaluation = FALSE` or
+#' # with the `list` argument.
 #' my_variable <- 5
 #' drake_plan(
 #'   a = !!my_variable,
 #'   b = !!my_variable + 1,
 #'   list = c(d = "!!my_variable")
+#' )
+#' drake_plan(
+#'   a = !!my_variable,
+#'   b = !!my_variable + 1,
+#'   list = c(d = "!!my_variable"),
+#'   tidy_evaluation = FALSE
 #' )
 #' # For instances of !! that remain unevaluated in the workflow plan,
 #' # make() will run these commands in tidy fashion,
@@ -94,10 +105,15 @@ drake_plan <- function(
   ...,
   list = character(0),
   file_targets = FALSE,
-  strings_in_dots = c("filenames", "literals")
+  strings_in_dots = c("filenames", "literals"),
+  tidy_evaluation = TRUE
 ){
   strings_in_dots <- match.arg(strings_in_dots)
-  dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
+  if (tidy_evaluation){
+    dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
+  } else {
+    dots <- match.call(expand.dots = FALSE)$...
+  }
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)

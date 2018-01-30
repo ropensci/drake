@@ -99,14 +99,22 @@ whole_plan <- rbind(dataset_plan, analysis_plan)
 whole_plan
 ```
 
-For the commands you pass in with the free-form `...` argument, `drake_plan()` uses tidy evaluation. For example, it supports quasiquotation with the `!!` argument. Use the `list` argument to suppress this behavior.
+For the commands you pass in with the free-form `...` argument, `drake_plan()` uses tidy evaluation. For example, it supports quasiquotation with the `!!` argument. Use `tidy_evaluation = FALSE` or the `list` argument to suppress this behavior.
 
 ```{r testquasiquoplan}
 my_variable <- 5
+
 drake_plan(
   a = !!my_variable,
   b = !!my_variable + 1,
   list = c(d = "!!my_variable")
+)
+
+drake_plan(
+  a = !!my_variable,
+  b = !!my_variable + 1,
+  list = c(d = "!!my_variable"),
+  tidy_evaluation = FALSE
 )
 ```
 
