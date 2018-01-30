@@ -35,7 +35,7 @@ test_with_dir("Random targets are reproducible", {
   expect_false(identical(old_x, old_y))
 
   # Deleted and reproduce some random data.
-  clean()
+  clean(destroy = TRUE)
   con2 <- make(
     data,
     envir = env,
@@ -55,7 +55,7 @@ test_with_dir("Random targets are reproducible", {
 
   # Change the seed and check that the targets are different.
   tmp <- runif(1)
-  clean()
+  clean(destroy = TRUE)
   con3 <- make(
     data,
     envir = env,
