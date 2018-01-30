@@ -98,7 +98,7 @@ give_up <- function(target, config){
 wrap_in_try_statement <- function(target, command){
   paste(
     target,
-    "<- evaluate::try_capture_stack(rlang::expr({\n",
+    "<- evaluate::try_capture_stack(quote({\n",
     command,
     "\n}), env = config$envir)"
   )
