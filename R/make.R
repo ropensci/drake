@@ -310,9 +310,9 @@
 #' #   recipe_command = "R -q -e") # nolint
 #' #
 #' # make() respects tidy evaluation as implemented in the rlang package.
-#' little_b <- "b"
 #' # This workflow plan uses rlang's quasiquotation operator `!!`.
 #' my_plan <- drake_plan(list = c(
+#'   little_b = "\"b\"",
 #'   letter = "!!little_b"
 #' ))
 #' my_plan
