@@ -59,6 +59,7 @@ Imports:
   parallel,
   plyr,
   R.utils,
+  rlang,
   rprojroot,
   stats,
   storr (>= 1.1.0),
