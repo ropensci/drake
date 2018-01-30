@@ -99,7 +99,9 @@ dependency_profile <- function(target, config){
   names(hashes_of_dependencies) <- deps
   out <- list(
     cached_command = meta$command,
-    current_command = get_command(target = target, config = config),
+    current_command = get_standardized_command(
+      target = target, config = config
+    ),
     cached_file_modification_time = meta$mtime,
     current_file_modification_time = suppressWarnings(
       file.mtime(drake::drake_unquote(target))
@@ -286,7 +288,8 @@ is_not_file <- function(x){
   !is_file(x)
 }
 
-tidy_command <- function(x) {
+# The standardized command 
+standardize_command <- function(x) {
   formatR::tidy_source(
     source = NULL,
     comment = FALSE,
@@ -306,7 +309,12 @@ braces <- function(x) {
   paste("{\n", x, "\n}")
 }
 
-get_command <- function(target, config) {
+get_standardized_command <- function(target, config) {
   config$plan$command[config$plan$target == target] %>%
-    tidy_command
+    standardize_command
+}
+
+get_evaluation_command <- function(target, config){
+  config$plan$command[config$plan$target == target] %>%
+    functionize
 }

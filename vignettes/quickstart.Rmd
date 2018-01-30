@@ -468,6 +468,21 @@ As you have seen with `reg2()`, `drake` reacts to changes in dependencies. In ot
 
 To enhance reproducibility beyond the scope of drake, you might consider [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/). [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
+# A note on tidy evaluation
+
+Running commands in your R console is not always exactly like running them with `make()`. That's because `make()` uses tidy evaluation as implemented in the [`rlang` package](https://github.com/tidyverse/rlang).
+
+```{r demotidyeval}
+little_b <- "b"
+# This workflow plan uses rlang's quasiquotation operator `!!`.
+my_plan <- drake_plan(list = c(
+  letter = "!!little_b"
+))
+my_plan
+make(my_plan)
+readd(letter)
+```
+
 # Need more speed?
 
 `Drake` has extensive high-performance computing support, from local multicore processing to serious distributed computing across multiple nodes of a cluster. See the [parallelism vignette](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd) for detailed instructions.

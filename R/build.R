@@ -76,8 +76,7 @@ build_in_hook <- function(target, meta, config) {
 }
 
 build_target <- function(target, config) {
-  command <- get_command(target = target, config = config) %>%
-    functionize
+  command <- get_evaluation_command(target = target, config = config)
   seed <- list(seed = config$seed, target = target) %>%
     seed_from_object
   value <- run_command(

@@ -126,6 +126,21 @@ You must properly install `drake` using `install.packages()`, `devtools::install
 Your workflow may depend on external packages such as
 [ggplot2](https://CRAN.R-project.org/package=ggplot2), [dplyr](https://CRAN.R-project.org/package=dplyr), and [MASS](https://CRAN.R-project.org/package=MASS). Such packages must be formally installed with `install.packages()`, `devtools::install_github()`, `devtools::install_local()`, or a similar command. If you load uninstalled packages with `devtools::load_all()`, results may be unpredictable and incorrect.
 
+## A note on tidy evaluation
+
+Running commands in your R console is not always exactly like running them with `make()`. That's because `make()` uses tidy evaluation as implemented in the [`rlang` package](https://github.com/tidyverse/rlang).
+
+```{r demotidyeval}
+little_b <- "b"
+# This workflow plan uses rlang's quasiquotation operator `!!`.
+my_plan <- drake_plan(list = c(
+  letter = "!!little_b"
+))
+my_plan
+make(my_plan)
+readd(letter)
+```
+
 ## Find and diagnose your errors.
 
 When `make()` fails, use `failed()` and `diagnose()` to debug. Try the following out yourself.

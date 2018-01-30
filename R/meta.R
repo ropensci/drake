@@ -72,7 +72,7 @@ drake_meta <- function(target, config) {
   # fields at the beginning of build_in_hook(),
   # but only after drake decides to actually build the target.
   if (trigger %in% triggers_with_command()){
-    meta$command <- get_command(target = target, config = config)
+    meta$command <- get_standardized_command(target = target, config = config)
   }
   if (trigger %in% triggers_with_depends()){
     meta$depends <- dependency_hash(target = target, config = config)
@@ -101,7 +101,7 @@ finish_meta <- function(target, meta, config){
     meta$file <- file_hash(target = target, config = config)
   }
   if (is.null(meta$command)){
-    meta$command <- get_command(target = target, config = config)
+    meta$command <- get_standardized_command(target = target, config = config)
   }
   if (is.null(meta$depends)){
     meta$depends <- dependency_hash(target = target, config = config)

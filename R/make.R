@@ -308,6 +308,16 @@
 #' # Requires Rtools on Windows.
 #' # make(my_plan, parallelism = "Makefile", jobs = 4, # nolint
 #' #   recipe_command = "R -q -e") # nolint
+#' #
+#' # make() respects tidy evaluation as implemented in the rlang package.
+#' little_b <- "b"
+#' # This workflow plan uses rlang's quasiquotation operator `!!`.
+#' my_plan <- drake_plan(list = c(
+#'   letter = "!!little_b"
+#' ))
+#' my_plan
+#' make(my_plan)
+#' readd(letter) # "b"
 #' })
 #' }
 make <- function(
