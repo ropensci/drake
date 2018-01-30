@@ -99,7 +99,9 @@ dependency_profile <- function(target, config){
   names(hashes_of_dependencies) <- deps
   out <- list(
     cached_command = meta$command,
-    current_command = get_command(target = target, config = config),
+    current_command = get_standardized_command(
+      target = target, config = config
+    ),
     cached_file_modification_time = meta$mtime,
     current_file_modification_time = suppressWarnings(
       file.mtime(drake::drake_unquote(target))
@@ -286,7 +288,45 @@ is_not_file <- function(x){
   !is_file(x)
 }
 
-tidy_command <- function(x) {
+braces <- function(x) {
+  paste("{\n", x, "\n}")
+}
+
+# This is the version of the command that is
+# actually run in make(), not the version
+# that is cached and treated as a dependency.
+# It needs to (1) wrap the command in a function
+# to protect the user's environment from side effects,
+# and (2) call rlang::expr() to enable tidy evaluation
+# features such as quasiquotation.
+get_evaluation_command <- function(target, config){
+  raw_command <- config$plan$command[config$plan$target == target] %>%
+    functionize
+  unevaluated <- paste0("rlang::expr(", raw_command, ")")
+  quasiquoted <- eval(parse(text = unevaluated), envir = config$envir)
+  wide_deparse(quasiquoted)
+}
+
+# This version of the command will be hashed and cached
+# as a dependency. When the command changes nontrivially,
+# drake will react. Otherwise, changes to whitespace or
+# comments are just standardized away, and drake
+# ignores them. Thus, superfluous builds are not triggered.
+get_standardized_command <- function(target, config) {
+  config$plan$command[config$plan$target == target] %>%
+    standardize_command
+}
+
+# The old standardization command
+# that relies on formatR.
+# Eventually, we may move to styler,
+# since it is now the preferred option for
+# text tidying.
+# The important thing for drake's standardization of commands
+# is to stay stable here, not to be super correct.
+# If styler's behavior changes a lot, it will
+# put targets out of date.
+standardize_command <- function(x) {
   formatR::tidy_source(
     source = NULL,
     comment = FALSE,
@@ -300,13 +340,4 @@ tidy_command <- function(x) {
   )$text.tidy %>%
     paste(collapse = "\n") %>%
     braces
-}
-
-braces <- function(x) {
-  paste("{\n", x, "\n}")
-}
-
-get_command <- function(target, config) {
-  config$plan$command[config$plan$target == target] %>%
-    tidy_command
 }

@@ -158,6 +158,31 @@ report <- drake_plan(
 my_plan <- rbind(report, my_datasets, my_analyses, results)
 
 
+# For the commands you specify the free-form `...` argument,
+# `drake_plan()` also supports tidy evaluation.
+# For example, it supports quasiquotation with the `!!` argument.
+# Use `tidy_evaluation = FALSE` or the `list` argument
+# to suppress this behavior.
+
+my_variable <- 5
+
+drake_plan(
+  a = !!my_variable,
+  b = !!my_variable + 1,
+  list = c(d = "!!my_variable")
+)
+
+drake_plan(
+  a = !!my_variable,
+  b = !!my_variable + 1,
+  list = c(d = "!!my_variable"),
+  tidy_evaluation = FALSE
+)
+
+# For instances of !! that remain in the workflow plan,
+# make() will run these commands in tidy fashion,
+# evaluating the !! operator using the environment you provided.
+
 #####################################
 ### CHECK AND DEBUG WORKFLOW PLAN ###
 #####################################

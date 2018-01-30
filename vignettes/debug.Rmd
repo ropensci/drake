@@ -311,6 +311,22 @@ f <- function(x){
 drake_build(target = "my_target", config = config)
 ```
 
+## Tidy evaluation: a caveat to diagnosing interactively
+
+Running commands in your R console is not always exactly like running them with `make()`. That's because `make()` uses tidy evaluation as implemented in the [`rlang` package](https://github.com/tidyverse/rlang).
+
+```{r demotidyeval}
+# This workflow plan uses rlang's quasiquotation operator `!!`.
+my_plan <- drake_plan(list = c(
+  little_b = "\"b\"",
+  letter = "!!little_b"
+))
+my_plan
+make(my_plan)
+readd(letter)
+```
+
+
 # Debrief a build session.
 
 After your project is at least somewhat built, you can inspect and read your results from the cache.

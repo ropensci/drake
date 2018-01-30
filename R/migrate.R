@@ -253,7 +253,7 @@ hashes <- function(target, config) {
 }
 
 legacy_dependency_hash <- function(target, config) {
-  command <- legacy_get_command(target = target, config = config)
+  command <- legacy_get_tidy_command(target = target, config = config)
   stopifnot(length(command) == 1)
   dependencies(target, config) %>%
     legacy_self_hash(config = config) %>%
@@ -261,7 +261,7 @@ legacy_dependency_hash <- function(target, config) {
     digest::digest(algo = config$long_hash_algo)
 }
 
-legacy_get_command <- function(target, config){
+legacy_get_tidy_command <- function(target, config){
   config$plan$command[config$plan$target == target] %>% legacy_tidy
 }
 
