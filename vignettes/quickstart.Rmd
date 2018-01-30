@@ -483,6 +483,19 @@ make(my_plan)
 readd(letter)
 ```
 
+For the commands you specify the free-form `...` argument, `drake_plan()` also supports tidy evaluation. For example, it supports quasiquotation with the `!!` argument. Use the `list` argument to suppress this behavior.
+
+```{r testquasiquoplan}
+my_variable <- 5
+drake_plan(
+  a = !!my_variable,
+  b = !!my_variable + 1,
+  list = c(d = "!!my_variable")
+)
+```
+
+For instances of `!!` that remain in the workflow plan, `make()` will run these commands in tidy fashion, evaluating the `!!` operator using the environment you provided.
+
 # Need more speed?
 
 `Drake` has extensive high-performance computing support, from local multicore processing to serious distributed computing across multiple nodes of a cluster. See the [parallelism vignette](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd) for detailed instructions.

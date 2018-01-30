@@ -54,7 +54,7 @@
 #' mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded withTimeout
-#' @importFrom rlang expr
+#' @importFrom rlang expr exprs
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_environment storr_rds

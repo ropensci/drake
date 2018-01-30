@@ -76,6 +76,20 @@
 #' )
 #' mtcars_plan
 #' # make(mtcars_plan) # Would write output_file.csv. # nolint
+#' # In the free-form `...` argument
+#' # drake_plan() uses tidy evaluation to figure out your commands.
+#' # For example, it respects the quasiquotation operator `!!`
+#' # when it figures out what your code should be.
+#' # Suppress this with the `list` argument.
+#' my_variable <- 5
+#' drake_plan(
+#'   a = !!my_variable,
+#'   b = !!my_variable + 1,
+#'   list = c(d = "!!my_variable")
+#' )
+#' # For instances of !! that remain unevaluated in the workflow plan,
+#' # make() will run these commands in tidy fashion,
+#' # evaluating the !! operator using the environment you provided.
 drake_plan <- function(
   ...,
   list = character(0),
@@ -83,7 +97,7 @@ drake_plan <- function(
   strings_in_dots = c("filenames", "literals")
 ){
   strings_in_dots <- match.arg(strings_in_dots)
-  dots <- match.call(expand.dots = FALSE)$...
+  dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)

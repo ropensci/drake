@@ -94,4 +94,14 @@ mtcars_plan <- drake_plan(
 )
 mtcars_plan
 # make(mtcars_plan) # Would write output_file.csv. # nolint
+# In the free-form `...` argument
+# drake_plan() uses tidy evaluation to figure out your commands.
+# For example, it respects the quasiquotation operator `!!`
+# when it figures out what your code should be.
+# Suppress this with the `list` argument.
+drake_plan(
+  a = !!my_variable,
+  b = !!my_variable + 1,
+  list = c(d = "!!my_variable")
+)
 }
