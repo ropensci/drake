@@ -16,7 +16,7 @@ project root or a subdirectory of the project.}
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
-\item{cache}{drake cache. See \code{\link{new_cache}()}.
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{whether to print console messages}
@@ -28,7 +28,7 @@ Character vector naming the built targets in the cache.
 }
 \description{
 Targets are listed in the workflow plan
-data frame (see \code{\link{drake_plan}()}.
+data frame (see \code{\link[=drake_plan]{drake_plan()}}.
 }
 \examples{
 \dontrun{
@@ -41,6 +41,6 @@ built() # List all the cached targets (built objects and files).
 }
 }
 \seealso{
-\code{\link{cached}}, \code{\link{loadd}},
+\code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}},
 \code{link{imported}}
 }

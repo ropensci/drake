@@ -3,8 +3,8 @@
 \name{in_progress}
 \alias{in_progress}
 \title{List the targets that either
-(1) are currently being built during a \code{\link{make}()}, or
-(2) were being built if the last \code{\link{make}()} quit unexpectedly.}
+(1) are currently being built during a \code{\link[=make]{make()}}, or
+(2) were being built if the last \code{\link[=make]{make()}} quit unexpectedly.}
 \usage{
 in_progress(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = TRUE)
@@ -28,7 +28,7 @@ the \code{path} and \code{search} arguments are ignored.}
 A character vector of target names.
 }
 \description{
-Similar to \code{\link{progress}()}.
+Similar to \code{\link[=progress]{progress()}}.
 }
 \examples{
 \dontrun{
@@ -41,7 +41,7 @@ in_progress()
 }
 }
 \seealso{
-\code{\link{diagnose}}, \code{\link{session}},
-\code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=session]{session()}},
+\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

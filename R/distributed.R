@@ -1,12 +1,12 @@
 #' @title Do the preparatory work
-#' for \code{\link{make}()} with a distributed computing
-#' backend (see the \code{parallelism} argument of \code{\link{make}()}).
+#' for [make()] with a distributed computing
+#' backend (see the `parallelism` argument of [make()]).
 #' @description For internal use only. Exported to flesh out some
 #' of the more advanced examples.
 #' @export
 #' @keywords internal
 #' @param config Internal configuration list from
-#' \code{\link{drake_config}()}.
+#' [drake_config()].
 #' @return Nothing.
 #' @examples
 #' \dontrun{

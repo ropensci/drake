@@ -10,7 +10,7 @@ examples_drake()
 Names of all the drake examples.
 }
 \description{
-Use \code{\link{drake_examples}()} instead.
+Use \code{\link[=drake_examples]{drake_examples()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -19,6 +19,6 @@ Deprecated on 2017-11-12.
 # See ?drake_examples for the examples.
 }
 \seealso{
-\code{\link{drake_examples}}
+\code{\link[=drake_examples]{drake_examples()}}
 }
 \keyword{internal}

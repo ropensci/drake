@@ -1,39 +1,39 @@
 #' @title Create the underlying node and edge data frames
-#' behind \code{\link{vis_drake_graph}()}.
+#' behind [vis_drake_graph()].
 #' @description With the returned data frames,
-#' you can plot your own custom \code{visNetwork} graph.
+#' you can plot your own custom `visNetwork` graph.
 #' @export
 #' @return A list of three data frames: one for nodes,
 #' one for edges, and one for
 #' the legend nodes. The list also contains the
 #' default title of the graph.
-#' @seealso \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}}
-#' @param config a \code{\link{drake_config}()} configuration list.
-#' You can get one as a return value from \code{\link{make}()} as well.
+#' @seealso [vis_drake_graph()], [build_drake_graph()]
+#' @param config a [drake_config()] configuration list.
+#' You can get one as a return value from [make()] as well.
 #'
 #' @param from Optional collection of target/import names.
-#' If \code{from} is nonempty,
+#' If `from` is nonempty,
 #' the graph will restrict itself to
-#' a neighborhood of \code{from}.
+#' a neighborhood of `from`.
 #' Control the neighborhood with
-#' \code{mode} and \code{order}.
+#' `mode` and `order`.
 #'
 #' @param mode Which direction to branch out in the graph
-#' to create a neighborhood around \code{from}.
-#' Use \code{"in"} to go upstream,
-#' \code{"out"} to go downstream,
-#' and \code{"all"} to go both ways and disregard
+#' to create a neighborhood around `from`.
+#' Use `"in"` to go upstream,
+#' `"out"` to go downstream,
+#' and `"all"` to go both ways and disregard
 #' edge direction altogether.
 #'
 #' @param order How far to branch out to create
-#' a neighborhood around \code{from} (measured
+#' a neighborhood around `from` (measured
 #' in the number of nodes). Defaults to
 #' as far as possible.
 #'
 #' @param subset Optional character vector of of target/import names.
 #' Subset of nodes to display in the graph.
-#' Applied after \code{from}, \code{mode}, and \code{order}.
-#' Be advised: edges are only kept for adjacent nodes in \code{subset}.
+#' Applied after `from`, `mode`, and `order`.
+#' Be advised: edges are only kept for adjacent nodes in `subset`.
 #' If you do not select all the intermediate nodes,
 #' edges will drop from the graph.=
 #'
@@ -52,19 +52,19 @@
 #'
 #' @param font_size numeric, font size of the node labels in the graph
 #'
-#' @param build_times logical, whether to show the \code{\link{build_times}()}
+#' @param build_times logical, whether to show the [build_times()]
 #' of the targets and imports, if available.
-#' These are just elapsed times from \code{system.time()}.
+#' These are just elapsed times from [system.time()].
 #'
 #' @param digits number of digits for rounding the build times
 #'
 #' @param from_scratch logical, whether to assume all the targets
-#' will be made from scratch on the next \code{\link{make}()}.
+#' will be made from scratch on the next [make()].
 #' Makes all targets outdated, but keeps information about
-#' build progress in previous \code{\link{make}()}s.
+#' build progress in previous [make()]s.
 #'
 #' @param make_imports logical, whether to make the imports first.
-#' Set to \code{FALSE} to increase speed and risk using obsolete information.
+#' Set to `FALSE` to increase speed and risk using obsolete information.
 #'
 #' @examples
 #' \dontrun{

@@ -16,7 +16,7 @@ vis_drake_graph(config, file = character(0), selfcontained = FALSE,
 }
 \arguments{
 \item{config}{Master configuration list produced by both
-\code{\link{make}()} and \code{\link{drake_config}()}.}
+\code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}}.}
 
 \item{file}{Name of HTML file to save the graph.
 If \code{NULL} or \code{character(0)},
@@ -28,7 +28,7 @@ HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
 
-\item{build_times}{logical, whether to print the \code{\link{build_times}()}
+\item{build_times}{logical, whether to print the \code{\link[=build_times]{build_times()}}
 in the graph.}
 
 \item{digits}{number of digits for rounding the build times}
@@ -56,7 +56,7 @@ acyclic graph, but not necessarily a tree.}
 \item{main}{title of the graph}
 
 \item{direction}{an argument to
-\code{visNetwork::visHierarchicalLayout()}
+\code{\link[visNetwork:visHierarchicalLayout]{visNetwork::visHierarchicalLayout()}}
 indicating the direction of the graph.
 Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized,
@@ -104,12 +104,12 @@ is faster, but all the relevant information is drawn from the cache
 and may be out of date.}
 
 \item{from_scratch}{logical, whether to assume all the targets
-will be made from scratch on the next \code{\link{make}()}.
+will be made from scratch on the next \code{\link[=make]{make()}}.
 Makes all targets outdated, but keeps information about
-build progress in previous \code{\link{make}()}s.}
+build progress in previous \code{\link[=make]{make()}}s.}
 
 \item{...}{other arguments passed to
-\code{visNetwork::visNetwork()} to plot the graph.}
+\code{\link[visNetwork:visNetwork]{visNetwork::visNetwork()}} to plot the graph.}
 }
 \value{
 A visNetwork graph.
@@ -117,7 +117,7 @@ A visNetwork graph.
 \description{
 To save time for repeated plotting,
 this function is divided into
-\code{\link{dataframes_graph}()} and \code{\link{render_drake_graph}()}.
+\code{\link[=dataframes_graph]{dataframes_graph()}} and \code{\link[=render_drake_graph]{render_drake_graph()}}.
 }
 \examples{
 \dontrun{
@@ -137,5 +137,5 @@ vis_drake_graph(
 }
 }
 \seealso{
-\code{\link{build_drake_graph}}
+\code{\link[=build_drake_graph]{build_drake_graph()}}
 }

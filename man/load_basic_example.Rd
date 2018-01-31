@@ -30,7 +30,7 @@ existing file \code{report.Rmd}}
 non-back-compatible cache from a previous version of drake.}
 }
 \value{
-A \code{\link{drake_config}()} configuration list.
+A \code{\link[=drake_config]{drake_config()}} configuration list.
 }
 \description{
 Is there an association between

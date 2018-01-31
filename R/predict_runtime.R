@@ -1,17 +1,17 @@
 #' @title Predict the elapsed runtime of the next call to `make()`.
 #' @description This function simply sums the elapsed build times
-#' from \code{\link{rate_limiting_times}()}, and this
+#' from [rate_limiting_times()], and this
 #' feature is experimental.
 #' To date, the accuracy/precision of the results
 #' has not yet been confirmed by performance studies.
 #' @details For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
-#' by \code{\link{make}()}). Otherwise, \code{predict_runtime()}
+#' by [make()]). Otherwise, `predict_runtime()`
 #' will warn you and tell you which targets have missing times.
 #' @export
-#' @seealso \code{\link{rate_limiting_times}},
-#' \code{\link{build_times}}
-#' \code{\link{make}}
+#' @seealso [rate_limiting_times()],
+#' [build_times()]
+#' [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -31,18 +31,18 @@
 #' )
 #' })
 #' }
-#' @return A \code{lubridate} \code{Duration} object
-#' with the predicted runtime of the next \code{\link{make}()}.
+#' @return A `lubridate` `Duration` object
+#' with the predicted runtime of the next [make()].
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
-#' produced by both \code{\link{make}()} and
-#' \code{\link{drake_config}()}.
+#' produced by both [make()] and
+#' [drake_config()].
 #' @param targets Character vector, names of targets.
 #' Predict the runtime of building these targets
 #' plus dependencies.
 #' Defaults to all targets.
 #' @param from_scratch logical, whether to predict a
-#' \code{\link{make}()} build from scratch or to
+#' [make()] build from scratch or to
 #' take into account the fact that some targets may be
 #' already up to date and therefore skipped.
 #' @param targets_only logical, whether to factor in
@@ -78,8 +78,8 @@ predict_runtime <- function(
 #' the rate-limiting targets of a drake project.
 #'
 #' @description This function produces a conservative
-#' estimate for \code{\link{predict_runtime}()}
-#' for when parallel computing is used in \code{\link{make}()}.
+#' estimate for [predict_runtime()]
+#' for when parallel computing is used in [make()].
 #' This feature is experimental.
 #' The accuracy, precision, and utility of these supposedly
 #' rate-limiting times has not been confirmed by rigorous
@@ -87,29 +87,29 @@ predict_runtime <- function(
 #'
 #' @export
 #'
-#' @details The \code{stage} column of the returned data frame
+#' @details The `stage` column of the returned data frame
 #' is an index that denotes a parallelizable stage.
-#' Within each stage during \code{\link{make}()},
+#' Within each stage during [make()],
 #' the targets are divided among the available jobs.
-#' For \code{rate_limiting_times()},
+#' For `rate_limiting_times()`,
 #' we assume the targets are divided evenly among the jobs
 #' and one job gets all the slowest targets.
 #' The build times of this hypothetical pessimistic job
 #' are returned for each stage. \cr
 #'
-#' By default \code{from_scratch} is \code{FALSE}. That way,
-#' \code{rate_limiting_times()} takes into account that some
+#' By default `from_scratch` is `FALSE`. That way,
+#' `rate_limiting_times()` takes into account that some
 #' targets are already up to date, meaning their elapsed
-#' build times will be instant during the next \code{\link{make}()}.
+#' build times will be instant during the next [make()].
 #'
 #' For the results to make sense, the previous build times
 #' of all targets need to be available (automatically cached
-#' by \code{\link{make}()}). Otherwise, \code{rate_limiting_times()}
+#' by [make()]). Otherwise, `rate_limiting_times()`
 #' will warn you and tell you which targets have missing times.
 #'
-#' @seealso \code{\link{predict_runtime}},
-#' \code{\link{build_times}}
-#' \code{\link{make}}
+#' @seealso [predict_runtime()],
+#' [build_times()]
+#' [make()]
 #'
 #' @examples
 #' \dontrun{
@@ -142,8 +142,8 @@ predict_runtime <- function(
 #'
 #' @param config option internal runtime parameter list of
 #' \code{\link{make}(...)},
-#' produced by both \code{\link{make}()} and
-#' \code{\link{drake_config}()}.
+#' produced by both [make()] and
+#' [drake_config()].
 #'
 #' @param targets Character vector, names of targets.
 #' Find the rate-limiting times for building these targets
@@ -151,8 +151,8 @@ predict_runtime <- function(
 #' Defaults to all targets.
 #'
 #' @param from_scratch logical, whether to assume
-#' next hypothetical call to \code{\link{make}()}
-#' is a build from scratch (after \code{\link{clean}()}).
+#' next hypothetical call to [make()]
+#' is a build from scratch (after [clean()]).
 #'
 #' @param targets_only logical, whether to factor in just the
 #' targets or use times from everything, including the imports.

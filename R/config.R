@@ -1,60 +1,60 @@
 #' @title Create the internal runtime parameter list
-#' used internally in \code{\link{make}()}.
+#' used internally in [make()].
 #' @description This configuration list
-#' is also required for functions such as \code{\link{outdated}()} and
-#' \code{\link{vis_drake_graph}()}. It is meant to be specific to
-#' a single call to \code{\link{make}()}, and you should not modify
-#' it by hand afterwards. If you later plan to call \code{\link{make}()}
-#' with different arguments (especially \code{targets}),
+#' is also required for functions such as [outdated()] and
+#' [vis_drake_graph()]. It is meant to be specific to
+#' a single call to [make()], and you should not modify
+#' it by hand afterwards. If you later plan to call [make()]
+#' with different arguments (especially `targets`),
 #' you should refresh the config list with another call to
-#' \code{\link{drake_config}()}. For changes to the
-#' \code{targets} argument
+#' [drake_config()]. For changes to the
+#' `targets` argument
 #' specifically, it is important to recompute the config list
 #' to make sure the internal workflow network has all the targets you need.
-#' Modifying the \code{targets} element afterwards will have no effect
+#' Modifying the `targets` element afterwards will have no effect
 #' and it could lead to false negative results from
-#' \code{\link{outdated}()}
+#' [outdated()]
 #' @export
 #' @return The master internal configuration list of a project.
-#' @seealso \code{\link{make_with_config}}, \code{\link{make}},
-#' \code{\link{drake_plan}}, \code{\link{vis_drake_graph}}
-#' @param plan same as for \code{\link{make}}
-#' @param targets same as for \code{\link{make}}
-#' @param envir same as for \code{\link{make}}
-#' @param verbose same as for \code{\link{make}}
-#' @param hook same as for \code{\link{make}}
-#' @param parallelism same as for \code{\link{make}}
-#' @param jobs same as for \code{\link{make}}
-#' @param packages same as for \code{\link{make}}
-#' @param prework same as for \code{\link{make}}
-#' @param prepend same as for \code{\link{make}}
-#' @param command same as for \code{\link{make}}
-#' @param args same as for \code{\link{make}}
-#' @param recipe_command same as for \code{\link{make}}
-#' @param cache same as for \code{\link{make}}
-#' @param fetch_cache same as for \code{\link{make}}
-#' @param timeout same as for \code{\link{make}}
-#' @param cpu same as for \code{\link{make}}
-#' @param elapsed same as for \code{\link{make}}
-#' @param retries same as for \code{\link{make}}
-#' @param force same as for \code{\link{make}}
+#' @seealso [make_with_config()], [make()],
+#' [drake_plan()], [vis_drake_graph()]
+#' @param plan same as for [make()]
+#' @param targets same as for [make()]
+#' @param envir same as for [make()]
+#' @param verbose same as for [make()]
+#' @param hook same as for [make()]
+#' @param parallelism same as for [make()]
+#' @param jobs same as for [make()]
+#' @param packages same as for [make()]
+#' @param prework same as for [make()]
+#' @param prepend same as for [make()]
+#' @param command same as for [make()]
+#' @param args same as for [make()]
+#' @param recipe_command same as for [make()]
+#' @param cache same as for [make()]
+#' @param fetch_cache same as for [make()]
+#' @param timeout same as for [make()]
+#' @param cpu same as for [make()]
+#' @param elapsed same as for [make()]
+#' @param retries same as for [make()]
+#' @param force same as for [make()]
 #' @param log_progress logical, whether to clear
 #' the cached progress of the targets readable by
 #' @param graph igraph object representing the workflow plan network.
-#' Overrides \code{skip_imports}.
-#' @param trigger same as for \code{\link{make}}
+#' Overrides `skip_imports`.
+#' @param trigger same as for [make()]
 #' @param imports_only logical, whether to skip building the targets
-#' in \code{plan} and just import objects and files.
+#' in `plan` and just import objects and files.
 #' @param skip_imports logical, whether to totally neglect to
 #' process the imports and jump straight to the targets. This can be useful
 #' if your imports are massive and you just want to test your project,
 #' but it is bad practice for reproducible data analysis.
-#' This argument is overridden if you supply your own \code{graph} argument.
+#' This argument is overridden if you supply your own `graph` argument.
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #' on your workflow to save time. Use at your own peril.
-#' @param lazy_load same as for \code{\link{make}}
-#' @param session_info same as for \code{\link{make}}
-#' @param cache_log_file same as for \code{\link{make}}
+#' @param lazy_load same as for [make()]
+#' @param session_info same as for [make()]
+#' @param cache_log_file same as for [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -166,15 +166,15 @@ add_packages_to_prework <- function(packages, prework) {
     packages, ")", sep = "") %>% c(prework)
 }
 
-#' @title Do the prework in the \code{prework}
-#' argument to \code{\link{make}()}.
+#' @title Do the prework in the `prework`
+#' argument to [make()].
 #' @export
 #' @keywords internal
 #' @description For internal use only.
 #' The only reason this function is exported
 #' is to set up parallel socket (PSOCK) clusters
 #' without too much fuss.
-#' @return Inivisibly returns \code{NULL}.
+#' @return Inivisibly returns `NULL`.
 #' @param config internal configuration list
 #' @param verbose_packages logical, whether to print
 #' package startup messages
@@ -199,11 +199,11 @@ do_prework <- function(config, verbose_packages) {
   invisible()
 }
 
-#' @title List the possible targets for the \code{targets}
-#' argument to \code{\link{make}()}, given a workflow plan
+#' @title List the possible targets for the `targets`
+#' argument to [make()], given a workflow plan
 #' data frame.
 #' @description Intended for internal use only.
-#' @seealso \code{\link{make}}
+#' @seealso [make()]
 #' @keywords internal
 #' @export
 #' @return Character vector of possible targets given the workflow plan.
@@ -223,7 +223,7 @@ possible_targets <- function(plan = drake_plan()) {
 }
 
 #' @title Store an internal configuration list
-#' from \code{\link{drake_config}()}.
+#' from [drake_config()].
 #' @description Exported for demonstration and tinkering purposes
 #' only. Not meant to be called by the user.
 #' @export

@@ -2,8 +2,8 @@
 % Please edit documentation in R/read.R
 \name{read_drake_config}
 \alias{read_drake_config}
-\title{Read the cached \code{\link{drake_config}()}
-list from the last \code{\link{make}()}.}
+\title{Read the cached \code{\link[=drake_config]{drake_config()}}
+list from the last \code{\link[=make]{make()}}.}
 \usage{
 read_drake_config(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1, jobs = 1, envir = parent.frame())
@@ -31,10 +31,10 @@ Supports 1 job only on Windows.}
 }
 \value{
 The cached master internal configuration list
-of the last \code{\link{make}()}.
+of the last \code{\link[=make]{make()}}.
 }
 \description{
-See \code{\link{drake_config}()} for more information
+See \code{\link[=drake_config]{drake_config()}} for more information
 about drake's internal runtime configuration parameter list.
 }
 \examples{
@@ -48,5 +48,5 @@ read_drake_config()
 }
 }
 \seealso{
-\code{\link{make}}
+\code{\link[=make]{make()}}
 }

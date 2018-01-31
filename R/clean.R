@@ -1,51 +1,51 @@
 #' @title Remove targets/imports from the cache.
-#' @description Cleans up the work done by \code{\link{make}()}.
+#' @description Cleans up the work done by [make()].
 #' @details
-#' By default, \code{clean()} removes references to cached data.
+#' By default, `clean()` removes references to cached data.
 #' To deep-clean the data to free up storage/memory, use
-#' \code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
+#' `clean(garbage_collection = TRUE)`. Garbage collection is slower,
 #' but it purges data with no remaining references. To just do garbage
-#' collection without cleaning, see \code{\link{drake_gc}()}.
-#' Also, for \code{clean()}, you must be in your project's working directory
+#' collection without cleaning, see [drake_gc()].
+#' Also, for `clean()`, you must be in your project's working directory
 #' or a subdirectory of it.
-#' \code{clean(search = TRUE)} searches upwards in your folder structure
+#' `clean(search = TRUE)` searches upwards in your folder structure
 #' for the drake cache and acts on the first one it sees. Use
-#' \code{search == FALSE} to look within the current working
+#' `search = FALSE` to look within the current working
 #' directory only.
-#' WARNING: This deletes ALL work done with \code{\link{make}()},
+#' WARNING: This deletes ALL work done with [make()],
 #' which includes
-#' file targets as well as the entire drake cache. Only use \code{clean()}
+#' file targets as well as the entire drake cache. Only use `clean()`
 #' if you're sure you won't lose anything important.
-#' @seealso \code{\link{drake_gc}}, \code{\link{make}}
+#' @seealso [drake_gc()], [make()]
 #' @export
-#' @return Invisibly return \code{NULL}.
+#' @return Invisibly return `NULL`.
 #'
 #' @param ... targets to remove from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to \code{...} in
+#' or character strings (quoted). Similar to `...` in
 #' \code{\link{remove}(...)}.
-#' The symbols must not match other (formal) arguments of \code{clean()},
-#' such as \code{destroy}, \code{cache}, \code{path}, \code{search},
-#' \code{verbose}, or \code{jobs}. If there are name conflicts,
-#' use the \code{list} argument instead of \code{...}.
+#' The symbols must not match other (formal) arguments of `clean()`,
+#' such as `destroy`, `cache`, `path`, `search`,
+#' `verbose`, or `jobs`. If there are name conflicts,
+#' use the `list` argument instead of `...`.
 #'
 #' @param list character vector naming targets to be removed from the
-#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#' cache. Similar to the `list` argument of [remove()].
 #'
 #' @param destroy logical, whether to totally remove the drake cache.
-#' If \code{destroy} is \code{FALSE}, only the targets
-#' from \code{make}()
-#' are removed. If \code{TRUE}, the whole cache is removed, including
+#' If `destroy` is `FALSE`, only the targets
+#' from `make()`
+#' are removed. If `TRUE`, the whole cache is removed, including
 #' session metadata, etc.
 #'
 #' @param cache optional drake cache. See code{\link{new_cache}()}. If
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
 #'
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #'
@@ -59,12 +59,12 @@
 #' current version of drake.
 #'
 #' @param garbage_collection logical, whether to call
-#' \code{cache$gc()} to do garbage collection.
-#' If \code{TRUE}, cached data with no remaining references
+#' `cache$gc()` to do garbage collection.
+#' If `TRUE`, cached data with no remaining references
 #' will be removed.
-#' This will slow down \code{clean()}, but the cache
+#' This will slow down `clean()`, but the cache
 #' could take up far less space afterwards.
-#' See the \code{gc()} method for \code{storr} caches.
+#' See the `gc()` method for `storr` caches.
 #'
 #' @param purge logical, whether to remove objects from
 #' metadata namespaces such as "meta", "build_times", and "errors".
@@ -199,22 +199,22 @@ remove_file_target <- function(target, plan){
 
 #' @title Do garbage collection on the drake cache.
 #' @description The cache is a key-value store.
-#' By default, the \code{\link{clean}()} function removes
+#' By default, the [clean()] function removes
 #' values, but not keys.
 #' Garbage collection removes the remaining dangling files.
-#' @seealso \code{\link{clean}}
+#' @seealso [clean()]
 #' @export
-#' @return\code{NULL}
+#' @return`NULL`
 #' @param path file path to the folder containing the cache.
 #' Yes, this is the parent directory containing the cache,
 #' not the cache itself, and it assumes the cache is in the
 #' `.drake` folder. If you are looking for a different cache
 #' with a known folder different from `.drake`, use
-#' the \code{\link{this_cache}()} function.
+#' the [this_cache()] function.
 #' @param search logical, whether to search back in the file system
 #' for the cache.
 #' @param verbose logical, whether to print the location of the cache
-#' @param cache the \code{drake}/\code{storr} cache object itself,
+#' @param cache the `drake`/`storr` cache object itself,
 #' if available.
 #' @param force logical, whether to load the cache
 #' despite any back compatibility issues with the
@@ -254,30 +254,30 @@ drake_gc <- function(
 }
 
 #' @title Try to repair a drake cache that is prone
-#' to throwing \code{storr}-related errors.
-#' @description Sometimes, \code{storr} caches may have
+#' to throwing `storr`-related errors.
+#' @description Sometimes, `storr` caches may have
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the
 #' cache normally again.
 #' @return The rescued drake/storr cache.
 #' @export
-#' @seealso \code{\link{get_cache}}, \code{\link{cached}},
-#' \code{\link{drake_gc}}, \code{\link{clean}}
+#' @seealso [get_cache()], [cached()],
+#' [drake_gc()], [clean()]
 #' @param targets Character vector, names of the targets to rescue.
-#' As with many other drake utility functions, the word \code{target}
+#' As with many other drake utility functions, the word `target`
 #' is defined generally in this case, encompassing imports
 #' as well as true targets.
-#' If \code{targets} is \code{NULL}, everything in the
+#' If `targets` is `NULL`, everything in the
 #' cache is rescued.
-#' @param path same as for \code{\link{get_cache}()}
-#' @param search same as for \code{\link{get_cache}()}
-#' @param verbose same as for \code{\link{get_cache}()}
-#' @param force same as for \code{\link{get_cache}()}
+#' @param path same as for [get_cache()]
+#' @param search same as for [get_cache()]
+#' @param verbose same as for [get_cache()]
+#' @param force same as for [get_cache()]
 #' @param cache a `storr` cache object
 #' @param jobs number of jobs for light parallelism
 #' (disabled on Windows)
 #' @param garbage_collection logical, whether to do garbage collection
-#' as a final step. See \code{\link{drake_gc}} and \code{\link{clean}}
+#' as a final step. See [drake_gc()] and [clean()]
 #' for details.
 #' @examples
 #' \dontrun{

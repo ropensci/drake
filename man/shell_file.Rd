@@ -14,11 +14,11 @@ shell_file(path = "shell.sh", overwrite = FALSE)
 destination file with the same name}
 }
 \value{
-The return value of the call to \code{file.copy()} that
+The return value of the call to \code{\link[=file.copy]{file.copy()}} that
 wrote the shell file.
 }
 \description{
-This function also does a `chmod +x`
+This function also does a \code{chmod +x}
 to enable execute permissions.
 }
 \examples{
@@ -32,7 +32,7 @@ shell_file()
 }
 }
 \seealso{
-\code{\link{make}}, \code{\link{max_useful_jobs}},
-\code{\link{parallelism_choices}}, \code{\link{drake_batchtools_tmpl_file}},
-\code{\link{drake_example}}, \code{\link{drake_examples}}
+\code{\link[=make]{make()}}, \code{\link[=max_useful_jobs]{max_useful_jobs()}},
+\code{\link[=parallelism_choices]{parallelism_choices()}}, \code{\link[=drake_batchtools_tmpl_file]{drake_batchtools_tmpl_file()}},
+\code{\link[=drake_example]{drake_example()}}, \code{\link[=drake_examples]{drake_examples()}}
 }

@@ -8,22 +8,22 @@ read_graph(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = 1, ...)
 }
 \arguments{
-\item{path}{Same as for \code{\link{read_drake_graph}()}.}
+\item{path}{Same as for \code{\link[=read_drake_graph]{read_drake_graph()}}.}
 
-\item{search}{Same as for \code{\link{read_drake_graph}()}.}
+\item{search}{Same as for \code{\link[=read_drake_graph]{read_drake_graph()}}.}
 
-\item{cache}{Same as for \code{\link{read_drake_graph}()}.}
+\item{cache}{Same as for \code{\link[=read_drake_graph]{read_drake_graph()}}.}
 
-\item{verbose}{Same as for \code{\link{read_drake_graph}()}.}
+\item{verbose}{Same as for \code{\link[=read_drake_graph]{read_drake_graph()}}.}
 
-\item{...}{Same as for \code{\link{read_drake_graph}()}.}
+\item{...}{Same as for \code{\link[=read_drake_graph]{read_drake_graph()}}.}
 }
 \value{
 An \code{igraph} object representing the dependency
 network of the workflow.
 }
 \description{
-Use \code{\link{read_drake_graph}()} instead.
+Use \code{\link[=read_drake_graph]{read_drake_graph()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -32,6 +32,6 @@ Deprecated on 2017-11-12.
 # See ?read_drake_graph for the examples.
 }
 \seealso{
-\code{\link{read_drake_graph}}.
+\code{\link[=read_drake_graph]{read_drake_graph()}}.
 }
 \keyword{internal}

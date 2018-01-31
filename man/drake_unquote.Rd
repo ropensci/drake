@@ -31,5 +31,5 @@ x <- "'abcd'"
 drake_unquote(x) # "abcd"
 }
 \seealso{
-\code{\link{drake_quotes}}, \code{\link{drake_strings}}
+\code{\link[=drake_quotes]{drake_quotes()}}, \code{\link[=drake_strings]{drake_strings()}}
 }

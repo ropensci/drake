@@ -6,11 +6,11 @@
 #' In workflow plan data frame commands,
 #' single-quoted targets denote physical files,
 #' and double-quoted strings are treated as ordinary string literals.
-#' @seealso \code{\link{drake_unquote}}, \code{\link{drake_strings}}
+#' @seealso [drake_unquote()], [drake_strings()]
 #' @export
 #' @return character vector with quotes around it
 #' @param x character vector or object to be coerced to character.
-#' @param single Add single quotes if \code{TRUE}
+#' @param single Add single quotes if `TRUE`
 #' and double quotes otherwise.
 #' @examples
 #' # Single-quote this string.
@@ -32,13 +32,13 @@ drake_quotes <- function(x = NULL, single = FALSE){
 #' In workflow plan data frame commands,
 #' single-quoted targets denote physical files,
 #' and double-quoted strings are treated as ordinary string literals.
-#' @seealso \code{\link{drake_quotes}}, \code{\link{drake_strings}}
+#' @seealso [drake_quotes()], [drake_strings()]
 #' @export
 #' @return character vector without leading
 #' or trailing escaped quotes around
 #' the elements
 #' @param x character vector
-#' @param deep remove all outer quotes if \code{TRUE}
+#' @param deep remove all outer quotes if `TRUE`
 #' and only the outermost set otherwise. Single and double
 #' quotes are treated interchangeably, and matching is not checked.
 #' @examples
@@ -56,7 +56,7 @@ drake_unquote <- function(x = NULL, deep = FALSE){
 #' @title Turn valid expressions into character strings.
 #' @description This function may be useful for
 #' constructing workflow plan data frames.
-#' @seealso \code{\link{drake_quotes}}, \code{\link{drake_unquote}}
+#' @seealso [drake_quotes()], [drake_unquote()]
 #' @export
 #' @return a character vector
 #' @param ... unquoted symbols to turn into character strings.
@@ -73,7 +73,7 @@ drake_strings <- function(...){
 
 #' @title Converts an ordinary character string
 #' into a filename understandable by drake.
-#' @description This function simply wraps single quotes around \code{x}.
+#' @description This function simply wraps single quotes around `x`.
 #' Quotes are important in drake.
 #' In workflow plan data frame commands,
 #' single-quoted targets denote physical files,

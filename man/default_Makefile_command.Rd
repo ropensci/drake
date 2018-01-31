@@ -3,7 +3,7 @@
 \name{default_Makefile_command}
 \alias{default_Makefile_command}
 \title{Give the default \code{command}
-argument to \code{\link{make}()}.}
+argument to \code{\link[=make]{make()}}.}
 \usage{
 default_Makefile_command()
 }

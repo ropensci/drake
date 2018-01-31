@@ -1,20 +1,20 @@
-#' @title Return the \code{\link{sessionInfo}()}
-#' of the last call to \code{\link{make}()}.
+#' @title Return the [sessionInfo()]
+#' of the last call to [make()].
 #' @description By default, session info is saved
-#' during \code{\link{make}()} to ensure reproducibility.
+#' during [make()] to ensure reproducibility.
 #' Your loaded packages and their versions are recorded, for example.
-#' @seealso \code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+#' @seealso [diagnose()], [built()], [imported()],
+#' [readd()], [drake_plan()], [make()]
 #' @export
-#' @return \code{\link{sessionInfo}()} of the last
-#' call to \code{\link{make}()}
+#' @return [sessionInfo()] of the last
+#' call to [make()]
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
@@ -37,21 +37,21 @@ drake_session <- function(path = getwd(), search = TRUE,
 }
 
 #' @title List the targets that either
-#' (1) are currently being built during a \code{\link{make}()}, or
-#' (2) were being built if the last \code{\link{make}()} quit unexpectedly.
-#' @description Similar to \code{\link{progress}()}.
-#' @seealso \code{\link{diagnose}}, \code{\link{session}},
-#' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+#' (1) are currently being built during a [make()], or
+#' (2) were being built if the last [make()] quit unexpectedly.
+#' @description Similar to [progress()].
+#' @seealso [diagnose()], [session()],
+#' [built()], [imported()],
+#' [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
@@ -75,22 +75,22 @@ in_progress <- function(path = getwd(), search = TRUE,
 }
 
 #' @title List the targets that failed in the last call
-#' to \code{\link{make}()}.
-#' @description Together, functions \code{failed} and
-#' \code{\link{diagnose}()} should eliminate the strict need
+#' to [make()].
+#' @description Together, functions `failed` and
+#' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
-#' @seealso \code{\link{diagnose}}, \code{\link{session}},
-#' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+#' @seealso [diagnose()], [session()],
+#' [built()], [imported()],
+#' [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
@@ -118,42 +118,42 @@ failed <- function(path = getwd(), search = TRUE,
 }
 
 #' @title Get the build progress of your targets
-#' during a \code{\link{make}()}.
+#' during a [make()].
 #' @description Objects that drake imported, built, or attempted
-#' to build are listed as \code{"finished"} or \code{"in progress"}.
+#' to build are listed as `"finished"` or `"in progress"`.
 #' Skipped objects are not listed.
-#' @seealso \code{\link{diagnose}}, \code{\link{session}},
-#' \code{\link{built}}, \code{\link{imported}},
-#' \code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+#' @seealso [diagnose()], [session()],
+#' [built()], [imported()],
+#' [readd()], [drake_plan()], [make()]
 #' @export
 #'
 #' @return The build progress of each target reached by
-#' the current \code{\link{make}()} so far.
+#' the current [make()] so far.
 #'
 #' @param ... objects to load from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to \code{...} in
+#' or character strings (quoted). Similar to `...` in
 #' \code{\link{remove}(...)}.
 #'
 #' @param list character vector naming objects to be loaded from the
-#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#' cache. Similar to the `list` argument of [remove()].
 #'
 #' @param no_imported_objects logical, whether to only return information
 #' about imported files and targets with commands (i.e. whether to ignore
 #' imported objects that are not files).
 #'
 #' @param imported_files_only logical, deprecated. Same as
-#' \code{no_imported_objects}.  Use the \code{no_imported_objects} argument
+#' `no_imported_objects`.  Use the `no_imported_objects` argument
 #' instead.
 #'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
 #'
-#' @param search If \code{TRUE}, search parent directories
+#' @param search If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #'

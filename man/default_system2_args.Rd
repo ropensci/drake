@@ -15,7 +15,7 @@ default_system2_args(jobs, verbose)
 \code{args} for \code{\link{system2}(command, args)}
 }
 \description{
-Use \code{\link{default_Makefile_args}()} instead.
+Use \code{\link[=default_Makefile_args]{default_Makefile_args()}} instead.
 }
 \details{
 Deprecated on 2017-10.
@@ -24,6 +24,6 @@ Deprecated on 2017-10.
 # See ?default_Makefile_args for examples.
 }
 \seealso{
-\code{\link{default_Makefile_args}}
+\code{\link[=default_Makefile_args]{default_Makefile_args()}}
 }
 \keyword{internal}

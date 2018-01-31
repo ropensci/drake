@@ -21,5 +21,5 @@ constructing workflow plan data frames.
 drake_strings(a, b, c, d) # [1] "a" "b" "c" "d"
 }
 \seealso{
-\code{\link{drake_quotes}}, \code{\link{drake_unquote}}
+\code{\link[=drake_quotes]{drake_quotes()}}, \code{\link[=drake_unquote]{drake_unquote()}}
 }

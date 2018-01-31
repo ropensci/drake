@@ -1,26 +1,26 @@
 #' @title Read and return a drake target or import from the cache.
 #' @description Does not delete the item from the cache.
-#' @seealso \code{\link{loadd}}, \code{\link{cached}},
-#' \code{\link{built}}, \code{link{imported}}, \code{\link{drake_plan}},
-#' \code{\link{make}}
+#' @seealso [loadd()], [cached()],
+#' [built()], \code{link{imported}}, [drake_plan()],
+#' [make()]
 #' @export
-#' @return The cached value of the \code{target}.
-#' @param target If \code{character_only} is \code{TRUE},
-#' \code{target} is a character string naming the object to read.
-#' Otherwise, \code{target} is an unquoted symbol with the name of the
-#' object. Note: \code{target} could be the name of an imported object.
-#' @param character_only logical, whether \code{name} should be treated
+#' @return The cached value of the `target`.
+#' @param target If `character_only` is `TRUE`,
+#' `target` is a character string naming the object to read.
+#' Otherwise, `target` is an unquoted symbol with the name of the
+#' object. Note: `target` could be the name of an imported object.
+#' @param character_only logical, whether `name` should be treated
 #' as a character or a symbol
-#' (just like \code{character.only} in \code{\link{library}()}).
+#' (just like `character.only` in [library()]).
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param namespace character scalar,
 #' name of an optional storr namespace to read from.
 #' @param verbose whether to print console messages
@@ -60,35 +60,35 @@ readd <- function(
 
 #' @title Load multiple targets or imports from the drake cache.
 #' @description Loads the object(s) into the
-#' current workspace (or \code{envir} if given). Defaults
-#' to loading the whole cache if arguments \code{...}
-#' and \code{list} are not set
+#' current workspace (or `envir` if given). Defaults
+#' to loading the whole cache if arguments `...`
+#' and `list` are not set
 #' (or all the imported objects if in addition
-#' imported_only is \code{TRUE}).
-#' @seealso \code{\link{cached}}, \code{\link{built}},
-#' \code{\link{imported}}, \code{\link{drake_plan}}, \code{\link{make}},
+#' imported_only is `TRUE`).
+#' @seealso [cached()], [built()],
+#' [imported()], [drake_plan()], [make()],
 #' @export
-#' @return \code{NULL}
+#' @return `NULL`
 #'
 #' @param ... targets to load from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to \code{...} in
+#' or character strings (quoted). Similar to `...` in
 #' \code{\link{remove}(...)}.
 #'
 #' @param list character vector naming targets to be loaded from the
-#' cache. Similar to the \code{list} argument of \code{\link{remove}()}.
+#' cache. Similar to the `list` argument of [remove()].
 #'
 #' @param imported_only logical, whether only imported objects
 #' should be loaded.
 #'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
 #'
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #'
@@ -100,9 +100,9 @@ readd <- function(
 #'
 #' @param jobs number of parallel jobs for loading objects. On
 #' non-Windows systems, the loading process for multiple objects
-#' can be lightly parallelized via \code{parallel::mclapply()}.
+#' can be lightly parallelized via `parallel::mclapply()`.
 #' just set jobs to be an integer greater than 1. On Windows,
-#' \code{jobs} is automatically demoted to 1.
+#' `jobs` is automatically demoted to 1.
 #'
 #' @param verbose logical, whether to print console messages
 #'
@@ -113,15 +113,15 @@ readd <- function(
 #' target failed and you want to debug the command in an interactive
 #' session with the dependencies in your workspace.
 #' One caveat: to find the dependencies,
-#' \code{\link{loadd}()} uses information that was stored
-#' in a \code{\link{drake_config}()} list and cached
-#' during the last \code{\link{make}()}.
-#' That means you need to have already called \code{\link{make}()}
-#' if you set \code{deps} to \code{TRUE}.
+#' [loadd()] uses information that was stored
+#' in a [drake_config()] list and cached
+#' during the last [make()].
+#' That means you need to have already called [make()]
+#' if you set `deps` to `TRUE`.
 #'
 #' @param lazy logical, whether to lazy load with
-#' \code{delayedAssign()} rather than the more eager
-#' \code{assign()}.
+#' [delayedAssign()] rather than the more eager
+#' [assign()].
 #'
 #' @examples
 #' \dontrun{
@@ -241,28 +241,28 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
   )
 }
 
-#' @title Read the cached \code{\link{drake_config}()}
-#' list from the last \code{\link{make}()}.
-#' @description See \code{\link{drake_config}()} for more information
+#' @title Read the cached [drake_config()]
+#' list from the last [make()].
+#' @description See [drake_config()] for more information
 #' about drake's internal runtime configuration parameter list.
-#' @seealso \code{\link{make}}
+#' @seealso [make()]
 #' @export
 #' @return The cached master internal configuration list
-#' of the last \code{\link{make}()}.
+#' of the last [make()].
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
 #' @param jobs number of jobs for light parallelism.
 #' Supports 1 job only on Windows.
 #' @param envir Optional environment to fill in if
-#' \code{config$envir} was not cached. Defaults to your workspace.
+#' `config$envir` was not cached. Defaults to your workspace.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -306,18 +306,18 @@ read_drake_config <- function(
 }
 
 #' @title Read the workflow plan
-#' from your last attempted call to \code{\link{make}()}.
+#' from your last attempted call to [make()].
 #' @description Uses the cache.
-#' @seealso \code{\link{read_drake_config}}
+#' @seealso [read_drake_config()]
 #' @export
 #' @return A workflow plan data frame.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages
@@ -349,26 +349,26 @@ read_drake_plan <- function(
 }
 
 #' @title Read the igraph dependency network
-#' from your last attempted call to \code{\link{make}()}.
+#' from your last attempted call to [make()].
 #' @description For more user-friendly graphing utilities,
-#' see \code{\link{vis_drake_graph}()}
+#' see [vis_drake_graph()]
 #' and related functions.
-#' @seealso \code{\link{vis_drake_graph}}, \code{\link{read_drake_config}}
+#' @seealso [vis_drake_graph()], [read_drake_config()]
 #' @export
-#' @return An \code{igraph} object representing the dependency
+#' @return An `igraph` object representing the dependency
 #' network of the workflow.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose logical, whether to print console messages
-#' @param ... arguments to \code{visNetwork()} via
-#' \code{\link{vis_drake_graph}()}
+#' @param ... arguments to [visNetwork()] via
+#' [vis_drake_graph()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -404,28 +404,28 @@ read_drake_graph <- function(
 #' target is up to date or outdated. The metadata of imports
 #' is used to compute the metadata of targets.
 #' @details Target metadata is computed
-#' with \code{drake_meta()} and then
-#' \code{drake:::finish_meta()}.
+#' with [drake_meta()] and then
+#' `drake:::finish_meta()`.
 #' This metadata corresponds
 #' to the state of the target immediately after it was built
-#' or imported in the last \code{\link{make}()} that
+#' or imported in the last [make()] that
 #' did not skip it.
-#' The exception to this is the \code{$missing} element
+#' The exception to this is the `$missing` element
 #' of the metadata, which indicates if the target/import
-#' was missing just \emph{before} it was built.
-#' @seealso \code{\link{dependency_profile}}, \code{\link{make}}
+#' was missing just *before* it was built.
+#' @seealso [dependency_profile()], [make()]
 #' @export
 #' @return The cached master internal configuration list
-#' of the last \code{\link{make}()}.
+#' of the last [make()].
 #' @param targets character vector, names of the targets
-#' to get metadata. If \code{NULL}, all metadata is collected.
+#' to get metadata. If `NULL`, all metadata is collected.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If \code{cache} is supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#' If `cache` is supplied,
+#' the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
+#' or if `search` is `TRUE`, either the
 #' project root or a subdirectory of the project.
-#' @param search logical. If \code{TRUE}, search parent directories
+#' @param search logical. If `TRUE`, search parent directories
 #' to find the nearest drake cache. Otherwise, look in the
 #' current working directory only.
 #' @param verbose whether to print console messages

@@ -16,19 +16,19 @@ configure_cache(cache = drake::get_cache(verbose = verbose),
 \item{short_hash_algo}{short hash algorithm for drake.
 
 The short algorithm must be among \code{\link{available_hash_algos}{}},
-which is just the collection of algorithms available to the `algo`
-argument in \code{digest::digest()}.
-See \code{?\link{default_short_hash_algo}} for more.}
+which is just the collection of algorithms available to the \code{algo}
+argument in \code{\link[digest:digest]{digest::digest()}}.
+See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} for more.}
 
 \item{long_hash_algo}{short hash algorithm for drake.
 The long algorithm must be among \code{\link{available_hash_algos}{}},
-which is just the collection of algorithms available to the `algo`
+which is just the collection of algorithms available to the \code{algo}
 argument in \code{digest::digest()}.
-See \code{?\link{default_long_hash_algo}} for more.}
+See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} for more.}
 
 \item{log_progress}{logical, whether to clear the recorded
 build progress if this cache was used for previous calls to
-\code{\link{make}()}}
+\code{\link[=make]{make()}}}
 
 \item{overwrite_hash_algos}{logical, whether to try to overwrite
 the hash algorithms in the cache with any user-specified ones.}
@@ -42,7 +42,7 @@ A drake/storr cache.
 }
 \description{
 The purpose of this function is
-to prepare the cache to be called from \code{\link{make}()}.
+to prepare the cache to be called from \code{\link[=make]{make()}}.
 }
 \examples{
 \dontrun{
@@ -66,6 +66,6 @@ make(my_plan) # Changing the long hash puts the targets out of date.
 }
 }
 \seealso{
-\code{\link{default_short_hash_algo}},
-\code{\link{default_long_hash_algo}}
+\code{\link[=default_short_hash_algo]{default_short_hash_algo()}},
+\code{\link[=default_long_hash_algo]{default_long_hash_algo()}}
 }

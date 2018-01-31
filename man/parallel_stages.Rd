@@ -2,17 +2,17 @@
 % Please edit documentation in R/parallel_stages.R
 \name{parallel_stages}
 \alias{parallel_stages}
-\title{Show how \code{\link{make}()} will build your targets
+\title{Show how \code{\link[=make]{make()}} will build your targets
 in successive parallelizable stages.}
 \usage{
 parallel_stages(config, from_scratch = FALSE)
 }
 \arguments{
 \item{config}{An configuration list output by
-\code{\link{make}()} or \code{\link{drake_config}()}.}
+\code{\link[=make]{make()}} or \code{\link[=drake_config]{drake_config()}}.}
 
 \item{from_scratch}{logical, whether to assume
-that the next \code{\link{make}()} will run from scratch
+that the next \code{\link[=make]{make()}} will run from scratch
 so that all targets are attempted.}
 }
 \value{
@@ -22,18 +22,18 @@ targets are divided into parallelizable stages
 }
 \description{
 The stages determine the order in which
-\code{\link{make}()} builds the targets.
+\code{\link[=make]{make()}} builds the targets.
 }
 \details{
-Usually, \code{\link{make}()} divides the targets
+Usually, \code{\link[=make]{make()}} divides the targets
 and imports into parallelizable stages strictly according
-to the columns in \code{\link{vis_drake_graph}()}.
+to the columns in \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
 However, if some targets are out of date, drake
 looks ahead in the graph until it finds outdated targets
 for the current stage. The \code{parallel_stages()} function
 takes this behavior into account when it reports a data frame
 of information on how targets and imports will be divided into
-parallel stages during the next \code{\link{make}()}.
+parallel stages during the next \code{\link[=make]{make()}}.
 }
 \examples{
 \dontrun{
@@ -58,6 +58,6 @@ parallel_stages(config = config)
 }
 }
 \seealso{
-\code{\link{next_stage}},
-\code{\link{make}}, \code{\link{make_with_config}}
+\code{\link[=next_stage]{next_stage()}},
+\code{\link[=make]{make()}}, \code{\link[=make_with_config]{make_with_config()}}
 }

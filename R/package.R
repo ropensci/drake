@@ -1,5 +1,5 @@
 #' Drake is a pipeline toolkit
-#' (\url{https://github.com/pditommaso/awesome-pipeline})
+#' (<https://github.com/pditommaso/awesome-pipeline>)
 #' and a scalable, R-focused solution for reproducibility
 #' and high-performance computing.
 #' @docType package
@@ -36,7 +36,7 @@
 #' unlink("report.Rmd") # Clean up the remaining files.
 #' })
 #' }
-#' @references \url{https://github.com/ropensci/drake}
+#' @references <https://github.com/ropensci/drake>
 #' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest

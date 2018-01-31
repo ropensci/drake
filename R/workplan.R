@@ -1,12 +1,12 @@
 #' @title Create a workflow plan data frame
-#' for the \code{plan} argument of \code{\link{make}}.
+#' for the `plan` argument of [make()].
 #' @description Turns a named collection of target/command pairs into
-#' a workflow plan data frame for \code{\link{make}()} and
-#' \code{\link{check}()}. You can give the commands
-#' as named expressions, or you can use the \code{list}
+#' a workflow plan data frame for [make()] and
+#' [check()]. You can give the commands
+#' as named expressions, or you can use the `list`
 #' argument to supply them as character strings.
 #' @details A workflow plan data frame is a data frame
-#' with a \code{target} column and a \code{command} column.
+#' with a `target` column and a `command` column.
 #' Targets are the objects and files that drake generates,
 #' and commands are the pieces of R code that produce them.
 #'
@@ -14,10 +14,10 @@
 #' Double quotes are reserved for ordinary strings.
 #' The distinction is important because drake thinks about
 #' how files, objects, targets, etc. depend on each other.
-#' Quotes in the \code{list} argument are left alone,
+#' Quotes in the `list` argument are left alone,
 #' but R messes with quotes when it parses the free-form
-#' arguments in \code{...}, so use the \code{strings_in_dots}
-#' argument to control the quoting in \code{...}.
+#' arguments in `...`, so use the `strings_in_dots`
+#' argument to control the quoting in `...`.
 #' @export
 #' @return A data frame of targets and commands.
 #' @param ... A collection of symbols/targets
@@ -28,20 +28,20 @@
 #' (single-quoted) external file targets.
 #' @param strings_in_dots Character scalar,
 #' how to treat quoted character strings in the commands
-#' specified through \code{...}.
-#' Set to \code{"filenames"} to treat all these strings as
+#' specified through `...`.
+#' Set to `"filenames"` to treat all these strings as
 #' external file targets/imports (single-quoted),
-#' or to \code{"literals"} to treat them all as literal
+#' or to `"literals"` to treat them all as literal
 #' strings (double-quoted).
 #' Unfortunately, because of how R deparses code,
 #' you cannot simply leave literal quotes alone in the
-#' \code{...} argument. R will either convert all these quotes
+#' `...` argument. R will either convert all these quotes
 #' to single quotes or double quotes. Literal quotes in the
-#' \code{list} argument are left alone.
+#' `list` argument are left alone.
 #' @param tidy_evaluation logical, whether to use tidy evaluation
 #' such as quasiquotation
 #' when evaluating commands passed through the free-form
-#' \code{...} argument.
+#' `...` argument.
 #' @examples
 #' # Create example workflow plan data frames for make()
 #' drake_plan(small = simulate(5), large = simulate(50))

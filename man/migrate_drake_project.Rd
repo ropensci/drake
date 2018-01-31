@@ -61,5 +61,5 @@ outdated(config)
 }
 }
 \seealso{
-\code{\link{rescue_cache}}, \code{\link{make}}
+\code{\link[=rescue_cache]{rescue_cache()}}, \code{\link[=make]{make()}}
 }

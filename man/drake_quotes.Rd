@@ -28,5 +28,5 @@ drake_quotes("abcd", single = TRUE) # "'abcd'"
 drake_quotes("abcd") # "\\"abcd\\""
 }
 \seealso{
-\code{\link{drake_unquote}}, \code{\link{drake_strings}}
+\code{\link[=drake_unquote]{drake_unquote()}}, \code{\link[=drake_strings]{drake_strings()}}
 }

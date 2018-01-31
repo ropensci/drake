@@ -18,12 +18,12 @@ is a file system cache.}
 Use \code{storr} to customize your caches instead.}
 
 \item{short_hash_algo}{short hash algorithm for the cache.
-See \code{\link{default_short_hash_algo}()} and
-\code{\link{make}()}}
+See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} and
+\code{\link[=make]{make()}}}
 
 \item{long_hash_algo}{long hash algorithm for the cache.
-See \code{\link{default_long_hash_algo}()} and
-\code{\link{make}()}}
+See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} and
+\code{\link[=make]{make()}}}
 
 \item{...}{other arguments to the cache constructor}
 }
@@ -31,7 +31,7 @@ See \code{\link{default_long_hash_algo}()} and
 A newly created drake cache as a storr object.
 }
 \description{
-Uses the \code{storr_rds()} function
+Uses the \code{\link[=storr_rds]{storr_rds()}} function
 from the \code{storr} package.
 }
 \examples{
@@ -46,7 +46,7 @@ clean(destroy = TRUE, cache = cache2)
 }
 }
 \seealso{
-\code{\link{default_short_hash_algo}},
-\code{\link{default_long_hash_algo}},
-\code{\link{make}}
+\code{\link[=default_short_hash_algo]{default_short_hash_algo()}},
+\code{\link[=default_long_hash_algo]{default_long_hash_algo()}},
+\code{\link[=make]{make()}}
 }

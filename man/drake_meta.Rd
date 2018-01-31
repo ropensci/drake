@@ -11,12 +11,12 @@ drake_meta(target, config)
 to get metadata.}
 
 \item{config}{Master internal configuration list produced
-by \code{\link{drake_config}()}.}
+by \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 A list of metadata on a target. Does not include
 the file modification time if the target is a file.
-That piece is provided later in \code{\link{make}()} by
+That piece is provided later in \code{\link[=make]{make()}} by
 \code{drake:::finish_meta}.
 }
 \description{
@@ -30,7 +30,7 @@ with \code{drake_meta()} and then
 \code{drake:::finish_meta()}.
 This metadata corresponds
 to the state of the target immediately after it was built
-or imported in the last \code{\link{make}()} that
+or imported in the last \code{\link[=make]{make()}} that
 did not skip it.
 The exception to this is the \code{$missing} element
 of the metadata, which indicates if the target/import
@@ -62,5 +62,5 @@ readd(small)
 }
 }
 \seealso{
-\code{\link{dependency_profile}}, \code{\link{make}}
+\code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
 }

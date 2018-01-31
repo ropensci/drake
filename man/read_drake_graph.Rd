@@ -3,7 +3,7 @@
 \name{read_drake_graph}
 \alias{read_drake_graph}
 \title{Read the igraph dependency network
-from your last attempted call to \code{\link{make}()}.}
+from your last attempted call to \code{\link[=make]{make()}}.}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1, ...)
@@ -23,8 +23,8 @@ the \code{path} and \code{search} arguments are ignored.}
 
 \item{verbose}{logical, whether to print console messages}
 
-\item{...}{arguments to \code{visNetwork()} via
-\code{\link{vis_drake_graph}()}}
+\item{...}{arguments to \code{\link[=visNetwork]{visNetwork()}} via
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}}
 }
 \value{
 An \code{igraph} object representing the dependency
@@ -32,7 +32,7 @@ network of the workflow.
 }
 \description{
 For more user-friendly graphing utilities,
-see \code{\link{vis_drake_graph}()}
+see \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 and related functions.
 }
 \examples{
@@ -47,5 +47,5 @@ class(g) # "igraph"
 }
 }
 \seealso{
-\code{\link{vis_drake_graph}}, \code{\link{read_drake_config}}
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}, \code{\link[=read_drake_config]{read_drake_config()}}
 }

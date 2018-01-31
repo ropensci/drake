@@ -8,19 +8,19 @@ read_config(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
-\item{path}{same as \code{\link{read_drake_config}()}}
+\item{path}{same as \code{\link[=read_drake_config]{read_drake_config()}}}
 
-\item{search}{same as \code{\link{read_drake_config}()}}
+\item{search}{same as \code{\link[=read_drake_config]{read_drake_config()}}}
 
-\item{cache}{same as \code{\link{read_drake_config}()}}
+\item{cache}{same as \code{\link[=read_drake_config]{read_drake_config()}}}
 
-\item{verbose}{same as \code{\link{read_drake_config}()}}
+\item{verbose}{same as \code{\link[=read_drake_config]{read_drake_config()}}}
 }
 \value{
 The master internal configuration list of a project.
 }
 \description{
-Use \code{\link{read_drake_config}()} instead.
+Use \code{\link[=read_drake_config]{read_drake_config()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -29,6 +29,6 @@ Deprecated on 2017-11-12.
 # See ?read_drake_config for examples.
 }
 \seealso{
-\code{\link{read_drake_config}}
+\code{\link[=read_drake_config]{read_drake_config()}}
 }
 \keyword{internal}

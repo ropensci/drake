@@ -1,11 +1,11 @@
 #' @title Suggest an upper bound on the jobs in the next call
-#' to \code{make(..., jobs = YOUR_CHOICE)}.
-#' @description The best number of \code{jobs}
-#' should be somewhere between 1 and \code{max_useful_jobs(...)}.
-#' Any additional jobs more than \code{max_useful_jobs(...)}
+#' to `make(..., jobs = YOUR_CHOICE)`.
+#' @description The best number of `jobs`
+#' should be somewhere between 1 and `max_useful_jobs(...)`.
+#' Any additional jobs more than `max_useful_jobs(...)`
 #' should be superfluous, and could even slow you down for
-#' \code{make(..., parallelism = 'parLapply')}.
-#' @details Set the \code{imports} argument to change your assumptions about
+#' `make(..., parallelism = 'parLapply')`.
+#' @details Set the `imports` argument to change your assumptions about
 #' how fast objects/files are imported.
 #' IMPORTANT: you must be in the root directory of your project.
 #' @export
@@ -13,20 +13,20 @@
 #' @return A numeric scalar, the maximum number of useful jobs for
 #' \code{\link{make}(..., jobs = ...)}.
 #'
-#' @seealso \code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}},
-#' \code{\link{shell_file}}, \code{\link{drake_config}()}
+#' @seealso [vis_drake_graph()], [build_drake_graph()],
+#' [shell_file()], [drake_config()]
 #'
 #' @param config internal configuration list of \code{\link{make}(...)},
-#' produced also with \code{\link{drake_config}()}.
+#' produced also with [drake_config()].
 #'
-#' @param imports Set the \code{imports} argument to change your
+#' @param imports Set the `imports` argument to change your
 #' assumptions about how fast objects/files are imported.
 #' Possible values:
 #' \itemize{
 #'  \item{'all'}{: Factor all imported files/objects into
 #'    calculating the max useful number of jobs.
 #'    Note: this is not appropriate for
-#'    \code{make(.., parallelism = 'Makefile')} because imports
+#'    `make(.., parallelism = 'Makefile')` because imports
 #'    are processed sequentially for the Makefile option.}
 #'  \item{'files'}{: Factor all imported files into the calculation,
 #'    but ignore all the other imports.}
@@ -35,7 +35,7 @@
 #' }
 #'
 #' @param from_scratch logical, whether to assume
-#' the next \code{\link{make}()} will run from scratch
+#' the next [make()] will run from scratch
 #' so that all targets are attempted.
 #'
 #' @examples

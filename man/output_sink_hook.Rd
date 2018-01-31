@@ -12,7 +12,7 @@ output_sink_hook(code)
 }
 \value{
 A function that you can supply to the \code{hook} argument
-of \code{\link{make}()}.
+of \code{\link[=make]{make()}}.
 }
 \description{
 Most users do not need to micromanage hooks.
@@ -37,6 +37,6 @@ try(make(x, hook = output_sink_hook), silent = FALSE)
 }
 }
 \seealso{
-\code{\link{make}}, \code{\link{silencer_hook}},
-\code{\link{message_sink_hook}}
+\code{\link[=make]{make()}}, \code{\link[=silencer_hook]{silencer_hook()}},
+\code{\link[=message_sink_hook]{message_sink_hook()}}
 }

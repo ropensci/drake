@@ -1,19 +1,19 @@
 #' @title Save the source code files of a drake example.
 #' @description Copy a folder of code files for a
 #' drake example to the current working directory.
-#' Call \code{drake_example('basic')} to generate the code files from the
-#' quickstart vignette: \code{vignette('quickstart')}.
-#' To see the names of all the examples, run \code{\link{drake_examples}}.
-#' @seealso \code{\link{drake_examples}}, \code{\link{make}},
-#' \code{\link{shell_file}}, \code{\link{drake_batchtools_tmpl_file}}
+#' Call `drake_example('basic')` to generate the code files from the
+#' quickstart vignette: `vignette('quickstart')`.
+#' To see the names of all the examples, run [drake_examples()].
+#' @seealso [drake_examples()], [make()],
+#' [shell_file()], [drake_batchtools_tmpl_file()]
 #' @export
-#' @return \code{NULL}
+#' @return `NULL`
 #' @param example name of the example.
 #' To see all the available example names,
-#' run \code{\link{drake_examples}}.
+#' run [drake_examples()].
 #' @param to Character scalar, file path, where
 #' to write the folder containing the code files for the example.
-#' @param destination Deprecated, use \code{to} instead.
+#' @param destination Deprecated, use `to` instead.
 #' @param overwrite Logical, whether to overwrite an existing folder
 #' with the same name as the drake example.
 #' @examples
@@ -48,12 +48,12 @@ drake_example <- function(
 }
 
 #' @title List the names of all the drake examples.
-#' @description The \code{'basic'} example is the one from the
-#' quickstart vignette: \code{vignette('quickstart')}.
-#' All are in the \code{inst/examples/} folder
+#' @description The `'basic'` example is the one from the
+#' quickstart vignette: `vignette('quickstart')`.
+#' All are in the `inst/examples/` folder
 #' of the package source code.
 #' @export
-#' @seealso \code{\link{drake_example}}, \code{\link{make}}
+#' @seealso [drake_example()], [make()]
 #' @return Names of all the drake examples.
 #' @examples
 #' \dontrun{

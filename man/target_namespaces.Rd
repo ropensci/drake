@@ -23,5 +23,5 @@ It is just another window into \code{drake}'s internals.
 target_namespaces()
 }
 \seealso{
-\code{\link{make}}
+\code{\link[=make]{make()}}
 }

@@ -8,21 +8,21 @@ build_graph(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, jobs = 1)
 }
 \arguments{
-\item{plan}{Same as for \code{\link{build_drake_graph}()}.}
+\item{plan}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
 
-\item{targets}{Same as for \code{\link{build_drake_graph}()}.}
+\item{targets}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
 
-\item{envir}{Same as for \code{\link{build_drake_graph}()}.}
+\item{envir}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
 
-\item{verbose}{Same as for \code{\link{build_drake_graph}()}.}
+\item{verbose}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
 
-\item{jobs}{Same as for \code{\link{build_drake_graph}()}.}
+\item{jobs}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
 }
 \value{
-The same return value as \code{\link{build_drake_graph}()}.
+The same return value as \code{\link[=build_drake_graph]{build_drake_graph()}}.
 }
 \description{
-Use \code{\link{build_drake_graph}()} instead.
+Use \code{\link[=build_drake_graph]{build_drake_graph()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -31,6 +31,6 @@ Deprecated on 2017-11-12.
 # See ?as_drake_filename for examples.
 }
 \seealso{
-\code{\link{build_drake_graph}}
+\code{\link[=build_drake_graph]{build_drake_graph()}}
 }
 \keyword{internal}

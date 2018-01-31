@@ -1,28 +1,28 @@
-#' @title Create the \code{igraph} dependency network of your project.
+#' @title Create the `igraph` dependency network of your project.
 #' @description This function returns an igraph object representing how
 #' the targets in your workflow plan data frame
 #' depend on each other.
-#' (\code{help(package = "igraph")}). To plot the graph, call
-#' to \code{\link{plot.igraph}()} on your graph, or just use
-#' \code{\link{vis_drake_graph}()} from the start.
-#' @seealso \code{\link{vis_drake_graph}}
+#' (`help(package = "igraph")`). To plot the graph, call
+#' to [plot.igraph()] on your graph, or just use
+#' [vis_drake_graph()] from the start.
+#' @seealso [vis_drake_graph()]
 #' @export
 #' @return An igraph object representing
 #' the workflow plan dependency network.
 #'
 #' @param plan workflow plan data frame, same as for function
-#' \code{\link{make}()}.
+#' [make()].
 #'
 #' @param targets names of targets to build, same as for function
-#' \code{\link{make}()}.
+#' [make()].
 #'
 #' @param envir environment to import from, same as for function
-#' \code{\link{make}()}.
+#' [make()].
 #'
 #' @param verbose logical, whether to output messages to the console.
 #'
 #' @param jobs number of jobs to accelerate the construction
-#' of the dependency graph. A light \code{mclapply}-based
+#' of the dependency graph. A light `mclapply()`-based
 #' parallelism is used if your operating system is not Windows.
 #'
 #' @examples
@@ -96,20 +96,20 @@ build_drake_graph <- function(
 
 #' @title Prune the dependency network of your project.
 #' @export
-#' @seealso \code{\link{build_drake_graph}}, \code{\link{config}},
-#' \code{\link{make}}
-#' @description \code{igraph} objects are used
+#' @seealso [build_drake_graph()], [config()],
+#' [make()]
+#' @description `igraph` objects are used
 #' internally to represent the dependency network of your workflow.
 #' See \code{\link{config}(my_plan)$graph} from the basic example.
 #' @details For a supplied graph, take the subgraph of all combined
-#' incoming paths to the vertices in \code{to}. In other words,
-#' remove the vertices after \code{to} from the graph.
+#' incoming paths to the vertices in `to`. In other words,
+#' remove the vertices after `to` from the graph.
 #' @return A pruned igraph object representing the dependency network
 #' of the workflow.
 #' @param graph An igraph object to be pruned.
 #' @param to Character vector, names of the vertices that draw
 #' the line for pruning. The pruning process removes all vertices
-#' downstream of \code{to}.
+#' downstream of `to`.
 #' @param jobs Number of jobs for light parallelism (on non-Windows machines).
 #' @examples
 #' \dontrun{

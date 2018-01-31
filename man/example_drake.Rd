@@ -7,15 +7,15 @@
 example_drake(example = drake::drake_examples(), destination = getwd())
 }
 \arguments{
-\item{example}{Same as for \code{\link{drake_example}()}}
+\item{example}{Same as for \code{\link[=drake_example]{drake_example()}}}
 
-\item{destination}{Same as for \code{\link{drake_example}()}}
+\item{destination}{Same as for \code{\link[=drake_example]{drake_example()}}}
 }
 \value{
 \code{NULL}
 }
 \description{
-Use \code{\link{drake_example}()} instead.
+Use \code{\link[=drake_example]{drake_example()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -24,6 +24,6 @@ Deprecated on 2017-11-12.
 # See ?drake_example for examples.
 }
 \seealso{
-\code{\link{drake_example}}
+\code{\link[=drake_example]{drake_example()}}
 }
 \keyword{internal}

@@ -11,15 +11,15 @@ Makefile_recipe(recipe_command = drake::default_recipe_command(),
 }
 \arguments{
 \item{recipe_command}{The Makefile recipe command.
-See \code{\link{default_recipe_command}()}.}
+See \code{\link[=default_recipe_command]{default_recipe_command()}}.}
 
 \item{target}{character scalar, name of your target}
 
 \item{cache_path}{path to the drake cache.
 In practice, this defaults to the hidden \code{.drake/} folder,
 but this can be customized. In the Makefile, the drake cache
-is coded with the Unix variable `DRAKE_CACHE` and then dereferenced
-with `$(DRAKE_CACHE)`. To simplify things for users who may
+is coded with the Unix variable \code{DRAKE_CACHE} and then dereferenced
+with \code{$(DRAKE_CACHE)}. To simplify things for users who may
 be unfamiliar with Unix variables, the \code{recipe()} function
 just shows the literal path to the cache.}
 }
@@ -33,8 +33,8 @@ Relevant to \code{"Makefile"} parallelism only.
 Makefile recipes to build targets are customizable.
 Use the \code{Makefile_recipe()} function to show and tweak
 Makefile recipes in advance, and see
-\code{\link{default_recipe_command}()} and
-\code{\link{r_recipe_wildcard}()} for more clues.
+\code{\link[=default_recipe_command]{default_recipe_command()}} and
+\code{\link[=r_recipe_wildcard]{r_recipe_wildcard()}} for more clues.
 The default recipe is \code{Rscript -e 'R_RECIPE'}, where
 \code{R_RECIPE} is the wildcard for the recipe in R for making the target.
 In writing the Makefile, \code{R_RECIPE} is replaced with something like
@@ -83,6 +83,6 @@ clean() # Start from scratch.
 }
 }
 \seealso{
-\code{\link{default_recipe_command}},
-\code{\link{r_recipe_wildcard}}, \code{\link{make}}
+\code{\link[=default_recipe_command]{default_recipe_command()}},
+\code{\link[=r_recipe_wildcard]{r_recipe_wildcard()}}, \code{\link[=make]{make()}}
 }

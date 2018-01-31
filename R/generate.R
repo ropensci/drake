@@ -1,9 +1,9 @@
 #' @title Show the analysis wildcard
-#' used in \code{\link{plan_summaries}()}.
+#' used in [plan_summaries()].
 #' @description Used to generate workflow plan data frames.
 #' @export
-#' @seealso \code{\link{plan_summaries}()}
-#' @return The analysis wildcard used in \code{\link{plan_summaries}()}.
+#' @seealso [plan_summaries()]
+#' @return The analysis wildcard used in [plan_summaries()].
 #' @examples
 #' # See ?plan_analyses for examples
 analysis_wildcard <- function(){
@@ -11,12 +11,12 @@ analysis_wildcard <- function(){
 }
 
 #' @title Show the dataset wildcard
-#' used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+#' used in [plan_analyses()] and [plan_summaries()].
 #' @description Used to generate workflow plan data frames.
 #' @export
-#' @seealso \code{\link{plan_analyses}()}
+#' @seealso [plan_analyses()]
 #' @return The dataset wildcard used in
-#' \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+#' [plan_analyses()] and [plan_summaries()].
 #' @examples
 #' # See ?plan_analyses for examples
 dataset_wildcard <- function(){
@@ -28,39 +28,39 @@ dataset_wildcard <- function(){
 #' @description The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
-#' possible values using \code{evaluate_plan}.
-#' @details Specify a single wildcard with the \code{wildcard}
-#' and \code{values} arguments. In each command, the text in
-#' \code{wildcard} will be replaced by each value in \code{values}
-#' in turn. Specify multiple wildcards with the \code{rules} argument,
-#' which overrules \code{wildcard} and \code{values} if
-#' not \code{NULL}. Here, \code{rules} should be a list with wildcards
+#' possible values using `evaluate_plan`.
+#' @details Specify a single wildcard with the `wildcard`
+#' and `values` arguments. In each command, the text in
+#' `wildcard` will be replaced by each value in `values`
+#' in turn. Specify multiple wildcards with the `rules` argument,
+#' which overrules `wildcard` and `values` if
+#' not `NULL`. Here, `rules` should be a list with wildcards
 #' as names and vectors of possible values as list elements.
 #' @export
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan workflow plan data frame, similar to one produced by
-#' \code{\link{drake_plan}}
+#' [drake_plan()]
 #'
 #' @param rules Named list with wildcards as names and vectors of
 #' replacements
 #' as values. This is a way to evaluate multiple wildcards at once.
-#' When not \code{NULL}, \code{rules} overrules \code{wildcard} and
-#' \code{values} if
-#' not \code{NULL}.
+#' When not `NULL`, `rules` overrules `wildcard` and
+#' `values` if
+#' not `NULL`.
 #'
 #' @param wildcard character scalar denoting a wildcard placeholder
 #'
 #' @param values vector of values to replace the wildcard
 #' in the drake instructions. Will be treated as a character vector.
-#' Must be the same length as \code{plan$command} if \code{expand} is
-#' \code{TRUE}.
+#' Must be the same length as `plan$command` if `expand` is
+#' `TRUE`.
 #'
-#' @param expand If \code{TRUE}, create a new rows in the workflow plan
+#' @param expand If `TRUE`, create a new rows in the workflow plan
 #' data frame
 #' if multiple values are assigned to a single wildcard.
-#' If \code{FALSE}, each occurrence of the wildcard
-#' is replaced with the next entry in the \code{values} vector,
+#' If `FALSE`, each occurrence of the wildcard
+#' is replaced with the next entry in the `values` vector,
 #' and the values are recycled.
 #'
 #' @examples
@@ -230,16 +230,16 @@ gather_plan <- function(
 #' analyze multiple datasets using multiple methods of analysis.
 #' @description Uses wildcards to create a new
 #' workflow plan data frame from a template data frame.
-#' @seealso \code{\link{plan_summaries}},
-#'  \code{\link{make}}, \code{\link{drake_plan}}
+#' @seealso [plan_summaries()],
+#'  [make()], [drake_plan()]
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.
 #' @param plan workflow plan data frame of analysis methods.
-#' The commands in the \code{command} column must
-#' have the \code{dataset__} wildcard where the datasets go.
-#' For example, one command could be \code{lm(dataset__)}. Then,
-#' the commands in the output will include \code{lm(your_dataset_1)},
-#' \code{lm(your_dataset_2)}, etc.
+#' The commands in the `command` column must
+#' have the `dataset__` wildcard where the datasets go.
+#' For example, one command could be `lm(dataset__)`. Then,
+#' the commands in the output will include `lm(your_dataset_1)`,
+#' `lm(your_dataset_2)`, etc.
 #' @param datasets workflow plan data frame with instructions
 #' to make the datasets.
 #' @examples
@@ -275,21 +275,21 @@ plan_analyses <- function(plan, datasets){
 #' multiple analyses of multiple datasets multiple ways.
 #' @description Uses wildcards to create a new
 #' workflow plan data frame from a template data frame.
-#' @seealso \code{\link{plan_analyses}}, \code{\link{make}},
-#' \code{\link{drake_plan}}
+#' @seealso [plan_analyses()], [make()],
+#' [drake_plan()]
 #' @export
 #' @return An evaluated workflow plan data frame of instructions
 #' for computing summaries of analyses and datasets.
 #' analyses of multiple datasets in multiple ways.
 #' @param plan workflow plan data frame with commands for the summaries.
-#' Use the \code{analysis__} and \code{dataset__} wildcards
-#' just like the \code{dataset__} wildcard in \code{\link{analyses}()}.
+#' Use the `analysis__` and `dataset__` wildcards
+#' just like the `dataset__` wildcard in [analyses()].
 #' @param analyses workflow plan data frame of analysis instructions
 #' @param datasets workflow plan data frame with instructions to make
 #' or import the datasets.
 #' @param gather Character vector, names of functions to gather the
-#' summaries. If not \code{NULL}, the length must be the number of
-#' rows in the \code{plan}. See the \code{\link{gather}()} function
+#' summaries. If not `NULL`, the length must be the number of
+#' rows in the `plan`. See the [gather()] function
 #' for more.
 #' @examples
 #' # Create the part of the workflow plan data frame for the datasets.

@@ -1,4 +1,4 @@
-#' @title Load the basic example from \code{drake_example("basic")}
+#' @title Load the basic example from `drake_example("basic")`
 #' @description Is there an association between
 #' the weight and the fuel efficiency of cars?
 #' To find out, we use the mtcars dataset.
@@ -10,23 +10,23 @@
 #' @details Use \code{\link{drake_example}('basic')} to get the code
 #' for the basic example. The included R script is a detailed,
 #' heavily-commented walkthrough. The quickstart vignette at
-#' \url{https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd} # nolint
-#' and \url{https://ropensci.github.io/drake/articles/quickstart.html}
+#' <https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd> # nolint
+#' and <https://ropensci.github.io/drake/articles/quickstart.html>
 #' also walks through the basic example.
 #' This function also writes/overwrites
-#' the file, \code{report.Rmd}.
+#' the file, `report.Rmd`.
 #' @export
-#' @return A \code{\link{drake_config}()} configuration list.
+#' @return A [drake_config()] configuration list.
 #' @param envir The environment to load the example into.
 #' Defaults to your workspace.
 #' For an insulated workspace,
-#' set \code{envir = new.env(parent = globalenv())}.
-#' @param cache Optional \code{storr} cache to use.
-#' @param report_file where to write the report file \code{report.Rmd}.
+#' set `envir = new.env(parent = globalenv())`.
+#' @param cache Optional `storr` cache to use.
+#' @param report_file where to write the report file `report.Rmd`.
 #' @param to deprecated, where to write the dynamic report source file
-#' \code{report.Rmd}
+#' `report.Rmd`
 #' @param overwrite logical, whether to overwrite an
-#' existing file \code{report.Rmd}
+#' existing file `report.Rmd`
 #' @param verbose logical, whether to print console messages.
 #' @param force logical, whether to force the loading of a
 #' non-back-compatible cache from a previous version of drake.

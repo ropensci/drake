@@ -30,7 +30,7 @@ build times of the targets (exclude the imports).}
 \item{jobs}{number of parallel jobs/workers for light parallelism.}
 }
 \value{
-A data frame of times, each from \code{\link{system.time}()}.
+A data frame of times, each from \code{\link[=system.time]{system.time()}}.
 }
 \description{
 Listed times do not include the amount of time
@@ -47,5 +47,5 @@ build_times() # Show how long it took to build each target.
 }
 }
 \seealso{
-\code{\link{built}}
+\code{\link[=built]{built()}}
 }

@@ -47,6 +47,6 @@ plot(pruned)
 }
 }
 \seealso{
-\code{\link{build_drake_graph}}, \code{\link{config}},
-\code{\link{make}}
+\code{\link[=build_drake_graph]{build_drake_graph()}}, \code{\link[=config]{config()}},
+\code{\link[=make]{make()}}
 }

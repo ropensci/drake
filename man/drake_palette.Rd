@@ -12,14 +12,14 @@ but the actual return value is \code{NULL}.
 }
 \description{
 This function is
-used in both the console and \code{\link{vis_drake_graph}()}
+used in both the console and \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 Your console must have the crayon package enabled.
 }
 \details{
 This palette applies to console output
 (internal functions \code{console()} and
 \code{console_many_targets()}) and the node colors
-in \code{\link{vis_drake_graph}()}.
+in \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
 So if you want to contribute improvements to the palette,
 please both \code{drake_palette()} and
 \code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}

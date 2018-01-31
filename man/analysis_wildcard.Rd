@@ -3,12 +3,12 @@
 \name{analysis_wildcard}
 \alias{analysis_wildcard}
 \title{Show the analysis wildcard
-used in \code{\link{plan_summaries}()}.}
+used in \code{\link[=plan_summaries]{plan_summaries()}}.}
 \usage{
 analysis_wildcard()
 }
 \value{
-The analysis wildcard used in \code{\link{plan_summaries}()}.
+The analysis wildcard used in \code{\link[=plan_summaries]{plan_summaries()}}.
 }
 \description{
 Used to generate workflow plan data frames.
@@ -17,5 +17,5 @@ Used to generate workflow plan data frames.
 # See ?plan_analyses for examples
 }
 \seealso{
-\code{\link{plan_summaries}()}
+\code{\link[=plan_summaries]{plan_summaries()}}
 }

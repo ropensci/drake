@@ -2,15 +2,15 @@
 #' @description Possible obvious errors include
 #' circular dependencies and
 #' missing input files.
-#' @seealso \code{ink{drake_plan}}, \code{\link{make}}
+#' @seealso \code{ink{drake_plan}}, [make()]
 #' @export
-#' @return Invisibly return \code{plan}.
+#' @return Invisibly return `plan`.
 #' @param plan workflow plan data frame, possibly from
-#' \code{\link{drake_plan}()}.
+#' [drake_plan()].
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See \code{\link{new_cache}()}
-#' @param verbose same as for \code{\link{make}()}
+#' @param cache optional drake cache. See [new_cache()]
+#' @param verbose same as for [make()]
 #' @param jobs number of jobs/workers for light parallelism
 #' @examples
 #' \dontrun{

@@ -10,7 +10,7 @@ evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by
-\code{\link{drake_plan}}}
+\code{\link[=drake_plan]{drake_plan()}}}
 
 \item{rules}{Named list with wildcards as names and vectors of
 replacements

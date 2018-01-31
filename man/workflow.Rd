@@ -21,8 +21,8 @@ A data frame of targets and commands.
 }
 \description{
 Turns a named collection of command/target pairs into
-a workflow plan data frame for \code{\link{make}} and
-\code{\link{check}}.
+a workflow plan data frame for \code{\link[=make]{make()}} and
+\code{\link[=check]{check()}}.
 }
 \details{
 Deprecated on 2017-10

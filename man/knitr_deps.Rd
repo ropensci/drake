@@ -16,7 +16,7 @@ A character vector of the names of dependencies.
 \description{
 To enable drake to watch for the dependencies
 of a knitr report, the command in your workflow plan data frame
-must call \code{knitr::knit()} directly.
+must call \code{\link[knitr:knit]{knitr::knit()}} directly.
 In other words,
 the command must look something like
 \code{knit('your_report.Rmd')} or
@@ -25,7 +25,7 @@ the command must look something like
 \details{
 Drake looks for dependencies in the document by
 analyzing evaluated code chunks for other targets/imports
-mentioned in \code{\link{loadd}()} and \code{\link{readd}()}.
+mentioned in \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}}.
 }
 \examples{
 \dontrun{
@@ -41,6 +41,6 @@ try(knitr_deps("'report.md'"), silent = FALSE) # error
 }
 }
 \seealso{
-\code{\link{deps}},
-\code{\link{make}}, \code{\link{load_basic_example}}
+\code{\link[=deps]{deps()}},
+\code{\link[=make]{make()}}, \code{\link[=load_basic_example]{load_basic_example()}}
 }

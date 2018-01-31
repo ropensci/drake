@@ -1,45 +1,45 @@
 #' @title For \code{\link{make}(..., parallelism = "Makefile")},
-#' see what your \code{Makefile} recipes
+#' see what your `Makefile` recipes
 #' will look like in advance.
 #' @export
-#' @seealso \code{\link{default_recipe_command}},
-#' \code{\link{r_recipe_wildcard}}, \code{\link{make}}
-#' @description Relevant to \code{"Makefile"} parallelism only.
+#' @seealso [default_recipe_command()],
+#' [r_recipe_wildcard()], [make()]
+#' @description Relevant to `"Makefile"` parallelism only.
 #' @return A character scalar with a Makefile recipe.
 #'
 #' @param recipe_command The Makefile recipe command.
-#' See \code{\link{default_recipe_command}()}.
+#' See [default_recipe_command()].
 #'
 #' @param target character scalar, name of your target
 #'
 #' @param cache_path path to the drake cache.
-#' In practice, this defaults to the hidden \code{.drake/} folder,
+#' In practice, this defaults to the hidden `.drake/` folder,
 #' but this can be customized. In the Makefile, the drake cache
 #' is coded with the Unix variable `DRAKE_CACHE` and then dereferenced
 #' with `$(DRAKE_CACHE)`. To simplify things for users who may
-#' be unfamiliar with Unix variables, the \code{recipe()} function
+#' be unfamiliar with Unix variables, the `recipe()` function
 #' just shows the literal path to the cache.
 #'
 #' @details Makefile recipes to build targets are customizable.
-#' Use the \code{Makefile_recipe()} function to show and tweak
+#' Use the `Makefile_recipe()` function to show and tweak
 #' Makefile recipes in advance, and see
-#' \code{\link{default_recipe_command}()} and
-#' \code{\link{r_recipe_wildcard}()} for more clues.
-#' The default recipe is \code{Rscript -e 'R_RECIPE'}, where
-#' \code{R_RECIPE} is the wildcard for the recipe in R for making the target.
-#' In writing the Makefile, \code{R_RECIPE} is replaced with something like
-#' \code{drake::mk("name_of_target", "path_to_cache")}.
+#' [default_recipe_command()] and
+#' [r_recipe_wildcard()] for more clues.
+#' The default recipe is `Rscript -e 'R_RECIPE'`, where
+#' `R_RECIPE` is the wildcard for the recipe in R for making the target.
+#' In writing the Makefile, `R_RECIPE` is replaced with something like
+#' `drake::mk("name_of_target", "path_to_cache")`.
 #' So when you call
-#' \code{make(..., parallelism = "Makefile", recipe_command = "R -e 'R_RECIPE' -q")}, # nolint
-#' from within R, the \code{Makefile} builds each target
-#' with the \code{Makefile} recipe,
-#' \code{R -e 'drake::mk("this_target", "path_to_cache")' -q}.
-#' But since \code{R -q -e} fails on Windows,
-#' so the default \code{recipe_command} argument is
-#' \code{"Rscript -e 'R_RECIPE'"}
-#' (equivalently just \code{"Rscript -e"}),
-#' so the default \code{Makefile} recipe for each target is
-#' \code{Rscript -e 'drake::mk("this_target", "path_to_cache")'}.
+#' `make(..., parallelism = "Makefile", recipe_command = "R -e 'R_RECIPE' -q")`, # nolint
+#' from within R, the `Makefile` builds each target
+#' with the `Makefile` recipe,
+#' `R -e 'drake::mk("this_target", "path_to_cache")' -q`.
+#' But since `R -q -e` fails on Windows,
+#' so the default `recipe_command` argument is
+#' `"Rscript -e 'R_RECIPE'"`
+#' (equivalently just `"Rscript -e"`),
+#' so the default `Makefile` recipe for each target is
+#' `Rscript -e 'drake::mk("this_target", "path_to_cache")'`.
 #'
 #' @examples
 #' # Only relevant for "Makefile" parallelism:
@@ -86,8 +86,8 @@ Makefile_recipe <- function( # nolint
 #' @title Show the default
 #' recipe command for \code{\link{make}(..., parallelism = "Makefile")}.
 #' @export
-#' @seealso \code{\link{Makefile_recipe}}
-#' @description See the help file of \code{\link{Makefile_recipe}}
+#' @seealso [Makefile_recipe()]
+#' @description See the help file of [Makefile_recipe()]
 #' for details and examples.
 #' @return A character scalar with the default recipe command.
 #' @examples
@@ -99,8 +99,8 @@ default_recipe_command <- function(){
 #' @title Show the R recipe wildcard
 #' for \code{\link{make}(..., parallelism = "Makefile")}.
 #' @export
-#' @seealso \code{\link{default_recipe_command}}
-#' @description Relevant to \code{"Makefile"} parallelism only.
+#' @seealso [default_recipe_command()]
+#' @description Relevant to `"Makefile"` parallelism only.
 #' @return The R recipe wildcard.
 #' @examples
 #' r_recipe_wildcard()

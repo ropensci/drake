@@ -3,7 +3,7 @@
 \name{read_drake_plan}
 \alias{read_drake_plan}
 \title{Read the workflow plan
-from your last attempted call to \code{\link{make}()}.}
+from your last attempted call to \code{\link[=make]{make()}}.}
 \usage{
 read_drake_plan(path = getwd(), search = TRUE, cache = NULL,
   verbose = TRUE)
@@ -39,5 +39,5 @@ read_drake_plan() # Retrieve the workflow plan data frame from the cache.
 }
 }
 \seealso{
-\code{\link{read_drake_config}}
+\code{\link[=read_drake_config]{read_drake_config()}}
 }

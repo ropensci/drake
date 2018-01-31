@@ -2,7 +2,7 @@
 % Please edit documentation in R/hooks.R
 \name{default_hook}
 \alias{default_hook}
-\title{Default \code{hook} argument to \code{\link{make}()}.}
+\title{Default \code{hook} argument to \code{\link[=make]{make()}}.}
 \usage{
 default_hook(code)
 }
@@ -11,7 +11,7 @@ default_hook(code)
 }
 \value{
 A function that you can supply to the \code{hook} argument
-of \code{\link{make}()}.
+of \code{\link[=make]{make()}}.
 }
 \description{
 Most users do not need to micromanage hooks.
