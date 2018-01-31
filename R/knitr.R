@@ -1,7 +1,7 @@
 #' @title Find the drake dependencies of a dynamic knitr report target.
 #' @export
 #' @seealso [deps()],
-#' [make()], [load_basic_example()]
+#'   [make()], [load_basic_example()]
 #' @description To enable drake to watch for the dependencies
 #' of a knitr report, the command in your workflow plan data frame
 #' must call [knitr::knit()] directly.
@@ -14,7 +14,7 @@
 #' analyzing evaluated code chunks for other targets/imports
 #' mentioned in [loadd()] and [readd()].
 #' @param target file path to the file or name of the file target,
-#' source text of the document.
+#'   source text of the document.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

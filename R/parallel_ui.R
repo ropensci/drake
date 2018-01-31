@@ -4,15 +4,15 @@
 #' only the first one (alphabetically) is written.
 #' @export
 #' @seealso [drake_examples()], [drake_example()],
-#' [shell_file()]
+#'   [shell_file()]
 #' @return `NULL` is returned,
-#' but a batchtools template file is written.
+#'   but a batchtools template file is written.
 #' @param example Name of the drake example
-#' from which to take the template file.
-#' Must be listed in [drake_examples()].
+#'   from which to take the template file.
+#'   Must be listed in [drake_examples()].
 #' @param to Character vector, where to write the file.
 #' @param overwrite Logical, whether to overwrite an existing file of the
-#' same name.
+#'   same name.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -55,7 +55,7 @@ drake_batchtools_tmpl_file <- function(
 #' @export
 #' @seealso [make()], [shell_file()]
 #' @return Character vector listing the types of parallel
-#' computing supported.
+#'   computing supported.
 #'
 #' @details Run `make(..., parallelism = x, jobs = n)` for any of
 #' the following values of `x` to distribute targets over parallel
@@ -123,8 +123,8 @@ drake_batchtools_tmpl_file <- function(
 #' }
 #'
 #' @param distributed_only logical, whether to return only
-#' the distributed backend types, such as `Makefile` and
-#' `parLapply`
+#'   the distributed backend types, such as `Makefile` and
+#'   `parLapply`
 #'
 #' @examples
 #' # See all the parallel computing options.
@@ -148,7 +148,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
 }
 
 #' @title Show the default `parallelism` argument
-#' to [make()] for your system.
+#'   to [make()] for your system.
 #' @description Returns `'parLapply'` for Windows machines
 #' and `'mclapply'` for other platforms.
 #' @export
@@ -162,18 +162,18 @@ default_parallelism <- function() {
 }
 
 #' @title Write an example `shell.sh` file required by
-#' `make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')`.
+#'   `make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')`.
 #' @description This function also does a `chmod +x`
 #' to enable execute permissions.
 #' @seealso [make()], [max_useful_jobs()],
-#' [parallelism_choices()], [drake_batchtools_tmpl_file()],
-#' [drake_example()], [drake_examples()]
+#'   [parallelism_choices()], [drake_batchtools_tmpl_file()],
+#'   [drake_example()], [drake_examples()]
 #' @export
 #' @return The return value of the call to [file.copy()] that
-#' wrote the shell file.
+#'   wrote the shell file.
 #' @param path file path of the shell file
 #' @param overwrite logical, whether to overwrite a possible
-#' destination file with the same name
+#'   destination file with the same name
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

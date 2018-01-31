@@ -1,28 +1,28 @@
 #' @title Read and return a drake target or import from the cache.
 #' @description Does not delete the item from the cache.
 #' @seealso [loadd()], [cached()],
-#' [built()], \code{link{imported}}, [drake_plan()],
-#' [make()]
+#'   [built()], \code{link{imported}}, [drake_plan()],
+#'   [make()]
 #' @export
 #' @return The cached value of the `target`.
 #' @param target If `character_only` is `TRUE`,
-#' `target` is a character string naming the object to read.
-#' Otherwise, `target` is an unquoted symbol with the name of the
-#' object. Note: `target` could be the name of an imported object.
+#'   `target` is a character string naming the object to read.
+#'   Otherwise, `target` is an unquoted symbol with the name of the
+#'   object. Note: `target` could be the name of an imported object.
 #' @param character_only logical, whether `name` should be treated
-#' as a character or a symbol
-#' (just like `character.only` in [library()]).
+#'   as a character or a symbol
+#'   (just like `character.only` in [library()]).
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param namespace character scalar,
-#' name of an optional storr namespace to read from.
+#'   name of an optional storr namespace to read from.
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
@@ -66,62 +66,62 @@ readd <- function(
 #' (or all the imported objects if in addition
 #' imported_only is `TRUE`).
 #' @seealso [cached()], [built()],
-#' [imported()], [drake_plan()], [make()],
+#'   [imported()], [drake_plan()], [make()],
 #' @export
 #' @return `NULL`
 #'
 #' @param ... targets to load from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to `...` in
-#' \code{\link{remove}(...)}.
+#'   or character strings (quoted). Similar to `...` in
+#'   \code{\link{remove}(...)}.
 #'
 #' @param list character vector naming targets to be loaded from the
-#' cache. Similar to the `list` argument of [remove()].
+#'   cache. Similar to the `list` argument of [remove()].
 #'
 #' @param imported_only logical, whether only imported objects
-#' should be loaded.
+#'   should be loaded.
 #'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #'
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #'
 #' @param namespace character scalar,
-#' name of an optional storr namespace to load from.
+#'   name of an optional storr namespace to load from.
 #'
 #' @param envir environment to load objects into. Defaults to the
-#' calling environment (current workspace).
+#'   calling environment (current workspace).
 #'
 #' @param jobs number of parallel jobs for loading objects. On
-#' non-Windows systems, the loading process for multiple objects
-#' can be lightly parallelized via `parallel::mclapply()`.
-#' just set jobs to be an integer greater than 1. On Windows,
-#' `jobs` is automatically demoted to 1.
+#'   non-Windows systems, the loading process for multiple objects
+#'   can be lightly parallelized via `parallel::mclapply()`.
+#'   just set jobs to be an integer greater than 1. On Windows,
+#'   `jobs` is automatically demoted to 1.
 #'
 #' @param verbose logical, whether to print console messages
 #'
 #' @param deps logical, whether to load any cached
-#' dependencies of the targets
-#' instead of the targets themselves.
-#' This is useful if you know your
-#' target failed and you want to debug the command in an interactive
-#' session with the dependencies in your workspace.
-#' One caveat: to find the dependencies,
-#' [loadd()] uses information that was stored
-#' in a [drake_config()] list and cached
-#' during the last [make()].
-#' That means you need to have already called [make()]
-#' if you set `deps` to `TRUE`.
+#'   dependencies of the targets
+#'   instead of the targets themselves.
+#'   This is useful if you know your
+#'   target failed and you want to debug the command in an interactive
+#'   session with the dependencies in your workspace.
+#'   One caveat: to find the dependencies,
+#'   [loadd()] uses information that was stored
+#'   in a [drake_config()] list and cached
+#'   during the last [make()].
+#'   That means you need to have already called [make()]
+#'   if you set `deps` to `TRUE`.
 #'
 #' @param lazy logical, whether to lazy load with
-#' [delayedAssign()] rather than the more eager
-#' [assign()].
+#'   [delayedAssign()] rather than the more eager
+#'   [assign()].
 #'
 #' @examples
 #' \dontrun{
@@ -242,27 +242,27 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
 }
 
 #' @title Read the cached [drake_config()]
-#' list from the last [make()].
+#'   list from the last [make()].
 #' @description See [drake_config()] for more information
 #' about drake's internal runtime configuration parameter list.
 #' @seealso [make()]
 #' @export
 #' @return The cached master internal configuration list
-#' of the last [make()].
+#'   of the last [make()].
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose whether to print console messages
 #' @param jobs number of jobs for light parallelism.
-#' Supports 1 job only on Windows.
+#'   Supports 1 job only on Windows.
 #' @param envir Optional environment to fill in if
-#' `config$envir` was not cached. Defaults to your workspace.
+#'   `config$envir` was not cached. Defaults to your workspace.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -306,20 +306,20 @@ read_drake_config <- function(
 }
 
 #' @title Read the workflow plan
-#' from your last attempted call to [make()].
+#'   from your last attempted call to [make()].
 #' @description Uses the cache.
 #' @seealso [read_drake_config()]
 #' @export
 #' @return A workflow plan data frame.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
@@ -349,26 +349,26 @@ read_drake_plan <- function(
 }
 
 #' @title Read the igraph dependency network
-#' from your last attempted call to [make()].
+#'   from your last attempted call to [make()].
 #' @description For more user-friendly graphing utilities,
 #' see [vis_drake_graph()]
 #' and related functions.
 #' @seealso [vis_drake_graph()], [read_drake_config()]
 #' @export
 #' @return An `igraph` object representing the dependency
-#' network of the workflow.
+#'   network of the workflow.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose logical, whether to print console messages
 #' @param ... arguments to [visNetwork()] via
-#' [vis_drake_graph()]
+#'   [vis_drake_graph()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -416,21 +416,21 @@ read_drake_graph <- function(
 #' @seealso [dependency_profile()], [make()]
 #' @export
 #' @return The cached master internal configuration list
-#' of the last [make()].
+#'   of the last [make()].
 #' @param targets character vector, names of the targets
-#' to get metadata. If `NULL`, all metadata is collected.
+#'   to get metadata. If `NULL`, all metadata is collected.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose whether to print console messages
 #' @param jobs number of jobs for light parallelism.
-#' Supports 1 job only on Windows.
+#'   Supports 1 job only on Windows.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

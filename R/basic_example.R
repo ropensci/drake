@@ -18,18 +18,18 @@
 #' @export
 #' @return A [drake_config()] configuration list.
 #' @param envir The environment to load the example into.
-#' Defaults to your workspace.
-#' For an insulated workspace,
-#' set `envir = new.env(parent = globalenv())`.
+#'   Defaults to your workspace.
+#'   For an insulated workspace,
+#'   set `envir = new.env(parent = globalenv())`.
 #' @param cache Optional `storr` cache to use.
 #' @param report_file where to write the report file `report.Rmd`.
 #' @param to deprecated, where to write the dynamic report source file
-#' `report.Rmd`
+#'   `report.Rmd`
 #' @param overwrite logical, whether to overwrite an
-#' existing file `report.Rmd`
+#'   existing file `report.Rmd`
 #' @param verbose logical, whether to print console messages.
 #' @param force logical, whether to force the loading of a
-#' non-back-compatible cache from a previous version of drake.
+#'   non-back-compatible cache from a previous version of drake.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

@@ -1,6 +1,6 @@
 #' @title List the targets that are out of date.
 #' @description Outdated targets will be rebuilt in the next
-#' [make()].
+#'   [make()].
 #' @details `outdated()` is sensitive to the alternative triggers
 #' described at
 #' <https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers>. # nolint
@@ -13,17 +13,17 @@
 #' See the details in the help file for [drake_config()].
 #' @export
 #' @seealso [missed()], [drake_plan()],
-#' [make()], [vis_drake_graph()]
+#'   [make()], [vis_drake_graph()]
 #' @return Character vector of the names of outdated targets.
 #' @param config option internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced with [drake_config()].
-#' You must use a fresh `config` argument with an up-to-date
-#' `config$targets` element that was never modified by hand.
-#' If needed, rerun [drake_config()] early and often.
-#' See the details in the help file for [drake_config()].
+#'   \code{\link{make}(...)},
+#'   produced with [drake_config()].
+#'   You must use a fresh `config` argument with an up-to-date
+#'   `config$targets` element that was never modified by hand.
+#'   If needed, rerun [drake_config()] early and often.
+#'   See the details in the help file for [drake_config()].
 #' @param make_imports logical, whether to make the imports first.
-#' Set to `FALSE` to save some time and risk obsolete output.
+#'   Set to `FALSE` to save some time and risk obsolete output.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -59,7 +59,7 @@ outdated <-  function(config, make_imports = TRUE){
 }
 
 #' @title Report any import objects required by your drake_plan
-#' plan but missing from your workspace.
+#'   plan but missing from your workspace.
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export
@@ -67,8 +67,8 @@ outdated <-  function(config, make_imports = TRUE){
 #' @return Character vector of names of missing objects and files.
 #'
 #' @param config internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced by both [drake_config()] and [make()].
+#'   \code{\link{make}(...)},
+#'   produced by both [drake_config()] and [make()].
 #'
 #' @examples
 #' \dontrun{

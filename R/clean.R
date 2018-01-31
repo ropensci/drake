@@ -21,53 +21,53 @@
 #' @return Invisibly return `NULL`.
 #'
 #' @param ... targets to remove from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to `...` in
-#' \code{\link{remove}(...)}.
-#' The symbols must not match other (formal) arguments of `clean()`,
-#' such as `destroy`, `cache`, `path`, `search`,
-#' `verbose`, or `jobs`. If there are name conflicts,
-#' use the `list` argument instead of `...`.
+#'   or character strings (quoted). Similar to `...` in
+#'   \code{\link{remove}(...)}.
+#'   The symbols must not match other (formal) arguments of `clean()`,
+#'   such as `destroy`, `cache`, `path`, `search`,
+#'   `verbose`, or `jobs`. If there are name conflicts,
+#'   use the `list` argument instead of `...`.
 #'
 #' @param list character vector naming targets to be removed from the
-#' cache. Similar to the `list` argument of [remove()].
+#'   cache. Similar to the `list` argument of [remove()].
 #'
 #' @param destroy logical, whether to totally remove the drake cache.
-#' If `destroy` is `FALSE`, only the targets
-#' from `make()`
-#' are removed. If `TRUE`, the whole cache is removed, including
-#' session metadata, etc.
+#'   If `destroy` is `FALSE`, only the targets
+#'   from `make()`
+#'   are removed. If `TRUE`, the whole cache is removed, including
+#'   session metadata, etc.
 #'
 #' @param cache optional drake cache. See code{\link{new_cache}()}. If
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #'
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #'
 #' @param verbose whether to print console messages
 #'
 #' @param jobs Number of jobs for light parallelism
-#' (disabled on Windows).
+#'   (disabled on Windows).
 #'
 #' @param force logical, whether to try to clean the cache
-#' even though the project may not be back compatible with the
-#' current version of drake.
+#'   even though the project may not be back compatible with the
+#'   current version of drake.
 #'
 #' @param garbage_collection logical, whether to call
-#' `cache$gc()` to do garbage collection.
-#' If `TRUE`, cached data with no remaining references
-#' will be removed.
-#' This will slow down `clean()`, but the cache
-#' could take up far less space afterwards.
-#' See the `gc()` method for `storr` caches.
+#'   `cache$gc()` to do garbage collection.
+#'   If `TRUE`, cached data with no remaining references
+#'   will be removed.
+#'   This will slow down `clean()`, but the cache
+#'   could take up far less space afterwards.
+#'   See the `gc()` method for `storr` caches.
 #'
 #' @param purge logical, whether to remove objects from
-#' metadata namespaces such as "meta", "build_times", and "errors".
+#'   metadata namespaces such as "meta", "build_times", and "errors".
 #'
 #' @examples
 #' \dontrun{
@@ -206,19 +206,19 @@ remove_file_target <- function(target, plan){
 #' @export
 #' @return`NULL`
 #' @param path file path to the folder containing the cache.
-#' Yes, this is the parent directory containing the cache,
-#' not the cache itself, and it assumes the cache is in the
-#' `.drake` folder. If you are looking for a different cache
-#' with a known folder different from `.drake`, use
-#' the [this_cache()] function.
+#'   Yes, this is the parent directory containing the cache,
+#'   not the cache itself, and it assumes the cache is in the
+#'   `.drake` folder. If you are looking for a different cache
+#'   with a known folder different from `.drake`, use
+#'   the [this_cache()] function.
 #' @param search logical, whether to search back in the file system
-#' for the cache.
+#'   for the cache.
 #' @param verbose logical, whether to print the location of the cache
 #' @param cache the `drake`/`storr` cache object itself,
-#' if available.
+#'   if available.
 #' @param force logical, whether to load the cache
-#' despite any back compatibility issues with the
-#' running version of drake.
+#'   despite any back compatibility issues with the
+#'   running version of drake.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -254,7 +254,7 @@ drake_gc <- function(
 }
 
 #' @title Try to repair a drake cache that is prone
-#' to throwing `storr`-related errors.
+#'   to throwing `storr`-related errors.
 #' @description Sometimes, `storr` caches may have
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the
@@ -262,23 +262,23 @@ drake_gc <- function(
 #' @return The rescued drake/storr cache.
 #' @export
 #' @seealso [get_cache()], [cached()],
-#' [drake_gc()], [clean()]
+#'   [drake_gc()], [clean()]
 #' @param targets Character vector, names of the targets to rescue.
-#' As with many other drake utility functions, the word `target`
-#' is defined generally in this case, encompassing imports
-#' as well as true targets.
-#' If `targets` is `NULL`, everything in the
-#' cache is rescued.
+#'   As with many other drake utility functions, the word `target`
+#'   is defined generally in this case, encompassing imports
+#'   as well as true targets.
+#'   If `targets` is `NULL`, everything in the
+#'   cache is rescued.
 #' @param path same as for [get_cache()]
 #' @param search same as for [get_cache()]
 #' @param verbose same as for [get_cache()]
 #' @param force same as for [get_cache()]
 #' @param cache a `storr` cache object
 #' @param jobs number of jobs for light parallelism
-#' (disabled on Windows)
+#'   (disabled on Windows)
 #' @param garbage_collection logical, whether to do garbage collection
-#' as a final step. See [drake_gc()] and [clean()]
-#' for details.
+#'   as a final step. See [drake_gc()] and [clean()]
+#'   for details.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

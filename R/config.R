@@ -1,5 +1,5 @@
 #' @title Create the internal runtime parameter list
-#' used internally in [make()].
+#'   used internally in [make()].
 #' @description This configuration list
 #' is also required for functions such as [outdated()] and
 #' [vis_drake_graph()]. It is meant to be specific to
@@ -17,7 +17,7 @@
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make_with_config()], [make()],
-#' [drake_plan()], [vis_drake_graph()]
+#'   [drake_plan()], [vis_drake_graph()]
 #' @param plan same as for [make()]
 #' @param targets same as for [make()]
 #' @param envir same as for [make()]
@@ -39,19 +39,19 @@
 #' @param retries same as for [make()]
 #' @param force same as for [make()]
 #' @param log_progress logical, whether to clear
-#' the cached progress of the targets readable by
+#'   the cached progress of the targets readable by
 #' @param graph igraph object representing the workflow plan network.
-#' Overrides `skip_imports`.
+#'   Overrides `skip_imports`.
 #' @param trigger same as for [make()]
 #' @param imports_only logical, whether to skip building the targets
-#' in `plan` and just import objects and files.
+#'   in `plan` and just import objects and files.
 #' @param skip_imports logical, whether to totally neglect to
-#' process the imports and jump straight to the targets. This can be useful
-#' if your imports are massive and you just want to test your project,
-#' but it is bad practice for reproducible data analysis.
-#' This argument is overridden if you supply your own `graph` argument.
+#'   process the imports and jump straight to the targets. This can be useful
+#'   if your imports are massive and you just want to test your project,
+#'   but it is bad practice for reproducible data analysis.
+#'   This argument is overridden if you supply your own `graph` argument.
 #' @param skip_safety_checks logical, whether to skip the safety checks
-#' on your workflow to save time. Use at your own peril.
+#'   on your workflow to save time. Use at your own peril.
 #' @param lazy_load same as for [make()]
 #' @param session_info same as for [make()]
 #' @param cache_log_file same as for [make()]
@@ -167,7 +167,7 @@ add_packages_to_prework <- function(packages, prework) {
 }
 
 #' @title Do the prework in the `prework`
-#' argument to [make()].
+#'   argument to [make()].
 #' @export
 #' @keywords internal
 #' @description For internal use only.
@@ -177,7 +177,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' @return Inivisibly returns `NULL`.
 #' @param config internal configuration list
 #' @param verbose_packages logical, whether to print
-#' package startup messages
+#'   package startup messages
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -200,8 +200,8 @@ do_prework <- function(config, verbose_packages) {
 }
 
 #' @title List the possible targets for the `targets`
-#' argument to [make()], given a workflow plan
-#' data frame.
+#'   argument to [make()], given a workflow plan
+#'   data frame.
 #' @description Intended for internal use only.
 #' @seealso [make()]
 #' @keywords internal
@@ -223,7 +223,7 @@ possible_targets <- function(plan = drake_plan()) {
 }
 
 #' @title Store an internal configuration list
-#' from [drake_config()].
+#'   from [drake_config()].
 #' @description Exported for demonstration and tinkering purposes
 #' only. Not meant to be called by the user.
 #' @export

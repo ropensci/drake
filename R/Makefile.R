@@ -85,7 +85,7 @@ build_recipe <- function(target, recipe_command,
 }
 
 #' @title Build a target inside a `Makefile`
-#' during `make(..., parallelism = "Makefile")`.
+#'   during `make(..., parallelism = "Makefile")`.
 #' @description Users should not need to call this function directly.
 #' @export
 #' @keywords internal
@@ -133,7 +133,7 @@ mk <- function(
 }
 
 #' @title Return the default value of the
-#' `args` argument to [make()].
+#'   `args` argument to [make()].
 #' @description For `make(..., parallelism = "Makefile")`,
 #' this function configures the default
 #' arguments to [system2()].
@@ -155,11 +155,11 @@ default_Makefile_args <- function(jobs, verbose){
 }
 
 #' @title Give the default `command`
-#' argument to [make()].
+#'   argument to [make()].
 #' @description Relevant for
 #' `"Makefile"` parallelism only.
 #' @return A character scalar naming a Linux/Unix command
-#' to run a Makefile.
+#'   to run a Makefile.
 #' @export
 #' @examples
 #' default_Makefile_command()

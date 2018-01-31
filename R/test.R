@@ -40,7 +40,7 @@ nobuild <- function(config) {
 }
 
 #' @title Run a unit test in a way that quarantines
-#' the side effects from your workspace and file system.
+#'   the side effects from your workspace and file system.
 #' @description Typical users of drake should not need this function.
 #' It is exported so it can be used to quarantine the side effects
 #' of the examples in the help files.

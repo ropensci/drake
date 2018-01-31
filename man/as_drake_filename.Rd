@@ -24,6 +24,6 @@ single-quoted targets denote physical files,
 and double-quoted strings are treated as ordinary string literals.
 }
 \examples{
-# Wraps the string in single quotes.
-as_drake_filename("my_file.rds") # "'my_file.rds'"
+  # Wraps the string in single quotes.
+  as_drake_filename("my_file.rds") # "'my_file.rds'"
 }

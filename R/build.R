@@ -8,7 +8,7 @@
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which
-#' targets are up to date (from [drake_meta()]).
+#'   targets are up to date (from [drake_meta()]).
 #' @param config internal configuration list
 #' @examples
 #' \dontrun{

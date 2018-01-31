@@ -13,7 +13,7 @@ available_hash_algos <- function(){
 #' @title Get the long hash algorithm of a drake cache.
 #' @export
 #' @seealso [default_short_hash_algo()],
-#' [default_long_hash_algo()]
+#'   [default_long_hash_algo()]
 #' @description  See the advanced storage tutorial
 #' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
@@ -45,7 +45,7 @@ long_hash <- function(
 #' @title Get the short hash algorithm of a drake cache.
 #' @export
 #' @seealso [default_short_hash_algo()],
-#' [default_long_hash_algo()]
+#'   [default_long_hash_algo()]
 #' @description See the advanced storage tutorial
 #' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
@@ -109,10 +109,10 @@ short_hash <- function(
 #' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
-#' When you \code{\link{configure_cache}(cache)} without
-#' supplying a short hash algorithm,
-#' `default_short_hash_algo(cache)` is the short
-#' hash algorithm that drake picks for you.
+#'   When you \code{\link{configure_cache}(cache)} without
+#'   supplying a short hash algorithm,
+#'   `default_short_hash_algo(cache)` is the short
+#'   hash algorithm that drake picks for you.
 #'
 #' @examples
 #' default_short_hash_algo()
@@ -177,10 +177,10 @@ default_short_hash_algo <- function(cache = NULL) {
 #' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
-#' When you \code{\link{configure_cache}(cache)} without
-#' supplying a long hash algorithm,
-#' `default_long_hash_algo(cache)` is the long
-#' hash algorithm that drake picks for you.
+#'   When you \code{\link{configure_cache}(cache)} without
+#'   supplying a long hash algorithm,
+#'   `default_long_hash_algo(cache)` is the long
+#'   hash algorithm that drake picks for you.
 #'
 #' @examples
 #' default_long_hash_algo()

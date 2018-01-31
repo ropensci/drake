@@ -1,5 +1,5 @@
 #' @title Show the analysis wildcard
-#' used in [plan_summaries()].
+#'   used in [plan_summaries()].
 #' @description Used to generate workflow plan data frames.
 #' @export
 #' @seealso [plan_summaries()]
@@ -11,12 +11,12 @@ analysis_wildcard <- function(){
 }
 
 #' @title Show the dataset wildcard
-#' used in [plan_analyses()] and [plan_summaries()].
+#'   used in [plan_analyses()] and [plan_summaries()].
 #' @description Used to generate workflow plan data frames.
 #' @export
 #' @seealso [plan_analyses()]
 #' @return The dataset wildcard used in
-#' [plan_analyses()] and [plan_summaries()].
+#'   [plan_analyses()] and [plan_summaries()].
 #' @examples
 #' # See ?plan_analyses for examples
 dataset_wildcard <- function(){
@@ -24,7 +24,7 @@ dataset_wildcard <- function(){
 }
 
 #' @title Use wildcard templating to create a
-#' workflow plan data frame from a template data frame.
+#'   workflow plan data frame from a template data frame.
 #' @description The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
@@ -40,28 +40,28 @@ dataset_wildcard <- function(){
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan workflow plan data frame, similar to one produced by
-#' [drake_plan()]
+#'   [drake_plan()]
 #'
 #' @param rules Named list with wildcards as names and vectors of
-#' replacements
-#' as values. This is a way to evaluate multiple wildcards at once.
-#' When not `NULL`, `rules` overrules `wildcard` and
-#' `values` if
-#' not `NULL`.
+#'   replacements
+#'   as values. This is a way to evaluate multiple wildcards at once.
+#'   When not `NULL`, `rules` overrules `wildcard` and
+#'   `values` if
+#'   not `NULL`.
 #'
 #' @param wildcard character scalar denoting a wildcard placeholder
 #'
 #' @param values vector of values to replace the wildcard
-#' in the drake instructions. Will be treated as a character vector.
-#' Must be the same length as `plan$command` if `expand` is
-#' `TRUE`.
+#'   in the drake instructions. Will be treated as a character vector.
+#'   Must be the same length as `plan$command` if `expand` is
+#'   `TRUE`.
 #'
 #' @param expand If `TRUE`, create a new rows in the workflow plan
-#' data frame
-#' if multiple values are assigned to a single wildcard.
-#' If `FALSE`, each occurrence of the wildcard
-#' is replaced with the next entry in the `values` vector,
-#' and the values are recycled.
+#'   data frame
+#'   if multiple values are assigned to a single wildcard.
+#'   If `FALSE`, each occurrence of the wildcard
+#'   is replaced with the next entry in the `values` vector,
+#'   and the values are recycled.
 #'
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
@@ -161,7 +161,7 @@ evaluations <- function(
 #' @return An expanded workflow plan data frame (with replicated targets).
 #' @param plan workflow plan data frame
 #' @param values values to expand over. These will be appended to
-#' the names of the new targets.
+#'   the names of the new targets.
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -185,18 +185,18 @@ expand_plan <- function(plan, values = NULL){
 }
 
 #' @title Write commands to combine several targets into one
-#' or more overarching targets.
+#'   or more overarching targets.
 #' @description Creates a new workflow plan data frame with a single new
 #' target. This new target is a list, vector, or other aggregate of
 #' a collection of existing targets in another workflow plan data frame.
 #' @export
 #' @return A workflow plan data frame that aggregates multiple
-#' prespecified targets into one additional target downstream.
+#'   prespecified targets into one additional target downstream.
 #' @param plan workflow plan data frame of prespecified targets
 #' @param target name of the new aggregated target
 #' @param gather function used to gather the targets. Should be
-#' one of \code{\link{list}(...)}, \code{\link{c}(...)},
-#' \code{\link{rbind}(...)}, or similar.
+#'   one of \code{\link{list}(...)}, \code{\link{c}(...)},
+#'   \code{\link{rbind}(...)}, or similar.
 #' @examples
 #' # Workflow plan for datasets:
 #' datasets <- drake_plan(
@@ -227,21 +227,21 @@ gather_plan <- function(
 }
 
 #' @title Generate a workflow plan data frame to
-#' analyze multiple datasets using multiple methods of analysis.
+#'   analyze multiple datasets using multiple methods of analysis.
 #' @description Uses wildcards to create a new
 #' workflow plan data frame from a template data frame.
 #' @seealso [plan_summaries()],
-#'  [make()], [drake_plan()]
+#'    [make()], [drake_plan()]
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.
 #' @param plan workflow plan data frame of analysis methods.
-#' The commands in the `command` column must
-#' have the `dataset__` wildcard where the datasets go.
-#' For example, one command could be `lm(dataset__)`. Then,
-#' the commands in the output will include `lm(your_dataset_1)`,
-#' `lm(your_dataset_2)`, etc.
+#'   The commands in the `command` column must
+#'   have the `dataset__` wildcard where the datasets go.
+#'   For example, one command could be `lm(dataset__)`. Then,
+#'   the commands in the output will include `lm(your_dataset_1)`,
+#'   `lm(your_dataset_2)`, etc.
 #' @param datasets workflow plan data frame with instructions
-#' to make the datasets.
+#'   to make the datasets.
 #' @examples
 #' # Create the piece of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -272,25 +272,25 @@ plan_analyses <- function(plan, datasets){
 }
 
 #' @title Generate a workflow plan data frame for summarizing
-#' multiple analyses of multiple datasets multiple ways.
+#'   multiple analyses of multiple datasets multiple ways.
 #' @description Uses wildcards to create a new
 #' workflow plan data frame from a template data frame.
 #' @seealso [plan_analyses()], [make()],
-#' [drake_plan()]
+#'   [drake_plan()]
 #' @export
 #' @return An evaluated workflow plan data frame of instructions
-#' for computing summaries of analyses and datasets.
-#' analyses of multiple datasets in multiple ways.
+#'   for computing summaries of analyses and datasets.
+#'   analyses of multiple datasets in multiple ways.
 #' @param plan workflow plan data frame with commands for the summaries.
-#' Use the `analysis__` and `dataset__` wildcards
-#' just like the `dataset__` wildcard in [analyses()].
+#'   Use the `analysis__` and `dataset__` wildcards
+#'   just like the `dataset__` wildcard in [analyses()].
 #' @param analyses workflow plan data frame of analysis instructions
 #' @param datasets workflow plan data frame with instructions to make
-#' or import the datasets.
+#'   or import the datasets.
 #' @param gather Character vector, names of functions to gather the
-#' summaries. If not `NULL`, the length must be the number of
-#' rows in the `plan`. See the [gather()] function
-#' for more.
+#'   summaries. If not `NULL`, the length must be the number of
+#'   rows in the `plan`. See the [gather()] function
+#'   for more.
 #' @examples
 #' # Create the part of the workflow plan data frame for the datasets.
 #' datasets <- drake_plan(

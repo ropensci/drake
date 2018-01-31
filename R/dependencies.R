@@ -1,5 +1,5 @@
 #' @title List the dependencies of a function, workflow plan command,
-#' or knitr report source file.
+#'   or knitr report source file.
 #' @description Intended for debugging and checking your project.
 #' The dependency structure of the components of your analysis
 #' decides which targets are built and when.
@@ -13,10 +13,10 @@
 #' they are dependencies of `'report.md'`, not `'report.Rmd'`
 #' @export
 #' @param x Either a function or a string.
-#' Strings are commands from your workflow plan data frame.
+#'   Strings are commands from your workflow plan data frame.
 #' @return A character vector, names of dependencies.
-#' Files wrapped in single quotes.
-#' The other names listed are functions or generic R objects.
+#'   Files wrapped in single quotes.
+#'   The other names listed are functions or generic R objects.
 #' @examples
 #' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y){
@@ -61,21 +61,21 @@ deps <- function(x){
 }
 
 #' @title Return the detailed dependency profile
-#' of the target.
+#'   of the target.
 #' @description Useful for debugging.
 #' For up to date targets, like elements
 #' of the returned list should agree: for example,
 #' `cached_dependency_hash` and
 #' `current_dependency_hash`.
 #' @return A list of information that drake takes into account
-#' when examining the dependencies of the target.
+#'   when examining the dependencies of the target.
 #' @export
 #' @seealso [read_drake_meta()],
-#' [deps()], [make()],
-#' [config()]
+#'   [deps()], [make()],
+#'   [config()]
 #' @param target name of the target
 #' @param config configuration list output by
-#' [config()] or [make()]
+#'   [config()] or [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -115,22 +115,22 @@ dependency_profile <- function(target, config){
 }
 
 #' @title List the targets and imports
-#' that are reproducibly tracked.
+#'   that are reproducibly tracked.
 #' @description In other words, list all the nodes
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
 #' @param plan workflow plan data frame, same as for function
-#' [make()].
+#'   [make()].
 #' @param targets names of targets to build, same as for function
-#' [make()].
+#'   [make()].
 #' @param envir environment to import from, same as for function
-#' [make()].
+#'   [make()].
 #' @param jobs number of jobs to accelerate the construction
-#' of the dependency graph. A light `mclapply()`-based
-#' parallelism is used if your operating system is not Windows.
+#'   of the dependency graph. A light `mclapply()`-based
+#'   parallelism is used if your operating system is not Windows.
 #' @param verbose logical, whether to print
-#' progress messages to the console.
+#'   progress messages to the console.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

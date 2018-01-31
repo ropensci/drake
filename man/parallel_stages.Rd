@@ -36,26 +36,26 @@ of information on how targets and imports will be divided into
 parallel stages during the next \code{\link[=make]{make()}}.
 }
 \examples{
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
-config <- drake_config(my_plan) # Get a configuration list.
-# Parallel stages for the next make().
-parallel_stages(config = config)
-# Check the graph to see that the information agrees.
-vis_drake_graph(config = config)
-# Build the project.
-config <- make_with_config(config) # or make(my_plan)
-# Nothing to build in the next make().
-parallel_stages(config = config)
-# Change a dependency and notice how the stages change.
-reg2 = function(d){
-  d$x3 = d$x^3
-  lm(y ~ x3, data = d)
-}
-parallel_stages(config = config)
-})
-}
+  \dontrun{
+  test_with_dir("Quarantine side effects.", {
+  load_basic_example() # Get the code with drake_example("basic").
+  config <- drake_config(my_plan) # Get a configuration list.
+  # Parallel stages for the next make().
+  parallel_stages(config = config)
+  # Check the graph to see that the information agrees.
+  vis_drake_graph(config = config)
+  # Build the project.
+  config <- make_with_config(config) # or make(my_plan)
+  # Nothing to build in the next make().
+  parallel_stages(config = config)
+  # Change a dependency and notice how the stages change.
+  reg2 = function(d){
+    d$x3 = d$x^3
+    lm(y ~ x3, data = d)
+  }
+  parallel_stages(config = config)
+  })
+  }
 }
 \seealso{
 \code{\link[=next_stage]{next_stage()}},

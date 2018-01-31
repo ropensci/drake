@@ -1,14 +1,14 @@
 #' @title Reconfigure an old project (built with drake <= 4.4.0)
-#' to be compatible with later versions of drake.
+#'   to be compatible with later versions of drake.
 #' @export
 #' @seealso [rescue_cache()], [make()]
 #' @param path Full path to the cache
 #' @param jobs number of jobs for light parallelism.
-#' (Disabled on Windows.)
+#'   (Disabled on Windows.)
 #' @return `TRUE` if the migration was successful, `FALSE` otherwise.
-#' A migration is successful if the transition preserves target status:
-#' that is, outdated targets remain outdated and up to date targets
-#' remain up to date.
+#'   A migration is successful if the transition preserves target status:
+#'   that is, outdated targets remain outdated and up to date targets
+#'   remain up to date.
 #' @description Migrate a project/cache from drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @details Drake versions after 4.4.0

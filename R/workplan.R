@@ -1,5 +1,5 @@
 #' @title Create a workflow plan data frame
-#' for the `plan` argument of [make()].
+#'   for the `plan` argument of [make()].
 #' @description Turns a named collection of target/command pairs into
 #' a workflow plan data frame for [make()] and
 #' [check()]. You can give the commands
@@ -21,27 +21,27 @@
 #' @export
 #' @return A data frame of targets and commands.
 #' @param ... A collection of symbols/targets
-#' with commands assigned to them. See the examples for details.
+#'   with commands assigned to them. See the examples for details.
 #' @param list A named list of targets, where the values
-#' are commands.
+#'   are commands.
 #' @param file_targets logical, whether the targets should be
-#' (single-quoted) external file targets.
+#'   (single-quoted) external file targets.
 #' @param strings_in_dots Character scalar,
-#' how to treat quoted character strings in the commands
-#' specified through `...`.
-#' Set to `"filenames"` to treat all these strings as
-#' external file targets/imports (single-quoted),
-#' or to `"literals"` to treat them all as literal
-#' strings (double-quoted).
-#' Unfortunately, because of how R deparses code,
-#' you cannot simply leave literal quotes alone in the
-#' `...` argument. R will either convert all these quotes
-#' to single quotes or double quotes. Literal quotes in the
-#' `list` argument are left alone.
+#'   how to treat quoted character strings in the commands
+#'   specified through `...`.
+#'   Set to `"filenames"` to treat all these strings as
+#'   external file targets/imports (single-quoted),
+#'   or to `"literals"` to treat them all as literal
+#'   strings (double-quoted).
+#'   Unfortunately, because of how R deparses code,
+#'   you cannot simply leave literal quotes alone in the
+#'   `...` argument. R will either convert all these quotes
+#'   to single quotes or double quotes. Literal quotes in the
+#'   `list` argument are left alone.
 #' @param tidy_evaluation logical, whether to use tidy evaluation
-#' such as quasiquotation
-#' when evaluating commands passed through the free-form
-#' `...` argument.
+#'   such as quasiquotation
+#'   when evaluating commands passed through the free-form
+#'   `...` argument.
 #' @examples
 #' # Create example workflow plan data frames for make()
 #' drake_plan(small = simulate(5), large = simulate(50))

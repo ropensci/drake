@@ -19,8 +19,8 @@ cache_namespaces <- function(
 }
 
 #' @title For drake caches,
-#' list the `storr` namespaces that are cleaned
-#' during a call to [clean()].
+#'   list the `storr` namespaces that are cleaned
+#'   during a call to [clean()].
 #' @description All these
 #' namespaces store target-level data, but not all
 #' target-level namespaces are cleaned during
@@ -28,7 +28,7 @@ cache_namespaces <- function(
 #' @export
 #' @seealso [cache_namespaces()], [clean()]
 #' @return A character vector of `storr` namespaces
-#' that are cleaned during [clean()].
+#'   that are cleaned during [clean()].
 #' @param default Name of the default `storr` namespace.
 #' @examples
 #' cleaned_namespaces()
@@ -44,12 +44,12 @@ cleaned_namespaces <- function(
 }
 
 #' @title For drake caches,
-#' list the `storr` cache namespaces
-#' that store target-level information.
+#'   list the `storr` cache namespaces
+#'   that store target-level information.
 #' @export
 #' @seealso [make()]
 #' @return A character vector of `storr` namespaces that store
-#' target-level information.
+#'   target-level information.
 #' @description Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
 #' @param default name of the default `storr` namespace

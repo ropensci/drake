@@ -10,8 +10,8 @@
 #' will warn you and tell you which targets have missing times.
 #' @export
 #' @seealso [rate_limiting_times()],
-#' [build_times()]
-#' [make()]
+#'   [build_times()]
+#'   [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -32,25 +32,25 @@
 #' })
 #' }
 #' @return A `lubridate` `Duration` object
-#' with the predicted runtime of the next [make()].
+#'   with the predicted runtime of the next [make()].
 #' @param config option internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced by both [make()] and
-#' [drake_config()].
+#'   \code{\link{make}(...)},
+#'   produced by both [make()] and
+#'   [drake_config()].
 #' @param targets Character vector, names of targets.
-#' Predict the runtime of building these targets
-#' plus dependencies.
-#' Defaults to all targets.
+#'   Predict the runtime of building these targets
+#'   plus dependencies.
+#'   Defaults to all targets.
 #' @param from_scratch logical, whether to predict a
-#' [make()] build from scratch or to
-#' take into account the fact that some targets may be
-#' already up to date and therefore skipped.
+#'   [make()] build from scratch or to
+#'   take into account the fact that some targets may be
+#'   already up to date and therefore skipped.
 #' @param targets_only logical, whether to factor in
-#' just the targets into the calculations or use the
-#' build times for everything, including the imports
+#'   just the targets into the calculations or use the
+#'   build times for everything, including the imports
 #' @param future_jobs hypothetical number of jobs
-#' assumed for the predicted runtime.
-#' assuming this number of jobs.
+#'   assumed for the predicted runtime.
+#'   assuming this number of jobs.
 #' @param digits number of digits for rounding the time
 predict_runtime <- function(
   config,
@@ -75,7 +75,7 @@ predict_runtime <- function(
 }
 
 #' @title Return a data frame of elapsed build times of
-#' the rate-limiting targets of a drake project.
+#'   the rate-limiting targets of a drake project.
 #'
 #' @description This function produces a conservative
 #' estimate for [predict_runtime()]
@@ -108,8 +108,8 @@ predict_runtime <- function(
 #' will warn you and tell you which targets have missing times.
 #'
 #' @seealso [predict_runtime()],
-#' [build_times()]
-#' [make()]
+#'   [build_times()]
+#'   [make()]
 #'
 #' @examples
 #' \dontrun{
@@ -138,28 +138,28 @@ predict_runtime <- function(
 #' }
 #'
 #' @return A data frame of times of the worst-case scenario
-#' rate-limiting targets in each parallelizable stage.
+#'   rate-limiting targets in each parallelizable stage.
 #'
 #' @param config option internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced by both [make()] and
-#' [drake_config()].
+#'   \code{\link{make}(...)},
+#'   produced by both [make()] and
+#'   [drake_config()].
 #'
 #' @param targets Character vector, names of targets.
-#' Find the rate-limiting times for building these targets
-#' plus dependencies.
-#' Defaults to all targets.
+#'   Find the rate-limiting times for building these targets
+#'   plus dependencies.
+#'   Defaults to all targets.
 #'
 #' @param from_scratch logical, whether to assume
-#' next hypothetical call to [make()]
-#' is a build from scratch (after [clean()]).
+#'   next hypothetical call to [make()]
+#'   is a build from scratch (after [clean()]).
 #'
 #' @param targets_only logical, whether to factor in just the
-#' targets or use times from everything, including the imports.
+#'   targets or use times from everything, including the imports.
 #'
 #' @param future_jobs hypothetical number of jobs
-#' assumed for the predicted runtime.
-#' assuming this number of jobs.
+#'   assumed for the predicted runtime.
+#'   assuming this number of jobs.
 #'
 #' @param digits number of digits for rounding the times.
 rate_limiting_times <- function(

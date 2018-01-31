@@ -51,16 +51,16 @@ configure_nodes <- function(config){
 }
 
 #' @title Return the default title of the graph for
-#' [vis_drake_graph()].
+#'   [vis_drake_graph()].
 #' @description For internal use only.
 #' @export
 #' @keywords internal
 #' @seealso [dataframes_graph()], [vis_drake_graph()]
 #' @return a character scalar with the default graph title for
-#' [vis_drake_graph()].
+#'   [vis_drake_graph()].
 #' @param split_columns logical, whether the columns were split
-#' in [dataframes_graph()] or [vis_drake_graph()]
-#' with the `split_columns` argument.
+#'   in [dataframes_graph()] or [vis_drake_graph()]
+#'   with the `split_columns` argument.
 #' @examples
 #' default_graph_title()
 default_graph_title <- function(split_columns = FALSE){
@@ -141,11 +141,11 @@ hover_text <- function(config) {
 hover_text_length <- 250
 
 #' @title Create the nodes data frame used in the legend
-#' of [vis_drake_graph()].
+#'   of [vis_drake_graph()].
 #' @export
 #' @seealso [drake_palette()],
-#' [vis_drake_graph()],
-#' [dataframes_graph()]
+#'   [vis_drake_graph()],
+#'   [dataframes_graph()]
 #' @description Output a `visNetwork`-friendly
 #' data frame of nodes. It tells you what
 #' the colors and shapes mean

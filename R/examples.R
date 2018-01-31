@@ -5,17 +5,17 @@
 #' quickstart vignette: `vignette('quickstart')`.
 #' To see the names of all the examples, run [drake_examples()].
 #' @seealso [drake_examples()], [make()],
-#' [shell_file()], [drake_batchtools_tmpl_file()]
+#'   [shell_file()], [drake_batchtools_tmpl_file()]
 #' @export
 #' @return `NULL`
 #' @param example name of the example.
-#' To see all the available example names,
-#' run [drake_examples()].
+#'   To see all the available example names,
+#'   run [drake_examples()].
 #' @param to Character scalar, file path, where
-#' to write the folder containing the code files for the example.
+#'   to write the folder containing the code files for the example.
 #' @param destination Deprecated, use `to` instead.
 #' @param overwrite Logical, whether to overwrite an existing folder
-#' with the same name as the drake example.
+#'   with the same name as the drake example.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

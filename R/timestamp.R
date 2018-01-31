@@ -1,5 +1,5 @@
 #' @title Write dummy timestamp files for
-#' \code{\link{make}(..., parallelism = "Makefile")}.
+#'   \code{\link{make}(..., parallelism = "Makefile")}.
 #' @description For `"Makefile"` parallelism,
 #' dummy timestamp files tell the Makefile
 #' which targets need to be built and which can be skipped.
@@ -9,7 +9,7 @@
 #' @keywords internal
 #' @return nothing
 #' @param config Internal master configuration list
-#' produced by [drake_config()].
+#'   produced by [drake_config()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

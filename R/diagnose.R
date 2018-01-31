@@ -1,5 +1,5 @@
 #' @title Get the last stored error log of a target
-#' that failed to build, or list the targets with error logs.
+#'   that failed to build, or list the targets with error logs.
 #' @description The specified target could be a
 #' completely failed target or a target
 #' that failed initially, retried, then succeeded.
@@ -9,31 +9,31 @@
 #' `diagnose()` should eliminate the strict need
 #' for ordinary error messages printed to the console.
 #' @seealso
-#' [failed()], [progress()],
-#' [readd()], [drake_plan()], [make()]
+#'   [failed()], [progress()],
+#'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return Either a character vector of target names or an object
-#' of class `"error"`.
+#'   of class `"error"`.
 #'
 #' @param target name of the target of the error to get.
-#' Can be a symbol if `character_only` is `FALSE`,
-#' must be a character if `character_only` is `TRUE`.
+#'   Can be a symbol if `character_only` is `FALSE`,
+#'   must be a character if `character_only` is `TRUE`.
 #'
 #' @param character_only logical, whether `target` should be treated
-#' as a character or a symbol.
-#' Just like `character.only` in [library()].
+#'   as a character or a symbol.
+#'   Just like `character.only` in [library()].
 #'
 #' @param cache optional drake cache. See [new_cache()].
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #'
 #' @param search If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #'
 #' @param verbose whether to print console messages
 #'

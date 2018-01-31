@@ -1,24 +1,24 @@
 #' @title For \code{\link{make}(..., parallelism = "Makefile")},
-#' see what your `Makefile` recipes
-#' will look like in advance.
+#'   see what your `Makefile` recipes
+#'   will look like in advance.
 #' @export
 #' @seealso [default_recipe_command()],
-#' [r_recipe_wildcard()], [make()]
+#'   [r_recipe_wildcard()], [make()]
 #' @description Relevant to `"Makefile"` parallelism only.
 #' @return A character scalar with a Makefile recipe.
 #'
 #' @param recipe_command The Makefile recipe command.
-#' See [default_recipe_command()].
+#'   See [default_recipe_command()].
 #'
 #' @param target character scalar, name of your target
 #'
 #' @param cache_path path to the drake cache.
-#' In practice, this defaults to the hidden `.drake/` folder,
-#' but this can be customized. In the Makefile, the drake cache
-#' is coded with the Unix variable `DRAKE_CACHE` and then dereferenced
-#' with `$(DRAKE_CACHE)`. To simplify things for users who may
-#' be unfamiliar with Unix variables, the `recipe()` function
-#' just shows the literal path to the cache.
+#'   In practice, this defaults to the hidden `.drake/` folder,
+#'   but this can be customized. In the Makefile, the drake cache
+#'   is coded with the Unix variable `DRAKE_CACHE` and then dereferenced
+#'   with `$(DRAKE_CACHE)`. To simplify things for users who may
+#'   be unfamiliar with Unix variables, the `recipe()` function
+#'   just shows the literal path to the cache.
 #'
 #' @details Makefile recipes to build targets are customizable.
 #' Use the `Makefile_recipe()` function to show and tweak
@@ -84,7 +84,7 @@ Makefile_recipe <- function( # nolint
 }
 
 #' @title Show the default
-#' recipe command for \code{\link{make}(..., parallelism = "Makefile")}.
+#'   recipe command for \code{\link{make}(..., parallelism = "Makefile")}.
 #' @export
 #' @seealso [Makefile_recipe()]
 #' @description See the help file of [Makefile_recipe()]
@@ -97,7 +97,7 @@ default_recipe_command <- function(){
 }
 
 #' @title Show the R recipe wildcard
-#' for \code{\link{make}(..., parallelism = "Makefile")}.
+#'   for \code{\link{make}(..., parallelism = "Makefile")}.
 #' @export
 #' @seealso [default_recipe_command()]
 #' @description Relevant to `"Makefile"` parallelism only.

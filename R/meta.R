@@ -30,13 +30,13 @@ meta_list <- function(targets, config) {
 #' @seealso [dependency_profile()], [make()]
 #' @export
 #' @return A list of metadata on a target. Does not include
-#' the file modification time if the target is a file.
-#' That piece is provided later in [make()] by
-#' `drake:::finish_meta`.
+#'   the file modification time if the target is a file.
+#'   That piece is provided later in [make()] by
+#'   `drake:::finish_meta`.
 #' @param target Character scalar, name of the target
-#' to get metadata.
+#'   to get metadata.
 #' @param config Master internal configuration list produced
-#' by [drake_config()].
+#'   by [drake_config()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

@@ -5,16 +5,16 @@
 #' @export
 #' @return A data frame of times, each from [system.time()].
 #' @param targets_only logical, whether to only return the
-#' build times of the targets (exclude the imports).
+#'   build times of the targets (exclude the imports).
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search logical. If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param digits How many digits to round the times to.
 #' @param cache optional drake cache. If supplied,
-#' the `path` and `search` arguments are ignored.
+#'   the `path` and `search` arguments are ignored.
 #' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
 #' @examples

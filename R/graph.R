@@ -8,22 +8,22 @@
 #' @seealso [vis_drake_graph()]
 #' @export
 #' @return An igraph object representing
-#' the workflow plan dependency network.
+#'   the workflow plan dependency network.
 #'
 #' @param plan workflow plan data frame, same as for function
-#' [make()].
+#'   [make()].
 #'
 #' @param targets names of targets to build, same as for function
-#' [make()].
+#'   [make()].
 #'
 #' @param envir environment to import from, same as for function
-#' [make()].
+#'   [make()].
 #'
 #' @param verbose logical, whether to output messages to the console.
 #'
 #' @param jobs number of jobs to accelerate the construction
-#' of the dependency graph. A light `mclapply()`-based
-#' parallelism is used if your operating system is not Windows.
+#'   of the dependency graph. A light `mclapply()`-based
+#'   parallelism is used if your operating system is not Windows.
 #'
 #' @examples
 #' \dontrun{
@@ -97,7 +97,7 @@ build_drake_graph <- function(
 #' @title Prune the dependency network of your project.
 #' @export
 #' @seealso [build_drake_graph()], [config()],
-#' [make()]
+#'   [make()]
 #' @description `igraph` objects are used
 #' internally to represent the dependency network of your workflow.
 #' See \code{\link{config}(my_plan)$graph} from the basic example.
@@ -105,11 +105,11 @@ build_drake_graph <- function(
 #' incoming paths to the vertices in `to`. In other words,
 #' remove the vertices after `to` from the graph.
 #' @return A pruned igraph object representing the dependency network
-#' of the workflow.
+#'   of the workflow.
 #' @param graph An igraph object to be pruned.
 #' @param to Character vector, names of the vertices that draw
-#' the line for pruning. The pruning process removes all vertices
-#' downstream of `to`.
+#'   the line for pruning. The pruning process removes all vertices
+#'   downstream of `to`.
 #' @param jobs Number of jobs for light parallelism (on non-Windows machines).
 #' @examples
 #' \dontrun{

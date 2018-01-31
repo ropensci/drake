@@ -1,22 +1,22 @@
 #' @title Return the [sessionInfo()]
-#' of the last call to [make()].
+#'   of the last call to [make()].
 #' @description By default, session info is saved
 #' during [make()] to ensure reproducibility.
 #' Your loaded packages and their versions are recorded, for example.
 #' @seealso [diagnose()], [built()], [imported()],
-#' [readd()], [drake_plan()], [make()]
+#'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return [sessionInfo()] of the last
-#' call to [make()]
+#'   call to [make()]
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
@@ -37,23 +37,23 @@ drake_session <- function(path = getwd(), search = TRUE,
 }
 
 #' @title List the targets that either
-#' (1) are currently being built during a [make()], or
-#' (2) were being built if the last [make()] quit unexpectedly.
+#'   (1) are currently being built during a [make()], or
+#'   (2) were being built if the last [make()] quit unexpectedly.
 #' @description Similar to [progress()].
 #' @seealso [diagnose()], [session()],
-#' [built()], [imported()],
-#' [readd()], [drake_plan()], [make()]
+#'   [built()], [imported()],
+#'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
@@ -75,24 +75,24 @@ in_progress <- function(path = getwd(), search = TRUE,
 }
 
 #' @title List the targets that failed in the last call
-#' to [make()].
+#'   to [make()].
 #' @description Together, functions `failed` and
 #' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
 #' @seealso [diagnose()], [session()],
-#' [built()], [imported()],
-#' [readd()], [drake_plan()], [make()]
+#'   [built()], [imported()],
+#'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #' @param search If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
@@ -118,44 +118,44 @@ failed <- function(path = getwd(), search = TRUE,
 }
 
 #' @title Get the build progress of your targets
-#' during a [make()].
+#'   during a [make()].
 #' @description Objects that drake imported, built, or attempted
 #' to build are listed as `"finished"` or `"in progress"`.
 #' Skipped objects are not listed.
 #' @seealso [diagnose()], [session()],
-#' [built()], [imported()],
-#' [readd()], [drake_plan()], [make()]
+#'   [built()], [imported()],
+#'   [readd()], [drake_plan()], [make()]
 #' @export
 #'
 #' @return The build progress of each target reached by
-#' the current [make()] so far.
+#'   the current [make()] so far.
 #'
 #' @param ... objects to load from the cache, as names (unquoted)
-#' or character strings (quoted). Similar to `...` in
-#' \code{\link{remove}(...)}.
+#'   or character strings (quoted). Similar to `...` in
+#'   \code{\link{remove}(...)}.
 #'
 #' @param list character vector naming objects to be loaded from the
-#' cache. Similar to the `list` argument of [remove()].
+#'   cache. Similar to the `list` argument of [remove()].
 #'
 #' @param no_imported_objects logical, whether to only return information
-#' about imported files and targets with commands (i.e. whether to ignore
-#' imported objects that are not files).
+#'   about imported files and targets with commands (i.e. whether to ignore
+#'   imported objects that are not files).
 #'
 #' @param imported_files_only logical, deprecated. Same as
-#' `no_imported_objects`.  Use the `no_imported_objects` argument
-#' instead.
+#'   `no_imported_objects`.  Use the `no_imported_objects` argument
+#'   instead.
 #'
 #' @param cache optional drake cache. See code{\link{new_cache}()}.
-#' If `cache` is supplied,
-#' the `path` and `search` arguments are ignored.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
 #'
 #' @param path Root directory of the drake project,
-#' or if `search` is `TRUE`, either the
-#' project root or a subdirectory of the project.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
 #'
 #' @param search If `TRUE`, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #'
 #' @param verbose whether to print console messages
 #'

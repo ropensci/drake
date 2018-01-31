@@ -1,5 +1,5 @@
 #' @title Suggest an upper bound on the jobs in the next call
-#' to `make(..., jobs = YOUR_CHOICE)`.
+#'   to `make(..., jobs = YOUR_CHOICE)`.
 #' @description The best number of `jobs`
 #' should be somewhere between 1 and `max_useful_jobs(...)`.
 #' Any additional jobs more than `max_useful_jobs(...)`
@@ -11,32 +11,32 @@
 #' @export
 #'
 #' @return A numeric scalar, the maximum number of useful jobs for
-#' \code{\link{make}(..., jobs = ...)}.
+#'   \code{\link{make}(..., jobs = ...)}.
 #'
 #' @seealso [vis_drake_graph()], [build_drake_graph()],
-#' [shell_file()], [drake_config()]
+#'   [shell_file()], [drake_config()]
 #'
 #' @param config internal configuration list of \code{\link{make}(...)},
-#' produced also with [drake_config()].
+#'   produced also with [drake_config()].
 #'
 #' @param imports Set the `imports` argument to change your
-#' assumptions about how fast objects/files are imported.
-#' Possible values:
-#' \itemize{
-#'  \item{'all'}{: Factor all imported files/objects into
-#'    calculating the max useful number of jobs.
-#'    Note: this is not appropriate for
-#'    `make(.., parallelism = 'Makefile')` because imports
-#'    are processed sequentially for the Makefile option.}
-#'  \item{'files'}{: Factor all imported files into the calculation,
-#'    but ignore all the other imports.}
-#'  \item{'none'}{: Ignore all the imports and just focus on the max number
-#'    of useful jobs for parallelizing targets.}
-#' }
+#'   assumptions about how fast objects/files are imported.
+#'   Possible values:
+#'   \itemize{
+#'    \item{'all'}{: Factor all imported files/objects into
+#'      calculating the max useful number of jobs.
+#'      Note: this is not appropriate for
+#'      `make(.., parallelism = 'Makefile')` because imports
+#'      are processed sequentially for the Makefile option.}
+#'    \item{'files'}{: Factor all imported files into the calculation,
+#'      but ignore all the other imports.}
+#'    \item{'none'}{: Ignore all the imports and just focus on the max number
+#'      of useful jobs for parallelizing targets.}
+#'   }
 #'
 #' @param from_scratch logical, whether to assume
-#' the next [make()] will run from scratch
-#' so that all targets are attempted.
+#'   the next [make()] will run from scratch
+#'   so that all targets are attempted.
 #'
 #' @examples
 #' \dontrun{

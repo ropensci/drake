@@ -46,12 +46,12 @@
 #' @importFrom future.apply future_lapply
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices delete_vertices degree edge
-#' induced_subgraph is_dag make_empty_graph plot.igraph subcomponent V vertex
+#'   induced_subgraph is_dag make_empty_graph plot.igraph subcomponent V vertex
 #' @importFrom knitr knit
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
-#' mclapply parLapply stopCluster
+#'   mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
 #' @importFrom R.utils isPackageLoaded withTimeout
 #' @importFrom rlang expr exprs
@@ -62,9 +62,9 @@
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom utils capture.output compareVersion installed.packages
-#' packageVersion read.csv sessionInfo type.convert unzip write.table
+#'   packageVersion read.csv sessionInfo type.convert unzip write.table
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
-#' visIgraphLayout visInteraction visLegend visNetwork visSave
+#'   visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink
-#' with_preserve_seed with_seed
+#'   with_preserve_seed with_seed
 NULL
