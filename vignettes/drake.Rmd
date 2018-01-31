@@ -38,8 +38,7 @@ Write the code files to your workspace.
 drake_example("basic")
 ```
 
-The new `basic` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example. The code is also [online here](https://git\
-hub.com/ropensci/drake/tree/master/inst/examples/basic).
+The new `basic` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example. The code is also [online here](https://github.com/ropensci/drake/tree/master/inst/examples/basic).
 
 
 # The motivation of the basic example
