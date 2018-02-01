@@ -61,7 +61,7 @@ repair_target_names <- function(x){
   illegals <- c(
     ":", "\\+", "\\-", "\\*", "\\^",
     "\\(", "\\)", "\\[", "\\]", "^_",
-    "\\""
+    "\\\""
   ) %>%
     paste(collapse = "|")
   non_files <- x[is_not_file(x)]
