@@ -21,6 +21,21 @@
 #'   Defaults to your workspace.
 #'   For an insulated workspace,
 #'   set `envir = new.env(parent = globalenv())`.
+#' @param seed integer, the root pseudo-random seed to use for your project.
+#'   To ensure reproducibility across different R sessions,
+#'   `set.seed()` and `.Random.seed` are ignored and have no affect on
+#'   `drake` workflows. Conversely, `make()` does not change `.Random.seed`,
+#'   even when pseudo-random numbers are generated.
+#'
+#'   On the first call to `make()` or `drake_config()`, `drake`
+#'   uses the random number generator seed from the `seed` argument.
+#'   Here, if the `seed` is `NULL` (default), `drake` uses a `seed` of `0`.
+#'   On subsequent `make()`s for existing projects, the project's
+#'   cached seed will be used in order to ensure reproducibility.
+#'   Thus, the `seed` argument must either be `NULL` or the same
+#'   seed from the project's cache (usually the `.drake/` folder).
+#'   To reset the random number generator seed for a project,
+#'   use [clean(destroy = TRUE)].
 #' @param cache Optional `storr` cache to use.
 #' @param report_file where to write the report file `report.Rmd`.
 #' @param to deprecated, where to write the dynamic report source file
@@ -57,6 +72,7 @@
 #' }
 load_basic_example <- function(
   envir = parent.frame(),
+  seed = NULL,
   cache = NULL,
   report_file = "report.Rmd",
   overwrite = FALSE,
@@ -153,6 +169,7 @@ load_basic_example <- function(
   invisible(drake_config(
     plan = envir$my_plan,
     envir = envir,
+    seed = seed,
     cache = cache,
     force = force,
     verbose = verbose
