@@ -386,6 +386,7 @@ make <- function(
       plan = plan,
       targets = targets,
       envir = envir,
+      seed = seed,
       verbose = verbose,
       hook = hook,
       parallelism = parallelism,
