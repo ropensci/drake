@@ -34,7 +34,6 @@ this one central seed. That way, reproducibility is protected,
 even under randomness.
 }
 \examples{
-\dontrun{
 cache <- storr::storr_environment() # For the examples.
 my_plan <- drake_plan(
   target1 = sqrt(1234),
@@ -54,7 +53,6 @@ make(my_plan, cache = cache) # Rebuild target2.
 digest::digest(read_drake_seed(cache = cache))
 digest::digest(.Random.seed)
 readd(target2, cache = cache)
-}
 }
 \seealso{
 \code{\link[=read_drake_config]{read_drake_config()}}

@@ -503,7 +503,6 @@ read_drake_meta <- function(
 #'   current working directory only.
 #' @param verbose whether to print console messages
 #' @examples
-#' \dontrun{
 #' cache <- storr::storr_environment() # For the examples.
 #' my_plan <- drake_plan(
 #'   target1 = sqrt(1234),
@@ -523,7 +522,6 @@ read_drake_meta <- function(
 #' digest::digest(read_drake_seed(cache = cache))
 #' digest::digest(.Random.seed)
 #' readd(target2, cache = cache)
-#' }
 read_drake_seed <- function(
   path = getwd(),
   search = TRUE,
