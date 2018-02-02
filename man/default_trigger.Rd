@@ -11,7 +11,7 @@ A character scalar naming the default trigger.
 }
 \description{
 Triggers are target-level rules
-that tell \code{\link{make}()} how to check if
+that tell \code{\link[=make]{make()}} how to check if
 target is up to date or outdated.
 }
 \examples{
@@ -19,5 +19,5 @@ default_trigger()
 # See ?triggers for more examples.
 }
 \seealso{
-\code{\link{triggers}}, \code{\link{make}}
+\code{\link[=triggers]{triggers()}}, \code{\link[=make]{make()}}
 }

@@ -12,7 +12,7 @@ drake_build(target, config, meta = NULL)
 \item{config}{internal configuration list}
 
 \item{meta}{list of metadata that tell which
-targets are up to date (from \code{drake_meta()}).}
+targets are up to date (from \code{\link[=drake_meta]{drake_meta()}}).}
 }
 \value{
 The value of the target right after it is built.

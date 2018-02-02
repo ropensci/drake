@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.R
 \name{make_with_config}
 \alias{make_with_config}
-\title{Run \code{\link{make}()},
+\title{Run \code{\link[=make]{make()}},
 on an existing internal configuration list.}
 \usage{
 make_with_config(config)
@@ -14,7 +14,7 @@ make_with_config(config)
 An output internal configuration list
 }
 \description{
-Use \code{\link{drake_config}()}
+Use \code{\link[=drake_config]{drake_config()}}
 to create the \code{config} argument.
 }
 \examples{
@@ -28,5 +28,5 @@ make_with_config(config = config) # Run the project, build the targets.
 }
 }
 \seealso{
-\code{\link{make}}, \code{\link{drake_config}}
+\code{\link[=make]{make()}}, \code{\link[=drake_config]{drake_config()}}
 }

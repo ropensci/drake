@@ -1,12 +1,12 @@
-#' @title Deprecated function \code{analyses}
-#' @description Use \code{\link{plan_analyses}()} instead.
+#' @title Deprecated function `analyses`
+#' @description Use [plan_analyses()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{plan_analyses}}
-#' @return The same return value as \code{\link{plan_analyses}()}.
-#' @param plan Same as for \code{\link{plan_analyses}()}.
-#' @param datasets Same as for \code{\link{plan_analyses}()}.
+#' @seealso [plan_analyses()]
+#' @return The same return value as [plan_analyses()].
+#' @param plan Same as for [plan_analyses()].
+#' @param datasets Same as for [plan_analyses()].
 #' @examples
 #' # See ?plan_analyses for examples.
 analyses <- function(plan, datasets){
@@ -22,14 +22,14 @@ analyses <- function(plan, datasets){
   plan_analyses(plan = plan, datasets = datasets)
 }
 
-#' @title Deprecated function \code{as_file}
-#' @description Use \code{\link{as_drake_filename}()} instead.
+#' @title Deprecated function `as_file`
+#' @description Use [as_drake_filename()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{as_drake_filename}}
-#' @return The same return value as \code{\link{as_drake_filename}()}.
-#' @param x Same as for \code{\link{as_drake_filename}()}.
+#' @seealso [as_drake_filename()]
+#' @return The same return value as [as_drake_filename()].
+#' @param x Same as for [as_drake_filename()].
 #' @examples
 #' # See ?as_drake_filename for examples.
 as_file <- function(x){
@@ -45,14 +45,14 @@ as_file <- function(x){
   as_drake_filename(x)
 }
 
-#' @title Deprecated function \code{backend}
-#' @description Use \code{future::plan()} instead.
-#' Avoid \code{drake::plan()}.
+#' @title Deprecated function `backend`
+#' @description Use [future::plan()] instead.
+#' Avoid `drake::plan()`.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @return The same return value as \code{future::plan()}.
-#' @param ... Arguments to \code{future::plan()}.
+#' @return The same return value as `future::plan()`.
+#' @param ... Arguments to `future::plan()`.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -81,18 +81,18 @@ backend <- function(...){
   future::plan(...)
 }
 
-#' @title Deprecated function \code{build_graph}
-#' @description Use \code{\link{build_drake_graph}()} instead.
+#' @title Deprecated function `build_graph`
+#' @description Use [build_drake_graph()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{build_drake_graph}}
-#' @return The same return value as \code{\link{build_drake_graph}()}.
-#' @param plan Same as for \code{\link{build_drake_graph}()}.
-#' @param targets Same as for \code{\link{build_drake_graph}()}.
-#' @param envir Same as for \code{\link{build_drake_graph}()}.
-#' @param verbose Same as for \code{\link{build_drake_graph}()}.
-#' @param jobs Same as for \code{\link{build_drake_graph}()}.
+#' @seealso [build_drake_graph()]
+#' @return The same return value as [build_drake_graph()].
+#' @param plan Same as for [build_drake_graph()].
+#' @param targets Same as for [build_drake_graph()].
+#' @param envir Same as for [build_drake_graph()].
+#' @param verbose Same as for [build_drake_graph()].
+#' @param jobs Same as for [build_drake_graph()].
 #' @examples
 #' # See ?as_drake_filename for examples.
 build_graph <- function(
@@ -117,18 +117,18 @@ build_graph <- function(
   )
 }
 
-#' @title Deprecated function \code{check}
-#' @description Use \code{\link{check_plan}()} instead.
+#' @title Deprecated function `check`
+#' @description Use [check_plan()] instead.
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{check_plan}}
+#' @seealso [check_plan()]
 #' @export
 #' @keywords internal
-#' @return Same as for \code{\link{check_plan}()}.
-#' @param plan Same as for \code{\link{check_plan}()}.
-#' @param targets Same as for \code{\link{check_plan}()}.
-#' @param envir Same as for \code{\link{check_plan}()}.
-#' @param cache Same as for \code{\link{check_plan}()}.
-#' @param verbose Same as for \code{\link{check_plan}()}.
+#' @return Same as for [check_plan()].
+#' @param plan Same as for [check_plan()].
+#' @param targets Same as for [check_plan()].
+#' @param envir Same as for [check_plan()].
+#' @param cache Same as for [check_plan()].
+#' @param verbose Same as for [check_plan()].
 #' @examples
 #' # See ?check_plan for examples.
 check <- function(
@@ -156,37 +156,37 @@ check <- function(
   )
 }
 
-#' @title Deprecated function \code{config}
-#' @description Use \code{\link{drake_config}()} instead.
+#' @title Deprecated function `config`
+#' @description Use [drake_config()] instead.
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{drake_config}}
+#' @seealso [drake_config()]
 #' @export
 #' @keywords internal
 #' @return The master internal configuration list of a project.
-#' @seealso \code{\link{drake_config}}
-#' @param plan same as for \code{\link{make}}
-#' @param targets same as for \code{\link{make}}
-#' @param envir same as for \code{\link{make}}
-#' @param verbose same as for \code{\link{make}}
-#' @param hook same as for \code{\link{make}}
-#' @param parallelism same as for \code{\link{make}}
-#' @param jobs same as for \code{\link{make}}
-#' @param packages same as for \code{\link{make}}
-#' @param prework same as for \code{\link{make}}
-#' @param prepend same as for \code{\link{make}}
-#' @param command same as for \code{\link{make}}
-#' @param args same as for \code{\link{make}}
-#' @param recipe_command same as for \code{\link{make}}
-#' @param cache same as for \code{\link{make}}
-#' @param timeout same as for \code{\link{make}}
-#' @param cpu same as for \code{\link{make}}
-#' @param elapsed same as for \code{\link{make}}
-#' @param retries same as for \code{\link{make}}
-#' @param force same as for \code{\link{make}}
-#' @param log_progress same as for \code{\link{drake_config}}
-#' @param graph same as for \code{\link{drake_config}}
-#' @param trigger same as for \code{\link{make}}
-#' @param skip_imports same as for \code{\link{drake_config}}
+#' @seealso [drake_config()]
+#' @param plan same as for [make()]
+#' @param targets same as for [make()]
+#' @param envir same as for [make()]
+#' @param verbose same as for [make()]
+#' @param hook same as for [make()]
+#' @param parallelism same as for [make()]
+#' @param jobs same as for [make()]
+#' @param packages same as for [make()]
+#' @param prework same as for [make()]
+#' @param prepend same as for [make()]
+#' @param command same as for [make()]
+#' @param args same as for [make()]
+#' @param recipe_command same as for [make()]
+#' @param cache same as for [make()]
+#' @param timeout same as for [make()]
+#' @param cpu same as for [make()]
+#' @param elapsed same as for [make()]
+#' @param retries same as for [make()]
+#' @param force same as for [make()]
+#' @param log_progress same as for [drake_config()]
+#' @param graph same as for [drake_config()]
+#' @param trigger same as for [make()]
+#' @param skip_imports same as for [drake_config()]
 #' @examples
 #' # See ?drake_config for the examples.
 config <- function(
@@ -253,13 +253,13 @@ config <- function(
   )
 }
 
-#' @title Deprecated function \code{default_system2_args}
-#' @description Use \code{\link{default_Makefile_args}()} instead.
+#' @title Deprecated function `default_system2_args`
+#' @description Use [default_Makefile_args()] instead.
 #' @details Deprecated on 2017-10.
-#' @seealso \code{\link{default_Makefile_args}}
+#' @seealso [default_Makefile_args()]
 #' @export
 #' @keywords internal
-#' @return \code{args} for \code{\link{system2}(command, args)}
+#' @return `args` for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
 #' @examples
@@ -299,18 +299,18 @@ deprecate_wildcard <- function(plan, old, replacement){
   plan
 }
 
-#' @title Deprecated function \code{evaluate}
-#' @description Use \code{\link{evaluate_plan}()} instead.
+#' @title Deprecated function `evaluate`
+#' @description Use [evaluate_plan()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{evaluate_plan}}
-#' @return Same as for \code{\link{evaluate_plan}}
-#' @param plan Same as for \code{\link{evaluate_plan}}
-#' @param rules Same as for \code{\link{evaluate_plan}}
-#' @param wildcard Same as for \code{\link{evaluate_plan}}
-#' @param values Same as for \code{\link{evaluate_plan}}
-#' @param expand Same as for \code{\link{evaluate_plan}}
+#' @seealso [evaluate_plan()]
+#' @return Same as for [evaluate_plan()]
+#' @param plan Same as for [evaluate_plan()]
+#' @param rules Same as for [evaluate_plan()]
+#' @param wildcard Same as for [evaluate_plan()]
+#' @param values Same as for [evaluate_plan()]
+#' @param expand Same as for [evaluate_plan()]
 #' @examples
 #' # See ?evaluate_plan for examples.
 evaluate <- function(
@@ -338,15 +338,15 @@ evaluate <- function(
   )
 }
 
-#' @title Deprecated function \code{example_drake}
-#' @description Use \code{\link{drake_example}()} instead.
+#' @title Deprecated function `example_drake`
+#' @description Use [drake_example()] instead.
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{drake_example}}
+#' @seealso [drake_example()]
 #' @export
 #' @keywords internal
-#' @return \code{NULL}
-#' @param example Same as for \code{\link{drake_example}()}
-#' @param destination Same as for \code{\link{drake_example}()}
+#' @return `NULL`
+#' @param example Same as for [drake_example()]
+#' @param destination Same as for [drake_example()]
 #' @examples
 #' # See ?drake_example for examples.
 example_drake <- function(
@@ -367,10 +367,10 @@ example_drake <- function(
   )
 }
 
-#' @title Deprecated function \code{examples_drake}
-#' @description Use \code{\link{drake_examples}()} instead.
+#' @title Deprecated function `examples_drake`
+#' @description Use [drake_examples()] instead.
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{drake_examples}}
+#' @seealso [drake_examples()]
 #' @export
 #' @keywords internal
 #' @return Names of all the drake examples.
@@ -388,15 +388,15 @@ examples_drake <- function() {
   drake_examples()
 }
 
-#' @title Deprecated function \code{expand}
-#' @description Use \code{\link{expand_plan}()} instead.
+#' @title Deprecated function `expand`
+#' @description Use [expand_plan()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{expand_plan}}
-#' @return Same as for \code{\link{expand_plan}}
-#' @param plan Same as for \code{\link{expand_plan}}
-#' @param values Same as for \code{\link{expand_plan}}
+#' @seealso [expand_plan()]
+#' @return Same as for [expand_plan()]
+#' @param plan Same as for [expand_plan()]
+#' @param values Same as for [expand_plan()]
 #' @examples
 #' # See ?expand_plan for examples.
 expand <- function(
@@ -418,16 +418,16 @@ expand <- function(
   )
 }
 
-#' @title Deprecated function \code{gather}
-#' @description Use \code{\link{gather_plan}()} instead.
+#' @title Deprecated function `gather`
+#' @description Use [gather_plan()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{gather_plan}}
-#' @return Same as for \code{\link{gather_plan}}
-#' @param plan Same as for \code{\link{gather_plan}}
-#' @param target Same as for \code{\link{gather_plan}}
-#' @param gather Same as for \code{\link{gather_plan}}
+#' @seealso [gather_plan()]
+#' @return Same as for [gather_plan()]
+#' @param plan Same as for [gather_plan()]
+#' @param target Same as for [gather_plan()]
+#' @param gather Same as for [gather_plan()]
 #' @examples
 #' # See ?gather_plan for examples.
 gather <- function(
@@ -451,17 +451,17 @@ gather <- function(
   )
 }
 
-#' @title Deprecated function \code{plan}
-#' @description Use \code{\link{drake_plan}()} instead.
+#' @title Deprecated function `plan`
+#' @description Use [drake_plan()] instead.
 #' @details Deprecated on 2017-10.
-#' @seealso \code{\link{drake_plan}}
+#' @seealso [drake_plan()]
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... Same as for \code{\link{drake_plan}()}.
-#' @param list Same as for \code{\link{drake_plan}()}.
-#' @param file_targets Same as for \code{\link{drake_plan}()}.
-#' @param strings_in_dots Same as for \code{\link{drake_plan}()}.
+#' @param ... Same as for [drake_plan()].
+#' @param list Same as for [drake_plan()].
+#' @param file_targets Same as for [drake_plan()].
+#' @param strings_in_dots Same as for [drake_plan()].
 #' @examples
 #' # See ?drake_plan for examples.
 plan <- function(
@@ -509,17 +509,17 @@ plan <- function(
   sanitize_plan(plan)
 }
 
-#' @title Deprecated function \code{plan_drake}
-#' @description Use \code{\link{drake_plan}()} instead.
+#' @title Deprecated function `plan_drake`
+#' @description Use [drake_plan()] instead.
 #' @details Deprecated on 2017-12-12.
-#' @seealso \code{\link{drake_plan}}
+#' @seealso [drake_plan()]
 #' @export
 #' @keywords internal
 #' @return A data frame of targets and commands.
-#' @param ... Same as for \code{\link{drake_plan}()}.
-#' @param list Same as for \code{\link{drake_plan}()}.
-#' @param file_targets Same as for \code{\link{drake_plan}()}.
-#' @param strings_in_dots Same as for \code{\link{drake_plan}()}.
+#' @param ... Same as for [drake_plan()].
+#' @param list Same as for [drake_plan()].
+#' @param file_targets Same as for [drake_plan()].
+#' @param strings_in_dots Same as for [drake_plan()].
 #' @examples
 #' # See ?drake_plan for examples.
 plan_drake <- function(
@@ -566,41 +566,41 @@ plan_drake <- function(
   sanitize_plan(plan)
 }
 
-#' @title Deprecated function \code{plot_graph}
-#' @description Use \code{\link{vis_drake_graph}()} instead.
+#' @title Deprecated function `plot_graph`
+#' @description Use [vis_drake_graph()] instead.
 #' @details Deprecated on 2017-10.
-#' @seealso \code{\link{vis_drake_graph}}
+#' @seealso [vis_drake_graph()]
 #' @export
 #' @keywords internal
-#' @return Same as for \code{\link{vis_drake_graph}()}.
-#' @param plan Same as for \code{\link{vis_drake_graph}()}.
-#' @param envir Same as for \code{\link{vis_drake_graph}()}.
-#' @param hook Same as for \code{\link{vis_drake_graph}()}.
-#' @param cache Same as for \code{\link{vis_drake_graph}()}.
-#' @param jobs Same as for \code{\link{vis_drake_graph}()}.
-#' @param packages Same as for \code{\link{vis_drake_graph}()}.
-#' @param prework Same as for \code{\link{vis_drake_graph}()}.
-#' @param verbose Same as for \code{\link{vis_drake_graph}()}.
-#' @param config Same as for \code{\link{vis_drake_graph}()}.
-#' @param file Same as for \code{\link{vis_drake_graph}()}.
-#' @param build_times Same as for \code{\link{vis_drake_graph}()}.
-#' @param digits Same as for \code{\link{vis_drake_graph}()}.
-#' @param targets_only Same as for \code{\link{vis_drake_graph}()}.
-#' @param split_columns Same as for \code{\link{vis_drake_graph}()}.
-#' @param font_size Same as for \code{\link{vis_drake_graph}()}.
-#' @param layout Same as for \code{\link{vis_drake_graph}()}.
-#' @param main Same as for \code{\link{vis_drake_graph}()}.
-#' @param direction Same as for \code{\link{vis_drake_graph}()}.
-#' @param hover Same as for \code{\link{vis_drake_graph}()}.
-#' @param navigationButtons Same as for \code{\link{vis_drake_graph}()}. # nolint
-#' @param from Same as for \code{\link{vis_drake_graph}()}.
-#' @param mode Same as for \code{\link{vis_drake_graph}()}.
-#' @param order Same as for \code{\link{vis_drake_graph}()}.
-#' @param subset Same as for \code{\link{vis_drake_graph}()}.
-#' @param ncol_legend Same as for \code{\link{vis_drake_graph}()}.
-#' @param make_imports Same as for \code{\link{vis_drake_graph}()}.
-#' @param from_scratch Same as for \code{\link{vis_drake_graph}()}.
-#' @param ... Same as for \code{\link{vis_drake_graph}()}.
+#' @return Same as for [vis_drake_graph()].
+#' @param plan Same as for [vis_drake_graph()].
+#' @param envir Same as for [vis_drake_graph()].
+#' @param hook Same as for [vis_drake_graph()].
+#' @param cache Same as for [vis_drake_graph()].
+#' @param jobs Same as for [vis_drake_graph()].
+#' @param packages Same as for [vis_drake_graph()].
+#' @param prework Same as for [vis_drake_graph()].
+#' @param verbose Same as for [vis_drake_graph()].
+#' @param config Same as for [vis_drake_graph()].
+#' @param file Same as for [vis_drake_graph()].
+#' @param build_times Same as for [vis_drake_graph()].
+#' @param digits Same as for [vis_drake_graph()].
+#' @param targets_only Same as for [vis_drake_graph()].
+#' @param split_columns Same as for [vis_drake_graph()].
+#' @param font_size Same as for [vis_drake_graph()].
+#' @param layout Same as for [vis_drake_graph()].
+#' @param main Same as for [vis_drake_graph()].
+#' @param direction Same as for [vis_drake_graph()].
+#' @param hover Same as for [vis_drake_graph()].
+#' @param navigationButtons Same as for [vis_drake_graph()]. # nolint
+#' @param from Same as for [vis_drake_graph()].
+#' @param mode Same as for [vis_drake_graph()].
+#' @param order Same as for [vis_drake_graph()].
+#' @param subset Same as for [vis_drake_graph()].
+#' @param ncol_legend Same as for [vis_drake_graph()].
+#' @param make_imports Same as for [vis_drake_graph()].
+#' @param from_scratch Same as for [vis_drake_graph()].
+#' @param ... Same as for [vis_drake_graph()].
 #' @examples
 #' # See ?vis_drake_graph for examples.
 plot_graph <- function(
@@ -677,17 +677,17 @@ plot_graph <- function(
   )
 }
 
-#' @title Deprecated function \code{read_config}
-#' @description Use \code{\link{read_drake_config}()} instead.
+#' @title Deprecated function `read_config`
+#' @description Use [read_drake_config()] instead.
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{read_drake_config}}
+#' @seealso [read_drake_config()]
 #' @export
 #' @keywords internal
 #' @return The master internal configuration list of a project.
-#' @param path same as \code{\link{read_drake_config}()}
-#' @param search same as \code{\link{read_drake_config}()}
-#' @param cache same as \code{\link{read_drake_config}()}
-#' @param verbose same as \code{\link{read_drake_config}()}
+#' @param path same as [read_drake_config()]
+#' @param search same as [read_drake_config()]
+#' @param cache same as [read_drake_config()]
+#' @param verbose same as [read_drake_config()]
 #' @examples
 #' # See ?read_drake_config for examples.
 read_config <- function(
@@ -712,19 +712,19 @@ read_config <- function(
   )
 }
 
-#' @title Deprecated function \code{read_graph}
-#' @description Use \code{\link{read_drake_graph}()} instead.
+#' @title Deprecated function `read_graph`
+#' @description Use [read_drake_graph()] instead.
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{read_drake_graph}}.
+#' @seealso [read_drake_graph()].
 #' @export
 #' @keywords internal
-#' @return An \code{igraph} object representing the dependency
+#' @return An `igraph` object representing the dependency
 #' network of the workflow.
-#' @param cache Same as for \code{\link{read_drake_graph}()}.
-#' @param path Same as for \code{\link{read_drake_graph}()}.
-#' @param search Same as for \code{\link{read_drake_graph}()}.
-#' @param verbose Same as for \code{\link{read_drake_graph}()}.
-#' @param ... Same as for \code{\link{read_drake_graph}()}.
+#' @param cache Same as for [read_drake_graph()].
+#' @param path Same as for [read_drake_graph()].
+#' @param search Same as for [read_drake_graph()].
+#' @param verbose Same as for [read_drake_graph()].
+#' @param ... Same as for [read_drake_graph()].
 #' @examples
 #' # See ?read_drake_graph for the examples.
 read_graph <- function(
@@ -749,18 +749,18 @@ read_graph <- function(
   )
 }
 
-#' @title Deprecated function \code{read_plan}
-#' @description Use \code{\link{read_drake_plan}()} instead.
+#' @title Deprecated function `read_plan`
+#' @description Use [read_drake_plan()] instead.
 #' @details Deprecated on 2017-11-21.
-#' @seealso \code{\link{read_drake_plan}}.
+#' @seealso [read_drake_plan()].
 #' @export
 #' @keywords internal
 #' @return An workflow plan data frame.
-#' @param cache Same as for \code{\link{read_drake_plan}()}.
-#' @param path Same as for \code{\link{read_drake_plan}()}.
-#' @param search Same as for \code{\link{read_drake_plan}()}.
-#' @param verbose Same as for \code{\link{read_drake_plan}()}.
-#' @param ... Same as for \code{\link{read_drake_plan}()}.
+#' @param cache Same as for [read_drake_plan()].
+#' @param path Same as for [read_drake_plan()].
+#' @param search Same as for [read_drake_plan()].
+#' @param verbose Same as for [read_drake_plan()].
+#' @param ... Same as for [read_drake_plan()].
 #' @examples
 #' # See ?read_drake_plan for the examples.
 read_plan <- function(
@@ -785,23 +785,23 @@ read_plan <- function(
   )
 }
 
-#' @title Deprecated function \code{render_graph}
-#' @description Use \code{\link{render_drake_graph}()} instead.
+#' @title Deprecated function `render_graph`
+#' @description Use [render_drake_graph()] instead.
 #' @details Deprecated on 2017-10.
-#' @seealso \code{\link{render_drake_graph}}
+#' @seealso [render_drake_graph()]
 #' @export
 #' @keywords internal
-#' @return Same as for \code{\link{render_drake_graph}()}.
-#' @param graph_dataframes Same as for \code{\link{render_drake_graph}()}.
-#' @param file Same as for \code{\link{render_drake_graph}()}.
-#' @param layout Same as for \code{\link{render_drake_graph}()}.
-#' @param direction Same as for \code{\link{render_drake_graph}()}.
-#' @param hover Same as for \code{\link{render_drake_graph}()}.
-#' @param main Same as for \code{\link{render_drake_graph}()}.
-#' @param selfcontained Same as for \code{\link{render_drake_graph}()}.
-#' @param navigationButtons Same as for \code{\link{render_drake_graph}()}. # nolint
-#' @param ncol_legend Same as for \code{\link{render_drake_graph}()}.
-#' @param ... Same as for \code{\link{render_drake_graph}()}.
+#' @return Same as for [render_drake_graph()].
+#' @param graph_dataframes Same as for [render_drake_graph()].
+#' @param file Same as for [render_drake_graph()].
+#' @param layout Same as for [render_drake_graph()].
+#' @param direction Same as for [render_drake_graph()].
+#' @param hover Same as for [render_drake_graph()].
+#' @param main Same as for [render_drake_graph()].
+#' @param selfcontained Same as for [render_drake_graph()].
+#' @param navigationButtons Same as for [render_drake_graph()]. # nolint
+#' @param ncol_legend Same as for [render_drake_graph()].
+#' @param ... Same as for [render_drake_graph()].
 #' @examples
 #' # See ?render_drake_graph for examples.
 render_graph <- function(
@@ -839,17 +839,17 @@ render_graph <- function(
   )
 }
 
-#' @title Deprecated function \code{session}
-#' @description Use \code{\link{drake_session}()} instead
+#' @title Deprecated function `session`
+#' @description Use [drake_session()] instead
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{drake_session}}
+#' @seealso [drake_session()]
 #' @export
 #' @keywords internal
-#' @return Same as for \code{\link{drake_session}()}.
-#' @param cache Same as for \code{\link{drake_session}()}.
-#' @param path Same as for \code{\link{drake_session}()}.
-#' @param search Same as for \code{\link{drake_session}()}.
-#' @param verbose Same as for \code{\link{drake_session}()}.
+#' @return Same as for [drake_session()].
+#' @param cache Same as for [drake_session()].
+#' @param path Same as for [drake_session()].
+#' @param search Same as for [drake_session()].
+#' @param verbose Same as for [drake_session()].
 #' @examples
 #' # See ?drake_session for examples.
 session <- function(
@@ -875,17 +875,17 @@ session <- function(
   )
 }
 
-#' @title Deprecated function \code{summaries}
-#' @description Use \code{\link{summaries}()} instead
+#' @title Deprecated function `summaries`
+#' @description Use [summaries()] instead
 #' @details Deprecated on 2017-11-12.
-#' @seealso \code{\link{summaries}}
+#' @seealso [summaries()]
 #' @export
 #' @keywords internal
-#' @return Same as for \code{\link{plan_summaries}()}.
-#' @param plan Same as for \code{\link{plan_summaries}()}.
-#' @param analyses Same as for \code{\link{plan_summaries}()}.
-#' @param datasets Same as for \code{\link{plan_summaries}()}.
-#' @param gather Same as for \code{\link{plan_summaries}()}.
+#' @return Same as for [plan_summaries()].
+#' @param plan Same as for [plan_summaries()].
+#' @param analyses Same as for [plan_summaries()].
+#' @param datasets Same as for [plan_summaries()].
+#' @param gather Same as for [plan_summaries()].
 #' @examples
 #' # See ?drake_session for examples.
 summaries <- function(
@@ -911,10 +911,10 @@ summaries <- function(
   )
 }
 
-#' @title Deprecated function \code{workflow}
+#' @title Deprecated function `workflow`
 #' @description Turns a named collection of command/target pairs into
-#' a workflow plan data frame for \code{\link{make}} and
-#' \code{\link{check}}.
+#' a workflow plan data frame for [make()] and
+#' [check()].
 #' @details Deprecated on 2017-10
 #' @export
 #' @keywords internal
@@ -966,10 +966,10 @@ workflow <- function(
   sanitize_plan(plan)
 }
 
-#' @title Deprecated function \code{workplan}
+#' @title Deprecated function `workplan`
 #' @description Turns a named collection of command/target pairs into
-#' a workflow plan data frame for \code{\link{make}} and
-#' \code{\link{check}}.
+#' a workflow plan data frame for [make()] and
+#' [check()].
 #' @details Deprecated on 2017-11-29
 #' @export
 #' @keywords internal

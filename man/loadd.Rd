@@ -15,7 +15,7 @@ or character strings (quoted). Similar to \code{...} in
 \code{\link{remove}(...)}.}
 
 \item{list}{character vector naming targets to be loaded from the
-cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
+cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{imported_only}{logical, whether only imported objects
 should be loaded.}
@@ -53,15 +53,15 @@ This is useful if you know your
 target failed and you want to debug the command in an interactive
 session with the dependencies in your workspace.
 One caveat: to find the dependencies,
-\code{\link{loadd}()} uses information that was stored
-in a \code{\link{drake_config}()} list and cached
-during the last \code{\link{make}()}.
-That means you need to have already called \code{\link{make}()}
+\code{\link[=loadd]{loadd()}} uses information that was stored
+in a \code{\link[=drake_config]{drake_config()}} list and cached
+during the last \code{\link[=make]{make()}}.
+That means you need to have already called \code{\link[=make]{make()}}
 if you set \code{deps} to \code{TRUE}.}
 
 \item{lazy}{logical, whether to lazy load with
-\code{delayedAssign()} rather than the more eager
-\code{assign()}.}
+\code{\link[=delayedAssign]{delayedAssign()}} rather than the more eager
+\code{\link[=assign]{assign()}}.}
 }
 \value{
 \code{NULL}
@@ -95,6 +95,6 @@ loadd()
 }
 }
 \seealso{
-\code{\link{cached}}, \code{\link{built}},
-\code{\link{imported}}, \code{\link{drake_plan}}, \code{\link{make}},
+\code{\link[=cached]{cached()}}, \code{\link[=built]{built()}},
+\code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}},
 }

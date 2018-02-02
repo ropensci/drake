@@ -3,7 +3,7 @@
 \name{do_prework}
 \alias{do_prework}
 \title{Do the prework in the \code{prework}
-argument to \code{\link{make}()}.}
+argument to \code{\link[=make]{make()}}.}
 \usage{
 do_prework(config, verbose_packages)
 }

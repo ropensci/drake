@@ -1,10 +1,10 @@
-#' @title List all the \code{storr} cache namespaces used by drake.
+#' @title List all the `storr` cache namespaces used by drake.
 #' @export
-#' @seealso \code{\link{make}}
-#' @return A character vector of \code{storr} namespaces used for drake.
+#' @seealso [make()]
+#' @return A character vector of `storr` namespaces used for drake.
 #' @description Ordinary users do not need to worry about this function.
-#' It is just another window into \code{drake}'s internals.
-#' @param default name of the default \code{storr} namespace
+#' It is just another window into `drake`'s internals.
+#' @param default name of the default `storr` namespace
 #' @examples
 #' cache_namespaces()
 cache_namespaces <- function(
@@ -19,17 +19,17 @@ cache_namespaces <- function(
 }
 
 #' @title For drake caches,
-#' list the \code{storr} namespaces that are cleaned
-#' during a call to \code{\link{clean}()}.
+#'   list the `storr` namespaces that are cleaned
+#'   during a call to [clean()].
 #' @description All these
 #' namespaces store target-level data, but not all
 #' target-level namespaces are cleaned during
-#' \code{\link{clean}()}.
+#' [clean()].
 #' @export
-#' @seealso \code{\link{cache_namespaces}}, \code{\link{clean}}
-#' @return A character vector of \code{storr} namespaces
-#' that are cleaned during \code{\link{clean}()}.
-#' @param default Name of the default \code{storr} namespace.
+#' @seealso [cache_namespaces()], [clean()]
+#' @return A character vector of `storr` namespaces
+#'   that are cleaned during [clean()].
+#' @param default Name of the default `storr` namespace.
 #' @examples
 #' cleaned_namespaces()
 cleaned_namespaces <- function(
@@ -44,15 +44,15 @@ cleaned_namespaces <- function(
 }
 
 #' @title For drake caches,
-#' list the \code{storr} cache namespaces
-#' that store target-level information.
+#'   list the `storr` cache namespaces
+#'   that store target-level information.
 #' @export
-#' @seealso \code{\link{make}}
-#' @return A character vector of \code{storr} namespaces that store
-#' target-level information.
+#' @seealso [make()]
+#' @return A character vector of `storr` namespaces that store
+#'   target-level information.
 #' @description Ordinary users do not need to worry about this function.
-#' It is just another window into \code{drake}'s internals.
-#' @param default name of the default \code{storr} namespace
+#' It is just another window into `drake`'s internals.
+#' @param default name of the default `storr` namespace
 #' @examples
 #' target_namespaces()
 target_namespaces <- function(

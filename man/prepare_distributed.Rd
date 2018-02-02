@@ -3,14 +3,14 @@
 \name{prepare_distributed}
 \alias{prepare_distributed}
 \title{Do the preparatory work
-for \code{\link{make}()} with a distributed computing
-backend (see the \code{parallelism} argument of \code{\link{make}()}).}
+for \code{\link[=make]{make()}} with a distributed computing
+backend (see the \code{parallelism} argument of \code{\link[=make]{make()}}).}
 \usage{
 prepare_distributed(config)
 }
 \arguments{
 \item{config}{Internal configuration list from
-\code{\link{drake_config}()}.}
+\code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 Nothing.

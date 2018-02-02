@@ -9,7 +9,7 @@ time_stamps(config)
 }
 \arguments{
 \item{config}{Internal master configuration list
-produced by \code{\link{drake_config}}.}
+produced by \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 nothing

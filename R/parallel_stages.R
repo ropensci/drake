@@ -1,48 +1,48 @@
-#' @title Show how \code{\link{make}()} will build your targets
-#' in successive parallelizable stages.
+#' @title Show how [make()] will build your targets
+#'   in successive parallelizable stages.
 #' @description The stages determine the order in which
-#' \code{\link{make}()} builds the targets.
-#' @details Usually, \code{\link{make}()} divides the targets
+#' [make()] builds the targets.
+#' @details Usually, [make()] divides the targets
 #' and imports into parallelizable stages strictly according
-#' to the columns in \code{\link{vis_drake_graph}()}.
+#' to the columns in [vis_drake_graph()].
 #' However, if some targets are out of date, drake
 #' looks ahead in the graph until it finds outdated targets
-#' for the current stage. The \code{parallel_stages()} function
+#' for the current stage. The `parallel_stages()` function
 #' takes this behavior into account when it reports a data frame
 #' of information on how targets and imports will be divided into
-#' parallel stages during the next \code{\link{make}()}.
+#' parallel stages during the next [make()].
 #' @export
-#' @seealso \code{\link{next_stage}},
-#' \code{\link{make}}, \code{\link{make_with_config}}
+#' @seealso [next_stage()],
+#'   [make()], [make_with_config()]
 #' @return A data frame of information spelling out how
-#' targets are divided into parallelizable stages
-#' (according to the \code{stage} column).
+#'   targets are divided into parallelizable stages
+#'   (according to the `stage` column).
 #' @param config An configuration list output by
-#' \code{\link{make}()} or \code{\link{drake_config}()}.
+#'   [make()] or [drake_config()].
 #' @param from_scratch logical, whether to assume
-#' that the next \code{\link{make}()} will run from scratch
-#' so that all targets are attempted.
+#'   that the next [make()] will run from scratch
+#'   so that all targets are attempted.
 #' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
-#' config <- drake_config(my_plan) # Get a configuration list.
-#' # Parallel stages for the next make().
-#' parallel_stages(config = config)
-#' # Check the graph to see that the information agrees.
-#' vis_drake_graph(config = config)
-#' # Build the project.
-#' config <- make_with_config(config) # or make(my_plan)
-#' # Nothing to build in the next make().
-#' parallel_stages(config = config)
-#' # Change a dependency and notice how the stages change.
-#' reg2 = function(d){
-#'   d$x3 = d$x^3
-#'   lm(y ~ x3, data = d)
-#' }
-#' parallel_stages(config = config)
-#' })
-#' }
+#'   \dontrun{
+#'   test_with_dir("Quarantine side effects.", {
+#'   load_basic_example() # Get the code with drake_example("basic").
+#'   config <- drake_config(my_plan) # Get a configuration list.
+#'   # Parallel stages for the next make().
+#'   parallel_stages(config = config)
+#'   # Check the graph to see that the information agrees.
+#'   vis_drake_graph(config = config)
+#'   # Build the project.
+#'   config <- make_with_config(config) # or make(my_plan)
+#'   # Nothing to build in the next make().
+#'   parallel_stages(config = config)
+#'   # Change a dependency and notice how the stages change.
+#'   reg2 = function(d){
+#'     d$x3 = d$x^3
+#'     lm(y ~ x3, data = d)
+#'   }
+#'   parallel_stages(config = config)
+#'   })
+#'   }
 parallel_stages <- function(config, from_scratch = FALSE){
   do_prework(config = config, verbose_packages = config$verbose)
   if (from_scratch){
@@ -125,16 +125,16 @@ read_parallel_stages <- function(config){
 }
 
 #' @title List the targets that will be built in the
-#' first parallelizable stage of the next call to \code{\link{make}}.
+#'   first parallelizable stage of the next call to [make()].
 #' @description Similar to the first stage in the output of
-#' \code{\link{parallel_stages}()}.
-#' @seealso \code{\link{parallel_stages}},
-#' \code{\link{make}}, \code{\link{drake_config}}
+#' [parallel_stages()].
+#' @seealso [parallel_stages()],
+#'   [make()], [drake_config()]
 #' @export
 #' @return A character vector of the targets to be made
-#' in the first parallel stage of the next call to \code{\link{make}}.
+#'   in the first parallel stage of the next call to [make()].
 #' @param config A master configuration list produced by
-#' \code{\link{drake_config}()} or \code{\link{make}()}
+#'   [drake_config()] or [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

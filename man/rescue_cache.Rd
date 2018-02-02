@@ -17,21 +17,21 @@ as well as true targets.
 If \code{targets} is \code{NULL}, everything in the
 cache is rescued.}
 
-\item{path}{same as for \code{\link{get_cache}()}}
+\item{path}{same as for \code{\link[=get_cache]{get_cache()}}}
 
-\item{search}{same as for \code{\link{get_cache}()}}
+\item{search}{same as for \code{\link[=get_cache]{get_cache()}}}
 
-\item{verbose}{same as for \code{\link{get_cache}()}}
+\item{verbose}{same as for \code{\link[=get_cache]{get_cache()}}}
 
-\item{force}{same as for \code{\link{get_cache}()}}
+\item{force}{same as for \code{\link[=get_cache]{get_cache()}}}
 
-\item{cache}{a `storr` cache object}
+\item{cache}{a \code{storr} cache object}
 
 \item{jobs}{number of jobs for light parallelism
 (disabled on Windows)}
 
 \item{garbage_collection}{logical, whether to do garbage collection
-as a final step. See \code{\link{drake_gc}} and \code{\link{clean}}
+as a final step. See \code{\link[=drake_gc]{drake_gc()}} and \code{\link[=clean]{clean()}}
 for details.}
 }
 \value{
@@ -57,6 +57,6 @@ rescue_cache(targets = c("small", "large"))
 }
 }
 \seealso{
-\code{\link{get_cache}}, \code{\link{cached}},
-\code{\link{drake_gc}}, \code{\link{clean}}
+\code{\link[=get_cache]{get_cache()}}, \code{\link[=cached]{cached()}},
+\code{\link[=drake_gc]{drake_gc()}}, \code{\link[=clean]{clean()}}
 }

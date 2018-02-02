@@ -7,17 +7,17 @@
 gather(plan = NULL, target = "target", gather = "list")
 }
 \arguments{
-\item{plan}{Same as for \code{\link{gather_plan}}}
+\item{plan}{Same as for \code{\link[=gather_plan]{gather_plan()}}}
 
-\item{target}{Same as for \code{\link{gather_plan}}}
+\item{target}{Same as for \code{\link[=gather_plan]{gather_plan()}}}
 
-\item{gather}{Same as for \code{\link{gather_plan}}}
+\item{gather}{Same as for \code{\link[=gather_plan]{gather_plan()}}}
 }
 \value{
-Same as for \code{\link{gather_plan}}
+Same as for \code{\link[=gather_plan]{gather_plan()}}
 }
 \description{
-Use \code{\link{gather_plan}()} instead.
+Use \code{\link[=gather_plan]{gather_plan()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -26,6 +26,6 @@ Deprecated on 2017-11-12.
 # See ?gather_plan for examples.
 }
 \seealso{
-\code{\link{gather_plan}}
+\code{\link[=gather_plan]{gather_plan()}}
 }
 \keyword{internal}

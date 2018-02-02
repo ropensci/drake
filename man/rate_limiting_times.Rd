@@ -11,8 +11,8 @@ rate_limiting_times(config, targets = NULL, from_scratch = FALSE,
 \arguments{
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
-produced by both \code{\link{make}()} and
-\code{\link{drake_config}()}.}
+produced by both \code{\link[=make]{make()}} and
+\code{\link[=drake_config]{drake_config()}}.}
 
 \item{targets}{Character vector, names of targets.
 Find the rate-limiting times for building these targets
@@ -20,8 +20,8 @@ plus dependencies.
 Defaults to all targets.}
 
 \item{from_scratch}{logical, whether to assume
-next hypothetical call to \code{\link{make}()}
-is a build from scratch (after \code{\link{clean}()}).}
+next hypothetical call to \code{\link[=make]{make()}}
+is a build from scratch (after \code{\link[=clean]{clean()}}).}
 
 \item{targets_only}{logical, whether to factor in just the
 targets or use times from everything, including the imports.}
@@ -38,8 +38,8 @@ rate-limiting targets in each parallelizable stage.
 }
 \description{
 This function produces a conservative
-estimate for \code{\link{predict_runtime}()}
-for when parallel computing is used in \code{\link{make}()}.
+estimate for \code{\link[=predict_runtime]{predict_runtime()}}
+for when parallel computing is used in \code{\link[=make]{make()}}.
 This feature is experimental.
 The accuracy, precision, and utility of these supposedly
 rate-limiting times has not been confirmed by rigorous
@@ -48,7 +48,7 @@ performance studies.
 \details{
 The \code{stage} column of the returned data frame
 is an index that denotes a parallelizable stage.
-Within each stage during \code{\link{make}()},
+Within each stage during \code{\link[=make]{make()}},
 the targets are divided among the available jobs.
 For \code{rate_limiting_times()},
 we assume the targets are divided evenly among the jobs
@@ -59,11 +59,11 @@ are returned for each stage. \cr
 By default \code{from_scratch} is \code{FALSE}. That way,
 \code{rate_limiting_times()} takes into account that some
 targets are already up to date, meaning their elapsed
-build times will be instant during the next \code{\link{make}()}.
+build times will be instant during the next \code{\link[=make]{make()}}.
 
 For the results to make sense, the previous build times
 of all targets need to be available (automatically cached
-by \code{\link{make}()}). Otherwise, \code{rate_limiting_times()}
+by \code{\link[=make]{make()}}). Otherwise, \code{rate_limiting_times()}
 will warn you and tell you which targets have missing times.
 }
 \examples{
@@ -94,7 +94,7 @@ rate_limiting_times(
 
 }
 \seealso{
-\code{\link{predict_runtime}},
-\code{\link{build_times}}
-\code{\link{make}}
+\code{\link[=predict_runtime]{predict_runtime()}},
+\code{\link[=build_times]{build_times()}}
+\code{\link[=make]{make()}}
 }

@@ -3,7 +3,7 @@
 \name{store_drake_config}
 \alias{store_drake_config}
 \title{Store an internal configuration list
-from \code{\link{drake_config}()}.}
+from \code{\link[=drake_config]{drake_config()}}.}
 \usage{
 store_drake_config(config)
 }

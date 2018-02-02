@@ -51,16 +51,16 @@ configure_nodes <- function(config){
 }
 
 #' @title Return the default title of the graph for
-#' \code{\link{vis_drake_graph}()}.
+#'   [vis_drake_graph()].
 #' @description For internal use only.
 #' @export
 #' @keywords internal
-#' @seealso \code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
+#' @seealso [dataframes_graph()], [vis_drake_graph()]
 #' @return a character scalar with the default graph title for
-#' \code{\link{vis_drake_graph}()}.
+#'   [vis_drake_graph()].
 #' @param split_columns logical, whether the columns were split
-#' in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
-#' with the \code{split_columns} argument.
+#'   in [dataframes_graph()] or [vis_drake_graph()]
+#'   with the `split_columns` argument.
 #' @examples
 #' default_graph_title()
 default_graph_title <- function(split_columns = FALSE){
@@ -141,17 +141,17 @@ hover_text <- function(config) {
 hover_text_length <- 250
 
 #' @title Create the nodes data frame used in the legend
-#' of \code{\link{vis_drake_graph}()}.
+#'   of [vis_drake_graph()].
 #' @export
-#' @seealso \code{\link{drake_palette}()},
-#' \code{\link{vis_drake_graph}()},
-#' \code{\link{dataframes_graph}()}
-#' @description Output a \code{visNetwork}-friendly
+#' @seealso [drake_palette()],
+#'   [vis_drake_graph()],
+#'   [dataframes_graph()]
+#' @description Output a `visNetwork`-friendly
 #' data frame of nodes. It tells you what
 #' the colors and shapes mean
-#' in \code{\link{vis_drake_graph}()}.
+#' in [vis_drake_graph()].
 #' @param font_size font size of the node label text
-#' @return A data frame of legend nodes for \code{\link{vis_drake_graph}()}.
+#' @return A data frame of legend nodes for [vis_drake_graph()].
 #' @examples
 #' \dontrun{
 #' # Show the legend nodes used in vis_drake_graph().

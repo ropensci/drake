@@ -18,25 +18,25 @@ meta_list <- function(targets, config) {
 #' target is up to date or outdated. The metadata of imports
 #' is used to compute the metadata of targets.
 #' @details Target metadata is computed
-#' with \code{drake_meta()} and then
-#' \code{drake:::finish_meta()}.
+#' with `drake_meta()` and then
+#' `drake:::finish_meta()`.
 #' This metadata corresponds
 #' to the state of the target immediately after it was built
-#' or imported in the last \code{\link{make}()} that
+#' or imported in the last [make()] that
 #' did not skip it.
-#' The exception to this is the \code{$missing} element
+#' The exception to this is the `$missing` element
 #' of the metadata, which indicates if the target/import
-#' was missing just \emph{before} it was built.
-#' @seealso \code{\link{dependency_profile}}, \code{\link{make}}
+#' was missing just *before* it was built.
+#' @seealso [dependency_profile()], [make()]
 #' @export
 #' @return A list of metadata on a target. Does not include
-#' the file modification time if the target is a file.
-#' That piece is provided later in \code{\link{make}()} by
-#' \code{drake:::finish_meta}.
+#'   the file modification time if the target is a file.
+#'   That piece is provided later in [make()] by
+#'   `drake:::finish_meta`.
 #' @param target Character scalar, name of the target
-#' to get metadata.
+#'   to get metadata.
 #' @param config Master internal configuration list produced
-#' by \code{\link{drake_config}()}.
+#'   by [drake_config()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

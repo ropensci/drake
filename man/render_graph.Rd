@@ -10,31 +10,31 @@ render_graph(graph_dataframes, file = character(0),
   navigationButtons = TRUE, ncol_legend = 1, ...)
 }
 \arguments{
-\item{graph_dataframes}{Same as for \code{\link{render_drake_graph}()}.}
+\item{graph_dataframes}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{file}{Same as for \code{\link{render_drake_graph}()}.}
+\item{file}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{layout}{Same as for \code{\link{render_drake_graph}()}.}
+\item{layout}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{direction}{Same as for \code{\link{render_drake_graph}()}.}
+\item{direction}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{hover}{Same as for \code{\link{render_drake_graph}()}.}
+\item{hover}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{main}{Same as for \code{\link{render_drake_graph}()}.}
+\item{main}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{selfcontained}{Same as for \code{\link{render_drake_graph}()}.}
+\item{selfcontained}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{navigationButtons}{Same as for \code{\link{render_drake_graph}()}. # nolint}
+\item{navigationButtons}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}. # nolint}
 
-\item{ncol_legend}{Same as for \code{\link{render_drake_graph}()}.}
+\item{ncol_legend}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
-\item{...}{Same as for \code{\link{render_drake_graph}()}.}
+\item{...}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 }
 \value{
-Same as for \code{\link{render_drake_graph}()}.
+Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.
 }
 \description{
-Use \code{\link{render_drake_graph}()} instead.
+Use \code{\link[=render_drake_graph]{render_drake_graph()}} instead.
 }
 \details{
 Deprecated on 2017-10.
@@ -43,6 +43,6 @@ Deprecated on 2017-10.
 # See ?render_drake_graph for examples.
 }
 \seealso{
-\code{\link{render_drake_graph}}
+\code{\link[=render_drake_graph]{render_drake_graph()}}
 }
 \keyword{internal}

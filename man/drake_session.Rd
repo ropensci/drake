@@ -2,8 +2,8 @@
 % Please edit documentation in R/progress.R
 \name{drake_session}
 \alias{drake_session}
-\title{Return the \code{\link{sessionInfo}()}
-of the last call to \code{\link{make}()}.}
+\title{Return the \code{\link[=sessionInfo]{sessionInfo()}}
+of the last call to \code{\link[=make]{make()}}.}
 \usage{
 drake_session(path = getwd(), search = TRUE, cache = drake::get_cache(path
   = path, search = search, verbose = verbose), verbose = TRUE)
@@ -24,12 +24,12 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{verbose}{whether to print console messages}
 }
 \value{
-\code{\link{sessionInfo}()} of the last
-call to \code{\link{make}()}
+\code{\link[=sessionInfo]{sessionInfo()}} of the last
+call to \code{\link[=make]{make()}}
 }
 \description{
 By default, session info is saved
-during \code{\link{make}()} to ensure reproducibility.
+during \code{\link[=make]{make()}} to ensure reproducibility.
 Your loaded packages and their versions are recorded, for example.
 }
 \examples{
@@ -42,6 +42,6 @@ drake_session() # Retrieve the cached sessionInfo() of the last make().
 }
 }
 \seealso{
-\code{\link{diagnose}}, \code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

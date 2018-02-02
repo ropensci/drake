@@ -4,7 +4,7 @@
 \alias{cleaned_namespaces}
 \title{For drake caches,
 list the \code{storr} namespaces that are cleaned
-during a call to \code{\link{clean}()}.}
+during a call to \code{\link[=clean]{clean()}}.}
 \usage{
 cleaned_namespaces(default = storr::storr_environment()$default_namespace)
 }
@@ -13,17 +13,17 @@ cleaned_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \value{
 A character vector of \code{storr} namespaces
-that are cleaned during \code{\link{clean}()}.
+that are cleaned during \code{\link[=clean]{clean()}}.
 }
 \description{
 All these
 namespaces store target-level data, but not all
 target-level namespaces are cleaned during
-\code{\link{clean}()}.
+\code{\link[=clean]{clean()}}.
 }
 \examples{
 cleaned_namespaces()
 }
 \seealso{
-\code{\link{cache_namespaces}}, \code{\link{clean}}
+\code{\link[=cache_namespaces]{cache_namespaces()}}, \code{\link[=clean]{clean()}}
 }

@@ -16,7 +16,7 @@ must be a character if \code{character_only} is \code{TRUE}.}
 
 \item{character_only}{logical, whether \code{target} should be treated
 as a character or a symbol.
-Just like \code{character.only} in \code{library()}.}
+Just like \code{character.only} in \code{\link[=library]{library()}}.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
@@ -26,7 +26,7 @@ project root or a subdirectory of the project.}
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
-\item{cache}{optional drake cache. See code{\link{new_cache}()}.
+\item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If \code{cache} is supplied,
 the \code{path} and \code{search} arguments are ignored.}
 
@@ -42,7 +42,7 @@ completely failed target or a target
 that failed initially, retried, then succeeded.
 If no target is given, then \code{diagnose()} simply
 lists the targets for which a error is retrievable.
-Together, functions \code{\link{failed}()} and
+Together, functions \code{\link[=failed]{failed()}} and
 \code{diagnose()} should eliminate the strict need
 for ordinary error messages printed to the console.
 }
@@ -72,6 +72,6 @@ error$calls # View the traceback. (See the traceback() function).
 }
 }
 \seealso{
-\code{\link{failed}}, \code{\link{progress}},
-\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+\code{\link[=failed]{failed()}}, \code{\link[=progress]{progress()}},
+\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

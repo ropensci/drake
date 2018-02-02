@@ -43,6 +43,6 @@ my_plan <- rbind(datasets, ans)
 my_plan
 }
 \seealso{
-\code{\link{plan_summaries}},
- \code{\link{make}}, \code{\link{drake_plan}}
+\code{\link[=plan_summaries]{plan_summaries()}},
+\code{\link[=make]{make()}}, \code{\link[=drake_plan]{drake_plan()}}
 }

@@ -33,6 +33,6 @@ short_hash(cache)
 }
 }
 \seealso{
-\code{\link{default_short_hash_algo}},
-\code{\link{default_long_hash_algo}}
+\code{\link[=default_short_hash_algo]{default_short_hash_algo()}},
+\code{\link[=default_long_hash_algo]{default_long_hash_algo()}}
 }

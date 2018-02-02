@@ -1,19 +1,19 @@
 #' @title List the available drake triggers.
 #' @export
-#' @seealso \code{\link{drake_plan}}, \code{\link{make}}
+#' @seealso [drake_plan()], [make()]
 #' @description Triggers are target-level rules
-#' that tell \code{\link{make}()} how to know if a target
+#' that tell [make()] how to know if a target
 #' is outdated or up to date.
 #' @return A character vector with the names of the available triggers.
-#' @details By default, \code{make()}
+#' @details By default, `make()`
 #' builds targets that need updating and
 #' skips over the ones that are already up to date.
 #' In other words, a change in a dependency, workflow plan command,
 #' or file, or the lack of the target itself,
-#'\emph{triggers} the build process for the target.
+#'*triggers* the build process for the target.
 #' You can relax this behavior by choosing a trigger for each target.
-#' Set the trigger for each target with a \code{"trigger"}
-#' column in your workflow plan data frame. The \code{triggers()}
+#' Set the trigger for each target with a `"trigger"`
+#' column in your workflow plan data frame. The `triggers()`
 #' function lists the available triggers:
 #'
 #' \itemize{
@@ -23,19 +23,19 @@
 #'
 #'   \item{'command'}{:
 #'     Build if the workflow plan command has changed since last
-#'     time the target was built. Also built if \code{missing} is triggered.
+#'     time the target was built. Also built if `missing` is triggered.
 #'   }
 #'
 #'   \item{'depends'}{:
 #'     Build if any of the target's dependencies
-#'     has changed since the last \code{\link{make}()}.
-#'     Also build if \code{missing} is triggered.
+#'     has changed since the last [make()].
+#'     Also build if `missing` is triggered.
 #'   }
 #'
 #'   \item{'file'}{:
 #'     Build if the target is a file and
 #'     that output file is either missing or corrupted.
-#'     Also build if \code{missing} is triggered.
+#'     Also build if `missing` is triggered.
 #'   }
 #'
 #'   \item{'missing'}{:
@@ -80,10 +80,10 @@ triggers <- function(){
 
 #' @title Return the default trigger.
 #' @description Triggers are target-level rules
-#' that tell \code{\link{make}()} how to check if
+#' that tell [make()] how to check if
 #' target is up to date or outdated.
 #' @export
-#' @seealso \code{\link{triggers}}, \code{\link{make}}
+#' @seealso [triggers()], [make()]
 #' @return A character scalar naming the default trigger.
 #' @examples
 #' default_trigger()

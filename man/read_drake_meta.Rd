@@ -30,7 +30,7 @@ Supports 1 job only on Windows.}
 }
 \value{
 The cached master internal configuration list
-of the last \code{\link{make}()}.
+of the last \code{\link[=make]{make()}}.
 }
 \description{
 The metadata helps determine if the
@@ -39,11 +39,11 @@ is used to compute the metadata of targets.
 }
 \details{
 Target metadata is computed
-with \code{drake_meta()} and then
+with \code{\link[=drake_meta]{drake_meta()}} and then
 \code{drake:::finish_meta()}.
 This metadata corresponds
 to the state of the target immediately after it was built
-or imported in the last \code{\link{make}()} that
+or imported in the last \code{\link[=make]{make()}} that
 did not skip it.
 The exception to this is the \code{$missing} element
 of the metadata, which indicates if the target/import
@@ -63,5 +63,5 @@ read_drake_meta(jobs = 2)
 }
 }
 \seealso{
-\code{\link{dependency_profile}}, \code{\link{make}}
+\code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
 }

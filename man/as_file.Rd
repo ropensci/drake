@@ -7,13 +7,13 @@
 as_file(x)
 }
 \arguments{
-\item{x}{Same as for \code{\link{as_drake_filename}()}.}
+\item{x}{Same as for \code{\link[=as_drake_filename]{as_drake_filename()}}.}
 }
 \value{
-The same return value as \code{\link{as_drake_filename}()}.
+The same return value as \code{\link[=as_drake_filename]{as_drake_filename()}}.
 }
 \description{
-Use \code{\link{as_drake_filename}()} instead.
+Use \code{\link[=as_drake_filename]{as_drake_filename()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -22,6 +22,6 @@ Deprecated on 2017-11-12.
 # See ?as_drake_filename for examples.
 }
 \seealso{
-\code{\link{as_drake_filename}}
+\code{\link[=as_drake_filename]{as_drake_filename()}}
 }
 \keyword{internal}

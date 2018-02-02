@@ -3,7 +3,7 @@
 \name{default_parallelism}
 \alias{default_parallelism}
 \title{Show the default \code{parallelism} argument
-to \code{\link{make}()} for your system.}
+to \code{\link[=make]{make()}} for your system.}
 \usage{
 default_parallelism()
 }
@@ -18,5 +18,5 @@ and \code{'mclapply'} for other platforms.
 default_parallelism()
 }
 \seealso{
-\code{\link{make}}, \code{\link{shell_file}}
+\code{\link[=make]{make()}}, \code{\link[=shell_file]{shell_file()}}
 }

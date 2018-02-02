@@ -16,7 +16,7 @@ object. Note: \code{target} could be the name of an imported object.}
 
 \item{character_only}{logical, whether \code{name} should be treated
 as a character or a symbol
-(just like \code{character.only} in \code{\link{library}()}).}
+(just like \code{character.only} in \code{\link[=library]{library()}}).}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
@@ -55,7 +55,7 @@ readd("'report.md'")
 }
 }
 \seealso{
-\code{\link{loadd}}, \code{\link{cached}},
-\code{\link{built}}, \code{link{imported}}, \code{\link{drake_plan}},
-\code{\link{make}}
+\code{\link[=loadd]{loadd()}}, \code{\link[=cached]{cached()}},
+\code{\link[=built]{built()}}, \code{link{imported}}, \code{\link[=drake_plan]{drake_plan()}},
+\code{\link[=make]{make()}}
 }

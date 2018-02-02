@@ -17,5 +17,5 @@ Relevant to \code{"Makefile"} parallelism only.
 r_recipe_wildcard()
 }
 \seealso{
-\code{\link{default_recipe_command}}
+\code{\link[=default_recipe_command]{default_recipe_command()}}
 }

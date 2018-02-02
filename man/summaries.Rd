@@ -7,19 +7,19 @@
 summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 }
 \arguments{
-\item{plan}{Same as for \code{\link{plan_summaries}()}.}
+\item{plan}{Same as for \code{\link[=plan_summaries]{plan_summaries()}}.}
 
-\item{analyses}{Same as for \code{\link{plan_summaries}()}.}
+\item{analyses}{Same as for \code{\link[=plan_summaries]{plan_summaries()}}.}
 
-\item{datasets}{Same as for \code{\link{plan_summaries}()}.}
+\item{datasets}{Same as for \code{\link[=plan_summaries]{plan_summaries()}}.}
 
-\item{gather}{Same as for \code{\link{plan_summaries}()}.}
+\item{gather}{Same as for \code{\link[=plan_summaries]{plan_summaries()}}.}
 }
 \value{
-Same as for \code{\link{plan_summaries}()}.
+Same as for \code{\link[=plan_summaries]{plan_summaries()}}.
 }
 \description{
-Use \code{\link{summaries}()} instead
+Use \code{\link[=summaries]{summaries()}} instead
 }
 \details{
 Deprecated on 2017-11-12.
@@ -28,6 +28,6 @@ Deprecated on 2017-11-12.
 # See ?drake_session for examples.
 }
 \seealso{
-\code{\link{summaries}}
+\code{\link[=summaries]{summaries()}}
 }
 \keyword{internal}

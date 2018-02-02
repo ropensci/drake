@@ -10,7 +10,7 @@ missed(config)
 \arguments{
 \item{config}{internal runtime parameter list of
 \code{\link{make}(...)},
-produced by both \code{\link{drake_config}()} and \code{\link{make}()}.}
+produced by both \code{\link[=drake_config]{drake_config()}} and \code{\link[=make]{make()}}.}
 }
 \value{
 Character vector of names of missing objects and files.
@@ -30,5 +30,5 @@ missed(config) # Should report that reg1 is missing.
 }
 }
 \seealso{
-\code{\link{outdated}}
+\code{\link[=outdated]{outdated()}}
 }

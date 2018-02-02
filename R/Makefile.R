@@ -84,12 +84,12 @@ build_recipe <- function(target, recipe_command,
   gsub(r_recipe_wildcard(), r_recipe, recipe_command)
 }
 
-#' @title Build a target inside a \code{Makefile}
-#' during \code{make(..., parallelism = "Makefile")}.
+#' @title Build a target inside a `Makefile`
+#'   during `make(..., parallelism = "Makefile")`.
 #' @description Users should not need to call this function directly.
 #' @export
 #' @keywords internal
-#' @return \code{NULL}
+#' @return `NULL`
 #' @param target name of target to make
 #' @param cache_path path to the drake cache
 #' @examples
@@ -133,14 +133,14 @@ mk <- function(
 }
 
 #' @title Return the default value of the
-#' \code{args} argument to \code{\link{make}()}.
-#' @description For \code{make(..., parallelism = "Makefile")},
+#'   `args` argument to [make()].
+#' @description For `make(..., parallelism = "Makefile")`,
 #' this function configures the default
-#' arguments to \code{\link{system2}()}.
+#' arguments to [system2()].
 #' It is an internal function, and most users do not need to
 #' worry about it.
 #' @export
-#' @return \code{args} for \code{\link{system2}(command, args)}
+#' @return `args` for \code{\link{system2}(command, args)}
 #' @param jobs number of jobs
 #' @param verbose logical, whether to be verbose
 #' @examples
@@ -154,12 +154,12 @@ default_Makefile_args <- function(jobs, verbose){
   return(out)
 }
 
-#' @title Give the default \code{command}
-#' argument to \code{\link{make}()}.
+#' @title Give the default `command`
+#'   argument to [make()].
 #' @description Relevant for
-#' \code{"Makefile"} parallelism only.
+#' `"Makefile"` parallelism only.
 #' @return A character scalar naming a Linux/Unix command
-#' to run a Makefile.
+#'   to run a Makefile.
 #' @export
 #' @examples
 #' default_Makefile_command()

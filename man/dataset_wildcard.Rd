@@ -3,13 +3,13 @@
 \name{dataset_wildcard}
 \alias{dataset_wildcard}
 \title{Show the dataset wildcard
-used in \code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.}
+used in \code{\link[=plan_analyses]{plan_analyses()}} and \code{\link[=plan_summaries]{plan_summaries()}}.}
 \usage{
 dataset_wildcard()
 }
 \value{
 The dataset wildcard used in
-\code{\link{plan_analyses}()} and \code{\link{plan_summaries}()}.
+\code{\link[=plan_analyses]{plan_analyses()}} and \code{\link[=plan_summaries]{plan_summaries()}}.
 }
 \description{
 Used to generate workflow plan data frames.
@@ -18,5 +18,5 @@ Used to generate workflow plan data frames.
 # See ?plan_analyses for examples
 }
 \seealso{
-\code{\link{plan_analyses}()}
+\code{\link[=plan_analyses]{plan_analyses()}}
 }

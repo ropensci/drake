@@ -3,7 +3,7 @@
 \name{progress}
 \alias{progress}
 \title{Get the build progress of your targets
-during a \code{\link{make}()}.}
+during a \code{\link[=make]{make()}}.}
 \usage{
 progress(..., list = character(0), no_imported_objects = FALSE,
   imported_files_only = logical(0), path = getwd(), search = TRUE,
@@ -16,7 +16,7 @@ or character strings (quoted). Similar to \code{...} in
 \code{\link{remove}(...)}.}
 
 \item{list}{character vector naming objects to be loaded from the
-cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
+cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{no_imported_objects}{logical, whether to only return information
 about imported files and targets with commands (i.e. whether to ignore
@@ -44,7 +44,7 @@ the \code{path} and \code{search} arguments are ignored.}
 }
 \value{
 The build progress of each target reached by
-the current \code{\link{make}()} so far.
+the current \code{\link[=make]{make()}} so far.
 }
 \description{
 Objects that drake imported, built, or attempted
@@ -65,7 +65,7 @@ progress(no_imported_objects = TRUE) # Ignore imported R objects.
 }
 }
 \seealso{
-\code{\link{diagnose}}, \code{\link{session}},
-\code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=session]{session()}},
+\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

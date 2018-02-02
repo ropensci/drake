@@ -1,20 +1,20 @@
 #' @title List the time it took to build each target/import.
 #' @description Listed times do not include the amount of time
 #' spent loading and saving objects!
-#' @seealso \code{\link{built}}
+#' @seealso [built()]
 #' @export
-#' @return A data frame of times, each from \code{\link{system.time}()}.
+#' @return A data frame of times, each from [system.time()].
 #' @param targets_only logical, whether to only return the
-#' build times of the targets (exclude the imports).
+#'   build times of the targets (exclude the imports).
 #' @param path Root directory of the drake project,
-#' or if \code{search} is \code{TRUE}, either the
-#' project root or a subdirectory of the project.
-#' @param search logical. If \code{TRUE}, search parent directories
-#' to find the nearest drake cache. Otherwise, look in the
-#' current working directory only.
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
+#' @param search logical. If `TRUE`, search parent directories
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
 #' @param digits How many digits to round the times to.
 #' @param cache optional drake cache. If supplied,
-#' the \code{path} and \code{search} arguments are ignored.
+#'   the `path` and `search` arguments are ignored.
 #' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
 #' @examples

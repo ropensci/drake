@@ -1,7 +1,7 @@
 #' @title List the available hash algorithms for drake caches.
 #' @export
 #' @description See the advanced storage tutorial
-#' at \url{https://ropensci.github.io/drake/articles/storage.html}
+#' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
 #' @return A character vector of names of available hash algorithms.
 #' @examples
@@ -12,10 +12,10 @@ available_hash_algos <- function(){
 
 #' @title Get the long hash algorithm of a drake cache.
 #' @export
-#' @seealso \code{\link{default_short_hash_algo}},
-#' \code{\link{default_long_hash_algo}}
+#' @seealso [default_short_hash_algo()],
+#'   [default_long_hash_algo()]
 #' @description  See the advanced storage tutorial
-#' at \url{https://ropensci.github.io/drake/articles/storage.html}
+#' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
 #' @return A character vector naming a hash algorithm.
 #' @param cache drake cache
@@ -44,10 +44,10 @@ long_hash <- function(
 
 #' @title Get the short hash algorithm of a drake cache.
 #' @export
-#' @seealso \code{\link{default_short_hash_algo}},
-#' \code{\link{default_long_hash_algo}}
+#' @seealso [default_short_hash_algo()],
+#'   [default_long_hash_algo()]
 #' @description See the advanced storage tutorial
-#' at \url{https://ropensci.github.io/drake/articles/storage.html}
+#' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
 #' @return A character vector naming a hash algorithm.
 #' @param cache drake cache
@@ -76,26 +76,26 @@ short_hash <- function(
   cache$get("short_hash_algo", namespace = "config")
 }
 
-#' @title Return the default short hash algorithm for \code{make()}.
+#' @title Return the default short hash algorithm for `make()`.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
+#' @seealso [make()], [available_hash_algos()]
 #' @description See the advanced storage tutorial
-#' at \url{https://ropensci.github.io/drake/articles/storage.html}
+#' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
 #' @details
 #' The short algorithm must be among \code{\link{available_hash_algos}{}},
 #' which is just the collection of algorithms available to the `algo`
-#' argument in \code{digest::digest()}. \cr \cr
+#' argument in [digest::digest()]. \cr \cr
 #'
 #' If you express no preference for a hash, drake will use
 #' the short hash for the existing project, or
-#' \code{\link{default_short_hash_algo}()} for a new project.
+#' [default_short_hash_algo()] for a new project.
 #' If you do supply a hash algorithm, it will only apply to
 #' fresh projects (see \code{\link{clean}(destroy = TRUE)}).
 #' For a project that already exists, if you supply a hash algorithm,
 #' drake will warn you and then ignore your choice, opting instead for
 #' the hash algorithm already chosen for the project
-#' in a previous \code{make()}. \cr \cr
+#' in a previous `make()`. \cr \cr
 #'
 #' Drake uses both a short hash algorithm
 #' and a long hash algorithm. The shorter hash has fewer characters,
@@ -109,10 +109,10 @@ short_hash <- function(
 #' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
-#' When you \code{\link{configure_cache}(cache)} without
-#' supplying a short hash algorithm,
-#' \code{default_short_hash_algo(cache)} is the short
-#' hash algorithm that drake picks for you.
+#'   When you \code{\link{configure_cache}(cache)} without
+#'   supplying a short hash algorithm,
+#'   `default_short_hash_algo(cache)` is the short
+#'   hash algorithm that drake picks for you.
 #'
 #' @examples
 #' default_short_hash_algo()
@@ -144,26 +144,26 @@ default_short_hash_algo <- function(cache = NULL) {
   out
 }
 
-#' @title Return the default long hash algorithm for \code{make()}.
+#' @title Return the default long hash algorithm for `make()`.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{available_hash_algos}}
+#' @seealso [make()], [available_hash_algos()]
 #' @description See the advanced storage tutorial
-#' at \url{https://ropensci.github.io/drake/articles/storage.html}
+#' at <https://ropensci.github.io/drake/articles/storage.html>
 #' for details.
 #' @details
 #' The long algorithm must be among \code{\link{available_hash_algos}{}},
 #' which is just the collection of algorithms available to the `algo`
-#' argument in \code{digest::digest()}. \cr \cr
+#' argument in `digest::digest()`. \cr \cr
 #'
 #' If you express no preference for a hash, drake will use
 #' the long hash for the existing project, or
-#' \code{\link{default_long_hash_algo}()} for a new project.
+#' [default_long_hash_algo()] for a new project.
 #' If you do supply a hash algorithm, it will only apply to
 #' fresh projects (see \code{\link{clean}(destroy = TRUE)}).
 #' For a project that already exists, if you supply a hash algorithm,
 #' drake will warn you and then ignore your choice, opting instead for
 #' the hash algorithm already chosen for the project
-#' in a previous \code{make()}. \cr \cr
+#' in a previous `make()`. \cr \cr
 #'
 #' Drake uses both a short hash algorithm
 #' and a long hash algorithm. The shorter hash has fewer characters,
@@ -177,10 +177,10 @@ default_short_hash_algo <- function(cache = NULL) {
 #' @return A character vector naming a hash algorithm.
 #'
 #' @param cache optional drake cache.
-#' When you \code{\link{configure_cache}(cache)} without
-#' supplying a long hash algorithm,
-#' \code{default_long_hash_algo(cache)} is the long
-#' hash algorithm that drake picks for you.
+#'   When you \code{\link{configure_cache}(cache)} without
+#'   supplying a long hash algorithm,
+#'   `default_long_hash_algo(cache)` is the long
+#'   hash algorithm that drake picks for you.
 #'
 #' @examples
 #' default_long_hash_algo()

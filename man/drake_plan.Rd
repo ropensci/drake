@@ -3,7 +3,7 @@
 \name{drake_plan}
 \alias{drake_plan}
 \title{Create a workflow plan data frame
-for the \code{plan} argument of \code{\link{make}}.}
+for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = FALSE,
   strings_in_dots = c("filenames", "literals"), tidy_evaluation = TRUE)
@@ -41,8 +41,8 @@ A data frame of targets and commands.
 }
 \description{
 Turns a named collection of target/command pairs into
-a workflow plan data frame for \code{\link{make}()} and
-\code{\link{check}()}. You can give the commands
+a workflow plan data frame for \code{\link[=make]{make()}} and
+\code{\link[=check]{check()}}. You can give the commands
 as named expressions, or you can use the \code{list}
 argument to supply them as character strings.
 }

@@ -23,12 +23,12 @@ for details.
 }
 \details{
 The short algorithm must be among \code{\link{available_hash_algos}{}},
-which is just the collection of algorithms available to the `algo`
-argument in \code{digest::digest()}. \cr \cr
+which is just the collection of algorithms available to the \code{algo}
+argument in \code{\link[digest:digest]{digest::digest()}}. \cr \cr
 
 If you express no preference for a hash, drake will use
 the short hash for the existing project, or
-\code{\link{default_short_hash_algo}()} for a new project.
+\code{\link[=default_short_hash_algo]{default_short_hash_algo()}} for a new project.
 If you do supply a hash algorithm, it will only apply to
 fresh projects (see \code{\link{clean}(destroy = TRUE)}).
 For a project that already exists, if you supply a hash algorithm,
@@ -60,5 +60,5 @@ default_short_hash_algo(cache)
 }
 }
 \seealso{
-\code{\link{make}}, \code{\link{available_hash_algos}}
+\code{\link[=make]{make()}}, \code{\link[=available_hash_algos]{available_hash_algos()}}
 }

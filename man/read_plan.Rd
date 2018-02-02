@@ -8,21 +8,21 @@ read_plan(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = 1, ...)
 }
 \arguments{
-\item{path}{Same as for \code{\link{read_drake_plan}()}.}
+\item{path}{Same as for \code{\link[=read_drake_plan]{read_drake_plan()}}.}
 
-\item{search}{Same as for \code{\link{read_drake_plan}()}.}
+\item{search}{Same as for \code{\link[=read_drake_plan]{read_drake_plan()}}.}
 
-\item{cache}{Same as for \code{\link{read_drake_plan}()}.}
+\item{cache}{Same as for \code{\link[=read_drake_plan]{read_drake_plan()}}.}
 
-\item{verbose}{Same as for \code{\link{read_drake_plan}()}.}
+\item{verbose}{Same as for \code{\link[=read_drake_plan]{read_drake_plan()}}.}
 
-\item{...}{Same as for \code{\link{read_drake_plan}()}.}
+\item{...}{Same as for \code{\link[=read_drake_plan]{read_drake_plan()}}.}
 }
 \value{
 An workflow plan data frame.
 }
 \description{
-Use \code{\link{read_drake_plan}()} instead.
+Use \code{\link[=read_drake_plan]{read_drake_plan()}} instead.
 }
 \details{
 Deprecated on 2017-11-21.
@@ -31,6 +31,6 @@ Deprecated on 2017-11-21.
 # See ?read_drake_plan for the examples.
 }
 \seealso{
-\code{\link{read_drake_plan}}.
+\code{\link[=read_drake_plan]{read_drake_plan()}}.
 }
 \keyword{internal}
