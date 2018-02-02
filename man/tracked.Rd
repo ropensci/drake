@@ -10,16 +10,16 @@ tracked(plan = drake_plan(), targets = drake::possible_targets(plan),
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
-\code{\link{make}()}.}
+\code{\link[=make]{make()}}.}
 
 \item{targets}{names of targets to build, same as for function
-\code{\link{make}()}.}
+\code{\link[=make]{make()}}.}
 
 \item{envir}{environment to import from, same as for function
-\code{\link{make}()}.}
+\code{\link[=make]{make()}}.}
 
 \item{jobs}{number of jobs to accelerate the construction
-of the dependency graph. A light \code{mclapply}-based
+of the dependency graph. A light \code{mclapply()}-based
 parallelism is used if your operating system is not Windows.}
 
 \item{verbose}{logical, whether to print

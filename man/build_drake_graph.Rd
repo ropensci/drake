@@ -10,18 +10,18 @@ build_drake_graph(plan = drake_plan(),
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
-\code{\link{make}()}.}
+\code{\link[=make]{make()}}.}
 
 \item{targets}{names of targets to build, same as for function
-\code{\link{make}()}.}
+\code{\link[=make]{make()}}.}
 
 \item{envir}{environment to import from, same as for function
-\code{\link{make}()}.}
+\code{\link[=make]{make()}}.}
 
 \item{verbose}{logical, whether to output messages to the console.}
 
 \item{jobs}{number of jobs to accelerate the construction
-of the dependency graph. A light \code{mclapply}-based
+of the dependency graph. A light \code{mclapply()}-based
 parallelism is used if your operating system is not Windows.}
 }
 \value{
@@ -33,8 +33,8 @@ This function returns an igraph object representing how
 the targets in your workflow plan data frame
 depend on each other.
 (\code{help(package = "igraph")}). To plot the graph, call
-to \code{\link{plot.igraph}()} on your graph, or just use
-\code{\link{vis_drake_graph}()} from the start.
+to \code{\link[=plot.igraph]{plot.igraph()}} on your graph, or just use
+\code{\link[=vis_drake_graph]{vis_drake_graph()}} from the start.
 }
 \examples{
 \dontrun{
@@ -47,5 +47,5 @@ class(g) # "igraph"
 }
 }
 \seealso{
-\code{\link{vis_drake_graph}}
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }

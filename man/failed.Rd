@@ -3,7 +3,7 @@
 \name{failed}
 \alias{failed}
 \title{List the targets that failed in the last call
-to \code{\link{make}()}.}
+to \code{\link[=make]{make()}}.}
 \usage{
 failed(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = TRUE)
@@ -28,7 +28,7 @@ A character vector of target names.
 }
 \description{
 Together, functions \code{failed} and
-\code{\link{diagnose}()} should eliminate the strict need
+\code{\link[=diagnose]{diagnose()}} should eliminate the strict need
 for ordinary error messages printed to the console.
 }
 \examples{
@@ -46,7 +46,7 @@ diagnose(x) # Retrieve the cached error log of x.
 }
 }
 \seealso{
-\code{\link{diagnose}}, \code{\link{session}},
-\code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{drake_plan}}, \code{\link{make}}
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=session]{session()}},
+\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

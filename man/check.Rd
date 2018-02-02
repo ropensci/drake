@@ -9,21 +9,21 @@ check(plan = drake_plan(), targets = drake::possible_targets(plan),
   verbose = TRUE)
 }
 \arguments{
-\item{plan}{Same as for \code{\link{check_plan}()}.}
+\item{plan}{Same as for \code{\link[=check_plan]{check_plan()}}.}
 
-\item{targets}{Same as for \code{\link{check_plan}()}.}
+\item{targets}{Same as for \code{\link[=check_plan]{check_plan()}}.}
 
-\item{envir}{Same as for \code{\link{check_plan}()}.}
+\item{envir}{Same as for \code{\link[=check_plan]{check_plan()}}.}
 
-\item{cache}{Same as for \code{\link{check_plan}()}.}
+\item{cache}{Same as for \code{\link[=check_plan]{check_plan()}}.}
 
-\item{verbose}{Same as for \code{\link{check_plan}()}.}
+\item{verbose}{Same as for \code{\link[=check_plan]{check_plan()}}.}
 }
 \value{
-Same as for \code{\link{check_plan}()}.
+Same as for \code{\link[=check_plan]{check_plan()}}.
 }
 \description{
-Use \code{\link{check_plan}()} instead.
+Use \code{\link[=check_plan]{check_plan()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -32,6 +32,6 @@ Deprecated on 2017-11-12.
 # See ?check_plan for examples.
 }
 \seealso{
-\code{\link{check_plan}}
+\code{\link[=check_plan]{check_plan()}}
 }
 \keyword{internal}

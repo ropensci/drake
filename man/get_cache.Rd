@@ -11,9 +11,9 @@ get_cache(path = getwd(), search = TRUE, verbose = 1, force = FALSE,
 \item{path}{file path to the folder containing the cache.
 Yes, this is the parent directory containing the cache,
 not the cache itself, and it assumes the cache is in the
-`.drake` folder. If you are looking for a different cache
-with a known folder different from `.drake`, use
-the \code{\link{this_cache}()} function.}
+\code{.drake} folder. If you are looking for a different cache
+with a known folder different from \code{.drake}, use
+the \code{\link[=this_cache]{this_cache()}} function.}
 
 \item{search}{logical, whether to search back in the file system
 for the cache.}
@@ -52,6 +52,6 @@ x$list() # Or x$list(namespace = x$default_namespace)
 }
 }
 \seealso{
-\code{\link{this_cache}}, \code{\link{new_cache}},
-\code{\link{recover_cache}}, \code{\link{config}}
+\code{\link[=this_cache]{this_cache()}}, \code{\link[=new_cache]{new_cache()}},
+\code{\link[=recover_cache]{recover_cache()}}, \code{\link[=config]{config()}}
 }

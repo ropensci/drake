@@ -3,7 +3,7 @@
 \name{possible_targets}
 \alias{possible_targets}
 \title{List the possible targets for the \code{targets}
-argument to \code{\link{make}()}, given a workflow plan
+argument to \code{\link[=make]{make()}}, given a workflow plan
 data frame.}
 \usage{
 possible_targets(plan = drake_plan())
@@ -28,6 +28,6 @@ possible_targets(my_plan)
 }
 }
 \seealso{
-\code{\link{make}}
+\code{\link[=make]{make()}}
 }
 \keyword{internal}

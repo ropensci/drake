@@ -18,11 +18,11 @@ such as \code{destroy}, \code{cache}, \code{path}, \code{search},
 use the \code{list} argument instead of \code{...}.}
 
 \item{list}{character vector naming targets to be removed from the
-cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
+cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{destroy}{logical, whether to totally remove the drake cache.
 If \code{destroy} is \code{FALSE}, only the targets
-from \code{make}()
+from \code{make()}
 are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
 
@@ -62,21 +62,21 @@ metadata namespaces such as "meta", "build_times", and "errors".}
 Invisibly return \code{NULL}.
 }
 \description{
-Cleans up the work done by \code{\link{make}()}.
+Cleans up the work done by \code{\link[=make]{make()}}.
 }
 \details{
 By default, \code{clean()} removes references to cached data.
 To deep-clean the data to free up storage/memory, use
 \code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
 but it purges data with no remaining references. To just do garbage
-collection without cleaning, see \code{\link{drake_gc}()}.
+collection without cleaning, see \code{\link[=drake_gc]{drake_gc()}}.
 Also, for \code{clean()}, you must be in your project's working directory
 or a subdirectory of it.
 \code{clean(search = TRUE)} searches upwards in your folder structure
 for the drake cache and acts on the first one it sees. Use
-\code{search == FALSE} to look within the current working
+\code{search = FALSE} to look within the current working
 directory only.
-WARNING: This deletes ALL work done with \code{\link{make}()},
+WARNING: This deletes ALL work done with \code{\link[=make]{make()}},
 which includes
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.
@@ -119,5 +119,5 @@ clean(destroy = TRUE)
 }
 }
 \seealso{
-\code{\link{drake_gc}}, \code{\link{make}}
+\code{\link[=drake_gc]{drake_gc()}}, \code{\link[=make]{make()}}
 }

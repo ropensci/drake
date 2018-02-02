@@ -8,21 +8,21 @@ evaluate(plan, rules = NULL, wildcard = NULL, values = NULL,
   expand = TRUE)
 }
 \arguments{
-\item{plan}{Same as for \code{\link{evaluate_plan}}}
+\item{plan}{Same as for \code{\link[=evaluate_plan]{evaluate_plan()}}}
 
-\item{rules}{Same as for \code{\link{evaluate_plan}}}
+\item{rules}{Same as for \code{\link[=evaluate_plan]{evaluate_plan()}}}
 
-\item{wildcard}{Same as for \code{\link{evaluate_plan}}}
+\item{wildcard}{Same as for \code{\link[=evaluate_plan]{evaluate_plan()}}}
 
-\item{values}{Same as for \code{\link{evaluate_plan}}}
+\item{values}{Same as for \code{\link[=evaluate_plan]{evaluate_plan()}}}
 
-\item{expand}{Same as for \code{\link{evaluate_plan}}}
+\item{expand}{Same as for \code{\link[=evaluate_plan]{evaluate_plan()}}}
 }
 \value{
-Same as for \code{\link{evaluate_plan}}
+Same as for \code{\link[=evaluate_plan]{evaluate_plan()}}
 }
 \description{
-Use \code{\link{evaluate_plan}()} instead.
+Use \code{\link[=evaluate_plan]{evaluate_plan()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -31,6 +31,6 @@ Deprecated on 2017-11-12.
 # See ?evaluate_plan for examples.
 }
 \seealso{
-\code{\link{evaluate_plan}}
+\code{\link[=evaluate_plan]{evaluate_plan()}}
 }
 \keyword{internal}

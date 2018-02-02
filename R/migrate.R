@@ -1,31 +1,31 @@
 #' @title Reconfigure an old project (built with drake <= 4.4.0)
-#' to be compatible with later versions of drake.
+#'   to be compatible with later versions of drake.
 #' @export
-#' @seealso \code{\link{rescue_cache}}, \code{\link{make}}
+#' @seealso [rescue_cache()], [make()]
 #' @param path Full path to the cache
 #' @param jobs number of jobs for light parallelism.
-#' (Disabled on Windows.)
-#' @return \code{TRUE} if the migration was successful, \code{FALSE} otherwise.
-#' A migration is successful if the transition preserves target status:
-#' that is, outdated targets remain outdated and up to date targets
-#' remain up to date.
+#'   (Disabled on Windows.)
+#' @return `TRUE` if the migration was successful, `FALSE` otherwise.
+#'   A migration is successful if the transition preserves target status:
+#'   that is, outdated targets remain outdated and up to date targets
+#'   remain up to date.
 #' @description Migrate a project/cache from drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @details Drake versions after 4.4.0
 #' have a different internal structure for the cache.
 #' This means projects built with drake 4.4.0 or before are not compatible
 #' with projects built with a later version of drake.
-#' The \code{migrate_drake_project()} function converts
+#' The `migrate_drake_project()` function converts
 #' an old cache to a format compatible with the version of drake
 #' installed on your system.
 #' Important note: build times and other non-essential metadata
 #' are lost during migration.
 #' A migration is successful if the transition preserves target status:
 #' that is, outdated targets remain outdated and up to date targets
-#' remain up to date. At the end, \code{migrate_drake_project()}
+#' remain up to date. At the end, `migrate_drake_project()`
 #' tells you whether the migration
 #' is successful. If it is not successful,
-#' \code{migrate_drake_project()} tells you where
+#' `migrate_drake_project()` tells you where
 #' it backed up your old project.
 #' @examples
 #' \dontrun{

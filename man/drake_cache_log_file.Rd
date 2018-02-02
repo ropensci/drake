@@ -20,7 +20,7 @@ project root or a subdirectory of the project.}
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
-\item{cache}{drake cache. See \code{\link{new_cache}()}.
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{whether to print console messages}
@@ -39,9 +39,9 @@ There is no return value, but a log file is generated.
 This functionality is like
 \code{\link{make}(..., cache_log_file = TRUE)},
 but separated and more customizable.
-The \code{drake_cache_log_file} function writes a flat text file
+The \code{drake_cache_log_file()} function writes a flat text file
 to represents the state of all the targets and imports in the cache.
-If you call it after each \code{\link{make}()}
+If you call it after each \code{\link[=make]{make()}}
 and put the log file under version control,
 you can track the changes to your results over time.
 This way, your data is versioned alongside your code
@@ -68,10 +68,10 @@ drake_cache_log_file() # writes drake_cache.log
 }
 }
 \seealso{
-\code{\link{drake_cache_log}},
-\code{\link{make}},
-\code{\link{get_cache}},
-\code{\link{default_long_hash_algo}},
-\code{\link{short_hash}},
-\code{\link{long_hash}}
+\code{\link[=drake_cache_log]{drake_cache_log()}},
+\code{\link[=make]{make()}},
+\code{\link[=get_cache]{get_cache()}},
+\code{\link[=default_long_hash_algo]{default_long_hash_algo()}},
+\code{\link[=short_hash]{short_hash()}},
+\code{\link[=long_hash]{long_hash()}}
 }

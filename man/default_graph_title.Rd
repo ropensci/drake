@@ -3,18 +3,18 @@
 \name{default_graph_title}
 \alias{default_graph_title}
 \title{Return the default title of the graph for
-\code{\link{vis_drake_graph}()}.}
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
 \usage{
 default_graph_title(split_columns = FALSE)
 }
 \arguments{
 \item{split_columns}{logical, whether the columns were split
-in \code{\link{dataframes_graph}()} or \code{\link{vis_drake_graph}()}
+in \code{\link[=dataframes_graph]{dataframes_graph()}} or \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 with the \code{split_columns} argument.}
 }
 \value{
 a character scalar with the default graph title for
-\code{\link{vis_drake_graph}()}.
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}.
 }
 \description{
 For internal use only.
@@ -23,6 +23,6 @@ For internal use only.
 default_graph_title()
 }
 \seealso{
-\code{\link{dataframes_graph}}, \code{\link{vis_drake_graph}}
+\code{\link[=dataframes_graph]{dataframes_graph()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }
 \keyword{internal}

@@ -14,7 +14,7 @@ or character strings (quoted). Similar to \code{...} in
 \code{\link{remove}(...)}.}
 
 \item{list}{character vector naming objects to be loaded from the
-cache. Similar to the \code{list} argument of \code{\link{remove}()}.}
+cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{no_imported_objects}{logical, applies only when
 no targets are specified and a list of cached targets is returned.
@@ -35,7 +35,7 @@ to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
 
-\item{cache}{drake cache. See \code{\link{new_cache}()}.
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{whether to print console messages}
@@ -51,8 +51,8 @@ targets or cached or a character vector listing all cached
 items, depending on whether any targets are specified
 }
 \description{
-Read/load a cached item with \code{\link{readd}()}
-or \code{\link{loadd}()}.
+Read/load a cached item with \code{\link[=readd]{readd()}}
+or \code{\link[=loadd]{loadd()}}.
 }
 \examples{
 \dontrun{
@@ -80,7 +80,7 @@ build_times()
 }
 }
 \seealso{
-\code{\link{built}}, \code{\link{imported}},
-\code{\link{readd}}, \code{\link{loadd}},
-\code{\link{drake_plan}}, \code{\link{make}}
+\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=readd]{readd()}}, \code{\link[=loadd]{loadd()}},
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

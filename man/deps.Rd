@@ -25,8 +25,8 @@ decides which targets are built and when.
 If the argument is a single-quoted string that points to
 a dynamic knitr report, the dependencies of the expected compiled
 output will be given. For example, \code{deps("'report.Rmd'")}
-will return target names found in calls to \code{\link{loadd}()}
-and \code{\link{readd}()} in active code chunks.
+will return target names found in calls to \code{\link[=loadd]{loadd()}}
+and \code{\link[=readd]{readd()}} in active code chunks.
 These targets are needed in order to run \code{knit('report.Rmd')}
 to produce the output file \code{'report.md'}, so technically,
 they are dependencies of \code{'report.md'}, not \code{'report.Rmd'}

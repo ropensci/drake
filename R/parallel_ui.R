@@ -3,16 +3,16 @@
 #' @description If there are multiple template files in the example,
 #' only the first one (alphabetically) is written.
 #' @export
-#' @seealso \code{\link{drake_examples}}, \code{\link{drake_example}},
-#' \code{\link{shell_file}}
-#' @return \code{NULL} is returned,
-#' but a batchtools template file is written.
+#' @seealso [drake_examples()], [drake_example()],
+#'   [shell_file()]
+#' @return `NULL` is returned,
+#'   but a batchtools template file is written.
 #' @param example Name of the drake example
-#' from which to take the template file.
-#' Must be listed in \code{\link{drake_examples}()}.
+#'   from which to take the template file.
+#'   Must be listed in [drake_examples()].
 #' @param to Character vector, where to write the file.
 #' @param overwrite Logical, whether to overwrite an existing file of the
-#' same name.
+#'   same name.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -51,46 +51,46 @@ drake_batchtools_tmpl_file <- function(
 
 #' @title List the types of supported parallel computing in drake.
 #' @description These are the possible values of the
-#' \code{parallelism} argument to \code{\link{make}()}.
+#' `parallelism` argument to [make()].
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{shell_file}}
+#' @seealso [make()], [shell_file()]
 #' @return Character vector listing the types of parallel
-#' computing supported.
+#'   computing supported.
 #'
-#' @details Run \code{make(..., parallelism = x, jobs = n)} for any of
-#' the following values of \code{x} to distribute targets over parallel
+#' @details Run `make(..., parallelism = x, jobs = n)` for any of
+#' the following values of `x` to distribute targets over parallel
 #' units of execution.
 #' \describe{
 #'   \item{'parLapply'}{launches multiple processes in a single R session
 #'   using \code{parallel::\link{parLapply}()}.
 #'   This is single-node, (potentially) multicore computing.
-#'   It requires more overhead than the \code{'mclapply'} option,
-#'   but it works on Windows. If \code{jobs} is \code{1} in
-#'   \code{\link{make}()}, then no 'cluster' is created and
+#'   It requires more overhead than the `'mclapply'` option,
+#'   but it works on Windows. If `jobs` is `1` in
+#'   [make()], then no 'cluster' is created and
 #'   no parallelism is used.}
 #'
 #'   \item{'mclapply'}{uses multiple processes in a single R session.
 #'   This is single-node, (potentially) multicore computing.
-#'   Does not work on Windows for \code{jobs > 1}
-#'   because \code{\link{mclapply}()} is based on forking.}
+#'   Does not work on Windows for `jobs > 1`
+#'   because [mclapply()] is based on forking.}
 #'
 #'   \item{'future_lapply'}{
 #'   opens up a whole trove of parallel backends
-#'   powered by the \code{future} and \code{future.batchtools}
+#'   powered by the `future` and `future.batchtools`
 #'   packages. First, set the parallel backend globally using
-#'   \code{future::plan()}.
+#'   `future::plan()`.
 #'   Then, apply the backend to your drake_plan
-#'   using \code{make(..., parallelism = "future_lapply", jobs = ...)}.
+#'   using `make(..., parallelism = "future_lapply", jobs = ...)`.
 #'   But be warned: the environment for each target needs to be set up
 #'   from scratch, so this backend type is higher overhead than either
-#'   \code{mclapply} or \code{parLapply}.
-#'   Also, the \code{jobs} argument only applies to the imports.
-#'   To set the max number of jobs, set the \code{workers}
+#'   `mclapply` or `parLapply`.
+#'   Also, the `jobs` argument only applies to the imports.
+#'   To set the max number of jobs, set the `workers`
 #'   argument where it exists. For example, call
-#'   \code{future::plan(multisession(workers = 4))},
+#'   `future::plan(multisession(workers = 4))`,
 #'   then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
 #'   You might also try options(mc.cores = jobs),
-#'   or see \code{?future::future::.options}
+#'   or see [future::.options]
 #'   for environment variables that set the max number of jobs.
 #'   }
 #'
@@ -99,8 +99,8 @@ drake_batchtools_tmpl_file <- function(
 #'   For distributed computing on a cluster or supercomputer,
 #'   try \code{\link{make}(..., parallelism = 'Makefile',
 #'   prepend = 'SHELL=./shell.sh')}.
-#'   You need an auxiliary \code{shell.sh} file for this,
-#'   and \code{\link{shell_file}()}
+#'   You need an auxiliary `shell.sh` file for this,
+#'   and [shell_file()]
 #'   writes an example.
 #'
 #'   Here, Makefile-level parallelism is only used for
@@ -108,23 +108,23 @@ drake_batchtools_tmpl_file <- function(
 #'   data frame, not imports. To process imported objects and files,
 #'   drake selects the best parallel
 #'   backend for your system and uses
-#'   the number of jobs you give to the \code{jobs}
-#'   argument to \code{\link{make}()}.
+#'   the number of jobs you give to the `jobs`
+#'   argument to [make()].
 #'   To use at most 2 jobs for imports and at most 4 jobs
 #'   for targets, run
-#'   \code{make(..., parallelism = 'Makefile', jobs = 2, args = '--jobs=4')}
+#'   `make(..., parallelism = 'Makefile', jobs = 2, args = '--jobs=4')`
 #'
 #'   Caution: the Makefile generated by
 #'   \code{\link{make}(..., parallelism = 'Makefile')}
 #'   is NOT standalone. DO NOT run it outside of
-#'   \code{\link{make}()} or \code{\link{make}()}.
+#'   [make()] or [make()].
 #'   Also, Windows users will need to download and install Rtools.
 #'   }
 #' }
 #'
 #' @param distributed_only logical, whether to return only
-#' the distributed backend types, such as \code{Makefile} and
-#' \code{parLapply}
+#'   the distributed backend types, such as `Makefile` and
+#'   `parLapply`
 #'
 #' @examples
 #' # See all the parallel computing options.
@@ -147,12 +147,12 @@ parallelism_choices <- function(distributed_only = FALSE) {
   }
 }
 
-#' @title Show the default \code{parallelism} argument
-#' to \code{\link{make}()} for your system.
-#' @description Returns \code{'parLapply'} for Windows machines
-#' and \code{'mclapply'} for other platforms.
+#' @title Show the default `parallelism` argument
+#'   to [make()] for your system.
+#' @description Returns `'parLapply'` for Windows machines
+#' and `'mclapply'` for other platforms.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{shell_file}}
+#' @seealso [make()], [shell_file()]
 #' @return The default parallelism option for your system.
 #' @examples
 #' default_parallelism()
@@ -161,19 +161,19 @@ default_parallelism <- function() {
     unname
 }
 
-#' @title Write an example \code{shell.sh} file required by
-#' \code{make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')}.
+#' @title Write an example `shell.sh` file required by
+#'   `make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')`.
 #' @description This function also does a `chmod +x`
 #' to enable execute permissions.
-#' @seealso \code{\link{make}}, \code{\link{max_useful_jobs}},
-#' \code{\link{parallelism_choices}}, \code{\link{drake_batchtools_tmpl_file}},
-#' \code{\link{drake_example}}, \code{\link{drake_examples}}
+#' @seealso [make()], [max_useful_jobs()],
+#'   [parallelism_choices()], [drake_batchtools_tmpl_file()],
+#'   [drake_example()], [drake_examples()]
 #' @export
-#' @return The return value of the call to \code{file.copy()} that
-#' wrote the shell file.
+#' @return The return value of the call to [file.copy()] that
+#'   wrote the shell file.
 #' @param path file path of the shell file
 #' @param overwrite logical, whether to overwrite a possible
-#' destination file with the same name
+#'   destination file with the same name
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

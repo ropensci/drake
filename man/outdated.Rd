@@ -9,11 +9,11 @@ outdated(config, make_imports = TRUE)
 \arguments{
 \item{config}{option internal runtime parameter list of
 \code{\link{make}(...)},
-produced with \code{\link{drake_config}()}.
+produced with \code{\link[=drake_config]{drake_config()}}.
 You must use a fresh \code{config} argument with an up-to-date
 \code{config$targets} element that was never modified by hand.
-If needed, rerun \code{\link{drake_config}()} early and often.
-See the details in the help file for \code{\link{drake_config}()}.}
+If needed, rerun \code{\link[=drake_config]{drake_config()}} early and often.
+See the details in the help file for \code{\link[=drake_config]{drake_config()}}.}
 
 \item{make_imports}{logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
@@ -23,7 +23,7 @@ Character vector of the names of outdated targets.
 }
 \description{
 Outdated targets will be rebuilt in the next
-\code{\link{make}()}.
+\code{\link[=make]{make()}}.
 }
 \details{
 \code{outdated()} is sensitive to the alternative triggers
@@ -34,8 +34,8 @@ For example, even if \code{outdated(...)} shows everything up to date,
 all targets out of date.
 You must use a fresh \code{config} argument with an up-to-date
 \code{config$targets} element that was never modified by hand.
-If needed, rerun \code{\link{drake_config}()} early and often.
-See the details in the help file for \code{\link{drake_config}()}.
+If needed, rerun \code{\link[=drake_config]{drake_config()}} early and often.
+See the details in the help file for \code{\link[=drake_config]{drake_config()}}.
 }
 \examples{
 \dontrun{
@@ -56,6 +56,6 @@ outdated(config = config)
 }
 }
 \seealso{
-\code{\link{missed}}, \code{\link{drake_plan}},
-\code{\link{make}}, \code{\link{vis_drake_graph}}
+\code{\link[=missed]{missed()}}, \code{\link[=drake_plan]{drake_plan()}},
+\code{\link[=make]{make()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }

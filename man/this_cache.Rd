@@ -18,7 +18,7 @@ running version of drake.}
 
 \item{fetch_cache}{character vector containing lines of code.
 The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{storr_rds()} or \code{storr_dbi()},
+with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
 but customized. This feature is experimental.}
 }
 \value{

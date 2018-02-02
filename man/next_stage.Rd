@@ -3,21 +3,21 @@
 \name{next_stage}
 \alias{next_stage}
 \title{List the targets that will be built in the
-first parallelizable stage of the next call to \code{\link{make}}.}
+first parallelizable stage of the next call to \code{\link[=make]{make()}}.}
 \usage{
 next_stage(config)
 }
 \arguments{
 \item{config}{A master configuration list produced by
-\code{\link{drake_config}()} or \code{\link{make}()}}
+\code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}}
 }
 \value{
 A character vector of the targets to be made
-in the first parallel stage of the next call to \code{\link{make}}.
+in the first parallel stage of the next call to \code{\link[=make]{make()}}.
 }
 \description{
 Similar to the first stage in the output of
-\code{\link{parallel_stages}()}.
+\code{\link[=parallel_stages]{parallel_stages()}}.
 }
 \examples{
 \dontrun{
@@ -28,6 +28,6 @@ next_stage(config = config)    # "small" and "large"
 }
 }
 \seealso{
-\code{\link{parallel_stages}},
-\code{\link{make}}, \code{\link{drake_config}}
+\code{\link[=parallel_stages]{parallel_stages()}},
+\code{\link[=make]{make()}}, \code{\link[=drake_config]{drake_config()}}
 }

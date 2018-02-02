@@ -1,29 +1,29 @@
 #' @title List the targets that are out of date.
 #' @description Outdated targets will be rebuilt in the next
-#' \code{\link{make}()}.
-#' @details \code{outdated()} is sensitive to the alternative triggers
+#'   [make()].
+#' @details `outdated()` is sensitive to the alternative triggers
 #' described at
-#' \url{https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
-#' For example, even if \code{outdated(...)} shows everything up to date,
-#' \code{outdated(..., trigger = "always")} will show
+#' <https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers>. # nolint
+#' For example, even if `outdated(...)` shows everything up to date,
+#' `outdated(..., trigger = "always")` will show
 #' all targets out of date.
-#' You must use a fresh \code{config} argument with an up-to-date
-#' \code{config$targets} element that was never modified by hand.
-#' If needed, rerun \code{\link{drake_config}()} early and often.
-#' See the details in the help file for \code{\link{drake_config}()}.
+#' You must use a fresh `config` argument with an up-to-date
+#' `config$targets` element that was never modified by hand.
+#' If needed, rerun [drake_config()] early and often.
+#' See the details in the help file for [drake_config()].
 #' @export
-#' @seealso \code{\link{missed}}, \code{\link{drake_plan}},
-#' \code{\link{make}}, \code{\link{vis_drake_graph}}
+#' @seealso [missed()], [drake_plan()],
+#'   [make()], [vis_drake_graph()]
 #' @return Character vector of the names of outdated targets.
 #' @param config option internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced with \code{\link{drake_config}()}.
-#' You must use a fresh \code{config} argument with an up-to-date
-#' \code{config$targets} element that was never modified by hand.
-#' If needed, rerun \code{\link{drake_config}()} early and often.
-#' See the details in the help file for \code{\link{drake_config}()}.
+#'   \code{\link{make}(...)},
+#'   produced with [drake_config()].
+#'   You must use a fresh `config` argument with an up-to-date
+#'   `config$targets` element that was never modified by hand.
+#'   If needed, rerun [drake_config()] early and often.
+#'   See the details in the help file for [drake_config()].
 #' @param make_imports logical, whether to make the imports first.
-#' Set to \code{FALSE} to save some time and risk obsolete output.
+#'   Set to `FALSE` to save some time and risk obsolete output.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -59,16 +59,16 @@ outdated <-  function(config, make_imports = TRUE){
 }
 
 #' @title Report any import objects required by your drake_plan
-#' plan but missing from your workspace.
+#'   plan but missing from your workspace.
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export
-#' @seealso \code{\link{outdated}}
+#' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
 #'
 #' @param config internal runtime parameter list of
-#' \code{\link{make}(...)},
-#' produced by both \code{\link{drake_config}()} and \code{\link{make}()}.
+#'   \code{\link{make}(...)},
+#'   produced by both [drake_config()] and [make()].
 #'
 #' @examples
 #' \dontrun{

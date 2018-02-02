@@ -1,12 +1,12 @@
 #' @title Search up the file system for the nearest drake cache.
 #' @description Only works if the cache is a file system in a
-#' hidden folder named \code{.drake} (default).
-#' @seealso \code{\link{drake_plan}}, \code{\link{make}},
+#' hidden folder named `.drake` (default).
+#' @seealso [drake_plan()], [make()],
 #' @export
-#' @return File path of the nearest drake cache or \code{NULL}
-#' if no cache is found.
+#' @return File path of the nearest drake cache or `NULL`
+#'   if no cache is found.
 #' @param path starting path for search back for the cache.
-#' Should be a subdirectory of the drake project.
+#'   Should be a subdirectory of the drake project.
 #' @param directory Name of the folder containing the cache.
 #' @examples
 #' \dontrun{
@@ -33,15 +33,15 @@ find_cache <- function(
 }
 
 #' @title Search up the file system
-#' for the nearest root path of a drake project.
+#'   for the nearest root path of a drake project.
 #' @description Only works if the cache is a file system
-#' in a folder named \code{.drake} (default).
+#' in a folder named `.drake` (default).
 #' @export
-#' @seealso \code{\link{drake_plan}}, \code{\link{make}}
-#' @return File path of the nearest drake project or \code{NULL}
-#' if no drake project is found.
+#' @seealso [drake_plan()], [make()]
+#' @return File path of the nearest drake project or `NULL`
+#'   if no drake project is found.
 #' @param path starting path for search back for the project.
-#' Should be a subdirectory of the drake project.
+#'   Should be a subdirectory of the drake project.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

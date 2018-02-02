@@ -8,19 +8,19 @@ session(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
-\item{path}{Same as for \code{\link{drake_session}()}.}
+\item{path}{Same as for \code{\link[=drake_session]{drake_session()}}.}
 
-\item{search}{Same as for \code{\link{drake_session}()}.}
+\item{search}{Same as for \code{\link[=drake_session]{drake_session()}}.}
 
-\item{cache}{Same as for \code{\link{drake_session}()}.}
+\item{cache}{Same as for \code{\link[=drake_session]{drake_session()}}.}
 
-\item{verbose}{Same as for \code{\link{drake_session}()}.}
+\item{verbose}{Same as for \code{\link[=drake_session]{drake_session()}}.}
 }
 \value{
-Same as for \code{\link{drake_session}()}.
+Same as for \code{\link[=drake_session]{drake_session()}}.
 }
 \description{
-Use \code{\link{drake_session}()} instead
+Use \code{\link[=drake_session]{drake_session()}} instead
 }
 \details{
 Deprecated on 2017-11-12.
@@ -29,6 +29,6 @@ Deprecated on 2017-11-12.
 # See ?drake_session for examples.
 }
 \seealso{
-\code{\link{drake_session}}
+\code{\link[=drake_session]{drake_session()}}
 }
 \keyword{internal}

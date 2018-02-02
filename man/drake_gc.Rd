@@ -11,9 +11,9 @@ drake_gc(path = getwd(), search = TRUE, verbose = 1, cache = NULL,
 \item{path}{file path to the folder containing the cache.
 Yes, this is the parent directory containing the cache,
 not the cache itself, and it assumes the cache is in the
-`.drake` folder. If you are looking for a different cache
-with a known folder different from `.drake`, use
-the \code{\link{this_cache}()} function.}
+\code{.drake} folder. If you are looking for a different cache
+with a known folder different from \code{.drake}, use
+the \code{\link[=this_cache]{this_cache()}} function.}
 
 \item{search}{logical, whether to search back in the file system
 for the cache.}
@@ -32,7 +32,7 @@ running version of drake.}
 }
 \description{
 The cache is a key-value store.
-By default, the \code{\link{clean}()} function removes
+By default, the \code{\link[=clean]{clean()}} function removes
 values, but not keys.
 Garbage collection removes the remaining dangling files.
 }
@@ -51,5 +51,5 @@ drake_gc() # Do garbage collection on the cache.
 }
 }
 \seealso{
-\code{\link{clean}}
+\code{\link[=clean]{clean()}}
 }

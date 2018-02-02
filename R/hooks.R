@@ -1,12 +1,12 @@
-#' @title An example \code{hook} argument to
-#' \code{make()} that redirects output and error messages
+#' @title An example `hook` argument to
+#'   `make()` that redirects output and error messages
 #  to separate files.
 #' @description Most users do not need to micromanage hooks.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{message_sink_hook}},
-#' \code{\link{output_sink_hook}}
-#' @return A function that you can supply to the \code{hook} argument
-#' of \code{\link{make}()}.
+#' @seealso [make()], [message_sink_hook()],
+#'   [output_sink_hook()]
+#' @return A function that you can supply to the `hook` argument
+#'   of [make()].
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -33,14 +33,14 @@ silencer_hook <- function(code){
   )
 }
 
-#' @title An example \code{hook} argument to
-#' \code{make()} that redirects error messages to files.
+#' @title An example `hook` argument to
+#'   `make()` that redirects error messages to files.
 #' @description Most users do not need to micromanage hooks.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{silencer_hook}},
-#' \code{\link{output_sink_hook}}
-#' @return A function that you can supply to the \code{hook} argument
-#' of \code{\link{make}()}.
+#' @seealso [make()], [silencer_hook()],
+#'   [output_sink_hook()]
+#' @return A function that you can supply to the `hook` argument
+#'   of [make()].
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -68,14 +68,14 @@ message_sink_hook <- function(code){
   force(code)
 }
 
-#' @title An example \code{hook} argument to
-#' \code{make()} that redirects output messages to files.
+#' @title An example `hook` argument to
+#'   `make()` that redirects output messages to files.
 #' @description Most users do not need to micromanage hooks.
 #' @export
-#' @seealso \code{\link{make}}, \code{\link{silencer_hook}},
-#' \code{\link{message_sink_hook}}
-#' @return A function that you can supply to the \code{hook} argument
-#' of \code{\link{make}()}.
+#' @seealso [make()], [silencer_hook()],
+#'   [message_sink_hook()]
+#' @return A function that you can supply to the `hook` argument
+#'   of [make()].
 #' @param code code to run to build the target.
 #' @examples \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -101,15 +101,15 @@ output_sink_hook <- function(code){
   force(code)
 }
 
-#' @title A \code{hook} argument to \code{\link{make}()}
-#' for which no targets get built and no imports get processed.
-#' @description This hook forces \code{\link{make}()}
-#' to essentially do nothing.
+#' @title A `hook` argument to [make()]
+#'   for which no targets get built and no imports get processed.
+#' @description This hook forces [make()]
+#'   to essentially do nothing.
 #' @export
-#' @return A function that you can supply to the \code{hook} argument
-#' of \code{\link{make}()}.
+#' @return A function that you can supply to the `hook` argument
+#'   of [make()].
 #' @param code Placeholder for the code to build a target/import.
-#' For \code{empty_hook}, this code does not actually get executed.
+#'   For `empty_hook()`, this code does not actually get executed.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -123,11 +123,11 @@ empty_hook <- function(code){
   invisible()
 }
 
-#' @title Default \code{hook} argument to \code{\link{make}()}.
+#' @title Default `hook` argument to [make()].
 #' @description Most users do not need to micromanage hooks.
 #' @export
-#' @return A function that you can supply to the \code{hook} argument
-#' of \code{\link{make}()}.
+#' @return A function that you can supply to the `hook` argument
+#'   of [make()].
 #' @param code Placeholder for the code to build a target/import.
 #' @examples
 #' \dontrun{

@@ -11,12 +11,12 @@ default_recipe_command()
 A character scalar with the default recipe command.
 }
 \description{
-See the help file of \code{\link{Makefile_recipe}}
+See the help file of \code{\link[=Makefile_recipe]{Makefile_recipe()}}
 for details and examples.
 }
 \examples{
 default_recipe_command()
 }
 \seealso{
-\code{\link{Makefile_recipe}}
+\code{\link[=Makefile_recipe]{Makefile_recipe()}}
 }

@@ -11,7 +11,7 @@ drake_batchtools_tmpl_file(example = drake::drake_examples(), to = getwd(),
 \arguments{
 \item{example}{Name of the drake example
 from which to take the template file.
-Must be listed in \code{\link{drake_examples}()}.}
+Must be listed in \code{\link[=drake_examples]{drake_examples()}}.}
 
 \item{to}{Character vector, where to write the file.}
 
@@ -45,6 +45,6 @@ library(future.batchtools)
 }
 }
 \seealso{
-\code{\link{drake_examples}}, \code{\link{drake_example}},
-\code{\link{shell_file}}
+\code{\link[=drake_examples]{drake_examples()}}, \code{\link[=drake_example]{drake_example()}},
+\code{\link[=shell_file]{shell_file()}}
 }

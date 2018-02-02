@@ -3,7 +3,7 @@
 \name{drake_config}
 \alias{drake_config}
 \title{Create the internal runtime parameter list
-used internally in \code{\link{make}()}.}
+used internally in \code{\link[=make]{make()}}.}
 \usage{
 drake_config(plan = drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
@@ -19,45 +19,45 @@ drake_config(plan = drake_plan(), targets = drake::possible_targets(plan),
   lazy_load = FALSE, session_info = TRUE, cache_log_file = NULL)
 }
 \arguments{
-\item{plan}{same as for \code{\link{make}}}
+\item{plan}{same as for \code{\link[=make]{make()}}}
 
-\item{targets}{same as for \code{\link{make}}}
+\item{targets}{same as for \code{\link[=make]{make()}}}
 
-\item{envir}{same as for \code{\link{make}}}
+\item{envir}{same as for \code{\link[=make]{make()}}}
 
-\item{verbose}{same as for \code{\link{make}}}
+\item{verbose}{same as for \code{\link[=make]{make()}}}
 
-\item{hook}{same as for \code{\link{make}}}
+\item{hook}{same as for \code{\link[=make]{make()}}}
 
-\item{cache}{same as for \code{\link{make}}}
+\item{cache}{same as for \code{\link[=make]{make()}}}
 
-\item{fetch_cache}{same as for \code{\link{make}}}
+\item{fetch_cache}{same as for \code{\link[=make]{make()}}}
 
-\item{parallelism}{same as for \code{\link{make}}}
+\item{parallelism}{same as for \code{\link[=make]{make()}}}
 
-\item{jobs}{same as for \code{\link{make}}}
+\item{jobs}{same as for \code{\link[=make]{make()}}}
 
-\item{packages}{same as for \code{\link{make}}}
+\item{packages}{same as for \code{\link[=make]{make()}}}
 
-\item{prework}{same as for \code{\link{make}}}
+\item{prework}{same as for \code{\link[=make]{make()}}}
 
-\item{prepend}{same as for \code{\link{make}}}
+\item{prepend}{same as for \code{\link[=make]{make()}}}
 
-\item{command}{same as for \code{\link{make}}}
+\item{command}{same as for \code{\link[=make]{make()}}}
 
-\item{args}{same as for \code{\link{make}}}
+\item{args}{same as for \code{\link[=make]{make()}}}
 
-\item{recipe_command}{same as for \code{\link{make}}}
+\item{recipe_command}{same as for \code{\link[=make]{make()}}}
 
-\item{timeout}{same as for \code{\link{make}}}
+\item{timeout}{same as for \code{\link[=make]{make()}}}
 
-\item{cpu}{same as for \code{\link{make}}}
+\item{cpu}{same as for \code{\link[=make]{make()}}}
 
-\item{elapsed}{same as for \code{\link{make}}}
+\item{elapsed}{same as for \code{\link[=make]{make()}}}
 
-\item{retries}{same as for \code{\link{make}}}
+\item{retries}{same as for \code{\link[=make]{make()}}}
 
-\item{force}{same as for \code{\link{make}}}
+\item{force}{same as for \code{\link[=make]{make()}}}
 
 \item{log_progress}{logical, whether to clear
 the cached progress of the targets readable by}
@@ -65,7 +65,7 @@ the cached progress of the targets readable by}
 \item{graph}{igraph object representing the workflow plan network.
 Overrides \code{skip_imports}.}
 
-\item{trigger}{same as for \code{\link{make}}}
+\item{trigger}{same as for \code{\link[=make]{make()}}}
 
 \item{imports_only}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
@@ -79,30 +79,30 @@ This argument is overridden if you supply your own \code{graph} argument.}
 \item{skip_safety_checks}{logical, whether to skip the safety checks
 on your workflow to save time. Use at your own peril.}
 
-\item{lazy_load}{same as for \code{\link{make}}}
+\item{lazy_load}{same as for \code{\link[=make]{make()}}}
 
-\item{session_info}{same as for \code{\link{make}}}
+\item{session_info}{same as for \code{\link[=make]{make()}}}
 
-\item{cache_log_file}{same as for \code{\link{make}}}
+\item{cache_log_file}{same as for \code{\link[=make]{make()}}}
 }
 \value{
 The master internal configuration list of a project.
 }
 \description{
 This configuration list
-is also required for functions such as \code{\link{outdated}()} and
-\code{\link{vis_drake_graph}()}. It is meant to be specific to
-a single call to \code{\link{make}()}, and you should not modify
-it by hand afterwards. If you later plan to call \code{\link{make}()}
+is also required for functions such as \code{\link[=outdated]{outdated()}} and
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}. It is meant to be specific to
+a single call to \code{\link[=make]{make()}}, and you should not modify
+it by hand afterwards. If you later plan to call \code{\link[=make]{make()}}
 with different arguments (especially \code{targets}),
 you should refresh the config list with another call to
-\code{\link{drake_config}()}. For changes to the
+\code{\link[=drake_config]{drake_config()}}. For changes to the
 \code{targets} argument
 specifically, it is important to recompute the config list
 to make sure the internal workflow network has all the targets you need.
 Modifying the \code{targets} element afterwards will have no effect
 and it could lead to false negative results from
-\code{\link{outdated}()}
+\code{\link[=outdated]{outdated()}}
 }
 \examples{
 \dontrun{
@@ -124,6 +124,6 @@ dataframes_graph(config = con)
 }
 }
 \seealso{
-\code{\link{make_with_config}}, \code{\link{make}},
-\code{\link{drake_plan}}, \code{\link{vis_drake_graph}}
+\code{\link[=make_with_config]{make_with_config()}}, \code{\link[=make]{make()}},
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }

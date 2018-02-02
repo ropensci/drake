@@ -2,21 +2,21 @@
 % Please edit documentation in R/hooks.R
 \name{empty_hook}
 \alias{empty_hook}
-\title{A \code{hook} argument to \code{\link{make}()}
+\title{A \code{hook} argument to \code{\link[=make]{make()}}
 for which no targets get built and no imports get processed.}
 \usage{
 empty_hook(code)
 }
 \arguments{
 \item{code}{Placeholder for the code to build a target/import.
-For \code{empty_hook}, this code does not actually get executed.}
+For \code{empty_hook()}, this code does not actually get executed.}
 }
 \value{
 A function that you can supply to the \code{hook} argument
-of \code{\link{make}()}.
+of \code{\link[=make]{make()}}.
 }
 \description{
-This hook forces \code{\link{make}()}
+This hook forces \code{\link[=make]{make()}}
 to essentially do nothing.
 }
 \examples{

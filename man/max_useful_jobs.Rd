@@ -10,25 +10,25 @@ max_useful_jobs(config, imports = c("files", "all", "none"),
 }
 \arguments{
 \item{config}{internal configuration list of \code{\link{make}(...)},
-produced also with \code{\link{drake_config}()}.}
+produced also with \code{\link[=drake_config]{drake_config()}}.}
 
 \item{imports}{Set the \code{imports} argument to change your
 assumptions about how fast objects/files are imported.
 Possible values:
 \itemize{
- \item{'all'}{: Factor all imported files/objects into
-   calculating the max useful number of jobs.
-   Note: this is not appropriate for
-   \code{make(.., parallelism = 'Makefile')} because imports
-   are processed sequentially for the Makefile option.}
- \item{'files'}{: Factor all imported files into the calculation,
-   but ignore all the other imports.}
- \item{'none'}{: Ignore all the imports and just focus on the max number
-   of useful jobs for parallelizing targets.}
+\item{'all'}{: Factor all imported files/objects into
+calculating the max useful number of jobs.
+Note: this is not appropriate for
+\code{make(.., parallelism = 'Makefile')} because imports
+are processed sequentially for the Makefile option.}
+\item{'files'}{: Factor all imported files into the calculation,
+but ignore all the other imports.}
+\item{'none'}{: Ignore all the imports and just focus on the max number
+of useful jobs for parallelizing targets.}
 }}
 
 \item{from_scratch}{logical, whether to assume
-the next \code{\link{make}()} will run from scratch
+the next \code{\link[=make]{make()}} will run from scratch
 so that all targets are attempted.}
 }
 \value{
@@ -91,6 +91,6 @@ max_useful_jobs(config, from_scratch = TRUE, imports = 'none') # 8
 }
 }
 \seealso{
-\code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}},
-\code{\link{shell_file}}, \code{\link{drake_config}()}
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}, \code{\link[=build_drake_graph]{build_drake_graph()}},
+\code{\link[=shell_file]{shell_file()}}, \code{\link[=drake_config]{drake_config()}}
 }

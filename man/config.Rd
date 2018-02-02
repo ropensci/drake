@@ -17,57 +17,57 @@ config(plan = drake_plan(), targets = drake::possible_targets(plan),
   skip_imports = FALSE)
 }
 \arguments{
-\item{plan}{same as for \code{\link{make}}}
+\item{plan}{same as for \code{\link[=make]{make()}}}
 
-\item{targets}{same as for \code{\link{make}}}
+\item{targets}{same as for \code{\link[=make]{make()}}}
 
-\item{envir}{same as for \code{\link{make}}}
+\item{envir}{same as for \code{\link[=make]{make()}}}
 
-\item{verbose}{same as for \code{\link{make}}}
+\item{verbose}{same as for \code{\link[=make]{make()}}}
 
-\item{hook}{same as for \code{\link{make}}}
+\item{hook}{same as for \code{\link[=make]{make()}}}
 
-\item{cache}{same as for \code{\link{make}}}
+\item{cache}{same as for \code{\link[=make]{make()}}}
 
-\item{parallelism}{same as for \code{\link{make}}}
+\item{parallelism}{same as for \code{\link[=make]{make()}}}
 
-\item{jobs}{same as for \code{\link{make}}}
+\item{jobs}{same as for \code{\link[=make]{make()}}}
 
-\item{packages}{same as for \code{\link{make}}}
+\item{packages}{same as for \code{\link[=make]{make()}}}
 
-\item{prework}{same as for \code{\link{make}}}
+\item{prework}{same as for \code{\link[=make]{make()}}}
 
-\item{prepend}{same as for \code{\link{make}}}
+\item{prepend}{same as for \code{\link[=make]{make()}}}
 
-\item{command}{same as for \code{\link{make}}}
+\item{command}{same as for \code{\link[=make]{make()}}}
 
-\item{args}{same as for \code{\link{make}}}
+\item{args}{same as for \code{\link[=make]{make()}}}
 
-\item{recipe_command}{same as for \code{\link{make}}}
+\item{recipe_command}{same as for \code{\link[=make]{make()}}}
 
-\item{timeout}{same as for \code{\link{make}}}
+\item{timeout}{same as for \code{\link[=make]{make()}}}
 
-\item{cpu}{same as for \code{\link{make}}}
+\item{cpu}{same as for \code{\link[=make]{make()}}}
 
-\item{elapsed}{same as for \code{\link{make}}}
+\item{elapsed}{same as for \code{\link[=make]{make()}}}
 
-\item{retries}{same as for \code{\link{make}}}
+\item{retries}{same as for \code{\link[=make]{make()}}}
 
-\item{force}{same as for \code{\link{make}}}
+\item{force}{same as for \code{\link[=make]{make()}}}
 
-\item{log_progress}{same as for \code{\link{drake_config}}}
+\item{log_progress}{same as for \code{\link[=drake_config]{drake_config()}}}
 
-\item{graph}{same as for \code{\link{drake_config}}}
+\item{graph}{same as for \code{\link[=drake_config]{drake_config()}}}
 
-\item{trigger}{same as for \code{\link{make}}}
+\item{trigger}{same as for \code{\link[=make]{make()}}}
 
-\item{skip_imports}{same as for \code{\link{drake_config}}}
+\item{skip_imports}{same as for \code{\link[=drake_config]{drake_config()}}}
 }
 \value{
 The master internal configuration list of a project.
 }
 \description{
-Use \code{\link{drake_config}()} instead.
+Use \code{\link[=drake_config]{drake_config()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -76,8 +76,8 @@ Deprecated on 2017-11-12.
 # See ?drake_config for the examples.
 }
 \seealso{
-\code{\link{drake_config}}
+\code{\link[=drake_config]{drake_config()}}
 
-\code{\link{drake_config}}
+\code{\link[=drake_config]{drake_config()}}
 }
 \keyword{internal}

@@ -27,5 +27,5 @@ drake_example("slurm")
 }
 }
 \seealso{
-\code{\link{drake_example}}, \code{\link{make}}
+\code{\link[=drake_example]{drake_example()}}, \code{\link[=make]{make()}}
 }

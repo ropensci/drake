@@ -10,15 +10,15 @@ check_plan(plan = drake_plan(), targets = drake::possible_targets(plan),
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
-\code{\link{drake_plan}()}.}
+\code{\link[=drake_plan]{drake_plan()}}.}
 
 \item{targets}{character vector of targets to make}
 
 \item{envir}{environment containing user-defined functions}
 
-\item{cache}{optional drake cache. See \code{\link{new_cache}()}}
+\item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}}
 
-\item{verbose}{same as for \code{\link{make}()}}
+\item{verbose}{same as for \code{\link[=make]{make()}}}
 
 \item{jobs}{number of jobs/workers for light parallelism}
 }
@@ -43,5 +43,5 @@ suppressWarnings(check_plan(my_plan))
 }
 }
 \seealso{
-\code{ink{drake_plan}}, \code{\link{make}}
+\code{ink{drake_plan}}, \code{\link[=make]{make()}}
 }

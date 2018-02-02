@@ -83,3 +83,4 @@ Suggests:
   tibble
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)

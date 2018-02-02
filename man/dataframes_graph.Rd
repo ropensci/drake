@@ -3,7 +3,7 @@
 \name{dataframes_graph}
 \alias{dataframes_graph}
 \title{Create the underlying node and edge data frames
-behind \code{\link{vis_drake_graph}()}.}
+behind \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
 \usage{
 dataframes_graph(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, build_times = TRUE, digits = 3,
@@ -11,8 +11,8 @@ dataframes_graph(config, from = NULL, mode = c("out", "in", "all"),
   from_scratch = FALSE, make_imports = TRUE)
 }
 \arguments{
-\item{config}{a \code{\link{drake_config}()} configuration list.
-You can get one as a return value from \code{\link{make}()} as well.}
+\item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
+You can get one as a return value from \code{\link[=make]{make()}} as well.}
 
 \item{from}{Optional collection of target/import names.
 If \code{from} is nonempty,
@@ -40,9 +40,9 @@ Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
 edges will drop from the graph.=}
 
-\item{build_times}{logical, whether to show the \code{\link{build_times}()}
+\item{build_times}{logical, whether to show the \code{\link[=build_times]{build_times()}}
 of the targets and imports, if available.
-These are just elapsed times from \code{system.time()}.}
+These are just elapsed times from \code{\link[=system.time]{system.time()}}.}
 
 \item{digits}{number of digits for rounding the build times}
 
@@ -62,9 +62,9 @@ indicates.)}
 \item{font_size}{numeric, font size of the node labels in the graph}
 
 \item{from_scratch}{logical, whether to assume all the targets
-will be made from scratch on the next \code{\link{make}()}.
+will be made from scratch on the next \code{\link[=make]{make()}}.
 Makes all targets outdated, but keeps information about
-build progress in previous \code{\link{make}()}s.}
+build progress in previous \code{\link[=make]{make()}}s.}
 
 \item{make_imports}{logical, whether to make the imports first.
 Set to \code{FALSE} to increase speed and risk using obsolete information.}
@@ -105,5 +105,5 @@ visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
 }
 }
 \seealso{
-\code{\link{vis_drake_graph}}, \code{\link{build_drake_graph}}
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}, \code{\link[=build_drake_graph]{build_drake_graph()}}
 }

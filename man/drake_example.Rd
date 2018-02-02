@@ -10,7 +10,7 @@ drake_example(example = drake::drake_examples(), to = getwd(),
 \arguments{
 \item{example}{name of the example.
 To see all the available example names,
-run \code{\link{drake_examples}}.}
+run \code{\link[=drake_examples]{drake_examples()}}.}
 
 \item{to}{Character scalar, file path, where
 to write the folder containing the code files for the example.}
@@ -28,7 +28,7 @@ Copy a folder of code files for a
 drake example to the current working directory.
 Call \code{drake_example('basic')} to generate the code files from the
 quickstart vignette: \code{vignette('quickstart')}.
-To see the names of all the examples, run \code{\link{drake_examples}}.
+To see the names of all the examples, run \code{\link[=drake_examples]{drake_examples()}}.
 }
 \examples{
 \dontrun{
@@ -42,6 +42,6 @@ drake_example("slurm")
 }
 }
 \seealso{
-\code{\link{drake_examples}}, \code{\link{make}},
-\code{\link{shell_file}}, \code{\link{drake_batchtools_tmpl_file}}
+\code{\link[=drake_examples]{drake_examples()}}, \code{\link[=make]{make()}},
+\code{\link[=shell_file]{shell_file()}}, \code{\link[=drake_batchtools_tmpl_file]{drake_batchtools_tmpl_file()}}
 }

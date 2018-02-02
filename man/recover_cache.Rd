@@ -14,12 +14,12 @@ recover_cache(path = drake::default_cache_path(),
 \item{path}{file path of the cache}
 
 \item{short_hash_algo}{short hash algorithm for the cache.
-See \code{\link{default_short_hash_algo}()} and
-\code{\link{make}()}}
+See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} and
+\code{\link[=make]{make()}}}
 
 \item{long_hash_algo}{long hash algorithm for the cache.
-See \code{\link{default_long_hash_algo}()} and
-\code{\link{make}()}}
+See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} and
+\code{\link[=make]{make()}}}
 
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the
@@ -29,7 +29,7 @@ running version of drake.}
 
 \item{fetch_cache}{character vector containing lines of code.
 The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{storr_rds()} or \code{storr_dbi()},
+with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
 but customized.}
 }
 \value{
@@ -37,7 +37,7 @@ A drake/storr cache.
 }
 \description{
 Does not work with
-in-memory caches such as \code{storr_environment()}.
+in-memory caches such as \code{\link[=storr_environment]{storr_environment()}}.
 }
 \examples{
 \dontrun{
@@ -50,6 +50,6 @@ x <- recover_cache(".drake") # Recover the project's storr cache.
 }
 }
 \seealso{
-\code{\link{new_cache}}, \code{\link{this_cache}},
-\code{\link{get_cache}}
+\code{\link[=new_cache]{new_cache()}}, \code{\link[=this_cache]{this_cache()}},
+\code{\link[=get_cache]{get_cache()}}
 }

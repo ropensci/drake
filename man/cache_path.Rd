@@ -16,7 +16,7 @@ File path where the cache is stored.
 }
 \description{
 Currently only works with
-\code{storr::storr_rds} file system caches.
+\code{\link[storr:storr_rds]{storr::storr_rds()}} file system caches.
 }
 \examples{
 \dontrun{

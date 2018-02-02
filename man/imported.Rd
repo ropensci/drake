@@ -22,7 +22,7 @@ project root or a subdirectory of the project.}
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.}
 
-\item{cache}{drake cache. See \code{\link{new_cache}()}.
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{whether to print console messages}
@@ -34,8 +34,8 @@ Character vector naming the imports in the cache.
 }
 \description{
 An import is a non-target object processed
-by \code{\link{make}()}. Targets in the workflow
-plan data frame (see \code{\link{drake_config}()}
+by \code{\link[=make]{make()}}. Targets in the workflow
+plan data frame (see \code{\link[=drake_config]{drake_config()}}
 may depend on imports.
 }
 \examples{
@@ -49,6 +49,6 @@ imported() # List all the imported objects/files in the cache.
 }
 }
 \seealso{
-\code{\link{cached}}, \code{\link{loadd}},
-\code{\link{built}}
+\code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}},
+\code{\link[=built]{built()}}
 }

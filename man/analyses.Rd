@@ -7,15 +7,15 @@
 analyses(plan, datasets)
 }
 \arguments{
-\item{plan}{Same as for \code{\link{plan_analyses}()}.}
+\item{plan}{Same as for \code{\link[=plan_analyses]{plan_analyses()}}.}
 
-\item{datasets}{Same as for \code{\link{plan_analyses}()}.}
+\item{datasets}{Same as for \code{\link[=plan_analyses]{plan_analyses()}}.}
 }
 \value{
-The same return value as \code{\link{plan_analyses}()}.
+The same return value as \code{\link[=plan_analyses]{plan_analyses()}}.
 }
 \description{
-Use \code{\link{plan_analyses}()} instead.
+Use \code{\link[=plan_analyses]{plan_analyses()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
@@ -24,6 +24,6 @@ Deprecated on 2017-11-12.
 # See ?plan_analyses for examples.
 }
 \seealso{
-\code{\link{plan_analyses}}
+\code{\link[=plan_analyses]{plan_analyses()}}
 }
 \keyword{internal}

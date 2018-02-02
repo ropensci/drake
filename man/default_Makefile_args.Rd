@@ -3,7 +3,7 @@
 \name{default_Makefile_args}
 \alias{default_Makefile_args}
 \title{Return the default value of the
-\code{args} argument to \code{\link{make}()}.}
+\code{args} argument to \code{\link[=make]{make()}}.}
 \usage{
 default_Makefile_args(jobs, verbose)
 }
@@ -18,7 +18,7 @@ default_Makefile_args(jobs, verbose)
 \description{
 For \code{make(..., parallelism = "Makefile")},
 this function configures the default
-arguments to \code{\link{system2}()}.
+arguments to \code{\link[=system2]{system2()}}.
 It is an internal function, and most users do not need to
 worry about it.
 }
