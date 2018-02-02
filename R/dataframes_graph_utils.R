@@ -240,7 +240,7 @@ shrink_levels <- function(nodes){
 split_levels <- function(old_levels, max_reps){
   n_nodes <- length(old_levels)
   n_levels <- floor(n_nodes / max_reps) + (n_nodes %% max_reps > 0)
-  index <- seq_along(old_levels)
+  index <- seq_along(along.with = old_levels)
   new_levels <- split(index, sort(index %% n_levels)) %>%
     lapply(FUN = function(substage){
       rep(max(substage), length(substage))

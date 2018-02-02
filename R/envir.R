@@ -3,7 +3,7 @@ assign_to_envir <- function(targets, values, config){
     return()
   }
   lightly_parallelize(
-    X = seq_along(targets),
+    X = seq_along(along.with = targets),
     FUN = assign_to_envir_single,
     jobs = config$jobs,
     targets = targets,

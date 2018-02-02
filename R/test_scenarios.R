@@ -86,7 +86,7 @@ test_scenarios <- function(
   ...
 ){
   scenarios <- testing_scenarios()
-  for (index in seq_along(scenario_names)){
+  for (index in seq_along(along.with = scenario_names)){
     scenario_names[index] <- match.arg(
       arg = scenario_names[index],
       choices = testing_scenario_names()
