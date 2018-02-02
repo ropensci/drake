@@ -305,49 +305,6 @@ read_drake_config <- function(
   out
 }
 
-#' @title Read the workflow plan
-#'   from your last attempted call to [make()].
-#' @description Uses the cache.
-#' @seealso [read_drake_config()]
-#' @export
-#' @return A workflow plan data frame.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
-#' @param verbose whether to print console messages
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
-#' make(my_plan) # Run the project, build the targets.
-#' read_drake_plan() # Retrieve the workflow plan data frame from the cache.
-#' })
-#' }
-read_drake_plan <- function(
-  path = getwd(),
-  search = TRUE,
-  cache = NULL,
-  verbose = TRUE
-){
-  if (is.null(cache)){
-    cache <- get_cache(path = path, search = search, verbose = verbose)
-  }
-  if (is.null(cache)){
-    stop("cannot find drake cache.")
-  }
-  if (cache$exists(key = "plan", namespace = "config")){
-    cache$get(key = "plan", namespace = "config")
-  } else {
-    drake_plan()
-  }
-}
-
 #' @title Read the igraph dependency network
 #'   from your last attempted call to [make()].
 #' @description For more user-friendly graphing utilities,
@@ -482,6 +439,49 @@ read_drake_meta <- function(
   out
 }
 
+#' @title Read the workflow plan
+#'   from your last attempted call to [make()].
+#' @description Uses the cache.
+#' @seealso [read_drake_config()]
+#' @export
+#' @return A workflow plan data frame.
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
+#' @param path Root directory of the drake project,
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
+#' @param search logical. If `TRUE`, search parent directories
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
+#' @param verbose whether to print console messages
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_basic_example() # Get the code with drake_example("basic").
+#' make(my_plan) # Run the project, build the targets.
+#' read_drake_plan() # Retrieve the workflow plan data frame from the cache.
+#' })
+#' }
+read_drake_plan <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = TRUE
+){
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  if (cache$exists(key = "plan", namespace = "config")){
+    cache$get(key = "plan", namespace = "config")
+  } else {
+    drake_plan()
+  }
+}
+
 #' @title Read the pseudo-random number generator seed of the project.
 #' @description When a project is created with [make()]
 #' or [drake_config()], the project's pseudo-random number generator
@@ -503,24 +503,37 @@ read_drake_meta <- function(
 #'   current working directory only.
 #' @param verbose whether to print console messages
 #' @examples
-#' cache <- storr::storr_environment() # For the examples.
+#' cache <- storr::storr_environment() # Just for the examples.
 #' my_plan <- drake_plan(
 #'   target1 = sqrt(1234),
 #'   target2 = rnorm(n = 1, mean = target1)
 #' )
-#' digest::digest(.Random.seed) # Take the fingerprint of the current seed.
+#' tmp <- runif(1) # Make sure your R session has a pseudo-random number generator seed.
+#' digest::digest(.Random.seed) # Take the fingerprint of the current R session's seed.
 #' make(my_plan, cache = cache) # Run the project, build the targets.
-#' digest::digest(.Random.seed) # make() protects your R session's seed from being changed.
-#' # Drake takes the seed from the R session that originally created the cache.
-#' digest::digest(read_drake_seed(cache = cache))
-#' readd(target2, cache = cache) # Here is some randomly-generated data.
-#' clean(target2, cache = cache) # Oops, I removed the data.
-#' x <- runif(1) # Maybe I also changed the R session's seed.
-#' digest::digest(.Random.seed) # Different from before.
+#' digest::digest(.Random.seed) # Your session's seed did not change.
+#' # Drake uses a hard-coded seed if you do not supply one.
+#' read_drake_seed(cache = cache)
+#' readd(target2, cache = cache) # Randomly-generated target data.
+#' clean(target2, cache = cache) # Oops, I removed the data!
+#' tmp <- runif(1) # Maybe the R session's seed also changed.
 #' make(my_plan, cache = cache) # Rebuild target2.
 #' # Same as before:
-#' digest::digest(read_drake_seed(cache = cache))
-#' digest::digest(.Random.seed)
+#' read_drake_seed(cache = cache)
+#' readd(target2, cache = cache)
+#' # You can also supply a seed.
+#' # If your project already exists, it must agree with the project's
+#' # preexisting seed (default: 0)
+#' clean(target2, cache = cache)
+#' make(my_plan, cache = cache, seed = 0)
+#' read_drake_seed(cache = cache)
+#' readd(target2, cache = cache)
+#' # If you want to supply a different seed than 0,
+#' # you need to destroy the cache and start over first.
+#' clean(destroy = TRUE, cache = cache)
+#' cache <- storr::storr_environment() # Just for the examples.
+#' make(my_plan, cache = cache, seed = 1234)
+#' read_drake_seed(cache = cache)
 #' readd(target2, cache = cache)
 read_drake_seed <- function(
   path = getwd(),
