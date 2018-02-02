@@ -18,43 +18,7 @@
 #' @return The master internal configuration list of a project.
 #' @seealso [make_with_config()], [make()],
 #'   [drake_plan()], [vis_drake_graph()]
-#' @param plan same as for [make()]
-#' @param targets same as for [make()]
-#' @param envir same as for [make()]
-#' @param verbose same as for [make()]
-#' @param hook same as for [make()]
-#' @param parallelism same as for [make()]
-#' @param jobs same as for [make()]
-#' @param packages same as for [make()]
-#' @param prework same as for [make()]
-#' @param prepend same as for [make()]
-#' @param command same as for [make()]
-#' @param args same as for [make()]
-#' @param recipe_command same as for [make()]
-#' @param cache same as for [make()]
-#' @param fetch_cache same as for [make()]
-#' @param timeout same as for [make()]
-#' @param cpu same as for [make()]
-#' @param elapsed same as for [make()]
-#' @param retries same as for [make()]
-#' @param force same as for [make()]
-#' @param log_progress logical, whether to clear
-#'   the cached progress of the targets readable by
-#' @param graph igraph object representing the workflow plan network.
-#'   Overrides `skip_imports`.
-#' @param trigger same as for [make()]
-#' @param imports_only logical, whether to skip building the targets
-#'   in `plan` and just import objects and files.
-#' @param skip_imports logical, whether to totally neglect to
-#'   process the imports and jump straight to the targets. This can be useful
-#'   if your imports are massive and you just want to test your project,
-#'   but it is bad practice for reproducible data analysis.
-#'   This argument is overridden if you supply your own `graph` argument.
-#' @param skip_safety_checks logical, whether to skip the safety checks
-#'   on your workflow to save time. Use at your own peril.
-#' @param lazy_load same as for [make()]
-#' @param session_info same as for [make()]
-#' @param cache_log_file same as for [make()]
+#' @inheritParams make
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
