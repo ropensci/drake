@@ -1,6 +1,6 @@
 choose_seed <- function(supplied, cache){
   previous <- get_previous_seed(cache = cache)
-  seed_conflict <- 
+  seed_conflict <-
     !is.null(previous) &&
     !is.null(supplied) &&
     !identical(previous, supplied)

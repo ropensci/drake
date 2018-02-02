@@ -15,7 +15,7 @@ test_with_dir("Random targets are reproducible", {
     mz = mean(z)
   )
   # Should not change the session's seed
-  seed0 <- .Random.seed
+  seed0 <- .Random.seed # nolint
   con <- make(
     data,
     envir = env,
@@ -24,7 +24,7 @@ test_with_dir("Random targets are reproducible", {
     verbose = FALSE,
     session_info = FALSE
   )
-  expect_true(identical(seed0, .Random.seed))
+  expect_true(identical(seed0, .Random.seed)) # nolint
   old_x <- readd(x)
   old_y <- readd(y)
   old_z <- readd(z)
@@ -86,7 +86,7 @@ test_with_dir("Random targets are reproducible", {
   expect_true(identical(con4$seed, con$seed))
   expect_true(identical(readd(y), old_y))
   expect_true(identical(readd(my), old_my))
-  
+
   # Change the supplied seed, destroy the cache,
   # and check that the results are different.
   tmp <- runif(1)
@@ -108,7 +108,7 @@ test_with_dir("Random targets are reproducible", {
   expect_false(identical(readd(mx), old_mx))
   expect_false(identical(readd(my), old_my))
   expect_false(identical(readd(mz), old_mz))
-  
+
   # Cannot supply a conflicting seed.
   expect_error(
     make(
