@@ -89,7 +89,7 @@ test_with_dir("analyses and summaries", {
     regression1 = reg1(dataset__),
     regression2 = reg2(dataset__)
   )
-  analyses <- plan_analyses(methods, data = datasets)
+  analyses <- plan_analyses(methods, datasets = datasets)
   x <- data.frame(
     target = c(
       "regression1_small",
@@ -107,7 +107,7 @@ test_with_dir("analyses and summaries", {
   expect_equal(analyses, x)
 
   m2 <- drake_plan(regression1 = reg1(n), regression2 = reg2(n))
-  expect_equal(plan_analyses(m2, data = datasets), m2)
+  expect_equal(plan_analyses(m2, datasets = datasets), m2)
 
   no_analyses <- drake_plan(
     summ = summary(dataset__),

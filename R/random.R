@@ -1,3 +1,11 @@
+get_previous_seed <- function(cache){
+  if (cache$exists(key = "seed", namespace = "config")){
+    cache$get(key = "seed", namespace = "config")
+  } else {
+    get_valid_seed()
+  }
+}
+
 # From withr
 get_valid_seed <- function(seed = get_seed()){
   if (is.null(seed)) {

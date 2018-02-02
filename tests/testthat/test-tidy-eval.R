@@ -5,12 +5,11 @@ test_with_dir("drake_plan does tidy eval in `...` argument", {
   my_variable <- 5
   plan1 <- drake_plan(
     a = !!my_variable,
-    b = !!my_variable + 1,
     list = c(d = "!!my_variable")
   )
   plan2 <- data.frame(
-    target = c("a", "b", "d"),
-    command = c("5", "6", "!!my_variable"),
+    target = c("a", "d"),
+    command = c("5", "!!my_variable"),
     stringsAsFactors = FALSE
   )
   expect_equal(plan1, plan2)

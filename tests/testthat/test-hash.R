@@ -35,17 +35,17 @@ test_with_dir("stress test file hash", {
 test_with_dir("stress test hashing decisions", {
   file <- "input.rds"
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
+    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
+    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
+    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
+    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
+    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
+    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
 })
 
 test_with_dir("more stress testing of hashing decisions", {
@@ -53,15 +53,15 @@ test_with_dir("more stress testing of hashing decisions", {
   saveRDS(1, file = file)
   expect_true(file.exists(file))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
+    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
+    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
+    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
   expect_true(should_rehash_file(
-    file = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
+    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
   expect_false(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
+    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
   expect_false(should_rehash_file(
-    file = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
+    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
 })

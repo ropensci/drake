@@ -102,9 +102,9 @@ test_with_dir("basic example works", {
   )
   suppressWarnings(con <- drake_config(plan = x))
   for (target in c("a", "d")){
-    expect_true("small" %in% dependencies(target = target, config = con))
+    expect_true("small" %in% dependencies(targets = target, config = con))
   }
   for (target in c("b", "c", "e", "f")){
-    expect_false("small" %in% dependencies(target = target, config = con))
+    expect_false("small" %in% dependencies(targets = target, config = con))
   }
 })

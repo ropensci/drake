@@ -108,7 +108,6 @@ drake_config <- function(
   cache_log_file = NULL
 ){
   force(envir)
-  seed <- get_valid_seed()
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
   parallelism <- match.arg(
@@ -133,6 +132,7 @@ drake_config <- function(
     overwrite_hash_algos = FALSE,
     jobs = jobs
   )
+  seed <- get_previous_seed(cache = cache)
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
     graph <- build_drake_graph(plan = plan, targets = targets,

@@ -10,7 +10,7 @@ test_with_dir("cache_path finding", {
 test_with_dir("fancy cache features, bad paths", {
   saveRDS(1, file = "exists")
   suppressWarnings(expect_error(x <- new_cache("exists")))
-  expect_silent(tmp <- uncache(target = "targ", cache = NULL))
+  expect_silent(tmp <- uncache(targets = "targ", cache = NULL))
 })
 
 test_with_dir("null hashes", {

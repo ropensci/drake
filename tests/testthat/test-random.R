@@ -65,7 +65,7 @@ test_with_dir("Random targets are reproducible", {
     verbose = FALSE,
     session_info = FALSE
   )
-  expect_equal(sort(justbuilt(con3)), sort(c("my", "y")))
+  expect_equal(justbuilt(con3), "y")
   expect_true(identical(con$seed, con3$seed))
   expect_true(identical(readd(y), old_y))
   expect_true(identical(readd(my), old_my))
