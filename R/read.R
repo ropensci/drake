@@ -270,6 +270,8 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the master internal configuration list from the cache.
 #' read_drake_config()
+#' # Retrieve an individual item from the config list.
+#' read_drake_config(keys = "seed") # Random number generator seed.
 #' })
 #' }
 read_drake_config <- function(
@@ -480,4 +482,65 @@ read_drake_meta <- function(
     out <- out[[1]]
   }
   out
+}
+
+#' @title Read the pseudo-random number generator seed of the project.
+#' @description When a project is created with [make()]
+#' or [drake_config()], the project's pseudo-random number generator
+#' seed is cached. Then, unless the cache is destroyed,
+#' the seeds of all the targets will deterministically depend on
+#' this one central seed. That way, reproducibility is protected,
+#' even under randomness.
+#' @seealso [read_drake_config()]
+#' @export
+#' @return A workflow plan data frame.
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
+#' @param path Root directory of the drake project,
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
+#' @param search logical. If `TRUE`, search parent directories
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
+#' @param verbose whether to print console messages
+#' @examples
+#' \dontrun{
+#' cache <- storr::storr_environment() # For the examples.
+#' my_plan <- drake_plan(
+#'   target1 = sqrt(1234),
+#'   target2 = rnorm(n = 1, mean = target1)
+#' )
+#' digest::digest(.Random.seed) # Take the fingerprint of the current seed.
+#' make(my_plan, cache = cache) # Run the project, build the targets.
+#' digest::digest(.Random.seed) # make() protects your R session's seed from being changed.
+#' # Drake takes the seed from the R session that originally created the cache.
+#' digest::digest(read_drake_seed(cache = cache))
+#' readd(target2, cache = cache) # Here is some randomly-generated data.
+#' clean(target2, cache = cache) # Oops, I removed the data.
+#' x <- runif(1) # Maybe I also changed the R session's seed.
+#' digest::digest(.Random.seed) # Different from before.
+#' make(my_plan, cache = cache) # Rebuild target2.
+#' # Same as before:
+#' digest::digest(read_drake_seed(cache = cache))
+#' digest::digest(.Random.seed)
+#' readd(target2, cache = cache)
+#' }
+read_drake_seed <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = TRUE
+){
+  if (is.null(cache)){
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)){
+    stop("cannot find drake cache.")
+  }
+  if (cache$exists(key = "seed", namespace = "config")){
+    cache$get(key = "seed", namespace = "config")
+  } else {
+    stop("Pseudo-random seed not found in the cache.")
+  }
 }
