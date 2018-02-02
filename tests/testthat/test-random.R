@@ -93,24 +93,24 @@ test_with_dir("Random targets are reproducible", {
 })
 
 test_that("random seed can be read", {
-  cache <- storr::storr_environment() # For the examples.
+  cache <- storr::storr_environment()
   my_plan <- drake_plan(
     target1 = sqrt(1234),
     target2 = rnorm(n = 1, mean = target1)
   )
-  digest::digest(.Random.seed) # Take the fingerprint of the current seed.
+  digest::digest(.Random.seed) # nolint
   make(my_plan, cache = cache, session_info = FALSE)
-  rs0 <- digest::digest(.Random.seed) # make() protects your R session's seed from being changed.
+  rs0 <- digest::digest(.Random.seed) # nolint
   ds0 <- digest::digest(read_drake_seed(cache = cache))
-  targ0 <- readd(target2, cache = cache) # Here is some randomly-generated data.
-  clean(target2, cache = cache) # Oops, I removed the data.
+  targ0 <- readd(target2, cache = cache)
+  clean(target2, cache = cache)
   x <- runif(1) # Maybe I also changed the R session's seed.
-  rs1 <- digest::digest(.Random.seed) # Different from before.
+  rs1 <- digest::digest(.Random.seed) # nolint
   make(my_plan, cache = cache, session_info = FALSE)
   ds2 <- digest::digest(read_drake_seed(cache = cache))
-  rs2 <- digest::digest(.Random.seed)
+  rs2 <- digest::digest(.Random.seed) # nolint
   targ2 <- readd(target2, cache = cache)
-  
+
   expect_equal(rs1, rs2)
   expect_false(rs0 == rs1)
   expect_equal(ds0, ds2)
