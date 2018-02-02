@@ -34,8 +34,8 @@ test_with_dir("Random targets are reproducible", {
   old_mz <- readd(mz)
   expect_false(identical(old_x, old_y))
 
-  # Deleted and reproduce some random data.
-  clean(destroy = TRUE)
+  # Delete and reproduce some random data.
+  clean()
   con2 <- make(
     data,
     envir = env,
@@ -53,9 +53,10 @@ test_with_dir("Random targets are reproducible", {
   expect_identical(readd(my), old_my)
   expect_identical(readd(mz), old_mz)
 
-  # Change the seed and check that the targets are different.
+  # Change the session's seed
+  # and check that y and my are the same as before.
   tmp <- runif(1)
-  clean(destroy = TRUE)
+  clean(y)
   con3 <- make(
     data,
     envir = env,
@@ -64,7 +65,25 @@ test_with_dir("Random targets are reproducible", {
     verbose = FALSE,
     session_info = FALSE
   )
-  expect_false(identical(con$seed, con3$seed))
+  expect_equal(sort(justbuilt(con3)), sort(c("my", "y")))
+  expect_true(identical(con$seed, con3$seed))
+  expect_true(identical(readd(y), old_y))
+  expect_true(identical(readd(my), old_my))
+
+  # Change the session's seed, destroy the cache.
+  # and check that the results are different.
+  tmp <- runif(1)
+  clean(destroy = TRUE)
+  con4 <- make(
+    data,
+    envir = env,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  expect_equal(sort(justbuilt(con4)), sort(con4$plan$target))
+  expect_false(identical(con$seed, con4$seed))
   expect_false(identical(readd(x), old_x))
   expect_false(identical(readd(y), old_y))
   expect_false(identical(readd(z), old_z))
