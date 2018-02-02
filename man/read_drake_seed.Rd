@@ -34,24 +34,37 @@ this one central seed. That way, reproducibility is protected,
 even under randomness.
 }
 \examples{
-cache <- storr::storr_environment() # For the examples.
+cache <- storr::storr_environment() # Just for the examples.
 my_plan <- drake_plan(
   target1 = sqrt(1234),
   target2 = rnorm(n = 1, mean = target1)
 )
-digest::digest(.Random.seed) # Take the fingerprint of the current seed.
+tmp <- runif(1) # Make sure your R session has a pseudo-random number generator seed.
+digest::digest(.Random.seed) # Take the fingerprint of the current R session's seed.
 make(my_plan, cache = cache) # Run the project, build the targets.
-digest::digest(.Random.seed) # make() protects your R session's seed from being changed.
-# Drake takes the seed from the R session that originally created the cache.
-digest::digest(read_drake_seed(cache = cache))
-readd(target2, cache = cache) # Here is some randomly-generated data.
-clean(target2, cache = cache) # Oops, I removed the data.
-x <- runif(1) # Maybe I also changed the R session's seed.
-digest::digest(.Random.seed) # Different from before.
+digest::digest(.Random.seed) # Your session's seed did not change.
+# Drake uses a hard-coded seed if you do not supply one.
+read_drake_seed(cache = cache)
+readd(target2, cache = cache) # Randomly-generated target data.
+clean(target2, cache = cache) # Oops, I removed the data!
+tmp <- runif(1) # Maybe the R session's seed also changed.
 make(my_plan, cache = cache) # Rebuild target2.
 # Same as before:
-digest::digest(read_drake_seed(cache = cache))
-digest::digest(.Random.seed)
+read_drake_seed(cache = cache)
+readd(target2, cache = cache)
+# You can also supply a seed.
+# If your project already exists, it must agree with the project's
+# preexisting seed (default: 0)
+clean(target2, cache = cache)
+make(my_plan, cache = cache, seed = 0)
+read_drake_seed(cache = cache)
+readd(target2, cache = cache)
+# If you want to supply a different seed than 0,
+# you need to destroy the cache and start over first.
+clean(destroy = TRUE, cache = cache)
+cache <- storr::storr_environment() # Just for the examples.
+make(my_plan, cache = cache, seed = 1234)
+read_drake_seed(cache = cache)
 readd(target2, cache = cache)
 }
 \seealso{
