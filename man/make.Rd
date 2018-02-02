@@ -108,7 +108,7 @@ argument where it exists: for example, call
 \code{future::plan(multisession(workers = 4))},
 then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
 You might also try \code{options(mc.cores = jobs)},
-or see \link[future:.options]{future::.options}
+or see \code{future::.options}
 for environment variables that set the max number of jobs.
 
 If \code{parallelism} is \code{"Makefile"},  Makefile-level parallelism is
