@@ -475,6 +475,32 @@ fork_kill_zombies <- function(){
 
 # Storage
 
+## Projects hosted on Dropbox and similar platforms
+
+If download a `drake` project from [Dropbox](https://www.dropbox.com/), you may get an error like the one in [issue 198](https://github.com/ropensci/drake/issues/198):
+
+<pre><code>
+cache pathto/.drake
+connect 61 imports: ...
+connect 200 targets: ...
+Error in rawToChar(as.raw(x)) : 
+  embedded nul in string: 'initial_drake_version\0\0\x9a\x9d\xdc\0J\xe9\0\0\0(\x9d\xf9brם\0\xca)\0\0\xb4\xd7\0\0\0\0\xb9'
+In addition: Warning message:
+In rawToChar(as.raw(x)) :
+  out-of-range values treated as 0 in coercion to raw
+</code></pre>
+
+This is probably because [Dropbox](https://www.dropbox.com/) generates a bunch of "conflicted copy" files when file transfers do not go smoothly. This confuses [storr](https://github.com/richfitz/storr), `drake`'s caching backend.
+
+<pre><code>
+keys/config/aG9vaw (Sandy Sum's conflicted copy 2018-01-31)
+keys/config/am9icw (Sandy Sum's conflicted copy 2018-01-31)
+keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
+</code></pre>
+
+Just remove these files and proceed with your work.
+
+
 ## Cache customization is limited
 
 The [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake`. As explained near the end of that vignette, you can plug custom [storr](https://github.com/richfitz/storr) caches into `make()`. However, non-RDS caches such as `storr_dbi()` may not work with parallel computing. In addition, please do not try to change the short hash algorithm of an existing cache.
