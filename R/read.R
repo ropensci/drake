@@ -270,8 +270,6 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
 #' make(my_plan) # Run the project, build the targets.
 #' # Retrieve the master internal configuration list from the cache.
 #' read_drake_config()
-#' # Retrieve an individual item from the config list.
-#' read_drake_config(keys = "seed") # Random number generator seed.
 #' })
 #' }
 read_drake_config <- function(

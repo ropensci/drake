@@ -50,6 +50,7 @@ test_with_dir("non-existent caches", {
   expect_error(tmp <- read_drake_plan(search = FALSE))
   expect_error(tmp <- read_drake_graph(search = FALSE))
   expect_error(tmp <- read_drake_meta(search = FALSE))
+  expect_error(tmp <- read_drake_seed(search = FALSE))
   expect_error(tmp <- drake_session(search = FALSE))
   dummy <- new_cache()
   expect_silent(read_drake_graph(cache = dummy))
@@ -176,6 +177,7 @@ test_with_dir("cache functions work", {
   expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
   expect_equal(read_drake_plan(search = FALSE), config$plan)
+  expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(inherits(read_drake_graph(search = FALSE), "igraph"))
   expect_true(is.list(
     tmp <- read_drake_meta(targets = "final", search = FALSE)))
