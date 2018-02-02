@@ -57,7 +57,7 @@
 #'   Thus, the `seed` argument must either be `NULL` or the same
 #'   seed from the project's cache (usually the `.drake/` folder).
 #'   To reset the random number generator seed for a project,
-#'   use [clean(destroy = TRUE)].
+#'   use `clean(destroy = TRUE)`.
 #'
 #' @param verbose logical or numeric, control printing to the console.
 #'   \describe{

@@ -17,18 +17,18 @@ set \code{envir = new.env(parent = globalenv())}.}
 \item{seed}{integer, the root pseudo-random seed to use for your project.
 To ensure reproducibility across different R sessions,
 \code{set.seed()} and \code{.Random.seed} are ignored and have no affect on
-\code{drake} workflows. Conversely, \code{make()} does not change \code{.Random.seed},
+\code{drake} workflows. Conversely, \code{\link[=make]{make()}} does not change \code{.Random.seed},
 even when pseudo-random numbers are generated.
 
-On the first call to \code{make()} or \code{drake_config()}, \code{drake}
+On the first call to \code{\link[=make]{make()}} or \code{\link[=drake_config]{drake_config()}}, \code{drake}
 uses the random number generator seed from the \code{seed} argument.
 Here, if the \code{seed} is \code{NULL} (default), \code{drake} uses a \code{seed} of \code{0}.
-On subsequent \code{make()}s for existing projects, the project's
+On subsequent \code{\link[=make]{make()}}s for existing projects, the project's
 cached seed will be used in order to ensure reproducibility.
 Thus, the \code{seed} argument must either be \code{NULL} or the same
 seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
-use \link{clean(destroy = TRUE)}.}
+use \code{clean(destroy = TRUE)}.}
 
 \item{cache}{Optional \code{storr} cache to use.}
 

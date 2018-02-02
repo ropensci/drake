@@ -59,7 +59,7 @@ cached seed will be used in order to ensure reproducibility.
 Thus, the \code{seed} argument must either be \code{NULL} or the same
 seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
-use \link{clean(destroy = TRUE)}.}
+use \code{clean(destroy = TRUE)}.}
 
 \item{verbose}{logical or numeric, control printing to the console.
 \describe{
