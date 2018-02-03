@@ -15,22 +15,27 @@ vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   make_imports = TRUE, from_scratch = FALSE, ...)
 }
 \arguments{
+\item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
+You can get one as a return value from \code{\link[=make]{make()}} as well.}
+
 \item{file}{Name of HTML file to save the graph.
 If \code{NULL} or \code{character(0)},
 no file is saved and the graph is rendered and displayed within R.}
 
-\item{selfcontained}{logical, whether to save
-the \code{file} as a self-contained
+\item{selfcontained}{logical, whether
+to save the \code{file} as a self-contained
 HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
 
-\item{build_times}{logical, whether to print the \code{\link[=build_times]{build_times()}}
-in the graph.}
+\item{build_times}{logical, whether to show the \code{\link[=build_times]{build_times()}}
+of the targets and imports, if available.
+These are just elapsed times from \code{\link[=system.time]{system.time()}}.}
 
 \item{digits}{number of digits for rounding the build times}
 
-\item{targets_only}{logical, whether to skip the imports and only show the
+\item{targets_only}{logical,
+whether to skip the imports and only include the
 targets in the workflow plan.}
 
 \item{split_columns}{logical, whether to break up the
@@ -44,16 +49,15 @@ indicates.)}
 
 \item{font_size}{numeric, font size of the node labels in the graph}
 
-\item{layout}{name of an igraph layout
-to use, such as 'layout_with_sugiyama'
-or 'layout_as_tree'. Be careful with
-'layout_as_tree': the graph is a directed
+\item{layout}{name of an igraph layout to use,
+such as 'layout_with_sugiyama'
+or 'layout_as_tree'.
+Be careful with 'layout_as_tree': the graph is a directed
 acyclic graph, but not necessarily a tree.}
 
 \item{main}{title of the graph}
 
-\item{direction}{an argument to
-\code{\link[visNetwork:visHierarchicalLayout]{visNetwork::visHierarchicalLayout()}}
+\item{direction}{an argument to \code{\link[visNetwork:visHierarchicalLayout]{visNetwork::visHierarchicalLayout()}}
 indicating the direction of the graph.
 Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized,
@@ -66,7 +70,7 @@ change with hovering.}
 \item{navigationButtons}{logical, whether to add navigation buttons with
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}
 
-\item{from}{Optional character vector of target/import names.
+\item{from}{Optional collection of target/import names.
 If \code{from} is nonempty,
 the graph will restrict itself to
 a neighborhood of \code{from}.
@@ -90,27 +94,24 @@ Subset of nodes to display in the graph.
 Applied after \code{from}, \code{mode}, and \code{order}.
 Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
-edges will drop from the graph.}
+edges will drop from the graph.=}
 
-\item{ncol_legend}{number of columns in the legend nodes}
+\item{ncol_legend}{number of columns in the legend nodes.
+To remove the legend entirely, set \code{ncol_legend} to \code{NULL} or \code{0}.}
 
 \item{full_legend}{logical. If \code{TRUE}, all the node types
 are printed in the legend. If \code{FALSE}, only the
 node types used are printed in the legend.}
 
-\item{make_imports}{logical, whether to import external files
-and objects from the user's workspace to determine
-which targets are up to date. If \code{FALSE}, the computation
-is faster, but all the relevant information is drawn from the cache
-and may be out of date.}
+\item{make_imports}{logical, whether to make the imports first.
+Set to \code{FALSE} to increase speed and risk using obsolete information.}
 
 \item{from_scratch}{logical, whether to assume all the targets
 will be made from scratch on the next \code{\link[=make]{make()}}.
 Makes all targets outdated, but keeps information about
 build progress in previous \code{\link[=make]{make()}}s.}
 
-\item{...}{other arguments passed to
-\code{\link[visNetwork:visNetwork]{visNetwork::visNetwork()}} to plot the graph.}
+\item{...}{arguments passed to \code{\link[=visNetwork]{visNetwork()}}.}
 }
 \value{
 A visNetwork graph.

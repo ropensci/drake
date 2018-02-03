@@ -234,11 +234,6 @@
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #'   on your workflow. Use at your own peril.
 #'
-#' @param config optional master configuration list created by
-#'   [drake_config()]. Using one could cut out some
-#'   superfluous overhead. Overrides all other arguments
-#'   if supplied
-#'
 #' @param lazy_load logical.
 #'   Should always be set to `FALSE` for `"parLapply"`
 #'   parallelism and `jobs` greater than 1.

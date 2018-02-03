@@ -287,11 +287,6 @@ Thus, the \code{seed} argument must either be \code{NULL} or the same
 seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
-
-\item{config}{optional master configuration list created by
-\code{\link[=drake_config]{drake_config()}}. Using one could cut out some
-superfluous overhead. Overrides all other arguments
-if supplied}
 }
 \value{
 The master internal configuration list of a project.
