@@ -59,6 +59,7 @@ check_drake_config <- function(config) {
   assert_standard_columns(config = config)
   warn_bad_symbols(config$plan$target)
   parallelism_warnings(config = config)
+  check_drake_graph(graph = config$graph)
 }
 
 assert_standard_columns <- function(config){
@@ -120,4 +121,11 @@ check_strings <- function(plan, jobs) {
       multiline_message(drake::drake_quotes(x[[target]],
       single = FALSE)), sep = "")
   }
+}
+
+check_drake_graph <- function(graph){
+  if (is_dag(graph)){
+    return()
+  }
+  stop("circular workflow")
 }

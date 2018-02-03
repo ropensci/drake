@@ -88,9 +88,6 @@ build_drake_graph <- function(
     vertex(vertices) +
     edge(edges)
   graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
-  if (!is_dag(graph)){
-    stop("Workflow is circular (chicken and egg dilemma).")
-  }
   return(graph)
 }
 
