@@ -1,5 +1,25 @@
 drake_context("cache")
 
+test_with_dir("active bindings", {
+  config <- dbug()
+  config$cache <- storr_environment()
+  testrun(config)
+  
+  expect_false("final" %in% ls(config$envir))
+  loadd(final, envir = config$envir, lazy = "binding")
+  expect_false("final" %in% ls(config$envir))
+  tmp <- config$envir$final
+  expect_true("final" %in% ls(config$envir))
+  expect_equal(config$envir$final, readd(final, cache = config$cache))
+
+  expect_false("nextone" %in% ls(config$envir))
+  loadd(envir = config$envir, lazy = "binding")
+  expect_false("nextone" %in% ls(config$envir))
+  tmp <- config$envir$nextone
+  expect_true("nextone" %in% ls(config$envir))
+  expect_equal(config$envir$nextone, readd(nextone, cache = config$cache))
+})
+
 test_with_dir("dependency profile", {
   config <- make(drake_plan(a = 1))
   expect_error(dependency_profile(
