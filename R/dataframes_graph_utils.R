@@ -78,7 +78,7 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
   tryCatch({
     readLines(unquoted_file, n = 10, warn = FALSE) %>%
       paste(collapse = "\n") %>%
-      crop_text(length = hover_text_length)
+      crop_text(width = hover_text_width)
   },
   error = function(e) quoted_file,
   warning = function(w) quoted_file
@@ -93,7 +93,7 @@ function_hover_text <- Vectorize(function(function_name, envir){
     unwrap_function %>%
     deparse %>%
     paste(collapse = "\n") %>%
-    crop_text(length = hover_text_length)
+    crop_text(width = hover_text_width)
 },
 "function_name")
 
@@ -138,7 +138,7 @@ hover_text <- function(config) {
   })
 }
 
-hover_text_length <- 250
+hover_text_width <- 250
 
 #' @title Create the nodes data frame used in the legend
 #'   of [vis_drake_graph()].
@@ -283,7 +283,7 @@ style_nodes <- function(config) {
 
 target_hover_text <- function(targets, plan) {
   plan[plan$target %in% targets, "command"] %>%
-    wrap_text %>% crop_text(length = hover_text_length)
+    wrap_text %>% crop_text(width = hover_text_width)
 }
 
 trim_node_categories <- function(config){

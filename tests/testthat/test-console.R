@@ -54,7 +54,7 @@ test_with_dir("console", {
     )
   )
   x1 <- "12345"
-  x2 <- paste(rep(0:9, length.out = console_length + 400), collapse = "")
+  x2 <- paste(rep(0:9, length.out = getOption("width") + 400), collapse = "")
   expect_equal(x1, color(x = x1, color = NULL))
   o1 <- evaluate_promise(
     console(
@@ -72,8 +72,8 @@ test_with_dir("console", {
     ),
     print = TRUE
   )$messages
-  expect_true(nchar(o1) < console_length)
-  expect_true(nchar(o2) < console_length + 20)
+  expect_true(nchar(o1) < getOption("width"))
+  expect_true(nchar(o2) < getOption("width") + 20)
   dots <- "\\.\\.\\.\n$"
   expect_false(grepl(dots, o1))
   expect_true(grepl(dots, o2))
@@ -99,5 +99,5 @@ test_with_dir("console_many_targets() works", {
     print = TRUE
   )$messages
   expect_true(is.character(tmp))
-  expect_true(nchar(tmp) <= console_length + 20)
+  expect_true(nchar(tmp) <= getOption("width") + 20)
 })

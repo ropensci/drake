@@ -1,5 +1,3 @@
-console_length <- 80
-
 console <- function(imported, target, config) {
   if (is.na(imported)) {
     console_missing(target = target, config = config)
@@ -127,14 +125,14 @@ finish_console <- function(text, pattern, verbose){
   if (!verbose){
     return(invisible())
   }
-  crop_text(x = text, length = console_length) %>%
+  crop_text(x = text) %>%
     color_grep(pattern = pattern, color = color_of(pattern)) %>%
     message(sep = "")
 }
 
-crop_text <- Vectorize(function(x, length = 50) {
-  if (nchar(x) > length)
-    x <- paste0(substr(x, 1, length - 3), "...")
+crop_text <- Vectorize(function(x, width = getOption("width")) {
+  if (nchar(x) > width)
+    x <- paste0(substr(x, 1, width - 3), "...")
   x
 },
 "x", USE.NAMES = FALSE)
