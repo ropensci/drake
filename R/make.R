@@ -96,7 +96,7 @@ make <- function(
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   config = NULL,
-  lazy_load = FALSE,
+  lazy_load = "none",
   session_info = TRUE,
   cache_log_file = NULL,
   seed = NULL

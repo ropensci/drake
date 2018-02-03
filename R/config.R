@@ -234,20 +234,27 @@
 #' @param skip_safety_checks logical, whether to skip the safety checks
 #'   on your workflow. Use at your own peril.
 #'
-#' @param lazy_load logical.
-#'   Should always be set to `FALSE` for `"parLapply"`
-#'   parallelism and `jobs` greater than 1.
+#' @param lazy_load either a character vector or a logical. Choices:
+#'   - `"eager"`: no lazy loading. The target is loaded right away
+#'     with [assign()].
+#'   - `"promise"`: lazy loading with [delayedAssign()]
+#'   - `"binding"`: lazy loading with active bindings:
+#'     [bindr::populate_env()].
+#'
+#'   `lazy_load` should not be `"promise"`
+#'   for `"parLapply"` parallelism combined with `jobs` greater than 1.
 #'   For local multi-session parallelism and lazy loading, try
 #'   `library(future); future::plan(multisession)` and then
-#'   `make(..., parallelism = "future_lapply", lazy_load = TRUE)`.
-#'   If `lazy_load` is `FALSE`,
+#'   `make(..., parallelism = "future_lapply", lazy_load = "binding")`.
+#'
+#'   If `lazy_load` is `"eager"`,
 #'   drake prunes the execution environment before every
 #'   parallelizable stages, removing all superfluous targets
 #'   and then loading any dependencies it will need
 #'   for the targets in the current parallelizable stage.
 #'   In other words, drake prepares the environment in advance
 #'   for all the whole collection of targets in the stage.
-#'   If `lazy_load` is `TRUE`, drake assigns
+#'   If `lazy_load` is `"binding"` or `"promise"`, drake assigns
 #'   promises to load any dependencies at the last minute.
 #'   Lazy loading may be more memory efficient in some use cases, but
 #'   it may duplicate the loading of dependencies, costing time.
@@ -333,7 +340,7 @@ drake_config <- function(
   imports_only = FALSE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
-  lazy_load = FALSE,
+  lazy_load = "eager",
   session_info = TRUE,
   cache_log_file = NULL,
   seed = NULL
@@ -372,6 +379,7 @@ drake_config <- function(
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
   cache_path <- force_cache_path(cache)
+  lazy_load <- parse_lazy_arg(lazy_load)
   list(
     plan = plan, targets = targets, envir = envir,
     cache = cache, cache_path = cache_path, fetch_cache = fetch_cache,

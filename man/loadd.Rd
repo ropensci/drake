@@ -7,7 +7,7 @@
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1, deps = FALSE, lazy = FALSE)
+  verbose = 1, deps = FALSE, lazy = "none")
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -59,9 +59,14 @@ during the last \code{\link[=make]{make()}}.
 That means you need to have already called \code{\link[=make]{make()}}
 if you set \code{deps} to \code{TRUE}.}
 
-\item{lazy}{logical, whether to lazy load with
-\code{\link[=delayedAssign]{delayedAssign()}} rather than the more eager
-\code{\link[=assign]{assign()}}.}
+\item{lazy}{either a character vector or a logical. Choices:
+\itemize{
+\item \code{"eager"}: no lazy loading. The target is loaded right away
+with \code{\link[=assign]{assign()}}.
+\item \code{"promise"}: lazy loading with \code{\link[=delayedAssign]{delayedAssign()}}
+\item \code{"binding"}: lazy loading with active bindings:
+\code{\link[bindr:populate_env]{bindr::populate_env()}}.
+}}
 }
 \value{
 \code{NULL}

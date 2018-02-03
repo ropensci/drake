@@ -1,5 +1,5 @@
 assign_to_envir <- function(targets, values, config){
-  if (config$lazy_load){
+  if (config$lazy_load != "eager"){
     return()
   }
   lightly_parallelize(
@@ -49,7 +49,7 @@ prune_envir <- function(targets, config){
     rm(list = discard_these, envir = config$envir)
   }
   if (length(load_these)){
-    if (!config$lazy_load){
+    if (config$lazy_load == "eager"){
       console_many_targets(
         load_these,
         pattern = "load",

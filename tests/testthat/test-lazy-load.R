@@ -69,12 +69,23 @@ test_with_dir("active bindings", {
   config$cache <- storr_environment()
   testrun(config)
 
+  rm(final, envir = config$envir)
   expect_false("final" %in% ls(config$envir))
   loadd(final, envir = config$envir, lazy = "binding")
+  
+  # `final` not loaded yet. Not sure if this is the right way to tell.
   expect_false("final" %in% ls(config$envir))
+  
+  # `final` should be loaded when it is referenced.
   tmp <- config$envir$final
   expect_true("final" %in% ls(config$envir))
   expect_equal(config$envir$final, readd(final, cache = config$cache))
+
+  # Allow active bindings to overwrite existing variables.
+  expect_message(
+    loadd(final, envir = config$envir, lazy = "binding", verbose = FALSE),
+    regexp = "active binding"
+  )
 
   expect_false("nextone" %in% ls(config$envir))
   loadd(envir = config$envir, lazy = "binding")
