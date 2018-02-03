@@ -23,7 +23,7 @@ test_with_dir("clean() works if there is no cache already", {
   expect_false(file.exists(default_cache_path()))
 })
 
-test_with_dir("bad/corrupt caches, no progress", {
+test_with_dir("bad/corrupt caches, no progress, no seed", {
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
   x <- drake_plan(a = 1)
@@ -38,6 +38,10 @@ test_with_dir("bad/corrupt caches, no progress", {
   expect_false(file.exists(path))
   expect_warning(expect_error(
     make(x, verbose = FALSE, session_info = FALSE)))
+  expect_error(
+    read_drake_seed(cache = storr::storr_environment()),
+    regexp = "random seed not found"
+  )
 })
 
 test_with_dir("non-existent caches", {
