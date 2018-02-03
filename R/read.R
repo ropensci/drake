@@ -508,8 +508,8 @@ read_drake_plan <- function(
 #'   target1 = sqrt(1234),
 #'   target2 = rnorm(n = 1, mean = target1)
 #' )
-#' tmp <- runif(1) # Make sure your R session has a pseudo-random number generator seed.
-#' digest::digest(.Random.seed) # Take the fingerprint of the current R session's seed.
+#' tmp <- runif(1) # Needed to get a .Random.seed, but not for drake.
+#' digest::digest(.Random.seed) # Fingerprint of the current R session's seed.
 #' make(my_plan, cache = cache) # Run the project, build the targets.
 #' digest::digest(.Random.seed) # Your session's seed did not change.
 #' # Drake uses a hard-coded seed if you do not supply one.
