@@ -41,7 +41,6 @@ drake_config <- function(
   plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  seed = NULL,
   verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
@@ -70,7 +69,8 @@ drake_config <- function(
   skip_safety_checks = FALSE,
   lazy_load = FALSE,
   session_info = TRUE,
-  cache_log_file = NULL
+  cache_log_file = NULL,
+  seed = NULL
 ){
   force(envir)
   plan <- sanitize_plan(plan)
