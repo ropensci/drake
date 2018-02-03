@@ -60,7 +60,8 @@ sanitize_nodes <- function(nodes, choices){
 repair_target_names <- function(x){
   illegals <- c(
     ":", "\\+", "\\-", "\\*", "\\^",
-    "\\(", "\\)", "\\[", "\\]", "^_"
+    "\\(", "\\)", "\\[", "\\]", "^_",
+    "\\\""
   ) %>%
     paste(collapse = "|")
   non_files <- x[is_not_file(x)]

@@ -119,7 +119,11 @@ test_with_dir("check_plan() finds bad symbols", {
     command = 1)
   expect_warning(o <- check_plan(x, verbose = FALSE))
   x <- data.frame(
-    target = c("gotcha", "b", "\"targs\""),
+    target = c("\"targs\""),
+    command = 1)
+  expect_warning(o <- check_plan(x, verbose = FALSE))
+  x <- data.frame(
+    target = c("gotcha", "b", "targs"),
     command = 1)
   expect_silent(o <- check_plan(x, verbose = FALSE))
 })
