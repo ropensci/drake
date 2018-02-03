@@ -15,9 +15,6 @@ vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   make_imports = TRUE, from_scratch = FALSE, ...)
 }
 \arguments{
-\item{config}{Master configuration list produced by both
-\code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}}.}
-
 \item{file}{Name of HTML file to save the graph.
 If \code{NULL} or \code{character(0)},
 no file is saved and the graph is rendered and displayed within R.}

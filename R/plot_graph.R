@@ -8,9 +8,6 @@
 #' @seealso [build_drake_graph()]
 #' @return A visNetwork graph.
 #'
-#' @param config Master configuration list produced by both
-#'   [make()] and [drake_config()].
-#'
 #' @param from Optional character vector of target/import names.
 #'   If `from` is nonempty,
 #'   the graph will restrict itself to

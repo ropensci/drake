@@ -240,10 +240,8 @@ This argument is overridden if you supply your own \code{graph} argument.}
 \item{skip_safety_checks}{logical, whether to skip the safety checks
 on your workflow. Use at your own peril.}
 
-\item{config}{optional master configuration list created by
-\code{\link[=drake_config]{drake_config()}}. Using one could cut out some
-superfluous overhead. Overrides all other arguments
-if supplied}
+\item{config}{Master configuration list produced by both
+\code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}}.}
 
 \item{lazy_load}{logical.
 Should always be set to \code{FALSE} for \code{"parLapply"}
