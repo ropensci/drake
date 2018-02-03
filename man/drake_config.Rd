@@ -288,11 +288,6 @@ seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
-\item{return_config}{Logical, whether to return the internal list
-of runtime configuration parameters used by \code{make()}.
-This argument is deprecated. Now, a configuration list
-is always invisibly returned.}
-
 \item{config}{optional master configuration list created by
 \code{\link[=drake_config]{drake_config()}}. Using one could cut out some
 superfluous overhead. Overrides all other arguments

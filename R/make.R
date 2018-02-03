@@ -17,6 +17,10 @@
 #'   constructed along the way. See [config()]
 #'   for more details.
 #' @inheritParams drake_config
+#' @param return_config Logical, whether to return the internal list
+#'   of runtime configuration parameters used by `make()`.
+#'   This argument is deprecated. Now, a configuration list
+#'   is always invisibly returned.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
