@@ -320,5 +320,5 @@ filter_legend_nodes <- function(dfs){
   colors <- unique(dfs$nodes$color)
   shapes <- unique(dfs$nodes$shape)
   ln <- dfs$legend_nodes
-  ln[ln$color %in% colors & ln$shape %in% shapes, ]
+  ln[ln$color %in% colors & ln$shape %in% shapes, , drop = FALSE] # nolint
 }
