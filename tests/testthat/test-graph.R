@@ -1,5 +1,18 @@
 drake_context("graph")
 
+test_with_dir("Recursive functions are okay", {
+  factorial <- function(n){
+    if (n == 0){
+      1
+    } else {
+      n * factorial(n - 1)
+    }
+  }
+  x <- drake_plan(output = factorial(10))
+  cache <- storr::storr_environment()
+  make(x, cache = cache, session_info = FALSE)
+})
+
 test_with_dir("drake searches past outdated targets for parallel stages", {
   plan <- drake_plan(
     a = 1,
@@ -35,9 +48,21 @@ test_with_dir("null graph", {
 })
 
 test_with_dir("circular non-DAG drake_plans quit in error", {
-  p <- drake_plan(a = b, b = c, c = a)
-  expect_error(tmp <- capture.output(check_plan(p)))
-  expect_error(make(p, verbose = FALSE, session_info = FALSE))
+  x <- drake_plan(a = b, b = c, c = a)
+  expect_error(tmp <- capture.output(check_plan(x)))
+  expect_error(
+    make(x, verbose = FALSE, session_info = FALSE),
+    regexp = "a b c"
+  )
+  x <- drake_plan(
+    a = b, b = c, c = a, d = 4, e = d,
+    A = B, B = C, C = A, mytarget = e
+  )
+  expect_error(tmp <- capture.output(check_plan(x)))
+  expect_error(
+    make(x, verbose = FALSE, session_info = FALSE),
+    regexp = "A B C\n  a b c|a b c\n  A B C"
+  )
 })
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {

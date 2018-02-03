@@ -102,6 +102,8 @@ deps(my_plan$command[1]) # File dependencies like report.Rmd are single-quoted.
 deps(my_plan$command[nrow(my_plan)])
 ```
 
+`Drake` takes special precautions so that a target/import does not depend on itself. For example, `deps(f)` might return `"f"` if `f()` is a recursive function, but `make()` just ignores this conflict and runs as expected. In other words, `make()` automatically removes all self-referential loops in the dependency network.
+
 List all the reproducibly-tracked objects and files, including imports and targets.
 
 ```{r trackeddebug}

@@ -59,6 +59,7 @@ check_drake_config <- function(config) {
   assert_standard_columns(config = config)
   warn_bad_symbols(config$plan$target)
   parallelism_warnings(config = config)
+  check_drake_graph(graph = config$graph)
 }
 
 assert_standard_columns <- function(config){
@@ -120,4 +121,22 @@ check_strings <- function(plan, jobs) {
       multiline_message(drake::drake_quotes(x[[target]],
       single = FALSE)), sep = "")
   }
+}
+
+check_drake_graph <- function(graph){
+  if (is_dag(graph)){
+    return()
+  }
+  comp <- igraph::components(graph, mode = "strong")
+  cycle_component_indices <- which(comp$csize > 1)
+  cycles <- lapply(cycle_component_indices, function(i){
+    names(comp$membership[comp$membership == i]) %>%
+      paste(collapse = " ")
+  }) %>%
+    unlist
+  stop(
+    "Circular workflow: there is a target ",
+    "that ultimately depends on itself. Cycles:\n",
+    multiline_message(cycles)
+  )
 }

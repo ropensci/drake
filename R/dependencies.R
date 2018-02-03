@@ -1,16 +1,23 @@
 #' @title List the dependencies of a function, workflow plan command,
 #'   or knitr report source file.
 #' @description Intended for debugging and checking your project.
-#' The dependency structure of the components of your analysis
-#' decides which targets are built and when.
+#'   The dependency structure of the components of your analysis
+#'   decides which targets are built and when.
 #' @details If the argument is a single-quoted string that points to
-#' a dynamic knitr report, the dependencies of the expected compiled
-#' output will be given. For example, `deps("'report.Rmd'")`
-#' will return target names found in calls to [loadd()]
-#' and [readd()] in active code chunks.
-#' These targets are needed in order to run `knit('report.Rmd')`
-#' to produce the output file `'report.md'`, so technically,
-#' they are dependencies of `'report.md'`, not `'report.Rmd'`
+#'   a dynamic knitr report, the dependencies of the expected compiled
+#'   output will be given. For example, `deps("'report.Rmd'")`
+#'   will return target names found in calls to [loadd()]
+#'   and [readd()] in active code chunks.
+#'   These targets are needed in order to run `knit('report.Rmd')`
+#'   to produce the output file `'report.md'`, so technically,
+#'   they are dependencies of `'report.md'`, not `'report.Rmd'`.
+#'
+#'   `Drake` takes special precautions so that a target/import
+#'   does not depend on itself. For example, `deps(f)`` might return
+#'   `"f"` if `f()` is a recursive function, but [make()] just ignores
+#'   this conflict and runs as expected. In other words, [make()]
+#'   automatically removes all self-referential loops in the dependency
+#'   network.
 #' @export
 #' @param x Either a function or a string.
 #'   Strings are commands from your workflow plan data frame.
