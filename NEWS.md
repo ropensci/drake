@@ -1,5 +1,7 @@
 # Version 5.1.0
 
+- When the graph cyclic, print out all the cycles.
+- Prune self-referential loops (and duplicate edges) from the workflow graph. That way, recursive functions are allowed.
 - Add a `seed` argument to `make()`, `drake_config()`, and `load_basic_example()`. Also hard-code a default seed of `0`. That way, the pseudo-randomness in projects should be reproducible
 across R sessions.
 - Cache the pseudo-random seed at the time the project is created and use that seed to build targets until the cache is destroyed.

@@ -48,9 +48,21 @@ test_with_dir("null graph", {
 })
 
 test_with_dir("circular non-DAG drake_plans quit in error", {
-  p <- drake_plan(a = b, b = c, c = a)
-  expect_error(tmp <- capture.output(check_plan(p)))
-  expect_error(make(p, verbose = FALSE, session_info = FALSE))
+  x <- drake_plan(a = b, b = c, c = a)
+  expect_error(tmp <- capture.output(check_plan(x)))
+  expect_error(
+    make(x, verbose = FALSE, session_info = FALSE),
+    regexp = "a b c"
+  )
+  x <- drake_plan(
+    a = b, b = c, c = a, d = 4, e = d,
+    A = B, B = C, C = A, mytarget = e
+  )
+  expect_error(tmp <- capture.output(check_plan(x)))
+  expect_error(
+    make(x, verbose = FALSE, session_info = FALSE),
+    regexp = "A B C\n  a b c|a b c\n  A B C"
+  )
 })
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {
