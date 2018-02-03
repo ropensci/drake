@@ -6,7 +6,7 @@
 used internally in \code{\link[=make]{make()}}.}
 \usage{
 drake_config(plan = drake_plan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1, hook = default_hook,
+  envir = parent.frame(), seed = NULL, verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   fetch_cache = NULL, parallelism = drake::default_parallelism(),
   jobs = 1, packages = rev(.packages()), prework = character(0),
@@ -44,6 +44,22 @@ by \code{make}. The deep copy inherits from the global environment.
 Wherever necessary, objects and functions are imported
 from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
+
+\item{seed}{integer, the root pseudo-random seed to use for your project.
+To ensure reproducibility across different R sessions,
+\code{set.seed()} and \code{.Random.seed} are ignored and have no affect on
+\code{drake} workflows. Conversely, \code{make()} does not change \code{.Random.seed},
+even when pseudo-random numbers are generated.
+
+On the first call to \code{make()} or \code{drake_config()}, \code{drake}
+uses the random number generator seed from the \code{seed} argument.
+Here, if the \code{seed} is \code{NULL} (default), \code{drake} uses a \code{seed} of \code{0}.
+On subsequent \code{make()}s for existing projects, the project's
+cached seed will be used in order to ensure reproducibility.
+Thus, the \code{seed} argument must either be \code{NULL} or the same
+seed from the project's cache (usually the \code{.drake/} folder).
+To reset the random number generator seed for a project,
+use \code{clean(destroy = TRUE)}.}
 
 \item{verbose}{logical or numeric, control printing to the console.
 \describe{

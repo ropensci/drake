@@ -1,9 +1,5 @@
 drake_context("reproducible random numbers")
 
-test_with_dir("get_valid_seed() gets a valid seed", {
-  expect_true(is.integer(get_valid_seed(seed = NULL)))
-})
-
 test_with_dir("Random targets are reproducible", {
   scenario <- get_testing_scenario()
   env <- eval(parse(text = scenario$envir))
@@ -18,6 +14,8 @@ test_with_dir("Random targets are reproducible", {
     my = mean(y),
     mz = mean(z)
   )
+  # Should not change the session's seed
+  seed0 <- .Random.seed # nolint
   con <- make(
     data,
     envir = env,
@@ -26,6 +24,7 @@ test_with_dir("Random targets are reproducible", {
     verbose = FALSE,
     session_info = FALSE
   )
+  expect_true(identical(seed0, .Random.seed)) # nolint
   old_x <- readd(x)
   old_y <- readd(y)
   old_z <- readd(z)
@@ -70,51 +69,57 @@ test_with_dir("Random targets are reproducible", {
   expect_true(identical(readd(y), old_y))
   expect_true(identical(readd(my), old_my))
 
-  # Change the session's seed, destroy the cache.
-  # and check that the results are different.
+  # Set the same seed as in the cache
+  # and check that things are the same as before.
   tmp <- runif(1)
-  clean(destroy = TRUE)
+  clean(y)
   con4 <- make(
     data,
     envir = env,
+    seed = con2$seed,
     parallelism = parallelism,
     jobs = jobs,
     verbose = FALSE,
     session_info = FALSE
   )
-  expect_equal(sort(justbuilt(con4)), sort(con4$plan$target))
-  expect_false(identical(con$seed, con4$seed))
+  expect_equal(justbuilt(con4), "y")
+  expect_true(identical(con4$seed, con$seed))
+  expect_true(identical(readd(y), old_y))
+  expect_true(identical(readd(my), old_my))
+
+  # Change the supplied seed, destroy the cache,
+  # and check that the results are different.
+  tmp <- runif(1)
+  clean(destroy = TRUE)
+  con5 <- make(
+    data,
+    envir = env,
+    seed = con2$seed + 1,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  expect_equal(sort(justbuilt(con5)), sort(con5$plan$target))
+  expect_false(identical(con$seed, con5$seed))
   expect_false(identical(readd(x), old_x))
   expect_false(identical(readd(y), old_y))
   expect_false(identical(readd(z), old_z))
   expect_false(identical(readd(mx), old_mx))
   expect_false(identical(readd(my), old_my))
   expect_false(identical(readd(mz), old_mz))
-})
 
-test_that("random seed can be read", {
-  cache <- storr::storr_environment()
-  my_plan <- drake_plan(
-    target1 = sqrt(1234),
-    target2 = rnorm(n = 1, mean = target1)
+  # Cannot supply a conflicting seed.
+  expect_error(
+    make(
+      data,
+      envir = env,
+      seed = con5$seed + 1,
+      parallelism = parallelism,
+      jobs = jobs,
+      verbose = FALSE,
+      session_info = FALSE
+    ),
+    regexp = "already has a different seed"
   )
-  digest::digest(.Random.seed) # nolint
-  make(my_plan, cache = cache, session_info = FALSE)
-  rs0 <- digest::digest(.Random.seed) # nolint
-  ds0 <- digest::digest(read_drake_seed(cache = cache))
-  targ0 <- readd(target2, cache = cache)
-  clean(target2, cache = cache)
-  x <- runif(1) # Maybe I also changed the R session's seed.
-  rs1 <- digest::digest(.Random.seed) # nolint
-  make(my_plan, cache = cache, session_info = FALSE)
-  ds2 <- digest::digest(read_drake_seed(cache = cache))
-  rs2 <- digest::digest(.Random.seed) # nolint
-  targ2 <- readd(target2, cache = cache)
-
-  expect_equal(rs1, rs2)
-  expect_false(rs0 == rs1)
-  expect_equal(ds0, ds2)
-  expect_equal(targ0, targ2)
-  cache$del(key = "seed", namespace = "config")
-  expect_error(read_drake_seed(cache = cache), regexp = "seed not found")
 })

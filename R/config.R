@@ -41,6 +41,7 @@ drake_config <- function(
   plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
+  seed = NULL,
   verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
@@ -96,7 +97,7 @@ drake_config <- function(
     overwrite_hash_algos = FALSE,
     jobs = jobs
   )
-  seed <- get_previous_seed(cache = cache)
+  seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
     graph <- build_drake_graph(plan = plan, targets = targets,

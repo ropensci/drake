@@ -43,6 +43,22 @@
 #'   from `envir` and the global environment and
 #'   then reproducibly tracked as dependencies.
 #'
+#' @param seed integer, the root pseudo-random seed to use for your project.
+#'   To ensure reproducibility across different R sessions,
+#'   `set.seed()` and `.Random.seed` are ignored and have no affect on
+#'   `drake` workflows. Conversely, `make()` does not change `.Random.seed`,
+#'   even when pseudo-random numbers are generated.
+#'
+#'   On the first call to `make()` or `drake_config()`, `drake`
+#'   uses the random number generator seed from the `seed` argument.
+#'   Here, if the `seed` is `NULL` (default), `drake` uses a `seed` of `0`.
+#'   On subsequent `make()`s for existing projects, the project's
+#'   cached seed will be used in order to ensure reproducibility.
+#'   Thus, the `seed` argument must either be `NULL` or the same
+#'   seed from the project's cache (usually the `.drake/` folder).
+#'   To reset the random number generator seed for a project,
+#'   use `clean(destroy = TRUE)`.
+#'
 #' @param verbose logical or numeric, control printing to the console.
 #'   \describe{
 #'     \item{0 or `FALSE`:}{print nothing.}
@@ -324,6 +340,7 @@ make <- function(
   plan = drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
+  seed = NULL,
   verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
@@ -369,6 +386,7 @@ make <- function(
       plan = plan,
       targets = targets,
       envir = envir,
+      seed = seed,
       verbose = verbose,
       hook = hook,
       parallelism = parallelism,
