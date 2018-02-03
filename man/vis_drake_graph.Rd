@@ -11,8 +11,8 @@ vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   split_columns = FALSE, font_size = 20, layout = "layout_with_sugiyama",
   main = NULL, direction = "LR", hover = TRUE, navigationButtons = TRUE,
   from = NULL, mode = c("out", "in", "all"), order = NULL,
-  subset = NULL, ncol_legend = 1, make_imports = TRUE,
-  from_scratch = FALSE, ...)
+  subset = NULL, ncol_legend = 1, full_legend = TRUE,
+  make_imports = TRUE, from_scratch = FALSE, ...)
 }
 \arguments{
 \item{config}{Master configuration list produced by both
@@ -96,6 +96,10 @@ If you do not select all the intermediate nodes,
 edges will drop from the graph.}
 
 \item{ncol_legend}{number of columns in the legend nodes}
+
+\item{full_legend}{logical. If \code{TRUE}, all the node types
+are printed in the legend. If \code{FALSE}, only the
+node types used are printed in the legend.}
 
 \item{make_imports}{logical, whether to import external files
 and objects from the user's workspace to determine

@@ -86,6 +86,9 @@ test_with_dir("graph functions work", {
   pdf(NULL)
   tmp <- vis_drake_graph(config)
   dev.off()
+  pdf(NULL)
+  tmp <- vis_drake_graph(config, full_legend = FALSE)
+  dev.off()
   unlink("Rplots.pdf", force = TRUE)
   expect_true(is.character(default_graph_title(
     split_columns = FALSE)))

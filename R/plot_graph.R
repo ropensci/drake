@@ -90,6 +90,10 @@
 #'
 #' @param ncol_legend number of columns in the legend nodes
 #'
+#' @param full_legend logical. If `TRUE`, all the node types
+#'   are printed in the legend. If `FALSE`, only the
+#'   node types used are printed in the legend.
+#'
 #' @param make_imports logical, whether to import external files
 #'   and objects from the user's workspace to determine
 #'   which targets are up to date. If `FALSE`, the computation
@@ -131,6 +135,7 @@ vis_drake_graph <- function(
   from = NULL, mode = c("out", "in", "all"), order = NULL,
   subset = NULL,
   ncol_legend = 1,
+  full_legend = TRUE,
   make_imports = TRUE,
   from_scratch = FALSE,
   ...
@@ -155,7 +160,8 @@ vis_drake_graph <- function(
   render_drake_graph(raw_graph, file = file, selfcontained = selfcontained,
     layout = layout, direction = direction,
     navigationButtons = navigationButtons, # nolint
-    hover = hover, main = main, ncol_legend = ncol_legend, ...)
+    hover = hover, main = main,
+    ncol_legend = ncol_legend, full_legend = full_legend, ...)
 }
 
 #' @export
@@ -205,7 +211,12 @@ drake_graph <- vis_drake_graph
 #'
 #' @param main title of the graph
 #'
-#' @param ncol_legend number of columns in the legend nodes
+#' @param ncol_legend number of columns in the legend nodes.
+#'   To remove the legend entirely, set `ncol_legend` to `NULL` or `0`.
+#'   
+#' @param full_legend logical. If `TRUE`, all the node types
+#'   are printed in the legend. If `FALSE`, only the
+#'   node types used are printed in the legend.
 #'
 #' @param ... arguments passed to [visNetwork()].
 #'
@@ -228,20 +239,26 @@ render_drake_graph <- function(
   layout = "layout_with_sugiyama", direction = "LR", hover = TRUE,
   main = graph_dataframes$default_title, selfcontained = FALSE,
   navigationButtons = TRUE, # nolint
-  ncol_legend = 1,
+  ncol_legend = 1, full_legend = TRUE,
   ...
 ){
+  if (!full_legend){
+    graph_dataframes$legend_nodes <- filter_legend_nodes(graph_dataframes)
+  }
   out <- visNetwork::visNetwork(
     nodes = graph_dataframes$nodes,
     edges = graph_dataframes$edges,
     main = main, ...
   ) %>%
-    visNetwork::visLegend(
+    visNetwork::visHierarchicalLayout(direction = direction)
+  if (length(ncol_legend) && ncol_legend > 0){
+    out <- visNetwork::visLegend(
+      graph = out,
       useGroups = FALSE,
       addNodes = graph_dataframes$legend_nodes,
       ncol = ncol_legend
-    ) %>%
-    visNetwork::visHierarchicalLayout(direction = direction)
+    )
+  }
   if (nrow(graph_dataframes$edges)){
     out <- visNetwork::visIgraphLayout(
       graph = out,
@@ -297,4 +314,11 @@ with_hover <- function(x) {
         });
       }"
     )
+}
+
+filter_legend_nodes <- function(dfs){
+  colors <- unique(dfs$nodes$color)
+  shapes <- unique(dfs$nodes$shape)
+  ln <- dfs$legend_nodes
+  ln[ln$color %in% colors & ln$shape %in% shapes, ]
 }
