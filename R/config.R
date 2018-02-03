@@ -240,6 +240,8 @@
 #'   - `"promise"`: lazy loading with [delayedAssign()]
 #'   - `"binding"`: lazy loading with active bindings:
 #'     [bindr::populate_env()].
+#'   - `TRUE`: same as `"promise"`.
+#'   - `FALSE`: same as `"eager"`.
 #'
 #'   `lazy_load` should not be `"promise"`
 #'   for `"parLapply"` parallelism combined with `jobs` greater than 1.
