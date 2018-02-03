@@ -87,8 +87,8 @@ build_drake_graph <- function(
   graph <- make_empty_graph() +
     vertex(vertices) +
     edge(edges)
-  graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
-  return(graph)
+  prune_drake_graph(graph = graph, to = targets, jobs = jobs) %>%
+    igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
 }
 
 #' @title Prune the dependency network of your project.

@@ -1,5 +1,18 @@
 drake_context("graph")
 
+test_with_dir("Recursive functions are okay", {
+  factorial <- function(n){
+    if (n == 0){
+      1
+    } else {
+      n * factorial(n - 1)
+    }
+  }
+  x <- drake_plan(output = factorial(10))
+  cache <- storr::storr_environment()
+  make(x, cache = cache, session_info = FALSE)
+})
+
 test_with_dir("drake searches past outdated targets for parallel stages", {
   plan <- drake_plan(
     a = 1,

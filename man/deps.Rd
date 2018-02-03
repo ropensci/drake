@@ -29,7 +29,13 @@ will return target names found in calls to \code{\link[=loadd]{loadd()}}
 and \code{\link[=readd]{readd()}} in active code chunks.
 These targets are needed in order to run \code{knit('report.Rmd')}
 to produce the output file \code{'report.md'}, so technically,
-they are dependencies of \code{'report.md'}, not \code{'report.Rmd'}
+they are dependencies of \code{'report.md'}, not \code{'report.Rmd'}.
+
+\code{Drake} takes special precautions so that a target/import
+does not depend on itself. For example, \code{deps(f)`` might return}"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
+this conflict and runs as expected. In other words, \code{\link[=make]{make()}}
+automatically removes all self-referential loops in the dependency
+network.
 }
 \examples{
 # Your workflow likely depends on functions in your workspace.
