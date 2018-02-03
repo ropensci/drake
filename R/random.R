@@ -9,7 +9,10 @@ choose_seed <- function(supplied, cache){
       "You supplied a seed of ", supplied,
       "to either make() or drake_config(). ",
       "Your project already has a different seed: ", previous, ". ",
-      "Use read_drake_seed() to see for yourself.",
+      "Use read_drake_seed() to see the seed for yourself. ",
+      "To reset the project's seed, you will have to destroy the cache ",
+      "and restart from scratch: clean(destroy = TRUE). This may seem ",
+      "excessive and inconvenient, but it ensures reproducible results.",
       call. = FALSE
     )
   }
