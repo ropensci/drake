@@ -2,7 +2,7 @@
 
 | Release | Usage | Development |
 |:--------|:------|:------------|
-| [![JOSS](http://joss.theoj.org/papers/10.21105/joss.00550/status.svg)](https://doi.org/10.21105/joss.00550) | [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true)](https://ci.appveyor.com/project/ropensci/drake) |
+| [![JOSS](http://joss.theoj.org/papers/10.21105/joss.00550/status.svg)](https://doi.org/10.21105/joss.00550) | [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true&branch=master)](https://ci.appveyor.com/project/ropensci/drake) |
 | [![rOpenSci](https://badges.ropensci.org/156_status.svg)](https://github.com/ropensci/onboarding/issues/156) | [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-blue.svg)](https://cran.r-project.org/) | [![Travis](https://travis-ci.org/ropensci/drake.svg?branch=master)](https://travis-ci.org/ropensci/drake) |
 | [![CRAN](http://www.r-pkg.org/badges/version/drake)](http://cran.r-project.org/package=drake) | [![downloads](http://cranlogs.r-pkg.org/badges/drake)](http://cran.rstudio.com/package=drake) | [![Codecov](https://codecov.io/github/ropensci/drake/coverage.svg?branch=master)](https://codecov.io/github/ropensci/drake?branch=master) |
 |[![Zenodo](https://zenodo.org/badge/82609103.svg)](https://zenodo.org/badge/latestdoi/82609103) | |
