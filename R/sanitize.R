@@ -76,3 +76,35 @@ repair_target_names <- function(x){
   x[!nchar(x)] <- "X"
   make.unique(x, sep = "_")
 }
+
+#' @title Exclude version control of the drake project cache files.
+#' @description Add drake cache directory (hidden folder named `.drake`)
+#' to `.gitignore`, when if there is not registered.
+#' @param path path to `.gitignore`. Typically below the root directory.
+#' @param verbose If TRUE, show status message.
+#' @examples
+#' \dontrun{
+#' add_ignore(path = '.gitignore', verbose = FALSE)
+#' }
+add_ignore <- function(path = NULL, verbose = FALSE) {
+
+  if (file.exists(path)) {
+    lines <- readLines(path, warn = FALSE)
+    lines <- lines[lines != ""]
+  } else {
+    lines <- character(0)
+  }
+
+  if (".drake" %in% lines) {
+      if (verbose == TRUE)
+        rlang::inform("Already existed in line")
+    } else {
+      if (verbose == TRUE)
+        rlang::inform(
+          paste0("Adding ", basename(drake::default_cache_path()), " to ", path)
+          )
+
+      lines <- c(lines, basename(drake::default_cache_path()))
+      writeLines(lines, path)
+    }
+}
