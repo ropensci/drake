@@ -119,7 +119,7 @@ readd <- function(
 #'   That means you need to have already called [make()]
 #'   if you set `deps` to `TRUE`.
 #'
-#' @param lazy either a character vector or a logical. Choices:
+#' @param lazy either a string or a logical. Choices:
 #'   - `"eager"`: no lazy loading. The target is loaded right away
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]

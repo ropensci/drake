@@ -59,7 +59,7 @@ during the last \code{\link[=make]{make()}}.
 That means you need to have already called \code{\link[=make]{make()}}
 if you set \code{deps} to \code{TRUE}.}
 
-\item{lazy}{either a character vector or a logical. Choices:
+\item{lazy}{either a string or a logical. Choices:
 \itemize{
 \item \code{"eager"}: no lazy loading. The target is loaded right away
 with \code{\link[=assign]{assign()}}.
