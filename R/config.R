@@ -349,6 +349,7 @@ drake_config <- function(
     packages = packages,
     prework = prework
   )
+  add_ignore(path = ".gitignore", verbose = FALSE)
   if (is.null(cache)) {
     cache <- recover_cache(
       force = force, verbose = verbose, fetch_cache = fetch_cache)
