@@ -90,7 +90,6 @@ conclude_build <- function(target, value, meta, start, config){
   invisible(value)
 }
 
-
 build_target <- function(target, meta, start, config) {
   command <- get_evaluation_command(target = target, config = config)
   seed <- list(seed = config$seed, target = target) %>%
