@@ -128,6 +128,10 @@ readd <- function(
 #'   if `deps` is `TRUE`. If none is supplied,
 #'   it will be read from the cache.
 #'
+#' @param replace logical. If `FALSE`,
+#'   items already in your enviroment
+#'   will not be replaced.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -160,7 +164,8 @@ loadd <- function(
   verbose = 1,
   deps = FALSE,
   lazy = FALSE,
-  graph = NULL
+  graph = NULL,
+  replace = TRUE
 ){
   if (is.null(cache)){
     stop("cannot find drake cache.")
@@ -190,6 +195,9 @@ loadd <- function(
     ) %>%
       unlist
     targets <- targets[exists]
+  }
+  if (!replace){
+    targets <- setdiff(targets, ls(envir, all.names = TRUE))
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,

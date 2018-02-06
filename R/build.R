@@ -10,6 +10,7 @@
 #' @param meta list of metadata that tell which
 #'   targets are up to date (from [drake_meta()]).
 #' @param config internal configuration list
+#' @inheritParams loadd
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -19,23 +20,51 @@
 #' load_basic_example() # Get the code with drake_example("basic").
 #' # Create the master internal configuration list.
 #' config <- drake_config(my_plan)
-#' # Optionally, compute metadata on 'small',
-#' # including a hash/fingerprint
-#' # of the dependencies. If meta is not supplied,
-#' # drake_build() computes it automatically.
-#' meta <- drake_meta(target = "small", config = config)
-#' # Should not yet include 'small'.
+#' out <- drake_build(small, config = config)
+#' # Now includes `small`.
 #' cached()
-#' # Build 'small'.
-#' # Equivalent to just drake_build(target = "small", config = config).
-#' drake_build(target = "small", config = config, meta = meta)
-#' # Should now include 'small'
-#' cached()
-#' readd(small)
+#' head(readd(small))
+#' # `small` was invisibly returned.
+#' head(out)
+#' # If you previously called make(),
+#' # `config` is just read from the cache.
+#' make(my_plan, verbose = FALSE)
+#' result <- drake_build(small)
+#' head(result)
 #' })
 #' }
-drake_build <- function(target, config, meta = NULL){
-  build_and_store(target = target, config = config, meta = meta)
+drake_build <- function(
+  target,
+  config = NULL,
+  meta = NULL,
+  character_only = FALSE,
+  envir = parent.frame(),
+  jobs = 1,
+  replace = FALSE
+){
+  if (!is.null(meta)){
+    warning(
+      "drake_build() is exclusively user-side now, ",
+      "so we can affort to compute `meta` on the fly. ",
+      "Thus, the `meta` argument is deprecated."
+    )
+  }
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
+  if (is.null(config)){
+    config <- read_drake_config(envir = envir, jobs = jobs)
+  }
+  loadd(
+    list = target,
+    deps = TRUE,
+    envir = envir,
+    cache = config$cache,
+    graph = config$graph,
+    jobs = jobs,
+    replace = replace
+  )
+  build_and_store(target = target, config = config)
 }
 
 build_and_store <- function(target, config, meta = NULL){

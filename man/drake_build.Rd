@@ -4,7 +4,8 @@
 \alias{drake_build}
 \title{Build/process a single target or import.}
 \usage{
-drake_build(target, config, meta = NULL)
+drake_build(target, config = NULL, meta = NULL, character_only = FALSE,
+  envir = parent.frame(), jobs = 1, replace = FALSE)
 }
 \arguments{
 \item{target}{name of the target}
@@ -13,6 +14,19 @@ drake_build(target, config, meta = NULL)
 
 \item{meta}{list of metadata that tell which
 targets are up to date (from \code{\link[=drake_meta]{drake_meta()}}).}
+
+\item{envir}{environment to load objects into. Defaults to the
+calling environment (current workspace).}
+
+\item{jobs}{number of parallel jobs for loading objects. On
+non-Windows systems, the loading process for multiple objects
+can be lightly parallelized via \code{parallel::mclapply()}.
+just set jobs to be an integer greater than 1. On Windows,
+\code{jobs} is automatically demoted to 1.}
+
+\item{replace}{logical. If \code{FALSE},
+items already in your enviroment
+will not be replaced.}
 }
 \value{
 The value of the target right after it is built.
@@ -32,19 +46,17 @@ test_with_dir("Quarantine side effects.", {
 load_basic_example() # Get the code with drake_example("basic").
 # Create the master internal configuration list.
 config <- drake_config(my_plan)
-# Optionally, compute metadata on 'small',
-# including a hash/fingerprint
-# of the dependencies. If meta is not supplied,
-# drake_build() computes it automatically.
-meta <- drake_meta(target = "small", config = config)
-# Should not yet include 'small'.
+out <- drake_build(small, config = config)
+# Now includes `small`.
 cached()
-# Build 'small'.
-# Equivalent to just drake_build(target = "small", config = config).
-drake_build(target = "small", config = config, meta = meta)
-# Should now include 'small'
-cached()
-readd(small)
+head(readd(small))
+# `small` was invisibly returned.
+head(out)
+# If you previously called make(),
+# `config` is just read from the cache.
+make(my_plan, verbose = FALSE)
+result <- drake_build(small)
+head(result)
 })
 }
 }
