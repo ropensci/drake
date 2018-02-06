@@ -161,6 +161,14 @@ next_stage <- function(config){
   )
 }
 
+drake_build_worker <- function(target, meta_list, config){
+  drake_build(
+    target = target,
+    meta = meta_list[[target]],
+    config = config
+  )
+}
+
 worker_next_stage <- function(targets, meta_list, config){
   config$stages_cache$set(
     key = "next_stage",

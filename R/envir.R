@@ -76,4 +76,3 @@ flexible_get <- function(target) {
   fun <- deparse(lang[[3]])
   get(fun, envir = getNamespace(pkg))
 }
-

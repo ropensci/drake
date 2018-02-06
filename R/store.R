@@ -47,18 +47,13 @@ store_target <- function(target, value, meta, start, config) {
 }
 
 finalize_storage <- function(target, value, meta, config, start){
-   meta <- append_times_to_meta(
+  meta <- append_times_to_meta(
     target = target,
     start = start,
     meta = meta,
     config = config
   )
   config$cache$set(key = target, value = meta, namespace = "meta")
-  set_progress(
-    target = target,
-    value = ifelse(inherits(value, "error"), "failed", "finished"),
-    config = config
-  )
 }
 
 store_object <- function(target, value, meta, config) {

@@ -18,17 +18,15 @@ test_with_dir("retries", {
       stop("this error is deliberate and expected.")
     }
   }
+
   pl <- drake_plan(x = f())
   expect_equal(diagnose(), character(0))
 
   debrief_retries <- function(){
     expect_true(cached(x))
-    expect_equal(diagnose(), "x")
-    expect_error(diagnose("notfound"))
-    expect_true(inherits(diagnose(x), "error"))
-    y <- "x"
-    expect_true(inherits(diagnose(y, character_only = TRUE), "error"))
+    expect_equal(diagnose(), character(0))
   }
+
   make(
     pl, parallelism = parallelism, jobs = jobs,
     envir = e, retries = 10, verbose = FALSE,

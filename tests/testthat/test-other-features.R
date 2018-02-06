@@ -1,5 +1,15 @@
 drake_context("other features")
 
+test_with_dir("build_target() does not need to access cache", {
+  config <- drake_config(drake_plan(x = 1))
+  config$cache <- NULL
+  expect_equal(1, build_target(target = "x", config = config))
+  expect_error(
+    drake_build(target = "x", config = config),
+    regexp = "non-function"
+  )
+})
+
 test_with_dir("cache log files and make()", {
   x <- drake_plan(a = 1)
   make(x, session_info = FALSE)
@@ -63,6 +73,10 @@ test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(in_progress(), character(0))
   expect_is(e <- diagnose(x), "error")
   expect_true(grepl(pattern = "function_doesnt_exist", x = e$message))
+  expect_error(diagnose("notfound"))
+  expect_true(inherits(diagnose(x), "error"))
+  y <- "x"
+  expect_true(inherits(diagnose(y, character_only = TRUE), "error"))
 })
 
 test_with_dir("missed() works", {
