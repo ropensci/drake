@@ -9,10 +9,10 @@ extract_imports <- function(
     package <- as.character(substitute(package))
   }
   pkg_env <- getNamespace(package) %>%
-    as.list %>%
+    as.list(all.names = TRUE) %>%
     list2env(parent = globalenv())
   lightly_parallelize(
-    X = ls(pkg_env),
+    X = ls(pkg_env, all.names = TRUE),
     FUN = function(name){
       assign(
         x = name,
