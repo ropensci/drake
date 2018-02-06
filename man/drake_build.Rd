@@ -25,7 +25,7 @@ just set jobs to be an integer greater than 1. On Windows,
 \code{jobs} is automatically demoted to 1.}
 
 \item{replace}{logical. If \code{FALSE},
-items already in your enviroment
+items already in your enviromnent
 will not be replaced.}
 }
 \value{

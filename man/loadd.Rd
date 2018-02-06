@@ -70,7 +70,7 @@ if \code{deps} is \code{TRUE}. If none is supplied,
 it will be read from the cache.}
 
 \item{replace}{logical. If \code{FALSE},
-items already in your enviroment
+items already in your enviromnent
 will not be replaced.}
 }
 \value{
