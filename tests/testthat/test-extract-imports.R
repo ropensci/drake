@@ -1,4 +1,4 @@
-context("extract-imports")
+drake_context("extract imports")
 
 test_with_dir("extract_imports() works", {
   scenario <- get_testing_scenario()
