@@ -4,12 +4,10 @@
 \alias{add_ignore}
 \title{Exclude version control of the drake project cache files.}
 \usage{
-add_ignore(path = NULL, verbose = FALSE)
+add_ignore(path = drake::find_project())
 }
 \arguments{
 \item{path}{path to \code{.gitignore}. Typically below the root directory.}
-
-\item{verbose}{If TRUE, show status message.}
 }
 \description{
 Add drake cache directory (hidden folder named \code{.drake})
@@ -17,6 +15,6 @@ to \code{.gitignore}, when if there is not registered.
 }
 \examples{
 \dontrun{
-add_ignore(path = '.gitignore', verbose = FALSE)
+add_ignore(path = '.gitignore')
 }
 }
