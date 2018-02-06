@@ -7,7 +7,7 @@
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1, deps = FALSE, lazy = FALSE)
+  verbose = 1, deps = FALSE, lazy = FALSE, graph = NULL)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -62,6 +62,11 @@ if you set \code{deps} to \code{TRUE}.}
 \item{lazy}{logical, whether to lazy load with
 \code{\link[=delayedAssign]{delayedAssign()}} rather than the more eager
 \code{\link[=assign]{assign()}}.}
+
+\item{graph}{optional igraph object, representation
+of the workflow network for getting dependencies
+if \code{deps} is \code{TRUE}. If none is supplied,
+it will be read from the cache.}
 }
 \value{
 \code{NULL}
