@@ -35,6 +35,10 @@
 #' })
 #' }
 drake_build <- function(target, config, meta = NULL){
+  build_and_store(target = target, config = config, meta = meta)
+}
+
+build_and_store <- function(target, config, meta = NULL){
   # The environment should have been pruned by now.
   # For staged parallelism, this was already done in bulk
   # for the whole stage.
@@ -45,19 +49,7 @@ drake_build <- function(target, config, meta = NULL){
       meta <- drake_meta(target = target, config = config)
     }
     announce_build(target = target, meta = meta, config = config)
-    if (meta$imported) {
-      value <- process_import(target = target, config = config)
-    } else {
-      # build_target() does not require access to the cache.
-      # A custom future-based job scheduler could build with different steps
-      # to write the output to the master process before caching it.
-      value <- build_target(
-        target = target,
-        meta = meta,
-        start = start,
-        config = config
-      )
-    }
+    value <- just_build(target = target, meta = meta, config = config)
     conclude_build(
       target = target,
       value = value,
@@ -66,6 +58,21 @@ drake_build <- function(target, config, meta = NULL){
       config = config
     )
   })
+}
+
+just_build <- function(target, meta, config){
+  if (meta$imported) {
+    process_import(target = target, config = config)
+  } else {
+    # build_target() does not require access to the cache.
+    # A custom future-based job scheduler could build with different steps
+    # to write the output to the master process before caching it.
+    build_target(
+      target = target,
+      meta = meta,
+      config = config
+    )
+  }
 }
 
 announce_build <- function(target, meta, config){
@@ -90,7 +97,7 @@ conclude_build <- function(target, value, meta, start, config){
   invisible(value)
 }
 
-build_target <- function(target, meta, start, config) {
+build_target <- function(target, meta, config) {
   command <- get_evaluation_command(target = target, config = config)
   seed <- list(seed = config$seed, target = target) %>%
     seed_from_object
