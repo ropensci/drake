@@ -1,12 +1,22 @@
 store_target <- function(target, value, meta, start, config) {
   # Need complete up-to-date metadata
   # to store targets properly.
+  # Files must have up-to-date modification times and hashes,
+  # and any metadata postponed due to custom triggers
+  # must be collected now.
   meta <- finish_meta(
     target = target,
     meta = meta,
     config = config
   )
-  if (is_file(target)) {
+  if (inherits(value, "error")){
+    store_error(
+      target = target,
+      value = value,
+      meta = meta,
+      config = config
+    )
+  } else if (is_file(target)) {
     store_file(
       target = target,
       meta = meta,
@@ -23,13 +33,14 @@ store_target <- function(target, value, meta, start, config) {
     store_object(
       target = target,
       value = value,
+      meta = meta,
       config = config
     )
   }
-  # Add build times to metadata at the last minute
-  # so that the timing information takes caching operations
-  # into account.
-  meta <- append_times_to_meta(
+}
+
+finalize_storage <- function(target, meta, config, progress){
+   meta <- append_times_to_meta(
     target = target,
     start = start,
     meta = meta,
@@ -38,12 +49,12 @@ store_target <- function(target, value, meta, start, config) {
   config$cache$set(key = target, value = meta, namespace = "meta")
   set_progress(
     target = target,
-    value = "finished",
+    value = progress,
     config = config
   )
 }
 
-store_object <- function(target, value, config) {
+store_object <- function(target, value, meta, config) {
   hash <- config$cache$set(
     key = target,
     value = value,
@@ -53,6 +64,12 @@ store_object <- function(target, value, config) {
     key = target,
     namespace = "kernels",
     hash = hash
+  )
+  finalize_storage(
+    target = target,
+    meta = meta,
+    config = config,
+    progress = "finished"
   )
 }
 
@@ -67,6 +84,12 @@ store_file <- function(target, meta, config) {
     key = target,
     namespace = "kernels",
     hash = hash
+  )
+  finalize_storage(
+    target = target,
+    meta = meta,
+    config = config,
+    progress = "finished"
   )
 }
 
@@ -85,5 +108,36 @@ store_function <- function(target, value, meta, config){
     key = target,
     value = string,
     namespace = "kernels"
+  )
+  finalize_storage(
+    target = target,
+    meta = meta,
+    config = config,
+    progress = "finished"
+  )
+}
+
+store_error <- function(target, config){
+  config$cache$set(
+    key = target,
+    value = value,
+    namespace = "errors"
+  )
+  text <- paste("fail", target)
+  if (config$verbose){
+    finish_console(text = text, pattern = "fail", verbose = config$verbose)
+  }
+  finalize_storage(
+    target = target,
+    meta = meta,
+    config = config,
+    progress = "failed"
+  )
+  # We may actually want the option to allow failures
+  stop(
+    "Target '", target, "' failed to build. ",
+    "Use diagnose(", target,
+    ") to retrieve diagnostic information.",
+    call. = FALSE
   )
 }

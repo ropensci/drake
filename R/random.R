@@ -35,12 +35,3 @@ seed_from_object <- function(x) {
   hexval <- paste0("0x", hash)
   utils::type.convert(hexval) %% .Machine$integer.max
 }
-
-# From lintr
-`%||%` <- function(x, y) {
-  if (is.null(x) || length(x) <= 0) {
-    y
-  } else {
-    x
-  }
-}

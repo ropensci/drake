@@ -52,10 +52,10 @@ parallel_stages <- function(config, from_scratch = FALSE){
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
   config$execution_graph <- imports_graph(config = config)
-  run_parallel(config = config, worker = worker_parallel_stages)
+  run_staged_parallelism(config = config, worker = worker_parallel_stages)
   targets_graph <- targets_graph(config = config)
   config$execution_graph <- targets_graph
-  run_parallel(config = config, worker = worker_parallel_stages)
+  run_staged_parallelism(config = config, worker = worker_parallel_stages)
   out <- read_parallel_stages(config = config)
   if (!length(out)){
     return(data.frame(
@@ -77,10 +77,18 @@ parallel_stages <- function(config, from_scratch = FALSE){
     v = delete_these
   )
   config$trigger <- "always"
-  run_parallel(config = config, worker = worker_parallel_stages)
+  run_staged_parallelism(config = config, worker = worker_parallel_stages)
   out <- read_parallel_stages(config = config)
   config$stages_cache$clear()
   out[order(out$stage, decreasing = FALSE), ]
+}
+
+run_staged_parallelism <- function(config, worker) {
+  config <- exclude_imports_if(config = config)
+  while (length(V(config$execution_graph))){
+    config <- parallel_stage(worker = worker, config = config)
+  }
+  invisible()
 }
 
 worker_parallel_stages <- function(targets, meta_list, config){

@@ -1,5 +1,5 @@
 run_lapply <- function(config){
-  run_parallel(config = config, worker = worker_lapply)
+  run_staged_parallelism(config = config, worker = worker_lapply)
 }
 
 worker_lapply <- function(targets, meta_list, config){

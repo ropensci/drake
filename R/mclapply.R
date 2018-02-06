@@ -1,5 +1,5 @@
 run_mclapply <- function(config){
-  run_parallel(config = config, worker = worker_mclapply)
+  run_staged_parallelism(config = config, worker = worker_mclapply)
 }
 
 worker_mclapply <- function(targets, meta_list, config){
