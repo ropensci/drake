@@ -23,6 +23,7 @@ cpu
 cranlogs
 customizable
 dereferenced
+deterministically
 devtools
 dplyr
 Ecdat

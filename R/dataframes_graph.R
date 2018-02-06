@@ -35,7 +35,7 @@
 #'   Applied after `from`, `mode`, and `order`.
 #'   Be advised: edges are only kept for adjacent nodes in `subset`.
 #'   If you do not select all the intermediate nodes,
-#'   edges will drop from the graph.=
+#'   edges will drop from the graph.
 #'
 #' @param targets_only logical,
 #'   whether to skip the imports and only include the

@@ -56,7 +56,7 @@ build_distributed <- function(target, meta_list, cache_path){
       return(invisible())
     }
   }
-  drake_build(
+  build_and_store(
     target = target,
     meta = meta_list[[target]],
     config = config

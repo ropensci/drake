@@ -1,6 +1,6 @@
 run_future_lapply <- function(config){
   prepare_distributed(config = config)
-  run_parallel(config = config, worker = worker_future_lapply)
+  run_staged_parallelism(config = config, worker = worker_future_lapply)
   finish_distributed(config = config)
 }
 

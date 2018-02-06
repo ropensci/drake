@@ -255,8 +255,9 @@ diagnose(verbose = FALSE)
 
 f <- function(x){
   if (x < 0){
-    stop("unusual error")
+    stop("`x` cannot be negative.")
   }
+  x
 }
 bad_plan <- drake_plan(
   a = 12,
@@ -282,7 +283,7 @@ str(error)
 error$calls # View the traceback.
 ```
 
-To figure out what went wrong, you could try to build the failed target interactively. To do that, you must load the target's dependencies in your workspace, which you can easily do with `loadd(my_target, deps = TRUE)`. Then, build it on its own with `drake_build()`.
+To figure out what went wrong, you could try to build the failed target interactively. To do that, simply call `drake_build()`. This function first calls `loadd(deps = TRUE)` to load any missing dependencies (see the `replace` argument here) and then builds your target.
 
 ```{r loaddeps}
 # Pretend we just opened a new R session.
@@ -294,23 +295,38 @@ config <- drake_config(plan = bad_plan)
 # my_target depends on b.
 "b" %in% ls()
 
-loadd(my_target, deps = TRUE)
-
-"b" %in% ls()
-
 # Try to build my_target until the error is fixed.
 # Skip all that pesky work checking dependencies.
-drake_build(target = "my_target", config = config)
+drake_build(my_target, config = config)
 
+# The target failed, but the dependency was loaded.
+"b" %in% ls()
+
+# What was `b` again?
+b
+
+# How was `b` used?
 diagnose(my_target)$message
+
+diagnose(my_target)$call
 
 f
 
 # Aha! The error was in f(). Let's fix it and try again.
 f <- function(x){
-  return(x)
+  x <- abs(x)
+  if (x < 0){
+    stop("`x` cannot be negative.")
+  }
+  x
 }
-drake_build(target = "my_target", config = config)
+
+# Now it works!
+# Since you called make() previously, `config` is read from the cache
+# if you do not supply it.
+drake_build(my_target)
+
+readd(my_target)
 ```
 
 ## Tidy evaluation: a caveat to diagnosing interactively

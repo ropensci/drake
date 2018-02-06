@@ -94,7 +94,7 @@ Subset of nodes to display in the graph.
 Applied after \code{from}, \code{mode}, and \code{order}.
 Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
-edges will drop from the graph.=}
+edges will drop from the graph.}
 
 \item{ncol_legend}{number of columns in the legend nodes.
 To remove the legend entirely, set \code{ncol_legend} to \code{NULL} or \code{0}.}

@@ -85,3 +85,9 @@ test_with_dir("deprecated example(s)_drake functions", {
 test_with_dir("deprecate misc utilities", {
   expect_warning(as_file("x"))
 })
+
+test_with_dir("deprecated arguments", {
+  pl <- drake_plan(a = 1, b = a)
+  con <- drake_config(plan = pl, session_info = FALSE)
+  expect_warning(drake_build(a, config = con, meta = list()))
+})

@@ -38,7 +38,7 @@ Subset of nodes to display in the graph.
 Applied after \code{from}, \code{mode}, and \code{order}.
 Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
-edges will drop from the graph.=}
+edges will drop from the graph.}
 
 \item{build_times}{logical, whether to show the \code{\link[=build_times]{build_times()}}
 of the targets and imports, if available.

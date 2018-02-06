@@ -5,14 +5,6 @@ run_parallel_backend <- function(config){
   )(config)
 }
 
-run_parallel <- function(config, worker) {
-  config <- exclude_imports_if(config = config)
-  while (length(V(config$execution_graph))){
-    config <- parallel_stage(worker = worker, config = config)
-  }
-  invisible()
-}
-
 parallel_filter <- function(x, f, jobs = 1, ...){
   index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...)
   x[as.logical(index)]

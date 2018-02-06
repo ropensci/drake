@@ -10,6 +10,7 @@
 #' @param meta list of metadata that tell which
 #'   targets are up to date (from [drake_meta()]).
 #' @param config internal configuration list
+#' @inheritParams loadd
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -19,87 +20,134 @@
 #' load_basic_example() # Get the code with drake_example("basic").
 #' # Create the master internal configuration list.
 #' config <- drake_config(my_plan)
-#' # Optionally, compute metadata on 'small',
-#' # including a hash/fingerprint
-#' # of the dependencies. If meta is not supplied,
-#' # drake_build() computes it automatically.
-#' meta <- drake_meta(target = "small", config = config)
-#' # Should not yet include 'small'.
+#' out <- drake_build(small, config = config)
+#' # Now includes `small`.
 #' cached()
-#' # Build 'small'.
-#' # Equivalent to just drake_build(target = "small", config = config).
-#' drake_build(target = "small", config = config, meta = meta)
-#' # Should now include 'small'
-#' cached()
-#' readd(small)
+#' head(readd(small))
+#' # `small` was invisibly returned.
+#' head(out)
+#' # If you previously called make(),
+#' # `config` is just read from the cache.
+#' make(my_plan, verbose = FALSE)
+#' result <- drake_build(small)
+#' head(result)
 #' })
 #' }
-drake_build <- function(target, config, meta = NULL){
-  if (is.null(meta)){
-    meta <- drake_meta(target = target, config = config)
+drake_build <- function(
+  target,
+  config = NULL,
+  meta = NULL,
+  character_only = FALSE,
+  envir = parent.frame(),
+  jobs = 1,
+  replace = FALSE
+){
+  if (!is.null(meta)){
+    warning(
+      "drake_build() is exclusively user-side now, ",
+      "so we can affort to compute `meta` on the fly. ",
+      "Thus, the `meta` argument is deprecated."
+    )
   }
-  config$hook(
-    build_in_hook(
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
+  if (is.null(config)){
+    config <- read_drake_config(envir = envir, jobs = jobs)
+  }
+  loadd(
+    list = target,
+    deps = TRUE,
+    envir = envir,
+    cache = config$cache,
+    graph = config$graph,
+    jobs = jobs,
+    replace = replace
+  )
+  build_and_store(target = target, config = config)
+}
+
+build_and_store <- function(target, config, meta = NULL){
+  # The environment should have been pruned by now.
+  # For staged parallelism, this was already done in bulk
+  # for the whole stage.
+  # Most of these steps require access to the cache.
+  config$hook({
+    start <- proc.time()
+    if (is.null(meta)){
+      meta <- drake_meta(target = target, config = config)
+    }
+    announce_build(target = target, meta = meta, config = config)
+    value <- just_build(target = target, meta = meta, config = config)
+    conclude_build(
+      target = target,
+      value = value,
+      meta = meta,
+      start = start,
+      config = config
+    )
+  })
+}
+
+just_build <- function(target, meta, config){
+  if (meta$imported) {
+    process_import(target = target, config = config)
+  } else {
+    # build_target() does not require access to the cache.
+    # A custom future-based job scheduler could build with different steps
+    # to write the output to the master process before caching it.
+    build_target(
       target = target,
       meta = meta,
       config = config
     )
-  )
+  }
 }
 
-drake_build_worker <- function(target, meta_list, config){
-  drake_build(
-    target = target,
-    meta = meta_list[[target]],
-    config = config
-  )
-}
-
-build_in_hook <- function(target, meta, config) {
-  start <- proc.time()
+announce_build <- function(target, meta, config){
   set_progress(
     target = target,
     value = "in progress",
     config = config
   )
   console(imported = meta$imported, target = target, config = config)
-  if (meta$imported) {
-    value <- imported_target(target = target,
-      config = config)
-  } else {
-    value <- build_target(target = target,
-      config = config)
-  }
+}
+
+conclude_build <- function(target, value, meta, start, config){
+  check_processed_file(target)
   store_target(target = target, value = value, meta = meta,
     start = start, config = config)
+  set_progress(
+    target = target,
+    value = ifelse(inherits(value, "error"), "failed", "finished"),
+    config = config
+  )
+  handle_error(target = target, value = value, config = config)
   invisible(value)
 }
 
-build_target <- function(target, config) {
+build_target <- function(target, meta, config) {
   command <- get_evaluation_command(target = target, config = config)
   seed <- list(seed = config$seed, target = target) %>%
     seed_from_object
-  value <- run_command(
-    target = target, command = command, config = config, seed = seed
-  )
-  check_built_file(target)
-  value
+  run_command(
+    target = target, command = command, config = config, seed = seed)
 }
 
-check_built_file <- function(target){
+check_processed_file <- function(target){
   if (!is_file(target)){
     return()
   }
   if (!file.exists(drake::drake_unquote(target))){
     warning(
-      "File target ", target, " was built,\n",
+      "File ", target, " was built or processed,\n",
       "but the file itself does not exist.",
       call. = FALSE
     )
   }
 }
 
-imported_target <- function(target, config) {
+process_import <- function(target, config) {
   if (is_file(target)) {
     return(NA)
   } else if (target %in% ls(config$envir, all.names = TRUE)) {
@@ -113,24 +161,19 @@ imported_target <- function(target, config) {
   value
 }
 
-flexible_get <- function(target) {
-  stopifnot(length(target) == 1)
-  parsed <- parse(text = target) %>%
-    as.call %>%
-    as.list
-  lang <- parsed[[1]]
-  is_namespaced <- length(lang) > 1
-  if (!is_namespaced)
-    return(get(target))
-  stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
-  pkg <- deparse(lang[[2]])
-  fun <- deparse(lang[[3]])
-  get(fun, envir = getNamespace(pkg))
-}
-
-# Turn a command into an anonymous function
-# call to avoid side effects that could interfere
-# with parallelism.
-functionize <- function(command) {
-  paste0("(function(){\n", command, "\n})()")
+# We may just want to have a warning here.
+handle_error <- function(target, value, config){
+  if (!inherits(value, "error")){
+    return()
+  }
+  if (config$verbose){
+    text <- paste("fail", target)
+    finish_console(text = text, pattern = "fail", verbose = config$verbose)
+  }
+  stop(
+    "Target '", target, "' failed to build. ",
+    "Use diagnose(", target,
+    ") to retrieve diagnostic information.",
+    call. = FALSE
+  )
 }

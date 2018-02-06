@@ -7,7 +7,8 @@
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1, deps = FALSE, lazy = "none")
+  verbose = 1, deps = FALSE, lazy = "none", graph = NULL,
+  replace = TRUE)
 }
 \arguments{
 \item{...}{targets to load from the cache, as names (unquoted)
@@ -69,6 +70,16 @@ with \code{\link[=assign]{assign()}}.
 \item \code{TRUE}: same as \code{"promise"}.
 \item \code{FALSE}: same as \code{"eager"}.
 }}
+
+\item{graph}{optional igraph object, representation
+of the workflow network for getting dependencies
+if \code{deps} is \code{TRUE}. If none is supplied,
+it will be read from the cache.}
+
+\item{replace}{logical. If \code{FALSE},
+items already in your enviroment
+will not be replaced.}
+
 }
 \value{
 \code{NULL}
