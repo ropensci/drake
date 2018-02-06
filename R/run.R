@@ -20,15 +20,10 @@ run_command <- function(target, command, seed, config){
       x = paste0("Error building target ", target, ": ", value$message),
       file = stderr()
     )
-    config$cache$set(
-      key = target,
-      value = value,
-      namespace = "errors"
-    )
     retries <- retries + 1
     console_retry(target = target, retries = retries, config = config)
   }
-  give_up(target = target, config = config)
+  value
 }
 
 one_try <- function(target, command, seed, config){
@@ -43,7 +38,6 @@ one_try <- function(target, command, seed, config){
 
 with_timeout <- function(target, command, config){
   env <- environment()
-  command <- wrap_in_try_statement(target = target, command = command)
   timeouts <- resolve_timeouts(target = target, config = config)
   R.utils::withTimeout({
       value <- eval(parse(text = command), envir = env)
@@ -75,31 +69,4 @@ resolve_timeouts <- function(target, config){
     }
   }
   timeouts
-}
-
-give_up <- function(target, config){
-  set_progress(
-    target = target,
-    value = "failed",
-    config = config
-  )
-  text <- paste("fail", target)
-  if (config$verbose){
-    finish_console(text = text, pattern = "fail", verbose = config$verbose)
-  }
-  stop(
-    "Target '", target, "' failed to build. ",
-    "Use diagnose(", target,
-    ") to retrieve diagnostic information.",
-    call. = FALSE
-  )
-}
-
-wrap_in_try_statement <- function(target, command){
-  paste(
-    target,
-    "<- evaluate::try_capture_stack(quote({\n",
-    command,
-    "\n}), env = config$envir)"
-  )
 }

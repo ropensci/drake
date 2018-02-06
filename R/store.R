@@ -1,14 +1,24 @@
 store_target <- function(target, value, meta, start, config) {
   # Need complete up-to-date metadata
   # to store targets properly.
+  # Files must have up-to-date modification times and hashes,
+  # and any metadata postponed due to custom triggers
+  # must be collected now.
   meta <- finish_meta(
     target = target,
     meta = meta,
     config = config
   )
-  if (is_file(target)) {
-    store_file(
+  if (inherits(value, "error")){
+    store_error(
       target = target,
+      value = value,
+      config = config
+    )
+  } else if (is_file(target)) {
+    store_object(
+      target = target,
+      value = meta$file,
       meta = meta,
       config = config
     )
@@ -23,12 +33,20 @@ store_target <- function(target, value, meta, start, config) {
     store_object(
       target = target,
       value = value,
+      meta = meta,
       config = config
     )
   }
-  # Add build times to metadata at the last minute
-  # so that the timing information takes caching operations
-  # into account.
+  finalize_storage(
+    target = target,
+    value = value,
+    meta = meta,
+    config = config,
+    start = start
+  )
+}
+
+finalize_storage <- function(target, value, meta, config, start){
   meta <- append_times_to_meta(
     target = target,
     start = start,
@@ -36,31 +54,12 @@ store_target <- function(target, value, meta, start, config) {
     config = config
   )
   config$cache$set(key = target, value = meta, namespace = "meta")
-  set_progress(
-    target = target,
-    value = "finished",
-    config = config
-  )
 }
 
-store_object <- function(target, value, config) {
+store_object <- function(target, value, meta, config) {
   hash <- config$cache$set(
     key = target,
     value = value,
-    namespace = config$cache$default_namespace
-  )
-  config$cache$driver$set_hash(
-    key = target,
-    namespace = "kernels",
-    hash = hash
-  )
-}
-
-store_file <- function(target, meta, config) {
-  # meta$file should have a file hash at this point.
-  hash <- config$cache$set(
-    key = target,
-    value = meta$file,
     namespace = config$cache$default_namespace
   )
   config$cache$driver$set_hash(
@@ -85,5 +84,13 @@ store_function <- function(target, value, meta, config){
     key = target,
     value = string,
     namespace = "kernels"
+  )
+}
+
+store_error <- function(target, value, config){
+  config$cache$set(
+    key = target,
+    value = value,
+    namespace = "errors"
   )
 }
