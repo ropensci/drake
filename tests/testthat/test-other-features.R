@@ -51,7 +51,7 @@ test_with_dir("make() with imports_only", {
   expect_false(cached(x))
 })
 
-test_with_dir("in_progress() works", {
+test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(in_progress(), character(0))
   bad_plan <- drake_plan(x = function_doesnt_exist())
   expect_error(tmp <- capture.output({
@@ -61,6 +61,8 @@ test_with_dir("in_progress() works", {
   )
   expect_equal(failed(), "x")
   expect_equal(in_progress(), character(0))
+  expect_is(e <- diagnose(x), "error")
+  expect_true(grepl(pattern = "function_doesnt_exist", x = e$message))
 })
 
 test_with_dir("missed() works", {

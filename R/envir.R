@@ -62,8 +62,18 @@ prune_envir <- function(targets, config){
   invisible()
 }
 
-nonfile_target_dependencies <- function(targets, config){
-  deps <- dependencies(targets = targets, config = config)
-  out <- parallel_filter(x = deps, f = is_not_file, jobs = config$jobs)
-  intersect(out, config$plan$target)
+flexible_get <- function(target) {
+  stopifnot(length(target) == 1)
+  parsed <- parse(text = target) %>%
+    as.call %>%
+    as.list
+  lang <- parsed[[1]]
+  is_namespaced <- length(lang) > 1
+  if (!is_namespaced)
+    return(get(target))
+  stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
+  pkg <- deparse(lang[[2]])
+  fun <- deparse(lang[[3]])
+  get(fun, envir = getNamespace(pkg))
 }
+

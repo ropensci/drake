@@ -36,8 +36,15 @@ get_evaluation_command <- function(target, config){
   wrap_in_try_statement(target = target, command = command)
 }
 
+# Turn a command into an anonymous function
+# call to avoid side effects that could interfere
+# with parallelism.
+functionize <- function(command) {
+  paste0("(function(){\n", command, "\n})()")
+}
+
 # If commands are text, we need to make sure
-# to 
+# to
 wrap_in_try_statement <- function(target, command){
   paste(
     target,

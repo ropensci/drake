@@ -69,9 +69,11 @@ build_in_hook <- function(target, meta, config) {
   } else {
     value <- build_target(target = target,
       config = config)
+    check_built_file(target)
   }
   store_target(target = target, value = value, meta = meta,
     start = start, config = config)
+  handle_error(target = target, value = value)
   invisible(value)
 }
 
@@ -79,11 +81,8 @@ build_target <- function(target, config) {
   command <- get_evaluation_command(target = target, config = config)
   seed <- list(seed = config$seed, target = target) %>%
     seed_from_object
-  value <- run_command(
-    target = target, command = command, config = config, seed = seed
-  )
-  check_built_file(target)
-  value
+  run_command(
+    target = target, command = command, config = config, seed = seed)
 }
 
 check_built_file <- function(target){
@@ -113,24 +112,19 @@ imported_target <- function(target, config) {
   value
 }
 
-flexible_get <- function(target) {
-  stopifnot(length(target) == 1)
-  parsed <- parse(text = target) %>%
-    as.call %>%
-    as.list
-  lang <- parsed[[1]]
-  is_namespaced <- length(lang) > 1
-  if (!is_namespaced)
-    return(get(target))
-  stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
-  pkg <- deparse(lang[[2]])
-  fun <- deparse(lang[[3]])
-  get(fun, envir = getNamespace(pkg))
-}
-
-# Turn a command into an anonymous function
-# call to avoid side effects that could interfere
-# with parallelism.
-functionize <- function(command) {
-  paste0("(function(){\n", command, "\n})()")
+# We may just want to have a warning here.
+handle_error <- function(target, value){
+  if (!inherits(value, "error")){
+    return()
+  }
+  if (config$verbose){
+    text <- paste("fail", target)
+    finish_console(text = text, pattern = "fail", verbose = config$verbose)
+  }
+  stop(
+    "Target '", target, "' failed to build. ",
+    "Use diagnose(", target,
+    ") to retrieve diagnostic information.",
+    call. = FALSE
+  )
 }

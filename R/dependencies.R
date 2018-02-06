@@ -171,6 +171,12 @@ dependencies <- function(targets, config){
   clean_dependency_list()
 }
 
+nonfile_target_dependencies <- function(targets, config){
+  deps <- dependencies(targets = targets, config = config)
+  out <- parallel_filter(x = deps, f = is_not_file, jobs = config$jobs)
+  intersect(out, config$plan$target)
+}
+
 command_dependencies <- function(command){
   if (!length(command)){
     return()

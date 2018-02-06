@@ -23,6 +23,7 @@ run_command <- function(target, command, seed, config){
     retries <- retries + 1
     console_retry(target = target, retries = retries, config = config)
   }
+  value
 }
 
 one_try <- function(target, command, seed, config){
