@@ -1,5 +1,7 @@
 # Version 5.1.0
 
+- Move `drake_build()` to be an exclusively user-side function.
+- Add a `replace` argument to `loadd()` so that objects already in the user's environment need not be replaced.
 - When the graph cyclic, print out all the cycles.
 - Prune self-referential loops (and duplicate edges) from the workflow graph. That way, recursive functions are allowed.
 - Add a `seed` argument to `make()`, `drake_config()`, and `load_basic_example()`. Also hard-code a default seed of `0`. That way, the pseudo-randomness in projects should be reproducible

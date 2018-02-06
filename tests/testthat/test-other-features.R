@@ -6,7 +6,7 @@ test_with_dir("build_target() does not need to access cache", {
   expect_equal(1, build_target(target = "x", config = config))
   expect_error(
     drake_build(target = "x", config = config),
-    regexp = "non-function"
+    regexp = "cannot find drake cache"
   )
 })
 
@@ -22,14 +22,52 @@ test_with_dir("cache log files and make()", {
   expect_true(file.exists("my.log"))
 })
 
-test_with_dir("drake_build can build a target by itself w/o input metadata", {
-  pl <- drake_plan(a = 1, b = 2)
-  con <- drake_config(plan = pl, session_info = FALSE)
-  o <- drake_build(target = "b", config = con)
+test_with_dir("drake_build works as expected", {
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  pl <- drake_plan(a = 1, b = a)
+  con <- drake_config(plan = pl, session_info = FALSE, envir = e)
+
+  # can run before any make()
+  o <- drake_build(
+    target = "a", character_only = TRUE, config = con, envir = e)
   x <- cached()
-  expect_equal(x, "b")
-  o <- make(pl)
-  expect_equal(justbuilt(o), "a")
+  expect_equal(x, "a")
+  o <- make(pl, envir = e)
+  expect_true("a" %in% ls(envir = e))
+  expect_equal(justbuilt(o), "b")
+  remove(list = "a", envir = e)
+  expect_false("a" %in% ls(envir = e))
+
+  # Can run without config
+  o <- drake_build(b, envir = e)
+  expect_equal(o, e$b)
+  expect_equal(o, readd(b))
+  expect_true("a" %in% ls(envir = e))
+
+  # Replacing deps in environment
+  expect_equal(e$a, 1)
+  e$a <- 2
+  o <- drake_build(b, envir = e)
+  expect_equal(e$a, 2)
+  expect_equal(readd(a), 1)
+  o <- drake_build(b, envir = e, replace = FALSE)
+  expect_equal(e$a, 2)
+  expect_equal(readd(a), 1)
+  e$a <- 3
+  o <- drake_build(b, envir = e, replace = TRUE)
+  expect_equal(e$a, 1)
+
+  # `replace` in loadd()
+  expect_equal(e$b, 1)
+  e$b <- 5
+  loadd(b, envir = e, replace = FALSE)
+  expect_equal(e$b, 5)
+  loadd(b, envir = e, replace = TRUE)
+  expect_equal(e$b, 1)
+  e$b <- 5
+  loadd(b, envir = e)
+  expect_equal(e$b, 1)
 })
 
 test_with_dir("colors and shapes", {

@@ -162,7 +162,7 @@ next_stage <- function(config){
 }
 
 drake_build_worker <- function(target, meta_list, config){
-  drake_build(
+  build_and_store(
     target = target,
     meta = meta_list[[target]],
     config = config

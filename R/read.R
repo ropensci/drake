@@ -123,6 +123,15 @@ readd <- function(
 #'   [delayedAssign()] rather than the more eager
 #'   [assign()].
 #'
+#' @param graph optional igraph object, representation
+#'   of the workflow network for getting dependencies
+#'   if `deps` is `TRUE`. If none is supplied,
+#'   it will be read from the cache.
+#'
+#' @param replace logical. If `FALSE`,
+#'   items already in your enviroment
+#'   will not be replaced.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -154,7 +163,9 @@ loadd <- function(
   jobs = 1,
   verbose = 1,
   deps = FALSE,
-  lazy = FALSE
+  lazy = FALSE,
+  graph = NULL,
+  replace = TRUE
 ){
   if (is.null(cache)){
     stop("cannot find drake cache.")
@@ -173,8 +184,10 @@ loadd <- function(
     stop("no targets to load.")
   }
   if (deps){
-    config <- read_drake_config(cache = cache)
-    targets <- dependencies(targets = targets, config = config)
+    if (is.null(graph)){
+      graph <- read_drake_graph(cache = cache)
+    }
+    targets <- dependencies(targets = targets, config = list(graph = graph))
     exists <- lightly_parallelize(
       X = targets,
       FUN = cache$exists,
@@ -182,6 +195,9 @@ loadd <- function(
     ) %>%
       unlist
     targets <- targets[exists]
+  }
+  if (!replace){
+    targets <- setdiff(targets, ls(envir, all.names = TRUE))
   }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
