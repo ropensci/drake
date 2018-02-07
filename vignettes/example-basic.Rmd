@@ -1,6 +1,6 @@
 ---
-title: "Quickstart guide"
-subtitle: "A thorough walk through drake's basic example"
+title: "The basic example"
+subtitle: "A thorough walkthrough of drake's main functionality"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -8,7 +8,7 @@ output:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{quickstart}
+  %\VignetteIndexEntry{example-basic}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is a quickstart guide that relies on `drake`'s basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
+This vignette is a walthrough of `drake`'s main functionality based on the basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
 
 # Get the code.
 
@@ -91,10 +91,15 @@ library(drake)
 We need a function to bootstrap larger datasets from `mtcars`.
 
 ```{r sim}
+# Pick a random subset of n rows from a dataset
+random_rows <- function(data, n){
+  data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+}
+
+# Bootstrapped datasets from mtcars.
 simulate <- function(n){
   # Pick a random set of cars to bootstrap from the mtcars data.
-  index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
-  data <- mtcars[index, ]
+  data <- random_rows(data = mtcars, n = n)
 
   # x is the car's weight, and y is the fuel efficiency.
   data.frame(
@@ -424,6 +429,19 @@ reg2 <- function(d) {
 outdated(config) # Everything is up to date.
 ```
 
+Drake cares about nested functions too: nontrivial changes to `random_rows()` will propagate to `simulate()`  and all the downstream targets.
+
+```{r, changerandomrows}
+random_rows <- function(data, n){
+  n <- n + 1
+  data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+}
+
+outdated(config)
+
+make(my_plan)
+```
+
 Need to add new work on the fly? Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.
 
 ```{r newstuff}
@@ -453,18 +471,19 @@ clean(destroy = TRUE, verbose = FALSE) # removes the cache entirely
 
 # Automatic watching for changed dependencies
 
-As you have seen with `reg2()`, `drake` reacts to changes in dependencies. In other words, `make()` notices when your dependencies are different from last time, rebuilds any affected targets, and continues downstream. In particular, `drake` watches for nontrivial changes to the following.
+As you have seen with `reg2()`, `drake` reacts to changes in dependencies. In other words, `make()` notices when your dependencies are different from last time, rebuilds any affected targets, and continues downstream. In particular, `drake` watches for nontrivial changes to the following items as long as they are connected to your workflow.
 
-1. Other imported functions, whether user-defined or from packages.
-1. For imported functions from your environment, any nested functions also in your environment or from packages.
-1. Commands in your workflow plan data frame.
-1. Global variables mentioned in the commands or imported functions.
-1. The output values of upstream targets.
-1. For [dynamic knitr reports](https://yihui.name/knitr/) generated with the right commands, targets and imports mentioned in calls to `readd()` and `loadd()` in the code chunks to be evaluated. `Drake` treats these targets and imports as dependencies of the compiled output target (say, `'report.md'` or `report.html`). **To activate this feature, the command in your workflow plan data frame must call `knitr::knit()` or `rmarkdown::render()`. Examples of acceptable commands:
+1. The output values of targets in your workflow plan.
+1. The commands themselves.
+1. External files, if their names are enclosed in single quotes in commands.
+1. R objects mentioned in the commands, including but not limited to user-defined functions and functions from packages.
+1. R objects (but not files) nested inside user-defined functions.
+1. For packages exposed with `expose_imports()`, R objects (but not files) nested inside package functions.
+1. For [dynamic `knitr` reports](https://yihui.name/knitr/), targets and imports mentioned in calls to `readd()` and `loadd()` in active code chunks. `Drake` treats these items as dependencies of the compiled output (say, `'report.md'` or `report.html`). **The workflow plan command must call `knit()` or `render()` explicitly.** Examples of acceptable commands:
     - `knit('report.Rmd')`
     - `knitr::knit(input = 'report.Rmd', quiet = TRUE)`
     - `render('report.Rmd')`
-    - `rmarkdown::('report.Rmd', output_file = "report.html")`
+    - `rmarkdown::render('report.Rmd', output_file = "report.html")`
 
 To enhance reproducibility beyond the scope of drake, you might consider [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/). [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
 
