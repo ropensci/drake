@@ -8,7 +8,83 @@ all the package's nested functions.}
 expose_imports(package, character_only = FALSE, envir = parent.frame(),
   jobs = 1)
 }
+\arguments{
+\item{package}{name of the package, either a symbol or a string,
+depending on \code{character_only}.}
+
+\item{character_only}{logical, whether to interpret \code{package}
+as a character string or a symbol (quoted vs unquoted).}
+
+\item{envir}{environment to load the exposed package imports.
+You will later pass this \code{envir} to \code{\link[=make]{make()}}.}
+
+\item{jobs}{number of parallel jobs for the parallel processing
+of the imports.}
+}
+\value{
+the environment that the exposed imports are loaded into.
+Defaults to your R workspace.
+}
 \description{
 When \code{drake} analyzes the functions in your environment,
-it can
+it understands that some of your functions
+are nested inside other functions.
+It dives into nested function after nested function in your environment
+so that if an inner function changes, targets produced by the outer
+functions will become out of date. However, \code{drake} stops searching
+as soon as it sees a function from a package. This keeps projects
+from being too brittle, but it is sometimes problematic.
+You may want to strongly depend on a package's internals.
+In fact, your data analysis workflow may be a package itself,
+so you want all your functions to be reproducibly tracked.
+
+To make all a package's functions available to be tracked
+as dependencies, use the \code{expose_imports()} function.
+See the examples in this help file for a demonstration.
+}
+\examples{
+test_with_dir("contain this example's side effects", {
+# Suppose you have a workflow that uses the `digest()` function,
+# which computes the hash of an object.
+
+library(digest) # Has the digest() function.
+g <- function(x){
+  digest(x)
+}
+f <- function(x){
+  g(x)
+}
+plan <- drake_plan(x = f(1))
+
+# Here are the reproducibly tracked objects in the workflow.
+tracked(plan)
+
+# But the digest() function has dependencies too.
+head(deps(digest))
+
+# Why doesn't `drake` import them? Because it knows `digest()`
+# is from a package, and it doesn't usually dive into functions
+# from packages. We need to call expose_imports() to expose
+# a package's inner functions.
+
+expose_imports(digest)
+new_objects <- tracked(plan)
+head(new_objects)
+length(new_objects)
+
+# Now when you call `make()`, `drake` will dive into `digest`
+# to import dependencies.
+
+cache <- storr::storr_environment() # just for examples
+make(plan, cache = cache)
+head(cached(cache = cache))
+length(cached(cache = cache))
+
+# But if you use `digest::digest()`` instead of just `digest()`,
+# `drake` does not dive into the function body anymore.
+g <- function(x){
+  digest::digest(x) # Was previously just digest()
+}
+tracked(plan)
+})
 }
