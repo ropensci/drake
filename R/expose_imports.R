@@ -16,6 +16,9 @@
 #'   To make all a package's functions available to be tracked
 #'   as dependencies, use the `expose_imports()` function.
 #'   See the examples in this help file for a demonstration.
+#'
+#' @details Thanks to [Jasper Clarkberg](https://github.com/dapperjapper)
+#'   for the idea that makes this function work.
 #' @export
 #' @return the environment that the exposed imports are loaded into.
 #'   Defaults to your R workspace.
