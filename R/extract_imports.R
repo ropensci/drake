@@ -1,5 +1,8 @@
 #' @title Expose all the imports in a package so `make()` can detect
 #'   all the package's nested functions.
+#' @description When `drake` analyzes the functions in your environment,
+#'   it can
+#'
 #' @export
 expose_imports <- function(
   package,
