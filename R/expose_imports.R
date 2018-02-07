@@ -54,7 +54,7 @@
 #'
 #' expose_imports(digest)
 #' new_objects <- tracked(plan)
-#' head(new_objects)
+#' head(new_objects, 10)
 #' length(new_objects)
 #'
 #' # Now when you call `make()`, `drake` will dive into `digest`
@@ -62,12 +62,12 @@
 #'
 #' cache <- storr::storr_environment() # just for examples
 #' make(plan, cache = cache)
-#' head(cached(cache = cache))
+#' head(cached(cache = cache), 10)
 #' length(cached(cache = cache))
 #'
 #' # Why would you want to expose a whole package like this?
 #' # Because you may want to wrap up your data science project
-#' # as a formal R package. In that case, `expose_package()`
+#' # as a formal R package. In that case, `expose_imports()`
 #' # tells `drake` to reproducibly track all of your code,
 #' # not just the exported API functions you mention in
 #' # workflow plan commands.

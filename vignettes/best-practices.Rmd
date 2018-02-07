@@ -157,9 +157,64 @@ style="border: none; box-shadow: none">
 
 [knitr](https://github.com/yihui/knitr) reports are the only kind of file that `drake` analyzes for dependencies. It does not give R scripts the same special treatment.
 
+## Workflows as R packages
+
+The R package structure is a great way to organize the files of your project. Writing your own package to contain your data science workflow is a good idea, but you will need to use `expose_imports()` to run it properly with `drake`. Thanks to [Jasper Clarkberg](https://github.com/dapperjapper) for the workaround.
+
+### Advantages of putting workflows in R packages
+
+- The file organization of R packages is a well-understood community standard. If you follow it, your work may be more readable and thus reproducible.
+- R package installation is a standard process. The system makes it easier for others to obtain and run your code.
+- You get development and quality control tools for free: [helpers for loading code and creating files](https://github.com/hadley/devtools), [unit testing](http://r-pkgs.had.co.nz/tests.html), [package checks](http://r-pkgs.had.co.nz/check.html), [code coverage](https://github.com/r-lib/covr), and [continuous integration](https://ipub.com/continuous-integration-for-r/).
+
+### The problem
+
+For `drake`, there is one problem: nested functions. `Drake` always looks for imported functions nested in other imported functions, but only in your environment. When it sees a function from a package, it does not look in its body for other imports.
+
+To see this, consider the `digest()` function from the [`digest` package](https://github.com/eddelbuettel/digest). [`Digest` package](https://github.com/eddelbuettel/digest) is a utility for computing hashes, not a data science workflow, but I will use it to demonstrate how `drake` treats imports from pacakges.
+
+
+```{r nestingproblem}
+library(digest)
+g <- function(x){
+  digest(x)
+}
+f <- function(x){
+  g(x)
+}
+plan <- drake_plan(x = f(1))
+
+# Here are the reproducibly tracked objects in the workflow.
+tracked(plan)
+
+# But the `digest()` function has dependencies too.
+# Because `drake` knows `digest()` is from a package,
+# it ignores these dependencies by default.
+head(deps(digest), 10)
+```
+
+### The solution
+
+To force `drake` to dive deeper into the nested functions in a package, you must use `expose_imports()`. Again, I demonstrate with the [`digest` package](https://github.com/eddelbuettel/digest) package, but you should really only do this with a package you write yourself to contain your workflow. For external packages, [packrat](https://rstudio.github.io/packrat/) is a much better solution for package reproducibility.
+
+```{r nestingsolution}
+expose_imports(digest)
+new_objects <- tracked(plan)
+head(new_objects, 10)
+length(new_objects)
+
+# Now when you call `make()`, `drake` will dive into `digest`
+# to import dependencies.
+
+cache <- storr::storr_environment() # just for examples
+make(plan, cache = cache)
+head(cached(cache = cache), 10)
+length(cached(cache = cache))
+```
+
 ```{r rmfiles_caution, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
-file.remove()
+file.remove("report.Rmd")
 unlink(
   c(
     "data.csv", "Makefile", "report.Rmd",
