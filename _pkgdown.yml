@@ -174,4 +174,4 @@ reference:
   - '`drake_quotes`'
   - '`drake_strings`'
   - '`drake_unquote`'
-  - '`extract_imports`'
+  - '`expose_imports`'
