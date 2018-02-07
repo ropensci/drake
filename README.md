@@ -39,7 +39,7 @@ load_basic_example(verbose = FALSE)
 # Drake looks for data objects in your R session environment
 ls()
 
-## [1] "my_plan"  "reg1"     "reg2"     "simulate"
+## [1] "my_plan"     "random_rows" "reg1"        "reg2"        "simulate"
 
 # and saved files in your file system.
 list.files()
@@ -103,6 +103,12 @@ make(my_plan)
 make(my_plan)
 
 ## All targets are already up to date.
+
+# Drake cares about nested functions too:
+# with the exception of trivial formatting edits,
+# changes to `random_rows()` will propagate to `simulate()`
+# and all the downstream targets.
+# Try it!
 ```
 
 # Reproducibility with confidence

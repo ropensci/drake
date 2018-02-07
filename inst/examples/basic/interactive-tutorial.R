@@ -268,6 +268,17 @@ reg2 <- function(d){
 }
 outdated(config) # Everything is still up to date.
 
+# Drake cares about nested functions too:
+# nontrivial changes to `random_rows()` will propagate to `simulate()`
+# and all the downstream targets.
+
+random_rows <- function(data, n){
+  n <- n + 1
+  data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+}
+outdated(config)
+make(my_plan)
+
 #########################################
 ### NEED TO ADD MORE WORK ON THE FLY? ###
 #########################################
