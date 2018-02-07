@@ -92,32 +92,44 @@ load_basic_example <- function(
   mtcars <- get("mtcars")
 
   # Pick a random subset of n rows from a dataset
-  evalq(random_rows <- function(data, n){
-    data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
-  }, envir = envir)
+  evalq(
+    random_rows <- function(data, n){
+      data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+    },
+    envir = envir
+  )
 
   # Bootstrapped datasets from mtcars.
-  evalq(simulate <- function(n){
-    # Pick a random set of cars to bootstrap from the mtcars data.
-    data <- random_rows(data = mtcars, n = n)
+  evalq(
+    simulate <- function(n){
+      # Pick a random set of cars to bootstrap from the mtcars data.
+      data <- random_rows(data = mtcars, n = n)
 
-    # x is the car's weight, and y is the fuel efficiency.
-    data.frame(
-      x = data$wt,
-      y = data$mpg
-    )
-  }, envir = envir)
+      # x is the car's weight, and y is the fuel efficiency.
+      data.frame(
+        x = data$wt,
+        y = data$mpg
+      )
+    },
+    envir = envir
+  )
 
   # Is there a linear relationship between weight and fuel efficiency?
-  evalq(reg1 <- function(d) {
-    lm(y ~ +x, data = d)
-  }, envir = envir)
+  evalq(
+    reg1 <- function(d) {
+      lm(y ~ +x, data = d)
+    },
+    envir = envir
+  )
 
   # Is there a QUADRATIC relationship between weight and fuel efficiency?
-  evalq(reg2 <- function(d) {
-    d$x2 <- d$x ^ 2
-    lm(y ~ x2, data = d)
-  }, envir = envir)
+  evalq(
+    reg2 <- function(d) {
+      d$x2 <- d$x ^ 2
+      lm(y ~ x2, data = d)
+    },
+    envir = envir
+  )
 
   # construct workflow plan
 
