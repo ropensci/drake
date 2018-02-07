@@ -53,11 +53,15 @@ library(drake)
 
 clean() # remove any previous drake output
 
-# The simulate() function bootstraps cars from the mtcars dataset.
+# Pick a random subset of n rows from a dataset
+random_rows <- function(data, n){
+  data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+}
+
+# Bootstrapped datasets from mtcars.
 simulate <- function(n){
   # Pick a random set of cars to bootstrap from the mtcars data.
-  index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
-  data <- mtcars[index, ]
+  data <- random_rows(data = mtcars, n = n)
 
   # x is the car's weight, and y is the fuel efficiency.
   data.frame(
@@ -239,7 +243,7 @@ outdated(config) # Everything is up to date
 # session() # get the sessionInfo() of the last call to make() #nolint: optional
 
 # Since the p-value on x2 is so low,
-# we can say that 
+# we can say that
 readd(coef_regression2_large) # see also: loadd(), cached(), imported(), and built() # nolint
 
 # Everything is up to date.

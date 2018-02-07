@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Move the "quickstart.Rmd" vignette to "example-basic.Rmd". The so-called "quickstart" didn't end up being very quick, and it was all about the basic example anyway.
 - Move `drake_build()` to be an exclusively user-side function.
 - Add a `replace` argument to `loadd()` so that objects already in the user's environment need not be replaced.
 - When the graph cyclic, print out all the cycles.

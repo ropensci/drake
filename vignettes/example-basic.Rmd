@@ -1,6 +1,6 @@
 ---
-title: "Quickstart guide"
-subtitle: "A thorough walk through drake's basic example"
+title: "The basic example"
+subtitle: "A thorough walkthrough of drake's main functionality"
 author: "William Michael Landau"
 date: "`r Sys.Date()`"
 output:
@@ -8,7 +8,7 @@ output:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{quickstart}
+  %\VignetteIndexEntry{example-basic}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is a quickstart guide that relies on `drake`'s basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
+This vignette is a walthrough of `drake`'s main functionality based on the basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
 
 # Get the code.
 
@@ -91,10 +91,15 @@ library(drake)
 We need a function to bootstrap larger datasets from `mtcars`.
 
 ```{r sim}
+# Pick a random subset of n rows from a dataset
+random_rows <- function(data, n){
+  data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+}
+
+# Bootstrapped datasets from mtcars.
 simulate <- function(n){
   # Pick a random set of cars to bootstrap from the mtcars data.
-  index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
-  data <- mtcars[index, ]
+  data <- random_rows(data = mtcars, n = n)
 
   # x is the car's weight, and y is the fuel efficiency.
   data.frame(

@@ -1,6 +1,6 @@
-drake_context("extract imports")
+drake_context("expose imports")
 
-test_with_dir("extract_imports() works", {
+test_with_dir("expose_imports() works", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   evalq(
@@ -21,7 +21,7 @@ test_with_dir("extract_imports() works", {
   config <- drake_config(plan, envir = envir)
   n_nodes <- length(igraph::V(config$graph)$name)
   expect_true(n_nodes < 10)
-  envir <- extract_imports(digest, envir = envir)
+  envir <- expose_imports(digest, envir = envir)
   config <- drake_config(plan, envir = envir)
   n_nodes_new <- length(igraph::V(config$graph)$name)
   expect_true(n_nodes_new > n_nodes)
