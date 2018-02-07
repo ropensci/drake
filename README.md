@@ -212,7 +212,7 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Get started](https://ropensci.github.io/drake/articles/drake.html)
 - [Example: R package download trends](https://ropensci.github.io/drake/articles/example-packages.html)
 - [Example: gross state products](https://ropensci.github.io/drake/articles/example-gsp.html)
-- [Quickstart](https://ropensci.github.io/drake/articles/quickstart.html)
+- [Basic example](https://ropensci.github.io/drake/articles/example-basic.html)
 - [General best practices](https://ropensci.github.io/drake/articles/best-practices.html)
 - [Cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html)
 - [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
@@ -221,7 +221,7 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Time logging](https://ropensci.github.io/drake/articles/timing.html)
 - [Storage](https://ropensci.github.io/drake/articles/storage.html)
 
-`Drake` also has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. Here are the beginner-oriented examples to help you learn `drake`.
+`Drake` also has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. The beginner-oriented examples are listed below. They help you learn `drake`'s main features, and they show one way to organize the files of `drake` projects.
 
 - `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.

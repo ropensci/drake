@@ -9,7 +9,8 @@
 #'   as soon as it sees a function from a package. This keeps projects
 #'   from being too brittle, but it is sometimes problematic.
 #'   You may want to strongly depend on a package's internals.
-#'   In fact, your data analysis workflow may be a package itself,
+#'   In fact, you may want to wrap your data analysis project itself
+#'   in a formal R package,
 #'   so you want all your functions to be reproducibly tracked.
 #'
 #'   To make all a package's functions available to be tracked
@@ -64,7 +65,14 @@
 #' head(cached(cache = cache))
 #' length(cached(cache = cache))
 #'
-#' # But if you use `digest::digest()`` instead of just `digest()`,
+#' # Why would you want to expose a whole package like this?
+#' # Because you may want to wrap up your data science project
+#' # as a formal R package. In that case, `expose_package()`
+#' # tells `drake` to reproducibly track all of your code,
+#' # not just the exported API functions you mention in
+#' # workflow plan commands.
+#'
+#' # Note: if you use `digest::digest()`` instead of just `digest()`,
 #' # `drake` does not dive into the function body anymore.
 #' g <- function(x){
 #'   digest::digest(x) # Was previously just digest()

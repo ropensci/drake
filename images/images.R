@@ -3,7 +3,7 @@
 # Requires pandoc.
 devtools::load_all() # load current drake
 clean(destroy = TRUE)
-config <- load_basic_example()
+config <- load_basic_example(overwrite = TRUE)
 
 vis_drake_graph(config, file = "outdated.html", selfcontained = TRUE,
   width = "100%", height = "500px")
@@ -62,14 +62,13 @@ library(magrittr)
 reportfile <- file.path("examples", "packages", "report.Rmd") %>%
   system.file(package = "drake", mustWork = TRUE)
 file.copy(reportfile, getwd())
-runfile <- file.path("examples", "packages", "run.R") %>%
+runfile <- file.path("examples", "packages", "interactive-tutorial.R") %>%
   system.file(package = "drake", mustWork = TRUE)
 source(runfile)
 vis_drake_graph(
   config, file = "packages.html", selfcontained = TRUE,
   width = "100%", height = "500px"
 )
-
 
 # For the best practices vignette
 get_data <- function(){
