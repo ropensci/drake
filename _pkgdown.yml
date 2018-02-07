@@ -21,9 +21,9 @@ navbar:
     - text: "General best practices for drake projects"
       href: articles/best-practices.html
     - text: Debugging and testing drake projects
-      href: articles/debug.html      
+      href: articles/debug.html
     - text: Graphs with drake
-      href: articles/graph.html      
+      href: articles/graph.html
     - text: Parallel computing
       href: articles/parallelism.html
     - text: Time logging
@@ -168,9 +168,10 @@ reference:
   - '`message_sink_hook`'
   - '`output_sink_hook`'
   - '`silencer_hook`'
-- title: String utilities
+- title: Utilities
   contents:
   - '`as_drake_filename`'
   - '`drake_quotes`'
   - '`drake_strings`'
   - '`drake_unquote`'
+  - '`extract_imports`'

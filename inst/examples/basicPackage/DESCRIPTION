@@ -1,0 +1,30 @@
+Package: basicPackage
+Version: 1.0.0
+Title: Drake's Basic Example in an R Package Structure
+  within an R package structure.
+Description: Demonstrate the benefits of organizing
+  your workflow in a formal R package structure.
+Authors@R: c(
+  person(
+    family = "Landau",
+    given = c("William", "Michael"),
+    email = "will.landau@gmail.com",
+    role = c("aut", "cre")
+  ),
+  person(
+    family = "Eli Lilly and Company",
+    role = "cph"
+  ))
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+ByteCompile: false
+Depends:
+  R (>= 3.2.0),
+  drake
+Imports: 
+  knitr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

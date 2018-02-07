@@ -1,5 +1,7 @@
+#' @title Expose all the imports in a package so `make()` can detect
+#'   all the package's nested functions.
 #' @export
-extract_imports <- function(
+expose_imports <- function(
   package,
   character_only = FALSE,
   envir = parent.frame(),

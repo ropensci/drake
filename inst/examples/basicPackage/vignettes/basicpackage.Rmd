@@ -1,0 +1,37 @@
+---
+title: "Drake's basic example in an R package structure"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{basicPackage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# The basic example
+
+## About
+
+## Run the basicPackage workflow
+
+# Benefits
+
+## Easy to share
+
+## Spelling
+
+## Linting
+
+## R package checks
+
+## Automated unit testing
+
+## Test coverage
