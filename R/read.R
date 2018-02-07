@@ -129,7 +129,7 @@ readd <- function(
 #'   it will be read from the cache.
 #'
 #' @param replace logical. If `FALSE`,
-#'   items already in your enviromnent
+#'   items already in your environment
 #'   will not be replaced.
 #'
 #' @examples
