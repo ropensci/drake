@@ -27,31 +27,23 @@ extract_filenames <- function(command){
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-get_evaluation_command <- function(target, config){
-  raw_command <- config$plan$command[config$plan$target == target] %>%
-    functionize
-  unevaluated <- paste0("rlang::expr(", raw_command, ")")
-  quasiquoted <- eval(parse(text = unevaluated), envir = config$envir)
-  command <- wide_deparse(quasiquoted)
-  wrap_in_try_statement(target = target, command = command)
+command_as_language <- function(target, config){
+  text <- config$plan$command[config$plan$target == target] %>%
+    preprocess_command
+  parse(text = text, keep.source = FALSE) %>%
+    eval(envir = config$envir)
 }
 
-# Turn a command into an anonymous function
-# call to avoid side effects that could interfere
-# with parallelism.
-functionize <- function(command) {
-  paste0("(function(){\n", command, "\n})()")
+# Use tidy evaluation to complete the contents of a command.
+preprocess_command <- function(command){
+  paste0("rlang::expr(local({\n", command, "\n}))")
 }
 
-# If commands are text, we need to make sure
-# to
-wrap_in_try_statement <- function(target, command){
-  paste(
-    target,
-    "<- evaluate::try_capture_stack(quote({\n",
-    command,
-    "\n}), env = config$envir)"
-  )
+# Can remove once we remove fetch_cache.
+# We can remove fetch_cache once we allow the master process
+# to optionally do all the caching.
+localize <- function(command) {
+  paste0("local({\n", command, "\n})")
 }
 
 # This version of the command will be hashed and cached

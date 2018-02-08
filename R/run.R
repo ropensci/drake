@@ -37,10 +37,12 @@ one_try <- function(target, command, seed, config){
 }
 
 with_timeout <- function(target, command, config){
-  env <- environment()
   timeouts <- resolve_timeouts(target = target, config = config)
   R.utils::withTimeout({
-      value <- eval(parse(text = command), envir = env)
+      value <- evaluate::try_capture_stack(
+        quoted_code = command,
+        env = config$envir
+      )
     },
     timeout = timeouts["timeout"],
     cpu = timeouts["cpu"],

@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is a walthrough of `drake`'s main functionality based on the basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
+This vignette is a walkthrough of `drake`'s main functionality based on the basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
 
 # Get the code.
 
