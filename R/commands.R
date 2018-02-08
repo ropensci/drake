@@ -29,29 +29,14 @@ extract_filenames <- function(command){
 # features such as quasiquotation.
 get_evaluation_command <- function(target, config){
   raw_command <- config$plan$command[config$plan$target == target] %>%
-    functionize
+    localize
   unevaluated <- paste0("rlang::expr(", raw_command, ")")
-  quasiquoted <- eval(parse(text = unevaluated), envir = config$envir)
-  command <- wide_deparse(quasiquoted)
-  wrap_in_try_statement(target = target, command = command)
+  eval(parse(text = unevaluated, keep.source = FALSE), envir = config$envir)
 }
 
-# Turn a command into an anonymous function
-# call to avoid side effects that could interfere
-# with parallelism.
-functionize <- function(command) {
-  paste0("(function(){\n", command, "\n})()")
-}
-
-# If commands are text, we need to make sure
-# to
-wrap_in_try_statement <- function(target, command){
-  paste(
-    target,
-    "<- evaluate::try_capture_stack(quote({\n",
-    command,
-    "\n}), env = config$envir)"
-  )
+# Contain the side effects of commands.
+localize <- function(command) {
+  paste0("local({\n", command, "\n})")
 }
 
 # This version of the command will be hashed and cached
