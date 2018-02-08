@@ -171,7 +171,7 @@ The R package structure is a great way to organize the files of your project. Wr
 
 For `drake`, there is one problem: nested functions. `Drake` always looks for imported functions nested in other imported functions, but only in your environment. When it sees a function from a package, it does not look in its body for other imports.
 
-To see this, consider the `digest()` function from the [`digest` package](https://github.com/eddelbuettel/digest). [`Digest` package](https://github.com/eddelbuettel/digest) is a utility for computing hashes, not a data science workflow, but I will use it to demonstrate how `drake` treats imports from pacakges.
+To see this, consider the `digest()` function from the [`digest` package](https://github.com/eddelbuettel/digest). [`Digest` package](https://github.com/eddelbuettel/digest) is a utility for computing hashes, not a data science workflow, but I will use it to demonstrate how `drake` treats imports from packages.
 
 
 ```{r nestingproblem}

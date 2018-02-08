@@ -27,11 +27,17 @@ extract_filenames <- function(command){
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-get_evaluation_command <- function(target, config){
-  raw_command <- config$plan$command[config$plan$target == target] %>%
-    localize
-  unevaluated <- paste0("rlang::expr(", raw_command, ")")
-  eval(parse(text = unevaluated, keep.source = FALSE), envir = config$envir)
+command_as_expression <- function(target, config){
+  text <- config$plan$command[config$plan$target == target] %>%
+    localize %>%
+    add_tidy_eval
+  parse(text = text, keep.source = FALSE) %>%
+    eval(envir = config$envir)
+}
+
+# Use tidy evaluation to complete the contents of a command.
+add_tidy_eval <- function(command){
+  paste0("rlang::expr({\n", command, "\n})")
 }
 
 # Contain the side effects of commands.
