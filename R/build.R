@@ -127,7 +127,7 @@ conclude_build <- function(target, value, meta, start, config){
 }
 
 build_target <- function(target, meta, config) {
-  command <- command_as_expression(target = target, config = config)
+  command <- command_as_language(target = target, config = config)
   seed <- list(seed = config$seed, target = target) %>%
     seed_from_object
   run_command(

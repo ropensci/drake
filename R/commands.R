@@ -27,20 +27,21 @@ extract_filenames <- function(command){
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-command_as_expression <- function(target, config){
+command_as_language <- function(target, config){
   text <- config$plan$command[config$plan$target == target] %>%
-    localize %>%
-    add_tidy_eval
+    preprocess_command
   parse(text = text, keep.source = FALSE) %>%
     eval(envir = config$envir)
 }
 
 # Use tidy evaluation to complete the contents of a command.
-add_tidy_eval <- function(command){
-  paste0("rlang::expr({\n", command, "\n})")
+preprocess_command <- function(command){
+  paste0("rlang::expr(local({\n", command, "\n}))")
 }
 
-# Contain the side effects of commands.
+# Can remove once we remove fetch_cache.
+# We can remove fetch_cache once we allow the master process
+# to optionally do all the caching.
 localize <- function(command) {
   paste0("local({\n", command, "\n})")
 }
