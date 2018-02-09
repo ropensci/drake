@@ -105,7 +105,7 @@ test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(in_progress(), character(0))
   bad_plan <- drake_plan(x = function_doesnt_exist())
   expect_error(tmp <- capture.output({
-      make(bad_plan, verbose = FALSE, session_info = FALSE)
+      make(bad_plan, verbose = TRUE, session_info = FALSE)
     },
     type = "message")
   )
@@ -129,7 +129,7 @@ test_with_dir("warnings and messages are caught", {
     123
   }
   bad_plan <- drake_plan(x = f(), y = x)
-  expect_warning(make(bad_plan, verbose = FALSE, session_info = FALSE))
+  expect_warning(make(bad_plan, verbose = TRUE, session_info = FALSE))
   x <- diagnose(x)
   expect_true(grepl("my first warn", x$warnings[1]))
   expect_true(grepl("my second warn", x$warnings[2]))
