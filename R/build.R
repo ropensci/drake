@@ -73,17 +73,16 @@ build_and_store <- function(target, config, meta = NULL){
   # for the whole stage.
   # Most of these steps require access to the cache.
   config$hook({
-    start <- proc.time()
     if (is.null(meta)){
       meta <- drake_meta(target = target, config = config)
     }
+    meta$start <- proc.time()
     announce_build(target = target, meta = meta, config = config)
-    value <- just_build(target = target, meta = meta, config = config)
+    build <- just_build(target = target, meta = meta, config = config)
     conclude_build(
       target = target,
-      value = value,
-      meta = meta,
-      start = start,
+      value = build$value,
+      meta = build$meta,
       config = config
     )
   })
@@ -91,7 +90,7 @@ build_and_store <- function(target, config, meta = NULL){
 
 just_build <- function(target, meta, config){
   if (meta$imported) {
-    process_import(target = target, config = config)
+    process_import(target = target, meta = meta, config = config)
   } else {
     # build_target() does not require access to the cache.
     # A custom future-based job scheduler could build with different steps
@@ -113,26 +112,13 @@ announce_build <- function(target, meta, config){
   console(imported = meta$imported, target = target, config = config)
 }
 
-conclude_build <- function(target, value, meta, start, config){
+conclude_build <- function(target, value, meta, config){
   check_processed_file(target)
-  store_target(target = target, value = value, meta = meta,
-    start = start, config = config)
-  set_progress(
-    target = target,
-    value = ifelse(inherits(value, "error"), "failed", "finished"),
-    config = config
-  )
-  handle_error(target = target, value = value, config = config)
+  store_target(target = target, value = value, meta = meta, config = config)
+  handle_error(target = target, meta, config = config)
   invisible(value)
 }
 
-build_target <- function(target, meta, config) {
-  command <- command_as_language(target = target, config = config)
-  seed <- list(seed = config$seed, target = target) %>%
-    seed_from_object
-  run_command(
-    target = target, command = command, config = config, seed = seed)
-}
 
 check_processed_file <- function(target){
   if (!is_file(target)){
@@ -147,9 +133,37 @@ check_processed_file <- function(target){
   }
 }
 
-process_import <- function(target, config) {
+build_target <- function(target, meta, config){
+  retries <- 0
+  max_retries <- drake_plan_override(
+    target = target,
+    field = "retries",
+    config = config
+  ) %>%
+    as.numeric
+  while (retries <= max_retries){
+    value <- one_try(
+      target = target,
+      meta = meta,
+      config = config
+    )
+    if (!inherits(value, "error")){
+      return(list(value = value, meta = meta))
+    }
+    write(
+      x = paste0("Error building target ", target, ": ", value$message),
+      file = stderr()
+    )
+    retries <- retries + 1
+    console_retry(target = target, retries = retries, config = config)
+  }
+  meta$error <- value
+  list(meta = meta)
+}
+
+process_import <- function(target, meta, config) {
   if (is_file(target)) {
-    return(NA)
+    value <- NA
   } else if (target %in% ls(config$envir, all.names = TRUE)) {
     value <- config$envir[[target]]
   } else {
@@ -158,7 +172,7 @@ process_import <- function(target, config) {
       error = function(e)
         console(imported = NA, target = target, config = config))
   }
-  value
+  list(value = value, meta = meta)
 }
 
 # We may just want to have a warning here.

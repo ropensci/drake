@@ -1,49 +1,47 @@
-run_command <- function(target, command, seed, config){
-  retries <- 0
-  max_retries <- drake_plan_override(
-    target = target,
-    field = "retries",
-    config = config
-  ) %>%
-    as.numeric
-  while (retries <= max_retries){
-    value <- one_try(
-      target = target,
-      command = command,
-      seed = seed,
-      config = config
-    )
-    if (!inherits(value, "error")){
-      return(value)
-    }
-    write(
-      x = paste0("Error building target ", target, ": ", value$message),
-      file = stderr()
-    )
-    retries <- retries + 1
-    console_retry(target = target, retries = retries, config = config)
-  }
-  value
-}
-
-one_try <- function(target, command, seed, config){
-  withr::with_seed(seed, {
-    with_timeout(
-      target = target,
-      command = command,
-      config = config
-    )
-  })
-}
-
-with_timeout <- function(target, command, config){
-  timeouts <- resolve_timeouts(target = target, config = config)
-  R.utils::withTimeout({
+# Borrowed from the rmonad package
+# https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
+run_command <- function(target, meta, config){
+  warnings <- messages <- NULL
+  parsed_command <- command_as_language(target = target, config = config)
+  meta$command_time <- system.time(
+    withCallingHandlers(
       value <- evaluate::try_capture_stack(
-        quoted_code = command,
+        quoted_code = parsed_command,
         env = config$envir
+      ),
+      warning = function(w){
+        warnings <<- c(warnings, w$message)
+      },
+      message = function(m){
+        messages <<- c(messages, m$message)
+      }
+    ),
+    gcFirst = FALSE # for performance
+  )
+  warn_now(target = target, warnings = warnings)
+  meta$warnings <- warnings
+  meta$messages <- messages
+  if (inherits(value, "error")){
+    meta$error <- value
+    value <- NULL
+  }
+  list(
+    meta = meta,
+    value = value
+  )
+}
+
+one_try <- function(target, meta, config){
+  timeouts <- resolve_timeouts(target = target, config = config)
+  R.utils::withTimeout(
+    withr::with_seed(
+      meta$seed,
+      run_command(
+        target = target,
+        meta = meta,
+        config = config
       )
-    },
+    ),
     timeout = timeouts["timeout"],
     cpu = timeouts["cpu"],
     elapsed = timeouts["elapsed"],

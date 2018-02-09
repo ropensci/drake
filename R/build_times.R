@@ -122,13 +122,21 @@ to_build_duration <- function(x){
 
 time_columns <- c("elapsed", "user", "system")
 
-append_times_to_meta <- function(target, start, meta, config){
-  if (is_bad_time(start)){
-    return(meta)
+finalize_times <- function(target, meta, config){
+  if (!is_bad_time(meta$command_time)){
+    meta$command_time <- runtime_entry(
+      runtime = meta$command_time,
+      target = target,
+      imported = meta$imported
+    )
   }
-  build_times <- (proc.time() - start) %>%
-    runtime_entry(target = target, imported = meta$imported)
-  meta$build_times <- build_times
+  if (!is_bad_time(meta$start)){
+    meta$build_time <- runtime_entry(
+      runtime = proc.time() - meta$start,
+      target = target,
+      imported = meta$imported
+    )
+  }
   meta
 }
 

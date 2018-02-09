@@ -13,21 +13,20 @@ meta_list <- function(targets, config) {
   out
 }
 
-#' @title Compute the metadata of a target or import.
+#' @title Compute the initial pre-build metadata of a target or import.
 #' @description The metadata helps determine if the
 #' target is up to date or outdated. The metadata of imports
 #' is used to compute the metadata of targets.
 #' @details Target metadata is computed
-#' with `drake_meta()` and then
-#' `drake:::finish_meta()`.
-#' This metadata corresponds
-#' to the state of the target immediately after it was built
-#' or imported in the last [make()] that
-#' did not skip it.
-#' The exception to this is the `$missing` element
-#' of the metadata, which indicates if the target/import
-#' was missing just *before* it was built.
-#' @seealso [dependency_profile()], [make()]
+#' with `drake_meta()`, and then
+#' `drake:::finish_meta()` completes the metadata
+#' after the target is built.
+#' In other words, the output of `drake_meta()` corresponds
+#' to the state of the target immediately before [make()]
+#' builds it.
+#' See [diagnose()] to read the final metadata of a target,
+#' including any errors, warnings, and messages in the last build.
+#' @seealso [diagnose()], [dependency_profile()], [make()]
 #' @export
 #' @return A list of metadata on a target. Does not include
 #'   the file modification time if the target is a file.
@@ -65,7 +64,8 @@ drake_meta <- function(target, config) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),
-    missing = !target_exists(target = target, config = config)
+    missing = !target_exists(target = target, config = config),
+    seed = seed_from_object(list(seed = config$seed, target = target))
   )
   trigger <- get_trigger(target = target, config = config)
   # Need to make sure meta includes all these
