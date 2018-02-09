@@ -7,7 +7,7 @@
 of your drake project.}
 \usage{
 vis_drake_graph(config, file = character(0), selfcontained = FALSE,
-  build_times = TRUE, digits = 3, targets_only = FALSE,
+  build_times = "build", digits = 3, targets_only = FALSE,
   split_columns = FALSE, font_size = 20, layout = "layout_with_sugiyama",
   main = NULL, direction = "LR", hover = TRUE, navigationButtons = TRUE,
   from = NULL, mode = c("out", "in", "all"), order = NULL,
@@ -28,9 +28,15 @@ HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
 pandoc is required.}
 
-\item{build_times}{logical, whether to show the \code{\link[=build_times]{build_times()}}
-of the targets and imports, if available.
-These are just elapsed times from \code{\link[=system.time]{system.time()}}.}
+\item{build_times}{character string or logical.
+If character, the choices are
+1. \code{"build"}: runtime of the command plus the time
+it take to store the target or import.
+2. \code{"command"}: just the runtime of the command.
+3. \code{"none"}: no build times.
+If logical, \code{build_times} selects whether to show the
+times from `build_times(..., type = "build")`` or use
+no build times at all. See \code{\link[=build_times]{build_times()}} for details.}
 
 \item{digits}{number of digits for rounding the build times}
 

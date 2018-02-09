@@ -1,32 +1,32 @@
-warn_now <- function(target, warnings){
-  if (!length(warnings)){
-    return()
+handle_build_exceptions <- function(target, meta, config){
+  if (length(meta$warnings) && config$verbose){
+    warn_opt <- max(1, getOption("warn"))
+    withr::with_options(
+      new = list(warn = warn_opt),
+      warning(
+        "target ", target, " warnings:\n",
+        multiline_message(meta$warnings),
+        call. = FALSE
+      )
+    )
   }
-  warn_opt <- max(1, getOption("warn"))
-  withr::with_options(
-    new = list(warn = warn_opt),
-    warning(
-      "target ", target, ":\n",
-      multiline_message(warnings),
+  if (length(meta$messages) && config$verbose){
+    message(
+      "Target ", target, " messages:\n",
+      multiline_message(meta$messages)
+    )
+  }
+  if (inherits(meta$error, "error")){
+    if (config$verbose){
+      text <- paste("fail", target)
+      finish_console(text = text, pattern = "fail", verbose = config$verbose)
+    }
+    stop(
+      "Target '", target, "' failed. Use diagnose(", target,
+      ") for details.",
       call. = FALSE
     )
-  )
-}
-
-# We may just want to have a warning here.
-handle_build_error <- function(target, meta, config){
-  if (!inherits(meta$error, "error")){
-    return()
   }
-  if (config$verbose){
-    text <- paste("fail", target)
-    finish_console(text = text, pattern = "fail", verbose = config$verbose)
-  }
-  stop(
-    "Target '", target, "' failed. Use diagnose(", target,
-    ") for details.",
-    call. = FALSE
-  )
 }
 
 error_character0 <- function(e){

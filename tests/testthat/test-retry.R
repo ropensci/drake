@@ -64,7 +64,7 @@ test_with_dir("timeouts", {
     make(
       pl,
       envir = e,
-      verbose = TRUE,
+      verbose = FALSE,
       hook = silencer_hook,
       session_info = FALSE
     )
@@ -78,7 +78,7 @@ test_with_dir("timeouts", {
       make(
         pl,
         envir = e,
-        verbose = TRUE,
+        verbose = FALSE,
         hook = silencer_hook,
         timeout = 1e-3,
         retries = 2,
@@ -98,7 +98,7 @@ test_with_dir("timeouts", {
     args <- list(
       plan = pl2,
       envir = e,
-      verbose = TRUE,
+      verbose = FALSE,
       hook = silencer_hook,
       retries = 2
     )

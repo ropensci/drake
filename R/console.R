@@ -69,7 +69,7 @@ console_parLapply <- function(config){ # nolint
     verbose = config$verbose)
 }
 
-console_retry <- function(target, retries, config){
+console_retry <- function(target, error, retries, config){
   if (retries <= config$retries){
     text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
     finish_console(text = text, pattern = "retry", verbose = config$verbose)

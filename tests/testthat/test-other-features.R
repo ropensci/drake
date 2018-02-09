@@ -104,11 +104,8 @@ test_with_dir("make() with imports_only", {
 test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(in_progress(), character(0))
   bad_plan <- drake_plan(x = function_doesnt_exist())
-  expect_error(tmp <- capture.output({
-      make(bad_plan, verbose = TRUE, session_info = FALSE)
-    },
-    type = "message")
-  )
+  expect_error(
+    make(bad_plan, verbose = TRUE, session_info = FALSE), hook = silencer_hook)
   expect_equal(failed(), "x")
   expect_equal(in_progress(), character(0))
   expect_is(e <- diagnose(x)$error, "error")

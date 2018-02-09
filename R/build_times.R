@@ -19,9 +19,9 @@
 #'   the `path` and `search` arguments are ignored.
 #' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
-#' @param type Type of time you want: either `"time_build"`
+#' @param type Type of time you want: either `"build"`
 #'   for the full build time including the time it took to
-#'   store the target, or `"time_command"` for the time it took
+#'   store the target, or `"command"` for the time it took
 #'   just to run the command.
 #' @examples
 #' \dontrun{
@@ -40,7 +40,7 @@ build_times <- function(
   targets_only = FALSE,
   verbose = TRUE,
   jobs = 1,
-  type = c("time_build", "time_command")
+  type = c("build", "command")
 ){
   if (is.null(cache)){
     return(empty_times())
@@ -51,7 +51,7 @@ build_times <- function(
     FUN = fetch_runtime,
     jobs = 1,
     cache = cache,
-    subspace = type
+    type = type
   ) %>%
     parallel_filter(f = is.data.frame, jobs = jobs) %>%
     do.call(what = rbind) %>%
@@ -66,10 +66,10 @@ build_times <- function(
   out
 }
 
-fetch_runtime <- function(key, cache, subspace){
+fetch_runtime <- function(key, cache, type){
   x <- get_from_subspace(
     key = key,
-    subspace = subspace,
+    subspace = paste0("time_", type),
     namespace = "meta",
     cache = cache
   )

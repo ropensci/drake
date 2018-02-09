@@ -138,31 +138,35 @@ test_with_dir("graphing args are not ignored (basic example)", {
   expect_false(file.exists("Makefile"))
 
   # Different graph configurations should be checked manually.
-  tmp <- dataframes_graph(config = config, build_times = FALSE)
-  tmpcopy <- dataframes_graph(config = config,
-    make_imports = FALSE, build_times = FALSE)
-  tmp0 <- dataframes_graph(config = config, build_times = FALSE,
-    subset = c("small", "regression2_large"))
-  tmp1 <- dataframes_graph(config = config, build_times = FALSE,
-    from = "small")
-  tmp2 <- dataframes_graph(config = config, build_times = FALSE,
-    from = "small", targets_only = TRUE)
-  tmp3 <- dataframes_graph(config = config, build_times = FALSE,
-    targets_only = TRUE)
-  tmp4 <- dataframes_graph(config = config, build_times = FALSE,
-    split_columns = TRUE)
-  tmp5 <- dataframes_graph(config = config, build_times = FALSE,
-    targets_only = TRUE, split_columns = TRUE)
-  tmp6 <- dataframes_graph(config = config, build_times = TRUE,
-    targets_only = TRUE, split_columns = TRUE)
-  tmp7 <- dataframes_graph(config = config, build_times = TRUE,
-    targets_only = TRUE, split_columns = TRUE, from_scratch = TRUE)
   expect_warning(
-    tmp8 <- dataframes_graph(config = config, build_times = FALSE,
+    tmp <- dataframes_graph(
+      config = config, build_times = FALSE, from_scratch = TRUE))
+  expect_warning(
+    tmp <- dataframes_graph(config = config, build_times = FALSE))
+  tmpcopy <- dataframes_graph(config = config,
+    make_imports = FALSE, build_times = "none")
+  tmp0 <- dataframes_graph(config = config, build_times = "none",
+    subset = c("small", "regression2_large"))
+  tmp1 <- dataframes_graph(config = config, build_times = "none",
+    from = "small")
+  tmp2 <- dataframes_graph(config = config, build_times = "none",
+    from = "small", targets_only = TRUE)
+  tmp3 <- dataframes_graph(config = config, build_times = "none",
+    targets_only = TRUE)
+  tmp4 <- dataframes_graph(config = config, build_times = "none",
+    split_columns = TRUE)
+  tmp5 <- dataframes_graph(config = config, build_times = "none",
+    targets_only = TRUE, split_columns = TRUE)
+  tmp6 <- dataframes_graph(config = config, build_times = "build",
+    targets_only = TRUE, split_columns = TRUE)
+  tmp7 <- dataframes_graph(config = config, build_times = "build",
+    targets_only = TRUE, split_columns = TRUE, from_scratch = FALSE)
+  expect_warning(
+    tmp8 <- dataframes_graph(config = config, build_times = "none",
                              from = c("small", "not_found"))
   )
   expect_error(
-    tmp9 <- dataframes_graph(config = config, build_times = FALSE,
+    tmp9 <- dataframes_graph(config = config, build_times = "none",
                              from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)

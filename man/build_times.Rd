@@ -6,8 +6,8 @@
 \usage{
 build_times(path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
-  targets_only = FALSE, verbose = TRUE, jobs = 1, type = c("time_build",
-  "time_command"))
+  targets_only = FALSE, verbose = TRUE, jobs = 1, type = c("build",
+  "command"))
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -30,9 +30,9 @@ build times of the targets (exclude the imports).}
 
 \item{jobs}{number of parallel jobs/workers for light parallelism.}
 
-\item{type}{Type of time you want: either \code{"time_build"}
+\item{type}{Type of time you want: either \code{"build"}
 for the full build time including the time it took to
-store the target, or \code{"time_command"} for the time it took
+store the target, or \code{"command"} for the time it took
 just to run the command.}
 }
 \value{

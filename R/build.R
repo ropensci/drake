@@ -115,7 +115,7 @@ announce_build <- function(target, meta, config){
 conclude_build <- function(target, value, meta, config){
   check_processed_file(target)
   store_target(target = target, value = value, meta = meta, config = config)
-  handle_build_error(target = target, meta, config = config)
+  handle_build_exceptions(target = target, meta = meta, config = config)
   invisible(value)
 }
 
@@ -150,11 +150,6 @@ build_target <- function(target, meta, config){
     if (!inherits(build$meta$error, "error")){
       return(build)
     }
-    write(
-      x = paste0(
-        "Error building target ", target, ": ", build$meta$error$message),
-      file = stderr()
-    )
     retries <- retries + 1
     console_retry(target = target, retries = retries, config = config)
   }
