@@ -27,15 +27,15 @@ extract_filenames <- function(command){
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-command_as_language <- function(target, config){
+preprocess_command <- function(target, config){
   text <- config$plan$command[config$plan$target == target] %>%
-    preprocess_command
+    wrap_command
   parse(text = text, keep.source = FALSE) %>%
     eval(envir = config$envir)
 }
 
 # Use tidy evaluation to complete the contents of a command.
-preprocess_command <- function(command){
+wrap_command <- function(command){
   paste0("rlang::expr(local({\n", command, "\n}))")
 }
 

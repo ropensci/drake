@@ -20,7 +20,7 @@ one_build <- function(target, meta, config){
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 run_command <- function(target, meta, config){
   warnings <- messages <- NULL
-  parsed_command <- command_as_language(target = target, config = config)
+  parsed_command <- preprocess_command(target = target, config = config)
   meta$time_command <- system.time(
     withCallingHandlers(
       value <- evaluate::try_capture_stack(
