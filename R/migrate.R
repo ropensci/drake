@@ -160,7 +160,7 @@ migrate_hook <- function(code){
     return()
   }
   store_target(target = target, value = value, meta = meta,
-    start = NA, config = config)
+    config = config)
 }
 
 error_na <- function(e){

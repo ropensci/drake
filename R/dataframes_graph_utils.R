@@ -1,6 +1,7 @@
 append_build_times <- function(config) {
   with(config, {
-    time_data <- build_times(digits = digits, cache = config$cache)
+    time_data <- build_times(
+      digits = digits, cache = cache, type = build_times)
     timed <- intersect(time_data$item, nodes$id)
     if (!length(timed))
       return(nodes)
@@ -40,7 +41,7 @@ configure_nodes <- function(config){
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
   config$nodes <- style_nodes(config = config)
-  if (config$build_times){
+  if (config$build_times != "none"){
     config$nodes <- append_build_times(config = config)
   }
   if (config$split_columns){
@@ -220,6 +221,23 @@ resolve_graph_outdated <- function(config){
       make_imports = config$make_imports
     )
   }
+}
+
+resolve_build_times <- function(build_times){
+  if (is.logical(build_times)){
+    warning(
+      "The build_times argument to the visualization functions ",
+      "should be a character string: \"build\", \"command\", or \"none\". ",
+      "The change will be forced in a later version of `drake`. ",
+      "see the `build_times()` function for details."
+    )
+    if (build_times){
+      build_times <- "build"
+    } else {
+      build_times <- "none"
+    }
+  }
+  build_times
 }
 
 resolve_levels <- function(config) { # nolint

@@ -1,13 +1,7 @@
-#' @title Get the last stored error log of a target
-#'   that failed to build, or list the targets with error logs.
-#' @description The specified target could be a
-#' completely failed target or a target
-#' that failed initially, retried, then succeeded.
-#' If no target is given, then `diagnose()` simply
-#' lists the targets for which a error is retrievable.
-#' Together, functions [failed()] and
-#' `diagnose()` should eliminate the strict need
-#' for ordinary error messages printed to the console.
+#' @title Get diagnostic metadata on a target.
+#' @description Diagnostics include errors, warnings,
+#'   messages, runtimes, and other context from when a
+#'   target was build or an import was processed.
 #' @seealso
 #'   [failed()], [progress()],
 #'   [readd()], [drake_plan()], [make()]
@@ -56,7 +50,7 @@
 #' # Drake keeps all the error logs.
 #' diagnose()
 #' # Get the error log, an object of class "error".
-#' error <- diagnose(my_target)
+#' error <- diagnose(my_target)$error # See also warnings and messages.
 #' str(error) # See what's inside the error log.
 #' error$calls # View the traceback. (See the traceback() function).
 #' })
@@ -76,10 +70,10 @@ diagnose <- function(
     target <- as.character(substitute(target))
   }
   if (!length(target)){
-    return(cache$list(namespace = "errors"))
+    return(cache$list(namespace = "meta"))
   }
-  if (!cache$exists(key = target, namespace = "errors")){
+  if (!cache$exists(key = target, namespace = "meta")){
     stop("No diagnostic information for target ", target, ".")
   }
-  cache$get(key = target, namespace = "errors")
+  cache$get(key = target, namespace = "meta")
 }

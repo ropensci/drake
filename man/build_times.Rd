@@ -6,7 +6,8 @@
 \usage{
 build_times(path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
-  targets_only = FALSE, verbose = TRUE, jobs = 1)
+  targets_only = FALSE, verbose = TRUE, jobs = 1, type = c("build",
+  "command"))
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -28,13 +29,20 @@ build times of the targets (exclude the imports).}
 \item{verbose}{whether to print console messages}
 
 \item{jobs}{number of parallel jobs/workers for light parallelism.}
+
+\item{type}{Type of time you want: either \code{"build"}
+for the full build time including the time it took to
+store the target, or \code{"command"} for the time it took
+just to run the command.}
 }
 \value{
 A data frame of times, each from \code{\link[=system.time]{system.time()}}.
 }
 \description{
 Listed times do not include the amount of time
-spent loading and saving objects!
+spent loading and saving objects! See the \code{type}
+argument for different versions of the build time.
+(You can choose whether to take storage time into account.)
 }
 \examples{
 \dontrun{

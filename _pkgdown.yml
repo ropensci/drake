@@ -140,7 +140,6 @@ reference:
   - '`progress`'
   - '`read_drake_config`'
   - '`read_drake_graph`'
-  - '`read_drake_meta`'
   - '`read_drake_plan`'
   - '`read_drake_seed`'
   - '`readd`'

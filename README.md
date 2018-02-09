@@ -211,7 +211,7 @@ install_github("ropensci/drake")
 - `outdated()`: see which targets will be built in the next `make()`.
 - `deps()`: check the dependencies of a command or function.
 - `failed()`: list the targets that failed to build in the last `make()`.
-- `diagnose()`: return the complete error log of a target that failed.
+- `diagnose()`: return the full context of a build, including errors, warnings, and messages.
 
 The articles below are tutorials taken from the [package vignettes](https://github.com/ropensci/drake/tree/master/vignettes).
 

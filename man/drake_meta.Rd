@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta.R
 \name{drake_meta}
 \alias{drake_meta}
-\title{Compute the metadata of a target or import.}
+\title{Compute the initial pre-build metadata of a target or import.}
 \usage{
 drake_meta(target, config)
 }
@@ -26,15 +26,14 @@ is used to compute the metadata of targets.
 }
 \details{
 Target metadata is computed
-with \code{drake_meta()} and then
-\code{drake:::finish_meta()}.
-This metadata corresponds
-to the state of the target immediately after it was built
-or imported in the last \code{\link[=make]{make()}} that
-did not skip it.
-The exception to this is the \code{$missing} element
-of the metadata, which indicates if the target/import
-was missing just \emph{before} it was built.
+with \code{drake_meta()}, and then
+\code{drake:::finish_meta()} completes the metadata
+after the target is built.
+In other words, the output of \code{drake_meta()} corresponds
+to the state of the target immediately before \code{\link[=make]{make()}}
+builds it.
+See \code{\link[=diagnose]{diagnose()}} to read the final metadata of a target,
+including any errors, warnings, and messages in the last build.
 }
 \examples{
 \dontrun{
@@ -62,5 +61,5 @@ readd(small)
 }
 }
 \seealso{
-\code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
 }

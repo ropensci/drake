@@ -1,6 +1,5 @@
 #' @title Build/process a single target or import.
 #' @export
-#' @keywords internal
 #' @description For internal use only.
 #' the only reason this function is exported
 #' is to set up parallel socket (PSOCK) clusters
@@ -11,6 +10,7 @@
 #'   targets are up to date (from [drake_meta()]).
 #' @param config internal configuration list
 #' @inheritParams loadd
+#' @inheritParams readd
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -73,17 +73,16 @@ build_and_store <- function(target, config, meta = NULL){
   # for the whole stage.
   # Most of these steps require access to the cache.
   config$hook({
-    start <- proc.time()
     if (is.null(meta)){
       meta <- drake_meta(target = target, config = config)
     }
+    meta$start <- proc.time()
     announce_build(target = target, meta = meta, config = config)
-    value <- just_build(target = target, meta = meta, config = config)
+    build <- just_build(target = target, meta = meta, config = config)
     conclude_build(
       target = target,
-      value = value,
-      meta = meta,
-      start = start,
+      value = build$value,
+      meta = build$meta,
       config = config
     )
   })
@@ -91,7 +90,7 @@ build_and_store <- function(target, config, meta = NULL){
 
 just_build <- function(target, meta, config){
   if (meta$imported) {
-    process_import(target = target, config = config)
+    process_import(target = target, meta = meta, config = config)
   } else {
     # build_target() does not require access to the cache.
     # A custom future-based job scheduler could build with different steps
@@ -113,26 +112,13 @@ announce_build <- function(target, meta, config){
   console(imported = meta$imported, target = target, config = config)
 }
 
-conclude_build <- function(target, value, meta, start, config){
+conclude_build <- function(target, value, meta, config){
   check_processed_file(target)
-  store_target(target = target, value = value, meta = meta,
-    start = start, config = config)
-  set_progress(
-    target = target,
-    value = ifelse(inherits(value, "error"), "failed", "finished"),
-    config = config
-  )
-  handle_error(target = target, value = value, config = config)
+  store_target(target = target, value = value, meta = meta, config = config)
+  handle_build_exceptions(target = target, meta = meta, config = config)
   invisible(value)
 }
 
-build_target <- function(target, meta, config) {
-  command <- command_as_language(target = target, config = config)
-  seed <- list(seed = config$seed, target = target) %>%
-    seed_from_object
-  run_command(
-    target = target, command = command, config = config, seed = seed)
-}
 
 check_processed_file <- function(target){
   if (!is_file(target)){
@@ -147,9 +133,32 @@ check_processed_file <- function(target){
   }
 }
 
-process_import <- function(target, config) {
+build_target <- function(target, meta, config){
+  retries <- 0
+  max_retries <- drake_plan_override(
+    target = target,
+    field = "retries",
+    config = config
+  ) %>%
+    as.numeric
+  while (retries <= max_retries){
+    build <- one_build(
+      target = target,
+      meta = meta,
+      config = config
+    )
+    if (!inherits(build$meta$error, "error")){
+      return(build)
+    }
+    retries <- retries + 1
+    console_retry(target = target, retries = retries, config = config)
+  }
+  build
+}
+
+process_import <- function(target, meta, config) {
   if (is_file(target)) {
-    return(NA)
+    value <- NA
   } else if (target %in% ls(config$envir, all.names = TRUE)) {
     value <- config$envir[[target]]
   } else {
@@ -158,22 +167,5 @@ process_import <- function(target, config) {
       error = function(e)
         console(imported = NA, target = target, config = config))
   }
-  value
-}
-
-# We may just want to have a warning here.
-handle_error <- function(target, value, config){
-  if (!inherits(value, "error")){
-    return()
-  }
-  if (config$verbose){
-    text <- paste("fail", target)
-    finish_console(text = text, pattern = "fail", verbose = config$verbose)
-  }
-  stop(
-    "Target '", target, "' failed to build. ",
-    "Use diagnose(", target,
-    ") to retrieve diagnostic information.",
-    call. = FALSE
-  )
+  list(value = value, meta = meta)
 }

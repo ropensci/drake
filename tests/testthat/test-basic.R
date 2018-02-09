@@ -28,6 +28,8 @@ test_with_dir("basic example works", {
   expect_true(is.list(dependency_profile(
     target = "small", config = con)))
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
+
+  # Should probably check the actual build times in the labels.
   tmp1 <- dataframes_graph(config = config,
     make_imports = FALSE)
   tmp2 <- dataframes_graph(config = config)
