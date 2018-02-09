@@ -749,6 +749,76 @@ read_graph <- function(
   )
 }
 
+#' @title Deprecated: read the metadata of a target or import.
+#' @description Use [diagnose()] instead.
+#' @details Deprecated on 2018-02-09
+#' @seealso [diagnose()] [dependency_profile()], [make()]
+#' @export
+#' @return The cached master internal configuration list
+#'   of the last [make()].
+#' @param targets character vector, names of the targets
+#'   to get metadata. If `NULL`, all metadata is collected.
+#' @param cache optional drake cache. See code{\link{new_cache}()}.
+#'   If `cache` is supplied,
+#'   the `path` and `search` arguments are ignored.
+#' @param path Root directory of the drake project,
+#'   or if `search` is `TRUE`, either the
+#'   project root or a subdirectory of the project.
+#' @param search logical. If `TRUE`, search parent directories
+#'   to find the nearest drake cache. Otherwise, look in the
+#'   current working directory only.
+#' @param verbose whether to print console messages
+#' @param jobs number of jobs for light parallelism.
+#'   Supports 1 job only on Windows.
+#' @examples
+#' # See ?diagnose() for examples.
+read_drake_meta <- function(
+  targets = NULL,
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = 1,
+  jobs = 1
+){
+  .Deprecated(
+    "read_drake_meta",
+    package = "drake",
+    msg = paste(
+      "read_drake_meta() is deprecated.",
+      "Use diagnose() instead."
+    )
+  )
+  if (is.null(cache)) {
+    cache <- get_cache(path = path, search = search, verbose = verbose)
+  }
+  if (is.null(cache)) {
+    stop("cannot find drake cache.")
+  }
+  if (is.null(targets)){
+    targets <- cache$list(namespace = "meta")
+  } else {
+    targets <- parallel_filter(
+      x = targets,
+      f = function(target){
+        cache$exists(key = target, namespace = "meta")
+      },
+      jobs = jobs
+    )
+  }
+  out <- lightly_parallelize(
+    X = targets,
+    FUN = function(target){
+      cache$get(key = target, namespace = "meta")
+    },
+    jobs = jobs
+  )
+  names(out) <- targets
+  if (length(out) == 1){
+    out <- out[[1]]
+  }
+  out
+}
+
 #' @title Deprecated function `read_plan`
 #' @description Use [read_drake_plan()] instead.
 #' @details Deprecated on 2017-11-21.
