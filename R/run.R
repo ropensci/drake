@@ -21,7 +21,7 @@ one_build <- function(target, meta, config){
 run_command <- function(target, meta, config){
   warnings <- messages <- NULL
   parsed_command <- command_as_language(target = target, config = config)
-  meta$command_time <- system.time(
+  meta$time_command <- system.time(
     withCallingHandlers(
       value <- evaluate::try_capture_stack(
         quoted_code = parsed_command,

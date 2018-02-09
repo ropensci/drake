@@ -19,9 +19,9 @@
 #'   the `path` and `search` arguments are ignored.
 #' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
-#' @param type Type of time you want: either `"build_time"`
-#'   for the full build time including the time it takes to
-#'   store the target, or `"command_time"` for the time it takes
+#' @param type Type of time you want: either `"time_build"`
+#'   for the full build time including the time it took to
+#'   store the target, or `"time_command"` for the time it took
 #'   just to run the command.
 #' @examples
 #' \dontrun{
@@ -40,7 +40,7 @@ build_times <- function(
   targets_only = FALSE,
   verbose = TRUE,
   jobs = 1,
-  type = c("build_time", "command_time")
+  type = c("time_build", "time_command")
 ){
   if (is.null(cache)){
     return(empty_times())
@@ -132,15 +132,15 @@ to_build_duration <- function(x){
 time_columns <- c("elapsed", "user", "system")
 
 finalize_times <- function(target, meta, config){
-  if (!is_bad_time(meta$command_time)){
-    meta$command_time <- runtime_entry(
-      runtime = meta$command_time,
+  if (!is_bad_time(meta$time_command)){
+    meta$time_command <- runtime_entry(
+      runtime = meta$time_command,
       target = target,
       imported = meta$imported
     )
   }
   if (!is_bad_time(meta$start)){
-    meta$build_time <- runtime_entry(
+    meta$time_build <- runtime_entry(
       runtime = proc.time() - meta$start,
       target = target,
       imported = meta$imported
