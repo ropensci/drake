@@ -1,6 +1,8 @@
 #' @title List the time it took to build each target/import.
 #' @description Listed times do not include the amount of time
-#' spent loading and saving objects!
+#'  spent loading and saving objects! See the `type`
+#'  argument for different versions of the build time.
+#'  (You can choose whether to take storage time into account.)
 #' @seealso [built()]
 #' @export
 #' @return A data frame of times, each from [system.time()].
@@ -17,6 +19,10 @@
 #'   the `path` and `search` arguments are ignored.
 #' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
+#' @param type Type of time you want: either `"build_time"`
+#'   for the full build time including the time it takes to
+#'   store the target, or `"command_time"` for the time it takes
+#'   just to run the command.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -33,16 +39,19 @@ build_times <- function(
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE,
   verbose = TRUE,
-  jobs = 1
+  jobs = 1,
+  type = c("build_time", "command_time")
 ){
   if (is.null(cache)){
     return(empty_times())
   }
+  type <- match.arg(type)
   out <- lightly_parallelize(
     X = cache$list(namespace = "meta"),
     FUN = fetch_runtime,
     jobs = 1,
-    cache = cache
+    cache = cache,
+    subspace = type
   ) %>%
     parallel_filter(f = is.data.frame, jobs = jobs) %>%
     do.call(what = rbind) %>%
@@ -57,10 +66,10 @@ build_times <- function(
   out
 }
 
-fetch_runtime <- function(key, cache){
+fetch_runtime <- function(key, cache, subspace){
   x <- get_from_subspace(
     key = key,
-    subspace = "build_times",
+    subspace = subspace,
     namespace = "meta",
     cache = cache
   )

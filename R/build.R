@@ -142,13 +142,13 @@ build_target <- function(target, meta, config){
   ) %>%
     as.numeric
   while (retries <= max_retries){
-    value <- one_try(
+    build <- one_build(
       target = target,
       meta = meta,
       config = config
     )
-    if (!inherits(value, "error")){
-      return(list(value = value, meta = meta))
+    if (!inherits(build$meta$error, "error")){
+      return(build)
     }
     write(
       x = paste0("Error building target ", target, ": ", value$message),
@@ -157,8 +157,7 @@ build_target <- function(target, meta, config){
     retries <- retries + 1
     console_retry(target = target, retries = retries, config = config)
   }
-  meta$error <- value
-  list(meta = meta)
+  build
 }
 
 process_import <- function(target, meta, config) {

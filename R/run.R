@@ -1,3 +1,21 @@
+one_build <- function(target, meta, config){
+  timeouts <- resolve_timeouts(target = target, config = config)
+  R.utils::withTimeout(
+    withr::with_seed(
+      meta$seed,
+      run_command(
+        target = target,
+        meta = meta,
+        config = config
+      )
+    ),
+    timeout = timeouts["timeout"],
+    cpu = timeouts["cpu"],
+    elapsed = timeouts["elapsed"],
+    onTimeout = "error"
+  )
+}
+
 # Borrowed from the rmonad package
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 run_command <- function(target, meta, config){
@@ -28,24 +46,6 @@ run_command <- function(target, meta, config){
   list(
     meta = meta,
     value = value
-  )
-}
-
-one_try <- function(target, meta, config){
-  timeouts <- resolve_timeouts(target = target, config = config)
-  R.utils::withTimeout(
-    withr::with_seed(
-      meta$seed,
-      run_command(
-        target = target,
-        meta = meta,
-        config = config
-      )
-    ),
-    timeout = timeouts["timeout"],
-    cpu = timeouts["cpu"],
-    elapsed = timeouts["elapsed"],
-    onTimeout = "error"
   )
 }
 
