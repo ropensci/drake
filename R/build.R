@@ -174,20 +174,3 @@ process_import <- function(target, meta, config) {
   }
   list(value = value, meta = meta)
 }
-
-# We may just want to have a warning here.
-handle_error <- function(target, value, config){
-  if (!inherits(value, "error")){
-    return()
-  }
-  if (config$verbose){
-    text <- paste("fail", target)
-    finish_console(text = text, pattern = "fail", verbose = config$verbose)
-  }
-  stop(
-    "Target '", target, "' failed to build. ",
-    "Use diagnose(", target,
-    ") to retrieve diagnostic information.",
-    call. = FALSE
-  )
-}

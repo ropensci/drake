@@ -119,6 +119,24 @@ test_with_dir("in_progress() works and errors are handled correctly", {
   expect_true(inherits(diagnose(y, character_only = TRUE)$error, "error"))
 })
 
+test_with_dir("warnings and messages are caught", {
+  expect_equal(in_progress(), character(0))
+  f <- function(x){
+    warning("my first warn")
+    message("my first mess")
+    warning("my second warn")
+    message("my second mess")
+    123
+  }
+  bad_plan <- drake_plan(x = f(), y = x)
+  expect_warning(make(bad_plan, verbose = FALSE, session_info = FALSE))
+  x <- diagnose(x)
+  expect_true(grepl("my first warn", x$warnings[1]))
+  expect_true(grepl("my second warn", x$warnings[2]))
+  expect_true(grepl("my first mess", x$messages[1]))
+  expect_true(grepl("my second mess", x$messages[2]))
+})
+
 test_with_dir("missed() works", {
   # May have been loaded in a globalenv() testing scenario
   remove_these <- intersect(ls(envir = globalenv()), c("f", "g"))

@@ -21,6 +21,8 @@ test_with_dir("deprecation: cache functions", {
   expect_warning(read_graph())
   expect_warning(read_plan())
   expect_true(is.list(
+    tmp <- read_drake_meta(targets = NULL, search = FALSE)))
+  expect_true(is.list(
     tmp <- read_drake_meta(targets = "x", search = FALSE)))
 })
 
