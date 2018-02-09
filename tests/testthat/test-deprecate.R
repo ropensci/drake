@@ -13,17 +13,17 @@ test_with_dir("deprecation: make() and config()", {
 
 test_with_dir("deprecation: cache functions", {
   plan <- drake_plan(x = 1)
-  expect_error(tmp <- read_drake_meta(search = FALSE))
+  expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
   expect_silent(make(plan, verbose = FALSE, session_info = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
   expect_warning(read_config())
   expect_warning(read_graph())
   expect_warning(read_plan())
-  expect_true(is.list(
-    tmp <- read_drake_meta(targets = NULL, search = FALSE)))
-  expect_true(is.list(
-    tmp <- read_drake_meta(targets = "x", search = FALSE)))
+  expect_true(expect_warning(is.list(
+    tmp <- read_drake_meta(targets = NULL, search = FALSE))))
+  expect_true(expect_warning(is.list(
+    tmp <- read_drake_meta(targets = "x", search = FALSE))))
 })
 
 test_with_dir("drake_plan deprecation", {
