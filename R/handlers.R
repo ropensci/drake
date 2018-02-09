@@ -24,7 +24,7 @@ handle_build_error <- function(target, meta, config){
   }
   stop(
     "Target '", target, "' failed. Use diagnose(", target,
-    ") to retrieve more diagnostic information.",
+    ") for details.",
     call. = FALSE
   )
 }

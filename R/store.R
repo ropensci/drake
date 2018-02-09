@@ -48,7 +48,7 @@ finalize_storage <- function(target, value, meta, config){
     config = config
   )
   config$cache$set(key = target, value = meta, namespace = "meta")
-  progress <- ifelse(inherits(value, "error"), "failed", "finished")
+  progress <- ifelse(inherits(meta$error, "error"), "failed", "finished")
   set_progress(
     target = target,
     value = progress,
