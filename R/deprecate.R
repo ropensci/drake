@@ -753,6 +753,7 @@ read_graph <- function(
 #' @description Use [diagnose()] instead.
 #' @details Deprecated on 2018-02-09
 #' @seealso [diagnose()] [dependency_profile()], [make()]
+#' @keywords internal
 #' @export
 #' @return The cached master internal configuration list
 #'   of the last [make()].

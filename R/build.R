@@ -1,6 +1,5 @@
 #' @title Build/process a single target or import.
 #' @export
-#' @keywords internal
 #' @description For internal use only.
 #' the only reason this function is exported
 #' is to set up parallel socket (PSOCK) clusters

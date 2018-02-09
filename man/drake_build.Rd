@@ -60,4 +60,3 @@ head(result)
 })
 }
 }
-\keyword{internal}
