@@ -1,5 +1,7 @@
 # Version 5.1.0
 
+- Return warnings, errors, and other context of each build, all wrapped up with the usual metadata. `diagnose()` will take on the role of returning this metadata.
+- Deprecate the `read_drake_meta()` function in favor of `diagnose()`.
 - Add a new `expose_imports()` function to optionally force `drake` detect deeply nested functions inside specific packages.
 - Move the "quickstart.Rmd" vignette to "example-basic.Rmd". The so-called "quickstart" didn't end up being very quick, and it was all about the basic example anyway.
 - Move `drake_build()` to be an exclusively user-side function.
