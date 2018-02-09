@@ -10,6 +10,7 @@
 #'   targets are up to date (from [drake_meta()]).
 #' @param config internal configuration list
 #' @inheritParams loadd
+#' @inheritParams readd
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
