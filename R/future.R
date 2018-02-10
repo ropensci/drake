@@ -17,7 +17,7 @@ run_future <- function(config){
   }
 }
 
-run_future_commands <- run_future_caching <- run_future
+run_future_commands <- run_future_total <- run_future
 
 get_redeployment_function <- function(config){
   getFromNamespace(
@@ -26,7 +26,7 @@ get_redeployment_function <- function(config){
   )
 }
 
-worker_future_commands <- function(id, target, config){
+worker_future_total <- function(id, target, config){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
@@ -47,7 +47,7 @@ worker_future_commands <- function(id, target, config){
   )
 }
 
-worker_future_total <- function(id, target, config){
+worker_future_commands <- function(id, target, config){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
@@ -64,7 +64,7 @@ worker_future_total <- function(id, target, config){
   prune_envir(targets = running_targets(config), config = config)
   meta$start <- proc.time()
   config$hook(announce_build(target = target, meta = meta, config = config))
-  future(
+  future::future(
     expr = just_build(target = target, meta = meta, config = config),
     packages = unique(c(config$packages, (.packages())))
   )
@@ -98,9 +98,12 @@ resolved_correctly <- function(worker){
 # since "future_total" workers already conclude the build
 # and store the results.
 conclude_worker <- function(target, worker, config){
-  if (is.na(worker) || (config$parallelism != "future_commands")){
+  if (identical(worker, NA) || (config$parallelism != "future_commands")){
     return(invisible())
   }
+  # We're assuming the "future_commands" backend is not used imports.
+  set_attempt_flag(config = config)
+  build <- future::value(worker)
   config$hook({
     conclude_build(
       target = build$target,

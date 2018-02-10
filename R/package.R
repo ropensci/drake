@@ -42,7 +42,7 @@
 #' @importFrom digest digest
 #' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
-#' @importFrom future plan
+#' @importFrom future future plan resolved value
 #' @importFrom future.apply future_lapply
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices components delete_vertices
