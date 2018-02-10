@@ -76,7 +76,7 @@ fetch_runtime <- function(key, cache, type){
   if (is_bad_time(x)){
     return(empty_times())
   }
-  if (inherits(x), "proc_time"){
+  if (inherits(x, "proc_time")){
     x <- runtime_entry(runtime = x, target = key, imported = NA)
   }
   x
