@@ -34,7 +34,7 @@
 #' @param targets_only logical, whether to output information
 #'   only on the targets in your workflow plan data frame.
 #'   If `targets_only` is `FALSE`, the output will
-#'   include the hashes of both targets and imports. 
+#'   include the hashes of both targets and imports.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -129,7 +129,7 @@ drake_cache_log_file <- function(
 #' @param targets_only logical, whether to output information
 #'   only on the targets in your workflow plan data frame.
 #'   If `targets_only` is `FALSE`, the output will
-#'   include the hashes of both targets and imports. 
+#'   include the hashes of both targets and imports.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -167,7 +167,7 @@ drake_cache_log <- function(
 ){
   if (is.null(cache)){
     return(
-      data.frame(
+      tibble(
         hash = character(0),
         type = character(0),
         name = character(0)
@@ -180,7 +180,8 @@ drake_cache_log <- function(
     jobs = jobs,
     cache = cache
   ) %>%
-    do.call(what = rbind)
+    do.call(what = rbind) %>%
+    as_tibble
   if (targets_only){
     out <- out[out$type == "target", ]
   }
