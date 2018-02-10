@@ -76,8 +76,7 @@ test_with_dir("basic Makefile stuff works", {
   config$verbose <- FALSE
   cache_path <- cache_path(config$cache)
   initialize_session(config = config)
-  increment_attempt_flag(
-    targets = outdated(config = config), config = config)
+  set_attempt_flag(config = config)
   config$recipe_command <- "Rscript -e"
   store_drake_config(config = config)
   run_Makefile(config, run = FALSE, debug = TRUE)
