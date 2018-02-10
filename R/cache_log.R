@@ -198,5 +198,5 @@ single_cache_log <- function(key, cache){
   )
   imported <- ifelse(is.na(imported), TRUE, imported)
   type <- ifelse(imported, "import", "target")
-  data.frame(hash = hash, type = type, name = key, stringsAsFactors = FALSE)
+  tibble(hash = hash, type = type, name = key)
 }
