@@ -10,17 +10,17 @@ store_target <- function(target, value, meta, config) {
     config = config
   )
   if (!inherits(meta$error, "error")){
-    if (is.function(value)) {
-      store_function(
-        target = target,
-        value = value,
-        meta = meta,
-        config = config
-      )
-    } else if (is_file(target)) {
+    if (is_file(target)) {
       store_object(
         target = target,
         value = meta$file,
+        meta = meta,
+        config = config
+      )
+    } else if (is.function(value)) {
+      store_function(
+        target = target,
+        value = value,
         meta = meta,
         config = config
       )
