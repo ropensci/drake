@@ -168,7 +168,8 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
   expect_error(check_plan(y, envir = config$envir))
   suppressWarnings(
     expect_error(
-      make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
+      make(y, envir = config$envir, hook = silencer_hook,
+           session_info = FALSE, verbose = FALSE)))
   suppressWarnings(expect_error(
     check_plan(config$plan, targets = character(0), envir = config$envir)))
   suppressWarnings(expect_error(
@@ -177,12 +178,13 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
       targets = character(0),
       envir = config$envir,
       session_info = FALSE,
-      verbose = FALSE
+      verbose = FALSE,
+      hook = silencer_hook
     )
   ))
   y <- drake_plan(x = 1, y = 2)
   y$bla <- "bluh"
-  expect_warning(make(y, session_info = FALSE))
+  expect_warning(make(y, session_info = FALSE, verbose = FALSE))
 })
 
 test_with_dir("targets can be partially specified", {
