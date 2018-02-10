@@ -121,7 +121,7 @@ drake_plan <- function(
   commands <- as.character(commands)
   if (!length(commands)){
     return(
-      data.frame(
+      tibble(
         target = character(0),
         command = character(0)
       )

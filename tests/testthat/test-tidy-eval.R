@@ -7,10 +7,9 @@ test_with_dir("drake_plan does tidy eval in `...` argument", {
     a = !!my_variable,
     list = c(d = "!!my_variable")
   )
-  plan2 <- data.frame(
+  plan2 <- tibble(
     target = c("a", "d"),
-    command = c("5", "!!my_variable"),
-    stringsAsFactors = FALSE
+    command = c("5", "!!my_variable")
   )
   expect_equal(plan1, plan2)
 })
@@ -23,10 +22,9 @@ test_with_dir("drake_plan tidy eval can be disabled", {
     list = c(d = "!!my_variable"),
     tidy_evaluation = FALSE
   )
-  plan2 <- data.frame(
+  plan2 <- tibble(
     target = c("a", "b", "d"),
-    command = c("!(!my_variable)", "!(!my_variable + 1)", "!!my_variable"),
-    stringsAsFactors = FALSE
+    command = c("!(!my_variable)", "!(!my_variable + 1)", "!!my_variable")
   )
   expect_equal(plan1, plan2)
 })
