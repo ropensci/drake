@@ -86,7 +86,7 @@ missing_input_files <- function(config) {
 }
 
 warn_bad_symbols <- function(x) {
-  x <- drake_unquote(x)
+  x <- Filter(x = x, f = is_not_file)
   bad <- which(!is_parsable(x)) %>% names
   if (!length(bad))
     return(invisible())
