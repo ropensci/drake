@@ -21,7 +21,7 @@ run_future_commands <- run_future_caching <- run_future
 
 get_redeployment_function <- function(config){
   getFromNamespace(
-    x = paste0("worker_", config$parallelism)
+    x = paste0("worker_", config$parallelism),
     ns = "drake"
   )
 }
@@ -97,16 +97,17 @@ resolved_correctly <- function(worker){
 # Currently only needed for "future_commands" workers
 # since "future_total" workers already conclude the build
 # and store the results.
-conclude_worker(target, worker, config){
-  if (config$parallelism == "future_commands"){
-    config$hook({
-      build <- future::value(worker)
-      conclude_build(
-        target = build$target,
-        value = build$value,
-        meta = build$meta,
-        config = config
-      )
-    })
+conclude_worker <- function(target, worker, config){
+  if (is.na(worker) || (config$parallelism != "future_commands")){
+    return(invisible())
   }
+  config$hook({
+    conclude_build(
+      target = build$target,
+      value = build$value,
+      meta = build$meta,
+      config = config
+    )
+  })
+  invisible()
 }
