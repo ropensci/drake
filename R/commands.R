@@ -66,6 +66,7 @@ get_standardized_command <- function(target, config) {
 # If styler's behavior changes a lot, it will
 # put targets out of date.
 standardize_command <- function(x) {
+  x <- language_to_text(x)
   formatR::tidy_source(
     source = NULL,
     comment = FALSE,
@@ -74,9 +75,23 @@ standardize_command <- function(x) {
     brace.newline = FALSE,
     indent = 4,
     output = FALSE,
-    text = x,
+    text = as.character(x),
     width.cutoff = 119
   )$text.tidy %>%
     paste(collapse = "\n") %>%
     braces
+}
+
+language_to_text <- function(x){
+  if (is.expression(x)){
+    stopifnot(length(x) < 2)
+    x <- x[[1]]
+  }
+  if (is.expression(x) || is.language(x)){
+    for(attribute in c("srcref", "srcfile", "wholeSrcref")){
+      attr(x = x, which = attribute) <- NULL
+    }
+    x <- wide_deparse(x)
+  }
+  x
 }
