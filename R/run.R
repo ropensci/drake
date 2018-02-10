@@ -47,6 +47,7 @@ run_command <- function(target, meta, config){
     value <- NULL
   }
   list(
+    target = target,
     meta = meta,
     value = value
   )

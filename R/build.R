@@ -167,5 +167,5 @@ process_import <- function(target, meta, config) {
       error = function(e)
         console(imported = NA, target = target, config = config))
   }
-  list(value = value, meta = meta)
+  list(target = target, value = value, meta = meta)
 }
