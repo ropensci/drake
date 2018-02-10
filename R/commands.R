@@ -88,7 +88,7 @@ language_to_text <- function(x){
     x <- x[[1]]
   }
   if (is.expression(x) || is.language(x)){
-    for(attribute in c("srcref", "srcfile", "wholeSrcref")){
+    for (attribute in c("srcref", "srcfile", "wholeSrcref")){
       attr(x = x, which = attribute) <- NULL
     }
     x <- wide_deparse(x)
