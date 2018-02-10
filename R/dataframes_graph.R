@@ -146,7 +146,7 @@ dataframes_graph <- function(
     config$edges$arrows <- "to"
   }
 
-  list(nodes = config$nodes, edges = config$edges,
+  list(nodes = as_tibble(config$nodes), edges = as_tibble(config$edges),
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(split_columns = split_columns))
 }
