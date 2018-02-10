@@ -121,16 +121,15 @@ drake_plan <- function(
   commands <- as.character(commands)
   if (!length(commands)){
     return(
-      data.frame(
+      tibble(
         target = character(0),
         command = character(0)
       )
     )
   }
-  plan <- data.frame(
+  plan <- tibble(
     target = targets,
-    command = commands,
-    stringsAsFactors = FALSE
+    command = commands
   )
   from_dots <- plan$target %in% names(commands_dots)
   if (file_targets){

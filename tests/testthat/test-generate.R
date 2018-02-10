@@ -15,49 +15,45 @@ test_with_dir("evaluate, expand, and gather", {
   expect_equal(m1, df)
 
   x <- expand_plan(df, values = c("rep1", "rep2"))
-  y <- data.frame(
+  y <- tibble(
     target = c("data_rep1", "data_rep2"),
-    command = rep("simulate(center = MU, scale = SIGMA)", 2),
-    stringsAsFactors = FALSE
+    command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
   expect_equal(x, y)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
-  y <- data.frame(
+  y <- tibble(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
       "simulate(center = 1, scale = SIGMA)",
       "simulate(center = 2, scale = SIGMA)",
       "simulate(center = 1, scale = SIGMA)",
       "simulate(center = 2, scale = SIGMA)"
-    ),
-    stringsAsFactors = FALSE
+    )
   )
   expect_equal(x2, y)
 
   x3 <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
     expand = FALSE)
-  y <- data.frame(
+  y <- tibble(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
       "simulate(center = 1, scale = a)",
       "simulate(center = 2, scale = b)",
       "simulate(center = 1, scale = a)",
       "simulate(center = 2, scale = b)"
-    ),
-    stringsAsFactors = FALSE
+    )
   )
   expect_equal(x3, y)
 
   x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
     expand = FALSE)
-  y <- data.frame(
+  y <- tibble(
     target = c("data_rep1", "data_rep2"),
     command = c(
       "simulate(center = 1, scale = 0.1)",
       "simulate(center = 2, scale = 1)"
-    ),
-    stringsAsFactors = FALSE
+    )
   )
   expect_equal(x4, y)
 
@@ -67,18 +63,16 @@ test_with_dir("evaluate, expand, and gather", {
   expect_equal(6, length(unique(x5$command)))
 
   x6 <- gather_plan(x)
-  y <- data.frame(
+  y <- tibble(
     target = "target",
-    command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)",
-    stringsAsFactors = F
+    command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
   expect_equal(x6, y)
 
   x7 <- gather_plan(x, target = "my_summaries", gather = "rbind")
-  y <- data.frame(
+  y <- tibble(
     target = "my_summaries",
-    command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)",
-    stringsAsFactors = F
+    command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
   expect_equal(x7, y)
 })
@@ -90,7 +84,7 @@ test_with_dir("analyses and summaries", {
     regression2 = reg2(dataset__)
   )
   analyses <- plan_analyses(methods, datasets = datasets)
-  x <- data.frame(
+  x <- tibble(
     target = c(
       "regression1_small",
       "regression1_large",
@@ -101,8 +95,7 @@ test_with_dir("analyses and summaries", {
       "reg1(small)",
       "reg1(large)",
       "reg2(small)",
-      "reg2(large)"),
-    stringsAsFactors = F
+      "reg2(large)")
   )
   expect_equal(analyses, x)
 
@@ -124,7 +117,7 @@ test_with_dir("analyses and summaries", {
     coef = coefficients(analysis__)
   )
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
-  x <- data.frame(
+  x <- tibble(
     target = c(
       "summ_regression1_small",
       "summ_regression1_large",
@@ -144,8 +137,7 @@ test_with_dir("analyses and summaries", {
       "coefficients(regression1_large)",
       "coefficients(regression2_small)",
       "coefficients(regression2_large)"
-    ),
-    stringsAsFactors = FALSE
+    )
   )
   expect_equal(results, x)
 
@@ -159,7 +151,7 @@ test_with_dir("analyses and summaries", {
     datasets,
     gather = c("list", "rbind")
   )
-  x <- data.frame(
+  x <- tibble(
     target = c(
       "summ_regression1_small",
       "summ_regression1_large",
@@ -179,8 +171,7 @@ test_with_dir("analyses and summaries", {
       "coefficients(regression1_large)",
       "coefficients(regression2_small)",
       "coefficients(regression2_large)"
-    ),
-    stringsAsFactors = FALSE
+    )
   )
   y <- results[-1:-2, ]
   row.names(x) <- row.names(y) <- NULL

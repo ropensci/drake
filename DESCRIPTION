@@ -72,6 +72,7 @@ Imports:
   stringi,
   stringr,
   testthat,
+  tibble,
   utils,
   visNetwork,
   withr
@@ -85,8 +86,7 @@ Suggests:
   MASS,
   methods,
   RSQLite,
-  rmarkdown,
-  tibble
+  rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

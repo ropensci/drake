@@ -160,7 +160,7 @@ hover_text_width <- 250
 #' visNetwork::visNetwork(nodes = legend_nodes())
 #' }
 legend_nodes <- function(font_size = 20) {
-  out <- data.frame(
+  out <- tibble(
     label = c(
       "Up to date",
       "Outdated",

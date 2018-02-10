@@ -1,5 +1,17 @@
 drake_context("other features")
 
+test_with_dir("Can standardize commands from expr or lang", {
+  x <- parse(text = c("f(x +2) + 2", "!!y"))
+  y <- standardize_command(x[[1]])
+  x <- parse(text = "f(x +2) + 2")
+  z <- standardize_command(x)
+  w <- standardize_command(x[[1]])
+  s <- "{\n f(x + 2) + 2 \n}"
+  expect_equal(y, s)
+  expect_equal(z, s)
+  expect_equal(w, s)
+})
+
 test_with_dir("build_target() does not need to access cache", {
   config <- drake_config(drake_plan(x = 1))
   meta <- drake_meta(target = "x", config = config)
@@ -160,24 +172,31 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 test_with_dir("check_drake_config() via check_plan() and make()", {
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
-  expect_error(check_plan(y, envir = config$envir))
-  expect_error(make(y, envir = config$envir, session_info = FALSE))
+  suppressWarnings(expect_error(check_plan(y, envir = config$envir)))
+  suppressWarnings(
+    expect_error(
+      make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
   y <- data.frame(target = character(0), command = character(0))
   expect_error(check_plan(y, envir = config$envir))
-  expect_error(make(y, envir = config$envir, session_info = FALSE))
-  expect_error(
-    check_plan(config$plan, targets = character(0), envir = config$envir))
-  expect_error(
+  suppressWarnings(
+    expect_error(
+      make(y, envir = config$envir, hook = silencer_hook,
+           session_info = FALSE, verbose = FALSE)))
+  suppressWarnings(expect_error(
+    check_plan(config$plan, targets = character(0), envir = config$envir)))
+  suppressWarnings(expect_error(
     make(
       config$plan,
       targets = character(0),
       envir = config$envir,
-      session_info = FALSE
+      session_info = FALSE,
+      verbose = FALSE,
+      hook = silencer_hook
     )
-  )
+  ))
   y <- drake_plan(x = 1, y = 2)
   y$bla <- "bluh"
-  expect_warning(make(y, session_info = FALSE))
+  expect_warning(make(y, session_info = FALSE, verbose = FALSE))
 })
 
 test_with_dir("targets can be partially specified", {

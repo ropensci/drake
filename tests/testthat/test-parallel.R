@@ -1,8 +1,8 @@
 drake_context("parallel")
 
 test_with_dir("parallelism not found for testrun()", {
-  config <- list(parallelism = "not found")
-  expect_error(testrun(config))
+  config <- list(parallelism = "not found", verbose = FALSE)
+  suppressWarnings(expect_error(testrun(config)))
 })
 
 test_with_dir("parallelism_choices", {

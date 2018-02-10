@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Use tibbles for workflow plan data frames and the output of `dataframes_graph()`.
 - Return warnings, errors, and other context of each build, all wrapped up with the usual metadata. `diagnose()` will take on the role of returning this metadata.
 - Deprecate the `read_drake_meta()` function in favor of `diagnose()`.
 - Add a new `expose_imports()` function to optionally force `drake` detect deeply nested functions inside specific packages.

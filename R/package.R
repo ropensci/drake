@@ -62,6 +62,7 @@
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat context expect_false expect_true test_dir test_that
+#' @importFrom tibble as_tibble tibble
 #' @importFrom utils capture.output compareVersion installed.packages
 #'   packageVersion read.csv sessionInfo type.convert unzip write.table
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout

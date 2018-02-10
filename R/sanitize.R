@@ -1,7 +1,13 @@
 sanitize_plan <- function(plan){
-  for (field in drake_plan_character_columns()){
+  plan <- as_tibble(plan)
+  for (field in drake_plan_non_factors()){
     if (!is.null(plan[[field]])){
-      plan[[field]] <- str_trim(plan[[field]], side = "both")
+      if (is.factor(plan[[field]])){
+         plan[[field]] <- as.character(plan[[field]])
+      }
+      if (is.character(plan[[field]])){
+        plan[[field]] <- str_trim(plan[[field]], side = "both")
+      }
     }
   }
   if (!is.null(plan[["trigger"]])){
@@ -11,7 +17,7 @@ sanitize_plan <- function(plan){
   plan[nchar(plan$target) > 0, ]
 }
 
-drake_plan_character_columns <- function(){
+drake_plan_non_factors <- function(){
   c(
     "command",
     "target",
@@ -21,12 +27,13 @@ drake_plan_character_columns <- function(){
 
 drake_plan_columns <- function(){
   c(
-    drake_plan_character_columns(),
+    drake_plan_non_factors(),
     "cpu",
     "elapsed",
     "evaluator",
     "retries",
-    "timeout"
+    "timeout",
+    "evaluator"
   )
 }
 
