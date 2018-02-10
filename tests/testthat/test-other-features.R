@@ -1,5 +1,17 @@
 drake_context("other features")
 
+test_with_dir("Can standardize commands from expr or lang", {
+  x <- parse(text = c("f(x +2) + 2", "!!y"))
+  y <- standardize_command(x[[1]])
+  x <- parse(text = "f(x +2) + 2")
+  z <- standardize_command(x)
+  w <- standardize_command(x[[1]])
+  s <- "{\n f(x + 2) + 2 \n}"
+  expect_equal(y, s)
+  expect_equal(z, s)
+  expect_equal(w, s)
+})
+
 test_with_dir("build_target() does not need to access cache", {
   config <- drake_config(drake_plan(x = 1))
   meta <- drake_meta(target = "x", config = config)
