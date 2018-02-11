@@ -66,6 +66,9 @@ test_with_dir("lazy loading is actually lazy", {
 
 test_with_dir("active bindings", {
   config <- dbug()
+  if (identical(globalenv(), config$envir)){
+    skip("Testing active bindings on a global environment mangles other tests.") # nolint
+  }
   testrun(config)
 
   if ("final" %in% ls(config$envir)){
