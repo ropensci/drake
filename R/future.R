@@ -1,5 +1,5 @@
 run_future <- function(config){
-  targets <- igraph::topological.sort(config$graph)$name
+  targets <- igraph::topological.sort(config$execution_graph)$name
   workers <- initialize_workers(config)
   while (length(targets)){
     for (id in seq_along(workers)){
