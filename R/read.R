@@ -119,9 +119,14 @@ readd <- function(
 #'   That means you need to have already called [make()]
 #'   if you set `deps` to `TRUE`.
 #'
-#' @param lazy logical, whether to lazy load with
-#'   [delayedAssign()] rather than the more eager
-#'   [assign()].
+#' @param lazy either a string or a logical. Choices:
+#'   - `"eager"`: no lazy loading. The target is loaded right away
+#'     with [assign()].
+#'   - `"promise"`: lazy loading with [delayedAssign()]
+#'   - `"bind"`: lazy loading with active bindings:
+#'     [bindr::populate_env()].
+#'   - `TRUE`: same as `"promise"`.
+#'   - `FALSE`: same as `"eager"`.
 #'
 #' @param graph optional igraph object, representation
 #'   of the workflow network for getting dependencies
@@ -163,7 +168,7 @@ loadd <- function(
   jobs = 1,
   verbose = 1,
   deps = FALSE,
-  lazy = FALSE,
+  lazy = "eager",
   graph = NULL,
   replace = TRUE
 ){
@@ -207,26 +212,51 @@ loadd <- function(
   invisible()
 }
 
-load_target <- function(target, cache, namespace, envir, verbose, lazy){
-  if (lazy){
-    lazy_load_target(
-      target = target,
-      cache = cache,
-      namespace = namespace,
-      envir = envir,
-      verbose = verbose
-    )
+parse_lazy_arg <- function(lazy){
+  if (identical(lazy, FALSE)){
+    "eager"
+  } else if (identical(lazy, TRUE)){
+    "promise"
   } else {
-    eager_load_target(
-      target = target,
-      cache = cache,
-      namespace = namespace,
-      envir = envir,
-      verbose = verbose
-    )
+    match.arg(arg = lazy, choices = c("eager", "promise", "bind"))
   }
 }
 
+load_target <- function(target, cache, namespace, envir, verbose, lazy){
+  lazy <- parse_lazy_arg(lazy)
+  switch(
+    lazy,
+    eager = eager_load_target(
+      target = target,
+      cache = cache,
+      namespace = namespace,
+      envir = envir,
+      verbose = verbose
+    ),
+    promise = promise_load_target(
+      target = target,
+      cache = cache,
+      namespace = namespace,
+      envir = envir,
+      verbose = verbose
+    ),
+    bind = bind_load_target(
+      target = target,
+      cache = cache,
+      namespace = namespace,
+      envir = envir,
+      verbose = verbose
+    )
+  )
+}
+
+#' @title Load a target right away (internal function)
+#' @description This function is only exported
+#' to make active bindings work safely.
+#' It is not actually a user-side function.
+#' @keywords internal
+#' @export
+#' @inheritParams loadd
 eager_load_target <- function(target, cache, namespace, envir, verbose){
   value <- readd(
     target,
@@ -241,7 +271,7 @@ eager_load_target <- function(target, cache, namespace, envir, verbose){
   invisible()
 }
 
-lazy_load_target <- function(target, cache, namespace, envir, verbose){
+promise_load_target <- function(target, cache, namespace, envir, verbose){
   eval_env <- environment()
   delayedAssign(
     x = target,
@@ -254,6 +284,29 @@ lazy_load_target <- function(target, cache, namespace, envir, verbose){
     ),
     eval.env = eval_env,
     assign.env = envir
+  )
+}
+
+bind_load_target <- function(target, cache, namespace, envir, verbose){
+  # Allow active bindings to overwrite existing variables.
+  if (target %in% ls(envir)){
+    message(
+      "Replacing already-loaded variable ", target,
+      " with an active binding."
+    )
+    remove(list = target, envir = envir)
+  }
+  bindr::populate_env(
+    env = envir,
+    names = as.character(target),
+    fun = function(key, cache, namespace){
+      if (!length(namespace)){
+        namespace <- cache$default_namespace
+      }
+      cache$get(key = as.character(key), namespace = as.character(namespace))
+    },
+    cache = cache,
+    namespace = namespace
   )
 }
 

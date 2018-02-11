@@ -63,3 +63,48 @@ test_with_dir("lazy loading is actually lazy", {
   expect_true(all(lazily_loaded %in% loaded))
   expect_true(all(eagerly_loaded %in% loaded))
 })
+
+test_with_dir("active bindings", {
+  config <- dbug()
+  if (identical(globalenv(), config$envir)){
+    skip("Testing active bindings on a global environment mangles other tests.") # nolint
+  }
+  testrun(config)
+
+  if ("final" %in% ls(config$envir)){
+    rm(final, envir = config$envir)
+  }
+  expect_false("final" %in% ls(config$envir))
+  loadd(final, envir = config$envir, lazy = "bind", cache = config$cache)
+
+  # `final` should be loaded when it is referenced.
+  tmp <- config$envir$final
+  expect_true(is.numeric(tmp))
+  expect_equal(config$envir$final, readd(final, cache = config$cache))
+
+  # Allow active bindings to overwrite existing variables.
+  expect_message(
+    loadd(
+      final, envir = config$envir, lazy = "bind",
+      verbose = FALSE, cache = config$cache),
+    regexp = "active binding"
+  )
+
+  # Needed for the tests on parallel backends.
+  e <- new.env(parent = globalenv())
+  loadd(
+    final, envir = e, lazy = "bind",
+    verbose = FALSE, cache = config$cache)
+
+  # Active bindings react to make()
+  old_final <- e$final
+  config$plan$command[6] <- paste0(sum(old_final), "+ 1")
+  testrun(config)
+  expect_equal(e$final, sum(old_final) + 1)
+
+  expect_false("nextone" %in% ls(config$envir))
+  loadd(envir = config$envir, lazy = "bind", cache = config$cache)
+  tmp <- config$envir$nextone
+  expect_true("nextone" %in% ls(config$envir))
+  expect_equal(config$envir$nextone, readd(nextone, cache = config$cache))
+})
