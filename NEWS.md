@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Add support for active bindings: `loadd(..., lazy = "bind")`. That way, when you have a target loaded in one R session and hit `make()` in another R session, the target in your first session will automatically update.
 - Move `drake_build()` to be an exclusively user-side function.
 - Add a `replace` argument to `loadd()` so that objects already in the user's environment need not be replaced.
 - When the graph cyclic, print out all the cycles.
