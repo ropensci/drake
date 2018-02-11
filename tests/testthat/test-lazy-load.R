@@ -89,7 +89,7 @@ test_with_dir("active bindings", {
   old_final <- config$envir$final
   config$plan$command[6] <- paste0(sum(old_final), "+ 1")
   testrun(config)
-  expect_false(identical(config$envir$final, old_final))
+  expect_equal(config$envir$final, sum(old_final) + 1)
 
   expect_false("nextone" %in% ls(config$envir))
   loadd(envir = config$envir, lazy = "bind", cache = config$cache)
