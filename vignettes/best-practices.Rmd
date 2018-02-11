@@ -222,3 +222,67 @@ unlink(
   )
 )
 ```
+
+# Generating workflow plan data frames
+
+`Drake` has the following functions to generate workflow plan data frames (the `plan` argument of `make()`, where you list your targets and commands). 
+
+- `drake_plan()`
+- `evaluate_plan()`
+- `expand_plan()`
+- `gather_plan()`
+- `plan_analyses()`
+- `plan_summaries()`
+
+Except for `drake_plan()`, they all use wildcards as templates. For example, suppose your workflow checks several metrics of several schools. The idea is to write a workflow plan with your metrics and let the wildcard templating expand over the available schools.
+
+```{r schoolswildcards1}
+hard_plan <- drake_plan(
+  credits = check_credit_hours(school__),
+  students = check_students(school__),
+  grads = check_graduations(school__),
+  public_funds = check_public_funding(school__)
+)
+
+evaluate_plan(
+  hard_plan, 
+  rules = list(school__ = c("schoolA", "schoolB", "schoolC"))
+) 
+```
+
+But what if some metrics do not make sense? For exmaple, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.
+
+```{r rulesgridschools}
+library(magrittr)
+rules_grid <- tibble::tibble(
+  school_ =  c("schoolA", "schoolB", "schoolC"),
+  funding_ = c("public", "public", "private"),
+) %>% 
+  tidyr::crossing(cohort_ = c("2012", "2013", "2014", "2015")) %>%
+  dplyr::filter(!(school_ == "schoolB" & cohort_ %in% c("2012", "2013"))) %>%
+  print()
+```
+
+Then, alternately choose `expand = TRUE` and `expand = FALSE` when evaluating the wildcards.
+
+```{r rulesgridevalplan}
+drake_plan(
+  credits = check_credit_hours("school_", "funding_", "cohort_"),
+  students = check_students("school_", "funding_", "cohort_"),
+  grads = check_graduations("school_", "funding_", "cohort_"),
+  public_funds = check_public_funding("school_", "funding_", "cohort_"),
+  strings_in_dots = "literals"
+) %>% evaluate_plan(
+    wildcard = "school_",
+    values = rules_grid$school_,
+    expand = TRUE
+  ) %>%
+  evaluate_plan(
+    wildcard = "funding_",
+    rules = rules_grid,
+    expand = FALSE
+  ) %>%
+  DT::datatable()
+```
+
+Thanks to [Alex Axthelm](https://github.com/AlexAxthelm) for this example in [issue 235](https://github.com/ropensci/drake/issues/235).

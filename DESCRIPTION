@@ -81,13 +81,16 @@ Suggests:
   abind,
   cranlogs,
   DBI,
+  DT,
+  dplyr,
   Ecdat,
   future.batchtools,
   ggplot2,
   MASS,
   methods,
   RSQLite,
-  rmarkdown
+  rmarkdown,
+  tidyr
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1
