@@ -23,20 +23,27 @@ assign_to_envir_single <- function(index, targets, values, config){
   invisible()
 }
 
-prune_envir <- function(targets, config){
-  downstream <- downstream_nodes(
-    from = targets, graph = config$graph, jobs = config$jobs)
+prune_envir <- function(targets, config, downstream = NULL){
+  if (is.null(downstream)){
+    downstream <- downstream_nodes(
+      from = targets,
+      graph = config$graph,
+      jobs = config$jobs
+    )
+  }
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
-  load_these <- nonfile_target_dependencies(
+  target_deps <- nonfile_target_dependencies(
     targets = targets,
     config = config
-    ) %>%
-    setdiff(y = c(targets, already_loaded))
-  keep_these <- nonfile_target_dependencies(
+  )
+  downstream_deps <- nonfile_target_dependencies(
     targets = downstream,
     config = config
   )
+  load_these <- setdiff(target_deps, targets) %>%
+    setdiff(y = already_loaded)
+  keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
     parallel_filter(f = is_not_file, jobs = config$jobs) %>%
     intersect(y = already_loaded)
