@@ -134,7 +134,7 @@ readd <- function(
 #'   it will be read from the cache.
 #'
 #' @param replace logical. If `FALSE`,
-#'   items already in your enviroment
+#'   items already in your environment
 #'   will not be replaced.
 #'
 #' @examples
@@ -300,10 +300,13 @@ binding_load_target <- function(target, cache, namespace, envir, verbose){
     env = envir,
     names = as.character(target),
     fun = function(key, cache, namespace){
+      if (is.null(namespace)){
+        namespace <- cache$default_namespace
+      }
       cache$get(key = as.character(key), namespace = as.character(namespace))
     },
     cache = cache,
-    namespace = as.character(namespace)
+    namespace = namespace
   )
 }
 
