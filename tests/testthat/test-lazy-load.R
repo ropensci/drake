@@ -66,7 +66,6 @@ test_with_dir("lazy loading is actually lazy", {
 
 test_with_dir("active bindings", {
   config <- dbug()
-  config$cache <- storr::storr_environment()
   testrun(config)
 
   rm(final, envir = config$envir)
@@ -75,9 +74,6 @@ test_with_dir("active bindings", {
 
   # `final` should be loaded when it is referenced.
   tmp <- config$envir$final
-
-
-
   expect_true(is.numeric(tmp))
   expect_equal(config$envir$final, readd(final, cache = config$cache))
 
