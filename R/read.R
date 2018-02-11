@@ -123,7 +123,7 @@ readd <- function(
 #'   - `"eager"`: no lazy loading. The target is loaded right away
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]
-#'   - `"binding"`: lazy loading with active bindings:
+#'   - `"bind"`: lazy loading with active bindings:
 #'     [bindr::populate_env()].
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
@@ -218,7 +218,7 @@ parse_lazy_arg <- function(lazy){
   } else if (identical(lazy, TRUE)){
     "promise"
   } else {
-    match.arg(arg = lazy, choices = c("eager", "promise", "binding"))
+    match.arg(arg = lazy, choices = c("eager", "promise", "bind"))
   }
 }
 
@@ -240,7 +240,7 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy){
       envir = envir,
       verbose = verbose
     ),
-    binding = binding_load_target(
+    bind = bind_load_target(
       target = target,
       cache = cache,
       namespace = namespace,
@@ -287,7 +287,7 @@ promise_load_target <- function(target, cache, namespace, envir, verbose){
   )
 }
 
-binding_load_target <- function(target, cache, namespace, envir, verbose){
+bind_load_target <- function(target, cache, namespace, envir, verbose){
   # Allow active bindings to overwrite existing variables.
   if (target %in% ls(envir)){
     message(
@@ -300,7 +300,7 @@ binding_load_target <- function(target, cache, namespace, envir, verbose){
     env = envir,
     names = as.character(target),
     fun = function(key, cache, namespace){
-      if (is.null(namespace)){
+      if (!length(namespace)){
         namespace <- cache$default_namespace
       }
       cache$get(key = as.character(key), namespace = as.character(namespace))

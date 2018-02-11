@@ -71,17 +71,20 @@ test_with_dir("active bindings", {
 
   rm(final, envir = config$envir)
   expect_false("final" %in% ls(config$envir))
-  loadd(final, envir = config$envir, lazy = "binding", cache = config$cache)
+  loadd(final, envir = config$envir, lazy = "bind", cache = config$cache)
 
   # `final` should be loaded when it is referenced.
   tmp <- config$envir$final
-  expect_true("final" %in% ls(config$envir))
+
+
+
+  expect_true(is.numeric(tmp))
   expect_equal(config$envir$final, readd(final, cache = config$cache))
 
   # Allow active bindings to overwrite existing variables.
   expect_message(
     loadd(
-      final, envir = config$envir, lazy = "binding",
+      final, envir = config$envir, lazy = "bind",
       verbose = FALSE, cache = config$cache),
     regexp = "active binding"
   )
@@ -93,7 +96,7 @@ test_with_dir("active bindings", {
   expect_false(identical(config$envir$final, old_final))
 
   expect_false("nextone" %in% ls(config$envir))
-  loadd(envir = config$envir, lazy = "binding", cache = config$cache)
+  loadd(envir = config$envir, lazy = "bind", cache = config$cache)
   tmp <- config$envir$nextone
   expect_true("nextone" %in% ls(config$envir))
   expect_equal(config$envir$nextone, readd(nextone, cache = config$cache))

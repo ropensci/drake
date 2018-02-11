@@ -238,7 +238,7 @@
 #'   - `"eager"`: no lazy loading. The target is loaded right away
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]
-#'   - `"binding"`: lazy loading with active bindings:
+#'   - `"bind"`: lazy loading with active bindings:
 #'     [bindr::populate_env()].
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
@@ -247,7 +247,7 @@
 #'   for `"parLapply"` parallelism combined with `jobs` greater than 1.
 #'   For local multi-session parallelism and lazy loading, try
 #'   `library(future); future::plan(multisession)` and then
-#'   `make(..., parallelism = "future_lapply", lazy_load = "binding")`.
+#'   `make(..., parallelism = "future_lapply", lazy_load = "bind")`.
 #'
 #'   If `lazy_load` is `"eager"`,
 #'   drake prunes the execution environment before every
@@ -256,7 +256,7 @@
 #'   for the targets in the current parallelizable stage.
 #'   In other words, drake prepares the environment in advance
 #'   for all the whole collection of targets in the stage.
-#'   If `lazy_load` is `"binding"` or `"promise"`, drake assigns
+#'   If `lazy_load` is `"bind"` or `"promise"`, drake assigns
 #'   promises to load any dependencies at the last minute.
 #'   Lazy loading may be more memory efficient in some use cases, but
 #'   it may duplicate the loading of dependencies, costing time.

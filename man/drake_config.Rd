@@ -241,7 +241,7 @@ on your workflow. Use at your own peril.}
 \item \code{"eager"}: no lazy loading. The target is loaded right away
 with \code{\link[=assign]{assign()}}.
 \item \code{"promise"}: lazy loading with \code{\link[=delayedAssign]{delayedAssign()}}
-\item \code{"binding"}: lazy loading with active bindings:
+\item \code{"bind"}: lazy loading with active bindings:
 \code{\link[bindr:populate_env]{bindr::populate_env()}}.
 \item \code{TRUE}: same as \code{"promise"}.
 \item \code{FALSE}: same as \code{"eager"}.
@@ -251,7 +251,7 @@ with \code{\link[=assign]{assign()}}.
 for \code{"parLapply"} parallelism combined with \code{jobs} greater than 1.
 For local multi-session parallelism and lazy loading, try
 \code{library(future); future::plan(multisession)} and then
-\code{make(..., parallelism = "future_lapply", lazy_load = "binding")}.
+\code{make(..., parallelism = "future_lapply", lazy_load = "bind")}.
 
 If \code{lazy_load} is \code{"eager"},
 drake prunes the execution environment before every
@@ -260,7 +260,7 @@ and then loading any dependencies it will need
 for the targets in the current parallelizable stage.
 In other words, drake prepares the environment in advance
 for all the whole collection of targets in the stage.
-If \code{lazy_load} is \code{"binding"} or \code{"promise"}, drake assigns
+If \code{lazy_load} is \code{"bind"} or \code{"promise"}, drake assigns
 promises to load any dependencies at the last minute.
 Lazy loading may be more memory efficient in some use cases, but
 it may duplicate the loading of dependencies, costing time.}
