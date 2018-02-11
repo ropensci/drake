@@ -154,7 +154,32 @@ The nodes in each column above are conditionally independent given the dependenc
 
 To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function. All the targets/imports in a stage are processed in parallel before moving on to the next stage.
 
+# Control the legend.
 
-# Finer control
+To remove superfluous information from the legend, set the `full_legend` argument to `FALSE`.
+
+```{r smalllegend, eval = FALSE}
+vis_drake_graph(config, full_legend = FALSE)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/reg2-small-legend.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+To remove the legend altogether, set the `ncol_legend` argument to `0`.
+
+```{r nolegend, eval = FALSE}
+vis_drake_graph(config, ncol_legend = 0)
+```
+
+<iframe
+src = "https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/reg2-no-legend.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+# More extensibility
 
 We have only scratched the surface of `vis_drake_graph()`. The help files (`?vis_drake_graph`) document much more functionality. In particular, the `dataframes_graph()` and `render_drake_graph()` functions let you customize your own [visNetwork graph](http://datastorm-open.github.io/visNetwork/).

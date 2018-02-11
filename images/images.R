@@ -21,6 +21,11 @@ reg2 <- function(d){
 vis_drake_graph(config, file = "reg2.html", selfcontained = TRUE,
   width = "100%", height = "500px")
 
+vis_drake_graph(config, file = "reg2-small-legend.html", selfcontained = TRUE,
+  width = "100%", height = "500px", full_legend = FALSE)
+
+vis_drake_graph(config, file = "reg2-no-legend.html", selfcontained = TRUE,
+  width = "100%", height = "500px", ncol_legend = 0)
 
 vis_drake_graph(
   config, file = "targetsonly.html", selfcontained = TRUE,
