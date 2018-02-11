@@ -15,7 +15,7 @@ make(plan = drake_plan(), targets = drake::possible_targets(plan),
   imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
   trigger = drake::default_trigger(), skip_imports = FALSE,
-  skip_safety_checks = FALSE, config = NULL, lazy_load = FALSE,
+  skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL)
 }
 \arguments{
@@ -243,20 +243,31 @@ on your workflow. Use at your own peril.}
 \item{config}{Master configuration list produced by both
 \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}}.}
 
-\item{lazy_load}{logical.
-Should always be set to \code{FALSE} for \code{"parLapply"}
-parallelism and \code{jobs} greater than 1.
+\item{lazy_load}{either a character vector or a logical. Choices:
+\itemize{
+\item \code{"eager"}: no lazy loading. The target is loaded right away
+with \code{\link[=assign]{assign()}}.
+\item \code{"promise"}: lazy loading with \code{\link[=delayedAssign]{delayedAssign()}}
+\item \code{"bind"}: lazy loading with active bindings:
+\code{\link[bindr:populate_env]{bindr::populate_env()}}.
+\item \code{TRUE}: same as \code{"promise"}.
+\item \code{FALSE}: same as \code{"eager"}.
+}
+
+\code{lazy_load} should not be \code{"promise"}
+for \code{"parLapply"} parallelism combined with \code{jobs} greater than 1.
 For local multi-session parallelism and lazy loading, try
 \code{library(future); future::plan(multisession)} and then
-\code{make(..., parallelism = "future_lapply", lazy_load = TRUE)}.
-If \code{lazy_load} is \code{FALSE},
+\code{make(..., parallelism = "future_lapply", lazy_load = "bind")}.
+
+If \code{lazy_load} is \code{"eager"},
 drake prunes the execution environment before every
 parallelizable stages, removing all superfluous targets
 and then loading any dependencies it will need
 for the targets in the current parallelizable stage.
 In other words, drake prepares the environment in advance
 for all the whole collection of targets in the stage.
-If \code{lazy_load} is \code{TRUE}, drake assigns
+If \code{lazy_load} is \code{"bind"} or \code{"promise"}, drake assigns
 promises to load any dependencies at the last minute.
 Lazy loading may be more memory efficient in some use cases, but
 it may duplicate the loading of dependencies, costing time.}
