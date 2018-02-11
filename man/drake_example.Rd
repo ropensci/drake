@@ -27,14 +27,14 @@ with the same name as the drake example.}
 Copy a folder of code files for a
 drake example to the current working directory.
 Call \code{drake_example('basic')} to generate the code files from the
-quickstart vignette: \code{vignette('quickstart')}.
+basic example vignette: \code{vignette("example-basic")}.
 To see the names of all the examples, run \code{\link[=drake_examples]{drake_examples()}}.
 }
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 drake_examples() # List all the drake examples.
-# Sets up the same example as the quickstart vignette.
+# Sets up the same example as the basic example vignette.
 drake_example("basic")
 # Sets up the SLURM example.
 drake_example("slurm")

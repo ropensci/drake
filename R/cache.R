@@ -132,7 +132,7 @@ this_cache <- function(
   }
   fetch_cache <- as.character(fetch_cache)
   if (length(fetch_cache) && nchar(fetch_cache)){
-    cache <- eval(parse(text = functionize(fetch_cache)))
+    cache <- eval(parse(text = localize(fetch_cache)))
   } else {
     cache <- drake_fetch_rds(path)
   }

@@ -221,9 +221,7 @@ gather_plan <- function(
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  return(
-    data.frame(target = target, command = command, stringsAsFactors = FALSE)
-  )
+  tibble(target = target, command = command)
 }
 
 #' @title Generate a workflow plan data frame to
@@ -372,7 +370,8 @@ plan_summaries <- function(
         target = summary_type,
         gather = gather[which(summary_type == plan$target)])
     }
-    )
+  ) %>%
+    as_tibble
   out[[group]] <- NULL
   gathered[[group]] <- NULL
   return(rbind(gathered, out))

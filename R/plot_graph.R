@@ -28,7 +28,7 @@
 vis_drake_graph <- function(
   config,
   file = character(0), selfcontained = FALSE,
-  build_times = TRUE, digits = 3, targets_only = FALSE,
+  build_times = "build", digits = 3, targets_only = FALSE,
   split_columns = FALSE, font_size = 20,
   layout = "layout_with_sugiyama", main = NULL,
   direction = "LR", hover = TRUE,
@@ -114,7 +114,7 @@ drake_graph <- vis_drake_graph
 #'
 #' @param ncol_legend number of columns in the legend nodes.
 #'   To remove the legend entirely, set `ncol_legend` to `NULL` or `0`.
-#'   
+#'
 #' @param full_legend logical. If `TRUE`, all the node types
 #'   are printed in the legend. If `FALSE`, only the
 #'   node types used are printed in the legend.

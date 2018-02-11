@@ -15,6 +15,10 @@ drake_build(target, config = NULL, meta = NULL, character_only = FALSE,
 \item{meta}{list of metadata that tell which
 targets are up to date (from \code{\link[=drake_meta]{drake_meta()}}).}
 
+\item{character_only}{logical, whether \code{name} should be treated
+as a character or a symbol
+(just like \code{character.only} in \code{\link[=library]{library()}}).}
+
 \item{envir}{environment to load objects into. Defaults to the
 calling environment (current workspace).}
 
@@ -60,4 +64,3 @@ head(result)
 })
 }
 }
-\keyword{internal}

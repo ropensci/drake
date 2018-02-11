@@ -82,7 +82,7 @@ vis_drake_graph(config, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/0b76e536/images/outdated.html"
+src = "https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -245,13 +245,10 @@ withr::with_message_sink(
 
 # Diagnose failures.
 
-`Drake` records
-
-1. which targets failed in the last `make()`, and
-1. the most recent error log of each target.
+`Drake` records diagnostic metadata on all your targets, including the latest errors, warnings, messages, and other bits of context.
 
 ```{r diagnosedebug}
-diagnose(verbose = FALSE)
+diagnose(verbose = FALSE) # Targets with available metadata.
 
 f <- function(x){
   if (x < 0){
@@ -274,11 +271,11 @@ withr::with_message_sink(
 
 failed(verbose = FALSE) # from the last make() only
 
-diagnose(verbose = FALSE) # from all previous make()'s
+error <- diagnose(my_target, verbose = FALSE)$error # See also warnings and messages.
 
-error <- diagnose(my_target, verbose = FALSE)
+error$message
 
-str(error)
+error$call
 
 error$calls # View the traceback.
 ```

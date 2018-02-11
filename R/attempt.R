@@ -11,13 +11,8 @@ get_attempt_flag <- function(config){
   ifelse(is.na(flag), FALSE, flag)
 }
 
-increment_attempt_flag <- function(targets, config){
-  flag <- as.logical(length(targets)) || get_attempt_flag(config = config)
-  set_attempt_flag(flag = flag, config = config)
-}
-
-set_attempt_flag <- function(flag, config){
+set_attempt_flag <- function(config){
   config$cache$set(
-    key = "attempt", value = flag, namespace = "session")
+    key = "attempt", value = TRUE, namespace = "session")
   invisible()
 }

@@ -27,31 +27,23 @@ extract_filenames <- function(command){
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-get_evaluation_command <- function(target, config){
-  raw_command <- config$plan$command[config$plan$target == target] %>%
-    functionize
-  unevaluated <- paste0("rlang::expr(", raw_command, ")")
-  quasiquoted <- eval(parse(text = unevaluated), envir = config$envir)
-  command <- wide_deparse(quasiquoted)
-  wrap_in_try_statement(target = target, command = command)
+preprocess_command <- function(target, config){
+  text <- config$plan$command[config$plan$target == target] %>%
+    wrap_command
+  parse(text = text, keep.source = FALSE) %>%
+    eval(envir = config$envir)
 }
 
-# Turn a command into an anonymous function
-# call to avoid side effects that could interfere
-# with parallelism.
-functionize <- function(command) {
-  paste0("(function(){\n", command, "\n})()")
+# Use tidy evaluation to complete the contents of a command.
+wrap_command <- function(command){
+  paste0("rlang::expr(local({\n", command, "\n}))")
 }
 
-# If commands are text, we need to make sure
-# to
-wrap_in_try_statement <- function(target, command){
-  paste(
-    target,
-    "<- evaluate::try_capture_stack(quote({\n",
-    command,
-    "\n}), env = config$envir)"
-  )
+# Can remove once we remove fetch_cache.
+# We can remove fetch_cache once we allow the master process
+# to optionally do all the caching.
+localize <- function(command) {
+  paste0("local({\n", command, "\n})")
 }
 
 # This version of the command will be hashed and cached
@@ -74,6 +66,7 @@ get_standardized_command <- function(target, config) {
 # If styler's behavior changes a lot, it will
 # put targets out of date.
 standardize_command <- function(x) {
+  x <- language_to_text(x)
   formatR::tidy_source(
     source = NULL,
     comment = FALSE,
@@ -82,9 +75,23 @@ standardize_command <- function(x) {
     brace.newline = FALSE,
     indent = 4,
     output = FALSE,
-    text = x,
+    text = as.character(x),
     width.cutoff = 119
   )$text.tidy %>%
     paste(collapse = "\n") %>%
     braces
+}
+
+language_to_text <- function(x){
+  if (is.expression(x)){
+    stopifnot(length(x) < 2)
+    x <- x[[1]]
+  }
+  if (is.expression(x) || is.language(x)){
+    for (attribute in c("srcref", "srcfile", "wholeSrcref")){
+      attr(x = x, which = attribute) <- NULL
+    }
+    x <- wide_deparse(x)
+  }
+  x
 }

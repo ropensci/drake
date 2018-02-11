@@ -2,8 +2,7 @@
 % Please edit documentation in R/diagnose.R
 \name{diagnose}
 \alias{diagnose}
-\title{Get the last stored error log of a target
-that failed to build, or list the targets with error logs.}
+\title{Get diagnostic metadata on a target.}
 \usage{
 diagnose(target = NULL, character_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
@@ -37,14 +36,9 @@ Either a character vector of target names or an object
 of class \code{"error"}.
 }
 \description{
-The specified target could be a
-completely failed target or a target
-that failed initially, retried, then succeeded.
-If no target is given, then \code{diagnose()} simply
-lists the targets for which a error is retrievable.
-Together, functions \code{\link[=failed]{failed()}} and
-\code{diagnose()} should eliminate the strict need
-for ordinary error messages printed to the console.
+Diagnostics include errors, warnings,
+messages, runtimes, and other context from when a
+target was build or an import was processed.
 }
 \examples{
 \dontrun{
@@ -65,7 +59,7 @@ failed() # List the failed targets from the last make() (my_target).
 # Drake keeps all the error logs.
 diagnose()
 # Get the error log, an object of class "error".
-error <- diagnose(my_target)
+error <- diagnose(my_target)$error # See also warnings and messages.
 str(error) # See what's inside the error log.
 error$calls # View the traceback. (See the traceback() function).
 })
