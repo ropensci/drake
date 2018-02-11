@@ -216,8 +216,9 @@ parallel_stage <- function(worker, config) {
     }
     old_leaves <- new_leaves
   }
-  intersect(build_these, config$plan$target) %>%
-    increment_attempt_flag(config = config)
+  if (length(intersect(build_these, config$plan$target))){
+    set_attempt_flag(config = config)
+  }
   if (length(build_these)){
     worker(targets = build_these, meta_list = meta_list,
            config = config)

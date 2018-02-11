@@ -2,7 +2,7 @@
 #' @description Copy a folder of code files for a
 #' drake example to the current working directory.
 #' Call `drake_example('basic')` to generate the code files from the
-#' quickstart vignette: `vignette('quickstart')`.
+#' basic example vignette: `vignette("example-basic")`.
 #' To see the names of all the examples, run [drake_examples()].
 #' @seealso [drake_examples()], [make()],
 #'   [shell_file()], [drake_batchtools_tmpl_file()]
@@ -20,7 +20,7 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' drake_examples() # List all the drake examples.
-#' # Sets up the same example as the quickstart vignette.
+#' # Sets up the same example as the basic example vignette.
 #' drake_example("basic")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
@@ -49,7 +49,7 @@ drake_example <- function(
 
 #' @title List the names of all the drake examples.
 #' @description The `'basic'` example is the one from the
-#' quickstart vignette: `vignette('quickstart')`.
+#' basic example vignette: `vignette("example-basic")`.
 #' All are in the `inst/examples/` folder
 #' of the package source code.
 #' @export
@@ -59,7 +59,7 @@ drake_example <- function(
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' drake_examples() # List all the drake examples.
-#' # Sets up the same example as the quickstart vignette.
+#' # Sets up the same example as the basic example vignette.
 #' drake_example("basic")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")

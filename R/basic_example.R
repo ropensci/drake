@@ -9,9 +9,9 @@
 #' to see if there is an association.
 #' @details Use \code{\link{drake_example}('basic')} to get the code
 #' for the basic example. The included R script is a detailed,
-#' heavily-commented walkthrough. The quickstart vignette at
-#' <https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd> # nolint
-#' and <https://ropensci.github.io/drake/articles/quickstart.html>
+#' heavily-commented walkthrough. The basic example vignette at
+#' <https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd> # nolint
+#' and <https://ropensci.github.io/drake/articles/example-basic.html>
 #' also walks through the basic example.
 #' This function also writes/overwrites
 #' the file, `report.Rmd`.
@@ -91,29 +91,45 @@ load_basic_example <- function(
   eval(parse(text = "base::require(knitr, quietly = TRUE)"))
   mtcars <- get("mtcars")
 
-  # Bootstrapped datasets from mtcars.
-  envir$simulate <- function(n){
-    # Pick a random set of cars to bootstrap from the mtcars data.
-    index <- sample.int(n = nrow(mtcars), size = n, replace = TRUE)
-    data <- mtcars[index, ]
+  # Pick a random subset of n rows from a dataset
+  evalq(
+    random_rows <- function(data, n){
+      data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+    },
+    envir = envir
+  )
 
-    # x is the car's weight, and y is the fuel efficiency.
-    data.frame(
-      x = data$wt,
-      y = data$mpg
-    )
-  }
+  # Bootstrapped datasets from mtcars.
+  evalq(
+    simulate <- function(n){
+      # Pick a random set of cars to bootstrap from the mtcars data.
+      data <- random_rows(data = mtcars, n = n)
+
+      # x is the car's weight, and y is the fuel efficiency.
+      data.frame(
+        x = data$wt,
+        y = data$mpg
+      )
+    },
+    envir = envir
+  )
 
   # Is there a linear relationship between weight and fuel efficiency?
-  envir$reg1 <- function(d) {
-    lm(y ~ +x, data = d)
-  }
+  evalq(
+    reg1 <- function(d) {
+      lm(y ~ +x, data = d)
+    },
+    envir = envir
+  )
 
   # Is there a QUADRATIC relationship between weight and fuel efficiency?
-  envir$reg2 <- function(d) {
-    d$x2 <- d$x ^ 2
-    lm(y ~ x2, data = d)
-  }
+  evalq(
+    reg2 <- function(d) {
+      d$x2 <- d$x ^ 2
+      lm(y ~ x2, data = d)
+    },
+    envir = envir
+  )
 
   # construct workflow plan
 

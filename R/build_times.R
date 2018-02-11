@@ -1,6 +1,8 @@
 #' @title List the time it took to build each target/import.
 #' @description Listed times do not include the amount of time
-#' spent loading and saving objects!
+#'  spent loading and saving objects! See the `type`
+#'  argument for different versions of the build time.
+#'  (You can choose whether to take storage time into account.)
 #' @seealso [built()]
 #' @export
 #' @return A data frame of times, each from [system.time()].
@@ -17,6 +19,10 @@
 #'   the `path` and `search` arguments are ignored.
 #' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
+#' @param type Type of time you want: either `"build"`
+#'   for the full build time including the time it took to
+#'   store the target, or `"command"` for the time it took
+#'   just to run the command.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -33,16 +39,19 @@ build_times <- function(
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE,
   verbose = TRUE,
-  jobs = 1
+  jobs = 1,
+  type = c("build", "command")
 ){
   if (is.null(cache)){
     return(empty_times())
   }
+  type <- match.arg(type)
   out <- lightly_parallelize(
     X = cache$list(namespace = "meta"),
     FUN = fetch_runtime,
     jobs = 1,
-    cache = cache
+    cache = cache,
+    type = type
   ) %>%
     parallel_filter(f = is.data.frame, jobs = jobs) %>%
     do.call(what = rbind) %>%
@@ -57,17 +66,17 @@ build_times <- function(
   out
 }
 
-fetch_runtime <- function(key, cache){
+fetch_runtime <- function(key, cache, type){
   x <- get_from_subspace(
     key = key,
-    subspace = "build_times",
+    subspace = paste0("time_", type),
     namespace = "meta",
     cache = cache
   )
   if (is_bad_time(x)){
     return(empty_times())
   }
-  if (class(x) == "proc_time"){
+  if (inherits(x, "proc_time")){
     x <- runtime_entry(runtime = x, target = key, imported = NA)
   }
   x
@@ -122,13 +131,21 @@ to_build_duration <- function(x){
 
 time_columns <- c("elapsed", "user", "system")
 
-append_times_to_meta <- function(target, start, meta, config){
-  if (is_bad_time(start)){
-    return(meta)
+finalize_times <- function(target, meta, config){
+  if (!is_bad_time(meta$time_command)){
+    meta$time_command <- runtime_entry(
+      runtime = meta$time_command,
+      target = target,
+      imported = meta$imported
+    )
   }
-  build_times <- (proc.time() - start) %>%
-    runtime_entry(target = target, imported = meta$imported)
-  meta$build_times <- build_times
+  if (!is_bad_time(meta$start)){
+    meta$time_build <- runtime_entry(
+      runtime = proc.time() - meta$start,
+      target = target,
+      imported = meta$imported
+    )
+  }
   meta
 }
 

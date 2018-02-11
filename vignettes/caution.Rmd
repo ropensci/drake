@@ -167,6 +167,7 @@ For instances of `!!` that remain in the workflow plan, `make()` will run these 
 When `make()` fails, use `failed()` and `diagnose()` to debug. Try the following out yourself.
 
 ```{r diagnosecaution}
+# Targets with available diagnostic metadata, incluing errors, warnings, etc.
 diagnose()
 
 f <- function(){
@@ -182,11 +183,11 @@ withr::with_message_sink(
 
 failed() # From the last make() only
 
-diagnose() # From all previous make()s
+error <- diagnose(target)$error # See also warnings and messages.
 
-error <- diagnose(target)
+error$message
 
-str(error)
+error$call
 
 error$calls # View the traceback.
 ```
@@ -228,60 +229,9 @@ readd(out)
 
 The master configuration list returned by `drake_config()` is important to `drake`'s internals, and you will need it for functions like `outdated()` and `vis_drake_graph()`. The config list corresponds to a single call to `make()`, and you should not modify it by hand afterwards. For example, modifying the `targets` element post-hoc will have no effect because the `graph` element will remain the same. It is best to just call `drake_config()` again.
 
-## Take special precautions if your `drake` project is a package.
+## Workflows as R packages. 
 
-Some users like to structure their `drake` projects as [formal R packages](https://cran.r-project.org/doc/manuals/R-exts.html). The straightforward way to run such a project is to 
-
-1. Write all your imported functions in `*.R` files in the package's `R/` folder.
-1. Load the package's environment with `devtools::load_all()`.
-1. Call `drake::make()`.
-
-```{r devtools1, eval = FALSE}
-env <- devtools::load_all("yourProject")$env # Has all your imported functions
-drake::make(my_plan, envir = env)            # Run the project normally.
-```
-
-However, the simple strategy above only works for `parLapply` parallelism with `jobs = 1` and `mcapply` parallelism. For other kinds of parallelism, you must turn  `devtools::load_all("yourProject")$env` into an ordinary environment that does not look like a package namespace. Thanks to [Jasper Clarkberg](https://github.com/dapperjapper), we have the following workaround.
-
-1. Clone `devtools::load_all("yourProject")$env` in order to change the *binding environment* of all your functions.
-
-```{r devtools2, eval = FALSE}
-env <- devtools::load_all("yourProject")$env
-env <- list2env(as.list(env), parent = globalenv())
-```
-
-2. Change the [*enclosing environment*](http://adv-r.had.co.nz/Environments.html#function-envs) of your functions using an [unfortunate hack](https://stackoverflow.com/questions/14464442/using-get-with-replacement-functions) involving `environment<-`.
-
-```{r devtools3, eval = FALSE}
-for (name in ls(env)){
-  assign(
-    x = name,
-    envir = env,
-    value = `environment<-`(get(n, envir = env), env)
-  )
-}
-```
-
-3. Make sure `drake` does not attach `yourProject` as an external package.
-
-```{r devtools4, eval = FALSE}
-package_name <- "yourProject" # devtools::as.package(".")$package # nolint
-packages_to_load <- setdiff(.packages(), package_name)
-```
-
-4. Run the project with `make()`.
-
-```{r devtools5, eval = FALSE}
-make(
-  my_plan,                    # Prepared in advance
-  envir = env,                # Environment of package "yourProject"
-  parallelism = "Makefile",   # Or "parLapply"
-  jobs = 2,
-  packages = packages_to_load # Does not include "yourProject"
-)
-```
-
-You may need to adapt this last workaround, depending on the structure of the package, `yourProject`.
+The R package structure is a great way to organize the files of your project. Writing your own package to contain your data science workflow is a good idea, but you will need to use `expose_imports()` to run it properly with `drake`. See the [best practices vignette](https://github.com/ropensci/drake/blob/master/vignettes/best-practices.Rmd) and `?expose_imports` for detailed explanations. Thanks to [Jasper Clarkberg](https://github.com/dapperjapper) for the workaround.
 
 ## The `lazy_load` flag does not work with `"parLapply"` parallelism.
 

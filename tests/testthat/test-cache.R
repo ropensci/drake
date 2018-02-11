@@ -53,7 +53,6 @@ test_with_dir("non-existent caches", {
   expect_error(tmp <- read_drake_config(search = FALSE))
   expect_error(tmp <- read_drake_plan(search = FALSE))
   expect_error(tmp <- read_drake_graph(search = FALSE))
-  expect_error(tmp <- read_drake_meta(search = FALSE))
   expect_error(tmp <- read_drake_seed(search = FALSE))
   expect_error(tmp <- drake_session(search = FALSE))
   dummy <- new_cache()
@@ -183,16 +182,9 @@ test_with_dir("cache functions work", {
   expect_equal(read_drake_plan(search = FALSE), config$plan)
   expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(inherits(read_drake_graph(search = FALSE), "igraph"))
-  expect_true(is.list(
-    tmp <- read_drake_meta(targets = "final", search = FALSE)))
-  expect_true(is.list(
-    tmp <- read_drake_meta(
-      targets = c("final", "yourinput"), search = FALSE)))
-  expect_equal(sort(names(tmp)), sort(c("final", "yourinput")))
-  expect_true(is.list(tmp <- read_drake_meta(search = FALSE)))
-  expect_true(length(tmp) > 1)
+
   # imported , built, cached, diagnose, rescue
-  expect_equal(diagnose(search = FALSE), character(0))
+  expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
   expect_equal(imported(files_only = FALSE, search = FALSE),
     imports)
   expect_equal(imported(files_only = TRUE, search = FALSE),

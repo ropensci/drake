@@ -7,7 +7,7 @@ test_with_dir("can ignore a bad time", {
   expect_equal(nrow(build_times()), 2)
   set_in_subspace(
     key = "a",
-    subspace = "build_times",
+    subspace = "time_build",
     namespace = "meta",
     value = NA,
     cache = cache
@@ -24,11 +24,11 @@ test_with_dir("proc_time runtimes can be fetched", {
   set_in_subspace(
     key = key,
     value = t,
-    subspace = "build_times",
+    subspace = "time_build",
     namespace = "meta",
     cache = cache
   )
-  y <- fetch_runtime(key = key, cache = cache)
+  y <- fetch_runtime(key = key, cache = cache, type = "build")
   expect_true(nrow(y) > 0)
 })
 
@@ -115,7 +115,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 5)
+  expect_equal(nrow(x), 6)
   expect_warning(
     x <- rate_limiting_times(
       config,
@@ -129,7 +129,7 @@ test_with_dir("time predictions: incomplete targets", {
     x <- rate_limiting_times(config) %>%
     min_df
   )
-  expect_equal(nrow(x), 12)
+  expect_equal(nrow(x), 13)
   expect_warning(
     y <- predict_runtime(
       config,
@@ -159,7 +159,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 7)
+  expect_equal(nrow(x), 8)
 
   config <- drake_config(plan = con$plan, envir = con$envir, verbose = FALSE)
   testrun(config)
@@ -179,7 +179,7 @@ test_with_dir("time predictions: incomplete targets", {
     ) %>%
     min_df
   )
-  expect_equal(nrow(x), 27)
+  expect_equal(nrow(x), 28)
   expect_silent(
     y <- predict_runtime(
       config,
@@ -258,9 +258,9 @@ test_with_dir("timing predictions with realistic build", {
   expect_true(all(complete.cases(jobs_4_df)))
   expect_true(all(complete.cases(jobs_4_df_targets)))
 
-  expect_equal(nrow(scratch_df), 28)
+  expect_equal(nrow(scratch_df), 29)
   expect_equal(nrow(resume_df), nrow(scratch_df) - 8)
-  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 21)
+  expect_equal(nrow(resume_df_targets), nrow(scratch_df) - 22)
   expect_true(nrow(jobs_2_df) < nrow(scratch_df))
   expect_true(nrow(jobs_4_df) < nrow(jobs_2_df))
   expect_true(nrow(jobs_4_df_targets) < nrow(jobs_4_df))

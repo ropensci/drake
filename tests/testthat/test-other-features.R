@@ -1,9 +1,23 @@
 drake_context("other features")
 
+test_with_dir("Can standardize commands from expr or lang", {
+  x <- parse(text = c("f(x +2) + 2", "!!y"))
+  y <- standardize_command(x[[1]])
+  x <- parse(text = "f(x +2) + 2")
+  z <- standardize_command(x)
+  w <- standardize_command(x[[1]])
+  s <- "{\n f(x + 2) + 2 \n}"
+  expect_equal(y, s)
+  expect_equal(z, s)
+  expect_equal(w, s)
+})
+
 test_with_dir("build_target() does not need to access cache", {
   config <- drake_config(drake_plan(x = 1))
+  meta <- drake_meta(target = "x", config = config)
   config$cache <- NULL
-  expect_equal(1, build_target(target = "x", config = config))
+  build <- build_target(target = "x", meta = meta, config = config)
+  expect_equal(1, build$value)
   expect_error(
     drake_build(target = "x", config = config),
     regexp = "cannot find drake cache"
@@ -102,19 +116,34 @@ test_with_dir("make() with imports_only", {
 test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(in_progress(), character(0))
   bad_plan <- drake_plan(x = function_doesnt_exist())
-  expect_error(tmp <- capture.output({
-      make(bad_plan, verbose = FALSE, session_info = FALSE)
-    },
-    type = "message")
-  )
+  expect_error(
+    make(bad_plan, verbose = TRUE, session_info = FALSE), hook = silencer_hook)
   expect_equal(failed(), "x")
   expect_equal(in_progress(), character(0))
-  expect_is(e <- diagnose(x), "error")
+  expect_is(e <- diagnose(x)$error, "error")
   expect_true(grepl(pattern = "function_doesnt_exist", x = e$message))
   expect_error(diagnose("notfound"))
-  expect_true(inherits(diagnose(x), "error"))
+  expect_true(inherits(diagnose(x)$error, "error"))
   y <- "x"
-  expect_true(inherits(diagnose(y, character_only = TRUE), "error"))
+  expect_true(inherits(diagnose(y, character_only = TRUE)$error, "error"))
+})
+
+test_with_dir("warnings and messages are caught", {
+  expect_equal(in_progress(), character(0))
+  f <- function(x){
+    warning("my first warn")
+    message("my first mess")
+    warning("my second warn")
+    message("my second mess")
+    123
+  }
+  bad_plan <- drake_plan(x = f(), y = x)
+  expect_warning(make(bad_plan, verbose = TRUE, session_info = FALSE))
+  x <- diagnose(x)
+  expect_true(grepl("my first warn", x$warnings[1]))
+  expect_true(grepl("my second warn", x$warnings[2]))
+  expect_true(grepl("my first mess", x$messages[1]))
+  expect_true(grepl("my second mess", x$messages[2]))
 })
 
 test_with_dir("missed() works", {
@@ -143,24 +172,31 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 test_with_dir("check_drake_config() via check_plan() and make()", {
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
-  expect_error(check_plan(y, envir = config$envir))
-  expect_error(make(y, envir = config$envir, session_info = FALSE))
+  suppressWarnings(expect_error(check_plan(y, envir = config$envir)))
+  suppressWarnings(
+    expect_error(
+      make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
   y <- data.frame(target = character(0), command = character(0))
   expect_error(check_plan(y, envir = config$envir))
-  expect_error(make(y, envir = config$envir, session_info = FALSE))
-  expect_error(
-    check_plan(config$plan, targets = character(0), envir = config$envir))
-  expect_error(
+  suppressWarnings(
+    expect_error(
+      make(y, envir = config$envir, hook = silencer_hook,
+           session_info = FALSE, verbose = FALSE)))
+  suppressWarnings(expect_error(
+    check_plan(config$plan, targets = character(0), envir = config$envir)))
+  suppressWarnings(expect_error(
     make(
       config$plan,
       targets = character(0),
       envir = config$envir,
-      session_info = FALSE
+      session_info = FALSE,
+      verbose = FALSE,
+      hook = silencer_hook
     )
-  )
+  ))
   y <- drake_plan(x = 1, y = 2)
   y$bla <- "bluh"
-  expect_warning(make(y, session_info = FALSE))
+  expect_warning(make(y, session_info = FALSE, verbose = FALSE))
 })
 
 test_with_dir("targets can be partially specified", {

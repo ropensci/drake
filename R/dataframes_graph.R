@@ -52,9 +52,15 @@
 #'
 #' @param font_size numeric, font size of the node labels in the graph
 #'
-#' @param build_times logical, whether to show the [build_times()]
-#'   of the targets and imports, if available.
-#'   These are just elapsed times from [system.time()].
+#' @param build_times character string or logical.
+#'   If character, the choices are
+#'     1. `"build"`: runtime of the command plus the time
+#'       it take to store the target or import.
+#'     2. `"command"`: just the runtime of the command.
+#'     3. `"none"`: no build times.
+#'   If logical, `build_times` selects whether to show the
+#'   times from `build_times(..., type = "build")`` or use
+#'   no build times at all. See [build_times()] for details.
 #'
 #' @param digits number of digits for rounding the build times
 #'
@@ -96,7 +102,7 @@ dataframes_graph <- function(
   mode = c("out", "in", "all"),
   order = NULL,
   subset = NULL,
-  build_times = TRUE,
+  build_times = "build",
   digits = 3,
   targets_only = FALSE,
   split_columns = FALSE,
@@ -107,7 +113,7 @@ dataframes_graph <- function(
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }
-  config$build_times <- build_times
+  config$build_times <- resolve_build_times(build_times)
   config$digits <- digits
   config$font_size <- font_size
   config$from_scratch <- from_scratch
@@ -140,7 +146,7 @@ dataframes_graph <- function(
     config$edges$arrows <- "to"
   }
 
-  list(nodes = config$nodes, edges = config$edges,
+  list(nodes = as_tibble(config$nodes), edges = as_tibble(config$edges),
     legend_nodes = legend_nodes(font_size = font_size),
     default_title = default_graph_title(split_columns = split_columns))
 }

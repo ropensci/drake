@@ -25,7 +25,9 @@ time_stamps <- function(config){
   dir_empty(stamp_dir)
   write_time_stamp_template(cache_path)
   build_these <- next_stage(config = config)
-  set_attempt_flag(flag = length(build_these), config = config)
+  if (length(build_these)){
+    set_attempt_flag(config = config)
+  }
   stamp_these <- setdiff(config$plan$target, build_these)
   lightly_parallelize(
     stamp_these, write_time_stamp, jobs = config$jobs, config = config)

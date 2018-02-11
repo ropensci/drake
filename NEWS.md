@@ -1,8 +1,13 @@
 # Version 5.1.0
 
 - Add support for active bindings: `loadd(..., lazy = "bind")`. That way, when you have a target loaded in one R session and hit `make()` in another R session, the target in your first session will automatically update.
+- Use tibbles for workflow plan data frames and the output of `dataframes_graph()`.
+- Return warnings, errors, and other context of each build, all wrapped up with the usual metadata. `diagnose()` will take on the role of returning this metadata.
+- Deprecate the `read_drake_meta()` function in favor of `diagnose()`.
+- Add a new `expose_imports()` function to optionally force `drake` detect deeply nested functions inside specific packages.
+- Move the "quickstart.Rmd" vignette to "example-basic.Rmd". The so-called "quickstart" didn't end up being very quick, and it was all about the basic example anyway.
 - Move `drake_build()` to be an exclusively user-side function.
-- Add a `replace` argument to `loadd()` so that objects already in the user's environment need not be replaced.
+- Add a `replace` argument to `loadd()` so that objects already in the user's eOne small thing:nvironment need not be replaced.
 - When the graph cyclic, print out all the cycles.
 - Prune self-referential loops (and duplicate edges) from the workflow graph. That way, recursive functions are allowed.
 - Add a `seed` argument to `make()`, `drake_config()`, and `load_basic_example()`. Also hard-code a default seed of `0`. That way, the pseudo-randomness in projects should be reproducible

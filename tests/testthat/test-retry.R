@@ -15,6 +15,7 @@ test_with_dir("retries", {
       saveRDS(n + 1, file)
     }
     if (n < 5){
+      file.create("failed_once.txt")
       stop("this error is deliberate and expected.")
     }
   }
@@ -23,8 +24,9 @@ test_with_dir("retries", {
   expect_equal(diagnose(), character(0))
 
   debrief_retries <- function(){
+    expect_true(file.exists("failed_once.txt"))
     expect_true(cached(x))
-    expect_equal(diagnose(), character(0))
+    expect_null(diagnose(x)$error)
   }
 
   make(
@@ -37,7 +39,7 @@ test_with_dir("retries", {
   # The 'retries' in the workflow plan should override
   # the 'retries' argument to make().
   clean(destroy = TRUE)
-  unlink("file.rds")
+  unlink(c("failed_once.txt", "file.rds"))
   pl$retries <- 10
   make(
     pl, parallelism = parallelism, jobs = jobs,
@@ -62,7 +64,7 @@ test_with_dir("timeouts", {
     make(
       pl,
       envir = e,
-      verbose = TRUE,
+      verbose = FALSE,
       hook = silencer_hook,
       session_info = FALSE
     )
@@ -76,7 +78,7 @@ test_with_dir("timeouts", {
       make(
         pl,
         envir = e,
-        verbose = TRUE,
+        verbose = FALSE,
         hook = silencer_hook,
         timeout = 1e-3,
         retries = 2,
@@ -96,7 +98,7 @@ test_with_dir("timeouts", {
     args <- list(
       plan = pl2,
       envir = e,
-      verbose = TRUE,
+      verbose = FALSE,
       hook = silencer_hook,
       retries = 2
     )
