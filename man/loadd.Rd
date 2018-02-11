@@ -7,7 +7,7 @@
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1, deps = FALSE, lazy = "none", graph = NULL,
+  verbose = 1, deps = FALSE, lazy = "eager", graph = NULL,
   replace = TRUE)
 }
 \arguments{
@@ -79,7 +79,6 @@ it will be read from the cache.}
 \item{replace}{logical. If \code{FALSE},
 items already in your enviroment
 will not be replaced.}
-
 }
 \value{
 \code{NULL}

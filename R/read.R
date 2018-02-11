@@ -168,7 +168,7 @@ loadd <- function(
   jobs = 1,
   verbose = 1,
   deps = FALSE,
-  lazy = "none",
+  lazy = "eager",
   graph = NULL,
   replace = TRUE
 ){
@@ -218,7 +218,7 @@ parse_lazy_arg <- function(lazy){
   } else if (identical(lazy, TRUE)){
     "promise"
   } else {
-    lazy
+    match.arg(arg = lazy, choices = c("eager", "promise", "binding"))
   }
 }
 
@@ -298,14 +298,12 @@ binding_load_target <- function(target, cache, namespace, envir, verbose){
   }
   bindr::populate_env(
     env = envir,
-    names = target,
-    fun = drake::eager_load_target,
-    .envir = envir,
-    target = target,
+    names = as.character(target),
+    fun = function(key, cache, namespace){
+      cache$get(key = as.character(key), namespace = as.character(namespace))
+    },
     cache = cache,
-    namespace = namespace,
-    envir = envir,
-    verbose = verbose
+    namespace = as.character(namespace)
   )
 }
 
