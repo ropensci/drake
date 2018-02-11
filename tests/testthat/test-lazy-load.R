@@ -68,7 +68,9 @@ test_with_dir("active bindings", {
   config <- dbug()
   testrun(config)
 
-  rm(final, envir = config$envir)
+  if ("final" %in% ls(config$envir)){
+    rm(final, envir = config$envir)
+  }
   expect_false("final" %in% ls(config$envir))
   loadd(final, envir = config$envir, lazy = "bind", cache = config$cache)
 
@@ -85,11 +87,17 @@ test_with_dir("active bindings", {
     regexp = "active binding"
   )
 
+  # Needed for the tests on parallel backends.
+  e <- new.env(parent = globalenv())
+  loadd(
+    final, envir = e, lazy = "bind",
+    verbose = FALSE, cache = config$cache)
+
   # Active bindings react to make()
-  old_final <- config$envir$final
+  old_final <- e$final
   config$plan$command[6] <- paste0(sum(old_final), "+ 1")
   testrun(config)
-  expect_equal(config$envir$final, sum(old_final) + 1)
+  expect_equal(e$final, sum(old_final) + 1)
 
   expect_false("nextone" %in% ls(config$envir))
   loadd(envir = config$envir, lazy = "bind", cache = config$cache)
