@@ -36,11 +36,6 @@ run_future <- function(config){
 
 run_future_commands <- run_future_total <- run_future
 
-work_remains <- function(queue, workers, config){
-  length(queue) ||
-    length(running_targets(workers = workers, config = config))
-}
-
 get_redeployment_function <- function(config){
   getFromNamespace(
     x = paste0("worker_", config$parallelism),
@@ -57,12 +52,14 @@ worker_future_total <- function(id, target, config, protect){
   )){
     return(NA)
   }
-  prune_envir(
-    targets = target, config = config, downstream = protect)
   structure(
     future::future(
-      expr = build_and_store(target = target, meta = meta, config = config),
-      packages = unique(c(config$packages, (.packages())))
+      expr = {
+        prune_envir(
+          targets = target, config = config, downstream = protect)
+        do_prework(config = config, verbose_packages = FALSE)
+        build_and_store(target = target, meta = meta, config = config)
+      }
     ),
     target = target
   )
@@ -77,18 +74,24 @@ worker_future_commands <- function(id, target, config, protect){
   )){
     return(NA)
   }
-  prune_envir(
-    targets = target, config = config, downstream = protect)
   meta$start <- proc.time()
   config$hook(announce_build(target = target, meta = meta, config = config))
   structure(
     future::future(
-      expr = config$hook(
-        just_build(target = target, meta = meta, config = config)),
-      packages = unique(c(config$packages, (.packages())))
+      expr = config$hook({
+        prune_envir(
+          targets = target, config = config, downstream = protect)
+        do_prework(config = config, verbose_packages = FALSE)
+        just_build(target = target, meta = meta, config = config)
+      })
     ),
     target = target
   )
+}
+
+work_remains <- function(queue, workers, config){
+  length(queue) ||
+    length(running_targets(workers = workers, config = config))
 }
 
 running_targets <- function(workers, config){
