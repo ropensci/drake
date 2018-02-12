@@ -1,16 +1,18 @@
 run_future <- function(config){
   targets <- igraph::topological.sort(config$execution_graph)$name
   workers <- initialize_workers(config)
-  while (length(targets)){
+  # While any targets are queued or running...
+  while (work_remains(queue = targets, workers = workers, config = config)){
     for (id in seq_along(workers)){
-      if (!length(targets)){
-        break
-      }
-      if (resolved_correctly(workers[[id]])){
+      if (is_idle(workers[[id]])){
         workers[[id]] <- conclude_worker(
           worker = workers[[id]],
           config = config
         )
+        if (!length(targets)){
+          next
+        }
+
         next_target <- targets[1]
         next_target_deps <- dependencies(targets = next_target, config = config)
         running <- running_targets(workers = workers, config = config)
@@ -33,6 +35,11 @@ run_future <- function(config){
 }
 
 run_future_commands <- run_future_total <- run_future
+
+work_remains <- function(queue, workers, config){
+  length(queue) ||
+    length(running_targets(workers = workers, config = config))
+}
 
 get_redeployment_function <- function(config){
   getFromNamespace(
@@ -76,7 +83,8 @@ worker_future_commands <- function(id, target, config, downstream){
   config$hook(announce_build(target = target, meta = meta, config = config))
   structure(
     future::future(
-      expr = just_build(target = target, meta = meta, config = config),
+      expr = config$hook(
+        just_build(target = target, meta = meta, config = config)),
       packages = unique(c(config$packages, (.packages())))
     ),
     target = target
@@ -107,8 +115,9 @@ initialize_workers <- function(config){
 # Maybe the job scheduler failed.
 # This should be the responsibility of the `future` package
 # or something lower level.
-resolved_correctly <- function(worker){
-  future::resolved(worker)
+is_idle <- function(worker){
+  identical(worker, NA) ||
+    future::resolved(worker)
 }
 
 # Currently only needed for "future_commands" workers
@@ -120,6 +129,7 @@ conclude_worker <- function(target, worker, config){
   }
   # We're assuming the "future_commands" backend is not used imports.
   set_attempt_flag(config = config)
+  # Here, we should also check if the future resolved due to an error.
   if (config$parallelism != "future_commands"){
     return(NA)
   }
