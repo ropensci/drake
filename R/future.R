@@ -1,6 +1,5 @@
 run_future <- function(config){
-  queue <- Queue$new(
-    items = igraph::topological.sort(config$execution_graph)$name)
+  queue <- new_target_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
   while (work_remains(queue = queue, workers = workers, config = config)){

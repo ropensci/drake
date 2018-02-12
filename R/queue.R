@@ -1,3 +1,9 @@
+new_target_queue <- function(config){
+  # TODO: add prioritites
+  Queue$new(
+    items = igraph::topological.sort(config$execution_graph)$name)
+}
+
 Queue <- R6::R6Class(
   classname = "Queue",
   private = list(
