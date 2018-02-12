@@ -5,6 +5,9 @@ run_future <- function(config){
   while (work_remains(queue = queue, workers = workers, config = config)){
     for (id in seq_along(workers)){
       if (is_idle(workers[[id]])){
+
+        # Should also decrease key in the priority queue
+        # so all the available targets are at the head.
         workers[[id]] <- conclude_worker(
           worker = workers[[id]],
           config = config
@@ -12,6 +15,10 @@ run_future <- function(config){
         if (!queue$size()){
           next
         }
+
+        # WL: I expect this block to be slow
+        # for projects with lots of targets.
+        # An efficient priority queue should be able to fix this.
         next_target <- queue$peek(n = 1)
         next_target_deps <- dependencies(
           targets = next_target, config = config)
@@ -20,7 +27,10 @@ run_future <- function(config){
         if (length(running_deps)){
           next
         }
+
+        # Should replace the above block for a priority queue:
         queue$pop(n = 1)
+
         protect <- c(running, queue$list())
         workers[[id]] <- get_redeployment_function(config)(
           id = id,
