@@ -55,6 +55,7 @@
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #'   mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
+#' @importFrom R6 R6Class
 #' @importFrom R.utils isPackageLoaded withTimeout
 #' @importFrom rlang expr exprs
 #' @importFrom rprojroot find_root

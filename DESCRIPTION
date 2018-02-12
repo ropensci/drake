@@ -65,6 +65,7 @@ Imports:
   magrittr,
   parallel,
   plyr,
+  R6,
   R.utils,
   rlang,
   rprojroot,
