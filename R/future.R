@@ -1,32 +1,32 @@
 run_future <- function(config){
-  targets <- igraph::topological.sort(config$execution_graph)$name
+  queue <- igraph::topological.sort(config$execution_graph)$name
   workers <- initialize_workers(config)
   # While any targets are queued or running...
-  while (work_remains(queue = targets, workers = workers, config = config)){
+  while (work_remains(queue = queue, workers = workers, config = config)){
     for (id in seq_along(workers)){
       if (is_idle(workers[[id]])){
         workers[[id]] <- conclude_worker(
           worker = workers[[id]],
           config = config
         )
-        if (!length(targets)){
+        if (!length(queue)){
           next
         }
-
-        next_target <- targets[1]
-        next_target_deps <- dependencies(targets = next_target, config = config)
+        next_target <- queue[1]
+        next_target_deps <- dependencies(
+          targets = next_target, config = config)
         running <- running_targets(workers = workers, config = config)
         running_deps <- intersect(running, next_target_deps)
         if (length(running_deps)){
           next
         }
-        targets <- targets[-1]
-        downstream <- c(running, targets)
+        queue <- queue[-1]
+        protect <- c(running, queue)
         workers[[id]] <- get_redeployment_function(config)(
           id = id,
           target = next_target,
           config = config,
-          downstream = downstream
+          protect = protect
         )
       }
     }
@@ -48,7 +48,7 @@ get_redeployment_function <- function(config){
   )
 }
 
-worker_future_total <- function(id, target, config, downstream){
+worker_future_total <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
@@ -58,7 +58,7 @@ worker_future_total <- function(id, target, config, downstream){
     return(NA)
   }
   prune_envir(
-    targets = target, config = config, downstream = downstream)
+    targets = target, config = config, downstream = protect)
   structure(
     future::future(
       expr = build_and_store(target = target, meta = meta, config = config),
@@ -68,7 +68,7 @@ worker_future_total <- function(id, target, config, downstream){
   )
 }
 
-worker_future_commands <- function(id, target, config, downstream){
+worker_future_commands <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
@@ -78,7 +78,7 @@ worker_future_commands <- function(id, target, config, downstream){
     return(NA)
   }
   prune_envir(
-    targets = target, config = config, downstream = downstream)
+    targets = target, config = config, downstream = protect)
   meta$start <- proc.time()
   config$hook(announce_build(target = target, meta = meta, config = config))
   structure(
