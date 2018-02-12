@@ -1,5 +1,6 @@
 run_future <- function(config){
-  queue <- igraph::topological.sort(config$execution_graph)$name
+  queue <- Queue$new(
+    items = igraph::topological.sort(config$execution_graph)$name)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
   while (work_remains(queue = queue, workers = workers, config = config)){
@@ -9,10 +10,10 @@ run_future <- function(config){
           worker = workers[[id]],
           config = config
         )
-        if (!length(queue)){
+        if (!queue$size()){
           next
         }
-        next_target <- queue[1]
+        next_target <- queue$peek(n = 1)
         next_target_deps <- dependencies(
           targets = next_target, config = config)
         running <- running_targets(workers = workers, config = config)
@@ -20,8 +21,8 @@ run_future <- function(config){
         if (length(running_deps)){
           next
         }
-        queue <- queue[-1]
-        protect <- c(running, queue)
+        queue$pop(n = 1)
+        protect <- c(running, queue$list())
         workers[[id]] <- get_redeployment_function(config)(
           id = id,
           target = next_target,
@@ -90,7 +91,7 @@ worker_future_commands <- function(id, target, config, protect){
 }
 
 work_remains <- function(queue, workers, config){
-  length(queue) ||
+  !queue$empty() ||
     length(running_targets(workers = workers, config = config))
 }
 
