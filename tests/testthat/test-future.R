@@ -27,6 +27,8 @@ test_with_dir("future package functionality", {
       character(0)
     )
   }
+
+  # Stuff is already up to date.
   config <- make(
     e$my_plan,
     envir = e,
@@ -37,6 +39,18 @@ test_with_dir("future package functionality", {
     session_info = FALSE
   )
   expect_equal(justbuilt(config), character(0))
+
+  # Workers can wait for dependencies.
+  e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
+  make(
+    e$my_plan,
+    envir = e,
+    parallelism = backends[3],
+    caching = caching[3],
+    jobs = 1,
+    verbose = FALSE,
+    session_info = FALSE
+  )
 })
 
 test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
