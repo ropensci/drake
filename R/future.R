@@ -40,6 +40,20 @@ run_future <- function(config){
   }
 }
 
+#' @keywords internal
+#' @export
+drake_future_task <- function(target, meta, config, protect){
+  prune_envir(
+    targets = target, config = config, downstream = protect)
+  do_prework(config = config, verbose_packages = FALSE)
+  if (config$caching == "worker"){
+    build_and_store(target = target, meta = meta, config = config)
+  } else {
+    announce_build(target = target, meta = meta, config = config)
+    config$hook(just_build(target = target, meta = meta, config = config))
+  }
+}
+
 active_worker <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
@@ -51,17 +65,9 @@ active_worker <- function(id, target, config, protect){
   }
   structure(
     future::future(
-      expr = {
-        prune_envir(
-          targets = target, config = config, downstream = protect)
-        do_prework(config = config, verbose_packages = FALSE)
-        if (config$caching == "worker"){
-          build_and_store(target = target, meta = meta, config = config)
-        } else {
-          announce_build(target = target, meta = meta, config = config)
-          config$hook(just_build(target = target, meta = meta, config = config))
-        }
-      }
+      expr = drake_future_task(
+        target = target, meta = meta, config = config, protect = protect),
+      packages = "drake"
     ),
     target = target
   )
