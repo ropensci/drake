@@ -161,17 +161,17 @@ tracked <- function(
   V(graph)$name
 }
 
-dependencies <- function(targets, config){
+dependencies <- function(targets, config, reverse = FALSE){
   if (!length(targets)){
     return(character(0))
   }
   adjacent_vertices(
     graph = config$graph,
     v = targets,
-    mode = "in"
-    ) %>%
-  lapply(FUN = names) %>%
-  clean_dependency_list()
+    mode = ifelse(reverse, "out", "in")
+  ) %>%
+    lapply(FUN = names) %>%
+    clean_dependency_list()
 }
 
 nonfile_target_dependencies <- function(targets, config){

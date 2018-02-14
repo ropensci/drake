@@ -5,30 +5,20 @@ run_future <- function(config){
   while (work_remains(queue = queue, workers = workers, config = config)){
     for (id in seq_along(workers)){
       if (is_idle(workers[[id]])){
-        # Should also decrease key in the priority queue
-        # so all the available targets are at the head.
+        # Also calls decrease-key on the queue.
         workers[[id]] <- conclude_worker(
           worker = workers[[id]],
-          config = config
+          config = config,
+          queue = queue
         )
-        if (!queue$size()){
+        # Pop the head target only if its priority is 0
+        next_target <- queue$pop0(what = "names")
+        if (!length(next_target)){
           next
         }
-
-        # With a priority queue, we should not need to 
-        # check dependencies in a manner this slow.
-        next_target <- queue$peek(n = 1)
-        next_target_deps <- dependencies(
-          targets = next_target, config = config)
         running <- running_targets(workers = workers, config = config)
-        running_deps <- intersect(running, next_target_deps)
-        if (length(running_deps)){
-          next
-        }
-        queue$pop(n = 1)
-
-        protect <- c(running, queue$list())
-        workers[[id]] <- active_worker(
+        protect <- c(running, queue$list(what = "names"))
+        workers[[id]] <- new_worker(
           id = id,
           target = next_target,
           config = config,
@@ -63,7 +53,7 @@ drake_future_task <- function(target, meta, config, protect){
   }
 }
 
-active_worker <- function(id, target, config, protect){
+new_worker <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
@@ -145,10 +135,26 @@ initialize_workers <- function(config){
   as.list(rep(empty_worker(target = NA), length(config$jobs)))
 }
 
+decrease_revdep_keys <- function(worker, config, queue){
+  target <- attr(worker, "target")
+  revdeps <- dependencies(
+    targets = target,
+    config = config,
+    reverse = TRUE
+  ) %>%
+    intersect(y = queue$list(what = "names"))
+  queue$decrease_key(names = revdeps)
+}
+
 # Currently only needed for "future_commands" workers
 # since "future_total" workers already conclude the build
 # and store the results.
-conclude_worker <- function(target, worker, config){
+conclude_worker <- function(target, worker, config, queue){
+  decrease_revdep_keys(
+    worker = worker,
+    queue = queue,
+    config = config
+  )
   out <- concluded_worker()
   if (is_empty_worker(worker)){
     return(out)
