@@ -14,6 +14,9 @@ run_future <- function(config){
         if (!queue$size()){
           next
         }
+
+        # With a priority queue, we should not need to 
+        # check dependencies in a manner this slow.
         next_target <- queue$peek(n = 1)
         next_target_deps <- dependencies(
           targets = next_target, config = config)
@@ -23,6 +26,7 @@ run_future <- function(config){
           next
         }
         queue$pop(n = 1)
+
         protect <- c(running, queue$list())
         workers[[id]] <- active_worker(
           id = id,
