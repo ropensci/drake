@@ -14,7 +14,7 @@ run_future <- function(config){
         # Pop the head target only if its priority is 0
         next_target <- queue$pop0(what = "names")
         if (!length(next_target)){
-          next
+          next # needs to be field tested for coverage # nocov
         }
         running <- running_targets(workers = workers, config = config)
         protect <- c(running, queue$list(what = "names"))
@@ -127,7 +127,7 @@ running_targets <- function(workers, config){
       if (is_idle(worker)){
         NULL
       } else {
-        attr(worker, "target")
+        attr(worker, "target") # needs to be field tested for coverage # nocov
       }
     }
   ) %>%
