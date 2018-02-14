@@ -62,11 +62,17 @@ new_worker <- function(id, target, config, protect){
   )){
     return(empty_worker(target = target))
   }
+  if (identical(config$envir, globalenv())){
+    globals <- ls(config$envir) # Unit tests should modify global env # nocov
+  } else {
+    globals <- NULL
+  }
   structure(
     future::future(
       expr = drake_future_task(
         target = target, meta = meta, config = config, protect = protect),
-      packages = "drake"
+      packages = "drake",
+      globals = c(globals, "target", "meta", "config", "protect")
     ),
     target = target
   )
