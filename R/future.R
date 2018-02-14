@@ -24,6 +24,9 @@ run_future <- function(config){
           config = config,
           protect = protect
         )
+
+        browser()
+
       }
     }
     Sys.sleep(1e-9)
@@ -132,7 +135,10 @@ running_targets <- function(workers, config){
 
 initialize_workers <- function(config){
   config$cache$clear(namespace = "workers")
-  as.list(rep(empty_worker(target = NA), length(config$jobs)))
+  out <- list()
+  for (i in seq_len(config$jobs))
+    out[[i]] <- empty_worker(target = NA)
+  out
 }
 
 decrease_revdep_keys <- function(worker, config, queue){
