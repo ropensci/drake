@@ -5,7 +5,6 @@ run_future <- function(config){
   while (work_remains(queue = queue, workers = workers, config = config)){
     for (id in seq_along(workers)){
       if (is_idle(workers[[id]])){
-
         # Should also decrease key in the priority queue
         # so all the available targets are at the head.
         workers[[id]] <- conclude_worker(
@@ -15,10 +14,6 @@ run_future <- function(config){
         if (!queue$size()){
           next
         }
-
-        # WL: I expect this block to be slow
-        # for projects with lots of targets.
-        # An efficient priority queue should be able to fix this.
         next_target <- queue$peek(n = 1)
         next_target_deps <- dependencies(
           targets = next_target, config = config)
@@ -27,10 +22,7 @@ run_future <- function(config){
         if (length(running_deps)){
           next
         }
-
-        # Should replace the above block for a priority queue:
         queue$pop(n = 1)
-
         protect <- c(running, queue$list())
         workers[[id]] <- active_worker(
           id = id,
@@ -62,6 +54,7 @@ active_worker <- function(id, target, config, protect){
         if (config$caching == "worker"){
           build_and_store(target = target, meta = meta, config = config)
         } else {
+          announce_build(target = target, meta = meta, config = config)
           config$hook(just_build(target = target, meta = meta, config = config))
         }
       }
@@ -78,6 +71,14 @@ is_empty_worker <- function(worker){
   !inherits(worker, "Future")
 }
 
+concluded_worker <- function(){
+  empty_worker(target = NULL)
+}
+
+is_concluded_worker <- function(worker){
+  is.null(attr(worker, "target"))
+}
+
 # Need to check if the worker quit in error early somehow.
 # Maybe the job scheduler failed.
 # This should be the responsibility of the `future` package
@@ -88,7 +89,19 @@ is_idle <- function(worker){
 
 work_remains <- function(queue, workers, config){
   !queue$empty() ||
-    length(running_targets(workers = workers, config = config))
+    !all_concluded(workers = workers, config = config)
+}
+
+all_concluded <- function(workers, config){
+  lightly_parallelize(
+    X = workers,
+    FUN = function(worker){
+      is_concluded_worker(worker)
+    },
+    jobs = config$jobs
+  ) %>%
+    unlist %>%
+    all
 }
 
 running_targets <- function(workers, config){
@@ -115,18 +128,16 @@ initialize_workers <- function(config){
 # since "future_total" workers already conclude the build
 # and store the results.
 conclude_worker <- function(target, worker, config){
+  out <- concluded_worker()
   if (is_empty_worker(worker)){
-    return(worker)
+    return(out)
   }
   set_attempt_flag(config = config)
   # Here, we should also check if the future resolved due to an error.
   if (config$caching == "worker"){
-    return(worker)
+    return(out)
   }
   build <- future::value(worker)
-
-  browser()
-
   config$hook({
     conclude_build(
       target = build$target,
@@ -135,5 +146,5 @@ conclude_worker <- function(target, worker, config){
       config = config
     )
   })
-  emtpy_worker(target = build$target)
+  out
 }
