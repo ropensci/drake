@@ -84,7 +84,9 @@ is_concluded_worker <- function(worker){
 # This should be the responsibility of the `future` package
 # or something lower level.
 is_idle <- function(worker){
-  is_empty_worker(worker) || future::resolved(worker)
+  is_empty_worker(worker) ||
+    is_concluded_worker(worker) ||
+    future::resolved(worker)
 }
 
 work_remains <- function(queue, workers, config){
