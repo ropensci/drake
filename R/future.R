@@ -120,10 +120,13 @@ conclude_worker <- function(target, worker, config){
   }
   set_attempt_flag(config = config)
   # Here, we should also check if the future resolved due to an error.
-  if (config$caching != "worker"){
+  if (config$caching == "worker"){
     return(worker)
   }
   build <- future::value(worker)
+
+  browser()
+
   config$hook({
     conclude_build(
       target = build$target,
