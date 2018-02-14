@@ -14,7 +14,11 @@ run_future <- function(config){
         # Pop the head target only if its priority is 0
         next_target <- queue$pop0(what = "names")
         if (!length(next_target)){
-          next # needs to be field tested for coverage # nocov
+          # It's hard to make this line run in a small test workflow
+          # suitable enough for unit testing, but
+          # I did artificially stall targets and verified that this line
+          # is reached in the future::multisession backend as expected.
+          next # nocov
         }
         running <- running_targets(workers = workers, config = config)
         protect <- c(running, queue$list(what = "names"))
@@ -127,7 +131,11 @@ running_targets <- function(workers, config){
       if (is_idle(worker)){
         NULL
       } else {
-        attr(worker, "target") # needs to be field tested for coverage # nocov
+        # It's hard to make this line run in a small test workflow
+        # suitable enough for unit testing, but
+        # I did artificially stall targets and verified that this line
+        # is reached in the future::multisession backend as expected.
+        attr(worker, "target") # nocov
       }
     }
   ) %>%
