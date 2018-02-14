@@ -20,12 +20,10 @@ R6_queue <- R6::R6Class(
     empty = function(){
       self$size() < 1
     },
-    push = function(items){
-      private$items <- c(private$items, items)
-    },
     pop = function(n = 1){
       if (self$empty() || n < 1){
-        return(character(0))
+        # We'll be using a different queue soon anyway.
+        return(character(0)) # nocov
       }
       n <- min(n, self$size())
       index_pop <- seq_len(n)
