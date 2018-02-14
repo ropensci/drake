@@ -43,7 +43,7 @@ test_that("the priority queue works", {
   expect_equal(x$list("names"), nms)
   expect_equal(unname(x$list("priorities")), pri)
 
-  expect_equal(x$pop(), character(0))
+  expect_equal(x$pop(n = 0), character(0))
   expect_equal(x$list("names"), nms)
   expect_equal(unname(x$list("priorities")), pri)
   expect_equal(x$pop0(), "Preservation")
