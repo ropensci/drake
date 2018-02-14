@@ -42,7 +42,7 @@ test_with_dir("future package functionality", {
 
   # Workers can wait for dependencies.
   e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
-  future::plan(future::multisession)
+  future::plan(future::multicore)
   make(
     e$my_plan,
     envir = e,
