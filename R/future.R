@@ -40,8 +40,17 @@ run_future <- function(config){
   }
 }
 
+#' @title Task passed to individual futures in the `"future"` backend
+#' @description For internal use only. Only exported to make available
+#' to futures.
 #' @keywords internal
 #' @export
+#' @return Either the target value or a list of build results.
+#' @param target name of the target
+#' @param meta list of metadata
+#' @param config [drake_config()] list
+#' @param protect Names of targets that still need their
+#' dependencies available in `config$envir`.
 drake_future_task <- function(target, meta, config, protect){
   prune_envir(
     targets = target, config = config, downstream = protect)
