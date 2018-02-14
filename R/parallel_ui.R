@@ -137,8 +137,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "parLapply"
   )
   distributed <- c(
-    "future_commands",
-    "future_total",
+    "future",
     "future_lapply",
     "Makefile"
   )

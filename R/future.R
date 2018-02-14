@@ -32,7 +32,7 @@ run_future <- function(config){
         queue$pop(n = 1)
 
         protect <- c(running, queue$list())
-        workers[[id]] <- get_redeployment_function(config)(
+        workers[[id]] <- active_worker(
           id = id,
           target = next_target,
           config = config,
@@ -44,23 +44,14 @@ run_future <- function(config){
   }
 }
 
-run_future_commands <- run_future_total <- run_future
-
-get_redeployment_function <- function(config){
-  getFromNamespace(
-    x = paste0("worker_", config$parallelism),
-    ns = "drake"
-  )
-}
-
-worker_future_total <- function(id, target, config, protect){
+active_worker <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
     meta = meta,
     config = config
   )){
-    return(NA)
+    return(empty_worker(target = target))
   }
   structure(
     future::future(
@@ -68,35 +59,31 @@ worker_future_total <- function(id, target, config, protect){
         prune_envir(
           targets = target, config = config, downstream = protect)
         do_prework(config = config, verbose_packages = FALSE)
-        build_and_store(target = target, meta = meta, config = config)
+        if (config$caching == "worker"){
+          build_and_store(target = target, meta = meta, config = config)
+        } else {
+          config$hook(just_build(target = target, meta = meta, config = config))
+        }
       }
     ),
     target = target
   )
 }
 
-worker_future_commands <- function(id, target, config, protect){
-  meta <- drake_meta(target = target, config = config)
-  if (!should_build_target(
-    target = target,
-    meta = meta,
-    config = config
-  )){
-    return(NA)
-  }
-  meta$start <- proc.time()
-  config$hook(announce_build(target = target, meta = meta, config = config))
-  structure(
-    future::future(
-      expr = config$hook({
-        prune_envir(
-          targets = target, config = config, downstream = protect)
-        do_prework(config = config, verbose_packages = FALSE)
-        just_build(target = target, meta = meta, config = config)
-      })
-    ),
-    target = target
-  )
+empty_worker <- function(target){
+  structure(NA, target = target)
+}
+
+is_empty_worker <- function(worker){
+  !inherits(worker, "Future")
+}
+
+# Need to check if the worker quit in error early somehow.
+# Maybe the job scheduler failed.
+# This should be the responsibility of the `future` package
+# or something lower level.
+is_idle <- function(worker){
+  is_empty_worker(worker) || future::resolved(worker)
 }
 
 work_remains <- function(queue, workers, config){
@@ -108,7 +95,7 @@ running_targets <- function(workers, config){
   lightly_parallelize(
     X = workers,
     FUN = function(worker){
-      if (identical(worker, NA)){
+      if (is_idle(worker)){
         NULL
       } else {
         attr(worker, "target")
@@ -121,30 +108,20 @@ running_targets <- function(workers, config){
 
 initialize_workers <- function(config){
   config$cache$clear(namespace = "workers")
-  as.list(rep(NA, length(config$jobs)))
-}
-
-# Need to check if the worker quit in error early somehow.
-# Maybe the job scheduler failed.
-# This should be the responsibility of the `future` package
-# or something lower level.
-is_idle <- function(worker){
-  identical(worker, NA) ||
-    future::resolved(worker)
+  as.list(rep(empty_worker(target = NA), length(config$jobs)))
 }
 
 # Currently only needed for "future_commands" workers
 # since "future_total" workers already conclude the build
 # and store the results.
 conclude_worker <- function(target, worker, config){
-  if (identical(worker, NA)){
-    return(NA)
+  if (is_empty_worker(worker)){
+    return(worker)
   }
-  # We're assuming the "future_commands" backend is not used imports.
   set_attempt_flag(config = config)
   # Here, we should also check if the future resolved due to an error.
-  if (config$parallelism != "future_commands"){
-    return(NA)
+  if (config$caching != "worker"){
+    return(worker)
   }
   build <- future::value(worker)
   config$hook({
@@ -155,5 +132,5 @@ conclude_worker <- function(target, worker, config){
       config = config
     )
   })
-  NA
+  emtpy_worker(target = build$target)
 }

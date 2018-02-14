@@ -294,6 +294,9 @@
 #'   seed from the project's cache (usually the `.drake/` folder).
 #'   To reset the random number generator seed for a project,
 #'   use `clean(destroy = TRUE)`.
+#'
+#' @param caching character string, only applies to `"future"` parallelism.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -345,7 +348,8 @@ drake_config <- function(
   lazy_load = "eager",
   session_info = TRUE,
   cache_log_file = NULL,
-  seed = NULL
+  seed = NULL,
+  caching = c("worker", "master")
 ){
   force(envir)
   plan <- sanitize_plan(plan)
@@ -395,7 +399,7 @@ drake_config <- function(
     imports_only = imports_only, skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks, log_progress = log_progress,
     lazy_load = lazy_load, session_info = session_info,
-    cache_log_file = cache_log_file
+    cache_log_file = cache_log_file, caching = match.arg(caching)
   )
 }
 
