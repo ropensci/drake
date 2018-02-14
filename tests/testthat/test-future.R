@@ -27,6 +27,16 @@ test_with_dir("future package functionality", {
       character(0)
     )
   }
+  config <- make(
+    e$my_plan,
+    envir = e,
+    parallelism = backends[3],
+    caching = caching[3],
+    jobs = 1,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  expect_equal(justbuilt(config), character(0))
 })
 
 test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
