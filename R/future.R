@@ -104,19 +104,18 @@ work_remains <- function(queue, workers, config){
 }
 
 all_concluded <- function(workers, config){
-  lightly_parallelize(
+  lapply(
     X = workers,
     FUN = function(worker){
       is_concluded_worker(worker)
-    },
-    jobs = config$jobs
+    }
   ) %>%
     unlist %>%
     all
 }
 
 running_targets <- function(workers, config){
-  lightly_parallelize(
+  lapply(
     X = workers,
     FUN = function(worker){
       if (is_idle(worker)){
@@ -124,8 +123,7 @@ running_targets <- function(workers, config){
       } else {
         attr(worker, "target")
       }
-    },
-    jobs = config$jobs
+    }
   ) %>%
     unlist
 }

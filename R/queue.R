@@ -74,7 +74,7 @@ R6_priority_queue <- R6::R6Class(
     },
     pop = function(n = 1, what = "names"){
       if (n < 1){
-        return()
+        return(character(0))
       }
       index <- seq_len(min(n, self$size()))
       x <- private$data[index]

@@ -39,7 +39,13 @@ test_that("the priority queue works", {
   pri <- c(0, 3, 4, 5, 6.66, 7, 7, 8)
   expect_equal(x$list("names"), nms)
   expect_equal(unname(x$list("priorities")), pri)
+  x$push()
+  expect_equal(x$list("names"), nms)
+  expect_equal(unname(x$list("priorities")), pri)
 
+  expect_equal(x$pop(), character(0))
+  expect_equal(x$list("names"), nms)
+  expect_equal(unname(x$list("priorities")), pri)
   expect_equal(x$pop0(), "Preservation")
   expect_true(!length(x$pop0()))
   expect_equal(x$list("names"), nms[-1])
