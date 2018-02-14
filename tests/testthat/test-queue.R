@@ -1,4 +1,4 @@
-context("queue")
+drake_context("queue")
 
 test_that("the priority queue works", {
   names <- c("foo", "bar", "baz", "Bob", "Amy", "Joe", "soup", "spren")
