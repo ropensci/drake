@@ -24,9 +24,6 @@ run_future <- function(config){
           config = config,
           protect = protect
         )
-
-        browser()
-
       }
     }
     Sys.sleep(1e-9)
