@@ -48,7 +48,7 @@ test_with_dir("future package functionality", {
     envir = e,
     parallelism = backends[3],
     caching = caching[3],
-    jobs = 2,
+    jobs = 3,
     verbose = FALSE,
     session_info = FALSE
   )
