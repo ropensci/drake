@@ -1,6 +1,7 @@
 drake_context("workflow plan")
 
-test_with_dir("empty plan", {
+test_with_dir("edge cases for plans", {
+  # empty plan
   expect_equal(
     drake_plan(),
     tibble(
@@ -8,6 +9,30 @@ test_with_dir("empty plan", {
       command = character(0)
     )
   )
+  # no target names
+  expect_equal(
+    drake_plan(a, b),
+    tibble(
+      target = c("drake_target_1", "drake_target_2"),
+      command = c("a", "b")
+    )
+  )
+  # incomplete target names
+  expect_equal(
+    drake_plan(a = 1, b),
+    tibble(
+      target = c("a", "drake_target_1"),
+      command = c("1", "b")
+    )
+  )
+  # too many file outputs
+  expect_warning(expect_equal(
+    drake_plan(a = file_output(file1, file2)),
+    tibble(
+      target = c("\"file1\""),
+      command = "file_output(file1, file2)"
+    )
+  ))
 })
 
 test_with_dir("plan set 1", {

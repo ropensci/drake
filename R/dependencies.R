@@ -392,11 +392,6 @@ find_globals <- function(expr){
     Filter(f = is_parsable)
 }
 
-has_quotes <- function(text, single = TRUE, double = TRUE){
-  (single && safe_grepl("^'", text) && safe_grepl("'$", text)) ||
-    (double && safe_grepl("^\"", text) && safe_grepl("\"$", text))
-}
-
 declare_file <- function(expr){
   out <- wide_deparse(expr) %>%
     drake_unquote %>%

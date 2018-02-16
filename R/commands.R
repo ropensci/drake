@@ -1,7 +1,3 @@
-parsable_list <- function(x){
-  lapply(x, function(y) Filter(is_parsable, y))
-}
-
 is_parsable <- Vectorize(function(x){
   tryCatch({
       parse(text = x)
