@@ -25,10 +25,7 @@
 #'   of the dependency graph. A light `mclapply()`-based
 #'   parallelism is used if your operating system is not Windows.
 #'
-#' @param preprocess_plan logical, whether to do some preprocessing
-#'   steps on `plan`. These include sanitizing the plan and
-#'   converting any [file_output()]s to target names.
-#'
+#' @param sanitize_plan logical, whether to sanitize the workflow plan first.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -44,12 +41,11 @@ build_drake_graph <- function(
   envir = parent.frame(),
   verbose = 1,
   jobs = 1,
-  preprocess_plan = TRUE
+  sanitize_plan = TRUE
 ){
   force(envir)
-  if (preprocess_plan){
-    plan <- sanitize_plan(plan) %>%
-      file_outputs_to_targets
+  if (sanitize_plan){
+    plan <- sanitize_plan(plan)
   }
   targets <- sanitize_targets(plan, targets)
   imports <- as.list(envir)

@@ -13,6 +13,7 @@ sanitize_plan <- function(plan){
   if (!is.null(plan[["trigger"]])){
     assert_legal_triggers(plan[["trigger"]])
   }
+  plan <- file_outputs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
   plan[nchar(plan$target) > 0, ]
 }

@@ -165,12 +165,9 @@ load_basic_example <- function(
   # imported functions are ignored, so this mechanism only
   # works inside the drake_plan my_plan data frame.  WARNING:
   # drake cannot track entire directories (folders).
-  report <- drake_plan(
-    knit(
-      file_input(report.Rmd),
-      file_output(report.md),
-      quiet = TRUE
-    )
+  report <- data.frame(
+    target = "",
+    command = "knit(file_input(report.Rmd), file_output(report.md), quiet = TRUE)" # nolint
   )
 
   # Row order doesn't matter in the drake_plan my_plan.
