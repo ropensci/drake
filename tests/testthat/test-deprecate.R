@@ -96,3 +96,16 @@ test_with_dir("deprecated arguments", {
   con <- drake_config(plan = pl, session_info = FALSE)
   expect_warning(drake_build(a, config = con, meta = list()))
 })
+
+test_with_dir("old file API", {
+  expect_warning(x <- drake_plan(
+    file.csv = write.csv(mtcars, "file.csv"),
+    strings_in_dots = "literals",
+    file_targets = TRUE
+  ))
+  y <- drake_plan(
+    contents = read.csv("file.csv"))
+  z <- rbind(x, y)
+  make(z, session_info = FALSE) -> config
+  expect_equal(sort(justbuilt(config)), sort(c("contents", "'file.csv'")))
+})

@@ -127,7 +127,7 @@ drake_plan <- function(
   if (length(file_targets) && file_targets){
     plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
-  if (length(strings_in_dots) && strings_in_dots == "filenames"){
+  if (!length(strings_in_dots) || strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
