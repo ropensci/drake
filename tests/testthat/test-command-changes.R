@@ -5,7 +5,7 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     sort(outdated(config)),
     sort(c(
-      "'intermediatefile.rds'",
+      "\"intermediatefile.rds\"",
       "combined",
       "final",
       "myinput",
@@ -25,7 +25,7 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     sort(outdated(config)),
     sort(c(
-      "'intermediatefile.rds'",
+      "\"intermediatefile.rds\"",
       "combined",
       "final",
       "yourinput"
@@ -38,7 +38,7 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     justbuilt(config),
     sort(c(
-      "'intermediatefile.rds'",
+      "\"intermediatefile.rds\"",
       "combined",
       "final",
       "yourinput"
@@ -52,6 +52,6 @@ test_with_dir("changes to commands are handled well", {
   config <- testrun(config)
   expect_equal(
     justbuilt(config),
-    sort(c("'intermediatefile.rds'", "final"))
+    sort(c("\"intermediatefile.rds\"", "final"))
   )
 })
