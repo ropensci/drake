@@ -30,13 +30,14 @@ test_with_dir("knitr_deps() works", {
   x <- knitr_deps("report.Rmd")
   y <- deps("knit('report.Rmd')")
   z <- deps("render('report.Rmd')")
+  w <- deps("funct(knitr_input(report.Rmd))")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
   expect_equal(sort(x), sort(real_deps))
-  expect_equal("targ", find_knitr_targets(function(x){
-    readd(targ)
-  }))
+  expect_equal(sort(y), sort(c(real_deps, "knit", "report.Rmd")))
+  expect_equal(sort(z), sort(c(real_deps, "render", "report.Rmd")))
+  expect_equal(sort(w), sort(c(real_deps, "funct", "\"report.Rmd\"")))
 })
 
 test_with_dir("find_knitr_doc() works", {

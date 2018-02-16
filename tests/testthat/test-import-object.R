@@ -56,7 +56,7 @@ test_with_dir("responses to imported objects and functions", {
   final0 <- readd(final, search = FALSE)
   builds <- sort(
     c(
-      "'intermediatefile.rds'",
+      "\"intermediatefile.rds\"",
       "combined",
       "final",
       "yourinput"
