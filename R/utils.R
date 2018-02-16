@@ -3,7 +3,8 @@ safe_grepl <- function(pattern, x){
 }
 
 is_file <- function(x){
-  safe_grepl("^'", x) & safe_grepl("'$", x)
+  (safe_grepl("^'", x) & safe_grepl("'$", x)) |
+    (safe_grepl("^\"", x) & safe_grepl("\"$", x))
 }
 
 is_existing_file <- function(x){
@@ -25,4 +26,23 @@ braces <- function(x) {
   } else {
     x
   }
+}
+
+merge_lists <- function(x, y){
+  names <- base::union(names(x), names(y))
+  lapply(
+    X = names,
+    function(name){
+      c(x[[name]], y[[name]])
+    }
+  ) %>%
+    setNames(nm = names)
+}
+
+clean_dependency_list <- function(x){
+  x %>%
+    unlist() %>%
+    unname() %>%
+    unique() %>%
+    sort()
 }
