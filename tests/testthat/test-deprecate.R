@@ -107,5 +107,12 @@ test_with_dir("old file API", {
     contents = read.csv("file.csv"))
   z <- rbind(x, y)
   make(z, session_info = FALSE) -> config
+  expect_equal(
+    z,
+    tibble::tibble(
+      target = c("'file.csv'", "contents"),
+      command = c("write.csv(mtcars, \"file.csv\")", "read.csv('file.csv')")
+    )
+  )
   expect_equal(sort(justbuilt(config)), sort(c("contents", "'file.csv'")))
 })
