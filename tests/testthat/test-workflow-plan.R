@@ -29,11 +29,11 @@ test_with_dir("plan set 1", {
 
 test_with_dir("plan set 2", {
   for (tidy_evaluation in c(TRUE, FALSE)){
-    x <- drake_plan(a = c,
+    expect_warning(x <- drake_plan(a = c,
                     b = "c",
                     list = c(c = "d", d = "readRDS('e')"),
                     strings_in_dots = "literals",
-                    tidy_evaluation = tidy_evaluation)
+                    tidy_evaluation = tidy_evaluation))
     y <- tibble(
       target = letters[1:4],
       command = c("c", "\"c\"",
@@ -44,12 +44,12 @@ test_with_dir("plan set 2", {
 
 test_with_dir("plan set 3", {
   for (tidy_evaluation in c(TRUE, FALSE)){
-  x <- drake_plan(
+  expect_warning(x <- drake_plan(
     a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "literals", file_targets = TRUE,
-    tidy_evaluation = tidy_evaluation)
+    tidy_evaluation = tidy_evaluation))
   y <- tibble(
     target = drake::drake_quotes(letters[1:4], single = TRUE),
     command = c("c", "\"c\"", "d", "readRDS('e')"))

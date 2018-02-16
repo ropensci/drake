@@ -9,7 +9,7 @@ test_with_dir("config and make without safety checks", {
 })
 
 test_with_dir("Strings stay strings, not symbols", {
-  x <- drake_plan(a = "A", strings_in_dots = "literals")
+  expect_warning(x <- drake_plan(a = "A", strings_in_dots = "literals"))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
@@ -21,7 +21,7 @@ test_with_dir("error handlers", {
 })
 
 test_with_dir("error when file target names do not match actual filenames", {
-  x <- drake_plan(y = 1, file_targets = TRUE)
+  expect_warning(x <- drake_plan(y = 1, file_targets = TRUE))
   expect_warning(expect_error(make(x, verbose = FALSE, session_info = FALSE)))
 })
 
