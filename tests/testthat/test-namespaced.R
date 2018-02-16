@@ -25,11 +25,8 @@ test_with_dir("function_dependencies() works on :: and :::", {
   )
   expect_equal(sort(find_namespaced_functions(crazy)), ns)
   expect_equal(
-    function_dependencies(crazy),
-    list(
-      functions = sort(c(ns, "g", "runif", "sqrt")),
-      variables = character(0)
-    )
+    unname(sort(unlist(code_dependencies(crazy)))),
+    sort(c(ns, "g", "runif", "sqrt"))
   )
   command <- "digest::digest(stats::rnorm(runif(stats::rpois(100))))"
   d <- sort(deps(command))

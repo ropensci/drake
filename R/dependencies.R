@@ -335,12 +335,6 @@ code_dependencies <- function(expr){
         )
       }
     } else if (is.call(expr) || is.recursive(expr)) {
-      if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
-        results$namespaced <<- base::union(
-          results$namespaced,
-          setdiff(wide_deparse(expr), drake_fn_patterns)
-        )
-      }
       if (is_loadd_call(expr)){
         results$loadd <<- base::union(
           results$loadd,
@@ -352,13 +346,20 @@ code_dependencies <- function(expr){
           setdiff(analyze_readd(expr), drake_fn_patterns)
         )
       }
-      lapply(
-        X = expr,
-        FUN = walk,
-        knitr_input = is_knitr_input_call(expr),
-        file_input = is_file_input_call(expr),
-        file_output = is_file_output_call(expr)
-      )
+      if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
+        results$namespaced <<- base::union(
+          results$namespaced,
+          setdiff(wide_deparse(expr), drake_fn_patterns)
+        )
+      } else {
+        lapply(
+          X = expr,
+          FUN = walk,
+          knitr_input = is_knitr_input_call(expr),
+          file_input = is_file_input_call(expr),
+          file_output = is_file_output_call(expr)
+        )
+      }
     }
   }
   # Actually walk the expression.
