@@ -24,11 +24,11 @@ test_with_dir(
   expect_equal(sort(deps(f)), sort(c("g", "saveRDS")))
   my_plan <- drake_plan(
     x = 1 + some_object,
-    my_target = x + readRDS("tracked_input_file.rds"),
+    my_target = x + readRDS(file_input(tracked_input_file.rds)),
     return_value = f(x, y, g(z + w)))
   expect_equal(deps(my_plan$command[1]), "some_object")
   expect_equal(sort(deps(my_plan$command[2])),
-    sort(c("'tracked_input_file.rds'", "readRDS", "x")))
+    sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))
   expect_equal(sort(deps(my_plan$command[3])), sort(c("f", "g", "w",
     "x", "y", "z")))
 })
@@ -37,14 +37,14 @@ test_with_dir("tracked() works", {
   config <- dbug()
   x <- sort(
     tracked(plan = config$plan, envir = config$envir, verbose = FALSE))
-  y <- sort(c("'intermediatefile.rds'",
+  y <- sort(c("\"intermediatefile.rds\"",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a", "saveRDS", "'input.rds'", "readRDS"))
+    "c", "b", "a", "saveRDS", "\"input.rds\"", "readRDS"))
   expect_equal(x, y)
   x <- sort(tracked(plan = config$plan, targets = "myinput",
     envir = config$envir, verbose = FALSE))
-  y <- sort(c("myinput", "'input.rds'", "readRDS"))
+  y <- sort(c("myinput", "\"input.rds\"", "readRDS"))
   expect_equal(x, y)
 })
 

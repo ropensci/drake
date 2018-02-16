@@ -56,7 +56,7 @@
 #' }
 deps <- function(x){
   if (is.function(x)){
-    out <- function_dependencies(x)
+    out <- code_dependencies(x)
   } else if (file.exists(drake_unquote(x))){
     out <- knitr_deps(drake_unquote(x))
   } else if (is.character(x)){
@@ -236,14 +236,6 @@ unwrap_function <- function(funct){
   funct
 }
 
-function_dependencies <- function(funct){
-  funct <- unwrap_function(funct)
-  if (typeof(funct) != "closure"){
-    funct <- function(){} # nolint: curly braces are necessary
-  }
-  code_dependencies(funct)
-}
-
 ##############################
 ### NEW FILE DETECTION API ###
 ### AND CODE ANALYSIS      ###
@@ -311,6 +303,10 @@ code_dependencies <- function(expr){
     if (!length(expr)){
       return()
     } else if (is.function(expr)) {
+      expr <- unwrap_function(expr)
+      if (typeof(expr) != "closure"){
+        expr <- function(){} # nolint: curly braces are necessary
+      }
       walk(
         body(expr),
         knitr_input = knitr_input,
@@ -367,7 +363,6 @@ code_dependencies <- function(expr){
   }
   # Actually walk the expression.
   walk(expr)
-
   # Filter out useless globals.
   if (length(results$globals)){
     results$globals <- intersect(results$globals, find_globals(expr))
@@ -377,6 +372,7 @@ code_dependencies <- function(expr){
 
 find_globals <- function(expr){
   if(is.function(expr)){
+    expr <- unwrap_function(expr)
     formals <- names(formals(expr))
     expr <- body(expr)
   } else {
