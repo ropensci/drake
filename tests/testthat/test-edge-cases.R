@@ -62,7 +62,7 @@ test_with_dir("target conflicts with previous import", {
     command = "1+1"))
   config$targets <- config$plan$target
   testrun(config)
-  expect_equal(justbuilt(config), sort(c("'intermediatefile.rds'",
+  expect_equal(justbuilt(config), sort(c("\"intermediatefile.rds\"",
     "combined", "f", "final", "yourinput")))
 })
 
