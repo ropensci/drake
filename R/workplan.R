@@ -10,14 +10,10 @@
 #' Targets are the objects and files that drake generates,
 #' and commands are the pieces of R code that produce them.
 #'
-#' For file inputs and targets, drake uses single quotes.
-#' Double quotes are reserved for ordinary strings.
-#' The distinction is important because drake thinks about
-#' how files, objects, targets, etc. depend on each other.
-#' Quotes in the `list` argument are left alone,
-#' but R messes with quotes when it parses the free-form
-#' arguments in `...`, so use the `strings_in_dots`
-#' argument to control the quoting in `...`.
+#' To use custom files in your workflow plan,
+#' use the [file_input()], [knitr_input()], and
+#' [file_output()] functions in your commands.
+#' the examples in this help file provide some guidance.
 #' @export
 #' @return A data frame of targets and commands.
 #' @param ... A collection of symbols/targets
