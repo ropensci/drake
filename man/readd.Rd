@@ -50,7 +50,7 @@ readd(reg1) # Return imported object 'reg1' from the cache.
 readd(small) # Return targets 'small' from the cache.
 readd("large", character_only = TRUE) # Return 'large' from the cache.
 # For external files, only the fingerprint/hash is stored.
-readd("'report.md'")
+readd("\\"report.md\\"")
 })
 }
 }

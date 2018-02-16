@@ -77,8 +77,8 @@ mtcars_plan <- drake_plan(
 )
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
-readd(value)
-# You can use knitr inputs too.
+head(readd(value))
+# You can use knitr inputs too. See the top command below.
 load_basic_example()
 head(my_plan)
 # The `knitr_input(report.Rmd)` tells `drake` to dive into the active
@@ -87,6 +87,7 @@ head(my_plan)
 # loaded into the report itself:
 deps("report.Rmd")
 # Are you a fan of tidy evaluation?
+my_variable <- 1
 drake_plan(
   a = !!my_variable,
   b = !!my_variable + 1,

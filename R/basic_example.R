@@ -167,12 +167,13 @@ load_basic_example <- function(
   # drake cannot track entire directories (folders).
   report <- data.frame(
     target = "",
-    command = "knit(file_input(report.Rmd), file_output(report.md), quiet = TRUE)" # nolint
+    command = "knit(file_input(report.Rmd), file_output(report.md), quiet = TRUE)", # nolint  
+    stringsAsFactors = FALSE
   )
 
   # Row order doesn't matter in the drake_plan my_plan.
-  envir$my_plan <- rbind(report, datasets,
-                         analyses, results)
+  envir$my_plan <- rbind(report, datasets, analyses, results) %>%
+    tibble::as_tibble()
 
   # Write the R Markdown source for a dynamic knitr report
   report <- system.file(
