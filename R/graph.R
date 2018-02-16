@@ -100,9 +100,6 @@ imports_edges <- function(name, value){
 }
 
 code_deps_to_edges <- function(target, deps){
-  if (!length(unlist(deps))){
-    return()
-  }
   inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_output")])
   edges <- NULL
   if (length(inputs)){

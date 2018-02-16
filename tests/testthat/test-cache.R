@@ -1,7 +1,7 @@
 drake_context("cache")
 
 test_with_dir("dependency profile", {
-  config <- make(drake_plan(a = 1))
+  config <- make(drake_plan(a = 1), session_info = FALSE)
   expect_error(dependency_profile(
     target = "notfound", config = config))
   expect_true(is.list(dependency_profile(

@@ -40,6 +40,9 @@ merge_lists <- function(x, y){
 }
 
 clean_dependency_list <- function(x){
+  if (!length(x)){
+    return(character(0))
+  }
   x %>%
     unlist() %>%
     unname() %>%
