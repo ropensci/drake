@@ -166,7 +166,7 @@ load_basic_example <- function(
   # works inside the drake_plan my_plan data frame.  WARNING:
   # drake cannot track entire directories (folders).
   report <- drake_plan(
-    file_path = knit(
+    knit(
       file_input(report.Rmd),
       file_output(report.md),
       quiet = TRUE

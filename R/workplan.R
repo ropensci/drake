@@ -116,6 +116,7 @@ drake_plan <- function(
   }
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
+  commands_dots <- complete_target_names(commands_dots)
   commands <- c(commands_dots, list)
   targets <- names(commands)
   commands <- as.character(commands)
@@ -141,11 +142,45 @@ drake_plan <- function(
   sanitize_plan(plan)
 }
 
+complete_target_names <- function(commands_list){
+  if (is.null(names(commands_list))){
+    names(commands_list) <- paste0("drake_target_", seq_along(commands_list))
+  }
+  index <- !nchar(names(commands_list))
+  names(commands_list)[index] <- paste0("drake_target_", seq_len(sum(index)))
+  commands_list
+}
+
 drake_plan_override <- function(target, field, config){
   in_plan <- config$plan[[field]]
   if (is.null(in_plan)){
     return(config[[field]])
   } else {
     return(in_plan[config$plan$target == target])
+  }
+}
+
+file_outputs_to_targets <- function(plan){
+  index <- grepl("file_output", plan$command)
+  plan$target[index] <- vapply(
+    plan$command[index],
+    single_file_output,
+    character(1)
+  )
+  plan
+}
+
+single_file_output <- function(command){
+  file_output <- command_dependencies(command)$file_output
+  stopifnot(length(file_output) > 0)
+  if (length(file_output) > 1){
+    warning(
+      "Multiple file outputs found for ", target, ".",
+      "Choosing ", file_output[1], " as the target name.",
+      call. = FALSE
+    )
+    file_output[1]
+  } else {
+    file_output
   }
 }
