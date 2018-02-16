@@ -313,7 +313,7 @@ code_dependencies <- function(expr){
         file_input = file_input,
         file_output = file_output
       )
-    } else if (is.name(expr)) {
+    } else if (is.name(expr) || is.atomic(expr)) {
       if (knitr_input){
         file <- declare_file(expr)
         results$knitr_input <<- base::union(results$knitr_input,file)
