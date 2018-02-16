@@ -97,10 +97,7 @@ drake_plan <- function(
   }
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
-  commands_dots <- complete_target_names(commands_dots)
   commands <- c(commands_dots, list)
-  targets <- names(commands)
-  commands <- as.character(commands)
   if (!length(commands)){
     return(
       tibble(
@@ -109,6 +106,10 @@ drake_plan <- function(
       )
     )
   }
+  commands <- complete_target_names(commands)
+  targets <- names(commands)
+  commands <- as.character(commands)
+
   plan <- tibble(
     target = targets,
     command = commands

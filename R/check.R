@@ -96,30 +96,14 @@ warn_bad_symbols <- function(x) {
 }
 
 check_strings <- function(plan, jobs) {
-  x <- stri_extract_all_regex(plan$command, "(?<=\").*?(?=\")")
-  names(x) <- plan$target
-  x <- x[!is.na(x)]
-  if (!length(x))
-    return()
-  x <- lightly_parallelize(
-    X = x,
-    FUN = function(y) {
-      if (length(y) > 2)
-        return(y[seq(from = 1, to = length(y), by = 2)])
-      else
-        return(y)
-    },
-    jobs = jobs
-  )
-  message("Double-quoted strings were found in plan$command.\n",
-    "Should these be single-quoted instead?\n",
-    "Remember: single-quoted strings are file target dependencies\n",
-    "and double-quoted strings are just ordinary strings.")
-  for (target in seq_len(length(x))) {
-    message("\ntarget: ", names(x)[target])
-    message("strings in command:\n",
-      multiline_message(drake::drake_quotes(x[[target]],
-      single = FALSE)), sep = "")
+  if (any(grepl("'", plan$target)) || any(grepl("'", plan$command))){
+    warning(
+      "Single-quoted strings found in workflow plan. ",
+      "Single-quotes used to be the way to specify file targets/imports, ",
+      "but the interface is changing. Use file_input(), file_output(), and ",
+      "knitr_input() in your commands. See `?drake_plan` for examples.",
+      call. = FALSE
+    )
   }
 }
 

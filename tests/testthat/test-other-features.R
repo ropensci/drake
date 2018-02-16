@@ -201,7 +201,7 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
 
 test_with_dir("targets can be partially specified", {
   config <- dbug()
-  config$targets <- "'intermediatefile.rds'"
+  config$targets <- "\"intermediatefile.rds\""
   testrun(config)
   expect_true(file.exists("intermediatefile.rds"))
   expect_error(readd(final, search = FALSE))
@@ -228,7 +228,7 @@ test_with_dir("unique_random_string() works", {
   for (i in 1:10){
     expect_equal(
       unique_random_string(exclude = exclude, n = 1),
-      "0"
+      "X0"
     )
   }
 })

@@ -22,7 +22,7 @@ test_with_dir("triggers work as expected", {
   for (trigger in triggers_with_command()){
     con$plan$trigger[con$plan$target == "combined"] <- trigger
     expect_equal(sort(outdated(config = con)),
-      sort(c("combined", "final", "'intermediatefile.rds'")))
+      sort(c("combined", "final", "\"intermediatefile.rds\"")))
   }
   con$plan$command[con$plan$target == "combined"] <- cmd
 
@@ -34,9 +34,9 @@ test_with_dir("triggers work as expected", {
       expect_equal(outdated(config = con), character(0))
     }
     for (trigger in triggers_with_file()){
-      con$plan$trigger[con$plan$target == "'intermediatefile.rds'"] <- trigger
+      con$plan$trigger[con$plan$target == "\"intermediatefile.rds\""] <- trigger
       expect_equal(sort(outdated(config = con)),
-        sort(c("final", "'intermediatefile.rds'")))
+        sort(c("final", "\"intermediatefile.rds\"")))
     }
   }
   check_file(con)

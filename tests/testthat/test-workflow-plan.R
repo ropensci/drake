@@ -23,6 +23,7 @@ test_with_dir("plan set 1", {
       command = c("c", "'c'",
       "d", "readRDS('e')"))
     expect_equal(x, y)
+    expect_warning(check_plan(x))
   }
 })
 
@@ -53,22 +54,6 @@ test_with_dir("plan set 3", {
     target = drake::drake_quotes(letters[1:4], single = TRUE),
     command = c("c", "\"c\"", "d", "readRDS('e')"))
   expect_equal(x, y)
-  }
-})
-
-test_with_dir("plan set 4", {
-  for (tidy_evaluation in c(TRUE, FALSE)){
-    x <- drake_plan(
-      a = c,
-      b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
-      strings_in_dots = "filenames", file_targets = TRUE,
-      tidy_evaluation = tidy_evaluation)
-    y <- tibble(
-      target = drake::drake_quotes(letters[1:4], single = TRUE),
-      command = c("c", "'c'", "d", "readRDS('e')"))
-    expect_equal(x, y)
-    expect_warning(check_plan(x, verbose = FALSE))
   }
 })
 
@@ -119,7 +104,7 @@ test_with_dir("check_plan() finds bad symbols", {
   x <- tibble(
     target = c("\"targs\""),
     command = 1)
-  expect_warning(o <- check_plan(x, verbose = FALSE))
+  expect_silent(o <- check_plan(x, verbose = FALSE))
   x <- tibble(
     target = c("gotcha", "b", "targs"),
     command = 1)
