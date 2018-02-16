@@ -96,7 +96,6 @@ drake_plan <- function(
   } else {
     dots <- match.call(expand.dots = FALSE)$...
   }
-
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)
@@ -111,7 +110,6 @@ drake_plan <- function(
   commands <- complete_target_names(commands)
   targets <- names(commands)
   commands <- as.character(commands)
-
   plan <- tibble(
     target = targets,
     command = commands
@@ -137,8 +135,9 @@ drake_plan <- function(
 }
 
 complete_target_names <- function(commands_list){
-  if (is.null(names(commands_list))){
-    names(commands_list) <- paste0("drake_target_", seq_along(commands_list))
+  if (!length(names(commands_list))){
+    # Should not actually happen, but it's better to have anyway.
+    names(commands_list) <- paste0("drake_target_", seq_along(commands_list)) # nocov # nolint
   }
   index <- !nchar(names(commands_list))
   names(commands_list)[index] <- paste0("drake_target_", seq_len(sum(index)))

@@ -17,6 +17,10 @@ test_with_dir("edge cases for plans", {
       command = c("a", "b")
     )
   )
+  expect_equal(
+    drake_plan(list = c("a", "b")),
+    drake_plan(a, b)
+  )
   # incomplete target names
   expect_equal(
     drake_plan(a = 1, b),
