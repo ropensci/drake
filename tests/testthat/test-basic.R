@@ -42,13 +42,13 @@ test_with_dir("basic example works", {
   config$targets <- config$plan$target
   con <- testrun(config)
   jb <- justbuilt(con)
-  expect_true("'report.md'" %in% jb)
+  expect_true("\"report.md\"" %in% jb)
   expect_false(any(dats %in% jb))
 
   # Check that file is not rehashed.
   # Code coverage should cover every line of file_hash().
   expect_true(is.character(file_hash(
-    target = "'report.Rmd'", config = con, size_cutoff = -1)))
+    target = "\"report.Rmd\"", config = con, size_cutoff = -1)))
 
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
@@ -72,7 +72,7 @@ test_with_dir("basic example works", {
     verbose = FALSE)
   expect_equal(
     sort(outdated(config = config)),
-    sort(c("'report.md'", "coef_regression2_large",
+    sort(c("\"report.md\"", "coef_regression2_large",
       "coef_regression2_small", "regression2_large", "regression2_small",
       "summ_regression2_large", "summ_regression2_small")))
   expect_equal(max_useful_jobs(config = config), 4)
@@ -95,8 +95,8 @@ test_with_dir("basic example works", {
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.
   x <- drake_plan(
-    a = knitr::knit('report.Rmd'), # nolint
-    b = knitr::knit('report.md'), # nolint
+    a = knitr::knit(knitr_input(report.Rmd)), # nolint
+    b = knitr::knit(knitr_input(report.md)), # nolint
     c = knitr::knit("nonfile"),
     d = rmarkdown::render('report.Rmd'), # nolint
     e = rmarkdown::render('report.md'), # nolint

@@ -86,11 +86,10 @@
 drake_plan <- function(
   ...,
   list = character(0),
-  file_targets = FALSE,
-  strings_in_dots = c("filenames", "literals"),
+  file_targets = NULL,
+  strings_in_dots = NULL,
   tidy_evaluation = TRUE
 ){
-  strings_in_dots <- match.arg(strings_in_dots)
   if (tidy_evaluation){
     dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
   } else {
