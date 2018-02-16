@@ -191,9 +191,11 @@ command_dependencies <- function(command){
   deps <- code_dependencies(parse(text = command))
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
+
   files <- extract_filenames(command)
   if (length(files)){
-    files <- drake_unquote(files)
+    files <- drake_unquote(files) %>%
+      drake_quotes(single = FALSE)
     deps$file_input <- c(deps$file_input, files)
   }
   deps$loadd <- c(deps$loadd, knitr_deps(find_knitr_doc(command))) %>%

@@ -50,8 +50,8 @@ test_with_dir("plan set 3", {
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "literals", file_targets = TRUE,
     tidy_evaluation = tidy_evaluation))
-  y <- tibble(
-    target = drake::drake_quotes(letters[1:4], single = TRUE),
+  y <- tibble::tibble(
+    target = drake::drake_quotes(letters[1:4], single = FALSE),
     command = c("c", "\"c\"", "d", "readRDS('e')"))
   expect_equal(x, y)
   }
@@ -142,14 +142,16 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 
 test_with_dir("file names with weird characters do not get mangled", {
   out <- tibble(
-    target = c("'is:a:file'", "not:a:file"),
+    target = c("\"is:a:file\"", "not:a:file"),
     command = as.character(1:2)
   )
   out2 <- expect_warning(sanitize_plan(out))
   out3 <- tibble(
-    target = c("'is:a:file'", "not_a_file"),
+    target = c("\"is:a:file\"", "not_a_file"),
     command = as.character(1:2)
   )
+  expect_equal(out[1, ], out2[1, ])
+  expect_false(identical(out[2, ], out2[2, ]))
   expect_equal(out2, out3)
 })
 

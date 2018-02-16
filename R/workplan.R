@@ -160,6 +160,9 @@ file_outputs_to_targets <- function(plan){
     single_file_output,
     character(1)
   )
+  plan$target[is_file(plan$target)] <-
+    plan$target[is_file(plan$target)] %>%
+    gsub(pattern = "^'|'$", replacement = "\"")
   plan
 }
 
@@ -168,7 +171,7 @@ single_file_output <- function(command){
   stopifnot(length(file_output) > 0)
   if (length(file_output) > 1){
     warning(
-      "Multiple file outputs found for ", target, ".",
+      "Multiple file outputs found for command `", command, "`. ",
       "Choosing ", file_output[1], " as the target name.",
       call. = FALSE
     )
