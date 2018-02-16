@@ -28,7 +28,7 @@ dbug_envir <- function(envir) {
 dbug_plan <- function() {
   drake_plan(
     saveRDS(combined, file_output(intermediatefile.rds)),
-    yourinput = f(1+1),
+    yourinput = f(1 + 1),
     nextone = myinput + g(7),
     combined = nextone + yourinput,
     myinput = readRDS(file_input(input.rds)),

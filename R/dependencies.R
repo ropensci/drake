@@ -316,7 +316,7 @@ code_dependencies <- function(expr){
     } else if (is.name(expr) || is.atomic(expr)) {
       if (knitr_input){
         file <- declare_file(expr)
-        results$knitr_input <<- base::union(results$knitr_input,file)
+        results$knitr_input <<- base::union(results$knitr_input, file)
         results <<- merge_lists(x = results, y = knitr_deps_list(file))
       } else if (file_input){
         results$file_input <<- base::union(
@@ -372,7 +372,7 @@ code_dependencies <- function(expr){
 }
 
 find_globals <- function(expr){
-  if(is.function(expr)){
+  if (is.function(expr)){
     expr <- unwrap_function(expr)
     formals <- names(formals(expr))
     expr <- body(expr)
