@@ -115,10 +115,20 @@ drake_plan <- function(
     command = commands
   )
   from_dots <- plan$target %in% names(commands_dots)
-  if (file_targets){
+  if (length(file_targets) || length(strings_in_dots)){
+    warning(
+      "The `file_targets` and `strings_in_target` are deprecated. ",
+      "See the help file examples of `drake_plan()` to see the new ",
+      "way to handle file inputs/targets. ",
+      "Use the file_input(), file_output(), and knitr_input() functions ",
+      "in your commands. ",
+      "Worry about single-quotes no more!"
+    )
+  }
+  if (length(file_targets) && file_targets){
     plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
-  if (strings_in_dots == "filenames"){
+  if (length(strings_in_dots) && strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
