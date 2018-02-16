@@ -96,6 +96,7 @@ drake_plan <- function(
   } else {
     dots <- match.call(expand.dots = FALSE)$...
   }
+
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)

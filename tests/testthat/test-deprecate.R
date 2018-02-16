@@ -104,7 +104,7 @@ test_with_dir("old file API", {
     file_targets = TRUE
   ))
   y <- drake_plan(
-    contents = read.csv('file.csv'))
+    contents = read.csv('file.csv')) # nolint
   z <- rbind(x, y)
   make(z, session_info = FALSE) -> config
   expect_equal(
