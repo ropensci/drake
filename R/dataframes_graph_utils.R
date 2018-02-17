@@ -300,8 +300,14 @@ style_nodes <- function(config) {
 }
 
 target_hover_text <- function(targets, plan) {
-  plan[plan$target %in% targets, "command"] %>%
-    wrap_text %>% crop_text(width = hover_text_width)
+  vapply(
+    X = plan$command[plan$target %in% targets],
+    FUN = function(text){
+      crop_text(wrap_text(text), width = hover_text_width)
+    },
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
 }
 
 trim_node_categories <- function(config){

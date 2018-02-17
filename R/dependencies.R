@@ -245,11 +245,13 @@ unwrap_function <- function(funct){
 
 #' @title Declare the file inputs of a workflow plan command.
 #' @description Use this function to help write the commands
-#'   in your workflow plan data frame. Treat the output as a character vector.
+#'   in your workflow plan data frame. See the examples
+#'   for a full explanation.
 #' @export
-#' @seealso file_output knitr_input
-#' @return A character vector of declared files.
-#' @param ... Symbols or character vectors denoting file inputs.
+#' @seealso `file_output` `knitr_input`
+#' @return A character vector of declared input file paths.
+#' @param ... Character strings. File paths of input files
+#'   to a command in your workflow plan data frame.
 #' @export
 #' @examples
 #' \dontrun{
@@ -280,18 +282,21 @@ unwrap_function <- function(funct){
 #' })
 #' }
 file_input <- function(...){
-  as.list(match.call(expand.dots = FALSE)$...) %>%
-    lapply(FUN = wide_deparse) %>%
-    drake_unquote
+  as.character(unlist(list(...)))
 }
 
 #' @title Declare the file outputs of a workflow plan command.
 #' @description Use this function to help write the commands
-#'   in your workflow plan data frame.
+#'   in your workflow plan data frame. You can only specify
+#'   one file output per command. See the examples
+#'   for a full explanation.
 #' @export
 #' @seealso file_input knitr_input
-#' @return A character vector of declared files.
-#' @param ... Symbols or character vectors denoting file outputs.
+#' @return A character string, the file path of the file output.
+#' @param path Character string of length 1. File path
+#'   of the file output of a command in your
+#'   workflow plan data frame.
+#' @param ... Do not use. For informative input handling only.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
@@ -320,17 +325,29 @@ file_input <- function(...){
 #' # in your report.
 #' })
 #' }
-file_output <- file_input
+file_output <- function(path, ...){
+  path <- c(path, as.character(unlist(list(...))))
+  if (length(path) != 1){
+    warning(
+      "In file_output(), the `path` argument must ",
+      "have length 1. Supplied length = ", length(path), ". ",
+      "using first file output: ", path[1], ".",
+      call. = FALSE
+    )
+  }
+  as.character(path[1])
+}
 
 #' @title Declare the `knitr`/`rmarkdown` source files
 #'   of a workflow plan command.
 #' @description Use this function to help write the commands
-#'   in your workflow plan data frame.
+#'   in your workflow plan data frame. See the examples
+#'   for a full explanation.
 #' @export
 #' @seealso file_input file_output
-#' @return A character vector of declared files.
-#' @param ... Symbols or character vectors naming source files
-#'   for `knitr`/`rmarkdown` dynamic reports.
+#' @return A character vector of declared input file paths.
+#' @param ... Character strings. File paths of `knitr`/`rmarkdown`
+#'   source files suplied to a command in your workflow plan data frame.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {

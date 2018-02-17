@@ -1,5 +1,15 @@
 drake_context("workflow plan")
 
+test_with_dir("File functions handle input", {
+  expect_equal(
+    file_input(1, "x", "y"), c("1", "x", "y")
+  )
+  expect_equal(
+    knitr_input(1, "x", "y"), c("1", "x", "y")
+  )
+  expect_warning(expect_equal(file_output(1, "x", "y"), "1"))
+})
+
 test_with_dir("edge cases for plans", {
   # empty plan
   expect_equal(

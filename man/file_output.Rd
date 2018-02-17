@@ -4,17 +4,23 @@
 \alias{file_output}
 \title{Declare the file outputs of a workflow plan command.}
 \usage{
-file_output(...)
+file_output(path, ...)
 }
 \arguments{
-\item{...}{Symbols or character vectors denoting file outputs.}
+\item{path}{Character string of length 1. File path
+of the file output of a command in your
+workflow plan data frame.}
+
+\item{...}{Do not use. For informative input handling only.}
 }
 \value{
-A character vector of declared files.
+A character string, the file path of the file output.
 }
 \description{
 Use this function to help write the commands
-in your workflow plan data frame.
+in your workflow plan data frame. You can only specify
+one file output per command. See the examples
+for a full explanation.
 }
 \examples{
 \dontrun{

@@ -8,15 +8,16 @@ of a workflow plan command.}
 knitr_input(...)
 }
 \arguments{
-\item{...}{Symbols or character vectors naming source files
-for \code{knitr}/\code{rmarkdown} dynamic reports.}
+\item{...}{Character strings. File paths of \code{knitr}/\code{rmarkdown}
+source files suplied to a command in your workflow plan data frame.}
 }
 \value{
-A character vector of declared files.
+A character vector of declared input file paths.
 }
 \description{
 Use this function to help write the commands
-in your workflow plan data frame.
+in your workflow plan data frame. See the examples
+for a full explanation.
 }
 \examples{
 \dontrun{
