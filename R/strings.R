@@ -88,7 +88,7 @@ drake_strings <- function(...){
 #'   # Wraps the string in single quotes.
 #'   as_drake_filename("my_file.rds") # "'my_file.rds'"
 as_drake_filename <- function(x){
-  drake::drake_quotes(x, single = TRUE)
+  drake::drake_quotes(x, single = FALSE)
 }
 
 wide_deparse <- function(x){
