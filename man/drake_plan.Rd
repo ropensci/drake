@@ -72,8 +72,8 @@ the examples in this help file provide some guidance.
 test_with_dir("Contain side effects", {
 # Create workflow plan data frames.
 mtcars_plan <- drake_plan(
-  write.csv(mtcars[, c("mpg", "cyl")], file_output(mtcars.csv)),
-  value = read.csv(file_input(mtcars.csv))
+  write.csv(mtcars[, c("mpg", "cyl")], file_output("mtcars.csv")),
+  value = read.csv(file_input("mtcars.csv"))
 )
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -81,10 +81,10 @@ head(readd(value))
 # You can use knitr inputs too. See the top command below.
 load_basic_example()
 head(my_plan)
-# The `knitr_input(report.Rmd)` tells `drake` to dive into the active
-# code chunks to find dependencies. In other words, your
-# `report.md` file will depend on these targets
-# loaded into the report itself:
+# The `knitr_input("report.Rmd")` tells `drake` to dive into the active
+# code chunks to find dependencies.
+# There, `drake` sees that `small`, `large`, and `coef_regression2_small`
+# are loaded in with calls to `loadd()` and `readd()`.
 deps("report.Rmd")
 # Are you a fan of tidy evaluation?
 my_variable <- 1

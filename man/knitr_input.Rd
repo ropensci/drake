@@ -9,9 +9,7 @@ knitr_input(...)
 }
 \arguments{
 \item{...}{Symbols or character vectors naming source files
-for \code{knitr}/\code{rmarkdown} dynamic reports.
-knitr_input(my_report.Rmd)
-knitr_input(report1.Rmd, 'report2.Rmd', "report3.Rmd")}
+for \code{knitr}/\code{rmarkdown} dynamic reports.}
 }
 \value{
 A character vector of declared files.
@@ -19,6 +17,30 @@ A character vector of declared files.
 \description{
 Use this function to help write the commands
 in your workflow plan data frame.
+}
+\examples{
+#' \dontrun{
+test_with_dir("Contain side effects", {
+# `knitr_input()` is like `file_input()`
+# except that it analyzes active code chunks in your `knitr`
+# source file and detects non-file dependencies.
+# That way, updates to the right dependencies trigger rebuilds
+# in your report.
+# The basic example (`drake_example("basic")`)
+# already has a demonstration
+load_basic_example()
+config <- make(my_plan)
+vis_drake_graph(config)
+# Now how did drake magically know that
+# `small`, `large`, and `coef_regression2_small` were
+# dependencies of the output file `report.md`?
+# because the command in the workflow plan had
+# `knitr_input("report.Rmd")` in it, so drake knew
+# to analyze the active code chunks. There, it spotted
+# where `small`, `large`, and `coef_regression2_small`
+# were read from the cache using calls to `loadd()` and `readd()`.
+})
+}
 }
 \seealso{
 file_input file_output

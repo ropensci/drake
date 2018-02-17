@@ -31,10 +31,10 @@ test_with_dir("edge cases for plans", {
   )
   # too many file outputs
   expect_warning(expect_equal(
-    drake_plan(a = file_output(file1, file2)),
+    drake_plan(a = file_output("file1", "file2")),
     tibble(
       target = c("\"file1\""),
-      command = "file_output(file1, file2)"
+      command = "file_output('file1', 'file2')"
     )
   ))
 })

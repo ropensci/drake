@@ -159,16 +159,9 @@ load_basic_example <- function(
   # skip 'gather' (drake_plan my_plan is more readable)
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
 
-  # External file targets and dependencies should be
-  # single-quoted.  Use double quotes to remove any special
-  # meaning from character strings.  Single quotes inside
-  # imported functions are ignored, so this mechanism only
-  # works inside the drake_plan my_plan data frame.  WARNING:
-  # drake cannot track entire directories (folders).
-  report <- data.frame(
+  report <- tibble(
     target = "",
-    command = "knit(file_input(report.Rmd), file_output(report.md), quiet = TRUE)", # nolint  
-    stringsAsFactors = FALSE
+    command = 'knit(file_input("report.Rmd"), file_output("report.md"), quiet = TRUE)', # nolint  
   )
 
   # Row order doesn't matter in the drake_plan my_plan.

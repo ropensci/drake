@@ -252,8 +252,33 @@ unwrap_function <- function(funct){
 #' @param ... Symbols or character vectors denoting file inputs.
 #' @export
 #' @examples
-#' file_input(my_file.txt)
-#' file_input(data.csv, 'spreadsheet.xlsx', "serialized.rds")
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # The `file_output()` and `file_input()` functions
+#' # just takes in strings and returns them.
+#' file_output("summaries.txt")
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     write.csv(mtcars, file_output("mtcars.csv")),
+#'     contents = read.csv(file_input("mtcars.csv")),
+#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'   )
+#' )
+#' plan
+#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # and a dependency of `contents`. See for yourself:
+#' config <- make(plan)
+#' file.exists("mtcars.csv")
+#' vis_drake_graph(config)
+#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' })
+#' }
 file_input <- function(...){
   as.list(match.call(expand.dots = FALSE)$...) %>%
     lapply(FUN = wide_deparse) %>%
@@ -267,8 +292,34 @@ file_input <- function(...){
 #' @seealso file_input knitr_input
 #' @return A character vector of declared files.
 #' @param ... Symbols or character vectors denoting file outputs.
-#' file_output(summaries.txt)
-#' file_output(plot.pdf, 'report.ps', "report.html")
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # The `file_output()` and `file_input()` functions
+#' # just takes in strings and returns them.
+#' file_output("summaries.txt")
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     write.csv(mtcars, file_output("mtcars.csv")),
+#'     contents = read.csv(file_input("mtcars.csv")),
+#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'   )
+#' )
+#' plan
+#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # and a dependency of `contents`. See for yourself:
+#' config <- make(plan)
+#' file.exists("mtcars.csv")
+#' vis_drake_graph(config)
+#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' })
+#' }
 file_output <- file_input
 
 #' @title Declare the `knitr`/`rmarkdown` source files
@@ -280,8 +331,29 @@ file_output <- file_input
 #' @return A character vector of declared files.
 #' @param ... Symbols or character vectors naming source files
 #'   for `knitr`/`rmarkdown` dynamic reports.
-#' knitr_input(my_report.Rmd)
-#' knitr_input(report1.Rmd, 'report2.Rmd', "report3.Rmd")
+#' @examples
+#' #' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' # The basic example (`drake_example("basic")`)
+#' # already has a demonstration
+#' load_basic_example()
+#' config <- make(my_plan)
+#' vis_drake_graph(config)
+#' # Now how did drake magically know that
+#' # `small`, `large`, and `coef_regression2_small` were
+#' # dependencies of the output file `report.md`?
+#' # because the command in the workflow plan had
+#' # `knitr_input("report.Rmd")` in it, so drake knew
+#' # to analyze the active code chunks. There, it spotted
+#' # where `small`, `large`, and `coef_regression2_small`
+#' # were read from the cache using calls to `loadd()` and `readd()`.
+#' })
+#' }
 knitr_input <- file_input
 
 code_dependencies <- function(expr){
