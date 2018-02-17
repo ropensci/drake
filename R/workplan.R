@@ -153,30 +153,132 @@ drake_plan_override <- function(target, field, config){
   }
 }
 
-file_outputs_to_targets <- function(plan){
-  index <- grepl("file_output", plan$command)
-  plan$target[index] <- vapply(
-    plan$command[index],
-    single_file_output,
-    character(1)
-  )
-  plan$target[is_file(plan$target)] <-
-    plan$target[is_file(plan$target)] %>%
-    gsub(pattern = "^'|'$", replacement = "\"")
-  plan
+#' @title Declare the file inputs of a workflow plan command.
+#' @description Use this function to help write the commands
+#'   in your workflow plan data frame. See the examples
+#'   for a full explanation.
+#' @export
+#' @seealso `file_output` `knitr_input`
+#' @return A character vector of declared input file paths.
+#' @param ... Character strings. File paths of input files
+#'   to a command in your workflow plan data frame.
+#' @export
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # The `file_output()` and `file_input()` functions
+#' # just takes in strings and returns them.
+#' file_output("summaries.txt")
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     write.csv(mtcars, file_output("mtcars.csv")),
+#'     contents = read.csv(file_input("mtcars.csv")),
+#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'   )
+#' )
+#' plan
+#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # and a dependency of `contents`. See for yourself:
+#' config <- make(plan)
+#' file.exists("mtcars.csv")
+#' vis_drake_graph(config)
+#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' })
+#' }
+file_input <- function(...){
+  as.character(unlist(list(...)))
 }
 
-single_file_output <- function(command){
-  file_output <- command_dependencies(command)$file_output
-  stopifnot(length(file_output) > 0)
-  if (length(file_output) > 1){
+#' @title Declare the file outputs of a workflow plan command.
+#' @description Use this function to help write the commands
+#'   in your workflow plan data frame. You can only specify
+#'   one file output per command. See the examples
+#'   for a full explanation.
+#' @export
+#' @seealso file_input knitr_input
+#' @return A character string, the file path of the file output.
+#' @param path Character string of length 1. File path
+#'   of the file output of a command in your
+#'   workflow plan data frame.
+#' @param ... Do not use. For informative input handling only.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # The `file_output()` and `file_input()` functions
+#' # just takes in strings and returns them.
+#' file_output("summaries.txt")
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     write.csv(mtcars, file_output("mtcars.csv")),
+#'     contents = read.csv(file_input("mtcars.csv")),
+#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'   )
+#' )
+#' plan
+#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # and a dependency of `contents`. See for yourself:
+#' config <- make(plan)
+#' file.exists("mtcars.csv")
+#' vis_drake_graph(config)
+#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' })
+#' }
+file_output <- function(path, ...){
+  path <- c(path, as.character(unlist(list(...))))
+  if (length(path) != 1){
     warning(
-      "Multiple file outputs found for command `", command, "`. ",
-      "Choosing ", file_output[1], " as the target name.",
+      "In file_output(), the `path` argument must ",
+      "have length 1. Supplied length = ", length(path), ". ",
+      "using first file output: ", path[1], ".",
       call. = FALSE
     )
-    file_output[1]
-  } else {
-    file_output
   }
+  as.character(path[1])
 }
+
+#' @title Declare the `knitr`/`rmarkdown` source files
+#'   of a workflow plan command.
+#' @description Use this function to help write the commands
+#'   in your workflow plan data frame. See the examples
+#'   for a full explanation.
+#' @export
+#' @seealso file_input file_output
+#' @return A character vector of declared input file paths.
+#' @param ... Character strings. File paths of `knitr`/`rmarkdown`
+#'   source files suplied to a command in your workflow plan data frame.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' # The basic example (`drake_example("basic")`)
+#' # already has a demonstration
+#' load_basic_example()
+#' config <- make(my_plan)
+#' vis_drake_graph(config)
+#' # Now how did drake magically know that
+#' # `small`, `large`, and `coef_regression2_small` were
+#' # dependencies of the output file `report.md`?
+#' # because the command in the workflow plan had
+#' # `knitr_input("report.Rmd")` in it, so drake knew
+#' # to analyze the active code chunks. There, it spotted
+#' # where `small`, `large`, and `coef_regression2_small`
+#' # were read from the cache using calls to `loadd()` and `readd()`.
+#' })
+#' }
+knitr_input <- file_input
