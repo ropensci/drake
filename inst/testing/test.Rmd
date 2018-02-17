@@ -49,10 +49,10 @@ g <- function(){
 function(){
   f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
 }
-readd("'file1'")
-readd(target = "'file2'")
-readd(target = "'file3'", character_only = TRUE)
-readd(target = "'file4'", character_only = FALSE)
-loadd("'file5'")
-loadd(list = "'file6'")
+readd("\"file1\"")
+readd(target = "\"file2\"")
+readd(target = "\"file3\"", character_only = TRUE)
+readd(target = "\"file4\"", character_only = FALSE)
+loadd("\"file5\"")
+loadd(list = "\"file6\"")
 ```
