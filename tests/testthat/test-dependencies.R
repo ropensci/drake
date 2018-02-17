@@ -24,13 +24,18 @@ test_with_dir(
   expect_equal(sort(deps(f)), sort(c("g", "saveRDS")))
   my_plan <- drake_plan(
     x = 1 + some_object,
-    my_target = x + readRDS(file_input(tracked_input_file.rds)),
-    return_value = f(x, y, g(z + w)))
+    my_target = x + readRDS(file_input("tracked_input_file.rds")),
+    return_value = f(x, y, g(z + w)),
+    botched = read.csv(file_input(nothing)),
+    meta = read.table(file_input("file_input")))
   expect_equal(deps(my_plan$command[1]), "some_object")
   expect_equal(sort(deps(my_plan$command[2])),
     sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))
   expect_equal(sort(deps(my_plan$command[3])), sort(c("f", "g", "w",
     "x", "y", "z")))
+  expect_equal(sort(deps(my_plan$command[4])), sort(c("read.csv")))
+  expect_equal(sort(deps(my_plan$command[5])),
+    sort(c("read.table", "\"file_input\"")))
 })
 
 test_with_dir("tracked() works", {

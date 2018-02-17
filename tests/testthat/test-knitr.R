@@ -37,7 +37,7 @@ test_with_dir("knitr_deps() works", {
   expect_equal(sort(x), sort(real_deps))
   expect_equal(sort(y), sort(c(real_deps, "knit", "\"report.Rmd\"")))
   expect_equal(sort(z), sort(c(real_deps, "render", "\"report.Rmd\"")))
-  expect_equal(sort(w), sort(c(real_deps, "funct", "\"report.Rmd\"")))
+  expect_equal(sort(w), sort(c("funct")))
 })
 
 test_with_dir("find_knitr_doc() works", {

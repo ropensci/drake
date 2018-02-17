@@ -196,9 +196,11 @@ command_dependencies <- function(command){
   if (length(files)){
     files <- drake_unquote(files) %>%
       drake_quotes(single = FALSE)
-    deps$file_input <- c(deps$file_input, files)
+    deps$file_input <- base::union(deps$file_input, files)
   }
-  deps$loadd <- c(deps$loadd, knitr_deps(find_knitr_doc(command))) %>%
+  deps$loadd <- base::union(
+    deps$loadd, knitr_deps(find_knitr_doc(command))
+  ) %>%
     unique
   deps
 }
@@ -482,14 +484,10 @@ find_globals <- function(expr){
 }
 
 declare_file <- function(expr){
-  out <- wide_deparse(expr) %>%
-    drake_unquote %>%
-    setdiff(y = drake_fn_patterns)
-  if (length(out)){
-    drake_quotes(out, single = FALSE)
-  } else {
-    character(0)
+  if (is.symbol(expr)){
+    return(character(0))
   }
+  drake_quotes(as.character(expr), single = FALSE)
 }
 
 analyze_loadd <- function(expr){
