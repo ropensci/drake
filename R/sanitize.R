@@ -112,4 +112,3 @@ single_file_output <- function(command){
     file_output
   }
 }
-
