@@ -63,10 +63,13 @@ reference:
   - '`load_basic_example`'
 - title: Basic
   contents:
+  - '`drake_build`'
   - '`drake_config`'
+  - '`file_input`'
+  - '`file_output`'
+  - '`knitr_input`'
   - '`make_imports`'
   - '`make`'
-  - '`drake_build`'
   - '`make_targets`'
   - '`make_with_config`'
 - title: Workflow plan data frames
