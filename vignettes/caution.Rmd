@@ -44,64 +44,6 @@ Versions of `drake` after 4.4.0 have different caching internals. That means if 
 
 It is common practice to divide the work of a project into multiple R files, but if you do this, you will not get the most out of `drake`. Please see the [best practices vignette](https://github.com/ropensci/drake/blob/master/vignettes/best-practices.Rmd) for more details.
 
-## Beware unparsable symbols in your workflow plan.
-
-In your workflow plan, be sure that target names can be parsed as symbols and commands can be parsed as R code. To be safe, use `check_plan(my_plan)` to screen for illegal symbols and other problem areas.
-
-A common pitfall is using the `evaluate_plan()` function to expand wildcards after applying single quotes to file targets.
-
-```{r filethenevaluate}
-library(magrittr) # for the pipe operator %>%
-drake_plan(
-  data = readRDS("data_DATASIZE__rds")
-) %>%
-  rbind(drake::drake_plan(
-    file.csv = write.csv(
-      data_DATASIZE__, # nolint
-      "file_DATASIZE__csv"
-    ),
-    strings_in_dots = "literals",
-    file_targets = T
-  )) %>%
-  evaluate_plan(
-    rules = list(DATASIZE__ = c("small", "large"))
-  )
-```
-
-The single quotes in the middle of `'file.csv'_small` and `'file.csv'large` are illegal, and the target names do not even correspond to the files written. Instead, construct your workflow plan in multiple stages and apply the single quotes at the very end.
-
-```{r correctevaldatasize}
-rules <- list(DATASIZE__ = c("small", "large"))
-datasets <- drake_plan(data = readRDS("data_DATASIZE__rds")) %>%
-  evaluate_plan(rules = rules)
-```
-
-Plan the CSV files separately.
-```{r correctevaldatasize2}
-files <- drake_plan(
-  file = write.csv(data_DATASIZE__, "file_DATASIZE__csv"), # nolint
-  strings_in_dots = "literals"
-) %>%
-  evaluate_plan(rules = rules)
-```
-
-Single-quote the file targets after `evaluate_plan()`.
-
-```{r correctevaldatasize3}
-files$target <- paste0(
-  files$target, ".csv"
-) %>%
-  as_drake_filename
-```
-
-Put the workflow plan together.
-
-```{r correctevaldatasize4}
-rbind(datasets, files)
-```
-
-For finer control over target names in cases like this, you may want to use the [wildcard package](https://github.com/wlandau/wildcard).
-
 ## Commands are NOT perfectly flexible.
 
 In your workflow plan data frame (produced by `drake_plan()` and accepted by `make()`), your commands can usually be flexible R expressions.
@@ -272,57 +214,22 @@ You should explicitly learn the items in your workflow and the dependencies of y
 
 ```{r cautiondeps}
 f <- function(){
-  b <- get("x", envir = globalenv())           # x is incorrectly ignored
-  file_dependency <- readRDS('input_file.rds') # 'input_file.rds' is incorrectly ignored # nolint
+  b <- get("x", envir = globalenv()) # x is incorrectly ignored
   digest::digest(file_dependency)
 }
 
 deps(f)
 
-command <- "x <- digest::digest('input_file.rds'); assign(\"x\", 1); x"
+command <- "x <- digest::digest(file_input(\"input_file.rds\")); assign(\"x\", 1); x"
 deps(command)
 ```
 
 `Drake` takes special precautions so that a target/import does not depend on itself. For example, `deps(f)` might return `"f"` if `f()` is a recursive function, but `make()` just ignores this conflict and runs as expected. In other words, `make()` automatically removes all self-referential loops in the dependency network.
 
-## Dynamic R Markdown / `knitr` reports
+## Knitr input files
 
-In [dynamic knitr reports](https://yihui.name/knitr/), `drake` automatically looks for active code chunks and learns dependencies from calls to `loadd()` and `readd()`. This behavior activates when
+If you have `knitr` reports, you can use `knitr_report()` in your commands so that your reports are refreshed every time one of their dependencies changes. See `drake_example("basic")` and the `?knitr_input()` help file examples for demonstrations. Dependencies are detected if you call `loadd()` or `readd()` in your code chunks. But beware: an empty call to `loadd()` does not account for any dependencies even though it loads all the available targets into your R session.
 
-1. the appropriate command in your command has an explicit reference to `knit()` or `render()` (from the `rmarkdown` package), and
-1. the `*.Rmd`/`*.Rnw` source file already exists before `make()`.
-
-```{r knitrdeps1}
-load_basic_example() # Get the code with drake_example("basic").
-my_plan[1, ]
-```
-
-Above, the [R Markdown report](http://rmarkdown.rstudio.com/lesson-1.html) loads targets 'small', 'large', and 'coef_regression2_small' using code chunks marked for evaluation.
-
-```{r knitr2}
-deps("knit('report.Rmd')")
-
-deps("render('report.Rmd')")
-
-deps("'report.Rmd'") # These are actually dependencies of 'report.md' (output)
-```
-
-However, **you must explicitly mention each and every target loaded into a report**. The following examples are discouraged in code chunks because they do not reference any particular target directly or literally in a way that static code analysis can detect.
-
-```{r badknitr, eval = FALSE}
-var <- "good_target"
-# Works in isolation, but drake sees "var" literally as a dependency,
-# not "good_target".
-readd(target = var, character_only = TRUE)
-loadd(list = var)
-# All cached items are loaded, but none are treated as dependencies.
-loadd()
-loadd(imports_only = TRUE)
-```
-
-## The `knit()` and `render()` functions
-
-Functions `knit()` and `render()` are special. When you explicitly mention them in a command for a target, you are signaling to `drake` that you have a dynamic report (like an R Markdown `*.Rmd` file). Drake assumes you are using `knit()` from the `knitr` package and `render()` from the `rmarkdown` package. Thus, unless you know exactly what you are doing, **please do not define your own custom `knitr()` or `render()` functions or load different versions of these functions from other packages.** 
 
 ## Functions produced by `Vectorize()`
 
@@ -345,7 +252,7 @@ Some R functions use `.Call()` to run compiled code in the backend. The R code i
 
 ## Directories (folders) are not reproducibly tracked.
 
-In your workflow plan, you can use single quotes to assert that some targets/imports are external files. However, entire directories (i.e. folders) cannot be reproducibly tracked this way. Please see [issue 12](https://github.com/ropensci/drake/issues/12) for a discussion.
+In your workflow plan, you can use `file_input()`, `file_output()`, and `knitr_input()` to assert that some targets/imports are external files. However, entire directories (i.e. folders) cannot be reproducibly tracked this way. Please see [issue 12](https://github.com/ropensci/drake/issues/12) for a discussion.
 
 ## Packages are not tracked as dependencies.
 
