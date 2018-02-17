@@ -87,10 +87,8 @@ rmspe_results_plan <- gather_plan(
 
 # Plan some final output.
 output_plan <- drake_plan(
-  rmspe.pdf = ggsave(filename = "rmspe.pdf", plot = plot_rmspe(rmspe)),
-  report.md = knit("report.Rmd", quiet = TRUE),
-  file_targets = TRUE,
-  strings_in_dots = "literals"
+  ggsave(filename = file_output("rmspe.pdf"), plot = plot_rmspe(rmspe)),
+  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
 )
 
 # We need a function to generate the plot.
