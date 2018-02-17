@@ -332,7 +332,7 @@ file_output <- file_input
 #' @param ... Symbols or character vectors naming source files
 #'   for `knitr`/`rmarkdown` dynamic reports.
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' test_with_dir("Contain side effects", {
 #' # `knitr_input()` is like `file_input()`
 #' # except that it analyzes active code chunks in your `knitr`

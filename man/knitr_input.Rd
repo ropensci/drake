@@ -19,7 +19,7 @@ Use this function to help write the commands
 in your workflow plan data frame.
 }
 \examples{
-#' \dontrun{
+\dontrun{
 test_with_dir("Contain side effects", {
 # `knitr_input()` is like `file_input()`
 # except that it analyzes active code chunks in your `knitr`
