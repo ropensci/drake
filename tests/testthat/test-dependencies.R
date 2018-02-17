@@ -25,7 +25,11 @@ test_with_dir("file_output() and knitr_input(): commands vs imports", {
   y <- imports_edges("f", f)
   expect_equal(
     sort(x$from),
-    sort(c("coef_regression2_small", "large", "\"report.Rmd\"", "small", "\"x\""))
+    sort(
+      c("coef_regression2_small", "large",
+        "\"report.Rmd\"", "small", "\"x\""
+      )
+    )
   )
   expect_equal(x$to, rep("\"y\"", 5))
   expect_equal(
