@@ -97,7 +97,10 @@ Programmatically, several functions can help you check immediate dependencies.
 ```{r checkdepsdebug}
 deps(reg2)
 
-deps(my_plan$command[1]) # File dependencies like report.Rmd are single-quoted.
+# knitr_input() makes sure your target depends on `report.Rmd`
+# and any dependencies loaded with loadd() and readd()
+# in the report's active code chunks.
+deps(my_plan$command[1])
 
 deps(my_plan$command[nrow(my_plan)])
 ```
@@ -154,10 +157,12 @@ config$cache$get_hash(key = "reg2") # different
 
 In `drake`, the "kernel" of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see `drake:::store_function()`).
 
-The internal functions `drake:::meta()` and `drake:::meta_list()` compute the metadata on each target that `drake` uses to decide which targets to build and which to skip (via `drake:::should_build_target()`). Then, after the target/import is processed, `drake:::finish_meta()` updates the metadata (except for the `$missing` element) before it is cached. See `read_drake_meta()`.
+The internal functions `drake:::meta()` and `drake:::meta_list()` compute the metadata on each target that `drake` uses to decide which targets to build and which to skip (via `drake:::should_build_target()`). Then, after the target/import is processed, `drake:::finish_meta()` updates the metadata (except for the `$missing` element) before it is cached. See `diagnose()` to read available metadata, along with any errors, warnings, and messages generated during the build.
 
 ```{r readdrakemeta}
-read_drake_meta("'report.md'")
+str(diagnose(small))
+
+str(diagnose("\"report.md\""))
 ```
 
 # Test with triggers.
@@ -357,11 +362,11 @@ built(verbose = FALSE)
 
 imported(verbose = FALSE)
 
-loadd(large, verbose = FALSE)
+loadd(little_b, verbose = FALSE)
 
-head(large)
+little_b
 
-head(readd(small, verbose = FALSE))
+readd(letter, verbose = FALSE)
 
 progress(verbose = FALSE)
 
