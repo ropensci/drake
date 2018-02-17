@@ -6,6 +6,44 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps(x))
 })
 
+test_with_dir("file_output() and knitr_input(): commands vs imports", {
+  cmd <- "file_input(\"x\"); file_output(\"y\"); knitr_input(\"report.Rmd\")"
+  f <- function(){
+    file_input("x")
+    file_output("y")
+    knitr_input("report.Rmd")
+  }
+  file.create("x")
+  file.create("y")
+  path <- system.file(
+    file.path("examples", "basic", "report.Rmd"),
+    package = "drake",
+    mustWork = TRUE
+  )
+  file.copy(from = path, to = getwd(), overwrite = TRUE)
+  x <- commands_edges("\"y\"", cmd)
+  y <- imports_edges("f", f)
+  expect_equal(
+    sort(x$from),
+    sort(c("coef_regression2_small", "large", "\"report.Rmd\"", "small", "\"x\""))
+  )
+  expect_equal(x$to, rep("\"y\"", 5))
+  expect_equal(
+    sort(y$from),
+    sort(c("\"report.Rmd\"", "\"x\""))
+  )
+  expect_equal(y$to, rep("f", 2))
+  expect_equal(sort(deps(f)), sort(c("\"report.Rmd\"", "\"x\"")))
+  expect_equal(
+    sort(deps(cmd)),
+    sort(
+      c("coef_regression2_small", "large",
+        "\"report.Rmd\"", "small", "\"x\"", "\"y\""
+      )
+    )
+  )
+})
+
 test_with_dir(
   "deps() correctly reports dependencies of functions and commands", {
   expect_equal(deps(""), character(0))

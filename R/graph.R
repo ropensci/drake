@@ -96,16 +96,18 @@ commands_edges <- function(target, command){
 }
 
 imports_edges <- function(name, value){
-  code_deps_to_edges(target = name, deps = code_dependencies(value))
+  deps <- import_dependencies(value)
+  code_deps_to_edges(target = name, deps = deps)
 }
 
 code_deps_to_edges <- function(target, deps){
   inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_output")])
   edges <- NULL
   if (length(inputs)){
-    data.frame(from = inputs, to = target)
+    data.frame(from = inputs, to = target, stringsAsFactors = FALSE)
   } else {
-    data.frame(from = target, to = target) # Loops will be removed.
+    # Loops will be removed.
+    data.frame(from = target, to = target, stringsAsFactors = FALSE)
   }
 }
 

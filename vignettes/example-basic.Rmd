@@ -247,12 +247,12 @@ results
 
 The `gather` feature reduces a collection of targets to a single target. The resulting commands are long, so gathering is deactivated for the sake of readability.
 
-For the dynamic report `'report.Rmd'`/`'report.md'`, be sure the file names are single-quoted. Single quotes denote file targets/imports, and double quotes denote literal strings that should not be treated as dependencies. To tell `drake` to look for the other dependencies of `'report.md'`, be sure the source file `'report.Rmd'` exists and `knit()` is in the workflow plan command. That way, `drake` searches the active code chunks in `'report.Rmd'` for any targets/imports mentioned in calls to `loadd()` and `readd()`.
+For your `knitr` reports, use `knitr_input()` in your commands so that `report.Rmd` is a dependency and targets loaded with `loadd()` and `readd()` in active code chunks are also dependencies. Use `file_output()` to tell `drake` that the target is a file output. If the file is an output, you do not need to name the target. The target name will be the name of the output file in quotes.
 
 ```{r reportplan}
 report <- drake_plan(
-  report.md = knit('report.Rmd', quiet = TRUE), # nolint
-  file_targets = TRUE, strings_in_dots = "filenames")
+  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
+)
 report
 ```
 
@@ -480,13 +480,11 @@ As you have seen with `reg2()`, `drake` reacts to changes in dependencies. In ot
 1. R objects mentioned in the commands, including but not limited to user-defined functions and functions from packages.
 1. R objects (but not files) nested inside user-defined functions.
 1. For packages exposed with `expose_imports()`, R objects (but not files) nested inside package functions.
-1. For [dynamic `knitr` reports](https://yihui.name/knitr/), targets and imports mentioned in calls to `readd()` and `loadd()` in active code chunks. `Drake` treats these items as dependencies of the compiled output (say, `'report.md'` or `report.html`). **The workflow plan command must call `knit()` or `render()` explicitly.** Examples of acceptable commands:
-    - `knit('report.Rmd')`
-    - `knitr::knit(input = 'report.Rmd', quiet = TRUE)`
-    - `render('report.Rmd')`
-    - `rmarkdown::render('report.Rmd', output_file = "report.html")`
+1. Files declared with `file_input()` inside your commands or custom functions.
+1. `knitr` reports declared with `knitr_input()` in your commands, along with any targets explicitly loaded in active code chunks with `loadd()` or `readd()`. Do not use `knitr_input()` inside your imported functions.
+1. Files declared with `file_output()` in your commands. Do not use `file_output()` inside your imported functions.
 
-To enhance reproducibility beyond the scope of drake, you might consider [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/). [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with [Docker](https://www.docker.com/), you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and [Docker](https://www.docker.com/) can help others reproduce your work even if they have different software and hardware.
+To enhance reproducibility beyond the scope of drake, you might consider [packrat](https://rstudio.github.io/packrat) and a container tool (such as [Singularity](http://singularity.lbl.gov/) or [Docker](https://www.docker.com/). [Packrat](https://rstudio.github.io/packrat) creates a tightly-controlled local library of packages to extend the shelf life of your project. And with containerization, you can execute your project on a [virtual machine](https://en.wikipedia.org/wiki/Virtual_machine) to ensure platform independence. Together, [packrat](https://rstudio.github.io/packrat) and containers can help others reproduce your work even if they have different software and hardware.
 
 # A note on tidy evaluation
 

@@ -56,7 +56,7 @@
 #' }
 deps <- function(x){
   if (is.function(x)){
-    out <- code_dependencies(x)
+    out <- import_dependencies(x)
   } else if (file.exists(drake_unquote(x))){
     out <- knitr_deps(drake_unquote(x))
   } else if (is.character(x)){
@@ -176,6 +176,15 @@ nonfile_target_dependencies <- function(targets, config){
   deps <- dependencies(targets = targets, config = config)
   out <- parallel_filter(x = deps, f = is_not_file, jobs = config$jobs)
   intersect(out, config$plan$target)
+}
+
+import_dependencies <- function(expr){
+  deps <- code_dependencies(expr)
+  # Imported functions can't have file_output() deps # nolint
+  # or target dependencies from knitr code chunks.
+  # However, file_input()s are totally fine. # nolint
+  deps$file_output <- deps$loadd <- deps$readd <- NULL
+  deps
 }
 
 command_dependencies <- function(command){
