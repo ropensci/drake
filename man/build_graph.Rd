@@ -4,8 +4,9 @@
 \alias{build_graph}
 \title{Deprecated function \code{build_graph}}
 \usage{
-build_graph(plan = drake_plan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1, jobs = 1)
+build_graph(plan = read_drake_plan(),
+  targets = drake::possible_targets(plan), envir = parent.frame(),
+  verbose = 1, jobs = 1)
 }
 \arguments{
 \item{plan}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}

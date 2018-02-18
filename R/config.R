@@ -313,7 +313,7 @@
 #' })
 #' }
 drake_config <- function(
-  plan = drake_plan(),
+  plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -458,7 +458,7 @@ do_prework <- function(config, verbose_packages) {
 #' possible_targets(my_plan)
 #' })
 #' }
-possible_targets <- function(plan = drake_plan()) {
+possible_targets <- function(plan = read_drake_plan()) {
   plan <- sanitize_plan(plan)
   as.character(plan$target)
 }

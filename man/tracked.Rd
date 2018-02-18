@@ -5,7 +5,7 @@
 \title{List the targets and imports
 that are reproducibly tracked.}
 \usage{
-tracked(plan = drake_plan(), targets = drake::possible_targets(plan),
+tracked(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), jobs = 1, verbose = TRUE)
 }
 \arguments{

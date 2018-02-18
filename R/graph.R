@@ -35,7 +35,7 @@
 #' })
 #' }
 build_drake_graph <- function(
-  plan = drake_plan(),
+  plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,

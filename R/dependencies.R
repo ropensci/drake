@@ -147,7 +147,7 @@ dependency_profile <- function(target, config){
 #' })
 #' }
 tracked <- function(
-  plan = drake_plan(),
+  plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,
