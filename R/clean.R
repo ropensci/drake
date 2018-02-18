@@ -20,6 +20,8 @@
 #' @export
 #' @return Invisibly return `NULL`.
 #'
+#' @inheritParams cached
+#'
 #' @param ... targets to remove from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   \code{\link{remove}(...)}.
@@ -36,18 +38,6 @@
 #'   from `make()`
 #'   are removed. If `TRUE`, the whole cache is removed, including
 #'   session metadata, etc.
-#'
-#' @param cache optional drake cache. See code{\link{new_cache}()}. If
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#'
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#'
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
 #'
 #' @param verbose whether to print console messages
 #'

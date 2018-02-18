@@ -16,7 +16,7 @@ check_plan(plan = drake_plan(), targets = drake::possible_targets(plan),
 
 \item{envir}{environment containing user-defined functions}
 
-\item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}}
+\item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}.}
 
 \item{verbose}{same as for \code{\link[=make]{make()}}}
 

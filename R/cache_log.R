@@ -21,20 +21,18 @@
 #' @export
 #' @return There is no return value, but a log file is generated.
 #' @param file character scalar, name of the flat text log file.
-#' @param cache drake cache. See [new_cache()].
-#'   If supplied, `path` and `search` are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @param jobs number of jobs/workers for parallel processing
+#'
 #' @param targets_only logical, whether to output information
 #'   only on the targets in your workflow plan data frame.
 #'   If `targets_only` is `FALSE`, the output will
 #'   include the hashes of both targets and imports.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -116,20 +114,18 @@ drake_cache_log_file <- function(
 #' @export
 #' @return Data frame of the hash keys of the targets and imports
 #'   in the cache
-#' @param cache drake cache. See [new_cache()].
-#'   If supplied, `path` and `search` are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @param jobs number of jobs/workers for parallel processing
+#'
 #' @param targets_only logical, whether to output information
 #'   only on the targets in your workflow plan data frame.
 #'   If `targets_only` is `FALSE`, the output will
 #'   include the hashes of both targets and imports.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
