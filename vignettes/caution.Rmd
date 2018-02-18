@@ -455,7 +455,7 @@ Just remove these files and proceed with your work.
 
 ## Cache customization is limited
 
-The [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake`. As explained near the end of that vignette, you can plug custom [storr](https://github.com/richfitz/storr) caches into `make()`. However, non-RDS caches such as `storr_dbi()` may not work with parallel computing. In addition, please do not try to change the short hash algorithm of an existing cache.
+The [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd) describes how storage works in `drake`. As explained near the end of that vignette, you can plug custom [storr](https://github.com/richfitz/storr) caches into `make()`. However, non-RDS caches such as `storr_dbi()` may not work with most forms of parallel computing. The `storr::storr_dbi()` cache and many others are not threadsafe. Either use no parallel computing at all or set `parallelism = "future"` with `caching = "master"`. The `"future"` backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.
 
 ## Runtime predictions
 
