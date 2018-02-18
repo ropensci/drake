@@ -11,11 +11,13 @@ drake_cache_log(path = getwd(), search = TRUE,
 \arguments{
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.}
+project root or a subdirectory of the project.
+Ignored if a \code{cache} is supplied.}
 
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
-current working directory only.}
+current working directory only.
+Ignored if a \code{cache} is supplied.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}

@@ -9,7 +9,7 @@
 #'   [drake_plan()].
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See [new_cache()]
+#' @param cache optional drake cache. See [new_cache()].
 #' @param verbose same as for [make()]
 #' @param jobs number of jobs/workers for light parallelism
 #' @examples
