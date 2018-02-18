@@ -41,7 +41,6 @@ check_plan <- function(
     jobs = jobs
   )
   check_drake_config(config)
-  check_strings(config$plan, jobs = jobs)
   invisible(plan)
 }
 
@@ -93,18 +92,6 @@ warn_bad_symbols <- function(x) {
   warning("Possibly bad target names:\n", multiline_message(bad),
     call. = FALSE)
   invisible()
-}
-
-check_strings <- function(plan, jobs) {
-  if (any(grepl("'", plan$target)) || any(grepl("'", plan$command))){
-    warning(
-      "Single-quoted strings found in workflow plan. ",
-      "Single-quotes used to be the way to specify file targets/imports, ",
-      "but the interface is changing. Use file_input(), file_output(), and ",
-      "knitr_input() in your commands. See `?drake_plan` for examples.",
-      call. = FALSE
-    )
-  }
 }
 
 check_drake_graph <- function(graph){

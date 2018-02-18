@@ -198,20 +198,42 @@ command_dependencies <- function(command){
   # if we support expressions in workflow plans.
   command <- as.character(command)
   deps <- code_dependencies(parse(text = command))
+
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
-
   files <- extract_filenames(command)
   if (length(files)){
     files <- drake_unquote(files) %>%
       drake_quotes(single = FALSE)
+    warn_single_quoted_files(files = files, deps = deps)
     deps$file_input <- base::union(deps$file_input, files)
   }
   deps$loadd <- base::union(
     deps$loadd, knitr_deps(find_knitr_doc(command))
   ) %>%
     unique
+
   deps
+}
+
+# TODO: this function can go away when drake
+# stops supporting single-quoted file names
+warn_single_quoted_files <- function(files, deps){
+  old_api_files <- drake_unquote(files)
+  new_api_files <- c(deps$file_input, deps$file_output, deps$knitr_input) %>%
+    drake_unquote
+  warn_files <- setdiff(old_api_files, new_api_files)
+  if (!length(warn_files)){
+    return()
+  }
+  warning(
+    "Files in a command declared with single-quotes:\n",
+    multiline_message(warn_files),
+    "\nThe way to declare files in drake is changing. ",
+    "Use file_input(), file_output(), and knitr_input() ",
+    "in your commands. See `?drake_plan` for examples.",
+    call. = FALSE
+  )
 }
 
 # Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.

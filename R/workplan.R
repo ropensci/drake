@@ -115,7 +115,7 @@ drake_plan <- function(
     command = commands
   )
   from_dots <- plan$target %in% names(commands_dots)
-  if (length(file_targets) || length(strings_in_dots)){
+  if (length(file_targets) || identical(strings_in_dots, "filenames")){
     warning(
       "The `file_targets` and `strings_in_target` are deprecated. ",
       "See the help file examples of `drake_plan()` to see the new ",
@@ -125,10 +125,14 @@ drake_plan <- function(
       "Worry about single-quotes no more!"
     )
   }
-  if (length(file_targets) && file_targets){
+  if (identical(file_targets, TRUE)){
     plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
-  if (!length(strings_in_dots) || strings_in_dots == "filenames"){
+  # TODO: leave double-quoted strings alone when we're ready to
+  # deprecate single-quoting in the file API.
+  # Currently, to totally take advantage of the new file API,
+  # users need to set strings_in_dots to "filenames" every time.
+  if (identical(strings_in_dots, "filenames")){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
