@@ -4,7 +4,7 @@
 \alias{build_drake_graph}
 \title{Create the \code{igraph} dependency network of your project.}
 \usage{
-build_drake_graph(plan = drake_plan(),
+build_drake_graph(plan = read_drake_plan(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
   verbose = 1, jobs = 1, sanitize_plan = TRUE)
 }

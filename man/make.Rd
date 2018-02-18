@@ -4,7 +4,7 @@
 \alias{make}
 \title{Run your project (build the outdated targets).}
 \usage{
-make(plan = drake_plan(), targets = drake::possible_targets(plan),
+make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   fetch_cache = NULL, parallelism = drake::default_parallelism(),

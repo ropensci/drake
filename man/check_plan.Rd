@@ -4,9 +4,9 @@
 \alias{check_plan}
 \title{Check a workflow plan data frame for obvious errors.}
 \usage{
-check_plan(plan = drake_plan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
-  verbose = TRUE, jobs = 1)
+check_plan(plan = read_drake_plan(),
+  targets = drake::possible_targets(plan), envir = parent.frame(),
+  cache = drake::get_cache(verbose = verbose), verbose = TRUE, jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
