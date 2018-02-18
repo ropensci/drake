@@ -251,7 +251,7 @@ Be sure to heed the previously-mentioned cautionary note about deploying too man
 
 ## future
 
-The `future` backend is similar to `future_lapply` except that individual futures are launched and managed using a manual job scheduler. Jobs are submitted as soon as workers become available, which overcomes an inefficiency of the usual staged parallelism. And with the optional `evaluator` column of the workflow plan data frame, you can use different computing resources for different targets. (See the `evaluator` argument of `future()`.)
+The `future` backend is experimental and needs more real-world testing. It is similar to `future_lapply` except that individual futures are launched and managed using a manual job scheduler. Jobs are submitted as soon as workers become available, which overcomes an inefficiency of the usual staged parallelism. And with the optional `evaluator` column of the workflow plan data frame, you can use different computing resources for different targets. (See the `evaluator` argument of `future()`.)
 
 ```{r democustomfutureevaluators, eval = FALSE}
 library(future)
