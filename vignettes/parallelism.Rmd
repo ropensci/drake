@@ -266,6 +266,7 @@ for (i in seq_len(nrow(my_plan))){
 }
 # ...except for the R Markdown report.
 evaluator[[1]] <- local
+my_plan$evaluator <- evaluator
 make(my_plan, parallelism = "future", jobs = 8)
 ```
 
