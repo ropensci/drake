@@ -146,6 +146,6 @@ drake_plan_override <- function(target, field, config){
   if (is.null(in_plan)){
     return(config[[field]])
   } else {
-    return(in_plan[config$plan$target == target])
+    return(in_plan[[which(config$plan$target == target)]])
   }
 }

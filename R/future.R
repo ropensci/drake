@@ -71,12 +71,19 @@ new_worker <- function(id, target, config, protect){
   } else {
     globals <- NULL
   }
+  evaluator <- drake_plan_override(
+    target = target,
+    field = "evaluator",
+    config = config
+  ) %||%
+    future::plan("next")
   structure(
     future::future(
       expr = drake_future_task(
         target = target, meta = meta, config = config, protect = protect),
       packages = "drake",
-      globals = c(globals, "target", "meta", "config", "protect")
+      globals = c(globals, "target", "meta", "config", "protect"),
+      evaluator = evaluator
     ),
     target = target
   )

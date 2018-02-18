@@ -399,7 +399,8 @@ drake_config <- function(
     imports_only = imports_only, skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks, log_progress = log_progress,
     lazy_load = lazy_load, session_info = session_info,
-    cache_log_file = cache_log_file, caching = match.arg(caching)
+    cache_log_file = cache_log_file, caching = match.arg(caching),
+    evaluator = future::plan("next")
   )
 }
 
