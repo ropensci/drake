@@ -28,8 +28,8 @@ test_with_dir("knitr_deps() works", {
   expect_equal(x, character(0))
   load_basic_example()
   x <- knitr_deps("report.Rmd")
-  y <- deps("knit('report.Rmd')")
-  z <- deps("render('report.Rmd')")
+  y <- expect_warning(deps("knit('report.Rmd')"))
+  z <- expect_warning(deps("render('report.Rmd')"))
   w <- deps("funct(knitr_input(report.Rmd))")
   real_deps <- c(
     "small", "coef_regression2_small", "large"

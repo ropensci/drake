@@ -51,13 +51,13 @@
 #' load_basic_example() # Get the code with drake_example("basic").
 #' # Dependencies of the knitr-generated targets like 'report.md'
 #' # include targets/imports referenced with `readd()` or `loadd()`.
-#' deps("report.Rmd")
+#' deps("\"report.Rmd\"")
 #' })
 #' }
 deps <- function(x){
   if (is.function(x)){
     out <- import_dependencies(x)
-  } else if (file.exists(drake_unquote(x))){
+  } else if (is_file(x) && file.exists(drake_unquote(x))){
     out <- knitr_deps(drake_unquote(x))
   } else if (is.character(x)){
     out <- command_dependencies(x)

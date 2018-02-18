@@ -68,11 +68,13 @@ test_with_dir("plan set 1", {
 
 test_with_dir("plan set 2", {
   for (tidy_evaluation in c(TRUE, FALSE)){
-    expect_warning(x <- drake_plan(a = c,
-                    b = "c",
-                    list = c(c = "d", d = "readRDS('e')"),
-                    strings_in_dots = "literals",
-                    tidy_evaluation = tidy_evaluation))
+    x <- drake_plan(
+      a = c,
+      b = "c",
+      list = c(c = "d", d = "readRDS('e')"),
+      strings_in_dots = "literals",
+      tidy_evaluation = tidy_evaluation
+    )
     y <- tibble(
       target = letters[1:4],
       command = c("c", "\"c\"",

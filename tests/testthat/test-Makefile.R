@@ -168,11 +168,11 @@ test_with_dir("packages are loaded in prework", {
   # Load packages with the 'packages' argument
   config$packages <- c("abind", "MASS")
   config$prework <- "options(test_drake_option_12345 = 'set')"
-  expect_warning(config$plan <- drake_plan(
+  config$plan <- drake_plan(
     x = getOption("test_drake_option_12345"),
     y = c(deparse(body(abind)), deparse(body(lda)), x),
     strings_in_dots = "literals"
-  ))
+  )
   config$targets <- config$plan$target
   expect_false(any(c("x", "y") %in% config$cache$list()))
   testrun(config)

@@ -64,7 +64,7 @@ test_with_dir("Quarantine side effects.", {
 load_basic_example() # Get the code with drake_example("basic").
 # Dependencies of the knitr-generated targets like 'report.md'
 # include targets/imports referenced with `readd()` or `loadd()`.
-deps("report.Rmd")
+deps("\\"report.Rmd\\"")
 })
 }
 }

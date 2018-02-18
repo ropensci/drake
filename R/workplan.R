@@ -132,7 +132,7 @@ drake_plan <- function(
   # deprecate single-quoting in the file API.
   # Currently, to totally take advantage of the new file API,
   # users need to set strings_in_dots to "filenames" every time.
-  if (identical(strings_in_dots, "filenames")){
+  if (!length(strings_in_dots) || strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)

@@ -106,7 +106,8 @@ test_with_dir("old file API", {
   y <- drake_plan(
     contents = read.csv('file.csv')) # nolint
   z <- rbind(x, y)
-  make(z, session_info = FALSE) -> config
+  expect_warning(check_plan(z))
+  expect_warning(make(z, session_info = FALSE) -> config)
   expect_equal(
     z,
     tibble::tibble(

@@ -1,7 +1,7 @@
 drake_context("edge cases")
 
 test_with_dir("config and make without safety checks", {
-  x <- drake_plan(file = readRDS("my_file.rds"))
+  x <- drake_plan(file = readRDS(file_input("my_file.rds")))
   expect_warning(tmp <- config(x, verbose = FALSE))
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
@@ -9,7 +9,7 @@ test_with_dir("config and make without safety checks", {
 })
 
 test_with_dir("Strings stay strings, not symbols", {
-  expect_warning(x <- drake_plan(a = "A", strings_in_dots = "literals"))
+  expect_silent(x <- drake_plan(a = "A", strings_in_dots = "literals"))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
