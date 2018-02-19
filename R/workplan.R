@@ -196,7 +196,7 @@ drake_plan_override <- function(target, field, config){
 #' })
 #' }
 file_input <- function(...){
-  as.character(unlist(list(...)))
+  as.character(c(...))
 }
 
 #' @title Declare the file outputs of a workflow plan command.
@@ -240,7 +240,7 @@ file_input <- function(...){
 #' })
 #' }
 file_output <- function(path, ...){
-  path <- c(path, as.character(unlist(list(...))))
+  path <- c(path, as.character(c(...)))
   if (length(path) != 1){
     warning(
       "In file_output(), the `path` argument must ",
