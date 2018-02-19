@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Implement `dplyr`-style `tidyselect` functionality in `loadd()` and `clean()`.
 - Make `read_drake_plan()` (rather than an empty `drake_plan()`) the default `plan` argument in all functions that accept a `plan`.
 - Add support for active bindings: `loadd(..., lazy = "bind")`. That way, when you have a target loaded in one R session and hit `make()` in another R session, the target in your first session will automatically update.
 - Use tibbles for workflow plan data frames and the output of `dataframes_graph()`.
