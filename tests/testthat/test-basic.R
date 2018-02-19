@@ -92,8 +92,25 @@ test_with_dir("basic example works", {
   expect_equal(sort(outdated(config = config)),
     character(0))
 
+  # Take this opportunity to test tidyselect API. Saves test time that way.
+  # loadd() # nolint
+  e <- new.env(parent = globalenv())
+  coefs <- c("coef_regression1_large", "coef_regression1_small",
+             "coef_regression2_large", "coef_regression2_small")
+  loadd(starts_with("coef"), envir = e)
+  expect_equal(sort(ls(envir = e)), sort(coefs))
+
+  # clean() # nolint
+  x <- sort(cached())
+  expect_true(all(coefs %in% x))
+  clean(starts_with("coef"))
+  expect_equal(sort(cached()), setdiff(x, coefs))
+
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.
+  # Saves time that way.
+  # But we can remove it all when we deprecate the single-quoted stuff
+  # and users know to rely on knitr_input().
   x <- drake_plan(
     a = knitr::knit('report.Rmd'), # nolint
     b = knitr::knit('report.md'), # nolint
