@@ -5,6 +5,9 @@
 #'   [make()]
 #' @export
 #' @return The cached value of the `target`.
+#'
+#' @inheritParams cached
+#'
 #' @param target If `character_only` is `TRUE`,
 #'   `target` is a character string naming the object to read.
 #'   Otherwise, `target` is an unquoted symbol with the name of the
@@ -12,15 +15,6 @@
 #' @param character_only logical, whether `name` should be treated
 #'   as a character or a symbol
 #'   (just like `character.only` in [library()]).
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
 #' @param namespace character scalar,
 #'   name of an optional storr namespace to read from.
 #' @param verbose whether to print console messages
@@ -70,6 +64,8 @@ readd <- function(
 #' @export
 #' @return `NULL`
 #'
+#' @inheritParams cached
+#'
 #' @param ... targets to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   \code{\link{remove}(...)}.
@@ -79,18 +75,6 @@ readd <- function(
 #'
 #' @param imported_only logical, whether only imported objects
 #'   should be loaded.
-#'
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#'
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#'
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
 #'
 #' @param namespace character scalar,
 #'   name of an optional storr namespace to load from.
@@ -318,20 +302,17 @@ bind_load_target <- function(target, cache, namespace, envir, verbose){
 #' @export
 #' @return The cached master internal configuration list
 #'   of the last [make()].
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @param jobs number of jobs for light parallelism.
 #'   Supports 1 job only on Windows.
+#'
 #' @param envir Optional environment to fill in if
 #'   `config$envir` was not cached. Defaults to your workspace.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -383,18 +364,14 @@ read_drake_config <- function(
 #' @export
 #' @return An `igraph` object representing the dependency
 #'   network of the workflow.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose logical, whether to print console messages
+#'
 #' @param ... arguments to [visNetwork()] via
 #'   [vis_drake_graph()]
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -431,16 +408,11 @@ read_drake_graph <- function(
 #' @seealso [read_drake_config()]
 #' @export
 #' @return A workflow plan data frame.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -477,17 +449,12 @@ read_drake_plan <- function(
 #' even under randomness.
 #' @seealso [read_drake_config()]
 #' @export
-#' @return A workflow plan data frame.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#' @return An integer vector.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @examples
 #' cache <- storr::storr_environment() # Just for the examples.
 #' my_plan <- drake_plan(

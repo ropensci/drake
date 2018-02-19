@@ -7,9 +7,8 @@
 eager_load_target(target, cache, namespace, envir, verbose)
 }
 \arguments{
-\item{cache}{optional drake cache. See code{\link{new_cache}()}.
-If \code{cache} is supplied,
-the \code{path} and \code{search} arguments are ignored.}
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
+If supplied, \code{path} and \code{search} are ignored.}
 
 \item{namespace}{character scalar,
 name of an optional storr namespace to load from.}

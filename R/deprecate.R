@@ -823,20 +823,17 @@ read_graph <- function(
 #' @export
 #' @return The cached master internal configuration list
 #'   of the last [make()].
+#'
+#' @inheritParams cached
+#'
 #' @param targets character vector, names of the targets
 #'   to get metadata. If `NULL`, all metadata is collected.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
 #' @param verbose whether to print console messages
+#'
 #' @param jobs number of jobs for light parallelism.
 #'   Supports 1 job only on Windows.
+#'
 #' @examples
 #' # See ?diagnose() for examples.
 read_drake_meta <- function(
