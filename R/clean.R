@@ -120,7 +120,7 @@ clean <- function(
     namespaces = target_namespaces(),
     list = list
   )
-  if (!length(targets)){
+  if (!length(targets) && is.null(c(...))){
     targets <- cache$list()
   }
   uncache(targets = targets, cache = cache, jobs = jobs, purge = purge)
