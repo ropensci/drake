@@ -101,8 +101,6 @@ test_with_dir("knitr file deps from commands and functions", {
 })
 
 test_with_dir("misc knitr", {
-  o <- get_specific_arg(list(a = parse(text = "1 <- 2")), name = "a")
-  expect_equal(o, character(0))
   f <- function()
   expect_silent(o <- doc_of_function_call(knit))
   f <- function(x){

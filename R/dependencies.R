@@ -387,31 +387,27 @@ declare_file <- function(expr){
 }
 
 analyze_loadd <- function(expr){
-  args <- as.list(expr)[-1]
-  targets <- unnamed_in_list(args)
-  list <- get_specific_arg(args = args, name = "list")
-  c(targets, list)
+  args <- parse_loadd_arg_list(expr)
+  c(unnamed_in_list(args), args[["list"]])
 }
 
 analyze_readd <- function(expr){
-  args <- as.list(expr)[-1]
-  targets <- unnamed_in_list(args)
-  target <- get_specific_arg(args = args, name = "target")
-  c(targets, target)
+  args <- parse_loadd_arg_list(expr)
+  c(unnamed_in_list(args), args[["target"]])
 }
 
-get_specific_arg <- function(args, name){
-  tryCatch(
-    eval(args[[name]]),
-    error = error_character0
-  )
+parse_loadd_arg_list <- function(expr){
+  lapply(as.list(expr)[-1], function(arg){
+    inputs <- CodeDepends::getInputs(arg)
+    c(inputs@strings, inputs@inputs)
+  })
 }
 
 unnamed_in_list <- function(x){
   if (!length(names(x))){
-    as.character(x)
+    x
   } else {
-    as.character(x[!nchar(names(x))])
+    x[!nchar(names(x))]
   }
 }
 
