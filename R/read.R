@@ -168,7 +168,7 @@ loadd <- function(
     stop("cannot find drake cache.")
   }
   if (is.null(namespace)){
-    namespace = cache$default_namespace
+    namespace <- cache$default_namespace
   }
   targets <- drake_select(
     cache = cache, ..., namespaces = namespace, list = list)
