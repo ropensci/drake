@@ -295,7 +295,9 @@ bind_load_target <- function(target, cache, namespace, envir, verbose){
     names = as.character(target),
     fun = function(key, cache, namespace){
       if (!length(namespace)){
-        namespace <- cache$default_namespace
+        # Now impractical to cover because loadd() checks the namespace,
+        # but good to have around anyway.
+        namespace <- cache$default_namespace # nocov
       }
       cache$get(key = as.character(key), namespace = as.character(namespace))
     },
