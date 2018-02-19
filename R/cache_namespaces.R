@@ -64,3 +64,14 @@ target_namespaces <- function(
   ) %>%
     sort
 }
+
+list_multiple_namespaces <- function(cache, namespaces, jobs = 1){
+  lightly_parallelize(
+    X = namespaces,
+    FUN = function(namespace){
+      cache$list(namespace = namespace)
+    },
+    jobs = jobs
+  ) %>%
+    Reduce(f = base::union)
+}

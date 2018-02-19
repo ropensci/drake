@@ -64,10 +64,19 @@
 #' @importFrom stringr str_split str_trim
 #' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom tibble as_tibble tibble
+#' @importFrom tidyselect contains ends_with everything matches
+#'   num_range one_of starts_with vars_select
 #' @importFrom utils capture.output compareVersion installed.packages
 #'   packageVersion read.csv sessionInfo type.convert unzip write.table
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #'   visIgraphLayout visInteraction visLegend visNetwork visSave
 #' @importFrom withr with_dir with_options with_output_sink
 #'   with_preserve_seed with_seed
+#' @export contains
+#' @export ends_with
+#' @export everything
+#' @export matches
+#' @export num_range
+#' @export one_of
+#' @export starts_with
 NULL

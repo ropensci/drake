@@ -11,9 +11,9 @@ loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   replace = TRUE)
 }
 \arguments{
-\item{...}{targets to load from the cache, as names (unquoted)
-or character strings (quoted). Similar to \code{...} in
-\code{\link{remove}(...)}.}
+\item{...}{targets to load from the cache: as names (symbols),
+character strings, or \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}.}
 
 \item{list}{character vector naming targets to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
@@ -102,13 +102,20 @@ small
 # For many targets, you can parallelize loadd()
 # using the 'jobs' argument.
 loadd(list = c("small", "large"), jobs = 2)
+ls()
+# How about tidyselect?
+loadd(starts_with("summ"))
+ls()
 # Load the dependencies of the target, coef_regression2_small
 loadd(coef_regression2_small, deps = TRUE)
+ls()
 # Load all the imported objects/functions.
 loadd(imported_only = TRUE)
+ls()
 # Load everything, including built targets.
 # Be sure your computer has enough memory.
 loadd()
+ls()
 })
 }
 }

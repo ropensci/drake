@@ -9,13 +9,9 @@ clean(..., list = character(0), destroy = FALSE, path = getwd(),
   garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
-\item{...}{targets to remove from the cache, as names (unquoted)
-or character strings (quoted). Similar to \code{...} in
-\code{\link{remove}(...)}.
-The symbols must not match other (formal) arguments of \code{clean()},
-such as \code{destroy}, \code{cache}, \code{path}, \code{search},
-\code{verbose}, or \code{jobs}. If there are name conflicts,
-use the \code{list} argument instead of \code{...}.}
+\item{...}{targets to remove from the cache: as names (symbols),
+character strings, or \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}.}
 
 \item{list}{character vector naming targets to be removed from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
@@ -93,6 +89,9 @@ cached(no_imported_objects = TRUE)
 # Remove 'summ_regression1_large' and 'small' from the cache.
 clean(summ_regression1_large, small)
 # Those objects should be gone.
+cached(no_imported_objects = TRUE)
+# How about `tidyselect`?
+clean(starts_with("coef"))
 cached(no_imported_objects = TRUE)
 # Rebuild the missing targets.
 make(my_plan)

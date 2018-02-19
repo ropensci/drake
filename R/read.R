@@ -66,9 +66,9 @@ readd <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param ... targets to load from the cache, as names (unquoted)
-#'   or character strings (quoted). Similar to `...` in
-#'   \code{\link{remove}(...)}.
+#' @param ... targets to load from the cache: as names (symbols),
+#'   character strings, or `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`.
 #'
 #' @param list character vector naming targets to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
@@ -131,13 +131,20 @@ readd <- function(
 #' # For many targets, you can parallelize loadd()
 #' # using the 'jobs' argument.
 #' loadd(list = c("small", "large"), jobs = 2)
+#' ls()
+#' # How about tidyselect?
+#' loadd(starts_with("summ"))
+#' ls()
 #' # Load the dependencies of the target, coef_regression2_small
 #' loadd(coef_regression2_small, deps = TRUE)
+#' ls()
 #' # Load all the imported objects/functions.
 #' loadd(imported_only = TRUE)
+#' ls()
 #' # Load everything, including built targets.
 #' # Be sure your computer has enough memory.
 #' loadd()
+#' ls()
 #' })
 #' }
 loadd <- function(
@@ -156,12 +163,15 @@ loadd <- function(
   graph = NULL,
   replace = TRUE
 ){
+  force(envir)
   if (is.null(cache)){
     stop("cannot find drake cache.")
   }
-  force(envir)
-  dots <- match.call(expand.dots = FALSE)$...
-  targets <- targets_from_dots(dots, list)
+  if (is.null(namespace)){
+    namespace = cache$default_namespace
+  }
+  targets <- drake_select(
+    cache = cache, ..., namespaces = namespace, list = list)
   if (!length(targets)){
     targets <- cache$list(namespace = cache$default_namespace)
   }
