@@ -7,6 +7,11 @@ is_file <- function(x){
     (safe_grepl("^\"", x) & safe_grepl("\"$", x))
 }
 
+standardize_filename <- function(text){
+  text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
+  text
+}
+
 is_existing_file <- function(x){
   is_file(x) & file.exists(drake_unquote(x, deep = TRUE))
 }

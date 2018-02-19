@@ -231,7 +231,8 @@ targets_from_dots <- function(dots, list) {
   names <- vapply(dots, as.character, "")
   if (length(names) == 0L)
     names <- character()
-  .Primitive("c")(names, list) %>% unique
+  targets <- .Primitive("c")(names, list) %>% unique
+  standardize_filename(targets)
 }
 
 imported_only <- function(targets, plan, jobs) {

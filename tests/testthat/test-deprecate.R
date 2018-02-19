@@ -108,6 +108,11 @@ test_with_dir("old file API", {
   z <- rbind(x, y)
   expect_warning(check_plan(z))
   expect_warning(make(z, session_info = FALSE) -> config)
+  expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
+  expect_true(is.character(readd("'file.csv'")))
+  expect_error(is.character(`"file.csv"`))
+  expect_silent(loadd("'file.csv'", verbose = FALSE))
+  expect_true(is.character(`"file.csv"`))
   expect_equal(
     z,
     tibble::tibble(

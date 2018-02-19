@@ -55,7 +55,7 @@ readd <- function(
   if (is.null(namespace)){
     namespace <- cache$default_namespace
   }
-  cache$get(target, namespace = namespace)
+  cache$get(standardize_filename(target), namespace = namespace)
 }
 
 #' @title Load multiple targets or imports from the drake cache.
