@@ -310,24 +310,17 @@ code_dependencies <- function(expr){
     } else if (is.name(expr) || is.atomic(expr)) {
       if (knitr_input){
         file <- declare_file(expr)
-        results$knitr_input <<- base::union(results$knitr_input, file)
-        results <<- merge_lists(x = results, y = knitr_deps_list(file))
+        new_results <- knitr_deps_list(file)
+        new_results$knitr_input <- base::union(new_results$knitr_input, file)
       } else if (file_input){
-        results$file_input <<- base::union(
-          results$file_input,
-          declare_file(expr)
-        )
+        new_results <- list(file_input = declare_file(expr))
       } else if (file_output) {
-        results$file_output <<- base::union(
-          results$file_output,
-          declare_file(expr)
-        )
+        new_results <- list(file_output = declare_file(expr))
       } else {
-        results$globals <<- base::union(
-          results$globals,
-          setdiff(wide_deparse(expr), drake_fn_patterns)
-        )
+        new_results <- list(globals = setdiff(
+          x = wide_deparse(expr), y = drake_fn_patterns))
       }
+      results <<- merge_lists(x = results, y = new_results)
     } else if (is.call(expr) || is.recursive(expr)) {
       if (is_loadd_call(expr)){
         results$loadd <<- base::union(
