@@ -1,5 +1,14 @@
 drake_context("edge cases")
 
+test_with_dir("drake_plan_override() quits correctly in error", {
+  con <- dbug()
+  con$plan$missing <- "nope"
+  expect_error(
+    drake_plan_override(target = "missing", field = "missing", config = con),
+    regexp = "not in the workflow plan"
+  )
+})
+
 test_with_dir("config and make without safety checks", {
   x <- drake_plan(file = readRDS(file_in("my_file.rds")))
   expect_warning(tmp <- config(x, verbose = FALSE))

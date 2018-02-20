@@ -152,7 +152,13 @@ drake_plan_override <- function(target, field, config){
   if (is.null(in_plan)){
     return(config[[field]])
   } else {
-    return(in_plan[[which(config$plan$target == target)]])
+    # Should be length 0 or 1 because sanitize_plan()
+    # already screens for duplicate target names.
+    index <- which(config$plan$target == target)
+    if (!length(index)){
+      stop("target ", target, " is not in the workflow plan.")
+    }
+    return(in_plan[[index]])
   }
 }
 
