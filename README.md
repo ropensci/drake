@@ -1,4 +1,4 @@
-<img src="https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 
 | Release | Usage | Development |
 |:--------|:------|:------------|
@@ -7,7 +7,7 @@
 | [![CRAN](http://www.r-pkg.org/badges/version/drake)](http://cran.r-project.org/package=drake) | [![downloads](http://cranlogs.r-pkg.org/badges/drake)](http://cran.rstudio.com/package=drake) | [![Codecov](https://codecov.io/github/ropensci/drake/coverage.svg?branch=master)](https://codecov.io/github/ropensci/drake?branch=master) |
 |[![Zenodo](https://zenodo.org/badge/82609103.svg)](https://zenodo.org/badge/latestdoi/82609103) | |
 
-# The drake R package <img src="https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
+# The drake R package <img src="https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
 The `drake` R package is a workflow manager and computational engine for data science projects. Its primary objective is to keep results up to date with the underlying code and data. When it runs a project, `drake` detects any pre-existing output and refreshes the pieces that are outdated or missing. Not every runthrough starts from scratch, and the final answers are reproducible. With a user-friendly R-focused interface, [comprehensive documentation](https://ropensci.github.io/drake/), and [extensive implicit parallel computing support](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd), `drake` surpasses the analogous functionality in similar tools such as  [Make](www.gnu.org/software/make/), [remake](https://github.com/richfitz/remake), [memoise](https://github.com/r-lib/memoise), and [knitr](https://github.com/yihui/knitr).
 

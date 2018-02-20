@@ -119,7 +119,7 @@ vis_drake_graph(my_plan, width = "100%", height = "500px")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/301ec7c3/images/reg2.html"
+src = "https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true" 
 style="border: none; box-shadow: none">
 </iframe>
