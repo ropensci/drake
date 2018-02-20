@@ -6,7 +6,7 @@
 argument to \code{\link[=make]{make()}}, given a workflow plan
 data frame.}
 \usage{
-possible_targets(plan = drake_plan())
+possible_targets(plan = read_drake_plan())
 }
 \arguments{
 \item{plan}{workflow plan data frame}

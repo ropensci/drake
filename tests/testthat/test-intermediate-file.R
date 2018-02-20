@@ -16,12 +16,12 @@ test_with_dir("responses to intermediate file", {
   # actually change file
   saveRDS(sum(val) + 1, "intermediatefile.rds")
   testrun(config)
-  expect_equal(justbuilt(config), "'intermediatefile.rds'")
+  expect_equal(justbuilt(config), "\"intermediatefile.rds\"")
   expect_equal(final0, readd(final, search = FALSE))
 
   # break the intermediate file
   unlink("intermediatefile.rds", force = TRUE)
   testrun(config)
-  expect_equal(justbuilt(config), "'intermediatefile.rds'")
+  expect_equal(justbuilt(config), "\"intermediatefile.rds\"")
   expect_equal(final0, readd(final, search = FALSE))
 })

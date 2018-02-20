@@ -4,9 +4,9 @@
 \alias{build_drake_graph}
 \title{Create the \code{igraph} dependency network of your project.}
 \usage{
-build_drake_graph(plan = drake_plan(),
+build_drake_graph(plan = read_drake_plan(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = 1, jobs = 1)
+  verbose = 1, jobs = 1, sanitize_plan = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -23,6 +23,8 @@ build_drake_graph(plan = drake_plan(),
 \item{jobs}{number of jobs to accelerate the construction
 of the dependency graph. A light \code{mclapply()}-based
 parallelism is used if your operating system is not Windows.}
+
+\item{sanitize_plan}{logical, whether to sanitize the workflow plan first.}
 }
 \value{
 An igraph object representing

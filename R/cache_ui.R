@@ -131,16 +131,13 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs){
 #'   \code{link{imported}}
 #' @export
 #' @return Character vector naming the built targets in the cache.
-#' @param cache drake cache. See [new_cache()].
-#'   If supplied, `path` and `search` are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @param jobs number of jobs/workers for parallel processing
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -178,20 +175,18 @@ built <- function(
 #'   [built()]
 #' @export
 #' @return Character vector naming the imports in the cache.
+#'
+#' @inheritParams cached
+#'
 #' @param files_only logical, whether to show imported files only
 #'   and ignore imported objects. Since all your functions and
 #'   all their global variables are imported, the full list of
 #'   imported objects could get really cumbersome.
-#' @param cache drake cache. See [new_cache()].
-#'   If supplied, `path` and `search` are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search logical. If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
 #' @param verbose whether to print console messages
+#'
 #' @param jobs number of jobs/workers for parallel processing
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -231,7 +226,8 @@ targets_from_dots <- function(dots, list) {
   names <- vapply(dots, as.character, "")
   if (length(names) == 0L)
     names <- character()
-  .Primitive("c")(names, list) %>% unique
+  targets <- .Primitive("c")(names, list) %>% unique
+  standardize_filename(targets)
 }
 
 imported_only <- function(targets, plan, jobs) {

@@ -51,14 +51,14 @@
 #' load_basic_example() # Get the code with drake_example("basic").
 #' # Dependencies of the knitr-generated targets like 'report.md'
 #' # include targets/imports referenced with `readd()` or `loadd()`.
-#' deps("'report.Rmd'")
+#' deps("\"report.Rmd\"")
 #' })
 #' }
 deps <- function(x){
   if (is.function(x)){
-    out <- function_dependencies(x)
-  } else if (is_file(x) & file.exists(file <- drake::drake_unquote(x))){
-    out <- knitr_deps(x)
+    out <- import_dependencies(x)
+  } else if (is_file(x) && file.exists(drake_unquote(x))){
+    out <- knitr_deps(drake_unquote(x))
   } else if (is.character(x)){
     out <- command_dependencies(x)
   } else{
@@ -90,7 +90,7 @@ deps <- function(x){
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)
-#' dependency_profile("'report.md'", config = con)
+#' dependency_profile("\"report.md\"", config = con)
 #' })
 #' }
 dependency_profile <- function(target, config){
@@ -102,7 +102,7 @@ dependency_profile <- function(target, config){
   deps <- dependencies(target, config)
   hashes_of_dependencies <- self_hash(target = deps, config = config)
   current_dependency_hash <- digest::digest(hashes_of_dependencies,
-    algo = config$long_hash_algo)
+                                            algo = config$long_hash_algo)
   names(hashes_of_dependencies) <- deps
   out <- list(
     cached_command = meta$command,
@@ -113,7 +113,8 @@ dependency_profile <- function(target, config){
     current_file_modification_time = suppressWarnings(
       file.mtime(drake::drake_unquote(target))
     ),
-    file_hash = meta$file,
+    cached_file_hash = meta$file,
+    current_file_hash = file_hash(target = target, config = config),
     cached_dependency_hash = meta$depends,
     current_dependency_hash = current_dependency_hash,
     hashes_of_dependencies = hashes_of_dependencies
@@ -147,7 +148,7 @@ dependency_profile <- function(target, config){
 #' })
 #' }
 tracked <- function(
-  plan = drake_plan(),
+  plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,
@@ -180,6 +181,15 @@ nonfile_target_dependencies <- function(targets, config){
   intersect(out, config$plan$target)
 }
 
+import_dependencies <- function(expr){
+  deps <- code_dependencies(expr)
+  # Imported functions can't have file_output() deps # nolint
+  # or target dependencies from knitr code chunks.
+  # However, file_input()s are totally fine. # nolint
+  deps$file_output <- deps$loadd <- deps$readd <- NULL
+  deps
+}
+
 command_dependencies <- function(command){
   if (!length(command)){
     return()
@@ -187,36 +197,54 @@ command_dependencies <- function(command){
   if (is.na(command)){
     return()
   }
-  command <- as.character(command) %>%
-    braces()
-  fun <- function(){} # nolint: I'm still not sure why these braces need to be here.
-  body(fun) <- parse(text = command)
-  non_files <- function_dependencies(fun) %>%
-    unlist()
+  # TODO: May need to think about changing this bit
+  # if we support expressions in workflow plans.
+  command <- as.character(command)
+  deps <- code_dependencies(parse(text = command))
+
+  # TODO: this block can go away when `drake`
+  # stops supporting single-quoted file names.
   files <- extract_filenames(command)
   if (length(files)){
-    files <- drake::drake_quotes(files, single = TRUE)
+    files <- drake_unquote(files) %>%
+      drake_quotes(single = FALSE)
+    warn_single_quoted_files(files = files, deps = deps)
+    deps$file_input <- base::union(deps$file_input, files)
   }
-  knitr <- find_knitr_doc(command) %>%
-    knitr_deps
-  c(non_files, files, knitr) %>%
-    clean_dependency_list
+  deps$loadd <- base::union(
+    deps$loadd, knitr_deps(find_knitr_doc(command))
+  ) %>%
+    unique
+
+  deps
 }
 
-import_dependencies <- function(object){
-  if (is.function(object)){
-    function_dependencies(object) %>% clean_dependency_list
-  } else{
-    character(0)
+# TODO: this function can go away when drake
+# stops supporting single-quoted file names
+warn_single_quoted_files <- function(files, deps){
+  old_api_files <- drake_unquote(files)
+  new_api_files <- c(deps$file_input, deps$file_output, deps$knitr_input) %>%
+    drake_unquote
+  warn_files <- setdiff(old_api_files, new_api_files)
+  if (!length(warn_files)){
+    return()
   }
+  warning(
+    "Files in a command declared with single-quotes:\n",
+    multiline_message(warn_files),
+    "\nThe way to declare files in drake is changing. ",
+    "Use file_input(), file_output(), and knitr_input() ",
+    "in your commands. See `?drake_plan` for examples.",
+    call. = FALSE
+  )
 }
 
 # Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.
 find_namespaced_functions <- function(f, found = character(0)){
   if (is.function(f)){
     return(find_namespaced_functions(body(f), found))
-  } else if (is.call(f) && deparse(f[[1]]) %in% c("::", ":::")){
-    found <- c(found, deparse(f))
+  } else if (is.call(f) && wide_deparse(f[[1]]) %in% c("::", ":::")){
+    found <- c(found, wide_deparse(f))
   } else if (is.recursive(f)){
     v <- lapply(as.list(f), find_namespaced_functions, found)
     found <- unique(c(found, unlist(v)))
@@ -246,22 +274,176 @@ unwrap_function <- function(funct){
   funct
 }
 
-function_dependencies <- function(funct){
-  funct <- unwrap_function(funct)
-  if (typeof(funct) != "closure"){
-    funct <- function(){} # nolint: curly braces are necessary
+code_dependencies <- function(expr){
+  if (
+    !is.function(expr) &&
+    !is.expression(expr) &&
+    !is.language(expr)
+  ){
+    return(list())
   }
-  out <- findGlobals(funct, merge = FALSE)
-  namespaced <- find_namespaced_functions(funct)
-  out$functions <- c(out$functions, namespaced) %>%
-    sort()
-  parsable_list(out)
+
+  results <- list()
+
+  # `walk()` sees `results` in its lexical scope.
+  walk <- function(
+    expr,
+    knitr_input = FALSE,
+    file_input = FALSE,
+    file_output = FALSE
+  ){
+    if (!length(expr)){
+      return()
+    } else if (is.function(expr)) {
+      expr <- unwrap_function(expr)
+      if (typeof(expr) != "closure"){
+        expr <- function(){} # nolint: curly braces are necessary
+      }
+      walk(
+        body(expr),
+        knitr_input = knitr_input,
+        file_input = file_input,
+        file_output = file_output
+      )
+    } else if (is.name(expr) || is.atomic(expr)) {
+      if (knitr_input){
+        file <- declare_file(expr)
+        results$knitr_input <<- base::union(results$knitr_input, file)
+        results <<- merge_lists(x = results, y = knitr_deps_list(file))
+      } else if (file_input){
+        results$file_input <<- base::union(
+          results$file_input,
+          declare_file(expr)
+        )
+      } else if (file_output) {
+        results$file_output <<- base::union(
+          results$file_output,
+          declare_file(expr)
+        )
+      } else {
+        results$globals <<- base::union(
+          results$globals,
+          setdiff(wide_deparse(expr), drake_fn_patterns)
+        )
+      }
+    } else if (is.call(expr) || is.recursive(expr)) {
+      if (is_loadd_call(expr)){
+        results$loadd <<- base::union(
+          results$loadd,
+          setdiff(analyze_loadd(expr), drake_fn_patterns)
+        )
+      } else if (is_readd_call(expr)){
+        results$readd <<- base::union(
+          results$readd,
+          setdiff(analyze_readd(expr), drake_fn_patterns)
+        )
+      }
+      if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
+        results$namespaced <<- base::union(
+          results$namespaced,
+          setdiff(wide_deparse(expr), drake_fn_patterns)
+        )
+      } else {
+        lapply(
+          X = expr,
+          FUN = walk,
+          knitr_input = is_knitr_input_call(expr),
+          file_input = is_file_input_call(expr),
+          file_output = is_file_output_call(expr)
+        )
+      }
+    }
+  }
+  # Actually walk the expression.
+  walk(expr)
+  # Filter out useless globals.
+  if (length(results$globals)){
+    results$globals <- intersect(results$globals, find_globals(expr))
+  }
+  results
 }
 
-clean_dependency_list <- function(x){
-  x %>%
-    unlist() %>%
-    unname() %>%
-    unique() %>%
-    sort()
+find_globals <- function(expr){
+  if (is.function(expr)){
+    expr <- unwrap_function(expr)
+    formals <- names(formals(expr))
+    expr <- body(expr)
+  } else {
+    formals <- character(0)
+  }
+  # Warning: In collector$results(reset = reset) :
+  #  partial argument match of 'reset' to 'resetState'
+  suppressWarnings(inputs <- CodeDepends::getInputs(expr))
+  base::union(
+    inputs@inputs,
+    names(inputs@functions)
+  ) %>%
+    setdiff(y = formals) %>%
+    Filter(f = is_parsable)
+}
+
+declare_file <- function(expr){
+  if (is.symbol(expr)){
+    return(character(0))
+  }
+  drake_quotes(as.character(expr), single = FALSE)
+}
+
+analyze_loadd <- function(expr){
+  args <- parse_loadd_arg_list(expr)
+  c(unnamed_in_list(args), args[["list"]])
+}
+
+analyze_readd <- function(expr){
+  args <- parse_loadd_arg_list(expr)
+  c(unnamed_in_list(args), args[["target"]])
+}
+
+parse_loadd_arg_list <- function(expr){
+  lapply(as.list(expr)[-1], function(arg){
+    inputs <- CodeDepends::getInputs(arg)
+    c(inputs@strings, inputs@inputs)
+  })
+}
+
+unnamed_in_list <- function(x){
+  if (!length(names(x))){
+    x
+  } else {
+    x[!nchar(names(x))]
+  }
+}
+
+drake_prefix <- c("", "drake::", "drake:::")
+knitr_input_fns <- paste0(drake_prefix, "knitr_input")
+file_input_fns <- paste0(drake_prefix, "file_input")
+file_output_fns <- paste0(drake_prefix, "file_output")
+loadd_fns <- paste0(drake_prefix, "loadd")
+readd_fns <- paste0(drake_prefix, "readd")
+drake_fn_patterns <- c(
+  knitr_input_fns,
+  file_input_fns,
+  file_output_fns,
+  loadd_fns,
+  readd_fns
+)
+
+is_knitr_input_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% c(knitr_input_fns)
+}
+
+is_file_input_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% file_input_fns
+}
+
+is_file_output_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% file_output_fns
+}
+
+is_loadd_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% loadd_fns
+}
+
+is_readd_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% readd_fns
 }

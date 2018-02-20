@@ -400,5 +400,5 @@ unique_random_string <- function(n = 30, exclude = NULL){
     out <- stri_rand_strings(1, n)
     next
   }
-  return(out)
+  make.names(out)
 }

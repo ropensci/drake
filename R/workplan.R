@@ -10,23 +10,30 @@
 #' Targets are the objects and files that drake generates,
 #' and commands are the pieces of R code that produce them.
 #'
-#' For file inputs and targets, drake uses single quotes.
-#' Double quotes are reserved for ordinary strings.
-#' The distinction is important because drake thinks about
-#' how files, objects, targets, etc. depend on each other.
-#' Quotes in the `list` argument are left alone,
-#' but R messes with quotes when it parses the free-form
-#' arguments in `...`, so use the `strings_in_dots`
-#' argument to control the quoting in `...`.
+#' To use custom files in your workflow plan,
+#' use the [file_input()], [knitr_input()], and
+#' [file_output()] functions in your commands.
+#' the examples in this help file provide some guidance.
 #' @export
 #' @return A data frame of targets and commands.
 #' @param ... A collection of symbols/targets
 #'   with commands assigned to them. See the examples for details.
-#' @param list A named list of targets, where the values
-#'   are commands.
-#' @param file_targets logical, whether the targets should be
-#'   (single-quoted) external file targets.
-#' @param strings_in_dots Character scalar,
+#' @param list A named character vector of commands
+#'   with names as targets.
+#' @param file_targets deprecated argument. See [file_output()],
+#'   [file_input()], and [knitr_input()] for the new way to work
+#'   with files.
+#'   In the past, this argument was a logical to indicate whether the
+#'   target names should be single-quoted to denote files. But the newer
+#'   interface is much better.
+#' @param strings_in_dots deprecated argument. See [file_output()],
+#'   [file_input()], and [knitr_input()] for the new way to work
+#'   with files.
+#'   In the past, this argument was a logical to indicate whether the
+#'   target names should be single-quoted to denote files. But the newer
+#'   interface is much better.
+#'
+#'   In the past, this argument was a character scalar denoting
 #'   how to treat quoted character strings in the commands
 #'   specified through `...`.
 #'   Set to `"filenames"` to treat all these strings as
@@ -43,50 +50,25 @@
 #'   when evaluating commands passed through the free-form
 #'   `...` argument.
 #' @examples
-#' # Create example workflow plan data frames for make()
-#' drake_plan(small = simulate(5), large = simulate(50))
-#' # Commands can be multi-line code chunks.
-#' small_plan <- drake_plan(
-#'   small_target = {
-#'     local_object <- 1 + 1
-#'     2 + sqrt(local_object)
-#'   }
-#' )
-#' small_plan
-#' cache <- storr::storr_environment() # Avoid writing files in examples.
-#' make(small_plan, cache = cache) # Most users don't need the cache argument.
-#' cached(cache = cache)
-#' readd(small_target, cache = cache)
-#' # local_object only applies to the code chunk.
-#' ls() # your environment is protected (local_object not found)
-#' rm(small_target)
-#' # For tighter control over commands, use the `list` argument.
-#' # Single quotes are file names, double quotes are oridinary strings.
-#' # To actually run the little example workflow below,
-#' # you need a file called `my_file.xlsx``
-#' # with an Excel sheet called `second_sheet`.
-#' # You also need to install the xlsx package.
-#' drake_plan(
-#'   list = c(
-#'     dataset = "readxl::read_excel(path = 'my_file.xlsx', sheet = \"second_sheet\")" # nolint
-#'   )
-#' )
-#' # Output targets can also be files,
-#' # but the target names must have single quotes around them.
+#' test_with_dir("Contain side effects", {
+#' # Create workflow plan data frames.
 #' mtcars_plan <- drake_plan(
-#'   output_file.csv = write.csv(mtcars, "output_file.csv"),
-#'   file_targets = TRUE,
-#'   strings_in_dots = "literals"
+#'   write.csv(mtcars[, c("mpg", "cyl")], file_output("mtcars.csv")),
+#'   value = read.csv(file_input("mtcars.csv"))
 #' )
 #' mtcars_plan
-#' # make(mtcars_plan) # Would write output_file.csv. # nolint
-#' # In the free-form `...` argument
-#' # drake_plan() uses tidy evaluation to figure out your commands.
-#' # For example, it respects the quasiquotation operator `!!`
-#' # when it figures out what your code should be.
-#' # Suppress this with `tidy_evaluation = FALSE` or
-#' # with the `list` argument.
-#' my_variable <- 5
+#' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
+#' head(readd(value))
+#' # You can use knitr inputs too. See the top command below.
+#' load_basic_example()
+#' head(my_plan)
+#' # The `knitr_input("report.Rmd")` tells `drake` to dive into the active
+#' # code chunks to find dependencies.
+#' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
+#' # are loaded in with calls to `loadd()` and `readd()`.
+#' deps("report.Rmd")
+#' # Are you a fan of tidy evaluation?
+#' my_variable <- 1
 #' drake_plan(
 #'   a = !!my_variable,
 #'   b = !!my_variable + 1,
@@ -101,14 +83,14 @@
 #' # For instances of !! that remain unevaluated in the workflow plan,
 #' # make() will run these commands in tidy fashion,
 #' # evaluating the !! operator using the environment you provided.
+#' })
 drake_plan <- function(
   ...,
   list = character(0),
-  file_targets = FALSE,
-  strings_in_dots = c("filenames", "literals"),
+  file_targets = NULL,
+  strings_in_dots = NULL,
   tidy_evaluation = TRUE
 ){
-  strings_in_dots <- match.arg(strings_in_dots)
   if (tidy_evaluation){
     dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
   } else {
@@ -117,8 +99,6 @@ drake_plan <- function(
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)
-  targets <- names(commands)
-  commands <- as.character(commands)
   if (!length(commands)){
     return(
       tibble(
@@ -127,18 +107,45 @@ drake_plan <- function(
       )
     )
   }
+  commands <- complete_target_names(commands)
+  targets <- names(commands)
+  commands <- as.character(commands)
   plan <- tibble(
     target = targets,
     command = commands
   )
   from_dots <- plan$target %in% names(commands_dots)
-  if (file_targets){
+  if (length(file_targets) || identical(strings_in_dots, "filenames")){
+    warning(
+      "The `file_targets` and `strings_in_target` are deprecated. ",
+      "See the help file examples of `drake_plan()` to see the new ",
+      "way to handle file inputs/targets. ",
+      "Use the file_input(), file_output(), and knitr_input() functions ",
+      "in your commands. ",
+      "Worry about single-quotes no more!"
+    )
+  }
+  if (identical(file_targets, TRUE)){
     plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
-  if (strings_in_dots == "filenames"){
+  # TODO: leave double-quoted strings alone when we're ready to
+  # deprecate single-quoting in the file API.
+  # Currently, to totally take advantage of the new file API,
+  # users need to set strings_in_dots to "filenames" every time.
+  if (!length(strings_in_dots) || strings_in_dots == "filenames"){
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
+}
+
+complete_target_names <- function(commands_list){
+  if (!length(names(commands_list))){
+    # Should not actually happen, but it's better to have anyway.
+    names(commands_list) <- paste0("drake_target_", seq_along(commands_list)) # nocov # nolint
+  }
+  index <- !nchar(names(commands_list))
+  names(commands_list)[index] <- paste0("drake_target_", seq_len(sum(index)))
+  commands_list
 }
 
 drake_plan_override <- function(target, field, config){
@@ -149,3 +156,133 @@ drake_plan_override <- function(target, field, config){
     return(in_plan[[which(config$plan$target == target)]])
   }
 }
+
+#' @title Declare the file inputs of a workflow plan command.
+#' @description Use this function to help write the commands
+#'   in your workflow plan data frame. See the examples
+#'   for a full explanation.
+#' @export
+#' @seealso `file_output` `knitr_input`
+#' @return A character vector of declared input file paths.
+#' @param ... Character strings. File paths of input files
+#'   to a command in your workflow plan data frame.
+#' @export
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # The `file_output()` and `file_input()` functions
+#' # just takes in strings and returns them.
+#' file_output("summaries.txt")
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     write.csv(mtcars, file_output("mtcars.csv")),
+#'     contents = read.csv(file_input("mtcars.csv")),
+#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'   )
+#' )
+#' plan
+#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # and a dependency of `contents`. See for yourself:
+#' config <- make(plan)
+#' file.exists("mtcars.csv")
+#' vis_drake_graph(config)
+#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' })
+#' }
+file_input <- function(...){
+  as.character(c(...))
+}
+
+#' @title Declare the file outputs of a workflow plan command.
+#' @description Use this function to help write the commands
+#'   in your workflow plan data frame. You can only specify
+#'   one file output per command. See the examples
+#'   for a full explanation.
+#' @export
+#' @seealso file_input knitr_input
+#' @return A character string, the file path of the file output.
+#' @param path Character string of length 1. File path
+#'   of the file output of a command in your
+#'   workflow plan data frame.
+#' @param ... Do not use. For informative input handling only.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # The `file_output()` and `file_input()` functions
+#' # just takes in strings and returns them.
+#' file_output("summaries.txt")
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     write.csv(mtcars, file_output("mtcars.csv")),
+#'     contents = read.csv(file_input("mtcars.csv")),
+#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'   )
+#' )
+#' plan
+#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # and a dependency of `contents`. See for yourself:
+#' config <- make(plan)
+#' file.exists("mtcars.csv")
+#' vis_drake_graph(config)
+#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' })
+#' }
+file_output <- function(path, ...){
+  path <- c(path, as.character(c(...)))
+  if (length(path) != 1){
+    warning(
+      "In file_output(), the `path` argument must ",
+      "have length 1. Supplied length = ", length(path), ". ",
+      "using first file output: ", path[1], ".",
+      call. = FALSE
+    )
+  }
+  as.character(path[1])
+}
+
+#' @title Declare the `knitr`/`rmarkdown` source files
+#'   of a workflow plan command.
+#' @description Use this function to help write the commands
+#'   in your workflow plan data frame. See the examples
+#'   for a full explanation.
+#' @export
+#' @seealso file_input file_output
+#' @return A character vector of declared input file paths.
+#' @param ... Character strings. File paths of `knitr`/`rmarkdown`
+#'   source files suplied to a command in your workflow plan data frame.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # `knitr_input()` is like `file_input()`
+#' # except that it analyzes active code chunks in your `knitr`
+#' # source file and detects non-file dependencies.
+#' # That way, updates to the right dependencies trigger rebuilds
+#' # in your report.
+#' # The basic example (`drake_example("basic")`)
+#' # already has a demonstration
+#' load_basic_example()
+#' config <- make(my_plan)
+#' vis_drake_graph(config)
+#' # Now how did drake magically know that
+#' # `small`, `large`, and `coef_regression2_small` were
+#' # dependencies of the output file `report.md`?
+#' # because the command in the workflow plan had
+#' # `knitr_input("report.Rmd")` in it, so drake knew
+#' # to analyze the active code chunks. There, it spotted
+#' # where `small`, `large`, and `coef_regression2_small`
+#' # were read from the cache using calls to `loadd()` and `readd()`.
+#' })
+#' }
+knitr_input <- file_input

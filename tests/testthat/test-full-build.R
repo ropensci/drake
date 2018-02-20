@@ -32,8 +32,8 @@ test_with_dir("scratch build with custom filesystem cache.", {
   cache <- this_cache(path = path)
 
   # take this opportunity to test clean() and prune()
-  all <- sort(c("'input.rds'",
-    "'intermediatefile.rds'", "a",
+  all <- sort(c("\"input.rds\"",
+    "\"intermediatefile.rds\"", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i", "j",
     "myinput", "nextone", "readRDS", "saveRDS", "yourinput"))
   expect_equal(config$cache$list(), all)
@@ -43,20 +43,20 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(file.exists(path))
 
   # clean specific targets
-  clean(b, c, list = c("'intermediatefile.rds'", "nextone"),
+  clean(b, c, list = c("\"intermediatefile.rds\"", "nextone"),
     cache = cache)
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_equal(config$cache$list(),
-    setdiff(all, c("b", "c", "'intermediatefile.rds'", "nextone")))
+    setdiff(all, c("b", "c", "\"intermediatefile.rds\"", "nextone")))
 
   # clean does not remove imported files
   expect_true(file.exists("input.rds"))
-  expect_true("'input.rds'" %in%
+  expect_true("\"input.rds\"" %in%
     config$cache$list())
-  clean("'input.rds'", cache = cache)
+  clean("\"input.rds\"", cache = cache)
   expect_true(file.exists("input.rds"))
-  expect_false("'input.rds'" %in%
+  expect_false("\"input.rds\"" %in%
     config$cache$list())
 
   # clean removes imported functions and cleans up 'functions'

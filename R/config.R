@@ -316,7 +316,7 @@
 #' })
 #' }
 drake_config <- function(
-  plan = drake_plan(),
+  plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
@@ -380,7 +380,8 @@ drake_config <- function(
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
     graph <- build_drake_graph(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, jobs = jobs)
+      envir = envir, verbose = verbose, jobs = jobs,
+      sanitize_plan = FALSE)
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
@@ -463,7 +464,7 @@ do_prework <- function(config, verbose_packages) {
 #' possible_targets(my_plan)
 #' })
 #' }
-possible_targets <- function(plan = drake_plan()) {
+possible_targets <- function(plan = read_drake_plan()) {
   plan <- sanitize_plan(plan)
   as.character(plan$target)
 }

@@ -8,16 +8,11 @@
 #' @export
 #' @return [sessionInfo()] of the last
 #'   call to [make()]
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -45,16 +40,11 @@ drake_session <- function(path = getwd(), search = TRUE,
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -84,16 +74,11 @@ in_progress <- function(path = getwd(), search = TRUE,
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#' @param search If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
+#'
+#' @inheritParams cached
+#'
 #' @param verbose whether to print console messages
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -130,6 +115,8 @@ failed <- function(path = getwd(), search = TRUE,
 #' @return The build progress of each target reached by
 #'   the current [make()] so far.
 #'
+#' @inheritParams cached
+#'
 #' @param ... objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   \code{\link{remove}(...)}.
@@ -144,18 +131,6 @@ failed <- function(path = getwd(), search = TRUE,
 #' @param imported_files_only logical, deprecated. Same as
 #'   `no_imported_objects`.  Use the `no_imported_objects` argument
 #'   instead.
-#'
-#' @param cache optional drake cache. See code{\link{new_cache}()}.
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#'
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#'
-#' @param search If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
 #'
 #' @param verbose whether to print console messages
 #'

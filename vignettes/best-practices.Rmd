@@ -60,7 +60,7 @@ Then, set up your workflow plan data frame.
 
 ```{r storecode1}
 good_plan <- drake_plan(
-  my_data = get_data('data.csv'), # External files need to be in commands explicitly. # nolint
+  my_data = get_data(file_input("data.csv")), # External files need to be in commands explicitly. # nolint
   my_analysis = analyze_data(my_data),
   my_summaries = summarize_results(my_data, my_analysis)
 )
@@ -76,7 +76,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/good-commands.html"
+src = "https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/good-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -101,9 +101,9 @@ If you migrate to `drake`, you may be tempted to set up a workflow plan like thi
 
 ```{r badsource}
 bad_plan <- drake_plan(
-  my_data = source('get_data.R'),           # nolint
-  my_analysis = source('analyze_data.R'),   # nolint
-  my_summaries = source('summarize_data.R') # nolint
+  my_data = source(file_input("get_data.R")),
+  my_analysis = source(file_input("analyze_data.R")),
+  my_summaries = source(file_input("summarize_data.R"))
 )
 
 bad_plan
@@ -117,7 +117,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/bad-commands.html"
+src = "https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/bad-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -127,7 +127,7 @@ Dangers:
 1. In the first `make(bad_plan, jobs = 2)`, `drake` will try to build `my_data` and `my_analysis` at the same time even though `my_data` must finish before `my_analysis` begins.
 2. `Drake` is oblivious to `data.csv` since it is not explicitly mentioned in a workflow plan command. So when `data.csv` changes, `make(bad_plan)` will not rebuild `my_data`.
 3. `my_analysis` will not update when `my_data` changes.
-4. The return value of `source()` is formatted counter-intuitively. If `source('get_data.R')` is the command for `my_data`, then `my_data` will always be a list with elements `"value"` and `"visible"`. In other words, `source('get_data.R')$value` is really what you would want.
+4. The return value of `source()` is formatted counter-intuitively. If `source(file_input("get_data.R"))` is the command for `my_data`, then `my_data` will always be a list with elements `"value"` and `"visible"`. In other words, `source(file_input("get_data.R"))$value` is really what you would want.
 
 In addition, this `source()`-based approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
 
@@ -148,7 +148,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/951c3fe7/images/outdated.html"
+src = "https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -222,3 +222,67 @@ unlink(
   )
 )
 ```
+
+# Generating workflow plan data frames
+
+`Drake` has the following functions to generate workflow plan data frames (the `plan` argument of `make()`, where you list your targets and commands). 
+
+- `drake_plan()`
+- `evaluate_plan()`
+- `expand_plan()`
+- `gather_plan()`
+- `plan_analyses()`
+- `plan_summaries()`
+
+Except for `drake_plan()`, they all use wildcards as templates. For example, suppose your workflow checks several metrics of several schools. The idea is to write a workflow plan with your metrics and let the wildcard templating expand over the available schools.
+
+```{r schoolswildcards1}
+hard_plan <- drake_plan(
+  credits = check_credit_hours(school__),
+  students = check_students(school__),
+  grads = check_graduations(school__),
+  public_funds = check_public_funding(school__)
+)
+
+evaluate_plan(
+  hard_plan, 
+  rules = list(school__ = c("schoolA", "schoolB", "schoolC"))
+) 
+```
+
+But what if some metrics do not make sense? For exmaple, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.
+
+```{r rulesgridschools}
+library(magrittr)
+rules_grid <- tibble::tibble(
+  school_ =  c("schoolA", "schoolB", "schoolC"),
+  funding_ = c("public", "public", "private"),
+) %>% 
+  tidyr::crossing(cohort_ = c("2012", "2013", "2014", "2015")) %>%
+  dplyr::filter(!(school_ == "schoolB" & cohort_ %in% c("2012", "2013"))) %>%
+  print()
+```
+
+Then, alternately choose `expand = TRUE` and `expand = FALSE` when evaluating the wildcards.
+
+```{r rulesgridevalplan}
+drake_plan(
+  credits = check_credit_hours("school_", "funding_", "cohort_"),
+  students = check_students("school_", "funding_", "cohort_"),
+  grads = check_graduations("school_", "funding_", "cohort_"),
+  public_funds = check_public_funding("school_", "funding_", "cohort_"),
+  strings_in_dots = "literals"
+) %>% evaluate_plan(
+    wildcard = "school_",
+    values = rules_grid$school_,
+    expand = TRUE
+  ) %>%
+  evaluate_plan(
+    wildcard = "funding_",
+    rules = rules_grid,
+    expand = FALSE
+  ) %>%
+  DT::datatable()
+```
+
+Thanks to [Alex Axthelm](https://github.com/AlexAxthelm) for this example in [issue 235](https://github.com/ropensci/drake/issues/235).

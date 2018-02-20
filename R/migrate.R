@@ -314,7 +314,8 @@ legacy_target_current <- function(target, hashes, config){
   }
   if (!legacy_file_current(
     target = target, hashes = hashes, config = config)){
-    return(FALSE)
+    # won't spend time covering every inch of legacy functions
+    return(FALSE) # nocov
   }
   identical(
     config$cache$get(target, namespace = "depends"),
@@ -327,7 +328,8 @@ legacy_file_current <- function(target, hashes, config){
     return(TRUE)
   }
   if (!file.exists(drake_unquote(target))){
-    return(FALSE)
+    # won't spend time covering every inch of legacy functions
+    return(FALSE) # nocov
   }
   out <- config$cache$get(target)
   out <- ifelse(is.character(out), out, out$value)

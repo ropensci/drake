@@ -5,11 +5,12 @@
 \title{Create the internal runtime parameter list
 used internally in \code{\link[=make]{make()}}.}
 \usage{
-drake_config(plan = drake_plan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), verbose = 1, hook = default_hook,
-  cache = drake::get_cache(verbose = verbose, force = force),
-  fetch_cache = NULL, parallelism = drake::default_parallelism(),
-  jobs = 1, packages = rev(.packages()), prework = character(0),
+drake_config(plan = read_drake_plan(),
+  targets = drake::possible_targets(plan), envir = parent.frame(),
+  verbose = 1, hook = default_hook, cache = drake::get_cache(verbose =
+  verbose, force = force), fetch_cache = NULL,
+  parallelism = drake::default_parallelism(), jobs = 1,
+  packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,

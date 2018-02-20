@@ -2,7 +2,7 @@ Package: drake
 Title: Data Frames in R for Make
 Description: An R-focused pipeline toolkit
   for reproducible code and high-performance computing.
-Version: 5.0.1.9001
+Version: 5.0.1.9002
 License: GPL-3
 URL: https://github.com/ropensci/drake
 BugReports: https://github.com/ropensci/drake/issues
@@ -51,7 +51,7 @@ Depends:
   R (>= 3.2.0)
 Imports:
   bindr,
-  codetools,
+  CodeDepends,
   crayon,
   evaluate,
   digest,
@@ -82,13 +82,16 @@ Suggests:
   abind,
   cranlogs,
   DBI,
+  DT,
+  dplyr,
   Ecdat,
   future.batchtools,
   ggplot2,
   MASS,
   methods,
   RSQLite,
-  rmarkdown
+  rmarkdown,
+  tidyr
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

@@ -9,7 +9,7 @@
 #'   [drake_plan()].
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See [new_cache()]
+#' @param cache optional drake cache. See [new_cache()].
 #' @param verbose same as for [make()]
 #' @param jobs number of jobs/workers for light parallelism
 #' @examples
@@ -24,7 +24,7 @@
 #' })
 #' }
 check_plan <- function(
-  plan = drake_plan(),
+  plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
@@ -41,7 +41,6 @@ check_plan <- function(
     jobs = jobs
   )
   check_drake_config(config)
-  check_strings(config$plan, jobs = jobs)
   invisible(plan)
 }
 
@@ -93,34 +92,6 @@ warn_bad_symbols <- function(x) {
   warning("Possibly bad target names:\n", multiline_message(bad),
     call. = FALSE)
   invisible()
-}
-
-check_strings <- function(plan, jobs) {
-  x <- stri_extract_all_regex(plan$command, "(?<=\").*?(?=\")")
-  names(x) <- plan$target
-  x <- x[!is.na(x)]
-  if (!length(x))
-    return()
-  x <- lightly_parallelize(
-    X = x,
-    FUN = function(y) {
-      if (length(y) > 2)
-        return(y[seq(from = 1, to = length(y), by = 2)])
-      else
-        return(y)
-    },
-    jobs = jobs
-  )
-  message("Double-quoted strings were found in plan$command.\n",
-    "Should these be single-quoted instead?\n",
-    "Remember: single-quoted strings are file target dependencies\n",
-    "and double-quoted strings are just ordinary strings.")
-  for (target in seq_len(length(x))) {
-    message("\ntarget: ", names(x)[target])
-    message("strings in command:\n",
-      multiline_message(drake::drake_quotes(x[[target]],
-      single = FALSE)), sep = "")
-  }
 }
 
 check_drake_graph <- function(graph){

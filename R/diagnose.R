@@ -9,6 +9,8 @@
 #' @return Either a character vector of target names or an object
 #'   of class `"error"`.
 #'
+#' @inheritParams cached
+#'
 #' @param target name of the target of the error to get.
 #'   Can be a symbol if `character_only` is `FALSE`,
 #'   must be a character if `character_only` is `TRUE`.
@@ -16,18 +18,6 @@
 #' @param character_only logical, whether `target` should be treated
 #'   as a character or a symbol.
 #'   Just like `character.only` in [library()].
-#'
-#' @param cache optional drake cache. See [new_cache()].
-#'   If `cache` is supplied,
-#'   the `path` and `search` arguments are ignored.
-#'
-#' @param path Root directory of the drake project,
-#'   or if `search` is `TRUE`, either the
-#'   project root or a subdirectory of the project.
-#'
-#' @param search If `TRUE`, search parent directories
-#'   to find the nearest drake cache. Otherwise, look in the
-#'   current working directory only.
 #'
 #' @param verbose whether to print console messages
 #'
@@ -75,5 +65,5 @@ diagnose <- function(
   if (!cache$exists(key = target, namespace = "meta")){
     stop("No diagnostic information for target ", target, ".")
   }
-  cache$get(key = target, namespace = "meta")
+  cache$get(key = standardize_filename(target), namespace = "meta")
 }

@@ -1,6 +1,17 @@
 drake_context("workflow plan")
 
-test_with_dir("empty plan", {
+test_with_dir("File functions handle input", {
+  expect_equal(
+    file_input(1, "x", "y"), c("1", "x", "y")
+  )
+  expect_equal(
+    knitr_input(1, "x", "y"), c("1", "x", "y")
+  )
+  expect_warning(expect_equal(file_output(1, "x", "y"), "1"))
+})
+
+test_with_dir("edge cases for plans", {
+  # empty plan
   expect_equal(
     drake_plan(),
     tibble(
@@ -8,6 +19,34 @@ test_with_dir("empty plan", {
       command = character(0)
     )
   )
+  # no target names
+  expect_equal(
+    drake_plan(a, b),
+    tibble(
+      target = c("drake_target_1", "drake_target_2"),
+      command = c("a", "b")
+    )
+  )
+  expect_equal(
+    drake_plan(list = c("a", "b")),
+    drake_plan(a, b)
+  )
+  # incomplete target names
+  expect_equal(
+    drake_plan(a = 1, b),
+    tibble(
+      target = c("a", "drake_target_1"),
+      command = c("1", "b")
+    )
+  )
+  # too many file outputs
+  expect_warning(expect_equal(
+    drake_plan(a = file_output("file1", "file2")),
+    tibble(
+      target = c("\"file1\""),
+      command = "file_output('file1', 'file2')"
+    )
+  ))
 })
 
 test_with_dir("plan set 1", {
@@ -23,16 +62,19 @@ test_with_dir("plan set 1", {
       command = c("c", "'c'",
       "d", "readRDS('e')"))
     expect_equal(x, y)
+    expect_warning(check_plan(x))
   }
 })
 
 test_with_dir("plan set 2", {
   for (tidy_evaluation in c(TRUE, FALSE)){
-    x <- drake_plan(a = c,
-                    b = "c",
-                    list = c(c = "d", d = "readRDS('e')"),
-                    strings_in_dots = "literals",
-                    tidy_evaluation = tidy_evaluation)
+    x <- drake_plan(
+      a = c,
+      b = "c",
+      list = c(c = "d", d = "readRDS('e')"),
+      strings_in_dots = "literals",
+      tidy_evaluation = tidy_evaluation
+    )
     y <- tibble(
       target = letters[1:4],
       command = c("c", "\"c\"",
@@ -43,32 +85,16 @@ test_with_dir("plan set 2", {
 
 test_with_dir("plan set 3", {
   for (tidy_evaluation in c(TRUE, FALSE)){
-  x <- drake_plan(
+  expect_warning(x <- drake_plan(
     a = c,
     b = "c",
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "literals", file_targets = TRUE,
-    tidy_evaluation = tidy_evaluation)
-  y <- tibble(
-    target = drake::drake_quotes(letters[1:4], single = TRUE),
+    tidy_evaluation = tidy_evaluation))
+  y <- tibble::tibble(
+    target = drake::drake_quotes(letters[1:4], single = FALSE),
     command = c("c", "\"c\"", "d", "readRDS('e')"))
   expect_equal(x, y)
-  }
-})
-
-test_with_dir("plan set 4", {
-  for (tidy_evaluation in c(TRUE, FALSE)){
-    x <- drake_plan(
-      a = c,
-      b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
-      strings_in_dots = "filenames", file_targets = TRUE,
-      tidy_evaluation = tidy_evaluation)
-    y <- tibble(
-      target = drake::drake_quotes(letters[1:4], single = TRUE),
-      command = c("c", "'c'", "d", "readRDS('e')"))
-    expect_equal(x, y)
-    expect_warning(check_plan(x, verbose = FALSE))
   }
 })
 
@@ -119,7 +145,7 @@ test_with_dir("check_plan() finds bad symbols", {
   x <- tibble(
     target = c("\"targs\""),
     command = 1)
-  expect_warning(o <- check_plan(x, verbose = FALSE))
+  expect_silent(o <- check_plan(x, verbose = FALSE))
   x <- tibble(
     target = c("gotcha", "b", "targs"),
     command = 1)
@@ -157,14 +183,16 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 
 test_with_dir("file names with weird characters do not get mangled", {
   out <- tibble(
-    target = c("'is:a:file'", "not:a:file"),
+    target = c("\"is:a:file\"", "not:a:file"),
     command = as.character(1:2)
   )
   out2 <- expect_warning(sanitize_plan(out))
   out3 <- tibble(
-    target = c("'is:a:file'", "not_a_file"),
+    target = c("\"is:a:file\"", "not_a_file"),
     command = as.character(1:2)
   )
+  expect_equal(out[1, ], out2[1, ])
+  expect_false(identical(out[2, ], out2[2, ]))
   expect_equal(out2, out3)
 })
 

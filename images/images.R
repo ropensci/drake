@@ -21,6 +21,11 @@ reg2 <- function(d){
 vis_drake_graph(config, file = "reg2.html", selfcontained = TRUE,
   width = "100%", height = "500px")
 
+vis_drake_graph(config, file = "reg2-small-legend.html", selfcontained = TRUE,
+  width = "100%", height = "500px", full_legend = FALSE)
+
+vis_drake_graph(config, file = "reg2-no-legend.html", selfcontained = TRUE,
+  width = "100%", height = "500px", ncol_legend = 0)
 
 vis_drake_graph(
   config, file = "targetsonly.html", selfcontained = TRUE,
@@ -50,7 +55,7 @@ vis_drake_graph(
 vis_drake_graph(
   config, file = "subset.html", selfcontained = TRUE,
   width = "100%", height = "500px",
-  subset = c("regression2_small", "'report.md'")
+  subset = c("regression2_small", "\"report.md\"")
 )
 
 clean(destroy = TRUE)
@@ -89,7 +94,7 @@ for (file in files){
 }
 
 my_plan <- drake_plan(
-  my_data = get_data('data.csv'), # nolint
+  my_data = get_data(file_input("data.csv")), # nolint
   my_analysis = analyze_data(my_data),
   my_summaries = summarize_results(my_data, my_analysis)
 )
@@ -101,9 +106,9 @@ vis_drake_graph(
 )
 
 my_plan <- drake_plan(
-  my_data = source('get_data.R'), # nolint
-  my_analysis = source('analyze_data.R'), # nolint
-  my_summaries = source('summarize_data.R') # nolint
+  my_data = source(file_input("get_data.R")), # nolint
+  my_analysis = source(file_input("analyze_data.R")), # nolint
+  my_summaries = source(file_input("summarize_data.R")) # nolint
 )
 config <- drake_config(my_plan)
 vis_drake_graph(
