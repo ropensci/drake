@@ -180,10 +180,10 @@ nonfile_target_dependencies <- function(targets, config){
 
 import_dependencies <- function(expr){
   deps <- code_dependencies(expr)
-  # Imported functions can't have file_output() deps # nolint
+  # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
-  # However, file_input()s are totally fine. # nolint
-  deps$file_output <- deps$loadd <- deps$readd <- NULL
+  # However, file_in()s are totally fine. # nolint
+  deps$file_out <- deps$loadd <- deps$readd <- NULL
   deps
 }
 
@@ -206,8 +206,8 @@ command_dependencies <- function(command){
     files <- drake_unquote(files) %>%
       drake_quotes(single = FALSE)
     warn_single_quoted_files(files = files, deps = deps)
-    files <- setdiff(files, deps$file_output)
-    deps$file_input <- base::union(deps$file_input, files)
+    files <- setdiff(files, deps$file_out)
+    deps$file_in <- base::union(deps$file_in, files)
   }
   deps$loadd <- base::union(
     deps$loadd, knitr_deps(find_knitr_doc(command))
@@ -220,7 +220,7 @@ command_dependencies <- function(command){
 # stops supporting single-quoted file names
 warn_single_quoted_files <- function(files, deps){
   old_api_files <- drake_unquote(files)
-  new_api_files <- c(deps$file_input, deps$file_output, deps$knitr_input) %>%
+  new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in) %>%
     drake_unquote
   warn_files <- setdiff(old_api_files, new_api_files)
   if (!length(warn_files)){
@@ -230,7 +230,7 @@ warn_single_quoted_files <- function(files, deps){
     "Files in a command declared with single-quotes:\n",
     multiline_message(warn_files),
     "\nThe way to declare files in drake is deprecated. ",
-    "Use file_input(), file_output(), and knitr_input() ",
+    "Use file_in(), file_out(), and knitr_in() ",
     "in your commands. See `?drake_plan` for examples.",
     call. = FALSE
   )
@@ -302,12 +302,12 @@ code_dependencies <- function(expr){
         new_results <- analyze_loadd(expr)
       } else if (is_readd_call(expr)){
         new_results <- analyze_readd(expr)
-      } else if (is_knitr_input_call(expr)){
-        new_results <- analyze_knitr_input(expr)
-      } else if (is_file_input_call(expr)){
-        new_results <- analyze_file_input(expr)
-      } else if (is_file_output_call(expr)){
-        new_results <- analyze_file_output(expr)
+      } else if (is_knitr_in_call(expr)){
+        new_results <- analyze_knitr_in(expr)
+      } else if (is_file_in_call(expr)){
+        new_results <- analyze_file_in(expr)
+      } else if (is_file_out_call(expr)){
+        new_results <- analyze_file_out(expr)
       } else {
         if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
           new_results <- list(
@@ -359,25 +359,25 @@ analyze_readd <- function(expr){
   list(readd = setdiff(args[["target"]], drake_fn_patterns))
 }
 
-analyze_file_input <- function(expr){
+analyze_file_in <- function(expr){
   inputs <- CodeDepends::getInputs(expr)
   deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
-  list(file_input = deps)
+  list(file_in = deps)
 }
 
-analyze_file_output <- function(expr){
+analyze_file_out <- function(expr){
   inputs <- CodeDepends::getInputs(expr)
   deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
-  list(file_output = deps)
+  list(file_out = deps)
 }
 
-analyze_knitr_input <- function(expr){
+analyze_knitr_in <- function(expr){
   inputs <- CodeDepends::getInputs(expr)
   files <- c(inputs@strings, inputs@files)
   out <- lapply(files, knitr_deps_list) %>%
     Reduce(f = merge_lists)
   files <- drake_quotes(files, single = FALSE)
-  out$knitr_input <- base::union(out$knitr_input, files)
+  out$knitr_in <- base::union(out$knitr_in, files)
   out
 }
 
@@ -406,29 +406,29 @@ pair_text <- function(x, y){
 }
 
 drake_prefix <- c("", "drake::", "drake:::")
-knitr_input_fns <- pair_text(drake_prefix, c("knitr_input"))
-file_input_fns <- pair_text(drake_prefix, c("file_input"))
-file_output_fns <- pair_text(drake_prefix, c("file_output"))
+knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
+file_in_fns <- pair_text(drake_prefix, c("file_in"))
+file_out_fns <- pair_text(drake_prefix, c("file_out"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
 drake_fn_patterns <- c(
-  knitr_input_fns,
-  file_input_fns,
-  file_output_fns,
+  knitr_in_fns,
+  file_in_fns,
+  file_out_fns,
   loadd_fns,
   readd_fns
 )
 
-is_knitr_input_call <- function(expr){
-  wide_deparse(expr[[1]]) %in% c(knitr_input_fns)
+is_knitr_in_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% c(knitr_in_fns)
 }
 
-is_file_input_call <- function(expr){
-  wide_deparse(expr[[1]]) %in% file_input_fns
+is_file_in_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% file_in_fns
 }
 
-is_file_output_call <- function(expr){
-  wide_deparse(expr[[1]]) %in% file_output_fns
+is_file_out_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% file_out_fns
 }
 
 is_loadd_call <- function(expr){

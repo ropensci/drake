@@ -35,7 +35,7 @@ test_with_dir("knitr_deps() works", {
   x <- knitr_deps("report.Rmd")
   y <- expect_warning(deps("knit('report.Rmd')"))
   z <- expect_warning(deps("render('report.Rmd')"))
-  w <- deps("funct(knitr_input(report.Rmd))")
+  w <- deps("funct(knitr_in(report.Rmd))")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )

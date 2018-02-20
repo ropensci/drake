@@ -97,7 +97,7 @@ Programmatically, several functions can help you check immediate dependencies.
 ```{r checkdepsdebug}
 deps(reg2)
 
-# knitr_input() makes sure your target depends on `report.Rmd`
+# knitr_in() makes sure your target depends on `report.Rmd`
 # and any dependencies loaded with loadd() and readd()
 # in the report's active code chunks.
 deps(my_plan$command[1])

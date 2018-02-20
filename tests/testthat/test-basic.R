@@ -95,8 +95,8 @@ test_with_dir("basic example works", {
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.
   x <- drake_plan(
-    a = knitr::knit(knitr_input(report.Rmd)), # nolint
-    b = knitr::knit(knitr_input(report.md)), # nolint
+    a = knitr::knit(knitr_in(report.Rmd)), # nolint
+    b = knitr::knit(knitr_in(report.md)), # nolint
     c = knitr::knit("nonfile"),
     d = rmarkdown::render('report.Rmd'), # nolint
     e = rmarkdown::render('report.md'), # nolint
