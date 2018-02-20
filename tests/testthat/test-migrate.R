@@ -57,7 +57,7 @@ test_with_dir("migrate_drake_project() a partially outdated cache", {
   plan$command[plan$target == "small"] <- "simulate(6)"
   cache$set(key = "plan", value = plan, namespace = "config")
   expect_true(migrate_drake_project(path = "old", jobs = 2))
-  out <- c("'report.md'", plan$target[grep("small", plan$target)])
+  out <- c("\"report.md\"", plan$target[grep("small", plan$target)])
   config <- load_basic_example(cache = cache)
   out2 <- outdated(config = config)
   # expect_equal(sort(out), sort(out2)) # r-lib/covr#289 # nolint
@@ -71,7 +71,7 @@ test_with_dir("migration_result()", {
 test_with_dir("Null cases in legacy functions", {
   write_v4.3.0_project() # nolint
   cache <- this_cache(force = TRUE)
-  cache$set(key = "'report.md'", value = Inf, namespace = "filemtime")
+  cache$set(key = "\"report.md\"", value = Inf, namespace = "filemtime")
   config <- read_drake_config(cache = cache)
   expect_true(is.na(legacy_self_hash(target = "ok123", config = config)))
   x <- legacy_file_hash(target = "'report.md'", config = config,
@@ -82,14 +82,14 @@ test_with_dir("Null cases in legacy functions", {
   unlink("report.md")
   expect_false(
     legacy_target_current(
-      target = "'report.md'", hashes = NULL, config = config))
+      target = "\"report.md\"", hashes = NULL, config = config))
   expect_true(is.na(error_na()))
 })
 
 test_with_dir("edge cases in the legacy functions. (no glaring errors)", {
   con <- dbug()
   testrun(con)
-  target <- "'intermediatefile.rds'"
+  target <- "\"intermediatefile.rds\""
 
   # Force legacy_file_hash() to rehash a file.
   con$cache$set(key = target, value = Inf, namespace = "filemtime")

@@ -96,3 +96,29 @@ test_with_dir("deprecated arguments", {
   con <- drake_config(plan = pl, session_info = FALSE)
   expect_warning(drake_build(a, config = con, meta = list()))
 })
+
+test_with_dir("old file API", {
+  expect_warning(x <- drake_plan(
+    file.csv = write.csv(mtcars, file = "file.csv"),
+    strings_in_dots = "literals",
+    file_targets = TRUE
+  ))
+  y <- drake_plan(
+    contents = read.csv('file.csv')) # nolint
+  z <- rbind(x, y)
+  expect_warning(check_plan(z))
+  expect_warning(make(z, session_info = FALSE) -> config)
+  expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
+  expect_true(is.character(readd("'file.csv'")))
+  expect_error(is.character(`"file.csv"`))
+  expect_silent(loadd("'file.csv'", verbose = FALSE))
+  expect_true(is.character(`"file.csv"`))
+  expect_equal(
+    z,
+    tibble::tibble(
+      target = c("\"file.csv\"", "contents"),
+      command = c("write.csv(mtcars, file = \"file.csv\")", "read.csv('file.csv')") # nolint
+    )
+  )
+  expect_equal(sort(justbuilt(config)), sort(c("contents", "\"file.csv\"")))
+})

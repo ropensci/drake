@@ -43,13 +43,10 @@ test_with_dir("prepend arg works", {
 })
 
 test_with_dir("files inside directories can be timestamped", {
-  plan <- drake_plan(
-    list = c(
-      `'t1/t2'` = "dir.create(\"t1\"); saveRDS(1, file.path(\"t1\", \"t2\"))"
-    )
-  )
-  plan$target[1] <- file <- drake::drake_quotes(file.path("t1",
-    "t2"), single = TRUE)
+  plan <- drake_plan({
+    dir.create("t1"); saveRDS(1, file_output("t1/t2"))
+  })
+  file <- plan$target[1]
   config <- drake_config(plan = plan, targets = plan$target[1],
     parallelism = "parLapply", verbose = FALSE,
     envir = new.env(), cache = NULL)
@@ -103,7 +100,7 @@ test_with_dir("basic Makefile stuff works", {
   ))
   expect_equal(stamps, stamps2)
 
-  targ <- "'intermediatefile.rds'"
+  targ <- "\"intermediatefile.rds\""
   expect_false(file.exists(drake::drake_unquote(targ)))
   config$cache$del(key = targ, namespace = "progress")
   mk(targ, cache_path = cache_path)

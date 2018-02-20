@@ -5,20 +5,31 @@
 \title{Create a workflow plan data frame
 for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
-drake_plan(..., list = character(0), file_targets = FALSE,
-  strings_in_dots = c("filenames", "literals"), tidy_evaluation = TRUE)
+drake_plan(..., list = character(0), file_targets = NULL,
+  strings_in_dots = NULL, tidy_evaluation = TRUE)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
 with commands assigned to them. See the examples for details.}
 
-\item{list}{A named list of targets, where the values
-are commands.}
+\item{list}{A named character vector of commands
+with names as targets.}
 
-\item{file_targets}{logical, whether the targets should be
-(single-quoted) external file targets.}
+\item{file_targets}{deprecated argument. See \code{\link[=file_output]{file_output()}},
+\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the new way to work
+with files.
+In the past, this argument was a logical to indicate whether the
+target names should be single-quoted to denote files. But the newer
+interface is much better.}
 
-\item{strings_in_dots}{Character scalar,
+\item{strings_in_dots}{deprecated argument. See \code{\link[=file_output]{file_output()}},
+\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the new way to work
+with files.
+In the past, this argument was a logical to indicate whether the
+target names should be single-quoted to denote files. But the newer
+interface is much better.
+
+In the past, this argument was a character scalar denoting
 how to treat quoted character strings in the commands
 specified through \code{...}.
 Set to \code{"filenames"} to treat all these strings as
@@ -52,60 +63,31 @@ with a \code{target} column and a \code{command} column.
 Targets are the objects and files that drake generates,
 and commands are the pieces of R code that produce them.
 
-For file inputs and targets, drake uses single quotes.
-Double quotes are reserved for ordinary strings.
-The distinction is important because drake thinks about
-how files, objects, targets, etc. depend on each other.
-Quotes in the \code{list} argument are left alone,
-but R messes with quotes when it parses the free-form
-arguments in \code{...}, so use the \code{strings_in_dots}
-argument to control the quoting in \code{...}.
+To use custom files in your workflow plan,
+use the \code{\link[=file_input]{file_input()}}, \code{\link[=knitr_input]{knitr_input()}}, and
+\code{\link[=file_output]{file_output()}} functions in your commands.
+the examples in this help file provide some guidance.
 }
 \examples{
-# Create example workflow plan data frames for make()
-drake_plan(small = simulate(5), large = simulate(50))
-# Commands can be multi-line code chunks.
-small_plan <- drake_plan(
-  small_target = {
-    local_object <- 1 + 1
-    2 + sqrt(local_object)
-  }
-)
-small_plan
-cache <- storr::storr_environment() # Avoid writing files in examples.
-make(small_plan, cache = cache) # Most users don't need the cache argument.
-cached(cache = cache)
-readd(small_target, cache = cache)
-# local_object only applies to the code chunk.
-ls() # your environment is protected (local_object not found)
-rm(small_target)
-# For tighter control over commands, use the `list` argument.
-# Single quotes are file names, double quotes are oridinary strings.
-# To actually run the little example workflow below,
-# you need a file called `my_file.xlsx``
-# with an Excel sheet called `second_sheet`.
-# You also need to install the xlsx package.
-drake_plan(
-  list = c(
-    dataset = "readxl::read_excel(path = 'my_file.xlsx', sheet = \\"second_sheet\\")" # nolint
-  )
-)
-# Output targets can also be files,
-# but the target names must have single quotes around them.
+test_with_dir("Contain side effects", {
+# Create workflow plan data frames.
 mtcars_plan <- drake_plan(
-  output_file.csv = write.csv(mtcars, "output_file.csv"),
-  file_targets = TRUE,
-  strings_in_dots = "literals"
+  write.csv(mtcars[, c("mpg", "cyl")], file_output("mtcars.csv")),
+  value = read.csv(file_input("mtcars.csv"))
 )
 mtcars_plan
-# make(mtcars_plan) # Would write output_file.csv. # nolint
-# In the free-form `...` argument
-# drake_plan() uses tidy evaluation to figure out your commands.
-# For example, it respects the quasiquotation operator `!!`
-# when it figures out what your code should be.
-# Suppress this with `tidy_evaluation = FALSE` or
-# with the `list` argument.
-my_variable <- 5
+make(mtcars_plan) # Makes `mtcars.csv` and then `value`
+head(readd(value))
+# You can use knitr inputs too. See the top command below.
+load_basic_example()
+head(my_plan)
+# The `knitr_input("report.Rmd")` tells `drake` to dive into the active
+# code chunks to find dependencies.
+# There, `drake` sees that `small`, `large`, and `coef_regression2_small`
+# are loaded in with calls to `loadd()` and `readd()`.
+deps("report.Rmd")
+# Are you a fan of tidy evaluation?
+my_variable <- 1
 drake_plan(
   a = !!my_variable,
   b = !!my_variable + 1,
@@ -120,4 +102,5 @@ drake_plan(
 # For instances of !! that remain unevaluated in the workflow plan,
 # make() will run these commands in tidy fashion,
 # evaluating the !! operator using the environment you provided.
+})
 }

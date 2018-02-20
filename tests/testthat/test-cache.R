@@ -1,7 +1,7 @@
 drake_context("cache")
 
 test_with_dir("dependency profile", {
-  config <- make(drake_plan(a = 1))
+  config <- make(drake_plan(a = 1), session_info = FALSE)
   expect_error(dependency_profile(
     target = "notfound", config = config))
   expect_true(is.list(dependency_profile(
@@ -142,11 +142,11 @@ test_with_dir("cache functions work", {
   expect_equal(sort(x), sort(y))
 
   # targets
-  all <- sort(c("'input.rds'",
-    "'intermediatefile.rds'", "a",
+  all <- sort(c("\"input.rds\"",
+    "\"intermediatefile.rds\"", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i", "j",
     "myinput", "nextone", "readRDS", "saveRDS", "yourinput"))
-  imports <- sort(c("'input.rds'",
+  imports <- sort(c("\"input.rds\"",
     "a", "b", "c", "f", "g",
     "h", "i", "j", "readRDS", "saveRDS"))
   builds <- setdiff(all, imports)
@@ -169,7 +169,7 @@ test_with_dir("cache functions work", {
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(
     sort(names(progress(search = FALSE, no_imported_objects = TRUE))),
-    sort(c("'input.rds'", builds)))
+    sort(c("\"input.rds\"", builds)))
   expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE),
     c(bla = "not built or imported", f = "finished", h = "finished",
       final = "finished"))
@@ -188,13 +188,13 @@ test_with_dir("cache functions work", {
   expect_equal(imported(files_only = FALSE, search = FALSE),
     imports)
   expect_equal(imported(files_only = TRUE, search = FALSE),
-    "'input.rds'")
+    "\"input.rds\"")
   expect_equal(sort(built(search = FALSE)), sort(config$plan$target))
   twopiece <- sort(c(built(search = FALSE), imported(search = FALSE,
     files_only = FALSE)))
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
   expect_equal(sort(cached(search = FALSE, no_imported_objects = TRUE)),
-    sort(c("'input.rds'", builds)))
+    sort(c("\"input.rds\"", builds)))
   expect_true(all(cached(search = FALSE, list = all)))
   expect_equal(
     length(cached(search = FALSE, i, list = imported(files_only = FALSE))),
@@ -248,7 +248,7 @@ test_with_dir("cache functions work", {
   expect_equal(sort(names(progress(search = TRUE, path = s))),
     sort(all))
   expect_equal(sort(names(progress(no_imported_objects = TRUE,
-    search = TRUE, path = s))), sort(c("'input.rds'", builds)))
+    search = TRUE, path = s))), sort(c("\"input.rds\"", builds)))
   expect_equal(sort(progress(search = TRUE, path = s, bla, f,
     list = c("h", "final"))), sort(c(bla = "not built or imported",
     f = "finished", h = "finished", final = "finished")))
@@ -259,7 +259,7 @@ test_with_dir("cache functions work", {
   expect_equal(sort(imported(files_only = FALSE, search = TRUE,
     path = s)), sort(imports))
   expect_equal(imported(files_only = TRUE, search = TRUE, path = s),
-    "'input.rds'")
+    "\"input.rds\"")
   expect_equal(sort(built(search = TRUE, path = s)),
     sort(config$plan$target))
   twopiece <- sort(c(built(path = s, search = TRUE),
@@ -268,7 +268,7 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(path = s, search = TRUE)), sort(all),
     twopiece)
   expect_equal(sort(cached(no_imported_objects = TRUE, path = s,
-    search = T)), sort(c("'input.rds'", builds)))
+    search = T)), sort(c("\"input.rds\"", builds)))
   expect_true(all(cached(list = all, path = s, search = TRUE)))
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
   expect_true(all(cached(list = all, path = s, search = TRUE)))

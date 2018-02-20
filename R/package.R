@@ -38,7 +38,7 @@
 #' }
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom bindr populate_env
-#' @importFrom codetools findGlobals
+#' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom evaluate try_capture_stack

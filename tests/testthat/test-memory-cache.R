@@ -48,7 +48,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(nrow(y) > 0)
 
   expect_equal(cached(verbose = FALSE), character(0))
-  targets <- my_plan$target
+  targets <- con$plan$target
   expect_true(all(targets %in% cached(cache = cache, verbose = FALSE)))
   expect_false(file.exists(default_cache_path()))
 

@@ -27,7 +27,7 @@
 #' readd(small) # Return targets 'small' from the cache.
 #' readd("large", character_only = TRUE) # Return 'large' from the cache.
 #' # For external files, only the fingerprint/hash is stored.
-#' readd("'report.md'")
+#' readd("\"report.md\"")
 #' })
 #' }
 readd <- function(
@@ -49,7 +49,7 @@ readd <- function(
   if (is.null(namespace)){
     namespace <- cache$default_namespace
   }
-  cache$get(target, namespace = namespace)
+  cache$get(standardize_filename(target), namespace = namespace)
 }
 
 #' @title Load multiple targets or imports from the drake cache.

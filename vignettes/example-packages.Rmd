@@ -140,14 +140,15 @@ in a dynamic knitr report.
 
 ```{r reportplanpackages}
 report_plan <- drake_plan(
-  report.md = knit("report.Rmd", quiet = TRUE),
-  file_targets = TRUE
+  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
 )
 
 report_plan
 ```
 
-And we complete the workflow plan data frame by
+Because of the mention of `knitr_input()` above, `make()` will look dependencies inside `report.Rmd` (targets mentioned with `loadd()` or `readd()` in active code chunks). That way, whenever a dependency changes, `drake` will rebuild `report.md` when you call `make()`. For that to happen, we need `report.Rmd` to exist before the call to `make()`. For this example, you can find [report.Rmd here](https://github.com/ropensci/drake/blob/master/inst/examples/packages/report.Rmd).
+
+Now, we complete the workflow plan data frame by
 concatenating the results together.
 `Drake` analyzes the plan to figure out the dependency network,
 so row order does not matter.
@@ -207,7 +208,7 @@ out of date because of the `"always"` trigger.
 If you rerun the project tomorrow,
 the `recent` dataset will have shifted one day forward,
 so `make()` will refresh `averages_recent`, `plot_recent`, and
-`'report.md'`. Targets `averages_older` and `plot_older`
+`report.md`. Targets `averages_older` and `plot_older`
 should be unaffected, so `drake` will skip them.
 
 ```{r plotpackagesgraph, eval = FALSE}
@@ -216,7 +217,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/301ec7c3/images/packages.html"
+src = "https://cdn.rawgit.com/ropensci/drake/e87f05ad/images/packages.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>

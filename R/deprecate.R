@@ -299,6 +299,27 @@ deprecate_wildcard <- function(plan, old, replacement){
   plan
 }
 
+# Deprecated on 2018-02-15
+doc_of_function_call <- function(expr){
+  args <- as.list(expr)[-1]
+  if (!length(args)){
+    return(character(0))
+  }
+  if (is.null(names(args))){
+    names(args) <- rep("", length(args))
+  }
+  if (!is.null(args$input)){
+    as.character(args$input)
+  } else {
+    unnamed <- which(!nchar(names(args)))
+    if (!length(unnamed)){
+      return(character(0))
+    }
+    input_index <- min(unnamed)
+    as.character(args[[input_index]])
+  }
+}
+
 #' @title Deprecated function `evaluate`
 #' @description Use [evaluate_plan()] instead.
 #' @details Deprecated on 2017-11-12.
@@ -449,6 +470,51 @@ gather <- function(
     target = target,
     gather = gather
   )
+}
+
+# Deprecated on 2018-02-15
+find_knitr_doc <- function(expr, result = character(0)){
+  if (!length(expr)){
+    return(result)
+  }
+  if (is.character(expr)) {
+    if (is_parsable(expr)) {
+      expr <- parse(text = expr)
+    } else {
+      return(result)
+    }
+  }
+  if (is.function(expr)){
+    result <- find_knitr_doc(body(expr), result = result)
+  } else if (is.call(expr) & length(expr) > 1){
+    does_knitting <-
+      is_function_call(expr, package = "knitr", what = "knit") ||
+      is_function_call(expr, package = "rmarkdown", what = "render")
+    if (does_knitting){
+      result <- doc_of_function_call(expr)
+    } else {
+      result <- lapply(as.list(expr), find_knitr_doc,
+                       result = result) %>%
+        clean_dependency_list
+    }
+  } else if (is.recursive(expr)){
+    result <- lapply(as.list(expr), find_knitr_doc,
+                     result = result) %>%
+      clean_dependency_list
+  }
+  setdiff(result, drake_fn_patterns)
+}
+
+# Deprecated on 2018-02-15
+is_function_call <- function(
+  expr,
+  package = c("drake", "knitr", "rmarkdown"),
+  what = c("loadd", "readd", "knit", "render")
+){
+  package <- match.arg(package)
+  what <- match.arg(what)
+  drake::drake_unquote(deparse(expr[[1]])) %in%
+    paste0(c("", paste0(package, c("::", ":::"))), what)
 }
 
 #' @title Deprecated function `plan`
