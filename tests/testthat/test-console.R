@@ -17,6 +17,12 @@ test_with_dir("console_up_to_date", {
   expect_message(console_up_to_date(con))
 })
 
+test_with_dir("file consoles", {
+  config <- list(verbose = 3)
+  console_missing("\"myfile\"", config)
+  console_import("\"myfile\"", config)
+})
+
 test_with_dir("console_parLapply", {
   config <- list(verbose = TRUE)
   expect_message(console_parLapply(config = config)) # nolint
