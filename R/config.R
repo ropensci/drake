@@ -358,6 +358,7 @@ drake_config <- function(
     packages = packages,
     prework = prework
   )
+  add_ignore(path = drake::find_project())
   if (is.null(cache)) {
     cache <- recover_cache(
       force = force, verbose = verbose, fetch_cache = fetch_cache)
