@@ -249,6 +249,29 @@ drake_batchtools_tmpl_file("slurm") # Writes batchtools.slurm.tmpl
 
 Be sure to heed the previously-mentioned cautionary note about deploying too many jobs at once. In `"future_lapply"` parallelism, the `jobs` argument applies to the imports, but not the targets. Functions passed to `future::plan()` such as `mulitisession()` and `batchtools_slurm()` usually have a `workers` arguments for this purpose. Depending on the `future` backend you select with `future::plan()`, you might also make use of one of the other environment variables listed in `?future::future.options`.
 
+## future
+
+The `future` backend is experimental and needs more real-world testing. It is similar to `future_lapply` except that individual futures are launched and managed using a manual job scheduler. Jobs are submitted as soon as workers become available, which overcomes an inefficiency of the usual staged parallelism. And with the optional `evaluator` column of the workflow plan data frame, you can use different computing resources for different targets. (See the `evaluator` argument of `future()`.)
+
+```{r democustomfutureevaluators, eval = FALSE}
+library(future)
+library(drake)
+load_basic_example()
+remote <- future::plan(multisession)
+local <- future::plan(multicore)
+evaluator <- NULL
+# Make the targets with the multisession future backend...
+for (i in seq_len(nrow(my_plan))){
+  evaluator <- c(evaluator, remote)
+}
+# ...except for the R Markdown report.
+evaluator[[1]] <- local
+my_plan$evaluator <- evaluator
+make(my_plan, parallelism = "future", jobs = 8)
+```
+
+In addition, you can set the `caching` argument to control when the values of the targets are cached: `"worker"` for the individual workers (default) and `"master"` for the master process. If you let the workers do the caching, you can take advantage of parallelism when targets are stored. On the other hand, `"master"` is a better option if workers do not have cache access or you are using a custom cache that is not threadsafe (e.g. `storr::storr_dbi()`.
+
 ## Makefile
 
 `Makefile` parallelism uses proper [Makefiles](https://www.gnu.org/software/make/) to distribute targets across different R sessions. Similarly to `future_lapply` parallelism, it is a mechanism for distributing targets at scale. 

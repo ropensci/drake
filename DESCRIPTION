@@ -66,6 +66,7 @@ Imports:
   parallel,
   plyr,
   purrr,
+  R6,
   R.utils,
   rlang,
   rprojroot,

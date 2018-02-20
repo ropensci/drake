@@ -18,7 +18,7 @@ drake_config(plan = read_drake_plan(),
   log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
   imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
-  seed = NULL)
+  seed = NULL, caching = c("worker", "master"))
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -299,6 +299,8 @@ Thus, the \code{seed} argument must either be \code{NULL} or the same
 seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
+
+\item{caching}{character string, only applies to \code{"future"} parallelism.}
 }
 \value{
 The master internal configuration list of a project.

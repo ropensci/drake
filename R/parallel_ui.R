@@ -133,12 +133,13 @@ drake_batchtools_tmpl_file <- function(
 #' parallelism_choices(distributed_only = TRUE)
 parallelism_choices <- function(distributed_only = FALSE) {
   local <- c(
-    "parLapply",
-    "mclapply"
+    "mclapply",
+    "parLapply"
   )
   distributed <- c(
-    "Makefile",
-    "future_lapply"
+    "future",
+    "future_lapply",
+    "Makefile"
   )
   if (distributed_only){
     distributed

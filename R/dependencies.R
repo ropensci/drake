@@ -163,6 +163,9 @@ tracked <- function(
 }
 
 dependencies <- function(targets, config, reverse = FALSE){
+  if (!length(targets)){
+    return(character(0))
+  }
   adjacent_vertices(
     graph = config$graph,
     v = targets,

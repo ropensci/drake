@@ -99,7 +99,8 @@ make <- function(
   lazy_load = "eager",
   session_info = TRUE,
   cache_log_file = NULL,
-  seed = NULL
+  seed = NULL,
+  caching = "worker"
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -140,7 +141,8 @@ make <- function(
       skip_safety_checks = skip_safety_checks,
       lazy_load = lazy_load,
       session_info = session_info,
-      cache_log_file = cache_log_file
+      cache_log_file = cache_log_file,
+      caching = caching
     )
   }
   make_with_config(config = config)

@@ -43,7 +43,7 @@
 #' @importFrom digest digest
 #' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
-#' @importFrom future plan
+#' @importFrom future future plan resolved value
 #' @importFrom future.apply future_lapply
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices components delete_vertices
@@ -56,6 +56,7 @@
 #'   mclapply parLapply stopCluster
 #' @importFrom plyr ddply dlply
 #' @importFrom purrr map_int
+#' @importFrom R6 R6Class
 #' @importFrom R.utils isPackageLoaded withTimeout
 #' @importFrom rlang expr exprs
 #' @importFrom rprojroot find_root
