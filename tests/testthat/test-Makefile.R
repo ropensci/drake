@@ -44,7 +44,7 @@ test_with_dir("prepend arg works", {
 
 test_with_dir("files inside directories can be timestamped", {
   plan <- drake_plan({
-    dir.create("t1"); saveRDS(1, file_output("t1/t2"))
+    dir.create("t1"); saveRDS(1, file_out("t1/t2"))
   })
   file <- plan$target[1]
   config <- drake_config(plan = plan, targets = plan$target[1],

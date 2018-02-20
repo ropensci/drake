@@ -4,8 +4,8 @@ drake_context("strings")
 # https://github.com/ropensci/eply
 
 test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
-  expect_equal(drake_quotes(), "\"\"")
-  expect_equal(drake_quotes(single = T), "\'\'")
+  expect_equal(drake_quotes(), character(0))
+  expect_equal(drake_quotes(single = T), character(0))
   expect_equal(drake_quotes(drake_strings(x, y)), c("\"x\"", "\"y\""))
   expect_equal(drake_quotes(c("x", "y")), c("\"x\"", "\"y\""))
   expect_equal(drake_quotes(c("x", "y"), single = F), c("\"x\"", "\"y\""))

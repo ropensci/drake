@@ -48,7 +48,7 @@ list.files()
 
 # The real work is outlined step-by-step in the `my_plan` data frame.
 # The steps are called "targets", and they depend on the imports.
-# File targets have the names in `file_output()`, and the non-file
+# File targets have the names in `file_out()`, and the non-file
 # targets have the names in the `target` column of the data frame.
 # Drake's `make()` function runs the commands to build the targets
 # in the correct order.
@@ -57,7 +57,7 @@ head(my_plan)
 ## # A tibble: 6 x 2
 ##   target            command                                                                      
 ##   <chr>             <chr>                                                                        
-## 1 ""                "knit(knitr_input(\"report.Rmd\"), file_output(\"report.md\"), quiet = TRUE)"
+## 1 ""                "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE)"
 ## 2 small             simulate(48)                                                                 
 ## 3 large             simulate(64)                                                                 
 ## 4 regression1_small reg1(small)                                                                  

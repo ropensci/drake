@@ -36,12 +36,15 @@ knitr_deps <- function(target){
 }
 
 knitr_deps_list <- function(target){
+  if (!length(target)){
+    return(list())
+  }
   fragments <- safe_get_tangled_frags(target)
   results <- code_dependencies(fragments)
   select <- c(
-    "knitr_input",
-    "file_input",
-    "file_output",
+    "knitr_in",
+    "file_in",
+    "file_out",
     "loadd",
     "readd"
   ) %>%

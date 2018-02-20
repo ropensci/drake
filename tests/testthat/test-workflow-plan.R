@@ -2,12 +2,21 @@ drake_context("workflow plan")
 
 test_with_dir("File functions handle input", {
   expect_equal(
-    file_input(1, "x", "y"), c("1", "x", "y")
+    file_in(1, "x", "y"), c("1", "x", "y")
   )
   expect_equal(
-    knitr_input(1, "x", "y"), c("1", "x", "y")
+    knitr_in(1, "x", "y"), c("1", "x", "y")
   )
-  expect_warning(expect_equal(file_output(1, "x", "y"), "1"))
+  expect_warning(expect_equal(file_out(c(1, "x", "y")), "1"))
+  expect_error(file_out(1, "x", "y"))
+  expect_equal(
+    code_dependencies(quote(file_out(c("file1", "file2")))),
+    list(file_out = drake_quotes(c("file1", "file2"), single = FALSE))
+  )
+  expect_error(
+    single_file_out(""),
+    regexp = "found an empty"
+  )
 })
 
 test_with_dir("edge cases for plans", {
@@ -41,10 +50,17 @@ test_with_dir("edge cases for plans", {
   )
   # too many file outputs
   expect_warning(expect_equal(
-    drake_plan(a = file_output("file1", "file2")),
+    drake_plan(a = file_out("file1", "file2")),
     tibble(
       target = c("\"file1\""),
-      command = "file_output('file1', 'file2')"
+      command = "file_out('file1', 'file2')"
+    )
+  ))
+  expect_warning(expect_equal(
+    drake_plan(a = file_out(c("file1", "file2"))),
+    tibble(
+      target = c("\"file1\""),
+      command = "file_out(c('file1', 'file2'))"
     )
   ))
 })

@@ -10,7 +10,7 @@ test_with_dir("basic example works", {
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
     jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+    verbose = 3)
 
   expect_equal(max_useful_jobs(config), 8)
   expect_false(file.exists("Makefile"))
@@ -95,8 +95,8 @@ test_with_dir("basic example works", {
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.
   x <- drake_plan(
-    a = knitr::knit(knitr_input(report.Rmd)), # nolint
-    b = knitr::knit(knitr_input(report.md)), # nolint
+    a = knitr::knit(knitr_in(report.Rmd)), # nolint
+    b = knitr::knit(knitr_in(report.md)), # nolint
     c = knitr::knit("nonfile"),
     d = rmarkdown::render('report.Rmd'), # nolint
     e = rmarkdown::render('report.md'), # nolint

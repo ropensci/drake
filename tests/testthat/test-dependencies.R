@@ -6,12 +6,12 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps(x))
 })
 
-test_with_dir("file_output() and knitr_input(): commands vs imports", {
-  cmd <- "file_input(\"x\"); file_output(\"y\"); knitr_input(\"report.Rmd\")"
+test_with_dir("file_out() and knitr_in(): commands vs imports", {
+  cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
   f <- function(){
-    file_input("x")
-    file_output("y")
-    knitr_input("report.Rmd")
+    file_in("x")
+    file_out("y")
+    knitr_in("report.Rmd")
   }
   file.create("x")
   file.create("y")
@@ -66,10 +66,10 @@ test_with_dir(
   expect_equal(sort(deps(f)), sort(c("g", "saveRDS")))
   my_plan <- drake_plan(
     x = 1 + some_object,
-    my_target = x + readRDS(file_input("tracked_input_file.rds")),
+    my_target = x + readRDS(file_in("tracked_input_file.rds")),
     return_value = f(x, y, g(z + w)),
-    botched = read.csv(file_input(nothing)),
-    meta = read.table(file_input("file_input")))
+    botched = read.csv(file_in(nothing)),
+    meta = read.table(file_in("file_in")))
   expect_equal(deps(my_plan$command[1]), "some_object")
   expect_equal(sort(deps(my_plan$command[2])),
     sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))
@@ -77,7 +77,7 @@ test_with_dir(
     "x", "y", "z")))
   expect_equal(sort(deps(my_plan$command[4])), sort(c("read.csv")))
   expect_equal(sort(deps(my_plan$command[5])),
-    sort(c("read.table", "\"file_input\"")))
+    sort(c("read.table", "\"file_in\"")))
 })
 
 test_with_dir("tracked() works", {

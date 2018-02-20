@@ -13,7 +13,7 @@ sanitize_plan <- function(plan){
   if (!is.null(plan[["trigger"]])){
     assert_legal_triggers(plan[["trigger"]])
   }
-  plan <- file_outputs_to_targets(plan)
+  plan <- file_outs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
   plan[nchar(plan$target) > 0, ]
 }
@@ -85,11 +85,11 @@ repair_target_names <- function(x){
   make.unique(x, sep = "_")
 }
 
-file_outputs_to_targets <- function(plan){
-  index <- grepl("file_output", plan$command)
+file_outs_to_targets <- function(plan){
+  index <- grepl("file_out", plan$command)
   plan$target[index] <- vapply(
     plan$command[index],
-    single_file_output,
+    single_file_out,
     character(1)
   )
   plan$target[is_file(plan$target)] <-
@@ -98,17 +98,19 @@ file_outputs_to_targets <- function(plan){
   plan
 }
 
-single_file_output <- function(command){
-  file_output <- command_dependencies(command)$file_output
-  stopifnot(length(file_output) > 0)
-  if (length(file_output) > 1){
+single_file_out <- function(command){
+  file_out <- command_dependencies(command)$file_out
+  if (length(file_out) < 1){
+    stop("found an empty file_out() in command: ", command, call. = FALSE)
+  }
+  if (length(file_out) > 1){
     warning(
       "Multiple file outputs found for command `", command, "`. ",
-      "Choosing ", file_output[1], " as the target name.",
+      "Choosing ", file_out[1], " as the target name.",
       call. = FALSE
     )
-    file_output[1]
+    file_out[1]
   } else {
-    file_output
+    file_out
   }
 }

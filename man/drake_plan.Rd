@@ -15,15 +15,15 @@ with commands assigned to them. See the examples for details.}
 \item{list}{A named character vector of commands
 with names as targets.}
 
-\item{file_targets}{deprecated argument. See \code{\link[=file_output]{file_output()}},
-\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the new way to work
+\item{file_targets}{deprecated argument. See \code{\link[=file_out]{file_out()}},
+\code{\link[=file_in]{file_in()}}, and \code{\link[=knitr_in]{knitr_in()}} for the current way to work
 with files.
 In the past, this argument was a logical to indicate whether the
 target names should be single-quoted to denote files. But the newer
 interface is much better.}
 
-\item{strings_in_dots}{deprecated argument. See \code{\link[=file_output]{file_output()}},
-\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the new way to work
+\item{strings_in_dots}{deprecated argument. See \code{\link[=file_out]{file_out()}},
+\code{\link[=file_in]{file_in()}}, and \code{\link[=knitr_in]{knitr_in()}} for the current way to work
 with files.
 In the past, this argument was a logical to indicate whether the
 target names should be single-quoted to denote files. But the newer
@@ -64,16 +64,16 @@ Targets are the objects and files that drake generates,
 and commands are the pieces of R code that produce them.
 
 To use custom files in your workflow plan,
-use the \code{\link[=file_input]{file_input()}}, \code{\link[=knitr_input]{knitr_input()}}, and
-\code{\link[=file_output]{file_output()}} functions in your commands.
+use the \code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in]{knitr_in()}}, and
+\code{\link[=file_out]{file_out()}} functions in your commands.
 the examples in this help file provide some guidance.
 }
 \examples{
 test_with_dir("Contain side effects", {
 # Create workflow plan data frames.
 mtcars_plan <- drake_plan(
-  write.csv(mtcars[, c("mpg", "cyl")], file_output("mtcars.csv")),
-  value = read.csv(file_input("mtcars.csv"))
+  write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
+  value = read.csv(file_in("mtcars.csv"))
 )
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -81,7 +81,7 @@ head(readd(value))
 # You can use knitr inputs too. See the top command below.
 load_basic_example()
 head(my_plan)
-# The `knitr_input("report.Rmd")` tells `drake` to dive into the active
+# The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 # code chunks to find dependencies.
 # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 # are loaded in with calls to `loadd()` and `readd()`.

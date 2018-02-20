@@ -94,7 +94,7 @@ for (file in files){
 }
 
 my_plan <- drake_plan(
-  my_data = get_data(file_input("data.csv")), # nolint
+  my_data = get_data(file_in("data.csv")), # nolint
   my_analysis = analyze_data(my_data),
   my_summaries = summarize_results(my_data, my_analysis)
 )
@@ -106,9 +106,9 @@ vis_drake_graph(
 )
 
 my_plan <- drake_plan(
-  my_data = source(file_input("get_data.R")), # nolint
-  my_analysis = source(file_input("analyze_data.R")), # nolint
-  my_summaries = source(file_input("summarize_data.R")) # nolint
+  my_data = source(file_in("get_data.R")), # nolint
+  my_analysis = source(file_in("analyze_data.R")), # nolint
+  my_summaries = source(file_in("summarize_data.R")) # nolint
 )
 config <- drake_config(my_plan)
 vis_drake_graph(

@@ -224,9 +224,7 @@ targets_from_dots <- function(dots, list) {
     is.character(x), NA, USE.NAMES = FALSE)))
     stop("... must contain names or character strings")
   names <- vapply(dots, as.character, "")
-  if (length(names) == 0L)
-    names <- character()
-  targets <- .Primitive("c")(names, list) %>% unique
+  targets <- c(names, list) %>% unique
   standardize_filename(targets)
 }
 

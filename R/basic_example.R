@@ -161,7 +161,7 @@ load_basic_example <- function(
 
   report <- tibble(
     target = "",
-    command = 'knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)', # nolint  
+    command = 'knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)', # nolint  
   )
 
   # Row order doesn't matter in the drake_plan my_plan.
