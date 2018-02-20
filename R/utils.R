@@ -51,6 +51,7 @@ clean_dependency_list <- function(x){
   x %>%
     unlist() %>%
     unname() %>%
+    as.character() %>%
     unique() %>%
     sort()
 }
