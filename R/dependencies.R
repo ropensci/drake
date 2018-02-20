@@ -346,13 +346,6 @@ find_globals <- function(expr){
     Filter(f = is_parsable)
 }
 
-declare_file <- function(expr){
-  if (is.symbol(expr)){
-    return(character(0))
-  }
-  drake_quotes(as.character(expr), single = FALSE)
-}
-
 analyze_loadd <- function(expr){
   expr <- match.call(drake::loadd, as.call(expr))
   args <- parse_loadd_arg_list(expr)
