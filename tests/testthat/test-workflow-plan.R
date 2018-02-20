@@ -13,6 +13,10 @@ test_with_dir("File functions handle input", {
     code_dependencies(quote(file_output(c("file1", "file2")))),
     list(file_output = drake_quotes(c("file1", "file2"), single = FALSE))
   )
+  expect_error(
+    single_file_output(""),
+    regexp = "found an empty"
+  )
 })
 
 test_with_dir("edge cases for plans", {
