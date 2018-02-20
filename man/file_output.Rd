@@ -2,6 +2,7 @@
 % Please edit documentation in R/workplan.R
 \name{file_output}
 \alias{file_output}
+\alias{file_out}
 \title{Declare the file outputs of a workflow plan command.}
 \usage{
 file_output(path)
@@ -26,6 +27,7 @@ for a full explanation.
 \dontrun{
 test_with_dir("Contain side effects", {
 # The `file_output()` and `file_input()` functions
+# (and their respective aliases `file_out()` and `file_in()`)
 # just takes in strings and returns them.
 file_output("summaries.txt")
 # Their main purpose is to orchestrate your custom files

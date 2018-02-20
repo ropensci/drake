@@ -2,6 +2,7 @@
 % Please edit documentation in R/workplan.R
 \name{file_input}
 \alias{file_input}
+\alias{file_in}
 \title{Declare the file inputs of a workflow plan command.}
 \usage{
 file_input(...)
@@ -22,6 +23,7 @@ for a full explanation.
 \dontrun{
 test_with_dir("Contain side effects", {
 # The `file_output()` and `file_input()` functions
+# (and their respective aliases `file_out()` and `file_in()`)
 # just takes in strings and returns them.
 file_output("summaries.txt")
 # Their main purpose is to orchestrate your custom files
