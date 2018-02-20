@@ -121,14 +121,12 @@ work_remains <- function(queue, workers, config){
 }
 
 all_concluded <- function(workers, config){
-  lapply(
-    X = workers,
-    FUN = function(worker){
-      is_concluded_worker(worker)
+  for (worker in workers){
+    if (!is_concluded_worker(worker)){
+      return(FALSE)
     }
-  ) %>%
-    unlist %>%
-    all
+  }
+  TRUE
 }
 
 running_targets <- function(workers, config){
