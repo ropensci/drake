@@ -238,8 +238,7 @@ file_input <- function(...){
 #' # in your report.
 #' })
 #' }
-file_output <- function(path, ...){
-  path <- c(path, as.character(c(...)))
+file_output <- function(path){
   if (length(path) != 1){
     warning(
       "In file_output(), the `path` argument must ",

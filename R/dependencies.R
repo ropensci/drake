@@ -206,14 +206,14 @@ command_dependencies <- function(command){
     files <- drake_unquote(files) %>%
       drake_quotes(single = FALSE)
     warn_single_quoted_files(files = files, deps = deps)
+    files <- setdiff(files, deps$file_output)
     deps$file_input <- base::union(deps$file_input, files)
   }
   deps$loadd <- base::union(
     deps$loadd, knitr_deps(find_knitr_doc(command))
   ) %>%
     unique
-
-  deps
+  deps[lapply(deps, length) > 0]
 }
 
 # TODO: this function can go away when drake
@@ -279,83 +279,52 @@ code_dependencies <- function(expr){
   ){
     return(list())
   }
-
   results <- list()
-
-  # `walk()` sees `results` in its lexical scope.
-  walk <- function(
-    expr,
-    knitr_input = FALSE,
-    file_input = FALSE,
-    file_output = FALSE
-  ){
+  # `walk()` analyzes `drake`-specific calls
+  # in an expression or function.
+  # It sees `results` in its lexical scope.
+  walk <- function(expr){
     if (!length(expr)){
       return()
-    } else if (is.primitive(expr)){
-      results$globals <<- base::union(
-        results$globals,
-        setdiff(wide_deparse(expr), drake_fn_patterns)
-      )
     } else if (is.function(expr)) {
       expr <- unwrap_function(expr)
       if (typeof(expr) != "closure"){
         expr <- function(){} # nolint: curly braces are necessary
       }
-      walk(
-        body(expr),
-        knitr_input = knitr_input,
-        file_input = file_input,
-        file_output = file_output
-      )
-    } else if (is.name(expr) || is.atomic(expr)) {
-      if (knitr_input){
-        file <- declare_file(expr)
-        new_results <- knitr_deps_list(file)
-        new_results$knitr_input <- base::union(new_results$knitr_input, file)
-      } else if (file_input){
-        new_results <- list(file_input = declare_file(expr))
-      } else if (file_output) {
-        new_results <- list(file_output = declare_file(expr))
+      walk(body(expr))
+    } else if (is.name(expr) || is.atomic(expr) || is.primitive(expr)) {
+      new_globals <- setdiff(
+        x = wide_deparse(expr), y = drake_fn_patterns)
+      results$globals <<- c(results$globals, new_globals)
+    } else if (is.call(expr) || is.recursive(expr)) {
+      new_results <- list()
+      if (is_loadd_call(expr)){
+        new_results <- analyze_loadd(expr)
+      } else if (is_readd_call(expr)){
+        new_results <- analyze_readd(expr)
+      } else if (is_knitr_input_call(expr)){
+        new_results <- analyze_knitr_input(expr)
+      } else if (is_file_input_call(expr)){
+        new_results <- analyze_file_input(expr)
+      } else if (is_file_output_call(expr)){
+        new_results <- analyze_file_output(expr)
       } else {
-        new_results <- list(globals = setdiff(
-          x = wide_deparse(expr), y = drake_fn_patterns))
+        if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
+          results$namespaced <<- base::union(
+            results$namespaced,
+            setdiff(wide_deparse(expr), drake_fn_patterns)
+          )
+        } else {
+          lapply(X = expr, FUN = walk)
+        }
       }
       results <<- merge_lists(x = results, y = new_results)
-    } else if (is.call(expr) || is.recursive(expr)) {
-      if (is_loadd_call(expr)){
-        results$loadd <<- base::union(
-          results$loadd,
-          setdiff(analyze_loadd(expr), drake_fn_patterns)
-        )
-      } else if (is_readd_call(expr)){
-        results$readd <<- base::union(
-          results$readd,
-          setdiff(analyze_readd(expr), drake_fn_patterns)
-        )
-      }
-      if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
-        results$namespaced <<- base::union(
-          results$namespaced,
-          setdiff(wide_deparse(expr), drake_fn_patterns)
-        )
-      } else {
-        lapply(
-          X = expr,
-          FUN = walk,
-          knitr_input = is_knitr_input_call(expr),
-          file_input = is_file_input_call(expr),
-          file_output = is_file_output_call(expr)
-        )
-      }
     }
   }
-  # Actually walk the expression.
+
   walk(expr)
-  # Filter out useless globals.
-  if (length(results$globals)){
-    results$globals <- intersect(results$globals, find_globals(expr))
-  }
-  results
+  results$globals <- intersect(results$globals, find_globals(expr))
+  results[lapply(results, length) > 0]
 }
 
 find_globals <- function(expr){
@@ -373,7 +342,7 @@ find_globals <- function(expr){
     inputs@inputs,
     names(inputs@functions)
   ) %>%
-    setdiff(y = formals) %>%
+    setdiff(y = c(formals, drake_fn_patterns)) %>%
     Filter(f = is_parsable)
 }
 
@@ -387,13 +356,36 @@ declare_file <- function(expr){
 analyze_loadd <- function(expr){
   expr <- match.call(drake::loadd, as.call(expr))
   args <- parse_loadd_arg_list(expr)
-  c(unnamed_in_list(args), args[["list"]])
+  out <- c(unnamed_in_list(args), args[["list"]])
+  list(loadd = setdiff(out, drake_fn_patterns))
 }
 
 analyze_readd <- function(expr){
   expr <- match.call(drake::readd, as.call(expr))
   args <- parse_loadd_arg_list(expr)
-  args[["target"]]
+  list(readd = setdiff(args[["target"]], drake_fn_patterns))
+}
+
+analyze_file_input <- function(expr){
+  inputs <- CodeDepends::getInputs(expr)
+  deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
+  list(file_input = deps)
+}
+
+analyze_file_output <- function(expr){
+  inputs <- CodeDepends::getInputs(expr)
+  deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
+  list(file_output = deps)
+}
+
+analyze_knitr_input <- function(expr){
+  inputs <- CodeDepends::getInputs(expr)
+  files <- c(inputs@strings, inputs@files)
+  out <- lapply(files, knitr_deps_list) %>%
+    Reduce(f = merge_lists)
+  files <- drake_quotes(files, single = FALSE)
+  out$knitr_input <- base::union(out$knitr_input, files)
+  out
 }
 
 parse_loadd_arg_list <- function(expr){
@@ -405,10 +397,11 @@ parse_loadd_arg_list <- function(expr){
 
 unnamed_in_list <- function(x){
   if (!length(names(x))){
-    x
+    out <- x
   } else {
-    x[!nchar(names(x))]
+    out <- x[!nchar(names(x))]
   }
+  unlist(out)
 }
 
 drake_prefix <- c("", "drake::", "drake:::")

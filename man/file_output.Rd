@@ -4,7 +4,7 @@
 \alias{file_output}
 \title{Declare the file outputs of a workflow plan command.}
 \usage{
-file_output(path, ...)
+file_output(path)
 }
 \arguments{
 \item{path}{Character string of length 1. File path

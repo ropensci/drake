@@ -100,7 +100,9 @@ file_outputs_to_targets <- function(plan){
 
 single_file_output <- function(command){
   file_output <- command_dependencies(command)$file_output
-  stopifnot(length(file_output) > 0)
+  if (length(file_output) < 1){
+    stop("found an empty file_output() in command: ", command, call. = FALSE)
+  }
   if (length(file_output) > 1){
     warning(
       "Multiple file outputs found for command `", command, "`. ",

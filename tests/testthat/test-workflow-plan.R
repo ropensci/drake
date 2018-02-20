@@ -7,7 +7,12 @@ test_with_dir("File functions handle input", {
   expect_equal(
     knitr_input(1, "x", "y"), c("1", "x", "y")
   )
-  expect_warning(expect_equal(file_output(1, "x", "y"), "1"))
+  expect_warning(expect_equal(file_output(c(1, "x", "y")), "1"))
+  expect_error(file_output(1, "x", "y"))
+  expect_equal(
+    code_dependencies(quote(file_output(c("file1", "file2")))),
+    list(file_output = drake_quotes(c("file1", "file2"), single = FALSE))
+  )
 })
 
 test_with_dir("edge cases for plans", {
@@ -45,6 +50,13 @@ test_with_dir("edge cases for plans", {
     tibble(
       target = c("\"file1\""),
       command = "file_output('file1', 'file2')"
+    )
+  ))
+  expect_warning(expect_equal(
+    drake_plan(a = file_output(c("file1", "file2"))),
+    tibble(
+      target = c("\"file1\""),
+      command = "file_output(c('file1', 'file2'))"
     )
   ))
 })
