@@ -5,16 +5,9 @@ test_with_dir("File functions handle input", {
     file_input(1, "x", "y"), c("1", "x", "y")
   )
   expect_equal(
-    file_in(1, "x", "y"), c("1", "x", "y")
-  )
-  expect_equal(
     knitr_input(1, "x", "y"), c("1", "x", "y")
   )
-  expect_equal(
-    knitr_in(1, "x", "y"), c("1", "x", "y")
-  )
   expect_warning(expect_equal(file_output(c(1, "x", "y")), "1"))
-  expect_warning(expect_equal(file_out(c(1, "x", "y")), "1"))
   expect_error(file_output(1, "x", "y"))
   expect_equal(
     code_dependencies(quote(file_output(c("file1", "file2")))),

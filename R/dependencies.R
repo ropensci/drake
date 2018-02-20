@@ -399,14 +399,16 @@ unnamed_in_list <- function(x){
 
 # This function is just to set up the prefixes and patterns below.
 # Existing tests will fail if the output is incorrect.
+# pair_text is not really needed currently, but in case we have synonyms,
+# we might keep it around for now.
 pair_text <- function(x, y){
   apply(expand.grid(x, y), 1, paste0, collapse = "") # nocov
 }
 
 drake_prefix <- c("", "drake::", "drake:::")
-knitr_input_fns <- pair_text(drake_prefix, c("knitr_input", "knitr_in"))
-file_input_fns <- pair_text(drake_prefix, c("file_input", "file_in"))
-file_output_fns <- pair_text(drake_prefix, c("file_output", "file_out"))
+knitr_input_fns <- pair_text(drake_prefix, c("knitr_input"))
+file_input_fns <- pair_text(drake_prefix, c("file_input"))
+file_output_fns <- pair_text(drake_prefix, c("file_output"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
 drake_fn_patterns <- c(

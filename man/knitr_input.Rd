@@ -2,7 +2,6 @@
 % Please edit documentation in R/workplan.R
 \name{knitr_input}
 \alias{knitr_input}
-\alias{knitr_in}
 \title{Declare the \code{knitr}/\code{rmarkdown} source files
 of a workflow plan command.}
 \usage{
@@ -23,7 +22,7 @@ for a full explanation.
 \examples{
 \dontrun{
 test_with_dir("Contain side effects", {
-# `knitr_input()` (and its alias `knitr_in()`) is like `file_input()`
+# `knitr_input()` is like `file_input()`
 # except that it analyzes active code chunks in your `knitr`
 # source file and detects non-file dependencies.
 # That way, updates to the right dependencies trigger rebuilds

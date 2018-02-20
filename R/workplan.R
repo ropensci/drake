@@ -161,7 +161,6 @@ drake_plan_override <- function(target, field, config){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @aliases file_in
 #' @seealso `file_output` `knitr_input`
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of input files
@@ -171,7 +170,6 @@ drake_plan_override <- function(target, field, config){
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
 #' # The `file_output()` and `file_input()` functions
-#' # (and their respective aliases `file_out()` and `file_in()`)
 #' # just takes in strings and returns them.
 #' file_output("summaries.txt")
 #' # Their main purpose is to orchestrate your custom files
@@ -196,7 +194,7 @@ drake_plan_override <- function(target, field, config){
 #' # in your report.
 #' })
 #' }
-file_input <- file_in <- function(...){
+file_input <- function(...){
   as.character(c(...))
 }
 
@@ -205,7 +203,6 @@ file_input <- file_in <- function(...){
 #'   in your workflow plan data frame. You can only specify
 #'   one file output per command. See the examples
 #'   for a full explanation.
-#' @aliases file_out
 #' @export
 #' @seealso file_input knitr_input
 #' @return A character string, the file path of the file output.
@@ -217,7 +214,6 @@ file_input <- file_in <- function(...){
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
 #' # The `file_output()` and `file_input()` functions
-#' # (and their respective aliases `file_out()` and `file_in()`)
 #' # just takes in strings and returns them.
 #' file_output("summaries.txt")
 #' # Their main purpose is to orchestrate your custom files
@@ -242,7 +238,7 @@ file_input <- file_in <- function(...){
 #' # in your report.
 #' })
 #' }
-file_output <- file_out <- function(path){
+file_output <- function(path){
   if (length(path) != 1){
     warning(
       "In file_output(), the `path` argument must ",
@@ -260,7 +256,6 @@ file_output <- file_out <- function(path){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @aliases knitr_in
 #' @seealso file_input file_output
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
@@ -268,7 +263,7 @@ file_output <- file_out <- function(path){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
-#' # `knitr_input()` (and its alias `knitr_in()`) is like `file_input()`
+#' # `knitr_input()` is like `file_input()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
 #' # That way, updates to the right dependencies trigger rebuilds
@@ -288,4 +283,4 @@ file_output <- file_out <- function(path){
 #' # were read from the cache using calls to `loadd()` and `readd()`.
 #' })
 #' }
-knitr_input <- knitr_in <- file_input
+knitr_input <- file_input

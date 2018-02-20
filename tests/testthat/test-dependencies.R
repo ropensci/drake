@@ -48,33 +48,6 @@ test_with_dir("file_output() and knitr_input(): commands vs imports", {
   )
 })
 
-test_with_dir("file util synonyms", {
-  expect_identical(
-    code_dependencies(quote(file_input("x", "y"))),
-    code_dependencies(quote(file_in("x", "y")))
-  )
-  expect_identical(
-    sort(code_dependencies(quote(file_input("x", "y")))$file_input),
-    sort(drake_quotes(c("x", "y"), single = FALSE))
-  )
-  expect_identical(
-    code_dependencies(quote(file_output("x"))),
-    code_dependencies(quote(file_out("x")))
-  )
-  expect_identical(
-    code_dependencies(quote(file_output("x")))$file_output,
-    drake_quotes(c("x"), single = FALSE)
-  )
-  expect_warning(expect_identical(
-    code_dependencies(quote(knitr_input("x", "y"))),
-    code_dependencies(quote(knitr_in("x", "y")))
-  ))
-  expect_warning(expect_identical(
-    sort(code_dependencies(quote(knitr_input("x", "y")))$knitr_input),
-    sort(drake_quotes(c("x", "y"), single = FALSE))
-  ))
-})
-
 test_with_dir(
   "deps() correctly reports dependencies of functions and commands", {
   expect_equal(deps(""), character(0))
