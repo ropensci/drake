@@ -1,5 +1,10 @@
 drake_context("knitr")
 
+test_with_dir("empty cases", {
+  expect_equal(knitr_deps_list(NULL), list())
+  expect_equal(safe_get_tangled_frags(NULL), character(0))
+})
+
 test_with_dir("unparsable pieces of commands are handled correctly", {
   x <- "bluh$"
   expect_false(is_parsable(x))
