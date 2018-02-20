@@ -136,13 +136,22 @@ At the end, let's generate a pdf plot of the RMSPE scores and a [knitr](https://
 
 ```{r masterknitrreport}
 output_plan <- drake_plan(
-  rmspe.pdf = ggsave(filename = "rmspe.pdf", plot = plot_rmspe(rmspe)),
-  report.md = knit("report.Rmd", quiet = TRUE),
-  file_targets = TRUE,
-  strings_in_dots = "literals"
+  ggsave(
+    filename = file_output("rmspe.pdf"),
+    plot = plot_rmspe(rmspe)
+  ),
+  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
 )
 
 head(output_plan)
+```
+
+Because of the mention of `knitr_input()` above, `make()` will look dependencies inside `report.Rmd` (targets mentioned with `loadd()` or `readd()` in active code chunks). That way, whenever a dependency changes, `drake` will rebuild `report.md` when you call `make()`. For that to happen, we need `report.Rmd` to exist before the call to `make()`. For this example, you can find [report.Rmd here](https://github.com/ropensci/drake/blob/master/inst/examples/gsp/report.Rmd).
+
+```{r copyreport}
+local <- file.path("examples", "gsp", "report.Rmd")
+path <- system.file(path = local, package = "drake", mustWork = TRUE)
+file.copy(from = path, to = "report.Rmd", overwrite = TRUE)
 ```
 
 At this point, we can gather together the whole workflow plan.
@@ -158,14 +167,6 @@ plot_rmspe <- function(rmspe){
   ggplot(rmspe) +
     geom_histogram(aes(x = rmspe), bins = 30)
 }
-```
-
-We also need the [report.Rmd file](https://github.com/ropensci/drake/blob/master/inst/examples/gsp/report.Rmd) for this example.
-
-```{r copyreport}
-local <- file.path("examples", "gsp", "report.Rmd")
-path <- system.file(path = local, package = "drake", mustWork = TRUE)
-file.copy(from = path, to = "report.Rmd", overwrite = TRUE)
 ```
 
 Now, we can run the project

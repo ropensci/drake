@@ -93,7 +93,7 @@ test_with_dir("totally off the default cache", {
   saveRDS("stuff", file = "some_file")
   con <- dbug()
   unlink(default_cache_path(), recursive = TRUE)
-  con$plan <- data.frame(target = "a", command = "c('some_file')")
+  con$plan <- data.frame(target = "a", command = "file_input(\"some_file\")")
   con$targets <- con$plan$target
   con$cache <- new_cache(
     path = "my_new_cache",
@@ -114,7 +114,10 @@ test_with_dir("totally off the default cache", {
 test_with_dir("use two differnt file system caches", {
   saveRDS("stuff", file = "some_file")
   targ <- "DRAKE_TEST_target"
-  my_plan <- data.frame(target = targ, command = "my_function('some_file')")
+  my_plan <- data.frame(
+    target = targ,
+    command = "my_function(file_input(\"some_file\"))"
+  )
   scenario <- get_testing_scenario()
   parallelism <- scenario$parallelism
   jobs <- scenario$jobs
@@ -126,7 +129,6 @@ test_with_dir("use two differnt file system caches", {
     x
   }
   cache <- dbug()$cache
-
   con <- make(
     my_plan,
     cache = cache,

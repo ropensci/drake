@@ -47,23 +47,14 @@ results <- plan_summaries(
   gather = NULL
 ) # skip 'gather' (workflow my_plan is more readable)
 
-# External file targets and dependencies should be single-quoted.
-# Use double quotes to remove any special meaning from character strings.
-# Single quotes inside imported functions are ignored, so this mechanism
-# only works inside the workflow my_plan data frame.
-# WARNING: drake cannot track entire directories (folders).
+# Use `knitr_input()` to tell drake to look for dependencies
+# inside report.Rmd (targets referenced explicitly with loadd() and readd()
+# in active code chunks).
+# Use file_output() to tell drake that the target is a file.
+# Drake knows to put report.md in the "target" column when it comes
+# time to make().
 report <- drake_plan(
-  # As long as `knit()`, `knitr::knit()`, `render()`, or `rmarkdown::render()`
-  # is visible in your workflow plan command,
-  # drake will dig into the active code chunks of your `report.Rmd`
-  # and find the dependencies of `report.md` in the arguments of
-  # calls to loadd() and readd().
-  report.md = knit(
-    'report.Rmd', #nolint: use single quotes to specify file dependency.
-     quiet = TRUE
-  ),
-  file_targets = TRUE,
-  strings_in_dots = "filenames" # Redundant, since we used single quotes
+  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
 )
 
 # Row order doesn't matter in the workflow my_plan.

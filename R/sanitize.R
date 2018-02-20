@@ -13,6 +13,7 @@ sanitize_plan <- function(plan){
   if (!is.null(plan[["trigger"]])){
     assert_legal_triggers(plan[["trigger"]])
   }
+  plan <- file_outputs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
   plan[nchar(plan$target) > 0, ]
 }
@@ -82,4 +83,32 @@ repair_target_names <- function(x){
   x <- gsub("^_", "", x)
   x[!nchar(x)] <- "X"
   make.unique(x, sep = "_")
+}
+
+file_outputs_to_targets <- function(plan){
+  index <- grepl("file_output", plan$command)
+  plan$target[index] <- vapply(
+    plan$command[index],
+    single_file_output,
+    character(1)
+  )
+  plan$target[is_file(plan$target)] <-
+    plan$target[is_file(plan$target)] %>%
+    gsub(pattern = "^'|'$", replacement = "\"")
+  plan
+}
+
+single_file_output <- function(command){
+  file_output <- command_dependencies(command)$file_output
+  stopifnot(length(file_output) > 0)
+  if (length(file_output) > 1){
+    warning(
+      "Multiple file outputs found for command `", command, "`. ",
+      "Choosing ", file_output[1], " as the target name.",
+      call. = FALSE
+    )
+    file_output[1]
+  } else {
+    file_output
+  }
 }

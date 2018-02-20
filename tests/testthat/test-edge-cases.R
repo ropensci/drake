@@ -1,7 +1,7 @@
 drake_context("edge cases")
 
 test_with_dir("config and make without safety checks", {
-  x <- drake_plan(file = readRDS("my_file.rds"))
+  x <- drake_plan(file = readRDS(file_input("my_file.rds")))
   expect_warning(tmp <- config(x, verbose = FALSE))
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
@@ -9,7 +9,7 @@ test_with_dir("config and make without safety checks", {
 })
 
 test_with_dir("Strings stay strings, not symbols", {
-  x <- drake_plan(a = "A", strings_in_dots = "literals")
+  expect_silent(x <- drake_plan(a = "A", strings_in_dots = "literals"))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
@@ -21,7 +21,7 @@ test_with_dir("error handlers", {
 })
 
 test_with_dir("error when file target names do not match actual filenames", {
-  x <- drake_plan(y = 1, file_targets = TRUE)
+  expect_warning(x <- drake_plan(y = 1, file_targets = TRUE))
   expect_warning(expect_error(make(x, verbose = FALSE, session_info = FALSE)))
 })
 
@@ -62,7 +62,7 @@ test_with_dir("target conflicts with previous import", {
     command = "1+1"))
   config$targets <- config$plan$target
   testrun(config)
-  expect_equal(justbuilt(config), sort(c("'intermediatefile.rds'",
+  expect_equal(justbuilt(config), sort(c("\"intermediatefile.rds\"",
     "combined", "f", "final", "yourinput")))
 })
 

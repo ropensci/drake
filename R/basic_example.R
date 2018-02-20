@@ -159,18 +159,14 @@ load_basic_example <- function(
   # skip 'gather' (drake_plan my_plan is more readable)
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
 
-  # External file targets and dependencies should be
-  # single-quoted.  Use double quotes to remove any special
-  # meaning from character strings.  Single quotes inside
-  # imported functions are ignored, so this mechanism only
-  # works inside the drake_plan my_plan data frame.  WARNING:
-  # drake cannot track entire directories (folders).
-  report <- drake_plan(report.md = knit("report.Rmd", quiet = TRUE),
-    file_targets = TRUE, strings_in_dots = "filenames")
+  report <- tibble(
+    target = "",
+    command = 'knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)', # nolint  
+  )
 
   # Row order doesn't matter in the drake_plan my_plan.
-  envir$my_plan <- rbind(report, datasets,
-    analyses, results)
+  envir$my_plan <- rbind(report, datasets, analyses, results) %>%
+    tibble::as_tibble()
 
   # Write the R Markdown source for a dynamic knitr report
   report <- system.file(

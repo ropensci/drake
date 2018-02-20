@@ -46,19 +46,23 @@ list.files()
 
 ## [1] "report.Rmd"
 
-# The real work is outlined step by step in the `my_plan` data frame.
+# The real work is outlined step-by-step in the `my_plan` data frame.
 # The steps are called "targets", and they depend on the imports.
+# File targets have the names in `file_output()`, and the non-file
+# targets have the names in the `target` column of the data frame.
 # Drake's `make()` function runs the commands to build the targets
 # in the correct order.
 head(my_plan)
 
-##              target                          command
-## 1       'report.md' knit('report.Rmd', quiet = TRUE)
-## 2             small                      simulate(5)
-## 3             large                     simulate(50)
-## 4 regression1_small                      reg1(small)
-## 5 regression1_large                      reg1(large)
-## 6 regression2_small                      reg2(small)
+## # A tibble: 6 x 2
+##   target            command                                                                      
+##   <chr>             <chr>                                                                        
+## 1 ""                "knit(knitr_input(\"report.Rmd\"), file_output(\"report.md\"), quiet = TRUE)"
+## 2 small             simulate(48)                                                                 
+## 3 large             simulate(64)                                                                 
+## 4 regression1_small reg1(small)                                                                  
+## 5 regression1_large reg1(large)                                                                  
+## 6 regression2_small reg2(small)  
 
 # First round: drake builds all 15 targets.
 make(my_plan) 
@@ -77,7 +81,7 @@ make(my_plan)
 ## target summ_regression1_small
 ## target summ_regression2_large
 ## target summ_regression2_small
-## target 'report.md'
+## target "report.md"
 
 # If you change the reg2() function,
 # all the regression2 targets are out of date,
@@ -97,7 +101,7 @@ make(my_plan)
 ## target coef_regression2_small
 ## target summ_regression2_large
 ## target summ_regression2_small
-## target 'report.md'
+## target "report.md"
 
 # If nothing important changed, drake rebuilds nothing.
 make(my_plan)
@@ -237,11 +241,18 @@ For context and history, check out [this post on the rOpenSci blog](https://rope
 
 # Help and troubleshooting
 
-Please refer to [TROUBLESHOOTING.md](https://github.com/ropensci/drake/blob/master/TROUBLESHOOTING.md) on the [GitHub page](https://github.com/ropensci/drake) for instructions.
+The following resources document many known issues and challenges.
+
+- Frequently-asked questions: [wiki](https://github.com/ropensci/drake/wiki/Frequently-Asked-Questions) and [issues](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22Frequently+Asked+Question%22).
+- [Cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html)
+- [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
+- [Other known issues](https://github.com/ropensci/drake/issues) (please search both open and closed ones).
+
+If you are still having trouble, please submit a [new issue](https://github.com/ropensci/drake/issues/new) with a bug report or feature request, along with a minimal reproducible example where appropriate.
 
 # Contributing
 
-Bug reports, suggestions, and code are welcome. Please see [CONTRIBUTING.md](https://github.com/ropensci/drake/blob/master/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/ropensci/drake/blob/master/CONDUCT.md).
+Bug reports, suggestions, and especially code contributions are welcome. Please see [CONTRIBUTING.md](https://github.com/ropensci/drake/blob/master/CONTRIBUTING.md). Maintainers and contributors must follow this repository's [code of conduct](https://github.com/ropensci/drake/blob/master/CONDUCT.md).
 
 # Similar work
 

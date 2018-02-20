@@ -51,7 +51,7 @@ Depends:
   R (>= 3.2.0)
 Imports:
   bindr,
-  codetools,
+  CodeDepends,
   crayon,
   evaluate,
   digest,

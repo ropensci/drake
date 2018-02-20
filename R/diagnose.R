@@ -65,5 +65,5 @@ diagnose <- function(
   if (!cache$exists(key = target, namespace = "meta")){
     stop("No diagnostic information for target ", target, ".")
   }
-  cache$get(key = target, namespace = "meta")
+  cache$get(key = standardize_filename(target), namespace = "meta")
 }

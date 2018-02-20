@@ -1,3 +1,10 @@
 # Troubleshooting
 
-The ["caution" vignette](https://github.com/ropensci/drake/blob/master/vignettes/caution.Rmd) (`vignette("caution")`, also linked from the [CRAN page](https://CRAN.R-project.org/package=drake) under "vignettes") lists some known issues, limitations, and edge cases. Please look there first if you encounter problems or unexpected behavior. The ["debug" vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd) (`vignette("debug")`) describes how to debug and test `drake` workflows. If these vignettes do not solve your issue, please search the [issues page](https://github.com/ropensci/drake/issues), taking care to browse the closed issues as well. If you are still unsatisfied, please submit your bug report, question, or feature reqest as a [new issue](https://github.com/ropensci/drake/issues/new).
+The following resources document many known issues and challenges.
+
+- Frequently-asked questions: [wiki](https://github.com/ropensci/drake/wiki/Frequently-Asked-Questions) and [issues](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22Frequently+Asked+Question%22).
+- [Cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html)
+- [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
+- [Other known issues](https://github.com/ropensci/drake/issues) (please search both open and closed ones).
+
+If you are still having trouble, please submit a [new issue](https://github.com/ropensci/drake/issues/new) with a bug report or feature request, along with a minimal reproducible example where appropriate.

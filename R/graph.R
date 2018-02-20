@@ -25,6 +25,7 @@
 #'   of the dependency graph. A light `mclapply()`-based
 #'   parallelism is used if your operating system is not Windows.
 #'
+#' @param sanitize_plan logical, whether to sanitize the workflow plan first.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -39,10 +40,13 @@ build_drake_graph <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   verbose = 1,
-  jobs = 1
+  jobs = 1,
+  sanitize_plan = TRUE
 ){
   force(envir)
-  plan <- sanitize_plan(plan)
+  if (sanitize_plan){
+    plan <- sanitize_plan(plan)
+  }
   targets <- sanitize_targets(plan, targets)
   imports <- as.list(envir)
   assert_unique_names(
@@ -51,44 +55,60 @@ build_drake_graph <- function(
     envir = envir,
     verbose = verbose
   )
-  true_import_names <- setdiff(names(imports), targets)
-  imports <- imports[true_import_names]
+  import_names <- setdiff(names(imports), targets)
+  imports <- imports[import_names]
   console_many_targets(
     targets = names(imports),
     pattern = "connect",
     type = "import",
     config = list(verbose = verbose)
   )
-  import_deps <- lightly_parallelize(
-    imports, import_dependencies, jobs = jobs)
+  imports_edges <- lightly_parallelize(
+    X = seq_along(imports),
+    FUN = function(i){
+      imports_edges(name = import_names[[i]], value = imports[[i]])
+    },
+    jobs = jobs
+  )
   console_many_targets(
     targets = plan$target,
     pattern = "connect",
     type = "target",
     config = list(verbose = verbose)
   )
-  command_deps <- lightly_parallelize(
-    plan$command, command_dependencies, jobs = jobs)
-  names(command_deps) <- plan$target
-  dependency_list <- c(command_deps, import_deps)
-  keys <- names(dependency_list)
-  vertices <- c(keys, unlist(dependency_list)) %>% unique
-  from <- unlist(dependency_list) %>%
-    unname()
-  times <- vapply(
-    X = dependency_list,
-    FUN = length,
-    FUN.VALUE = integer(1),
-    USE.NAMES = TRUE
+  commands_edges <- lightly_parallelize(
+    X = seq_len(nrow(plan)),
+    FUN = function(i){
+      commands_edges(target = plan$target[i], command = plan$command[i])
+    },
+    jobs = jobs
   )
-  to <- rep(keys, times = times)
-  edges <- rbind(from, to) %>%
-    as.character()
-  graph <- make_empty_graph() +
-    vertex(vertices) +
-    edge(edges)
-  prune_drake_graph(graph = graph, to = targets, jobs = jobs) %>%
+  c(imports_edges, commands_edges) %>%
+    do.call(what = rbind) %>%
+    igraph::graph_from_data_frame() %>%
+    prune_drake_graph(to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
+}
+
+commands_edges <- function(target, command){
+  deps <- command_dependencies(command)
+  code_deps_to_edges(target = target, deps = deps)
+}
+
+imports_edges <- function(name, value){
+  deps <- import_dependencies(value)
+  code_deps_to_edges(target = name, deps = deps)
+}
+
+code_deps_to_edges <- function(target, deps){
+  inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_output")])
+  edges <- NULL
+  if (length(inputs)){
+    data.frame(from = inputs, to = target, stringsAsFactors = FALSE)
+  } else {
+    # Loops will be removed.
+    data.frame(from = target, to = target, stringsAsFactors = FALSE)
+  }
 }
 
 #' @title Prune the dependency network of your project.

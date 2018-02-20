@@ -2,4 +2,4 @@
 # On the next make(), your workflow will start over from scratch.
 
 drake::clean(destroy = TRUE) # destroy = TRUE removes the .drake/ folder too.
-unlink(c("report.html", "figure"), recursive = TRUE)
+unlink(c("report.html", "figure", "Rplots.pdf"), recursive = TRUE)

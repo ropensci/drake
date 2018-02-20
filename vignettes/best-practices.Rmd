@@ -60,7 +60,7 @@ Then, set up your workflow plan data frame.
 
 ```{r storecode1}
 good_plan <- drake_plan(
-  my_data = get_data('data.csv'), # External files need to be in commands explicitly. # nolint
+  my_data = get_data(file_input("data.csv")), # External files need to be in commands explicitly. # nolint
   my_analysis = analyze_data(my_data),
   my_summaries = summarize_results(my_data, my_analysis)
 )
@@ -101,9 +101,9 @@ If you migrate to `drake`, you may be tempted to set up a workflow plan like thi
 
 ```{r badsource}
 bad_plan <- drake_plan(
-  my_data = source('get_data.R'),           # nolint
-  my_analysis = source('analyze_data.R'),   # nolint
-  my_summaries = source('summarize_data.R') # nolint
+  my_data = source(file_input("get_data.R")),
+  my_analysis = source(file_input("analyze_data.R")),
+  my_summaries = source(file_input("summarize_data.R"))
 )
 
 bad_plan
@@ -127,7 +127,7 @@ Dangers:
 1. In the first `make(bad_plan, jobs = 2)`, `drake` will try to build `my_data` and `my_analysis` at the same time even though `my_data` must finish before `my_analysis` begins.
 2. `Drake` is oblivious to `data.csv` since it is not explicitly mentioned in a workflow plan command. So when `data.csv` changes, `make(bad_plan)` will not rebuild `my_data`.
 3. `my_analysis` will not update when `my_data` changes.
-4. The return value of `source()` is formatted counter-intuitively. If `source('get_data.R')` is the command for `my_data`, then `my_data` will always be a list with elements `"value"` and `"visible"`. In other words, `source('get_data.R')$value` is really what you would want.
+4. The return value of `source()` is formatted counter-intuitively. If `source(file_input("get_data.R"))` is the command for `my_data`, then `my_data` will always be a list with elements `"value"` and `"visible"`. In other words, `source(file_input("get_data.R"))$value` is really what you would want.
 
 In addition, this `source()`-based approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
 

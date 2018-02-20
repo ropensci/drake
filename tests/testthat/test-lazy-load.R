@@ -27,7 +27,7 @@ test_with_dir("no overt errors lazy load for the debug example", {
     "nextone + yourinput + 1"
   config <- testrun(config)
   expect_equal(sort(justbuilt(config)), sort(c(
-    "combined", "final", "'intermediatefile.rds'"
+    "combined", "final", "\"intermediatefile.rds\""
   )))
   expect_equal(outdated(config), character(0))
 })

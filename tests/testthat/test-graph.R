@@ -35,7 +35,7 @@ test_with_dir("Supplied graph is not an igraph.", {
 })
 
 test_with_dir("graph does not fail if input file is binary", {
-  x <- drake_plan(y = readRDS("input.rds"))
+  x <- drake_plan(y = readRDS(file_input("input.rds")))
   saveRDS(as.list(mtcars), "input.rds")
   con <- drake_config(x, verbose = FALSE)
   expect_silent(out <- vis_drake_graph(con))
@@ -52,7 +52,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
   expect_error(tmp <- capture.output(check_plan(x)))
   expect_error(
     make(x, verbose = FALSE, session_info = FALSE),
-    regexp = "a b c"
+    regexp = "[Cc]ircular workflow"
   )
   x <- drake_plan(
     a = b, b = c, c = a, d = 4, e = d,
@@ -61,7 +61,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
   expect_error(tmp <- capture.output(check_plan(x)))
   expect_error(
     make(x, verbose = FALSE, session_info = FALSE),
-    regexp = "A B C\n  a b c|a b c\n  A B C"
+    regexp = "[Cc]ircular workflow"
   )
 })
 
@@ -182,7 +182,7 @@ test_with_dir("graphing args are not ignored (basic example)", {
   expect_false(file.exists("Makefile"))
   expect_true(is.data.frame(tmp$nodes))
   expect_equal(sort(outdated(config = config)),
-               sort(c(my_plan$target)))
+               sort(c(config$plan$target)))
   expect_false(file.exists("Makefile"))
 
   file <- "graph.html"

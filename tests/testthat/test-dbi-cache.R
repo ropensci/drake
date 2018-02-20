@@ -59,6 +59,6 @@ test_with_dir("storr_dbi is usable", {
 
   expect_equal(short_hash(cache), "murmur32")
   expect_equal(long_hash(cache), "sha1")
-  expect_equal(sort(built(cache = cache)), sort(my_plan$target))
+  expect_equal(sort(built(cache = cache)), sort(config$plan$target))
   expect_equal(outdated(config), character(0))
 })
