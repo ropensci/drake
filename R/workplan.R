@@ -21,13 +21,13 @@
 #' @param list A named character vector of commands
 #'   with names as targets.
 #' @param file_targets deprecated argument. See [file_output()],
-#'   [file_input()], and [knitr_input()] for the new way to work
+#'   [file_input()], and [knitr_input()] for the current way to work
 #'   with files.
 #'   In the past, this argument was a logical to indicate whether the
 #'   target names should be single-quoted to denote files. But the newer
 #'   interface is much better.
 #' @param strings_in_dots deprecated argument. See [file_output()],
-#'   [file_input()], and [knitr_input()] for the new way to work
+#'   [file_input()], and [knitr_input()] for the current way to work
 #'   with files.
 #'   In the past, this argument was a logical to indicate whether the
 #'   target names should be single-quoted to denote files. But the newer

@@ -16,14 +16,14 @@ with commands assigned to them. See the examples for details.}
 with names as targets.}
 
 \item{file_targets}{deprecated argument. See \code{\link[=file_output]{file_output()}},
-\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the new way to work
+\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the current way to work
 with files.
 In the past, this argument was a logical to indicate whether the
 target names should be single-quoted to denote files. But the newer
 interface is much better.}
 
 \item{strings_in_dots}{deprecated argument. See \code{\link[=file_output]{file_output()}},
-\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the new way to work
+\code{\link[=file_input]{file_input()}}, and \code{\link[=knitr_input]{knitr_input()}} for the current way to work
 with files.
 In the past, this argument was a logical to indicate whether the
 target names should be single-quoted to denote files. But the newer
