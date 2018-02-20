@@ -385,13 +385,15 @@ declare_file <- function(expr){
 }
 
 analyze_loadd <- function(expr){
+  expr <- match.call(drake::loadd, as.call(expr))
   args <- parse_loadd_arg_list(expr)
   c(unnamed_in_list(args), args[["list"]])
 }
 
 analyze_readd <- function(expr){
+  expr <- match.call(drake::readd, as.call(expr))
   args <- parse_loadd_arg_list(expr)
-  c(unnamed_in_list(args), args[["target"]])
+  args[["target"]]
 }
 
 parse_loadd_arg_list <- function(expr){
