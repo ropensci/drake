@@ -13,7 +13,11 @@ console_missing <- function(target, config){
     return()
   }
   pattern <- "missing"
-  text <- paste(pattern, target)
+  text <- target
+  if (is_file(target)){
+    text <- paste0("file ", text)
+  }
+  text <- paste(pattern, text)
   finish_console(text = text, pattern = pattern, verbose = config$verbose)
 }
 
@@ -22,13 +26,21 @@ console_import <- function(target, config){
     return()
   }
   pattern <- "import"
-  text <- paste(pattern, target)
+  text <- target
+  if (is_file(target)){
+    text <- paste0("file ", text)
+  }
+  text <- paste(pattern, text)
   finish_console(text = text, pattern = pattern, verbose = config$verbose)
 }
 
 console_target <- function(target, config){
   pattern <- "target"
-  text <- paste("target", target)
+  text <- target
+  if (is_file(target)){
+    text <- paste0("file ", text)
+  }
+  text <- paste("target", text)
   trigger <- get_trigger(target = target, config = config)
   if (trigger != "any"){
     trigger <- get_trigger(target = target, config = config)
@@ -53,6 +65,7 @@ console_many_targets <- function(
   if (n < 1){
     return(invisible())
   }
+  targets[is_file(targets)] <- paste("file", targets[is_file(targets)])
   paste0(
     pattern,
     " ", n, " ", type,

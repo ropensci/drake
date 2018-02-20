@@ -38,7 +38,7 @@ merge_lists <- function(x, y){
   lapply(
     X = names,
     function(name){
-      c(x[[name]], y[[name]])
+      base::union(x[[name]], y[[name]])
     }
   ) %>%
     setNames(nm = names)

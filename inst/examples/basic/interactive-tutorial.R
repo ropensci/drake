@@ -139,14 +139,14 @@ results <- plan_summaries(
   gather = NULL
 ) # skip 'gather' (workflow my_plan is more readable)
 
-# Use `knitr_input()` to tell drake to look for dependencies
+# Use `knitr_in()` to tell drake to look for dependencies
 # inside report.Rmd (targets referenced explicitly with loadd() and readd()
 # in active code chunks).
-# Use file_output() to tell drake that the target is a file.
+# Use file_out() to tell drake that the target is a file.
 # Drake knows to put report.md in the "target" column when it comes
 # time to make().
 report <- drake_plan(
-  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
+  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 # Row order doesn't matter in the workflow my_plan.

@@ -140,13 +140,13 @@ in a dynamic knitr report.
 
 ```{r reportplanpackages}
 report_plan <- drake_plan(
-  knit(knitr_input("report.Rmd"), file_output("report.md"), quiet = TRUE)
+  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 report_plan
 ```
 
-Because of the mention of `knitr_input()` above, `make()` will look dependencies inside `report.Rmd` (targets mentioned with `loadd()` or `readd()` in active code chunks). That way, whenever a dependency changes, `drake` will rebuild `report.md` when you call `make()`. For that to happen, we need `report.Rmd` to exist before the call to `make()`. For this example, you can find [report.Rmd here](https://github.com/ropensci/drake/blob/master/inst/examples/packages/report.Rmd).
+Because of the mention of `knitr_in()` above, `make()` will look dependencies inside `report.Rmd` (targets mentioned with `loadd()` or `readd()` in active code chunks). That way, whenever a dependency changes, `drake` will rebuild `report.md` when you call `make()`. For that to happen, we need `report.Rmd` to exist before the call to `make()`. For this example, you can find [report.Rmd here](https://github.com/ropensci/drake/blob/master/inst/examples/packages/report.Rmd).
 
 Now, we complete the workflow plan data frame by
 concatenating the results together.

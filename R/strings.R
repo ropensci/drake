@@ -19,6 +19,9 @@
 #' drake_quotes("abcd") # "\"abcd\""
 drake_quotes <- function(x = NULL, single = FALSE){
   stopifnot(is.logical(single))
+  if (!length(x)){
+    return(character(0))
+  }
   if (single){
     paste0("'", x, "'")
   } else {
