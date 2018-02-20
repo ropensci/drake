@@ -213,7 +213,7 @@ command_dependencies <- function(command){
     deps$loadd, knitr_deps(find_knitr_doc(command))
   ) %>%
     unique
-  deps[lapply(deps, length) > 0]
+  deps[purrr::map_int(deps, length) > 0]
 }
 
 # TODO: this function can go away when drake
@@ -310,9 +310,8 @@ code_dependencies <- function(expr){
         new_results <- analyze_file_output(expr)
       } else {
         if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
-          results$namespaced <<- base::union(
-            results$namespaced,
-            setdiff(wide_deparse(expr), drake_fn_patterns)
+          new_results <- list(
+            namespaced = setdiff(wide_deparse(expr), drake_fn_patterns)
           )
         } else {
           lapply(X = expr, FUN = walk)
@@ -324,7 +323,7 @@ code_dependencies <- function(expr){
 
   walk(expr)
   results$globals <- intersect(results$globals, find_globals(expr))
-  results[lapply(results, length) > 0]
+  results[purrr::map_int(results, length) > 0]
 }
 
 find_globals <- function(expr){
@@ -337,6 +336,7 @@ find_globals <- function(expr){
   }
   # Warning: In collector$results(reset = reset) :
   #  partial argument match of 'reset' to 'resetState'
+
   suppressWarnings(inputs <- CodeDepends::getInputs(expr))
   base::union(
     inputs@inputs,
