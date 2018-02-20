@@ -1,6 +1,4 @@
 # From `dplyr`:
-# Flag to disable hotpatching from old tidyselect versions
-peek_vars <- tidyselect::peek_vars
 #' @importFrom tidyselect contains
 #' @export
 tidyselect::contains
@@ -11,6 +9,9 @@ tidyselect::ends_with
 #' @export
 tidyselect::everything
 #' @importFrom tidyselect matches
+#' @export
+tidyselect::last_col
+#' @importFrom tidyselect last_col
 #' @export
 tidyselect::matches
 #' @importFrom tidyselect num_range
