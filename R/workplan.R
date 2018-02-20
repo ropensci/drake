@@ -117,11 +117,10 @@ drake_plan <- function(
   from_dots <- plan$target %in% names(commands_dots)
   if (length(file_targets) || identical(strings_in_dots, "filenames")){
     warning(
-      "The `file_targets` and `strings_in_target` are deprecated. ",
-      "See the help file examples of `drake_plan()` to see the new ",
-      "way to handle file inputs/targets. ",
       "Use the file_input(), file_output(), and knitr_input() functions ",
-      "in your commands. ",
+      "to work with files in your commands. ",
+      "See `?drake_plan` for examples. ",
+      "The `file_targets` and `strings_in_target` are deprecated. ",
       "Worry about single-quotes no more!"
     )
   }
