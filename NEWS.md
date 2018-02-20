@@ -2,10 +2,10 @@
 
 - Implement `dplyr`-style `tidyselect` functionality in `loadd()` and `clean()`.
 - Deprecate the single-quoting API for files. Users should now use
-    - `file_input()` for file inputs to commands or imported functions (for imported functions, the input file needs to be an imported file, not a target).
-    - `file_output()` for output file targets (ignored if used in imported functions).
-    - `knitr_input()` for `knitr`/`rmarkdown` reports. This tells `drake` to look inside the source file for target dependencies in code chunks (explicitly referenced with `loadd()` and `readd()`). Treated as a `file_input()` if used in imported functions.
-- Change `drake_plan()` so that it automatically fills in any target names that the user does not supply. Also, any `file_outputs()` become the target names automatically (double-quoted internally).
+    - `file_in()` for file inputs to commands or imported functions (for imported functions, the input file needs to be an imported file, not a target).
+    - `file_out()` for output file targets (ignored if used in imported functions).
+    - `knitr_in()` for `knitr`/`rmarkdown` reports. This tells `drake` to look inside the source file for target dependencies in code chunks (explicitly referenced with `loadd()` and `readd()`). Treated as a `file_in()` if used in imported functions.
+- Change `drake_plan()` so that it automatically fills in any target names that the user does not supply. Also, any `file_out()`s become the target names automatically (double-quoted internally).
 - Make `read_drake_plan()` (rather than an empty `drake_plan()`) the default `plan` argument in all functions that accept a `plan`.
 - Add support for active bindings: `loadd(..., lazy = "bind")`. That way, when you have a target loaded in one R session and hit `make()` in another R session, the target in your first session will automatically update.
 - Use tibbles for workflow plan data frames and the output of `dataframes_graph()`.

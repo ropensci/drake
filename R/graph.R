@@ -101,7 +101,7 @@ imports_edges <- function(name, value){
 }
 
 code_deps_to_edges <- function(target, deps){
-  inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_output")])
+  inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_out")])
   edges <- NULL
   if (length(inputs)){
     data.frame(from = inputs, to = target, stringsAsFactors = FALSE)

@@ -220,7 +220,7 @@ f <- function(){
 
 deps(f)
 
-command <- "x <- digest::digest(file_input(\"input_file.rds\")); assign(\"x\", 1); x"
+command <- "x <- digest::digest(file_in(\"input_file.rds\")); assign(\"x\", 1); x"
 deps(command)
 ```
 
@@ -228,30 +228,30 @@ deps(command)
 
 ## Dependencies of `knitr` reports
 
-If you have `knitr` reports, you can use `knitr_report()` in your commands so that your reports are refreshed every time one of their dependencies changes. See `drake_example("basic")` and the `?knitr_input()` help file examples for demonstrations. Dependencies are detected if you call `loadd()` or `readd()` in your code chunks. But beware: an empty call to `loadd()` does not account for any dependencies even though it loads all the available targets into your R session.
+If you have `knitr` reports, you can use `knitr_report()` in your commands so that your reports are refreshed every time one of their dependencies changes. See `drake_example("basic")` and the `?knitr_in()` help file examples for demonstrations. Dependencies are detected if you call `loadd()` or `readd()` in your code chunks. But beware: an empty call to `loadd()` does not account for any dependencies even though it loads all the available targets into your R session.
 
 ## Knitr inputs and file outputs in imported functions.
 
-Similarly, `file_output()` in a command tells `drake` that the result of a command is an output file. Clearly, this is inapproariate for imported functions, but `drake` will look anyway. Do not try to use `file_output()` or `knitr_input()` inside your custom imported functions. `Drake` only pays attention to them in proper commands in your workflow plan data frame. However, `file_input()` is perfectly fine if your imported function needs a file in order to run. Here are some examples.
+Similarly, `file_out()` in a command tells `drake` that the result of a command is an output file. Clearly, this is inapproariate for imported functions, but `drake` will look anyway. Do not try to use `file_out()` or `knitr_in()` inside your custom imported functions. `Drake` only pays attention to them in proper commands in your workflow plan data frame. However, `file_in()` is perfectly fine if your imported function needs a file in order to run. Here are some examples.
 
 ```{r fileimportsfunctions}
 # toally_fine() will depend on the imported data.csv file.
 # But make sure data.csv is an imported file and not a file target.
 totally_okay <- function(x, y, z){
-  read.csv(file_input("data.csv"))
+  read.csv(file_in("data.csv"))
 }
 
-# file_output() is for file targets, so `drake` will ignore it.
+# file_out() is for file targets, so `drake` will ignore it.
 avoid_this <- function(x, y, z){
-  read.csv(file_output("data.csv"))
+  read.csv(file_out("data.csv"))
 }
 
-# knitr_input() is for knitr files with dependencies
+# knitr_in() is for knitr files with dependencies
 # in their active code chunks (explicitly referenced with loadd() and readd().
-# Drake just treats knitr_input() as an ordinary file input in this case.
-# You should really be using file_input() instead.
+# Drake just treats knitr_in() as an ordinary file input in this case.
+# You should really be using file_in() instead.
 avoid_this <- function(x, y, z){
-  read.csv(knitr_input("report.Rmd"))
+  read.csv(knitr_in("report.Rmd"))
 }
 ```
 
@@ -276,7 +276,7 @@ Some R functions use `.Call()` to run compiled code in the backend. The R code i
 
 ## Directories (folders) are not reproducibly tracked.
 
-In your workflow plan, you can use `file_input()`, `file_output()`, and `knitr_input()` to assert that some targets/imports are external files. However, entire directories (i.e. folders) cannot be reproducibly tracked this way. Please see [issue 12](https://github.com/ropensci/drake/issues/12) for a discussion.
+In your workflow plan, you can use `file_in()`, `file_out()`, and `knitr_in()` to assert that some targets/imports are external files. However, entire directories (i.e. folders) cannot be reproducibly tracked this way. Please see [issue 12](https://github.com/ropensci/drake/issues/12) for a discussion.
 
 ## Packages are not tracked as dependencies.
 

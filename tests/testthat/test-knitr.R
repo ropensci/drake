@@ -1,5 +1,10 @@
 drake_context("knitr")
 
+test_with_dir("empty cases", {
+  expect_equal(knitr_deps_list(NULL), list())
+  expect_equal(safe_get_tangled_frags(NULL), character(0))
+})
+
 test_with_dir("unparsable pieces of commands are handled correctly", {
   x <- "bluh$"
   expect_false(is_parsable(x))
@@ -30,7 +35,7 @@ test_with_dir("knitr_deps() works", {
   x <- knitr_deps("report.Rmd")
   y <- expect_warning(deps("knit('report.Rmd')"))
   z <- expect_warning(deps("render('report.Rmd')"))
-  w <- deps("funct(knitr_input(report.Rmd))")
+  w <- deps("funct(knitr_in(report.Rmd))")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )

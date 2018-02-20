@@ -11,8 +11,8 @@
 #' and commands are the pieces of R code that produce them.
 #'
 #' To use custom files in your workflow plan,
-#' use the [file_input()], [knitr_input()], and
-#' [file_output()] functions in your commands.
+#' use the [file_in()], [knitr_in()], and
+#' [file_out()] functions in your commands.
 #' the examples in this help file provide some guidance.
 #' @export
 #' @return A data frame of targets and commands.
@@ -20,14 +20,14 @@
 #'   with commands assigned to them. See the examples for details.
 #' @param list A named character vector of commands
 #'   with names as targets.
-#' @param file_targets deprecated argument. See [file_output()],
-#'   [file_input()], and [knitr_input()] for the new way to work
+#' @param file_targets deprecated argument. See [file_out()],
+#'   [file_in()], and [knitr_in()] for the current way to work
 #'   with files.
 #'   In the past, this argument was a logical to indicate whether the
 #'   target names should be single-quoted to denote files. But the newer
 #'   interface is much better.
-#' @param strings_in_dots deprecated argument. See [file_output()],
-#'   [file_input()], and [knitr_input()] for the new way to work
+#' @param strings_in_dots deprecated argument. See [file_out()],
+#'   [file_in()], and [knitr_in()] for the current way to work
 #'   with files.
 #'   In the past, this argument was a logical to indicate whether the
 #'   target names should be single-quoted to denote files. But the newer
@@ -53,8 +53,8 @@
 #' test_with_dir("Contain side effects", {
 #' # Create workflow plan data frames.
 #' mtcars_plan <- drake_plan(
-#'   write.csv(mtcars[, c("mpg", "cyl")], file_output("mtcars.csv")),
-#'   value = read.csv(file_input("mtcars.csv"))
+#'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
+#'   value = read.csv(file_in("mtcars.csv"))
 #' )
 #' mtcars_plan
 #' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -62,7 +62,7 @@
 #' # You can use knitr inputs too. See the top command below.
 #' load_basic_example()
 #' head(my_plan)
-#' # The `knitr_input("report.Rmd")` tells `drake` to dive into the active
+#' # The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 #' # code chunks to find dependencies.
 #' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 #' # are loaded in with calls to `loadd()` and `readd()`.
@@ -117,11 +117,10 @@ drake_plan <- function(
   from_dots <- plan$target %in% names(commands_dots)
   if (length(file_targets) || identical(strings_in_dots, "filenames")){
     warning(
+      "Use the file_in(), file_out(), and knitr_in() functions ",
+      "to work with files in your commands. ",
+      "See `?drake_plan` for examples. ",
       "The `file_targets` and `strings_in_target` are deprecated. ",
-      "See the help file examples of `drake_plan()` to see the new ",
-      "way to handle file inputs/targets. ",
-      "Use the file_input(), file_output(), and knitr_input() functions ",
-      "in your commands. ",
       "Worry about single-quotes no more!"
     )
   }
@@ -162,7 +161,7 @@ drake_plan_override <- function(target, field, config){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso `file_output` `knitr_input`
+#' @seealso `file_out` `knitr_in`
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of input files
 #'   to a command in your workflow plan data frame.
@@ -170,15 +169,15 @@ drake_plan_override <- function(target, field, config){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
-#' # The `file_output()` and `file_input()` functions
+#' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_output("summaries.txt")
+#' file_out("summaries.txt")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
 #'   plan <- drake_plan(
-#'     write.csv(mtcars, file_output("mtcars.csv")),
-#'     contents = read.csv(file_input("mtcars.csv")),
+#'     write.csv(mtcars, file_out("mtcars.csv")),
+#'     contents = read.csv(file_in("mtcars.csv")),
 #'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
 #'   )
 #' )
@@ -188,14 +187,14 @@ drake_plan_override <- function(target, field, config){
 #' config <- make(plan)
 #' file.exists("mtcars.csv")
 #' vis_drake_graph(config)
-#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # See also `knitr_in()`. `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
 #' # That way, updates to the right dependencies trigger rebuilds
 #' # in your report.
 #' })
 #' }
-file_input <- function(...){
+file_in <- function(...){
   as.character(c(...))
 }
 
@@ -205,7 +204,7 @@ file_input <- function(...){
 #'   one file output per command. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso file_input knitr_input
+#' @seealso file_in knitr_in
 #' @return A character string, the file path of the file output.
 #' @param path Character string of length 1. File path
 #'   of the file output of a command in your
@@ -214,15 +213,15 @@ file_input <- function(...){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
-#' # The `file_output()` and `file_input()` functions
+#' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_output("summaries.txt")
+#' file_out("summaries.txt")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
 #'   plan <- drake_plan(
-#'     write.csv(mtcars, file_output("mtcars.csv")),
-#'     contents = read.csv(file_input("mtcars.csv")),
+#'     write.csv(mtcars, file_out("mtcars.csv")),
+#'     contents = read.csv(file_in("mtcars.csv")),
 #'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
 #'   )
 #' )
@@ -232,18 +231,17 @@ file_input <- function(...){
 #' config <- make(plan)
 #' file.exists("mtcars.csv")
 #' vis_drake_graph(config)
-#' # See also `knitr_input()`. `knitr_input()` is like `file_input()`
+#' # See also `knitr_in()`. `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
 #' # That way, updates to the right dependencies trigger rebuilds
 #' # in your report.
 #' })
 #' }
-file_output <- function(path, ...){
-  path <- c(path, as.character(c(...)))
+file_out <- function(path){
   if (length(path) != 1){
     warning(
-      "In file_output(), the `path` argument must ",
+      "In file_out(), the `path` argument must ",
       "have length 1. Supplied length = ", length(path), ". ",
       "using first file output: ", path[1], ".",
       call. = FALSE
@@ -258,14 +256,14 @@ file_output <- function(path, ...){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso file_input file_output
+#' @seealso file_in file_out
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
 #'   source files suplied to a command in your workflow plan data frame.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
-#' # `knitr_input()` is like `file_input()`
+#' # `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
 #' # That way, updates to the right dependencies trigger rebuilds
@@ -279,10 +277,10 @@ file_output <- function(path, ...){
 #' # `small`, `large`, and `coef_regression2_small` were
 #' # dependencies of the output file `report.md`?
 #' # because the command in the workflow plan had
-#' # `knitr_input("report.Rmd")` in it, so drake knew
+#' # `knitr_in("report.Rmd")` in it, so drake knew
 #' # to analyze the active code chunks. There, it spotted
 #' # where `small`, `large`, and `coef_regression2_small`
 #' # were read from the cache using calls to `loadd()` and `readd()`.
 #' })
 #' }
-knitr_input <- file_input
+knitr_in <- file_in
