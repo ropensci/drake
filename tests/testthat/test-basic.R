@@ -112,11 +112,11 @@ test_with_dir("basic example works", {
   # But we can remove it all when we deprecate the single-quoted stuff
   # and users know to rely on knitr_input().
   x <- drake_plan(
-    a = knitr::knit(knitr_in(report.Rmd)), # nolint
-    b = knitr::knit(knitr_in(report.md)), # nolint
+    a = knitr::knit(knitr_in("report.Rmd")), # nolint
+    b = knitr::knit(knitr_in("report.md")), # nolint
     c = knitr::knit("nonfile"),
-    d = rmarkdown::render('report.Rmd'), # nolint
-    e = rmarkdown::render('report.md'), # nolint
+    d = rmarkdown::render("report.Rmd"), # nolint
+    e = rmarkdown::render("report.md"), # nolint
     f = rmarkdown::render("nonfile")
   )
   suppressWarnings(con <- drake_config(plan = x))
