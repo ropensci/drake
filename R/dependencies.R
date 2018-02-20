@@ -229,7 +229,7 @@ warn_single_quoted_files <- function(files, deps){
   warning(
     "Files in a command declared with single-quotes:\n",
     multiline_message(warn_files),
-    "\nThe way to declare files in drake is changing. ",
+    "\nThe way to declare files in drake is deprecated. ",
     "Use file_input(), file_output(), and knitr_input() ",
     "in your commands. See `?drake_plan` for examples.",
     call. = FALSE
