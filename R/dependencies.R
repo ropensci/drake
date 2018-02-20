@@ -291,6 +291,11 @@ code_dependencies <- function(expr){
   ){
     if (!length(expr)){
       return()
+    } else if (is.primitive(expr)){
+      results$globals <<- base::union(
+        results$globals,
+        setdiff(wide_deparse(expr), drake_fn_patterns)
+      )
     } else if (is.function(expr)) {
       expr <- unwrap_function(expr)
       if (typeof(expr) != "closure"){
