@@ -397,8 +397,10 @@ unnamed_in_list <- function(x){
   unlist(out)
 }
 
+# This function is just to set up the prefixes and patterns below.
+# Existing tests will fail if the output is incorrect.
 pair_text <- function(x, y){
-  apply(expand.grid(x, y), 1, paste0, collapse = "")
+  apply(expand.grid(x, y), 1, paste0, collapse = "") # nocov
 }
 
 drake_prefix <- c("", "drake::", "drake:::")
