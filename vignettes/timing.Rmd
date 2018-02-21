@@ -32,6 +32,9 @@ make(my_plan, jobs = 2, verbose = FALSE) # See also max_useful_jobs(my_plan).
 
 build_times(digits = 8) # From the cache.
 
+# `dplyr`-style `tidyselect` commands
+build_times(starts_with("coef"), digits = 8)
+
 build_times(digits = 8, targets_only = TRUE)
 ```
 

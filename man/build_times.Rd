@@ -4,12 +4,16 @@
 \alias{build_times}
 \title{List the time it took to build each target/import.}
 \usage{
-build_times(path = getwd(), search = TRUE, digits = 3,
+build_times(..., path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE, verbose = TRUE, jobs = 1, type = c("build",
   "command"))
 }
 \arguments{
+\item{...}{targets to load from the cache: as names (symbols),
+character strings, or \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}.}
+
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.}
@@ -51,6 +55,7 @@ test_with_dir("Quarantine side effects.", {
 load_basic_example() # Get the code with drake_example("basic").
 make(my_plan) # Build all the targets.
 build_times() # Show how long it took to build each target.
+build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
 })
 }
 }

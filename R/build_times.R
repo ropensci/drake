@@ -6,6 +6,9 @@
 #' @seealso [built()]
 #' @export
 #' @return A data frame of times, each from [system.time()].
+#' @param ... targets to load from the cache: as names (symbols),
+#'   character strings, or `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`.
 #' @param targets_only logical, whether to only return the
 #'   build times of the targets (exclude the imports).
 #' @param path Root directory of the drake project,
@@ -30,9 +33,11 @@
 #' load_basic_example() # Get the code with drake_example("basic").
 #' make(my_plan) # Build all the targets.
 #' build_times() # Show how long it took to build each target.
+#' build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
 #' })
 #' }
 build_times <- function(
+  ...,
   path = getwd(),
   search = TRUE,
   digits = 3,
@@ -45,9 +50,13 @@ build_times <- function(
   if (is.null(cache)){
     return(empty_times())
   }
+  targets <- drake_select(cache = cache, ..., namespace = "meta")
+  if (!length(targets)){
+    targets <- cache$list(namespace = "meta")
+  }
   type <- match.arg(type)
   out <- lightly_parallelize(
-    X = cache$list(namespace = "meta"),
+    X = targets,
     FUN = fetch_runtime,
     jobs = 1,
     cache = cache,

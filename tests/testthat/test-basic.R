@@ -95,10 +95,16 @@ test_with_dir("basic example works", {
   # Take this opportunity to test tidyselect API. Saves test time that way.
   # loadd() # nolint
   e <- new.env(parent = globalenv())
-  coefs <- c("coef_regression1_large", "coef_regression1_small",
-             "coef_regression2_large", "coef_regression2_small")
+  coefs <- sort(c("coef_regression1_large", "coef_regression1_small",
+             "coef_regression2_large", "coef_regression2_small"))
   loadd(starts_with("coef"), envir = e)
-  expect_equal(sort(ls(envir = e)), sort(coefs))
+  expect_equal(sort(ls(envir = e)), coefs)
+
+  # build_times() # nolint
+  all_times <- build_times()
+  expect_true(nrow(all_times) >= nrow(config$plan))
+  some_times <- build_times(starts_with("coef"))
+  expect_equal(sort(some_times$item), coefs)
 
   # clean() # nolint
   x <- sort(cached())
