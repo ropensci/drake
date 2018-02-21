@@ -100,7 +100,7 @@ test_with_dir("basic example works", {
   loadd(starts_with("coef"), envir = e)
   expect_equal(sort(ls(envir = e)), coefs)
 
-  # build_times()
+  # build_times() # nolint
   all_times <- build_times()
   expect_true(nrow(all_times) >= nrow(config$plan))
   some_times <- build_times(starts_with("coef"))
