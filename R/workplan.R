@@ -26,12 +26,11 @@
 #'   In the past, this argument was a logical to indicate whether the
 #'   target names should be single-quoted to denote files. But the newer
 #'   interface is much better.
-#' @param strings_in_dots deprecated argument. See [file_out()],
-#'   [file_in()], and [knitr_in()] for the current way to work
-#'   with files.
-#'   In the past, this argument was a logical to indicate whether the
-#'   target names should be single-quoted to denote files. But the newer
-#'   interface is much better.
+#' @param strings_in_dots deprecated argument for handling strings in
+#'   commands specified in the `...` argument. Defaults to `NULL` for backward
+#'   compatibility. New code should use [file_out()], [file_in()], and
+#'   [knitr_in()] to specify file names and set this argument to `"literals"`,
+#'   which will at some point become the only accepted value.
 #'
 #'   In the past, this argument was a character scalar denoting
 #'   how to treat quoted character strings in the commands
@@ -54,7 +53,8 @@
 #' # Create workflow plan data frames.
 #' mtcars_plan <- drake_plan(
 #'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
-#'   value = read.csv(file_in("mtcars.csv"))
+#'   value = read.csv(file_in("mtcars.csv")),
+#'   strings_in_dots = "literals"
 #' )
 #' mtcars_plan
 #' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -118,21 +118,36 @@ drake_plan <- function(
   if (length(file_targets) || identical(strings_in_dots, "filenames")){
     warning(
       "Use the file_in(), file_out(), and knitr_in() functions ",
-      "to work with files in your commands. ",
+      "to work with files in your commands, and pass ",
+      "`strings_in_dots = \"literals\"`. ",
       "See `?drake_plan` for examples. ",
-      "The `file_targets` and `strings_in_target` are deprecated. ",
+      "The `file_targets` argument is deprecated. ",
       "Worry about single-quotes no more!"
     )
   }
   if (identical(file_targets, TRUE)){
     plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
+
   # TODO: leave double-quoted strings alone when we're ready to
   # deprecate single-quoting in the file API.
   # Currently, to totally take advantage of the new file API,
-  # users need to set strings_in_dots to "filenames" every time.
-  if (!length(strings_in_dots) || strings_in_dots == "filenames"){
-    plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
+  # users need to set strings_in_dots to "literals" every time.
+  from_dots_with_quotes <- grep("\"", plan$command[from_dots])
+  if (length(from_dots_with_quotes)){
+    if (!length(strings_in_dots)){
+      warning(
+        "Converting double-quotes to single-quotes because ",
+        "the `strings_in_dots` argument is missing. ",
+        "Use the file_in(), file_out(), and knitr_in() functions ",
+        "to work with files in your commands, and pass ",
+        "`strings_in_dots = \"literals\"` to remove this warning.",
+        call. = FALSE
+      )
+    }
+    if (!length(strings_in_dots) || identical(strings_in_dots, "filenames")){
+      plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
+    }
   }
   sanitize_plan(plan)
 }

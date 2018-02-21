@@ -22,12 +22,11 @@ In the past, this argument was a logical to indicate whether the
 target names should be single-quoted to denote files. But the newer
 interface is much better.}
 
-\item{strings_in_dots}{deprecated argument. See \code{\link[=file_out]{file_out()}},
-\code{\link[=file_in]{file_in()}}, and \code{\link[=knitr_in]{knitr_in()}} for the current way to work
-with files.
-In the past, this argument was a logical to indicate whether the
-target names should be single-quoted to denote files. But the newer
-interface is much better.
+\item{strings_in_dots}{deprecated argument for handling strings in
+commands specified in the \code{...} argument. Defaults to \code{NULL} for backward
+compatibility. New code should use \code{\link[=file_out]{file_out()}}, \code{\link[=file_in]{file_in()}}, and
+\code{\link[=knitr_in]{knitr_in()}} to specify file names and set this argument to \code{"literals"},
+which will at some point become the only accepted value.
 
 In the past, this argument was a character scalar denoting
 how to treat quoted character strings in the commands
@@ -73,7 +72,8 @@ test_with_dir("Contain side effects", {
 # Create workflow plan data frames.
 mtcars_plan <- drake_plan(
   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
-  value = read.csv(file_in("mtcars.csv"))
+  value = read.csv(file_in("mtcars.csv")),
+  strings_in_dots = "literals"
 )
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
