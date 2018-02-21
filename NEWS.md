@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Implement `dplyr`-style `tidyselect` functionality in `loadd()` and `clean()`.
 - Deprecate the single-quoting API for files. Users should now use
     - `file_in()` for file inputs to commands or imported functions (for imported functions, the input file needs to be an imported file, not a target).
     - `file_out()` for output file targets (ignored if used in imported functions).

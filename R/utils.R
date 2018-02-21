@@ -33,6 +33,18 @@ braces <- function(x) {
   }
 }
 
+drake_select <- function(
+  cache, ..., namespaces = cache$default_namespace, list = character(0)
+){
+  tidyselect::vars_select(
+    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
+    ...,
+    .strict = FALSE
+  ) %>%
+    unname %>%
+    c(list)
+}
+
 merge_lists <- function(x, y){
   names <- base::union(names(x), names(y))
   lapply(

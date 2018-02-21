@@ -332,6 +332,7 @@ test_with_dir("cache functions work", {
   # Test purging
   prog <- progress(search = TRUE, path = s)
   expect_true("final" %in% names(prog))
+
   clean(final, path = s, search = TRUE, jobs = 2,
     garbage_collection = TRUE, purge = TRUE)
   prog <- progress(search = TRUE, path = s)

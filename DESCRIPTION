@@ -76,6 +76,7 @@ Imports:
   stringr,
   testthat,
   tibble,
+  tidyselect,
   utils,
   visNetwork,
   withr

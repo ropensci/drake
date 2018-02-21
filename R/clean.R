@@ -22,13 +22,9 @@
 #'
 #' @inheritParams cached
 #'
-#' @param ... targets to remove from the cache, as names (unquoted)
-#'   or character strings (quoted). Similar to `...` in
-#'   \code{\link{remove}(...)}.
-#'   The symbols must not match other (formal) arguments of `clean()`,
-#'   such as `destroy`, `cache`, `path`, `search`,
-#'   `verbose`, or `jobs`. If there are name conflicts,
-#'   use the `list` argument instead of `...`.
+#' @param ... targets to remove from the cache: as names (symbols),
+#'   character strings, or `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`.
 #'
 #' @param list character vector naming targets to be removed from the
 #'   cache. Similar to the `list` argument of [remove()].
@@ -71,6 +67,9 @@
 #' clean(summ_regression1_large, small)
 #' # Those objects should be gone.
 #' cached(no_imported_objects = TRUE)
+#' # How about `tidyselect`?
+#' clean(starts_with("coef"))
+#' cached(no_imported_objects = TRUE)
 #' # Rebuild the missing targets.
 #' make(my_plan)
 #' # Remove all the targets and imports.
@@ -108,14 +107,21 @@ clean <- function(
   garbage_collection = FALSE,
   purge = FALSE
 ){
-  dots <- match.call(expand.dots = FALSE)$...
-  targets <- targets_from_dots(dots, list)
   if (is.null(cache)){
     cache <- get_cache(
       path = path, search = search, verbose = verbose, force = force)
   }
   if (is.null(cache)){
     return(invisible())
+  }
+  targets <- drake_select(
+    cache = cache,
+    ...,
+    namespaces = target_namespaces(),
+    list = list
+  )
+  if (!length(targets) && is.null(c(...))){
+    targets <- cache$list()
   }
   uncache(targets = targets, cache = cache, jobs = jobs, purge = purge)
   if (destroy){
