@@ -21,6 +21,7 @@ handle_build_exceptions <- function(target, meta, config){
       text <- paste("fail", target)
       finish_console(text = text, pattern = "fail", verbose = config$verbose)
     }
+    store_failure(target = target, meta = meta, config = config)
     stop(
       "Target '", target, "' failed. Use diagnose(", target,
       ") for details.",
