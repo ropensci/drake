@@ -1,5 +1,31 @@
 drake_context("edge cases")
 
+test_with_dir("failed targets do not become up to date", {
+  fail <- FALSE
+  plan <- drake_plan(
+    d = 3,
+    a = {
+      if (fail){
+        stop("my failure message")
+      } else {
+        d
+      }
+    },
+    b = 5,
+    c = list(a, b),
+    strings_in_dots = "literals"
+  )
+  con <- make(plan)
+  expect_equal(sort(justbuilt(con)), sort(letters[1:4]))
+  fail <- TRUE
+  expect_error(make(plan))
+  expect_error(make(plan))
+  meta <- diagnose(a)
+  expect_true(grepl("my failure message", meta$error$message))
+  con <- drake_config(plan)
+  expect_equal(sort(outdated(con)), sort(c("a", "c")))
+})
+
 test_with_dir("drake_plan_override() quits correctly in error", {
   con <- dbug()
   con$plan$missing <- "nope"
