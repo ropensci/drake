@@ -52,13 +52,13 @@ drake_future_task <- function(target, meta, config, protect){
   if (config$caching == "worker"){
     build_and_store(target = target, meta = meta, config = config)
   } else {
-    announce_build(target = target, meta = meta, config = config)
     config$hook(just_build(target = target, meta = meta, config = config))
   }
 }
 
 new_worker <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
+
   if (!should_build_target(
     target = target,
     meta = meta,
@@ -66,6 +66,9 @@ new_worker <- function(id, target, config, protect){
   )){
     return(empty_worker(target = target))
   }
+
+  announce_build(target = target, meta = meta, config = config)
+
   if (identical(config$envir, globalenv())){
     globals <- ls(config$envir) # Unit tests should modify global env # nocov
   } else {
