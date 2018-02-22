@@ -196,8 +196,13 @@ conclude_worker <- function(worker, config, queue){
   out
 }
 
+# Also caches error information if available.
+# I know, it has a return value AND a side effect,
+# but it's hard to think of another clean way
+# to handle crashes.
 resolve_worker_value <- function(worker, config){
   tryCatch(
+    # Check if the worker crashed.
     future::value(worker),
     error = function(e){
       e$message <- paste0(
@@ -206,12 +211,15 @@ resolve_worker_value <- function(worker, config){
       )
       meta <- list(error = e)
       if (config$caching == "worker"){
+        # Need to store the error if the worker crashed.
         handle_build_exceptions(
           target = attr(worker, "target"),
           meta = meta,
           config = config
         )
       }
+      # For `caching = "master"`, we need to conclude the build
+      # and store the value and metadata.
       list(
         target = attr(worker, "target"),
         value = e,
