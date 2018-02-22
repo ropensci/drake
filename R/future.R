@@ -170,9 +170,6 @@ decrease_revdep_keys <- function(worker, config, queue){
   queue$decrease_key(names = revdeps)
 }
 
-# Currently only needed for "future_commands" workers
-# since "future_total" workers already conclude the build
-# and store the results.
 conclude_worker <- function(worker, config, queue){
   decrease_revdep_keys(
     worker = worker,
@@ -184,11 +181,10 @@ conclude_worker <- function(worker, config, queue){
     return(out)
   }
   set_attempt_flag(config = config)
-  # Here, we should also check if the future resolved due to an error.
+  build <- resolve_worker_value(worker = worker, config = config)
   if (config$caching == "worker"){
     return(out)
   }
-  build <- get_worker_value(worker = worker)
   config$hook({
     conclude_build(
       target = build$target,
@@ -200,7 +196,7 @@ conclude_worker <- function(worker, config, queue){
   out
 }
 
-get_worker_value <- function(worker){
+resolve_worker_value <- function(worker, config){
   tryCatch(
     future::value(worker),
     error = function(e){
@@ -208,10 +204,18 @@ get_worker_value <- function(worker){
         "Worker terminated unexpectedly before the target could complete. ",
         "Is something wrong with your system or job scheduler?"
       )
+      meta <- list(error = e)
+      if (config$caching == "worker"){
+        handle_build_exceptions(
+          target = attr(worker, "target"),
+          meta = meta,
+          config = config
+        )
+      }
       list(
         target = attr(worker, "target"),
         value = e,
-        meta = list(error = e)
+        meta = meta
       )
     }
   )

@@ -62,20 +62,24 @@ test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {
-  con <- dbug()
-  con$caching <- "master"
-  worker <- list()
-  class(worker) <- "Future"
-  expect_false(is_empty_worker(worker))
-  expect_error(future::value(worker))
-  expect_error(
-    conclude_worker(
-      target = "myinput",
-      worker = worker,
-      config = con,
-      queue = new_target_queue(config = con)
+  for(caching in c("master", "worker")){
+    con <- dbug()
+    con$caching <- caching
+    con$execution_graph <- con$graph
+    worker <- structure(list(), target = "myinput")
+    class(worker) <- "Future"
+    expect_false(is_empty_worker(worker))
+    expect_error(future::value(worker))
+    expect_error(
+      conclude_worker(
+        worker = worker,
+        config = con,
+        queue = new_target_queue(config = con)
+      ),
+      regexp = "failed. Use diagnose"
     )
-  )
-  meta <- diagnose(myinput)
-  expect_true(grepl("Worker terminated unexpectedly", meta$error$message))
+    meta <- diagnose(myinput)
+    expect_true(grepl("Worker terminated unexpectedly", meta$error$message))
+    clean(destroy = TRUE)
+  }
 })
