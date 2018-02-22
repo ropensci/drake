@@ -200,7 +200,7 @@ conclude_worker <- function(target, worker, config, queue){
   out
 }
 
-get_worker_value = function(target, worker){
+get_worker_value <- function(target, worker){
   tryCatch(
     future::value(worker),
     error = function(e){
@@ -214,5 +214,5 @@ get_worker_value = function(target, worker){
         meta = list(error = e)
       )
     }
-  ) 
+  )
 }

@@ -61,7 +61,7 @@ test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
   expect_true(file.exists("nope"))
 })
 
-test_with_dir("can properly conclude a worker that can't get a value", {
+test_with_dir("can gracefully conclude a crashed worker", {
   con <- dbug()
   con$caching <- "master"
   worker <- list()
