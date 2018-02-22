@@ -69,7 +69,9 @@ test_with_dir(
     my_target = x + readRDS(file_in("tracked_input_file.rds")),
     return_value = f(x, y, g(z + w)),
     botched = read.csv(file_in(nothing)),
-    meta = read.table(file_in("file_in")))
+    meta = read.table(file_in("file_in")),
+    strings_in_dots = "literals"
+  )
   expect_equal(deps(my_plan$command[1]), "some_object")
   expect_equal(sort(deps(my_plan$command[2])),
     sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))

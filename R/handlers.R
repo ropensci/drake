@@ -22,11 +22,13 @@ handle_build_exceptions <- function(target, meta, config){
       finish_console(text = text, pattern = "fail", verbose = config$verbose)
     }
     store_failure(target = target, meta = meta, config = config)
-    stop(
-      "Target '", target, "' failed. Use diagnose(", target,
-      ") for details.",
-      call. = FALSE
-    )
+    if (!config$keep_going){
+      stop(
+        "Target '", target, "' failed. Use diagnose(", target,
+        ") for details.",
+        call. = FALSE
+      )
+    }
   }
 }
 

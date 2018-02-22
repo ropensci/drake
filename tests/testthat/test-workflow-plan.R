@@ -67,12 +67,13 @@ test_with_dir("edge cases for plans", {
 
 test_with_dir("plan set 1", {
   for (tidy_evaluation in c(TRUE, FALSE)){
-    x <- drake_plan(
+    expect_warning(x <- drake_plan(
       a = c,
       b = "c",
       list = c(c = "d", d = "readRDS('e')"),
-      tidy_evaluation = tidy_evaluation
-    )
+      tidy_evaluation = tidy_evaluation,
+      strings_in_dots = "filenames"
+    ))
     y <- tibble(
       target = letters[1:4],
       command = c("c", "'c'",

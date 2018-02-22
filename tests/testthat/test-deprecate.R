@@ -103,8 +103,10 @@ test_with_dir("old file API", {
     strings_in_dots = "literals",
     file_targets = TRUE
   ))
-  y <- drake_plan(
-    contents = read.csv('file.csv')) # nolint
+  expect_warning(y <- drake_plan(
+    contents = read.csv('file.csv'), # nolint
+    strings_in_dots = "filenames"
+  ))
   z <- rbind(x, y)
   expect_warning(check_plan(z))
   expect_warning(make(z, session_info = FALSE) -> config)

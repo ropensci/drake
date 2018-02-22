@@ -39,7 +39,16 @@ of class \code{"error"}.
 \description{
 Diagnostics include errors, warnings,
 messages, runtimes, and other context from when a
-target was build or an import was processed.
+target was built or an import was processed.
+If your target's last build succeeded,
+then \code{diagnose(your_target)} has the most current information
+from that build.
+But if your target failed, then only
+\code{diagnose(your_target)$error},
+\code{diagnose(your_target)$warnings},
+and \code{diagnose(your_target)$messages} correspond to the failure,
+and all the other metadata correspond to the last build that completed
+without an error.
 }
 \examples{
 \dontrun{

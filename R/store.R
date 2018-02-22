@@ -1,4 +1,9 @@
 store_target <- function(target, value, meta, config) {
+  # Failed targets need to stay invalidated,
+  # even when `config$keep_going` is `TRUE`.
+  if (inherits(meta$error, "error")){
+    return()
+  }
   meta <- finish_meta(
     target = target,
     meta = meta,

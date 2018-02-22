@@ -297,6 +297,9 @@
 #'
 #' @param caching character string, only applies to `"future"` parallelism.
 #'
+#' @param keep_going logical, whether to still keep running [make()]
+#'   if targets fail.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -349,7 +352,8 @@ drake_config <- function(
   session_info = TRUE,
   cache_log_file = NULL,
   seed = NULL,
-  caching = c("worker", "master")
+  caching = c("worker", "master"),
+  keep_going = FALSE
 ){
   force(envir)
   plan <- sanitize_plan(plan)
@@ -401,7 +405,7 @@ drake_config <- function(
     skip_safety_checks = skip_safety_checks, log_progress = log_progress,
     lazy_load = lazy_load, session_info = session_info,
     cache_log_file = cache_log_file, caching = match.arg(caching),
-    evaluator = future::plan("next")
+    evaluator = future::plan("next"), keep_going = keep_going
   )
 }
 

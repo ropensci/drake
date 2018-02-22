@@ -1,7 +1,16 @@
 #' @title Get diagnostic metadata on a target.
 #' @description Diagnostics include errors, warnings,
 #'   messages, runtimes, and other context from when a
-#'   target was build or an import was processed.
+#'   target was built or an import was processed.
+#'   If your target's last build succeeded,
+#'   then `diagnose(your_target)` has the most current information
+#'   from that build.
+#'   But if your target failed, then only
+#'   `diagnose(your_target)$error`,
+#'   `diagnose(your_target)$warnings`,
+#'   and `diagnose(your_target)$messages` correspond to the failure,
+#'   and all the other metadata correspond to the last build that completed
+#'   without an error.
 #' @seealso
 #'   [failed()], [progress()],
 #'   [readd()], [drake_plan()], [make()]

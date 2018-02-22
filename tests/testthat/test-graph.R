@@ -35,7 +35,10 @@ test_with_dir("Supplied graph is not an igraph.", {
 })
 
 test_with_dir("graph does not fail if input file is binary", {
-  x <- drake_plan(y = readRDS(file_in("input.rds")))
+  x <- drake_plan(
+    y = readRDS(file_in("input.rds")),
+    strings_in_dots = "literals"
+  )
   saveRDS(as.list(mtcars), "input.rds")
   con <- drake_config(x, verbose = FALSE)
   expect_silent(out <- vis_drake_graph(con))

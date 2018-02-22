@@ -123,7 +123,8 @@ test_with_dir("basic example works", {
     c = knitr::knit("nonfile"),
     d = rmarkdown::render("report.Rmd"), # nolint
     e = rmarkdown::render("report.md"), # nolint
-    f = rmarkdown::render("nonfile")
+    f = rmarkdown::render("nonfile"),
+    strings_in_dots = "literals"
   )
   suppressWarnings(con <- drake_config(plan = x))
   for (target in c("a", "d")){

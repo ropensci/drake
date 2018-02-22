@@ -17,7 +17,7 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   trigger = drake::default_trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
-  caching = "worker")
+  caching = "worker", keep_going = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -308,6 +308,9 @@ To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
 \item{caching}{character string, only applies to \code{"future"} parallelism.}
+
+\item{keep_going}{logical, whether to still keep running \code{\link[=make]{make()}}
+if targets fail.}
 }
 \value{
 The master internal configuration list, mostly

@@ -3,13 +3,21 @@ drake_context("edge cases")
 test_with_dir("can keep going", {
   con <- dbug()
   con$plan$command[2] <- "stop(1234)"
-  expect_error(testrun(con))
+  expect_error(make_with_config(con))
+  expect_equal(failed(), "yourinput")
   expect_equal(justbuilt(con), "myinput")
-  con$keep_going = TRUE
-  expect_silent(testrun(con))
+  con$keep_going <- TRUE
+  make_with_config(con)
+  expect_equal(failed(), "yourinput")
   expect_equal(
     sort(justbuilt(con)),
-    sort(setdiff(con$plan$target), "myinput")
+    sort(setdiff(con$plan$target, "yourinput"))
+  )
+  expect_silent(make_with_config(con))
+  expect_equal(failed(), "yourinput")
+  expect_equal(
+    sort(justbuilt(con)),
+    sort(setdiff(con$plan$target, "yourinput"))
   )
 })
 
@@ -49,7 +57,10 @@ test_with_dir("drake_plan_override() quits correctly in error", {
 })
 
 test_with_dir("config and make without safety checks", {
-  x <- drake_plan(file = readRDS(file_in("my_file.rds")))
+  x <- drake_plan(
+    file = readRDS(file_in("my_file.rds")),
+    strings_in_dots = "literals"
+  )
   expect_warning(tmp <- config(x, verbose = FALSE))
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))

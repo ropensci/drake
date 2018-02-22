@@ -165,6 +165,8 @@ str(diagnose(small))
 str(diagnose("\"report.md\""))
 ```
 
+If your target's last build succeeded, then `diagnose(your_target)` has the most current information from that build. But if your target failed, then only `diagnose(your_target)$error`, `diagnose(your_target)$warnings`, and `diagnose(your_target)$messages` correspond to the failure, and all the other metadata correspond to the last build that completed without an error.
+
 # Test with triggers.
 
 To track dependencies and make decisions about what needs building, `make()` store the fingerprint, or hash, of each target. Hashing is great for detecting the right changes in targets, but if all you want to do is test and debug a workflow, the full rigor can be time-consuming.
