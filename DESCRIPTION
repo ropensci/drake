@@ -94,6 +94,8 @@ Suggests:
   RSQLite,
   rmarkdown,
   tidyr
+Remotes:
+  tidyverse/tidyselect
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1
