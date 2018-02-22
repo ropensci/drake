@@ -50,9 +50,9 @@ drake_future_task <- function(target, meta, config, protect){
     targets = target, config = config, downstream = protect)
   do_prework(config = config, verbose_packages = FALSE)
   if (config$caching == "worker"){
-    build_and_store(target = target, meta = meta, config = config)
+    build_and_store(
+      target = target, meta = meta, config = config, announce = FALSE)
   } else {
-    announce_build(target = target, meta = meta, config = config)
     config$hook(just_build(target = target, meta = meta, config = config))
   }
 }
@@ -77,6 +77,7 @@ new_worker <- function(id, target, config, protect){
     config = config
   ) %||%
     future::plan("next")
+  announce_build(target = target, meta = meta, config = config)
   structure(
     future::future(
       expr = drake_future_task(
@@ -187,7 +188,7 @@ conclude_worker <- function(target, worker, config, queue){
   if (config$caching == "worker"){
     return(out)
   }
-  build <- future::value(worker)
+  build <- get_future_build(target = target, worker = worker)
   config$hook({
     conclude_build(
       target = build$target,
@@ -197,4 +198,21 @@ conclude_worker <- function(target, worker, config, queue){
     )
   })
   out
+}
+
+get_future_build = function(target, worker){
+  tryCatch(
+    future::value(worker),
+    error = function(e){
+      e$message <- paste0(
+        "Worker terminated unexpectedly before the target could complete. ",
+        "Is something wrong with your job scheduler?"
+      )
+      list(
+        target = target,
+        value = e,
+        meta = list(error = e)
+      )
+    }
+  ) 
 }

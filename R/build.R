@@ -67,7 +67,7 @@ drake_build <- function(
   build_and_store(target = target, config = config)
 }
 
-build_and_store <- function(target, config, meta = NULL){
+build_and_store <- function(target, config, meta = NULL, announce = TRUE){
   # The environment should have been pruned by now.
   # For staged parallelism, this was already done in bulk
   # for the whole stage.
@@ -77,7 +77,9 @@ build_and_store <- function(target, config, meta = NULL){
       meta <- drake_meta(target = target, config = config)
     }
     meta$start <- proc.time()
-    announce_build(target = target, meta = meta, config = config)
+    if (announce){
+      announce_build(target = target, meta = meta, config = config)
+    }
     build <- just_build(target = target, meta = meta, config = config)
     conclude_build(
       target = target,
