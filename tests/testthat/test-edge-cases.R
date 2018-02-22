@@ -1,5 +1,18 @@
 drake_context("edge cases")
 
+test_with_dir("can keep going", {
+  con <- dbug()
+  con$plan$command[2] <- "stop(1234)"
+  expect_error(testrun(con))
+  expect_equal(justbuilt(con), "myinput")
+  con$keep_going = TRUE
+  expect_silent(testrun(con))
+  expect_equal(
+    sort(justbuilt(con)),
+    sort(setdiff(con$plan$target), "myinput")
+  )
+})
+
 test_with_dir("failed targets do not become up to date", {
   fail <- FALSE
   plan <- drake_plan(
