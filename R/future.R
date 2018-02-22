@@ -169,10 +169,10 @@ decrease_revdep_keys <- function(worker, config, queue){
   queue$decrease_key(names = revdeps)
 }
 
-# Currently only needed for "future_commands" workers
-# since "future_total" workers already conclude the build
-# and store the results.
-conclude_worker <- function(target, worker, config, queue){
+# Currently only needed for "master" caching
+# since "worker" caching already concluded the build
+# and stored the results.
+conclude_worker <- function(worker, config, queue){
   decrease_revdep_keys(
     worker = worker,
     queue = queue,
