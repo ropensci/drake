@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Add a new experimental `"future"` backend with a manual scheduler.
 - Implement `dplyr`-style `tidyselect` functionality in `loadd()`, `clean()`, and `build_times()`. For `build_times()`, there is an API change: for `tidyselect` to work, we needed to insert a new `...` argument as the first argument of `build_times()`.
 - Deprecate the single-quoting API for files. Users should now use formal API functions in their commands:
     - `file_in()` for file inputs to commands or imported functions (for imported functions, the input file needs to be an imported file, not a target).
