@@ -62,7 +62,7 @@ test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {
-  for(caching in c("master", "worker")){
+  for (caching in c("master", "worker")){
     con <- dbug()
     con$caching <- caching
     con$execution_graph <- con$graph
