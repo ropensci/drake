@@ -50,9 +50,9 @@ drake_future_task <- function(target, meta, config, protect){
     targets = target, config = config, downstream = protect)
   do_prework(config = config, verbose_packages = FALSE)
   if (config$caching == "worker"){
-    build_and_store(target = target, meta = meta, config = config)
+    build_and_store(
+      target = target, meta = meta, config = config, announce = FALSE)
   } else {
-    announce_build(target = target, meta = meta, config = config)
     config$hook(just_build(target = target, meta = meta, config = config))
   }
 }
@@ -77,6 +77,7 @@ new_worker <- function(id, target, config, protect){
     config = config
   ) %||%
     future::plan("next")
+  announce_build(target = target, meta = meta, config = config)
   structure(
     future::future(
       expr = drake_future_task(
@@ -169,9 +170,6 @@ decrease_revdep_keys <- function(worker, config, queue){
   queue$decrease_key(names = revdeps)
 }
 
-# Currently only needed for "master" caching
-# since "worker" caching already concluded the build
-# and stored the results.
 conclude_worker <- function(worker, config, queue){
   decrease_revdep_keys(
     worker = worker,
@@ -183,11 +181,10 @@ conclude_worker <- function(worker, config, queue){
     return(out)
   }
   set_attempt_flag(config = config)
-  # Here, we should also check if the future resolved due to an error.
+  build <- resolve_worker_value(worker = worker, config = config)
   if (config$caching == "worker"){
     return(out)
   }
-  build <- future::value(worker)
   config$hook({
     conclude_build(
       target = build$target,
@@ -197,4 +194,37 @@ conclude_worker <- function(worker, config, queue){
     )
   })
   out
+}
+
+# Also caches error information if available.
+# I know, it has a return value AND a side effect,
+# but it's hard to think of another clean way
+# to handle crashes.
+resolve_worker_value <- function(worker, config){
+  tryCatch(
+    # Check if the worker crashed.
+    future::value(worker),
+    error = function(e){
+      e$message <- paste0(
+        "Worker terminated unexpectedly before the target could complete. ",
+        "Is something wrong with your system or job scheduler?"
+      )
+      meta <- list(error = e)
+      if (config$caching == "worker"){
+        # Need to store the error if the worker crashed.
+        handle_build_exceptions(
+          target = attr(worker, "target"),
+          meta = meta,
+          config = config
+        )
+      }
+      # For `caching = "master"`, we need to conclude the build
+      # and store the value and metadata.
+      list(
+        target = attr(worker, "target"),
+        value = e,
+        meta = meta
+      )
+    }
+  )
 }
