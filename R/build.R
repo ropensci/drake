@@ -121,7 +121,6 @@ conclude_build <- function(target, value, meta, config){
   invisible(value)
 }
 
-
 check_processed_file <- function(target){
   if (!is_file(target)){
     return()

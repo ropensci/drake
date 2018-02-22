@@ -1,6 +1,6 @@
 drake_context("queue")
 
-test_that("the priority queue works", {
+test_with_dir("the priority queue works", {
   names <- c("foo", "bar", "baz", "Bob", "Amy", "Joe", "soup", "spren")
   priorities <- c(8, 2, 3, 7, 4, 1, 7, 5)
   priorities[4] <- priorities[7]

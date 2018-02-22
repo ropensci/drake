@@ -188,7 +188,7 @@ conclude_worker <- function(target, worker, config, queue){
   if (config$caching == "worker"){
     return(out)
   }
-  build <- get_future_build(target = target, worker = worker)
+  build <- get_worker_value(target = target, worker = worker)
   config$hook({
     conclude_build(
       target = build$target,
@@ -200,13 +200,13 @@ conclude_worker <- function(target, worker, config, queue){
   out
 }
 
-get_future_build = function(target, worker){
+get_worker_value = function(target, worker){
   tryCatch(
     future::value(worker),
     error = function(e){
       e$message <- paste0(
         "Worker terminated unexpectedly before the target could complete. ",
-        "Is something wrong with your job scheduler?"
+        "Is something wrong with your system or job scheduler?"
       )
       list(
         target = target,

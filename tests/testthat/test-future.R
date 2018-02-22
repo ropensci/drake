@@ -60,3 +60,22 @@ test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
   prepare_distributed(config)
   expect_true(file.exists("nope"))
 })
+
+test_with_dir("can properly conclude a worker that can't get a value", {
+  con <- dbug()
+  con$caching <- "master"
+  worker <- list()
+  class(worker) <- "Future"
+  expect_false(is_empty_worker(worker))
+  expect_error(future::value(worker))
+  expect_error(
+    conclude_worker(
+      target = "myinput",
+      worker = worker,
+      config = con,
+      queue = new_target_queue(config = con)
+    )
+  )
+  meta <- diagnose(myinput)
+  expect_true(grepl("Worker terminated unexpectedly", meta$error$message))
+})
