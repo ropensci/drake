@@ -1,7 +1,7 @@
 # Version 5.1.0
 
 - Implement `dplyr`-style `tidyselect` functionality in `loadd()`, `clean()`, and `build_times()`. For `build_times()`, there is an API change: for `tidyselect` to work, we needed to insert a new `...` argument as the first argument of `build_times()`.
-- Deprecate the single-quoting API for files. Users should now use
+- Deprecate the single-quoting API for files. Users should now use formal API functions in their commands:
     - `file_in()` for file inputs to commands or imported functions (for imported functions, the input file needs to be an imported file, not a target).
     - `file_out()` for output file targets (ignored if used in imported functions).
     - `knitr_in()` for `knitr`/`rmarkdown` reports. This tells `drake` to look inside the source file for target dependencies in code chunks (explicitly referenced with `loadd()` and `readd()`). Treated as a `file_in()` if used in imported functions.
