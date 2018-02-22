@@ -44,9 +44,6 @@ artifacts:
 environment:
   global:
     WARNINGS_ARE_ERRORS: 1
-    CRAN: https://ftp.ussg.iu.edu/CRAN/
-    USE_RTOOLS: true
-    PKGTYPE: "source"
 
   matrix:
     - R_VERSION: release
