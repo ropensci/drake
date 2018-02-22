@@ -201,6 +201,9 @@ conclude_worker <- function(worker, config, queue){
 }
 
 get_worker_value <- function(worker){
+  
+  browser()
+  
   tryCatch(
     future::value(worker),
     error = function(e){
