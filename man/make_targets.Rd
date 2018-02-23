@@ -29,9 +29,8 @@ and \code{\link[=make_imports]{make_imports()}} just makes the imports.
 Most users should just use \code{\link[=make]{make()}}
 instead of either \code{\link[=make_imports]{make_imports()}} or
 \code{\link[=make_targets]{make_targets()}}.
-See \url{https://ropensci.github.io/drake/}
-for the full documentation of drake,
-including multiple in-depth tutorials.
+See \url{https://github.com/ropensci/drake/blob/master/README.md#documentation}
+for an overview of the documentation.
 }
 \examples{
 \dontrun{

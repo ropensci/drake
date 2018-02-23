@@ -31,6 +31,7 @@
 #' @param jobs number of parallel jobs for the parallel processing
 #'   of the imports.
 #' @examples
+#' \dontrun{
 #' test_with_dir("contain this example's side effects", {
 #' # Suppose you have a workflow that uses the `digest()` function,
 #' # which computes the hash of an object.
@@ -82,6 +83,7 @@
 #' }
 #' tracked(plan)
 #' })
+#' }
 expose_imports <- function(
   package,
   character_only = FALSE,

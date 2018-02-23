@@ -63,7 +63,6 @@ Use \code{\link{drake_example}('basic')} to get the code
 for the basic example. The included R script is a detailed,
 heavily-commented walkthrough. The basic example vignette at
 \url{https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd} # nolint
-and \url{https://ropensci.github.io/drake/articles/example-basic.html}
 also walks through the basic example.
 This function also writes/overwrites
 the file, \code{report.Rmd}.

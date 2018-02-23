@@ -48,6 +48,7 @@ Thanks to \href{https://github.com/dapperjapper}{Jasper Clarkberg}
 for the idea that makes this function work.
 }
 \examples{
+\dontrun{
 test_with_dir("contain this example's side effects", {
 # Suppose you have a workflow that uses the `digest()` function,
 # which computes the hash of an object.
@@ -99,4 +100,5 @@ g <- function(x){
 }
 tracked(plan)
 })
+}
 }

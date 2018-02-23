@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 <img src="https://cdn.rawgit.com/ropensci/drake/ddefa828/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 
-This tutorial is a recommended starting place for learning how to use `drake`. It is the abridged version of the [basic example vignette](https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd). For more information, see the [documentation website](https://ropensci.github.io/drake/), which includes the [rendered online version of the basic example vignette](https://ropensci.github.io/drake/articles/example-basic.html).
+This tutorial is a recommended starting place for learning how to use `drake`. It is the abridged version of the [basic example vignette](https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd). See [this section of the README](https://github.com/ropensci/drake/blob/master/README.md#documentation) for a high-level overview of the available documentation.
 
 # Get the code.
 

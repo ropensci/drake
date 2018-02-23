@@ -3,8 +3,8 @@
 #' of the drake package. It runs all the steps of your
 #' workflow in the correct order, skipping any work
 #' that is already up to date.
-#' See <https://ropensci.github.io/drake/>
-#' for the full documentation, which includes multiple in-depth tutorials.
+#' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
+#' for an overview of the documentation.
 #' @seealso [make_with_config()],
 #'   [drake_plan()], [drake_plan()],
 #'   [vis_drake_graph()],
@@ -202,9 +202,8 @@ make_with_config <- function(config){
 #' Most users should just use [make()]
 #' instead of either [make_imports()] or
 #' [make_targets()].
-#' See <https://ropensci.github.io/drake/>
-#' for the full documentation of drake,
-#' including multiple in-depth tutorials.
+#' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
+#' for an overview of the documentation.
 #' @export
 #' @seealso [make()], [config()],
 #'   [make_targets()]
@@ -251,9 +250,8 @@ imports_graph <- function(config){
 #' Most users should just use [make()]
 #' instead of either [make_imports()] or
 #' [make_targets()].
-#' See <https://ropensci.github.io/drake/>
-#' for the full documentation of drake,
-#' including multiple in-depth tutorials.
+#' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
+#' for an overview of the documentation.
 #' @export
 #' @seealso [make()], [config()],
 #'   [make_imports()]

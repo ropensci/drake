@@ -323,8 +323,8 @@ This is the central, most important function
 of the drake package. It runs all the steps of your
 workflow in the correct order, skipping any work
 that is already up to date.
-See \url{https://ropensci.github.io/drake/}
-for the full documentation, which includes multiple in-depth tutorials.
+See \url{https://github.com/ropensci/drake/blob/master/README.md#documentation}
+for an overview of the documentation.
 }
 \examples{
 \dontrun{
