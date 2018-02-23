@@ -210,7 +210,10 @@ new_cache <- function(
     mangle_key = TRUE,
     hash_algorithm = short_hash_algo
   )
-  writeLines(text = c("*", "!.gitignore"), con = file.path(path, ".gitignore"))
+  writeLines(
+    text = c("*", "!/.gitignore"),
+    con = file.path(path, ".gitignore")
+  )
   configure_cache(
     cache = cache,
     short_hash_algo = short_hash_algo,
