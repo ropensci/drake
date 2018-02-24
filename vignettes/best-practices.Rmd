@@ -15,6 +15,9 @@ vignette: >
 ```{r cautionstart, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(magrittr)))
+suppressMessages(suppressWarnings(library(curl)))
+suppressMessages(suppressWarnings(library(httr)))
+suppressMessages(suppressWarnings(library(R.utils)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
@@ -286,3 +289,69 @@ drake_plan(
 ```
 
 Thanks to [Alex Axthelm](https://github.com/AlexAxthelm) for this example in [issue 235](https://github.com/ropensci/drake/issues/235).
+
+# Remote data sources
+
+Some workflows rely on remote data from the internet, and the workflow needs to refresh when the datasets change. As an example, let us consider the download logs of [CRAN packages](http://cran.r-project.org/).
+
+```{r logs1}
+library(drake)
+library(R.utils) # For unzipping the files we download.
+library(curl)    # For downloading data.
+library(httr)    # For querying websites.
+
+url <- "http://cran-logs.rstudio.com/2018/2018-02-09-r.csv.gz"
+```
+
+How do we know when the data at the URL changed? We get the time that the file was last modified. (Alternatively, we could use an HTTP ETag.)
+
+```{r logs2}
+query <- HEAD(url)
+timestamp <- query$headers[["last-modified"]]
+timestamp
+```
+
+In our workflow plan, the timestamp is a target and a dependency. When the timestamp changes, so does everything downstream.
+
+```{r logs3}
+cranlogs_plan <- drake_plan(
+  timestamp = HEAD(url)$headers[["last-modified"]],
+  logs = get_logs(url, timestamp),
+  strings_in_dots = "literals"
+)
+cranlogs_plan
+```
+
+To make sure we always have the latest timestamp, we use the `"always"` trigger. (See [this section of the debugging vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) for more on triggers.)
+
+```{r logs4}
+cranlogs_plan$trigger = c("always", "any")
+cranlogs_plan
+```
+
+Lastly, we define the `get_logs()` function, which actually downloads the data.
+
+```{r logs5}
+# The ... is just so we can write dependencies as function arguments
+# in the workflow plan.
+get_logs <- function(url, ...){
+  curl_download(url, "logs.csv.gz")       # Get a big file.
+  gunzip("logs.csv.gz", overwrite = TRUE) # Unzip it.
+  out <- read.csv("logs.csv", nrows = 4)  # Extract the data you need.
+  unlink(c("logs.csv.gz", "logs.csv"))    # Remove the big files
+  out                                     # Value of the target.
+}
+```
+
+When we are ready, we run the workflow.
+
+```{r logs6}
+make(cranlogs_plan)
+
+readd(logs)
+```
+
+```{r endofline_bestpractices, echo = F}
+clean(destroy = TRUE, verbose = FALSE)
+unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+```
