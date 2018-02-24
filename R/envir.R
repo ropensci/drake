@@ -67,7 +67,7 @@ prune_envir <- function(targets, config, downstream = NULL){
       loadd(list = load_these, envir = config$envir, cache = config$cache,
         verbose = FALSE, lazy = config$lazy_load),
       error = function(e){
-        warning(
+        ifelse(config$keep_going, warning, stop)(
           "unable to load required dependencies:\n",
           multiline_message(load_these),
           call. = FALSE
