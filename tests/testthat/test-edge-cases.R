@@ -1,24 +1,37 @@
 drake_context("edge cases")
 
 test_with_dir("can keep going", {
-  con <- dbug()
-  con$plan$command[2] <- "stop(1234)"
-  expect_error(make_with_config(con))
-  expect_equal(failed(), "yourinput")
-  expect_equal(justbuilt(con), "myinput")
-  con$keep_going <- TRUE
-  make_with_config(con)
-  expect_equal(failed(), "yourinput")
-  expect_equal(
-    sort(justbuilt(con)),
-    sort(setdiff(con$plan$target, "yourinput"))
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  e$fail <- function(...) {
+    stop("oops")
+  }
+  e$succeed <- function(...) {
+    invisible()
+  }
+  plan <- drake_plan(
+    a1 = fail(),
+    a2 = succeed(),
+    a3 = succeed(),
+    a4 = fail(),
+    b1 = fail(a1),
+    b2 = succeed(a2),
+    b3 = succeed(a3),
+    b4 = succeed(a4)
   )
-  expect_silent(make_with_config(con))
-  expect_equal(failed(), "yourinput")
-  expect_equal(
-    sort(justbuilt(con)),
-    sort(setdiff(con$plan$target, "yourinput"))
+  # warnings depend on the parallelism
+  expect_warning(
+    make(
+      plan,
+      keep_going = TRUE,
+      jobs = 2,
+      envir = e
+    )
   )
+  expect_equal(length(built()), 5)
+  expect_equal(length(failed()), 3)
+  expect_equal(length(intersect(built(), failed())), 0)
 })
 
 test_with_dir("failed targets do not become up to date", {

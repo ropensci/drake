@@ -63,8 +63,17 @@ prune_envir <- function(targets, config, downstream = NULL){
         config = config
       )
     }
-    loadd(list = load_these, envir = config$envir, cache = config$cache,
-      verbose = FALSE, lazy = config$lazy_load)
+    tryCatch(
+      loadd(list = load_these, envir = config$envir, cache = config$cache,
+        verbose = FALSE, lazy = config$lazy_load),
+      error = function(e){
+        warning(
+          "unable to load required dependencies:\n",
+          multiline_message(load_these),
+          call. = FALSE
+        )
+      }
+    )
   }
   invisible()
 }
