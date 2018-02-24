@@ -222,6 +222,10 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
+# What remote data sources in general?
+
+When you rely on data from the internet, you should trigger a new download when the data change remotely. [This section of the best practices guide](https://github.com/ropensci/drake/blob/master/vignettes/best-practices.Rmd#remote-data-sources) explains how to automatically refresh the data when the online timestamp changes.
+
 ```{r rmfiles_main, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
 unlink(
