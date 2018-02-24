@@ -10,6 +10,8 @@ navbar:
     href: articles/drake.html
   - text: Reference
     href: reference/index.html
+  - text: FAQ
+    href: articles/faq.html
   - text: Articles
     menu:
     - text: "Example: R package download trends"

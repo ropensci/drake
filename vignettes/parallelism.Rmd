@@ -1,6 +1,6 @@
 ---
 title: "High-performance computing with drake"
-author: "William Michael Landau"
+author: "Will Landau"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:

@@ -1,7 +1,7 @@
 ---
 title: "Caution"
 subtitle: "Cautionary notes for drake"
-author: "William Michael Landau"
+author: "Will Landau"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:

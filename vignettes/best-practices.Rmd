@@ -1,6 +1,6 @@
 ---
 title: "General best practices for drake projects"
-author: "William Michael Landau"
+author: "Will Landau"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:

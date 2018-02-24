@@ -41,5 +41,6 @@ vignettes/.*_files
 ^.*\.yml$
 ^CONDUCT\.md$
 ^docs$
+^docs\.R$
 ^pkgdown\.R$
 ^_pkgdown\.yml$

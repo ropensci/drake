@@ -204,7 +204,15 @@ install_github("ropensci/drake")
 
 # Documentation
 
-`Drake` has a [documentation website](https://ropensci.github.io/drake/). The [reference section](https://ropensci.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
+`Drake` has a [documentation website](https://ropensci.github.io/drake/) with many resources.
+
+## Frequently asked questions
+
+The [FAQ page](https://ropensci.github.io/drake/articles/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
+
+## Function reference
+
+The [reference section](https://ropensci.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
 
 - `drake_plan()`: create a workflow data frame (like `my_plan`).
 - `make()`: build your project.
@@ -216,6 +224,8 @@ install_github("ropensci/drake")
 - `deps()`: check the dependencies of a command or function.
 - `failed()`: list the targets that failed to build in the last `make()`.
 - `diagnose()`: return the full context of a build, including errors, warnings, and messages.
+
+## Tuturials
 
 The articles below are tutorials taken from the [package vignettes](https://github.com/ropensci/drake/tree/master/vignettes).
 
@@ -231,11 +241,15 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Time logging](https://ropensci.github.io/drake/articles/timing.html)
 - [Storage](https://ropensci.github.io/drake/articles/storage.html)
 
+## Examples
+
 `Drake` also has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. The beginner-oriented examples are listed below. They help you learn `drake`'s main features, and they show one way to organize the files of `drake` projects.
 
 - `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+
+## Context and history
 
 For context and history, check out [this post on the rOpenSci blog](https://ropensci.org/blog/2018/02/06/drake/) and [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
 
