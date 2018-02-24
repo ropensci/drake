@@ -21,10 +21,11 @@ test_with_dir("can keep going", {
     b4 = succeed(a4)
   )
   # warnings depend on the parallelism
-  expect_warning(
+  suppressWarnings(
     make(
       plan,
       keep_going = TRUE,
+      parallelism = parallelism,
       jobs = 2,
       envir = e
     )

@@ -218,7 +218,7 @@ with_hover <- function(x) {
 }
 
 filter_legend_nodes <- function(dfs){
-  colors <- unique(dfs$nodes$color)
+  colors <- c(unique(dfs$nodes$color), color_of("object"))
   shapes <- unique(dfs$nodes$shape)
   ln <- dfs$legend_nodes
   ln[ln$color %in% colors & ln$shape %in% shapes, , drop = FALSE] # nolint

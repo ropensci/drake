@@ -1,5 +1,14 @@
 drake_context("envir")
 
+test_with_dir("prune_envir() warns if loading missing deps", {
+  plan <- drake_plan(a = 1, b = a)
+  con <- drake_config(plan)
+  expect_warning(
+    prune_envir(targets = "b", config = con),
+    regexp = "unable to load required dependencies"
+  )
+})
+
 test_with_dir("prune_envir in full build", {
   # drake_plan with lots of nested deps This will fail if
   # prune_envir() doesn't work.
