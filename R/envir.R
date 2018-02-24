@@ -43,6 +43,7 @@ prune_envir <- function(targets, config, downstream = NULL){
   )
   load_these <- setdiff(target_deps, targets) %>%
     setdiff(y = already_loaded)
+  load_these <- exclude_unloadable(targets = load_these, config = config)
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
     parallel_filter(f = is_not_file, jobs = config$jobs) %>%
@@ -63,17 +64,8 @@ prune_envir <- function(targets, config, downstream = NULL){
         config = config
       )
     }
-    tryCatch(
-      loadd(list = load_these, envir = config$envir, cache = config$cache,
-        verbose = FALSE, lazy = config$lazy_load),
-      error = function(e){
-        ifelse(config$keep_going, warning, stop)(
-          "unable to load required dependencies:\n",
-          multiline_message(load_these),
-          call. = FALSE
-        )
-      }
-    )
+    loadd(list = load_these, envir = config$envir, cache = config$cache,
+          verbose = FALSE, lazy = config$lazy_load)
   }
   invisible()
 }
@@ -91,4 +83,21 @@ flexible_get <- function(target) {
   pkg <- deparse(lang[[2]])
   fun <- deparse(lang[[3]])
   get(fun, envir = getNamespace(pkg))
+}
+
+exclude_unloadable <- function(targets, config){
+  unloadable <- parallel_filter(
+    x = targets,
+    f = function(target){
+      !config$cache$exists(key = target)
+    }
+  )
+  if (length(unloadable)){
+    warning(
+      "unable to load required dependencies:\n",
+      multiline_message(targets),
+      call. = FALSE
+    )
+  }
+  setdiff(targets, unloadable)
 }
