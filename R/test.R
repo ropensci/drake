@@ -23,7 +23,8 @@ justbuilt <- function(config) {
   all <- lightly_parallelize(
     X = recorded,
     FUN = function(target){
-      config$cache$get(key = target, namespace = "progress")
+      config$cache$get(
+        key = target, namespace = "progress", use_cache = FALSE)
     },
     jobs = config$jobs
   )

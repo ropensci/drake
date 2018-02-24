@@ -49,7 +49,11 @@ readd <- function(
   if (is.null(namespace)){
     namespace <- cache$default_namespace
   }
-  cache$get(standardize_filename(target), namespace = namespace)
+  cache$get(
+    standardize_filename(target),
+    namespace = namespace,
+    use_cache = FALSE
+  )
 }
 
 #' @title Load multiple targets or imports from the drake cache.
@@ -299,7 +303,11 @@ bind_load_target <- function(target, cache, namespace, envir, verbose){
         # but good to have around anyway.
         namespace <- cache$default_namespace # nocov
       }
-      cache$get(key = as.character(key), namespace = as.character(namespace))
+      cache$get(
+        key = as.character(key),
+        namespace = as.character(namespace),
+        use_cache = FALSE
+      )
     },
     cache = cache,
     namespace = namespace
@@ -353,7 +361,7 @@ read_drake_config <- function(
   out <- lightly_parallelize(
     X = keys,
     FUN = function(item){
-      cache$get(key = item, namespace = "config")
+      cache$get(key = item, namespace = "config", use_cache = FALSE)
     },
     jobs = jobs
   )
@@ -408,7 +416,7 @@ read_drake_graph <- function(
     stop("cannot find drake cache.")
   }
   if (cache$exists(key = "graph", namespace = "config")){
-    cache$get(key = "graph", namespace = "config")
+    cache$get(key = "graph", namespace = "config", use_cache = FALSE)
   } else {
     make_empty_graph()
   }
@@ -446,7 +454,7 @@ read_drake_plan <- function(
     stop("cannot find drake cache.")
   }
   if (cache$exists(key = "plan", namespace = "config")){
-    cache$get(key = "plan", namespace = "config")
+    cache$get(key = "plan", namespace = "config", use_cache = FALSE)
   } else {
     drake_plan()
   }
@@ -513,7 +521,7 @@ read_drake_seed <- function(
     stop("cannot find drake cache.")
   }
   if (cache$exists(key = "seed", namespace = "config")){
-    cache$get(key = "seed", namespace = "config")
+    cache$get(key = "seed", namespace = "config", use_cache = FALSE)
   } else {
     stop("Pseudo-random seed not found in the cache.")
   }

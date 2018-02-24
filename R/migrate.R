@@ -172,9 +172,10 @@ null_proc_time <- function(e){
 }
 
 legacy_readd <- function(target, cache){
-  store <- cache$get(target)
+  store <- cache$get(target, use_cache = FALSE)
   if (store$type == "function"){
-    value <- cache$get(key = target, namespace = "functions")
+    value <- cache$get(
+      key = target, namespace = "functions", use_cache = FALSE)
   } else{
     value <- store$value
   }
@@ -291,7 +292,8 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
     return(as.character(NA))
   old_mtime <- ifelse(
     target %in% config$cache$list(namespace = "filemtime"),
-    config$cache$get(key = target, namespace = "filemtime"),
+    config$cache$get(
+      key = target, namespace = "filemtime", use_cache = FALSE),
     -Inf
   )
   new_mtime <- file.mtime(filename)
@@ -303,7 +305,7 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   if (do_rehash){
     rehash_file(target = target, config = config)
   } else {
-    out <- config$cache$get(target)
+    out <- config$cache$get(target, use_cache = FALSE)
     ifelse(is.character(out), out, out$value)
   }
 }
@@ -318,7 +320,7 @@ legacy_target_current <- function(target, hashes, config){
     return(FALSE) # nocov
   }
   identical(
-    config$cache$get(target, namespace = "depends"),
+    config$cache$get(target, namespace = "depends", use_cache = FALSE),
     hashes$depends
   )
 }
@@ -331,7 +333,7 @@ legacy_file_current <- function(target, hashes, config){
     # won't spend time covering every inch of legacy functions
     return(FALSE) # nocov
   }
-  out <- config$cache$get(target)
+  out <- config$cache$get(target, use_cache = FALSE)
   out <- ifelse(is.character(out), out, out$value)
   identical(out, hashes$file)
 }

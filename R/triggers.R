@@ -160,7 +160,7 @@ file_trigger <- function(target, meta, config){
   }
   tryCatch(
     !identical(
-      config$cache$get(target, namespace = "kernels"),
+      config$cache$get(target, namespace = "kernels", use_cache = FALSE),
       meta$file
     ),
     error = error_false
