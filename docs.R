@@ -28,7 +28,7 @@ faq <- function(token = NULL){
   links <- paste0("- [", titles, "](", urls, ")")
 
   starter <- system.file(
-    file.path("docs", "faq.Rmd"),
+    file.path("stubs", "faq.Rmd"),
     package = "drake",
     mustWork = TRUE
   )
