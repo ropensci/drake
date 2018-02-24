@@ -87,6 +87,22 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
 },
 "quoted_file")
 
+filter_legend_nodes <- function(legend_nodes, all_nodes){
+  colors <- c(unique(all_nodes$color), color_of("object"))
+  shapes <- unique(all_nodes$shape)
+  ln <- legend_nodes
+  ln[ln$color %in% colors & ln$shape %in% shapes, , drop = FALSE] # nolint
+}
+
+filtered_legend_nodes <- function(all_nodes, full_legend, font_size){
+  legend_nodes <- legend_nodes(font_size = font_size)
+  if (full_legend){
+    legend_nodes
+  } else {
+    filter_legend_nodes(legend_nodes = legend_nodes, all_nodes = all_nodes)
+  }
+}
+
 function_hover_text <- Vectorize(function(function_name, envir){
   tryCatch(
     eval(parse(text = function_name), envir = envir),

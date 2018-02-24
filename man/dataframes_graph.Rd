@@ -8,7 +8,7 @@ behind \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
 dataframes_graph(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, build_times = "build", digits = 3,
   targets_only = FALSE, split_columns = FALSE, font_size = 20,
-  from_scratch = FALSE, make_imports = TRUE)
+  from_scratch = FALSE, make_imports = TRUE, full_legend = TRUE)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -74,6 +74,10 @@ build progress in previous \code{\link[=make]{make()}}s.}
 
 \item{make_imports}{logical, whether to make the imports first.
 Set to \code{FALSE} to increase speed and risk using obsolete information.}
+
+\item{full_legend}{logical. If \code{TRUE}, all the node types
+are printed in the legend. If \code{FALSE}, only the
+node types used are printed in the legend.}
 }
 \value{
 A list of three data frames: one for nodes,

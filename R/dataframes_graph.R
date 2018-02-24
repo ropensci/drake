@@ -72,6 +72,10 @@
 #' @param make_imports logical, whether to make the imports first.
 #'   Set to `FALSE` to increase speed and risk using obsolete information.
 #'
+#' @param full_legend logical. If `TRUE`, all the node types
+#'   are printed in the legend. If `FALSE`, only the
+#'   node types used are printed in the legend.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -108,7 +112,8 @@ dataframes_graph <- function(
   split_columns = FALSE,
   font_size = 20,
   from_scratch = FALSE,
-  make_imports = TRUE
+  make_imports = TRUE,
+  full_legend = TRUE
 ) {
   if (!length(V(config$graph)$name)){
     return(null_graph())
@@ -121,7 +126,6 @@ dataframes_graph <- function(
   config$split_columns <- split_columns
   config <- get_raw_node_category_data(config)
   config$stages <- graphing_parallel_stages(config)
-
   config$graph <- get_neighborhood(
     graph = config$graph,
     from = from,
@@ -135,18 +139,22 @@ dataframes_graph <- function(
       subset = config$plan$target
     )
   }
-
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
-
   config$edges <- network_data$edges
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
   }
-
-  list(nodes = as_tibble(config$nodes), edges = as_tibble(config$edges),
-    legend_nodes = legend_nodes(font_size = font_size),
-    default_title = default_graph_title(split_columns = split_columns))
+  list(
+    nodes = as_tibble(config$nodes),
+    edges = as_tibble(config$edges),
+    legend_nodes = filtered_legend_nodes(
+      all_nodes = config$nodes,
+      full_legend = full_legend,
+      font_size = font_size
+    ),
+    default_title = default_graph_title(split_columns = split_columns)
+  )
 }
