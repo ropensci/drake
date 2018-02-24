@@ -26,6 +26,7 @@ test_with_dir("can keep going", {
       plan,
       keep_going = TRUE,
       parallelism = parallelism,
+      verbose = FALSE,
       jobs = 2,
       envir = e
     )
