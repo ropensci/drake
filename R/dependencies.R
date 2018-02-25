@@ -99,7 +99,7 @@ dependency_profile <- function(target, config){
   }
   config$plan[["trigger"]] <- NULL
   meta <- config$cache$get(
-    key = target, namespace = "meta", use_cache = FALSE)
+    key = target, namespace = "meta")
   deps <- dependencies(target, config)
   hashes_of_dependencies <- self_hash(target = deps, config = config)
   current_dependency_hash <- digest::digest(hashes_of_dependencies,

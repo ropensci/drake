@@ -521,7 +521,7 @@ read_drake_seed <- function(
     stop("cannot find drake cache.")
   }
   if (cache$exists(key = "seed", namespace = "config")){
-    cache$get(key = "seed", namespace = "config", use_cache = FALSE)
+    cache$get(key = "seed", namespace = "config")
   } else {
     stop("Pseudo-random seed not found in the cache.")
   }

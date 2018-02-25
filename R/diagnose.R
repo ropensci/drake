@@ -76,7 +76,6 @@ diagnose <- function(
   }
   cache$get(
     key = standardize_filename(target),
-    namespace = "meta",
-    use_cache = FALSE
+    namespace = "meta"
   )
 }

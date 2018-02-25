@@ -1,4 +1,4 @@
-faq <- function(token = NULL){
+faq <- function(){
   library(tidyverse)
   library(gh)
 
@@ -12,8 +12,7 @@ faq <- function(token = NULL){
 
   faq <- gh(
     "GET /repos/ropensci/drake/issues?state=all",
-    .limit = Inf,
-    .token = token
+    .limit = Inf
   ) %>%
     Filter(f = any_faq_label)
 
