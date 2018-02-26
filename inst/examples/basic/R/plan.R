@@ -7,7 +7,7 @@ my_datasets <- drake_plan(
   large = simulate(64)
 )
 
-# Optionally, get replicates with expand(my_datasets,
+# Optionally, get replicates with expand_plan(my_datasets,
 #   values = c("rep1", "rep2")).
 # Bootstrapping involves randomness, so this is good practice
 # in real life. But this is a miniaturized workflow,
