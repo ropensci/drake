@@ -34,7 +34,7 @@ jobs_imports <- function(jobs){
   } else if (is.null(names(jobs))){
     jobs[1]
   } else {
-    jobs["imports"]
+    unname(jobs["imports"])
   }
 }
 
@@ -45,7 +45,7 @@ jobs_targets <- function(jobs){
   } else if (is.null(names(jobs))){
     jobs[2]
   } else {
-    jobs["targets"]
+    unname(jobs["targets"])
   }
 }
 
