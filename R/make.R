@@ -224,6 +224,7 @@ make_with_config <- function(config){
 #' }
 make_imports <- function(config){
   config$execution_graph <- imports_graph(config = config)
+  config$jobs <- jobs_imports(jobs = config$jobs)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
   invisible(config)
@@ -272,6 +273,7 @@ imports_graph <- function(config){
 #' }
 make_targets <- function(config){
   config$execution_graph <- targets_graph(config = config)
+  config$jobs <- jobs_targets(jobs = config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)

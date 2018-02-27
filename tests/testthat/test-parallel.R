@@ -1,5 +1,32 @@
 drake_context("parallel")
 
+test_with_dir("check_jobs()", {
+  expect_error(check_jobs(NULL), regexp = "length")
+  expect_error(check_jobs(-1), regexp = "jobs > 0")
+  expect_error(check_jobs(c(-1, 1)), regexp = "jobs > 0")
+  expect_error(check_jobs(c(a = 1, targets = 5)), regexp = "targets")
+  expect_silent(check_jobs(1))
+  expect_silent(check_jobs(1:2))
+  expect_silent(check_jobs(c(targets = 5, imports = 6)))
+  expect_silent(check_jobs(c(imports = 5, targets = 6)))
+})
+
+test_with_dir("jobs_imports()", {
+  expect_equal(jobs_imports(8), 8)
+  expect_equal(jobs_imports(c(8, 12)), 8)
+  expect_equal(jobs_imports(c(8, 1)), 8)
+  expect_equal(jobs_imports(c(targets = 8, imports = 12)), 12)
+  expect_equal(jobs_imports(c(imports = 8, targets = 12)), 8)
+})
+
+test_with_dir("jobs_targets()", {
+  expect_equal(jobs_targets(8), 8)
+  expect_equal(jobs_targets(c(8, 12)), 12)
+  expect_equal(jobs_targets(c(8, 1)), 1)
+  expect_equal(jobs_targets(c(targets = 8, imports = 12)), 8)
+  expect_equal(jobs_targets(c(imports = 8, targets = 12)), 12)
+})
+
 test_with_dir("parallelism not found for testrun()", {
   config <- list(parallelism = "not found", verbose = FALSE)
   suppressWarnings(expect_error(testrun(config)))
