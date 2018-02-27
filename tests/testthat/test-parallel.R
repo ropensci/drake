@@ -11,7 +11,7 @@ test_with_dir("check_jobs()", {
   expect_silent(check_jobs(c(imports = 5, targets = 6)))
 })
 
-test_with_dir("targets_imports()", {
+test_with_dir("jobs_imports() and jobs_targets()", {
   
   
 })
