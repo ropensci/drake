@@ -89,6 +89,13 @@
 #'   who use `parallelism = "Makefile"` will need to
 #'   download and install Rtools.
 #'
+#'   Imports and targets are processed separately, and they usually
+#'   have different parallelism needs. To use at most 2 jobs at a time
+#'   for imports and at most 4 jobs at a time for targets, call
+#'   `make(..., jobs = c(imports = 2, targets = 4))`,
+#'   `make(..., jobs = c(targets = 4, imports = 2))`,
+#'   or `make(..., jobs = c(2, 4))`.
+#'
 #'   For `"future_lapply"` parallelism, `jobs`
 #'   only applies to the imports.
 #'   To set the max number of jobs for `"future_lapply"`
@@ -106,7 +113,8 @@
 #'   for your system and uses the number of jobs you give to the `jobs`
 #'   argument to [make()]. To use at most 2 jobs for imports and at
 #'   most 4 jobs for targets, run
-#'   `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")`
+#'   `make(..., parallelism = "Makefile", jobs = c(imports = 2, targets = 4))` or
+#'   `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")`.
 #'
 #' @param packages character vector packages to load, in the order
 #'   they should be loaded. Defaults to `rev(.packages())`, so you
