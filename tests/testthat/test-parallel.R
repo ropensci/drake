@@ -1,5 +1,21 @@
 drake_context("parallel")
 
+test_with_dir("check_jobs()", {
+  expect_error(check_jobs(NULL), regexp = "length")
+  expect_error(check_jobs(-1), regexp = "jobs > 0")
+  expect_error(check_jobs(c(-1, 1)), regexp = "jobs > 0")
+  expect_error(check_jobs(c(a = 1, targets = 5)), regexp = "targets")
+  expect_silent(check_jobs(1))
+  expect_silent(check_jobs(1:2))
+  expect_silent(check_jobs(c(targets = 5, imports = 6)))
+  expect_silent(check_jobs(c(imports = 5, targets = 6)))
+})
+
+test_with_dir("targets_imports()", {
+  
+  
+})
+
 test_with_dir("parallelism not found for testrun()", {
   config <- list(parallelism = "not found", verbose = FALSE)
   suppressWarnings(expect_error(testrun(config)))

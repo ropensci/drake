@@ -27,8 +27,30 @@ lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...){
   values[index]
 }
 
+jobs_imports <- function(jobs){
+  check_jobs(jobs)
+  if (length(jobs) < 2){
+    jobs
+  } else if (is.null(names(jobs))){
+    jobs[1]
+  } else {
+    jobs["imports"]
+  }
+}
+
+jobs_targets <- function(jobs){
+  check_jobs(jobs)
+  if (length(jobs) < 2){
+    jobs
+  } else if (is.null(names(jobs))){
+    jobs[2]
+  } else {
+    jobs["targets"]
+  }
+}
+
 safe_jobs <- function(jobs){
-  ifelse(on_windows(), 1, jobs)
+  ifelse(on_windows(), 1, jobs_imports(jobs = jobs))
 }
 
 on_windows <- function(){
