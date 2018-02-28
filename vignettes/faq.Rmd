@@ -19,4 +19,4 @@ The [FAQ page](https://ropensci.github.io/drake/articles/faq.html) is an index o
 - [Trouble with caches sent through Dropbox](https://github.com/ropensci/drake/issues/198)
 - [How to add .R files to drake_plan()](https://github.com/ropensci/drake/issues/193)
 - [Add an option to always build some selected targets (add an "always" trigger)](https://github.com/ropensci/drake/issues/166)
-- [evaluate() with file targets](https://github.com/ropensci/drake/issues/106)
+- [evaluate_plan() with file targets](https://github.com/ropensci/drake/issues/106)
