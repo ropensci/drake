@@ -60,7 +60,7 @@ pkgdown <- function(){
 
   from <- "<p><img src=.*images/graph.png.*></p>"
   to <- "<iframe
-    src = 'https://cdn.rawgit.com/ropensci/drake/ddefa828/images/reg2.html'
+    src = 'https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2.html'
     width = '100%' height = '600px' allowtransparency='true'
     style='border: none; box-shadow: none'>
     </iframe>"

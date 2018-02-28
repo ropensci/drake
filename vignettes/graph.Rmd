@@ -37,7 +37,7 @@ vis_drake_graph(config) # Same as drake_graph()
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/outdated.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -51,7 +51,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/built.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/built.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -68,7 +68,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/reg2.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -82,7 +82,7 @@ vis_drake_graph(config, subset = c("regression2_small", "\"report.md\""))
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/subset.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/subset.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -94,7 +94,7 @@ vis_drake_graph(config, targets_only = TRUE)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/targetsonly.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/targetsonly.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -107,7 +107,7 @@ vis_drake_graph(config, from = c("regression2_small", "regression2_large"))
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/fromout.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/fromout.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -120,7 +120,7 @@ vis_drake_graph(config, from = "small", mode = "in")
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/fromin.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/fromin.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -133,7 +133,7 @@ vis_drake_graph(config, from = "small", mode = "all", order = 1)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/fromall.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/fromall.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -145,7 +145,7 @@ The `report.md` node is drawn in somewhat, but it is still the farthest to the r
 `Drake` shows its parallel computing strategy plainly in the graph.
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/reg2.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -163,7 +163,7 @@ vis_drake_graph(config, full_legend = FALSE)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/reg2-small-legend.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2-small-legend.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -175,7 +175,7 @@ vis_drake_graph(config, ncol_legend = 0)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/ddefa828/images/reg2-no-legend.html"
+src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2-no-legend.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
