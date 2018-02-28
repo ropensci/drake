@@ -33,8 +33,7 @@ drake_plan_columns <- function(){
     "elapsed",
     "evaluator",
     "retries",
-    "timeout",
-    "evaluator"
+    "timeout"
   )
 }
 
