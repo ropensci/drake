@@ -44,6 +44,10 @@
 #' make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
 #' vis_drake_graph(config) # The colors changed in the graph.
 #' clean() # Start from scratch.
+#' # Run with at most 2 jobs at a time for the imports
+#' # and at most 4 jobs at a time for the targets.
+#' make(my_plan, jobs = c(imports = 2, targets = 4))
+#' clean() # Start from scratch.
 #' # Rerun with "Makefile" parallelism with at most 4 jobs.
 #' # Requires Rtools on Windows.
 #' # make(my_plan, parallelism = "Makefile", jobs = 4) # nolint

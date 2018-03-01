@@ -61,7 +61,7 @@ migrate_drake_project <- function(
   config <- read_drake_config(cache = cache)
   config$cache <- cache
   config$parallelism <- "mclapply"
-  config$jobs <- safe_jobs(jobs)
+  config$jobs <- safe_jobs_imports(jobs)
   config$hook <- migrate_hook
   config$envir <- new.env(parent = globalenv())
   config$verbose <- TRUE

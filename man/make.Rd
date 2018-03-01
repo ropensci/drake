@@ -104,9 +104,7 @@ download and install Rtools.
 Imports and targets are processed separately, and they usually
 have different parallelism needs. To use at most 2 jobs at a time
 for imports and at most 4 jobs at a time for targets, call
-\code{make(..., jobs = c(imports = 2, targets = 4))},
-\code{make(..., jobs = c(targets = 4, imports = 2))},
-or \code{make(..., jobs = c(2, 4))}.
+\code{make(..., jobs = c(imports = 2, targets = 4))}.
 
 For \code{"future_lapply"} parallelism, \code{jobs}
 only applies to the imports.
@@ -354,6 +352,10 @@ make(my_plan) # Rebuild just the outdated targets.
 outdated(config) # Everything is up to date again.
 make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
 vis_drake_graph(config) # The colors changed in the graph.
+clean() # Start from scratch.
+# Run with at most 2 jobs at a time for the imports
+# and at most 4 jobs at a time for the targets.
+make(my_plan, jobs = c(imports = 2, targets = 4))
 clean() # Start from scratch.
 # Rerun with "Makefile" parallelism with at most 4 jobs.
 # Requires Rtools on Windows.

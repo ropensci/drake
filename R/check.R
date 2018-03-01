@@ -116,11 +116,14 @@ check_jobs <- function(jobs){
   stopifnot(length(jobs) > 0)
   stopifnot(is.numeric(jobs) || is.integer(jobs))
   stopifnot(all(jobs > 0))
-  if (!is.null(names(jobs))){
-    if (!identical(sort(names(jobs)), sort(c("imports", "targets")))){
+  if (length(jobs) > 1){
+    if (
+      is.null(names(jobs)) ||
+      !identical(sort(names(jobs)), sort(c("imports", "targets")))
+    ){
       stop(
-        "In the `jobs` argument, you must either give an unnamed numeric ",
-        "or a named numeric with names 'imports' and 'targets'.",
+        "In the `jobs` argument, you must either give a numeric scalar ",
+        "or a named numeric vector with names 'imports' and 'targets'.",
         call. = FALSE
       )
     }

@@ -105,9 +105,7 @@ download and install Rtools.
 Imports and targets are processed separately, and they usually
 have different parallelism needs. To use at most 2 jobs at a time
 for imports and at most 4 jobs at a time for targets, call
-\code{make(..., jobs = c(imports = 2, targets = 4))},
-\code{make(..., jobs = c(targets = 4, imports = 2))},
-or \code{make(..., jobs = c(2, 4))}.
+\code{make(..., jobs = c(imports = 2, targets = 4))}.
 
 For \code{"future_lapply"} parallelism, \code{jobs}
 only applies to the imports.

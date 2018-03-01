@@ -11,7 +11,7 @@ parallel_filter <- function(x, f, jobs = 1, ...){
 }
 
 lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
-  jobs <- safe_jobs(jobs)
+  jobs <- safe_jobs_imports(jobs)
   if (is.atomic(X)){
     lightly_parallelize_atomic(X = X, FUN = FUN, jobs = jobs, ...)
   } else {
@@ -20,7 +20,7 @@ lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
 }
 
 lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...){
-  jobs <- safe_jobs(jobs)
+  jobs <- safe_jobs_imports(jobs)
   keys <- unique(X)
   index <- match(X, keys)
   values <- mclapply(X = keys, FUN = FUN, mc.cores = jobs, ...)
@@ -31,8 +31,6 @@ jobs_imports <- function(jobs){
   check_jobs(jobs)
   if (length(jobs) < 2){
     jobs
-  } else if (is.null(names(jobs))){
-    jobs[1]
   } else {
     unname(jobs["imports"])
   }
@@ -42,14 +40,17 @@ jobs_targets <- function(jobs){
   check_jobs(jobs)
   if (length(jobs) < 2){
     jobs
-  } else if (is.null(names(jobs))){
-    jobs[2]
   } else {
     unname(jobs["targets"])
   }
 }
 
 safe_jobs <- function(jobs){
+  stopifnot(length(jobs) == 1)
+  ifelse(on_windows(), 1, jobs)
+}
+
+safe_jobs_imports <- function(jobs){
   ifelse(on_windows(), 1, jobs_imports(jobs = jobs))
 }
 
