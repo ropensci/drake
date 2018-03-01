@@ -15,7 +15,7 @@ install:
 branches:
   except:
   - gh-pages
-  - scheduler-spec
+  - scheduler
 
 build_script:
   - travis-tool.sh install_deps
