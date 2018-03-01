@@ -12,6 +12,11 @@ install:
 
 # Adapt as necessary starting from here
 
+branches:
+  except:
+  - gh-pages
+  - scheduler-spec
+
 build_script:
   - travis-tool.sh install_deps
 
