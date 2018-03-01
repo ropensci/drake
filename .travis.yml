@@ -6,6 +6,11 @@ cache: packages
 
 # Added manually by Will Landau
 
+branches:
+  except:
+  - gh-pages
+  - scheduler-spec
+
 warnings_are_errors: true
 
 r_packages:
