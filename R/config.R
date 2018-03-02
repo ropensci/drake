@@ -21,6 +21,8 @@
 #' @param plan workflow plan data frame.
 #'   A workflow plan data frame is a data frame
 #'   with a `target` column and a `command` column.
+#'   (See the details in the [drake_plan()] help file
+#'   for descriptions of the optional columns.)
 #'   Targets are the objects and files that drake generates,
 #'   and commands are the pieces of R code that produce them.
 #'   Use the function [drake_plan()] to generate workflow plan
@@ -28,30 +30,6 @@
 #'   [summaries()], [evaluate()],
 #'   [expand()], and [gather()] for
 #'   easy ways to generate large workflow plan data frames.
-#'
-#'   Besides the `target` and `command` columns, there are optional columns
-#'   you may append to your workflow plan data frame:
-#'   - `trigger`: a character vector of triggers. A trigger is a rule for
-#'   when to cause a target to (re)build. See [triggers()] for your options.
-#'   For a walkthrough, see
-#'   <https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers>. # nolint
-#'   - `retries`: number of times to retry a target if it fails
-#'     to build the first time.
-#'   - `timeout`: Seconds of overall time to allow before imposing
-#'     a timeout on a target. Passed to `R.utils::withTimeout()`.
-#'     Assign target-level timeout times with an optional `timeout`
-#'     column in `plan`.
-#'   - `cpu`: Seconds of cpu time to allow before imposing
-#'     a timeout on a target. Passed to `R.utils::withTimeout()`.
-#'     Assign target-level cpu timeout times with an optional `cpu`
-#'     column in `plan`.
-#'   - `elapsed`: Seconds of elapsed time to allow before imposing
-#'     a timeout on a target. Passed to `R.utils::withTimeout()`.
-#'     Assign target-level elapsed timeout times with an optional `elapsed`
-#'     column in `plan`.
-#'   - `evaluator`: An experimental column. Each entry is a function
-#'     passed to the `evaluator` argument of `future::future()`
-#'     for each worker in `make(..., parallelism = "future")`.
 #'
 #' @param targets character string, names of targets to build.
 #'   Dependencies are built too. Together, the `plan` and
