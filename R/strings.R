@@ -82,7 +82,7 @@ drake_strings <- function(...){
 #'   `deps(file_store("report.md"))`. See the examples for details.
 #'   Internally, `drake` wraps the names of file targets/imports
 #'   inside literal double quotes to avoid confusion between
-#'   files and non-files.
+#'   files and generic R objects.
 #' @export
 #' @return A single-quoted character string: i.e., a filename
 #'   understandable by drake.

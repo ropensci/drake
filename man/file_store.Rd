@@ -23,7 +23,7 @@ Use when you are calling functions like \code{deps()}: for example,
 \code{deps(file_store("report.md"))}. See the examples for details.
 Internally, \code{drake} wraps the names of file targets/imports
 inside literal double quotes to avoid confusion between
-files and non-files.
+files and generic R objects.
 }
 \examples{
   # Wraps the string in single quotes.
