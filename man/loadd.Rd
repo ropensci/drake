@@ -116,6 +116,10 @@ ls()
 # Be sure your computer has enough memory.
 loadd()
 ls()
+# With files, you just get the fingerprint.
+loadd(list = file_store("report.md"))
+ls() # Should include "\\"report.md\\"".
+get(file_store("report.md"))
 })
 }
 }

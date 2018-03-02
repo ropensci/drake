@@ -22,16 +22,39 @@ analyses <- function(plan, datasets){
   plan_analyses(plan = plan, datasets = datasets)
 }
 
+#' @title Deprecated function `as_drake_filename`
+#' @description Use [file_store()] instead.
+#' @details Deprecated on 2018-03-02.
+#' @export
+#' @keywords internal
+#' @seealso [file_store()]
+#' @return The same return value as [file_store()].
+#' @param x Same as for [file_store()].
+#' @examples
+#' # See ?file_store for examples.
+as_drake_filename <- function(x){
+  .Deprecated(
+    "backend",
+    package = "drake",
+    msg = paste(
+      "drake::as_file() is deprecated",
+      "due to possible name conflicts.",
+      "Use file_store() instead."
+    )
+  )
+  file_store(x)
+}
+
 #' @title Deprecated function `as_file`
-#' @description Use [as_drake_filename()] instead.
+#' @description Use [file_store()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso [as_drake_filename()]
-#' @return The same return value as [as_drake_filename()].
-#' @param x Same as for [as_drake_filename()].
+#' @seealso [file_store()]
+#' @return The same return value as [file_store()].
+#' @param x Same as for [file_store()].
 #' @examples
-#' # See ?as_drake_filename for examples.
+#' # See ?file_store for examples.
 as_file <- function(x){
   .Deprecated(
     "backend",
@@ -39,10 +62,10 @@ as_file <- function(x){
     msg = paste(
       "drake::as_file() is deprecated",
       "due to possible name conflicts.",
-      "Use as_drake_filename() instead."
+      "Use file_store() instead."
     )
   )
-  as_drake_filename(x)
+  file_store(x)
 }
 
 #' @title Deprecated function `backend`

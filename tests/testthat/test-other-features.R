@@ -214,8 +214,8 @@ test_with_dir("targets can be partially specified", {
   expect_silent(check_plan(pl, verbose = FALSE))
 })
 
-test_with_dir("as_drake_filename quotes properly", {
-  expect_equal(as_drake_filename("x"), "\"x\"")
+test_with_dir("file_store quotes properly", {
+  expect_equal(file_store("x"), "\"x\"")
 })
 
 test_with_dir("unique_random_string() works", {

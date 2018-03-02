@@ -27,7 +27,7 @@
 #' readd(small) # Return targets 'small' from the cache.
 #' readd("large", character_only = TRUE) # Return 'large' from the cache.
 #' # For external files, only the fingerprint/hash is stored.
-#' readd("\"report.md\"")
+#' readd(file_store("report.md"), character_only = TRUE)
 #' })
 #' }
 readd <- function(
@@ -149,6 +149,10 @@ readd <- function(
 #' # Be sure your computer has enough memory.
 #' loadd()
 #' ls()
+#' # With files, you just get the fingerprint.
+#' loadd(list = file_store("report.md"))
+#' ls() # Should include "\"report.md\"".
+#' get(file_store("report.md"))
 #' })
 #' }
 loadd <- function(

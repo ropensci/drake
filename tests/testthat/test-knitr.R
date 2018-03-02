@@ -24,7 +24,7 @@ test_with_dir("knitr_deps() works", {
   ))
   ans <- sort(c(
     paste0("target", seq_len(18)),
-    as_drake_filename(paste0("file", seq_len(6)))
+    file_store(paste0("file", seq_len(6)))
   ))
   expect_equal(sort(knitr_deps("'test.Rmd'")), ans)
   expect_false(file.exists("test.md"))

@@ -76,6 +76,7 @@ reference:
   - '`drake_plan`'
   - '`file_in`'
   - '`file_out`'
+  - '`file_store`'
   - '`knitr_in`'
   - '`analysis_wildcard`'
   - '`dataset_wildcard`'
@@ -174,7 +175,6 @@ reference:
   - '`silencer_hook`'
 - title: Utilities
   contents:
-  - '`as_drake_filename`'
   - '`drake_quotes`'
   - '`drake_strings`'
   - '`drake_unquote`'

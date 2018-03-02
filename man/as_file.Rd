@@ -7,21 +7,21 @@
 as_file(x)
 }
 \arguments{
-\item{x}{Same as for \code{\link[=as_drake_filename]{as_drake_filename()}}.}
+\item{x}{Same as for \code{\link[=file_store]{file_store()}}.}
 }
 \value{
-The same return value as \code{\link[=as_drake_filename]{as_drake_filename()}}.
+The same return value as \code{\link[=file_store]{file_store()}}.
 }
 \description{
-Use \code{\link[=as_drake_filename]{as_drake_filename()}} instead.
+Use \code{\link[=file_store]{file_store()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
 }
 \examples{
-# See ?as_drake_filename for examples.
+# See ?file_store for examples.
 }
 \seealso{
-\code{\link[=as_drake_filename]{as_drake_filename()}}
+\code{\link[=file_store]{file_store()}}
 }
 \keyword{internal}

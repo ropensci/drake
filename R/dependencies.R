@@ -51,7 +51,7 @@
 #' load_basic_example() # Get the code with drake_example("basic").
 #' # Dependencies of the knitr-generated targets like 'report.md'
 #' # include targets/imports referenced with `readd()` or `loadd()`.
-#' deps("\"report.Rmd\"")
+#' deps(file_store("report.Rmd"))
 #' })
 #' }
 deps <- function(x){
@@ -90,7 +90,7 @@ deps <- function(x){
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)
-#' dependency_profile("\"report.md\"", config = con)
+#' dependency_profile(file_store("report.md"), config = con)
 #' })
 #' }
 dependency_profile <- function(target, config){
