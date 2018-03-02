@@ -10,7 +10,7 @@ test_with_dir("basic example works", {
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
     jobs = jobs, parallelism = parallelism,
-    verbose = 3)
+    verbose = FALSE)
 
   expect_equal(max_useful_jobs(config), 8)
   expect_false(file.exists("Makefile"))

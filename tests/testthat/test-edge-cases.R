@@ -28,7 +28,8 @@ test_with_dir("can keep going", {
       parallelism = parallelism,
       verbose = FALSE,
       jobs = 2,
-      envir = e
+      envir = e,
+      hook = suppressWarnings
     )
   )
   expect_equal(length(built()), 5)
