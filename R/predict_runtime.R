@@ -184,7 +184,8 @@ rate_limiting_times <- function(
     digits = Inf,
     targets_only = FALSE,
     verbose = TRUE
-  )
+  ) %>%
+    as.data.frame
   keys <- V(config$graph)$name
   import_keys <- setdiff(keys, config$plan$target)
   items <- intersect(keys, times$item)
@@ -213,7 +214,11 @@ rate_limiting_times <- function(
   ) %>%
     round_times(digits = digits) %>%
     unname_rows
-  out[!is.na(out$item), ]
+  out <- out[!is.na(out$item), ]
+  tryCatch(
+    as_tibble(out),
+    error = error_tibble_times
+  )
 }
 
 append_stages_to_times <- function(x, config){

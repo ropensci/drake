@@ -47,3 +47,11 @@ error_na <- function(e){
 error_null <- function(e){
   NULL
 }
+
+error_tibble_times <- function(e){
+  stop(
+    "Failed converting a data frame of times to a tibble. ",
+    "Please install version 1.2.1 or greater of the pillar package.",
+    call. = FALSE
+  )
+}

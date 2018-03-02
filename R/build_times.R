@@ -72,7 +72,10 @@ build_times <- function(
   if (targets_only){
     out <- out[out$type == "target", ]
   }
-  out
+  tryCatch(
+    as_tibble(out),
+    error = error_tibble_times
+  )
 }
 
 fetch_runtime <- function(key, cache, type){
