@@ -37,8 +37,7 @@ as_drake_filename <- function(x){
     "backend",
     package = "drake",
     msg = paste(
-      "drake::as_file() is deprecated",
-      "due to possible name conflicts.",
+      "drake::as_drake_filename() is deprecated.",
       "Use file_store() instead."
     )
   )
