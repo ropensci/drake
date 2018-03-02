@@ -64,6 +64,7 @@ Imports:
   lubridate,
   magrittr,
   parallel,
+  pkgconfig,
   plyr,
   purrr,
   R6,

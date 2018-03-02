@@ -88,7 +88,7 @@ drake_plan <- function(
   ...,
   list = character(0),
   file_targets = NULL,
-  strings_in_dots = NULL,
+  strings_in_dots = pkgconfig::get_config("drake::strings_in_dots"),
   tidy_evaluation = TRUE
 ){
   if (tidy_evaluation){
@@ -140,8 +140,10 @@ drake_plan <- function(
         "Converting double-quotes to single-quotes because ",
         "the `strings_in_dots` argument is missing. ",
         "Use the file_in(), file_out(), and knitr_in() functions ",
-        "to work with files in your commands, and pass ",
-        "`strings_in_dots = \"literals\"` to remove this warning.",
+        "to work with files in your commands. To remove this warning, ",
+        "either call `drake_plan()` with `strings_in_dots = \"literals\"` ",
+        "or use ",
+        "`pkgconfig::set_config(\"drake::strings_in_dots\" = \"literals\")`.",
         call. = FALSE
       )
     }

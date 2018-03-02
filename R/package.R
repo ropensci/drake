@@ -54,6 +54,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #'   mclapply parLapply stopCluster
+#' @importFrom pkgconfig get_config
 #' @importFrom plyr ddply dlply
 #' @importFrom purrr map_int
 #' @importFrom R6 R6Class

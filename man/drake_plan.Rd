@@ -6,7 +6,8 @@
 for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
-  strings_in_dots = NULL, tidy_evaluation = TRUE)
+  strings_in_dots = pkgconfig::get_config("drake::strings_in_dots"),
+  tidy_evaluation = TRUE)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
