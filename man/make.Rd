@@ -29,7 +29,33 @@ Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow pl
 data frames easily, and see functions \code{\link[=analyses]{analyses()}},
 \code{\link[=summaries]{summaries()}}, \code{\link[=evaluate]{evaluate()}},
 \code{\link[=expand]{expand()}}, and \code{\link[=gather]{gather()}} for
-easy ways to generate large workflow plan data frames.}
+easy ways to generate large workflow plan data frames.
+
+Besides the \code{target} and \code{command} columns, there are optional columns
+you may append to your workflow plan data frame:
+\itemize{
+\item \code{trigger}: a character vector of triggers. A trigger is a rule for
+when to cause a target to (re)build. See \code{\link[=triggers]{triggers()}} for your options.
+For a walkthrough, see
+\url{https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+\item \code{retries}: number of times to retry a target if it fails
+to build the first time.
+\item \code{timeout}: Seconds of overall time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level timeout times with an optional \code{timeout}
+column in \code{plan}.
+\item \code{cpu}: Seconds of cpu time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level cpu timeout times with an optional \code{cpu}
+column in \code{plan}.
+\item \code{elapsed}: Seconds of elapsed time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level elapsed timeout times with an optional \code{elapsed}
+column in \code{plan}.
+\item \code{evaluator}: An experimental column. Each entry is a function
+passed to the \code{evaluator} argument of \code{future::future()}
+for each worker in \code{make(..., parallelism = "future")}.
+}}
 
 \item{targets}{character string, names of targets to build.
 Dependencies are built too. Together, the \code{plan} and

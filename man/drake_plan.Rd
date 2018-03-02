@@ -48,7 +48,8 @@ when evaluating commands passed through the free-form
 \code{...} argument.}
 }
 \value{
-A data frame of targets and commands.
+A data frame of targets and commands. See the details
+for optional columns you can append manually post-hoc.
 }
 \description{
 Turns a named collection of target/command pairs into
@@ -67,6 +68,32 @@ To use custom files in your workflow plan,
 use the \code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in]{knitr_in()}}, and
 \code{\link[=file_out]{file_out()}} functions in your commands.
 the examples in this help file provide some guidance.
+
+Besides the \code{target} and \code{command} columns, there are optional columns
+you may append to your workflow plan data frame:
+\itemize{
+\item \code{trigger}: a character vector of triggers. A trigger is a rule for
+when to cause a target to (re)build. See \code{\link[=triggers]{triggers()}} for your options.
+For a walkthrough, see
+\url{https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+\item \code{retries}: number of times to retry a target if it fails
+to build the first time.
+\item \code{timeout}: Seconds of overall time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level timeout times with an optional \code{timeout}
+column in \code{plan}.
+\item \code{cpu}: Seconds of cpu time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level cpu timeout times with an optional \code{cpu}
+column in \code{plan}.
+\item \code{elapsed}: Seconds of elapsed time to allow before imposing
+a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+Assign target-level elapsed timeout times with an optional \code{elapsed}
+column in \code{plan}.
+\item \code{evaluator}: An experimental column. Each entry is a function
+passed to the \code{evaluator} argument of \code{future::future()}
+for each worker in \code{make(..., parallelism = "future")}.
+}
 }
 \examples{
 test_with_dir("Contain side effects", {
