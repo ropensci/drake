@@ -1,8 +1,7 @@
 #' @title Create a workflow plan data frame
 #'   for the `plan` argument of [make()].
 #' @description Turns a named collection of target/command pairs into
-#' a workflow plan data frame for [make()] and
-#' [check()]. You can give the commands
+#' a workflow plan data frame for [make()]. You can give the commands
 #' as named expressions, or you can use the `list`
 #' argument to supply them as character strings.
 #' @details A workflow plan data frame is a data frame

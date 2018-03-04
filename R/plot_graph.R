@@ -113,7 +113,7 @@ drake_graph <- vis_drake_graph
 #'   when you hover over a node with the mouse. For imports, the label does not
 #'   change with hovering.
 #'
-#' @param main title of the graph
+#' @param main character string, title of the graph
 #'
 #' @param ncol_legend number of columns in the legend nodes.
 #'   To remove the legend entirely, set `ncol_legend` to `NULL` or `0`.

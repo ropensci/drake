@@ -5,12 +5,13 @@
 #' that is already up to date.
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
-#' @seealso [make_with_config()],
-#'   [drake_plan()], [drake_plan()],
+#' @seealso 
+#'   [drake_plan()],
 #'   [vis_drake_graph()],
-#'   [max_useful_jobs()], [shell_file()],
-#'   [default_hook()], [silencer_hook()],
-#'   [triggers()]
+#'   [parallelism_choices()],
+#'   [max_useful_jobs()],
+#'   [triggers()],
+#'   [make_with_config()]
 #' @export
 #' @return The master internal configuration list, mostly
 #'   containing arguments to `make()` and important objects

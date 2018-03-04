@@ -26,12 +26,12 @@
 #'   Targets are the objects and files that drake generates,
 #'   and commands are the pieces of R code that produce them.
 #'   Use the function [drake_plan()] to generate workflow plan
-#'   data frames easily, and see functions [analyses()],
-#'   [summaries()], [evaluate()],
-#'   [expand()], and [gather()] for
+#'   data frames easily, and see functions [plan_analyses()],
+#'   [plan_summaries()], [evaluate_plan()],
+#'   [expand_plan()], and [gather_plan()] for
 #'   easy ways to generate large workflow plan data frames.
 #'
-#' @param targets character string, names of targets to build.
+#' @param targets character vector, names of targets to build.
 #'   Dependencies are built too. Together, the `plan` and
 #'   `targets` comprise the workflow network
 #'   (i.e. the `graph` argument).

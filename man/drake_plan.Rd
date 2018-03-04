@@ -53,8 +53,7 @@ for optional columns you can append manually post-hoc.
 }
 \description{
 Turns a named collection of target/command pairs into
-a workflow plan data frame for \code{\link[=make]{make()}} and
-\code{\link[=check]{check()}}. You can give the commands
+a workflow plan data frame for \code{\link[=make]{make()}}. You can give the commands
 as named expressions, or you can use the \code{list}
 argument to supply them as character strings.
 }

@@ -292,7 +292,7 @@ Thanks to [Alex Axthelm](https://github.com/AlexAxthelm) for this example in [is
 
 # Remote data sources
 
-Some workflows rely on remote data from the internet, and the workflow needs to refresh when the datasets change. As an example, let us consider the download logs of [CRAN packages](http://cran.r-project.org/).
+Some workflows rely on remote data from the internet, and the workflow needs to refresh when the datasets change. As an example, let us consider the download logs of [CRAN packages](https://cran.r-project.org/).
 
 ```{r logs1}
 library(drake)

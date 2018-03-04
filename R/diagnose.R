@@ -1,6 +1,6 @@
 #' @title Get diagnostic metadata on a target.
 #' @description Diagnostics include errors, warnings,
-#'   messages, runtimes, and other context from when a
+#'   messages, runtimes, and other context/metadata from when a
 #'   target was built or an import was processed.
 #'   If your target's last build succeeded,
 #'   then `diagnose(your_target)` has the most current information

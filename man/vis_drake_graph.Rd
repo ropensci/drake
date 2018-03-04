@@ -61,7 +61,7 @@ or 'layout_as_tree'.
 Be careful with 'layout_as_tree': the graph is a directed
 acyclic graph, but not necessarily a tree.}
 
-\item{main}{title of the graph}
+\item{main}{character string, title of the graph}
 
 \item{direction}{an argument to \code{\link[visNetwork:visHierarchicalLayout]{visNetwork::visHierarchicalLayout()}}
 indicating the direction of the graph.

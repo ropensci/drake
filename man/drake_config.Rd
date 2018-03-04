@@ -29,12 +29,12 @@ for descriptions of the optional columns.)
 Targets are the objects and files that drake generates,
 and commands are the pieces of R code that produce them.
 Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow plan
-data frames easily, and see functions \code{\link[=analyses]{analyses()}},
-\code{\link[=summaries]{summaries()}}, \code{\link[=evaluate]{evaluate()}},
-\code{\link[=expand]{expand()}}, and \code{\link[=gather]{gather()}} for
+data frames easily, and see functions \code{\link[=plan_analyses]{plan_analyses()}},
+\code{\link[=plan_summaries]{plan_summaries()}}, \code{\link[=evaluate_plan]{evaluate_plan()}},
+\code{\link[=expand_plan]{expand_plan()}}, and \code{\link[=gather_plan]{gather_plan()}} for
 easy ways to generate large workflow plan data frames.}
 
-\item{targets}{character string, names of targets to build.
+\item{targets}{character vector, names of targets to build.
 Dependencies are built too. Together, the \code{plan} and
 \code{targets} comprise the workflow network
 (i.e. the \code{graph} argument).

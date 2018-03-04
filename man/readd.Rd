@@ -2,17 +2,17 @@
 % Please edit documentation in R/read.R
 \name{readd}
 \alias{readd}
-\title{Read and return a drake target or import from the cache.}
+\title{Read and return a drake target/import from the cache.}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   namespace = NULL, verbose = TRUE)
 }
 \arguments{
-\item{target}{If \code{character_only} is \code{TRUE},
+\item{target}{If \code{character_only} is \code{TRUE}, then
 \code{target} is a character string naming the object to read.
 Otherwise, \code{target} is an unquoted symbol with the name of the
-object. Note: \code{target} could be the name of an imported object.}
+object.}
 
 \item{character_only}{logical, whether \code{name} should be treated
 as a character or a symbol
@@ -31,10 +31,10 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{namespace}{character scalar,
-name of an optional storr namespace to read from.}
+\item{namespace}{optional character string,
+name of the \code{storr} namespace to read from.}
 
-\item{verbose}{whether to print console messages}
+\item{verbose}{logical, whether to print console messages}
 }
 \value{
 The cached value of the \code{target}.

@@ -1,4 +1,4 @@
-#' @title Read and return a drake target or import from the cache.
+#' @title Read and return a drake target/import from the cache.
 #' @description Does not delete the item from the cache.
 #' @seealso [loadd()], [cached()],
 #'   [built()], \code{link{imported}}, [drake_plan()],
@@ -8,16 +8,16 @@
 #'
 #' @inheritParams cached
 #'
-#' @param target If `character_only` is `TRUE`,
+#' @param target If `character_only` is `TRUE`, then
 #'   `target` is a character string naming the object to read.
 #'   Otherwise, `target` is an unquoted symbol with the name of the
-#'   object. Note: `target` could be the name of an imported object.
+#'   object.
 #' @param character_only logical, whether `name` should be treated
 #'   as a character or a symbol
 #'   (just like `character.only` in [library()]).
-#' @param namespace character scalar,
-#'   name of an optional storr namespace to read from.
-#' @param verbose whether to print console messages
+#' @param namespace optional character string,
+#'   name of the `storr` namespace to read from.
+#' @param verbose logical, whether to print console messages
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -56,13 +56,11 @@ readd <- function(
   )
 }
 
-#' @title Load multiple targets or imports from the drake cache.
+#' @title Load one or more targets or imports from the drake cache.
 #' @description Loads the object(s) into the
-#' current workspace (or `envir` if given). Defaults
-#' to loading the whole cache if arguments `...`
-#' and `list` are not set
-#' (or all the imported objects if in addition
-#' imported_only is `TRUE`).
+#' current workspace (or environment `envir` if given). Defaults
+#' to loading the entire cache if you do not supply anything
+#' to arguments `...` or `list`.
 #' @seealso [cached()], [built()],
 #'   [imported()], [drake_plan()], [make()],
 #' @export

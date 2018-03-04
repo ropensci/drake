@@ -36,7 +36,7 @@ but this may not always be the case ;) in the future.}
 when you hover over a node with the mouse. For imports, the label does not
 change with hovering.}
 
-\item{main}{title of the graph}
+\item{main}{character string, title of the graph}
 
 \item{selfcontained}{logical, whether
 to save the \code{file} as a self-contained
