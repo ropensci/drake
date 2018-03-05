@@ -204,7 +204,14 @@ install_github("ropensci/drake")
 
 # Documentation
 
-`Drake` has a [documentation website](https://ropensci.github.io/drake/) with many resources.
+The main resources to learn `drake` are
+
+1. The [documentation website](https://ropensci.github.io/drake/)
+2. [Kirill Müller](https://github.com/krlmlr)'s [`drake` workshop from March 5, 2018](https://github.com/krlmlr/drake-sib-zurich).
+
+## Cheat sheet
+
+Thanks to [Kirill](https://github.com/krlmlr) for preparing a [`drake` cheat sheet](https://github.com/krlmlr/drake-sib-zurich/blob/master/cheat-sheet.pdf) for the [workshop](https://github.com/krlmlr/drake-sib-zurich).
 
 ## Frequently asked questions
 
@@ -225,7 +232,9 @@ The [reference section](https://ropensci.github.io/drake/reference/index.html) l
 - `failed()`: list the targets that failed to build in the last `make()`.
 - `diagnose()`: return the full context of a build, including errors, warnings, and messages.
 
-## Tuturials
+## Tutorials
+
+Thanks to [Kirill](https://github.com/krlmlr) for constructing two interactive [`learnr`](https://rstudio.github.io/learnr/) tutorials: [one supporting `drake` itself](https://krlmlr.shinyapps.io/cooking-drake-tutorial/), and a [prerequisite walkthrough](https://krlmlr.shinyapps.io/cooking-tutorial/) of the [`cooking` package](https://github.com/krlmlr/cooking).
 
 The articles below are tutorials taken from the [package vignettes](https://github.com/ropensci/drake/tree/master/vignettes).
 
@@ -248,6 +257,12 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+
+## Presentations
+
+- https://krlmlr.github.io/drake-pitch
+- https://krlmlr.github.io/slides/drake-sib-zurich
+- https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html
 
 ## Context and history
 
