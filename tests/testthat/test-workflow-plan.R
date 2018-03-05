@@ -1,5 +1,25 @@
 drake_context("workflow plan")
 
+test_with_dir("warn about <- and -> in drake_plan()", {
+  expect_silent(tmp <- drake_plan(a = 1, b = 2))
+  expect_silent(
+    tmp <- drake_plan(
+      a = {
+        x <- 1
+        x
+      }
+    )
+  )
+  expect_warning(
+    tmp <- drake_plan(a = 1, b <- 2),
+    regexp = "to assign targets to commands"
+  )
+  expect_warning(
+    tmp <- drake_plan(a = 1, b -> 2),
+    regexp = "to assign targets to commands"
+  )
+})
+
 test_with_dir("File functions handle input", {
   expect_equal(
     file_in(1, "x", "y"), c("1", "x", "y")

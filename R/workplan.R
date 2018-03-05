@@ -121,6 +121,7 @@ drake_plan <- function(
   } else {
     dots <- match.call(expand.dots = FALSE)$...
   }
+  warn_arrows(dots)
   commands_dots <- lapply(dots, wide_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)
@@ -332,3 +333,19 @@ file_out <- function(path){
 #' })
 #' }
 knitr_in <- file_in
+
+
+warn_arrows <- function(dots){
+  lapply(dots, warn_arrow)
+}
+
+warn_arrow <- function(command){
+  if (length(command) > 2 && deparse(command[[1]]) %in% c("<-", "->")){
+    warning(
+      "Use `=` instead of `->` or `->` ",
+      "to assign targets to commands in `drake_plan()`. Found: ",
+      deparse(command),
+      call. = FALSE
+    )
+  }
+}
