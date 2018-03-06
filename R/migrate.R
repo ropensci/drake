@@ -112,7 +112,7 @@ assert_compatible_cache <- function(cache){
     return()
   }
   err <- try(
-    old <- drake_session(cache = cache)$otherPkgs$drake$Version, # nolint
+    old <- drake_version(session_info = drake_session(cache = cache)), # nolint
     silent = TRUE
   )
   if (inherits(err, "try-error")){
