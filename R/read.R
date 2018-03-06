@@ -52,7 +52,7 @@ readd <- function(
   cache$get(
     standardize_filename(target),
     namespace = namespace,
-    use_cache = TRUE
+    use_cache = FALSE
   )
 }
 
