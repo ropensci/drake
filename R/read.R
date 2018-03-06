@@ -308,7 +308,7 @@ bind_load_target <- function(target, cache, namespace, envir, verbose){
       cache$get(
         key = as.character(key),
         namespace = as.character(namespace),
-        use_cache = FALSE
+        use_cache = TRUE
       )
     },
     cache = cache,
