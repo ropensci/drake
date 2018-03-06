@@ -353,9 +353,11 @@ warn_arrows <- function(dots){
 warn_arrow <- function(command){
   if (length(command) > 2 && deparse(command[[1]]) %in% c("<-", "->")){
     warning(
-      "Use `=` instead of `->` or `->` ",
-      "to assign targets to commands in `drake_plan()`. Found: `",
-      deparse(command), "`",
+      "Use `=` instead of `<-` or `->` ",
+      "to assign targets to commands in `drake_plan()`. ",
+      "For example, write `drake_plan(a = 1)` instead of ",
+      "`drake_plan(a <- 1)`. An arrow was used to declare the command, ",
+      "`", command, "`.",
       call. = FALSE
     )
   }
