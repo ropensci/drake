@@ -10,12 +10,28 @@ test_with_dir("warn about <- and -> in drake_plan()", {
       }
     )
   )
+  expect_silent(
+    tmp <- drake_plan(
+      a = x <- 1,
+      b = 2
+    )
+  )
+  expect_silent(
+    tmp <- drake_plan(
+      a = 1 -> x,
+      b = 2
+    )
+  )
   expect_warning(
     tmp <- drake_plan(a = 1, b <- 2),
     regexp = "to assign targets to commands"
   )
   expect_warning(
     tmp <- drake_plan(a = 1, b -> 2),
+    regexp = "to assign targets to commands"
+  )
+  expect_warning(
+    tmp <- drake_plan(a <- 1, b -> 2),
     regexp = "to assign targets to commands"
   )
 })

@@ -334,17 +334,28 @@ file_out <- function(path){
 #' }
 knitr_in <- file_in
 
-
+# Unnamed arguments may have been declared with `<-`` or `->``
+# rather than the required `=`.
 warn_arrows <- function(dots){
-  lapply(dots, warn_arrow)
+  if (!length(dots)){
+    return()
+  }
+  if (is.null(names(dots))){
+    names(dots) <- rep("", length(dots))
+  }
+  check_these <- purrr:::map_lgl(names(dots), function(x){
+    nchar(x) < 1
+  }) %>%
+    which
+  lapply(dots[check_these], warn_arrow)
 }
 
 warn_arrow <- function(command){
   if (length(command) > 2 && deparse(command[[1]]) %in% c("<-", "->")){
     warning(
       "Use `=` instead of `->` or `->` ",
-      "to assign targets to commands in `drake_plan()`. Found: ",
-      deparse(command),
+      "to assign targets to commands in `drake_plan()`. Found: `",
+      deparse(command), "`",
       call. = FALSE
     )
   }
