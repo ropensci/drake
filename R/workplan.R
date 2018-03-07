@@ -135,6 +135,9 @@ drake_plan <- function(
   }
   commands <- complete_target_names(commands)
   targets <- names(commands)
+  if ( any(duplicated(targets)) ) {
+    stop("Duplicate target names '", paste(targets[duplicated(targets)], collapse = ", "), "' detected! The target names have to be unique!")
+  }
   commands <- as.character(commands)
   plan <- tibble(
     target = targets,
