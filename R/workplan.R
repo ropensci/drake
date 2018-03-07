@@ -348,7 +348,8 @@ warn_arrows <- function(dots){
     return()
   }
   if (is.null(names(dots))){
-    names(dots) <- rep("", length(dots))
+    # Probably not possible, but good to have:
+    names(dots) <- rep("", length(dots)) # nocov
   }
   check_these <- purrr:::map_lgl(names(dots), function(x){
     nchar(x) < 1
