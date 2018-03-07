@@ -43,7 +43,10 @@
 #'   parallel_stages(config = config)
 #'   })
 #'   }
-parallel_stages <- function(config, from_scratch = FALSE){
+parallel_stages <- function(
+  config = drake::read_drake_config(),
+  from_scratch = FALSE
+){
   do_prework(config = config, verbose_packages = config$verbose)
   if (from_scratch){
     config$trigger <- "always"
@@ -150,7 +153,7 @@ read_parallel_stages <- function(config){
 #' next_stage(config = config)    # "small" and "large"
 #' })
 #' }
-next_stage <- function(config){
+next_stage <- function(config = drake::read_drake_config()){
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
   config$execution_graph <- targets_graph(config = config)

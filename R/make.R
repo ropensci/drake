@@ -172,7 +172,7 @@ make <- function(
 #' make_with_config(config = config) # Run the project, build the targets.
 #' })
 #' }
-make_with_config <- function(config){
+make_with_config <- function(config = drake::read_drake_config()){
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
@@ -227,7 +227,7 @@ make_with_config <- function(config){
 #' make_targets(config = con)
 #' })
 #' }
-make_imports <- function(config){
+make_imports <- function(config = drake::read_drake_config()){
   config$execution_graph <- imports_graph(config = config)
   config$jobs <- jobs_imports(jobs = config$jobs)
   config$parallelism <- use_default_parallelism(config$parallelism)
@@ -276,7 +276,7 @@ imports_graph <- function(config){
 #' make_targets(config = con)
 #' })
 #' }
-make_targets <- function(config){
+make_targets <- function(config = drake::read_drake_config()){
   config$execution_graph <- targets_graph(config = config)
   config$jobs <- jobs_targets(jobs = config$jobs)
   run_parallel_backend(config = config)

@@ -5,7 +5,7 @@
 \title{Show how \code{\link[=make]{make()}} will build your targets
 in successive parallelizable stages.}
 \usage{
-parallel_stages(config, from_scratch = FALSE)
+parallel_stages(config = drake::read_drake_config(), from_scratch = FALSE)
 }
 \arguments{
 \item{config}{An configuration list output by

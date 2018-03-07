@@ -4,8 +4,9 @@
 \alias{drake_build}
 \title{Build/process a single target or import.}
 \usage{
-drake_build(target, config = NULL, meta = NULL, character_only = FALSE,
-  envir = parent.frame(), jobs = 1, replace = FALSE)
+drake_build(target, config = drake::read_drake_config(), meta = NULL,
+  character_only = FALSE, envir = parent.frame(), jobs = 1,
+  replace = FALSE)
 }
 \arguments{
 \item{target}{name of the target}

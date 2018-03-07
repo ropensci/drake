@@ -4,7 +4,7 @@
 \alias{make_imports}
 \title{Just make the imports.}
 \usage{
-make_imports(config)
+make_imports(config = drake::read_drake_config())
 }
 \arguments{
 \item{config}{a configuration list returned by \code{\link[=config]{config()}}}

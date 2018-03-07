@@ -101,7 +101,7 @@
 #' })
 #' }
 dataframes_graph <- function(
-  config,
+  config = drake::read_drake_config(),
   from = NULL,
   mode = c("out", "in", "all"),
   order = NULL,

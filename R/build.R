@@ -35,7 +35,7 @@
 #' }
 drake_build <- function(
   target,
-  config = NULL,
+  config = drake::read_drake_config(),
   meta = NULL,
   character_only = FALSE,
   envir = parent.frame(),

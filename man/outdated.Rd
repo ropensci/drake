@@ -4,7 +4,7 @@
 \alias{outdated}
 \title{List the targets that are out of date.}
 \usage{
-outdated(config, make_imports = TRUE)
+outdated(config = drake::read_drake_config(), make_imports = TRUE)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of

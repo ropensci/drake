@@ -5,7 +5,7 @@
 \title{Run \code{\link[=make]{make()}},
 on an existing internal configuration list.}
 \usage{
-make_with_config(config)
+make_with_config(config = drake::read_drake_config())
 }
 \arguments{
 \item{config}{An input internal configuration list}

@@ -5,7 +5,7 @@
 \title{Report any import objects required by your drake_plan
 plan but missing from your workspace.}
 \usage{
-missed(config)
+missed(config = drake::read_drake_config())
 }
 \arguments{
 \item{config}{internal runtime parameter list of

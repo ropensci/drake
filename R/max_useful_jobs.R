@@ -81,7 +81,7 @@
 #' })
 #' }
 max_useful_jobs <- function(
-  config,
+  config = drake::read_drake_config(),
   imports = c("files", "all", "none"),
   from_scratch = FALSE
 ){

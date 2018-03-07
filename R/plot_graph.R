@@ -26,7 +26,7 @@
 #' })
 #' }
 vis_drake_graph <- function(
-  config,
+  config = drake::read_drake_config(),
   file = character(0), selfcontained = FALSE,
   build_times = "build", digits = 3, targets_only = FALSE,
   split_columns = FALSE, font_size = 20,

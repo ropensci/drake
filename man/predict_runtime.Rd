@@ -4,8 +4,9 @@
 \alias{predict_runtime}
 \title{Predict the elapsed runtime of the next call to \code{make()}.}
 \usage{
-predict_runtime(config, targets = NULL, future_jobs = 1,
-  from_scratch = FALSE, targets_only = FALSE, digits = 3)
+predict_runtime(config = drake::read_drake_config(), targets = NULL,
+  future_jobs = 1, from_scratch = FALSE, targets_only = FALSE,
+  digits = 3)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of

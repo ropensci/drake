@@ -5,8 +5,9 @@
 \title{Return a data frame of elapsed build times of
 the rate-limiting targets of a drake project.}
 \usage{
-rate_limiting_times(config, targets = NULL, from_scratch = FALSE,
-  targets_only = FALSE, future_jobs = 1, digits = 3)
+rate_limiting_times(config = drake::read_drake_config(), targets = NULL,
+  from_scratch = FALSE, targets_only = FALSE, future_jobs = 1,
+  digits = 3)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of

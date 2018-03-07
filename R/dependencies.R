@@ -93,7 +93,7 @@ deps <- function(x){
 #' dependency_profile(file_store("report.md"), config = con)
 #' })
 #' }
-dependency_profile <- function(target, config){
+dependency_profile <- function(target, config = drake::read_drake_config()){
   if (!config$cache$exists(key = target, namespace = "meta")){
     stop("no recorded metadata for target ", target, ".")
   }

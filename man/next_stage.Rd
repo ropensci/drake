@@ -5,7 +5,7 @@
 \title{List the targets that will be built in the
 first parallelizable stage of the next call to \code{\link[=make]{make()}}.}
 \usage{
-next_stage(config)
+next_stage(config = drake::read_drake_config())
 }
 \arguments{
 \item{config}{A master configuration list produced by

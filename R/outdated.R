@@ -41,7 +41,10 @@
 #' outdated(config = config)
 #' })
 #' }
-outdated <-  function(config, make_imports = TRUE){
+outdated <-  function(
+  config = drake::read_drake_config(),
+  make_imports = TRUE
+){
   do_prework(config = config, verbose_packages = config$verbose)
   if (make_imports){
     make_imports(config = config)
@@ -79,7 +82,7 @@ outdated <-  function(config, make_imports = TRUE){
 #' missed(config) # Should report that reg1 is missing.
 #' })
 #' }
-missed <- function(config){
+missed <- function(config = drake::read_drake_config()){
   imports <- setdiff(V(config$graph)$name, config$plan$target)
   is_missing <- lightly_parallelize(
     X = imports,

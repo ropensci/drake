@@ -5,7 +5,7 @@
 \title{Return the detailed dependency profile
 of the target.}
 \usage{
-dependency_profile(target, config)
+dependency_profile(target, config = drake::read_drake_config())
 }
 \arguments{
 \item{target}{name of the target}

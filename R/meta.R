@@ -60,7 +60,7 @@ meta_list <- function(targets, config) {
 #' readd(small)
 #' })
 #' }
-drake_meta <- function(target, config) {
+drake_meta <- function(target, config = drake::read_drake_config()) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),

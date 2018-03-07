@@ -5,8 +5,8 @@
 \title{Suggest an upper bound on the jobs in the next call
 to \code{make(..., jobs = YOUR_CHOICE)}.}
 \usage{
-max_useful_jobs(config, imports = c("files", "all", "none"),
-  from_scratch = FALSE)
+max_useful_jobs(config = drake::read_drake_config(), imports = c("files",
+  "all", "none"), from_scratch = FALSE)
 }
 \arguments{
 \item{config}{internal configuration list of \code{\link{make}(...)},

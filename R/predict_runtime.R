@@ -53,7 +53,7 @@
 #'   assuming this number of jobs.
 #' @param digits number of digits for rounding the time
 predict_runtime <- function(
-  config,
+  config = drake::read_drake_config(),
   targets = NULL,
   future_jobs = 1,
   from_scratch = FALSE,
@@ -163,7 +163,7 @@ predict_runtime <- function(
 #'
 #' @param digits number of digits for rounding the times.
 rate_limiting_times <- function(
-  config,
+  config = drake::read_drake_config(),
   targets = NULL,
   from_scratch = FALSE,
   targets_only = FALSE,

@@ -4,7 +4,7 @@
 \alias{make_targets}
 \title{Just build the targets.}
 \usage{
-make_targets(config)
+make_targets(config = drake::read_drake_config())
 }
 \arguments{
 \item{config}{a configuration list returned by \code{\link[=config]{config()}}}
