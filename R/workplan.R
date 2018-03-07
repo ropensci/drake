@@ -135,8 +135,12 @@ drake_plan <- function(
   }
   commands <- complete_target_names(commands)
   targets <- names(commands)
-  if ( any(duplicated(targets)) ) {
-    stop("Duplicate target names '", paste(targets[duplicated(targets)], collapse = ", "), "' detected! The target names have to be unique!")
+  if (anyDuplicated(targets)) {
+    stop(
+      "The target names in the workflow plan must be unique. ",
+      "Duplicated target names:\n",
+      multiline_message(unique(targets[duplicated(targets)]))
+    )
   }
   commands <- as.character(commands)
   plan <- tibble(

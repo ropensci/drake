@@ -1,5 +1,18 @@
 drake_context("workflow plan")
 
+test_with_dir("duplicated targets", {
+  expect_error(
+    drake_plan(
+      a = 1,
+      a = 2,
+      b = 1,
+      b = 2,
+      c = 3
+    ),
+    regexp = "Duplicated target names"
+  )
+})
+
 test_with_dir("warn about <- and -> in drake_plan()", {
   expect_silent(tmp <- drake_plan())
   expect_silent(tmp <- drake_plan(a = 1, b = 2))
