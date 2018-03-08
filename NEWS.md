@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Change `loadd()` so that only targets (not imports) are loaded if the `...` and `list` arguments are empty.
 - Add check to drake_plan() to check for duplicate targets
 - Add a `.gitignore` file containing `"*"` to the default `.drake/` cache folder every time `new_cache()` is called. This means the cache will not be automatically committed to git. Users need to remove `.gitignore` file to allow unforced commits, and then subsequent `make()`s on the same cache will respect the user's wishes and not add another `.gitignore`. this only works for the default cache. Not supported for manual `storr`s.
 - Add a new experimental `"future"` backend with a manual scheduler.
