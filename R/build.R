@@ -35,7 +35,7 @@
 #' }
 drake_build <- function(
   target,
-  config = drake::read_drake_config(envir = envir),
+  config = drake::read_drake_config(envir = envir, jobs = jobs),
   meta = NULL,
   character_only = FALSE,
   envir = parent.frame(),
@@ -51,9 +51,6 @@ drake_build <- function(
   }
   if (!character_only){
     target <- as.character(substitute(target))
-  }
-  if (is.null(config)){
-    config <- read_drake_config(envir = envir, jobs = jobs)
   }
   loadd(
     list = target,

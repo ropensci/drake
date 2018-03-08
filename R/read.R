@@ -143,7 +143,8 @@ readd <- function(
 #' # Load all the imported objects/functions.
 #' loadd(imported_only = TRUE)
 #' ls()
-#' # Load everything, including built targets.
+#' # Load all the targets listed in the workflow plan
+#' # of the previous `make()`.
 #' # Be sure your computer has enough memory.
 #' loadd()
 #' ls()
@@ -178,11 +179,13 @@ loadd <- function(
   }
   targets <- drake_select(
     cache = cache, ..., namespaces = namespace, list = list)
-  if (!length(targets)){
-    targets <- cache$list(namespace = cache$default_namespace)
-  }
-  if (imported_only){
+  if (!length(targets) && !imported_only){
+    targets <- built(cache = cache, jobs = jobs)
+  } else if (imported_only){
     plan <- read_drake_plan(cache = cache)
+    if (!length(targets)){
+      targets <- cache$list()
+    }
     targets <- imported_only(targets = targets, plan = plan, jobs = jobs)
   }
   if (!length(targets)){
