@@ -18,8 +18,10 @@ commands such as \code{starts_with()}.}
 \item{list}{character vector naming targets to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
-\item{imported_only}{logical, whether only imported objects
-should be loaded.}
+\item{imported_only}{deprecated logical. Loading imported functions
+into your workspace may interfere with dependency detection
+and put some targets out of date. Use \code{\link[=readd]{readd()}} to get
+imported functions and use different names where possible.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
@@ -54,6 +56,8 @@ instead of the targets themselves.
 This is useful if you know your
 target failed and you want to debug the command in an interactive
 session with the dependencies in your workspace.
+Imports are excluded here. In other words, only targets in the workflow
+plan are loaded.
 One caveat: to find the dependencies,
 \code{\link[=loadd]{loadd()}} uses information that was stored
 in a \code{\link[=drake_config]{drake_config()}} list and cached
@@ -106,9 +110,6 @@ loadd(starts_with("summ"))
 ls()
 # Load the dependencies of the target, coef_regression2_small
 loadd(coef_regression2_small, deps = TRUE)
-ls()
-# Load all the imported objects/functions.
-loadd(imported_only = TRUE)
 ls()
 # Load all the targets listed in the workflow plan
 # of the previous `make()`.
