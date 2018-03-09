@@ -236,16 +236,6 @@ targets_only <- function(targets, cache, jobs) {
   )
 }
 
-imported_only <- function(targets, cache, jobs) {
-  parallel_filter(
-    x = targets,
-    f = function(target){
-      is_imported(target = target, cache = cache)
-    },
-    jobs = jobs
-  )
-}
-
 no_imported_objects <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
