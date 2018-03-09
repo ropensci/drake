@@ -137,7 +137,6 @@ uncache <- function(targets, cache, jobs, purge){
   if (is.null(cache)){
     return()
   }
-  plan <- read_drake_plan(cache = cache)
   if (purge){
     namespaces <- target_namespaces(default = cache$default_namespace)
   } else {
@@ -161,7 +160,7 @@ uncache <- function(targets, cache, jobs, purge){
       X = files,
       FUN = remove_file_target,
       jobs = jobs,
-      plan = plan
+      cache = cache
     )
     lightly_parallelize(
       X = remove_these,
@@ -179,12 +178,13 @@ uncache_single <- function(target, cache, namespace){
   invisible()
 }
 
-remove_file_target <- function(target, plan){
+remove_file_target <- function(target, cache){
   if (
     is_file(target) &&
+    cache$exists(key = target, namespace = "meta") &&
     !is_imported(
       target = target,
-      plan = plan
+      cache = cache
     )
   ){
     drake_unquote(target) %>%

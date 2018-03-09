@@ -193,11 +193,10 @@ list_progress <- function(no_imported_objects, cache, jobs){
     cache = cache,
     jobs = jobs
   )
-  plan <- read_drake_plan(cache = cache)
   abridged_marked <- parallel_filter(
     all_marked,
     f = function(target){
-      is_built_or_imported_file(target = target, plan = plan)
+      is_built_or_imported_file(target = target, cache = cache)
     },
     jobs = jobs
   )

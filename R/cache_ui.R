@@ -118,8 +118,8 @@ is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
 list_cache <- function(no_imported_objects, cache, namespace, jobs){
   targets <- cache$list(namespace = namespace)
   if (no_imported_objects){
-    plan <- read_drake_plan(cache = cache)
-    targets <- no_imported_objects(targets = targets, plan = plan, jobs = jobs)
+    targets <- no_imported_objects(
+      targets = targets, cache = cache, jobs = jobs)
   }
   targets
 }
@@ -156,11 +156,10 @@ built <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  plan <- read_drake_plan(cache = cache)
   cache$list(namespace = cache$default_namespace) %>%
     parallel_filter(
       f = function(target){
-        !is_imported(target = target, plan = plan)
+        !is_imported(target = target, cache = cache)
       },
       jobs = jobs
     )
@@ -205,11 +204,10 @@ imported <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  plan <- read_drake_plan(cache = cache)
   targets <- cache$list(namespace = cache$default_namespace) %>%
     parallel_filter(
       f = function(target){
-        is_imported(target = target, plan = plan)
+        is_imported(target = target, cache = cache)
       },
       jobs = jobs
     )
@@ -228,33 +226,38 @@ targets_from_dots <- function(dots, list) {
   standardize_filename(targets)
 }
 
-imported_only <- function(targets, plan, jobs) {
+imported_only <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
     f = function(target){
-      is_imported(target = target, plan = plan)
+      is_imported(target = target, cache = cache)
     },
     jobs = jobs
   )
 }
 
-no_imported_objects <- function(targets, plan, jobs) {
+no_imported_objects <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
     f = function(target){
-      is_built_or_imported_file(target = target, plan = plan)
+      is_built_or_imported_file(target = target, cache = cache)
     },
     jobs = jobs
   )
 }
 
-is_imported <- Vectorize(function(target, plan) {
-  !(target %in% plan$target)
+is_imported <- Vectorize(function(target, cache) {
+  cache$exists(key = target) &&
+  diagnose(
+    target = target,
+    character_only = TRUE,
+    cache = cache
+  )$imported
 },
 "target", SIMPLIFY = TRUE)
 
-is_built_or_imported_file <- Vectorize(function(target, plan) {
-  imported <- is_imported(target = target, plan = plan)
+is_built_or_imported_file <- Vectorize(function(target, cache) {
+  imported <- is_imported(target = target, cache = cache)
   !imported | (imported & is_file(target))
 },
 "target", SIMPLIFY = TRUE)
