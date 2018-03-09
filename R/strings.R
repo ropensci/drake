@@ -41,19 +41,19 @@ drake_quotes <- function(x = NULL, single = FALSE){
 #'   or trailing escaped quotes around
 #'   the elements
 #' @param x character vector
-#' @param deep remove all outer quotes if `TRUE`
-#'   and only the outermost set otherwise. Single and double
-#'   quotes are treated interchangeably, and matching is not checked.
+#' @param deep deprecated logical.
 #' @examples
 #' x <- "'abcd'"
 #' # Remove the literal quotes around x.
 #' drake_unquote(x) # "abcd"
 drake_unquote <- function(x = NULL, deep = FALSE){
   if (deep){
-    gsub("^[\"']*|[\"']*$", "", x)
-  } else {
-    gsub("^[\"']|[\"']$", "", x)
+    warning(
+      "The `deep` argument to `drake_unquote()` is deprecated",
+      call. = FALSE
+    )
   }
+  gsub(pattern = "^(?:'(.*)'|\"(.*)\")$", replacement = "\\1\\2", x = x)
 }
 
 #' @title Turn valid expressions into character strings.
