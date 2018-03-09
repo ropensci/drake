@@ -110,7 +110,8 @@ ls()
 # Load all the imported objects/functions.
 loadd(imported_only = TRUE)
 ls()
-# Load everything, including built targets.
+# Load all the targets listed in the workflow plan
+# of the previous `make()`.
 # Be sure your computer has enough memory.
 loadd()
 ls()

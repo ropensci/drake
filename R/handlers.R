@@ -24,8 +24,9 @@ handle_build_exceptions <- function(target, meta, config){
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going){
       stop(
-        "Target '", target, "' failed. Use diagnose(", target,
-        ") for details.",
+        "Target `", target, "`` failed. Call `diagnose(", target,
+        ")` for details. Error message:\n  ",
+        meta$error$message,
         call. = FALSE
       )
     }

@@ -355,18 +355,26 @@ warn_arrows <- function(dots){
     nchar(x) < 1
   }) %>%
     which
-  lapply(dots[check_these], warn_arrow)
-}
-
-warn_arrow <- function(command){
-  if (length(command) > 2 && deparse(command[[1]]) %in% c("<-", "->")){
+  offending_commands <- lapply(dots[check_these], detect_arrow) %>%
+    Filter(f = function(x){
+      !is.null(x)
+    })
+  if (length(offending_commands)){
     warning(
       "Use `=` instead of `<-` or `->` ",
       "to assign targets to commands in `drake_plan()`. ",
       "For example, write `drake_plan(a = 1)` instead of ",
-      "`drake_plan(a <- 1)`. An arrow was used to declare the command, ",
-      "`", command, "`.",
+      "`drake_plan(a <- 1)`. Arrows were used to declare these commands:\n",
+      multiline_message(offending_commands),
       call. = FALSE
     )
+  }
+}
+
+detect_arrow <- function(command){
+  if (length(command) > 2 && deparse(command[[1]]) %in% c("<-", "->")){
+    wide_deparse(command)
+  } else {
+    NULL
   }
 }

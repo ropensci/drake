@@ -76,7 +76,7 @@ test_with_dir("can gracefully conclude a crashed worker", {
         config = con,
         queue = new_target_queue(config = con)
       ),
-      regexp = "failed. Use diagnose"
+      regexp = "failed."
     )
     meta <- diagnose(myinput)
     expect_true(grepl("Worker terminated unexpectedly", meta$error$message))
