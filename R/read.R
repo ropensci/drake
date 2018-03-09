@@ -75,8 +75,10 @@ readd <- function(
 #' @param list character vector naming targets to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param imported_only logical, whether only imported objects
-#'   should be loaded.
+#' @param imported_only deprecated logical. Loading imported functions
+#'   into your workspace may interfere with dependency detection
+#'   and put some targets out of date. Use [readd()] to get
+#'   imported functions and use different names where possible.
 #'
 #' @param namespace character scalar,
 #'   name of an optional storr namespace to load from.
@@ -98,6 +100,8 @@ readd <- function(
 #'   This is useful if you know your
 #'   target failed and you want to debug the command in an interactive
 #'   session with the dependencies in your workspace.
+#'   Imports are excluded here. In other words, only targets in the workflow
+#'   plan are loaded.
 #'   One caveat: to find the dependencies,
 #'   [loadd()] uses information that was stored
 #'   in a [drake_config()] list and cached
@@ -140,9 +144,6 @@ readd <- function(
 #' # Load the dependencies of the target, coef_regression2_small
 #' loadd(coef_regression2_small, deps = TRUE)
 #' ls()
-#' # Load all the imported objects/functions.
-#' loadd(imported_only = TRUE)
-#' ls()
 #' # Load all the targets listed in the workflow plan
 #' # of the previous `make()`.
 #' # Be sure your computer has enough memory.
@@ -177,18 +178,20 @@ loadd <- function(
   if (is.null(namespace)){
     namespace <- cache$default_namespace
   }
+  if (imported_only){
+    warning(
+      "The `imported_only` argument to `loadd()` is deprecated. ",
+      "Loading imported functions with `loadd()` can interfere ",
+      "with the dependency detection and could put targets out of date. ",
+      "Use `readd()` to get imported functions from the cache ",
+      "and use different names where possible.",
+      call. = FALSE
+    )
+  }
   targets <- drake_select(
     cache = cache, ..., namespaces = namespace, list = list)
-  if (!length(targets) && !imported_only){
+  if (!length(as.list(substitute(...))) && !length(list)){
     targets <- built(cache = cache, jobs = jobs)
-  } else if (imported_only){
-    if (!length(targets)){
-      targets <- cache$list()
-    }
-    targets <- imported_only(targets = targets, cache = cache, jobs = jobs)
-  }
-  if (!length(targets)){
-    stop("no targets to load.")
   }
   if (deps){
     if (is.null(graph)){
@@ -201,7 +204,8 @@ loadd <- function(
       jobs = jobs
     ) %>%
       unlist
-    targets <- targets[exists]
+    targets <- targets[exists] %>%
+      targets_only(cache = cache, jobs = jobs)
   }
   if (!replace){
     targets <- setdiff(targets, ls(envir, all.names = TRUE))
@@ -211,6 +215,8 @@ loadd <- function(
     namespace = namespace, envir = envir,
     verbose = verbose, lazy = lazy
   )
+  warn_loaded_imported_fns(
+    targets = targets, cache = cache, envir = envir, jobs = jobs)
   invisible()
 }
 
@@ -250,6 +256,28 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy){
       verbose = verbose
     )
   )
+}
+
+warn_loaded_imported_fns <- function(targets, cache, envir, jobs){
+  imported_functions <- parallel_filter(
+    x = targets,
+    f = function(target){
+      cache$exists(key = target, namespace = "meta") &&
+      is_imported(target = target, cache = cache) &&
+      is.function(envir[[target]])
+    },
+    jobs = jobs
+  )
+  if (length(imported_functions)){
+    warning(
+      "Loaded imported functions into `envir` in `loadd()`. ",
+      "If this function was not originally defined in your workspace, ",
+      "this could interfere with dependency detection and put some ",
+      "targets out of date. Loaded imported functions:\n",
+      multiline_message(imported_functions),
+      call. = FALSE
+    )
+  }
 }
 
 #' @title Load a target right away (internal function)

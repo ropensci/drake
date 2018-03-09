@@ -15,6 +15,7 @@ test_with_dir("deprecation: cache functions", {
   plan <- drake_plan(x = 1)
   expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
   expect_silent(make(plan, verbose = FALSE, session_info = FALSE))
+  expect_warning(loadd(imported_only = TRUE))
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
   expect_warning(read_config())
@@ -114,8 +115,6 @@ test_with_dir("old file API", {
   expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
   expect_true(is.character(readd("'file.csv'")))
   expect_error(is.character(`"file.csv"`))
-  expect_silent(loadd("'file.csv'", verbose = FALSE))
-  expect_true(is.character(`"file.csv"`))
   expect_equal(
     z,
     tibble::tibble(
