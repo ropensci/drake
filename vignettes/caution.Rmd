@@ -232,7 +232,7 @@ If you have `knitr` reports, you can use `knitr_report()` in your commands so th
 
 ## Knitr inputs and file outputs in imported functions.
 
-Similarly, `file_out()` in a command tells `drake` that the result of a command is an output file. Clearly, this is inapproariate for imported functions, but `drake` will look anyway. Do not try to use `file_out()` or `knitr_in()` inside your custom imported functions. `Drake` only pays attention to them in proper commands in your workflow plan data frame. However, `file_in()` is perfectly fine if your imported function needs a file in order to run. Here are some examples.
+Similarly, `file_out()` in a command tells `drake` that the result of a command is an output file. Clearly, this is inappropriate for imported functions, but `drake` will look anyway. Do not try to use `file_out()` or `knitr_in()` inside your custom imported functions. `Drake` only pays attention to them in proper commands in your workflow plan data frame. However, `file_in()` is perfectly fine if your imported function needs a file in order to run. Here are some examples.
 
 ```{r fileimportsfunctions}
 # toally_fine() will depend on the imported data.csv file.

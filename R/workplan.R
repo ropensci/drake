@@ -315,7 +315,7 @@ file_out <- function(path){
 #' @seealso file_in file_out
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
-#'   source files suplied to a command in your workflow plan data frame.
+#'   source files supplied to a command in your workflow plan data frame.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {

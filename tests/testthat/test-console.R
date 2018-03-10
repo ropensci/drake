@@ -19,10 +19,16 @@ test_with_dir("console_up_to_date", {
   expect_message(console_up_to_date(con))
 })
 
-test_with_dir("file consoles", {
-  config <- list(verbose = 3)
-  console_missing("\"myfile\"", config)
-  console_import("\"myfile\"", config)
+test_with_dir("verbose consoles", {
+  config <- list(verbose = 2)
+  expect_silent(console_missing("\"myfile\"", config))
+  expect_silent(console_import("\"myfile\"", config))
+  config$verbose <- 3
+  expect_message(console_missing("\"myfile\"", config))
+  expect_silent(console_import("\"myfile\"", config))
+  config$verbose <- 4
+  expect_message(console_missing("\"myfile\"", config))
+  expect_message(console_import("\"myfile\"", config))
 })
 
 test_with_dir("console_parLapply", {
@@ -98,6 +104,9 @@ test_with_dir("console_many_targets() works", {
     targets = character(0), pattern = "check", config = config))
   expect_silent(console_many_targets(
     targets = "my_target", pattern = "check", config = config))
+  config$verbose <- 2
+  expect_silent(console_many_targets(
+    targets = character(0), pattern = "check", config = config))
   tmp <- evaluate_promise(
     console_many_targets(
       targets = LETTERS,

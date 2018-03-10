@@ -86,7 +86,7 @@ deps <- function(x){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical exmaple.
+#' load_basic_example() # Load drake's canonical example.
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)

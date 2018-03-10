@@ -2,7 +2,7 @@ drake_context("import file")
 
 test_with_dir("responses to imported file", {
   config <- dbug()
-  expect_message(check_plan(plan = config$plan, envir = config$envir))
+  expect_silent(check_plan(plan = config$plan, envir = config$envir))
   expect_warning(
     check_plan(plan = config$plan[-1, ], envir = config$envir,
           verbose = FALSE))
