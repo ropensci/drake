@@ -10,9 +10,7 @@ drake_unquote(x = NULL, deep = FALSE)
 \arguments{
 \item{x}{character vector}
 
-\item{deep}{remove all outer quotes if \code{TRUE}
-and only the outermost set otherwise. Single and double
-quotes are treated interchangeably, and matching is not checked.}
+\item{deep}{deprecated logical.}
 }
 \value{
 character vector without leading
