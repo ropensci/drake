@@ -52,11 +52,10 @@ then reproducibly tracked as dependencies.}
 \item{verbose}{logical or numeric, control printing to the console.
 \describe{
 \item{0 or \code{FALSE}:}{print nothing.}
-\item{1 or \code{TRUE}:}{print checks and targets to build.}
-\item{2:}{print checks, targets, to build,
-and any potentially missing items.}
-\item{3:}{full verbosity: print checks, targets to build, potentially
-missing items, and imports.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
 }}
 
 \item{hook}{function with at least one argument.
