@@ -9,7 +9,7 @@ console <- function(imported, target, config) {
 }
 
 console_missing <- function(target, config){
-  if (config$verbose < 2){
+  if (config$verbose < 3){
     return()
   }
   pattern <- "missing"
@@ -22,7 +22,7 @@ console_missing <- function(target, config){
 }
 
 console_import <- function(target, config){
-  if (config$verbose < 3){
+  if (config$verbose < 4){
     return()
   }
   pattern <- "import"
@@ -51,6 +51,9 @@ console_target <- function(target, config){
 }
 
 console_cache <- function(path, verbose){
+  if (verbose < 2){
+    return()
+  }
   if (!length(path)){
     path <- default_cache_path()
   }
@@ -61,6 +64,9 @@ console_cache <- function(path, verbose){
 console_many_targets <- function(
   targets, pattern, config, color = color_of(pattern), type = "item"
 ){
+  if (config$verbose < 2){
+    return()
+  }
   n <- length(targets)
   if (n < 1){
     return(invisible())

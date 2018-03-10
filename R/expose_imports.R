@@ -90,22 +90,26 @@ expose_imports <- function(
   envir = parent.frame(),
   jobs = 1
 ){
+  force(envir)
   if (!character_only){
     package <- as.character(substitute(package))
   }
-  pkg_env <- getNamespace(package) %>%
-    as.list(all.names = TRUE) %>%
+  expose_envir(from = getNamespace(package), to = envir, jobs = jobs)
+}
+
+expose_envir <- function(from, to, jobs, keep = ls(from, all.names = TRUE)){
+  from <- as.list(from, all.names = TRUE)[keep] %>%
     list2env(parent = globalenv())
   lightly_parallelize(
-    X = ls(pkg_env, all.names = TRUE),
+    X = ls(from, all.names = TRUE),
     FUN = function(name){
       assign(
         x = name,
-        envir = envir,
-        value = `environment<-`(get(name, envir = pkg_env), pkg_env)
+        envir = to,
+        value = `environment<-`(get(name, envir = from), from)
       )
     },
     jobs = jobs
   )
-  envir
+  to
 }

@@ -2,6 +2,7 @@
 
 - Deprecate the `imported_only` argument in `loadd()`.
 - Warn about imported functions loaded with `loadd()`.
+- Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.
 - Change `loadd()` so that only targets (not imports) are loaded if the `...` and `list` arguments are empty.
 - Exclude imports from `loadd(deps = TRUE)`.
 - Add check to drake_plan() to check for duplicate targets

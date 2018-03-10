@@ -9,7 +9,7 @@ knitr_in(...)
 }
 \arguments{
 \item{...}{Character strings. File paths of \code{knitr}/\code{rmarkdown}
-source files suplied to a command in your workflow plan data frame.}
+source files supplied to a command in your workflow plan data frame.}
 }
 \value{
 A character vector of declared input file paths.

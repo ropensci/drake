@@ -86,7 +86,7 @@ deps <- function(x){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical exmaple.
+#' load_basic_example() # Load drake's canonical example.
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)
@@ -233,7 +233,7 @@ warn_single_quoted_files <- function(files, deps){
   warning(
     "Files in a command declared with single-quotes:\n",
     multiline_message(warn_files),
-    "\nThe way to declare files in drake is deprecated. ",
+    "\nThe use of single-quotes to declare files is deprecated. ",
     "Use file_in(), file_out(), and knitr_in() ",
     "in your commands. See `?drake_plan` for examples.",
     call. = FALSE

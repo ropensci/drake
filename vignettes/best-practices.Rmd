@@ -253,7 +253,7 @@ evaluate_plan(
 ) 
 ```
 
-But what if some metrics do not make sense? For exmaple, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.
+But what if some metrics do not make sense? For example, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.
 
 ```{r rulesgridschools}
 library(magrittr)

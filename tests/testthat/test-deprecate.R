@@ -91,6 +91,7 @@ test_with_dir("deprecated example(s)_drake functions", {
 test_with_dir("deprecate misc utilities", {
   expect_warning(as_file("x"))
   expect_warning(as_drake_filename("x"))
+  expect_warning(drake_unquote("x", deep = TRUE))
 })
 
 test_with_dir("deprecated arguments", {
