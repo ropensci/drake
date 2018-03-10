@@ -50,9 +50,9 @@ test_with_dir("console", {
   expect_silent(console(imported = TRUE, target = "myinput",
     config = config))
   config$verbose <- 3
-  expect_silent(console(imported = FALSE, target = "myinput",
+  expect_message(console(imported = FALSE, target = "myinput",
     config = config))
-  expect_message(console(imported = TRUE, target = "myinput",
+  expect_silent(console(imported = TRUE, target = "myinput",
     config = config))
   expect_message(console(imported = NA, target = "myinput",
     config = config))
@@ -96,7 +96,7 @@ test_with_dir("console_many_targets() works", {
   config <- list(verbose = TRUE)
   expect_silent(console_many_targets(
     targets = character(0), pattern = "check", config = config))
-  expect_message(console_many_targets(
+  expect_silent(console_many_targets(
     targets = "my_target", pattern = "check", config = config))
   tmp <- evaluate_promise(
     console_many_targets(
