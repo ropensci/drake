@@ -1,8 +1,10 @@
 drake_context("console")
 
 test_with_dir("console_cache", {
-  expect_message(console_cache("12345", verbose = TRUE))
-  expect_message(console_cache(NULL, verbose = TRUE))
+  expect_silent(console_cache("12345", verbose = TRUE))
+  expect_message(console_cache("12345", verbose = 2))
+  expect_silent(console_cache(NULL, verbose = TRUE))
+  expect_message(console_cache(NULL, verbose = 2))
 })
 
 test_with_dir("console_up_to_date", {
@@ -48,7 +50,7 @@ test_with_dir("console", {
   expect_silent(console(imported = TRUE, target = "myinput",
     config = config))
   config$verbose <- 3
-  expect_message(console(imported = FALSE, target = "myinput",
+  expect_silent(console(imported = FALSE, target = "myinput",
     config = config))
   expect_message(console(imported = TRUE, target = "myinput",
     config = config))
