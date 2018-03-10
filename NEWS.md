@@ -1,7 +1,10 @@
 # Version 5.1.0
 
+- Deprecate the `imported_only` argument in `loadd()`.
+- Warn about imported functions loaded with `loadd()`.
 - Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.
 - Change `loadd()` so that only targets (not imports) are loaded if the `...` and `list` arguments are empty.
+- Exclude imports from `loadd(deps = TRUE)`.
 - Add check to drake_plan() to check for duplicate targets
 - Add a `.gitignore` file containing `"*"` to the default `.drake/` cache folder every time `new_cache()` is called. This means the cache will not be automatically committed to git. Users need to remove `.gitignore` file to allow unforced commits, and then subsequent `make()`s on the same cache will respect the user's wishes and not add another `.gitignore`. this only works for the default cache. Not supported for manual `storr`s.
 - Add a new experimental `"future"` backend with a manual scheduler.
@@ -30,7 +33,6 @@ across R sessions.
 - Preprocess workflow plan commands with `rlang::expr()` before evaluating them. That means you can use the quasiquotation operator `!!` in your commands, and `make()` will evaluate them according to the tidy evaluation paradigm.
 - Restructure `drake_example("basic")`, `drake_example("gsp")`, and `drake_example("packages")` to demonstrate how to set up the files for serious `drake` projects. More guidance was needed in light of [this issue](https://github.com/ropensci/drake/issues/193).
 - Improve the examples of `drake_plan()` in the help file (`?drake_plan`).
-- Warn if double quotes appear in target names.
 
 # Version 5.0.0
 

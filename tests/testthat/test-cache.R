@@ -218,19 +218,16 @@ test_with_dir("cache functions work", {
   # load and read stuff
   list <- intersect(c(imported(), built()), ls(envir = envir))
   rm(list = list, envir = envir)
-  expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
-  expect_error(loadd(yourinput, myinput, search = FALSE, imported_only = TRUE))
-  loadd(h, i, j, c, jobs = 2, search = FALSE, envir = envir)
-  expect_true(is.numeric(h(1)))
-  rm(h, i, j, c, envir = envir)
-  expect_error(h(1))
+
+  e <- new.env()
+  loadd(yourinput, myinput, jobs = 2, search = FALSE, envir = e)
+  expect_true(is.numeric(e$yourinput))
+  expect_true(is.numeric(e$myinput))
 
   # test loadd imported_only and loadd() everything
-  loadd(imported_only = TRUE)
-  expect_true(all(imported(search = FALSE) %in% ls()))
   loadd(search = FALSE)
-  expect_true(all(config$cache$list() %in% ls()))
+  expect_true(all(built(cache = config$cache) %in% ls()))
   rm(list = intersect(all, ls()))
 
   # search from a different directory
@@ -289,7 +286,10 @@ test_with_dir("cache functions work", {
   expect_true(is.numeric(readd(a, path = s, search = TRUE)))
   expect_error(h(1))
   expect_error(j(1))
-  loadd(h, i, j, c, path = s, search = TRUE, envir = envir)
+  expect_warning(
+    loadd(h, i, j, c, path = s, search = TRUE, envir = envir),
+    regexp = "Loaded imported functions"
+  )
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))

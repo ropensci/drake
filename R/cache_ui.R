@@ -226,11 +226,11 @@ targets_from_dots <- function(dots, list) {
   standardize_filename(targets)
 }
 
-imported_only <- function(targets, cache, jobs) {
+targets_only <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
     f = function(target){
-      is_imported(target = target, cache = cache)
+      !is_imported(target = target, cache = cache)
     },
     jobs = jobs
   )
