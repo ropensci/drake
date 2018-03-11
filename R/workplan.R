@@ -217,7 +217,7 @@ drake_plan_override <- function(target, field, config){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso `file_out` `knitr_in`
+#' @seealso [file_out()], [knitr_in()], [ignore()]
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of input files
 #'   to a command in your workflow plan data frame.
@@ -260,7 +260,7 @@ file_in <- function(...){
 #'   one file output per command. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso file_in knitr_in
+#' @seealso [file_in()], [knitr_in(()], [ignore()]
 #' @return A character string, the file path of the file output.
 #' @param path Character string of length 1. File path
 #'   of the file output of a command in your
@@ -312,7 +312,7 @@ file_out <- function(path){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso file_in file_out
+#' @seealso [file_in()], [file_out()], [ignore()]
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
 #'   source files supplied to a command in your workflow plan data frame.
@@ -340,6 +340,18 @@ file_out <- function(path){
 #' })
 #' }
 knitr_in <- file_in
+
+#' @title Ignore components of commands and imported functions.
+#' @description In commands and imported functions, use
+#' `ignore(some_code)` to
+#' 1. Force `drake` to not track dependencies in `some_code`, and
+#' 2. Ignore any changes in `some_code` when it comes to
+#'   deciding which target are out of date.
+#' @export
+#' @seealso [file_in()], [file_out()], [knitr_in()]
+#' @return the argument
+#' @param x code to ignore
+ignore <- identity
 
 # Unnamed arguments may have been declared with `<-`` or `->``
 # rather than the required `=`.
