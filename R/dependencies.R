@@ -448,3 +448,7 @@ is_readd_call <- function(expr){
 is_ignore <- function(expr){
   wide_deparse(expr[[1]]) %in% ignore_fns
 }
+
+ignore_pattern <- paste0(
+  "(", paste0(ignore_fns, collapse = "|"), ")\\s*\\([^\\)]*\\)"
+)
