@@ -109,7 +109,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-10</h4>
+            <h4 class="date">2018-03-11</h4>
           </div>
 
     
@@ -537,7 +537,7 @@ keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 <div id="cache-customization-is-limited" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cache-customization-is-limited" class="anchor"></a>Cache customization is limited</h2>
-<p>The <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage vignette</a> describes how storage works in <code>drake</code>. As explained near the end of that vignette, you can plug custom <a href="https://github.com/richfitz/storr">storr</a> caches into <code><a href="../reference/make.html">make()</a></code>. However, non-RDS caches such as <code>storr_dbi()</code> may not work with most forms of parallel computing. The <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code> cache and many others are not threadsafe. Either use no parallel computing at all or set <code>parallelism = "future"</code> with <code>caching = "master"</code>. The <code>"future"</code> backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.</p>
+<p>The <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage vignette</a> describes how storage works in <code>drake</code>. As explained near the end of that vignette, you can plug custom <a href="https://github.com/richfitz/storr">storr</a> caches into <code><a href="../reference/make.html">make()</a></code>. However, non-RDS caches such as <code>storr_dbi()</code> may not work with most forms of parallel computing. The <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code> cache and many others are not thread-safe. Either use no parallel computing at all or set <code>parallelism = "future"</code> with <code>caching = "master"</code>. The <code>"future"</code> backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.</p>
 </div>
 <div id="runtime-predictions" class="section level2">
 <h2 class="hasAnchor">

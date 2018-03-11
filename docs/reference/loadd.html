@@ -250,9 +250,16 @@ will not be replaced.</p></td>
 
     <p><code>NULL</code></p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>loadd()</code> excludes foreign imports:
+R objects not originally defined in <code>envir</code>
+when <code><a href='make.html'>make()</a></code> last imported them.
+To get these objects, use <code><a href='readd.html'>readd()</a></code>.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='cached.html'>cached()</a></code>, <code><a href='built.html'>built()</a></code>,
+    <p><code><a href='readd.html'>readd()</a></code>, <code><a href='cached.html'>cached()</a></code>, <code><a href='built.html'>built()</a></code>,
 <code><a href='imported.html'>imported()</a></code>, <code><a href='drake_plan.html'>drake_plan()</a></code>, <code><a href='make.html'>make()</a></code>,</p>
     
 
@@ -274,6 +281,9 @@ will not be replaced.</p></td>
 <span class='fu'>loadd</span>(<span class='no'>coef_regression2_small</span>, <span class='kw'>deps</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>ls</span>()
 <span class='co'># Load all the imported objects/functions.</span>
+<span class='co'># Note: loadd() excludes foreign imports</span>
+<span class='co'># (R objects not originally defined in `envir`</span>
+<span class='co'># when `make()` last imported them).</span>
 <span class='fu'>loadd</span>(<span class='kw'>imported_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>ls</span>()
 <span class='co'># Load all the targets listed in the workflow plan</span>
@@ -294,6 +304,8 @@ will not be replaced.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

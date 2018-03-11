@@ -109,7 +109,7 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-10</h4>
+            <h4 class="date">2018-03-11</h4>
           </div>
 
     
@@ -539,7 +539,20 @@ df
 ## character(0)
 
 <span class="kw"><a href="../reference/build_times.html">build_times</a></span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="co"># How long did it take to make each target?</span>
-## Error: Incompatible duration classes (Duration, numeric). Please coerce with `as.duration`.</code></pre></div>
+## # A tibble: 28 x 5
+##    item                   type   elapsed        user           system     
+##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
+##  1 coef_regression1_large target 0.004s         0.004s         0.001s     
+##  2 coef_regression1_small target 0.003s         0.003s         0s         
+##  3 coef_regression2_large target 0.003s         0.003s         0s         
+##  4 coef_regression2_small target 0.003s         0.003s         0s         
+##  5 data.frame             import 0.005s         0.005s         0s         
+##  6 knit                   import 0.002s         0.003s         0s         
+##  7 large                  target 0.099s         0.094s         0.004s     
+##  8 lm                     import 0.002s         0.002s         0s         
+##  9 mtcars                 import 0.001s         0s             0s         
+## 10 nrow                   import 0.003s         0.003s         0s         
+## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
@@ -667,7 +680,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "6966cbfe169b2a92"</code></pre></div>
+## [1] "6c6a2f91737ce9b7"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>

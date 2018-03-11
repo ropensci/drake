@@ -137,6 +137,8 @@
 <h1 class="hasAnchor">
 <a href="#version-5-1-0" class="anchor"></a>Version 5.1.0</h1>
 <ul>
+<li>Force <code>drake</code> to only look for imports in environments inheriting from <code>envir</code> in <code><a href="../reference/make.html">make()</a></code> (plus explicitly namespaced functions).</li>
+<li>Force <code><a href="../reference/loadd.html">loadd()</a></code> to ignore foreign imports (imports not explicitly found in <code>envir</code> when <code><a href="../reference/make.html">make()</a></code> last imported them).</li>
 <li>Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.</li>
 <li>Change <code><a href="../reference/loadd.html">loadd()</a></code> so that only targets (not imports) are loaded if the <code>...</code> and <code>list</code> arguments are empty.</li>
 <li>Add check to drake_plan() to check for duplicate targets</li>

@@ -108,7 +108,7 @@
       <h1>High-performance computing with drake</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-10</h4>
+            <h4 class="date">2018-03-11</h4>
           </div>
 
     
@@ -325,7 +325,7 @@ for (i in <span class="kw">seq_len</span>(<span class="kw">nrow</span>(my_plan))
 evaluator[[<span class="dv">1</span>]] &lt;-<span class="st"> </span>local
 my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">8</span>)</code></pre></div>
-<p>In addition, you can set the <code>caching</code> argument to control when the values of the targets are cached: <code>"worker"</code> for the individual workers (default) and <code>"master"</code> for the master process. If you let the workers do the caching, you can take advantage of parallelism when targets are stored. On the other hand, <code>"master"</code> is a better option if workers do not have cache access or you are using a custom cache that is not threadsafe (e.g. <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code>.</p>
+<p>In addition, you can set the <code>caching</code> argument to control when the values of the targets are cached: <code>"worker"</code> for the individual workers (default) and <code>"master"</code> for the master process. If you let the workers do the caching, you can take advantage of parallelism when targets are stored. On the other hand, <code>"master"</code> is a better option if workers do not have cache access or you are using a custom cache that is not thread-safe (e.g. <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code>.</p>
 </div>
 <div id="makefile" class="section level2">
 <h2 class="hasAnchor">
@@ -363,7 +363,7 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 <p>But be warned: that particular recipe fails on Windows.</p>
 <p>Use the <code><a href="../reference/Makefile_recipe.html">Makefile_recipe()</a></code> function to show and tweak <code>Makefile</code> recipes in advance.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>()
-## Rscript -e 'drake::mk(target = "your_target", cache_path = "/tmp/Rtmp8tau8H/articles/.drake")'
+## Rscript -e 'drake::mk(target = "your_target", cache_path = "/tmp/Rtmp5WO1rG/articles/.drake")'
 
 <span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(
   <span class="dt">recipe_command =</span> <span class="st">"R -e 'R_RECIPE' -q"</span>,
@@ -373,7 +373,7 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 ## R -e 'drake::mk(target = "this_target", cache_path = "custom_cache")' -q</code></pre></div>
 <p>If <code>recipe_command</code> contains no mention of <code>R_RECIPE</code>, then <code>R_RECIPE</code> is single-quoted and appended automatically.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(<span class="dt">recipe_command =</span> <span class="st">"R -q -e"</span>)
-## R -q -e 'drake::mk(target = "your_target", cache_path = "/tmp/Rtmp8tau8H/articles/.drake")'</code></pre></div>
+## R -q -e 'drake::mk(target = "your_target", cache_path = "/tmp/Rtmp5WO1rG/articles/.drake")'</code></pre></div>
 <p>Try each of the following and look at the generated <code>Makefile</code> after each call to <code><a href="../reference/make.html">make()</a></code>. To see the recipes printed to the console, run <code><a href="../reference/clean.html">clean()</a></code> between each <code><a href="../reference/make.html">make()</a></code> and leave <code>verbose</code> equal to <code>TRUE</code> (default).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">4</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">4</span>,
