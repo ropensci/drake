@@ -64,6 +64,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   meta <- list(
     target = target,
     imported = !(target %in% config$plan$target),
+    foreign = !(target %in% ls(config$envir)),
     missing = !target_exists(target = target, config = config),
     seed = seed_from_object(list(seed = config$seed, target = target))
   )
