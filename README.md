@@ -178,7 +178,7 @@ config <- drake_config(my_plan)
 vis_drake_graph(config)
 ```
 
-![](./images/graph.png)
+![](./docs/images/graph.png)
 
 Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function.
 
@@ -352,6 +352,6 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
-Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/images/image-credit.md).
+Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/docs/images/image-credit.md).
 
 [![ropensci_footer](http://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

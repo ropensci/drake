@@ -1,4 +1,4 @@
-# Generate the HTML widgets in the images/ folder.
+# Generate the HTML widgets in the docs/images/ folder.
 # These interactive graphs are embedded in the vignettes.
 # Requires pandoc.
 devtools::load_all() # load current drake
