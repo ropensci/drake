@@ -203,7 +203,11 @@ command_dependencies <- function(command){
 
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
-  if (identical(pkgconfig::get_config("drake::strings_in_dots"), "literals")){
+  use_new_file_api <- identical(
+    pkgconfig::get_config("drake::strings_in_dots"),
+    "literals"
+  )
+  if (use_new_file_api){
     files <- character(0)
   } else {
     files <- extract_filenames(command)
@@ -218,10 +222,13 @@ command_dependencies <- function(command){
 
   # TODO: remove this bit when we're confident
   # users have totally switched to `knitr_in()`.
-  deps$loadd <- base::union(
-    deps$loadd, knitr_deps(find_knitr_doc(command))
-  ) %>%
-    unique
+  # Turn it off right away if users elect for the new file API.
+  if (!use_new_file_api){
+    deps$loadd <- base::union(
+      deps$loadd, knitr_deps(find_knitr_doc(command))
+    ) %>%
+      unique
+  }
 
   # This bit stays the same.
   deps[purrr::map_int(deps, length) > 0]
