@@ -46,9 +46,11 @@ run_future <- function(config){
 #' @param protect Names of targets that still need their
 #' dependencies available in `config$envir`.
 drake_future_task <- function(target, meta, config, protect){
-  prune_envir(
-    targets = target, config = config, downstream = protect)
-  do_prework(config = config, verbose_packages = FALSE)
+  config$hook({
+    do_prework(config = config, verbose_packages = FALSE)
+    prune_envir(
+      targets = target, config = config, downstream = protect)
+  })
   if (config$caching == "worker"){
     build_and_store(
       target = target, meta = meta, config = config, announce = FALSE)
