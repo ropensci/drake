@@ -2,7 +2,7 @@
 % Please edit documentation in R/workplan.R
 \name{ignore}
 \alias{ignore}
-\title{Ignore components of commands and imported functions.}
+\title{Ignore components of commands.}
 \usage{
 ignore(x)
 }
@@ -13,12 +13,29 @@ ignore(x)
 the argument
 }
 \description{
-In commands and imported functions, use
+In commands in the workflow plan, you can
 \code{ignore(some_code)} to
 \enumerate{
 \item Force \code{drake} to not track dependencies in \code{some_code}, and
 \item Ignore any changes in \code{some_code} when it comes to
 deciding which target are out of date.
+}
+}
+\examples{
+\dontrun{
+test_with_dir("Contain side effects", {
+# Normally, `drake` reacts to changes in dependencies.
+x <- 4
+make(plan = drake_plan(y = sqrt(x)))
+x <- 5
+make(plan = drake_plan(y = sqrt(x)))
+make(plan = drake_plan(y = sqrt(4) + x))
+# But not with ignore().
+make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Builds y.
+x <- 6
+make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Skips y.
+make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Skips y.
+})
 }
 }
 \seealso{

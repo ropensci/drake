@@ -284,3 +284,56 @@ test_with_dir("can use braces for multi-line commands", {
   expect_equal(readd(small_target), 4)
   expect_false("local_object" %in% ls())
 })
+
+test_with_dir("ignore() suppresses updates", {
+  cache <- storr::storr_environment()
+  envir <- new.env(parent = globalenv())
+  envir$arg <- 4
+
+  # Without ignore()
+  con <- make(
+    plan = drake_plan(x = sqrt(arg)),
+    envir = envir,
+    cache = cache
+  )
+  expect_equal(justbuilt(con), "x")
+  con$envir$arg <- con$envir$arg + 1
+  con <- make_with_config(con)
+  expect_equal(justbuilt(con), "x")
+
+  # With ignore()
+  con <- make(
+    plan = drake_plan(x = sqrt( ignore(arg) + 123)),
+    envir = envir,
+    cache = cache
+  )
+  expect_equal(justbuilt(con), "x")
+  con$envir$arg <- con$envir$arg + 1
+  con <- make_with_config(con)
+  expect_equal(justbuilt(con), character(0))
+
+  con$envir$arg2 <- con$envir$arg + 1234
+  con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123))
+  con <- make_with_config(con)
+  expect_equal(justbuilt(con), character(0))
+})
+
+test_with_dir("standardized commands with ignore()", {
+  expect_equal(standardize_command("sqrt(arg)"), "{\n sqrt(arg) \n}")
+  expect_equal(
+    standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123))"),
+    "{\n f(sqrt() + 123) \n}"
+  )
+  expect_equal(
+    standardize_command("sqrt( ignore  (fun(arg) + 7) + 123)"),
+    "{\n f(sqrt() + 123) \n}"
+  )
+  expect_equal(
+    standardize_command("sqrt( drake::ignore(fun(arg) + 7) + 123)"),
+    "{\n f(sqrt() + 123) \n}"
+  )
+  expect_equal(
+    standardize_command("sqrt( drake ::: ignore  (fun(arg) + 7) + 123)"),
+    "{\n f(sqrt() + 123) \n}"
+  )
+})

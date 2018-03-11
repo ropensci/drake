@@ -1,5 +1,8 @@
 # Version 5.1.0
 
+- Use `ignore()` to optionally ignore pieces of workflow plan commands. Use `ignore(some_code)` to
+1. Force `drake` to not track dependencies in `some_code`, and
+2. Ignore any changes in `some_code` when it comes to deciding which target are out of date.
 - Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.
 - Change `loadd()` so that only targets (not imports) are loaded if the `...` and `list` arguments are empty.
 - Add check to drake_plan() to check for duplicate targets

@@ -139,8 +139,7 @@ this_cache <- function(
   configure_cache(
     cache = cache,
     long_hash_algo = "md5",
-    overwrite_hash_algos = FALSE,
-    log_progress = FALSE
+    overwrite_hash_algos = FALSE
   )
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -218,7 +217,6 @@ new_cache <- function(
     cache = cache,
     short_hash_algo = short_hash_algo,
     long_hash_algo = long_hash_algo,
-    log_progress = FALSE,
     overwrite_hash_algos = FALSE
   )
   console_cache(path = cache_path(cache), verbose = verbose)
@@ -314,7 +312,8 @@ default_cache_path <- function(){
 #'   argument in `digest::digest()`.
 #'   See [default_long_hash_algo()] for more.
 #'
-#' @param log_progress logical, whether to clear the recorded
+#' @param log_progress deprecated logical.
+#'   Previously toggled whether to clear the recorded
 #'   build progress if this cache was used for previous calls to
 #'   [make()].
 #'
@@ -359,7 +358,10 @@ configure_cache <- function(
   long_hash_algo <- match.arg(long_hash_algo,
     choices = available_hash_algos())
   if (log_progress){
-    clear_progress(cache = cache, jobs = jobs)
+    warning(
+      "The `log_progress` argument of `configure_cache()` is deprecated.",
+      call. = FALSE
+    )
   }
   short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
   long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")

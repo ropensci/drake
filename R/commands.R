@@ -62,8 +62,7 @@ get_standardized_command <- function(target, config) {
 # If styler's behavior changes a lot, it will
 # put targets out of date.
 standardize_command <- function(x) {
-  x <- language_to_text(x) %>%
-    ignore_ignore()
+  x <- language_to_text(x)
   formatR::tidy_source(
     source = NULL,
     comment = FALSE,
@@ -76,7 +75,8 @@ standardize_command <- function(x) {
     width.cutoff = 119
   )$text.tidy %>%
     paste(collapse = "\n") %>%
-    braces
+    braces %>%
+    ignore_ignore
 }
 
 ignore_ignore <- function(x){
