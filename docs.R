@@ -89,3 +89,4 @@ pkgdown <- function(){
 
 faq()
 pkgdown()
+source("images.R", local = TRUE)
