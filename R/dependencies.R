@@ -223,6 +223,9 @@ command_dependencies <- function(command){
   # TODO: remove this bit when we're confident
   # users have totally switched to `knitr_in()`.
   # Turn it off right away if users elect for the new file API.
+  # I know strings_in_dots is not really meant to do this,
+  # but pkgconfig is only a temporary solution to manage
+  # the deprecation anyway.
   if (!use_new_file_api){
     deps$loadd <- base::union(
       deps$loadd, knitr_deps(find_knitr_doc(command))
