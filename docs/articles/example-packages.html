@@ -293,7 +293,7 @@ whole_plan
 <p>To visualize the build behavior, plot the dependency network. Target <code>recent</code> and everything depending on it is always out of date because of the <code>"always"</code> trigger. If you rerun the project tomorrow, the <code>recent</code> dataset will have shifted one day forward, so <code><a href="../reference/make.html">make()</a></code> will refresh <code>averages_recent</code>, <code>plot_recent</code>, and <code>report.md</code>. Targets <code>averages_older</code> and <code>plot_older</code> should be unaffected, so <code>drake</code> will skip them.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(whole_plan)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/packages.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/packages.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 </div>
 <div id="what-remote-data-sources-in-general" class="section level1">

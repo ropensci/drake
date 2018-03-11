@@ -124,12 +124,12 @@
 <span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Same as drake_graph()</span></code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>After <code><a href="../reference/make.html">make()</a></code>, the whole project is all caught up.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">4</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/built.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/built.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>But when you change a dependency, some targets are out of date until the next <code><a href="../reference/make.html">make(my_plan)</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
@@ -137,7 +137,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
   <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 </div>
 <div id="subgraphs" class="section level1">
@@ -145,23 +145,23 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <a href="#subgraphs" class="anchor"></a>Subgraphs</h1>
 <p>Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual <code>subset</code> of nodes. However, with the <code>subset</code> argument, <code><a href="../reference/vis_drake_graph.html">vis_drake_graph()</a></code> may drop intermediate nodes and edges.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">subset =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/subset.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/subset.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The rest of the subgraph functionality preserves connectedness. Use <code>targets_only</code> to ignore the imports.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/targetsonly.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/targetsonly.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>Similarly, you can just show downstream nodes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="st">"regression2_large"</span>))</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/fromout.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/fromout.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>Or upstream ones.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="st">"small"</span>, <span class="dt">mode =</span> <span class="st">"in"</span>)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/fromin.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/fromin.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>In fact, let us just take a small neighborhood around a target in both directions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="st">"small"</span>, <span class="dt">mode =</span> <span class="st">"all"</span>, <span class="dt">order =</span> <span class="dv">1</span>)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/fromall.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/fromall.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The <code>report.md</code> node is drawn in somewhat, but it is still the farthest to the right in order to communicate <code>drake</code>’s parallel computing strategy.</p>
 </div>
@@ -169,7 +169,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <h1 class="hasAnchor">
 <a href="#parallel-computing-laid-bare" class="anchor"></a>Parallel computing laid bare</h1>
 <p><code>Drake</code> shows its parallel computing strategy plainly in the graph.</p>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The nodes in each column above are conditionally independent given the dependencies to the left. So in general, the targets and imports are processed column by column from left to right, and everything within a column is executed in parallel. When some targets are already up to date, <code>drake</code> searches ahead in the graph to maximize the number of outdated targets in each parallelizable stage.</p>
 <p>To show the parallelizable stages of the next <code><a href="../reference/make.html">make()</a></code> programmatically, use the <code><a href="../reference/parallel_stages.html">parallel_stages()</a></code> function. All the targets/imports in a stage are processed in parallel before moving on to the next stage.</p>
@@ -179,11 +179,11 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <a href="#control-the-legend-" class="anchor"></a>Control the legend.</h1>
 <p>To remove superfluous information from the legend, set the <code>full_legend</code> argument to <code>FALSE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">full_legend =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2-small-legend.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/reg2-small-legend.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>To remove the legend altogether, set the <code>ncol_legend</code> argument to <code>0</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">ncol_legend =</span> <span class="dv">0</span>)</code></pre></div>
-<iframe src="https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2-no-legend.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+<iframe src="https://ropensci.github.io/drake/images/reg2-no-legend.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 </div>
 <div id="more-flexibility" class="section level1">

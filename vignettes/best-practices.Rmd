@@ -79,7 +79,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/good-commands.html"
+src = "https://ropensci.github.io/drake/images/good-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -120,7 +120,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/bad-commands.html"
+src = "https://ropensci.github.io/drake/images/bad-commands.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
@@ -151,7 +151,7 @@ vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/outdated.html"
+src = "https://ropensci.github.io/drake/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
