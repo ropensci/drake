@@ -234,6 +234,9 @@ exclude_foreign_imports <- function(targets, cache, jobs){
 }
 
 is_not_foreign_import_obj <- function(target, cache){
+  if (is_file(target)){
+    return(TRUE)
+  }
   if (!cache$exists(key = target, namespace = "meta")){
     return(FALSE)
   }
@@ -243,9 +246,7 @@ is_not_foreign_import_obj <- function(target, cache){
     character_only = TRUE,
     verbose = FALSE
   )
-  identical(meta$imported, FALSE) ||
-    identical(meta$foreign, FALSE) ||
-    is_file(target)
+  identical(meta$imported, FALSE) || identical(meta$foreign, FALSE)
 }
 
 parse_lazy_arg <- function(lazy){
