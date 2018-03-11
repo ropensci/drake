@@ -226,12 +226,21 @@ test_with_dir("cache functions work", {
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
 
-  # test loadd imported_only and loadd() everything
-  loadd(imported_only = TRUE)
-  expect_true(all(imported(search = FALSE) %in% ls()))
-  loadd(search = FALSE)
-  expect_true(all(config$cache$list() %in% ls()))
-  rm(list = intersect(all, ls()))
+  # test loadd imported_only and loadd() everything safe
+  e <- new.env()
+  loadd(imported_only = TRUE, envir = e)
+  should_have_loaded <- setdiff(
+    imported(search = FALSE),
+    c("readRDS", "saveRDS")
+  )
+  expect_true(all(should_have_loaded %in% ls(envir = e)))
+  e <- new.env()
+  loadd(search = FALSE, envir = e)
+  should_have_loaded <- setdiff(
+    config$cache$list(),
+    c("readRDS", "saveRDS")
+  )
+  expect_true(all(should_have_loaded %in% ls(envir = e)))
 
   # search from a different directory
   if (!file.exists("searchfrom")) {

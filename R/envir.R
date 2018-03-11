@@ -70,15 +70,16 @@ prune_envir <- function(targets, config, downstream = NULL){
   invisible()
 }
 
-flexible_get <- function(target) {
+flexible_get <- function(target, envir) {
   stopifnot(length(target) == 1)
   parsed <- parse(text = target) %>%
     as.call %>%
     as.list
   lang <- parsed[[1]]
   is_namespaced <- length(lang) > 1
-  if (!is_namespaced)
-    return(get(target))
+  if (!is_namespaced){
+    return(get(x = target, envir = envir))
+  }
   stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
   pkg <- deparse(lang[[2]])
   fun <- deparse(lang[[3]])

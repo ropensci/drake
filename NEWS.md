@@ -1,5 +1,7 @@
 # Version 5.1.0
 
+- Force `drake` to only look for imports in environments inheriting from `envir` in `make()` (plus explicitly namespaced functions).
+- Force `loadd()` to ignore foreign imports (imports not explicitly found in `envir` when `make()` last imported them).
 - Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.
 - Change `loadd()` so that only targets (not imports) are loaded if the `...` and `list` arguments are empty.
 - Add check to drake_plan() to check for duplicate targets

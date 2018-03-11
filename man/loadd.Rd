@@ -90,6 +90,12 @@ current workspace (or environment \code{envir} if given). Defaults
 to loading the entire cache if you do not supply anything
 to arguments \code{...} or \code{list}.
 }
+\details{
+\code{loadd()} excludes foreign imports:
+R objects not originally defined in \code{envir}
+when \code{\link[=make]{make()}} last imported them.
+To get these objects, use \code{\link[=readd]{readd()}}.
+}
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
@@ -108,6 +114,9 @@ ls()
 loadd(coef_regression2_small, deps = TRUE)
 ls()
 # Load all the imported objects/functions.
+# Note: loadd() excludes foreign imports
+# (R objects not originally defined in `envir`
+# when `make()` last imported them).
 loadd(imported_only = TRUE)
 ls()
 # Load all the targets listed in the workflow plan
@@ -123,6 +132,6 @@ get(file_store("report.md"))
 }
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \code{\link[=built]{built()}},
+\code{\link[=readd]{readd()}}, \code{\link[=cached]{cached()}}, \code{\link[=built]{built()}},
 \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}},
 }

@@ -61,7 +61,11 @@ readd <- function(
 #' current workspace (or environment `envir` if given). Defaults
 #' to loading the entire cache if you do not supply anything
 #' to arguments `...` or `list`.
-#' @seealso [cached()], [built()],
+#' @details `loadd()` excludes foreign imports:
+#'   R objects not originally defined in `envir`
+#'   when [make()] last imported them.
+#'   To get these objects, use [readd()].
+#' @seealso [readd()], [cached()], [built()],
 #'   [imported()], [drake_plan()], [make()],
 #' @export
 #' @return `NULL`
@@ -141,6 +145,9 @@ readd <- function(
 #' loadd(coef_regression2_small, deps = TRUE)
 #' ls()
 #' # Load all the imported objects/functions.
+#' # Note: loadd() excludes foreign imports
+#' # (R objects not originally defined in `envir`
+#' # when `make()` last imported them).
 #' loadd(imported_only = TRUE)
 #' ls()
 #' # Load all the targets listed in the workflow plan
@@ -179,12 +186,10 @@ loadd <- function(
   }
   targets <- drake_select(
     cache = cache, ..., namespaces = namespace, list = list)
-  if (!length(targets) && !imported_only){
-    targets <- built(cache = cache, jobs = jobs)
-  } else if (imported_only){
-    if (!length(targets)){
-      targets <- cache$list()
-    }
+  if (!length(targets)){
+    targets <- cache$list()
+  }
+  if (imported_only){
     targets <- imported_only(targets = targets, cache = cache, jobs = jobs)
   }
   if (!length(targets)){
@@ -206,12 +211,42 @@ loadd <- function(
   if (!replace){
     targets <- setdiff(targets, ls(envir, all.names = TRUE))
   }
+  targets <- exclude_foreign_imports(
+    targets = targets,
+    cache = cache,
+    jobs = jobs
+  )
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
     namespace = namespace, envir = envir,
     verbose = verbose, lazy = lazy
   )
   invisible()
+}
+
+exclude_foreign_imports <- function(targets, cache, jobs){
+  parallel_filter(
+    x = targets,
+    f = is_not_foreign_import_obj,
+    jobs = jobs,
+    cache = cache
+  )
+}
+
+is_not_foreign_import_obj <- function(target, cache){
+  if (is_file(target)){
+    return(TRUE)
+  }
+  if (!cache$exists(key = target, namespace = "meta")){
+    return(FALSE)
+  }
+  meta <- diagnose(
+    target = target,
+    cache = cache,
+    character_only = TRUE,
+    verbose = FALSE
+  )
+  identical(meta$imported, FALSE) || identical(meta$foreign, FALSE)
 }
 
 parse_lazy_arg <- function(lazy){
