@@ -260,7 +260,7 @@ file_in <- function(...){
 #'   one file output per command. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso [file_in()], [knitr_in(()], [ignore()]
+#' @seealso [file_in()], [knitr_in()], [ignore()]
 #' @return A character string, the file path of the file output.
 #' @param path Character string of length 1. File path
 #'   of the file output of a command in your

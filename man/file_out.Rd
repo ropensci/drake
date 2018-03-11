@@ -52,5 +52,5 @@ vis_drake_graph(config)
 }
 }
 \seealso{
-\code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in(]{knitr_in(()}}, \code{\link[=ignore]{ignore()}}
+\code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}
 }
