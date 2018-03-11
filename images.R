@@ -1,16 +1,19 @@
-# Generate the HTML widgets in the images/ folder.
+# Generate the HTML widgets in the docs/images/ folder.
 # These interactive graphs are embedded in the vignettes.
 # Requires pandoc.
+
+html_out <- function(...) here::here("docs", "images", ...)
+
 devtools::load_all() # load current drake
 clean(destroy = TRUE)
 config <- load_basic_example(overwrite = TRUE)
 
-vis_drake_graph(config, file = "outdated.html", selfcontained = TRUE,
+vis_drake_graph(config, file = html_out("outdated.html"), selfcontained = TRUE,
   width = "100%", height = "500px")
 
 config <- make(my_plan)
 
-vis_drake_graph(config, file = "built.html", selfcontained = TRUE,
+vis_drake_graph(config, file = html_out("built.html"), selfcontained = TRUE,
   width = "100%", height = "500px")
 
 reg2 <- function(d){
@@ -18,42 +21,42 @@ reg2 <- function(d){
   lm(y ~ x3, data = d)
 }
 
-vis_drake_graph(config, file = "reg2.html", selfcontained = TRUE,
+vis_drake_graph(config, file = html_out("reg2.html"), selfcontained = TRUE,
   width = "100%", height = "500px")
 
-vis_drake_graph(config, file = "reg2-small-legend.html", selfcontained = TRUE,
+vis_drake_graph(config, file = html_out("reg2-small-legend.html"), selfcontained = TRUE,
   width = "100%", height = "500px", full_legend = FALSE)
 
-vis_drake_graph(config, file = "reg2-no-legend.html", selfcontained = TRUE,
+vis_drake_graph(config, file = html_out("reg2-no-legend.html"), selfcontained = TRUE,
   width = "100%", height = "500px", ncol_legend = 0)
 
 vis_drake_graph(
-  config, file = "targetsonly.html", selfcontained = TRUE,
+  config, file = html_out("targetsonly.html"), selfcontained = TRUE,
   targets_only = TRUE,
   width = "100%", height = "500px",
   from = c("large", "small")
 )
 
 vis_drake_graph(
-  config, file = "fromout.html", selfcontained = TRUE,
+  config, file = html_out("fromout.html"), selfcontained = TRUE,
   width = "100%", height = "500px",
   from = c("regression2_small", "regression2_large")
 )
 
 vis_drake_graph(
-  config, file = "fromin.html", selfcontained = TRUE,
+  config, file = html_out("fromin.html"), selfcontained = TRUE,
   width = "100%", height = "500px",
   from = "small", mode = "in"
 )
 
 vis_drake_graph(
-  config, file = "fromall.html", selfcontained = TRUE,
+  config, file = html_out("fromall.html"), selfcontained = TRUE,
   width = "100%", height = "500px",
   from = "small", mode = "all", order = 1
 )
 
 vis_drake_graph(
-  config, file = "subset.html", selfcontained = TRUE,
+  config, file = html_out("subset.html"), selfcontained = TRUE,
   width = "100%", height = "500px",
   subset = c("regression2_small", "\"report.md\"")
 )
@@ -71,7 +74,7 @@ runfile <- file.path("examples", "packages", "interactive-tutorial.R") %>%
   system.file(package = "drake", mustWork = TRUE)
 source(runfile)
 vis_drake_graph(
-  config, file = "packages.html", selfcontained = TRUE,
+  config, file = html_out("packages.html"), selfcontained = TRUE,
   width = "100%", height = "500px"
 )
 
@@ -101,7 +104,7 @@ my_plan <- drake_plan(
 config <- drake_config(my_plan)
 vis_drake_graph(
   main = "Good workflow plan",
-  config, file = "good-commands.html", selfcontained = TRUE,
+  config, file = html_out("good-commands.html"), selfcontained = TRUE,
   width = "100%", height = "500px"
 )
 
@@ -113,7 +116,7 @@ my_plan <- drake_plan(
 config <- drake_config(my_plan)
 vis_drake_graph(
   main = "Bad workflow plan",
-  config, file = "bad-commands.html", selfcontained = TRUE,
+  config, file = html_out("bad-commands.html"), selfcontained = TRUE,
   width = "100%", height = "500px"
 )
 
@@ -123,3 +126,5 @@ for (file in files){
 
 clean(destroy = TRUE)
 unlink(c("figure", "report.Rmd"), recursive = TRUE)
+
+unlink(html_out("*_files"), recursive = TRUE)

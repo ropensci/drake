@@ -1,0 +1,17 @@
+urls:
+  reference: https://github.com/ropensci/drake/reference
+  article: https://github.com/ropensci/drake/articles
+articles:
+  best-practices: best-practices.html
+  caution: caution.html
+  debug: debug.html
+  drake: drake.html
+  example-basic: example-basic.html
+  example-gsp: example-gsp.html
+  example-packages: example-packages.html
+  faq: faq.html
+  graph: graph.html
+  parallelism: parallelism.html
+  storage: storage.html
+  timing: timing.html
+

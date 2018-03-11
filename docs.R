@@ -55,12 +55,12 @@ pkgdown <- function(){
   tmp <- pkgdown::build_site(pkg = dir, path = site_dir, preview = FALSE)
 
   x <- readLines(index_file)
-  icon <- file.path(dir, "images", "icon.ico")
+  icon <- file.path(dir, "docs/images", "icon.ico")
   tmp <- file.copy(from = icon, to = site_dir, overwrite = TRUE)
 
-  from <- "<p><img src=.*images/graph.png.*></p>"
+  from <- "<p><img src=.*docs/images/graph.png.*></p>"
   to <- "<iframe
-    src = 'https://cdn.rawgit.com/ropensci/drake/0fdb7d29/images/reg2.html'
+    src = 'https://ropensci.github.io/drake/images/reg2.html'
     width = '100%' height = '600px' allowtransparency='true'
     style='border: none; box-shadow: none'>
     </iframe>"
@@ -89,3 +89,4 @@ pkgdown <- function(){
 
 faq()
 pkgdown()
+source("images.R", local = TRUE)
