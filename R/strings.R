@@ -1,6 +1,3 @@
-# All functions in this file are taken from eply:
-# https://github.com/ropensci/eply
-
 #' @title Put quotes around each element of a character vector.
 #' @description Quotes are important in drake.
 #' In workflow plan data frame commands,
@@ -53,7 +50,7 @@ drake_unquote <- function(x = NULL, deep = FALSE){
       call. = FALSE
     )
   }
-  gsub(pattern = "^(?:'(.*)'|\"(.*)\")$", replacement = "\\1\\2", x = x)
+  gsub(pattern = quotes_regex, replacement = "\\1\\2", x = x)
 }
 
 #' @title Turn valid expressions into character strings.
@@ -114,3 +111,5 @@ file_store <- function(x){
 wide_deparse <- function(x){
   paste(deparse(x), collapse = "\n")
 }
+
+quotes_regex <- "^(?:'(.*)'|\"(.*)\")$"

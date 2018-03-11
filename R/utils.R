@@ -3,7 +3,7 @@ safe_grepl <- function(pattern, x){
 }
 
 is_file <- function(x){
-  safe_grepl(pattern = "^(?:'(.*)'|\"(.*)\")$", x = x)
+  safe_grepl(pattern = quotes_regex, x = x)
 }
 
 standardize_filename <- function(text){
