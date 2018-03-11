@@ -198,14 +198,16 @@ command_dependencies <- function(command){
   if (is.na(command)){
     return()
   }
-  # TODO: May need to think about changing this bit
-  # if we support expressions in workflow plans.
   command <- as.character(command)
   deps <- code_dependencies(parse(text = command))
 
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
-  files <- extract_filenames(command)
+  if (identical(pkgconfig::get_config("drake::strings_in_dots"), "literals")){
+    files <- character(0)
+  } else {
+    files <- extract_filenames(command)
+  }
   if (length(files)){
     files <- drake_unquote(files) %>%
       drake_quotes(single = FALSE)
@@ -213,10 +215,15 @@ command_dependencies <- function(command){
     files <- setdiff(files, deps$file_out)
     deps$file_in <- base::union(deps$file_in, files)
   }
+
+  # TODO: remove this bit when we're confident
+  # users have totally switched to `knitr_in()`.
   deps$loadd <- base::union(
     deps$loadd, knitr_deps(find_knitr_doc(command))
   ) %>%
     unique
+
+  # This bit stays the same.
   deps[purrr::map_int(deps, length) > 0]
 }
 
