@@ -161,7 +161,7 @@ process_import <- function(target, meta, config) {
     value <- config$envir[[target]]
   } else {
     value <- tryCatch(
-      flexible_get(target),
+      flexible_get(target, envir = config$envir),
       error = function(e)
         console(imported = NA, target = target, config = config))
   }

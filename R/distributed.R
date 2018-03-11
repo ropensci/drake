@@ -43,8 +43,10 @@ finish_distributed <- function(config){
 
 build_distributed <- function(target, meta_list, cache_path){
   config <- recover_drake_config(cache_path = cache_path)
-  do_prework(config = config, verbose_packages = FALSE)
-  prune_envir(targets = target, config = config)
+  config$hook({
+    do_prework(config = config, verbose_packages = FALSE)
+    prune_envir(targets = target, config = config)
+  })
   if (is.null(meta_list)){
     meta_list <- meta_list(targets = target, config = config)
     do_build <- should_build_target(

@@ -1,8 +1,10 @@
 # Version 5.1.0
 
 - Use `ignore()` to optionally ignore pieces of workflow plan commands. Use `ignore(some_code)` to
-1. Force `drake` to not track dependencies in `some_code`, and
-2. Ignore any changes in `some_code` when it comes to deciding which target are out of date.
+    1. Force `drake` to not track dependencies in `some_code`, and
+    2. Ignore any changes in `some_code` when it comes to deciding which target are out of date.
+- Force `drake` to only look for imports in environments inheriting from `envir` in `make()` (plus explicitly namespaced functions).
+- Force `loadd()` to ignore foreign imports (imports not explicitly found in `envir` when `make()` last imported them).
 - Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.
 - Change `loadd()` so that only targets (not imports) are loaded if the `...` and `list` arguments are empty.
 - Add check to drake_plan() to check for duplicate targets
