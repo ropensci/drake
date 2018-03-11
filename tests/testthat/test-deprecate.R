@@ -1,5 +1,20 @@
 drake_context("deprecation")
 
+test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
+  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
+  on.exit(
+    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
+  )
+  cmd <- "readRDS('my_file.rds')"
+  pkgconfig::set_config("drake::strings_in_dots" = "literals")
+  expect_equal(command_dependencies(cmd), list(globals = "readRDS"))
+  pkgconfig::set_config("drake::strings_in_dots" = "garbage")
+  expect_equal(
+    expect_warning(command_dependencies(cmd)),
+    list(globals = "readRDS", file_in = "\"my_file.rds\"")
+  )
+})
+
 test_with_dir("deprecation: future", {
   expect_warning(backend())
 })

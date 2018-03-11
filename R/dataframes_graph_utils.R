@@ -211,7 +211,7 @@ legend_nodes <- function(font_size = 20) {
 
 missing_import <- function(x, envir) {
   missing_object <- !is_file(x) & is.null(envir[[x]]) & tryCatch({
-    flexible_get(x)
+    flexible_get(x, envir = envir)
     FALSE
   },
   error = function(e) TRUE)
