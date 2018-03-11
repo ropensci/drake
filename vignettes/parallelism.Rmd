@@ -270,7 +270,7 @@ my_plan$evaluator <- evaluator
 make(my_plan, parallelism = "future", jobs = 8)
 ```
 
-In addition, you can set the `caching` argument to control when the values of the targets are cached: `"worker"` for the individual workers (default) and `"master"` for the master process. If you let the workers do the caching, you can take advantage of parallelism when targets are stored. On the other hand, `"master"` is a better option if workers do not have cache access or you are using a custom cache that is not threadsafe (e.g. `storr::storr_dbi()`.
+In addition, you can set the `caching` argument to control when the values of the targets are cached: `"worker"` for the individual workers (default) and `"master"` for the master process. If you let the workers do the caching, you can take advantage of parallelism when targets are stored. On the other hand, `"master"` is a better option if workers do not have cache access or you are using a custom cache that is not thread-safe (e.g. `storr::storr_dbi()`.
 
 ## Makefile
 

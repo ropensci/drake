@@ -240,7 +240,7 @@ readd(result, cache = memory_cache)
 In theory, it should be possible to leverage serious databases using `storr_dbi()`. However, if you use such caches, please heed the following.
 
 1. Be sure you have [storr](https://github.com/richfitz/storr) version 1.1.3 or greater installed.
-1. Be careful about parallel computing. For example the `storr::storr_dbi()` cache is not threadsafe. Either use no parallel computing at all or set `parallelism = "future"` with `caching = "master"`. The `"future"` backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.
+1. Be careful about parallel computing. For example the `storr::storr_dbi()` cache is not thread-safe. Either use no parallel computing at all or set `parallelism = "future"` with `caching = "master"`. The `"future"` backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.
 
 The following example requires the `DBI` and `RSQLite` packages.
 
