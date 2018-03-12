@@ -109,7 +109,7 @@
             <h3 class="subtitle">Visualize your workflow.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-11</h4>
+            <h4 class="date">2018-03-12</h4>
           </div>
 
     
@@ -144,7 +144,10 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <h1 class="hasAnchor">
 <a href="#subgraphs" class="anchor"></a>Subgraphs</h1>
 <p>Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual <code>subset</code> of nodes. However, with the <code>subset</code> argument, <code><a href="../reference/vis_drake_graph.html">vis_drake_graph()</a></code> may drop intermediate nodes and edges.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">subset =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(
+  config,
+  <span class="dt">subset =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="kw"><a href="../reference/file_store.html">file_store</a></span>(<span class="st">"report.md"</span>))
+)</code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/subset.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The rest of the subgraph functionality preserves connectedness. Use <code>targets_only</code> to ignore the imports.</p>
@@ -165,9 +168,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 </iframe>
 <p>The <code>report.md</code> node is drawn in somewhat, but it is still the farthest to the right in order to communicate <code>drake</code>’s parallel computing strategy.</p>
 </div>
-<div id="parallel-computing-laid-bare" class="section level1">
+<div id="parallel-computing-visualized" class="section level1">
 <h1 class="hasAnchor">
-<a href="#parallel-computing-laid-bare" class="anchor"></a>Parallel computing laid bare</h1>
+<a href="#parallel-computing-visualized" class="anchor"></a>Parallel computing visualized</h1>
 <p><code>Drake</code> shows its parallel computing strategy plainly in the graph.</p>
 <iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
@@ -201,7 +204,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#dependency-reactivity">Dependency reactivity</a></li>
       <li><a href="#subgraphs">Subgraphs</a></li>
-      <li><a href="#parallel-computing-laid-bare">Parallel computing laid bare</a></li>
+      <li><a href="#parallel-computing-visualized">Parallel computing visualized</a></li>
       <li><a href="#control-the-legend-">Control the legend.</a></li>
       <li><a href="#more-flexibility">More flexibility</a></li>
       </ul>
@@ -216,7 +219,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

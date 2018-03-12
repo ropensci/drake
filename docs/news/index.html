@@ -137,6 +137,12 @@
 <h1 class="hasAnchor">
 <a href="#version-5-1-0" class="anchor"></a>Version 5.1.0</h1>
 <ul>
+<li>Use <code><a href="../reference/ignore.html">ignore()</a></code> to optionally ignore pieces of workflow plan commands and/or imported functions. Use <code><a href="../reference/ignore.html">ignore(some_code)</a></code> to
+<ol>
+<li>Force <code>drake</code> to not track dependencies in <code>some_code</code>, and</li>
+<li>Ignore any changes in <code>some_code</code> when it comes to deciding which target are out of date.</li>
+</ol>
+</li>
 <li>Force <code>drake</code> to only look for imports in environments inheriting from <code>envir</code> in <code><a href="../reference/make.html">make()</a></code> (plus explicitly namespaced functions).</li>
 <li>Force <code><a href="../reference/loadd.html">loadd()</a></code> to ignore foreign imports (imports not explicitly found in <code>envir</code> when <code><a href="../reference/make.html">make()</a></code> last imported them).</li>
 <li>Reduce default verbosity. Only targets are printed out by default. Verbosity levels are integers ranging from 0 through 4.</li>
@@ -359,7 +365,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

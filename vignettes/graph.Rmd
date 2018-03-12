@@ -143,7 +143,7 @@ style="border: none; box-shadow: none">
 
 The `report.md` node is drawn in somewhat, but it is still the farthest to the right in order to communicate `drake`'s parallel computing strategy. 
 
-# Parallel computing laid bare
+# Parallel computing visualized
 
 `Drake` shows its parallel computing strategy plainly in the graph.
 

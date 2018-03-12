@@ -78,6 +78,7 @@ reference:
   - '`file_out`'
   - '`file_store`'
   - '`knitr_in`'
+  - '`ignore`'
   - '`analysis_wildcard`'
   - '`dataset_wildcard`'
   - '`evaluate_plan`'
