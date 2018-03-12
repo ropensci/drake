@@ -1,6 +1,6 @@
 # Version 5.1.0
 
-- Use `ignore()` to optionally ignore pieces of workflow plan commands. Use `ignore(some_code)` to
+- Use `ignore()` to optionally ignore pieces of workflow plan commands and/or imported functions. Use `ignore(some_code)` to
     1. Force `drake` to not track dependencies in `some_code`, and
     2. Ignore any changes in `some_code` when it comes to deciding which target are out of date.
 - Force `drake` to only look for imports in environments inheriting from `envir` in `make()` (plus explicitly namespaced functions).
