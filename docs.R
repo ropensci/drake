@@ -158,6 +158,7 @@ images <- function(){
   unlink("report.Rmd")
 
   # For the "packages" example.
+  rm(config)
   library(magrittr)
   reportfile <- file.path("examples", "packages", "report.Rmd") %>%
     system.file(package = "drake", mustWork = TRUE)
