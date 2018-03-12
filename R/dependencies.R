@@ -313,7 +313,7 @@ code_dependencies <- function(expr){
         expr <- function(){} # nolint: curly braces are necessary
       }
       walk(body(expr))
-    } else if (is.name(expr) || is.atomic(expr) || is.primitive(expr)) {
+    } else if (is.name(expr) || is.atomic(expr)) {
       new_globals <- setdiff(
         x = wide_deparse(expr), y = drake_fn_patterns)
       results$globals <<- c(results$globals, new_globals)
