@@ -29,6 +29,17 @@ compatibility. New code should use \code{\link[=file_out]{file_out()}}, \code{\l
 \code{\link[=knitr_in]{knitr_in()}} to specify file names and set this argument to \code{"literals"},
 which will at some point become the only accepted value.
 
+To fully embrace the glorious new file API, call
+\code{pkgconfig::set_config("drake::strings_in_dots" = "literals")}
+right when you start your R session.
+That way, \code{drake} totally relies on \code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}},
+and \code{\link[=knitr_in]{knitr_in()}} to coordinate input and output files, as
+opposed to deprecated features like single-quotes
+(and in the case of \code{knitr} reports,
+explicit calls to \code{knitr::knit()} and \code{rmarkdown::render()} in commands).
+This is why the default value of \code{strings_in_dots} is
+\code{pkgconfig::get_config("drake::strings_in_dots")}.
+
 In the past, this argument was a character scalar denoting
 how to treat quoted character strings in the commands
 specified through \code{...}.

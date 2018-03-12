@@ -57,6 +57,17 @@
 #'   [knitr_in()] to specify file names and set this argument to `"literals"`,
 #'   which will at some point become the only accepted value.
 #'
+#'   To fully embrace the glorious new file API, call
+#'   `pkgconfig::set_config("drake::strings_in_dots" = "literals")`
+#'   right when you start your R session.
+#'   That way, `drake` totally relies on [file_in()], [file_out()],
+#'   and [knitr_in()] to coordinate input and output files, as
+#'   opposed to deprecated features like single-quotes
+#'   (and in the case of `knitr` reports,
+#'   explicit calls to `knitr::knit()` and `rmarkdown::render()` in commands).
+#'   This is why the default value of `strings_in_dots` is
+#'   `pkgconfig::get_config("drake::strings_in_dots")`.
+#'
 #'   In the past, this argument was a character scalar denoting
 #'   how to treat quoted character strings in the commands
 #'   specified through `...`.
