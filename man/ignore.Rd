@@ -2,9 +2,9 @@
 % Please edit documentation in R/workplan.R
 \name{ignore}
 \alias{ignore}
-\title{Ignore components of commands.}
+\title{Ignore components of commands and imported functions.}
 \usage{
-ignore(x)
+ignore(x = NULL)
 }
 \arguments{
 \item{x}{code to ignore}
@@ -13,7 +13,8 @@ ignore(x)
 the argument
 }
 \description{
-In commands in the workflow plan, you can
+In a command in the workflow plan
+or the body of an imported function, you can
 \code{ignore(some_code)} to
 \enumerate{
 \item Force \code{drake} to not track dependencies in \code{some_code}, and
@@ -35,6 +36,16 @@ make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Builds y.
 x <- 6
 make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Skips y.
 make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Skips y.
+# What about imported functions?
+f <- function(x) sqrt(4) + ignore(x + 1)
+make(plan = drake_plan(x = f(2)))
+readd(x)
+f <- function(x) sqrt(4) + ignore(x + 2)
+make(plan = drake_plan(x = f(2)))
+readd(x)
+f <- function(x) sqrt(5) + ignore(x + 2)
+make(plan = drake_plan(x = f(2)))
+readd(x)
 })
 }
 }

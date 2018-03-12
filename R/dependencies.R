@@ -317,7 +317,7 @@ code_dependencies <- function(expr){
       new_globals <- setdiff(
         x = wide_deparse(expr), y = drake_fn_patterns)
       results$globals <<- c(results$globals, new_globals)
-    } else if (is.call(expr) || is.recursive(expr)) {
+    } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
       new_results <- list()
       if (is_loadd_call(expr)){
         new_results <- analyze_loadd(expr)

@@ -62,7 +62,8 @@ get_standardized_command <- function(target, config) {
 # If styler's behavior changes a lot, it will
 # put targets out of date.
 standardize_command <- function(x) {
-  x <- language_to_text(x)
+  x <- ignore_ignore(x) %>%
+    language_to_text
   formatR::tidy_source(
     source = NULL,
     comment = FALSE,
@@ -75,18 +76,47 @@ standardize_command <- function(x) {
     width.cutoff = 119
   )$text.tidy %>%
     paste(collapse = "\n") %>%
-    braces %>%
-    ignore_ignore
+    braces
 }
 
-ignore_ignore <- function(x){
-  gsub(pattern = ignore_pattern, replacement = "", x = x)
+ignore_ignore <- function(expr){
+  if (is.character(expr)){
+    expr <- parse(text = expr)
+  }
+  recurse_ignore(expr)
+}
+
+recurse_ignore <- function(x) {
+  if (is.function(x) && !is.primitive(x) && !is.null(body(x))){
+    body(x) <- recurse_ignore(body(x))
+  } else if (
+    length(x) > 0 &&
+    is.language(x) &&
+    (is.call(x) || is.recursive(x))
+  ){
+    if (is_ignore_call(x)) {
+      x <- quote(ignore())
+    } else {
+      for (i in seq_along(x)){
+        if (length(x[[i]])){
+          x[[i]] <- recurse_ignore(x[[i]])
+        }
+      }
+    }
+  }
+  x
 }
 
 language_to_text <- function(x){
+  if (length(x) < 1){
+    return(character(0))
+  }
   if (is.expression(x)){
-    stopifnot(length(x) < 2)
-    x <- x[[1]]
+    # TODO: remove the if () clause in some major version bump.
+    # The only reason it exists is to avoid invalidating old projects.
+    if (length(x) < 2){
+      x <- x[[1]]
+    }
   }
   if (is.expression(x) || is.language(x)){
     for (attribute in c("srcref", "srcfile", "wholeSrcref")){

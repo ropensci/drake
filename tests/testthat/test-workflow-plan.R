@@ -318,22 +318,65 @@ test_with_dir("ignore() suppresses updates", {
   expect_equal(justbuilt(con), character(0))
 })
 
+test_with_dir("ignore() works on its own", {
+  expect_equal(ignore(), NULL)
+  expect_equal(ignore(1234), 1234)
+  expect_identical(ignore_ignore(digest::digest), digest::digest)
+})
+
 test_with_dir("standardized commands with ignore()", {
   expect_equal(standardize_command("sqrt(arg)"), "{\n sqrt(arg) \n}")
   expect_equal(
     standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123))"),
-    "{\n f(sqrt() + 123) \n}"
+    "{\n f(sqrt(ignore() + 123)) \n}"
   )
   expect_equal(
-    standardize_command("sqrt( ignore  (fun(arg) + 7) + 123)"),
-    "{\n f(sqrt() + 123) \n}"
+    standardize_command("f(sqrt( ignore  (fun(arg) + 7) + 123) )"),
+    "{\n f(sqrt(ignore() + 123)) \n}"
   )
   expect_equal(
-    standardize_command("sqrt( drake::ignore(fun(arg) + 7) + 123)"),
-    "{\n f(sqrt() + 123) \n}"
+    standardize_command(" f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))"),
+    "{\n f(sqrt(ignore() + 123)) \n}"
   )
   expect_equal(
-    standardize_command("sqrt( drake ::: ignore  (fun(arg) + 7) + 123)"),
-    "{\n f(sqrt() + 123) \n}"
+    standardize_command("\tf(sqrt( drake ::: ignore  (fun(arg) + 7) + 123))"),
+    "{\n f(sqrt(ignore() + 123)) \n}"
   )
+  expect_equal(
+    standardize_command("function(x){(sqrt( ignore(fun(arg) + 7) + 123))}"),
+    "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
+  )
+  f <- function(x){
+    (sqrt( ignore(fun(arg) + 7) + 123))
+  }
+  b <- body(ignore_ignore(f))
+  for (a in names(attributes(b))){
+    attr(b, a) <- NULL
+  }
+  expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
+})
+
+test_with_dir("ignore() in imported functions", {
+  f <- function(x){
+    (sqrt( ignore(sqrt(x) + 7) + 123))
+  }
+  plan <- drake_plan(x = f(1))
+  cache <- storr::storr_environment()
+  config <- make(plan, cache = cache)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readd(f, cache = cache), f)
+  expect_equal(
+    readd(f, cache = cache, namespace = "kernels")[3],
+    "    (sqrt(ignore() + 123))"
+  )
+  f <- function(x){
+    (sqrt( ignore(sqrt(x) + 8) + 123))
+  }
+  config <- make(plan, cache = cache)
+  expect_equal(justbuilt(config), character(0))
+  f <- function(x){
+    (sqrt( ignore(sqrt(x) + 8) + 124))
+  }
+  config <- make(plan, cache = cache)
+  expect_equal(justbuilt(config), "x")
 })

@@ -341,8 +341,9 @@ file_out <- function(path){
 #' }
 knitr_in <- file_in
 
-#' @title Ignore components of commands.
-#' @description In commands in the workflow plan, you can
+#' @title Ignore components of commands and imported functions.
+#' @description In a command in the workflow plan
+#' or the body of an imported function, you can
 #' `ignore(some_code)` to
 #' 1. Force `drake` to not track dependencies in `some_code`, and
 #' 2. Ignore any changes in `some_code` when it comes to
@@ -365,9 +366,21 @@ knitr_in <- file_in
 #' x <- 6
 #' make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Skips y.
 #' make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Skips y.
+#' # What about imported functions?
+#' f <- function(x) sqrt(4) + ignore(x + 1)
+#' make(plan = drake_plan(x = f(2)))
+#' readd(x)
+#' f <- function(x) sqrt(4) + ignore(x + 2)
+#' make(plan = drake_plan(x = f(2)))
+#' readd(x)
+#' f <- function(x) sqrt(5) + ignore(x + 2)
+#' make(plan = drake_plan(x = f(2)))
+#' readd(x)
 #' })
 #' }
-ignore <- identity
+ignore <- function(x = NULL){
+  identity(x)
+}
 
 # Unnamed arguments may have been declared with `<-`` or `->``
 # rather than the required `=`.
