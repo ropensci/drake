@@ -72,6 +72,11 @@ store_function <- function(target, value, meta, config){
     value = value,
     namespace = config$cache$default_namespace
   )
+  # For the kernel of an imported function,
+  # we ignore any code wrapped in ignore().
+  if (meta$imported){
+    value <- ignore_ignore(value)
+  }
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
   if (meta$imported){

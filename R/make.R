@@ -290,6 +290,9 @@ targets_graph <- function(config){
 }
 
 initialize_session <- function(config){
+  if (config$log_progress){
+    clear_progress(cache = config$cache, jobs = jobs_imports(config$jobs))
+  }
   config$cache$clear(namespace = "session")
   if (config$session_info){
     config$cache$set(

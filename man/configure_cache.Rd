@@ -25,7 +25,8 @@ which is just the collection of algorithms available to the \code{algo}
 argument in \code{digest::digest()}.
 See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} for more.}
 
-\item{log_progress}{logical, whether to clear the recorded
+\item{log_progress}{deprecated logical.
+Previously toggled whether to clear the recorded
 build progress if this cache was used for previous calls to
 \code{\link[=make]{make()}}.}
 

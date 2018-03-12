@@ -383,7 +383,6 @@ drake_config <- function(
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(
     cache = cache,
-    log_progress = log_progress,
     overwrite_hash_algos = FALSE,
     jobs = jobs
   )

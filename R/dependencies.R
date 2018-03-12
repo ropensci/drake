@@ -317,7 +317,7 @@ code_dependencies <- function(expr){
       new_globals <- setdiff(
         x = wide_deparse(expr), y = drake_fn_patterns)
       results$globals <<- c(results$globals, new_globals)
-    } else if (is.call(expr) || is.recursive(expr)) {
+    } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
       new_results <- list()
       if (is_loadd_call(expr)){
         new_results <- analyze_loadd(expr)
@@ -329,7 +329,7 @@ code_dependencies <- function(expr){
         new_results <- analyze_file_in(expr)
       } else if (is_file_out_call(expr)){
         new_results <- analyze_file_out(expr)
-      } else {
+      } else if (!is_ignore_call(expr)){
         if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
           new_results <- list(
             namespaced = setdiff(wide_deparse(expr), drake_fn_patterns)
@@ -432,12 +432,14 @@ file_in_fns <- pair_text(drake_prefix, c("file_in"))
 file_out_fns <- pair_text(drake_prefix, c("file_out"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
+ignore_fns <- pair_text(drake_prefix, "ignore")
 drake_fn_patterns <- c(
   knitr_in_fns,
   file_in_fns,
   file_out_fns,
   loadd_fns,
-  readd_fns
+  readd_fns,
+  ignore_fns
 )
 
 is_knitr_in_call <- function(expr){
@@ -459,3 +461,11 @@ is_loadd_call <- function(expr){
 is_readd_call <- function(expr){
   wide_deparse(expr[[1]]) %in% readd_fns
 }
+
+is_ignore_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% ignore_fns
+}
+
+ignore_pattern <- paste0(
+  "(\\s*|drake\\s*::\\s*|drake\\s*:::\\s*)ignore\\s*\\([^\\)]*\\)"
+)

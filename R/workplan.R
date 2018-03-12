@@ -228,7 +228,7 @@ drake_plan_override <- function(target, field, config){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso `file_out` `knitr_in`
+#' @seealso [file_out()], [knitr_in()], [ignore()]
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of input files
 #'   to a command in your workflow plan data frame.
@@ -271,7 +271,7 @@ file_in <- function(...){
 #'   one file output per command. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso file_in knitr_in
+#' @seealso [file_in()], [knitr_in()], [ignore()]
 #' @return A character string, the file path of the file output.
 #' @param path Character string of length 1. File path
 #'   of the file output of a command in your
@@ -323,7 +323,7 @@ file_out <- function(path){
 #'   in your workflow plan data frame. See the examples
 #'   for a full explanation.
 #' @export
-#' @seealso file_in file_out
+#' @seealso [file_in()], [file_out()], [ignore()]
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
 #'   source files supplied to a command in your workflow plan data frame.
@@ -351,6 +351,47 @@ file_out <- function(path){
 #' })
 #' }
 knitr_in <- file_in
+
+#' @title Ignore components of commands and imported functions.
+#' @description In a command in the workflow plan
+#' or the body of an imported function, you can
+#' `ignore(some_code)` to
+#' 1. Force `drake` to not track dependencies in `some_code`, and
+#' 2. Ignore any changes in `some_code` when it comes to
+#'   deciding which target are out of date.
+#' @export
+#' @seealso [file_in()], [file_out()], [knitr_in()]
+#' @return the argument
+#' @param x code to ignore
+#' @examples
+#' \dontrun{
+#' test_with_dir("Contain side effects", {
+#' # Normally, `drake` reacts to changes in dependencies.
+#' x <- 4
+#' make(plan = drake_plan(y = sqrt(x)))
+#' x <- 5
+#' make(plan = drake_plan(y = sqrt(x)))
+#' make(plan = drake_plan(y = sqrt(4) + x))
+#' # But not with ignore().
+#' make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Builds y.
+#' x <- 6
+#' make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Skips y.
+#' make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Skips y.
+#' # What about imported functions?
+#' f <- function(x) sqrt(4) + ignore(x + 1)
+#' make(plan = drake_plan(x = f(2)))
+#' readd(x)
+#' f <- function(x) sqrt(4) + ignore(x + 2)
+#' make(plan = drake_plan(x = f(2)))
+#' readd(x)
+#' f <- function(x) sqrt(5) + ignore(x + 2)
+#' make(plan = drake_plan(x = f(2)))
+#' readd(x)
+#' })
+#' }
+ignore <- function(x = NULL){
+  identity(x)
+}
 
 # Unnamed arguments may have been declared with `<-`` or `->``
 # rather than the required `=`.

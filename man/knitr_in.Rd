@@ -44,5 +44,5 @@ vis_drake_graph(config)
 }
 }
 \seealso{
-file_in file_out
+\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=ignore]{ignore()}}
 }
