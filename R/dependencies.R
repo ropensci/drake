@@ -418,6 +418,34 @@ unnamed_in_list <- function(x){
   unlist(out)
 }
 
+ignore_ignore <- function(expr){
+  if (is.character(expr)){
+    expr <- parse(text = expr)
+  }
+  recurse_ignore(expr)
+}
+
+recurse_ignore <- function(x) {
+  if (is.function(x) && !is.primitive(x) && !is.null(body(x))){
+    body(x) <- recurse_ignore(body(x))
+  } else if (is_callish(x)){
+    if (is_ignore_call(x)) {
+      x <- quote(ignore())
+    } else {
+      for (i in seq_along(x)){
+        if (length(x[[i]])){
+          x[[i]] <- recurse_ignore(x[[i]])
+        }
+      }
+    }
+  }
+  x
+}
+
+is_callish <- function(x){
+  length(x) > 0 && is.language(x) && (is.call(x) || is.recursive(x))
+}
+
 # This function is just to set up the prefixes and patterns below.
 # Existing tests will fail if the output is incorrect.
 # pair_text is not really needed currently, but in case we have synonyms,
@@ -465,7 +493,3 @@ is_readd_call <- function(expr){
 is_ignore_call <- function(expr){
   wide_deparse(expr[[1]]) %in% ignore_fns
 }
-
-ignore_pattern <- paste0(
-  "(\\s*|drake\\s*::\\s*|drake\\s*:::\\s*)ignore\\s*\\([^\\)]*\\)"
-)

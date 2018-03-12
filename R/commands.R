@@ -79,34 +79,6 @@ standardize_command <- function(x) {
     braces
 }
 
-ignore_ignore <- function(expr){
-  if (is.character(expr)){
-    expr <- parse(text = expr)
-  }
-  recurse_ignore(expr)
-}
-
-recurse_ignore <- function(x) {
-  if (is.function(x) && !is.primitive(x) && !is.null(body(x))){
-    body(x) <- recurse_ignore(body(x))
-  } else if (
-    length(x) > 0 &&
-    is.language(x) &&
-    (is.call(x) || is.recursive(x))
-  ){
-    if (is_ignore_call(x)) {
-      x <- quote(ignore())
-    } else {
-      for (i in seq_along(x)){
-        if (length(x[[i]])){
-          x[[i]] <- recurse_ignore(x[[i]])
-        }
-      }
-    }
-  }
-  x
-}
-
 language_to_text <- function(x){
   if (length(x) < 1){
     return(character(0))
