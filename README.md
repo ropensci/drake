@@ -149,6 +149,14 @@ make(my_plan) # Independently re-create the results from the code and input data
 
 With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you relied on basic `drake` functions such as `make()`, so you may not have needed to peek at any substantive author-defined code in advance. In that case, you can stay usefully ignorant as you reimplement the original author's methodology. In other words, `drake` could potentially improve the integrity of independent replication.
 
+## Readability and transparency
+
+For reproducibility, it is important that others can read your code and understand what your workflow is doing. `Drake` helps in several ways.
+
+- The [workflow plan data frame](https://ropensci.github.io/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
+- `Drake` automatically schedules the parallel execution of the targets and deploys them to the high-performance computing backend you choose. That means the code that manages the high-performance computing is not longer tangled up with the code that expresses the actual ideas that constitute your project.
+- You can [generate large numbers of targets](https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames) without encumbering the collection of imported functions that make up your code base. In other words, `drake` can scale up the size of your project without scaling up the complexity of your custom code.
+
 # Aggressively scale up.
 
 Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. But `drake` knows what to do. Parallelism is implicit and automatic. See the [parallelism vignette](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd) for all the details.
