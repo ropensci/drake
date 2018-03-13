@@ -274,6 +274,17 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <a href="#independent-replication" class="anchor"></a>Independent replication</h2>
 <p>With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you relied on basic <code>drake</code> functions such as <code><a href="reference/make.html">make()</a></code>, so you may not have needed to peek at any substantive author-defined code in advance. In that case, you can stay usefully ignorant as you reimplement the original author’s methodology. In other words, <code>drake</code> could potentially improve the integrity of independent replication.</p>
 </div>
+<div id="readability-and-transparency" class="section level2">
+<h2 class="hasAnchor">
+<a href="#readability-and-transparency" class="anchor"></a>Readability and transparency</h2>
+<p>For reproducibility, it is important that others can read your code and understand what your workflow is doing. <code>Drake</code> helps in several ways.</p>
+<ul>
+<li>The <a href="https://ropensci.github.io/drake/reference/drake_plan.html">workflow plan data frame</a> explicitly outlines the steps of the analysis, and <a href="https://ropensci.github.io/drake/reference/vis_drake_graph.html"><code><a href="reference/vis_drake_graph.html">vis_drake_graph()</a></code></a> visualizes how those steps depend on each other.</li>
+<li>
+<code>Drake</code> takes care of the parallel scheduling and high-performance computing (HPC) so you do not have to. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.</li>
+<li>You can <a href="https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames">generate large numbers of targets</a> without encumbering the collection of imported functions that make up your code base. In other words, <code>drake</code> can scale up the size of your project without making your custom code more complicated.</li>
+</ul>
+</div>
 </div>
 <div id="aggressively-scale-up-" class="section level1">
 <h1 class="hasAnchor">

@@ -108,7 +108,7 @@
       <h1>Time logging</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-12</h4>
+            <h4 class="date">2018-03-13</h4>
           </div>
 
     
@@ -123,16 +123,16 @@
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 "\"report.md\""        target 0.164s         0.157s         0.007s     
+##  1 "\"report.md\""        target 0.184s         0.171s         0.011s     
 ##  2 "\"report.Rmd\""       import 0.006s         0.001s         0.003s     
-##  3 coef_regression1_large target 0.015s         0.01s          0.003s     
-##  4 coef_regression1_small target 0.015s         0.012s         0.001s     
-##  5 coef_regression2_large target 0.006s         0.002s         0.005s     
-##  6 coef_regression2_small target 0.006s         0.004s         0.002s     
-##  7 data.frame             import 0.048s         0.034s         0.012s     
-##  8 knit                   import 0.039s         0.024s         0.015s     
-##  9 large                  target 0.013s         0.006s         0.005s     
-## 10 lm                     import 0.014s         0.009s         0.005s     
+##  3 coef_regression1_large target 0.015s         0.007s         0.007s     
+##  4 coef_regression1_small target 0.015s         0.012s         0.002s     
+##  5 coef_regression2_large target 0.008s         0.006s         0.001s     
+##  6 coef_regression2_small target 0.007s         0.006s         0.001s     
+##  7 data.frame             import 0.047s         0.03s          0.016s     
+##  8 knit                   import 0.042s         0.023s         0.018s     
+##  9 large                  target 0.016s         0.007s         0.007s     
+## 10 lm                     import 0.013s         0.01s          0.003s     
 ## # ... with 18 more rows
 
 <span class="co"># `dplyr`-style `tidyselect` commands</span>
@@ -140,30 +140,30 @@
 ## # A tibble: 4 x 5
 ##   item                   type   elapsed        user           system      
 ## * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durati&gt;
-## 1 coef_regression1_large target 0.015s         0.01s          0.003s      
-## 2 coef_regression1_small target 0.015s         0.012s         0.001s      
-## 3 coef_regression2_large target 0.006s         0.002s         0.005s      
-## 4 coef_regression2_small target 0.006s         0.004s         0.002s
+## 1 coef_regression1_large target 0.015s         0.007s         0.007s      
+## 2 coef_regression1_small target 0.015s         0.012s         0.002s      
+## 3 coef_regression2_large target 0.008s         0.006s         0.001s      
+## 4 coef_regression2_small target 0.007s         0.006s         0.001s
 
 <span class="kw"><a href="../reference/build_times.html">build_times</a></span>(<span class="dt">digits =</span> <span class="dv">8</span>, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
 ## # A tibble: 15 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 "\"report.md\""        target 0.164s         0.157s         0.007s     
-##  2 coef_regression1_large target 0.015s         0.01s          0.003s     
-##  3 coef_regression1_small target 0.015s         0.012s         0.001s     
-##  4 coef_regression2_large target 0.006s         0.002s         0.005s     
-##  5 coef_regression2_small target 0.006s         0.004s         0.002s     
-##  6 large                  target 0.013s         0.006s         0.005s     
-##  7 regression1_large      target 0.018s         0.011s         0.005s     
-##  8 regression1_small      target 0.017s         0.008s         0.007s     
-##  9 regression2_large      target 0.008s         0.004s         0.004s     
-## 10 regression2_small      target 0.008s         0.004s         0.004s     
-## 11 small                  target 0.012s         0.008s         0.002s     
-## 12 summ_regression1_large target 0.009s         0.004s         0.004s     
-## 13 summ_regression1_small target 0.008s         0.008s         0.001s     
-## 14 summ_regression2_large target 0.007s         0.005s         0.001s     
-## 15 summ_regression2_small target 0.006s         0.006s         0.001s</code></pre></div>
+##  1 "\"report.md\""        target 0.184s         0.171s         0.011s     
+##  2 coef_regression1_large target 0.015s         0.007s         0.007s     
+##  3 coef_regression1_small target 0.015s         0.012s         0.002s     
+##  4 coef_regression2_large target 0.008s         0.006s         0.001s     
+##  5 coef_regression2_small target 0.007s         0.006s         0.001s     
+##  6 large                  target 0.016s         0.007s         0.007s     
+##  7 regression1_large      target 0.02s          0.011s         0.007s     
+##  8 regression1_small      target 0.019s         0.01s          0.007s     
+##  9 regression2_large      target 0.008s         0.006s         0.002s     
+## 10 regression2_small      target 0.008s         0.006s         0.002s     
+## 11 small                  target 0.014s         0.009s         0.004s     
+## 12 summ_regression1_large target 0.01s          0.008s         0.001s     
+## 13 summ_regression1_small target 0.009s         0.007s         0.002s     
+## 14 summ_regression2_large target 0.007s         0.004s         0.003s     
+## 15 summ_regression2_small target 0.007s         0.006s         0s</code></pre></div>
 <p>For <code>drake</code> version 4.1.0 and earlier, <code><a href="../reference/build_times.html">build_times()</a></code> just measures the elapsed runtime of each command in <code>my_plan$command</code>. For later versions, the build times also account for all the internal operations in <code>drake:::build()</code>, such as <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage and hashing</a>.</p>
 <div id="predicting-runtime" class="section level1">
 <h1 class="hasAnchor">
@@ -183,7 +183,7 @@
   <span class="dt">digits =</span> <span class="dv">8</span>,
   <span class="dt">targets_only =</span> <span class="ot">TRUE</span>
 )
-## [1] "0.312s"</code></pre></div>
+## [1] "0.347s"</code></pre></div>
 <p>Suppose we change a dependency to make some targets out of date. Now, even though <code>from_scatch</code> is <code>FALSE</code>, the next <code><a href="../reference/make.html">make()</a></code> should take some time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -195,7 +195,7 @@
   <span class="dt">digits =</span> <span class="dv">8</span>,
   <span class="dt">targets_only =</span> <span class="ot">TRUE</span>
 )
-## [1] "0.205s"</code></pre></div>
+## [1] "0.229s"</code></pre></div>
 <p>We can also factor in parallelism using the <code>future_jobs</code> argument, which is just <code>jobs</code> for a hypothetical next <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(
   config,
@@ -204,7 +204,7 @@
   <span class="dt">digits =</span> <span class="dv">8</span>,
   <span class="dt">targets_only =</span> <span class="ot">TRUE</span>
 )
-## [1] "0.312s"
+## [1] "0.347s"
 
 <span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(
   config,
@@ -213,7 +213,7 @@
   <span class="dt">digits =</span> <span class="dv">8</span>,
   <span class="dt">targets_only =</span> <span class="ot">TRUE</span>
 )
-## [1] "0.259s"
+## [1] "0.288s"
 
 <span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(
   config,
@@ -222,7 +222,7 @@
   <span class="dt">digits =</span> <span class="dv">8</span>,
   <span class="dt">targets_only =</span> <span class="ot">TRUE</span>
 )
-## [1] "0.225s"</code></pre></div>
+## [1] "0.25s"</code></pre></div>
 </div>
 <div id="rate-limiting-targets" class="section level1">
 <h1 class="hasAnchor">
@@ -247,21 +247,21 @@
 ## # A tibble: 15 x 6
 ##    item                   type   elapsed    user  system stage
 ##  * &lt;chr&gt;                  &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
-##  1 large                  target 0.0130  0.00600 0.00500    4.
-##  2 small                  target 0.0120  0.00800 0.00200    4.
-##  3 regression1_large      target 0.0180  0.0110  0.00500    5.
-##  4 regression1_small      target 0.0170  0.00800 0.00700    5.
-##  5 regression2_large      target 0.00800 0.00400 0.00400    5.
-##  6 regression2_small      target 0.00800 0.00400 0.00400    5.
-##  7 coef_regression1_large target 0.0150  0.0100  0.00300    6.
-##  8 coef_regression1_small target 0.0150  0.0120  0.00100    6.
-##  9 summ_regression1_large target 0.00900 0.00400 0.00400    6.
-## 10 summ_regression1_small target 0.00800 0.00800 0.00100    6.
-## 11 summ_regression2_large target 0.00700 0.00500 0.00100    6.
-## 12 coef_regression2_small target 0.00600 0.00400 0.00200    6.
-## 13 summ_regression2_small target 0.00600 0.00600 0.00100    6.
-## 14 coef_regression2_large target 0.00600 0.00200 0.00500    6.
-## 15 "\"report.md\""        target 0.164   0.157   0.00700    7.
+##  1 large                  target 0.0160  0.00700 0.00700    4.
+##  2 small                  target 0.0140  0.00900 0.00400    4.
+##  3 regression1_large      target 0.0200  0.0110  0.00700    5.
+##  4 regression1_small      target 0.0190  0.0100  0.00700    5.
+##  5 regression2_large      target 0.00800 0.00600 0.00200    5.
+##  6 regression2_small      target 0.00800 0.00600 0.00200    5.
+##  7 coef_regression1_large target 0.0150  0.00700 0.00700    6.
+##  8 coef_regression1_small target 0.0150  0.0120  0.00200    6.
+##  9 summ_regression1_large target 0.0100  0.00800 0.00100    6.
+## 10 summ_regression1_small target 0.00900 0.00700 0.00200    6.
+## 11 coef_regression2_large target 0.00800 0.00600 0.00100    6.
+## 12 coef_regression2_small target 0.00700 0.00600 0.00100    6.
+## 13 summ_regression2_large target 0.00700 0.00400 0.00300    6.
+## 14 summ_regression2_small target 0.00700 0.00600 0.         6.
+## 15 "\"report.md\""        target 0.184   0.171   0.0110     7.
 
 <span class="kw"><a href="../reference/rate_limiting_times.html">rate_limiting_times</a></span>(
   config,
@@ -273,14 +273,14 @@
 ## # A tibble: 8 x 6
 ##   item                   type   elapsed    user  system stage
 ## * &lt;chr&gt;                  &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
-## 1 large                  target 0.0130  0.00600 0.00500    4.
-## 2 regression1_large      target 0.0180  0.0110  0.00500    5.
-## 3 regression1_small      target 0.0170  0.00800 0.00700    5.
-## 4 coef_regression1_large target 0.0150  0.0100  0.00300    6.
-## 5 coef_regression1_small target 0.0150  0.0120  0.00100    6.
-## 6 summ_regression1_large target 0.00900 0.00400 0.00400    6.
-## 7 summ_regression1_small target 0.00800 0.00800 0.00100    6.
-## 8 "\"report.md\""        target 0.164   0.157   0.00700    7.
+## 1 large                  target 0.0160  0.00700 0.00700    4.
+## 2 regression1_large      target 0.0200  0.0110  0.00700    5.
+## 3 regression1_small      target 0.0190  0.0100  0.00700    5.
+## 4 coef_regression1_large target 0.0150  0.00700 0.00700    6.
+## 5 coef_regression1_small target 0.0150  0.0120  0.00200    6.
+## 6 summ_regression1_large target 0.0100  0.00800 0.00100    6.
+## 7 summ_regression1_small target 0.00900 0.00700 0.00200    6.
+## 8 "\"report.md\""        target 0.184   0.171   0.0110     7.
 
 <span class="kw"><a href="../reference/rate_limiting_times.html">rate_limiting_times</a></span>(
   config,
@@ -292,11 +292,11 @@
 ## # A tibble: 5 x 6
 ##   item                   type   elapsed    user  system stage
 ## * &lt;chr&gt;                  &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
-## 1 large                  target  0.0130 0.00600 0.00500    4.
-## 2 regression1_large      target  0.0180 0.0110  0.00500    5.
-## 3 coef_regression1_large target  0.0150 0.0100  0.00300    6.
-## 4 coef_regression1_small target  0.0150 0.0120  0.00100    6.
-## 5 "\"report.md\""        target  0.164  0.157   0.00700    7.</code></pre></div>
+## 1 large                  target  0.0160 0.00700 0.00700    4.
+## 2 regression1_large      target  0.0200 0.0110  0.00700    5.
+## 3 coef_regression1_large target  0.0150 0.00700 0.00700    6.
+## 4 coef_regression1_small target  0.0150 0.0120  0.00200    6.
+## 5 "\"report.md\""        target  0.184  0.171   0.0110     7.</code></pre></div>
 <p>and the parallelizable stages in general.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/parallel_stages.html">parallel_stages</a></span>(config, <span class="dt">from_scratch =</span> <span class="ot">TRUE</span>)
 ##                      item imported  file stage

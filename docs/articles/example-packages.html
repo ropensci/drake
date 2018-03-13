@@ -109,7 +109,7 @@
             <h3 class="subtitle">Refresh your project without restarting from scratch.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-12</h4>
+            <h4 class="date">2018-03-13</h4>
           </div>
 
     
@@ -130,13 +130,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-03-04  6301   dplyr
-## 2 2018-03-05 14736   dplyr
-## 3 2018-03-06 15107   dplyr
-## 4 2018-03-07 15112   dplyr
-## 5 2018-03-08 14491   dplyr
-## 6 2018-03-09 12965   dplyr
-## 7 2018-03-10  7093   dplyr</code></pre></div>
+## 1 2018-03-05 14736   dplyr
+## 2 2018-03-06 15107   dplyr
+## 3 2018-03-07 15112   dplyr
+## 4 2018-03-08 14491   dplyr
+## 5 2018-03-09 12965   dplyr
+## 6 2018-03-10  7093   dplyr
+## 7 2018-03-11  6941   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -266,9 +266,9 @@ whole_plan
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_recent)
 ##   package mean_downloads
-## 1 ggplot2      13302.400
-## 2   knitr       9444.133
-## 3    Rcpp      17162.833
+## 1 ggplot2      13600.500
+## 2   knitr       9658.067
+## 3    Rcpp      17571.100
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ##   package mean_downloads
