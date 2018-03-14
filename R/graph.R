@@ -9,15 +9,7 @@
 #' @export
 #' @return An igraph object representing
 #'   the workflow plan dependency network.
-#'
-#' @param plan workflow plan data frame, same as for function
-#'   [make()].
-#'
-#' @param targets names of targets to build, same as for function
-#'   [make()].
-#'
-#' @param envir environment to import from, same as for function
-#'
+#' @inheritParams drake_config
 #' @param sanitize_plan logical, whether to sanitize the workflow plan first.
 #' @examples
 #' \dontrun{

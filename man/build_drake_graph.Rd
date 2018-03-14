@@ -9,13 +9,79 @@ build_drake_graph(plan = read_drake_plan(),
   verbose = drake::default_verbose(), jobs = 1, sanitize_plan = TRUE)
 }
 \arguments{
-\item{plan}{workflow plan data frame, same as for function
-\code{\link[=make]{make()}}.}
+\item{plan}{workflow plan data frame.
+A workflow plan data frame is a data frame
+with a \code{target} column and a \code{command} column.
+(See the details in the \code{\link[=drake_plan]{drake_plan()}} help file
+for descriptions of the optional columns.)
+Targets are the objects and files that drake generates,
+and commands are the pieces of R code that produce them.
+Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow plan
+data frames easily, and see functions \code{\link[=plan_analyses]{plan_analyses()}},
+\code{\link[=plan_summaries]{plan_summaries()}}, \code{\link[=evaluate_plan]{evaluate_plan()}},
+\code{\link[=expand_plan]{expand_plan()}}, and \code{\link[=gather_plan]{gather_plan()}} for
+easy ways to generate large workflow plan data frames.}
 
-\item{targets}{names of targets to build, same as for function
-\code{\link[=make]{make()}}.}
+\item{targets}{character vector, names of targets to build.
+Dependencies are built too. Together, the \code{plan} and
+\code{targets} comprise the workflow network
+(i.e. the \code{graph} argument).
+Changing either will change the network.}
 
-\item{envir}{environment to import from, same as for function}
+\item{envir}{environment to use. Defaults to the current
+workspace, so you should not need to worry about this
+most of the time. A deep copy of \code{envir} is made,
+so you don't need to worry about your workspace being modified
+by \code{make}. The deep copy inherits from the global environment.
+Wherever necessary, objects and functions are imported
+from \code{envir} and the global environment and
+then reproducibly tracked as dependencies.}
+
+\item{verbose}{logical or numeric, control printing to the console.
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
+
+\item{jobs}{number of parallel processes or jobs to run.
+See \code{\link[=max_useful_jobs]{max_useful_jobs()}} or \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+to help figure out what the number of jobs should be.
+Windows users should not set \code{jobs > 1} if
+\code{parallelism} is \code{"mclapply"} because
+\code{\link[=mclapply]{mclapply()}} is based on forking. Windows users
+who use \code{parallelism = "Makefile"} will need to
+download and install Rtools.
+
+Imports and targets are processed separately, and they usually
+have different parallelism needs. To use at most 2 jobs at a time
+for imports and at most 4 jobs at a time for targets, call
+\code{make(..., jobs = c(imports = 2, targets = 4))}.
+
+For \code{"future_lapply"} parallelism, \code{jobs}
+only applies to the imports.
+To set the max number of jobs for \code{"future_lapply"}
+parallelism, set the \code{workers}
+argument where it exists: for example, call
+\code{future::plan(multisession(workers = 4))},
+then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
+You might also try \code{options(mc.cores = jobs)},
+or see \code{future::.options}
+for environment variables that set the max number of jobs.
+
+If \code{parallelism} is \code{"Makefile"},  Makefile-level parallelism is
+only used for targets in your workflow plan data frame, not imports.  To
+process imported objects and files, drake selects the best parallel backend
+for your system and uses the number of jobs you give to the \code{jobs}
+argument to \code{\link[=make]{make()}}. To use at most 2 jobs for imports and at
+most 4 jobs for targets, run
+\code{make(..., parallelism = "Makefile", jobs = c(imports = 2, targets = 4))} or
+\code{make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")}.}
 
 \item{sanitize_plan}{logical, whether to sanitize the workflow plan first.}
 }
