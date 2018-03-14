@@ -6,6 +6,17 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps(x))
 })
 
+test_with_dir("magrittr dot is ignored", {
+  expect_equal(
+    sort(deps("sqrt(x + y + .)")),
+    sort(c("sqrt", "x", "y"))
+  )
+  expect_equal(
+    sort(deps("dplyr::filter(complete.cases(.))")),
+    sort(c("complete.cases", "dplyr::filter"))
+  )
+})
+
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
   cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
   f <- function(){

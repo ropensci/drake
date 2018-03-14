@@ -196,6 +196,15 @@ You can call `make(..., timeout = 10)` to time out all each target after 10 seco
 
 # Dependencies
 
+## The `magrittr` dot (`.`) is always ignored.
+
+It is common practice to use a literal dot (`.`) to carry an object through a [`magrittr`](https://github.com/tidyverse/magrittr) pipeline. Due to some tricky  limitations in static code analysis, `drake` never treats the dot (`.`) as a dependency, even if you use it as an ordinary variable outside of a [`tidyverse`](https://www.tidyverse.org/) context.
+
+```{r depsdot}
+deps("sqrt(x + y + .)")
+deps("dplyr::filter(complete.cases(.))")
+```
+
 ## Triggers and skipped imports
 
 With alternate [triggers](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) and the [option to skip imports](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#skipping-imports), you can sacrifice reproducibility to gain speed. However, these options can throw the dependency network out of sync. You should only use them for testing and debugging.
