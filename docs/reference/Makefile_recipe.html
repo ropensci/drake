@@ -201,7 +201,7 @@ so the default <code>Makefile</code> recipe for each target is
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Only relevant for "Makefile" parallelism:</span>
-<span class='fu'>Makefile_recipe</span>() <span class='co'># Show an example Makefile recipe.</span></div><div class='output co'>#&gt; <span class='message'>Rscript -e 'drake::mk(target = "your_target", cache_path = "/tmp/Rtmp65Mt9o/reference/.drake")'</span></div><div class='input'><span class='co'># Customize your Makefile recipe.</span>
+<span class='fu'>Makefile_recipe</span>() <span class='co'># Show an example Makefile recipe.</span></div><div class='output co'>#&gt; <span class='message'>Rscript -e 'drake::mk(target = "your_target", cache_path = "/tmp/RtmpgrzW0b/reference/.drake")'</span></div><div class='input'><span class='co'># Customize your Makefile recipe.</span>
 <span class='fu'>Makefile_recipe</span>(
   <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"this_target"</span>,
   <span class='kw'>recipe_command</span> <span class='kw'>=</span> <span class='st'>"R -e 'R_RECIPE' -q"</span>,

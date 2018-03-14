@@ -143,9 +143,8 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>drake_tip</span>() <span class='co'># Show a tip about using drake.</span></div><div class='output co'>#&gt; Check out the "future_lapply" backends. Example:\n    load_basic_example();\n    future::plan(future::multisession);\n    make(my_plan, parallelism = "future_lapply") 
-#&gt;        "Check out the \"future_lapply\" backends. Example: load_basic_example();\nfuture::plan(future::multisession); make(my_plan, parallelism =\n\"future_lapply\")" </div><div class='input'><span class='fu'>message</span>(<span class='fu'>drake_tip</span>()) <span class='co'># Print out a tip as a message.</span></div><div class='output co'>#&gt; <span class='message'>See the vignettes at https://cran.r-project.org/package=drake/vignettes</span>
-#&gt; <span class='message'>for in-depth tutorials and other thorough documentation.</span></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>drake_tip</span>() <span class='co'># Show a tip about using drake.</span></div><div class='output co'>#&gt; Drake quickstart:\n     load_basic_example();\n     vis_drake_graph(my_plan);\n     make(my_plan);\n     vis_drake_graph(my_plan) 
+#&gt;                      "Drake quickstart: load_basic_example(); vis_drake_graph(my_plan);\nmake(my_plan); vis_drake_graph(my_plan)" </div><div class='input'><span class='fu'>message</span>(<span class='fu'>drake_tip</span>()) <span class='co'># Print out a tip as a message.</span></div><div class='output co'>#&gt; <span class='message'>Check out the documentation website: https://ropensci.github.io/drake/</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

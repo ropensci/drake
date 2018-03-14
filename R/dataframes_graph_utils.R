@@ -65,7 +65,7 @@ configure_nodes <- function(config){
 #' @examples
 #' default_graph_title()
 default_graph_title <- function(split_columns = FALSE){
-  out <- "Workflow graph"
+  out <- "Dependency graph"
   if (split_columns){
     out <- paste(out, "with split columns")
   }

@@ -141,7 +141,7 @@ prune_drake_graph <- function(
   unlisted <- setdiff(to, V(graph)$name)
   if (length(unlisted)){
     warning(
-      "supplied targets not in the workflow graph:\n",
+      "supplied targets not in the dependency graph:\n",
       multiline_message(unlisted),
       call. = FALSE
     )

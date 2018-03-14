@@ -320,7 +320,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "d47109544c89ca7a"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "7189608ac59e17c1"</code></pre></div>
+## [1] "71bb776a7f5cd6d5"</code></pre></div>
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -333,19 +333,19 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
-##  $ start       :Class 'proc_time'  Named num [1:5] 6.181 0.187 6.716 0.069 0.041
+##  $ start       :Class 'proc_time'  Named num [1:5] 7.988 0.205 8.512 0.068 0.046
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.004
-##   ..$ user   : num 0.004
+##   ..$ elapsed: num 0.005
+##   ..$ user   : num 0.005
 ##   ..$ system : num 0
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.048
-##   ..$ user   : num 0.048
+##   ..$ elapsed: num 0.066
+##   ..$ user   : num 0.067
 ##   ..$ system : num 0
 
 <span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))
@@ -358,21 +358,21 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
 ##  $ depends     : chr "5f72f8f2a06b7a515e17a3ea3f57b1dd3522d7143e0cbd0650a3c0985683f81d"
 ##  $ file        : chr "ed35f108e2ccd75a904273f1e8559d5a0acb9c2700531276a7acdcfba09decc6"
-##  $ start       :Class 'proc_time'  Named num [1:5] 6.49 0.201 7.039 0.069 0.041
+##  $ start       :Class 'proc_time'  Named num [1:5] 8.348 0.227 8.893 0.068 0.046
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.053
-##   ..$ user   : num 0.048
-##   ..$ system : num 0.005
-##  $ mtime       : POSIXct[1:1], format: "2018-03-14 12:21:28"
+##   ..$ elapsed: num 0.058
+##   ..$ user   : num 0.058
+##   ..$ system : num 0.001
+##  $ mtime       : POSIXct[1:1], format: "2018-03-14 12:32:46"
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.057
-##   ..$ user   : num 0.051
-##   ..$ system : num 0.006</code></pre></div>
+##   ..$ elapsed: num 0.064
+##   ..$ user   : num 0.063
+##   ..$ system : num 0.001</code></pre></div>
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
 </div>
@@ -447,7 +447,7 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
-## &lt;bytecode: 0x4977150&gt;
+## &lt;bytecode: 0x4540690&gt;
 
 reg2 &lt;-<span class="st"> </span>function(d) {
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -507,8 +507,8 @@ withr::<span class="kw">with_message_sink</span>(
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="fl">1e-3</span>, <span class="dt">retries =</span> <span class="dv">2</span>)
 )
 ## target x
-## target y
-## retry y: 1 of 2
+## [2018-03-14 12:32:49] TimeoutException: reached elapsed time limit
+## [cpu=0.001s, elapsed=0.001s]
 ## Warning: No message sink to remove.</code></pre></div>
 <p>To tailor these settings to each individual target, create new <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, or <code>retries</code> columns in your workflow plan. These columns override the analogous arguments to <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
@@ -526,14 +526,8 @@ withr::<span class="kw">with_message_sink</span>(
   <span class="dt">new =</span> <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="ot">Inf</span>, <span class="dt">retries =</span> <span class="dv">0</span>)
 )
-## Unloading targets from environment:
-##   x
-##   y
 ## target x
 ## target y
-## fail y
-## Error: Target `y`` failed. Call `diagnose(y)` for details. Error message:
-##   reached elapsed time limit
 ## Warning: No message sink to remove.</code></pre></div>
 </div>
 <div id="diagnose-failures-" class="section level1">
@@ -576,7 +570,7 @@ withr::<span class="kw">with_message_sink</span>(
 ## Warning: No message sink to remove.
 
 <span class="kw"><a href="../reference/failed.html">failed</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># from the last make() only</span>
-## [1] "my_target" "y"
+## [1] "my_target"
 
 error &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)$error <span class="co"># See also warnings and messages.</span>
 
@@ -659,7 +653,7 @@ f
 ##   }
 ##   x
 ## }
-## &lt;bytecode: 0x75fa818&gt;
+## &lt;bytecode: 0x5bd09b8&gt;
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
 f &lt;-<span class="st"> </span>function(x){
@@ -709,11 +703,12 @@ my_plan
 <span class="co"># drake_session(verbose = FALSE) # Prints the sessionInfo() of the last make(). # nolint</span>
 
 <span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-## [1] "a"         "b"         "f"         "letter"    "little_b"  "my_target"
-## [7] "stop"      "Sys.sleep" "x"
+##  [1] "a"         "b"         "f"         "letter"    "little_b" 
+##  [6] "my_target" "stop"      "Sys.sleep" "x"         "y"
 
 <span class="kw"><a href="../reference/built.html">built</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-## [1] "a"         "b"         "letter"    "little_b"  "my_target" "x"
+## [1] "a"         "b"         "letter"    "little_b"  "my_target" "x"        
+## [7] "y"
 
 <span class="kw"><a href="../reference/imported.html">imported</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 ## [1] "f"         "stop"      "Sys.sleep"
@@ -745,17 +740,17 @@ little_b
 ##             "finished"             "finished"             "finished" 
 ## summ_regression2_large summ_regression2_small                summary 
 ##             "finished"             "finished"             "finished" 
-##       suppressWarnings                      y 
-##             "finished"               "failed"
+##       suppressWarnings 
+##             "finished"
 
 <span class="kw"><a href="../reference/in_progress.html">in_progress</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Unfinished targets</span>
 ## character(0)</code></pre></div>
 <p>There are functions to help you locate the project’s cache.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/find_project.html">find_project</a></span>()
-## [1] "/tmp/Rtmp65Mt9o/articles"
+## [1] "/tmp/RtmpgrzW0b/articles"
 
 <span class="kw"><a href="../reference/find_cache.html">find_cache</a></span>()
-## [1] "/tmp/Rtmp65Mt9o/articles/.drake"</code></pre></div>
+## [1] "/tmp/RtmpgrzW0b/articles/.drake"</code></pre></div>
 <p>For more information on the cache, see the <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage vignette</a>.</p>
 </div>
 <div id="start-tinkering-" class="section level1">

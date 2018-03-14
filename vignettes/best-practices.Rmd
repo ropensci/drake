@@ -143,7 +143,7 @@ For a serious project, you should use `drake`'s `make()` function outside `knitr
 load_basic_example() # Get the code with drake_example("basic").
 ```
 
-To see where `report.md` will be built, look to the right of the workflow graph.
+To see where `report.md` will be built, look to the right of the dependency graph.
 
 ```{r revisitbasicgraph, eval = FALSE}
 config <- drake_config(my_plan)
@@ -156,7 +156,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the workflow graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) to produce the target file `report.md`.
+`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the dependency graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) to produce the target file `report.md`.
 
 [knitr](https://github.com/yihui/knitr) reports are the only kind of file that `drake` analyzes for dependencies. It does not give R scripts the same special treatment.
 

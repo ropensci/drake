@@ -114,7 +114,7 @@ To predict the next runtime with multiple parallel jobs, `drake` makes some assu
 1. The outdated targets are spread out evenly over the available jobs.
 1. One job gets all the slowest targets (pessimistic scenario).
 
-Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a usually a column in the workflow graph, but if there are up-to-date targets in a column, `drake` skips ahead to try to fit as many targets as possible in a stage.
+Then, `drake` simply takes the targets from the slowest job in each parallelizable stage and sums the corresponding elapsed build times. A parallelizable stage is a usually a column in the dependency graph, but if there are up-to-date targets in a column, `drake` skips ahead to try to fit as many targets as possible in a stage.
 
 ```{r faketiminggraph, eval = FALSE}
 # Hover, click, drag, zoom, and pan.

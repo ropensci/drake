@@ -7,30 +7,20 @@
 #' message(drake_tip()) # Print out a tip as a message.
 drake_tip <- function() {
   tips <- c(
-    "In drake >= 4.4.0, you can select subgraphs of the workflow graph:
-     e.g. vis_drake_graph(..., from = some_targets, mode = \"out\", order = 2).
-     See the new 'graph' vignette for more.",
+    "Check out the new file API: file_in(), file_out(), knitr_in().
+     Embrace the new API in your R session by calling
+     pkgconfig::set_config(\"drake::strings_in_dots\" = \"literals\")",
 
-    "Use diagnose() to retrieve diagnostic information on
-     a target that fails to build.",
+    "Use diagnose() to retrieve diagnostic metadata:
+     errors, warnings, messages, commands, runtimes, etc.",
 
-    "Predict the runtime of the next make() with predict_runtime().
-     See also build_times() and rate_limiting_times().",
-
-    "Use drake_example('basic') to generate code files
+    "Use drake_example(\"basic\") to generate code files
      for a minimal drake example walkthrough.",
 
-    "See the vignettes at
-     https://cran.r-project.org/package=drake/vignettes for
-     in-depth tutorials and other thorough documentation.",
+    "Check out the documentation website: https://ropensci.github.io/drake/",
 
     "Use suppressPackageStartupMessages() to eliminate
      package startup messages like this one.",
-
-    "Check out the \"future_lapply\" backends. Example:
-    load_basic_example();
-    future::plan(future::multisession);
-    make(my_plan, parallelism = \"future_lapply\")",
 
     "Drake quickstart:
      load_basic_example();
