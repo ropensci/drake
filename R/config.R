@@ -47,7 +47,8 @@
 #'   then reproducibly tracked as dependencies.
 #'
 #' @param verbose logical or numeric, control printing to the console.
-#'   Set the defauld value with `pkgconfig`:
+#'   Use `pkgconfig` to set the default value of `verbose` 
+#'   for your R session:
 #'   for example, `pkgconfig::set_config("drake::verbose" = 2)`.
 #'   \describe{
 #'     \item{0 or `FALSE`:}{print nothing.}

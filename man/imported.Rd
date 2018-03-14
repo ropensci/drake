@@ -28,7 +28,8 @@ Ignored if a \code{cache} is supplied.}
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Set the defauld value with \code{pkgconfig}:
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
 for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \describe{
 \item{0 or \code{FALSE}:}{print nothing.}

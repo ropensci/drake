@@ -41,7 +41,8 @@ existing file \code{report.Rmd}}
 \code{report.Rmd}}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Set the defauld value with \code{pkgconfig}:
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
 for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \describe{
 \item{0 or \code{FALSE}:}{print nothing.}

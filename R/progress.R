@@ -8,11 +8,7 @@
 #' @export
 #' @return [sessionInfo()] of the last
 #'   call to [make()]
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -40,11 +36,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -74,11 +66,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -131,8 +119,6 @@ failed <- function(path = getwd(), search = TRUE,
 #' @param imported_files_only logical, deprecated. Same as
 #'   `no_imported_objects`.  Use the `no_imported_objects` argument
 #'   instead.
-#'
-#' @param verbose whether to print console messages
 #'
 #' @param jobs number of jobs/workers for parallel processing
 #'

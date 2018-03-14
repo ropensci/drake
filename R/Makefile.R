@@ -141,8 +141,8 @@ mk <- function(
 #' worry about it.
 #' @export
 #' @return `args` for \code{\link{system2}(command, args)}
+#' @inheritParams drake_config
 #' @param jobs number of jobs
-#' @param verbose logical, whether to be verbose
 #' @examples
 #' default_Makefile_args(jobs = 2, verbose = FALSE)
 #' default_Makefile_args(jobs = 4, verbose = TRUE)
