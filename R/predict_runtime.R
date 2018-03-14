@@ -183,7 +183,7 @@ rate_limiting_times <- function(
     cache = config$cache,
     digits = Inf,
     targets_only = FALSE,
-    verbose = TRUE
+    verbose = config$verbose
   ) %>%
     as.data.frame
   keys <- V(config$graph)$name

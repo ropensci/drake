@@ -6,7 +6,8 @@
 to \code{\link[=make]{make()}}.}
 \usage{
 failed(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = TRUE)
+  path, search = search, verbose = verbose),
+  verbose = drake::default_verbose())
 }
 \arguments{
 \item{path}{Root directory of the drake project,

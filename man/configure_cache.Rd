@@ -7,8 +7,8 @@
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  log_progress = FALSE, overwrite_hash_algos = FALSE, verbose = TRUE,
-  jobs = 1)
+  log_progress = FALSE, overwrite_hash_algos = FALSE,
+  verbose = drake::default_verbose(), jobs = 1)
 }
 \arguments{
 \item{cache}{cache to configure}
@@ -33,7 +33,16 @@ build progress if this cache was used for previous calls to
 \item{overwrite_hash_algos}{logical, whether to try to overwrite
 the hash algorithms in the cache with any user-specified ones.}
 
-\item{verbose}{whether to print console messages}
+\item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
 \item{jobs}{number of jobs for parallel processing}
 }

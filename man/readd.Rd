@@ -6,7 +6,7 @@
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  namespace = NULL, verbose = TRUE)
+  namespace = NULL, verbose = drake::default_verbose())
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then

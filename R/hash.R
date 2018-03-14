@@ -18,8 +18,8 @@ available_hash_algos <- function(){
 #' at <https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd>
 #' for details.
 #' @return A character vector naming a hash algorithm.
+#' @inheritParams drake_config
 #' @param cache drake cache
-#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -34,7 +34,7 @@ available_hash_algos <- function(){
 #' }
 long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (!cache$exists(key = "long_hash_algo", namespace = "config")){
     return(NULL)
@@ -50,8 +50,8 @@ long_hash <- function(
 #' at <https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd>
 #' for details.
 #' @return A character vector naming a hash algorithm.
+#' @inheritParams drake_config
 #' @param cache drake cache
-#' @param verbose whether to print console messages
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -66,7 +66,7 @@ long_hash <- function(
 #' }
 short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
-  verbose = verbose
+  verbose = drake::default_verbose()
 ){
   if (!cache$exists(key = "short_hash_algo", namespace = "config")){
     return(NULL)

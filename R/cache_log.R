@@ -24,8 +24,6 @@
 #'
 #' @inheritParams cached
 #'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs number of jobs/workers for parallel processing
 #'
 #' @param targets_only logical, whether to output information
@@ -56,7 +54,7 @@ drake_cache_log_file <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1,
   targets_only = FALSE
 ){
@@ -117,8 +115,6 @@ drake_cache_log_file <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs number of jobs/workers for parallel processing
 #'
 #' @param targets_only logical, whether to output information
@@ -157,7 +153,7 @@ drake_cache_log <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1,
   targets_only = FALSE
 ){

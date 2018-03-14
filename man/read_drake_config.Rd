@@ -6,7 +6,7 @@
 list from the last \code{\link[=make]{make()}}.}
 \usage{
 read_drake_config(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 1, jobs = 1, envir = parent.frame())
+  verbose = drake::default_verbose(), jobs = 1, envir = parent.frame())
 }
 \arguments{
 \item{path}{Root directory of the drake project,

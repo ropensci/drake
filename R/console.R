@@ -163,3 +163,15 @@ multiline_message <- function(x) {
   }
   paste0("  ", x) %>% paste(collapse = "\n")
 }
+
+#' @title Default verbosity for `drake`
+#' @description Set with `pkgconfig`: for example,
+#'   `pkgconfig::set_config("drake::verbose" = 2)`.
+#' @export
+#' @keywords internal
+#' @return a logical or integer with the value of
+#'   the default `verbose` argument to `drake` functions.
+default_verbose <- function(){
+  default <- pkgconfig::get_config("drake::verbose")
+  ifelse(!length(default), 1, default)
+}

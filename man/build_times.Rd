@@ -6,8 +6,8 @@
 \usage{
 build_times(..., path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
-  targets_only = FALSE, verbose = TRUE, jobs = 1, type = c("build",
-  "command"))
+  targets_only = FALSE, verbose = drake::default_verbose(), jobs = 1,
+  type = c("build", "command"))
 }
 \arguments{
 \item{...}{targets to load from the cache: as names (symbols),
@@ -30,7 +30,16 @@ the \code{path} and \code{search} arguments are ignored.}
 \item{targets_only}{logical, whether to only return the
 build times of the targets (exclude the imports).}
 
-\item{verbose}{whether to print console messages}
+\item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
 \item{jobs}{number of parallel jobs/workers for light parallelism.}
 

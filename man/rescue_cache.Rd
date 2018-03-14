@@ -5,9 +5,10 @@
 \title{Try to repair a drake cache that is prone
 to throwing \code{storr}-related errors.}
 \usage{
-rescue_cache(targets = NULL, path = getwd(), search = TRUE, verbose = 1,
-  force = FALSE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose, force = force), jobs = 1, garbage_collection = FALSE)
+rescue_cache(targets = NULL, path = getwd(), search = TRUE,
+  verbose = drake::default_verbose(), force = FALSE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose,
+  force = force), jobs = 1, garbage_collection = FALSE)
 }
 \arguments{
 \item{targets}{Character vector, names of the targets to rescue.
@@ -17,13 +18,30 @@ as well as true targets.
 If \code{targets} is \code{NULL}, everything in the
 cache is rescued.}
 
-\item{path}{same as for \code{\link[=get_cache]{get_cache()}}}
+\item{path}{file path to the folder containing the cache.
+Yes, this is the parent directory containing the cache,
+not the cache itself, and it assumes the cache is in the
+\code{.drake} folder. If you are looking for a different cache
+with a known folder different from \code{.drake}, use
+the \code{\link[=this_cache]{this_cache()}} function.}
 
-\item{search}{same as for \code{\link[=get_cache]{get_cache()}}}
+\item{search}{logical, whether to search back in the file system
+for the cache.}
 
-\item{verbose}{same as for \code{\link[=get_cache]{get_cache()}}}
+\item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
-\item{force}{same as for \code{\link[=get_cache]{get_cache()}}}
+\item{force}{logical, whether to load the cache
+despite any back compatibility issues with the
+running version of drake.}
 
 \item{cache}{a \code{storr} cache object}
 

@@ -16,6 +16,7 @@
 #' the file, `report.Rmd`.
 #' @export
 #' @return A [drake_config()] configuration list.
+#' @inheritParams drake_config
 #' @param envir The environment to load the example into.
 #'   Defaults to your workspace.
 #'   For an insulated workspace,
@@ -41,7 +42,6 @@
 #'   `report.Rmd`
 #' @param overwrite logical, whether to overwrite an
 #'   existing file `report.Rmd`
-#' @param verbose logical, whether to print console messages.
 #' @param force logical, whether to force the loading of a
 #'   non-back-compatible cache from a previous version of drake.
 #' @examples
@@ -76,7 +76,7 @@ load_basic_example <- function(
   report_file = "report.Rmd",
   overwrite = FALSE,
   to = report_file,
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   force = FALSE
 ){
   if (to != report_file){

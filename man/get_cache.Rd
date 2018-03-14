@@ -4,8 +4,8 @@
 \alias{get_cache}
 \title{Get the drake cache, optionally searching up the file system.}
 \usage{
-get_cache(path = getwd(), search = TRUE, verbose = 1, force = FALSE,
-  fetch_cache = NULL)
+get_cache(path = getwd(), search = TRUE,
+  verbose = drake::default_verbose(), force = FALSE, fetch_cache = NULL)
 }
 \arguments{
 \item{path}{file path to the folder containing the cache.
@@ -18,7 +18,16 @@ the \code{\link[=this_cache]{this_cache()}} function.}
 \item{search}{logical, whether to search back in the file system
 for the cache.}
 
-\item{verbose}{logical, whether to print the location of the cache}
+\item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the

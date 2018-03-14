@@ -7,10 +7,10 @@ used internally in \code{\link[=make]{make()}}.}
 \usage{
 drake_config(plan = read_drake_plan(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = 1, hook = default_hook, cache = drake::get_cache(verbose =
-  verbose, force = force), fetch_cache = NULL,
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0),
+  verbose = drake::default_verbose(), hook = default_hook,
+  cache = drake::get_cache(verbose = verbose, force = force),
+  fetch_cache = NULL, parallelism = drake::default_parallelism(),
+  jobs = 1, packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
@@ -50,6 +50,8 @@ from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
 
 \item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \describe{
 \item{0 or \code{FALSE}:}{print nothing.}
 \item{1 or \code{TRUE}:}{print only targets to build.}

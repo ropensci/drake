@@ -37,7 +37,7 @@ readd <- function(
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   namespace = NULL,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   # if the cache is null after trying get_cache:
   if (is.null(cache)){
@@ -171,7 +171,7 @@ loadd <- function(
   namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   deps = FALSE,
   lazy = "eager",
   graph = NULL,
@@ -385,7 +385,7 @@ read_drake_config <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   jobs = 1,
   envir = parent.frame()
 ){
@@ -445,7 +445,7 @@ read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   ...
 ){
   if (is.null(cache)){
@@ -484,7 +484,7 @@ read_drake_plan <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search, verbose = verbose)
@@ -551,7 +551,7 @@ read_drake_seed <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search, verbose = verbose)

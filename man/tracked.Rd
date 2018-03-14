@@ -6,7 +6,7 @@
 that are reproducibly tracked.}
 \usage{
 tracked(plan = read_drake_plan(), targets = drake::possible_targets(plan),
-  envir = parent.frame(), jobs = 1, verbose = TRUE)
+  envir = parent.frame(), jobs = 1, verbose = drake::default_verbose())
 }
 \arguments{
 \item{plan}{workflow plan data frame, same as for function
@@ -22,8 +22,16 @@ tracked(plan = read_drake_plan(), targets = drake::possible_targets(plan),
 of the dependency graph. A light \code{mclapply()}-based
 parallelism is used if your operating system is not Windows.}
 
-\item{verbose}{logical, whether to print
-progress messages to the console.}
+\item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 }
 \value{
 A character vector with the names of reproducibly-tracked targets.

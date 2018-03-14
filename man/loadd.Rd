@@ -7,8 +7,8 @@
 loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
   verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1, deps = FALSE, lazy = "eager", graph = NULL,
-  replace = TRUE)
+  verbose = drake::default_verbose(), deps = FALSE, lazy = "eager",
+  graph = NULL, replace = TRUE)
 }
 \arguments{
 \item{...}{targets to load from the cache: as names (symbols),

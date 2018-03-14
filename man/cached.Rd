@@ -5,8 +5,8 @@
 \title{Enumerate cached targets or check if a target is cached.}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE, cache = NULL, verbose = 1,
-  namespace = NULL, jobs = 1)
+  path = getwd(), search = TRUE, cache = NULL,
+  verbose = drake::default_verbose(), namespace = NULL, jobs = 1)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
@@ -38,7 +38,16 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{whether to print console messages}
+\item{verbose}{logical or numeric, control printing to the console.
+Set the defauld value with \code{pkgconfig}:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
 \item{namespace}{character scalar, name of the storr namespace
 to use for listing objects}

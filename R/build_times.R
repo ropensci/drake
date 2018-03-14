@@ -6,6 +6,7 @@
 #' @seealso [built()]
 #' @export
 #' @return A data frame of times, each from [system.time()].
+#' @inheritParams drake_config
 #' @param ... targets to load from the cache: as names (symbols),
 #'   character strings, or `dplyr`-style `tidyselect`
 #'   commands such as `starts_with()`.
@@ -20,7 +21,6 @@
 #' @param digits How many digits to round the times to.
 #' @param cache optional drake cache. If supplied,
 #'   the `path` and `search` arguments are ignored.
-#' @param verbose whether to print console messages
 #' @param jobs number of parallel jobs/workers for light parallelism.
 #' @param type Type of time you want: either `"build"`
 #'   for the full build time including the time it took to
@@ -43,7 +43,7 @@ build_times <- function(
   digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE,
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1,
   type = c("build", "command")
 ){

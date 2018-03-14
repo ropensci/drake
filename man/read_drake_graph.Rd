@@ -6,7 +6,7 @@
 from your last attempted call to \code{\link[=make]{make()}}.}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 1, ...)
+  verbose = drake::default_verbose(), ...)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

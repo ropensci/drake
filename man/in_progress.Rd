@@ -7,7 +7,8 @@
 (2) were being built if the last \code{\link[=make]{make()}} quit unexpectedly.}
 \usage{
 in_progress(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = TRUE)
+  path, search = search, verbose = verbose),
+  verbose = drake::default_verbose())
 }
 \arguments{
 \item{path}{Root directory of the drake project,

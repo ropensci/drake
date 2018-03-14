@@ -8,7 +8,7 @@ during a \code{\link[=make]{make()}}.}
 progress(..., list = character(0), no_imported_objects = FALSE,
   imported_files_only = logical(0), path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE, jobs = 1)
+  verbose = drake::default_verbose(), jobs = 1)
 }
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)

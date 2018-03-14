@@ -23,7 +23,7 @@
 #' }
 drake_session <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
@@ -56,7 +56,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "in progress") %>%
@@ -94,7 +94,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "failed") %>%
@@ -156,7 +156,7 @@ progress <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1
 ){
   # deprecate imported_files_only

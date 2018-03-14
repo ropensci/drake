@@ -5,7 +5,7 @@
 \title{Read the pseudo-random number generator seed of the project.}
 \usage{
 read_drake_seed(path = getwd(), search = TRUE, cache = NULL,
-  verbose = TRUE)
+  verbose = drake::default_verbose())
 }
 \arguments{
 \item{path}{Root directory of the drake project,

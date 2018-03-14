@@ -35,8 +35,6 @@
 #'   are removed. If `TRUE`, the whole cache is removed, including
 #'   session metadata, etc.
 #'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs Number of jobs for light parallelism
 #'   (disabled on Windows).
 #'
@@ -101,7 +99,7 @@ clean <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   jobs = 1,
   force = FALSE,
   garbage_collection = FALSE,
@@ -201,6 +199,7 @@ remove_file_target <- function(target, cache){
 #' @seealso [clean()]
 #' @export
 #' @return`NULL`
+#' @inheritParams drake_config
 #' @param path file path to the folder containing the cache.
 #'   Yes, this is the parent directory containing the cache,
 #'   not the cache itself, and it assumes the cache is in the
@@ -209,7 +208,6 @@ remove_file_target <- function(target, cache){
 #'   the [this_cache()] function.
 #' @param search logical, whether to search back in the file system
 #'   for the cache.
-#' @param verbose logical, whether to print the location of the cache
 #' @param cache the `drake`/`storr` cache object itself,
 #'   if available.
 #' @param force logical, whether to load the cache
@@ -231,7 +229,7 @@ remove_file_target <- function(target, cache){
 drake_gc <- function(
   path = getwd(),
   search = TRUE,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   cache = NULL,
   force = FALSE
 ){
@@ -259,16 +257,13 @@ drake_gc <- function(
 #' @export
 #' @seealso [get_cache()], [cached()],
 #'   [drake_gc()], [clean()]
+#' @inheritParams get_cache
 #' @param targets Character vector, names of the targets to rescue.
 #'   As with many other drake utility functions, the word `target`
 #'   is defined generally in this case, encompassing imports
 #'   as well as true targets.
 #'   If `targets` is `NULL`, everything in the
 #'   cache is rescued.
-#' @param path same as for [get_cache()]
-#' @param search same as for [get_cache()]
-#' @param verbose same as for [get_cache()]
-#' @param force same as for [get_cache()]
 #' @param cache a `storr` cache object
 #' @param jobs number of jobs for light parallelism
 #'   (disabled on Windows)
@@ -289,7 +284,10 @@ drake_gc <- function(
 #' }
 rescue_cache <- function(
   targets = NULL,
-  path = getwd(), search = TRUE, verbose = 1, force = FALSE,
+  path = getwd(),
+  search = TRUE,
+  verbose = drake::default_verbose(),
+  force = FALSE,
   cache = drake::get_cache(
     path = path, search = search, verbose = verbose, force = force),
   jobs = 1,
