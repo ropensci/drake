@@ -45,15 +45,7 @@ force_cache_path <- function(cache = NULL){
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
 #'   if available. `NULL` otherwise.
-#' @inheritParams drake_config
-#' @param path file path to the folder containing the cache.
-#'   Yes, this is the parent directory containing the cache,
-#'   not the cache itself, and it assumes the cache is in the
-#'   `.drake` folder. If you are looking for a different cache
-#'   with a known folder different from `.drake`, use
-#'   the [this_cache()] function.
-#' @param search logical, whether to search back in the file system
-#'   for the cache.
+#' @inheritParams cached
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
@@ -97,7 +89,7 @@ get_cache <- function(
 #' @description This function does not apply to
 #' in-memory caches such as `storr_environment()`.
 #' @return A drake/storr cache at the specified path, if it exists.
-#' @inheritParams drake_config
+#' @inheritParams cached
 #' @param path file path of the cache
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
@@ -166,7 +158,7 @@ drake_fetch_rds <- function(path){
 #' from the `storr` package.
 #' @export
 #' @return A newly created drake cache as a storr object.
-#' @inheritParams drake_config
+#' @inheritParams cached
 #' @seealso [default_short_hash_algo()],
 #'   [default_long_hash_algo()],
 #'   [make()]
@@ -233,7 +225,7 @@ new_cache <- function(
 #' Does not work with
 #' in-memory caches such as [storr_environment()].
 #' @return A drake/storr cache.
-#' @inheritParams drake_config
+#' @inheritParams cached
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
 #'   See [default_short_hash_algo()] and
@@ -299,7 +291,7 @@ default_cache_path <- function(){
 #' to prepare the cache to be called from [make()].
 #' @return A drake/storr cache.
 #'
-#' @inheritParams drake_config
+#' @inheritParams cached
 #'
 #' @param cache cache to configure
 #'

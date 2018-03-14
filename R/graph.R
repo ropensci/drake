@@ -10,8 +10,6 @@
 #' @return An igraph object representing
 #'   the workflow plan dependency network.
 #'
-#' @inheritParams drake_config
-#'
 #' @param plan workflow plan data frame, same as for function
 #'   [make()].
 #'
@@ -19,11 +17,6 @@
 #'   [make()].
 #'
 #' @param envir environment to import from, same as for function
-#'   [make()].
-#'
-#' @param jobs number of jobs to accelerate the construction
-#'   of the dependency graph. A light `mclapply()`-based
-#'   parallelism is used if your operating system is not Windows.
 #'
 #' @param sanitize_plan logical, whether to sanitize the workflow plan first.
 #' @examples

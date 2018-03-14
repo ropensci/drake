@@ -18,15 +18,15 @@ as well as true targets.
 If \code{targets} is \code{NULL}, everything in the
 cache is rescued.}
 
-\item{path}{file path to the folder containing the cache.
-Yes, this is the parent directory containing the cache,
-not the cache itself, and it assumes the cache is in the
-\code{.drake} folder. If you are looking for a different cache
-with a known folder different from \code{.drake}, use
-the \code{\link[=this_cache]{this_cache()}} function.}
+\item{path}{Root directory of the drake project,
+or if \code{search} is \code{TRUE}, either the
+project root or a subdirectory of the project.
+Ignored if a \code{cache} is supplied.}
 
-\item{search}{logical, whether to search back in the file system
-for the cache.}
+\item{search}{logical. If \code{TRUE}, search parent directories
+to find the nearest drake cache. Otherwise, look in the
+current working directory only.
+Ignored if a \code{cache} is supplied.}
 
 \item{verbose}{logical or numeric, control printing to the console.
 Use \code{pkgconfig} to set the default value of \code{verbose}

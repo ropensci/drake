@@ -5,13 +5,12 @@
 #' @seealso \code{ink{drake_plan}}, [make()]
 #' @export
 #' @return Invisibly return `plan`.
-#' @inheritParams drake_config
+#' @inheritParams cached
 #' @param plan workflow plan data frame, possibly from
 #'   [drake_plan()].
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See [new_cache()].
-#' @param jobs number of jobs/workers for light parallelism
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

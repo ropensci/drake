@@ -15,24 +15,7 @@ build_drake_graph(plan = read_drake_plan(),
 \item{targets}{names of targets to build, same as for function
 \code{\link[=make]{make()}}.}
 
-\item{envir}{environment to import from, same as for function
-\code{\link[=make]{make()}}.}
-
-\item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
-\describe{
-\item{0 or \code{FALSE}:}{print nothing.}
-\item{1 or \code{TRUE}:}{print only targets to build.}
-\item{2:}{in addition, print checks and cache info.}
-\item{3:}{in addition, print any potentially missing items.}
-\item{4:}{in addition, print imports. Full verbosity.}
-}}
-
-\item{jobs}{number of jobs to accelerate the construction
-of the dependency graph. A light \code{mclapply()}-based
-parallelism is used if your operating system is not Windows.}
+\item{envir}{environment to import from, same as for function}
 
 \item{sanitize_plan}{logical, whether to sanitize the workflow plan first.}
 }

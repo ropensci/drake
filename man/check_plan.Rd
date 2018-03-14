@@ -31,7 +31,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{in addition, print imports. Full verbosity.}
 }}
 
-\item{jobs}{number of jobs/workers for light parallelism}
+\item{jobs}{number of jobs/workers for parallel processing}
 }
 \value{
 Invisibly return \code{plan}.

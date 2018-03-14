@@ -18,9 +18,7 @@ tracked(plan = read_drake_plan(), targets = drake::possible_targets(plan),
 \item{envir}{environment to import from, same as for function
 \code{\link[=make]{make()}}.}
 
-\item{jobs}{number of jobs to accelerate the construction
-of the dependency graph. A light \code{mclapply()}-based
-parallelism is used if your operating system is not Windows.}
+\item{jobs}{number of jobs/workers for parallel processing}
 
 \item{verbose}{logical or numeric, control printing to the console.
 Use \code{pkgconfig} to set the default value of \code{verbose}

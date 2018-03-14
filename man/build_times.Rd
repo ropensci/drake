@@ -16,16 +16,18 @@ commands such as \code{starts_with()}.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.}
+project root or a subdirectory of the project.
+Ignored if a \code{cache} is supplied.}
 
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
-current working directory only.}
+current working directory only.
+Ignored if a \code{cache} is supplied.}
 
 \item{digits}{How many digits to round the times to.}
 
-\item{cache}{optional drake cache. If supplied,
-the \code{path} and \code{search} arguments are ignored.}
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
+If supplied, \code{path} and \code{search} are ignored.}
 
 \item{targets_only}{logical, whether to only return the
 build times of the targets (exclude the imports).}
@@ -42,7 +44,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{in addition, print imports. Full verbosity.}
 }}
 
-\item{jobs}{number of parallel jobs/workers for light parallelism.}
+\item{jobs}{number of jobs/workers for parallel processing}
 
 \item{type}{Type of time you want: either \code{"build"}
 for the full build time including the time it took to

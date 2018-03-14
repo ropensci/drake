@@ -18,8 +18,7 @@ available_hash_algos <- function(){
 #' at <https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd>
 #' for details.
 #' @return A character vector naming a hash algorithm.
-#' @inheritParams drake_config
-#' @param cache drake cache
+#' @inheritParams cached
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -50,8 +49,7 @@ long_hash <- function(
 #' at <https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd>
 #' for details.
 #' @return A character vector naming a hash algorithm.
-#' @inheritParams drake_config
-#' @param cache drake cache
+#' @inheritParams cached
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

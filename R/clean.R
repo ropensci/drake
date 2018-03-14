@@ -199,17 +199,7 @@ remove_file_target <- function(target, cache){
 #' @seealso [clean()]
 #' @export
 #' @return`NULL`
-#' @inheritParams drake_config
-#' @param path file path to the folder containing the cache.
-#'   Yes, this is the parent directory containing the cache,
-#'   not the cache itself, and it assumes the cache is in the
-#'   `.drake` folder. If you are looking for a different cache
-#'   with a known folder different from `.drake`, use
-#'   the [this_cache()] function.
-#' @param search logical, whether to search back in the file system
-#'   for the cache.
-#' @param cache the `drake`/`storr` cache object itself,
-#'   if available.
+#' @inheritParams cached
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.

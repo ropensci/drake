@@ -8,7 +8,8 @@ short_hash(cache = drake::get_cache(verbose = verbose),
   verbose = drake::default_verbose())
 }
 \arguments{
-\item{cache}{drake cache}
+\item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
+If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{logical or numeric, control printing to the console.
 Use \code{pkgconfig} to set the default value of \code{verbose}
