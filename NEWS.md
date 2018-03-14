@@ -1,5 +1,6 @@
 # Version 5.1.0
 
+- Forcibly exclude the dot (`.`) from being a dependency of any target or import. This enforces more consistent behavior in the face of the current static code analysis funcionality, which sometimes detects `.` and sometimes does not.
 - Use `ignore()` to optionally ignore pieces of workflow plan commands and/or imported functions. Use `ignore(some_code)` to
     1. Force `drake` to not track dependencies in `some_code`, and
     2. Ignore any changes in `some_code` when it comes to deciding which target are out of date.
