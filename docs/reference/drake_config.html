@@ -152,10 +152,10 @@ and it could lead to false negative results from
 
     <pre class="usage"><span class='fu'>drake_config</span>(<span class='kw'>plan</span> <span class='kw'>=</span> <span class='fu'><a href='read_drake_plan.html'>read_drake_plan</a></span>(),
   <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/possible_targets'>possible_targets</a></span>(<span class='no'>plan</span>), <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'>parent.frame</span>(),
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>hook</span> <span class='kw'>=</span> <span class='no'>default_hook</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>verbose</span> <span class='kw'>=</span>
-  <span class='no'>verbose</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='no'>force</span>), <span class='kw'>fetch_cache</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>parallelism</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_parallelism'>default_parallelism</a></span>(), <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>packages</span> <span class='kw'>=</span> <span class='fu'>rev</span>(<span class='fu'>.packages</span>()), <span class='kw'>prework</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(), <span class='kw'>hook</span> <span class='kw'>=</span> <span class='no'>default_hook</span>,
+  <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='no'>force</span>),
+  <span class='kw'>fetch_cache</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>parallelism</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_parallelism'>default_parallelism</a></span>(),
+  <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>packages</span> <span class='kw'>=</span> <span class='fu'>rev</span>(<span class='fu'>.packages</span>()), <span class='kw'>prework</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>),
   <span class='kw'>prepend</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>command</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_Makefile_command'>default_Makefile_command</a></span>(),
   <span class='kw'>args</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_Makefile_args'>default_Makefile_args</a></span>(<span class='kw'>jobs</span> <span class='kw'>=</span> <span class='no'>jobs</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>),
   <span class='kw'>recipe_command</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_recipe_command'>default_recipe_command</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
@@ -204,7 +204,10 @@ then reproducibly tracked as dependencies.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>logical or numeric, control printing to the console.</p><dl class='dl-horizontal'>
+      <td><p>logical or numeric, control printing to the console.
+Use <code>pkgconfig</code> to set the default value of <code>verbose</code>
+for your R session:
+for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/set_config'>pkgconfig::set_config("drake::verbose" = 2)</a></code>.</p><dl class='dl-horizontal'>
 <dt>0 or <code>FALSE</code>:</dt><dd><p>print nothing.</p></dd>
 <dt>1 or <code>TRUE</code>:</dt><dd><p>print only targets to build.</p></dd>
 <dt>2:</dt><dd><p>in addition, print checks and cache info.</p></dd>

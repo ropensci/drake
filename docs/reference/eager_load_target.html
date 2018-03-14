@@ -159,7 +159,16 @@ calling environment (current workspace).</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>logical, whether to print console messages</p></td>
+      <td><p>logical or numeric, control printing to the console.
+Use <code>pkgconfig</code> to set the default value of <code>verbose</code>
+for your R session:
+for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/set_config'>pkgconfig::set_config("drake::verbose" = 2)</a></code>.</p><dl class='dl-horizontal'>
+<dt>0 or <code>FALSE</code>:</dt><dd><p>print nothing.</p></dd>
+<dt>1 or <code>TRUE</code>:</dt><dd><p>print only targets to build.</p></dd>
+<dt>2:</dt><dd><p>in addition, print checks and cache info.</p></dd>
+<dt>3:</dt><dd><p>in addition, print any potentially missing items.</p></dd>
+<dt>4:</dt><dd><p>in addition, print imports. Full verbosity.</p></dd>
+</dl></td>
     </tr>
     </table>
     

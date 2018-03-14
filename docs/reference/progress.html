@@ -142,7 +142,7 @@ Skipped objects are not listed.</p>
     <pre class="usage"><span class='fu'>progress</span>(<span class='no'>...</span>, <span class='kw'>list</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>no_imported_objects</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>imported_files_only</span> <span class='kw'>=</span> <span class='fu'>logical</span>(<span class='fl'>0</span>), <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'>getwd</span>(), <span class='kw'>search</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>path</span>, <span class='kw'>search</span> <span class='kw'>=</span> <span class='no'>search</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>),
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(), <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -191,7 +191,16 @@ If supplied, <code>path</code> and <code>search</code> are ignored.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>whether to print console messages</p></td>
+      <td><p>logical or numeric, control printing to the console.
+Use <code>pkgconfig</code> to set the default value of <code>verbose</code>
+for your R session:
+for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/set_config'>pkgconfig::set_config("drake::verbose" = 2)</a></code>.</p><dl class='dl-horizontal'>
+<dt>0 or <code>FALSE</code>:</dt><dd><p>print nothing.</p></dd>
+<dt>1 or <code>TRUE</code>:</dt><dd><p>print only targets to build.</p></dd>
+<dt>2:</dt><dd><p>in addition, print checks and cache info.</p></dd>
+<dt>3:</dt><dd><p>in addition, print any potentially missing items.</p></dd>
+<dt>4:</dt><dd><p>in addition, print imports. Full verbosity.</p></dd>
+</dl></td>
     </tr>
     <tr>
       <th>jobs</th>

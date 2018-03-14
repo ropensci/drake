@@ -155,7 +155,7 @@ Ideally, independent observers should be able to read your code and understand i
 
 - The [workflow plan data frame](https://ropensci.github.io/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
 - `Drake` takes care of the parallel scheduling and high-performance computing (HPC) for you. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.
-- You can scale up and [generate large collections of targets](https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames) without encumbering your custom code (imported functions).
+- You can [generate large collections of targets](https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames) without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow
 
 # Aggressively scale up.
 
@@ -186,7 +186,7 @@ config <- drake_config(my_plan)
 vis_drake_graph(config)
 ```
 
-![](./docs/images/graph.png)
+[![](./docs/images/graph.png)](https://ropensci.github.io/drake/images/reg2.html)
 
 Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function.
 

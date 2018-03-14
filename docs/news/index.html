@@ -137,6 +137,7 @@
 <h1 class="hasAnchor">
 <a href="#version-5-1-0" class="anchor"></a>Version 5.1.0</h1>
 <ul>
+<li>Forcibly exclude the dot (<code>.</code>) from being a dependency of any target or import. This enforces more consistent behavior in the face of the current static code analysis funcionality, which sometimes detects <code>.</code> and sometimes does not.</li>
 <li>Use <code><a href="../reference/ignore.html">ignore()</a></code> to optionally ignore pieces of workflow plan commands and/or imported functions. Use <code><a href="../reference/ignore.html">ignore(some_code)</a></code> to
 <ol>
 <li>Force <code>drake</code> to not track dependencies in <code>some_code</code>, and</li>

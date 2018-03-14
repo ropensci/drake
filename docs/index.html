@@ -277,12 +277,12 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <div id="readability-and-transparency" class="section level2">
 <h2 class="hasAnchor">
 <a href="#readability-and-transparency" class="anchor"></a>Readability and transparency</h2>
-<p>For reproducibility, it is important that others can read your code and understand what your workflow is doing. <code>Drake</code> helps in several ways.</p>
+<p>Ideally, independent observers should be able to read your code and understand it. <code>Drake</code> helps in several ways.</p>
 <ul>
 <li>The <a href="https://ropensci.github.io/drake/reference/drake_plan.html">workflow plan data frame</a> explicitly outlines the steps of the analysis, and <a href="https://ropensci.github.io/drake/reference/vis_drake_graph.html"><code><a href="reference/vis_drake_graph.html">vis_drake_graph()</a></code></a> visualizes how those steps depend on each other.</li>
 <li>
-<code>Drake</code> takes care of the parallel scheduling and high-performance computing (HPC) so you do not have to. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.</li>
-<li>You can <a href="https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames">generate large numbers of targets</a> without encumbering the collection of imported functions that make up your code base. In other words, <code>drake</code> can scale up the size of your project without making your custom code more complicated.</li>
+<code>Drake</code> takes care of the parallel scheduling and high-performance computing (HPC) for you. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.</li>
+<li>You can <a href="https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames">generate large collections of targets</a> without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow</li>
 </ul>
 </div>
 </div>

@@ -109,7 +109,7 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-13</h4>
+            <h4 class="date">2018-03-14</h4>
           </div>
 
     
@@ -542,16 +542,16 @@ df
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 "\"report.md\""        target 0.068s         0.065s         0.003s     
+##  1 "\"report.md\""        target 0.055s         0.052s         0.003s     
 ##  2 "\"report.Rmd\""       import 0.001s         0.001s         0s         
-##  3 coef_regression1_large target 0.007s         0.007s         0s         
-##  4 coef_regression1_small target 0.006s         0.006s         0s         
-##  5 coef_regression2_large target 0.006s         0.006s         0s         
-##  6 coef_regression2_small target 0.006s         0.006s         0s         
-##  7 data.frame             import 0.02s          0.02s          0s         
-##  8 knit                   import 0.019s         0.019s         0s         
-##  9 large                  target 0.115s         0.101s         0.011s     
-## 10 lm                     import 0.01s          0.01s          0s         
+##  3 coef_regression1_large target 0.006s         0.007s         0s         
+##  4 coef_regression1_small target 0.005s         0.005s         0s         
+##  5 coef_regression2_large target 0.005s         0.004s         0.001s     
+##  6 coef_regression2_small target 0.005s         0.005s         0s         
+##  7 data.frame             import 0.017s         0.017s         0s         
+##  8 knit                   import 0.014s         0.014s         0s         
+##  9 large                  target 0.083s         0.079s         0.004s     
+## 10 lm                     import 0.008s         0.008s         0s         
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -680,7 +680,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "5f678952cc990da2"</code></pre></div>
+## [1] "8aa89a0d3fa94a0c"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>

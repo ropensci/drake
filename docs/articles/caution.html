@@ -109,7 +109,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-13</h4>
+            <h4 class="date">2018-03-14</h4>
           </div>
 
     
@@ -356,6 +356,15 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multis
 <div id="dependencies" class="section level1">
 <h1 class="hasAnchor">
 <a href="#dependencies" class="anchor"></a>Dependencies</h1>
+<div id="the-magrittr-dot---is-always-ignored-" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-magrittr-dot---is-always-ignored-" class="anchor"></a>The <code>magrittr</code> dot (<code>.</code>) is always ignored.</h2>
+<p>It is common practice to use a literal dot (<code>.</code>) to carry an object through a <a href="https://github.com/tidyverse/magrittr"><code>magrittr</code></a> pipeline. Due to some tricky limitations in static code analysis, <code>drake</code> never treats the dot (<code>.</code>) as a dependency, even if you use it as an ordinary variable outside of a <a href="https://www.tidyverse.org/"><code>tidyverse</code></a> context.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/deps.html">deps</a></span>(<span class="st">"sqrt(x + y + .)"</span>)
+## [1] "sqrt" "x"    "y"
+<span class="kw"><a href="../reference/deps.html">deps</a></span>(<span class="st">"dplyr::filter(complete.cases(.))"</span>)
+## [1] "complete.cases" "dplyr::filter"</code></pre></div>
+</div>
 <div id="triggers-and-skipped-imports" class="section level2">
 <h2 class="hasAnchor">
 <a href="#triggers-and-skipped-imports" class="anchor"></a>Triggers and skipped imports</h2>
@@ -575,7 +584,8 @@ keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 </li>
       <li>
 <a href="#dependencies">Dependencies</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#triggers-and-skipped-imports">Triggers and skipped imports</a></li>
+<li><a href="#the-magrittr-dot---is-always-ignored-">The <code>magrittr</code> dot (<code>.</code>) is always ignored.</a></li>
+      <li><a href="#triggers-and-skipped-imports">Triggers and skipped imports</a></li>
       <li><a href="#dependencies-are-not-tracked-in-some-edge-cases-">Dependencies are not tracked in some edge cases.</a></li>
       <li><a href="#dependencies-of-knitr-reports">Dependencies of <code>knitr</code> reports</a></li>
       <li><a href="#knitr-inputs-and-file-outputs-in-imported-functions-">Knitr inputs and file outputs in imported functions.</a></li>
