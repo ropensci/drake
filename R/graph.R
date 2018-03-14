@@ -9,22 +9,7 @@
 #' @export
 #' @return An igraph object representing
 #'   the workflow plan dependency network.
-#'
-#' @param plan workflow plan data frame, same as for function
-#'   [make()].
-#'
-#' @param targets names of targets to build, same as for function
-#'   [make()].
-#'
-#' @param envir environment to import from, same as for function
-#'   [make()].
-#'
-#' @param verbose logical, whether to output messages to the console.
-#'
-#' @param jobs number of jobs to accelerate the construction
-#'   of the dependency graph. A light `mclapply()`-based
-#'   parallelism is used if your operating system is not Windows.
-#'
+#' @inheritParams drake_config
 #' @param sanitize_plan logical, whether to sanitize the workflow plan first.
 #' @examples
 #' \dontrun{
@@ -39,7 +24,7 @@ build_drake_graph <- function(
   plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = 1,
+  verbose = drake::default_verbose(),
   jobs = 1,
   sanitize_plan = TRUE
 ){

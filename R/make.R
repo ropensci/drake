@@ -73,7 +73,7 @@ make <- function(
   plan = read_drake_plan(),
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
-  verbose = 1,
+  verbose = drake::default_verbose(),
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose, force = force),
   fetch_cache = NULL,

@@ -9,6 +9,8 @@
 #'   targets or cached or a character vector listing all cached
 #'   items, depending on whether any targets are specified
 #'
+#' @inheritParams drake_config
+#'
 #' @param ... objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   \code{\link{remove}(...)}.
@@ -37,8 +39,6 @@
 #'   to find the nearest drake cache. Otherwise, look in the
 #'   current working directory only.
 #'   Ignored if a `cache` is supplied.
-#'
-#' @param verbose whether to print console messages
 #'
 #' @param namespace character scalar, name of the storr namespace
 #'   to use for listing objects
@@ -76,7 +76,7 @@ cached <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   namespace = NULL,
   jobs = 1
 ){
@@ -131,13 +131,8 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs){
 #'   \code{link{imported}}
 #' @export
 #' @return Character vector naming the built targets in the cache.
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs number of jobs/workers for parallel processing
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -150,7 +145,7 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs){
 built <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1
 ){
   if (is.null(cache)){
@@ -182,8 +177,6 @@ built <- function(
 #'   all their global variables are imported, the full list of
 #'   imported objects could get really cumbersome.
 #'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs number of jobs/workers for parallel processing
 #'
 #' @examples
@@ -198,7 +191,7 @@ built <- function(
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1
 ){
   if (is.null(cache)){

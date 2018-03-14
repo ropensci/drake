@@ -6,7 +6,8 @@
 to \code{\link[=make]{make()}}.}
 \usage{
 failed(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = TRUE)
+  path, search = search, verbose = verbose),
+  verbose = drake::default_verbose())
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -22,7 +23,17 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{whether to print console messages}
+\item{verbose}{logical or numeric, control printing to the console.
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 }
 \value{
 A character vector of target names.

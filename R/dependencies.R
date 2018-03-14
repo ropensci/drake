@@ -129,17 +129,13 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
+#' @inheritParams cached
 #' @param plan workflow plan data frame, same as for function
 #'   [make()].
 #' @param targets names of targets to build, same as for function
 #'   [make()].
 #' @param envir environment to import from, same as for function
 #'   [make()].
-#' @param jobs number of jobs to accelerate the construction
-#'   of the dependency graph. A light `mclapply()`-based
-#'   parallelism is used if your operating system is not Windows.
-#' @param verbose logical, whether to print
-#'   progress messages to the console.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -153,7 +149,7 @@ tracked <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   jobs = 1,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   force(envir)
   graph <- build_drake_graph(

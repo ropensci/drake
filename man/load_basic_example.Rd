@@ -6,7 +6,7 @@
 \usage{
 load_basic_example(envir = parent.frame(), seed = NULL, cache = NULL,
   report_file = "report.Rmd", overwrite = FALSE, to = report_file,
-  verbose = TRUE, force = FALSE)
+  verbose = drake::default_verbose(), force = FALSE)
 }
 \arguments{
 \item{envir}{The environment to load the example into.
@@ -40,7 +40,17 @@ existing file \code{report.Rmd}}
 \item{to}{deprecated, where to write the dynamic report source file
 \code{report.Rmd}}
 
-\item{verbose}{logical, whether to print console messages.}
+\item{verbose}{logical or numeric, control printing to the console.
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
 \item{force}{logical, whether to force the loading of a
 non-back-compatible cache from a previous version of drake.}

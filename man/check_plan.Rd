@@ -6,7 +6,8 @@
 \usage{
 check_plan(plan = read_drake_plan(),
   targets = drake::possible_targets(plan), envir = parent.frame(),
-  cache = drake::get_cache(verbose = verbose), verbose = TRUE, jobs = 1)
+  cache = drake::get_cache(verbose = verbose),
+  verbose = drake::default_verbose(), jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
@@ -18,9 +19,19 @@ check_plan(plan = read_drake_plan(),
 
 \item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}.}
 
-\item{verbose}{same as for \code{\link[=make]{make()}}}
+\item{verbose}{logical or numeric, control printing to the console.
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
-\item{jobs}{number of jobs/workers for light parallelism}
+\item{jobs}{number of jobs/workers for parallel processing}
 }
 \value{
 Invisibly return \code{plan}.

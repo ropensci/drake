@@ -8,7 +8,7 @@ or create a new one otherwise.}
 recover_cache(path = drake::default_cache_path(),
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(), force = FALSE,
-  verbose = TRUE, fetch_cache = NULL)
+  verbose = drake::default_verbose(), fetch_cache = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -25,7 +25,17 @@ See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} and
 despite any back compatibility issues with the
 running version of drake.}
 
-\item{verbose}{logical, whether to print the file path of the cache.}
+\item{verbose}{logical or numeric, control printing to the console.
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{in addition, print checks and cache info.}
+\item{3:}{in addition, print any potentially missing items.}
+\item{4:}{in addition, print imports. Full verbosity.}
+}}
 
 \item{fetch_cache}{character vector containing lines of code.
 The purpose of this code is to fetch the \code{storr} cache

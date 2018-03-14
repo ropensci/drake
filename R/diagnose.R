@@ -28,8 +28,6 @@
 #'   as a character or a symbol.
 #'   Just like `character.only` in [library()].
 #'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -77,7 +75,7 @@ diagnose <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)){
     return(character(0))

@@ -8,11 +8,7 @@
 #' @export
 #' @return [sessionInfo()] of the last
 #'   call to [make()]
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -23,7 +19,7 @@
 #' }
 drake_session <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
@@ -40,11 +36,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -56,7 +48,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "in progress") %>%
@@ -74,11 +66,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
-#'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -94,7 +82,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   prog <- progress(path = path, search = search, cache = cache)
   which(prog == "failed") %>%
@@ -132,8 +120,6 @@ failed <- function(path = getwd(), search = TRUE,
 #'   `no_imported_objects`.  Use the `no_imported_objects` argument
 #'   instead.
 #'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs number of jobs/workers for parallel processing
 #'
 #' @examples
@@ -156,7 +142,7 @@ progress <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1
 ){
   # deprecate imported_files_only

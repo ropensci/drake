@@ -5,13 +5,12 @@
 #' @seealso \code{ink{drake_plan}}, [make()]
 #' @export
 #' @return Invisibly return `plan`.
+#' @inheritParams cached
 #' @param plan workflow plan data frame, possibly from
 #'   [drake_plan()].
 #' @param targets character vector of targets to make
 #' @param envir environment containing user-defined functions
 #' @param cache optional drake cache. See [new_cache()].
-#' @param verbose same as for [make()]
-#' @param jobs number of jobs/workers for light parallelism
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -28,7 +27,7 @@ check_plan <- function(
   targets = drake::possible_targets(plan),
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
-  verbose = TRUE,
+  verbose = drake::default_verbose(),
   jobs = 1
 ){
   force(envir)

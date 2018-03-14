@@ -5,9 +5,7 @@
 #'   [make()]
 #' @export
 #' @return The cached value of the `target`.
-#'
 #' @inheritParams cached
-#'
 #' @param target If `character_only` is `TRUE`, then
 #'   `target` is a character string naming the object to read.
 #'   Otherwise, `target` is an unquoted symbol with the name of the
@@ -17,7 +15,6 @@
 #'   (just like `character.only` in [library()]).
 #' @param namespace optional character string,
 #'   name of the `storr` namespace to read from.
-#' @param verbose logical, whether to print console messages
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -37,7 +34,7 @@ readd <- function(
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   namespace = NULL,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   # if the cache is null after trying get_cache:
   if (is.null(cache)){
@@ -93,8 +90,6 @@ readd <- function(
 #'   can be lightly parallelized via `parallel::mclapply()`.
 #'   just set jobs to be an integer greater than 1. On Windows,
 #'   `jobs` is automatically demoted to 1.
-#'
-#' @param verbose logical, whether to print console messages
 #'
 #' @param deps logical, whether to load any cached
 #'   dependencies of the targets
@@ -171,7 +166,7 @@ loadd <- function(
   namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   deps = FALSE,
   lazy = "eager",
   graph = NULL,
@@ -364,8 +359,6 @@ bind_load_target <- function(target, cache, namespace, envir, verbose){
 #'
 #' @inheritParams cached
 #'
-#' @param verbose whether to print console messages
-#'
 #' @param jobs number of jobs for light parallelism.
 #'   Supports 1 job only on Windows.
 #'
@@ -385,7 +378,7 @@ read_drake_config <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   jobs = 1,
   envir = parent.frame()
 ){
@@ -426,8 +419,6 @@ read_drake_config <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param verbose logical, whether to print console messages
-#'
 #' @param ... arguments to [visNetwork()] via
 #'   [vis_drake_graph()]
 #'
@@ -445,7 +436,7 @@ read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = 1,
+  verbose = drake::default_verbose(),
   ...
 ){
   if (is.null(cache)){
@@ -470,8 +461,6 @@ read_drake_graph <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param verbose whether to print console messages
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -484,7 +473,7 @@ read_drake_plan <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search, verbose = verbose)
@@ -511,8 +500,6 @@ read_drake_plan <- function(
 #' @return An integer vector.
 #'
 #' @inheritParams cached
-#'
-#' @param verbose whether to print console messages
 #'
 #' @examples
 #' cache <- storr::storr_environment() # Just for the examples.
@@ -551,7 +538,7 @@ read_drake_seed <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = TRUE
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search, verbose = verbose)
