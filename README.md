@@ -151,11 +151,11 @@ With even more evidence and confidence, you can invest the time to independently
 
 ## Readability and transparency
 
-For reproducibility, it is important that others can read your code and understand what your workflow is doing. `Drake` helps in several ways.
+Ideally, independent observers should be able to read your code and understand it. `Drake` helps in several ways.
 
 - The [workflow plan data frame](https://ropensci.github.io/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
-- `Drake` takes care of the parallel scheduling and high-performance computing (HPC) so you do not have to. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.
-- You can [generate large numbers of targets](https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames) without encumbering the collection of imported functions that make up your code base. In other words, `drake` can scale up the size of your project without making your custom code more complicated.
+- `Drake` takes care of the parallel scheduling and high-performance computing (HPC) for you. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.
+- You can scale up and [generate large collections of targets](https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames) without encumbering your custom code (imported functions).
 
 # Aggressively scale up.
 
