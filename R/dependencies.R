@@ -353,14 +353,14 @@ find_globals <- function(expr){
   }
   # Warning: In collector$results(reset = reset) :
   #  partial argument match of 'reset' to 'resetState'
-
   suppressWarnings(inputs <- CodeDepends::getInputs(expr))
   base::union(
     inputs@inputs,
     names(inputs@functions)
   ) %>%
     setdiff(y = c(formals, drake_fn_patterns)) %>%
-    Filter(f = is_parsable)
+    Filter(f = is_parsable) %>%
+    setdiff(y = ".") # Exclude the magrittr dot
 }
 
 analyze_loadd <- function(expr){
