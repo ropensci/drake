@@ -4,8 +4,8 @@
 \alias{reduce_plan}
 \title{Write commands to reduce several targets down to one.}
 \usage{
-reduce_plan(plan = NULL, target = "target", begin = "(", op = "+",
-  end = ")", pairwise = FALSE)
+reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
+  end = "", pairwise = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}

@@ -252,10 +252,10 @@ gather_plan <- function(
 reduce_plan <- function(
   plan = NULL,
   target = "target",
-  begin = "(",
-  op = "+",
-  end = ")",
-  pairwise = FALSE
+  begin = "",
+  op = " + ",
+  end = "",
+  pairwise = TRUE
 ){
   if (pairwise){
     pairs <- reduction_pairs(
@@ -265,13 +265,13 @@ reduce_plan <- function(
     pairs$names[nrow(pairs)] <- target
     tibble(
       target = pairs$names,
-      command = paste0(begin, pairs$odds, " ", op, " ", pairs$evens, end)
+      command = paste0(begin, pairs$odds, op, pairs$evens, end)
     )
   } else {
     command <- Reduce(
       x = plan$target,
       f = function(x, y){
-        paste0(begin, x, " ", op, " ", y, end)
+        paste0(begin, x, op, y, end)
       }
     )
     tibble(target = target, command = command)
