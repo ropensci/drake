@@ -224,6 +224,82 @@ gather_plan <- function(
   tibble(target = target, command = command)
 }
 
+#' @title Write commands to reduce several targets down to one.
+#' @description Creates a new workflow plan data frame with a single new
+#'   target. This target is formed by combining the targets
+#'   in the argument plan using successive applications of a binary
+#'   operator.
+#' @export
+#' @return A workflow plan data frame that aggregates multiple
+#'   prespecified targets into one additional target downstream.
+#' @param plan workflow plan data frame of prespecified targets
+#' @param target name of the new aggregated target
+#' @param gather function used to gather the targets. Should be
+#'   one of \code{\link{list}(...)}, \code{\link{c}(...)},
+#'   \code{\link{rbind}(...)}, or similar.
+#' @examples
+#' # Workflow plan for datasets:
+#' x_plan <- evaluate_plan(
+#'   drake_plan(x = VALUE),
+#'   wildcard = "VALUE",
+#'   values = 1:8
+#' )
+#' # Create a new target from the sum of the others.
+#' reduce_plan(x_plan, target = "x_sum")
+#' # For memory efficiency and parallel computing,
+#' # reduce pairwise:
+#' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+reduce_plan <- function(
+  plan = NULL,
+  target = "target",
+  begin = "(",
+  op = "+",
+  end = ")",
+  pairwise = FALSE
+){
+  if (pairwise){
+    pairs <- reduction_pairs(
+      x = plan$target,
+      base_name = paste0(target, "_")
+    )
+    pairs$names[nrow(pairs)] <- target
+    tibble(
+      target = pairs$names,
+      command = paste0(begin, pairs$odds, " ", op, " ", pairs$evens, end)
+    )
+  } else {
+    command <- Reduce(
+      x = plan$target,
+      f = function(x, y){
+        paste0(begin, x, " ", op, " ", y, end)
+      }
+    )
+    tibble(target = target, command = command)
+  }
+}
+
+reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){
+  if (length(x) < 2){
+    return(pairs)
+  }
+  evens <- x[seq(from = 2, to = length(x), by = 2)]
+  odds <- x[seq(from = 1, to = length(x), by = 2)]
+  names <- new_x <- paste0(base_name, seq_along(odds) + (nrow(pairs) %||% 0))
+  if (length(odds) > length(evens)){
+    evens[length(evens) + 1] <- names[1]
+    new_x <- new_x[-1]
+  }
+  new_pairs <- data.frame(
+    names = names, odds = odds, evens = evens,
+    stringsAsFactors = FALSE
+  )
+  reduction_pairs(
+    x = new_x,
+    pairs = rbind(pairs, new_pairs),
+    base_name = base_name
+  )
+}
+
 #' @title Generate a workflow plan data frame to
 #'   analyze multiple datasets using multiple methods of analysis.
 #' @description Uses wildcards to create a new
