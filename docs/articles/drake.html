@@ -109,7 +109,7 @@
             <h3 class="subtitle">where to begin</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-14</h4>
+            <h4 class="date">2018-03-15</h4>
           </div>
 
     
@@ -162,21 +162,21 @@
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
 <p>Wildcard templating generates these data frames at scale.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 dataset_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
@@ -260,11 +260,11 @@ whole_plan
 <p>At this point, all your targets are out of date because the project is new.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Master configuration list</span>
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "\"report.md\""          "coef_regression1_large"
-##  [3] "coef_regression1_small" "coef_regression2_large"
-##  [5] "coef_regression2_small" "large"                 
-##  [7] "regression1_large"      "regression1_small"     
-##  [9] "regression2_large"      "regression2_small"     
+##  [1] "coef_regression1_large" "coef_regression1_small"
+##  [3] "coef_regression2_large" "coef_regression2_small"
+##  [5] "large"                  "regression1_large"     
+##  [7] "regression1_small"      "regression2_large"     
+##  [9] "regression2_small"      "\"report.md\""         
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"</code></pre></div>
@@ -375,7 +375,7 @@ whole_plan
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

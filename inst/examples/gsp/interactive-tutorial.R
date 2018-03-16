@@ -105,7 +105,12 @@ whole_plan <- rbind(model_plan, rmspe_plan, rmspe_results_plan, output_plan)
 # vis_drake_graph(config) # nolint
 
 # Just see the dependencies of the report.
-# vis_drake_graph(config, from = "'report.md'", mode = "in", order = 1) # nolint
+# vis_drake_graph(
+#   config,
+#   from = file_store("report.md"),
+#   mode = "in",
+#   order = 1 # nolint
+# )
 
 # Run the project.
 # View the results rmspe.pdf and report.md

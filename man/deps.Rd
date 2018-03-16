@@ -22,14 +22,16 @@ The dependency structure of the components of your analysis
 decides which targets are built and when.
 }
 \details{
-If the argument is a single-quoted string that points to
+If the argument is a double-quoted string that points to
 a dynamic knitr report, the dependencies of the expected compiled
-output will be given. For example, \code{deps("'report.Rmd'")}
+output will be given. For example, \code{deps(file_store("report.Rmd"))}
 will return target names found in calls to \code{\link[=loadd]{loadd()}}
-and \code{\link[=readd]{readd()}} in active code chunks.
-These targets are needed in order to run \code{knit('report.Rmd')}
-to produce the output file \code{'report.md'}, so technically,
-they are dependencies of \code{'report.md'}, not \code{'report.Rmd'}.
+and \code{\link[=readd]{readd()}} in active code chunks. The \code{\link[=file_store]{file_store()}} function
+(alerts \code{drake} utility functions to file names by double-quoting them.)
+These \code{\link[=loadd]{loadd()}}/\code{\link[=readd]{readd()}} targets are needed
+in order to run \code{knit(knitr_in("report.Rmd"))}
+to produce the output file \code{"report.md"}, so technically,
+they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
 
 \code{Drake} takes special precautions so that a target/import
 does not depend on itself. For example, \code{deps(f)`` might return}"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
@@ -50,8 +52,9 @@ deps(f)
 # Define a workflow plan data frame that uses your function f().
 my_plan <- drake_plan(
   x = 1 + some_object,
-  my_target = x + readRDS('tracked_input_file.rds'),
-  return_value = f(x, y, g(z + w))
+  my_target = x + readRDS(file_in("tracked_input_file.rds")),
+  return_value = f(x, y, g(z + w)),
+  strings_in_dots = "literals"
 )
 # Get the dependencies of workflow plan commands.
 # Here, the dependencies could be R functions/objects from your workspace

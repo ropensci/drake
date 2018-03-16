@@ -129,7 +129,7 @@ assert_compatible_cache <- function(cache){
     "The project at '", path, "' was previously built by drake ", old, ". ",
     "You are running drake ", current, ", which is not back-compatible. ",
     "To format your cache for the newer drake, ",
-    "try migrate_drake_project('", path, "'). ",
+    "try migrate_drake_project(\"", path, "\"). ",
     "migrate_drake_project() restructures the cache in a way that ",
     "preserves the statuses of your targets (up to date vs outdated). ",
     "But in case of errors, ",

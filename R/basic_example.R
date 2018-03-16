@@ -7,7 +7,7 @@
 #' and then analyze them with regression models.
 #' Finally, we summarize the regression models
 #' to see if there is an association.
-#' @details Use \code{\link{drake_example}('basic')} to get the code
+#' @details Use \code{\link{drake_example}("basic")} to get the code
 #' for the basic example. The included R script is a detailed,
 #' heavily-commented walkthrough. The basic example vignette at
 #' <https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd> # nolint
@@ -66,7 +66,7 @@
 #' # Remove the whole cache.
 #' clean(destroy = TRUE)
 #' # Clean up the imported file.
-#' unlink('report.Rmd')
+#' unlink("report.Rmd")
 #' })
 #' }
 load_basic_example <- function(

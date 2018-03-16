@@ -26,7 +26,7 @@ with the same name as the drake example.}
 \description{
 Copy a folder of code files for a
 drake example to the current working directory.
-Call \code{drake_example('basic')} to generate the code files from the
+Call \code{drake_example("basic")} to generate the code files from the
 basic example vignette: \code{vignette("example-basic")}.
 To see the names of all the examples, run \code{\link[=drake_examples]{drake_examples()}}.
 }

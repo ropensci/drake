@@ -11,6 +11,7 @@ vignette: >
 
 The [FAQ page](https://ropensci.github.io/drake/articles/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
 
+- [Gather without loading all dependencies at the same time](https://github.com/ropensci/drake/issues/325)
 - [Reproducibility with random numbers](https://github.com/ropensci/drake/issues/313)
 - [output file as target](https://github.com/ropensci/drake/issues/297)
 - [How should I mix non-R code (e.g. Python and shell scripts) in a large drake workflow?](https://github.com/ropensci/drake/issues/277)

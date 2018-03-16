@@ -224,6 +224,98 @@ gather_plan <- function(
   tibble(target = target, command = command)
 }
 
+#' @title Write commands to reduce several targets down to one.
+#' @description Creates a new workflow plan data frame with the
+#'   commands to do a reduction (i.e. to repeatedly apply a binary
+#'   operator to pairs of targets to produce one target).
+#' @export
+#' @return A workflow plan data frame that aggregates multiple
+#'   prespecified targets into one additional target downstream.
+#' @param plan workflow plan data frame of prespecified targets
+#' @param target name of the new reduced target
+#' @param begin character, code to place at the beginning
+#'   of each step in the reduction
+#' @param op binary operator to apply in the reduction
+#' @param end character, code to place at the end
+#'   of each step in the reduction
+#' @param pairwise logical, whether to create multiple
+#'   new targets, one for each pair/step in the reduction (`TRUE`), 
+#'   or to do the reduction all in one command.
+#' @examples
+#' # Workflow plan for datasets:
+#' x_plan <- evaluate_plan(
+#'   drake_plan(x = VALUE),
+#'   wildcard = "VALUE",
+#'   values = 1:8
+#' )
+#' # Create a new target from the sum of the others.
+#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE)
+#' # For memory efficiency and parallel computing,
+#' # reduce pairwise:
+#' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+#' # Optionally define your own function and use it as the
+#' # binary operator in the reduction.
+#' x_plan <- evaluate_plan(
+#'   drake_plan(x = VALUE),
+#'   wildcard = "VALUE",
+#'   values = 1:9
+#' )
+#' x_plan
+#' reduce_plan(
+#'   x_plan, target = "x_sum", pairwise = TRUE,
+#'   begin = "fun(", op = ", ", end = ")"
+#' )
+reduce_plan <- function(
+  plan = NULL,
+  target = "target",
+  begin = "",
+  op = " + ",
+  end = "",
+  pairwise = TRUE
+){
+  if (pairwise){
+    pairs <- reduction_pairs(
+      x = plan$target,
+      base_name = paste0(target, "_")
+    )
+    pairs$names[nrow(pairs)] <- target
+    tibble(
+      target = pairs$names,
+      command = paste0(begin, pairs$odds, op, pairs$evens, end)
+    )
+  } else {
+    command <- Reduce(
+      x = plan$target,
+      f = function(x, y){
+        paste0(begin, x, op, y, end)
+      }
+    )
+    tibble(target = target, command = command)
+  }
+}
+
+reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){
+  if (length(x) < 2){
+    return(pairs)
+  }
+  evens <- x[seq(from = 2, to = length(x), by = 2)]
+  odds <- x[seq(from = 1, to = length(x), by = 2)]
+  names <- new_x <- paste0(base_name, seq_along(odds) + (nrow(pairs) %||% 0))
+  if (length(odds) > length(evens)){
+    evens[length(evens) + 1] <- names[1]
+    new_x <- new_x[-1]
+  }
+  new_pairs <- data.frame(
+    names = names, odds = odds, evens = evens,
+    stringsAsFactors = FALSE
+  )
+  reduction_pairs(
+    x = new_x,
+    pairs = rbind(pairs, new_pairs),
+    base_name = base_name
+  )
+}
+
 #' @title Generate a workflow plan data frame to
 #'   analyze multiple datasets using multiple methods of analysis.
 #' @description Uses wildcards to create a new

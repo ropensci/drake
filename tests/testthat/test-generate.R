@@ -205,3 +205,112 @@ test_with_dir("analyses and summaries", {
     gather = NULL))
   expect_equal(nrow(s), 8)
 })
+
+test_with_dir("reduce_plan()", {
+  # Non-pairwise reduce
+  x_plan <- evaluate_plan(
+    drake_plan(x = VALUE),
+    wildcard = "VALUE",
+    values = 1:8
+  )
+  x <- reduce_plan(
+    x_plan, target = "x_sum", pairwise = FALSE,
+    begin = "", end = ""
+  )
+  x0 <- tibble::tibble(
+    target = "x_sum",
+    command = paste0(x_plan$target, collapse = " + ")
+  )
+  expect_equal(x, x0)
+  make(rbind(x_plan, x), session_info = FALSE)
+  expect_equal(readd(x_sum), sum(1:8))
+  clean(destroy = TRUE)
+
+  # Pairwise reduce even number of targets
+  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+  x0 <- tibble(
+    target = c(paste0("x_sum_", 1:6), "x_sum"),
+    command = c(
+      "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
+      "x_sum_1 + x_sum_2", "x_sum_3 + x_sum_4",
+      "x_sum_5 + x_sum_6"
+    )
+  )
+  expect_equal(x, x0)
+  x <- reduce_plan(
+    x_plan, target = "x_sum", pairwise = FALSE,
+    begin = "", end = ""
+  )
+  x0 <- tibble::tibble(
+    target = "x_sum",
+    command = paste0(x_plan$target, collapse = " + ")
+  )
+  expect_equal(x, x0)
+  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+  x0 <- tibble(
+    target = c(paste0("x_sum_", 1:6), "x_sum"),
+    command = c(
+      "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
+      "x_sum_1 + x_sum_2", "x_sum_3 + x_sum_4",
+      "x_sum_5 + x_sum_6"
+    )
+  )
+  expect_equal(x, x0)
+  make(rbind(x_plan, x), session_info = FALSE)
+  expect_equal(readd(x_sum), sum(1:8))
+  clean(destroy = TRUE)
+
+  # Odd number of targets
+  x_plan <- evaluate_plan(
+    drake_plan(x = VALUE),
+    wildcard = "VALUE",
+    values = 1:9
+  )
+  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+  x0 <- tibble(
+    target = c(paste0("x_sum_", 1:7), "x_sum"),
+    command = c(
+      "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
+      "x_9 + x_sum_1",
+      "x_sum_2 + x_sum_3", "x_sum_4 + x_sum_5",
+      "x_sum_6 + x_sum_7"
+    )
+  )
+  expect_equal(x, x0)
+  make(rbind(x_plan, x), session_info = FALSE)
+  expect_equal(readd(x_sum), sum(1:9))
+  clean(destroy = TRUE)
+
+  # Arbitrary function in reduction
+  x_plan <- evaluate_plan(
+    drake_plan(x = VALUE),
+    wildcard = "VALUE",
+    values = 1:8
+  )
+  fun <- function(x, y){
+    x ^ 2 - 3 * y
+  }
+  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE,
+    begin = "fun(", op = ", ", end = ")")
+  x0 <- tibble(
+    target = c(paste0("x_sum_", 1:6), "x_sum"),
+    command = c(
+      "fun(x_1, x_2)", "fun(x_3, x_4)", "fun(x_5, x_6)", "fun(x_7, x_8)",
+      "fun(x_sum_1, x_sum_2)", "fun(x_sum_3, x_sum_4)",
+      "fun(x_sum_5, x_sum_6)"
+    )
+  )
+  expect_equal(x, x0)
+  make(rbind(x_plan, x))
+  out <- fun(
+    fun(
+      fun(1, 2),
+      fun(3, 4)
+    ),
+    fun(
+      fun(5, 6),
+      fun(7, 8)
+    )
+  )
+  expect_equal(readd(x_sum), out)
+})
