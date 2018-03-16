@@ -430,11 +430,7 @@ recurse_ignore <- function(x) {
     if (is_ignore_call(x)) {
       x <- quote(ignore())
     } else {
-      for (i in seq_along(x)){
-        if (length(x[[i]])){
-          x[[i]] <- recurse_ignore(x[[i]])
-        }
-      }
+      x[] <- purrr::map(as.list(x), recurse_ignore)
     }
   }
   x
