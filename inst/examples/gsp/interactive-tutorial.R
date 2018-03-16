@@ -109,7 +109,7 @@ whole_plan <- rbind(model_plan, rmspe_plan, rmspe_results_plan, output_plan)
 #   config,
 #   from = file_store("report.md"),
 #   mode = "in",
-#   order = 1
+#   order = 1 # nolint
 # )
 
 # Run the project.
