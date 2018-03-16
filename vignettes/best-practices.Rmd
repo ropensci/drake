@@ -249,9 +249,9 @@ hard_plan <- drake_plan(
 )
 
 evaluate_plan(
-  hard_plan, 
+  hard_plan,
   rules = list(school__ = c("schoolA", "schoolB", "schoolC"))
-) 
+)
 ```
 
 But what if some metrics do not make sense? For example, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.
@@ -261,7 +261,7 @@ library(magrittr)
 rules_grid <- tibble::tibble(
   school_ =  c("schoolA", "schoolB", "schoolC"),
   funding_ = c("public", "public", "private"),
-) %>% 
+) %>%
   tidyr::crossing(cohort_ = c("2012", "2013", "2014", "2015")) %>%
   dplyr::filter(!(school_ == "schoolB" & cohort_ %in% c("2012", "2013"))) %>%
   print()
@@ -326,7 +326,7 @@ cranlogs_plan
 To make sure we always have the latest timestamp, we use the `"always"` trigger. (See [this section of the debugging vignette](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers) for more on triggers.)
 
 ```{r logs4}
-cranlogs_plan$trigger = c("always", "any")
+cranlogs_plan$trigger <- c("always", "any")
 cranlogs_plan
 ```
 

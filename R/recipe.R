@@ -42,8 +42,9 @@
 #' `Rscript -e 'drake::mk("this_target", "path_to_cache")'`.
 #'
 #' @examples
-#' # Only relevant for "Makefile" parallelism:
-#' Makefile_recipe() # Show an example Makefile recipe.
+#' # Only relevant for "Makefile" parallelism.
+#' # Show an example Makefile recipe.
+#' Makefile_recipe(cache_path = "path") # `cache_path` has a reliable default.
 #' # Customize your Makefile recipe.
 #' Makefile_recipe(
 #'   target = "this_target",

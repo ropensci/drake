@@ -13,5 +13,7 @@ Default file path of the drake/storr cache.
 Applies to file system caches only.
 }
 \examples{
+\dontrun{
 default_cache_path()
+}
 }

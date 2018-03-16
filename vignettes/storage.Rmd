@@ -119,7 +119,7 @@ long_hash(cache)
 For new projects, use `new_cache()` to set the hash algorithms of the default cache.
 
 ```{r default_cache_reset}
-cache_path(cache) # Default cache from before.
+# cache_path(cache) # Default cache from before. # nolint
 
 # Start from scratch to reset both hash algorithms.
 clean(destroy = TRUE)
@@ -178,9 +178,8 @@ faster_cache <- new_cache(
   long_hash_algo = "murmur32"
 )
 
-cache_path(faster_cache)
-
-cache_path(cache) # location of the previous cache
+# cache_path(faster_cache) # nolint
+# cache_path(cache) # location of the previous cache # nolint
 
 short_hash(faster_cache)
 

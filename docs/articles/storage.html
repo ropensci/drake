@@ -209,19 +209,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "25077abd9890daf4c2b34359da6f461b"</code></pre></div>
+## [1] "750a262e1576f02c3e69314c5902bb0f"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "31ccbc63c7af2b0de4fc60f22dc19d18b157385c2dea93966b7f720a5a9f2460b206390c8301a8672b36a00acc685f56d1559f57e16458d49d4ad0f1c0585b05"
+## [1] "b1ca08d582bdf27e78b3c1a3ddcc3d3e3e044c21318d7a12e90a014ec302cd6c8e9b96790cb951729c08268912fbc6a5bda8bd5baddf3e2517b3baa34c12d3cf"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "25077abd9890daf4c2b34359da6f461b"
+## [1] "750a262e1576f02c3e69314c5902bb0f"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "1948ee0377748f9b"
+## [1] "3b0544f661f15b5d"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "f8bdcc28"</code></pre></div>
+## [1] "6950c81e"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
@@ -243,8 +243,7 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 <h1 class="hasAnchor">
 <a href="#select-the-hash-algorithms-of-the-default-cache" class="anchor"></a>Select the hash algorithms of the default cache</h1>
 <p>For new projects, use <code><a href="../reference/new_cache.html">new_cache()</a></code> to set the hash algorithms of the default cache.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/cache_path.html">cache_path</a></span>(cache) <span class="co"># Default cache from before.</span>
-## [1] "/home/landau/projects/drake/vignettes/.drake"
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cache_path(cache) # Default cache from before. # nolint</span>
 
 <span class="co"># Start from scratch to reset both hash algorithms.</span>
 <span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>)
@@ -301,11 +300,8 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
   <span class="dt">long_hash_algo =</span> <span class="st">"murmur32"</span>
 )
 
-<span class="kw"><a href="../reference/cache_path.html">cache_path</a></span>(faster_cache)
-## [1] "/home/landau/projects/drake/vignettes/faster_cache"
-
-<span class="kw"><a href="../reference/cache_path.html">cache_path</a></span>(cache) <span class="co"># location of the previous cache</span>
-## [1] "/home/landau/projects/drake/vignettes/.drake"
+<span class="co"># cache_path(faster_cache) # nolint</span>
+<span class="co"># cache_path(cache) # location of the previous cache # nolint</span>
 
 <span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(faster_cache)
 ## [1] "murmur32"

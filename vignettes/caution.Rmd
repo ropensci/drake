@@ -229,7 +229,7 @@ f <- function(){
 
 deps(f)
 
-command <- "x <- digest::digest(file_in(\"input_file.rds\")); assign(\"x\", 1); x"
+command <- "x <- digest::digest(file_in(\"input_file.rds\")); assign(\"x\", 1); x" # nolint
 deps(command)
 ```
 

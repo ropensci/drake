@@ -371,8 +371,8 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 </code></pre>
 <p>But be warned: that particular recipe fails on Windows.</p>
 <p>Use the <code><a href="../reference/Makefile_recipe.html">Makefile_recipe()</a></code> function to show and tweak <code>Makefile</code> recipes in advance.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>()
-## Rscript -e 'drake::mk(target = "your_target", cache_path = "/home/landau/projects/drake/vignettes/.drake")'
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(<span class="dt">cache_path =</span> <span class="st">"just_use_the_default"</span>)
+## Rscript -e 'drake::mk(target = "your_target", cache_path = "just_use_the_default")'
 
 <span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(
   <span class="dt">recipe_command =</span> <span class="st">"R -e 'R_RECIPE' -q"</span>,
@@ -381,8 +381,8 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 )
 ## R -e 'drake::mk(target = "this_target", cache_path = "custom_cache")' -q</code></pre></div>
 <p>If <code>recipe_command</code> contains no mention of <code>R_RECIPE</code>, then <code>R_RECIPE</code> is single-quoted and appended automatically.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(<span class="dt">recipe_command =</span> <span class="st">"R -q -e"</span>)
-## R -q -e 'drake::mk(target = "your_target", cache_path = "/home/landau/projects/drake/vignettes/.drake")'</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(<span class="dt">recipe_command =</span> <span class="st">"R -q -e"</span>, <span class="dt">cache_path =</span> <span class="st">"supplied_by_default"</span>)
+## R -q -e 'drake::mk(target = "your_target", cache_path = "supplied_by_default")'</code></pre></div>
 <p>Try each of the following and look at the generated <code>Makefile</code> after each call to <code><a href="../reference/make.html">make()</a></code>. To see the recipes printed to the console, run <code><a href="../reference/clean.html">clean()</a></code> between each <code><a href="../reference/make.html">make()</a></code> and leave <code>verbose</code> equal to <code>TRUE</code> (default).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">4</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">4</span>,

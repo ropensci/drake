@@ -278,7 +278,9 @@ recover_cache <- function(
 #' @description Applies to file system caches only.
 #' @return Default file path of the drake/storr cache.
 #' @examples
+#' \dontrun{
 #' default_cache_path()
+#' }
 default_cache_path <- function(){
   file.path(getwd(), ".drake")
 }

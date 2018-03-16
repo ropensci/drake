@@ -338,7 +338,7 @@ But be warned: that particular recipe fails on Windows.
 Use the `Makefile_recipe()` function to show and tweak `Makefile` recipes in advance.
 
 ```{r makefilerecipefunction}
-Makefile_recipe()
+Makefile_recipe(cache_path = "just_use_the_default")
 
 Makefile_recipe(
   recipe_command = "R -e 'R_RECIPE' -q",
@@ -350,7 +350,7 @@ Makefile_recipe(
 If `recipe_command` contains no mention of `R_RECIPE`, then `R_RECIPE` is single-quoted and appended automatically.
 
 ```{r reappendrrecipe}
-Makefile_recipe(recipe_command = "R -q -e")
+Makefile_recipe(recipe_command = "R -q -e", cache_path = "supplied_by_default")
 ```
 
 Try each of the following and look at the generated `Makefile` after each call to `make()`. To see the recipes printed to the console, run `clean()` between each `make()` and leave `verbose` equal to `TRUE` (default).

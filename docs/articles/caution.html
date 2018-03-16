@@ -395,7 +395,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multis
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(f)
 ## [1] "digest::digest"  "file_dependency" "get"             "globalenv"
 
-command &lt;-<span class="st"> "x &lt;- digest::digest(file_in(</span><span class="ch">\"</span><span class="st">input_file.rds</span><span class="ch">\"</span><span class="st">)); assign(</span><span class="ch">\"</span><span class="st">x</span><span class="ch">\"</span><span class="st">, 1); x"</span>
+command &lt;-<span class="st"> "x &lt;- digest::digest(file_in(</span><span class="ch">\"</span><span class="st">input_file.rds</span><span class="ch">\"</span><span class="st">)); assign(</span><span class="ch">\"</span><span class="st">x</span><span class="ch">\"</span><span class="st">, 1); x"</span> <span class="co"># nolint</span>
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(command)
 ## [1] "assign"             "digest::digest"     "\"input_file.rds\""</code></pre></div>
 <p><code>Drake</code> takes special precautions so that a target/import does not depend on itself. For example, <code><a href="../reference/deps.html">deps(f)</a></code> might return <code>"f"</code> if <code>f()</code> is a recursive function, but <code><a href="../reference/make.html">make()</a></code> just ignores this conflict and runs as expected. In other words, <code><a href="../reference/make.html">make()</a></code> automatically removes all self-referential loops in the dependency network.</p>

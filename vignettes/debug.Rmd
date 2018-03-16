@@ -278,7 +278,8 @@ withr::with_message_sink(
 
 failed(verbose = FALSE) # from the last make() only
 
-error <- diagnose(my_target, verbose = FALSE)$error # See also warnings and messages.
+# See also warnings and messages.
+error <- diagnose(my_target, verbose = FALSE)$error
 
 error$message
 
@@ -378,9 +379,8 @@ in_progress(verbose = FALSE) # Unfinished targets
 There are functions to help you locate the project's cache.
 
 ```{r finddebug}
-find_project()
-
-find_cache()
+# find_project() # nolint
+# find_cache()   # nolint
 ```
 
 For more information on the cache, see the [storage vignette](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd).
