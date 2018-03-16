@@ -361,9 +361,8 @@ find_globals <- function(expr){
     inputs@inputs,
     names(inputs@functions)
   ) %>%
-    setdiff(y = c(formals, drake_fn_patterns)) %>%
-    Filter(f = is_parsable) %>%
-    setdiff(y = ".") # Exclude the magrittr dot
+    setdiff(y = c(formals, drake_fn_patterns, ".")) %>%
+    Filter(f = is_parsable)
 }
 
 analyze_loadd <- function(expr){
