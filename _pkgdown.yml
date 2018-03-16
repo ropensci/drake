@@ -1,5 +1,5 @@
 url: https://github.com/ropensci/drake
-templates_path: inst/pkgdown/templates
+destination: docs/
 navbar:
   title: drake
   type: default
@@ -34,6 +34,8 @@ navbar:
       href: articles/storage.html
     - text: Caution
       href: articles/caution.html
+    - text: Frequently-asked questions
+      href: articles/faq.html
   - text: News
     href: news/index.html
   right:

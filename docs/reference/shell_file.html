@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Write an example <code>shell.sh</code> file required by
-<code><a href='make.html'>make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')</a></code>. — shell_file • drake</title>
+<code>make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')</code>. — shell_file • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -19,13 +19,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Write an example <code>shell.sh</code> file required by
+<code>make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')</code>. — shell_file" />
+
+<meta property="og:description" content="This function also does a chmod +x
+to enable execute permissions." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +110,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -130,7 +139,8 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write an example <code>shell.sh</code> file required by
-<code><a href='make.html'>make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')</a></code>.</h1>
+<code>make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')</code>.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/parallel_ui.R'><code>R/parallel_ui.R</code></a></small>
     </div>
 
     
@@ -205,3 +215,4 @@ wrote the shell file.</p>
 
   </body>
 </html>
+

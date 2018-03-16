@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Predict the elapsed runtime of the next call to <code><a href='make.html'>make()</a></code>. — predict_runtime • drake</title>
+<title>Predict the elapsed runtime of the next call to <code>make()</code>. — predict_runtime • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,21 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Predict the elapsed runtime of the next call to <code>make()</code>. — predict_runtime" />
+
+<meta property="og:description" content="This function simply sums the elapsed build times
+from rate_limiting_times(), and this
+feature is experimental.
+To date, the accuracy/precision of the results
+has not yet been confirmed by performance studies." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -103,6 +111,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -128,7 +139,8 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Predict the elapsed runtime of the next call to <code><a href='make.html'>make()</a></code>.</h1>
+    <h1>Predict the elapsed runtime of the next call to <code>make()</code>.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/predict_runtime.R'><code>R/predict_runtime.R</code></a></small>
     </div>
 
     
@@ -255,3 +267,4 @@ will warn you and tell you which targets have missing times.</p>
 
   </body>
 </html>
+

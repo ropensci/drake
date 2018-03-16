@@ -19,13 +19,20 @@ or knitr report source file. — deps • drake</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="List the dependencies of a function, workflow plan command,
+or knitr report source file. — deps" />
+
+<meta property="og:description" content="Intended for debugging and checking your project.
+The dependency structure of the components of your analysis
+decides which targets are built and when." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +111,9 @@ or knitr report source file. — deps • drake</title>
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -131,6 +141,7 @@ or knitr report source file. — deps • drake</title>
     <div class="page-header">
     <h1>List the dependencies of a function, workflow plan command,
 or knitr report source file.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/dependencies.R'><code>R/dependencies.R</code></a></small>
     </div>
 
     
@@ -159,15 +170,17 @@ The other names listed are functions or generic R objects.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the argument is a single-quoted string that points to
+    <p>If the argument is a double-quoted string that points to
 a dynamic knitr report, the dependencies of the expected compiled
-output will be given. For example, <code>deps("'report.Rmd'")</code>
+output will be given. For example, <code>deps(file_store("report.Rmd"))</code>
 will return target names found in calls to <code><a href='loadd.html'>loadd()</a></code>
-and <code><a href='readd.html'>readd()</a></code> in active code chunks.
-These targets are needed in order to run <code>knit('report.Rmd')</code>
-to produce the output file <code>'report.md'</code>, so technically,
-they are dependencies of <code>'report.md'</code>, not <code>'report.Rmd'</code>.
-    <code>Drake</code> takes special precautions so that a target/import
+and <code><a href='readd.html'>readd()</a></code> in active code chunks. The <code><a href='file_store.html'>file_store()</a></code> function
+(alerts <code>drake</code> utility functions to file names by double-quoting them.)
+These <code><a href='loadd.html'>loadd()</a></code>/<code><a href='readd.html'>readd()</a></code> targets are needed
+in order to run <code>knit(knitr_in("report.Rmd"))</code>
+to produce the output file <code>"report.md"</code>, so technically,
+they are dependencies of <code>"report.md"</code>, not <code>"report.Rmd"</code>.</p>
+<p><code>Drake</code> takes special precautions so that a target/import
 does not depend on itself. For example, <code>deps(f)`` might return</code>"f"<code>if</code>f()` is a recursive function, but <code><a href='make.html'>make()</a></code> just ignores
 this conflict and runs as expected. In other words, <code><a href='make.html'>make()</a></code>
 automatically removes all self-referential loops in the dependency
@@ -186,14 +199,14 @@ network.</p>
 <span class='fu'>deps</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "g"       "saveRDS"</div><div class='input'><span class='co'># Define a workflow plan data frame that uses your function f().</span>
 <span class='no'>my_plan</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_plan.html'>drake_plan</a></span>(
   <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span> + <span class='no'>some_object</span>,
-  <span class='kw'>my_target</span> <span class='kw'>=</span> <span class='no'>x</span> + <span class='fu'>readRDS</span>(<span class='st'>'tracked_input_file.rds'</span>),
-  <span class='kw'>return_value</span> <span class='kw'>=</span> <span class='fu'>f</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='fu'>g</span>(<span class='no'>z</span> + <span class='no'>w</span>))
-)</div><div class='output co'>#&gt; <span class='warning'>Warning: Converting double-quotes to single-quotes because the `strings_in_dots` argument is missing. Use the file_in(), file_out(), and knitr_in() functions to work with files in your commands. To remove this warning, either call `drake_plan()` with `strings_in_dots = "literals"` or use `pkgconfig::set_config("drake::strings_in_dots" = "literals")`.</span></div><div class='input'><span class='co'># Get the dependencies of workflow plan commands.</span>
+  <span class='kw'>my_target</span> <span class='kw'>=</span> <span class='no'>x</span> + <span class='fu'>readRDS</span>(<span class='fu'><a href='file_in.html'>file_in</a></span>(<span class='st'>"tracked_input_file.rds"</span>)),
+  <span class='kw'>return_value</span> <span class='kw'>=</span> <span class='fu'>f</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='fu'>g</span>(<span class='no'>z</span> + <span class='no'>w</span>)),
+  <span class='kw'>strings_in_dots</span> <span class='kw'>=</span> <span class='st'>"literals"</span>
+)
+<span class='co'># Get the dependencies of workflow plan commands.</span>
 <span class='co'># Here, the dependencies could be R functions/objects from your workspace</span>
 <span class='co'># or packages, imported files, or other targets in the workflow plan.</span>
-<span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; <span class='warning'>Warning: Files in a command declared with single-quotes:</span>
-#&gt; <span class='warning'>  tracked_input_file.rds</span>
-#&gt; <span class='warning'>The use of single-quotes to declare files is deprecated. Use file_in(), file_out(), and knitr_in() in your commands. See `?drake_plan` for examples.</span></div><div class='output co'>#&gt; [1] "readRDS"                    "\"tracked_input_file.rds\""
+<span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] "readRDS"                    "\"tracked_input_file.rds\""
 #&gt; [3] "x"                         </div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>3</span>])</div><div class='output co'>#&gt; [1] "f" "g" "w" "x" "y" "z"</div><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
@@ -232,3 +245,4 @@ network.</p>
 
   </body>
 </html>
+

@@ -46,13 +46,12 @@ faq <- function(){
 
 pkgdown <- function(){
   dir <- rprojroot::find_root(criterion = "DESCRIPTION", path = getwd())
-  dest <- file.path(dir, "docs")
-  if (!file.exists(dest)){
-    dir.create(dest)
+  site_dir <- file.path(dir, "docs")
+  if (!file.exists(site_dir)){
+    dir.create(site_dir)
   }
-  site_dir <- tempdir()
   index_file <- file.path(site_dir, "index.html")
-  tmp <- pkgdown::build_site(pkg = dir, path = site_dir, preview = FALSE)
+  tmp <- pkgdown::build_site(pkg = dir, preview = FALSE)
 
   x <- readLines(index_file)
   from <- '<p><a href="https://ropensci.github.io/drake/images/reg2.html"><img src="./docs/images/graph.png"></a></p>' # nolint
@@ -72,13 +71,11 @@ pkgdown <- function(){
   x <- gsub(pattern = from, replacement = to, x = x)
 
   tmp <- writeLines(text = x, con = index_file)
-  from <- list.files(site_dir, full.names = TRUE)
-  tmp <- file.copy(from = from, to = dest, overwrite = TRUE, recursive = TRUE)
   unlink(
     c(
-      file.path(dest, "*.rds"),
-      file.path(dest, "file*"),
-      file.path(dest, "preview-")
+      file.path(site_dir, "*.rds"),
+      file.path(site_dir, "file*"),
+      file.path(site_dir, "preview-")
     ),
     recursive = TRUE
   )

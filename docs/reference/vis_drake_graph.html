@@ -19,13 +19,20 @@ of your drake project. — vis_drake_graph • drake</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Show an interactive visual network representation
+of your drake project. — vis_drake_graph" />
+
+<meta property="og:description" content="To save time for repeated plotting,
+this function is divided into
+dataframes_graph() and render_drake_graph()." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +111,9 @@ of your drake project. — vis_drake_graph • drake</title>
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -131,6 +141,7 @@ of your drake project. — vis_drake_graph • drake</title>
     <div class="page-header">
     <h1>Show an interactive visual network representation
 of your drake project.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/plot_graph.R'><code>R/plot_graph.R</code></a></small>
     </div>
 
     
@@ -355,3 +366,4 @@ build progress in previous <code><a href='make.html'>make()</a></code>s.</p></td
 
   </body>
 </html>
+

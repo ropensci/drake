@@ -19,13 +19,24 @@ the rate-limiting targets of a drake project. — rate_limiting_times • drake<
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Return a data frame of elapsed build times of
+the rate-limiting targets of a drake project. — rate_limiting_times" />
+
+<meta property="og:description" content="This function produces a conservative
+estimate for predict_runtime()
+for when parallel computing is used in make().
+This feature is experimental.
+The accuracy, precision, and utility of these supposedly
+rate-limiting times has not been confirmed by rigorous
+performance studies." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +115,9 @@ the rate-limiting targets of a drake project. — rate_limiting_times • drake<
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -131,6 +145,7 @@ the rate-limiting targets of a drake project. — rate_limiting_times • drake<
     <div class="page-header">
     <h1>Return a data frame of elapsed build times of
 the rate-limiting targets of a drake project.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/predict_runtime.R'><code>R/predict_runtime.R</code></a></small>
     </div>
 
     
@@ -277,3 +292,4 @@ will warn you and tell you which targets have missing times.</p>
 
   </body>
 </html>
+

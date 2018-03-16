@@ -18,13 +18,21 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Save the source code files of a drake example. — drake_example" />
+
+<meta property="og:description" content="Copy a folder of code files for a
+drake example to the current working directory.
+Call drake_example("basic") to generate the code files from the
+basic example vignette: vignette("example-basic").
+To see the names of all the examples, run drake_examples()." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -103,6 +111,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -129,12 +140,13 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Save the source code files of a drake example.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/examples.R'><code>R/examples.R</code></a></small>
     </div>
 
     
     <p>Copy a folder of code files for a
 drake example to the current working directory.
-Call <code>drake_example('basic')</code> to generate the code files from the
+Call <code>drake_example("basic")</code> to generate the code files from the
 basic example vignette: <code><a href='../articles/example-basic.html'>vignette("example-basic")</a></code>.
 To see the names of all the examples, run <code><a href='drake_examples.html'>drake_examples()</a></code>.</p>
     
@@ -217,3 +229,4 @@ with the same name as the drake example.</p></td>
 
   </body>
 </html>
+

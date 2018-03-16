@@ -8,8 +8,11 @@
 <title>The basic example • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="The basic example">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -80,6 +83,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -109,8 +115,11 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-15</h4>
-          </div>
+            <h4 class="date">2018-03-16</h4>
+      
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd"><code>vignettes/example-basic.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -243,12 +252,11 @@ report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(pa
 ## [6] "simulate"</code></pre></div>
 <p>and saved files from your file system.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>()
-##  [1] "best-practices_files" "best-practices.html"  "best-practices.Rmd"  
-##  [4] "caution.html"         "caution.Rmd"          "debug.html"          
-##  [7] "debug.Rmd"            "drake.html"           "drake.Rmd"           
-## [10] "example-basic.Rmd"    "example-gsp.Rmd"      "example-packages.Rmd"
-## [13] "faq.Rmd"              "graph.Rmd"            "parallelism.Rmd"     
-## [16] "report.Rmd"           "storage.Rmd"          "timing.Rmd"</code></pre></div>
+##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
+##  [4] "drake.Rmd"            "example-basic.Rmd"    "example-gsp.Rmd"     
+##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
+## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
+## [13] "timing.Rmd"</code></pre></div>
 </div>
 <div id="the-workflow-plan-data-frame" class="section level1">
 <h1 class="hasAnchor">
@@ -589,15 +597,15 @@ x_plan
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
 ##  1 coef_regression1_large target 0.004s         0.004s         0s         
-##  2 coef_regression1_small target 0.004s         0.004s         0s         
+##  2 coef_regression1_small target 0.003s         0.003s         0s         
 ##  3 coef_regression2_large target 0.003s         0.003s         0s         
-##  4 coef_regression2_small target 0.004s         0.004s         0s         
-##  5 data.frame             import 0.013s         0.012s         0s         
-##  6 knit                   import 0.01s          0.007s         0.003s     
-##  7 large                  target 0.053s         0.053s         0s         
-##  8 lm                     import 0.005s         0.005s         0s         
-##  9 mtcars                 import 0.003s         0.003s         0s         
-## 10 nrow                   import 0.004s         0s             0.004s     
+##  4 coef_regression2_small target 0.003s         0.003s         0s         
+##  5 data.frame             import 0.019s         0.019s         0s         
+##  6 knit                   import 0.018s         0.018s         0s         
+##  7 large                  target 0.048s         0.048s         0s         
+##  8 lm                     import 0.006s         0.007s         0s         
+##  9 mtcars                 import 0.001s         0.001s         0s         
+## 10 nrow                   import 0.004s         0.004s         0s         
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -726,7 +734,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "98692509b89ae51f"</code></pre></div>
+## [1] "bf6beef9ba86c959"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>

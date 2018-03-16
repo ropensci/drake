@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Check a workflow plan data frame for obvious errors. — check_plan" />
+
+<meta property="og:description" content="Possible obvious errors include
+circular dependencies and
+missing input files." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -103,6 +109,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -129,6 +138,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Check a workflow plan data frame for obvious errors.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/check.R'><code>R/check.R</code></a></small>
     </div>
 
     
@@ -195,7 +205,7 @@ for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/top
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
 <span class='fu'>check_plan</span>(<span class='no'>my_plan</span>) <span class='co'># Check the workflow plan dataframe for obvious errors.</span>
-<span class='fu'>unlink</span>(<span class='st'>'report.Rmd'</span>) <span class='co'># Remove an import file mentioned in the plan.</span>
+<span class='fu'>unlink</span>(<span class='st'>"report.Rmd"</span>) <span class='co'># Remove an import file mentioned in the plan.</span>
 <span class='co'># If you un-suppress the warnings, check_plan()</span>
 <span class='co'># will tell you that 'report.Rmd' is missing.</span>
 <span class='fu'>suppressWarnings</span>(<span class='fu'>check_plan</span>(<span class='no'>my_plan</span>))
@@ -231,3 +241,4 @@ for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/top
 
   </body>
 </html>
+

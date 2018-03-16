@@ -8,8 +8,11 @@
 <title>High-performance computing with drake • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="High-performance computing with drake">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -80,6 +83,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -108,8 +114,11 @@
       <h1>High-performance computing with drake</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-15</h4>
-          </div>
+            <h4 class="date">2018-03-16</h4>
+      
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd"><code>vignettes/parallelism.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -351,7 +360,7 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 
 <span class="kw"><a href="../reference/r_recipe_wildcard.html">r_recipe_wildcard</a></span>()
 ## [1] "R_RECIPE"</code></pre></div>
-<p>The <code>R_RECIPE</code> wildcard is replaced by <code><a href="http://www.rdocumentation.org/packages/drake/topics/mk">drake::mk("your_target", "path_to_cache")</a></code> in the <code>Makefile</code>. That way, a target named <code>your_target</code> is built with the <code>Makefile</code> recipe,</p>
+<p>The <code>R_RECIPE</code> wildcard is replaced by <code><a href="../reference/mk.html">drake::mk("your_target", "path_to_cache")</a></code> in the <code>Makefile</code>. That way, a target named <code>your_target</code> is built with the <code>Makefile</code> recipe,</p>
 <pre><code>Rscript -e 'drake::mk("your_target", "path_to_cache")'
 </code></pre>
 <p>You can change the recipe with the <code>recipe_command</code> argument to <code><a href="../reference/make.html">make()</a></code>. For example, to save some time and skip the loading of the <code>methods</code> package, you might use <code>"R -e 'R_RECIPE' -q"</code>.</p>
@@ -363,7 +372,7 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 <p>But be warned: that particular recipe fails on Windows.</p>
 <p>Use the <code><a href="../reference/Makefile_recipe.html">Makefile_recipe()</a></code> function to show and tweak <code>Makefile</code> recipes in advance.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>()
-## Rscript -e 'drake::mk(target = "your_target", cache_path = "/tmp/RtmpiaWoY8/articles/.drake")'
+## Rscript -e 'drake::mk(target = "your_target", cache_path = "/home/landau/projects/drake/vignettes/.drake")'
 
 <span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(
   <span class="dt">recipe_command =</span> <span class="st">"R -e 'R_RECIPE' -q"</span>,
@@ -373,7 +382,7 @@ my_plan$evaluator &lt;-<span class="st"> </span>evaluator
 ## R -e 'drake::mk(target = "this_target", cache_path = "custom_cache")' -q</code></pre></div>
 <p>If <code>recipe_command</code> contains no mention of <code>R_RECIPE</code>, then <code>R_RECIPE</code> is single-quoted and appended automatically.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/Makefile_recipe.html">Makefile_recipe</a></span>(<span class="dt">recipe_command =</span> <span class="st">"R -q -e"</span>)
-## R -q -e 'drake::mk(target = "your_target", cache_path = "/tmp/RtmpiaWoY8/articles/.drake")'</code></pre></div>
+## R -q -e 'drake::mk(target = "your_target", cache_path = "/home/landau/projects/drake/vignettes/.drake")'</code></pre></div>
 <p>Try each of the following and look at the generated <code>Makefile</code> after each call to <code><a href="../reference/make.html">make()</a></code>. To see the recipes printed to the console, run <code><a href="../reference/clean.html">clean()</a></code> between each <code><a href="../reference/make.html">make()</a></code> and leave <code>verbose</code> equal to <code>TRUE</code> (default).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">4</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">4</span>,

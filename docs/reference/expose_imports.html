@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expose all the imports in a package so <code><a href='make.html'>make()</a></code> can detect
+<title>Expose all the imports in a package so <code>make()</code> can detect
 all the package's nested functions. — expose_imports • drake</title>
 
 <!-- jquery -->
@@ -19,13 +19,32 @@ all the package's nested functions. — expose_imports • drake</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Expose all the imports in a package so <code>make()</code> can detect
+all the package's nested functions. — expose_imports" />
+
+<meta property="og:description" content="When drake analyzes the functions in your environment,
+it understands that some of your functions
+are nested inside other functions.
+It dives into nested function after nested function in your environment
+so that if an inner function changes, targets produced by the outer
+functions will become out of date. However, drake stops searching
+as soon as it sees a function from a package. This keeps projects
+from being too brittle, but it is sometimes problematic.
+You may want to strongly depend on a package's internals.
+In fact, you may want to wrap your data analysis project itself
+in a formal R package,
+so you want all your functions to be reproducibly tracked.
+To make all a package's functions available to be tracked
+as dependencies, use the expose_imports() function.
+See the examples in this help file for a demonstration." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +123,9 @@ all the package's nested functions. — expose_imports • drake</title>
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -129,8 +151,9 @@ all the package's nested functions. — expose_imports • drake</title>
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Expose all the imports in a package so <code><a href='make.html'>make()</a></code> can detect
+    <h1>Expose all the imports in a package so <code>make()</code> can detect
 all the package's nested functions.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/expose_imports.R'><code>R/expose_imports.R</code></a></small>
     </div>
 
     
@@ -274,3 +297,4 @@ for the idea that makes this function work.</p>
 
   </body>
 </html>
+

@@ -18,13 +18,33 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Just make the imports. — make_imports" />
+
+<meta property="og:description" content="make() is the central, most important function
+of the drake package. make() runs all the steps of your
+workflow in the correct order, skipping any work
+that is already up to date. During make(),
+there are two kinds of processing steps: "imports",
+which are pre-existing functions and input data files
+that are loaded or checked, and targets, which are
+serious reproducibly-tracked data analysis steps
+that have commands in your workflow plan data frame.
+The make_targets() function just makes the targets
+(skipping any targets that are already up to date)
+and make_imports() just makes the imports.
+Most users should just use make()
+instead of either make_imports() or
+make_targets().
+See https://github.com/ropensci/drake/blob/master/README.md#documentation
+for an overview of the documentation." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -103,6 +123,9 @@
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -129,6 +152,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Just make the imports.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/make.R'><code>R/make.R</code></a></small>
     </div>
 
     
@@ -215,3 +239,4 @@ used by <code><a href='make.html'>make()</a></code>.</p>
 
   </body>
 </html>
+

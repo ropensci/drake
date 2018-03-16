@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Suggest an upper bound on the jobs in the next call
-to <code><a href='make.html'>make(..., jobs = YOUR_CHOICE)</a></code>. — max_useful_jobs • drake</title>
+to <code>make(..., jobs = YOUR_CHOICE)</code>. — max_useful_jobs • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -19,13 +19,22 @@ to <code><a href='make.html'>make(..., jobs = YOUR_CHOICE)</a></code>. — max_u
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Suggest an upper bound on the jobs in the next call
+to <code>make(..., jobs = YOUR_CHOICE)</code>. — max_useful_jobs" />
+
+<meta property="og:description" content="The best number of jobs
+should be somewhere between 1 and max_useful_jobs(...).
+Any additional jobs more than max_useful_jobs(...)
+should be superfluous, and could even slow you down for
+make(..., parallelism = 'parLapply')." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +113,9 @@ to <code><a href='make.html'>make(..., jobs = YOUR_CHOICE)</a></code>. — max_u
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -130,7 +142,8 @@ to <code><a href='make.html'>make(..., jobs = YOUR_CHOICE)</a></code>. — max_u
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Suggest an upper bound on the jobs in the next call
-to <code><a href='make.html'>make(..., jobs = YOUR_CHOICE)</a></code>.</h1>
+to <code>make(..., jobs = YOUR_CHOICE)</code>.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/max_useful_jobs.R'><code>R/max_useful_jobs.R</code></a></small>
     </div>
 
     
@@ -267,3 +280,4 @@ IMPORTANT: you must be in the root directory of your project.</p>
 
   </body>
 </html>
+

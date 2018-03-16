@@ -19,13 +19,24 @@ on a <em>file</em> (target or import), not an ordinary object. â€” file_store â€
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Tell <code>drake</code> that you want information
+on a <em>file</em> (target or import), not an ordinary object. â€” file_store" />
+
+<meta property="og:description" content="This function simply wraps literal double quotes around
+the argument x so drake knows it is the name of a file.
+Use when you are calling functions like deps(): for example,
+deps(file_store("report.md")). See the examples for details.
+Internally, drake wraps the names of file targets/imports
+inside literal double quotes to avoid confusion between
+files and generic R objects." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -104,6 +115,9 @@ on a <em>file</em> (target or import), not an ordinary object. â€” file_store â€
     <li>
       <a href="../articles/caution.html">Caution</a>
     </li>
+    <li>
+      <a href="../articles/faq.html">Frequently-asked questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -131,6 +145,7 @@ on a <em>file</em> (target or import), not an ordinary object. â€” file_store â€
     <div class="page-header">
     <h1>Tell <code>drake</code> that you want information
 on a <em>file</em> (target or import), not an ordinary object.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/strings.R'><code>R/strings.R</code></a></small>
     </div>
 
     
@@ -208,3 +223,4 @@ understandable by drake.</p>
 
   </body>
 </html>
+
