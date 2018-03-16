@@ -109,16 +109,12 @@
             <h3 class="subtitle">Generate lots of tasks with ease.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-14</h4>
+            <h4 class="date">2018-03-15</h4>
           </div>
 
     
     
 <div class="contents">
-<pre><code>## Warning: replacing previous import 'graph::addNode' by 'XML::addNode' when
-## loading 'CodeDepends'</code></pre>
-<pre><code>## Warning: replacing previous import 'graph::plot' by 'graphics::plot' when
-## loading 'CodeDepends'</code></pre>
 <p>The following data analysis workflow shows off <code>drake</code>’s ability to generate lots of reproducibly-tracked tasks with ease. The same technique would be cumbersome, even intractable, with <a href="https://www.gnu.org/software/make/">GNU Make</a>.</p>
 <div id="get-the-code-" class="section level1">
 <h1 class="hasAnchor">
@@ -272,8 +268,8 @@ rmspe_plan &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<spa
 ## # A tibble: 2 x 2
 ##   target          command                                                 
 ##   &lt;chr&gt;           &lt;chr&gt;                                                   
-## 1 "\"rmspe.pdf\"" "ggsave(filename = file_out(\"rmspe.pdf\"), plot = plot~
-## 2 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")~</code></pre></div>
+## 1 "\"rmspe.pdf\"" "ggsave(filename = file_out(\"rmspe.pdf\"), plot = plot…
+## 2 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</code></pre></div>
 <p>We see warnings above because our R Markdown report <code>report.Rmd</code> does not exist yet. You can find it <a href="https://github.com/ropensci/drake/blob/master/inst/examples/gsp/report.Rmd">here</a>, and the code below generates it.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">local &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"gsp"</span>, <span class="st">"report.Rmd"</span>)
 path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">path =</span> local, <span class="dt">package =</span> <span class="st">"drake"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)
@@ -376,7 +372,7 @@ report.md: report.Rmd
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

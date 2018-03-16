@@ -265,7 +265,7 @@ my_plan
 
 # Flexible workflow plan generation
 
-If your workflow does not fit the rigid datasets/analyses/summaries framework, consider using functions `expand_plan()`, `evaluate_plan()`, and `gather_plan()`.
+If your workflow does not fit the rigid datasets/analyses/summaries framework, consider using functions `expand_plan()`, `evaluate_plan()`, `gather_plan()`, and `reduce_plan()`.
 
 ```{r more_expansions_and_plans}
 df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
@@ -285,6 +285,19 @@ evaluate_plan(df, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
 gather_plan(df)
 
 gather_plan(df, target = "my_summaries", gather = "rbind")
+
+x_plan <- evaluate_plan(
+  drake_plan(x = VALUE),
+  wildcard = "VALUE",
+  values = 1:8
+)
+x_plan
+
+x_plan
+reduce_plan(
+  x_plan, target = "x_sum", pairwise = TRUE,
+  begin = "fun(", op = ", ", end = ")"
+)
 ```
 
 # Run the workflow

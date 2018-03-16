@@ -225,7 +225,7 @@ test_with_dir("reduce_plan()", {
   make(rbind(x_plan, x), session_info = FALSE)
   expect_equal(readd(x_sum), sum(1:8))
   clean(destroy = TRUE)
-  
+
   # Pairwise reduce even number of targets
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
   x0 <- tibble(
@@ -288,7 +288,7 @@ test_with_dir("reduce_plan()", {
     values = 1:8
   )
   fun <- function(x, y){
-    x^2 -3*y
+    x ^ 2 - 3 * y
   }
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE,
     begin = "fun(", op = ", ", end = ")")

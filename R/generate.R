@@ -225,18 +225,22 @@ gather_plan <- function(
 }
 
 #' @title Write commands to reduce several targets down to one.
-#' @description Creates a new workflow plan data frame with a single new
-#'   target. This target is formed by combining the targets
-#'   in the argument plan using successive applications of a binary
-#'   operator.
+#' @description Creates a new workflow plan data frame with the
+#'   commands to do a reduction (i.e. to repeatedly apply a binary
+#'   operator to pairs of targets to produce one target).
 #' @export
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
 #' @param plan workflow plan data frame of prespecified targets
-#' @param target name of the new aggregated target
-#' @param gather function used to gather the targets. Should be
-#'   one of \code{\link{list}(...)}, \code{\link{c}(...)},
-#'   \code{\link{rbind}(...)}, or similar.
+#' @param target name of the new reduced target
+#' @param begin character, code to place at the beginning
+#'   of each step in the reduction
+#' @param op binary operator to apply in the reduction
+#' @param end character, code to place at the end
+#'   of each step in the reduction
+#' @param pairwise logical, whether to create multiple
+#'   new targets, one for each pair/step in the reduction (`TRUE`), 
+#'   or to do the reduction all in one command.
 #' @examples
 #' # Workflow plan for datasets:
 #' x_plan <- evaluate_plan(
@@ -245,10 +249,22 @@ gather_plan <- function(
 #'   values = 1:8
 #' )
 #' # Create a new target from the sum of the others.
-#' reduce_plan(x_plan, target = "x_sum")
+#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE)
 #' # For memory efficiency and parallel computing,
 #' # reduce pairwise:
 #' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+#' # Optionally define your own function and use it as the
+#' # binary operator in the reduction.
+#' x_plan <- evaluate_plan(
+#'   drake_plan(x = VALUE),
+#'   wildcard = "VALUE",
+#'   values = 1:9
+#' )
+#' x_plan
+#' reduce_plan(
+#'   x_plan, target = "x_sum", pairwise = TRUE,
+#'   begin = "fun(", op = ", ", end = ")"
+#' )
 reduce_plan <- function(
   plan = NULL,
   target = "target",

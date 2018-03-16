@@ -137,6 +137,7 @@
 <h1 class="hasAnchor">
 <a href="#version-5-1-0" class="anchor"></a>Version 5.1.0</h1>
 <ul>
+<li>Add a <code><a href="../reference/reduce_plan.html">reduce_plan()</a></code> function to do pairwise reductions on collections of targets.</li>
 <li>Forcibly exclude the dot (<code>.</code>) from being a dependency of any target or import. This enforces more consistent behavior in the face of the current static code analysis funcionality, which sometimes detects <code>.</code> and sometimes does not.</li>
 <li>Use <code><a href="../reference/ignore.html">ignore()</a></code> to optionally ignore pieces of workflow plan commands and/or imported functions. Use <code><a href="../reference/ignore.html">ignore(some_code)</a></code> to
 <ol>
@@ -366,7 +367,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

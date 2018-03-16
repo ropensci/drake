@@ -234,6 +234,7 @@ unlink(
 - `evaluate_plan()`
 - `expand_plan()`
 - `gather_plan()`
+- `reduce_plan()`
 - `plan_analyses()`
 - `plan_summaries()`
 

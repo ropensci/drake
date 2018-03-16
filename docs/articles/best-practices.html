@@ -112,7 +112,7 @@
       <h1>General best practices for drake projects</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-14</h4>
+            <h4 class="date">2018-03-15</h4>
           </div>
 
     
@@ -264,9 +264,9 @@ plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_
 <span class="co"># Because `drake` knows `digest()` is from a package,</span>
 <span class="co"># it ignores these dependencies by default.</span>
 <span class="kw">head</span>(<span class="kw"><a href="../reference/deps.html">deps</a></span>(digest), <span class="dv">10</span>)
-##  [1] ".Call"           ".errorhandler"   "any"            
-##  [4] "as.integer"      "as.raw"          "base::serialize"
-##  [7] "digest_impl"     "file.access"     "file.exists"    
+##  [1] "any"             "as.integer"      "as.raw"         
+##  [4] "base::serialize" ".Call"           "digest_impl"    
+##  [7] ".errorhandler"   "file.access"     "file.exists"    
 ## [10] "file.info"</code></pre></div>
 </div>
 <div id="the-solution" class="section level3">
@@ -278,8 +278,8 @@ plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_
 new_objects &lt;-<span class="st"> </span><span class="kw"><a href="../reference/tracked.html">tracked</a></span>(plan)
 <span class="kw">head</span>(new_objects, <span class="dv">10</span>)
 ##  [1] "digest"          "warning"         "as.raw"         
-##  [4] ".Call"           ".errorhandler"   "any"            
-##  [7] "as.integer"      "base::serialize" "digest_impl"    
+##  [4] "any"             "as.integer"      "base::serialize"
+##  [7] ".Call"           "digest_impl"     ".errorhandler"  
 ## [10] "file.access"
 <span class="kw">length</span>(new_objects)
 ## [1] 32
@@ -316,6 +316,7 @@ cache &lt;-<span class="st"> </span>storr::<span class="kw">storr_environment</s
 <li><code><a href="../reference/evaluate_plan.html">evaluate_plan()</a></code></li>
 <li><code><a href="../reference/expand_plan.html">expand_plan()</a></code></li>
 <li><code><a href="../reference/gather_plan.html">gather_plan()</a></code></li>
+<li><code><a href="../reference/reduce_plan.html">reduce_plan()</a></code></li>
 <li><code><a href="../reference/plan_analyses.html">plan_analyses()</a></code></li>
 <li><code><a href="../reference/plan_summaries.html">plan_summaries()</a></code></li>
 </ul>
@@ -386,8 +387,8 @@ rules_grid &lt;-<span class="st"> </span>tibble::<span class="kw">tibble</span>(
     <span class="dt">expand =</span> <span class="ot">FALSE</span>
   ) %&gt;%
 <span class="st">  </span>DT::<span class="kw">datatable</span>()</code></pre></div>
-<div id="htmlwidget-8e5d97fb85a871790231" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8e5d97fb85a871790231">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40"],["credits_schoolA","credits_schoolA","credits_schoolA","credits_schoolA","credits_schoolB","credits_schoolB","credits_schoolC","credits_schoolC","credits_schoolC","credits_schoolC","students_schoolA","students_schoolA","students_schoolA","students_schoolA","students_schoolB","students_schoolB","students_schoolC","students_schoolC","students_schoolC","students_schoolC","grads_schoolA","grads_schoolA","grads_schoolA","grads_schoolA","grads_schoolB","grads_schoolB","grads_schoolC","grads_schoolC","grads_schoolC","grads_schoolC","public_funds_schoolA","public_funds_schoolA","public_funds_schoolA","public_funds_schoolA","public_funds_schoolB","public_funds_schoolB","public_funds_schoolC","public_funds_schoolC","public_funds_schoolC","public_funds_schoolC"],["check_credit_hours(\"schoolA\", \"public\", \"2012\")","check_credit_hours(\"schoolA\", \"public\", \"2013\")","check_credit_hours(\"schoolA\", \"public\", \"2014\")","check_credit_hours(\"schoolA\", \"public\", \"2015\")","check_credit_hours(\"schoolB\", \"public\", \"2014\")","check_credit_hours(\"schoolB\", \"public\", \"2015\")","check_credit_hours(\"schoolC\", \"private\", \"2012\")","check_credit_hours(\"schoolC\", \"private\", \"2013\")","check_credit_hours(\"schoolC\", \"private\", \"2014\")","check_credit_hours(\"schoolC\", \"private\", \"2015\")","check_students(\"schoolA\", \"public\", \"2012\")","check_students(\"schoolA\", \"public\", \"2013\")","check_students(\"schoolA\", \"public\", \"2014\")","check_students(\"schoolA\", \"public\", \"2015\")","check_students(\"schoolB\", \"public\", \"2014\")","check_students(\"schoolB\", \"public\", \"2015\")","check_students(\"schoolC\", \"private\", \"2012\")","check_students(\"schoolC\", \"private\", \"2013\")","check_students(\"schoolC\", \"private\", \"2014\")","check_students(\"schoolC\", \"private\", \"2015\")","check_graduations(\"schoolA\", \"public\", \"2012\")","check_graduations(\"schoolA\", \"public\", \"2013\")","check_graduations(\"schoolA\", \"public\", \"2014\")","check_graduations(\"schoolA\", \"public\", \"2015\")","check_graduations(\"schoolB\", \"public\", \"2014\")","check_graduations(\"schoolB\", \"public\", \"2015\")","check_graduations(\"schoolC\", \"private\", \"2012\")","check_graduations(\"schoolC\", \"private\", \"2013\")","check_graduations(\"schoolC\", \"private\", \"2014\")","check_graduations(\"schoolC\", \"private\", \"2015\")","check_public_funding(\"schoolA\", \"public\", \"2012\")","check_public_funding(\"schoolA\", \"public\", \"2013\")","check_public_funding(\"schoolA\", \"public\", \"2014\")","check_public_funding(\"schoolA\", \"public\", \"2015\")","check_public_funding(\"schoolB\", \"public\", \"2014\")","check_public_funding(\"schoolB\", \"public\", \"2015\")","check_public_funding(\"schoolC\", \"private\", \"2012\")","check_public_funding(\"schoolC\", \"private\", \"2013\")","check_public_funding(\"schoolC\", \"private\", \"2014\")","check_public_funding(\"schoolC\", \"private\", \"2015\")"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>target<\/th>\n      <th>command<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><p>Thanks to <a href="https://github.com/AlexAxthelm">Alex Axthelm</a> for this example in <a href="https://github.com/ropensci/drake/issues/235">issue 235</a>.</p>
+<div id="htmlwidget-6a66455d77c01ac7912d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6a66455d77c01ac7912d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40"],["credits_schoolA","credits_schoolA","credits_schoolA","credits_schoolA","credits_schoolB","credits_schoolB","credits_schoolC","credits_schoolC","credits_schoolC","credits_schoolC","students_schoolA","students_schoolA","students_schoolA","students_schoolA","students_schoolB","students_schoolB","students_schoolC","students_schoolC","students_schoolC","students_schoolC","grads_schoolA","grads_schoolA","grads_schoolA","grads_schoolA","grads_schoolB","grads_schoolB","grads_schoolC","grads_schoolC","grads_schoolC","grads_schoolC","public_funds_schoolA","public_funds_schoolA","public_funds_schoolA","public_funds_schoolA","public_funds_schoolB","public_funds_schoolB","public_funds_schoolC","public_funds_schoolC","public_funds_schoolC","public_funds_schoolC"],["check_credit_hours(\"schoolA\", \"public\", \"2012\")","check_credit_hours(\"schoolA\", \"public\", \"2013\")","check_credit_hours(\"schoolA\", \"public\", \"2014\")","check_credit_hours(\"schoolA\", \"public\", \"2015\")","check_credit_hours(\"schoolB\", \"public\", \"2014\")","check_credit_hours(\"schoolB\", \"public\", \"2015\")","check_credit_hours(\"schoolC\", \"private\", \"2012\")","check_credit_hours(\"schoolC\", \"private\", \"2013\")","check_credit_hours(\"schoolC\", \"private\", \"2014\")","check_credit_hours(\"schoolC\", \"private\", \"2015\")","check_students(\"schoolA\", \"public\", \"2012\")","check_students(\"schoolA\", \"public\", \"2013\")","check_students(\"schoolA\", \"public\", \"2014\")","check_students(\"schoolA\", \"public\", \"2015\")","check_students(\"schoolB\", \"public\", \"2014\")","check_students(\"schoolB\", \"public\", \"2015\")","check_students(\"schoolC\", \"private\", \"2012\")","check_students(\"schoolC\", \"private\", \"2013\")","check_students(\"schoolC\", \"private\", \"2014\")","check_students(\"schoolC\", \"private\", \"2015\")","check_graduations(\"schoolA\", \"public\", \"2012\")","check_graduations(\"schoolA\", \"public\", \"2013\")","check_graduations(\"schoolA\", \"public\", \"2014\")","check_graduations(\"schoolA\", \"public\", \"2015\")","check_graduations(\"schoolB\", \"public\", \"2014\")","check_graduations(\"schoolB\", \"public\", \"2015\")","check_graduations(\"schoolC\", \"private\", \"2012\")","check_graduations(\"schoolC\", \"private\", \"2013\")","check_graduations(\"schoolC\", \"private\", \"2014\")","check_graduations(\"schoolC\", \"private\", \"2015\")","check_public_funding(\"schoolA\", \"public\", \"2012\")","check_public_funding(\"schoolA\", \"public\", \"2013\")","check_public_funding(\"schoolA\", \"public\", \"2014\")","check_public_funding(\"schoolA\", \"public\", \"2015\")","check_public_funding(\"schoolB\", \"public\", \"2014\")","check_public_funding(\"schoolB\", \"public\", \"2015\")","check_public_funding(\"schoolC\", \"private\", \"2012\")","check_public_funding(\"schoolC\", \"private\", \"2013\")","check_public_funding(\"schoolC\", \"private\", \"2014\")","check_public_funding(\"schoolC\", \"private\", \"2015\")"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>target<\/th>\n      <th>command<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><p>Thanks to <a href="https://github.com/AlexAxthelm">Alex Axthelm</a> for this example in <a href="https://github.com/ropensci/drake/issues/235">issue 235</a>.</p>
 </div>
 <div id="remote-data-sources" class="section level1">
 <h1 class="hasAnchor">
@@ -480,7 +481,7 @@ get_logs &lt;-<span class="st"> </span>function(url, ...){
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

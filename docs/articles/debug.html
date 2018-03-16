@@ -108,7 +108,7 @@
       <h1>Debugging and testing drake projects</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-14</h4>
+            <h4 class="date">2018-03-15</h4>
           </div>
 
     
@@ -166,21 +166,21 @@ my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…
 
 <span class="kw"><a href="../reference/check_plan.html">check_plan</a></span>(my_plan) <span class="co"># No issues.</span></code></pre></div>
 </div>
@@ -206,9 +206,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <span class="co"># and any dependencies loaded with loadd() and readd()</span>
 <span class="co"># in the report's active code chunks.</span>
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="dv">1</span>])
-## [1] "\"report.md\""          "\"report.Rmd\""        
-## [3] "coef_regression2_small" "knit"                  
-## [5] "large"                  "small"
+## [1] "coef_regression2_small" "knit"                  
+## [3] "large"                  "\"report.md\""         
+## [5] "\"report.Rmd\""         "small"
 
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="kw">nrow</span>(my_plan)])
 ## [1] "regression2_large" "summary"           "suppressWarnings"</code></pre></div>
@@ -222,8 +222,8 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ##  [1] "data.frame"             "mtcars"                
 ##  [3] "random_rows"            "lm"                    
 ##  [5] "nrow"                   "sample.int"            
-##  [7] "\"report.Rmd\""         "coef_regression2_small"
-##  [9] "knit"                   "large"                 
+##  [7] "coef_regression2_small" "knit"                  
+##  [9] "large"                  "\"report.Rmd\""        
 ## [11] "small"                  "simulate"              
 ## [13] "reg1"                   "reg2"                  
 ## [15] "regression1_small"      "summary"               
@@ -243,11 +243,11 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ## character(0)</code></pre></div>
 <p><code><a href="../reference/outdated.html">outdated()</a></code> reports any targets that are outdated, plus any downstream targets that depend on them.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "\"report.md\""          "coef_regression1_large"
-##  [3] "coef_regression1_small" "coef_regression2_large"
-##  [5] "coef_regression2_small" "large"                 
-##  [7] "regression1_large"      "regression1_small"     
-##  [9] "regression2_large"      "regression2_small"     
+##  [1] "coef_regression1_large" "coef_regression1_small"
+##  [3] "coef_regression2_large" "coef_regression2_small"
+##  [5] "large"                  "regression1_large"     
+##  [7] "regression1_small"      "regression2_large"     
+##  [9] "regression2_small"      "\"report.md\""         
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"</code></pre></div>
@@ -260,9 +260,9 @@ reg2 &lt;-<span class="st"> </span>function(d) {
   <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-## [1] "\"report.md\""          "coef_regression2_large"
-## [3] "coef_regression2_small" "regression2_large"     
-## [5] "regression2_small"      "summ_regression2_large"
+## [1] "coef_regression2_large" "coef_regression2_small"
+## [3] "regression2_large"      "regression2_small"     
+## [5] "\"report.md\""          "summ_regression2_large"
 ## [7] "summ_regression2_small"
 
 <span class="kw"><a href="../reference/dependency_profile.html">dependency_profile</a></span>(<span class="dt">target =</span> <span class="st">"regression2_small"</span>, <span class="dt">config =</span> config)
@@ -320,7 +320,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "d47109544c89ca7a"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "71bb776a7f5cd6d5"</code></pre></div>
+## [1] "ea217e00d79aaf01"</code></pre></div>
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -333,19 +333,19 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
-##  $ start       :Class 'proc_time'  Named num [1:5] 7.988 0.205 8.512 0.068 0.046
+##  $ start       :Class 'proc_time'  Named num [1:5] 4.519 0.088 4.625 0.011 0.001
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.005
-##   ..$ user   : num 0.005
+##   ..$ elapsed: num 0.002
+##   ..$ user   : num 0.003
 ##   ..$ system : num 0
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.066
-##   ..$ user   : num 0.067
+##   ..$ elapsed: num 0.032
+##   ..$ user   : num 0.032
 ##   ..$ system : num 0
 
 <span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))
@@ -356,23 +356,23 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ missing     : logi TRUE
 ##  $ seed        : num 1.85e+09
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
-##  $ depends     : chr "5f72f8f2a06b7a515e17a3ea3f57b1dd3522d7143e0cbd0650a3c0985683f81d"
+##  $ depends     : chr "64359e27d6a98840038b26e32f64dc51b86fcfdaf98d7f094ec491fa33cc80c0"
 ##  $ file        : chr "ed35f108e2ccd75a904273f1e8559d5a0acb9c2700531276a7acdcfba09decc6"
-##  $ start       :Class 'proc_time'  Named num [1:5] 8.348 0.227 8.893 0.068 0.046
+##  $ start       :Class 'proc_time'  Named num [1:5] 4.653 0.096 4.767 0.011 0.001
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.058
-##   ..$ user   : num 0.058
-##   ..$ system : num 0.001
-##  $ mtime       : POSIXct[1:1], format: "2018-03-14 12:32:46"
+##   ..$ elapsed: num 0.036
+##   ..$ user   : num 0.036
+##   ..$ system : num 0
+##  $ mtime       : POSIXct[1:1], format: "2018-03-15 21:16:02"
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.064
-##   ..$ user   : num 0.063
-##   ..$ system : num 0.001</code></pre></div>
+##   ..$ elapsed: num 0.039
+##   ..$ user   : num 0.039
+##   ..$ system : num 0</code></pre></div>
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
 </div>
@@ -425,21 +425,21 @@ my_plan
 ## # A tibble: 15 x 3
 ##    target                 command                                  trigger
 ##    &lt;chr&gt;                  &lt;chr&gt;                                    &lt;chr&gt;  
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_ou~ file   
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_ou… file   
 ##  2 small                  simulate(48)                             command
 ##  3 large                  simulate(64)                             command
 ##  4 regression1_small      reg1(small)                              command
 ##  5 regression1_large      reg1(large)                              command
 ##  6 regression2_small      reg2(small)                              command
 ##  7 regression2_large      reg2(large)                              command
-##  8 summ_regression1_small suppressWarnings(summary(regression1_sm~ command
-##  9 summ_regression1_large suppressWarnings(summary(regression1_la~ command
-## 10 summ_regression2_small suppressWarnings(summary(regression2_sm~ command
-## 11 summ_regression2_large suppressWarnings(summary(regression2_la~ command
-## 12 coef_regression1_small suppressWarnings(summary(regression1_sm~ command
-## 13 coef_regression1_large suppressWarnings(summary(regression1_la~ command
-## 14 coef_regression2_small suppressWarnings(summary(regression2_sm~ command
-## 15 coef_regression2_large suppressWarnings(summary(regression2_la~ command
+##  8 summ_regression1_small suppressWarnings(summary(regression1_sm… command
+##  9 summ_regression1_large suppressWarnings(summary(regression1_la… command
+## 10 summ_regression2_small suppressWarnings(summary(regression2_sm… command
+## 11 summ_regression2_large suppressWarnings(summary(regression2_la… command
+## 12 coef_regression1_small suppressWarnings(summary(regression1_sm… command
+## 13 coef_regression1_large suppressWarnings(summary(regression1_la… command
+## 14 coef_regression2_small suppressWarnings(summary(regression2_sm… command
+## 15 coef_regression2_large suppressWarnings(summary(regression2_la… command
 
 <span class="co"># Change an imported dependency:</span>
 reg2
@@ -447,7 +447,7 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
-## &lt;bytecode: 0x4540690&gt;
+## &lt;bytecode: 0x74c3130&gt;
 
 reg2 &lt;-<span class="st"> </span>function(d) {
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -507,8 +507,8 @@ withr::<span class="kw">with_message_sink</span>(
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="fl">1e-3</span>, <span class="dt">retries =</span> <span class="dv">2</span>)
 )
 ## target x
-## [2018-03-14 12:32:49] TimeoutException: reached elapsed time limit
-## [cpu=0.001s, elapsed=0.001s]
+## target y
+## retry y: 1 of 2
 ## Warning: No message sink to remove.</code></pre></div>
 <p>To tailor these settings to each individual target, create new <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, or <code>retries</code> columns in your workflow plan. These columns override the analogous arguments to <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
@@ -526,16 +526,19 @@ withr::<span class="kw">with_message_sink</span>(
   <span class="dt">new =</span> <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="ot">Inf</span>, <span class="dt">retries =</span> <span class="dv">0</span>)
 )
+## Unloading targets from environment:
+##   x
+##   y
 ## target x
-## target y
-## Warning: No message sink to remove.</code></pre></div>
+## [2018-03-15 21:16:07] TimeoutException: reached elapsed time limit
+## [cpu=0.001s, elapsed=0.001s]</code></pre></div>
 </div>
 <div id="diagnose-failures-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#diagnose-failures-" class="anchor"></a>Diagnose failures.</h1>
 <p><code>Drake</code> records diagnostic metadata on all your targets, including the latest errors, warnings, messages, and other bits of context.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Targets with available metadata.</span>
-## [1] "f"         "Sys.sleep" "x"         "y"
+## [1] "f"         "Sys.sleep"
 
 f &lt;-<span class="st"> </span>function(x){
   if (x &lt;<span class="st"> </span><span class="dv">0</span>){
@@ -653,7 +656,7 @@ f
 ##   }
 ##   x
 ## }
-## &lt;bytecode: 0x5bd09b8&gt;
+## &lt;bytecode: 0x432e950&gt;
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
 f &lt;-<span class="st"> </span>function(x){
@@ -703,12 +706,11 @@ my_plan
 <span class="co"># drake_session(verbose = FALSE) # Prints the sessionInfo() of the last make(). # nolint</span>
 
 <span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-##  [1] "a"         "b"         "f"         "letter"    "little_b" 
-##  [6] "my_target" "stop"      "Sys.sleep" "x"         "y"
+## [1] "a"         "b"         "f"         "letter"    "little_b"  "my_target"
+## [7] "stop"      "Sys.sleep"
 
 <span class="kw"><a href="../reference/built.html">built</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-## [1] "a"         "b"         "letter"    "little_b"  "my_target" "x"        
-## [7] "y"
+## [1] "a"         "b"         "letter"    "little_b"  "my_target"
 
 <span class="kw"><a href="../reference/imported.html">imported</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 ## [1] "f"         "stop"      "Sys.sleep"
@@ -722,35 +724,35 @@ little_b
 ## [1] "b"
 
 <span class="kw"><a href="../reference/progress.html">progress</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-##            "report.md"           "report.Rmd" coef_regression1_large 
+## coef_regression1_large coef_regression1_small coef_regression2_large 
 ##             "finished"             "finished"             "finished" 
-## coef_regression1_small coef_regression2_large coef_regression2_small 
+## coef_regression2_small             data.frame                   knit 
 ##             "finished"             "finished"             "finished" 
-##             data.frame                   knit                  large 
+##                  large                     lm                 mtcars 
 ##             "finished"             "finished"             "finished" 
-##                     lm                 mtcars                   nrow 
+##                   nrow            random_rows                   reg1 
 ##             "finished"             "finished"             "finished" 
-##            random_rows                   reg1                   reg2 
+##                   reg2      regression1_large      regression1_small 
 ##             "finished"             "finished"             "finished" 
-##      regression1_large      regression1_small      regression2_large 
+##      regression2_large      regression2_small            "report.md" 
 ##             "finished"             "finished"             "finished" 
-##      regression2_small             sample.int               simulate 
+##           "report.Rmd"             sample.int               simulate 
 ##             "finished"             "finished"             "finished" 
-##                  small summ_regression1_large summ_regression1_small 
+##                  small                summary summ_regression1_large 
 ##             "finished"             "finished"             "finished" 
-## summ_regression2_large summ_regression2_small                summary 
+## summ_regression1_small summ_regression2_large summ_regression2_small 
 ##             "finished"             "finished"             "finished" 
-##       suppressWarnings 
-##             "finished"
+##       suppressWarnings                      x                      y 
+##             "finished"          "in progress"             "finished"
 
 <span class="kw"><a href="../reference/in_progress.html">in_progress</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Unfinished targets</span>
-## character(0)</code></pre></div>
+## [1] "x"</code></pre></div>
 <p>There are functions to help you locate the project’s cache.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/find_project.html">find_project</a></span>()
-## [1] "/tmp/RtmpgrzW0b/articles"
+## [1] "/tmp/RtmpiaWoY8/articles"
 
 <span class="kw"><a href="../reference/find_cache.html">find_cache</a></span>()
-## [1] "/tmp/RtmpgrzW0b/articles/.drake"</code></pre></div>
+## [1] "/tmp/RtmpiaWoY8/articles/.drake"</code></pre></div>
 <p>For more information on the cache, see the <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage vignette</a>.</p>
 </div>
 <div id="start-tinkering-" class="section level1">
@@ -805,7 +807,7 @@ little_b
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

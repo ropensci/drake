@@ -7,8 +7,8 @@
 #' must call [knitr::knit()] directly.
 #' In other words,
 #' the command must look something like
-#' `knit('your_report.Rmd')` or
-#' `knit('your_report.Rmd', quiet = TRUE)`.
+#' `knit("your_report.Rmd")` or
+#' `knit("your_report.Rmd", quiet = TRUE)`.
 #' @return A character vector of the names of dependencies.
 #' @details Drake looks for dependencies in the document by
 #' analyzing evaluated code chunks for other targets/imports

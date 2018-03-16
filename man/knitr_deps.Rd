@@ -19,8 +19,8 @@ of a knitr report, the command in your workflow plan data frame
 must call \code{\link[knitr:knit]{knitr::knit()}} directly.
 In other words,
 the command must look something like
-\code{knit('your_report.Rmd')} or
-\code{knit('your_report.Rmd', quiet = TRUE)}.
+\code{knit("your_report.Rmd")} or
+\code{knit("your_report.Rmd", quiet = TRUE)}.
 }
 \details{
 Drake looks for dependencies in the document by

@@ -1,7 +1,7 @@
 #' @title Save the source code files of a drake example.
 #' @description Copy a folder of code files for a
 #' drake example to the current working directory.
-#' Call `drake_example('basic')` to generate the code files from the
+#' Call `drake_example("basic")` to generate the code files from the
 #' basic example vignette: `vignette("example-basic")`.
 #' To see the names of all the examples, run [drake_examples()].
 #' @seealso [drake_examples()], [make()],

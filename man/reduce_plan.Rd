@@ -10,21 +10,28 @@ reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
 
-\item{target}{name of the new aggregated target}
+\item{target}{name of the new reduced target}
 
-\item{gather}{function used to gather the targets. Should be
-one of \code{\link{list}(...)}, \code{\link{c}(...)},
-\code{\link{rbind}(...)}, or similar.}
+\item{begin}{character, code to place at the beginning
+of each step in the reduction}
+
+\item{op}{binary operator to apply in the reduction}
+
+\item{end}{character, code to place at the end
+of each step in the reduction}
+
+\item{pairwise}{logical, whether to create multiple
+new targets, one for each pair/step in the reduction (\code{TRUE}),
+or to do the reduction all in one command.}
 }
 \value{
 A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
-Creates a new workflow plan data frame with a single new
-target. This target is formed by combining the targets
-in the argument plan using successive applications of a binary
-operator.
+Creates a new workflow plan data frame with the
+commands to do a reduction (i.e. to repeatedly apply a binary
+operator to pairs of targets to produce one target).
 }
 \examples{
 # Workflow plan for datasets:
@@ -34,8 +41,20 @@ x_plan <- evaluate_plan(
   values = 1:8
 )
 # Create a new target from the sum of the others.
-reduce_plan(x_plan, target = "x_sum")
+reduce_plan(x_plan, target = "x_sum", pairwise = FALSE)
 # For memory efficiency and parallel computing,
 # reduce pairwise:
 reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+# Optionally define your own function and use it as the
+# binary operator in the reduction.
+x_plan <- evaluate_plan(
+  drake_plan(x = VALUE),
+  wildcard = "VALUE",
+  values = 1:9
+)
+x_plan
+reduce_plan(
+  x_plan, target = "x_sum", pairwise = TRUE,
+  begin = "fun(", op = ", ", end = ")"
+)
 }
