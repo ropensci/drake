@@ -57,6 +57,20 @@ or see future::.options
 for environment variables that set the max number of jobs.
 }
 
+\item{'future'}{
+Just like \code{"future_lapply"} parallelism, except that
+\enumerate{
+\item Rather than use staged parallelism, each target begins as soon as
+their dependencies are ready and a worker is available. This
+greatly increases parallel efficiency.
+\item The \code{jobs} argument to \code{make()} works as intended: in
+\code{make(jobs = 4, parallelism = "future")}, 4 workers will run
+simultaneously, so at most 4 jobs will run simultaneously.
+\item The \code{"future"} backend is experimental, so it is more likely
+to have bugs than its counterparts.
+}
+}
+
 \item{'Makefile'}{uses multiple R sessions
 by creating and running a Makefile.
 For distributed computing on a cluster or supercomputer,

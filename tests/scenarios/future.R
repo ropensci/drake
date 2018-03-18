@@ -3,8 +3,7 @@ devtools::load_all()
 scenario_names <- Filter(
   x = testing_scenario_names(),
   f = function(name){
-    # grepl("future", name)
-    grepl("master$", name) | grepl("worker$", name)
+    grepl("future", name)
   }
 )
 withr::with_options(

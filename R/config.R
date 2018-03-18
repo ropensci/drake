@@ -500,6 +500,7 @@ possible_targets <- function(plan = read_drake_plan()) {
 #' })
 #' }
 store_drake_config <- function(config) {
+  config$cache$flush_cache() # Less data to save this way.
   save_these <- setdiff(names(config), "envir")  # envir could get massive.
   lightly_parallelize(
     save_these,
