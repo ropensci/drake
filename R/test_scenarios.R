@@ -8,12 +8,15 @@ testing_scenarios <- function(){
   rownames(x) <- paste(
     x$envir,
     x$parallelism,
-    x$jobs, x$backend,
+    x$jobs,
+    x$backend,
+    x$caching,
     sep = "_"
   ) %>%
-    gsub(pattern = "_$", replacement = "")
+    gsub(pattern = "_*$", replacement = "")
   x$backend <- backend_code(x$backend)
   x$envir <- envir_code(x$envir)
+  x$caching[!nchar(x$caching)] <- "worker"
   apply_skip_os(x)
 }
 

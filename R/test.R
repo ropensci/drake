@@ -13,7 +13,8 @@ testrun <- function(config) {
       prepend = config$prepend, command = config$command,
       cache = config$cache, lazy_load = config$lazy_load,
       session_info = config$session_info,
-      fetch_cache = config$fetch_cache
+      fetch_cache = config$fetch_cache,
+      caching = config$caching
     )
   )
 }

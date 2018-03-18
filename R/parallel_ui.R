@@ -94,6 +94,18 @@ drake_batchtools_tmpl_file <- function(
 #'   for environment variables that set the max number of jobs.
 #'   }
 #'
+#'   \item{'future'}{
+#'   Just like `"future_lapply"` parallelism, except that
+#'   1. Rather than use staged parallelism, each target begins as soon as
+#'     their dependencies are ready and a worker is available. This
+#'     greatly increases parallel efficiency.
+#'   2. The `jobs` argument to `make()` works as intended: in
+#'     `make(jobs = 4, parallelism = "future")`, 4 workers will run
+#'     simultaneously, so at most 4 jobs will run simultaneously.
+#'   3. The `"future"` backend is experimental, so it is more likely
+#'     to have bugs than its counterparts.
+#'   }
+#'
 #'   \item{'Makefile'}{uses multiple R sessions
 #'   by creating and running a Makefile.
 #'   For distributed computing on a cluster or supercomputer,
