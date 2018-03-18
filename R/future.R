@@ -69,10 +69,28 @@ new_worker <- function(id, target, config, protect){
   )){
     return(empty_worker(target = target))
   }
+  config$cache$flush_cache() # Less data to pass this way.
+  # Avoid potential name conflicts with other globals.
+  # When we solve #296, the need for such a clumsy workaround
+  # should go away.
+  globals <- list(
+    DRAKE_GLOBALS__ = list(
+      target = target,
+      meta = meta,
+      config = config,
+      protect = protect
+    )
+  )
   if (identical(config$envir, globalenv())){
-    globals <- ls(config$envir) # Unit tests should modify global env # nocov
-  } else {
-    globals <- NULL
+    # Unit tests should not modify global env # nocov
+    if (exists("DRAKE_GLOBALS__", config$envir)){ # nocov # nolint
+      warning( # nocov
+        "Do not define an object named `DRAKE_GLOBALS__` ", # nocov
+        "in the global environment", # nocov
+        call. = FALSE # nocov
+      ) # nocov
+    } # nocov
+    globals <- c(globals, as.list(config$envir, all.names = TRUE)) # nocov
   }
   evaluator <- drake_plan_override(
     target = target,
@@ -81,13 +99,16 @@ new_worker <- function(id, target, config, protect){
   ) %||%
     future::plan("next")
   announce_build(target = target, meta = meta, config = config)
-  config$cache$flush_cache() # Less data to pass this way.
   structure(
     future::future(
       expr = drake_future_task(
-        target = target, meta = meta, config = config, protect = protect),
+        target = DRAKE_GLOBALS__$target,
+        meta = DRAKE_GLOBALS__$meta,
+        config = DRAKE_GLOBALS__$config,
+        protect = DRAKE_GLOBALS__$protect
+      ),
       packages = "drake",
-      globals = c(globals, "target", "meta", "config", "protect"),
+      globals = globals,
       evaluator = evaluator
     ),
     target = target
