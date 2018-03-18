@@ -15,5 +15,5 @@ envir,parallelism,jobs,backend,caching
 "global","Makefile",2,,
 "global","future_lapply",1,"future::multicore",
 "global","future_lapply",1,"future::multisession",
-"local","future",2,"future::multicore","worker"
-"local","future",9,"future::multisession","master"
+"global","future",2,"future::multicore","worker"
+"global","future",9,"future::multisession","master"

@@ -14,6 +14,7 @@ worker_future_lapply <- function(targets, meta_list, config){
     x = targets,
     FUN = build_distributed,
     cache_path = config$cache$driver$path,
-    meta_list = meta_list
+    meta_list = meta_list,
+    future.globals = FALSE
   )
 }
