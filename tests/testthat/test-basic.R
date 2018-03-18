@@ -5,12 +5,13 @@ test_with_dir("basic example works", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
   parallelism <- scenario$parallelism
+  caching <- scenario$caching
 
   load_basic_example(envir = e)
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
     jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+    verbose = FALSE, caching = caching)
 
   expect_equal(max_useful_jobs(config), 8)
   expect_false(file.exists("Makefile"))

@@ -8,7 +8,8 @@ dbug <- function() {
     envir = envir, parallelism = scenario$parallelism,
     jobs = scenario$jobs, verbose = FALSE,
     session_info = FALSE,
-    log_progress = TRUE
+    log_progress = TRUE,
+    caching = scenario$caching
   )
 }
 
