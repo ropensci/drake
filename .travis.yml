@@ -9,7 +9,6 @@ cache: packages
 branches:
   except:
   - gh-pages
-  - scheduler
 
 warnings_are_errors: true
 
