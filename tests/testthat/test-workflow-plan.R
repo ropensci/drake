@@ -57,8 +57,10 @@ test_with_dir("File functions handle input", {
   expect_equal(
     knitr_in(1, "x", "y"), c("1", "x", "y")
   )
-  expect_warning(expect_equal(file_out(c(1, "x", "y")), "1"))
-  expect_error(file_out(1, "x", "y"))
+  expect_equal(
+    sort(file_out(c(1, "x", "y"))),
+    sort(c("1", "x", "y"))
+  )
   expect_equal(
     code_dependencies(quote(file_out(c("file1", "file2")))),
     list(file_out = drake_quotes(c("file1", "file2"), single = FALSE))

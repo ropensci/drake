@@ -238,7 +238,8 @@ drake_plan_override <- function(target, field, config){
 #' test_with_dir("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_out("summaries.txt")
+#' # You can specify multiple files at once.
+#' file_in("summaries.txt", "file.txt")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
@@ -282,7 +283,8 @@ file_in <- function(...){
 #' test_with_dir("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_out("summaries.txt")
+#' # You can specify multiple input/output files
+#' file_out("summaries.txt", "text.txt")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
@@ -305,17 +307,7 @@ file_in <- function(...){
 #' # in your report.
 #' })
 #' }
-file_out <- function(path){
-  if (length(path) != 1){
-    warning(
-      "In file_out(), the `path` argument must ",
-      "have length 1. Supplied length = ", length(path), ". ",
-      "using first file output: ", path[1], ".",
-      call. = FALSE
-    )
-  }
-  as.character(path[1])
-}
+file_out <- file_in
 
 #' @title Declare the `knitr`/`rmarkdown` source files
 #'   of a workflow plan command.
