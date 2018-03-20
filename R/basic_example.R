@@ -158,9 +158,8 @@ load_basic_example <- function(
   # skip 'gather' (drake_plan my_plan is more readable)
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
 
-  report <- tibble(
-    target = "",
-    command = 'knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)', # nolint  
+  report <- drake_plan(
+    knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
   )
 
   # Row order doesn't matter in the drake_plan my_plan.

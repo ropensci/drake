@@ -169,6 +169,8 @@ drake_plan <- function(
       "Worry about single-quotes no more!"
     )
   }
+
+  # TODO: get rid of this once we remove the old file API.
   if (identical(file_targets, TRUE)){
     plan$target <- drake::drake_quotes(plan$target, single = TRUE)
   }
