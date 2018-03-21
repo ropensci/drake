@@ -87,12 +87,12 @@ imports_edges <- function(name, value){
 
 code_deps_to_edges <- function(target, deps){
   inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_out")])
-  edges <- NULL
+  outputs <- c(target, deps$file_out)
   if (length(inputs)){
-    data.frame(from = inputs, to = target, stringsAsFactors = FALSE)
+    expand.grid(from = inputs, to = outputs, stringsAsFactors = FALSE)
   } else {
     # Loops will be removed.
-    data.frame(from = target, to = target, stringsAsFactors = FALSE)
+    data.frame(from = outputs, to = outputs, stringsAsFactors = FALSE)
   }
 }
 

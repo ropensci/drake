@@ -479,7 +479,10 @@ do_prework <- function(config, verbose_packages) {
 #' }
 possible_targets <- function(plan = read_drake_plan()) {
   plan <- sanitize_plan(plan)
-  as.character(plan$target)
+  purrr::map(plan$command, command_dependencies) %>%
+    purrr::map("file_out") %>%
+    c(plan$target) %>%
+    clean_dependency_list
 }
 
 #' @title Store an internal configuration list
