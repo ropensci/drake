@@ -54,7 +54,8 @@ build_drake_graph <- function(
       imports_edges(name = import_names[[i]], value = imports[[i]])
     },
     jobs = jobs
-  )
+  ) %>%
+    do.call(what = rbind)
   console_many_targets(
     targets = plan$target,
     pattern = "connect",
@@ -67,17 +68,24 @@ build_drake_graph <- function(
       commands_edges(target = plan$target[i], command = plan$command[i])
     },
     jobs = jobs
-  )
-  c(imports_edges, commands_edges) %>%
-    do.call(what = rbind) %>%
-    igraph::graph_from_data_frame() %>%
+  ) %>%
+    do.call(what = rbind)
+  edges <- rbind(imports_edges, commands_edges[, c("from", "to")])
+  igraph::graph_from_data_frame(edges) %>%
+    igraph::set_vertex_attr(
+      name = "command_group",
+      index = commands_edges$to,
+      value = commands_edges$command_group
+    ) %>%
     prune_drake_graph(to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
 }
 
 commands_edges <- function(target, command){
   deps <- command_dependencies(command)
-  code_deps_to_edges(target = target, deps = deps)
+  edges <- code_deps_to_edges(target = target, deps = deps)
+  edges$command_group <- digest::digest(command)
+  edges
 }
 
 imports_edges <- function(name, value){
