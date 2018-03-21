@@ -236,7 +236,8 @@ make_imports <- function(config = drake::read_drake_config()){
 }
 
 imports_graph <- function(config){
-  delete_these <- intersect(config$plan$target, V(config$graph)$name)
+  vertices <- V(config$graph)
+  delete_these <- vertices$name[!is.na(vertices$command_group)]
   delete_vertices(config$graph, v = delete_these)
 }
 
@@ -285,7 +286,8 @@ make_targets <- function(config = drake::read_drake_config()){
 }
 
 targets_graph <- function(config){
-  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
+  vertices <- V(config$graph)
+  delete_these <- vertices$name[is.na(vertices$command_group)]
   delete_vertices(config$graph, v = delete_these)
 }
 
