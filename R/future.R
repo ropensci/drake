@@ -70,6 +70,7 @@ new_worker <- function(id, target, config, protect){
     return(empty_worker(target = target))
   }
   config$cache$flush_cache() # Less data to pass this way.
+  DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
   # When we solve #296, the need for such a clumsy workaround
   # should go away.
