@@ -8,7 +8,7 @@
 
 <title>For <code><a href='make.html'>make</a>(..., parallelism = "Makefile")</code>,
 see what your <code>Makefile</code> recipes
-will look like in advance. — Makefile_recipe • drake</title>
+will look like in advance. <U+2014> Makefile_recipe • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -20,19 +20,13 @@ will look like in advance. — Makefile_recipe • drake</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-<!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="For <code><a href='make.html'>make</a>(..., parallelism = "Makefile")</code>,
-see what your <code>Makefile</code> recipes
-will look like in advance. — Makefile_recipe" />
-
-<meta property="og:description" content="Relevant to "Makefile" parallelism only." />
-<meta name="twitter:card" content="summary" />
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -142,7 +136,6 @@ will look like in advance. — Makefile_recipe" />
     <h1>For <code><a href='make.html'>make</a>(..., parallelism = "Makefile")</code>,
 see what your <code>Makefile</code> recipes
 will look like in advance.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/recipe.R'><code>R/recipe.R</code></a></small>
     </div>
 
     
@@ -190,7 +183,7 @@ Makefile recipes in advance, and see
 The default recipe is <code>Rscript -e 'R_RECIPE'</code>, where
 <code>R_RECIPE</code> is the wildcard for the recipe in R for making the target.
 In writing the Makefile, <code>R_RECIPE</code> is replaced with something like
-<code><a href='mk.html'>drake::mk("name_of_target", "path_to_cache")</a></code>.
+<code><a href='http://www.rdocumentation.org/packages/drake/topics/mk'>drake::mk("name_of_target", "path_to_cache")</a></code>.
 So when you call
 <code><a href='make.html'>make(..., parallelism = "Makefile", recipe_command = "R -e 'R_RECIPE' -q")</a></code>, # nolint
 from within R, the <code>Makefile</code> builds each target
@@ -260,7 +253,7 @@ so the default <code>Makefile</code> recipe for each target is
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -268,4 +261,3 @@ so the default <code>Makefile</code> recipe for each target is
 
   </body>
 </html>
-

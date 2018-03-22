@@ -8,11 +8,8 @@
 <title>drake • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="drake">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -115,11 +112,8 @@
             <h3 class="subtitle">where to begin</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-16</h4>
-      
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/drake.Rmd"><code>vignettes/drake.Rmd</code></a></small>
-
-    </div>
+            <h4 class="date">2018-03-22</h4>
+          </div>
 
     
     
@@ -160,31 +154,41 @@
 
 <span class="co"># and saved files in your file system.</span>
 <span class="kw">list.files</span>()
-##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
-##  [4] "drake.Rmd"            "example-basic.Rmd"    "example-gsp.Rmd"     
-##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
-## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
-## [13] "timing.Rmd"</code></pre></div>
+##  [1] "best-practices_files"   "best-practices.html"   
+##  [3] "best-practices.Rmd"     "caution.html"          
+##  [5] "caution.Rmd"            "debug.html"            
+##  [7] "debug.Rmd"              "drake.html"            
+##  [9] "drake.Rmd"              "example-basic.html"    
+## [11] "example-basic.Rmd"      "example-gsp_files"     
+## [13] "example-gsp.html"       "example-gsp.Rmd"       
+## [15] "example-packages_files" "example-packages.html" 
+## [17] "example-packages.Rmd"   "faq.html"              
+## [19] "faq.Rmd"                "graph.html"            
+## [21] "graph.Rmd"              "index.html"            
+## [23] "parallelism.html"       "parallelism.Rmd"       
+## [25] "report.Rmd"             "storage.html"          
+## [27] "storage.Rmd"            "timing.html"           
+## [29] "timing.Rmd"</code></pre></div>
 <p>Your real work is outlined in a data frame of data analysis steps called “targets”. The targets depend on the imports, and <code>drake</code> will figure out how they are all connected.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
 <p>Wildcard templating generates these data frames at scale.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 dataset_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
@@ -268,11 +272,11 @@ whole_plan
 <p>At this point, all your targets are out of date because the project is new.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Master configuration list</span>
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
+##  [1] "\"report.md\""          "coef_regression1_large"
+##  [3] "coef_regression1_small" "coef_regression2_large"
+##  [5] "coef_regression2_small" "large"                 
+##  [7] "regression1_large"      "regression1_small"     
+##  [9] "regression2_large"      "regression2_small"     
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"</code></pre></div>
@@ -383,7 +387,7 @@ whole_plan
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

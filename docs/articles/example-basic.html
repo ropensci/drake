@@ -8,11 +8,8 @@
 <title>The basic example • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="The basic example">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -115,11 +112,8 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-16</h4>
-      
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd"><code>vignettes/example-basic.Rmd</code></a></small>
-
-    </div>
+            <h4 class="date">2018-03-22</h4>
+          </div>
 
     
     
@@ -252,11 +246,21 @@ report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(pa
 ## [6] "simulate"</code></pre></div>
 <p>and saved files from your file system.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>()
-##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
-##  [4] "drake.Rmd"            "example-basic.Rmd"    "example-gsp.Rmd"     
-##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
-## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
-## [13] "timing.Rmd"</code></pre></div>
+##  [1] "best-practices_files"   "best-practices.html"   
+##  [3] "best-practices.Rmd"     "caution.html"          
+##  [5] "caution.Rmd"            "debug.html"            
+##  [7] "debug.Rmd"              "drake.html"            
+##  [9] "drake.Rmd"              "example-basic.html"    
+## [11] "example-basic.Rmd"      "example-gsp_files"     
+## [13] "example-gsp.html"       "example-gsp.Rmd"       
+## [15] "example-packages_files" "example-packages.html" 
+## [17] "example-packages.Rmd"   "faq.html"              
+## [19] "faq.Rmd"                "graph.html"            
+## [21] "graph.Rmd"              "index.html"            
+## [23] "parallelism.html"       "parallelism.Rmd"       
+## [25] "report.Rmd"             "storage.html"          
+## [27] "storage.Rmd"            "timing.html"           
+## [29] "timing.Rmd"</code></pre></div>
 </div>
 <div id="the-workflow-plan-data-frame" class="section level1">
 <h1 class="hasAnchor">
@@ -267,21 +271,21 @@ my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
 <p>Each row is an intermediate step, and each <strong>command</strong> generates a single <strong>target</strong>. A target is an output R object (cached when generated) or an output file (specified with single quotes), and a command just an ordinary piece of R code (not necessarily a single function call). Commands make use of R objects imported from your workspace, targets generated by other commands, and initial input files. These dependencies give your project an underlying network representation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
@@ -293,9 +297,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ## [1] "lm"
 
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="dv">1</span>]) <span class="co"># Files like report.Rmd are single-quoted.</span>
-## [1] "coef_regression2_small" "knit"                  
-## [3] "large"                  "\"report.md\""         
-## [5] "\"report.Rmd\""         "small"
+## [1] "\"report.md\""          "\"report.Rmd\""        
+## [3] "coef_regression2_small" "knit"                  
+## [5] "large"                  "small"
 
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="kw">nrow</span>(my_plan)])
 ## [1] "regression2_large" "summary"           "suppressWarnings"</code></pre></div>
@@ -308,8 +312,8 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ##  [1] "data.frame"             "mtcars"                
 ##  [3] "random_rows"            "lm"                    
 ##  [5] "nrow"                   "sample.int"            
-##  [7] "coef_regression2_small" "knit"                  
-##  [9] "large"                  "\"report.Rmd\""        
+##  [7] "\"report.Rmd\""         "coef_regression2_small"
+##  [9] "knit"                   "large"                 
 ## [11] "small"                  "simulate"              
 ## [13] "reg1"                   "reg2"                  
 ## [15] "regression1_small"      "summary"               
@@ -382,14 +386,14 @@ results
 ## # A tibble: 8 x 2
 ##   target                 command                                          
 ##   &lt;chr&gt;                  &lt;chr&gt;                                            
-## 1 summ_regression1_small suppressWarnings(summary(regression1_small$resid…
-## 2 summ_regression1_large suppressWarnings(summary(regression1_large$resid…
-## 3 summ_regression2_small suppressWarnings(summary(regression2_small$resid…
-## 4 summ_regression2_large suppressWarnings(summary(regression2_large$resid…
-## 5 coef_regression1_small suppressWarnings(summary(regression1_small))$coe…
-## 6 coef_regression1_large suppressWarnings(summary(regression1_large))$coe…
-## 7 coef_regression2_small suppressWarnings(summary(regression2_small))$coe…
-## 8 coef_regression2_large suppressWarnings(summary(regression2_large))$coe…</code></pre></div>
+## 1 summ_regression1_small suppressWarnings(summary(regression1_small$resid~
+## 2 summ_regression1_large suppressWarnings(summary(regression1_large$resid~
+## 3 summ_regression2_small suppressWarnings(summary(regression2_small$resid~
+## 4 summ_regression2_large suppressWarnings(summary(regression2_large$resid~
+## 5 coef_regression1_small suppressWarnings(summary(regression1_small))$coe~
+## 6 coef_regression1_large suppressWarnings(summary(regression1_large))$coe~
+## 7 coef_regression2_small suppressWarnings(summary(regression2_small))$coe~
+## 8 coef_regression2_large suppressWarnings(summary(regression2_large))$coe~</code></pre></div>
 <p>The <code>gather</code> feature reduces a collection of targets to a single target. The resulting commands are long, so gathering is deactivated for the sake of readability.</p>
 <p>For your <code>knitr</code> reports, use <code><a href="../reference/knitr_in.html">knitr_in()</a></code> in your commands so that <code>report.Rmd</code> is a dependency and targets loaded with <code><a href="../reference/loadd.html">loadd()</a></code> and <code><a href="../reference/readd.html">readd()</a></code> in active code chunks are also dependencies. Use <code><a href="../reference/file_out.html">file_out()</a></code> to tell <code>drake</code> that the target is a file output. If the file is an output, you do not need to name the target. The target name will be the name of the output file in quotes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">report &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
@@ -399,28 +403,28 @@ report
 ## # A tibble: 1 x 2
 ##   target          command                                                 
 ##   &lt;chr&gt;           &lt;chr&gt;                                                   
-## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</code></pre></div>
+## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")~</code></pre></div>
 <p>Finally, consolidate your workflow using <code>rbind()</code>. Row order does not matter.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(report, my_datasets, my_analyses, results)
 my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
 </div>
 <div id="flexible-workflow-plan-generation" class="section level1">
 <h1 class="hasAnchor">
@@ -544,11 +548,11 @@ x_plan
 <p>You may want to check for outdated or missing targets/imports first.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Targets that need to be (re)built.</span>
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
+##  [1] "\"report.md\""          "coef_regression1_large"
+##  [3] "coef_regression1_small" "coef_regression2_large"
+##  [5] "coef_regression2_small" "large"                 
+##  [7] "regression1_large"      "regression1_small"     
+##  [9] "regression2_large"      "regression2_small"     
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"
@@ -596,16 +600,16 @@ x_plan
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.004s         0.004s         0s         
-##  2 coef_regression1_small target 0.003s         0s             0.003s     
-##  3 coef_regression2_large target 0.003s         0.003s         0s         
-##  4 coef_regression2_small target 0.003s         0.003s         0s         
-##  5 data.frame             import 0.019s         0.019s         0s         
-##  6 knit                   import 0.019s         0.019s         0s         
-##  7 large                  target 0.047s         0.047s         0s         
-##  8 lm                     import 0.007s         0.007s         0s         
-##  9 mtcars                 import 0s             0s             0s         
-## 10 nrow                   import 0.004s         0.003s         0s         
+##  1 "\"report.md\""        target 0.112s         0.064s         0.009s     
+##  2 "\"report.Rmd\""       import 0.012s         0.002s         0s         
+##  3 coef_regression1_large target 0.022s         0.009s         0s         
+##  4 coef_regression1_small target 0.018s         0.007s         0s         
+##  5 coef_regression2_large target 0.018s         0.007s         0s         
+##  6 coef_regression2_small target 0.021s         0.007s         0s         
+##  7 data.frame             import 0.051s         0.039s         0s         
+##  8 knit                   import 0.048s         0.038s         0s         
+##  9 large                  target 0.118s         0.099s         0.003s     
+## 10 lm                     import 0.026s         0.015s         0.001s     
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -638,35 +642,35 @@ x_plan
 ##  TRUE  TRUE
 
 <span class="kw"><a href="../reference/cached.html">cached</a></span>()
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "data.frame"             "knit"                  
-##  [7] "large"                  "lm"                    
-##  [9] "mtcars"                 "nrow"                  
-## [11] "random_rows"            "reg1"                  
-## [13] "reg2"                   "regression1_large"     
-## [15] "regression1_small"      "regression2_large"     
-## [17] "regression2_small"      "\"report.md\""         
-## [19] "\"report.Rmd\""         "sample.int"            
+##  [1] "\"report.md\""          "\"report.Rmd\""        
+##  [3] "coef_regression1_large" "coef_regression1_small"
+##  [5] "coef_regression2_large" "coef_regression2_small"
+##  [7] "data.frame"             "knit"                  
+##  [9] "large"                  "lm"                    
+## [11] "mtcars"                 "nrow"                  
+## [13] "random_rows"            "reg1"                  
+## [15] "reg2"                   "regression1_large"     
+## [17] "regression1_small"      "regression2_large"     
+## [19] "regression2_small"      "sample.int"            
 ## [21] "simulate"               "small"                 
-## [23] "summary"                "summ_regression1_large"
-## [25] "summ_regression1_small" "summ_regression2_large"
-## [27] "summ_regression2_small" "suppressWarnings"
+## [23] "summ_regression1_large" "summ_regression1_small"
+## [25] "summ_regression2_large" "summ_regression2_small"
+## [27] "summary"                "suppressWarnings"
 
 <span class="kw"><a href="../reference/built.html">built</a></span>()
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
+##  [1] "\"report.md\""          "coef_regression1_large"
+##  [3] "coef_regression1_small" "coef_regression2_large"
+##  [5] "coef_regression2_small" "large"                 
+##  [7] "regression1_large"      "regression1_small"     
+##  [9] "regression2_large"      "regression2_small"     
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"
 
 <span class="kw"><a href="../reference/imported.html">imported</a></span>()
-##  [1] "data.frame"       "knit"             "lm"              
-##  [4] "mtcars"           "nrow"             "random_rows"     
-##  [7] "reg1"             "reg2"             "\"report.Rmd\""  
+##  [1] "\"report.Rmd\""   "data.frame"       "knit"            
+##  [4] "lm"               "mtcars"           "nrow"            
+##  [7] "random_rows"      "reg1"             "reg2"            
 ## [10] "sample.int"       "simulate"         "summary"         
 ## [13] "suppressWarnings"
 
@@ -674,7 +678,7 @@ x_plan
 ## # A tibble: 6 x 2
 ##   target            command                                               
 ##   &lt;chr&gt;             &lt;chr&gt;                                                 
-## 1 "\"report.md\""   "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\…
+## 1 "\"report.md\""   "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\~
 ## 2 small             simulate(48)                                          
 ## 3 large             simulate(64)                                          
 ## 4 regression1_small reg1(small)                                           
@@ -682,9 +686,9 @@ x_plan
 ## 6 regression2_small reg2(small)
 
 <span class="kw">head</span>(<span class="kw"><a href="../reference/progress.html">progress</a></span>()) <span class="co"># See also in_progress()</span>
-## coef_regression1_large coef_regression1_small coef_regression2_large 
+##            "report.md"           "report.Rmd" coef_regression1_large 
 ##             "finished"             "finished"             "finished" 
-## coef_regression2_small             data.frame                   knit 
+## coef_regression1_small coef_regression2_large coef_regression2_small 
 ##             "finished"             "finished"             "finished"
 
 <span class="kw"><a href="../reference/progress.html">progress</a></span>(large)
@@ -705,9 +709,9 @@ x_plan
 }</code></pre></div>
 <p>The targets that depend on <code>reg2()</code> need to be rebuilt.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-## [1] "coef_regression2_large" "coef_regression2_small"
-## [3] "regression2_large"      "regression2_small"     
-## [5] "\"report.md\""          "summ_regression2_large"
+## [1] "\"report.md\""          "coef_regression2_large"
+## [3] "coef_regression2_small" "regression2_large"     
+## [5] "regression2_small"      "summ_regression2_large"
 ## [7] "summ_regression2_small"</code></pre></div>
 <p><strong>Advanced</strong>: To find out why a target is out of date, you can load the <a href="https://github.com/richfitz/storr">storr</a> cache and compare the appropriate hash keys to the output of <code><a href="../reference/dependency_profile.html">dependency_profile()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/dependency_profile.html">dependency_profile</a></span>(<span class="dt">target =</span> <span class="st">"regression2_small"</span>, <span class="dt">config =</span> config)
@@ -734,7 +738,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "8a0ad9a9f6571d60"</code></pre></div>
+## [1] "e3b081c0e864c5ca"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
@@ -763,11 +767,11 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 }
 
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
+##  [1] "\"report.md\""          "coef_regression1_large"
+##  [3] "coef_regression1_small" "coef_regression2_large"
+##  [5] "coef_regression2_small" "large"                 
+##  [7] "regression1_large"      "regression1_small"     
+##  [9] "regression2_large"      "regression2_small"     
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"
@@ -810,21 +814,21 @@ my_plan
 ## # A tibble: 16 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~
 ## 16 new_data               new_simulation(36) + sqrt(10)
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
@@ -943,7 +947,7 @@ my_plan
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>
