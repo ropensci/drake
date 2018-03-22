@@ -71,7 +71,8 @@ safe_get_tangled_frags <- function(target){
   error = function(e){
     warning(
       "Could not parse file '", file,
-      "'. Drake dependencies could not be extracted from code chunks."
+      "'. Drake dependencies could not be extracted from code chunks: ",
+      conditionMessage(e)
     )
     character(0)
   })
