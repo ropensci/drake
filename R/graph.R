@@ -121,13 +121,13 @@ code_deps_to_edges <- function(target, deps){
 
 imports_graph <- function(graph){
   vertices <- V(graph)
-  delete_these <- vertices$name[vertices$imported]
+  delete_these <- vertices$name[!vertices$imported]
   delete_vertices(graph, v = delete_these)
 }
 
 targets_graph <- function(graph){
   vertices <- V(graph)
-  delete_these <- vertices$name[!vertices$imported]
+  delete_these <- vertices$name[vertices$imported]
   delete_vertices(graph, v = delete_these)
 }
 
