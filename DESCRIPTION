@@ -74,7 +74,6 @@ Imports:
   stats,
   storr (>= 1.1.0),
   stringi,
-  stringr,
   testthat,
   tibble,
   tidyselect (>= 0.2.4),

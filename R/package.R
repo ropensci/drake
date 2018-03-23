@@ -64,7 +64,7 @@
 #' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_environment storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
-#' @importFrom stringr str_split str_trim
+#'   stri_split_fixed stri_trim_both
 #' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select

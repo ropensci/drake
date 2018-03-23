@@ -6,7 +6,7 @@ sanitize_plan <- function(plan){
          plan[[field]] <- as.character(plan[[field]])
       }
       if (is.character(plan[[field]])){
-        plan[[field]] <- str_trim(plan[[field]], side = "both")
+        plan[[field]] <- stringi::stri_trim_both(plan[[field]])
       }
     }
   }
@@ -77,7 +77,7 @@ repair_target_names <- function(x){
   } else {
     return(x)
   }
-  x <- str_trim(x, side = "both")
+  x <- stringi::stri_trim_both(x)
   x[is_not_file(x)] <- gsub(illegals, "_", x[is_not_file(x)])
   x <- gsub("^_", "", x)
   x[!nchar(x)] <- "X"
