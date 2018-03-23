@@ -398,6 +398,7 @@ drake_config <- function(
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
+  schedule <- schedule_graph(graph)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   list(
@@ -406,6 +407,7 @@ drake_config <- function(
     parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,
+    schedule = schedule,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed, trigger = trigger,

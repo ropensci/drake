@@ -54,9 +54,9 @@ parallel_stages <- function(
   }
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
-  config$execution_graph <- imports_graph(config = config)
+  config$execution_graph <- imports_graph(graph = config$graph)
   run_staged_parallelism(config = config, worker = worker_parallel_stages)
-  targets_graph <- targets_graph(config = config)
+  targets_graph <- targets_graph(graph = config$graph)
   config$execution_graph <- targets_graph
   run_staged_parallelism(config = config, worker = worker_parallel_stages)
   out <- read_parallel_stages(config = config)
@@ -156,7 +156,7 @@ read_parallel_stages <- function(config){
 next_stage <- function(config = drake::read_drake_config()){
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
-  config$execution_graph <- targets_graph(config = config)
+  config$execution_graph <- targets_graph(graph = config$graph)
   parallel_stage(worker = worker_next_stage, config = config)
   tryCatch(
     config$stages_cache$get(key = "next_stage"),

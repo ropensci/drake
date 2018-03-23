@@ -71,20 +71,35 @@ build_drake_graph <- function(
   ) %>%
     do.call(what = rbind)
   edges <- rbind(imports_edges, commands_edges[, c("from", "to")])
-  igraph::graph_from_data_frame(edges) %>%
+  graph <- igraph::graph_from_data_frame(edges) %>%
     igraph::set_vertex_attr(
-      name = "command_group",
+      name = "imported",
+      value = TRUE
+    ) %>%
+    igraph::set_vertex_attr(
+      name = "imported",
       index = commands_edges$to,
-      value = commands_edges$command_group
+      value = FALSE
     ) %>%
     prune_drake_graph(to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
+  igraph::set_vertex_attr(
+    graph = graph,
+    name = "job",
+    index = V(graph),
+    value = V(graph)$name
+  ) %>%
+    igraph::set_vertex_attr(
+      name = "job",
+      index = commands_edges$to,
+      value = commands_edges$job
+    )
 }
 
 commands_edges <- function(target, command){
   deps <- command_dependencies(command)
   edges <- code_deps_to_edges(target = target, deps = deps)
-  edges$command_group <- digest::digest(command)
+  edges$job <- target
   edges
 }
 
@@ -102,6 +117,24 @@ code_deps_to_edges <- function(target, deps){
     # Loops will be removed.
     data.frame(from = outputs, to = outputs, stringsAsFactors = FALSE)
   }
+}
+
+imports_graph <- function(graph){
+  vertices <- V(graph)
+  delete_these <- vertices$name[vertices$imported]
+  delete_vertices(graph, v = delete_these)
+}
+
+targets_graph <- function(graph){
+  vertices <- V(graph)
+  delete_these <- vertices$name[!vertices$imported]
+  delete_vertices(graph, v = delete_these)
+}
+
+schedule_graph <- function(graph){
+  vertices <- V(graph)
+  delete_these <- vertices$name[vertices$name != vertices$job]
+  delete_vertices(graph, v = delete_these)
 }
 
 #' @title Prune the dependency network of your project.

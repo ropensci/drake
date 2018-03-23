@@ -228,17 +228,11 @@ make_with_config <- function(config = drake::read_drake_config()){
 #' })
 #' }
 make_imports <- function(config = drake::read_drake_config()){
-  config$execution_graph <- imports_graph(config = config)
+  config$execution_graph <- imports_graph(graph = config$graph)
   config$jobs <- jobs_imports(jobs = config$jobs)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
   invisible(config)
-}
-
-imports_graph <- function(config){
-  vertices <- V(config$graph)
-  delete_these <- vertices$name[!is.na(vertices$command_group)]
-  delete_vertices(config$graph, v = delete_these)
 }
 
 #' @title Just build the targets.
@@ -278,17 +272,11 @@ imports_graph <- function(config){
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()){
-  config$execution_graph <- targets_graph(config = config)
+  config$execution_graph <- targets_graph(graph = config$graph)
   config$jobs <- jobs_targets(jobs = config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
-}
-
-targets_graph <- function(config){
-  vertices <- V(config$graph)
-  delete_these <- vertices$name[is.na(vertices$command_group)]
-  delete_vertices(config$graph, v = delete_these)
 }
 
 initialize_session <- function(config){
