@@ -178,7 +178,7 @@ dependencies <- function(targets, config, reverse = FALSE){
 nonfile_target_dependencies <- function(targets, config){
   deps <- dependencies(targets = targets, config = config)
   out <- parallel_filter(x = deps, f = is_not_file, jobs = config$jobs)
-  intersect(out, config$plan$target)
+  intersect(out, V(targets_graph(config$graph))$name)
 }
 
 import_dependencies <- function(expr){

@@ -117,7 +117,7 @@ function_hover_text <- Vectorize(function(function_name, envir){
 get_raw_node_category_data <- function(config){
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)
-  config$imports <- setdiff(all_labels, config$plan$target)
+  config$imports <- V(imports_graph(config$graph))$name
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
@@ -230,7 +230,7 @@ null_graph <- function() {
 
 resolve_graph_outdated <- function(config){
   if (config$from_scratch){
-    config$outdated <- config$plan$target
+    config$outdated <- V(targets_graph(config$graph))$name
   } else {
     config$outdated <- outdated(
       config = config,

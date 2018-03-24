@@ -33,7 +33,7 @@ justbuilt <- function(config) {
   unlist(all) %>%
     Filter(f = function(x) x == "finished") %>%
     names %>%
-    intersect(y = config$plan$target) %>%
+    intersect(y = V(targets_graph(config$graph))$name) %>%
     sort
 }
 

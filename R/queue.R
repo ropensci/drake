@@ -1,6 +1,6 @@
 new_target_queue <- function(config){
-  config$graph <- config$execution_graph
-  targets <- V(config$graph)$name
+  config$schedule <- config$execution_graph
+  targets <- V(config$schedule)$name
   priorities <- lightly_parallelize(
     X = targets,
     FUN = function(target){

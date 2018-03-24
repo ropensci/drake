@@ -95,7 +95,7 @@ run_staged_parallelism <- function(config, worker) {
 }
 
 worker_parallel_stages <- function(targets, meta_list, config){
-  imports <- setdiff(targets, config$plan$target)
+  imports <- setdiff(targets, V(imports_graph(config$graph))$name)
   if (length(imports)){
     worker_mclapply(
       targets = imports,
@@ -109,7 +109,7 @@ worker_parallel_stages <- function(targets, meta_list, config){
   stage <- config$stages_cache$get(key = "stage")
   out <- data.frame(
     item = targets,
-    imported = !targets %in% config$plan$target,
+    imported = !targets %in% V(targets_graph(config$graph))$name,
     file = is_file(targets),
     stage = stage,
     stringsAsFactors = FALSE
@@ -219,7 +219,7 @@ parallel_stage <- function(worker, config) {
     }
     old_leaves <- new_leaves
   }
-  if (length(intersect(build_these, config$plan$target))){
+  if (length(intersect(build_these, V(targets_graph(config$graph))$name))){
     set_attempt_flag(config = config)
   }
   if (length(build_these)){

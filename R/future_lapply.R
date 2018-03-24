@@ -5,7 +5,7 @@ run_future_lapply <- function(config){
 }
 
 worker_future_lapply <- function(targets, meta_list, config){
-  targets <- intersect(targets, config$plan$target)
+  targets <- intersect(targets, V(targets_graph(config$schedule))$name)
   # Probably will not encounter this, but it is better to have:
   if (!length(targets)){ # nocov # nolint
     return()             # nocov

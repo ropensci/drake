@@ -113,10 +113,9 @@ readd <- function(
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
 #'
-#' @param graph optional igraph object, representation
-#'   of the workflow network for getting dependencies
-#'   if `deps` is `TRUE`. If none is supplied,
-#'   it will be read from the cache.
+#' @param graph optional igraph object, the dependency graph
+#'   of the workflow. Used to load dependencies if `deps` is `TRUE`.
+#'   If no graph is supplied, one will be read from the cache.
 #'
 #' @param replace logical. If `FALSE`,
 #'   items already in your environment

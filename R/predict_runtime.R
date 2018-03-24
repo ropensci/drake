@@ -187,7 +187,7 @@ rate_limiting_times <- function(
   ) %>%
     as.data.frame
   keys <- V(config$graph)$name
-  import_keys <- setdiff(keys, config$plan$target)
+  import_keys <- V(imports_graph(config$graph))$name
   items <- intersect(keys, times$item)
   not_timed <- setdiff(keys, items)
   warn_not_timed(not_timed)

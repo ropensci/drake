@@ -134,10 +134,7 @@ dataframes_graph <- function(
   )
   config$graph <- subset_graph(graph = config$graph, subset = subset)
   if (targets_only){
-    config$graph <- subset_graph(
-      graph = config$graph,
-      subset = config$plan$target
-    )
+    config$graph <- targets_graph(config$graph)
   }
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes

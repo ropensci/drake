@@ -28,7 +28,7 @@ time_stamps <- function(config){
   if (length(build_these)){
     set_attempt_flag(config = config)
   }
-  stamp_these <- setdiff(config$plan$target, build_these)
+  stamp_these <- setdiff(V(targets_graph(config$schedule))$name, build_these)
   lightly_parallelize(
     stamp_these, write_time_stamp, jobs = config$jobs, config = config)
   return(invisible())

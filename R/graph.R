@@ -273,13 +273,9 @@ exclude_imports_if <- function(config){
   if (!config$skip_imports){
     return(config)
   }
-  delete_these <- setdiff(
-    V(config$execution_graph)$name,
-    config$plan$target
-  )
   config$execution_graph <- delete_vertices(
     graph = config$execution_graph,
-    v = delete_these
+    v = V(imports_graph(config$graph))$name
   )
   config
 }

@@ -38,11 +38,11 @@ makefile_head <- function(config){
 }
 
 makefile_rules <- function(config){
-  targets <- intersect(config$plan$target, V(config$graph)$name)
+  config$graph <- targets_graph(config$schedule)
+  targets <- V(config$graph)$name
   cache_path <- cache_path(config$cache)
   for (target in targets){
     deps <- dependencies(target, config) %>%
-      intersect(y = config$plan$target) %>%
       time_stamp_target(config = config)
     breaker <- ifelse(length(deps), " \\\n", "\n")
     cat(

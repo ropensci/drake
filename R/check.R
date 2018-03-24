@@ -72,8 +72,7 @@ assert_standard_columns <- function(config){
 }
 
 missing_input_files <- function(config) {
-  missing_files <- V(config$graph)$name %>%
-    setdiff(y = config$plan$target) %>%
+  missing_files <- V(config$graph)$name[V(config$graph)$imported] %>%
     parallel_filter(f = is_file, jobs = config$jobs) %>%
     drake_unquote %>%
     parallel_filter(f = function(x) !file.exists(x), jobs = config$jobs)

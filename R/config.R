@@ -224,10 +224,9 @@
 #'   about your setup is not quite right: for example, if you are using
 #'   a version of drake that is not back compatible with your project's cache.
 #'
-#' @param graph An `igraph` object from the previous `make()`.
-#'   Supplying a pre-built graph could save time.
+#' @param graph An optional `igraph` object, the dependency graph.
+#'   Supplying a pre-built dependency graph could save time.
 #'   The graph is constructed by [build_drake_graph()].
-#'   You can also get one from \code{\link{config}(my_plan)$graph}.
 #'   Overrides `skip_imports`.
 #'
 #' @param trigger Name of the trigger to apply to all targets.

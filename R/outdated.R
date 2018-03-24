@@ -83,7 +83,7 @@ outdated <-  function(
 #' })
 #' }
 missed <- function(config = drake::read_drake_config()){
-  imports <- setdiff(V(config$graph)$name, config$plan$target)
+  imports <- V(imports_graph(config$graph))$name
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = function(x){

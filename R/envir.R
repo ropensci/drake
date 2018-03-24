@@ -16,7 +16,7 @@ assign_to_envir <- function(targets, values, config){
 assign_to_envir_single <- function(index, targets, values, config){
   target <- targets[index]
   value <- values[[index]]
-  if (is_file(target) | !(target %in% config$plan$target)){
+  if (is_file(target) | !(target %in% V(targets_graph(config$graph))$name)){
     return()
   }
   assign(x = target, value = value, envir = config$envir)
@@ -32,7 +32,7 @@ prune_envir <- function(targets, config, downstream = NULL){
     )
   }
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
-    intersect(y = config$plan$target)
+    intersect(y = V(targets_graph(config$graph))$name)
   target_deps <- nonfile_target_dependencies(
     targets = targets,
     config = config
@@ -45,7 +45,8 @@ prune_envir <- function(targets, config, downstream = NULL){
     setdiff(y = already_loaded)
   load_these <- exclude_unloadable(targets = load_these, config = config)
   keep_these <- c(target_deps, downstream_deps)
-  discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
+  discard_these <- setdiff(
+    x = V(targets_graph(config$graph))$name, y = keep_these) %>%
     parallel_filter(f = is_not_file, jobs = config$jobs) %>%
     intersect(y = already_loaded)
   if (length(discard_these)){
