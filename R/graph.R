@@ -27,7 +27,7 @@ build_drake_graph <- function(
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
-  sanitize_plan = TRUE, 
+  sanitize_plan = TRUE,
   sanitize_targets = TRUE
 ){
   force(envir)
