@@ -121,7 +121,7 @@ test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(failed(), "x")
   expect_equal(in_progress(), character(0))
   expect_is(e <- diagnose(x)$error, "error")
-  expect_true(grepl(pattern = "function_doesnt_exist", x = e$message))
+  expect_true(grepl(pattern = "function_doesnt_exist", x = e$message, fixed = TRUE))
   expect_error(diagnose("notfound"))
   expect_true(inherits(diagnose(x)$error, "error"))
   y <- "x"
@@ -140,10 +140,10 @@ test_with_dir("warnings and messages are caught", {
   bad_plan <- drake_plan(x = f(), y = x)
   expect_warning(make(bad_plan, verbose = TRUE, session_info = FALSE))
   x <- diagnose(x)
-  expect_true(grepl("my first warn", x$warnings[1]))
-  expect_true(grepl("my second warn", x$warnings[2]))
-  expect_true(grepl("my first mess", x$messages[1]))
-  expect_true(grepl("my second mess", x$messages[2]))
+  expect_true(grepl("my first warn", x$warnings[1], fixed = TRUE))
+  expect_true(grepl("my second warn", x$warnings[2], fixed = TRUE))
+  expect_true(grepl("my first mess", x$messages[1], fixed = TRUE))
+  expect_true(grepl("my second mess", x$messages[2], fixed = TRUE))
 })
 
 test_with_dir("missed() works", {

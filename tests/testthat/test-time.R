@@ -57,8 +57,8 @@ test_with_dir("build time the same after superfluous make", {
 
 test_with_dir("empty time predictions", {
   min_df <- function(df){
-    df <- df[!grepl("covr", df$item), ]
-    df <- df[!grepl(":::", df$item), ]
+    df <- df[!grepl("covr", df$item, fixed = TRUE), ]
+    df <- df[!grepl(":::", df$item, fixed = TRUE), ]
     df
   }
 
@@ -91,8 +91,8 @@ test_with_dir("empty time predictions", {
 
 test_with_dir("time predictions: incomplete targets", {
   min_df <- function(df){
-    df <- df[!grepl("covr", df$item), ]
-    df <- df[!grepl(":::", df$item), ]
+    df <- df[!grepl("covr", df$item, fixed = TRUE), ]
+    df <- df[!grepl(":::", df$item, fixed = TRUE), ]
     df
   }
 
@@ -192,8 +192,8 @@ test_with_dir("time predictions: incomplete targets", {
 
 test_with_dir("timing predictions with realistic build", {
   min_df <- function(df){
-    df <- df[!grepl("covr", df$item), ]
-    df <- df[!grepl(":::", df$item), ]
+    df <- df[!grepl("covr", df$item, fixed = TRUE), ]
+    df <- df[!grepl(":::", df$item, fixed = TRUE), ]
     df
   }
 

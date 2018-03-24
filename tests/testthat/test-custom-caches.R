@@ -197,6 +197,6 @@ test_with_dir("use two differnt file system caches", {
     con2$cache$driver$hash_algorithm,
     "murmur32"
   )
-  expect_true(grepl("my_new_cache", con2$cache$driver$path))
-  expect_true(grepl("my_new_cache", cache_path(cache2)))
+  expect_true(grepl("my_new_cache", con2$cache$driver$path, fixed = TRUE))
+  expect_true(grepl("my_new_cache", cache_path(cache2), fixed = TRUE))
 })

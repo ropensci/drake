@@ -39,7 +39,7 @@ test_with_dir("prepend arg works", {
   store_drake_config(config = config)
   run_Makefile(config, run = FALSE)
   lines <- readLines("Makefile")
-  expect_true(grepl("# add", lines[1]))
+  expect_true(grepl("# add", lines[1], fixed = TRUE))
 })
 
 test_with_dir("files inside directories can be timestamped", {
