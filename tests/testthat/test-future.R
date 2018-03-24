@@ -79,7 +79,13 @@ test_with_dir("can gracefully conclude a crashed worker", {
       regexp = "failed."
     )
     meta <- diagnose(myinput)
-    expect_true(grepl("Worker terminated unexpectedly", meta$error$message, fixed = TRUE))
+    expect_true(
+      grepl(
+        "Worker terminated unexpectedly",
+        meta$error$message,
+        fixed = TRUE
+      )
+    )
     clean(destroy = TRUE)
   }
 })
