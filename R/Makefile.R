@@ -77,11 +77,11 @@ build_recipe <- function(target, recipe_command,
   }
   r_recipe <- paste0("drake::mk(target = ", target,
     ", cache_path = \"", cache_path, "\")")
-  if (!safe_grepl(r_recipe_wildcard(), recipe_command)){
+  if (!safe_grepl(r_recipe_wildcard(), recipe_command, fixed = TRUE)){
     recipe_command <- paste0(recipe_command, " '",
       r_recipe_wildcard(), "'")
   }
-  gsub(r_recipe_wildcard(), r_recipe, recipe_command)
+  gsub(r_recipe_wildcard(), r_recipe, recipe_command, fixed = TRUE)
 }
 
 #' @title Build a target inside a `Makefile`

@@ -203,7 +203,7 @@ complete_target_names <- function(commands_list){
     # Should not actually happen, but it's better to have anyway.
     names(commands_list) <- paste0("drake_target_", seq_along(commands_list)) # nocov # nolint
   }
-  index <- !nchar(names(commands_list))
+  index <- !nzchar(names(commands_list))
   names(commands_list)[index] <- paste0("drake_target_", seq_len(sum(index)))
   commands_list
 }
@@ -404,7 +404,7 @@ warn_arrows <- function(dots){
     names(dots) <- rep("", length(dots)) # nocov
   }
   check_these <- purrr::map_lgl(names(dots), function(x){
-    nchar(x) < 1
+    !nzchar(x)
   }) %>%
     which
   offending_commands <- lapply(dots[check_these], detect_arrow) %>%

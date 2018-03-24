@@ -16,13 +16,13 @@ testing_scenarios <- function(){
     gsub(pattern = "_*$", replacement = "")
   x$backend <- backend_code(x$backend)
   x$envir <- envir_code(x$envir)
-  x$caching[!nchar(x$caching)] <- "worker"
+  x$caching[!nzchar(x$caching)] <- "worker"
   apply_skip_os(x)
 }
 
 backend_code <- function(x){
   ifelse(
-    nchar(x),
+    nzchar(x),
     paste0("future::plan(", x, ")"),
     x
   )

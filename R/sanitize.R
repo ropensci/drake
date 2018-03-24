@@ -15,7 +15,7 @@ sanitize_plan <- function(plan){
   }
   plan <- file_outs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
-  plan[nchar(plan$target) > 0, ]
+  plan[nzchar(plan$target), ]
 }
 
 drake_plan_non_factors <- function(){
@@ -80,12 +80,12 @@ repair_target_names <- function(x){
   x <- stringi::stri_trim_both(x)
   x[is_not_file(x)] <- gsub(illegals, "_", x[is_not_file(x)])
   x <- gsub("^_", "", x)
-  x[!nchar(x)] <- "X"
+  x[!nzchar(x)] <- "X"
   make.unique(x, sep = "_")
 }
 
 file_outs_to_targets <- function(plan){
-  index <- grepl("file_out", plan$command)
+  index <- grepl("file_out", plan$command, fixed = TRUE)
   plan$target[index] <- vapply(
     plan$command[index],
     single_file_out,
