@@ -58,7 +58,7 @@ test_with_dir("failed targets do not become up to date", {
   expect_error(make(plan))
   expect_error(make(plan))
   meta <- diagnose(a)
-  expect_true(grepl("my failure message", meta$error$message))
+  expect_true(grepl("my failure message", meta$error$message, fixed = TRUE))
   con <- drake_config(plan)
   expect_equal(sort(outdated(con)), sort(c("a", "c")))
 })

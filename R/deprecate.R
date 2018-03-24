@@ -333,7 +333,7 @@ doc_of_function_call <- function(expr){
   if (!is.null(args$input)){
     as.character(args$input)
   } else {
-    unnamed <- which(!nchar(names(args)))
+    unnamed <- which(!nzchar(names(args)))
     if (!length(unnamed)){
       return(character(0))
     }

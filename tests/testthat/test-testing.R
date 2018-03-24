@@ -88,7 +88,7 @@ test_with_dir("test_scenarios()", {
   expect_equal(old_scenario, getOption(test_option_name))
 
   # Check if we tested with all the options
-  loggings <- grepl("logged scenario", log)
+  loggings <- grepl("logged scenario", log, fixed = TRUE)
   expect_true(any(loggings))
   log <- log[loggings]
   log <- gsub("logged scenario ", "", log)
@@ -104,7 +104,7 @@ test_with_dir("test_scenarios()", {
   )
   log <- c(log$output, log$messages)
 
-  loggings <- grepl("logged scenario", log)
+  loggings <- grepl("logged scenario", log, fixed = TRUE)
   expect_false(any(loggings))
-  expect_true(any(grepl("skip", log)))
+  expect_true(any(grepl("skip", log, fixed = TRUE)))
 })

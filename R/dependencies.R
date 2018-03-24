@@ -411,7 +411,7 @@ unnamed_in_list <- function(x){
   if (!length(names(x))){
     out <- x
   } else {
-    out <- x[!nchar(names(x))]
+    out <- x[!nzchar(names(x))]
   }
   unlist(out)
 }

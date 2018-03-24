@@ -1,5 +1,5 @@
-safe_grepl <- function(pattern, x){
-  tryCatch(grepl(pattern, x), error = error_false)
+safe_grepl <- function(pattern, x, ...){
+  tryCatch(grepl(pattern, x, ...), error = error_false)
 }
 
 is_file <- function(x){
