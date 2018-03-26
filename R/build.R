@@ -112,20 +112,27 @@ announce_build <- function(target, meta, config){
 }
 
 conclude_build <- function(target, value, meta, config){
-  check_processed_files(target)
+  outputs <- V(config$graph)$name[V(config$graph)$job == target]
+  check_processed_files(outputs)
   handle_build_exceptions(target = target, meta = meta, config = config)
-  store_target(target = target, value = value, meta = meta, config = config)
+  store_outputs(
+    target = target,
+    outputs = outputs,
+    value = value,
+    meta = meta,
+    config = config
+  )
   invisible(value)
 }
 
-check_processed_files <- function(target){
-  if (!is_file(target)){
-    return()
-  }
-  if (!file.exists(drake::drake_unquote(target))){
+check_processed_files <- function(outputs){
+  bad <- Filter(x = outputs, f = function(x){
+    is_file(x) && !file.exists(drake::drake_unquote(x))
+  })
+  if (length(bad)){
     warning(
-      "File ", target, " was built or processed,\n",
-      "but the file itself does not exist.",
+      "Missing output files:\n",
+      multiline_message(bad),
       call. = FALSE
     )
   }

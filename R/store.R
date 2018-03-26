@@ -1,3 +1,20 @@
+store_outputs <- function(target, outputs, value, meta, config){
+  store_target(target = target, value = value, meta = meta, config = config)
+  for (output in setdiff(outputs, target)){
+    new_meta <- concomitant_output_meta(
+      output = output,
+      meta = meta,
+      config = config
+    )
+    store_target(
+      target = output,
+      value = new_meta$file,
+      meta = new_meta,
+      config = config
+    )
+  }
+}
+
 store_target <- function(target, value, meta, config) {
   # Failed targets need to stay invalidated,
   # even when `config$keep_going` is `TRUE`.

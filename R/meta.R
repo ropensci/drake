@@ -63,6 +63,7 @@ meta_list <- function(targets, config) {
 drake_meta <- function(target, config = drake::read_drake_config()) {
   meta <- list(
     target = target,
+    job = V(config$graph)$job[V(config$graph)$name == target],
     imported = target %in% V(imports_graph(config$graph))$name,
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
@@ -113,6 +114,13 @@ finish_meta <- function(target, meta, config){
 full_meta <- function(target, config){
   meta <- drake_meta(target = target, config = config)
   finish_meta(target = target, meta = meta, config = config)
+}
+
+concomitant_output_meta <- function(output, meta, config){
+  new_meta <- full_meta(target = output, config = config)
+  carry_over <- c("seed", "command", "start", "time_command")
+  new_meta[carry_over] <- meta[carry_over]
+  new_meta
 }
 
 dependency_hash <- function(target, config) {
