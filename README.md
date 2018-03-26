@@ -22,9 +22,7 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 
 Have you ever tried to manually salvage old results for a new runthrough?
 
-<a href="https://twitter.com/fossilosophy/status/966408174470299648">
-<img src="https://ropensci.github.io/drake/images/tweet.png" alt="infographic" align="center" style = "border: none; float: center;">
-</a>
+<img src="https://ropensci.github.io/drake/images/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
 
 `Drake` automatically
 
