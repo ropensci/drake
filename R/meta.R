@@ -100,7 +100,12 @@ finish_meta <- function(target, meta, config){
   # Empty fields need to be filled so that the target
   # can appear up to date in the next make().
   if (is.null(meta$file)){
+    ####### TODO: meta$file needs to be the file_out_hash(),
+    ####### a hash of the hashes of all the output files.
     meta$file <- file_hash(target = target, config = config)
+    
+    or file_out_hash()? # intentional bug to remind me to pick up here.
+    
   }
   if (is.null(meta$command)){
     meta$command <- get_standardized_command(target = target, config = config)
@@ -118,7 +123,7 @@ full_meta <- function(target, config){
 
 concomitant_output_meta <- function(output, meta, config){
   new_meta <- full_meta(target = output, config = config)
-  carry_over <- c("seed", "command", "start", "time_command")
+  carry_over <- c("seed", "command", "file", "start", "time_command")
   new_meta[carry_over] <- meta[carry_over]
   new_meta
 }

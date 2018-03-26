@@ -152,19 +152,24 @@ depends_trigger <- function(target, meta, config){
 
 file_trigger <- function(target, meta, config){
   stopifnot(!is.null(meta$file))
-  if (!is_file(target)){
+  files <- V(config$graph)$name[V(config$graph)$job == meta$job] %>%
+    Filter(f = is_file)
+  if (!length(files)){
     return(FALSE)
   }
-  if (!file.exists(drake_unquote(target))){
+  if (!all(file.exists(drake_unquote(files)))){
     return(TRUE)
   }
-  tryCatch(
+  if (!tryCatch(
     !identical(
-      config$cache$get(target, namespace = "kernels"),
+      config$cache$get(target, namespace = "meta")$file,
       meta$file
     ),
     error = error_false
-  )
+  )){
+    return(FALSE)
+  }
+
 }
 
 should_build <- function(target, meta_list, config){
