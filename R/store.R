@@ -8,7 +8,7 @@ store_outputs <- function(target, outputs, value, meta, config){
     )
     store_target(
       target = output,
-      value = new_meta$file,
+      value = new_meta$file, # Need the DSL for extra non-file outputs.
       meta = new_meta,
       config = config
     )
