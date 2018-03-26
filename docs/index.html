@@ -154,7 +154,9 @@
 <li>Discover an issue.</li>
 <li>Restart from scratch.</li>
 </ol>
-<p>But <code>drake</code> automatically</p>
+<p>Have you ever tried to manually salvage old results for a new runthrough?</p>
+<p><a href="https://twitter.com/fossilosophy/status/966408174470299648"> <img src="https://ropensci.github.io/drake/images/tweet.png" alt="infographic" align="center" style="border: none; float: center;"></a></p>
+<p><code>Drake</code> automatically</p>
 <ol>
 <li>Launches the parts that changed since the last runthrough.</li>
 <li>Skips the rest.</li>
@@ -311,11 +313,7 @@ reg2 &lt;-<span class="st"> </span>function(d){
 <span class="co"># Plot an interactive graph.</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(my_plan)
 <span class="kw"><a href="reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
-<iframe
-    src = 'https://ropensci.github.io/drake/images/reg2.html'
-    width = '100%' height = '600px' allowtransparency='true'
-    style='border: none; box-shadow: none'>
-    </iframe>
+<p><a href="https://ropensci.github.io/drake/images/reg2.html"><img src="./images/graph.png"></a></p>
 <p>Within each column above, the nodes are conditionally independent given their dependencies. Each <code><a href="reference/make.html">make()</a></code> walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, <code>drake</code> looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next <code><a href="reference/make.html">make()</a></code> programmatically, use the <code><a href="reference/parallel_stages.html">parallel_stages()</a></code> function.</p>
 </div>
 <div id="installation" class="section level1">
@@ -532,7 +530,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <li><a href="https://github.com/kendonB">Kendon Bell</a></li>
 <li><a href="https://github.com/krlmlr">Kirill Müller</a></li>
 </ul>
-<p>Credit for images is <a href="https://github.com/ropensci/drake/blob/master/docs/images/image-credit.md">attributed here</a>.</p>
+<p>Credit for images is <a href="https://github.com/ropensci/drake/blob/master/images/image-credit.md">attributed here</a>.</p>
 <p><a href="https://ropensci.org"><img src="http://ropensci.org/public_images/github_footer.png" alt="ropensci_footer"></a></p>
 </div>
 

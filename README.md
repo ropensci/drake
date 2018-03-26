@@ -20,7 +20,13 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 3. Discover an issue.
 4. Restart from scratch.
 
-But `drake` automatically
+Have you ever tried to manually salvage old results for a new runthrough?
+
+<a href="https://twitter.com/fossilosophy/status/966408174470299648">
+<img src="https://ropensci.github.io/drake/images/tweet.png" alt="infographic" align="center" style = "border: none; float: center;">
+</a>
+
+`Drake` automatically
 
 1. Launches the parts that changed since the last runthrough.
 2. Skips the rest.
@@ -186,7 +192,7 @@ config <- drake_config(my_plan)
 vis_drake_graph(config)
 ```
 
-[![](./docs/images/graph.png)](https://ropensci.github.io/drake/images/reg2.html)
+[![](./images/graph.png)](https://ropensci.github.io/drake/images/reg2.html)
 
 Within each column above, the nodes are conditionally independent given their dependencies. Each `make()` walks through the columns from left to right and applies parallel processing within each column. If any nodes are already up to date, `drake` looks downstream to maximize the number of outdated targets in a parallelizable stage. To show the parallelizable stages of the next `make()` programmatically, use the `parallel_stages()` function.
 
@@ -360,6 +366,6 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 
-Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/docs/images/image-credit.md).
+Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/images/image-credit.md).
 
 [![ropensci_footer](http://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
