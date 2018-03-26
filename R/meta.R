@@ -110,6 +110,11 @@ finish_meta <- function(target, meta, config){
   meta
 }
 
+full_meta <- function(target, config){
+  meta <- drake_meta(target = target, config = config)
+  finish_meta(target = target, meta = meta, config = config)
+}
+
 dependency_hash <- function(target, config) {
   dependencies(target, config) %>%
     self_hash(config = config) %>%

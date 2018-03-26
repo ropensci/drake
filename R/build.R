@@ -112,13 +112,13 @@ announce_build <- function(target, meta, config){
 }
 
 conclude_build <- function(target, value, meta, config){
-  check_processed_file(target)
+  check_processed_files(target)
   handle_build_exceptions(target = target, meta = meta, config = config)
   store_target(target = target, value = value, meta = meta, config = config)
   invisible(value)
 }
 
-check_processed_file <- function(target){
+check_processed_files <- function(target){
   if (!is_file(target)){
     return()
   }
