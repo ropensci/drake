@@ -1,6 +1,9 @@
 store_outputs <- function(target, outputs, value, meta, config){
   store_target(target = target, value = value, meta = meta, config = config)
   for (output in setdiff(outputs, target)){
+    
+    browser()
+    
     new_meta <- concomitant_output_meta(
       output = output,
       meta = meta,

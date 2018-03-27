@@ -201,7 +201,11 @@ file_out_hash <- function(target, config){
     index = target
   )
   files <- V(config$graph)$name[V(config$graph)$job == job] %>%
-    Filter(f = is_file) %>%
-    file_hash(config = config) %>%
+    Filter(f = is_file)
+  if (length(files)){
+    purrr::map_chr(.x = files, .f = file_hash, config = config) %>%
     digest::digest(algo = config$long_hash_algo)
+  } else {
+    as.character(NA)
+  }
 }
