@@ -193,19 +193,3 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
     config$cache$get(key = target, namespace = "kernels")
   }
 }
-
-file_out_hash <- function(target, config){
-  job <- igraph::vertex_attr(
-    graph = config$graph,
-    name = "job",
-    index = target
-  )
-  files <- V(config$graph)$name[V(config$graph)$job == job] %>%
-    Filter(f = is_file)
-  if (length(files)){
-    purrr::map_chr(.x = files, .f = file_hash, config = config) %>%
-    digest::digest(algo = config$long_hash_algo)
-  } else {
-    as.character(NA)
-  }
-}
