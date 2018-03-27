@@ -1,5 +1,11 @@
 drake_context("triggers")
 
+test_with_dir("empty triggers return logical", {
+  expect_identical(depends_trigger("x", list(), list()), FALSE)
+  expect_identical(command_trigger("x", list(), list()), FALSE)
+  expect_identical(file_trigger("x", list(), list()), FALSE)
+})
+
 test_with_dir("triggers work as expected", {
   con <- dbug()
   con$plan$trigger <- "missing"

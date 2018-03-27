@@ -129,7 +129,9 @@ assert_legal_triggers <- function(x){
 }
 
 command_trigger <- function(target, meta, config){
-  stopifnot(!is.null(meta$command))
+  if (is.null(meta$command)){
+    return(FALSE)
+  }
   command <- get_from_subspace(
     key = target,
     subspace = "command",
@@ -140,7 +142,9 @@ command_trigger <- function(target, meta, config){
 }
 
 depends_trigger <- function(target, meta, config){
-  stopifnot(!is.null(meta$depends))
+  if (is.null(meta$depends)){
+    return(FALSE)
+  }
   depends <- get_from_subspace(
     key = target,
     subspace = "depends",
@@ -151,7 +155,9 @@ depends_trigger <- function(target, meta, config){
 }
 
 file_trigger <- function(target, meta, config){
-  stopifnot(!is.null(meta$file))
+  if (is.null(meta$file)){
+    return(FALSE)
+  }
   files <- V(config$graph)$name[V(config$graph)$job == meta$job] %>%
     Filter(f = is_file)
   if (!length(files)){
