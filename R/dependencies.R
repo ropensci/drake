@@ -118,7 +118,7 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
       file.mtime(drake::drake_unquote(target))
     ),
     cached_file_hash = meta$file,
-    current_file_hash = file_out_hash(target = target, config = config),
+    current_file_hash = file_hash(target = target, config = config),
     cached_dependency_hash = meta$depends,
     current_dependency_hash = current_dependency_hash,
     hashes_of_dependencies = hashes_of_dependencies

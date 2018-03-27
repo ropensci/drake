@@ -166,6 +166,8 @@ file_trigger <- function(target, meta, config){
   if (!all(file.exists(drake_unquote(files)))){
     return(TRUE)
   }
+  
+  
   !identical(
     meta$file,
     get_from_subspace(

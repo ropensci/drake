@@ -73,7 +73,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$depends <- dependency_hash(target = target, config = config)
   }
   if (trigger %in% triggers_with_file()){
-    meta$file <- file_out_hash(target = target, config = config)
+    meta$file <- file_hash(target = target, config = config)
   }
   meta
 }
@@ -104,7 +104,7 @@ finish_meta <- function(target, meta, config){
   # Empty fields need to be filled so that the target
   # can appear up to date in the next make().
   if (is.null(meta$file)){
-    meta$file <- file_out_hash(target = target, config = config)
+    meta$file <- file_hash(target = target, config = config)
   }
   if (is.null(meta$command)){
     meta$command <- get_standardized_command(target = target, config = config)
@@ -118,7 +118,7 @@ finish_meta <- function(target, meta, config){
 concomitant_output_meta <- function(output, meta, config){
   new_meta <- meta_stub(target = output, config = config)
   carry_over <- c(
-    "command", "depends", "file", "seed", "start", "time_command"
+    "command", "depends", "seed", "start", "time_command"
   )
   new_meta[carry_over] <- meta[carry_over]
   new_meta
