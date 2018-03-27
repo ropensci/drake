@@ -73,7 +73,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$depends <- dependency_hash(target = target, config = config)
   }
   if (trigger %in% triggers_with_file()){
-    meta$file <- file_hash(target = target, config = config)
+    meta$file <- file_out_hash(target = target, config = config)
   }
   meta
 }
@@ -194,9 +194,12 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   }
 }
 
-file_out_hash <- function(target, config, size_cutoff = 1e5){
+file_out_hash <- function(target, config){
   files <- V(config$graph)$name[V(config$graph)$job == meta$job] %>%
     Filter(f = is_file) %>%
-    file_hash(config = config, size_cutoff = size_cutoff) %>%
+    file_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }
+
+
+
