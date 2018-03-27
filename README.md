@@ -30,10 +30,10 @@ Have you ever tried to manually salvage old results for a new runthrough?
 </a>
 </center>
 
-`Drake` automatically
+With `drake`, you can automatically
 
-1. Launches the parts that changed since the last runthrough.
-2. Skips the rest.
+1. Launch the parts that changed since last time.
+2. Skip the rest.
 
 ```r
 library(drake)
