@@ -23,7 +23,8 @@ for a full explanation.
 test_with_dir("Contain side effects", {
 # The `file_out()` and `file_in()` functions
 # just takes in strings and returns them.
-file_out("summaries.txt")
+# You can specify multiple files at once.
+file_in("summaries.txt", "file.txt")
 # Their main purpose is to orchestrate your custom files
 # in your workflow plan data frame.
 suppressWarnings(

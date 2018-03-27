@@ -224,10 +224,9 @@ and speed with
 \code{\link[=progress]{progress()}} and \code{\link[=in_progress]{in_progress()}}
 will no longer work if you do that.}
 
-\item{graph}{An \code{igraph} object from the previous \code{make()}.
-Supplying a pre-built graph could save time.
+\item{graph}{An optional \code{igraph} object, the dependency graph.
+Supplying a pre-built dependency graph could save time.
 The graph is constructed by \code{\link[=build_drake_graph]{build_drake_graph()}}.
-You can also get one from \code{\link{config}(my_plan)$graph}.
 Overrides \code{skip_imports}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.

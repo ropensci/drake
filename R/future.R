@@ -73,6 +73,7 @@ new_worker <- function(id, target, config, protect){
   # Avoid potential name conflicts with other globals.
   # When we solve #296, the need for such a clumsy workaround
   # should go away.
+  DRAKE_GLOBALS__ <- NULL # Avoids warnings about undefined global symbols.
   globals <- list(
     DRAKE_GLOBALS__ = list(
       target = target,

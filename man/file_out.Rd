@@ -4,14 +4,14 @@
 \alias{file_out}
 \title{Declare the file outputs of a workflow plan command.}
 \usage{
-file_out(path)
+file_out(...)
 }
 \arguments{
+\item{...}{Do not use. For informative input handling only.}
+
 \item{path}{Character string of length 1. File path
 of the file output of a command in your
 workflow plan data frame.}
-
-\item{...}{Do not use. For informative input handling only.}
 }
 \value{
 A character string, the file path of the file output.
@@ -27,7 +27,8 @@ for a full explanation.
 test_with_dir("Contain side effects", {
 # The `file_out()` and `file_in()` functions
 # just takes in strings and returns them.
-file_out("summaries.txt")
+# You can specify multiple input/output files
+file_out("summaries.txt", "text.txt")
 # Their main purpose is to orchestrate your custom files
 # in your workflow plan data frame.
 suppressWarnings(

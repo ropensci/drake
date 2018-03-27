@@ -82,10 +82,9 @@ with \code{\link[=assign]{assign()}}.
 \item \code{FALSE}: same as \code{"eager"}.
 }}
 
-\item{graph}{optional igraph object, representation
-of the workflow network for getting dependencies
-if \code{deps} is \code{TRUE}. If none is supplied,
-it will be read from the cache.}
+\item{graph}{optional igraph object, the dependency graph
+of the workflow. Used to load dependencies if \code{deps} is \code{TRUE}.
+If no graph is supplied, one will be read from the cache.}
 
 \item{replace}{logical. If \code{FALSE},
 items already in your environment
