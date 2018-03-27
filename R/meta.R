@@ -200,6 +200,3 @@ file_out_hash <- function(target, config){
     file_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }
-
-
-
