@@ -160,16 +160,15 @@ file_trigger <- function(target, meta, config){
   if (!all(file.exists(drake_unquote(files)))){
     return(TRUE)
   }
-  if (!tryCatch(
-    !identical(
-      config$cache$get(target, namespace = "meta")$file,
-      meta$file
-    ),
-    error = error_false
-  )){
-    return(FALSE)
-  }
-
+  !identical(
+    meta$file,
+    get_from_subspace(
+      key = target,
+      subspace = "file",
+      namespace = "meta",
+      cache = config$cache
+    )
+  )
 }
 
 should_build <- function(target, meta_list, config){

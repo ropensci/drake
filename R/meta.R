@@ -61,14 +61,7 @@ meta_list <- function(targets, config) {
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
-  meta <- list(
-    target = target,
-    job = V(config$graph)$job[V(config$graph)$name == target],
-    imported = target %in% V(imports_graph(config$graph))$name,
-    foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
-    missing = !target_exists(target = target, config = config),
-    seed = seed_from_object(list(seed = config$seed, target = target))
-  )
+  meta <- meta_stub(target = target, config = config)
   trigger <- get_trigger(target = target, config = config)
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),
@@ -83,6 +76,17 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$file <- file_hash(target = target, config = config)
   }
   meta
+}
+
+meta_stub <- function(target, config){
+  list(
+    target = target,
+    job = V(config$graph)$job[V(config$graph)$name == target],
+    imported = target %in% V(imports_graph(config$graph))$name,
+    foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
+    missing = !target_exists(target = target, config = config),
+    seed = seed_from_object(list(seed = config$seed, target = target))
+  )
 }
 
 finish_meta <- function(target, meta, config){
@@ -100,12 +104,7 @@ finish_meta <- function(target, meta, config){
   # Empty fields need to be filled so that the target
   # can appear up to date in the next make().
   if (is.null(meta$file)){
-    ####### TODO: meta$file needs to be the file_out_hash(),
-    ####### a hash of the hashes of all the output files.
-    meta$file <- file_hash(target = target, config = config)
-    
-    or file_out_hash()? # intentional bug to remind me to pick up here.
-    
+    meta$file <- file_out_hash(target = target, config = config)
   }
   if (is.null(meta$command)){
     meta$command <- get_standardized_command(target = target, config = config)
@@ -116,14 +115,11 @@ finish_meta <- function(target, meta, config){
   meta
 }
 
-full_meta <- function(target, config){
-  meta <- drake_meta(target = target, config = config)
-  finish_meta(target = target, meta = meta, config = config)
-}
-
 concomitant_output_meta <- function(output, meta, config){
-  new_meta <- full_meta(target = output, config = config)
-  carry_over <- c("seed", "command", "file", "start", "time_command")
+  new_meta <- meta_stub(target = output, config = config)
+  carry_over <- c(
+    "command", "depends", "file", "seed", "start", "time_command"
+  )
   new_meta[carry_over] <- meta[carry_over]
   new_meta
 }
@@ -196,4 +192,11 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
   } else {
     config$cache$get(key = target, namespace = "kernels")
   }
+}
+
+file_out_hash <- function(target, config, size_cutoff = 1e5){
+  files <- V(config$graph)$name[V(config$graph)$job == meta$job] %>%
+    Filter(f = is_file) %>%
+    file_hash(config = config, size_cutoff = size_cutoff) %>%
+    digest::digest(algo = config$long_hash_algo)
 }
