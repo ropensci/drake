@@ -340,10 +340,23 @@ code_dependencies <- function(expr){
       results <<- merge_lists(x = results, y = new_results)
     }
   }
-
   walk(expr)
-  results$globals <- intersect(results$globals, find_globals(expr))
+  results$globals <- intersect(results$globals, safe_find_globals(expr))
   results[purrr::map_int(results, length) > 0]
+}
+
+safe_find_globals <- function(expr){
+  tryCatch(
+    find_globals(expr),
+    error = function(e){
+      warning(
+        "could not resolve implicit dependencies of code:",
+        head(deparse(expr)),
+        call. = FALSE
+      )
+      character(0)
+    }
+  )
 }
 
 find_globals <- function(expr){

@@ -1,5 +1,12 @@
 drake_context("dependencies")
 
+test_with_dir("safe_find_globals", {
+  expect_warning(
+    safe_find_globals(new.env()),
+    regexp = "implicit dependencies"
+  )
+})
+
 test_with_dir("unparsable commands are handled correctly", {
   x <- "bluh$"
   expect_false(is_parsable(x))
