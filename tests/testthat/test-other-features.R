@@ -241,8 +241,7 @@ test_with_dir("unique_random_string() works", {
 
 test_with_dir("make(session = callr::r_vanilla)", {
   con <- dbug()
-  # Regular tests should not modify the global environment.
-  # con$envir <- dbug_envir(globalenv()) # nolint
+  con$envir <- dbug_envir(globalenv())
   con$prework = "library(base)"
   ls1 <- ls(envir = con$envir)
   con$session <- callr::r_vanilla

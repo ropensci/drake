@@ -186,8 +186,7 @@ make_with_config <- function(config = drake::read_drake_config()){
         args <- list(...)
         envir <- globalenv()
         for (var in names(args)){
-          # Regular tests should not modify the global environment.
-          assign(x = var, value = args[[var]], envir = envir) # nocov
+          assign(x = var, value = args[[var]], envir = envir)
         }
         drake::make_session(config = config)
       },
