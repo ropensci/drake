@@ -58,7 +58,10 @@ parallel_stages <- function(
   run_staged_parallelism(config = config, worker = worker_parallel_stages)
   targets_graph <- targets_graph(graph = config$graph)
   config$execution_graph <- targets_graph
-  run_staged_parallelism(config = config, worker = worker_parallel_stages)
+  # Some output files may not exist yet:
+  suppressWarnings(
+    run_staged_parallelism(config = config, worker = worker_parallel_stages)
+  )
   out <- read_parallel_stages(config = config)
   if (!length(out)){
     return(data.frame(

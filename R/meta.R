@@ -96,7 +96,7 @@ finish_meta <- function(target, meta, config){
     # If the target is a file output, then we know
     # it needs to be rehashed.
     if (!meta$imported){
-      meta$file <- rehash_file(target = target, config = config)
+      meta$file <- safe_rehash_file(target = target, config = config)
     }
   }
   # If the user selected a non-default trigger,
@@ -146,6 +146,15 @@ rehash_file <- function(target, config) {
     file = TRUE,
     serialize = FALSE
   )
+}
+
+safe_rehash_file <- function(target, config){
+  if (file.exists(drake_unquote(target))){
+    rehash_file(target = target, config = config)
+  } else {
+    warning("File does not exist: ", target, call. = FALSE)
+    as.character(NA)
+  }
 }
 
 should_rehash_file <- function(filename, new_mtime, old_mtime,
