@@ -242,7 +242,6 @@ test_with_dir("unique_random_string() works", {
 test_with_dir("make(session = callr::r_vanilla)", {
   con <- dbug()
   con$envir <- dbug_envir(globalenv())
-  con$prework = "library(base)"
   ls1 <- ls(envir = con$envir)
   con$session <- callr::r_vanilla
   make_with_config(con)
