@@ -106,7 +106,8 @@ make <- function(
   cache_log_file = NULL,
   seed = NULL,
   caching = "worker",
-  keep_going = FALSE
+  keep_going = FALSE,
+  session = NULL
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -149,7 +150,8 @@ make <- function(
       session_info = session_info,
       cache_log_file = cache_log_file,
       caching = caching,
-      keep_going = keep_going
+      keep_going = keep_going,
+      session = session
     )
   }
   make_with_config(config = config)
@@ -173,6 +175,39 @@ make <- function(
 #' })
 #' }
 make_with_config <- function(config = drake::read_drake_config()){
+  if (is.null(config$session)){
+    make_session(config = config)
+  } else {
+    globals <- global_imports(config)
+    args <- as.list(globalenv(), all.names = TRUE)[globals]
+    args$config <- config
+    config$session(
+      func = function(config, ...){
+        args <- list(...)
+        envir <- globalenv()
+        for (var in names(args)){
+          # Regular tests should not modify the global environment.
+          assign(x = var, value = args[[var]], envir = envir) # nocov
+        }
+        drake::make_session(config = config)
+      },
+      args = args,
+      libpath = .libPaths()
+    )
+  }
+  return(invisible(config))
+}
+
+global_imports <- function(config){
+  setdiff(V(config$graph)$name, config$plan$target) %>%
+    intersect(ls(envir = globalenv()))
+}
+
+#' @title Internal function to be called by [make_with_config()]
+#' @description For internal use only. Not for the API.
+#' @keywords internal
+#' @export
+make_session <- function(config){
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
