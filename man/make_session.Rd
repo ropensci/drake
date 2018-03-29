@@ -6,6 +6,9 @@
 \usage{
 make_session(config)
 }
+\arguments{
+\item{config}{An input internal configuration list}
+}
 \description{
 For internal use only. Not for the API.
 }

@@ -206,6 +206,7 @@ global_imports <- function(config){
 #' @description For internal use only. Not for the API.
 #' @keywords internal
 #' @export
+#' @inheritParams make_with_config
 make_session <- function(config){
   check_drake_config(config = config)
   store_drake_config(config = config)
