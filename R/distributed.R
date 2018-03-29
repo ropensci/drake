@@ -24,13 +24,13 @@ prepare_distributed <- function(config){
     text = as.character(config$fetch_cache),
     con = file.path(config$cache_path, fetch_cache_file)
   )
-  if (identical(globalenv(), config$envir)){
-    save(
-      list = ls(config$envir, all.names = TRUE),
-      envir = config$envir,
-      file = globalenv_file(config$cache_path)
-    )
-  }
+  # Always save globalenv() because config$envir could inherit from it
+  # and so drake might look for stuff there.
+  save(
+    list = ls(globalenv(), all.names = TRUE),
+    envir = globalenv(),
+    file = globalenv_file(config$cache_path)
+  )
   config$cache$set(key = "envir", value = config$envir, namespace = "config")
   invisible()
 }
@@ -74,11 +74,11 @@ recover_drake_config <- function(cache_path){
   )
   cache <- this_cache(cache_path, verbose = FALSE, fetch_cache = fetch_cache)
   config <- read_drake_config(cache = cache)
-  if (identical(globalenv(), config$envir)){
-    dir <- cache_path(cache = cache)
-    file <- globalenv_file(dir)
-    load(file = file, envir = config$envir)
-  }
+  # Always load globalenv() because config$envir could inherit from it
+  # and so drake might look for stuff there.
+  dir <- cache_path(cache = cache)
+  file <- globalenv_file(dir)
+  load(file = file, envir = globalenv())
   config
 }
 
