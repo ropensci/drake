@@ -251,6 +251,6 @@ test_with_dir("make(session = callr::r_vanilla)", {
   expect_equal(ls1, ls2)
   rm_these <- setdiff(ls(envir = con$envir), ls1)
   if(length(rm_these)){
-    rm(rm_these, envir = con$envir)
+    rm(list = rm_these, envir = con$envir)
   }
 })
