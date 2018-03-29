@@ -1,3 +1,7 @@
+# Version 5.2.0
+
+- Add an optional `session` argument to tell `make()` to build targets in a separate, isolated master R session. For example, `make(session = callr::r_vanilla)`.
+
 # Version 5.1.0
 
 - Add a `reduce_plan()` function to do pairwise reductions on collections of targets.

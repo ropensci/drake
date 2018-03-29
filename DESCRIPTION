@@ -82,6 +82,7 @@ Imports:
   withr
 Suggests: 
   abind,
+  callr,
   cranlogs,
   curl,
   DBI,

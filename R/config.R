@@ -310,6 +310,17 @@
 #' @param keep_going logical, whether to still keep running [make()]
 #'   if targets fail.
 #'
+#' @param session An optional `callr` function if you want to
+#'   build all your targets in a separate master session:
+#'   for example, `make(plan = my_plan, session = callr::r_vanilla)`.
+#'   Running `make()` in a clean, isolated
+#'   session can enhance reproducibility.
+#'   But be warned: if you do this, [make()] will take longer to start.
+#'   If `session` is `NULL` (default), then [make()] will just use
+#'   your current R session as the master session. This is slightly faster,
+#'   but it causes [make()] to populate your workspace/environment
+#'   with the last few targets it builds.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -363,7 +374,8 @@ drake_config <- function(
   cache_log_file = NULL,
   seed = NULL,
   caching = c("worker", "master"),
-  keep_going = FALSE
+  keep_going = FALSE,
+  session = NULL
 ){
   force(envir)
   plan <- sanitize_plan(plan)
@@ -414,7 +426,8 @@ drake_config <- function(
     skip_safety_checks = skip_safety_checks, log_progress = log_progress,
     lazy_load = lazy_load, session_info = session_info,
     cache_log_file = cache_log_file, caching = match.arg(caching),
-    evaluator = future::plan("next"), keep_going = keep_going
+    evaluator = future::plan("next"), keep_going = keep_going,
+    session = session
   )
 }
 

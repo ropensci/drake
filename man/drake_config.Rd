@@ -18,7 +18,8 @@ drake_config(plan = read_drake_plan(),
   log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
   imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
-  seed = NULL, caching = c("worker", "master"), keep_going = FALSE)
+  seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
+  session = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -314,6 +315,17 @@ use \code{clean(destroy = TRUE)}.}
 
 \item{keep_going}{logical, whether to still keep running \code{\link[=make]{make()}}
 if targets fail.}
+
+\item{session}{An optional \code{callr} function if you want to
+build all your targets in a separate master session:
+for example, \code{make(plan = my_plan, session = callr::r_vanilla)}.
+Running \code{make()} in a clean, isolated
+session can enhance reproducibility.
+But be warned: if you do this, \code{\link[=make]{make()}} will take longer to start.
+If \code{session} is \code{NULL} (default), then \code{\link[=make]{make()}} will just use
+your current R session as the master session. This is slightly faster,
+but it causes \code{\link[=make]{make()}} to populate your workspace/environment
+with the last few targets it builds.}
 }
 \value{
 The master internal configuration list of a project.
