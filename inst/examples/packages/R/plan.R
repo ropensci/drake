@@ -15,14 +15,26 @@ package_list <- c(
 # from the RStudio CRAN mirror.
 
 data_plan <- drake_plan(
-  recent = cran_downloads(packages = package_list, when = "last-month"),
   older = cran_downloads(
     packages = package_list,
     from = "2016-11-01",
     to = "2016-12-01"
   ),
+  recent = target(
+    command = cran_downloads(
+      packages = package_list,
+      when = "last-month"
+    ),
+    trigger = "always"
+  ),
   strings_in_dots = "literals"
 )
+
+# The latest download data needs to be refreshed every day,
+# so in data_plan above, we use triggers
+# to force `recent` to always build.
+# For more on triggers, see the vignette on debugging and testing:
+# https://ropensci.github.io/drake/articles/debug.htmll#test-with-triggers- # nolint
 
 # We want to summarize each set of
 # download statistics a couple different ways.
@@ -53,16 +65,8 @@ report_plan <- drake_plan(
 # Drake analyzes the plan to figure out the dependency network,
 # so row order does not matter.
 
-whole_plan <- rbind(
+whole_plan <- bind_plans(
   data_plan,
   output_plan,
   report_plan
 )
-
-# The latest download data needs to be refreshed every day, so we use
-# triggers to force `recent` to always build.
-# For more on triggers, see the vignette on debugging and testing:
-# https://ropensci.github.io/drake/articles/debug.htmll#test-with-triggers- # nolint
-
-whole_plan$trigger <- "any" # default trigger
-whole_plan$trigger[whole_plan$target == "recent"] <- "always"

@@ -268,6 +268,17 @@ for each worker in <code><a href='make.html'>make(..., parallelism = "future")</
 <span class='co'># There, `drake` sees that `small`, `large`, and `coef_regression2_small`</span>
 <span class='co'># are loaded in with calls to `loadd()` and `readd()`.</span>
 <span class='fu'><a href='deps.html'>deps</a></span>(<span class='st'>"report.Rmd"</span>)
+<span class='co'># You can create your own custom columns too.</span>
+<span class='co'># See ?triggers for more on triggers.</span>
+<span class='fu'>drake_plan</span>(
+  <span class='kw'>website_data</span> <span class='kw'>=</span> <span class='fu'>target</span>(
+    <span class='kw'>command</span> <span class='kw'>=</span> <span class='fu'>download_data</span>(<span class='st'>"www.your_url.com"</span>),
+    <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='st'>"always"</span>,
+    <span class='kw'>custom_column</span> <span class='kw'>=</span> <span class='fl'>5</span>
+  ),
+  <span class='kw'>analysis</span> <span class='kw'>=</span> <span class='fu'>analyze</span>(<span class='no'>website_data</span>),
+  <span class='kw'>strings_in_dots</span> <span class='kw'>=</span> <span class='st'>"literals"</span>
+)
 <span class='co'># Are you a fan of tidy evaluation?</span>
 <span class='no'>my_variable</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>
 <span class='fu'>drake_plan</span>(

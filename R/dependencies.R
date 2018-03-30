@@ -413,6 +413,19 @@ analyze_knitr_in <- function(expr){
   out
 }
 
+analyze_target_call <- function(expr){
+  out <- as.list(expr)
+  out[nzchar(names(out))] %>%
+    purrr::map(.f = function(x){
+      if (is.language(x)){
+        wide_deparse(x)
+      } else {
+        x
+      }
+    }) %>%
+    tibble::as_tibble()
+}
+
 parse_loadd_arg_list <- function(expr){
   lapply(as.list(expr)[-1], function(arg){
     inputs <- CodeDepends::getInputs(arg)
@@ -468,13 +481,15 @@ file_out_fns <- pair_text(drake_prefix, c("file_out"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
 ignore_fns <- pair_text(drake_prefix, "ignore")
+target_fns <- pair_text(drake_prefix, "target")
 drake_fn_patterns <- c(
   knitr_in_fns,
   file_in_fns,
   file_out_fns,
   loadd_fns,
   readd_fns,
-  ignore_fns
+  ignore_fns,
+  target_fns
 )
 
 is_knitr_in_call <- function(expr){
@@ -499,4 +514,11 @@ is_readd_call <- function(expr){
 
 is_ignore_call <- function(expr){
   wide_deparse(expr[[1]]) %in% ignore_fns
+}
+
+is_target_call <- function(expr){
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% target_fns,
+    error = error_false
+  )
 }

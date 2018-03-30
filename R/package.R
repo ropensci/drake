@@ -41,6 +41,7 @@
 #' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style
 #' @importFrom digest digest
+#' @importFrom dplyr do group_by n
 #' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
 #' @importFrom future future plan resolved value

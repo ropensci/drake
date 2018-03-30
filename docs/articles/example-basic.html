@@ -600,16 +600,16 @@ x_plan
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 "\"report.md\""        target 0.103s         0.058s         0.01s      
-##  2 "\"report.Rmd\""       import 0.01s          0.002s         0s         
-##  3 coef_regression1_large target 0.018s         0.007s         0s         
-##  4 coef_regression1_small target 0.017s         0.004s         0.001s     
-##  5 coef_regression2_large target 0.016s         0.005s         0s         
-##  6 coef_regression2_small target 0.016s         0.006s         0s         
-##  7 data.frame             import 0.047s         0.037s         0s         
-##  8 knit                   import 0.048s         0.034s         0.002s     
-##  9 large                  target 0.106s         0.089s         0.004s     
-## 10 lm                     import 0.024s         0.015s         0s         
+##  1 "\"report.md\""        target 0.105s         0.066s         0.006s     
+##  2 "\"report.Rmd\""       import 0.009s         0.002s         0s         
+##  3 coef_regression1_large target 0.017s         0.007s         0.001s     
+##  4 coef_regression1_small target 0.019s         0.007s         0s         
+##  5 coef_regression2_large target 0.016s         0.006s         0s         
+##  6 coef_regression2_small target 0.016s         0.005s         0s         
+##  7 data.frame             import 0.048s         0.037s         0.002s     
+##  8 knit                   import 0.038s         0.028s         0.001s     
+##  9 large                  target 0.11s          0.093s         0s         
+## 10 lm                     import 0.024s         0.013s         0.001s     
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -738,7 +738,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "21c083883ad822aa"</code></pre></div>
+## [1] "7e3912748436afd4"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
