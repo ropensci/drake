@@ -140,6 +140,8 @@
 <h1 class="hasAnchor">
 <a href="#version-5-2-0" class="anchor"></a>Version 5.2.0</h1>
 <ul>
+<li>In <code><a href="../reference/drake_plan.html">drake_plan()</a></code>, allow users to customize target-level columns using <code>target()</code> inside the commands.</li>
+<li>Add a new <code><a href="../reference/bind_plans.html">bind_plans()</a></code> function to concatenate the rows of drake plans and then sanitize the aggregate plan.</li>
 <li>Add an optional <code>session</code> argument to tell <code><a href="../reference/make.html">make()</a></code> to build targets in a separate, isolated master R session. For example, <code><a href="../reference/make.html">make(session = callr::r_vanilla)</a></code>.</li>
 </ul>
 </div>
