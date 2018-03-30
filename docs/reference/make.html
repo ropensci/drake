@@ -156,7 +156,7 @@ for an overview of the documentation.</p>
   <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_trigger'>default_trigger</a></span>(), <span class='kw'>skip_imports</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>skip_safety_checks</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>config</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lazy_load</span> <span class='kw'>=</span> <span class='st'>"eager"</span>,
   <span class='kw'>session_info</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>caching</span> <span class='kw'>=</span> <span class='st'>"worker"</span>, <span class='kw'>keep_going</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>caching</span> <span class='kw'>=</span> <span class='st'>"worker"</span>, <span class='kw'>keep_going</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -521,6 +521,19 @@ use <code><a href='clean.html'>clean(destroy = TRUE)</a></code>.</p></td>
       <th>keep_going</th>
       <td><p>logical, whether to still keep running <code>make()</code>
 if targets fail.</p></td>
+    </tr>
+    <tr>
+      <th>session</th>
+      <td><p>An optional <code>callr</code> function if you want to
+build all your targets in a separate master session:
+for example, <code>make(plan = my_plan, session = callr::r_vanilla)</code>.
+Running <code>make()</code> in a clean, isolated
+session can enhance reproducibility.
+But be warned: if you do this, <code>make()</code> will take longer to start.
+If <code>session</code> is <code>NULL</code> (default), then <code>make()</code> will just use
+your current R session as the master session. This is slightly faster,
+but it causes <code>make()</code> to populate your workspace/environment
+with the last few targets it builds.</p></td>
     </tr>
     </table>
     

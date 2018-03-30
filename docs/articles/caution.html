@@ -112,7 +112,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-26</h4>
+            <h4 class="date">2018-03-30</h4>
           </div>
 
     
@@ -359,6 +359,32 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multis
 <div id="dependencies" class="section level1">
 <h1 class="hasAnchor">
 <a href="#dependencies" class="anchor"></a>Dependencies</h1>
+<div id="dependency-objects-containing-functions-may-change-unexpectedly" class="section level2">
+<h2 class="hasAnchor">
+<a href="#dependency-objects-containing-functions-may-change-unexpectedly" class="anchor"></a>Dependency objects containing functions may change unexpectedly</h2>
+<p>For example, an <code>R6</code> class changes whenever a new <code>R6</code> object of that class is created.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(digest)
+<span class="kw">library</span>(R6)
+example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/R6/topics/R6Class">R6Class</a></span>(
+  <span class="st">"example_class"</span>,
+  <span class="dt">private =</span> <span class="kw">list</span>(<span class="dt">data =</span> <span class="kw">list</span>()),
+  <span class="dt">public =</span> <span class="kw">list</span>(
+    <span class="dt">initialize =</span> function(<span class="dt">data =</span> <span class="kw">list</span>()) {
+      private$data =<span class="st"> </span>data
+    }
+  )
+)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
+## [1] "7d05feb9a2979c733b0e9254b490378c"
+example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
+## [1] "dddebdf61c915199e054ba30851e371f"</code></pre></div>
+<p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
+<span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>
+<span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># Builds `example_target` again because `example_class` changed.</span></code></pre></div>
+<p>The same behavior affects objects containing functions more broadly, not just <code>R6</code> classes. For more on this edge case, see <a href="https://github.com/ropensci/drake/issues/345">issue 345</a>.</p>
+</div>
 <div id="the-magrittr-dot---is-always-ignored-" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-magrittr-dot---is-always-ignored-" class="anchor"></a>The <code>magrittr</code> dot (<code>.</code>) is always ignored.</h2>
@@ -383,7 +409,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multis
 <p><code>Drake</code> can be fooled into skipping objects that should be treated as dependencies. For example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span>function(){
   b &lt;-<span class="st"> </span><span class="kw">get</span>(<span class="st">"x"</span>, <span class="dt">envir =</span> <span class="kw">globalenv</span>()) <span class="co"># x is incorrectly ignored</span>
-  digest::<span class="kw">digest</span>(file_dependency)
+  digest::<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(file_dependency)
 }
 
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(f)
@@ -587,7 +613,8 @@ keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 </li>
       <li>
 <a href="#dependencies">Dependencies</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#the-magrittr-dot---is-always-ignored-">The <code>magrittr</code> dot (<code>.</code>) is always ignored.</a></li>
+<li><a href="#dependency-objects-containing-functions-may-change-unexpectedly">Dependency objects containing functions may change unexpectedly</a></li>
+      <li><a href="#the-magrittr-dot---is-always-ignored-">The <code>magrittr</code> dot (<code>.</code>) is always ignored.</a></li>
       <li><a href="#triggers-and-skipped-imports">Triggers and skipped imports</a></li>
       <li><a href="#dependencies-are-not-tracked-in-some-edge-cases-">Dependencies are not tracked in some edge cases.</a></li>
       <li><a href="#dependencies-of-knitr-reports">Dependencies of <code>knitr</code> reports</a></li>
