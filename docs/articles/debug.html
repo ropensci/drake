@@ -323,7 +323,11 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "d47109544c89ca7a"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
+<<<<<<< HEAD
 ## [1] "e8fc54831e4a8432"</code></pre></div>
+=======
+## [1] "2266c34b8d266c05"</code></pre></div>
+>>>>>>> master
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -336,7 +340,11 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
+<<<<<<< HEAD
 ##  $ start       :Class 'proc_time'  Named num [1:5] 8.624 0.225 10.054 0.063 0.046
+=======
+##  $ start       :Class 'proc_time'  Named num [1:5] 8.052 0.272 10.5 0.068 0.043
+>>>>>>> master
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
@@ -347,9 +355,15 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
+<<<<<<< HEAD
 ##   ..$ elapsed: num 0.075
 ##   ..$ user   : num 0.063
 ##   ..$ system : num 0.001
+=======
+##   ..$ elapsed: num 0.071
+##   ..$ user   : num 0.061
+##   ..$ system : num 0
+>>>>>>> master
 
 <span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))
 ## List of 12
@@ -361,11 +375,16 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
 ##  $ depends     : chr "5f72f8f2a06b7a515e17a3ea3f57b1dd3522d7143e0cbd0650a3c0985683f81d"
 ##  $ file        : chr "ed35f108e2ccd75a904273f1e8559d5a0acb9c2700531276a7acdcfba09decc6"
+<<<<<<< HEAD
 ##  $ start       :Class 'proc_time'  Named num [1:5] 8.876 0.24 10.597 0.063 0.046
+=======
+##  $ start       :Class 'proc_time'  Named num [1:5] 8.3 0.285 11.045 0.068 0.043
+>>>>>>> master
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
+<<<<<<< HEAD
 ##   ..$ elapsed: num 0.091
 ##   ..$ user   : num 0.057
 ##   ..$ system : num 0.008
@@ -376,6 +395,18 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##   ..$ elapsed: num 0.107
 ##   ..$ user   : num 0.065
 ##   ..$ system : num 0.008</code></pre></div>
+=======
+##   ..$ elapsed: num 0.085
+##   ..$ user   : num 0.055
+##   ..$ system : num 0.005
+##  $ mtime       : POSIXct[1:1], format: "2018-03-30 09:29:02"
+##  $ time_build  :'data.frame':    1 obs. of  5 variables:
+##   ..$ item   : chr "\"report.md\""
+##   ..$ type   : chr "target"
+##   ..$ elapsed: num 0.108
+##   ..$ user   : num 0.06
+##   ..$ system : num 0.007</code></pre></div>
+>>>>>>> master
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
 </div>
@@ -450,7 +481,11 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
+<<<<<<< HEAD
 ## &lt;bytecode: 0x64caaa8&gt;
+=======
+## &lt;bytecode: 0x9236c28&gt;
+>>>>>>> master
 
 reg2 &lt;-<span class="st"> </span>function(d) {
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -510,9 +545,13 @@ withr::<span class="kw">with_message_sink</span>(
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="fl">1e-3</span>, <span class="dt">retries =</span> <span class="dv">2</span>)
 )
 ## target x
+<<<<<<< HEAD
 ## target y
 ## retry y: 1 of 2
 ## [2018-03-30 16:24:45] TimeoutException: reached CPU time limit [cpu=0.001s,
+=======
+## [2018-03-30 09:29:09] TimeoutException: reached CPU time limit [cpu=0.001s,
+>>>>>>> master
 ## elapsed=0.001s]
 ## Warning: No message sink to remove.</code></pre></div>
 <p>To tailor these settings to each individual target, create new <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, or <code>retries</code> columns in your workflow plan. These columns override the analogous arguments to <code><a href="../reference/make.html">make()</a></code>.</p>
@@ -661,7 +700,11 @@ f
 ##   }
 ##   x
 ## }
+<<<<<<< HEAD
 ## &lt;bytecode: 0x7ae3ad0&gt;
+=======
+## &lt;bytecode: 0x6d7bc00&gt;
+>>>>>>> master
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
 f &lt;-<span class="st"> </span>function(x){

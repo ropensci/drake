@@ -133,6 +133,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
+<<<<<<< HEAD
 ## 1 2018-03-23 14120   dplyr
 ## 2 2018-03-24  7706   dplyr
 ## 3 2018-03-25  7485   dplyr
@@ -140,6 +141,15 @@
 ## 5 2018-03-27 15421   dplyr
 ## 6 2018-03-28 14833   dplyr
 ## 7 2018-03-29 13735   dplyr</code></pre></div>
+=======
+## 1 2018-03-22 15865   dplyr
+## 2 2018-03-23 14120   dplyr
+## 3 2018-03-24  7706   dplyr
+## 4 2018-03-25  7485   dplyr
+## 5 2018-03-26 15435   dplyr
+## 6 2018-03-27 15421   dplyr
+## 7 2018-03-28 14833   dplyr</code></pre></div>
+>>>>>>> master
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -261,9 +271,15 @@ whole_plan
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_recent)
 ##   package mean_downloads
+<<<<<<< HEAD
 ## 1 ggplot2       16491.87
 ## 2   knitr       11101.50
 ## 3    Rcpp       22633.00
+=======
+## 1 ggplot2       16585.63
+## 2   knitr       11188.73
+## 3    Rcpp       22614.20
+>>>>>>> master
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ##   package mean_downloads
