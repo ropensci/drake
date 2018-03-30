@@ -413,11 +413,11 @@ analyze_knitr_in <- function(expr){
   out
 }
 
-analyze_target <- function(expr){
+analyze_target_call <- function(expr){
   out <- as.list(expr)
   out[nzchar(names(out))] %>%
     purrr::map(.f = function(x){
-      if(is.language(x)){
+      if (is.language(x)){
         wide_deparse(x)
       } else {
         x
@@ -517,5 +517,8 @@ is_ignore_call <- function(expr){
 }
 
 is_target_call <- function(expr){
-  wide_deparse(expr[[1]]) %in% target_fns
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% target_fns,
+    error = error_false
+  )
 }

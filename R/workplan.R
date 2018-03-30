@@ -103,6 +103,17 @@
 #' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 #' # are loaded in with calls to `loadd()` and `readd()`.
 #' deps("report.Rmd")
+#' # You can create your own custom columns too.
+#' # See ?triggers for more on triggers.
+#' drake_plan(
+#'   website_data = target(
+#'     command = download_data("www.your_url.com"),
+#'     trigger = "always",
+#'     custom_column = 5
+#'   ),
+#'   analysis = analyze(website_data),
+#'   strings_in_dots = "literals"
+#' )
 #' # Are you a fan of tidy evaluation?
 #' my_variable <- 1
 #' drake_plan(
@@ -195,7 +206,52 @@ drake_plan <- function(
       plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
     }
   }
+  plan <- parse_custom_columns(plan)
   sanitize_plan(plan)
+}
+
+#' @title Row-bind together drake plans
+#' @description combine drake plans together in a way that
+#'   correctly fills in missing entries.
+#' @export
+#' @seealso drake_plan, make
+#' @param ... workflow plan data frames (see [drake_plan()])
+#' @examples
+#' # You might need to refresh your data regularly (see ?triggers).
+#' download_plan <- drake_plan(
+#'   data = target(
+#'     command = download_data(),
+#'     trigger = "always"
+#'   ),
+#'   strings_in_dots = "literals"
+#' )
+#' # But if the data don't change, the analyses don't need to change.
+#' analysis_plan <- drake_plan(
+#'   usage = get_usage_metrics(data),
+#'   topline = scrape_topline_table(data)
+#' )
+#' your_plan <- bind_plans(download_plan, analysis_plan)
+#' your_plan
+#' # make(your_plan) # nolint
+bind_plans <- function(...){
+  out <- dplyr::bind_rows(...)
+  sanitize_plan(out)
+}
+
+parse_custom_columns <- function(plan){
+  . <- NULL # For warnings about undefined global symbols.
+  out <- dplyr::group_by(plan, seq_len(n())) %>%
+    dplyr::do(parse_custom_colums_row(.))
+}
+
+parse_custom_colums_row <- function(row){
+  expr <- parse(text = row$command, keep.source = FALSE)
+  if (!length(expr) || !is_target_call(expr[[1]])){
+    return(row)
+  }
+  out <- analyze_target_call(expr[[1]])
+  out$target <- row$target
+  out
 }
 
 complete_target_names <- function(commands_list){

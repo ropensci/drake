@@ -76,6 +76,7 @@ reference:
 - title: Workflow plan data frames
   contents:
   - '`drake_plan`'
+  - '`bind_plans`'
   - '`file_in`'
   - '`file_out`'
   - '`file_store`'

@@ -380,3 +380,49 @@ test_with_dir("ignore() in imported functions", {
   config <- make(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
 })
+
+test_with_dir("custom column interface", {
+  plan <- drake_plan(
+    x = target(
+      command = 1 + 2,
+      trigger = "always",
+      user_column_1 = 1,
+      user_column_2 = "some text"
+    ),
+    y = target(
+      command = Sys.sleep("not a number"),
+      col3 = "some text"
+    ),
+    z = rnorm(10),
+    strings_in_dots = "literals"
+  )
+  plan0 <- tibble::tibble(
+    target = c("x", "y", "z"),
+    command = c("1 + 2", "Sys.sleep(\"not a number\")", "rnorm(10)"),
+    trigger = c("always", "any", "any"),
+    user_column_1 = c(1, NA, NA),
+    user_column_2 = c("some text", NA, NA),
+    col3 = c(NA, "some text", NA)
+  )
+  cn <- colnames(plan)
+  expect_equal(cn, colnames(plan0))
+  expect_equal(plan[, cn], plan0[, cn])
+})
+
+test_with_dir("bind_plans()", {
+  plan1 <- drake_plan(x = 1, y = 2)
+  plan2 <- drake_plan(
+    z = target(
+      command = download_data(),
+      trigger = "always"
+    ),
+    strings_in_dots = "literals"
+  )
+  plan3 <- bind_plans(plan1, plan2)
+  plan4 <- tibble::tibble(
+    target = c("x", "y", "z"),
+    command = c("1", "2", "download_data()"),
+    trigger = c("any", "any", "always")
+  )
+  expect_equal(plan3, plan4)
+})

@@ -124,6 +124,17 @@ head(my_plan)
 # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 # are loaded in with calls to `loadd()` and `readd()`.
 deps("report.Rmd")
+# You can create your own custom columns too.
+# See ?triggers for more on triggers.
+drake_plan(
+  website_data = target(
+    command = download_data("www.your_url.com"),
+    trigger = "always",
+    custom_column = 5
+  ),
+  analysis = analyze(website_data),
+  strings_in_dots = "literals"
+)
 # Are you a fan of tidy evaluation?
 my_variable <- 1
 drake_plan(

@@ -10,12 +10,18 @@ sanitize_plan <- function(plan){
       }
     }
   }
-  if (!is.null(plan[["trigger"]])){
+  if ("trigger" %in% colnames(plan)){
+    plan$trigger[is.na(plan$trigger) | !nzchar(plan$trigger)] <- "any"
     assert_legal_triggers(plan[["trigger"]])
   }
   plan <- file_outs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
-  plan[nzchar(plan$target), ]
+  plan <- plan[nzchar(plan$target), ]
+  plan[["seq_len(n())"]] <- NULL
+  plan$command[is.na(plan$command)] <- ""
+  first <- c("target", "command")
+  cols <- c(first, setdiff(colnames(plan), first))
+  plan[, cols]
 }
 
 drake_plan_non_factors <- function(){
