@@ -133,7 +133,7 @@ console_nondefault_triggers <- function(){
   color(
     paste(
       "Used non-default triggers.",
-      "Some targets may be not be up to date."
+      "Some targets may not be up to date."
     ),
     colors["trigger"]
   ) %>%
