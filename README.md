@@ -268,19 +268,29 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Time logging](https://ropensci.github.io/drake/articles/timing.html)
 - [Storage](https://ropensci.github.io/drake/articles/storage.html)
 
-## Examples
-
-`Drake` also has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. The beginner-oriented examples are listed below. They help you learn `drake`'s main features, and they show one way to organize the files of `drake` projects.
-
-- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
-- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
-- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
-
 ## Presentations
 
 - https://krlmlr.github.io/drake-pitch
 - https://krlmlr.github.io/slides/drake-sib-zurich
 - https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html
+
+## Built-in examples
+
+`Drake` has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. The beginner-oriented examples are listed below. They help you learn `drake`'s main features, and they show one way to organize the files of `drake` projects.
+
+- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
+- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
+- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+
+## Real projects
+
+Here are some real-world projects that use `drake`. If you would like to add some of your own, please submit a [pull request](https://github.com/ropensci/drake/pulls) or an [issue](https://github.com/ropensci/drake/issues) to contribute.
+
+- [`dplyr`](https://github.com/tidyverse/dplyr) (for [checking reverse dependencies]https://github.com/tidyverse/dplyr/tree/master/revdep))
+- [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
+- [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
+- [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
+- [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
 
 ## Context and history
 
