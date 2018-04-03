@@ -242,6 +242,8 @@ parse_custom_columns <- function(plan){
   . <- NULL # For warnings about undefined global symbols.
   out <- dplyr::group_by(plan, seq_len(n())) %>%
     dplyr::do(parse_custom_colums_row(.))
+  out[["seq_len(n())"]] <- NULL
+  out
 }
 
 parse_custom_colums_row <- function(row){

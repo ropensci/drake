@@ -17,7 +17,6 @@ sanitize_plan <- function(plan){
   plan <- file_outs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
   plan <- plan[nzchar(plan$target), ]
-  plan[["seq_len(n())"]] <- NULL
   plan$command[is.na(plan$command)] <- ""
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))

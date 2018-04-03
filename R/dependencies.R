@@ -3,16 +3,21 @@
 #' @description Intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
-#' @details If the argument is a double-quoted string that points to
-#'   a dynamic knitr report, the dependencies of the expected compiled
+#' @details If the argument is a `knitr` report
+#'   (for example, `file_store("report.Rmd)` or `"\"report.Rmd\""`)
+#'   the the dependencies of the expected compiled
 #'   output will be given. For example, `deps(file_store("report.Rmd"))`
 #'   will return target names found in calls to [loadd()]
-#'   and [readd()] in active code chunks. The [file_store()] function
-#'   (alerts `drake` utility functions to file names by double-quoting them.) 
+#'   and [readd()] in active code chunks.
 #'   These [loadd()]/[readd()] targets are needed
 #'   in order to run `knit(knitr_in("report.Rmd"))`
 #'   to produce the output file `"report.md"`, so technically,
 #'   they are dependencies of `"report.md"`, not `"report.Rmd"`.
+#'
+#'   The [file_store()] function
+#'   alerts `drake` utility functions to file names by
+#'   enclosing them in literal double quotes.
+#'   (For example, `file_store("report.Rmd)` is just `"\"report.Rmd\""`.)
 #'
 #'   `Drake` takes special precautions so that a target/import
 #'   does not depend on itself. For example, `deps(f)`` might return

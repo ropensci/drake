@@ -22,16 +22,21 @@ The dependency structure of the components of your analysis
 decides which targets are built and when.
 }
 \details{
-If the argument is a double-quoted string that points to
-a dynamic knitr report, the dependencies of the expected compiled
+If the argument is a \code{knitr} report
+(for example, \code{file_store("report.Rmd)} or \code{"\"report.Rmd\""})
+the the dependencies of the expected compiled
 output will be given. For example, \code{deps(file_store("report.Rmd"))}
 will return target names found in calls to \code{\link[=loadd]{loadd()}}
-and \code{\link[=readd]{readd()}} in active code chunks. The \code{\link[=file_store]{file_store()}} function
-(alerts \code{drake} utility functions to file names by double-quoting them.)
+and \code{\link[=readd]{readd()}} in active code chunks.
 These \code{\link[=loadd]{loadd()}}/\code{\link[=readd]{readd()}} targets are needed
 in order to run \code{knit(knitr_in("report.Rmd"))}
 to produce the output file \code{"report.md"}, so technically,
 they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
+
+The \code{\link[=file_store]{file_store()}} function
+alerts \code{drake} utility functions to file names by
+enclosing them in literal double quotes.
+(For example, \code{file_store("report.Rmd)} is just \code{"\"report.Rmd\""}.)
 
 \code{Drake} takes special precautions so that a target/import
 does not depend on itself. For example, \code{deps(f)`` might return}"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
