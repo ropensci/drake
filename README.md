@@ -286,7 +286,6 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 
 Here are some real-world projects that use `drake`. If you would like to add some of your own, please submit a [pull request](https://github.com/ropensci/drake/pulls) or an [issue](https://github.com/ropensci/drake/issues) to contribute.
 
-- [`dplyr`](https://github.com/tidyverse/dplyr) (for [checking reverse dependencies](https://github.com/tidyverse/dplyr/tree/master/revdep))
 - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
 - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
 - [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
