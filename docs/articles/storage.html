@@ -112,7 +112,7 @@
             <h3 class="subtitle">Caching, hashing, and customization</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-03-30</h4>
+            <h4 class="date">2018-04-06</h4>
           </div>
 
     
@@ -203,19 +203,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "302895153677b31a26ff63622a988114"</code></pre></div>
+## [1] "ce28aff8bc5805c71450748b1da8170a"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "c900a8334341c32294fd568f9a9ed9be0a4aeedaab0969f628b8f6e10cca435efd496c3c934e23410a74a03d708b555d66680b2518a6c7d454ad095e67626359"
+## [1] "f8cdbe5d1e31dc571a67318464f2d6766b1e2d9c90211a681ad61ca7a498f57a6bc02a395a551788bfd53059feed9571dea4070182eb7def09c35fb1bf334e48"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "302895153677b31a26ff63622a988114"
+## [1] "ce28aff8bc5805c71450748b1da8170a"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "2a378ed936e0d79a"
+## [1] "897b30774d7c014b"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "f5ce4d8a"</code></pre></div>
+## [1] "7e46876a"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">

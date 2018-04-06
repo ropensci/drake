@@ -18,7 +18,7 @@ The `drake` R package is a workflow manager and computational engine for data sc
 Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.org/wiki/Sisyphus):
 
 1. Launch the code.
-2. Wait for it to finish.
+2. Wait while it runs.
 3. Discover an issue.
 4. Restart from scratch.
 

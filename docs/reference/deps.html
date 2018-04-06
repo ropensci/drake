@@ -162,16 +162,20 @@ The other names listed are functions or generic R objects.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the argument is a double-quoted string that points to
-a dynamic knitr report, the dependencies of the expected compiled
-output will be given. For example, <code>deps(file_store("report.Rmd"))</code>
-will return target names found in calls to <code><a href='loadd.html'>loadd()</a></code>
-and <code><a href='readd.html'>readd()</a></code> in active code chunks. The <code><a href='file_store.html'>file_store()</a></code> function
-(alerts <code>drake</code> utility functions to file names by double-quoting them.)
-These <code><a href='loadd.html'>loadd()</a></code>/<code><a href='readd.html'>readd()</a></code> targets are needed
-in order to run <code>knit(knitr_in("report.Rmd"))</code>
-to produce the output file <code>"report.md"</code>, so technically,
-they are dependencies of <code>"report.md"</code>, not <code>"report.Rmd"</code>.
+    <p>If the argument is a <code>knitr</code> report
+(for example, <code>file_store("report.Rmd)} or \code{"\"report.Rmd\""})
+the the dependencies of the expected compiled
+output will be given. For example, \code{deps(file_store("report.Rmd"))}
+will return target names found in calls to \code{<a href='loadd.html'>loadd()</a>}
+and \code{<a href='readd.html'>readd()</a>} in active code chunks.
+These \code{<a href='loadd.html'>loadd()</a>}/\code{<a href='readd.html'>readd()</a>} targets are needed
+in order to run \code{knit(knitr_in("report.Rmd"))}
+to produce the output file \code{"report.md"}, so technically,
+they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
+    The \code{<a href='file_store.html'>file_store()</a>} function
+alerts \code{drake} utility functions to file names by
+enclosing them in literal double quotes.
+(For example, \code{file_store("report.Rmd)</code> is just <code>"\"report.Rmd\""</code>.)
     <code>Drake</code> takes special precautions so that a target/import
 does not depend on itself. For example, <code>deps(f)`` might return</code>"f"<code>if</code>f()` is a recursive function, but <code><a href='make.html'>make()</a></code> just ignores
 this conflict and runs as expected. In other words, <code><a href='make.html'>make()</a></code>
