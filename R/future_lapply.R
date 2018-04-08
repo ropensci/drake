@@ -11,7 +11,7 @@ worker_future_lapply <- function(targets, meta_list, config){
     return()             # nocov
   }                      # nocov
   future.apply::future_lapply(
-    x = targets,
+    X = targets,
     FUN = build_distributed,
     cache_path = config$cache$driver$path,
     meta_list = meta_list,
