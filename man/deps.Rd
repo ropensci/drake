@@ -23,7 +23,7 @@ decides which targets are built and when.
 }
 \details{
 If the argument is a \code{knitr} report
-(for example, \code{file_store("report.Rmd)} or \code{"\"report.Rmd\""})
+(for example, \code{file_store("report.Rmd")} or \code{"\"report.Rmd\""})
 the the dependencies of the expected compiled
 output will be given. For example, \code{deps(file_store("report.Rmd"))}
 will return target names found in calls to \code{\link[=loadd]{loadd()}}
@@ -36,7 +36,7 @@ they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
 The \code{\link[=file_store]{file_store()}} function
 alerts \code{drake} utility functions to file names by
 enclosing them in literal double quotes.
-(For example, \code{file_store("report.Rmd)} is just \code{"\"report.Rmd\""}.)
+(For example, \code{file_store("report.Rmd")} is just \code{"\"report.Rmd\""}.)
 
 \code{Drake} takes special precautions so that a target/import
 does not depend on itself. For example, \code{deps(f)`` might return}"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
@@ -48,7 +48,7 @@ network.
 # Your workflow likely depends on functions in your workspace.
 f <- function(x, y){
   out <- x + y + g(x)
-  saveRDS(out, 'out.rds')
+  saveRDS(out, "out.rds")
 }
 # Find the dependencies of f. These could be R objects/functions
 # in your workspace or packages. Any file names or target names

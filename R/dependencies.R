@@ -4,7 +4,7 @@
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
 #' @details If the argument is a `knitr` report
-#'   (for example, `file_store("report.Rmd)` or `"\"report.Rmd\""`)
+#'   (for example, `file_store("report.Rmd")` or `"\"report.Rmd\""`)
 #'   the the dependencies of the expected compiled
 #'   output will be given. For example, `deps(file_store("report.Rmd"))`
 #'   will return target names found in calls to [loadd()]
@@ -17,7 +17,7 @@
 #'   The [file_store()] function
 #'   alerts `drake` utility functions to file names by
 #'   enclosing them in literal double quotes.
-#'   (For example, `file_store("report.Rmd)` is just `"\"report.Rmd\""`.)
+#'   (For example, `file_store("report.Rmd")` is just `"\"report.Rmd\""`.)
 #'
 #'   `Drake` takes special precautions so that a target/import
 #'   does not depend on itself. For example, `deps(f)`` might return
@@ -35,7 +35,7 @@
 #' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y){
 #'   out <- x + y + g(x)
-#'   saveRDS(out, 'out.rds')
+#'   saveRDS(out, "out.rds")
 #' }
 #' # Find the dependencies of f. These could be R objects/functions
 #' # in your workspace or packages. Any file names or target names
