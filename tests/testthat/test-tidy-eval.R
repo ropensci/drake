@@ -16,17 +16,21 @@ test_with_dir("drake_plan does tidy eval in `...` argument", {
 
 # From Alex Axthelm: https://github.com/ropensci/drake/issues/200
 test_with_dir("drake_plan tidy eval can be disabled", {
+  my_variable <- 5
   plan1 <- drake_plan(
     a = !!my_variable,
     b = !!my_variable + 1,
     list = c(d = "!!my_variable"),
     tidy_evaluation = FALSE
   )
-  plan2 <- tibble(
-    target = c("a", "b", "d"),
-    command = c("!(!my_variable)", "!(!my_variable + 1)", "!!my_variable")
+  plan2 <- drake_plan(
+    a = !!my_variable,
+    b = !!my_variable + 1,
+    list = c(d = "!!my_variable"),
+    tidy_evaluation = TRUE
   )
-  expect_equal(plan1, plan2)
+  expect_equal(plan1$target, plan2$target)
+  expect_false(identical(plan1$command, plan2$command))
 })
 
 # From Kendon Bell: https://github.com/ropensci/drake/issues/200
