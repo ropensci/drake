@@ -162,7 +162,12 @@ style="border: none; box-shadow: none">
 
 ## Workflows as R packages
 
-The R package structure is a great way to organize the files of your project. Writing your own package to contain your data science workflow is a good idea, but you will need to use `expose_imports()` to run it properly with `drake`. Thanks to [Jasper Clarkberg](https://github.com/dapperjapper) for the workaround.
+The R package structure is a great way to organize the files of your project. Writing your own package to contain your data science workflow is a good idea, but you will need to
+
+1. Use `expose_imports()` to properly account for all your nested function dependencies, and
+2. If you load the package with `devtools::load_all()`, set the `prework` argument of `make()`: e.g. `make(prework = "devtools::load_all()")`.
+
+Thanks to [Jasper Clarkberg](https://github.com/dapperjapper) for the workaround behind `expose_imports()`.
 
 ### Advantages of putting workflows in R packages
 

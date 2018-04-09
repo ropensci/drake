@@ -1,5 +1,6 @@
-# Version 5.2.0
+# Version 5.1.2
 
+- In R 3.5.0, the `!!` operator from tidyeval and `rlang` is parsed differently than in R <= 3.4.4. This change broke one of the tests in `tests/testthat/tidy-eval.R` The main purpose of `drake`'s 5.1.2 release is to fix the broken test.
 - In `drake_plan()`, allow users to customize target-level columns using `target()` inside the commands.
 - Add a new `bind_plans()` function to concatenate the rows of drake plans and then sanitize the aggregate plan.
 - Add an optional `session` argument to tell `make()` to build targets in a separate, isolated master R session. For example, `make(session = callr::r_vanilla)`.

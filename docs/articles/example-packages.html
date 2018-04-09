@@ -112,7 +112,7 @@
             <h3 class="subtitle">Refresh your project without restarting from scratch.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-06</h4>
+            <h4 class="date">2018-04-09</h4>
           </div>
 
     
@@ -133,13 +133,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-03-29 13735   dplyr
-## 2 2018-03-30 10169   dplyr
-## 3 2018-03-31  6494   dplyr
-## 4 2018-04-01  6124   dplyr
-## 5 2018-04-02 12577   dplyr
-## 6 2018-04-03 15520   dplyr
-## 7 2018-04-04 16830   dplyr</code></pre></div>
+## 1 2018-04-02 12577   dplyr
+## 2 2018-04-03 15520   dplyr
+## 3 2018-04-04 16830   dplyr
+## 4 2018-04-05 15695   dplyr
+## 6 2018-04-06     0   dplyr
+## 7 2018-04-07     0   dplyr
+## 5 2018-04-08  8140   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -178,8 +178,8 @@ data_plan
 ## # A tibble: 2 x 3
 ##   target command                                                   trigger
 ##   &lt;chr&gt;  &lt;chr&gt;                                                     &lt;chr&gt;  
-## 1 older  "cran_downloads(packages = package_list, from = \"2016-1~ any    
-## 2 recent "cran_downloads(packages = package_list, when = \"last-m~ always</code></pre></div>
+## 1 older  "cran_downloads(packages = package_list, from = \"2016-1… any    
+## 2 recent "cran_downloads(packages = package_list, when = \"last-m… always</code></pre></div>
 <p>Our <code>data_plan</code> data frame has a <code>"trigger"</code> column because the latest download data needs to be refreshed every day. We use triggers to force <code>recent</code> to always build. For more on triggers, see the <a href="https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd">vignette on debugging and testing</a>. Instead of triggers, we could have just made <code>recent</code> a global variable like <code>package_list</code> instead of a formal target in <code>data_plan</code>.</p>
 <p>We want to summarize each set of download statistics a couple different ways.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_types &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
@@ -194,14 +194,14 @@ output_types
 ## 1 averages make_my_table(dataset__)
 ## 2 plot     make_my_plot(dataset__)</code></pre></div>
 <p>We need to define functions to summarize and plot the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span>function(downloads){
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/plyr/topics/ddply">ddply</a></span>(downloads, <span class="st">"package"</span>, function(package_downloads){
-    <span class="kw">data.frame</span>(<span class="dt">mean_downloads =</span> <span class="kw">mean</span>(package_downloads$count))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/plyr/topics/ddply">ddply</a></span>(downloads, <span class="st">"package"</span>, <span class="cf">function</span>(package_downloads){
+    <span class="kw">data.frame</span>(<span class="dt">mean_downloads =</span> <span class="kw">mean</span>(package_downloads<span class="op">$</span>count))
   })
 }
 
-make_my_plot &lt;-<span class="st"> </span>function(downloads){
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) +
+make_my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) <span class="op">+</span>
 <span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> date, <span class="dt">y =</span> count, <span class="dt">group =</span> package, <span class="dt">color =</span> package))
 }</code></pre></div>
 <p>Below, the targets <code>recent</code> and <code>older</code> each take turns substituting the <code>dataset__</code> wildcard. Thus, <code>output_plan</code> has four rows.</p>
@@ -227,7 +227,7 @@ report_plan
 ## # A tibble: 1 x 2
 ##   target          command                                                 
 ##   &lt;chr&gt;           &lt;chr&gt;                                                   
-## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")~</code></pre></div>
+## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</code></pre></div>
 <p>Because of the mention of <code><a href="../reference/knitr_in.html">knitr_in()</a></code> above, <code><a href="../reference/make.html">make()</a></code> will look dependencies inside <code>report.Rmd</code> (targets mentioned with <code><a href="../reference/loadd.html">loadd()</a></code> or <code><a href="../reference/readd.html">readd()</a></code> in active code chunks). That way, whenever a dependency changes, <code>drake</code> will rebuild <code>report.md</code> when you call <code><a href="../reference/make.html">make()</a></code>. For that to happen, we need <code>report.Rmd</code> to exist before the call to <code><a href="../reference/make.html">make()</a></code>. For this example, you can find <a href="https://github.com/ropensci/drake/blob/master/inst/examples/packages/report.Rmd">report.Rmd here</a>.</p>
 <p>Now, we complete the workflow plan data frame by concatenating the results together. <code>Drake</code> analyzes the plan to figure out the dependency network, so row order does not matter.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">whole_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/bind_plans.html">bind_plans</a></span>(
@@ -240,13 +240,13 @@ whole_plan
 ## # A tibble: 7 x 3
 ##   target          command                                          trigger
 ##   &lt;chr&gt;           &lt;chr&gt;                                            &lt;chr&gt;  
-## 1 older           "cran_downloads(packages = package_list, from =~ any    
-## 2 recent          "cran_downloads(packages = package_list, when =~ always 
+## 1 older           "cran_downloads(packages = package_list, from =… any    
+## 2 recent          "cran_downloads(packages = package_list, when =… always 
 ## 3 averages_older  make_my_table(older)                             any    
 ## 4 averages_recent make_my_table(recent)                            any    
 ## 5 plot_older      make_my_plot(older)                              any    
 ## 6 plot_recent     make_my_plot(recent)                             any    
-## 7 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~ any</code></pre></div>
+## 7 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"repo… any</code></pre></div>
 <p>Now, we run the project to download the data and analyze it. The results will be summarized in the knitted report, <code>report.md</code>, but you can also read the results directly from the cache.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(whole_plan)
 ## Loading required package: methods
@@ -261,9 +261,9 @@ whole_plan
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_recent)
 ##   package mean_downloads
-## 1 ggplot2       16163.00
-## 2   knitr       10772.43
-## 3    Rcpp       22832.97
+## 1 ggplot2       14720.00
+## 2   knitr        9613.00
+## 3    Rcpp       21085.63
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ##   package mean_downloads

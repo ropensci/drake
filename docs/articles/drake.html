@@ -112,7 +112,7 @@
             <h3 class="subtitle">where to begin</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-06</h4>
+            <h4 class="date">2018-04-09</h4>
           </div>
 
     
@@ -174,21 +174,21 @@
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
 <p>Wildcard templating generates these data frames at scale.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
 dataset_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
@@ -204,8 +204,8 @@ dataset_plan
 
 analysis_methods &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
   <span class="dt">regression =</span> <span class="kw">regNUMBER</span>(dataset__) <span class="co"># nolint</span>
-) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(<span class="dt">wildcard =</span> <span class="st">"NUMBER"</span>, <span class="dt">values =</span> <span class="dv">1</span>:<span class="dv">2</span>)
+) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(<span class="dt">wildcard =</span> <span class="st">"NUMBER"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
 analysis_methods
 ## # A tibble: 2 x 2
 ##   target       command        
@@ -241,8 +241,8 @@ whole_plan
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_variable &lt;-<span class="st"> </span><span class="dv">5</span>
 
 <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> !!my_variable,
-  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
+  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
+  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
   <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>)
 )
 ## # A tibble: 3 x 2
@@ -253,8 +253,8 @@ whole_plan
 ## 3 d      !!my_variable
 
 <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> !!my_variable,
-  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
+  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
+  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
   <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>),
   <span class="dt">tidy_evaluation =</span> <span class="ot">FALSE</span>
 )
@@ -310,9 +310,9 @@ whole_plan
 ##   coef_regression2_small
 ## All targets are already up to date.</code></pre></div>
 <p>But a nontrivial change in <code>reg2()</code> triggers updates to all the affected downstream targets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
-  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
+  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
