@@ -79,11 +79,9 @@ test_with_dir("config and make without safety checks", {
     strings_in_dots = "literals"
   )
   expect_warning(tmp <- config(x, verbose = FALSE))
-  withr::with_options(list(warnPartialMatchArgs = FALSE), {
-    expect_silent(
-      tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
-    expect_silent(check_drake_config(config = tmp))
-  })
+  expect_silent(
+    tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
+  expect_silent(check_drake_config(config = tmp))
 })
 
 test_with_dir("Strings stay strings, not symbols", {
