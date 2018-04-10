@@ -7,7 +7,7 @@ to \code{\link[=make]{make()}}.}
 \usage{
 failed(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose),
-  verbose = drake::default_verbose())
+  verbose = drake::default_verbose(), upstream_only = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -34,6 +34,10 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{3:}{in addition, print any potentially missing items.}
 \item{4:}{in addition, print imports. Full verbosity.}
 }}
+
+\item{upstream_only}{logical, whether to list only those targets
+with no failed dependencies.
+Naturally accompanies \code{make(keep_going = TRUE)}.}
 }
 \value{
 A character vector of target names.

@@ -225,6 +225,12 @@ leaf_nodes <- function(graph){
   V(graph)[is_leaf]$name
 }
 
+filter_upstream <- function(targets, graph){
+  delete_these <- setdiff(V(graph)$name, targets)
+  graph <- delete_vertices(graph = graph, v = delete_these)
+  leaf_nodes(graph)
+}
+
 exclude_imports_if <- function(config){
   if (!length(config$skip_imports)){
     config$skip_imports <- FALSE
