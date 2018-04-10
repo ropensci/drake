@@ -364,6 +364,12 @@ safe_find_globals <- function(expr){
   )
 }
 
+quiet_get_inputs <- function(expr){
+  # Warning: In collector$results(reset = reset) :
+  #  partial argument match of 'reset' to 'resetState'
+  suppressWarnings(CodeDepends::getInputs(expr))
+}
+
 find_globals <- function(expr){
   if (is.function(expr)){
     expr <- unwrap_function(expr)
@@ -372,9 +378,7 @@ find_globals <- function(expr){
   } else {
     formals <- character(0)
   }
-  # Warning: In collector$results(reset = reset) :
-  #  partial argument match of 'reset' to 'resetState'
-  suppressWarnings(inputs <- CodeDepends::getInputs(expr))
+  inputs <- quiet_get_inputs(expr)
   base::union(
     inputs@inputs,
     names(inputs@functions)
@@ -397,19 +401,19 @@ analyze_readd <- function(expr){
 }
 
 analyze_file_in <- function(expr){
-  inputs <- CodeDepends::getInputs(expr)
+  inputs <- quiet_get_inputs(expr)
   deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
   list(file_in = deps)
 }
 
 analyze_file_out <- function(expr){
-  inputs <- CodeDepends::getInputs(expr)
+  inputs <- quiet_get_inputs(expr)
   deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
   list(file_out = deps)
 }
 
 analyze_knitr_in <- function(expr){
-  inputs <- CodeDepends::getInputs(expr)
+  inputs <- quiet_get_inputs(expr)
   files <- c(inputs@strings, inputs@files)
   out <- lapply(files, knitr_deps_list) %>%
     Reduce(f = merge_lists)
@@ -433,7 +437,7 @@ analyze_target_call <- function(expr){
 
 parse_loadd_arg_list <- function(expr){
   lapply(as.list(expr)[-1], function(arg){
-    inputs <- CodeDepends::getInputs(arg)
+    inputs <- quiet_get_inputs(arg)
     c(inputs@strings, inputs@inputs)
   })
 }

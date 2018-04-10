@@ -4,6 +4,7 @@ test_with_dir("can keep going", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
   e$fail <- function(...) {
     stop("oops")
   }
@@ -27,14 +28,14 @@ test_with_dir("can keep going", {
       keep_going = TRUE,
       parallelism = parallelism,
       verbose = FALSE,
-      jobs = 2,
+      jobs = jobs,
       envir = e,
-      hook = suppressWarnings
+      hook = suppressWarnings,
+      session_info = FALSE
     )
   )
-  expect_equal(length(built()), 5)
-  expect_equal(length(failed()), 3)
-  expect_equal(length(intersect(built(), failed())), 0)
+  expect_equal(sort(built()), sort(c("a2", "a3", "b2", "b3", "b4")))
+  expect_equal(sort(failed()), sort(c("a1", "a4", "b1")))
 })
 
 test_with_dir("failed targets do not become up to date", {
@@ -78,9 +79,11 @@ test_with_dir("config and make without safety checks", {
     strings_in_dots = "literals"
   )
   expect_warning(tmp <- config(x, verbose = FALSE))
-  expect_silent(
-    tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
-  expect_silent(check_drake_config(config = tmp))
+  withr::with_options(list(warnPartialMatchArgs = FALSE), {
+    expect_silent(
+      tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
+    expect_silent(check_drake_config(config = tmp))
+  })
 })
 
 test_with_dir("Strings stay strings, not symbols", {
