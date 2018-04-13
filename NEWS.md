@@ -4,6 +4,7 @@
 - Add an `upstream_only` argument to `failed()` so users can list failed targets that do not have any failed dependencies. Naturally accompanies `make(keep_going = TRUE)`.
 - Add an RStudio R Markdown template compatible with https://krlmlr.github.io/drake-pitch/.
 - Remove `plyr` as a dependency.
+- Handle duplicated targets better in `drake_plan()` and `bind_plans()`.
 
 # Version 5.1.2
 
