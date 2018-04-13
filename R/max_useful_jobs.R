@@ -95,7 +95,8 @@ max_useful_jobs <- function(
   if (!nrow(nodes)){
     return(0)
   }
-  dlply(nodes, "stage", nrow) %>%
-    unlist %>%
-    max
+  stage <- NULL
+  n_per_stage <- group_by(nodes, stage) %>%
+    mutate(nrow = n())
+  max(n_per_stage$nrow)
 }

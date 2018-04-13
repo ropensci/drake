@@ -33,11 +33,11 @@ cran_downloads(packages = "dplyr", when = "last-week")
 
 # Drake knows about the packages you load with library() or require().
 
-library(drake)
 library(cranlogs)
+library(drake)
+library(dplyr)
 library(ggplot2)
 library(knitr)
-library(plyr)
 
 # We want to explore the daily downloads from these packages.
 
@@ -74,9 +74,8 @@ output_types <- drake_plan(
 # and plot the data.
 
 make_my_table <- function(downloads){
-  ddply(downloads, "package", function(package_downloads){
-    data.frame(mean_downloads = mean(package_downloads$count))
-  })
+  group_by(downloads, package) %>%
+    summarize(mean_downloads = mean(count))
 }
 
 make_my_plot <- function(downloads){

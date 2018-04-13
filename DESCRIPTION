@@ -66,7 +66,6 @@ Imports:
   magrittr,
   parallel,
   pkgconfig,
-  plyr,
   purrr,
   R6,
   R.utils,

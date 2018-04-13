@@ -112,7 +112,7 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-09</h4>
+            <h4 class="date">2018-04-13</h4>
           </div>
 
     
@@ -139,11 +139,11 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <p>Debug errors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/failed.html">failed</a></span>()                   <span class="co"># Targets that failed in the most recent `make()`</span>
 context &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(large) <span class="co"># Diagnostic metadata: errors, warnings, etc.</span>
-error &lt;-<span class="st"> </span>context<span class="op">$</span>error
+error &lt;-<span class="st"> </span>context$error
 <span class="kw">str</span>(error)                 <span class="co"># Object of class "error"</span>
-error<span class="op">$</span>message
-error<span class="op">$</span>call
-error<span class="op">$</span>calls                <span class="co"># Full traceback of nested calls leading up to the error. # nolint</span></code></pre></div>
+error$message
+error$call
+error$calls                <span class="co"># Full traceback of nested calls leading up to the error. # nolint</span></code></pre></div>
 <p>Dive deeper into the built-in examples.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"basic"</span>) <span class="co"># Write the code files.</span>
 <span class="kw"><a href="../reference/drake_examples.html">drake_examples</a></span>()       <span class="co"># List the other examples.</span>
@@ -172,31 +172,31 @@ error<span class="op">$</span>calls                <span class="co"># Full trace
 <span class="kw">library</span>(drake)</code></pre></div>
 <p>We need a function to bootstrap larger datasets from <code>mtcars</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pick a random subset of n rows from a dataset</span>
-random_rows &lt;-<span class="st"> </span><span class="cf">function</span>(data, n){
+random_rows &lt;-<span class="st"> </span>function(data, n){
   data[<span class="kw">sample.int</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(data), <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), ]
 }
 
 <span class="co"># Bootstrapped datasets from mtcars.</span>
-simulate &lt;-<span class="st"> </span><span class="cf">function</span>(n){
+simulate &lt;-<span class="st"> </span>function(n){
   <span class="co"># Pick a random set of cars to bootstrap from the mtcars data.</span>
   data &lt;-<span class="st"> </span><span class="kw">random_rows</span>(<span class="dt">data =</span> mtcars, <span class="dt">n =</span> n)
 
   <span class="co"># x is the car's weight, and y is the fuel efficiency.</span>
   <span class="kw">data.frame</span>(
-    <span class="dt">x =</span> data<span class="op">$</span>wt,
-    <span class="dt">y =</span> data<span class="op">$</span>mpg
+    <span class="dt">x =</span> data$wt,
+    <span class="dt">y =</span> data$mpg
   )
 }</code></pre></div>
 <p>We also need functions to apply the regression models we need for detecting associations.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Is fuel efficiency linearly related to weight?</span>
-reg1 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="op">+</span><span class="st"> </span>x, <span class="dt">data =</span> d)
+reg1 &lt;-<span class="st"> </span>function(d){
+  <span class="kw">lm</span>(y ~<span class="st"> </span>+<span class="st"> </span>x, <span class="dt">data =</span> d)
 }
 
 <span class="co"># Is fuel efficiency related to the SQUARE of the weight?</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
-  d<span class="op">$</span>x2 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">2</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x2, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d){
+  d$x2 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">2</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x2, <span class="dt">data =</span> d)
 }</code></pre></div>
 <p>We want to summarize the final results in an R Markdown report, so we need the following <code>report.Rmd</code> source file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"basic"</span>, <span class="st">"report.Rmd"</span>)
@@ -271,21 +271,21 @@ my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
 <p>Each row is an intermediate step, and each <strong>command</strong> generates a single <strong>target</strong>. A target is an output R object (cached when generated) or an output file (specified with single quotes), and a command just an ordinary piece of R code (not necessarily a single function call). Commands make use of R objects imported from your workspace, targets generated by other commands, and initial input files. These dependencies give your project an underlying network representation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
@@ -296,12 +296,12 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/deps.html">deps</a></span>(reg2)
 ## [1] "lm"
 
-<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="dv">1</span>]) <span class="co"># Files like report.Rmd are single-quoted.</span>
+<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="dv">1</span>]) <span class="co"># Files like report.Rmd are single-quoted.</span>
 ## [1] "\"report.md\""          "\"report.Rmd\""        
 ## [3] "coef_regression2_small" "knit"                  
 ## [5] "large"                  "small"
 
-<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="kw">nrow</span>(my_plan)])
+<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="kw">nrow</span>(my_plan)])
 ## [1] "regression2_large" "summary"           "suppressWarnings"</code></pre></div>
 <p>List all the reproducibly-tracked objects and files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/tracked.html">tracked</a></span>(my_plan, <span class="dt">targets =</span> <span class="st">"small"</span>)
@@ -370,8 +370,8 @@ my_analyses
 ## 4 regression2_large reg2(large)</code></pre></div>
 <p>Next, we summarize each analysis of each dataset. We calculate descriptive statistics on the residuals, and we collect the regression coefficients and their p-values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary_types &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">summ =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__<span class="op">$</span>residuals)),
-  <span class="dt">coef =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__))<span class="op">$</span>coefficients
+  <span class="dt">summ =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__$residuals)),
+  <span class="dt">coef =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__))$coefficients
 )
 summary_types
 ## # A tibble: 2 x 2
@@ -386,14 +386,14 @@ results
 ## # A tibble: 8 x 2
 ##   target                 command                                          
 ##   &lt;chr&gt;                  &lt;chr&gt;                                            
-## 1 summ_regression1_small suppressWarnings(summary(regression1_small$resid…
-## 2 summ_regression1_large suppressWarnings(summary(regression1_large$resid…
-## 3 summ_regression2_small suppressWarnings(summary(regression2_small$resid…
-## 4 summ_regression2_large suppressWarnings(summary(regression2_large$resid…
-## 5 coef_regression1_small suppressWarnings(summary(regression1_small))$coe…
-## 6 coef_regression1_large suppressWarnings(summary(regression1_large))$coe…
-## 7 coef_regression2_small suppressWarnings(summary(regression2_small))$coe…
-## 8 coef_regression2_large suppressWarnings(summary(regression2_large))$coe…</code></pre></div>
+## 1 summ_regression1_small suppressWarnings(summary(regression1_small$resid~
+## 2 summ_regression1_large suppressWarnings(summary(regression1_large$resid~
+## 3 summ_regression2_small suppressWarnings(summary(regression2_small$resid~
+## 4 summ_regression2_large suppressWarnings(summary(regression2_large$resid~
+## 5 coef_regression1_small suppressWarnings(summary(regression1_small))$coe~
+## 6 coef_regression1_large suppressWarnings(summary(regression1_large))$coe~
+## 7 coef_regression2_small suppressWarnings(summary(regression2_small))$coe~
+## 8 coef_regression2_large suppressWarnings(summary(regression2_large))$coe~</code></pre></div>
 <p>The <code>gather</code> feature reduces a collection of targets to a single target. The resulting commands are long, so gathering is deactivated for the sake of readability.</p>
 <p>For your <code>knitr</code> reports, use <code><a href="../reference/knitr_in.html">knitr_in()</a></code> in your commands so that <code>report.Rmd</code> is a dependency and targets loaded with <code><a href="../reference/loadd.html">loadd()</a></code> and <code><a href="../reference/readd.html">readd()</a></code> in active code chunks are also dependencies. Use <code><a href="../reference/file_out.html">file_out()</a></code> to tell <code>drake</code> that the target is a file output. If the file is an output, you do not need to name the target. The target name will be the name of the output file in quotes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">report &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
@@ -403,28 +403,28 @@ report
 ## # A tibble: 1 x 2
 ##   target          command                                                 
 ##   &lt;chr&gt;           &lt;chr&gt;                                                   
-## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</code></pre></div>
+## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")~</code></pre></div>
 <p>Finally, consolidate your workflow using <code>rbind()</code>. Row order does not matter.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(report, my_datasets, my_analyses, results)
 my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~</code></pre></div>
 </div>
 <div id="flexible-workflow-plan-generation" class="section level1">
 <h1 class="hasAnchor">
@@ -445,7 +445,7 @@ df
 ## 1 data_rep1 simulate(center = MU, scale = SIGMA)
 ## 2 data_rep2 simulate(center = MU, scale = SIGMA)
 
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
+<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span>:<span class="dv">2</span>)
 ## # A tibble: 4 x 2
 ##   target      command                            
 ##   &lt;chr&gt;       &lt;chr&gt;                              
@@ -454,21 +454,21 @@ df
 ## 3 data_rep2_1 simulate(center = 1, scale = SIGMA)
 ## 4 data_rep2_2 simulate(center = 2, scale = SIGMA)
 
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">expand =</span> <span class="ot">FALSE</span>)
+<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span>:<span class="dv">2</span>, <span class="dt">expand =</span> <span class="ot">FALSE</span>)
 ## # A tibble: 2 x 2
 ##   target    command                            
 ##   &lt;chr&gt;     &lt;chr&gt;                              
 ## 1 data_rep1 simulate(center = 1, scale = SIGMA)
 ## 2 data_rep2 simulate(center = 2, scale = SIGMA)
 
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)), <span class="dt">expand =</span> <span class="ot">FALSE</span>)
+<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span>:<span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)), <span class="dt">expand =</span> <span class="ot">FALSE</span>)
 ## # A tibble: 2 x 2
 ##   target    command                          
 ##   &lt;chr&gt;     &lt;chr&gt;                            
 ## 1 data_rep1 simulate(center = 1, scale = 0.1)
 ## 2 data_rep2 simulate(center = 2, scale = 1)
 
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>)))
+<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span>:<span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>)))
 ## # A tibble: 12 x 2
 ##    target          command                          
 ##    &lt;chr&gt;           &lt;chr&gt;                            
@@ -500,7 +500,7 @@ df
 x_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(
   <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">x =</span> VALUE),
   <span class="dt">wildcard =</span> <span class="st">"VALUE"</span>,
-  <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>
+  <span class="dt">values =</span> <span class="dv">1</span>:<span class="dv">8</span>
 )
 x_plan
 ## # A tibble: 8 x 2
@@ -600,16 +600,16 @@ x_plan
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 "\"report.md\""        target 0.105s         0.058s         0.009s     
-##  2 "\"report.Rmd\""       import 0.011s         0.002s         0s         
-##  3 coef_regression1_large target 0.017s         0.007s         0s         
-##  4 coef_regression1_small target 0.018s         0.008s         0s         
-##  5 coef_regression2_large target 0.016s         0.006s         0s         
-##  6 coef_regression2_small target 0.016s         0.005s         0.001s     
-##  7 data.frame             import 0.04s          0.031s         0s         
-##  8 knit                   import 0.044s         0.033s         0s         
-##  9 large                  target 0.094s         0.077s         0.001s     
-## 10 lm                     import 0.025s         0.014s         0s         
+##  1 "\"report.md\""        target 0.101s         0.06s          0.007s     
+##  2 "\"report.Rmd\""       import 0.014s         0.002s         0s         
+##  3 coef_regression1_large target 0.019s         0.006s         0.001s     
+##  4 coef_regression1_small target 0.016s         0.006s         0s         
+##  5 coef_regression2_large target 0.015s         0.006s         0s         
+##  6 coef_regression2_small target 0.017s         0.004s         0.001s     
+##  7 data.frame             import 0.048s         0.036s         0.001s     
+##  8 knit                   import 0.04s          0.029s         0s         
+##  9 large                  target 0.102s         0.087s         0.001s     
+## 10 lm                     import 0.024s         0.015s         0s         
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -678,7 +678,7 @@ x_plan
 ## # A tibble: 6 x 2
 ##   target            command                                               
 ##   &lt;chr&gt;             &lt;chr&gt;                                                 
-## 1 "\"report.md\""   "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\…
+## 1 "\"report.md\""   "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\~
 ## 2 small             simulate(48)                                          
 ## 3 large             simulate(64)                                          
 ## 4 regression1_small reg1(small)                                           
@@ -703,9 +703,9 @@ x_plan
 ##   coef_regression2_small
 ## All targets are already up to date.</code></pre></div>
 <p>But if you change one of your functions, commands, or other dependencies, drake will update the affected targets. Suppose we change the quadratic term to a cubic term in <code>reg2()</code>. We might want to do this if we suspect a cubic relationship between tons and miles per gallon.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d) {
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }</code></pre></div>
 <p>The targets that depend on <code>reg2()</code> need to be rebuilt.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
@@ -734,11 +734,11 @@ x_plan
 ##               reg2              small 
 ## "d47109544c89ca7a" "40fb781de184c741"
 
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>) <span class="co"># same</span>
+config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>) <span class="co"># same</span>
 ## [1] "40fb781de184c741"
 
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "40df30833120958a"</code></pre></div>
+config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
+## [1] "9fb48330ddbe6fae"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
@@ -754,15 +754,15 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>Trivial changes to whitespace and comments are totally ignored.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-    <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d) <span class="co"># I indented here.</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d) {
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+    <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d) <span class="co"># I indented here.</span>
 }
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Everything is up to date.</span>
 ## character(0)</code></pre></div>
 <p>Drake cares about nested functions too: nontrivial changes to <code>random_rows()</code> will propagate to <code>simulate()</code> and all the downstream targets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">random_rows &lt;-<span class="st"> </span><span class="cf">function</span>(data, n){
-  n &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">random_rows &lt;-<span class="st"> </span>function(data, n){
+  n &lt;-<span class="st"> </span>n +<span class="st"> </span><span class="dv">1</span>
   data[<span class="kw">sample.int</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(data), <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), ]
 }
 
@@ -797,12 +797,12 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>Need to add new work on the fly? Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_simulation &lt;-<span class="st"> </span><span class="cf">function</span>(n){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_simulation &lt;-<span class="st"> </span>function(n){
   <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(n), <span class="dt">y =</span> <span class="kw">rnorm</span>(n))
 }
 
 additions &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">new_data =</span> <span class="kw">new_simulation</span>(<span class="dv">36</span>) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">10</span>))
+  <span class="dt">new_data =</span> <span class="kw">new_simulation</span>(<span class="dv">36</span>) +<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">10</span>))
 additions
 ## # A tibble: 1 x 2
 ##   target   command                      
@@ -814,21 +814,21 @@ my_plan
 ## # A tibble: 16 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~
 ## 16 new_data               new_simulation(36) + sqrt(10)
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
@@ -886,8 +886,8 @@ my_plan
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_variable &lt;-<span class="st"> </span><span class="dv">5</span>
 
 <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
-  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
+  <span class="dt">a =</span> !!my_variable,
+  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
   <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>)
 )
 ## # A tibble: 3 x 2
@@ -898,8 +898,8 @@ my_plan
 ## 3 d      !!my_variable
 
 <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
-  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
+  <span class="dt">a =</span> !!my_variable,
+  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
   <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>),
   <span class="dt">tidy_evaluation =</span> <span class="ot">FALSE</span>
 )

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>List the dependencies of a function, workflow plan command,
-or knitr report source file. — deps • drake</title>
+or knitr report source file. <U+2014> deps • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -163,19 +163,19 @@ The other names listed are functions or generic R objects.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If the argument is a <code>knitr</code> report
-(for example, <code>file_store("report.Rmd)} or \code{"\"report.Rmd\""})
+(for example, <code><a href='file_store.html'>file_store("report.Rmd")</a></code> or <code>"\"report.Rmd\""</code>)
 the the dependencies of the expected compiled
-output will be given. For example, \code{deps(file_store("report.Rmd"))}
-will return target names found in calls to \code{<a href='loadd.html'>loadd()</a>}
-and \code{<a href='readd.html'>readd()</a>} in active code chunks.
-These \code{<a href='loadd.html'>loadd()</a>}/\code{<a href='readd.html'>readd()</a>} targets are needed
-in order to run \code{knit(knitr_in("report.Rmd"))}
-to produce the output file \code{"report.md"}, so technically,
-they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
-    The \code{<a href='file_store.html'>file_store()</a>} function
-alerts \code{drake} utility functions to file names by
+output will be given. For example, <code>deps(file_store("report.Rmd"))</code>
+will return target names found in calls to <code><a href='loadd.html'>loadd()</a></code>
+and <code><a href='readd.html'>readd()</a></code> in active code chunks.
+These <code><a href='loadd.html'>loadd()</a></code>/<code><a href='readd.html'>readd()</a></code> targets are needed
+in order to run <code>knit(knitr_in("report.Rmd"))</code>
+to produce the output file <code>"report.md"</code>, so technically,
+they are dependencies of <code>"report.md"</code>, not <code>"report.Rmd"</code>.</p>
+<p>The <code><a href='file_store.html'>file_store()</a></code> function
+alerts <code>drake</code> utility functions to file names by
 enclosing them in literal double quotes.
-(For example, \code{file_store("report.Rmd)</code> is just <code>"\"report.Rmd\""</code>.)
+(For example, <code><a href='file_store.html'>file_store("report.Rmd")</a></code> is just <code>"\"report.Rmd\""</code>.)
     <code>Drake</code> takes special precautions so that a target/import
 does not depend on itself. For example, <code>deps(f)`` might return</code>"f"<code>if</code>f()` is a recursive function, but <code><a href='make.html'>make()</a></code> just ignores
 this conflict and runs as expected. In other words, <code><a href='make.html'>make()</a></code>
@@ -187,7 +187,7 @@ network.</p>
     <pre class="examples"><div class='input'><span class='co'># Your workflow likely depends on functions in your workspace.</span>
 <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>y</span>){
   <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='no'>x</span> + <span class='no'>y</span> + <span class='fu'>g</span>(<span class='no'>x</span>)
-  <span class='fu'>saveRDS</span>(<span class='no'>out</span>, <span class='st'>'out.rds'</span>)
+  <span class='fu'>saveRDS</span>(<span class='no'>out</span>, <span class='st'>"out.rds"</span>)
 }
 <span class='co'># Find the dependencies of f. These could be R objects/functions</span>
 <span class='co'># in your workspace or packages. Any file names or target names</span>
@@ -202,7 +202,7 @@ network.</p>
 <span class='co'># Get the dependencies of workflow plan commands.</span>
 <span class='co'># Here, the dependencies could be R functions/objects from your workspace</span>
 <span class='co'># or packages, imported files, or other targets in the workflow plan.</span>
-<span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; <span class='warning'>Warning: partial argument match of 'reset' to 'resetState'</span></div><div class='output co'>#&gt; <span class='warning'>Warning: partial argument match of 'reset' to 'resetState'</span></div><div class='output co'>#&gt; [1] "\"tracked_input_file.rds\"" "readRDS"                   
+<span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] "\"tracked_input_file.rds\"" "readRDS"                   
 #&gt; [3] "x"                         </div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>3</span>])</div><div class='output co'>#&gt; [1] "f" "g" "w" "x" "y" "z"</div><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>

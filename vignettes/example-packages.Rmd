@@ -11,12 +11,12 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(cranlogs)))
+suppressMessages(suppressWarnings(library(drake)))
+suppressMessages(suppressWarnings(library(dplyr)))
 suppressMessages(suppressWarnings(library(ggplot2)))
 suppressMessages(suppressWarnings(library(knitr)))
 suppressMessages(suppressWarnings(library(magrittr)))
-suppressMessages(suppressWarnings(library(plyr)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
@@ -57,11 +57,11 @@ Above, each count is the number of times `dplyr` was downloaded from the RStudio
 First, we load the required packages. `Drake` knows about the packages you install and load.
 
 ```{r pkgspkgs}
-library(drake)
 library(cranlogs)
+library(drake)
+library(dplyr)
 library(ggplot2)
 library(knitr)
-library(plyr)
 ```
 
 We want to explore the daily downloads from these packages.
@@ -120,9 +120,8 @@ and plot the data.
 
 ```{r summplotdatapackages}
 make_my_table <- function(downloads){
-  ddply(downloads, "package", function(package_downloads){
-    data.frame(mean_downloads = mean(package_downloads$count))
-  })
+  group_by(downloads, package) %>%
+    summarize(mean_downloads = mean(count))
 }
 
 make_my_plot <- function(downloads){

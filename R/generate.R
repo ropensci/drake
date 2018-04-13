@@ -452,21 +452,20 @@ plan_summaries <- function(
   if (!(length(gather) == dim(plan)[1])){
     stop("gather must be NULL or have length 1 or nrow(plan)")
   }
-  gathered <- ddply(
-    out,
-    group,
-    function(summary_group){
-      summary_type <- summary_group[[group]][1]
+  . <- group_sym <- as.symbol(group)
+  gathered <- group_by(out, !!!group_sym) %>%
+    do({
+      summary_type <- .[[group]][1]
       gather_plan(
-        summary_group,
+        .,
         target = summary_type,
-        gather = gather[which(summary_type == plan$target)])
-    }
-  ) %>%
-    as_tibble
-  out[[group]] <- NULL
-  gathered[[group]] <- NULL
-  return(rbind(gathered, out))
+        gather = gather[which(summary_type == plan$target)]
+      )
+    })
+  target <- command <- NULL
+  bind_rows(gathered, out) %>%
+    ungroup %>%
+    select(target, command)
 }
 
 with_analyses_only <- function(plan){

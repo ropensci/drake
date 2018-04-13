@@ -111,7 +111,7 @@
       <h1>Debugging and testing drake projects</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-09</h4>
+            <h4 class="date">2018-04-13</h4>
           </div>
 
     
@@ -169,21 +169,21 @@ my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
 ##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo~
 ##  2 small                  simulate(48)                                    
 ##  3 large                  simulate(64)                                    
 ##  4 regression1_small      reg1(small)                                     
 ##  5 regression1_large      reg1(large)                                     
 ##  6 regression2_small      reg2(small)                                     
 ##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…
+##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi~
+##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi~
+## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi~
+## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi~
+## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co~
+## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co~
+## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co~
+## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co~
 
 <span class="kw"><a href="../reference/check_plan.html">check_plan</a></span>(my_plan) <span class="co"># No issues.</span></code></pre></div>
 </div>
@@ -208,12 +208,12 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <span class="co"># knitr_in() makes sure your target depends on `report.Rmd`</span>
 <span class="co"># and any dependencies loaded with loadd() and readd()</span>
 <span class="co"># in the report's active code chunks.</span>
-<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="dv">1</span>])
+<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="dv">1</span>])
 ## [1] "\"report.md\""          "\"report.Rmd\""        
 ## [3] "coef_regression2_small" "knit"                  
 ## [5] "large"                  "small"
 
-<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="kw">nrow</span>(my_plan)])
+<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan$command[<span class="kw">nrow</span>(my_plan)])
 ## [1] "regression2_large" "summary"           "suppressWarnings"</code></pre></div>
 <p><code>Drake</code> takes special precautions so that a target/import does not depend on itself. For example, <code><a href="../reference/deps.html">deps(f)</a></code> might return <code>"f"</code> if <code>f()</code> is a recursive function, but <code><a href="../reference/make.html">make()</a></code> just ignores this conflict and runs as expected. In other words, <code><a href="../reference/make.html">make()</a></code> automatically removes all self-referential loops in the dependency network.</p>
 <p>List all the reproducibly-tracked objects and files, including imports and targets.</p>
@@ -258,9 +258,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 <span class="co"># Change a dependency.</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d) {
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
 ## [1] "\"report.md\""          "coef_regression2_large"
@@ -313,17 +313,17 @@ reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
 ## $file
 ## [1] NA
 
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>, <span class="dt">namespace =</span> <span class="st">"kernels"</span>) <span class="co"># same</span>
+config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>, <span class="dt">namespace =</span> <span class="st">"kernels"</span>) <span class="co"># same</span>
 ## [1] "40fb781de184c741"
 
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>) <span class="co"># same</span>
+config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>) <span class="co"># same</span>
 ## [1] "40fb781de184c741"
 
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>, <span class="dt">namespace =</span> <span class="st">"kernels"</span>) <span class="co"># same</span>
+config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>, <span class="dt">namespace =</span> <span class="st">"kernels"</span>) <span class="co"># same</span>
 ## [1] "d47109544c89ca7a"
 
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "81782c7a9e4bdfa3"</code></pre></div>
+config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
+## [1] "5b6ee7ee6be37fe5"</code></pre></div>
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -336,20 +336,20 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
-##  $ start       :Class 'proc_time'  Named num [1:5] 6.568 0.25 8.656 0.068 0.067
+##  $ start       :Class 'proc_time'  Named num [1:5] 6.167 0.219 8.091 0.064 0.055
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.005
-##   ..$ user   : num 0.005
+##   ..$ elapsed: num 0.006
+##   ..$ user   : num 0.006
 ##   ..$ system : num 0
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.064
-##   ..$ user   : num 0.051
-##   ..$ system : num 0.002
+##   ..$ elapsed: num 0.066
+##   ..$ user   : num 0.055
+##   ..$ system : num 0.001
 
 <span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))
 ## List of 12
@@ -361,21 +361,21 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
 ##  $ depends     : chr "5f72f8f2a06b7a515e17a3ea3f57b1dd3522d7143e0cbd0650a3c0985683f81d"
 ##  $ file        : chr "ed35f108e2ccd75a904273f1e8559d5a0acb9c2700531276a7acdcfba09decc6"
-##  $ start       :Class 'proc_time'  Named num [1:5] 6.808 0.264 9.219 0.068 0.067
+##  $ start       :Class 'proc_time'  Named num [1:5] 6.401 0.239 8.638 0.064 0.055
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.09
-##   ..$ user   : num 0.059
-##   ..$ system : num 0.004
-##  $ mtime       : POSIXct[1:1], format: "2018-04-09 12:46:18"
+##   ..$ elapsed: num 0.085
+##   ..$ user   : num 0.05
+##   ..$ system : num 0.011
+##  $ mtime       : POSIXct[1:1], format: "2018-04-13 16:16:59"
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.107
-##   ..$ user   : num 0.063
-##   ..$ system : num 0.006</code></pre></div>
+##   ..$ elapsed: num 0.105
+##   ..$ user   : num 0.055
+##   ..$ system : num 0.011</code></pre></div>
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
 </div>
@@ -422,27 +422,27 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
 <code>missing</code>: Build if and only if the target is missing.</li>
 </ul>
 <p>To select triggers for individual targets, create an optional <code>trigger</code> column in the workflow plan data frame. Entries in this column override the <code>trigger</code> argument to <code><a href="../reference/make.html">make()</a></code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan<span class="op">$</span>trigger &lt;-<span class="st"> "command"</span>
-my_plan<span class="op">$</span>trigger[<span class="dv">1</span>] &lt;-<span class="st"> "file"</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan$trigger &lt;-<span class="st"> "command"</span>
+my_plan$trigger[<span class="dv">1</span>] &lt;-<span class="st"> "file"</span>
 my_plan
 ## # A tibble: 15 x 3
 ##    target                 command                                  trigger
 ##    &lt;chr&gt;                  &lt;chr&gt;                                    &lt;chr&gt;  
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_ou… file   
+##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_ou~ file   
 ##  2 small                  simulate(48)                             command
 ##  3 large                  simulate(64)                             command
 ##  4 regression1_small      reg1(small)                              command
 ##  5 regression1_large      reg1(large)                              command
 ##  6 regression2_small      reg2(small)                              command
 ##  7 regression2_large      reg2(large)                              command
-##  8 summ_regression1_small suppressWarnings(summary(regression1_sm… command
-##  9 summ_regression1_large suppressWarnings(summary(regression1_la… command
-## 10 summ_regression2_small suppressWarnings(summary(regression2_sm… command
-## 11 summ_regression2_large suppressWarnings(summary(regression2_la… command
-## 12 coef_regression1_small suppressWarnings(summary(regression1_sm… command
-## 13 coef_regression1_large suppressWarnings(summary(regression1_la… command
-## 14 coef_regression2_small suppressWarnings(summary(regression2_sm… command
-## 15 coef_regression2_large suppressWarnings(summary(regression2_la… command
+##  8 summ_regression1_small suppressWarnings(summary(regression1_sm~ command
+##  9 summ_regression1_large suppressWarnings(summary(regression1_la~ command
+## 10 summ_regression2_small suppressWarnings(summary(regression2_sm~ command
+## 11 summ_regression2_large suppressWarnings(summary(regression2_la~ command
+## 12 coef_regression1_small suppressWarnings(summary(regression1_sm~ command
+## 13 coef_regression1_large suppressWarnings(summary(regression1_la~ command
+## 14 coef_regression2_small suppressWarnings(summary(regression2_sm~ command
+## 15 coef_regression2_large suppressWarnings(summary(regression2_la~ command
 
 <span class="co"># Change an imported dependency:</span>
 reg2
@@ -450,11 +450,11 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
-## &lt;bytecode: 0x53e5200&gt;
+## &lt;bytecode: 0x5f5a668&gt;
 
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d) {
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">trigger =</span> <span class="st">"any"</span>) <span class="co"># Nothing changes!</span>
 ## Unloading targets from environment:
@@ -469,7 +469,7 @@ reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
 <a href="#skipping-imports" class="anchor"></a>Skipping imports</h1>
 <p>Similar to triggers, you can also to skip the processing of imported objects and files. However, <em>you should only use this for testing purposes</em>. If some of your imports are not already cached and up to date, any built targets will be out of sync. In other words, <code><a href="../reference/outdated.html">outdated()</a></code> is more likely to be wrong, and your project may no longer be reproducible.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-my_plan<span class="op">$</span>trigger &lt;-<span class="st"> </span><span class="ot">NULL</span>
+my_plan$trigger &lt;-<span class="st"> </span><span class="ot">NULL</span>
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">skip_imports =</span> <span class="ot">TRUE</span>)
 ## target large
@@ -494,7 +494,7 @@ my_plan<span class="op">$</span>trigger &lt;-<span class="st"> </span><span clas
 <a href="#impose-timeouts-and-retries" class="anchor"></a>Impose timeouts and retries</h1>
 <p>See the <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, and <code>retries</code> argument to <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-f &lt;-<span class="st"> </span><span class="cf">function</span>(...){
+f &lt;-<span class="st"> </span>function(...){
   <span class="kw">Sys.sleep</span>(<span class="dv">1</span>)
 }
 debug_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="kw">f</span>(x))
@@ -505,7 +505,7 @@ debug_plan
 ## 1 x      1      
 ## 2 y      f(x)
 
-withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/withr/topics/with_sink">with_message_sink</a></span>(
+withr::<span class="kw">with_message_sink</span>(
   <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="fl">1e-3</span>, <span class="dt">retries =</span> <span class="dv">2</span>)
 )
@@ -515,8 +515,8 @@ withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 ## Warning: No message sink to remove.</code></pre></div>
 <p>To tailor these settings to each individual target, create new <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, or <code>retries</code> columns in your workflow plan. These columns override the analogous arguments to <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-debug_plan<span class="op">$</span>timeout &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1e-3</span>, <span class="fl">2e-3</span>)
-debug_plan<span class="op">$</span>retries &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>
+debug_plan$timeout &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1e-3</span>, <span class="fl">2e-3</span>)
+debug_plan$retries &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">2</span>
 
 debug_plan
 ## # A tibble: 2 x 4
@@ -525,7 +525,7 @@ debug_plan
 ## 1 x      1       0.00100       1
 ## 2 y      f(x)    0.00200       2
 
-withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/withr/topics/with_sink">with_message_sink</a></span>(
+withr::<span class="kw">with_message_sink</span>(
   <span class="dt">new =</span> <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="ot">Inf</span>, <span class="dt">retries =</span> <span class="dv">0</span>)
 )
@@ -546,15 +546,15 @@ withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Targets with available metadata.</span>
 ## [1] "f"         "Sys.sleep" "x"         "y"
 
-f &lt;-<span class="st"> </span><span class="cf">function</span>(x){
-  <span class="cf">if</span> (x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>){
+f &lt;-<span class="st"> </span>function(x){
+  if (x &lt;<span class="st"> </span><span class="dv">0</span>){
     <span class="kw">stop</span>(<span class="st">"`x` cannot be negative."</span>)
   }
   x
 }
 bad_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
   <span class="dt">a =</span> <span class="dv">12</span>,
-  <span class="dt">b =</span> <span class="op">-</span>a,
+  <span class="dt">b =</span> -a,
   <span class="dt">my_target =</span> <span class="kw">f</span>(b)
 )
 
@@ -566,7 +566,7 @@ bad_plan
 ## 2 b         -a     
 ## 3 my_target f(b)
 
-withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/withr/topics/with_sink">with_message_sink</a></span>(
+withr::<span class="kw">with_message_sink</span>(
   <span class="dt">new =</span> <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(bad_plan)
 )
@@ -582,15 +582,15 @@ withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 ## [1] "my_target" "y"
 
 <span class="co"># See also warnings and messages.</span>
-error &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)<span class="op">$</span>error
+error &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)$error
 
-error<span class="op">$</span>message
+error$message
 ## [1] "`x` cannot be negative."
 
-error<span class="op">$</span>call
+error$call
 ## f(b)
 
-error<span class="op">$</span>calls <span class="co"># View the traceback.</span>
+error$calls <span class="co"># View the traceback.</span>
 ## [[1]]
 ## local({
 ##     f(b)
@@ -630,7 +630,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ##   b
 
 <span class="co"># my_target depends on b.</span>
-<span class="st">"b"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">ls</span>()
+<span class="st">"b"</span> %in%<span class="st"> </span><span class="kw">ls</span>()
 ## [1] FALSE
 
 <span class="co"># Try to build my_target until the error is fixed.</span>
@@ -642,7 +642,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ##   `x` cannot be negative.
 
 <span class="co"># The target failed, but the dependency was loaded.</span>
-<span class="st">"b"</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">ls</span>()
+<span class="st">"b"</span> %in%<span class="st"> </span><span class="kw">ls</span>()
 ## [1] TRUE
 
 <span class="co"># What was `b` again?</span>
@@ -650,10 +650,10 @@ b
 ## [1] -12
 
 <span class="co"># How was `b` used?</span>
-<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target)<span class="op">$</span>message
+<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target)$message
 ## NULL
 
-<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target)<span class="op">$</span>call
+<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target)$call
 ## NULL
 
 f
@@ -663,12 +663,12 @@ f
 ##   }
 ##   x
 ## }
-## &lt;bytecode: 0x545db20&gt;
+## &lt;bytecode: 0x79c50f8&gt;
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
-f &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+f &lt;-<span class="st"> </span>function(x){
   x &lt;-<span class="st"> </span><span class="kw">abs</span>(x)
-  <span class="cf">if</span> (x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>){
+  if (x &lt;<span class="st"> </span><span class="dv">0</span>){
     <span class="kw">stop</span>(<span class="st">"`x` cannot be negative."</span>)
   }
   x

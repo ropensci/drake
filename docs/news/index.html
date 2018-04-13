@@ -136,10 +136,22 @@
     </div>
 
     <div class="contents">
-    <div id="version-5-2-0" class="section level1">
+    <div id="version-5-1-4" class="section level1">
 <h1 class="hasAnchor">
-<a href="#version-5-2-0" class="anchor"></a>Version 5.2.0</h1>
+<a href="#version-5-1-4" class="anchor"></a>Version 5.1.4</h1>
 <ul>
+<li>Attempt to fix a Solaris CRAN check error. The test at <a href="https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3" class="uri">https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3</a> was previously failing on CRAN’s Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.</li>
+<li>Add an <code>upstream_only</code> argument to <code><a href="../reference/failed.html">failed()</a></code> so users can list failed targets that do not have any failed dependencies. Naturally accompanies <code><a href="../reference/make.html">make(keep_going = TRUE)</a></code>.</li>
+<li>Add an RStudio R Markdown template compatible with <a href="https://krlmlr.github.io/drake-pitch/" class="uri">https://krlmlr.github.io/drake-pitch/</a>.</li>
+<li>Remove <code>plyr</code> as a dependency.</li>
+</ul>
+</div>
+    <div id="version-5-1-2" class="section level1">
+<h1 class="hasAnchor">
+<a href="#version-5-1-2" class="anchor"></a>Version 5.1.2</h1>
+<ul>
+<li>In R 3.5.0, the <code>!!</code> operator from tidyeval and <code>rlang</code> is parsed differently than in R &lt;= 3.4.4. This change broke one of the tests in <code>tests/testthat/tidy-eval.R</code> The main purpose of <code>drake</code>’s 5.1.2 release is to fix the broken test.</li>
+<li>Fix an elusive <code>R CMD check</code> error from building the pdf manual with LaTeX.</li>
 <li>In <code><a href="../reference/drake_plan.html">drake_plan()</a></code>, allow users to customize target-level columns using <code>target()</code> inside the commands.</li>
 <li>Add a new <code><a href="../reference/bind_plans.html">bind_plans()</a></code> function to concatenate the rows of drake plans and then sanitize the aggregate plan.</li>
 <li>Add an optional <code>session</code> argument to tell <code><a href="../reference/make.html">make()</a></code> to build targets in a separate, isolated master R session. For example, <code><a href="../reference/make.html">make(session = callr::r_vanilla)</a></code>.</li>
@@ -360,7 +372,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#version-5-2-0">5.2.0</a></li>
+        <li><a href="#version-5-1-4">5.1.4</a></li>
+        <li><a href="#version-5-1-2">5.1.2</a></li>
         <li><a href="#version-5-1-0">5.1.0</a></li>
         <li><a href="#version-5-0-0">5.0.0</a></li>
         <li><a href="#version-4-4-0">4.4.0</a></li>

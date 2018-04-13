@@ -289,14 +289,21 @@ split_node_columns <- function(nodes){
   max_reps <- nrow(nodes) %>%
     sqrt %>%
     ceiling
-  out <- ddply(nodes, "level", function(stage){
-    stage$level <- split_levels(
-      old_levels = stage$level, max_reps = max_reps)
-    stage
-  })
-  rownames(out) <- out$id
-  out$level <- as.integer(as.factor(out$level))
-  out
+  # group_by() %>% mutate() doesn't work here.
+  # Groups aren't actually selected, the whole nodes data frame
+  # just repeated. I do not know why.
+  nodes <- lapply(
+    X = split(nodes, f = nodes$level),
+    FUN = function(stage){
+      stage$level <- split_levels(
+        old_levels = stage$level, max_reps = max_reps)
+      stage
+    }
+  ) %>%
+    do.call(what = rbind)
+  rownames(nodes) <- nodes$id
+  nodes$level <- as.integer(as.factor(nodes$level))
+  nodes
 }
 
 style_nodes <- function(config) {

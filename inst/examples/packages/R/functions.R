@@ -5,9 +5,8 @@
 # and plot the data.
 
 make_my_table <- function(downloads){
-  ddply(downloads, "package", function(package_downloads){
-    data.frame(mean_downloads = mean(package_downloads$count))
-  })
+  group_by(downloads, package) %>%
+    summarize(mean_downloads = mean(count))
 }
 
 make_my_plot <- function(downloads){

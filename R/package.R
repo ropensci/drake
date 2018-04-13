@@ -41,7 +41,7 @@
 #' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style
 #' @importFrom digest digest
-#' @importFrom dplyr do group_by n
+#' @importFrom dplyr bind_rows do group_by mutate n select ungroup
 #' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
 #' @importFrom future future plan resolved value
@@ -56,13 +56,12 @@
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #'   mclapply parLapply stopCluster
 #' @importFrom pkgconfig get_config
-#' @importFrom plyr ddply dlply
 #' @importFrom purrr map_int
 #' @importFrom R6 R6Class
 #' @importFrom R.utils isPackageLoaded withTimeout
 #' @importFrom rlang expr exprs
 #' @importFrom rprojroot find_root
-#' @importFrom stats coef complete.cases lm rnorm rpois runif setNames
+#' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames
 #' @importFrom storr encode64 storr_environment storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #'   stri_split_fixed stri_trim_both

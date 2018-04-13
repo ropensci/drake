@@ -206,19 +206,14 @@ rate_limiting_times <- function(
     config$trigger <- "always"
   }
   times <- append_stages_to_times(x = times, config = config)
-  out <- ddply(
-    times,
-    "stage",
-    rate_limiting_at_stage,
-    future_jobs = future_jobs
-  ) %>%
+  . <- stage <- NULL
+  suppressWarnings(
+    group_by(times, stage) %>%
+      do(rate_limiting_at_stage(., future_jobs = future_jobs))
+  )  %>%
     round_times(digits = digits) %>%
-    unname_rows
-  out <- out[!is.na(out$item), ]
-  tryCatch(
-    as_tibble(out),
-    error = error_tibble_times
-  )
+    unname_rows %>%
+    na.omit
 }
 
 append_stages_to_times <- function(x, config){

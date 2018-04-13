@@ -144,7 +144,7 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#the-drake-r-package" class="anchor"></a>The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height="139" style="border: none; float: right;">
 </h1></div>
-<p>The <code>drake</code> R package is a workflow manager and computational engine for data science projects. Its primary objective is to keep results up to date with the underlying code and data. When it runs a project, <code>drake</code> detects any pre-existing output and refreshes the pieces that are outdated or missing. Not every runthrough starts from scratch, and the final answers are reproducible. With a user-friendly R-focused interface, <a href="https://ropensci.github.io/drake/">comprehensive documentation</a>, and <a href="https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd">extensive implicit parallel computing support</a>, <code>drake</code> surpasses the analogous functionality in similar tools such as <a href="www.gnu.org/software/make/">Make</a>, <a href="https://github.com/richfitz/remake">remake</a>, <a href="https://github.com/r-lib/memoise">memoise</a>, and <a href="https://github.com/yihui/knitr">knitr</a>.</p>
+<p>The <code>drake</code> package is a general-purpose workflow manager for data-driven tasks in R. It rebuilds intermediate data objects when their dependencies change, and it skips work when the results are already up to date. Not every runthrough starts from scratch, and completed workflows have tangible evidence of reproducibility. <code>Drake</code> is more scalable than <a href="https://github.com/yihui/knitr"><code>knitr</code></a>, more thorough than <a href="https://github.com/r-lib/memoise">memoization</a>, and more R-focused than <a href="https://github.com/pditommaso/awesome-pipeline">other pipeline toolkits</a> such as <a href="www.gnu.org/software/make/">GNU Make</a>, <a href="https://github.com/richfitz/remake"><code>remake</code></a>, and <a href="https://snakemake.readthedocs.io">snakemake</a>.</p>
 </div>
 <div id="what-gets-done-stays-done-" class="section level1">
 <h1 class="hasAnchor">
@@ -226,9 +226,9 @@
 <span class="co"># If you change the reg2() function,</span>
 <span class="co"># all the regression2 targets are out of date,</span>
 <span class="co"># which in turn affects 'report.md'.</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){    
-  d<span class="op">$</span>x4 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">4</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x4, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d){    
+  d$x4 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">4</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x4, <span class="dt">data =</span> d)
 }
 
 <span class="co"># Second round: drake only rebuilds the targets</span>
@@ -306,13 +306,13 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <span class="co"># Scale up to a supercomputer.</span>
 <span class="kw"><a href="reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"slurm"</span>) <span class="co"># https://slurm.schedmd.com/</span>
 <span class="kw">library</span>(future.batchtools)
-future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>, <span class="dt">workers =</span> <span class="dv">100</span>)
+future::<span class="kw"><a href="reference/plan.html">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>, <span class="dt">workers =</span> <span class="dv">100</span>)
 <span class="kw"><a href="reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>The network graph allows <code>drake</code> to wait for dependencies.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Change some code.</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){    
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d){    
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 
 <span class="co"># Plot an interactive graph.</span>
