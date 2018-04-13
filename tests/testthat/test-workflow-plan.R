@@ -9,7 +9,39 @@ test_with_dir("duplicated targets", {
       b = 2,
       c = 3
     ),
-    regexp = "Duplicated target names"
+    regexp = "Duplicated targets"
+  )
+  expect_error(
+    bind_plans(
+      drake_plan(a = 1, b = 1, c = 1),
+      drake_plan(a = 5, b = 2, d = 5)
+    ),
+    regexp = "Duplicated targets"
+  )
+  expect_equal(
+    bind_plans(
+      drake_plan(a = 1, b = 1, c = 1),
+      drake_plan(a = 1, b = 1, d = 5)
+    ),
+    drake_plan(
+      a = 1,
+      b = 1,
+      c = 1,
+      d = 5
+    )
+  )
+  expect_equal(
+    bind_plans(
+      drake_plan(d = f(c, b)),
+      drake_plan(c = f(a), a = 5),
+      drake_plan(b = f(a), a = 5)
+    ),
+    drake_plan(
+      d = f(c, b),
+      c = f(a),
+      a = 5,
+      b = f(a)
+    )
   )
 })
 

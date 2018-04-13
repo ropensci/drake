@@ -157,13 +157,6 @@ drake_plan <- function(
   }
   commands <- complete_target_names(commands)
   targets <- names(commands)
-  if (anyDuplicated(targets)) {
-    stop(
-      "The target names in the workflow plan must be unique. ",
-      "Duplicated target names:\n",
-      multiline_message(unique(targets[duplicated(targets)]))
-    )
-  }
   commands <- as.character(commands)
   plan <- tibble(
     target = targets,
@@ -206,8 +199,9 @@ drake_plan <- function(
       plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
     }
   }
-  plan <- parse_custom_columns(plan)
-  sanitize_plan(plan)
+  parse_custom_columns(plan) %>%
+    sanitize_plan %>%
+    handle_duplicated_targets
 }
 
 #' @title Row-bind together drake plans
@@ -234,8 +228,22 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...){
-  out <- dplyr::bind_rows(...)
-  sanitize_plan(out)
+  dplyr::bind_rows(...) %>%
+    sanitize_plan %>%
+    handle_duplicated_targets
+}
+
+handle_duplicated_targets <- function(plan){
+  plan <- plan[!duplicated(plan[, c("target", "command")]), ]
+  dups <- duplicated(plan$target)
+  if (any(dups)){
+    stop(
+      "Duplicated targets with different commands:\n",
+      multiline_message(plan$target[dups]),
+      call. = FALSE
+    )
+  }
+  plan
 }
 
 parse_custom_columns <- function(plan){
