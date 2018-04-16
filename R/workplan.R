@@ -200,8 +200,7 @@ drake_plan <- function(
     }
   }
   parse_custom_columns(plan) %>%
-    sanitize_plan %>%
-    handle_duplicated_targets
+    sanitize_plan
 }
 
 #' @title Row-bind together drake plans
@@ -229,8 +228,7 @@ drake_plan <- function(
 #' # make(your_plan) # nolint
 bind_plans <- function(...){
   dplyr::bind_rows(...) %>%
-    sanitize_plan %>%
-    handle_duplicated_targets
+    sanitize_plan
 }
 
 handle_duplicated_targets <- function(plan){

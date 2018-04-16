@@ -216,16 +216,15 @@ test_with_dir("make() and check_plan() trim outer whitespace in target names", {
   expect_equal(progress(), stat)
 
   expect_warning(
-    make(
+    con <- make(
       x,
       verbose = FALSE,
       targets = c("a", "nobody_home"),
       session_info = FALSE
     )
   )
-
-  x <- tibble(target = c("a", " a"), command = 1)
-  expect_error(check_plan(x, verbose = FALSE))
+  expect_true(all(letters[1:4] %in% cached()))
+  expect_true(all(letters[1:4] %in% con$plan$target))
 })
 
 test_with_dir("make() plays nicely with tibbles", {

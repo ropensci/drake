@@ -20,7 +20,7 @@ sanitize_plan <- function(plan){
   plan$command[is.na(plan$command)] <- ""
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))
-  plan[, cols]
+  handle_duplicated_targets(plan[, cols])
 }
 
 drake_plan_non_factors <- function(){
