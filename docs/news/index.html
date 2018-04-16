@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>All news • drake</title>
+<title>Changelog • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,14 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Changelog" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -132,34 +133,40 @@
 
   <div class="col-md-9">
     <div class="page-header">
-      <h1>Change log <small>All releases</small></h1>
+      <h1>Change log <small></small></h1>
+      <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div class="contents">
     <div id="version-5-1-4" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-5-1-4" class="anchor"></a>Version 5.1.4</h1>
+<h1 class="page-header">
+<a href="#version-5-1-4" class="anchor"></a>Version 5.1.4<small> Unreleased </small>
+</h1>
 <ul>
 <li>Attempt to fix a Solaris CRAN check error. The test at <a href="https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3" class="uri">https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3</a> was previously failing on CRAN’s Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.</li>
 <li>Add an <code>upstream_only</code> argument to <code><a href="../reference/failed.html">failed()</a></code> so users can list failed targets that do not have any failed dependencies. Naturally accompanies <code><a href="../reference/make.html">make(keep_going = TRUE)</a></code>.</li>
 <li>Add an RStudio R Markdown template compatible with <a href="https://krlmlr.github.io/drake-pitch/" class="uri">https://krlmlr.github.io/drake-pitch/</a>.</li>
 <li>Remove <code>plyr</code> as a dependency.</li>
+<li>Handle duplicated targets better in <code><a href="../reference/drake_plan.html">drake_plan()</a></code> and <code><a href="../reference/bind_plans.html">bind_plans()</a></code>.</li>
+<li>Add a true function <code><a href="../reference/target.html">target()</a></code> to help create drake plans with custom columns.</li>
 </ul>
 </div>
     <div id="version-5-1-2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-5-1-2" class="anchor"></a>Version 5.1.2</h1>
+<h1 class="page-header">
+<a href="#version-5-1-2" class="anchor"></a>Version 5.1.2<small> 2018-04-10 </small>
+</h1>
 <ul>
 <li>In R 3.5.0, the <code>!!</code> operator from tidyeval and <code>rlang</code> is parsed differently than in R &lt;= 3.4.4. This change broke one of the tests in <code>tests/testthat/tidy-eval.R</code> The main purpose of <code>drake</code>’s 5.1.2 release is to fix the broken test.</li>
 <li>Fix an elusive <code>R CMD check</code> error from building the pdf manual with LaTeX.</li>
-<li>In <code><a href="../reference/drake_plan.html">drake_plan()</a></code>, allow users to customize target-level columns using <code>target()</code> inside the commands.</li>
+<li>In <code><a href="../reference/drake_plan.html">drake_plan()</a></code>, allow users to customize target-level columns using <code><a href="../reference/target.html">target()</a></code> inside the commands.</li>
 <li>Add a new <code><a href="../reference/bind_plans.html">bind_plans()</a></code> function to concatenate the rows of drake plans and then sanitize the aggregate plan.</li>
 <li>Add an optional <code>session</code> argument to tell <code><a href="../reference/make.html">make()</a></code> to build targets in a separate, isolated master R session. For example, <code><a href="../reference/make.html">make(session = callr::r_vanilla)</a></code>.</li>
 </ul>
 </div>
     <div id="version-5-1-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-5-1-0" class="anchor"></a>Version 5.1.0</h1>
+<h1 class="page-header">
+<a href="#version-5-1-0" class="anchor"></a>Version 5.1.0<small> 2018-03-22 </small>
+</h1>
 <ul>
 <li>Add a <code><a href="../reference/reduce_plan.html">reduce_plan()</a></code> function to do pairwise reductions on collections of targets.</li>
 <li>Forcibly exclude the dot (<code>.</code>) from being a dependency of any target or import. This enforces more consistent behavior in the face of the current static code analysis funcionality, which sometimes detects <code>.</code> and sometimes does not.</li>
@@ -209,8 +216,9 @@
 </ul>
 </div>
     <div id="version-5-0-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-5-0-0" class="anchor"></a>Version 5.0.0</h1>
+<h1 class="page-header">
+<a href="#version-5-0-0" class="anchor"></a>Version 5.0.0<small> 2018-01-26 </small>
+</h1>
 <ul>
 <li>Transfer <code>drake</code> to rOpenSci: <a href="https://github.com/ropensci/drake" class="uri">https://github.com/ropensci/drake</a>
 </li>
@@ -224,7 +232,7 @@
 <li>dataframes_graph()</li>
 </ul>
 </li>
-<li>Always process all the imports before building any targets. This is part of the solution to #168: if imports and targets are processed together, the full power of parallelism is taken away from the targets. Also, the way parallelism happens is now consistent for all parallel backends.</li>
+<li>Always process all the imports before building any targets. This is part of the solution to <a href='https://github.com/ropensci/drake/issues/168'>#168</a>: if imports and targets are processed together, the full power of parallelism is taken away from the targets. Also, the way parallelism happens is now consistent for all parallel backends.</li>
 <li>Major speed improvement: dispense with internal inventories and rely on <code>cache$exists()</code> instead.</li>
 <li>Let the user define a trigger for each target to customize when <code><a href="../reference/make.html">make()</a></code> decides to build targets.</li>
 <li>Document triggers and other debugging/testing tools in the new <a href="https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd">debug vignette</a>.</li>
@@ -317,8 +325,9 @@
 </ul>
 </div>
     <div id="version-4-4-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-4-4-0" class="anchor"></a>Version 4.4.0</h1>
+<h1 class="page-header">
+<a href="#version-4-4-0" class="anchor"></a>Version 4.4.0<small> 2017-11-05 </small>
+</h1>
 <ul>
 <li>Extend <code><a href="../reference/plot_graph.html">plot_graph()</a></code> to display subcomponents. Check out arguments <code>from</code>, <code>mode</code>, <code>order</code>, and <code>subset</code>. The <a href="https://github.com/ropensci/drake/blob/master/vignettes/graph.Rmd">graphing vignette</a> has demonstrations.</li>
 <li>Add <code>"future_lapply"</code> parallelism: parallel backends supported by the <a href="https://github.com/HenrikBengtsson/future">future</a> and <a href="https://github.com/HenrikBengtsson/future.batchtools">future.batchtools</a> packages. See <code><a href="../reference/backend.html">?backend</a></code> for examples and the <a href="https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd">parallelism vignette</a> for an introductory tutorial. More advanced instruction can be found in the <code>future</code> and <code>future.batchtools</code> packages themselves.</li>
@@ -340,8 +349,9 @@
 </ul>
 </div>
     <div id="version-4-3-0-2017-10-17" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-4-3-0-2017-10-17" class="anchor"></a>Version 4.3.0: 2017-10-17</h1>
+<h1 class="page-header">
+<a href="#version-4-3-0-2017-10-17" class="anchor"></a>Version 4.3.0: 2017-10-17<small> 2017-10-18 </small>
+</h1>
 <p>Version 4.3.0 has:</p>
 <ul>
 <li><a href="https://github.com/ropensci/drake/pull/56">Reproducible random numbers</a></li>
@@ -351,18 +361,21 @@
 </ul>
 </div>
     <div id="version-4-2-0-2017-09-29" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-4-2-0-2017-09-29" class="anchor"></a>Version 4.2.0: 2017-09-29</h1>
+<h1 class="page-header">
+<a href="#version-4-2-0-2017-09-29" class="anchor"></a>Version 4.2.0: 2017-09-29<small> 2017-09-29 </small>
+</h1>
 <p>Version 4.2.0 will be released today. There are several improvements to code style and performance. In addition, there are new features such as cache/hash externalization and runtime prediction. See the new storage and timing vignettes for details. This release has automated checks for back-compatibility with existing projects, and I also did manual back compatibility checks on serious projects.</p>
 </div>
     <div id="version-3-0-0-2017-05-03" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-3-0-0-2017-05-03" class="anchor"></a>Version 3.0.0: 2017-05-03</h1>
+<h1 class="page-header">
+<a href="#version-3-0-0-2017-05-03" class="anchor"></a>Version 3.0.0: 2017-05-03<small> 2017-05-09 </small>
+</h1>
 <p>Version 3.0.0 is coming out. It manages environments more intelligently so that the behavior of <code><a href="../reference/make.html">make()</a></code> is more consistent with evaluating your code in an interactive session.</p>
 </div>
     <div id="version-1-0-1-2017-02-28" class="section level1">
-<h1 class="hasAnchor">
-<a href="#version-1-0-1-2017-02-28" class="anchor"></a>Version 1.0.1: 2017-02-28</h1>
+<h1 class="page-header">
+<a href="#version-1-0-1-2017-02-28" class="anchor"></a>Version 1.0.1: 2017-02-28<small> 2017-02-27 </small>
+</h1>
 <p>Version 1.0.1 is on CRAN! I’m already working on a massive update, though. 2.0.0 is cleaner and more powerful.</p>
 </div>
     </div>
@@ -393,7 +406,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -401,3 +414,4 @@
 
   </body>
 </html>
+

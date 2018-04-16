@@ -33,7 +33,7 @@ plan <- drake_plan(
   strings_in_dots = "literals"
 )
 plan
-# make(plan)
+# make(plan) # nolint
 # Call target() inside or outside drake_plan().
 target(
   command = download_data("www.your_url.com"),

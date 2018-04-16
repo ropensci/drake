@@ -8,8 +8,11 @@
 <title>Storage • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Storage">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -112,8 +115,11 @@
             <h3 class="subtitle">Caching, hashing, and customization</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-13</h4>
-          </div>
+            <h4 class="date">2018-04-15</h4>
+      
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/storage.Rmd"><code>vignettes/storage.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -128,9 +134,9 @@
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>You can explore your cached data using functions like <code><a href="../reference/loadd.html">loadd()</a></code>, <code><a href="../reference/readd.html">readd()</a></code>, and <code><a href="../reference/cached.html">cached()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw"><a href="../reference/cached.html">cached</a></span>())
-## [1] "\"report.md\""          "\"report.Rmd\""        
-## [3] "coef_regression1_large" "coef_regression1_small"
-## [5] "coef_regression2_large" "coef_regression2_small"
+## [1] "coef_regression1_large" "coef_regression1_small"
+## [3] "coef_regression2_large" "coef_regression2_small"
+## [5] "data.frame"             "knit"
 
 <span class="kw">head</span>(<span class="kw"><a href="../reference/readd.html">readd</a></span>(small))
 ##       x    y
@@ -167,20 +173,20 @@ cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_c
 ## [1] "storr" "R6"
 
 cache$<span class="kw">list</span>() <span class="co"># Functionality from storr</span>
-##  [1] "\"report.md\""          "\"report.Rmd\""        
-##  [3] "coef_regression1_large" "coef_regression1_small"
-##  [5] "coef_regression2_large" "coef_regression2_small"
-##  [7] "data.frame"             "knit"                  
-##  [9] "large"                  "lm"                    
-## [11] "mtcars"                 "nrow"                  
-## [13] "random_rows"            "reg1"                  
-## [15] "reg2"                   "regression1_large"     
-## [17] "regression1_small"      "regression2_large"     
-## [19] "regression2_small"      "sample.int"            
+##  [1] "coef_regression1_large" "coef_regression1_small"
+##  [3] "coef_regression2_large" "coef_regression2_small"
+##  [5] "data.frame"             "knit"                  
+##  [7] "large"                  "lm"                    
+##  [9] "mtcars"                 "nrow"                  
+## [11] "random_rows"            "reg1"                  
+## [13] "reg2"                   "regression1_large"     
+## [15] "regression1_small"      "regression2_large"     
+## [17] "regression2_small"      "\"report.md\""         
+## [19] "\"report.Rmd\""         "sample.int"            
 ## [21] "simulate"               "small"                 
-## [23] "summ_regression1_large" "summ_regression1_small"
-## [25] "summ_regression2_large" "summ_regression2_small"
-## [27] "summary"                "suppressWarnings"
+## [23] "summary"                "summ_regression1_large"
+## [25] "summ_regression1_small" "summ_regression2_large"
+## [27] "summ_regression2_small" "suppressWarnings"
 
 <span class="kw">head</span>(cache$<span class="kw">get</span>(<span class="st">"small"</span>)) <span class="co"># Functionality from storr</span>
 ##       x    y
@@ -203,19 +209,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "bb0d30dcd3501abec0f57b8937f6c4b0"</code></pre></div>
+## [1] "515a0688c805909bd9945922e9196cdc"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "38686dc6cc5150a6482f313702f20e88e10444715be16e731428be84db851b0874ed4404f099f6ca5e1141ca00ed7b9ba73149e6c3969ee8cb3a1b031ab28cab"
+## [1] "4c9cb5a3468fc9655f70f790ed7f8206d9ed5609287c002ced673d9a33d73fe33133275801ae155fe90c3334c238dd6be6f5129a977204f973b4030c23b1dc61"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "bb0d30dcd3501abec0f57b8937f6c4b0"
+## [1] "515a0688c805909bd9945922e9196cdc"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "9e94d54fa6a1e80f"
+## [1] "999f2f8e334e6237"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "3cf30a3d"</code></pre></div>
+## [1] "76adb076"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
@@ -267,11 +273,11 @@ config$cache &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <p>Below, the targets become outdated because the existing hash keys do not match the new hash algorithm.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config$cache)
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "\"report.md\""          "coef_regression1_large"
-##  [3] "coef_regression1_small" "coef_regression2_large"
-##  [5] "coef_regression2_small" "large"                 
-##  [7] "regression1_large"      "regression1_small"     
-##  [9] "regression2_large"      "regression2_small"     
+##  [1] "coef_regression1_large" "coef_regression1_small"
+##  [3] "coef_regression2_large" "coef_regression2_small"
+##  [5] "large"                  "regression1_large"     
+##  [7] "regression1_small"      "regression2_large"     
+##  [9] "regression2_small"      "\"report.md\""         
 ## [11] "small"                  "summ_regression1_large"
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"
@@ -377,23 +383,23 @@ cache &lt;-<span class="st"> </span>storr::<span class="kw"><a href="http://www.
 <div id="cleaning-up" class="section level1">
 <h1 class="hasAnchor">
 <a href="#cleaning-up" class="anchor"></a>Cleaning up</h1>
-<p>If you want to start from scratch, you can <code><a href="../reference/clean.html">clean()</a></code> the cache. Use the <code>destroy</code> argument to remove it completely. <code>cache$del()</code> and <code>cache$destroy()</code> are also options, but they leave output file targets dangling. By contrast, <code><a href="../reference/clean.html">clean(destroy = TRUE)</a></code> removes file targets generated by <code><a href="http://www.rdocumentation.org/packages/drake/topics/make">drake::make()</a></code>. <code><a href="../reference/drake_gc.html">drake_gc()</a></code> and <code><a href="../reference/clean.html">clean(..., garbage_collection = TRUE)</a></code> do garbage collection, and <code><a href="../reference/clean.html">clean(purge = TRUE)</a></code> removes all target-level data, not just the final output values.</p>
+<p>If you want to start from scratch, you can <code><a href="../reference/clean.html">clean()</a></code> the cache. Use the <code>destroy</code> argument to remove it completely. <code>cache$del()</code> and <code>cache$destroy()</code> are also options, but they leave output file targets dangling. By contrast, <code><a href="../reference/clean.html">clean(destroy = TRUE)</a></code> removes file targets generated by <code><a href="../reference/make.html">drake::make()</a></code>. <code><a href="../reference/drake_gc.html">drake_gc()</a></code> and <code><a href="../reference/clean.html">clean(..., garbage_collection = TRUE)</a></code> do garbage collection, and <code><a href="../reference/clean.html">clean(purge = TRUE)</a></code> removes all target-level data, not just the final output values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(small, large)
 
 <span class="kw"><a href="../reference/cached.html">cached</a></span>() <span class="co"># 'small' and 'large' are gone</span>
-##  [1] "\"report.md\""          "\"report.Rmd\""        
-##  [3] "coef_regression1_large" "coef_regression1_small"
-##  [5] "coef_regression2_large" "coef_regression2_small"
-##  [7] "data.frame"             "knit"                  
-##  [9] "lm"                     "mtcars"                
-## [11] "nrow"                   "random_rows"           
-## [13] "reg1"                   "reg2"                  
-## [15] "regression1_large"      "regression1_small"     
-## [17] "regression2_large"      "regression2_small"     
+##  [1] "coef_regression1_large" "coef_regression1_small"
+##  [3] "coef_regression2_large" "coef_regression2_small"
+##  [5] "data.frame"             "knit"                  
+##  [7] "lm"                     "mtcars"                
+##  [9] "nrow"                   "random_rows"           
+## [11] "reg1"                   "reg2"                  
+## [13] "regression1_large"      "regression1_small"     
+## [15] "regression2_large"      "regression2_small"     
+## [17] "\"report.md\""          "\"report.Rmd\""        
 ## [19] "sample.int"             "simulate"              
-## [21] "summ_regression1_large" "summ_regression1_small"
-## [23] "summ_regression2_large" "summ_regression2_small"
-## [25] "summary"                "suppressWarnings"
+## [21] "summary"                "summ_regression1_large"
+## [23] "summ_regression1_small" "summ_regression2_large"
+## [25] "summ_regression2_small" "suppressWarnings"
 
 <span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>)
 
@@ -430,7 +436,7 @@ cache &lt;-<span class="st"> </span>storr::<span class="kw"><a href="http://www.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

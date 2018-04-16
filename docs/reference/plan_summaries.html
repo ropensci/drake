@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Generate a workflow plan data frame for summarizing
-multiple analyses of multiple datasets multiple ways. <U+2014> plan_summaries • drake</title>
+multiple analyses of multiple datasets multiple ways. — plan_summaries • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -19,13 +19,19 @@ multiple analyses of multiple datasets multiple ways. <U+2014> plan_summaries �
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Generate a workflow plan data frame for summarizing
+multiple analyses of multiple datasets multiple ways. — plan_summaries" />
+
+<meta property="og:description" content="Uses wildcards to create a new
+workflow plan data frame from a template data frame." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -134,6 +140,7 @@ multiple analyses of multiple datasets multiple ways. <U+2014> plan_summaries �
     <div class="page-header">
     <h1>Generate a workflow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/generate.R'><code>R/generate.R</code></a></small>
     </div>
 
     
@@ -212,8 +219,8 @@ analyses of multiple datasets in multiple ways.</p>
 #&gt; 8 coef_regression2_large coefficients(regression2_large)</div><div class='input'><span class='fu'>plan_summaries</span>(<span class='no'>summary_types</span>, <span class='no'>analyses</span>, <span class='no'>datasets</span>)</div><div class='output co'>#&gt; # A tibble: 10 x 2
 #&gt;    target                 command                                              
 #&gt;    &lt;chr&gt;                  &lt;chr&gt;                                                
-#&gt;  1 coef                   list(coef_regression1_small = coef_regression1_small~
-#&gt;  2 summ                   list(summ_regression1_small = summ_regression1_small~
+#&gt;  1 coef                   list(coef_regression1_small = coef_regression1_small…
+#&gt;  2 summ                   list(summ_regression1_small = summ_regression1_small…
 #&gt;  3 summ_regression1_small summary(regression1_small)                           
 #&gt;  4 summ_regression1_large summary(regression1_large)                           
 #&gt;  5 summ_regression2_small summary(regression2_small)                           
@@ -224,8 +231,8 @@ analyses of multiple datasets in multiple ways.</p>
 #&gt; 10 coef_regression2_large coefficients(regression2_large)                      </div><div class='input'><span class='fu'>plan_summaries</span>(<span class='no'>summary_types</span>, <span class='no'>analyses</span>, <span class='no'>datasets</span>, <span class='kw'>gather</span> <span class='kw'>=</span> <span class='st'>"list"</span>)</div><div class='output co'>#&gt; # A tibble: 10 x 2
 #&gt;    target                 command                                              
 #&gt;    &lt;chr&gt;                  &lt;chr&gt;                                                
-#&gt;  1 coef                   list(coef_regression1_small = coef_regression1_small~
-#&gt;  2 summ                   list(summ_regression1_small = summ_regression1_small~
+#&gt;  1 coef                   list(coef_regression1_small = coef_regression1_small…
+#&gt;  2 summ                   list(summ_regression1_small = summ_regression1_small…
 #&gt;  3 summ_regression1_small summary(regression1_small)                           
 #&gt;  4 summ_regression1_large summary(regression1_large)                           
 #&gt;  5 summ_regression2_small summary(regression2_small)                           
@@ -246,8 +253,8 @@ analyses of multiple datasets in multiple ways.</p>
 #&gt;  4 regression1_large      reg1(large)                                          
 #&gt;  5 regression2_small      reg2(small)                                          
 #&gt;  6 regression2_large      reg2(large)                                          
-#&gt;  7 coef                   rbind(coef_regression1_small = coef_regression1_smal~
-#&gt;  8 summ                   list(summ_regression1_small = summ_regression1_small~
+#&gt;  7 coef                   rbind(coef_regression1_small = coef_regression1_smal…
+#&gt;  8 summ                   list(summ_regression1_small = summ_regression1_small…
 #&gt;  9 summ_regression1_small summary(regression1_small)                           
 #&gt; 10 summ_regression1_large summary(regression1_large)                           
 #&gt; 11 summ_regression2_small summary(regression2_small)                           
@@ -278,7 +285,7 @@ analyses of multiple datasets in multiple ways.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -286,3 +293,4 @@ analyses of multiple datasets in multiple ways.</p>
 
   </body>
 </html>
+

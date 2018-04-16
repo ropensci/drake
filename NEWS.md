@@ -5,6 +5,7 @@
 - Add an RStudio R Markdown template compatible with https://krlmlr.github.io/drake-pitch/.
 - Remove `plyr` as a dependency.
 - Handle duplicated targets better in `drake_plan()` and `bind_plans()`.
+- Add a true function `target()` to help create drake plans with custom columns.
 
 # Version 5.1.2
 

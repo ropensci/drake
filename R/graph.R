@@ -34,7 +34,7 @@ build_drake_graph <- function(
   }
   targets <- sanitize_targets(plan, targets)
   imports <- as.list(envir)
-  assert_unique_names(
+  unload_conflicts(
     imports = names(imports),
     targets = plan$target,
     envir = envir,
@@ -167,16 +167,7 @@ prune_drake_graph <- function(
   delete_vertices(graph = graph, v = ignore)
 }
 
-assert_unique_names <- function(imports, targets, envir, verbose){
-  if (anyDuplicated(targets)){
-    duplicated <- which(table(targets) > 1) %>%
-      names()
-    stop(
-      "Duplicate targets in workflow plan:\n",
-      multiline_message(duplicated),
-      call. = FALSE
-    )
-  }
+unload_conflicts <- function(imports, targets, envir, verbose){
   common <- intersect(imports, targets)
   if (verbose & length(common)){
     message(

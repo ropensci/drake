@@ -8,8 +8,11 @@
 <title>Caution • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Caution">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -112,8 +115,11 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-13</h4>
-          </div>
+            <h4 class="date">2018-04-15</h4>
+      
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/caution.Rmd"><code>vignettes/caution.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -314,7 +320,7 @@ myplan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 
 <span class="kw">ls</span>() <span class="co"># Check that your workspace did not change.</span>
 ## [1] "bad_plan"    "envir"       "error"       "f"           "letter"     
-## [6] "little_b"    "my_plan"     "my_variable" "myplan"
+## [6] "little_b"    "myplan"      "my_plan"     "my_variable"
 
 <span class="kw">ls</span>(envir) <span class="co"># Check your evaluation environment.</span>
 ## [1] "f"   "g"   "out"
@@ -380,10 +386,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "812f9ee05d4766eaf602e6ca0a582cbb"
+## [1] "b7a27fda2e671350774ec123ae85fe6c"
 example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "09496fe8e201438ef803c80eb531b3cc"</code></pre></div>
+## [1] "486750b90d20bf606ac8b08e0e4e3208"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>
@@ -422,7 +428,7 @@ example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new<
 
 command &lt;-<span class="st"> "x &lt;- digest::digest(file_in(</span><span class="ch">\"</span><span class="st">input_file.rds</span><span class="ch">\"</span><span class="st">)); assign(</span><span class="ch">\"</span><span class="st">x</span><span class="ch">\"</span><span class="st">, 1); x"</span> <span class="co"># nolint</span>
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(command)
-## [1] "\"input_file.rds\"" "assign"             "digest::digest"</code></pre></div>
+## [1] "assign"             "digest::digest"     "\"input_file.rds\""</code></pre></div>
 <p><code>Drake</code> takes special precautions so that a target/import does not depend on itself. For example, <code><a href="../reference/deps.html">deps(f)</a></code> might return <code>"f"</code> if <code>f()</code> is a recursive function, but <code><a href="../reference/make.html">make()</a></code> just ignores this conflict and runs as expected. In other words, <code><a href="../reference/make.html">make()</a></code> automatically removes all self-referential loops in the dependency network.</p>
 </div>
 <div id="dependencies-of-knitr-reports" class="section level2">
@@ -525,7 +531,7 @@ dovec &lt;-<span class="st"> </span>names %in%<span class="st"> </span>vectorize
 <div id="proper-makefiles-are-not-standalone-" class="section level2">
 <h2 class="hasAnchor">
 <a href="#proper-makefiles-are-not-standalone-" class="anchor"></a>Proper Makefiles are not standalone.</h2>
-<p>The <a href="http://kbroman.org/minimal_make/">Makefile</a> generated by <code><a href="../reference/make.html">make(myplan, parallelism = "Makefile")</a></code> is not standalone. Do not run it outside of <code><a href="http://www.rdocumentation.org/packages/drake/topics/make">drake::make()</a></code>. <code>Drake</code> uses dummy timestamp files to tell the <a href="http://kbroman.org/minimal_make/">Makefile</a> what to do, and running <code>make</code> in the <a href="https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/">terminal</a> will most likely give incorrect results.</p>
+<p>The <a href="http://kbroman.org/minimal_make/">Makefile</a> generated by <code><a href="../reference/make.html">make(myplan, parallelism = "Makefile")</a></code> is not standalone. Do not run it outside of <code><a href="../reference/make.html">drake::make()</a></code>. <code>Drake</code> uses dummy timestamp files to tell the <a href="http://kbroman.org/minimal_make/">Makefile</a> what to do, and running <code>make</code> in the <a href="https://www.howtogeek.com/140679/beginner-geek-how-to-start-using-the-linux-terminal/">terminal</a> will most likely give incorrect results.</p>
 </div>
 <div id="makefile-level-parallelism-for-imported-objects-and-files" class="section level2">
 <h2 class="hasAnchor">
@@ -542,7 +548,7 @@ dovec &lt;-<span class="st"> </span>names %in%<span class="st"> </span>vectorize
   includes &lt;-<span class="st"> "#include &lt;sys/wait.h&gt;"</span>
   code &lt;-<span class="st"> "int wstat; while (waitpid(-1, &amp;wstat, WNOHANG) &gt; 0) {};"</span>
 
-  wait &lt;-<span class="st"> </span>inline::<span class="kw"><a href="http://www.rdocumentation.org/packages/inline/topics/cfunction">cfunction</a></span>(
+  wait &lt;-<span class="st"> </span>inline::<span class="kw">cfunction</span>(
     <span class="dt">body =</span> code,
     <span class="dt">includes =</span> includes,
     <span class="dt">convention =</span> <span class="st">".C"</span>
@@ -661,7 +667,7 @@ keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

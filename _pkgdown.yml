@@ -82,6 +82,7 @@ reference:
   - '`file_store`'
   - '`knitr_in`'
   - '`ignore`'
+  - '`target`'
   - '`analysis_wildcard`'
   - '`dataset_wildcard`'
   - '`evaluate_plan`'
