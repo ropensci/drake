@@ -422,19 +422,6 @@ analyze_knitr_in <- function(expr){
   out
 }
 
-analyze_target_call <- function(expr){
-  out <- as.list(expr)
-  out[nzchar(names(out))] %>%
-    purrr::map(.f = function(x){
-      if (is.language(x)){
-        wide_deparse(x)
-      } else {
-        x
-      }
-    }) %>%
-    tibble::as_tibble()
-}
-
 parse_loadd_arg_list <- function(expr){
   lapply(as.list(expr)[-1], function(arg){
     inputs <- quiet_get_inputs(arg)

@@ -413,9 +413,10 @@ test_with_dir("ignore() in imported functions", {
 })
 
 test_with_dir("custom column interface", {
+  tidyvar <- 2
   plan <- drake_plan(
     x = target(
-      command = 1 + 2,
+      command = 1 + !!tidyvar,
       trigger = "always",
       user_column_1 = 1,
       user_column_2 = "some text"

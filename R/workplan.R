@@ -257,7 +257,7 @@ parse_custom_colums_row <- function(row){
   if (!length(expr) || !is_target_call(expr[[1]])){
     return(row)
   }
-  out <- analyze_target_call(expr[[1]])
+  out <- eval(expr[[1]])
   out$target <- row$target
   out
 }
@@ -493,4 +493,48 @@ detect_arrow <- function(command){
   } else {
     NULL
   }
+}
+
+#' @title Define custom columns in a [drake_plan()].
+#' @description The `target()` function lets you define
+#' custom columns in a workflow plan data frame, both
+#' inside and outside calls to [drake_plan()].
+#' @export
+#' @seealso [drake_plan()], [make()]
+#' @return A one-row workflow plan data frame with the named
+#' arguments as columns.
+#' @param ... named arguments specifying fields of the workflow plan.
+#'   Tidy evaluation will be applied to them, so the `!!` operator
+#'   is evaluated immediately for expressions and language objects.
+#' @examples
+#' # Use target() to create your own custom columns in a drake plan.
+#' # See ?triggers for more on triggers.
+#' plan <- drake_plan(
+#'   website_data = target(
+#'     command = download_data("www.your_url.com"),
+#'     trigger = "always",
+#'     custom_column = 5
+#'   ),
+#'   analysis = analyze(website_data),
+#'   strings_in_dots = "literals"
+#' )
+#' plan
+#' # make(plan)
+#' # Call target() inside or outside drake_plan().
+#' target(
+#'   command = download_data("www.your_url.com"),
+#'   trigger = "always",
+#'   custom_column = 5
+#' )
+target <- function(...){
+  out <- rlang::exprs(...)
+  out[nzchar(names(out))] %>%
+    purrr::map(.f = function(x){
+      if (is.language(x)){
+        wide_deparse(x)
+      } else {
+        x
+      }
+    }) %>%
+    tibble::as_tibble()
 }
