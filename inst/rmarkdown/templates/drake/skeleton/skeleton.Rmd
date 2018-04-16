@@ -27,45 +27,6 @@ To compile this report,
 
 1. Name it `report.Rmd`.
 2. Install the [`drake`](https://github.com/ropensci/drake) and [`tidyverse`](https://github.com/tidyverse/tidyverse) packages. 
-3. Run the [`drake`](https://github.com/ropensci/drake) workflow in the code chunk below.
+3. Use [`run_drake.R`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/run_drake.R) (included with this template) to run the [`drake`](https://github.com/ropensci/drake) workflow that compiles this report.
 
 Step 3 not only generates the output file `report.html`, but also produces a `.drake/` cache in your working directory, which enables `report.Rmd` to compile on its own with with [RStudio](https://www.rstudio.com/products/RStudio/), [`knitr`](https://github.com/yihui/knitr), or [`rmarkdown`](https://github.com/rstudio/rmarkdown). A great way way to generate `report.html` is still `make(plan)`. That way, compilation happens if and only if there were changes to `report.Rmd`, `report.html`, `raw_data`, `fit`, or `hist` since the last `make()`.
-
-```{r prework, eval = FALSE}
-# Load your packages in the usual way.
-
-library(drake)
-library(tidyverse)
-
-# Your custom code is a bunch of functions.
-
-get_data <- function(){
-  iris
-}
-
-create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram()
-}
-
-# The workflow plan is a data frame.
-# It outlines the steps of the workflow but does not run it.
-
-plan <- drake_plan(
-  raw_data = get_data(),
-  data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)),
-  hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  rmarkdown::render(
-    knitr_in("skeleton.Rmd"),
-    output_file = file_out("report.html"),
-    quiet = TRUE
-  )
-)
-
-# The make() function actually runs the workflow
-# and generates report.html.
-
-make(plan)
-```
