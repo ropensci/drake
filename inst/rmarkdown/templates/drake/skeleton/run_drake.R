@@ -24,7 +24,7 @@ plan <- drake_plan(
   hist = create_plot(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
   rmarkdown::render(
-    knitr_in("skeleton.Rmd"),
+    knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
     quiet = TRUE
   )
