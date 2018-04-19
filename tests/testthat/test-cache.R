@@ -140,6 +140,7 @@ test_with_dir("cache functions work", {
   drake_gc()
   y <- cached()
   expect_equal(sort(x), sort(y))
+  expect_equal(outdated(config), character(0))
 
   # targets
   all <- sort(c("\"input.rds\"",

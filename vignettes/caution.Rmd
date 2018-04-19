@@ -427,8 +427,12 @@ keys/config/am9icw (Sandy Sum's conflicted copy 2018-01-31)
 keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 </code></pre>
 
-Just remove these files and proceed with your work.
+Just remove these files using `drake_gc()` and proceed with your work.
 
+```r
+cache <- get_cache()
+drake_gc(cache)
+```
 
 ## Cache customization is limited
 

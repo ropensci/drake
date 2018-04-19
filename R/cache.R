@@ -424,6 +424,11 @@ drake_version <- function(session_info = NULL){ # nolint
   all_pkgs$drake$Version # nolint
 }
 
+is_default_cache <- function(cache){
+  "driver_rds" %in% class(cache$driver) &&
+    identical(cache$driver$mangle_key, TRUE)
+}
+
 safe_get <- function(key, namespace, config){
   if (config$cache$exists(key = key, namespace = namespace)){
     config$cache$get(key = key, namespace = namespace)

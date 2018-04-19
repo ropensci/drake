@@ -233,8 +233,17 @@ drake_gc <- function(
   }
   if (!is.null(cache)){
     cache$gc()
+    rm_bad_cache_filenames(cache)
   }
   invisible()
+}
+
+rm_bad_cache_filenames <- function(cache){
+  if (is_default_cache(cache)){
+    files <- list.files(path = cache$driver$path, recursive = TRUE)
+    keep <- grepl(pattern = "^[-_./\\0-9a-zA-Z]*$", x = files)
+    unlink(files[!keep], recursive = TRUE)
+  }
 }
 
 #' @title Try to repair a drake cache that is prone

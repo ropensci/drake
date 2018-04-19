@@ -6,6 +6,7 @@
 - Remove `plyr` as a dependency.
 - Handle duplicated targets better in `drake_plan()` and `bind_plans()`.
 - Add a true function `target()` to help create drake plans with custom columns.
+- In `drake_gc()`, clean out disruptive files in `storr`s with mangled keys (re: https://github.com/ropensci/drake/issues/198).
 
 # Version 5.1.2
 
