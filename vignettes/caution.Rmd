@@ -213,7 +213,7 @@ example_class <- R6Class(
   private = list(data = list()),
   public = list(
     initialize = function(data = list()) {
-      private$data = data
+      private$data <- data
     }
   )
 )
@@ -429,7 +429,7 @@ keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 
 Just remove these files using `drake_gc()` and proceed with your work.
 
-```r
+```{r drakegc, eval = FALSE}
 cache <- get_cache()
 drake_gc(cache)
 ```
