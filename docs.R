@@ -207,6 +207,72 @@ images <- function(){
     width = "100%", height = "500px"
   )
 
+  # drake.Rmd vignette
+  readr::write_csv(iris, "raw-data.csv")
+  pkgconfig::set_config("drake::strings_in_dots" = "literals")
+  rmd <- system.file(
+    file.path(
+      "rmarkdown", "templates", "drake", "skeleton", "skeleton.Rmd"
+    ),
+    package = "drake",
+    mustWork = TRUE
+  )
+  file.copy(from = rmd, to = "report.Rmd")
+  plan <- drake_plan(
+    raw_data = readxl::read_csv(file_in("raw-data.csv")),
+    data = raw_data %>%
+      mutate(Species = forcats::fct_inorder(Species)),
+    hist = create_plot(data),
+    fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+    rmarkdown::render(
+      knitr_in("report.Rmd"),
+      output_file = file_out("report.md"),
+      quiet = TRUE
+    )
+  )
+  create_plot <- function(data) {
+    ggplot(data, aes(x = Petal.Width, fill = Species)) +
+      geom_histogram()
+  }
+  config <- drake_config(plan)
+  vis_drake_graph(
+    config, from = file_store("raw-data.csv"), mode = "out",
+    build_times = "none", ncol_legend = 0, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("pitch1.html")
+  )
+  make(plan)
+  plan <- drake_plan(
+    raw_data = readxl::read_csv(file_in("raw-data.csv")),
+    data = raw_data %>%
+      mutate(Species = forcats::fct_inorder(Species)) %>%
+      select(-X__1),
+    hist = create_plot(data),
+    fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+    rmarkdown::render(
+      knitr_in("report.Rmd"),
+      output_file = file_out("report.md"),
+      quiet = TRUE
+    )
+  )
+  vis_drake_graph(
+    config, from = file_store("raw-data.csv"), mode = "out",
+    build_times = "none", full_legend = FALSE, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("pitch2.html")
+  )
+  create_plot <- function(data) {
+    ggplot(data, aes(x = Petal.Width, fill = Species)) +
+      geom_histogram() +
+      geom_histogram(binwidth = 0.25) +
+      theme_gray(20)
+  }
+  vis_drake_graph(
+    config, from = file_store("raw-data.csv"), mode = "out",
+    build_times = "none", full_legend = FALSE, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("pitch3.html")
+  )
   # Clean up.
   for (file in files){
     file.remove(file)

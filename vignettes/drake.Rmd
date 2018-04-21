@@ -1,7 +1,7 @@
 ---
 title: "drake"
-subtitle: "where to begin"
-author: "Will Landau"
+subtitle: "get started"
+author: "Will Landau and Kirill Müller"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -21,22 +21,30 @@ clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
   collapse = TRUE,
-  error = TRUE,
   warning = TRUE
 )
-readr::write_csv(iris, "raw-data.csv")
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
+write.csv(iris, "raw-data.csv")
+rmd <- system.file(
+  file.path(
+    "rmarkdown", "templates", "drake", "skeleton", "skeleton.Rmd"
+  ),
+  package = "drake",
+  mustWork = TRUE
+)
+file.copy(from = rmd, to = "report.Rmd")
+invisible()
 ```
 
-According to [Tidyverse](https://www.tidyverse.org/) wisdom, a typical project is a sequence of data transformations: importing, tidying, on up through communicating.
+A typical data analysis workflow is a sequence of data transformations.
 
-<img src="https://ropensci.github.io/drake/images/tidydag.png" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;">
 
-Lay out these transformations with a workflow plan data frame. The `drake_plan()` function creates the plan but does not run anything.
+In `drake`, you declare all the transformations in a data frame of targets and commands. The `drake_plan()` function creates the workflow plan data frame but does not run it.
 
 ```{r pitchplan}
 plan <- drake_plan(
-  raw_data = readxl::read_csv(file_in("raw-data.csv")),
+  raw_data = read_csv(file_in("raw-data.csv")),
   data = raw_data %>%
     mutate(Species = forcats::fct_inorder(Species)),
   hist = create_plot(data),
@@ -50,7 +58,7 @@ plan <- drake_plan(
 plan
 ```
 
-Plans usually need supporting functions and packages from you. Load them.
+Plans usually reference supporting functions and packages. Simply load them into your R session.
 
 ```{r pitchfunctions}
 library(drake)
@@ -61,15 +69,18 @@ create_plot <- function(data) {
 }
 ```
 
-The dependency graph visualizes the data transformations. The steps are in the correct order regardless of the row order of the plan.
+The network graph visualizes the dependencies among the files, functions, targets, and other intermediate data objects. The dependency relationships depend on how the objects are referenced, not on the order of the rows in the workflow plan data frame.
 
-```{r pitchgraph1}
+```{r pitchgraph1, eval = FALSE}
 config <- drake_config(plan)
-vis_drake_graph(
-  config, from = file_store("raw-data.csv"), mode = "out",
-  build_times = "none", ncol_legend = 0, width = "100%"
-)
+vis_drake_graph(config)
 ```
+
+<iframe
+src = "https://ropensci.github.io/drake/images/pitch1.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
 
 Use the `make()` function to actually run the workflow.
 
@@ -94,11 +105,11 @@ loadd(data, hist)
 data
 ```
 
-At this point, I notice an unwanted `X__1` column in the data. Let's change the plan to remove it.
+At this point, we notice an unwanted `X__1` column in the data. Let's change the plan to remove it.
 
 ```{r pitchx1}
 plan <- drake_plan(
-  raw_data = readxl::read_csv(file_in("raw-data.csv")),
+  raw_data = read_csv(file_in("raw-data.csv")),
   data = raw_data %>%
     mutate(Species = forcats::fct_inorder(Species)) %>%
     select(-X__1),
@@ -112,17 +123,19 @@ plan <- drake_plan(
 )
 ```
 
-The changed command affects `data` and everything depending on it is out of date.
+The changed command affects `data` and everything depending on it. Those targets are now out of date.
 
-```{r pitchgraph2}
-config <- drake_config(plan)
-vis_drake_graph(
-  config, from = file_store("raw-data.csv"), mode = "out",
-  build_times = "none", full_legend = FALSE, width = "100%"
-)
+```{r pitchgraph2, eval = FALSE}
+vis_drake_graph(config)
 ```
 
-But there is no reason to update `raw_data`.
+<iframe
+src = "https://ropensci.github.io/drake/images/pitch2.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+The next `make()` just builds the outdated targets and leaves `raw_data` alone.
 
 ```{r pitchmake2}
 make(plan)
@@ -130,7 +143,7 @@ make(plan)
 readd(data)
 ```
 
-Skipping up-to-date targets saves time, and we will need those time savings when we go back and change things over and over again. For example, we forgot to select a bin width for our histogram.
+Skipping targets saves time when we repeatedly go back and change things. For example, we forgot to select a bin width for our histogram.
 
 ```{r readdhist2}
 readd(hist)
@@ -150,20 +163,22 @@ create_plot <- function(data) {
 Only the histogram and the report need to change.
 
 ```{r pitchgraph3}
-vis_drake_graph(
-  config,
-  build_times = "none", full_legend = FALSE, width = "100%"
-)
+vis_drake_graph(config)
 ```
 
-So the next `make()` skips the data processing/modeling.
+<iframe
+src = "https://ropensci.github.io/drake/images/pitch3.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+So the next `make()` skips all the data wrangling and model fitting.
 
 ```{r histmake}
 make(plan)
 ```
 
-```{r endofline_drake, echo = F}
+```{r endofline_pitch, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
-unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+unlink(c("report.Rmd", "raw-data.csv", "STDIN.o*", "Thumbs.db"))
 ```
-
