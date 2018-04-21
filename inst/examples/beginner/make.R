@@ -1,3 +1,7 @@
+# Walkthrough: https://ropensci.github.io/drake/articles/drake.html
+# Slides: https://krlmlr.github.io/drake-pitch
+# Code: drake_example("beginner") # nolint
+
 # Load your packages in the usual way.
 
 library(drake)

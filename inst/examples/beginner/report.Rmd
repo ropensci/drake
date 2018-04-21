@@ -13,3 +13,9 @@ print(head(raw_data))
 print(fit)
 readd(hist)
 ```
+
+More:
+
+- Walkthrough: [https://ropensci.github.io/drake/articles/drake.html](https://ropensci.github.io/drake/articles/drake.html)
+- Slides: [https://krlmlr.github.io/drake-pitch](https://krlmlr.github.io/drake-pitch)
+- Code: `drake_example("beginner")`

@@ -177,6 +177,8 @@ So the next `make()` skips all the data wrangling and model fitting.
 make(plan)
 ```
 
+Want to try out the code yourself? Use `drake_example("beginner")` to write the files.
+
 ```{r endofline_pitch, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("report.Rmd", "raw_data.xlsx", "STDIN.o*", "Thumbs.db"))
