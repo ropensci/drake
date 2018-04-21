@@ -1,6 +1,6 @@
 ---
 title: "drake"
-subtitle: "get started"
+subtitle: "beginner example"
 author: "Will Landau and Kirill Müller"
 date: "`r Sys.Date()`"
 output:
@@ -154,7 +154,6 @@ Let's fix our plot function.
 ```{r fixplot}
 create_plot <- function(data) {
   ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram() +
     geom_histogram(binwidth = 0.25) +
     theme_gray(20)
 }

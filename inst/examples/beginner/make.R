@@ -2,19 +2,17 @@
 
 library(drake)
 library(tidyverse)
-pkgconfig::set_config("drake::strings_in_dots" = "literals")
+pkgconfig::set_config("drake::strings_in_dots" = "literals") # For convenience
 
 # Your custom code is a bunch of functions.
 
 create_plot <- function(data) {
   ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram() +
     geom_histogram(binwidth = 0.25) +
     theme_gray(20)
 }
 
-# The workflow plan is a data frame.
-# It outlines the steps of the workflow but does not run it.
+# The workflow plan data frame outlines what you are going to do.
 
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
@@ -30,7 +28,8 @@ plan <- drake_plan(
   )
 )
 
-# The make() function actually runs the workflow
-# and generates report.pdf.
+# Run your work with make().
 
 make(plan)
+
+# See also loadd(), readd(), vis_drake_graph(), and drake_config(). # nolint
