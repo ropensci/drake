@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
   warning = TRUE
 )
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
-write.csv(iris, "raw-data.csv")
+write_csv(iris, "raw_data.xlsx")
 rmd <- system.file(
   file.path(
     "rmarkdown", "templates", "drake", "skeleton", "skeleton.Rmd"
@@ -44,14 +44,14 @@ In `drake`, you declare all the transformations in a data frame of targets and c
 
 ```{r pitchplan}
 plan <- drake_plan(
-  raw_data = read_csv(file_in("raw-data.csv")),
+  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
     mutate(Species = forcats::fct_inorder(Species)),
   hist = create_plot(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  rmarkdown::render(
+  knitr::knit(
     knitr_in("report.Rmd"),
-    output_file = file_out("report.md"),
+    output = file_out("report.md"),
     quiet = TRUE
   )
 )
@@ -91,7 +91,7 @@ make(plan)
 Inspect the generated `report.md` file.
 
 ```{r pitchmd}
-cat(readLines("report.md"))
+cat(head(readLines("report.md")), sep = "\n")
 ```
 
 Inspect the intermediate data objects using `loadd()` and `readd()`.
@@ -109,7 +109,7 @@ At this point, we notice an unwanted `X__1` column in the data. Let's change the
 
 ```{r pitchx1}
 plan <- drake_plan(
-  raw_data = read_csv(file_in("raw-data.csv")),
+  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
     mutate(Species = forcats::fct_inorder(Species)) %>%
     select(-X__1),
@@ -180,5 +180,5 @@ make(plan)
 
 ```{r endofline_pitch, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
-unlink(c("report.Rmd", "raw-data.csv", "STDIN.o*", "Thumbs.db"))
+unlink(c("report.Rmd", "raw_data.xlsx", "STDIN.o*", "Thumbs.db"))
 ```

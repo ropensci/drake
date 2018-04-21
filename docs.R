@@ -208,7 +208,6 @@ images <- function(){
   )
 
   # drake.Rmd vignette
-  readr::write_csv(iris, "raw-data.csv")
   pkgconfig::set_config("drake::strings_in_dots" = "literals")
   rmd <- system.file(
     file.path(
