@@ -303,12 +303,6 @@ new_objects &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 
 cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_environment">storr_environment</a></span>() <span class="co"># just for examples</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan, <span class="dt">cache =</span> cache)
-## Loading required package: methods
-## 
-## Attaching package: 'methods'
-## The following objects are masked from 'package:R.oo':
-## 
-##     getClasses, getMethods
 ## target x
 <span class="kw">head</span>(<span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">cache =</span> cache), <span class="dv">10</span>)
 ##  [1] "any"             "as.integer"      "as.raw"         
@@ -401,8 +395,8 @@ rules_grid &lt;-<span class="st"> </span>tibble<span class="op">::</span><span c
     <span class="dt">expand =</span> <span class="ot">FALSE</span>
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DT/topics/datatable">datatable</a></span>()</code></pre></div>
-<div id="htmlwidget-25e45ceb09881ac0323d" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-25e45ceb09881ac0323d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["credits_schoolA","credits_schoolB","credits_schoolC","students_schoolA","students_schoolB","students_schoolC","grads_schoolA","grads_schoolB","grads_schoolC","public_funds_schoolA","public_funds_schoolB","public_funds_schoolC"],["check_credit_hours(\"schoolA\", \"public\", \"2012\")","check_credit_hours(\"schoolA\", \"public\", \"2013\")","check_credit_hours(\"schoolA\", \"public\", \"2014\")","check_students(\"schoolA\", \"public\", \"2015\")","check_students(\"schoolB\", \"public\", \"2014\")","check_students(\"schoolB\", \"public\", \"2015\")","check_graduations(\"schoolC\", \"private\", \"2012\")","check_graduations(\"schoolC\", \"private\", \"2013\")","check_graduations(\"schoolC\", \"private\", \"2014\")","check_public_funding(\"schoolC\", \"private\", \"2015\")","check_public_funding(\"schoolA\", \"public\", \"2012\")","check_public_funding(\"schoolA\", \"public\", \"2013\")"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>target<\/th>\n      <th>command<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><p>Thanks to <a href="https://github.com/AlexAxthelm">Alex Axthelm</a> for this example in <a href="https://github.com/ropensci/drake/issues/235">issue 235</a>.</p>
+<div id="htmlwidget-2d1fd20a71cbf1b1644b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2d1fd20a71cbf1b1644b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["credits_schoolA","credits_schoolB","credits_schoolC","students_schoolA","students_schoolB","students_schoolC","grads_schoolA","grads_schoolB","grads_schoolC","public_funds_schoolA","public_funds_schoolB","public_funds_schoolC"],["check_credit_hours(\"schoolA\", \"public\", \"2012\")","check_credit_hours(\"schoolA\", \"public\", \"2013\")","check_credit_hours(\"schoolA\", \"public\", \"2014\")","check_students(\"schoolA\", \"public\", \"2015\")","check_students(\"schoolB\", \"public\", \"2014\")","check_students(\"schoolB\", \"public\", \"2015\")","check_graduations(\"schoolC\", \"private\", \"2012\")","check_graduations(\"schoolC\", \"private\", \"2013\")","check_graduations(\"schoolC\", \"private\", \"2014\")","check_public_funding(\"schoolC\", \"private\", \"2015\")","check_public_funding(\"schoolA\", \"public\", \"2012\")","check_public_funding(\"schoolA\", \"public\", \"2013\")"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>target<\/th>\n      <th>command<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><p>Thanks to <a href="https://github.com/AlexAxthelm">Alex Axthelm</a> for this example in <a href="https://github.com/ropensci/drake/issues/235">issue 235</a>.</p>
 </div>
 <div id="remote-data-sources" class="section level1">
 <h1 class="hasAnchor">
