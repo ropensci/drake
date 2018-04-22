@@ -272,11 +272,13 @@ images <- function(){
     height = "500px", selfcontained = TRUE,
     file = html_out("pitch2.html")
   )
+  make(plan)
   create_plot <- function(data) {
     ggplot(data, aes(x = Petal.Width, fill = Species)) +
       geom_histogram(binwidth = 0.25) +
       theme_gray(20)
   }
+  config <- drake_config(plan)
   vis_drake_graph(
     config, from = file_store("raw_data.xlsx"), mode = "out",
     build_times = "none", full_legend = FALSE, width = "100%",
