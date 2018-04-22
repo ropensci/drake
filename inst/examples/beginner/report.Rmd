@@ -1,7 +1,7 @@
 ---
 title: "Example R Markdown drake file target"
 author: Will Landau and Kirill Müller
-output: pdf_document
+output: html_document
 ---
 
 Run `make.R` to generate the output `report.pdf` and its dependencies. Because we use `loadd()` and `readd()` below, `drake` knows `report.pdf` depends on targets `fit`, and `hist`.
