@@ -1,6 +1,6 @@
 ---
 title: "drake"
-subtitle: "beginner example"
+subtitle: "The beginner example"
 author: "Will Landau and Kirill Müller"
 date: "`r Sys.Date()`"
 output:
@@ -171,6 +171,8 @@ The next `make()` skips all the data wrangling and model fitting steps.
 
 ```{r histmake}
 make(plan)
+
+readd(hist)
 ```
 
 Want to try out the code yourself? Use `drake_example("beginner")` to write the files.

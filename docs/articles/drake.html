@@ -112,7 +112,7 @@
   <div class="col-md-9">
     <div class="page-header toc-ignore">
       <h1>drake</h1>
-            <h3 class="subtitle">beginner example</h3>
+            <h3 class="subtitle">The beginner example</h3>
                         <h4 class="author">Will Landau and Kirill Müller</h4>
             
             <h4 class="date">2018-04-21</h4>
@@ -131,12 +131,12 @@
 <a href="#plan-your-work-" class="anchor"></a>Plan your work.</h1>
 <p>To get started with <code>drake</code>, you need to plan out these data transformations.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">raw_data =</span> readxl::<span class="kw">read_excel</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
-  <span class="dt">data =</span> raw_data %&gt;%
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats::<span class="kw">fct_inorder</span>(Species)),
+  <span class="dt">raw_data =</span> readxl<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/readxl/topics/read_excel">read_excel</a></span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
+  <span class="dt">data =</span> raw_data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_inorder">fct_inorder</a></span>(Species)),
   <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
-  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width +<span class="st"> </span>Species, data),
-  knitr::<span class="kw">knit</span>(
+  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species, data),
+  knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/knit">knit</a></span>(
     <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
     <span class="dt">output =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>),
     <span class="dt">quiet =</span> <span class="ot">TRUE</span>
@@ -154,8 +154,8 @@ plan
 <p>The commands usually reference supporting functions and packages. Simply load them into your R session.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
 <span class="kw">library</span>(tidyverse)
-create_plot &lt;-<span class="st"> </span>function(data) {
-  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
+create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_histogram</span>()
 }</code></pre></div>
 <p>Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.</p>
@@ -215,13 +215,13 @@ data
 <a href="#go-back-and-change-things-" class="anchor"></a>Go back and change things.</h1>
 <p>Whether your code takes minutes, hours, or days to run, it is almost never quite right the first time. <strong>You will want to go back and change things. A lot.</strong> For example, our data has a superfluous <code>X__1</code> column. Let’s change the plan to remove it.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">raw_data =</span> readxl::<span class="kw">read_excel</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
-  <span class="dt">data =</span> raw_data %&gt;%
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats::<span class="kw">fct_inorder</span>(Species)) %&gt;%
-<span class="st">    </span><span class="kw">select</span>(-X__1),
+  <span class="dt">raw_data =</span> readxl<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/readxl/topics/read_excel">read_excel</a></span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
+  <span class="dt">data =</span> raw_data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_inorder">fct_inorder</a></span>(Species)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>X__<span class="dv">1</span>),
   <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
-  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width +<span class="st"> </span>Species, data),
-  rmarkdown::<span class="kw">render</span>(
+  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species, data),
+  rmarkdown<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rmarkdown/topics/render">render</a></span>(
     <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
     <span class="dt">output_file =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>),
     <span class="dt">quiet =</span> <span class="ot">TRUE</span>
@@ -262,9 +262,9 @@ data
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre></div>
 <p><img src="drake_files/figure-html/pitchmake2-1.png" width="672"></p>
 <p>Oops, we forgot to pick a bin width for our histogram. Let’s fix our plot function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
-  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
-<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)
 }</code></pre></div>
 <p>Only the histogram and the report need to change.</p>
@@ -277,7 +277,10 @@ data
 ##   fit
 ##   hist
 ## target hist
-## target file "report.md"</code></pre></div>
+## target file "report.md"
+
+<span class="kw"><a href="../reference/readd.html">readd</a></span>(hist)</code></pre></div>
+<p><img src="drake_files/figure-html/histmake-1.png" width="672"></p>
 <p>Want to try out the code yourself? Use <code><a href="../reference/drake_example.html">drake_example("beginner")</a></code> to write the files.</p>
 </div>
 </div>

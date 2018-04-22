@@ -132,9 +132,9 @@
 <span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">2</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Parallelize over 2 jobs.</span>
 <span class="co"># Change a dependency.</span>
-reg2 &lt;-<span class="st"> </span>function(d) {
-  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
+  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
@@ -193,9 +193,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
 <span class="kw"><a href="../reference/max_useful_jobs.html">max_useful_jobs</a></span>(config, <span class="dt">imports =</span> <span class="st">"all"</span>) <span class="co"># 8</span>
 <span class="kw"><a href="../reference/max_useful_jobs.html">max_useful_jobs</a></span>(config, <span class="dt">imports =</span> <span class="st">"none"</span>) <span class="co"># 0</span>
 <span class="co"># Change a function so some targets are now out of date.</span>
-reg2 &lt;-<span class="st"> </span>function(d){
-  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
+  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)
 <span class="kw"><a href="../reference/max_useful_jobs.html">max_useful_jobs</a></span>(config) <span class="co"># 4</span>
@@ -252,14 +252,14 @@ reg2 &lt;-<span class="st"> </span>function(d){
 <a href="#future_lapply" class="anchor"></a>future_lapply</h2>
 <p>The <code>future</code> package unlocks a wide array of powerful parallel backends. The idea is to set up a <code><a href="http://www.rdocumentation.org/packages/future/topics/plan">future::plan()</a></code> in advance and then call <code><a href="../reference/make.html">make(parallelism = "future_lapply")</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>()
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>()
 ## sequential:
 ## - args: function (expr, envir = parent.frame(), substitute = TRUE, lazy = FALSE, seed = NULL, globals = TRUE, local = TRUE, earlySignal = FALSE, label = NULL, ...)
 ## - tweaked: FALSE
 ## - call: plan("default", .init = FALSE)
 
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multicore)
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>()
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(multicore)
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>()
 ## multicore:
 ## - args: function (expr, envir = parent.frame(), substitute = TRUE, lazy = FALSE, seed = NULL, globals = TRUE, workers = availableCores(constraints = "multicore"), earlySignal = FALSE, label = NULL, ...)
 ## - tweaked: FALSE
@@ -267,16 +267,16 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>()
 <p><code><a href="../reference/make.html">make()</a></code> knows which <code><a href="http://www.rdocumentation.org/packages/future/topics/plan">future::plan()</a></code> you selected.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>The <code>multicore</code> plan is the analogue of <code>mclapply</code> parallelism, and the <code>multisession</code> plan is the analogue of <code>parLapply</code> parallelism.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/multisession">multisession</a></span>(<span class="dt">workers =</span> <span class="dv">4</span>)) <span class="co"># Use a max of 4 parallel jobs at a time. # nolint</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/multisession">multisession</a></span>(<span class="dt">workers =</span> <span class="dv">4</span>)) <span class="co"># Use a max of 4 parallel jobs at a time. # nolint</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>You can even deploy to your own parallel socket clusters clusters. You can use <code><a href="http://www.rdocumentation.org/packages/future/topics/makeClusterPSOCK">future::makeClusterPSOCK()</a></code> rather than <code><a href="http://www.rdocumentation.org/packages/parallel/topics/makeCluster">parallel::makePSOCKcluster()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cl &lt;-<span class="st"> </span>future::<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/makeClusterPSOCK">makeClusterPSOCK</a></span>(2L, <span class="dt">dryrun =</span> <span class="ot">TRUE</span>)
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(cluster, <span class="dt">workers =</span> cl)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cl &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/makeClusterPSOCK">makeClusterPSOCK</a></span>(2L, <span class="dt">dryrun =</span> <span class="ot">TRUE</span>)
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> cl)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>This approach should allow you to deploy targets to a <a href="https://www.docker.com/what-container">Docker container</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Setup of Docker worker running rocker and r-base # nolint
 ## (requires installation of future package)
-cl &lt;-<span class="st"> </span>future::<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/makeClusterPSOCK">makeClusterPSOCK</a></span>(
+cl &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/makeClusterPSOCK">makeClusterPSOCK</a></span>(
   <span class="st">"localhost"</span>,
   ## Launch Rscript inside Docker container
   <span class="dt">rscript =</span> <span class="kw">c</span>(
@@ -288,12 +288,12 @@ cl &lt;-<span class="st"> </span>future::<span class="kw"><a href="http://www.rd
     <span class="st">"-e"</span>, <span class="kw">shQuote</span>(<span class="st">"install.packages('drake')"</span>)
   )
 )
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(cluster, <span class="dt">workers =</span> cl)
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> cl)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>The <a href="https://github.com/HenrikBengtsson/future.batchtools">future.batchtools</a> package unlocks <a href="https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend">even more parallel computing functionality</a>, particularly for popular job schedulers such as <a href="https://slurm.schedmd.com/">SLURM</a>, <a href="http://www.adaptivecomputing.com/products/open-source/torque/">TORQUE</a>, and the <a href="https://supcom.hgc.jp/english/utili_info/manual/uge.html">Univa Grid Engine</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future.batchtools)
 <span class="kw"><a href="../reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"slurm"</span>) <span class="co"># Write batchtools.slurm.tmpl.</span>
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(
   batchtools_slurm,
   <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>,
   <span class="dt">workers =</span> <span class="dv">16</span>
@@ -301,7 +301,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>You can even nest parallelism strategies together. In the following example, targets are submitted as jobs on the Univa Grid engine, and then <code>future</code>-style multicore parallelism is applied to each target’s command individually.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"sge"</span>) <span class="co"># Write sge-simple.tmpl.</span>
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(
   <span class="kw">list</span>(
     <span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/tweak">tweak</a></span>(batchtools_sge, <span class="dt">template =</span> <span class="st">"sge-simple.tmpl"</span>),
     multiprocess
@@ -323,16 +323,16 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(drake)
 <span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()
-remote &lt;-<span class="st"> </span>future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multisession)
-local &lt;-<span class="st"> </span>future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multicore)
+remote &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(multisession)
+local &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(multicore)
 evaluator &lt;-<span class="st"> </span><span class="ot">NULL</span>
 <span class="co"># Make the targets with the multisession future backend...</span>
-for (i in <span class="kw">seq_len</span>(<span class="kw">nrow</span>(my_plan))){
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(<span class="kw">nrow</span>(my_plan))){
   evaluator &lt;-<span class="st"> </span><span class="kw">c</span>(evaluator, remote)
 }
 <span class="co"># ...except for the R Markdown report.</span>
 evaluator[[<span class="dv">1</span>]] &lt;-<span class="st"> </span>local
-my_plan$evaluator &lt;-<span class="st"> </span>evaluator
+my_plan<span class="op">$</span>evaluator &lt;-<span class="st"> </span>evaluator
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">8</span>)</code></pre></div>
 <p>In addition, you can set the <code>caching</code> argument to control when the values of the targets are cached: <code>"worker"</code> for the individual workers (default) and <code>"master"</code> for the master process. If you let the workers do the caching, you can take advantage of parallelism when targets are stored. On the other hand, <code>"master"</code> is a better option if workers do not have cache access or you are using a custom cache that is not thread-safe (e.g. <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code>.</p>
 </div>
@@ -447,12 +447,12 @@ echo "module load R; $*" | qsub -sync y -cwd -j y
 <h2 class="hasAnchor">
 <a href="#zombies" class="anchor"></a>Zombies</h2>
 <p>In versions of R prior to 3.5.0, some parallel backends, particularly <code>mclapply</code> and <code><a href="http://www.rdocumentation.org/packages/future/topics/multicore">future::multicore</a></code>, may create zombie processes. This issue is fixed in R versions 3.5.0 and later. Zombie children are not usually harmful, but you may wish to kill them yourself. The following function by <a href="https://github.com/CarlBoneri">Carl Boneri</a> should work on Unix-like systems. For a discussion, see <a href="https://github.com/ropensci/drake/issues/116">drake issue 116</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fork_kill_zombies &lt;-<span class="st"> </span>function(){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fork_kill_zombies &lt;-<span class="st"> </span><span class="cf">function</span>(){
   <span class="kw">require</span>(inline)
   includes &lt;-<span class="st"> "#include &lt;sys/wait.h&gt;"</span>
   code &lt;-<span class="st"> "int wstat; while (waitpid(-1, &amp;wstat, WNOHANG) &gt; 0) {};"</span>
 
-  wait &lt;-<span class="st"> </span>inline::<span class="kw">cfunction</span>(
+  wait &lt;-<span class="st"> </span>inline<span class="op">::</span><span class="kw">cfunction</span>(
     <span class="dt">body =</span> code,
     <span class="dt">includes =</span> includes,
     <span class="dt">convention =</span> <span class="st">".C"</span>

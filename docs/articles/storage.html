@@ -164,7 +164,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
 <h1 class="hasAnchor">
 <a href="#caches-as-r-objects" class="anchor"></a>Caches as R objects</h1>
 <p>The <a href="https://github.com/richfitz/storr">storr</a> package does the heavy lifting. A <code>storr</code> is an object in R that serves as an abstraction for a storage backend, usually a file system. See the <a href="https://cran.r-project.org/package=storr/vignettes/storr.html">main storr vignette</a> for a thorough walkthrough.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(config$cache) <span class="co"># from `config &lt;- make(...)`</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(config<span class="op">$</span>cache) <span class="co"># from `config &lt;- make(...)`</span>
 ## [1] "storr" "R6"
 
 cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>() <span class="co"># Get the default cache from the last build.</span>
@@ -172,7 +172,7 @@ cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_c
 <span class="kw">class</span>(cache)
 ## [1] "storr" "R6"
 
-cache$<span class="kw">list</span>() <span class="co"># Functionality from storr</span>
+cache<span class="op">$</span><span class="kw">list</span>() <span class="co"># Functionality from storr</span>
 ##  [1] "coef_regression1_large" "coef_regression1_small"
 ##  [3] "coef_regression2_large" "coef_regression2_small"
 ##  [5] "data.frame"             "knit"                  
@@ -188,7 +188,7 @@ cache$<span class="kw">list</span>() <span class="co"># Functionality from storr
 ## [25] "summ_regression1_small" "summ_regression2_large"
 ## [27] "summ_regression2_small" "suppressWarnings"
 
-<span class="kw">head</span>(cache$<span class="kw">get</span>(<span class="st">"small"</span>)) <span class="co"># Functionality from storr</span>
+<span class="kw">head</span>(cache<span class="op">$</span><span class="kw">get</span>(<span class="st">"small"</span>)) <span class="co"># Functionality from storr</span>
 ##       x    y
 ## 1 3.730 17.3
 ## 2 5.250 10.4
@@ -209,19 +209,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "e7d21d80365eac4791fe4e65a5fe7ff3"</code></pre></div>
+## [1] "1a47c64fdb59a354f6569536d6bde6e1"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "ed7caebb3d16019cbcfc24f6cb9c80159fcde18930bbb42db82982814ff536c135eac031fb92cabf30ae5ba0e41da7aecf910bac6e4d1de16b0a4592c83a866a"
+## [1] "5c183c80ad30e8bb45504006d486e27e5cb7c775a4110004c36d834319dd794a900fd9aba00d36af2ce2a161e8f32d4c3a05ece1a092ab7504ce76ac7a0a4d34"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "e7d21d80365eac4791fe4e65a5fe7ff3"
+## [1] "1a47c64fdb59a354f6569536d6bde6e1"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "a3ebb72b00002554"
+## [1] "2c6353ee9b893d21"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "c230d399"</code></pre></div>
+## [1] "d7f56498"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
@@ -256,22 +256,22 @@ tmp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cac
 <p>The cache at <code><a href="../reference/default_cache_path.html">default_cache_path()</a></code> (equivalently, the <code>.drake/</code> folder) is the default cache used for <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config$cache) <span class="co"># xxhash64 is the default_short_hash_algo()</span>
+<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># xxhash64 is the default_short_hash_algo()</span>
 ## [1] "crc32"
 
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config$cache) <span class="co"># sha256 is the default_long_hash_algo()</span>
+<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># sha256 is the default_long_hash_algo()</span>
 ## [1] "sha1"</code></pre></div>
 <p>You can change the long hash algorithm without throwing away the cache, but your project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and all its supporting files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># empty</span>
 ## character(0)
 
-config$cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/configure_cache.html">configure_cache</a></span>(
-  config$cache,
+config<span class="op">$</span>cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/configure_cache.html">configure_cache</a></span>(
+  config<span class="op">$</span>cache,
   <span class="dt">long_hash_algo =</span> <span class="st">"murmur32"</span>,
   <span class="dt">overwrite_hash_algos =</span> <span class="ot">TRUE</span>
 )</code></pre></div>
 <p>Below, the targets become outdated because the existing hash keys do not match the new hash algorithm.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config$cache)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config<span class="op">$</span>cache)
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
 ##  [1] "coef_regression1_large" "coef_regression1_small"
 ##  [3] "coef_regression2_large" "coef_regression2_small"
@@ -284,10 +284,10 @@ config$cache &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config$cache) <span class="co"># same as before</span>
+<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># same as before</span>
 ## [1] "crc32"
 
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config$cache) <span class="co"># different from before</span>
+<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># different from before</span>
 ## [1] "murmur32"</code></pre></div>
 </div>
 <div id="more-on-custom-caches" class="section level1">
@@ -310,7 +310,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
 ## [1] "murmur32"
 
 new_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">simple =</span> <span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span>
+  <span class="dt">simple =</span> <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
 )
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(new_plan, <span class="dt">cache =</span> faster_cache)
@@ -370,8 +370,8 @@ other_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <li>Be careful about parallel computing. For example the <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code> cache is not thread-safe. Either use no parallel computing at all or set <code>parallelism = "future"</code> with <code>caching = "master"</code>. The <code>"future"</code> backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.</li>
 </ol>
 <p>The following example requires the <code>DBI</code> and <code>RSQLite</code> packages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydb &lt;-<span class="st"> </span>DBI::<span class="kw">dbConnect</span>(RSQLite::<span class="kw">SQLite</span>(), <span class="st">"my-db.sqlite"</span>)
-cache &lt;-<span class="st"> </span>storr::<span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi</a></span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydb &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">"my-db.sqlite"</span>)
+cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi</a></span>(
   <span class="dt">tbl_data =</span> <span class="st">"data"</span>,
   <span class="dt">tbl_keys =</span> <span class="st">"keys"</span>,
   <span class="dt">con =</span> mydb

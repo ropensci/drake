@@ -265,6 +265,7 @@ images <- function(){
       quiet = TRUE
     )
   )
+  config <- drake_config(plan)
   vis_drake_graph(
     config, from = file_store("raw_data.xlsx"), mode = "out",
     build_times = "none", full_legend = FALSE, width = "100%",
