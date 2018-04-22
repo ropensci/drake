@@ -9,8 +9,7 @@ output: pdf_document
 ```{r content}
 tryCatch({
   library(drake)
-  loadd(raw_data, fit)
-  print(head(raw_data))
+  loadd(fit)
   print(fit)
   readd(hist)
 },
@@ -30,4 +29,4 @@ To compile this report,
 2. Install the [`drake`](https://github.com/ropensci/drake) and [`tidyverse`](https://github.com/tidyverse/tidyverse) packages. 
 3. Use [`make.R`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/make.R) (included with this template) to run the [`drake`](https://github.com/ropensci/drake) workflow that compiles this report.
 
-Step 3 not only generates the output file `report.pdf`, but also produces a `.drake/` cache in your working directory, which enables `report.Rmd` to compile on its own with with [RStudio](https://www.rstudio.com/products/RStudio/), [`knitr`](https://github.com/yihui/knitr), or [`rmarkdown`](https://github.com/rstudio/rmarkdown). A great way way to generate `report.pdf` is still `make(plan)`. That way, compilation happens if and only if there were changes to `report.Rmd`, `report.pdf`, `raw_data`, `fit`, or `hist` since the last `make()`.
+Step 3 not only generates the output file `report.pdf`, but also produces a `.drake/` cache in your working directory, which enables `report.Rmd` to compile on its own with with [RStudio](https://www.rstudio.com/products/RStudio/), [`knitr`](https://github.com/yihui/knitr), or [`rmarkdown`](https://github.com/rstudio/rmarkdown). A great way way to generate `report.pdf` is still `make(plan)`. That way, compilation happens if and only if there were changes to `report.Rmd`, `report.pdf`, `fit`, or `hist` since the last `make()`.

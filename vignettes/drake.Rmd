@@ -24,23 +24,27 @@ knitr::opts_chunk$set(
   warning = TRUE
 )
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
-write_csv(iris, "raw_data.xlsx")
-rmd <- system.file(
-  file.path(
-    "rmarkdown", "templates", "drake", "skeleton", "skeleton.Rmd"
-  ),
+dat <- system.file(
+  file.path("examples", "beginner", "raw_data.xlsx"),
   package = "drake",
   mustWork = TRUE
 )
-file.copy(from = rmd, to = "report.Rmd")
-invisible()
+tmp <- file.copy(from = dat, to = "raw_data.xlsx")
+rmd <- system.file(
+  file.path("examples", "beginner", "report.Rmd"),
+  package = "drake",
+  mustWork = TRUE
+)
+tmp <- file.copy(from = rmd, to = "report.Rmd")
 ```
 
-A typical data analysis workflow is a sequence of data transformations.
+A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, which then turns into fitted models, summaries, and reports.
 
 <img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;">
 
-In `drake`, you declare all the transformations in a data frame of targets and commands. The `drake_plan()` function creates the workflow plan data frame but does not run it.
+# Plan your work.
+
+To get started with `drake`, you need to plan out these data transformations.
 
 ```{r pitchplan}
 plan <- drake_plan(
@@ -58,7 +62,7 @@ plan <- drake_plan(
 plan
 ```
 
-Plans usually reference supporting functions and packages. Simply load them into your R session.
+The commands usually reference supporting functions and packages. Simply load them into your R session.
 
 ```{r pitchfunctions}
 library(drake)
@@ -69,7 +73,7 @@ create_plot <- function(data) {
 }
 ```
 
-The network graph visualizes the dependencies among the files, functions, targets, and other intermediate data objects. The dependency relationships depend on how the objects are referenced, not on the order of the rows in the workflow plan data frame.
+Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.
 
 ```{r pitchgraph1, eval = FALSE}
 config <- drake_config(plan)
@@ -82,19 +86,13 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-Use the `make()` function to actually run the workflow.
+The `make()` function actually does the work. The targets build in the correct order regardless of the order of the rows in your plan.
 
 ```{r pitchmake1}
 make(plan)
 ```
 
-Inspect the generated `report.md` file.
-
-```{r pitchmd}
-cat(head(readLines("report.md")), sep = "\n")
-```
-
-Inspect the intermediate data objects using `loadd()` and `readd()`.
+The file `report.md` was written, and everything else was stored in a hidden `.drake/` folder. Inspect the intermediate data objects using `loadd()` and `readd()`.
 
 ```{r pitchreadd}
 summary(readd(fit))
@@ -105,7 +103,9 @@ loadd(data, hist)
 data
 ```
 
-At this point, we notice an unwanted `X__1` column in the data. Let's change the plan to remove it.
+# Go back and change things.
+
+Whether your code takes minutes, hours, or days to run, it is almost never quite right the first time. **You will want to go back and change things. A lot.** For example, our data has a superfluous `X__1` column. Let's change the plan to remove it.
 
 ```{r pitchx1}
 plan <- drake_plan(
@@ -141,15 +141,11 @@ The next `make()` just builds the outdated targets and leaves `raw_data` alone.
 make(plan)
 
 readd(data)
-```
 
-Skipping targets saves time when we repeatedly go back and change things. For example, we forgot to select a bin width for our histogram.
-
-```{r readdhist2}
 readd(hist)
 ```
 
-Let's fix our plot function.
+Oops, we forgot to pick a bin width for our histogram. Let's fix our plot function.
 
 ```{r fixplot}
 create_plot <- function(data) {
@@ -161,7 +157,7 @@ create_plot <- function(data) {
 
 Only the histogram and the report need to change.
 
-```{r pitchgraph3}
+```{r pitchgraph3, eval = FALSE}
 vis_drake_graph(config)
 ```
 
@@ -171,7 +167,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-So the next `make()` skips all the data wrangling and model fitting.
+The next `make()` skips all the data wrangling and model fitting steps.
 
 ```{r histmake}
 make(plan)
