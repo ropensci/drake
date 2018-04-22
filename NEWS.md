@@ -10,6 +10,8 @@
 - Make the `drake.Rmd` vignette focus on Kirill's slides: https://krlmlr.github.io/drake-pitch
 - Rename the "basic example" to the "mtcars example".
 - Deprecate `load_basic_example()` in favor of `load_mtcars_example()`.
+- Refocus the `README.md` file on the main example rather than the mtcars example.
+- Use a `README.Rmd` file to generate `README.md`.
 
 # Version 5.1.2
 

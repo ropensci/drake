@@ -25,11 +25,13 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 3.  Discover an issue.
 4.  Restart from scratch.
 
-Have you ever tried to manually salvage old results for a new runthrough?
+Have you ever tried to manually salvage old results for a new runthrough? <br>
 
 <center>
 <a href="https://twitter.com/fossilosophy/status/966408174470299648"> <img src="https://ropensci.github.io/drake/images/tweet.png" alt="tweet" align="center" style = "border: none; float: center;"> </a>
 </center>
+<br>
+
 With `drake`, you can automatically
 
 1.  Launch the parts that changed since last time.
@@ -95,7 +97,6 @@ Then, run the plan with `make()`.
 
 ``` r
 make(plan)
-#> Loading required package: methods
 #> target raw_data
 #> target data
 #> target fit
