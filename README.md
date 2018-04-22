@@ -62,6 +62,8 @@ Development
 </tr>
 </tbody>
 </table>
+<br>
+
 The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 ==========================================================================================================================================================================
 
