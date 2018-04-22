@@ -88,7 +88,7 @@ for a full explanation." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -179,9 +179,9 @@ source files supplied to a command in your workflow plan data frame.</p></td>
 <span class='co'># source file and detects non-file dependencies.</span>
 <span class='co'># That way, updates to the right dependencies trigger rebuilds</span>
 <span class='co'># in your report.</span>
-<span class='co'># The basic example (`drake_example("basic")`)</span>
+<span class='co'># The mtcars example (`drake_example("mtcars")`)</span>
 <span class='co'># already has a demonstration</span>
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>()
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>()
 <span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='make.html'>make</a></span>(<span class='no'>my_plan</span>)
 <span class='fu'><a href='vis_drake_graph.html'>vis_drake_graph</a></span>(<span class='no'>config</span>)
 <span class='co'># Now how did drake magically know that</span>

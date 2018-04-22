@@ -3,7 +3,7 @@
 # That way, a persistent background process will manage the jobs.
 
 library(drake)
-load_basic_example() # Writes `report.Rmd` and sets up your workspace.
+load_mtcars_example() # Writes `report.Rmd` and sets up your workspace.
 # shell_file() # Writes an example `shell.sh` file. # nolint
 make(
   my_plan,

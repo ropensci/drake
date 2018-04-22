@@ -86,7 +86,7 @@ is outdated or up to date." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -191,7 +191,7 @@ Build if the target itself is missing. Always applies.</p></li>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>triggers</span>()</div><div class='output co'>#&gt; [1] "always"  "any"     "command" "depends" "file"    "missing"</div><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Load drake's canonical example.</span>
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Load drake's canonical example.</span>
 <span class='no'>my_plan</span><span class='kw'>[[</span><span class='st'>"trigger"</span>]] <span class='kw'>&lt;-</span> <span class='st'>"command"</span>
 <span class='co'># You can have different triggers for different targets.</span>
 <span class='no'>my_plan</span><span class='kw'>[[</span><span class='st'>"trigger"</span>]][<span class='fl'>1</span>] <span class='kw'>&lt;-</span> <span class='st'>"file"</span>

@@ -45,10 +45,10 @@ it backed up your old project.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 # With drake 4.3.0:
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the old project.
 # Now, install drake >= 5.0.0
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Error: cache is not back compatible.
 # Convert the project's '.drake/' cache to the new format.
 migrate_drake_project()

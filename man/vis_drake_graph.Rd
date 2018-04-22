@@ -130,7 +130,7 @@ this function is divided into
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-config <- load_basic_example() # Get the code with drake_example("basic").
+config <- load_mtcars_example() # Get the code with drake_example("mtcars").
 # Plot the network graph representation of the workflow.
 vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
 config <- make(my_plan) # Run the project, build the targets.

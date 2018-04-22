@@ -70,7 +70,7 @@ will warn you and tell you which targets have missing times.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- make(my_plan) # Run the project, build the targets.
 rate_limiting_times(config) # Everything is up to date.
 # Assume everything runs from scratch with 1 job.

@@ -32,7 +32,7 @@ knitr::opts_chunk$set(
 
 ```{r hiddenhpcpreplotgraph, eval = TRUE, echo = FALSE, message = FALSE}
 clean()
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
 # Change a dependency.
 reg2 <- function(d) {
@@ -43,7 +43,7 @@ reg2 <- function(d) {
 
 ```{r hpcplotgraph, eval = FALSE}
 clean()
-load_basic_example()
+load_mtcars_example()
 config <- make(my_plan, jobs = 2, verbose = FALSE) # Parallelize over 2 jobs.
 # Change a dependency.
 reg2 <- function(d) {
@@ -80,7 +80,7 @@ The `max_useful_jobs()` function analyzes your project and recommends a maximum 
 
 ```{r hpcquick, eval = FALSE}
 library(drake)
-load_basic_example()
+load_mtcars_example()
 config <- drake_config(my_plan)
 vis_drake_graph(config) # Set targets_only to TRUE for smaller graphs.
 max_useful_jobs(config) # 8
@@ -256,7 +256,7 @@ The `future` backend is experimental and needs more real-world testing. It is si
 ```{r democustomfutureevaluators, eval = FALSE}
 library(future)
 library(drake)
-load_basic_example()
+load_mtcars_example()
 remote <- future::plan(multisession)
 local <- future::plan(multicore)
 evaluator <- NULL
@@ -424,7 +424,7 @@ Finally, to deploy your work, just save the call to `make()` in an R script (say
 If you do not care about reproducibility and you want `drake` to be an ordinary job scheduler, consider using [alternative triggers](https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers).
 
 ```{r triggerparallel, eval = FALSE}
-load_basic_example()
+load_mtcars_example()
 make(my_plan, trigger = "missing") # Also consider "always".
 ```
 

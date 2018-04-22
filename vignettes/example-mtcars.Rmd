@@ -1,5 +1,5 @@
 ---
-title: "The basic example"
+title: "The mtcars example"
 subtitle: "A thorough walkthrough of drake's main functionality"
 author: "Will Landau"
 date: "`r Sys.Date()`"
@@ -8,7 +8,7 @@ output:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{example-basic}
+  %\VignetteIndexEntry{example-mtcars}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,17 +24,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is a walkthrough of `drake`'s main functionality based on the basic example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
+This vignette is a walkthrough of `drake`'s main functionality based on the mtcars example. It sets up the project and runs it repeatedly to demonstrate `drake`'s most important functionality.
 
 # Get the code.
 
 Write the code files to your workspace.
 
 ```{r getthequickstartcode, eval = FALSE}
-drake_example("basic")
+drake_example("mtcars")
 ```
 
-The new `basic` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example. The code is also [online here](https://github.com/ropensci/drake/tree/master/inst/examples/basic).
+The new `mtcars` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example. The code is also [online here](https://github.com/ropensci/drake/tree/master/inst/examples/mtcars).
 
 # Quick examples
 
@@ -42,7 +42,7 @@ Inspect and run your project.
 
 ```{r quickstartquickstart, eval = FALSE}
 library(drake)
-load_basic_example()            # Get the code with drake_example("basic").
+load_mtcars_example()            # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan) # Master configuration list
 vis_drake_graph(config)         # Hover, click, drag, zoom, pan.
 make(my_plan)                   # Run the workflow.
@@ -64,12 +64,12 @@ error$calls                # Full traceback of nested calls leading up to the er
 Dive deeper into the built-in examples.
 
 ```{r noeval2, eval = FALSE}
-drake_example("basic") # Write the code files.
+drake_example("mtcars") # Write the code files.
 drake_examples()       # List the other examples.
 vignette("quickstart") # This vignette
 ```
 
-# The motivation of the basic example
+# The motivation of the mtcars example
 
 Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
 
@@ -80,7 +80,7 @@ head(mtcars)
 
 Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.
 
-# Set up the basic example
+# Set up the mtcars example
 
 Before you run your project, you need to set up the workspace. In other words, you need to gather the "imports": functions, pre-loaded data objects, and saved files that you want to be available before the real work begins.
 
@@ -128,7 +128,7 @@ reg2 <- function(d){
 We want to summarize the final results in an R Markdown report, so we need the following `report.Rmd` source file.
 
 ```{r file}
-path <- file.path("examples", "basic", "report.Rmd")
+path <- file.path("examples", "mtcars", "report.Rmd")
 report_file <- system.file(path, package = "drake", mustWork = TRUE)
 file.copy(from = report_file, to = getwd(), overwrite = TRUE)
 ```
@@ -156,7 +156,7 @@ list.files()
 Now that your workspace of imports is prepared, we can outline the real work step by step in a workflow plan data frame.
 
 ```{r previewmyplan}
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 my_plan
 ```
 

@@ -30,7 +30,7 @@ files and generic R objects.
   file_store("my_file.rds") # "'my_file.rds'"
   \dontrun{
   test_with_dir("contain side effects", {
-  load_basic_example() # Get the code with drake_example("basic").
+  load_mtcars_example() # Get the code with drake_example("mtcars").
   make(my_plan) # Run the workflow to build the targets
   list.files() # Should include input "report.Rmd" and output "report.md".
   head(readd(small)) # You can use symbols for ordinary objects.

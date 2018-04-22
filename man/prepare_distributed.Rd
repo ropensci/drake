@@ -22,7 +22,7 @@ of the more advanced examples.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 prepare_distributed(config = config)
 })

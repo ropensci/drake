@@ -53,7 +53,7 @@ test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
 # No cache is available.
 get_cache() # NULL
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 x <- get_cache() # Now, there is a cache.
 # List the objects readable from the cache with readd().

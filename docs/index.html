@@ -61,7 +61,7 @@
       <a href="articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="articles/example-basic.html">Basic example</a>
+      <a href="articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="articles/best-practices.html">General best practices for drake projects</a>
@@ -171,9 +171,8 @@
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
 
-<span class="co"># Drake comes with a basic example.</span>
-<span class="co"># Get the code with drake_example("basic").</span>
-<span class="kw"><a href="reference/load_basic_example.html">load_basic_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
+<span class="co"># Drake comes with several built-in examples.</span>
+<span class="kw"><a href="reference/load_mtcars_example.html">load_mtcars_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Get the code: drake_example("mtcars")</span>
 
 <span class="co"># Your workspace starts with a bunch of "imports":</span>
 <span class="co"># functions, pre-loaded data objects, and saved files</span>
@@ -402,7 +401,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <li><a href="https://ropensci.github.io/drake/articles/drake.html">Get started</a></li>
 <li><a href="https://ropensci.github.io/drake/articles/example-packages.html">Example: R package download trends</a></li>
 <li><a href="https://ropensci.github.io/drake/articles/example-gsp.html">Example: gross state products</a></li>
-<li><a href="https://ropensci.github.io/drake/articles/example-basic.html">Basic example</a></li>
+<li><a href="https://ropensci.github.io/drake/articles/example-mtcars.html"><code>mtcars</code> example</a></li>
 <li><a href="https://ropensci.github.io/drake/articles/best-practices.html">General best practices</a></li>
 <li><a href="https://ropensci.github.io/drake/articles/caution.html">Cautionary notes and edge cases</a></li>
 <li><a href="https://ropensci.github.io/drake/articles/debug.html">Debugging and testing drake projects</a></li>
@@ -424,7 +423,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <li>
 <code>packages</code>: A concrete example using data on R package downloads. It demonstrates how <code>drake</code> can refresh a project based on new incoming data without restarting everything from scratch.</li>
 <li>
-<code>basic</code>: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use <code><a href="reference/load_basic_example.html">load_basic_example()</a></code> to set up the project in your workspace.</li>
+<code>mtcars</code>: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use <code><a href="reference/load_mtcars_example.html">load_mtcars_example()</a></code> to set up the project in your workspace.</li>
 </ul>
 </div>
 <div id="presentations" class="section level2">
@@ -511,7 +510,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <li>There is no obvious high-performance computing support.</li>
 <li>While there is a way to skip chunks that are already up to date (with code chunk options <code>cache</code> and <code>autodep</code>), this functionality is not the focus of <a href="https://yihui.name/knitr/">knitr</a>. It is deactivated by default, and <a href="https://github.com/richfitz/remake">remake</a> and <code>drake</code> are more dependable ways to skip work that is already up to date.</li>
 </ol>
-<p>As in the <a href="https://github.com/ropensci/drake/tree/master/inst/examples/basic">basic example</a> demonstrates, <code>drake</code> should manage the entire workflow, and any <a href="https://yihui.name/knitr/">knitr</a> reports should quickly build as targets at the very end. The strategy is analogous for <a href="https://yihui.name/knitr/">knitr</a> reports within <a href="https://github.com/richfitz/remake">remake</a> projects.</p>
+<p><code>Drake</code> was designed to manage the entire workflow with <a href="https://yihui.name/knitr/">knitr</a> reports as targets. The strategy is analogous for <a href="https://yihui.name/knitr/">knitr</a> reports within <a href="https://github.com/richfitz/remake">remake</a> projects.</p>
 </div>
 <div id="factuals-drake" class="section level2">
 <h2 class="hasAnchor">

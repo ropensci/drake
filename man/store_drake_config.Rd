@@ -20,7 +20,7 @@ only. Not meant to be called by the user.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 store_drake_config(config = config)
 read_drake_config()

@@ -14,7 +14,7 @@ test_with_dir("custom Makefile recipes work", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
   parallelism <- scenario$parallelism
-  load_basic_example(envir = e)
+  load_mtcars_example(envir = e)
   my_plan <- e$my_plan
   verbose <- TRUE
 

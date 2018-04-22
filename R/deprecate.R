@@ -78,7 +78,7 @@ as_file <- function(x){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Choose future's multicore parallel backend.
 #' library(future)
 #' future::plan(multicore) # Instead of backend(). Avoid drake::plan().
@@ -537,6 +537,46 @@ is_function_call <- function(
   what <- match.arg(what)
   drake::drake_unquote(deparse(expr[[1]])) %in%
     paste0(c("", paste0(package, c("::", ":::"))), what)
+}
+
+#' @title Deprecated function `load_basic_example`
+#' @description Use [load_mtcars_example()] instead.
+#' @details Deprecated on 2018-04-21.
+#' @seealso [load_mtcars_example()]
+#' @export
+#' @keywords internal
+#' @return A config list, as in [load_mtcars_example()].
+#' @inheritParams load_mtcars_example
+#' @examples
+#' # See ?load_mtcars_example for examples.
+load_basic_example <- function(
+  envir = parent.frame(),
+  seed = NULL,
+  cache = NULL,
+  report_file = "report.Rmd",
+  overwrite = FALSE,
+  to = report_file,
+  verbose = drake::default_verbose(),
+  force = FALSE
+){
+  .Deprecated(
+    "load_basic_example",
+    package = "drake",
+    msg = paste(
+      "load_basic_example() is deprecated",
+      "Use load_mtcars_example() instead."
+    )
+  )
+  load_mtcars_example(
+    envir = envir,
+    seed = seed,
+    cache = cache,
+    report_file = report_file,
+    overwrite = overwrite,
+    to = to,
+    verbose = verbose,
+    force = force
+  )
 }
 
 #' @title Deprecated function `plan`

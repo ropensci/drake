@@ -16,14 +16,14 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # List the drake examples. Only some have template files.
 #' drake_examples()
 #' # Write the batchtools template file from the SLURM example.
 #' drake_batchtools_tmpl_file("slurm") # Writes batchtools.slurm.tmpl.
 #' # Find batchtools.slurm.tmpl with the rest of the example's files.
 #' drake_example("slurm") # Writes a new 'slurm' folder with more files.
-#' # Run the basic example with a
+#' # Run the mtcars example with a
 #' # SLURM-powered parallel backend. Requires SLURM.
 #' library(future.batchtools)
 #' # future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl") # nolint

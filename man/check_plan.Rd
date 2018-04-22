@@ -44,7 +44,7 @@ missing input files.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 check_plan(my_plan) # Check the workflow plan dataframe for obvious errors.
 unlink("report.Rmd") # Remove an import file mentioned in the plan.
 # If you un-suppress the warnings, check_plan()

@@ -57,7 +57,7 @@ Build if the target itself is missing. Always applies.
 triggers()
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_mtcars_example() # Load drake's canonical example.
 my_plan[["trigger"]] <- "command"
 # You can have different triggers for different targets.
 my_plan[["trigger"]][1] <- "file"

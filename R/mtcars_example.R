@@ -1,4 +1,4 @@
-#' @title Load the basic example from `drake_example("basic")`
+#' @title Load the mtcars example from `drake_example("mtcars")`
 #' @description Is there an association between
 #' the weight and the fuel efficiency of cars?
 #' To find out, we use the mtcars dataset.
@@ -7,11 +7,11 @@
 #' and then analyze them with regression models.
 #' Finally, we summarize the regression models
 #' to see if there is an association.
-#' @details Use \code{\link{drake_example}("basic")} to get the code
-#' for the basic example. The included R script is a detailed,
-#' heavily-commented walkthrough. The basic example vignette at
-#' <https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd> # nolint
-#' also walks through the basic example.
+#' @details Use \code{\link{drake_example}("mtcars")} to get the code
+#' for the mtcars example. The included R script is a detailed,
+#' heavily-commented walkthrough. The mtcars example vignette at
+#' <https://github.com/ropensci/drake/blob/master/vignettes/example-mtcars.Rmd> # nolint
+#' also walks through the mtcars example.
 #' This function also writes/overwrites
 #' the file, `report.Rmd`.
 #' @export
@@ -48,7 +48,7 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' # Populate your workspace and write 'report.Rmd'.
-#' load_basic_example() # Get the code: drake_example("basic")
+#' load_mtcars_example() # Get the code: drake_example("mtcars")
 #' # Check the dependencies of an imported function.
 #' deps(reg1)
 #' # Check the dependencies of commands in the workflow plan.
@@ -69,7 +69,7 @@
 #' unlink("report.Rmd")
 #' })
 #' }
-load_basic_example <- function(
+load_mtcars_example <- function(
   envir = parent.frame(),
   seed = NULL,
   cache = NULL,
@@ -81,7 +81,7 @@ load_basic_example <- function(
 ){
   if (to != report_file){
     warning(
-      "In load_basic_example(), argument 'to' is deprecated. ",
+      "In load_mtcars_example(), argument 'to' is deprecated. ",
       "Use 'report_file' instead."
     )
   }
@@ -169,7 +169,7 @@ load_basic_example <- function(
 
   # Write the R Markdown source for a dynamic knitr report
   report <- system.file(
-    file.path("examples", "basic", "report.Rmd"),
+    file.path("examples", "mtcars", "report.Rmd"),
     package = "drake",
     mustWork = TRUE
   )

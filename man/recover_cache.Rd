@@ -53,7 +53,7 @@ in-memory caches such as \code{\link[=storr_environment]{storr_environment()}}.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build all the targets.
 x <- recover_cache(".drake") # Recover the project's storr cache.
 })

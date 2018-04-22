@@ -30,7 +30,7 @@ mentioned in \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}}.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 knitr_deps("'report.Rmd'") # Files must be single-quoted.
 # Find the dependencies of the compiled output target, 'report.md'.
 knitr_deps("report.Rmd")
@@ -42,5 +42,5 @@ try(knitr_deps("'report.md'"), silent = FALSE) # error
 }
 \seealso{
 \code{\link[=deps]{deps()}},
-\code{\link[=make]{make()}}, \code{\link[=load_basic_example]{load_basic_example()}}
+\code{\link[=make]{make()}}, \code{\link[=load_mtcars_example]{load_mtcars_example()}}
 }

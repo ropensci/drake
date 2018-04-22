@@ -101,7 +101,7 @@ test_with_dir("time predictions: incomplete targets", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
 
-  load_basic_example(envir = e)
+  load_mtcars_example(envir = e)
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
     jobs = 1, verbose = FALSE)
@@ -202,7 +202,7 @@ test_with_dir("timing predictions with realistic build", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
 
-  load_basic_example(envir = e)
+  load_mtcars_example(envir = e)
   my_plan <- e$my_plan
   my_plan$command <- paste("Sys.sleep(0.001);", my_plan$command)
   config <- drake_config(my_plan, envir = e, parallelism = "mclapply",

@@ -60,7 +60,7 @@
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -128,7 +128,7 @@
 <h1 class="hasAnchor">
 <a href="#the-configuration-list" class="anchor"></a>The configuration list</h1>
 <p>Most of <code>drake</code>’s functions rely on a central <code>config</code> list. An understanding of <code>config</code> will help you grasp the internals. <code><a href="../reference/make.html">make()</a></code> and <code><a href="../reference/drake_config.html">drake_config()</a></code> both return the <code>config</code> list. Unlike <code><a href="../reference/make.html">make()</a></code>, <code><a href="../reference/drake_config.html">drake_config()</a></code>’s return value is visible, and its only purpose is to construct your <code>config</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
 
 <span class="kw">sort</span>(<span class="kw">names</span>(config))
@@ -170,7 +170,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <h2 class="hasAnchor">
 <a href="#workflow-plan-data-frames" class="anchor"></a>Workflow plan data frames</h2>
 <p>The workflow plan data frame is your responsibility, and it takes effort and care. Fortunately, functions in <code>drake</code> can help. You can check the plan for formatting issues, missing input files, etc. with the <code><a href="../reference/check_plan.html">check_plan()</a></code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
@@ -261,7 +261,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ## [13] "summ_regression1_small" "summ_regression2_large"
 ## [15] "summ_regression2_small"</code></pre></div>
 <p>To find out why a target is out of date, you can load the <a href="https://github.com/richfitz/storr">storr</a>-based cache and compare the appropriate hash keys to the output of <code><a href="../reference/dependency_profile.html">dependency_profile()</a></code>. To use <code><a href="../reference/dependency_profile.html">dependency_profile()</a></code>, be sure to supply the master configuration list as the <code>config</code> argument. The same is true for <code><a href="../reference/drake_meta.html">drake_meta()</a></code>, another alternative.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 <span class="co"># Change a dependency.</span>
 reg2 &lt;-<span class="st"> </span>function(d) {
@@ -329,7 +329,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "d47109544c89ca7a"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "bd2a55b1ad23d122"</code></pre></div>
+## [1] "ac70956a5c763ceb"</code></pre></div>
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -342,19 +342,19 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
-##  $ start       :Class 'proc_time'  Named num [1:5] 4.7 0.087 4.874 0.083 0.005
+##  $ start       :Class 'proc_time'  Named num [1:5] 4.947 0.063 5.134 0.07 0.02
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.002
-##   ..$ user   : num 0.002
+##   ..$ elapsed: num 0.003
+##   ..$ user   : num 0.003
 ##   ..$ system : num 0
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.028
-##   ..$ user   : num 0.028
+##   ..$ elapsed: num 0.032
+##   ..$ user   : num 0.032
 ##   ..$ system : num 0
 
 <span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))
@@ -365,22 +365,22 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ missing     : logi TRUE
 ##  $ seed        : num 1.85e+09
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
-##  $ depends     : chr "64359e27d6a98840038b26e32f64dc51b86fcfdaf98d7f094ec491fa33cc80c0"
-##  $ file        : chr "ed35f108e2ccd75a904273f1e8559d5a0acb9c2700531276a7acdcfba09decc6"
-##  $ start       :Class 'proc_time'  Named num [1:5] 4.834 0.087 5.008 0.083 0.005
+##  $ depends     : chr "bdd361b34107fb7901742c60d249a999aa71a93380029cf534be513f6ab40789"
+##  $ file        : chr "65f43df5f3fb7d0e2b78b2fa2ada9a635a7557780e79e08805156d60b53e7abc"
+##  $ start       :Class 'proc_time'  Named num [1:5] 5.092 0.067 5.284 0.07 0.02
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.043
-##   ..$ user   : num 0.044
+##   ..$ elapsed: num 0.046
+##   ..$ user   : num 0.046
 ##   ..$ system : num 0
-##  $ mtime       : POSIXct[1:1], format: "2018-04-22 00:02:48"
+##  $ mtime       : POSIXct[1:1], format: "2018-04-22 00:43:20"
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.046
-##   ..$ user   : num 0.046
+##   ..$ elapsed: num 0.05
+##   ..$ user   : num 0.049
 ##   ..$ system : num 0</code></pre></div>
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
@@ -456,7 +456,7 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
-## &lt;bytecode: 0x70a6a00&gt;
+## &lt;bytecode: 0x5cc1ff0&gt;
 
 reg2 &lt;-<span class="st"> </span>function(d) {
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -518,6 +518,8 @@ withr::<span class="kw">with_message_sink</span>(
 ## target x
 ## target y
 ## retry y: 1 of 2
+## [2018-04-22 00:43:23] TimeoutException: reached elapsed time limit
+## [cpu=0.001s, elapsed=0.001s]
 ## Warning: No message sink to remove.</code></pre></div>
 <p>To tailor these settings to each individual target, create new <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, or <code>retries</code> columns in your workflow plan. These columns override the analogous arguments to <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
@@ -537,12 +539,8 @@ withr::<span class="kw">with_message_sink</span>(
 )
 ## Unloading targets from environment:
 ##   x
-##   y
 ## target x
 ## target y
-## fail y
-## Error: Target `y`` failed. Call `diagnose(y)` for details. Error message:
-##   reached elapsed time limit
 ## Warning: No message sink to remove.</code></pre></div>
 </div>
 <div id="diagnose-failures-" class="section level1">
@@ -585,7 +583,7 @@ withr::<span class="kw">with_message_sink</span>(
 ## Warning: No message sink to remove.
 
 <span class="kw"><a href="../reference/failed.html">failed</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># from the last make() only</span>
-## [1] "my_target" "y"
+## [1] "my_target"
 
 <span class="co"># See also warnings and messages.</span>
 error &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(my_target, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)$error
@@ -669,7 +667,7 @@ f
 ##   }
 ##   x
 ## }
-## &lt;bytecode: 0x7e3c068&gt;
+## &lt;bytecode: 0x78a7038&gt;
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
 f &lt;-<span class="st"> </span>function(x){
@@ -719,11 +717,12 @@ my_plan
 <span class="co"># drake_session(verbose = FALSE) # Prints the sessionInfo() of the last make(). # nolint</span>
 
 <span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-## [1] "a"         "b"         "f"         "letter"    "little_b"  "my_target"
-## [7] "stop"      "Sys.sleep" "x"
+##  [1] "a"         "b"         "f"         "letter"    "little_b" 
+##  [6] "my_target" "stop"      "Sys.sleep" "x"         "y"
 
 <span class="kw"><a href="../reference/built.html">built</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-## [1] "a"         "b"         "letter"    "little_b"  "my_target" "x"
+## [1] "a"         "b"         "letter"    "little_b"  "my_target" "x"        
+## [7] "y"
 
 <span class="kw"><a href="../reference/imported.html">imported</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 ## [1] "f"         "stop"      "Sys.sleep"
@@ -755,8 +754,8 @@ little_b
 ##             "finished"             "finished"             "finished" 
 ## summ_regression1_small summ_regression2_large summ_regression2_small 
 ##             "finished"             "finished"             "finished" 
-##       suppressWarnings                      y 
-##             "finished"               "failed"
+##       suppressWarnings 
+##             "finished"
 
 <span class="kw"><a href="../reference/in_progress.html">in_progress</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Unfinished targets</span>
 ## character(0)</code></pre></div>
@@ -768,14 +767,14 @@ little_b
 <div id="start-tinkering-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#start-tinkering-" class="anchor"></a>Start tinkering.</h1>
-<p>The <code><a href="../reference/load_basic_example.html">load_basic_example()</a></code> function loads the <a href="https://github.com/ropensci/drake/tree/master/inst/examples/basic">basic example</a> from <code><a href="../reference/drake_example.html">drake_example("basic")</a></code> right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only <code><a href="../reference/make.html">make(my_plan)</a></code> is left to you.</p>
+<p>The <code><a href="../reference/load_mtcars_example.html">load_mtcars_example()</a></code> function loads the <a href="https://github.com/ropensci/drake/tree/master/inst/examples/mtcars">mtcars example</a> from <code><a href="../reference/drake_example.html">drake_example("mtcars")</a></code> right into your workspace. The workflow plan data frame, workspace, and import files are set up for you. Only <code><a href="../reference/make.html">make(my_plan)</a></code> is left to you.</p>
 <p><code>Drake</code> has <a href="https://github.com/ropensci/drake/tree/master/inst/examples">many more built-in examples</a>. To see your choices, use</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_examples.html">drake_examples</a></span>()
-## [1] "basic"            "Docker-psock"     "gsp"             
-## [4] "main"             "Makefile-cluster" "packages"        
+## [1] "Docker-psock"     "gsp"              "main"            
+## [4] "Makefile-cluster" "mtcars"           "packages"        
 ## [7] "sge"              "slurm"            "torque"</code></pre></div>
 <p>To write the files for an example, use <code><a href="../reference/drake_example.html">drake_example()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"basic"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>)
 <span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"slurm"</span>)</code></pre></div>
 </div>
 </div>

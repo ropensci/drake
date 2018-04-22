@@ -89,7 +89,7 @@ argument to supply them as character strings." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -270,7 +270,7 @@ for each worker in <code><a href='make.html'>make(..., parallelism = "future")</
 <span class='fu'><a href='make.html'>make</a></span>(<span class='no'>mtcars_plan</span>) <span class='co'># Makes `mtcars.csv` and then `value`</span>
 <span class='fu'>head</span>(<span class='fu'><a href='readd.html'>readd</a></span>(<span class='no'>value</span>))
 <span class='co'># You can use knitr inputs too. See the top command below.</span>
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>()
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>()
 <span class='fu'>head</span>(<span class='no'>my_plan</span>)
 <span class='co'># The `knitr_in("report.Rmd")` tells `drake` to dive into the active</span>
 <span class='co'># code chunks to find dependencies.</span>

@@ -58,7 +58,7 @@ to prepare the cache to be called from \code{\link[=make]{make()}}.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 clean(destroy = TRUE)
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- make(my_plan) # Run the project, build all the targets.
 # Locate the drake/storr cache of the project
 # inside the master internal configuration list.

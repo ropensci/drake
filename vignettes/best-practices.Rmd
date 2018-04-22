@@ -36,14 +36,14 @@ This vignette describes general best practices for creating, configuring, and ru
 
 For examples of how to structure your code files, see the beginner oriented example projects:
 
-- [basic](https://github.com/ropensci/drake/tree/master/inst/examples/basic)
+- [mtcars](https://github.com/ropensci/drake/tree/master/inst/examples/mtcars)
 - [gsp](https://github.com/ropensci/drake/tree/master/inst/examples/gsp)
 - [packages](https://github.com/ropensci/drake/tree/master/inst/examples/packages)
 
 Write the code directly with the `drake_example()` function.
 
 ```{r exampledrakewritingbestpractices, eval = FALSE}
-drake_example("basic")
+drake_example("mtcars")
 drake_example("gsp")
 drake_example("packages")
 ``` 
@@ -136,16 +136,16 @@ In addition, this `source()`-based approach is simply inconvenient. `Drake` rebu
 
 ## R Markdown and knitr reports
 
-For a serious project, you should use `drake`'s `make()` function outside `knitr`. In other words, you should treat R Markdown reports and other `knitr` documents as targets and imports, not as a way to run `make()`. Viewed as targets, `drake` makes special exceptions for R Markdown reports and other [knitr](https://github.com/yihui/knitr) reports such as `*.Rmd` and `*.Rnw` files. Not every `drake` project needs them, but it is good practice to use them to summarize the final results of a project once all the other targets have already been built. The basic example, for instance, has an R Markdown report. `report.Rmd` is knitted to build `report.md`, which summarizes the final results.
+For a serious project, you should use `drake`'s `make()` function outside `knitr`. In other words, you should treat R Markdown reports and other `knitr` documents as targets and imports, not as a way to run `make()`. Viewed as targets, `drake` makes special exceptions for R Markdown reports and other [knitr](https://github.com/yihui/knitr) reports such as `*.Rmd` and `*.Rnw` files. Not every `drake` project needs them, but it is good practice to use them to summarize the final results of a project once all the other targets have already been built. The mtcars example, for instance, has an R Markdown report. `report.Rmd` is knitted to build `report.md`, which summarizes the final results.
 
-```{r revisitbasic}
+```{r revisitmtcars}
 # Load all the functions and the workflow plan data frame, my_plan.
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 ```
 
 To see where `report.md` will be built, look to the right of the dependency graph.
 
-```{r revisitbasicgraph, eval = FALSE}
+```{r revisitmtcarsgraph, eval = FALSE}
 config <- drake_config(my_plan)
 vis_drake_graph(config)
 ```
@@ -156,7 +156,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the dependency graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/basic/report.Rmd) to produce the target file `report.md`.
+`Drake` treats [knitr](https://github.com/yihui/knitr) report as a special cases. Whenever `drake` sees `knit()` or `render()` ([rmarkdown](https://github.com/rstudio/rmarkdown)) mentioned in a command, it dives into the source file to look for dependencies. Consider `report.Rmd`, which you can view [here](https://github.com/ropensci/drake/blob/master/inst/examples/mtcars/report.Rmd). When `drake` sees `readd(small)` in an active code chunk, it knows [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/mtcars/report.Rmd) depends on the target called `small`, and it draws the appropriate arrow in the dependency graph above. And if `small` ever changes, `make(my_plan)` will re-process [report.Rmd](https://github.com/ropensci/drake/blob/master/inst/examples/mtcars/report.Rmd) to produce the target file `report.md`.
 
 [knitr](https://github.com/yihui/knitr) reports are the only kind of file that `drake` analyzes for dependencies. It does not give R scripts the same special treatment.
 

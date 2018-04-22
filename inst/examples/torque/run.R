@@ -12,7 +12,7 @@ future::plan(
   workers = 4
 )
 
-load_basic_example()
+load_mtcars_example()
 make(
   my_plan,
   parallelism = "future_lapply"

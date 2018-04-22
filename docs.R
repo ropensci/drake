@@ -107,7 +107,7 @@ images <- function(){
   )
   devtools::load_all() # load current drake
   clean(destroy = TRUE)
-  config <- load_basic_example(overwrite = TRUE)
+  config <- load_mtcars_example(overwrite = TRUE)
   vis_drake_graph(
     config, file = html_out("outdated.html"), selfcontained = TRUE,
                   width = "100%", height = "500px")

@@ -56,7 +56,7 @@
 #' deps(my_plan$command[3])
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Dependencies of the knitr-generated targets like 'report.md'
 #' # include targets/imports referenced with `readd()` or `loadd()`.
 #' deps(file_store("report.Rmd"))
@@ -94,7 +94,7 @@ deps <- function(x){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load drake's canonical example.
+#' load_mtcars_example() # Load drake's canonical example.
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)
@@ -147,7 +147,7 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Load the canonical example for drake.
+#' load_mtcars_example() # Load the canonical example for drake.
 #' # List all the targets/imports that are reproducibly tracked.
 #' tracked(my_plan)
 #' })

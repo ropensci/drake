@@ -38,9 +38,8 @@ With `drake`, you can automatically
 ```r
 library(drake)
 
-# Drake comes with a basic example.
-# Get the code with drake_example("basic").
-load_basic_example(verbose = FALSE)
+# Drake comes with several built-in examples.
+load_mtcars_example(verbose = FALSE) # Get the code: drake_example("mtcars")
 
 # Your workspace starts with a bunch of "imports":
 # functions, pre-loaded data objects, and saved files
@@ -259,7 +258,7 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Get started](https://ropensci.github.io/drake/articles/drake.html)
 - [Example: R package download trends](https://ropensci.github.io/drake/articles/example-packages.html)
 - [Example: gross state products](https://ropensci.github.io/drake/articles/example-gsp.html)
-- [Basic example](https://ropensci.github.io/drake/articles/example-basic.html)
+- [`mtcars` example](https://ropensci.github.io/drake/articles/example-mtcars.html)
 - [General best practices](https://ropensci.github.io/drake/articles/best-practices.html)
 - [Cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html)
 - [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
@@ -275,7 +274,7 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - `main`: `drake`'s main example, based on [Kirill Müller's `drake` pitch](https://krlmlr.github.io/drake-pitch/). This is the most accessible example for beginners.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
-- `basic`: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use `load_basic_example()` to set up the project in your workspace.
+- `mtcars`: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use `load_mtcars_example()` to set up the project in your workspace.
 
 ## Presentations
 
@@ -345,7 +344,7 @@ Much of the R community uses [knitr](https://yihui.name/knitr/) for reproducible
 1. There is no obvious high-performance computing support.
 1. While there is a way to skip chunks that are already up to date (with code chunk options `cache` and `autodep`), this functionality is not the focus of [knitr](https://yihui.name/knitr/). It is deactivated by default, and [remake](https://github.com/richfitz/remake) and `drake` are more dependable ways to skip work that is already up to date.
 
-As in the [basic example](https://github.com/ropensci/drake/tree/master/inst/examples/basic) demonstrates, `drake` should manage the entire workflow, and any [knitr](https://yihui.name/knitr/) reports should quickly build as targets at the very end. The strategy is analogous for [knitr](https://yihui.name/knitr/) reports within [remake](https://github.com/richfitz/remake) projects.
+`Drake` was designed to manage the entire workflow with [knitr](https://yihui.name/knitr/) reports as targets. The strategy is analogous for [knitr](https://yihui.name/knitr/) reports within [remake](https://github.com/richfitz/remake) projects.
 
 ## Factual's Drake
 

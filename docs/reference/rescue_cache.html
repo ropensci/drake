@@ -89,7 +89,7 @@ cache normally again." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -232,7 +232,7 @@ for details.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
 <span class='fu'><a href='make.html'>make</a></span>(<span class='no'>my_plan</span>) <span class='co'># Run the project, build targets. This creates the cache.</span>
 <span class='co'># Remove dangling cache files that could cause errors.</span>
 <span class='fu'>rescue_cache</span>(<span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>2</span>)

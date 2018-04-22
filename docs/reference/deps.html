@@ -88,7 +88,7 @@ decides which targets are built and when." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -213,7 +213,7 @@ network.</p>
 <span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] "readRDS"                    "\"tracked_input_file.rds\""
 #&gt; [3] "x"                         </div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>3</span>])</div><div class='output co'>#&gt; [1] "f" "g" "w" "x" "y" "z"</div><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
 <span class='co'># Dependencies of the knitr-generated targets like 'report.md'</span>
 <span class='co'># include targets/imports referenced with `readd()` or `loadd()`.</span>
 <span class='fu'>deps</span>(<span class='fu'><a href='file_store.html'>file_store</a></span>(<span class='st'>"report.Rmd"</span>))

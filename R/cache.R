@@ -59,7 +59,7 @@ force_cache_path <- function(cache = NULL){
 #' clean(destroy = TRUE)
 #' # No cache is available.
 #' get_cache() # NULL
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' x <- get_cache() # Now, there is a cache.
 #' # List the objects readable from the cache with readd().
@@ -103,7 +103,7 @@ get_cache <- function(
 #' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
 #' try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' y <- this_cache() # Now, there is a cache.
 #' z <- this_cache(".drake") # Same as above.
@@ -244,7 +244,7 @@ new_cache <- function(
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build all the targets.
 #' x <- recover_cache(".drake") # Recover the project's storr cache.
 #' })
@@ -323,7 +323,7 @@ default_cache_path <- function(){
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' clean(destroy = TRUE)
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build all the targets.
 #' # Locate the drake/storr cache of the project
 #' # inside the master internal configuration list.

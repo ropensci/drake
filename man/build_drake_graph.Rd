@@ -100,7 +100,7 @@ to \code{\link[=plot.igraph]{plot.igraph()}} on your graph, or just use
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 # Make the igraph network connecting all the targets and imports.
 g <- build_drake_graph(my_plan)
 class(g) # "igraph"

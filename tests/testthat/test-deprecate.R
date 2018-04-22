@@ -15,6 +15,10 @@ test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
   )
 })
 
+test_with_dir("deprecation: examples", {
+  expect_warning(load_basic_example())
+})
+
 test_with_dir("deprecation: future", {
   expect_warning(backend())
 })

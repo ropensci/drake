@@ -92,7 +92,7 @@ files and generic R objects." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -181,7 +181,7 @@ understandable by drake.</p>
     <pre class="examples"><div class='input'>  <span class='co'># Wraps the string in single quotes.</span>
   <span class='fu'>file_store</span>(<span class='st'>"my_file.rds"</span>) <span class='co'># "'my_file.rds'"</span></div><div class='output co'>#&gt; [1] "\"my_file.rds\""</div><div class='input'>  </div><span class='co'># NOT RUN {</span>
   <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"contain side effects"</span>, {
-  <span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
+  <span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
   <span class='fu'><a href='make.html'>make</a></span>(<span class='no'>my_plan</span>) <span class='co'># Run the workflow to build the targets</span>
   <span class='fu'>list.files</span>() <span class='co'># Should include input "report.Rmd" and output "report.md".</span>
   <span class='fu'>head</span>(<span class='fu'><a href='readd.html'>readd</a></span>(<span class='no'>small</span>)) <span class='co'># You can use symbols for ordinary objects.</span>

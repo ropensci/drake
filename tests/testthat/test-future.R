@@ -4,7 +4,7 @@ test_with_dir("future package functionality", {
   future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  load_basic_example(envir = e)
+  load_mtcars_example(envir = e)
   backends <- c("future_lapply", rep("future", 2))
   caching <- c(rep("worker", 2), "master")
   for (i in 1:3){

@@ -1,5 +1,5 @@
 ---
-title: "Final results report for the basic example"
+title: "Final results report for the mtcars example"
 author: You
 output: html_document
 ---

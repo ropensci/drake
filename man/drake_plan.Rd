@@ -117,7 +117,7 @@ mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
 head(readd(value))
 # You can use knitr inputs too. See the top command below.
-load_basic_example()
+load_mtcars_example()
 head(my_plan)
 # The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 # code chunks to find dependencies.

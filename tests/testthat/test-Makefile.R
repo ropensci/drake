@@ -67,7 +67,7 @@ test_with_dir("files inside directories can be timestamped", {
   expect_false(file.exists("t1"))
 })
 
-test_with_dir("basic Makefile stuff works", {
+test_with_dir("mtcars Makefile stuff works", {
   config <- dbug()
   make(config$plan, targets = "combined", envir = config$envir,
     verbose = FALSE, session_info = FALSE)

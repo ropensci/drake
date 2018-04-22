@@ -35,7 +35,7 @@ for an overview of the documentation.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 # Generate the master internal configuration list.
 con <- drake_config(my_plan)
 # Just cache the imports, do not build any targets.

@@ -100,7 +100,7 @@ test_with_dir("graph functions work", {
 })
 
 test_with_dir("Supplied graph is pruned.", {
-  load_basic_example()
+  load_mtcars_example()
   graph <- build_drake_graph(my_plan)
   con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
@@ -125,13 +125,13 @@ test_with_dir("same graphical arrangements for distributed parallelism", {
   expect_true(is.list(tmp))
 })
 
-test_with_dir("graphing args are not ignored (basic example)", {
+test_with_dir("graphing args are not ignored (mtcars example)", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
   parallelism <- scenario$parallelism
 
-  load_basic_example(envir = e)
+  load_mtcars_example(envir = e)
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
                          jobs = jobs, parallelism = parallelism,

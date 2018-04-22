@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The basic example • drake</title>
+<title>The mtcars example • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="The basic example">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="The mtcars example">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -60,7 +60,7 @@
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -111,33 +111,33 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>The basic example</h1>
+      <h1>The mtcars example</h1>
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
             <h4 class="date">2018-04-22</h4>
       
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd"><code>vignettes/example-basic.Rmd</code></a></small>
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-mtcars.Rmd"><code>vignettes/example-mtcars.Rmd</code></a></small>
 
     </div>
 
     
     
 <div class="contents">
-<p>This vignette is a walkthrough of <code>drake</code>’s main functionality based on the basic example. It sets up the project and runs it repeatedly to demonstrate <code>drake</code>’s most important functionality.</p>
+<p>This vignette is a walkthrough of <code>drake</code>’s main functionality based on the mtcars example. It sets up the project and runs it repeatedly to demonstrate <code>drake</code>’s most important functionality.</p>
 <div id="get-the-code-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#get-the-code-" class="anchor"></a>Get the code.</h1>
 <p>Write the code files to your workspace.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"basic"</span>)</code></pre></div>
-<p>The new <code>basic</code> folder now includes a file structure of a serious <code>drake</code> project, plus an <code>interactive-tutorial.R</code> to narrate the example. The code is also <a href="https://github.com/ropensci/drake/tree/master/inst/examples/basic">online here</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>)</code></pre></div>
+<p>The new <code>mtcars</code> folder now includes a file structure of a serious <code>drake</code> project, plus an <code>interactive-tutorial.R</code> to narrate the example. The code is also <a href="https://github.com/ropensci/drake/tree/master/inst/examples/mtcars">online here</a>.</p>
 </div>
 <div id="quick-examples" class="section level1">
 <h1 class="hasAnchor">
 <a href="#quick-examples" class="anchor"></a>Quick examples</h1>
 <p>Inspect and run your project.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()            <span class="co"># Get the code with drake_example("basic").</span>
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()            <span class="co"># Get the code with drake_example("mtcars").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan) <span class="co"># Master configuration list</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)         <span class="co"># Hover, click, drag, zoom, pan.</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)                   <span class="co"># Run the workflow.</span>
@@ -151,13 +151,13 @@ error$message
 error$call
 error$calls                <span class="co"># Full traceback of nested calls leading up to the error. # nolint</span></code></pre></div>
 <p>Dive deeper into the built-in examples.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"basic"</span>) <span class="co"># Write the code files.</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>) <span class="co"># Write the code files.</span>
 <span class="kw"><a href="../reference/drake_examples.html">drake_examples</a></span>()       <span class="co"># List the other examples.</span>
 <span class="kw">vignette</span>(<span class="st">"quickstart"</span>) <span class="co"># This vignette</span></code></pre></div>
 </div>
-<div id="the-motivation-of-the-basic-example" class="section level1">
+<div id="the-motivation-of-the-mtcars-example" class="section level1">
 <h1 class="hasAnchor">
-<a href="#the-motivation-of-the-basic-example" class="anchor"></a>The motivation of the basic example</h1>
+<a href="#the-motivation-of-the-mtcars-example" class="anchor"></a>The motivation of the mtcars example</h1>
 <p>Is there an association between the weight and the fuel efficiency of cars? To find out, we use the <code>mtcars</code> dataset from the <code>datasets</code> package. The <code>mtcars</code> dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ?mtcars # more info</span>
 <span class="kw">head</span>(mtcars)
@@ -170,9 +170,9 @@ error$calls                <span class="co"># Full traceback of nested calls lea
 ## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre></div>
 <p>Here, <code>wt</code> is weight in tons, and <code>mpg</code> is fuel efficiency in miles per gallon. We want to figure out if there is an association between <code>wt</code> and <code>mpg</code>. The <code>mtcars</code> dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.</p>
 </div>
-<div id="set-up-the-basic-example" class="section level1">
+<div id="set-up-the-mtcars-example" class="section level1">
 <h1 class="hasAnchor">
-<a href="#set-up-the-basic-example" class="anchor"></a>Set up the basic example</h1>
+<a href="#set-up-the-mtcars-example" class="anchor"></a>Set up the mtcars example</h1>
 <p>Before you run your project, you need to set up the workspace. In other words, you need to gather the “imports”: functions, pre-loaded data objects, and saved files that you want to be available before the real work begins.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr) <span class="co"># Drake knows which packages you load.</span>
 <span class="kw">library</span>(drake)</code></pre></div>
@@ -205,14 +205,14 @@ reg2 &lt;-<span class="st"> </span>function(d){
   <span class="kw">lm</span>(y ~<span class="st"> </span>x2, <span class="dt">data =</span> d)
 }</code></pre></div>
 <p>We want to summarize the final results in an R Markdown report, so we need the following <code>report.Rmd</code> source file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"basic"</span>, <span class="st">"report.Rmd"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"mtcars"</span>, <span class="st">"report.Rmd"</span>)
 report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(path, <span class="dt">package =</span> <span class="st">"drake"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)
 <span class="kw">file.copy</span>(<span class="dt">from =</span> report_file, <span class="dt">to =</span> <span class="kw">getwd</span>(), <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)
 ## [1] TRUE</code></pre></div>
 <p>Here are the contents of the report. It will serve as a final summary of our work, and we will process it at the very end. Admittedly, some of the text spoils the punch line.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="kw">readLines</span>(<span class="st">"report.Rmd"</span>), <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)
 ## ---
-## title: "Final results report for the basic example"
+## title: "Final results report for the mtcars example"
 ## author: You
 ## output: html_document
 ## ---
@@ -253,7 +253,7 @@ report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(pa
 <p>and saved files from your file system.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>()
 ##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
-##  [4] "drake.Rmd"            "example-basic.Rmd"    "example-gsp.Rmd"     
+##  [4] "drake.Rmd"            "example-gsp.Rmd"      "example-mtcars.Rmd"  
 ##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
 ## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
 ## [13] "timing.Rmd"</code></pre></div>
@@ -262,7 +262,7 @@ report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(pa
 <h1 class="hasAnchor">
 <a href="#the-workflow-plan-data-frame" class="anchor"></a>The workflow plan data frame</h1>
 <p>Now that your workspace of imports is prepared, we can outline the real work step by step in a workflow plan data frame.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 my_plan
 ## # A tibble: 15 x 2
 ##    target                 command                                         
@@ -596,16 +596,16 @@ x_plan
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.004s         0.004s         0s         
-##  2 coef_regression1_small target 0.003s         0.003s         0s         
-##  3 coef_regression2_large target 0.004s         0.003s         0s         
+##  1 coef_regression1_large target 0.005s         0.005s         0s         
+##  2 coef_regression1_small target 0.004s         0.004s         0s         
+##  3 coef_regression2_large target 0.003s         0.004s         0s         
 ##  4 coef_regression2_small target 0.004s         0.003s         0s         
-##  5 data.frame             import 0.021s         0.021s         0s         
-##  6 knit                   import 0.016s         0.016s         0s         
-##  7 large                  target 0.049s         0.049s         0s         
+##  5 data.frame             import 0.02s          0.02s          0s         
+##  6 knit                   import 0.02s          0.02s          0s         
+##  7 large                  target 0.054s         0.053s         0s         
 ##  8 lm                     import 0.008s         0.007s         0s         
-##  9 mtcars                 import 0.001s         0.001s         0s         
-## 10 nrow                   import 0.005s         0.004s         0s         
+##  9 mtcars                 import 0s             0s             0s         
+## 10 nrow                   import 0.004s         0.004s         0s         
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -734,7 +734,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "36f0052ad8a69c3b"</code></pre></div>
+## [1] "c720654078aa2a9a"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
@@ -922,8 +922,8 @@ my_plan
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#get-the-code-">Get the code.</a></li>
       <li><a href="#quick-examples">Quick examples</a></li>
-      <li><a href="#the-motivation-of-the-basic-example">The motivation of the basic example</a></li>
-      <li><a href="#set-up-the-basic-example">Set up the basic example</a></li>
+      <li><a href="#the-motivation-of-the-mtcars-example">The motivation of the mtcars example</a></li>
+      <li><a href="#set-up-the-mtcars-example">Set up the mtcars example</a></li>
       <li><a href="#the-workflow-plan-data-frame">The workflow plan data frame</a></li>
       <li><a href="#generate-the-workflow-plan">Generate the workflow plan</a></li>
       <li><a href="#flexible-workflow-plan-generation">Flexible workflow plan generation</a></li>

@@ -31,7 +31,7 @@ test_with_dir("knitr_deps() works", {
   expect_warning(x <- sort(knitr_deps("report.Rmd")))
   expect_warning(expect_equal(x, sort(knitr_deps("\"report.Rmd\""))))
   expect_equal(x, character(0))
-  load_basic_example()
+  load_mtcars_example()
   x <- knitr_deps("report.Rmd")
   y <- expect_warning(deps("knit('report.Rmd')"))
   z <- expect_warning(deps("render('report.Rmd')"))
@@ -95,7 +95,7 @@ test_with_dir("edge cases finding knitr docs", {
 })
 
 test_with_dir("knitr file deps from commands and functions", {
-  load_basic_example()
+  load_mtcars_example()
   expect_equal(sort(deps("'report.Rmd'")), sort(c(
     "coef_regression2_small", "large", "small"
   )))

@@ -15,7 +15,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
 #' predict_runtime(config, digits = 4) # Everything is up to date.
 #' predict_runtime(config, digits = 4, from_scratch = TRUE) # 1 job
@@ -114,7 +114,7 @@ predict_runtime <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
 #' rate_limiting_times(config) # Everything is up to date.
 #' # Assume everything runs from scratch with 1 job.

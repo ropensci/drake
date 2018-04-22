@@ -14,7 +14,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Make the igraph network connecting all the targets and imports.
 #' g <- build_drake_graph(my_plan)
 #' class(g) # "igraph"
@@ -102,7 +102,7 @@ code_deps_to_edges <- function(target, deps){
 #'   [make()]
 #' @description `igraph` objects are used
 #' internally to represent the dependency network of your workflow.
-#' See \code{\link{config}(my_plan)$graph} from the basic example.
+#' See \code{\link{config}(my_plan)$graph} from the mtcars example.
 #' @details For a supplied graph, take the subgraph of all combined
 #' incoming paths to the vertices in `to`. In other words,
 #' remove the vertices after `to` from the graph.
@@ -116,7 +116,7 @@ code_deps_to_edges <- function(target, deps){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Build the igraph object representing the workflow dependency network.
 #' # You could also use drake_config(my_plan)$graph
 #' graph <- build_drake_graph(my_plan)

@@ -60,7 +60,7 @@
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -355,7 +355,7 @@ envir$out
 <p><code><a href="../reference/make.html">make(..., lazy_load = TRUE, parallelism = "parLapply", jobs = 2)</a></code> does not work. If you want to use local multisession parallelism with multiple jobs and lazy loading, try <code>"future_lapply"</code> parallelism instead.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multisession)
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">lazy_load =</span> <span class="ot">TRUE</span>, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 </li>
 <li><p>Delayed evaluation may cause the same dependencies to be loaded multiple times, and these duplicated loads could be slow.</p></li>
@@ -386,10 +386,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "26486b042891712cd459a4a3bc769685"
+## [1] "5e0055df2ee6b4317a426d6c427a85f3"
 example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "a88fbc64e14b8795addbeef1adc1b8f5"</code></pre></div>
+## [1] "8c89397c33fe354786aa33aae8f5133a"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>
@@ -434,7 +434,7 @@ command &lt;-<span class="st"> "x &lt;- digest::digest(file_in(</span><span clas
 <div id="dependencies-of-knitr-reports" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dependencies-of-knitr-reports" class="anchor"></a>Dependencies of <code>knitr</code> reports</h2>
-<p>If you have <code>knitr</code> reports, you can use <code>knitr_report()</code> in your commands so that your reports are refreshed every time one of their dependencies changes. See <code><a href="../reference/drake_example.html">drake_example("basic")</a></code> and the <code>?knitr_in()</code> help file examples for demonstrations. Dependencies are detected if you call <code><a href="../reference/loadd.html">loadd()</a></code> or <code><a href="../reference/readd.html">readd()</a></code> in your code chunks. But beware: an empty call to <code><a href="../reference/loadd.html">loadd()</a></code> does not account for any dependencies even though it loads all the available targets into your R session.</p>
+<p>If you have <code>knitr</code> reports, you can use <code>knitr_report()</code> in your commands so that your reports are refreshed every time one of their dependencies changes. See <code><a href="../reference/drake_example.html">drake_example("mtcars")</a></code> and the <code>?knitr_in()</code> help file examples for demonstrations. Dependencies are detected if you call <code><a href="../reference/loadd.html">loadd()</a></code> or <code><a href="../reference/readd.html">readd()</a></code> in your code chunks. But beware: an empty call to <code><a href="../reference/loadd.html">loadd()</a></code> does not account for any dependencies even though it loads all the available targets into your R session.</p>
 </div>
 <div id="knitr-inputs-and-file-outputs-in-imported-functions-" class="section level2">
 <h2 class="hasAnchor">

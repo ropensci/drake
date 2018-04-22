@@ -79,7 +79,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' config <- load_basic_example() # Get the code with drake_example("basic").
+#' config <- load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Get a list of data frames representing the nodes, edges,
 #' # and legend nodes of the visNetwork graph from vis_drake_graph().
 #' raw_graph <- dataframes_graph(config = config)

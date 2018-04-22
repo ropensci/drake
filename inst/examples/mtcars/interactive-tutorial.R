@@ -46,7 +46,7 @@
 ###################################
 
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
-# call load_basic_example().
+# call load_mtcars_example().
 
 library(knitr) # Drake knows you loaded knitr.
 library(drake)
@@ -91,7 +91,7 @@ reg2 <- function(d){
 ###############################
 
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
-# call load_basic_example().
+# call load_mtcars_example().
 
 # We write drake commands to generate our two bootstrapped datasets.
 my_datasets <- drake_plan(

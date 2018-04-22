@@ -47,7 +47,7 @@ Your loaded packages and their versions are recorded, for example.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 drake_session() # Retrieve the cached sessionInfo() of the last make().
 })

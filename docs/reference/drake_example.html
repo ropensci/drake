@@ -29,8 +29,8 @@
 
 <meta property="og:description" content="Copy a folder of code files for a
 drake example to the current working directory.
-Call drake_example("basic") to generate the code files from the
-basic example vignette: vignette("example-basic").
+Call drake_example("mtcars") to generate the code files from the
+mtcars example vignette: vignette("example-mtcars").
 To see the names of all the examples, run drake_examples()." />
 <meta name="twitter:card" content="summary" />
 <!-- mathjax -->
@@ -88,7 +88,7 @@ To see the names of all the examples, run drake_examples()." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -146,8 +146,8 @@ To see the names of all the examples, run drake_examples()." />
     
     <p>Copy a folder of code files for a
 drake example to the current working directory.
-Call <code>drake_example("basic")</code> to generate the code files from the
-basic example vignette: <code><a href='../articles/example-basic.html'>vignette("example-basic")</a></code>.
+Call <code>drake_example("mtcars")</code> to generate the code files from the
+mtcars example vignette: <code><a href='../articles/example-mtcars.html'>vignette("example-mtcars")</a></code>.
 To see the names of all the examples, run <code><a href='drake_examples.html'>drake_examples()</a></code>.</p>
     
 
@@ -193,8 +193,8 @@ with the same name as the drake example.</p></td>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='drake_examples.html'>drake_examples</a></span>() <span class='co'># List all the drake examples.</span>
-<span class='co'># Sets up the same example as the basic example vignette.</span>
-<span class='fu'>drake_example</span>(<span class='st'>"basic"</span>)
+<span class='co'># Sets up the same example as the mtcars example vignette.</span>
+<span class='fu'>drake_example</span>(<span class='st'>"mtcars"</span>)
 <span class='co'># Sets up the SLURM example.</span>
 <span class='fu'>drake_example</span>(<span class='st'>"slurm"</span>)
 })

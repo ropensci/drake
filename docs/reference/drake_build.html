@@ -87,7 +87,7 @@ without much of a fuss." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -207,7 +207,7 @@ will not be replaced.</p></td>
 <span class='co'># This example is not really a user-side demonstration.</span>
 <span class='co'># It just walks through a dive into the internals.</span>
 <span class='co'># Populate your workspace and write 'report.Rmd'.</span>
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
 <span class='co'># Create the master internal configuration list.</span>
 <span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_config.html'>drake_config</a></span>(<span class='no'>my_plan</span>)
 <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>drake_build</span>(<span class='no'>small</span>, <span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>)

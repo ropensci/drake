@@ -15,5 +15,5 @@ cl <- future::makeClusterPSOCK( # nolint
 )
 
 future::plan(cluster, workers = cl)
-load_basic_example()
+load_mtcars_example()
 make(my_plan, parallelism = "future_lapply")

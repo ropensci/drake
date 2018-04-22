@@ -25,7 +25,7 @@ test_with_dir("illegal hashes", {
 })
 
 test_with_dir("stress test file hash", {
-  load_basic_example()
+  load_mtcars_example()
   con <- drake_config(my_plan, verbose = FALSE)
   make_imports(con)
   expect_true(is.character(file_hash("'report.Rmd'", config = con, 0)))

@@ -20,7 +20,7 @@ Intended for internal use only.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 # List the possible targets you could choose for the
 # `targets` argument to make(). You may choose any subset.
 possible_targets(my_plan)

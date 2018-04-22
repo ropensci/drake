@@ -38,15 +38,15 @@ knitr::opts_chunk$set(
 When you run `make()`, `drake` stores your imports and output targets in a hidden cache.
 
 
-```{r basic_storage}
+```{r mtcars_storage}
 library(drake)
-load_basic_example(verbose = FALSE) # Get the code with drake_example("basic").
+load_mtcars_example(verbose = FALSE) # Get the code with drake_example("mtcars").
 config <- make(my_plan, verbose = FALSE)
 ```
 
 You can explore your cached data using functions like `loadd()`, `readd()`, and `cached()`.
 
-```{r explore_basic}
+```{r explore_mtcars}
 head(cached())
 
 head(readd(small))
@@ -250,7 +250,7 @@ cache <- storr::storr_dbi(
   tbl_keys = "keys",
   con = mydb
 )
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 unlink(".drake", recursive = TRUE)
 make(my_plan, cache = cache)
 ```

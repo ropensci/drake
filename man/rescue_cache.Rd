@@ -65,7 +65,7 @@ cache normally again.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build targets. This creates the cache.
 # Remove dangling cache files that could cause errors.
 rescue_cache(jobs = 2)

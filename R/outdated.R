@@ -27,7 +27,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Recopute the config list early and often to have the
 #' # most current information. Do not modify the config list by hand.
 #' config <- drake_config(my_plan)
@@ -76,7 +76,7 @@ outdated <-  function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' config <- load_basic_example() # Get the code with drake_example("basic").
+#' config <- load_mtcars_example() # Get the code with drake_example("mtcars").
 #' missed(config) # All the imported files and objects should be present.
 #' rm(reg1) # Remove an import dependency from you workspace.
 #' missed(config) # Should report that reg1 is missing.

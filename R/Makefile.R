@@ -99,7 +99,7 @@ build_recipe <- function(target, recipe_command,
 #' # make(..., parallelism = "Makefile").
 #' # These examples peer into the internals of drake,
 #' # but are not really of practical use for most users.
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan) # Internal configuration list.
 #' # Prepare to use a distributed computing parallel backend
 #' # such as "Makefile" or "future_lapply".

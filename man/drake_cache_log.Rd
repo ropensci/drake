@@ -76,7 +76,7 @@ of your cache (default: \code{\link[=default_short_hash_algo]{default_short_hash
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 # Load drake's canonical example.
-load_basic_example() # Get the code with drake_example()
+load_mtcars_example() # Get the code with drake_example()
 # Run the project, build all the targets.
 make(my_plan)
 # Get a data frame of all the hash keys.

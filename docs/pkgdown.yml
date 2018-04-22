@@ -6,8 +6,8 @@ articles:
   caution: caution.html
   debug: debug.html
   drake: drake.html
-  example-basic: example-basic.html
   example-gsp: example-gsp.html
+  example-mtcars: example-mtcars.html
   example-packages: example-packages.html
   faq: faq.html
   graph: graph.html

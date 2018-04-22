@@ -18,8 +18,8 @@ navbar:
       href: articles/example-packages.html
     - text: "Example: gross state products"
       href: articles/example-gsp.html
-    - text: "Basic example"
-      href: articles/example-basic.html
+    - text: "Example: mtcars and workflow plan generation"
+      href: articles/example-mtcars.html
     - text: "General best practices for drake projects"
       href: articles/best-practices.html
     - text: Debugging and testing drake projects
@@ -47,7 +47,7 @@ articles:
   - '`drake`'
   - '`example-packages`'
   - '`example-gsp`'
-  - '`example-basic`'
+  - '`example-mtcars`'
   - '`best-practices`'
   - '`caution`'
 - title: Specialized walkthroughs
@@ -64,7 +64,7 @@ reference:
   - '`drake_examples`'
   - '`drake-package`'
   - '`drake_tip`'
-  - '`load_basic_example`'
+  - '`load_mtcars_example`'
 - title: Basic
   contents:
   - '`make`'

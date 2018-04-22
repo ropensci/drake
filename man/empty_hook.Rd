@@ -22,7 +22,7 @@ to essentially do nothing.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 # Run the project with the empty hook.
 make(my_plan, hook = empty_hook) # Nothing gets built!
 cached() # character(0) # nolint

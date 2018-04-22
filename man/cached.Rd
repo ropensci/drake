@@ -67,7 +67,7 @@ or \code{\link[=loadd]{loadd()}}.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Load drake's canonical example.
+load_mtcars_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build all the targets.
 cached(list = 'reg1') # Is 'reg1' in the cache?
 # List all the targets and imported files in the cache.

@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' drake_session() # Retrieve the cached sessionInfo() of the last make().
 #' })
@@ -40,7 +40,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Kill before targets finish.
 #' # If you interrupted make(), some targets will probably be listed:
 #' in_progress()
@@ -73,7 +73,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' failed() # Should show that no targets failed.
 #' # Build a workflow plan doomed to fail:
@@ -134,7 +134,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_basic_example() # Get the code with drake_example("basic").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' # Watch the changing progress() as make() is running.
 #' progress() # List all the targets reached so far.

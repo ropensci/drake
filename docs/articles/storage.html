@@ -60,7 +60,7 @@
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -130,7 +130,7 @@
 <a href="#storage-basics" class="anchor"></a>Storage basics</h1>
 <p>When you run <code><a href="../reference/make.html">make()</a></code>, <code>drake</code> stores your imports and output targets in a hidden cache.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Get the code with drake_example("basic").</span>
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Get the code with drake_example("mtcars").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>You can explore your cached data using functions like <code><a href="../reference/loadd.html">loadd()</a></code>, <code><a href="../reference/readd.html">readd()</a></code>, and <code><a href="../reference/cached.html">cached()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw"><a href="../reference/cached.html">cached</a></span>())
@@ -209,19 +209,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "7dd33f9fe2cb65b48cb7f6d6769aba1e"</code></pre></div>
+## [1] "e36e240c4f46aab6edea1a6bc846fe75"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "3b1d059182fe1feb2dc57c94a69338ccf4a6e2d2674902c77966cd0914141b046d806e286582240b65ccd3fa93f011c4c253c3566a85495b94c0da3659f48a36"
+## [1] "d55864c1c8d0ea8bebbf43a74e98e8b75ee3a47e52dac2f0f7917b057d34ba6682998ac651f072a95f7a5ca3b2a055e91259f10269b7e552d15b29ae4e0eda2e"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "7dd33f9fe2cb65b48cb7f6d6769aba1e"
+## [1] "e36e240c4f46aab6edea1a6bc846fe75"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "5ba237387f0b47ec"
+## [1] "05f7763d13db891e"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "0887c393"</code></pre></div>
+## [1] "b42d07f7"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
@@ -376,7 +376,7 @@ cache &lt;-<span class="st"> </span>storr::<span class="kw"><a href="http://www.
   <span class="dt">tbl_keys =</span> <span class="st">"keys"</span>,
   <span class="dt">con =</span> mydb
 )
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 <span class="kw">unlink</span>(<span class="st">".drake"</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">cache =</span> cache)</code></pre></div>
 </div>

@@ -19,7 +19,7 @@ Most users do not need to micromanage hooks.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 # Everything gets built normally.
 make(my_plan, hook = default_hook)
 cached() # List the cached targets and imports.

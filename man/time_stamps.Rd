@@ -24,7 +24,7 @@ to flesh out some of the examples in the help files.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-load_basic_example() # Get the code with drake_example("basic").
+load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan) # Master internal configuration list
 time_stamps(config)
 # Now look in '.drake/ts' for dummy timestamp files.

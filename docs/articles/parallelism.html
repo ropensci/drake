@@ -60,7 +60,7 @@
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -129,7 +129,7 @@
 <a href="#the-concept" class="anchor"></a>The concept</h1>
 <p><code>Drake</code>’s approach to parallelism relies on the network graph representation of a project.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>()
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">2</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Parallelize over 2 jobs.</span>
 <span class="co"># Change a dependency.</span>
 reg2 &lt;-<span class="st"> </span>function(d) {
@@ -178,7 +178,7 @@ reg2 &lt;-<span class="st"> </span>function(d) {
 <a href="#drake-can-report-the-maximum-number-of-useful-simultaneous-jobs" class="anchor"></a>Drake can report the maximum number of useful simultaneous jobs</h2>
 <p>The <code><a href="../reference/max_useful_jobs.html">max_useful_jobs()</a></code> function analyzes your project and recommends a maximum value for the <code>jobs</code> argument to the next <code><a href="../reference/make.html">make()</a></code> (or the <code>workers</code> argument to a backend function in <a href="https://github.com/HenrikBengtsson/future">future</a>). This number returned by <code><a href="../reference/max_useful_jobs.html">max_useful_jobs()</a></code> is only an upper bound, not necessarily the number of <code>jobs</code> you should choose.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Set targets_only to TRUE for smaller graphs.</span>
 <span class="kw"><a href="../reference/max_useful_jobs.html">max_useful_jobs</a></span>(config) <span class="co"># 8</span>
@@ -322,7 +322,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(
 <p>The <code>future</code> backend is experimental and needs more real-world testing. It is similar to <code>future_lapply</code> except that individual futures are launched and managed using a manual job scheduler. Jobs are submitted as soon as workers become available, which overcomes an inefficiency of the usual staged parallelism. And with the optional <code>evaluator</code> column of the workflow plan data frame, you can use different computing resources for different targets. (See the <code>evaluator</code> argument of <code><a href="http://www.rdocumentation.org/packages/future/topics/future">future()</a></code>.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()
 remote &lt;-<span class="st"> </span>future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multisession)
 local &lt;-<span class="st"> </span>future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multicore)
 evaluator &lt;-<span class="st"> </span><span class="ot">NULL</span>
@@ -431,7 +431,7 @@ echo "module load R; $*" | qsub -sync y -cwd -j y
 <h1 class="hasAnchor">
 <a href="#drake-as-an-ordinary-job-scheduler" class="anchor"></a>Drake as an ordinary job scheduler</h1>
 <p>If you do not care about reproducibility and you want <code>drake</code> to be an ordinary job scheduler, consider using <a href="https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers">alternative triggers</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>()
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">trigger =</span> <span class="st">"missing"</span>) <span class="co"># Also consider "always".</span></code></pre></div>
 <p>Above, <code>drake</code> only builds the missing targets. This skips much of the <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd#hash-algorithms">time-consuming hashing</a> that ordinarily detects which targets are out of date.</p>
 </div>

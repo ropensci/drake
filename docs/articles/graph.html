@@ -60,7 +60,7 @@
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -130,7 +130,7 @@
 <a href="#dependency-reactivity" class="anchor"></a>Dependency reactivity</h1>
 <p>Initially, your entire project is out of date.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>() <span class="co"># Get the code with drake_example("basic").</span>
+<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Same as drake_graph()</span></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">

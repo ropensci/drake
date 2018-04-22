@@ -87,7 +87,7 @@ only the first one (alphabetically) is written." />
       <a href="../articles/example-gsp.html">Example: gross state products</a>
     </li>
     <li>
-      <a href="../articles/example-basic.html">Basic example</a>
+      <a href="../articles/example-mtcars.html">Example: mtcars and workflow plan generation</a>
     </li>
     <li>
       <a href="../articles/best-practices.html">General best practices for drake projects</a>
@@ -185,14 +185,14 @@ but a batchtools template file is written.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
-<span class='fu'><a href='load_basic_example.html'>load_basic_example</a></span>() <span class='co'># Get the code with drake_example("basic").</span>
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
 <span class='co'># List the drake examples. Only some have template files.</span>
 <span class='fu'><a href='drake_examples.html'>drake_examples</a></span>()
 <span class='co'># Write the batchtools template file from the SLURM example.</span>
 <span class='fu'>drake_batchtools_tmpl_file</span>(<span class='st'>"slurm"</span>) <span class='co'># Writes batchtools.slurm.tmpl.</span>
 <span class='co'># Find batchtools.slurm.tmpl with the rest of the example's files.</span>
 <span class='fu'><a href='drake_example.html'>drake_example</a></span>(<span class='st'>"slurm"</span>) <span class='co'># Writes a new 'slurm' folder with more files.</span>
-<span class='co'># Run the basic example with a</span>
+<span class='co'># Run the mtcars example with a</span>
 <span class='co'># SLURM-powered parallel backend. Requires SLURM.</span>
 <span class='fu'>library</span>(<span class='no'>future.batchtools</span>)
 <span class='co'># future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl") # nolint</span>

@@ -38,7 +38,7 @@ parallel stages during the next \code{\link[=make]{make()}}.
 \examples{
   \dontrun{
   test_with_dir("Quarantine side effects.", {
-  load_basic_example() # Get the code with drake_example("basic").
+  load_mtcars_example() # Get the code with drake_example("mtcars").
   config <- drake_config(my_plan) # Get a configuration list.
   # Parallel stages for the next make().
   parallel_stages(config = config)
