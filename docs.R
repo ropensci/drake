@@ -210,6 +210,9 @@ images <- function(){
   for (file in files){
     file.remove(file)
   }
+  clean(destroy = TRUE)
+  unlink(c("figure", "report.Rmd"), recursive = TRUE)
+  unlink(html_out("*_files"), recursive = TRUE)
 
   # drake.Rmd vignette
   pkgconfig::set_config("drake::strings_in_dots" = "literals")
@@ -218,13 +221,13 @@ images <- function(){
     package = "drake",
     mustWork = TRUE
   )
-  tmp <- file.copy(from = dat, to = "raw_data.xlsx")
+  tmp <- file.copy(from = dat, to = "raw_data.xlsx", overwrite = TRUE)
   rmd <- system.file(
     file.path("examples", "beginner", "report.Rmd"),
     package = "drake",
     mustWork = TRUE
   )
-  tmp <- file.copy(from = rmd, to = "report.Rmd")
+  tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
   plan <- drake_plan(
     raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
     data = raw_data %>%

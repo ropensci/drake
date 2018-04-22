@@ -112,10 +112,10 @@
   <div class="col-md-9">
     <div class="page-header toc-ignore">
       <h1>drake</h1>
-            <h3 class="subtitle">where to begin</h3>
-                        <h4 class="author">Will Landau</h4>
+            <h3 class="subtitle">beginner example</h3>
+                        <h4 class="author">Will Landau and Kirill Müller</h4>
             
-            <h4 class="date">2018-04-15</h4>
+            <h4 class="date">2018-04-21</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/drake.Rmd"><code>vignettes/drake.Rmd</code></a></small>
 
@@ -124,235 +124,161 @@
     
     
 <div class="contents">
-<p><img src="https://ropensci.github.io/drake/images/infographic.svg" alt="infographic" align="center" style="border: none; float: center;"></p>
-<p>This tutorial is a recommended starting place for learning how to use <code>drake</code>. It is the abridged version of the <a href="https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd">basic example vignette</a>. See <a href="https://github.com/ropensci/drake/blob/master/README.md#documentation">this section of the README</a> for a high-level overview of the available documentation.</p>
-<div id="get-the-code-" class="section level1">
+<p>A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, which then turns into fitted models, summaries, and reports.</p>
+<p><img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style="border: none; float: center;"></p>
+<div id="plan-your-work-" class="section level1">
 <h1 class="hasAnchor">
-<a href="#get-the-code-" class="anchor"></a>Get the code.</h1>
-<p>Write the code files to your workspace.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"basic"</span>)</code></pre></div>
-<p>The new <code>basic</code> folder now includes a file structure of a serious <code>drake</code> project, plus an <code>interactive-tutorial.R</code> to narrate the example. The code is also <a href="https://github.com/ropensci/drake/tree/master/inst/examples/basic">online here</a>.</p>
-</div>
-<div id="the-motivation-of-the-basic-example" class="section level1">
-<h1 class="hasAnchor">
-<a href="#the-motivation-of-the-basic-example" class="anchor"></a>The motivation of the basic example</h1>
-<p>Is there an association between the weight and the fuel efficiency of cars? To find out, we use the <code>mtcars</code> dataset from the <code>datasets</code> package. The <code>mtcars</code> dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ?mtcars # more info</span>
-<span class="kw">head</span>(mtcars)
-##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre></div>
-<p>Here, <code>wt</code> is weight in tons, and <code>mpg</code> is fuel efficiency in miles per gallon. We want to figure out if there is an association between <code>wt</code> and <code>mpg</code>. The <code>mtcars</code> dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.</p>
-</div>
-<div id="a-taste-of-the-basic-example" class="section level1">
-<h1 class="hasAnchor">
-<a href="#a-taste-of-the-basic-example" class="anchor"></a>A taste of the basic example</h1>
-<p>Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_basic_example.html">load_basic_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Get the code with drake_example("basic").</span>
-
-<span class="co"># Drake looks for data objects and functions in your R session environment</span>
-<span class="kw">ls</span>()
-## [1] "my_plan"     "random_rows" "reg1"        "reg2"        "simulate"
-
-<span class="co"># and saved files in your file system.</span>
-<span class="kw">list.files</span>()
-##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
-##  [4] "drake.Rmd"            "example-basic.Rmd"    "example-gsp.Rmd"     
-##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
-## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
-## [13] "timing.Rmd"</code></pre></div>
-<p>Your real work is outlined in a data frame of data analysis steps called “targets”. The targets depend on the imports, and <code>drake</code> will figure out how they are all connected.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan
-## # A tibble: 15 x 2
-##    target                 command                                         
-##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
-##  2 small                  simulate(48)                                    
-##  3 large                  simulate(64)                                    
-##  4 regression1_small      reg1(small)                                     
-##  5 regression1_large      reg1(large)                                     
-##  6 regression2_small      reg2(small)                                     
-##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
-<p>Wildcard templating generates these data frames at scale.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
-dataset_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">small =</span> <span class="kw">simulate</span>(<span class="dv">5</span>),
-  <span class="dt">large =</span> <span class="kw">simulate</span>(<span class="dv">50</span>)
+<a href="#plan-your-work-" class="anchor"></a>Plan your work.</h1>
+<p>To get started with <code>drake</code>, you need to plan out these data transformations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
+  <span class="dt">raw_data =</span> readxl::<span class="kw">read_excel</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
+  <span class="dt">data =</span> raw_data %&gt;%
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats::<span class="kw">fct_inorder</span>(Species)),
+  <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
+  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width +<span class="st"> </span>Species, data),
+  knitr::<span class="kw">knit</span>(
+    <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
+    <span class="dt">output =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>),
+    <span class="dt">quiet =</span> <span class="ot">TRUE</span>
+  )
 )
-dataset_plan
-## # A tibble: 2 x 2
-##   target command     
-##   &lt;chr&gt;  &lt;chr&gt;       
-## 1 small  simulate(5) 
-## 2 large  simulate(50)
-
-analysis_methods &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">regression =</span> <span class="kw">regNUMBER</span>(dataset__) <span class="co"># nolint</span>
-) %&gt;%
-<span class="st">  </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(<span class="dt">wildcard =</span> <span class="st">"NUMBER"</span>, <span class="dt">values =</span> <span class="dv">1</span>:<span class="dv">2</span>)
-analysis_methods
-## # A tibble: 2 x 2
-##   target       command        
-##   &lt;chr&gt;        &lt;chr&gt;          
-## 1 regression_1 reg1(dataset__)
-## 2 regression_2 reg2(dataset__)
-
-analysis_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plan_analyses.html">plan_analyses</a></span>(
-  <span class="dt">plan =</span> analysis_methods,
-  <span class="dt">datasets =</span> dataset_plan
-)
-analysis_plan
-## # A tibble: 4 x 2
-##   target             command    
-##   &lt;chr&gt;              &lt;chr&gt;      
-## 1 regression_1_small reg1(small)
-## 2 regression_1_large reg1(large)
-## 3 regression_2_small reg2(small)
-## 4 regression_2_large reg2(large)
-
-whole_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(dataset_plan, analysis_plan)
-whole_plan
-## # A tibble: 6 x 2
-##   target             command     
-##   &lt;chr&gt;              &lt;chr&gt;       
-## 1 small              simulate(5) 
-## 2 large              simulate(50)
-## 3 regression_1_small reg1(small) 
-## 4 regression_1_large reg1(large) 
-## 5 regression_2_small reg2(small) 
-## 6 regression_2_large reg2(large)</code></pre></div>
-<p>For the commands you pass in with the free-form <code>...</code> argument, <code><a href="../reference/drake_plan.html">drake_plan()</a></code> uses tidy evaluation. For example, it supports quasiquotation with the <code>!!</code> argument. Use <code>tidy_evaluation = FALSE</code> or the <code>list</code> argument to suppress this behavior.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_variable &lt;-<span class="st"> </span><span class="dv">5</span>
-
-<span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> !!my_variable,
-  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
-  <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>)
-)
-## # A tibble: 3 x 2
-##   target command      
-##   &lt;chr&gt;  &lt;chr&gt;        
-## 1 a      5            
-## 2 b      5 + 1        
-## 3 d      !!my_variable
-
-<span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> !!my_variable,
-  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
-  <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>),
-  <span class="dt">tidy_evaluation =</span> <span class="ot">FALSE</span>
-)
-## # A tibble: 3 x 2
-##   target command            
-##   &lt;chr&gt;  &lt;chr&gt;              
-## 1 a      !(!my_variable)    
-## 2 b      !(!my_variable + 1)
-## 3 d      !!my_variable</code></pre></div>
-<p>For instances of <code>!!</code> that remain in the workflow plan, <code><a href="../reference/make.html">make()</a></code> will run these commands in tidy fashion, evaluating the <code>!!</code> operator using the environment you provided.</p>
-<p>Using static code analysis, <code>drake</code> detects the dependencies of all your targets. The result is an interactive network diagram.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(my_plan)</code></pre></div>
-<iframe src="https://ropensci.github.io/drake/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+plan
+## # A tibble: 5 x 2
+##   target          command                                                 
+##   &lt;chr&gt;           &lt;chr&gt;                                                   
+## 1 raw_data        "readxl::read_excel(file_in(\"raw_data.xlsx\"))"        
+## 2 data            raw_data %&gt;% mutate(Species = forcats::fct_inorder(Spec…
+## 3 hist            create_plot(data)                                       
+## 4 fit             lm(Sepal.Width ~ Petal.Width + Species, data)           
+## 5 "\"report.md\"" "knitr::knit(knitr_in(\"report.Rmd\"), output = file_ou…</code></pre></div>
+<p>The commands usually reference supporting functions and packages. Simply load them into your R session.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
+<span class="kw">library</span>(tidyverse)
+create_plot &lt;-<span class="st"> </span>function(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
+<span class="st">    </span><span class="kw">geom_histogram</span>()
+}</code></pre></div>
+<p>Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(plan)
+<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
+<iframe src="https://ropensci.github.io/drake/images/pitch1.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
-<p>At this point, all your targets are out of date because the project is new.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Master configuration list</span>
-<span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
-## [11] "small"                  "summ_regression1_large"
-## [13] "summ_regression1_small" "summ_regression2_large"
-## [15] "summ_regression2_small"</code></pre></div>
-<p>The <code><a href="../reference/make.html">make()</a></code> function traverses the network and builds the targets that require updates.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## target large
-## target small
-## target regression1_large
-## target regression1_small
-## target regression2_large
-## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
-## target summ_regression1_large
-## target summ_regression1_small
-## target summ_regression2_large
-## target summ_regression2_small
+<p>The <code><a href="../reference/make.html">make()</a></code> function actually does the work. The targets build in the correct order regardless of the order of the rows in your plan.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
+## Loading required package: methods
+## target raw_data
+## target data
+## target fit
+## target hist
 ## target file "report.md"</code></pre></div>
-<p>For the <code>reg2()</code> model on the small dataset, the p-value on <code>x2</code> is so small that there may be an association between weight and fuel efficiency after all.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(coef_regression2_small)
-##              Estimate Std. Error   t value     Pr(&gt;|t|)
-## (Intercept) 27.504915 1.02496426 26.835000 9.676340e-30
-## x2          -0.708536 0.08285938 -8.551066 4.617125e-11</code></pre></div>
-<p>The project is currently up to date, so the next <code><a href="../reference/make.html">make()</a></code> does nothing.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## Unloading targets from environment:
-##   small
-##   large
-##   coef_regression2_small
-## All targets are already up to date.</code></pre></div>
-<p>But a nontrivial change in <code>reg2()</code> triggers updates to all the affected downstream targets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
-  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
-}
-
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## target regression2_large
-## target regression2_small
-## target coef_regression2_large
-## target coef_regression2_small
-## target summ_regression2_large
-## target summ_regression2_small
-## target file "report.md"</code></pre></div>
+<p>The file <code>report.md</code> was written, and everything else was stored in a hidden <code>.drake/</code> folder. Inspect the intermediate data objects using <code><a href="../reference/loadd.html">loadd()</a></code> and <code><a href="../reference/readd.html">readd()</a></code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw"><a href="../reference/readd.html">readd</a></span>(fit))
+## 
+## Call:
+## lm(formula = Sepal.Width ~ Petal.Width + Species, data = data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.17017 -0.19105  0.00793  0.19173  0.85172 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        3.23587    0.05194  62.295  &lt; 2e-16 ***
+## Petal.Width        0.78102    0.12121   6.443 1.59e-09 ***
+## Speciesversicolor -1.50150    0.14407 -10.422  &lt; 2e-16 ***
+## Speciesvirginica  -1.84421    0.22399  -8.234 9.35e-14 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3008 on 146 degrees of freedom
+## Multiple R-squared:  0.5335, Adjusted R-squared:  0.5239 
+## F-statistic: 55.65 on 3 and 146 DF,  p-value: &lt; 2.2e-16</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(data, hist)
+data
+## # A tibble: 150 x 6
+##     X__1 Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##    &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1    1.         5.10        3.50         1.40       0.200 setosa 
+##  2    2.         4.90        3.00         1.40       0.200 setosa 
+##  3    3.         4.70        3.20         1.30       0.200 setosa 
+##  4    4.         4.60        3.10         1.50       0.200 setosa 
+##  5    5.         5.00        3.60         1.40       0.200 setosa 
+##  6    6.         5.40        3.90         1.70       0.400 setosa 
+##  7    7.         4.60        3.40         1.40       0.300 setosa 
+##  8    8.         5.00        3.40         1.50       0.200 setosa 
+##  9    9.         4.40        2.90         1.40       0.200 setosa 
+## 10   10.         4.90        3.10         1.50       0.100 setosa 
+## # ... with 140 more rows</code></pre></div>
 </div>
-<div id="built-in-example-projects" class="section level1">
+<div id="go-back-and-change-things-" class="section level1">
 <h1 class="hasAnchor">
-<a href="#built-in-example-projects" class="anchor"></a>Built-in example projects</h1>
-<p><code>Drake</code> has <a href="https://github.com/ropensci/drake/tree/master/inst/examples">built-in example projects</a>. You can generate the code files for an example with <code><a href="../reference/drake_example.html">drake_example()</a></code>, and you can list the available examples with <code><a href="../reference/drake_examples.html">drake_examples()</a></code>. For instance, <code><a href="../reference/drake_example.html">drake_example("gsp")</a></code> generates the R script and R Markdown report for the built-in econometrics data analysis project. See below for the currently supported examples.</p>
-<div id="learn-how-to-use-drake-" class="section level2">
-<h2 class="hasAnchor">
-<a href="#learn-how-to-use-drake-" class="anchor"></a>Learn how to use <code>drake</code>.</h2>
-<ul>
-<li>
-<code>basic</code>: A tiny, minimal example with the <code>mtcars</code> dataset to demonstrate how to use <code>drake</code>. Use <code><a href="../reference/load_basic_example.html">load_basic_example()</a></code> to set up the project in your workspace. The <a href="https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd">basic example vignette</a> is a parallel walkthrough of the same example.</li>
-<li>
-<code>gsp</code>: A more concrete, practical example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off <code>drake</code>’s ability to generate lots of reproducibly-tracked tasks with ease.</li>
-<li>
-<code>packages</code>: A concrete, practical example using data on R package downloads. It demonstrates how <code>drake</code> can refresh a project based on new incoming data without restarting everything from scratch.</li>
-</ul>
-</div>
-<div id="high-performance-computing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#high-performance-computing" class="anchor"></a>High-performance computing</h2>
-<ul>
-<li>
-<code>Docker-psock</code>: demonstrates how to deploy targets to a <a href="https://www.docker.com/what-container">Docker container</a> using a specialized PSOCK cluster.</li>
-<li>
-<code>Makefile-cluster</code>: uses <a href="https://www.gnu.org/software/make/">Makefiles</a> to deploy targets to a generic cluster (configurable).</li>
-<li>
-<code>sge</code>: uses <code>"future_lapply"</code> parallelism to deploy targets to a <a href="https://supcom.hgc.jp/english/utili_info/manual/uge.html">Sun/Univa Grid Engine</a> cluster. Other clusters are similar. See the <a href="https://github.com/mllg/batchtools/tree/master/inst/templates">batchtools/inst/templates</a> and <a href="https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates">future.batchtools/inst/templates</a> for more example <code>*.tmpl</code> template files.</li>
-<li>
-<code>slurm</code>: similar to <code>sge</code>, but for <a href="https://slurm.schedmd.com">SLURM</a>.</li>
-<li>
-<code>torque</code>: similar to <code>sge</code>, but for <a href="http://www.adaptivecomputing.com/products/open-source/torque/">TORQUE</a>.</li>
-</ul>
-<p>Regarding the high-performance computing examples, there is no one-size-fits-all <code>*.tmpl</code> configuration file for any job scheduler, so we cannot guarantee that the above examples will work for you out of the box. To learn how to configure the files to suit your needs, you should make sure you understand how to use your job scheduler and <a href="https://github.com/mllg/batchtools">batchtools</a>.</p>
-</div>
+<a href="#go-back-and-change-things-" class="anchor"></a>Go back and change things.</h1>
+<p>Whether your code takes minutes, hours, or days to run, it is almost never quite right the first time. <strong>You will want to go back and change things. A lot.</strong> For example, our data has a superfluous <code>X__1</code> column. Let’s change the plan to remove it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
+  <span class="dt">raw_data =</span> readxl::<span class="kw">read_excel</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
+  <span class="dt">data =</span> raw_data %&gt;%
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats::<span class="kw">fct_inorder</span>(Species)) %&gt;%
+<span class="st">    </span><span class="kw">select</span>(-X__1),
+  <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
+  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width +<span class="st"> </span>Species, data),
+  rmarkdown::<span class="kw">render</span>(
+    <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
+    <span class="dt">output_file =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>),
+    <span class="dt">quiet =</span> <span class="ot">TRUE</span>
+  )
+)</code></pre></div>
+<p>The changed command affects <code>data</code> and everything depending on it. Those targets are now out of date.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
+<iframe src="https://ropensci.github.io/drake/images/pitch2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+</iframe>
+<p>The next <code><a href="../reference/make.html">make()</a></code> just builds the outdated targets and leaves <code>raw_data</code> alone.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
+## Unloading targets from environment:
+##   fit
+##   hist
+##   data
+## target data
+## target fit
+## target hist
+## target file "report.md"
+
+<span class="kw"><a href="../reference/readd.html">readd</a></span>(data)
+## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1         5.10        3.50         1.40       0.200 setosa 
+##  2         4.90        3.00         1.40       0.200 setosa 
+##  3         4.70        3.20         1.30       0.200 setosa 
+##  4         4.60        3.10         1.50       0.200 setosa 
+##  5         5.00        3.60         1.40       0.200 setosa 
+##  6         5.40        3.90         1.70       0.400 setosa 
+##  7         4.60        3.40         1.40       0.300 setosa 
+##  8         5.00        3.40         1.50       0.200 setosa 
+##  9         4.40        2.90         1.40       0.200 setosa 
+## 10         4.90        3.10         1.50       0.100 setosa 
+## # ... with 140 more rows
+
+<span class="kw"><a href="../reference/readd.html">readd</a></span>(hist)
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre></div>
+<p><img src="drake_files/figure-html/pitchmake2-1.png" width="672"></p>
+<p>Oops, we forgot to pick a bin width for our histogram. Let’s fix our plot function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
+<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) +
+<span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)
+}</code></pre></div>
+<p>Only the histogram and the report need to change.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
+<iframe src="https://ropensci.github.io/drake/images/pitch3.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
+</iframe>
+<p>The next <code><a href="../reference/make.html">make()</a></code> skips all the data wrangling and model fitting steps.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
+## Unloading targets from environment:
+##   fit
+##   hist
+## target hist
+## target file "report.md"</code></pre></div>
+<p>Want to try out the code yourself? Use <code><a href="../reference/drake_example.html">drake_example("beginner")</a></code> to write the files.</p>
 </div>
 </div>
   </div>
@@ -362,15 +288,8 @@ whole_plan
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#get-the-code-">Get the code.</a></li>
-      <li><a href="#the-motivation-of-the-basic-example">The motivation of the basic example</a></li>
-      <li><a href="#a-taste-of-the-basic-example">A taste of the basic example</a></li>
-      <li>
-<a href="#built-in-example-projects">Built-in example projects</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#learn-how-to-use-drake-">Learn how to use <code>drake</code>.</a></li>
-      <li><a href="#high-performance-computing">High-performance computing</a></li>
-      </ul>
-</li>
+<li><a href="#plan-your-work-">Plan your work.</a></li>
+      <li><a href="#go-back-and-change-things-">Go back and change things.</a></li>
       </ul>
 </div>
       </div>

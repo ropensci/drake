@@ -115,7 +115,7 @@
             <h3 class="subtitle">Refresh your project without restarting from scratch.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-15</h4>
+            <h4 class="date">2018-04-21</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-packages.Rmd"><code>vignettes/example-packages.Rmd</code></a></small>
 
@@ -139,13 +139,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-04-08  8140   dplyr
-## 2 2018-04-09 15721   dplyr
-## 3 2018-04-10 17016   dplyr
-## 4 2018-04-11 16622   dplyr
-## 5 2018-04-12 15604   dplyr
-## 6 2018-04-13 14035   dplyr
-## 7 2018-04-14  8677   dplyr</code></pre></div>
+## 1 2018-04-14  8677   dplyr
+## 2 2018-04-15  8395   dplyr
+## 3 2018-04-16 15847   dplyr
+## 4 2018-04-17 17180   dplyr
+## 5 2018-04-18 16340   dplyr
+## 6 2018-04-19 15892   dplyr
+## 7 2018-04-20 13340   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -268,9 +268,9 @@ whole_plan
 ## # A tibble: 3 x 2
 ##   package mean_downloads
 ##   &lt;chr&gt;            &lt;dbl&gt;
-## 1 ggplot2         15208.
-## 2 knitr           10126.
-## 3 Rcpp            22404.
+## 1 ggplot2         15459.
+## 2 knitr           10198.
+## 3 Rcpp            22471.
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ## # A tibble: 3 x 2
