@@ -20,7 +20,7 @@ error = function(e){
 
 # Instructions
 
-This file `report.Rmd` belongs to the example from [Kirill Müller's brief introduction to the `drake` R package](https://krlmlr.github.io/drake-pitch/) ( also from the [Get Started](https://ropensci.github.io/drake/articles/drake.html) page and `drake_example("beginner")`). The report does not compile from scratch because it is a [file target](https://ropensci.github.io/drake/reference/file_out.html) in a [`drake`](https://github.com/ropensci/drake)-powered reproducible workflow ([details here](https://ropensci.github.io/drake/articles/best-practices.html#r-markdown-and-knitr-reports)).
+This file `report.Rmd` belongs to the example from [Kirill Müller's brief introduction to the `drake` R package](https://krlmlr.github.io/drake-pitch/) ( also from the [Get Started](https://ropensci.github.io/drake/articles/drake.html) page and `drake_example("main")`). The report does not compile from scratch because it is a [file target](https://ropensci.github.io/drake/reference/file_out.html) in a [`drake`](https://github.com/ropensci/drake)-powered reproducible workflow ([details here](https://ropensci.github.io/drake/articles/best-practices.html#r-markdown-and-knitr-reports)).
 
 To compile this report,
 

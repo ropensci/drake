@@ -140,7 +140,6 @@
 <tr class="even">
 <td align="left"><a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a></td>
 <td align="left"></td>
-<td align="left"></td>
 </tr>
 </tbody>
 </table>
@@ -230,9 +229,9 @@
 <span class="co"># If you change the reg2() function,</span>
 <span class="co"># all the regression2 targets are out of date,</span>
 <span class="co"># which in turn affects 'report.md'.</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){    
-  d<span class="op">$</span>x4 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">4</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x4, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d){    
+  d$x4 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">4</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x4, <span class="dt">data =</span> d)
 }
 
 <span class="co"># Second round: drake only rebuilds the targets</span>
@@ -310,13 +309,13 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <span class="co"># Scale up to a supercomputer.</span>
 <span class="kw"><a href="reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"slurm"</span>) <span class="co"># https://slurm.schedmd.com/</span>
 <span class="kw">library</span>(future.batchtools)
-future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>, <span class="dt">workers =</span> <span class="dv">100</span>)
+future::<span class="kw"><a href="reference/plan.html">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>, <span class="dt">workers =</span> <span class="dv">100</span>)
 <span class="kw"><a href="reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 <p>The network graph allows <code>drake</code> to wait for dependencies.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Change some code.</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){    
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
+reg2 &lt;-<span class="st"> </span>function(d){    
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 
 <span class="co"># Plot an interactive graph.</span>
@@ -419,11 +418,13 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <p><code>Drake</code> also has built-in example projects with code files <a href="https://github.com/ropensci/drake/tree/master/inst/examples">available here</a>. You can generate the files for a project with <code><a href="reference/drake_example.html">drake_example()</a></code> (e.g. <code><a href="reference/drake_example.html">drake_example("gsp")</a></code>), and you can list the available projects with <code><a href="reference/drake_examples.html">drake_examples()</a></code>. The beginner-oriented examples are listed below. They help you learn <code>drake</code>’s main features, and they show one way to organize the files of <code>drake</code> projects.</p>
 <ul>
 <li>
-<code>basic</code>: A tiny, minimal example with the <code>mtcars</code> dataset to demonstrate how to use <code>drake</code>. Use <code><a href="reference/load_basic_example.html">load_basic_example()</a></code> to set up the project in your workspace. The <a href="https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd">quickstart vignette</a> is a parallel walkthrough of the same example.</li>
+<code>main</code>: <code>drake</code>’s main example, based on <a href="https://krlmlr.github.io/drake-pitch/">Kirill Müller’s <code>drake</code> pitch</a>. This is the most accessible example for beginners.</li>
 <li>
 <code>gsp</code>: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off <code>drake</code>’s ability to generate lots of reproducibly-tracked tasks with ease.</li>
 <li>
 <code>packages</code>: A concrete example using data on R package downloads. It demonstrates how <code>drake</code> can refresh a project based on new incoming data without restarting everything from scratch.</li>
+<li>
+<code>basic</code>: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use <code><a href="reference/load_basic_example.html">load_basic_example()</a></code> to set up the project in your workspace.</li>
 </ul>
 </div>
 <div id="presentations" class="section level2">

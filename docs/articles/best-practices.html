@@ -118,7 +118,7 @@
       <h1>General best practices for drake projects</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-21</h4>
+            <h4 class="date">2018-04-22</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/best-practices.Rmd"><code>vignettes/best-practices.Rmd</code></a></small>
 
@@ -262,10 +262,10 @@ bad_plan
 <p>For <code>drake</code>, there is one problem: nested functions. <code>Drake</code> always looks for imported functions nested in other imported functions, but only in your environment. When it sees a function from a package, it does not look in its body for other imports.</p>
 <p>To see this, consider the <code><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest()</a></code> function from the <a href="https://github.com/eddelbuettel/digest"><code>digest</code> package</a>. <a href="https://github.com/eddelbuettel/digest"><code>Digest</code> package</a> is a utility for computing hashes, not a data science workflow, but I will use it to demonstrate how <code>drake</code> treats imports from packages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(digest)
-g &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+g &lt;-<span class="st"> </span>function(x){
   <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(x)
 }
-f &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+f &lt;-<span class="st"> </span>function(x){
   <span class="kw">g</span>(x)
 }
 plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">x =</span> <span class="kw">f</span>(<span class="dv">1</span>))
@@ -301,7 +301,7 @@ new_objects &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 <span class="co"># Now when you call `make()`, `drake` will dive into `digest`</span>
 <span class="co"># to import dependencies.</span>
 
-cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_environment">storr_environment</a></span>() <span class="co"># just for examples</span>
+cache &lt;-<span class="st"> </span>storr::<span class="kw">storr_environment</span>() <span class="co"># just for examples</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan, <span class="dt">cache =</span> cache)
 ## Loading required package: methods
 ## 
@@ -363,12 +363,12 @@ cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="
 ## 12 public_funds_schoolC check_public_funding(schoolC)</code></pre></div>
 <p>But what if some metrics do not make sense? For example, what if <code>schoolC</code> is a completely privately-funded school? With no public funds, <code>check_public_funds(schoolC)</code> may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
-rules_grid &lt;-<span class="st"> </span>tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/tibble">tibble</a></span>(
+rules_grid &lt;-<span class="st"> </span>tibble::<span class="kw">tibble</span>(
   <span class="dt">school_ =</span>  <span class="kw">c</span>(<span class="st">"schoolA"</span>, <span class="st">"schoolB"</span>, <span class="st">"schoolC"</span>),
   <span class="dt">funding_ =</span> <span class="kw">c</span>(<span class="st">"public"</span>, <span class="st">"public"</span>, <span class="st">"private"</span>),
-) <span class="op">%&gt;%</span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/expand">crossing</a></span>(<span class="dt">cohort_ =</span> <span class="kw">c</span>(<span class="st">"2012"</span>, <span class="st">"2013"</span>, <span class="st">"2014"</span>, <span class="st">"2015"</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span>(school_ <span class="op">==</span><span class="st"> "schoolB"</span> <span class="op">&amp;</span><span class="st"> </span>cohort_ <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"2012"</span>, <span class="st">"2013"</span>))) <span class="op">%&gt;%</span>
+) %&gt;%
+<span class="st">  </span>tidyr::<span class="kw">crossing</span>(<span class="dt">cohort_ =</span> <span class="kw">c</span>(<span class="st">"2012"</span>, <span class="st">"2013"</span>, <span class="st">"2014"</span>, <span class="st">"2015"</span>)) %&gt;%
+<span class="st">  </span>dplyr::<span class="kw">filter</span>(!(school_ ==<span class="st"> "schoolB"</span> &amp;<span class="st"> </span>cohort_ %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">"2012"</span>, <span class="st">"2013"</span>))) %&gt;%
 <span class="st">  </span><span class="kw">print</span>()
 ## # A tibble: 10 x 3
 ##    school_ funding_ cohort_
@@ -390,19 +390,19 @@ rules_grid &lt;-<span class="st"> </span>tibble<span class="op">::</span><span c
   <span class="dt">grads =</span> <span class="kw">check_graduations</span>(<span class="st">"school_"</span>, <span class="st">"funding_"</span>, <span class="st">"cohort_"</span>),
   <span class="dt">public_funds =</span> <span class="kw">check_public_funding</span>(<span class="st">"school_"</span>, <span class="st">"funding_"</span>, <span class="st">"cohort_"</span>),
   <span class="dt">strings_in_dots =</span> <span class="st">"literals"</span>
-) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(
+) %&gt;%<span class="st"> </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(
     <span class="dt">wildcard =</span> <span class="st">"school_"</span>,
-    <span class="dt">values =</span> rules_grid<span class="op">$</span>school_,
+    <span class="dt">values =</span> rules_grid$school_,
     <span class="dt">expand =</span> <span class="ot">TRUE</span>
-  ) <span class="op">%&gt;%</span>
+  ) %&gt;%
 <span class="st">  </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(
     <span class="dt">wildcard =</span> <span class="st">"funding_"</span>,
     <span class="dt">rules =</span> rules_grid,
     <span class="dt">expand =</span> <span class="ot">FALSE</span>
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span>DT<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DT/topics/datatable">datatable</a></span>()</code></pre></div>
-<div id="htmlwidget-75c4797af4d4bfc14254" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-75c4797af4d4bfc14254">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["credits_schoolA","credits_schoolB","credits_schoolC","students_schoolA","students_schoolB","students_schoolC","grads_schoolA","grads_schoolB","grads_schoolC","public_funds_schoolA","public_funds_schoolB","public_funds_schoolC"],["check_credit_hours(\"schoolA\", \"public\", \"2012\")","check_credit_hours(\"schoolA\", \"public\", \"2013\")","check_credit_hours(\"schoolA\", \"public\", \"2014\")","check_students(\"schoolA\", \"public\", \"2015\")","check_students(\"schoolB\", \"public\", \"2014\")","check_students(\"schoolB\", \"public\", \"2015\")","check_graduations(\"schoolC\", \"private\", \"2012\")","check_graduations(\"schoolC\", \"private\", \"2013\")","check_graduations(\"schoolC\", \"private\", \"2014\")","check_public_funding(\"schoolC\", \"private\", \"2015\")","check_public_funding(\"schoolA\", \"public\", \"2012\")","check_public_funding(\"schoolA\", \"public\", \"2013\")"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>target<\/th>\n      <th>command<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><p>Thanks to <a href="https://github.com/AlexAxthelm">Alex Axthelm</a> for this example in <a href="https://github.com/ropensci/drake/issues/235">issue 235</a>.</p>
+  ) %&gt;%
+<span class="st">  </span>DT::<span class="kw">datatable</span>()</code></pre></div>
+<div id="htmlwidget-4cfd4304945262ce03d0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4cfd4304945262ce03d0">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["credits_schoolA","credits_schoolB","credits_schoolC","students_schoolA","students_schoolB","students_schoolC","grads_schoolA","grads_schoolB","grads_schoolC","public_funds_schoolA","public_funds_schoolB","public_funds_schoolC"],["check_credit_hours(\"schoolA\", \"public\", \"2012\")","check_credit_hours(\"schoolA\", \"public\", \"2013\")","check_credit_hours(\"schoolA\", \"public\", \"2014\")","check_students(\"schoolA\", \"public\", \"2015\")","check_students(\"schoolB\", \"public\", \"2014\")","check_students(\"schoolB\", \"public\", \"2015\")","check_graduations(\"schoolC\", \"private\", \"2012\")","check_graduations(\"schoolC\", \"private\", \"2013\")","check_graduations(\"schoolC\", \"private\", \"2014\")","check_public_funding(\"schoolC\", \"private\", \"2015\")","check_public_funding(\"schoolA\", \"public\", \"2012\")","check_public_funding(\"schoolA\", \"public\", \"2013\")"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>target<\/th>\n      <th>command<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><p>Thanks to <a href="https://github.com/AlexAxthelm">Alex Axthelm</a> for this example in <a href="https://github.com/ropensci/drake/issues/235">issue 235</a>.</p>
 </div>
 <div id="remote-data-sources" class="section level1">
 <h1 class="hasAnchor">
@@ -416,12 +416,12 @@ rules_grid &lt;-<span class="st"> </span>tibble<span class="op">::</span><span c
 url &lt;-<span class="st"> "http://cran-logs.rstudio.com/2018/2018-02-09-r.csv.gz"</span></code></pre></div>
 <p>How do we know when the data at the URL changed? We get the time that the file was last modified. (Alternatively, we could use an HTTP ETag.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">query &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/httr/topics/HEAD">HEAD</a></span>(url)
-timestamp &lt;-<span class="st"> </span>query<span class="op">$</span>headers[[<span class="st">"last-modified"</span>]]
+timestamp &lt;-<span class="st"> </span>query$headers[[<span class="st">"last-modified"</span>]]
 timestamp
 ## [1] "Mon, 12 Feb 2018 16:34:48 GMT"</code></pre></div>
 <p>In our workflow plan, the timestamp is a target and a dependency. When the timestamp changes, so does everything downstream.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cranlogs_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">timestamp =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/httr/topics/HEAD">HEAD</a></span>(url)<span class="op">$</span>headers[[<span class="st">"last-modified"</span>]],
+  <span class="dt">timestamp =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/httr/topics/HEAD">HEAD</a></span>(url)$headers[[<span class="st">"last-modified"</span>]],
   <span class="dt">logs =</span> <span class="kw">get_logs</span>(url, timestamp),
   <span class="dt">strings_in_dots =</span> <span class="st">"literals"</span>
 )
@@ -432,7 +432,7 @@ cranlogs_plan
 ## 1 timestamp "HEAD(url)$headers[[\"last-modified\"]]"
 ## 2 logs      get_logs(url, timestamp)</code></pre></div>
 <p>To make sure we always have the latest timestamp, we use the <code>"always"</code> trigger. (See <a href="https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers">this section of the debugging vignette</a> for more on triggers.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cranlogs_plan<span class="op">$</span>trigger &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"always"</span>, <span class="st">"any"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cranlogs_plan$trigger &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"always"</span>, <span class="st">"any"</span>)
 cranlogs_plan
 ## # A tibble: 2 x 3
 ##   target    command                                  trigger
@@ -442,7 +442,7 @@ cranlogs_plan
 <p>Lastly, we define the <code>get_logs()</code> function, which actually downloads the data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The ... is just so we can write dependencies as function arguments</span>
 <span class="co"># in the workflow plan.</span>
-get_logs &lt;-<span class="st"> </span><span class="cf">function</span>(url, ...){
+get_logs &lt;-<span class="st"> </span>function(url, ...){
   <span class="kw"><a href="http://www.rdocumentation.org/packages/curl/topics/curl_download">curl_download</a></span>(url, <span class="st">"logs.csv.gz"</span>)       <span class="co"># Get a big file.</span>
   <span class="kw"><a href="http://www.rdocumentation.org/packages/R.utils/topics/compressFile">gunzip</a></span>(<span class="st">"logs.csv.gz"</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>) <span class="co"># Unzip it.</span>
   out &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">"logs.csv"</span>, <span class="dt">nrows =</span> <span class="dv">4</span>)  <span class="co"># Extract the data you need.</span>

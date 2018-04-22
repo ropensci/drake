@@ -4,9 +4,10 @@ These are the `drake` examples managed by functions `drake_example()` and `drake
 
 # Learn how to use `drake`.
 
-- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [quickstart vignette](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd) is a parallel walkthrough of the same example.
+- `main`: `drake`'s main example, based on [Kirill Müller's `drake` pitch](https://krlmlr.github.io/drake-pitch/). This is the most accessible example for beginners.
 - `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
 - `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+- `basic`: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use `load_basic_example()` to set up the project in your workspace.
 
 # High-performance computing
 

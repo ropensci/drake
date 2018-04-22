@@ -217,13 +217,13 @@ images <- function(){
   # drake.Rmd vignette
   pkgconfig::set_config("drake::strings_in_dots" = "literals")
   dat <- system.file(
-    file.path("examples", "beginner", "raw_data.xlsx"),
+    file.path("examples", "main", "raw_data.xlsx"),
     package = "drake",
     mustWork = TRUE
   )
   tmp <- file.copy(from = dat, to = "raw_data.xlsx", overwrite = TRUE)
   rmd <- system.file(
-    file.path("examples", "beginner", "report.Rmd"),
+    file.path("examples", "main", "report.Rmd"),
     package = "drake",
     mustWork = TRUE
   )
