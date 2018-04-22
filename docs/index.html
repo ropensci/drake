@@ -218,6 +218,7 @@ plan
 <span class="co">#&gt; 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…</span></code></pre></div>
 <p>Then, run the plan with <code><a href="reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
+<span class="co">#&gt; Loading required package: methods</span>
 <span class="co">#&gt; target raw_data</span>
 <span class="co">#&gt; target data</span>
 <span class="co">#&gt; target fit</span>
@@ -237,7 +238,7 @@ plan
 }</code></pre></div>
 <p><code>Drake</code> notices. It can tell that the plot and <code>report.html</code> no longer match what your code is doing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)
-<span class="kw"><a href="reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
+<span class="kw"><a href="reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Interactive graph: hover, zoom, drag, etc.</span></code></pre></div>
 <p><a href="https://ropensci.github.io/drake/images/pitch3.html"><img src="/home/landau/projects/drake/images/graph.png"></a></p>
 <p>The next <code><a href="reference/make.html">make()</a></code> just builds the plot and the report. No need to wrangle the data or fit the model all over again.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)

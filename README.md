@@ -97,6 +97,7 @@ Then, run the plan with `make()`.
 
 ``` r
 make(plan)
+#> Loading required package: methods
 #> target raw_data
 #> target data
 #> target fit
@@ -127,7 +128,7 @@ create_plot <- function(data) {
 
 ``` r
 config <- drake_config(plan)
-vis_drake_graph(config)
+vis_drake_graph(config) # Interactive graph: hover, zoom, drag, etc.
 ```
 
 [![](./images/graph.png)](https://ropensci.github.io/drake/images/pitch3.html)

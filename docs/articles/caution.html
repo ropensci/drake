@@ -194,6 +194,7 @@ my_plan
 ## 1 little_b "\"b\""   
 ## 2 letter   !!little_b
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
+## Loading required package: methods
 ## target little_b
 ## target letter
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(letter)
@@ -385,10 +386,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "1a8fdbf160cb43fab8bdfe93656352a1"
+## [1] "5edabaf163db5f389d3e2a3e24c16093"
 example_object &lt;-<span class="st"> </span>example_class<span class="op">$</span><span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "f4b2ebfcafb847c4bea1981d9e4f0bda"</code></pre></div>
+## [1] "a57d56f804f200eead21ee2a54e2aba4"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class<span class="op">$</span><span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>
