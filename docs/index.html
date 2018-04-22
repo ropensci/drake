@@ -239,7 +239,11 @@ plan
 <p><code>Drake</code> notices. It can tell that the plot and <code>report.html</code> no longer match what your code is doing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)
 <span class="kw"><a href="reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Interactive graph: hover, zoom, drag, etc.</span></code></pre></div>
-<p><a href="https://ropensci.github.io/drake/images/pitch3.html"><img src="/home/landau/projects/drake/images/graph.png"></a></p>
+<iframe
+    src = 'https://ropensci.github.io/drake/images/pitch3.html'
+    width = '100%' height = '600px' allowtransparency='true'
+    style='border: none; box-shadow: none'>
+    </iframe>
 <p>The next <code><a href="reference/make.html">make()</a></code> just builds the plot and the report. No need to wrangle the data or fit the model all over again.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
 <span class="co">#&gt; Unloading targets from environment:</span>

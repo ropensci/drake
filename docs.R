@@ -54,7 +54,7 @@ pkgdown <- function(){
   tmp <- pkgdown::build_site(pkg = dir, preview = FALSE)
 
   x <- readLines(index_file)
-  from <- '<p><a href="https://ropensci.github.io/drake/images/pitch3.html"><img src="./docs/images/graph.png"></a></p>' # nolint
+  from <- '<p><a href="https://ropensci.github.io/drake/images/pitch3.html"><img src=".*graph.png"></a></p>' # nolint
   to <- "<iframe
     src = 'https://ropensci.github.io/drake/images/pitch3.html'
     width = '100%' height = '600px' allowtransparency='true'
