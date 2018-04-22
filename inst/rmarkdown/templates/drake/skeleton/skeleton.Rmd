@@ -9,8 +9,7 @@ output: html_document
 ```{r content}
 tryCatch({
   library(drake)
-  loadd(raw_data, fit)
-  print(head(raw_data))
+  loadd(fit)
   print(fit)
   readd(hist)
 },
@@ -21,12 +20,13 @@ error = function(e){
 
 # Instructions
 
-This file `report.Rmd` belongs to the example from [Kirill Müller's brief introduction to the `drake` R package](https://krlmlr.github.io/drake-pitch/). It does not compile from scratch because it is a [file target](https://ropensci.github.io/drake/reference/file_out.html) in a [`drake`](https://github.com/ropensci/drake)-powered reproducible workflow ([details here](https://ropensci.github.io/drake/articles/best-practices.html#r-markdown-and-knitr-reports)).
+This file `report.Rmd` belongs to the example from [Kirill Müller's brief introduction to the `drake` R package](https://krlmlr.github.io/drake-pitch/) ( also from the [Get Started](https://ropensci.github.io/drake/articles/drake.html) page and `drake_example("beginner")`). The report does not compile from scratch because it is a [file target](https://ropensci.github.io/drake/reference/file_out.html) in a [`drake`](https://github.com/ropensci/drake)-powered reproducible workflow ([details here](https://ropensci.github.io/drake/articles/best-practices.html#r-markdown-and-knitr-reports)).
 
 To compile this report,
 
-1. Name it `report.Rmd` (or modify the `knitr_in("report.Rmd")` line in [`run_drake.R`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/run_drake.R) accordingly).
+1. Name it `report.Rmd` (or modify the `knitr_in("report.Rmd")` line in [`make.R`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/make.R) accordingly).
+2. Make sure the included file [`raw_data.xlsx`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/raw_data.xlsx) is in your current working directory.
 2. Install the [`drake`](https://github.com/ropensci/drake) and [`tidyverse`](https://github.com/tidyverse/tidyverse) packages. 
-3. Use [`run_drake.R`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/run_drake.R) (included with this template) to run the [`drake`](https://github.com/ropensci/drake) workflow that compiles this report.
+3. Use [`make.R`](https://github.com/ropensci/drake/tree/master/inst/rmarkdown/templates/drake/skeleton/make.R) (included with this template) to run the [`drake`](https://github.com/ropensci/drake) workflow that compiles this report.
 
-Step 3 not only generates the output file `report.html`, but also produces a `.drake/` cache in your working directory, which enables `report.Rmd` to compile on its own with with [RStudio](https://www.rstudio.com/products/RStudio/), [`knitr`](https://github.com/yihui/knitr), or [`rmarkdown`](https://github.com/rstudio/rmarkdown). A great way way to generate `report.html` is still `make(plan)`. That way, compilation happens if and only if there were changes to `report.Rmd`, `report.html`, `raw_data`, `fit`, or `hist` since the last `make()`.
+Step 3 not only generates the output file `report.hml`, but also produces a `.drake/` cache in your working directory, which enables `report.Rmd` to compile on its own with with [RStudio](https://www.rstudio.com/products/RStudio/), [`knitr`](https://github.com/yihui/knitr), or [`rmarkdown`](https://github.com/rstudio/rmarkdown). A great way way to generate `report.hml` is still `make(plan)`. That way, compilation happens if and only if there were changes to `report.Rmd`, `report.hml`, `fit`, or `hist` since the last `make()`.

@@ -115,7 +115,7 @@
             <h3 class="subtitle">Caching, hashing, and customization</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-15</h4>
+            <h4 class="date">2018-04-21</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/storage.Rmd"><code>vignettes/storage.Rmd</code></a></small>
 
@@ -209,19 +209,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "515a0688c805909bd9945922e9196cdc"</code></pre></div>
+## [1] "e7d21d80365eac4791fe4e65a5fe7ff3"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "4c9cb5a3468fc9655f70f790ed7f8206d9ed5609287c002ced673d9a33d73fe33133275801ae155fe90c3334c238dd6be6f5129a977204f973b4030c23b1dc61"
+## [1] "ed7caebb3d16019cbcfc24f6cb9c80159fcde18930bbb42db82982814ff536c135eac031fb92cabf30ae5ba0e41da7aecf910bac6e4d1de16b0a4592c83a866a"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "515a0688c805909bd9945922e9196cdc"
+## [1] "e7d21d80365eac4791fe4e65a5fe7ff3"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "999f2f8e334e6237"
+## [1] "a3ebb72b00002554"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "76adb076"</code></pre></div>
+## [1] "c230d399"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">

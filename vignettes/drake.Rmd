@@ -1,7 +1,7 @@
 ---
 title: "drake"
-subtitle: "where to begin"
-author: "Will Landau"
+subtitle: "beginner example"
+author: "Will Landau and Kirill Müller"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -15,180 +15,167 @@ vignette: >
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
-suppressMessages(suppressWarnings(library(magrittr)))
+suppressMessages(suppressWarnings(library(tidyverse)))
 unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
   collapse = TRUE,
-  error = TRUE,
   warning = TRUE
 )
-```
-
-<img src="https://ropensci.github.io/drake/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
-
-This tutorial is a recommended starting place for learning how to use `drake`. It is the abridged version of the [basic example vignette](https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd). See [this section of the README](https://github.com/ropensci/drake/blob/master/README.md#documentation) for a high-level overview of the available documentation.
-
-# Get the code.
-
-Write the code files to your workspace.
-
-```{r getthequickstartcode, eval = FALSE}
-drake_example("basic")
-```
-
-The new `basic` folder now includes a file structure of a serious `drake` project, plus an `interactive-tutorial.R` to narrate the example. The code is also [online here](https://github.com/ropensci/drake/tree/master/inst/examples/basic).
-
-
-# The motivation of the basic example
-
-Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
-
-```{r mtcarsdrake1}
-# ?mtcars # more info
-head(mtcars)
-```
-
-Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.
-
-# A taste of the basic example
-
-Your workspace begins with a bunch of imports: functions, pre-loaded data objects, and saved files available before the real work begins.
-
-```{r drakeimportdrakermd}
-load_basic_example(verbose = FALSE) # Get the code with drake_example("basic").
-
-# Drake looks for data objects and functions in your R session environment
-ls()
-
-# and saved files in your file system.
-list.files()
-```
-
-Your real work is outlined in a data frame of data analysis steps called "targets". The targets depend on the imports, and `drake` will figure out how they are all connected.
-
-```{r myplandrakevig}
-my_plan
-```
-
-Wildcard templating generates these data frames at scale.
-
-```{r drake_plangeneration}
-library(magrittr)
-dataset_plan <- drake_plan(
-  small = simulate(5),
-  large = simulate(50)
+pkgconfig::set_config("drake::strings_in_dots" = "literals")
+dat <- system.file(
+  file.path("examples", "beginner", "raw_data.xlsx"),
+  package = "drake",
+  mustWork = TRUE
 )
-dataset_plan
-
-analysis_methods <- drake_plan(
-  regression = regNUMBER(dataset__) # nolint
-) %>%
-  evaluate_plan(wildcard = "NUMBER", values = 1:2)
-analysis_methods
-
-analysis_plan <- plan_analyses(
-  plan = analysis_methods,
-  datasets = dataset_plan
+tmp <- file.copy(from = dat, to = "raw_data.xlsx")
+rmd <- system.file(
+  file.path("examples", "beginner", "report.Rmd"),
+  package = "drake",
+  mustWork = TRUE
 )
-analysis_plan
-
-whole_plan <- rbind(dataset_plan, analysis_plan)
-whole_plan
+tmp <- file.copy(from = rmd, to = "report.Rmd")
 ```
 
-For the commands you pass in with the free-form `...` argument, `drake_plan()` uses tidy evaluation. For example, it supports quasiquotation with the `!!` argument. Use `tidy_evaluation = FALSE` or the `list` argument to suppress this behavior.
+A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, which then turns into fitted models, summaries, and reports.
 
-```{r testquasiquoplan}
-my_variable <- 5
+<img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;">
 
-drake_plan(
-  a = !!my_variable,
-  b = !!my_variable + 1,
-  list = c(d = "!!my_variable")
+# Plan your work.
+
+To get started with `drake`, you need to plan out these data transformations.
+
+```{r pitchplan}
+plan <- drake_plan(
+  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
+  data = raw_data %>%
+    mutate(Species = forcats::fct_inorder(Species)),
+  hist = create_plot(data),
+  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+  knitr::knit(
+    knitr_in("report.Rmd"),
+    output = file_out("report.md"),
+    quiet = TRUE
+  )
 )
-
-drake_plan(
-  a = !!my_variable,
-  b = !!my_variable + 1,
-  list = c(d = "!!my_variable"),
-  tidy_evaluation = FALSE
-)
+plan
 ```
 
-For instances of `!!` that remain in the workflow plan, `make()` will run these commands in tidy fashion, evaluating the `!!` operator using the environment you provided.
+The commands usually reference supporting functions and packages. Simply load them into your R session.
 
-Using static code analysis, `drake` detects the dependencies of all your targets. The result is an interactive network diagram.
+```{r pitchfunctions}
+library(drake)
+library(tidyverse)
+create_plot <- function(data) {
+  ggplot(data, aes(x = Petal.Width, fill = Species)) +
+    geom_histogram()
+}
+```
 
-```{r drakevisgraph, eval = FALSE}
-vis_drake_graph(my_plan)
+Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.
+
+```{r pitchgraph1, eval = FALSE}
+config <- drake_config(plan)
+vis_drake_graph(config)
 ```
 
 <iframe
-src = "https://ropensci.github.io/drake/images/outdated.html"
+src = "https://ropensci.github.io/drake/images/pitch1.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-At this point, all your targets are out of date because the project is new.
+The `make()` function actually does the work. The targets build in the correct order regardless of the order of the rows in your plan.
 
-```{r outdateddrake}
-config <- drake_config(my_plan, verbose = FALSE) # Master configuration list
-outdated(config)
+```{r pitchmake1}
+make(plan)
 ```
 
-The `make()` function traverses the network and builds the targets that require updates.
+The file `report.md` was written, and everything else was stored in a hidden `.drake/` folder. Inspect the intermediate data objects using `loadd()` and `readd()`.
 
-```{r firstmakedrake}
-make(my_plan)
+```{r pitchreadd}
+summary(readd(fit))
 ```
 
-For the `reg2()` model on the small dataset, the p-value on `x2` is so small that there may be an association between weight and fuel efficiency after all.
-
-```{r getmtcarsanswer}
-readd(coef_regression2_small)
+```{r pitchloadd}
+loadd(data, hist)
+data
 ```
 
-The project is currently up to date, so the next `make()` does nothing.
+# Go back and change things.
 
-```{r makeuptodatedrake}
-make(my_plan)
+Whether your code takes minutes, hours, or days to run, it is almost never quite right the first time. **You will want to go back and change things. A lot.** For example, our data has a superfluous `X__1` column. Let's change the plan to remove it.
+
+```{r pitchx1}
+plan <- drake_plan(
+  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
+  data = raw_data %>%
+    mutate(Species = forcats::fct_inorder(Species)) %>%
+    select(-X__1),
+  hist = create_plot(data),
+  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+  rmarkdown::render(
+    knitr_in("report.Rmd"),
+    output_file = file_out("report.md"),
+    quiet = TRUE
+  )
+)
 ```
 
-But a nontrivial change in `reg2()` triggers updates to all the affected downstream targets.
+The changed command affects `data` and everything depending on it. Those targets are now out of date.
 
-```{r reg2makedrake}
-reg2 <- function(d){
-  d$x3 <- d$x ^ 3
-  lm(y ~ x3, data = d)
+```{r pitchgraph2, eval = FALSE}
+vis_drake_graph(config)
+```
+
+<iframe
+src = "https://ropensci.github.io/drake/images/pitch2.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+The next `make()` just builds the outdated targets and leaves `raw_data` alone.
+
+```{r pitchmake2}
+make(plan)
+
+readd(data)
+
+readd(hist)
+```
+
+Oops, we forgot to pick a bin width for our histogram. Let's fix our plot function.
+
+```{r fixplot}
+create_plot <- function(data) {
+  ggplot(data, aes(x = Petal.Width, fill = Species)) +
+    geom_histogram(binwidth = 0.25) +
+    theme_gray(20)
 }
-
-make(my_plan)
 ```
 
-```{r endofline_drake, echo = F}
+Only the histogram and the report need to change.
+
+```{r pitchgraph3, eval = FALSE}
+vis_drake_graph(config)
+```
+
+<iframe
+src = "https://ropensci.github.io/drake/images/pitch3.html"
+width = "100%" height = "600px" allowtransparency="true"
+style="border: none; box-shadow: none">
+</iframe>
+
+The next `make()` skips all the data wrangling and model fitting steps.
+
+```{r histmake}
+make(plan)
+```
+
+Want to try out the code yourself? Use `drake_example("beginner")` to write the files.
+
+```{r endofline_pitch, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
-unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+unlink(c("report.Rmd", "raw_data.xlsx", "STDIN.o*", "Thumbs.db"))
 ```
-
-# Built-in example projects
-
-`Drake` has [built-in example projects](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the code files for an example with `drake_example()`, and you can list the available examples with `drake_examples()`. For instance, `drake_example("gsp")` generates the R script and R Markdown report for the built-in econometrics data analysis project. See below for the currently supported examples.
-
-## Learn how to use `drake`.
-
-- `basic`: A tiny, minimal example with the `mtcars` dataset to demonstrate how to use `drake`. Use `load_basic_example()` to set up the project in your workspace. The [basic example vignette](https://github.com/ropensci/drake/blob/master/vignettes/example-basic.Rmd) is a parallel walkthrough of the same example.
-- `gsp`: A more concrete, practical example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
-- `packages`: A concrete, practical example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
-
-
-## High-performance computing
-
-- `Docker-psock`: demonstrates how to deploy targets to a [Docker container](https://www.docker.com/what-container) using a specialized PSOCK cluster.
-- `Makefile-cluster`: uses [Makefiles](https://www.gnu.org/software/make/) to deploy targets to a generic cluster (configurable).
-- `sge`: uses `"future_lapply"` parallelism to deploy targets to a [Sun/Univa Grid Engine](https://supcom.hgc.jp/english/utili_info/manual/uge.html) cluster. Other clusters are similar. See the [batchtools/inst/templates](https://github.com/mllg/batchtools/tree/master/inst/templates) and [future.batchtools/inst/templates](https://github.com/HenrikBengtsson/future.batchtools/tree/master/inst/templates) for more example `*.tmpl` template files.
-- `slurm`: similar to `sge`, but for [SLURM](https://slurm.schedmd.com).
-- `torque`: similar to `sge`, but for [TORQUE](http://www.adaptivecomputing.com/products/open-source/torque/).
-
-Regarding the high-performance computing examples, there is no one-size-fits-all `*.tmpl` configuration file for any job scheduler, so we cannot guarantee that the above examples will work for you out of the box. To learn how to configure the files to suit your needs, you should make sure you understand how to use your job scheduler and [batchtools](https://github.com/mllg/batchtools).

@@ -115,7 +115,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-15</h4>
+            <h4 class="date">2018-04-21</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/caution.Rmd"><code>vignettes/caution.Rmd</code></a></small>
 
@@ -381,15 +381,15 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   <span class="dt">private =</span> <span class="kw">list</span>(<span class="dt">data =</span> <span class="kw">list</span>()),
   <span class="dt">public =</span> <span class="kw">list</span>(
     <span class="dt">initialize =</span> function(<span class="dt">data =</span> <span class="kw">list</span>()) {
-      private$data =<span class="st"> </span>data
+      private$data &lt;-<span class="st"> </span>data
     }
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "b7a27fda2e671350774ec123ae85fe6c"
+## [1] "6ab598ebe0805c44c4a520ccc302d89a"
 example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "486750b90d20bf606ac8b08e0e4e3208"</code></pre></div>
+## [1] "8d7ffeb089333fa1471726ca8e6f5f07"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>
@@ -581,7 +581,9 @@ keys/config/aG9vaw (Sandy Sum's conflicted copy 2018-01-31)
 keys/config/am9icw (Sandy Sum's conflicted copy 2018-01-31)
 keys/config/c2VlZA (Sandy Sum's conflicted copy 2018-01-31)
 </code></pre>
-<p>Just remove these files and proceed with your work.</p>
+<p>Just remove these files using <code><a href="../reference/drake_gc.html">drake_gc()</a></code> and proceed with your work.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>()
+<span class="kw"><a href="../reference/drake_gc.html">drake_gc</a></span>(cache)</code></pre></div>
 </div>
 <div id="cache-customization-is-limited" class="section level2">
 <h2 class="hasAnchor">

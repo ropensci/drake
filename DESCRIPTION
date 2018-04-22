@@ -88,14 +88,17 @@ Suggests:
   DBI,
   DT,
   Ecdat,
+  forcats,
   future.batchtools,
   ggplot2,
   httr,
   MASS,
   methods,
   RSQLite,
+  readxl,
   rmarkdown,
-  tidyr
+  tidyr,
+  tidyverse
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

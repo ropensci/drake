@@ -86,6 +86,7 @@ pkgdown <- function(){
 # Requires pandoc.
 images <- function(){
   library(here)
+  library(tidyverse)
   html_out <- function(...) here::here("docs", "images", ...)
   for (dir in c(here::here("docs"), here::here("docs", "images"))){
     if (!file.exists(dir)){
@@ -206,11 +207,84 @@ images <- function(){
     config, file = html_out("bad-commands.html"), selfcontained = TRUE,
     width = "100%", height = "500px"
   )
-
-  # Clean up.
   for (file in files){
     file.remove(file)
   }
+  clean(destroy = TRUE)
+  unlink(c("figure", "report.Rmd"), recursive = TRUE)
+  unlink(html_out("*_files"), recursive = TRUE)
+
+  # drake.Rmd vignette
+  pkgconfig::set_config("drake::strings_in_dots" = "literals")
+  dat <- system.file(
+    file.path("examples", "beginner", "raw_data.xlsx"),
+    package = "drake",
+    mustWork = TRUE
+  )
+  tmp <- file.copy(from = dat, to = "raw_data.xlsx", overwrite = TRUE)
+  rmd <- system.file(
+    file.path("examples", "beginner", "report.Rmd"),
+    package = "drake",
+    mustWork = TRUE
+  )
+  tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
+  plan <- drake_plan(
+    raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
+    data = raw_data %>%
+      mutate(Species = forcats::fct_inorder(Species)),
+    hist = create_plot(data),
+    fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+    knitr::knit(
+      knitr_in("report.Rmd"),
+      output = file_out("report.md"),
+      quiet = TRUE
+    )
+  )
+  create_plot <- function(data) {
+    ggplot(data, aes(x = Petal.Width, fill = Species)) +
+      geom_histogram()
+  }
+  config <- drake_config(plan)
+  vis_drake_graph(
+    config, from = file_store("raw_data.xlsx"), mode = "out",
+    build_times = "none", ncol_legend = 0, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("pitch1.html")
+  )
+  make(plan)
+  plan <- drake_plan(
+    raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
+    data = raw_data %>%
+      mutate(Species = forcats::fct_inorder(Species)) %>%
+      select(-X__1),
+    hist = create_plot(data),
+    fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+    knitr::knit(
+      knitr_in("report.Rmd"),
+      output = file_out("report.md"),
+      quiet = TRUE
+    )
+  )
+  vis_drake_graph(
+    config, from = file_store("raw_data.xlsx"), mode = "out",
+    build_times = "none", full_legend = FALSE, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("pitch2.html")
+  )
+  create_plot <- function(data) {
+    ggplot(data, aes(x = Petal.Width, fill = Species)) +
+      geom_histogram(binwidth = 0.25) +
+      theme_gray(20)
+  }
+  vis_drake_graph(
+    config, from = file_store("raw_data.xlsx"), mode = "out",
+    build_times = "none", full_legend = FALSE, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("pitch3.html")
+  )
+  unlink("raw_data.xlsx")
+
+  # Clean up the rest.
   clean(destroy = TRUE)
   unlink(c("figure", "report.Rmd"), recursive = TRUE)
   unlink(html_out("*_files"), recursive = TRUE)
