@@ -181,7 +181,7 @@ expand_plan <- function(plan, values = NULL){
   values <- rep(values, times = nrows)
   plan$target <- paste(plan$target, values, sep = "_")
   rownames(plan) <- NULL
-  sanitize_plan(plan)
+  sanitize_plan(plan, allow_duplicated_targets = TRUE)
 }
 
 #' @title Write commands to combine several targets into one

@@ -1,4 +1,4 @@
-sanitize_plan <- function(plan){
+sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   plan <- as_tibble(plan)
   for (field in drake_plan_non_factors()){
     if (!is.null(plan[[field]])){
@@ -20,7 +20,10 @@ sanitize_plan <- function(plan){
   plan$command[is.na(plan$command)] <- ""
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))
-  handle_duplicated_targets(plan[, cols])
+  if (!allow_duplicated_targets) {
+    plan <- handle_duplicated_targets(plan[, cols])
+  }
+  plan
 }
 
 drake_plan_non_factors <- function(){
