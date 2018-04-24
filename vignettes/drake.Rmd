@@ -73,6 +73,13 @@ create_plot <- function(data) {
 }
 ```
 
+Optionally, check that you have all the supporting files you need. For the current example, you can get the input dataset and the R Markdown report using `drake_example("main")`. Be sure to put `raw_data.xlsx` and `report.Rmd` in your working directory.
+
+```{r checkfiles}
+file.exists("raw_data.xlsx")
+file.exists("report.Rmd")
+```
+
 Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.
 
 ```{r pitchgraph1, eval = FALSE}

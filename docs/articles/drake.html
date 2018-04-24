@@ -158,6 +158,13 @@ create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data)
   <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_histogram</span>()
 }</code></pre></div>
+
+<p>Optionally, check that you have all the supporting files you need. For the current example, you can get the input dataset and the R Markdown report using <code>drake_example(&quot;main&quot;)</code>. Be sure to put <code>raw_data.xlsx</code> and <code>report.Rmd</code> in your working directory.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">file.exists</span>(<span class="st">&quot;raw_data.xlsx&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">## [1] TRUE</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">file.exists</span>(<span class="st">&quot;report.Rmd&quot;</span>)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">## [1] TRUE</a></code></pre></div>
+
 <p>Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(plan)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
