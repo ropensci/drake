@@ -2,43 +2,24 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <center>
-
 <img src="https://ropensci.github.io/drake/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
-
 </center>
-
 <table class="table">
-
 <thead>
-
 <tr class="header">
-
 <th align="left">
-
 Release
-
 </th>
-
 <th align="left">
-
 Usage
-
 </th>
-
 <th align="left">
-
 Development
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr class="odd">
-
 <td align="left">
 
 <a href="https://doi.org/10.21105/joss.00550"><img src="http://joss.theoj.org/papers/10.21105/joss.00550/status.svg" alt="JOSS"></a>
