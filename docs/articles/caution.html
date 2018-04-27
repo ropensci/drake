@@ -380,10 +380,10 @@
 <a class="sourceLine" id="cb7-10" data-line-number="10">  )</a>
 <a class="sourceLine" id="cb7-11" data-line-number="11">)</a>
 <a class="sourceLine" id="cb7-12" data-line-number="12"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)</a>
-<a class="sourceLine" id="cb7-13" data-line-number="13">## [1] "36fdcc9cd2b7ff97a318d4e9970f3c33"</a>
+<a class="sourceLine" id="cb7-13" data-line-number="13">## [1] "371570985c6f817884e0f7b4b72502ff"</a>
 <a class="sourceLine" id="cb7-14" data-line-number="14">example_object &lt;-<span class="st"> </span>example_class<span class="op">$</span><span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)</a>
 <a class="sourceLine" id="cb7-15" data-line-number="15"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16">## [1] "6d5a21dd4bafaf09d2d45d46c0ba038e"</a></code></pre></div>
+<a class="sourceLine" id="cb7-16" data-line-number="16">## [1] "b33b3d36dd84bf2526d6d9f57623a325"</a></code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class<span class="op">$</span><span class="kw">new</span>(<span class="dv">1234</span>))</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span></a>

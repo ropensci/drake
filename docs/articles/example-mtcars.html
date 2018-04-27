@@ -600,16 +600,16 @@
 <a class="sourceLine" id="cb30-5" data-line-number="5">## # A tibble: 28 x 5</a>
 <a class="sourceLine" id="cb30-6" data-line-number="6">##    item                   type   elapsed        user           system     </a>
 <a class="sourceLine" id="cb30-7" data-line-number="7">##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;</a>
-<a class="sourceLine" id="cb30-8" data-line-number="8">##  1 "\"report.md\""        target 0.101s         0.061s         0.006s     </a>
-<a class="sourceLine" id="cb30-9" data-line-number="9">##  2 "\"report.Rmd\""       import 0.013s         0s             0.001s     </a>
-<a class="sourceLine" id="cb30-10" data-line-number="10">##  3 coef_regression1_large target 0.017s         0.006s         0.001s     </a>
-<a class="sourceLine" id="cb30-11" data-line-number="11">##  4 coef_regression1_small target 0.017s         0.006s         0s         </a>
-<a class="sourceLine" id="cb30-12" data-line-number="12">##  5 coef_regression2_large target 0.018s         0.007s         0s         </a>
-<a class="sourceLine" id="cb30-13" data-line-number="13">##  6 coef_regression2_small target 0.017s         0.005s         0.001s     </a>
-<a class="sourceLine" id="cb30-14" data-line-number="14">##  7 data.frame             import 0.046s         0.033s         0.001s     </a>
-<a class="sourceLine" id="cb30-15" data-line-number="15">##  8 knit                   import 0.045s         0.031s         0.001s     </a>
-<a class="sourceLine" id="cb30-16" data-line-number="16">##  9 large                  target 0.094s         0.078s         0.002s     </a>
-<a class="sourceLine" id="cb30-17" data-line-number="17">## 10 lm                     import 0.024s         0.015s         0s         </a>
+<a class="sourceLine" id="cb30-8" data-line-number="8">##  1 "\"report.md\""        target 0.195s         0.076s         0.005s     </a>
+<a class="sourceLine" id="cb30-9" data-line-number="9">##  2 "\"report.Rmd\""       import 0.031s         0.001s         0.001s     </a>
+<a class="sourceLine" id="cb30-10" data-line-number="10">##  3 coef_regression1_large target 0.028s         0.008s         0s         </a>
+<a class="sourceLine" id="cb30-11" data-line-number="11">##  4 coef_regression1_small target 0.029s         0.007s         0s         </a>
+<a class="sourceLine" id="cb30-12" data-line-number="12">##  5 coef_regression2_large target 0.022s         0.008s         0s         </a>
+<a class="sourceLine" id="cb30-13" data-line-number="13">##  6 coef_regression2_small target 0.057s         0.006s         0.002s     </a>
+<a class="sourceLine" id="cb30-14" data-line-number="14">##  7 data.frame             import 0.242s         0.049s         0s         </a>
+<a class="sourceLine" id="cb30-15" data-line-number="15">##  8 knit                   import 0.05s          0.035s         0s         </a>
+<a class="sourceLine" id="cb30-16" data-line-number="16">##  9 large                  target 0.146s         0.096s         0.001s     </a>
+<a class="sourceLine" id="cb30-17" data-line-number="17">## 10 lm                     import 0.037s         0.016s         0.001s     </a>
 <a class="sourceLine" id="cb30-18" data-line-number="18">## # ... with 18 more rows</a></code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -738,7 +738,7 @@
 <a class="sourceLine" id="cb37-22" data-line-number="22">## [1] "40fb781de184c741"</a>
 <a class="sourceLine" id="cb37-23" data-line-number="23"></a>
 <a class="sourceLine" id="cb37-24" data-line-number="24">config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span></a>
-<a class="sourceLine" id="cb37-25" data-line-number="25">## [1] "666f1fd4b533e5b5"</a></code></pre></div>
+<a class="sourceLine" id="cb37-25" data-line-number="25">## [1] "2ffd6a8f394111ad"</a></code></pre></div>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Hover, click, drag, zoom, and pan.</span></a>
 <a class="sourceLine" id="cb38-2" data-line-number="2"><span class="co"># Same as drake_graph():</span></a>
 <a class="sourceLine" id="cb38-3" data-line-number="3"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</a></code></pre></div>

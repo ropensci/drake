@@ -1,6 +1,6 @@
 ---
 title: "Storage"
-subtitle: "Caching, hashing, and customization"
+subtitle: "Caches and hashes"
 author: "Will Landau"
 date: "`r Sys.Date()`"
 output:
@@ -33,18 +33,17 @@ knitr::opts_chunk$set(
 
 `Drake`'s `make()` function generates your project's output, and `drake` takes storing this output seriously. This guide explains how `drake` caches and hashes its data, and describes customization options that can increase convenience and speed.
 
-# Storage basics
+# Caches
 
-When you run `make()`, `drake` stores your imports and output targets in a hidden cache.
-
+When you run `make()`, `drake` stores your imports and targets in a hidden cache.
 
 ```{r mtcars_storage}
 library(drake)
 load_mtcars_example(verbose = FALSE) # Get the code with drake_example("mtcars").
-config <- make(my_plan, verbose = FALSE)
+config <- make(my_plan)
 ```
 
-You can explore your cached data using functions like `loadd()`, `readd()`, and `cached()`.
+You can explore your cached data using functions `loadd()`, `readd()`, `cached()`, and others.
 
 ```{r explore_mtcars}
 head(cached())
@@ -58,21 +57,69 @@ head(large)
 rm(large) # Does not remove `large` from the cache.
 ```
 
-# Caches as R objects
+By default, these objects live in a hidden `.drake` folder in your working directory. 
 
-The [storr](https://github.com/richfitz/storr) package does the heavy lifting. A `storr` is an object in R that serves as an abstraction for a storage backend, usually a file system. See the [main storr vignette](https://cran.r-project.org/package=storr/vignettes/storr.html) for a thorough walkthrough.
+```{r getdefaultcache, eval = FALSE}
+find_cache()
+## [1] "/home/you/project/.drake"
 
-```{r get_storrs}
-class(config$cache) # from `config <- make(...)`
-
-cache <- get_cache() # Get the default cache from the last build.
-
-class(cache)
-
-cache$list() # Functionality from storr
-
-head(cache$get("small")) # Functionality from storr
+find_project()
+## [1] "/home/you/project"
 ```
+
+`Drake` (via [storr](https://github.com/richfitz/storr)) has an object-like interface to these caches.
+
+```{r oopcache}
+cache <- get_cache()
+
+cache$list()
+
+head(cache$get("small"))
+
+tail(cache$get("small", namespace = "meta"))
+
+cache$list_namespaces()
+```
+
+Create a new cache of your own with `new_cache()`.
+
+```{r newcache1}
+cache2 <- new_cache(path = "cache2")
+file.exists("cache2")
+```
+
+You can use multiple caches simultaneously, default and non-default alike.
+
+```{r multiplecaches}
+config  <- drake_config(cache = cache)
+config2 <- drake_config(cache = cache2)
+outdated(config)
+outdated(config2)
+make(my_plan, cache = cache)
+make(my_plan, cache = cache2)
+```
+
+There are a couple different ways to retrieve caches.
+
+- `get_cache(path = "my_path")` assumes `my_path` is a project root containing a `.drake` folder. If it does not find a `.drake` folder in `my_path`, it searches up through the ancestors of `my_path` until it finds one.
+- `this_cache(path = "my_path")` literally assumes `my_path` is the path to the cache, `.drake` folder or not.
+- `storr::storr_rds("my_path", mangle_key = TRUE)` is analogous to `this_cache(path = "my_path")`.
+
+```{r usepath}
+cache3 <- get_cache(path = getwd()) # Finds the .drake folder in your directory.
+head(cache3$list())
+cache4 <- this_cache(path = "cache2") # The cache folder is literally called cache2.
+head(cache4$list())
+```
+
+Destroy caches to remove them from your file system.
+
+```{r rm3}
+cache4$destroy()
+cache2$list() # Same folder as cache4.
+```
+
+See [storr](https://github.com/richfitz/storr) for more on `drake`'s caching infrastructure.
 
 # Hash algorithms
 
@@ -114,9 +161,9 @@ short_hash(cache)
 long_hash(cache)
 ```
 
-# Select the hash algorithms of the default cache
+# Select the hash algorithms of the cache
 
-For new projects, use `new_cache()` to set the hash algorithms of the default cache.
+If you want to set the hash algorithms, do so right when the cache is first created.
 
 ```{r default_cache_reset}
 # cache_path(cache) # Default cache from before. # nolint
@@ -129,11 +176,7 @@ tmp <- new_cache(
   short_hash_algo = "crc32",
   long_hash_algo = "sha1"
 )
-```
 
-The cache at `default_cache_path()` (equivalently, the `.drake/` folder) is the default cache used for `make()`.
-
-```{r default_cache_control}
 config <- make(my_plan, verbose = FALSE)
 
 short_hash(config$cache) # xxhash64 is the default_short_hash_algo()
@@ -166,52 +209,14 @@ short_hash(config$cache) # same as before
 long_hash(config$cache) # different from before
 ```
 
-
-# More on custom caches
-
-You do not need to use the default cache at the `default_cache_path()` (`.drake/`). However, if you use a different file system, such as the custom `faster_cache/` folder below, you will need to manually supply the cache to all functions that require one.
-
-```{r, custom cache}
-faster_cache <- new_cache(
-  path = "faster_cache",
-  short_hash_algo = "murmur32",
-  long_hash_algo = "murmur32"
-)
-
-# cache_path(faster_cache) # nolint
-# cache_path(cache) # location of the previous cache # nolint
-
-short_hash(faster_cache)
-
-long_hash(faster_cache)
-
-new_plan <- drake_plan(
-  simple = 1 + 1
-)
-
-make(new_plan, cache = faster_cache)
-
-cached(cache = faster_cache)
-
-readd(simple, cache = faster_cache)
-```
-
-# Recovering the cache
-
-You can recover an old cache from the file system. You could use `storr::storr_rds()` directly if you know the short hash algorithm, but `this_cache()` and `recover_cache()` are safer for `drake`. `get_cache()` is similar, but it has a slightly different interface.
-
-```{r oldcachenoeval, eval = FALSE}
-old_cache <- this_cache("faste_cache") # Get a cache you know exists...
-recovered <- recover_cache("faster_cache") # or create a new one if missing.
-```
-
-# Custom [storr](https://github.com/richfitz/storr) caches
+# Using `storr` directly
 
 If you want bypass `drake` and generate a cache directly from [storr](https://github.com/richfitz/storr), it is best to do so right from the beginning.
 
 ```{r use_storr_directly}
 library(storr)
 my_storr <- storr_rds("my_storr", mangle_key = TRUE)
+new_plan <- drake_plan(simple = sqrt(4))
 make(new_plan, cache = my_storr)
 
 cached(cache = my_storr)
@@ -266,7 +271,6 @@ cached() # 'small' and 'large' are gone
 
 clean(destroy = TRUE)
 
-clean(destroy = TRUE, cache = faster_cache)
 clean(destroy = TRUE, cache = my_storr)
 ```
 
