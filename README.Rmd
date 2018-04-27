@@ -38,8 +38,7 @@ tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
 <img src="https://ropensci.github.io/drake/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
 
-<table class="table">
-<thead><tr class="header">
+<table class="table"><thead><tr class="header">
 <th align="left">Release</th>
 <th align="left">Usage</th>
 <th align="left">Development</th>

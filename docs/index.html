@@ -8,12 +8,8 @@
 <title>drake</title> <link rel="drake icon" type = "image/x-icon" href="icon.ico"/>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="Data Frames in R for Make">
-<meta property="og:description" content="An R-focused pipeline toolkit
-  for reproducible code and high-performance computing.">
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -177,6 +173,7 @@ Development
 </tr>
 </tbody>
 </table>
+<p><br></p>
 <div id="the-drake-r-package" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#the-drake-r-package" class="anchor"></a>The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height="139" style="border: none; float: right;">
@@ -208,81 +205,85 @@ Development
 <h1 class="hasAnchor">
 <a href="#how-it-works" class="anchor"></a>How it works</h1>
 <p>To set up a project, load your packages,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw">library</span>(tidyverse)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(drake)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <p>load your custom functions,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {
-  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_histogram</span>()
-}</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">    </span><span class="kw">geom_histogram</span>()</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">}</a></code></pre></div>
 <p>check any supporting files (optional),</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the files with drake_example("main").</span>
-<span class="kw">file.exists</span>(<span class="st">"raw_data.xlsx"</span>)
-<span class="co">#&gt; [1] TRUE</span>
-<span class="kw">file.exists</span>(<span class="st">"report.Rmd"</span>)
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Get the files with drake_example("main").</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">file.exists</span>(<span class="st">"raw_data.xlsx"</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; [1] TRUE</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">file.exists</span>(<span class="st">"report.Rmd"</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
 <p>and plan what you are going to do.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">raw_data =</span> readxl<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/readxl/topics/read_excel">read_excel</a></span>(<span class="kw"><a href="reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
-  <span class="dt">data =</span> raw_data <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_inorder">fct_inorder</a></span>(Species)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>X__<span class="dv">1</span>),
-  <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
-  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species, data),
-  rmarkdown<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rmarkdown/topics/render">render</a></span>(
-    <span class="kw"><a href="reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
-    <span class="dt">output_file =</span> <span class="kw"><a href="reference/file_out.html">file_out</a></span>(<span class="st">"report.html"</span>),
-    <span class="dt">quiet =</span> <span class="ot">TRUE</span>
-  )
-)
-plan
-<span class="co">#&gt; # A tibble: 5 x 2</span>
-<span class="co">#&gt;   target            command                                               </span>
-<span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;                                                 </span>
-<span class="co">#&gt; 1 raw_data          "readxl::read_excel(file_in(\"raw_data.xlsx\"))"      </span>
-<span class="co">#&gt; 2 data              "raw_data %&gt;% mutate(Species = forcats::fct_inorder(S…</span>
-<span class="co">#&gt; 3 hist              create_plot(data)                                     </span>
-<span class="co">#&gt; 4 fit               lm(Sepal.Width ~ Petal.Width + Species, data)         </span>
-<span class="co">#&gt; 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…</span></code></pre></div>
-<p>Then, run the plan with <code><a href="reference/make.html">make()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
-<span class="co">#&gt; target raw_data</span>
-<span class="co">#&gt; target data</span>
-<span class="co">#&gt; target fit</span>
-<span class="co">#&gt; target hist</span>
-<span class="co">#&gt; target file "report.html"</span></code></pre></div>
-<p>You will more than likely want to go back and change things. A lot. For example, we forgot to give our histogram a bin width.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/readd.html">readd</a></span>(hist) <span class="co"># See also loadd().</span>
-<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<div class="figure">
-<img src="https://ropensci.github.io/drake/images/hist1.png">
-</div>
-<p>So let’s change the function that creates the plot.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {
-  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)
-}</code></pre></div>
-<p><code>Drake</code> notices. It can tell that the plot and <code>report.html</code> no longer match what your code is doing.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)
-<span class="kw"><a href="reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Interactive graph: hover, zoom, drag, etc.</span></code></pre></div>
-<iframe
-    src = 'https://ropensci.github.io/drake/images/pitch3.html'
-    width = '100%' height = '600px' allowtransparency='true'
-    style='border: none; box-shadow: none'>
-    </iframe>
-<p>The next <code><a href="reference/make.html">make()</a></code> just builds the plot and the report. No need to wrangle the data or fit the model all over again.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
-<span class="co">#&gt; Unloading targets from environment:</span>
-<span class="co">#&gt;   fit</span>
-<span class="co">#&gt;   hist</span>
-<span class="co">#&gt; target hist</span>
-<span class="co">#&gt; target file "report.html"</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/loadd.html">loadd</a></span>(hist)
-hist</code></pre></div>
-<div class="figure">
-<img src="https://ropensci.github.io/drake/images/hist2.png">
-</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">plan &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="dt">raw_data =</span> readxl<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/readxl/topics/read_excel">read_excel</a></span>(<span class="kw"><a href="reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="dt">data =</span> raw_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_inorder">fct_inorder</a></span>(Species)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>X__<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species, data),</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">  rmarkdown<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rmarkdown/topics/render">render</a></span>(</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">    <span class="kw"><a href="reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">    <span class="dt">output_file =</span> <span class="kw"><a href="reference/file_out.html">file_out</a></span>(<span class="st">"report.html"</span>),</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">    <span class="dt">quiet =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">  )</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">)</a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">plan</a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; # A tibble: 5 x 2</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;   target            command                                               </span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt;   &lt;chr&gt;             &lt;chr&gt;                                                 </span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; 1 raw_data          "readxl::read_excel(file_in(\"raw_data.xlsx\"))"      </span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; 2 data              "raw_data %&gt;% mutate(Species = forcats::fct_inorder(S…</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; 3 hist              create_plot(data)                                     </span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; 4 fit               lm(Sepal.Width ~ Petal.Width + Species, data)         </span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…</span></a></code></pre></div>
+<p>So far, we have just been setting the stage. Use <code><a href="reference/make.html">make()</a></code> to actually make your results. Targets are built in the correct order regardless of the row order of <code>plan</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="reference/make.html">make</a></span>(plan)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; Loading required package: methods</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; target raw_data</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; target data</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; target fit</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; target hist</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; target file "report.html"</span></a></code></pre></div>
+<p>Except for files like <code>report.html</code>, your output is stored in a hidden <code>.drake/</code> folder. Reading it back is easy.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="reference/readd.html">readd</a></span>(data) <span class="co"># See also loadd().</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; # A tibble: 150 x 5</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt;          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  </span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; 1         5.10        3.50         1.40       0.200 setosa </span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; 2         4.90        3.00         1.40       0.200 setosa </span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; 3         4.70        3.20         1.30       0.200 setosa </span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt; 4         4.60        3.10         1.50       0.200 setosa </span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; 5         5.00        3.60         1.40       0.200 setosa </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; # ... with 145 more rows</span></a></code></pre></div>
+<p>But you find mistakes. A lot. For example, we forgot to give our histogram a bin width.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="reference/readd.html">readd</a></span>(hist)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></a></code></pre></div>
+<p><img src="https://ropensci.github.io/drake/images/hist1.png" alt="hist1" align="center" style="border: none; float: center;" width="500px"></p>
+<p>So let’s fix the plotting function.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">}</a></code></pre></div>
+<p><code>Drake</code> knows which results are affected.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw"><a href="reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Interactive graph: hover, zoom, drag, etc.</span></a></code></pre></div>
+<p><a href="https://ropensci.github.io/drake/images/pitch3.html"> <img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style="border: none; float: center;" width="500px"></a></p>
+<p>The next <code><a href="reference/make.html">make()</a></code> just builds <code>hist</code> and <code>report.html</code>. No point in wasting time on the data or model.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="reference/make.html">make</a></span>(plan)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt; Unloading targets from environment:</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt;   fit</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt;   hist</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; target hist</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; target file "report.html"</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="reference/loadd.html">loadd</a></span>(hist)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">hist</a></code></pre></div>
+<p><img src="https://ropensci.github.io/drake/images/hist2.png" alt="hist1" align="center" style="border: none; float: center;" width="500px"></p>
 </div>
 <div id="reproducibility-with-confidence" class="section level1">
 <h1 class="hasAnchor">
@@ -292,28 +293,28 @@ hist</code></pre></div>
 <h2 class="hasAnchor">
 <a href="#evidence" class="anchor"></a>Evidence</h2>
 <p>Suppose you are reviewing someone else’s data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results without the help of the original author? With <code>drake</code>, it is quick and easy to find out.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
-<span class="co">#&gt; Unloading targets from environment:</span>
-<span class="co">#&gt;   fit</span>
-<span class="co">#&gt;   hist</span>
-<span class="co">#&gt; All targets are already up to date.</span>
-
-config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)
-<span class="kw"><a href="reference/outdated.html">outdated</a></span>(config)
-<span class="co">#&gt; character(0)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="reference/make.html">make</a></span>(plan)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">#&gt; Unloading targets from environment:</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">#&gt;   fit</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#&gt;   hist</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#&gt; All targets are already up to date.</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="kw"><a href="reference/outdated.html">outdated</a></span>(config)</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#&gt; character(0)</span></a></code></pre></div>
 <p>With everything already up to date, you have <strong>tangible evidence</strong> of reproducibility. Even though you did not re-create the results, you know the results are re-creatable. They <strong>faithfully show</strong> what the code is producing. Given the right <a href="https://rstudio.github.io/packrat/">package environment</a> and <a href="https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html">system configuration</a>, you have everything you need to reproduce all the output by yourself.</p>
 </div>
 <div id="ease" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ease" class="anchor"></a>Ease</h2>
 <p>When it comes time to actually rerun the entire project, you have much more confidence. Starting over from scratch is trivially easy.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/clean.html">clean</a></span>()       <span class="co"># Remove the original author's results.</span>
-<span class="kw"><a href="reference/make.html">make</a></span>(plan) <span class="co"># Independently re-create the results from the code and input data.</span>
-<span class="co">#&gt; target raw_data</span>
-<span class="co">#&gt; target data</span>
-<span class="co">#&gt; target fit</span>
-<span class="co">#&gt; target hist</span>
-<span class="co">#&gt; target file "report.html"</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="reference/clean.html">clean</a></span>()       <span class="co"># Remove the original author's results.</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw"><a href="reference/make.html">make</a></span>(plan) <span class="co"># Independently re-create the results from the code and input data.</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt; target raw_data</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">#&gt; target data</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co">#&gt; target fit</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#&gt; target hist</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">#&gt; target file "report.html"</span></a></code></pre></div>
 </div>
 <div id="independent-replication" class="section level2">
 <h2 class="hasAnchor">
@@ -336,26 +337,26 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_c
 <h1 class="hasAnchor">
 <a href="#aggressively-scale-up-" class="anchor"></a>Aggressively scale up.</h1>
 <p>Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. <code>Drake</code> knows what to do. Parallelism is implicit and automatic. See the <a href="https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd">parallelism vignette</a> for all the details.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use the spare cores on your local machine.</span>
-<span class="kw"><a href="reference/make.html">make</a></span>(plan, <span class="dt">jobs =</span> <span class="dv">4</span>)
-
-<span class="co"># Or scale up to a supercomputer.</span>
-<span class="kw"><a href="reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"slurm"</span>) <span class="co"># https://slurm.schedmd.com/</span>
-<span class="kw">library</span>(future.batchtools)
-future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>, <span class="dt">workers =</span> <span class="dv">100</span>)
-<span class="kw"><a href="reference/make.html">make</a></span>(plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># Use the spare cores on your local machine.</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw"><a href="reference/make.html">make</a></span>(plan, <span class="dt">jobs =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="co"># Or scale up to a supercomputer.</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="kw"><a href="reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"slurm"</span>) <span class="co"># https://slurm.schedmd.com/</span></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="kw">library</span>(future.batchtools)</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>, <span class="dt">workers =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="kw"><a href="reference/make.html">make</a></span>(plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</a></code></pre></div>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can choose among different versions of <code>drake</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Install the latest stable release from CRAN.</span>
-<span class="kw">install.packages</span>(<span class="st">"drake"</span>)
-
-<span class="co"># Alternatively, install the development version from GitHub.</span>
-<span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
-<span class="kw">library</span>(devtools)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"ropensci/drake"</span>)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># Install the latest stable release from CRAN.</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">"drake"</span>)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co"># Alternatively, install the development version from GitHub.</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="kw">library</span>(devtools)</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"ropensci/drake"</span>)</a></code></pre></div>
 <ul>
 <li>You must properly install <code>drake</code> using <code>install.packages()</code>, <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github()</a></code>, or similar. It is not enough to use <code><a href="http://www.rdocumentation.org/packages/devtools/topics/load_all">devtools::load_all()</a></code>, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to <code>require(drake)</code>.</li>
 <li>For <code><a href="reference/make.html">make(..., parallelism = "Makefile")</a></code>, Windows users need to download and install <a href="https://cran.r-project.org/bin/windows/Rtools/"><code>Rtools</code></a>.</li>
@@ -480,7 +481,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <div id="contributing" class="section level1">
 <h1 class="hasAnchor">
 <a href="#contributing" class="anchor"></a>Contributing</h1>
-<p>Bug reports, suggestions, and especially code contributions are welcome. Please see <a href="https://github.com/ropensci/drake/blob/master/CONTRIBUTING.html">CONTRIBUTING.md</a>. Maintainers and contributors must follow this repository’s <a href="https://github.com/ropensci/drake/blob/master/CONDUCT.html">code of conduct</a>.</p>
+<p>Bug reports, suggestions, and especially code contributions are welcome. Please see <a href="https://github.com/ropensci/drake/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>. Maintainers and contributors must follow this repository’s <a href="https://github.com/ropensci/drake/blob/master/CONDUCT.md">code of conduct</a>.</p>
 </div>
 <div id="similar-work" class="section level1">
 <h1 class="hasAnchor">
@@ -511,7 +512,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <ol style="list-style-type: decimal">
 <li>High-performance computing. <a href="https://github.com/richfitz/remake">Remake</a> has no native parallel computing support. <a href="https://github.com/ropensci/drake">Drake</a>, on the other hand, has a <a href="https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd">vast arsenal</a> of parallel computing options, from local multicore computing to serious distributed computing. Thanks to <a href="github.com/HenrikBengtsson/future">future</a>, <a href="github.com/HenrikBengtsson/future.batchtools">future.batchtools</a>, and <a href="github.com/mllg/batchtools">batchtools</a>, it is straightforward to configure a <a href="https://github.com/ropensci/drake">drake</a> project for most popular job schedulers, such as <a href="https://github.com/ropensci/drake/tree/master/inst/examples/slurm">SLURM</a>, <a href="https://github.com/ropensci/drake/tree/master/inst/examples/torque">TORQUE</a>, and the <a href="https://github.com/ropensci/drake/tree/master/inst/examples/sge">Sun/Univa Grid Engine</a>, as well as systems contained in <a href="https://github.com/ropensci/drake/tree/master/inst/examples/Docker-psock">Docker images</a>.</li>
 <li>A friendly interface. In <a href="https://github.com/richfitz/remake">remake</a>, the user must manually write a <a href="https://github.com/richfitz/remake/blob/master/doc/remake.yml">YAML</a> configuration file to arrange the steps of a workflow, which leads to some of the same scalability problems as <a href="https://www.gnu.org/software/make/">Make</a>. <a href="https://github.com/ropensci/drake">Drake</a>’s data-frame-based interface and <a href="https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan">wildcard templating functionality</a> easily generate workflows at scale.</li>
-<li>Thorough documentation. <a href="https://github.com/ropensci/drake">Drake</a> contains <a href="https://github.com/ropensci/drake/tree/master/vignettes">several vignettes</a>, a <a href="https://github.com/ropensci/drake/blob/master/README.html">comprehensive README</a>, examples in the help files of user-side functions, and <a href="https://github.com/ropensci/drake/tree/master/inst/examples">accessible example code</a> that users can write with <code><a href="reference/example_drake.html">drake::example_drake()</a></code>.</li>
+<li>Thorough documentation. <a href="https://github.com/ropensci/drake">Drake</a> contains <a href="https://github.com/ropensci/drake/tree/master/vignettes">several vignettes</a>, a <a href="https://github.com/ropensci/drake/blob/master/README.md">comprehensive README</a>, examples in the help files of user-side functions, and <a href="https://github.com/ropensci/drake/tree/master/inst/examples">accessible example code</a> that users can write with <code><a href="http://www.rdocumentation.org/packages/drake/topics/example_drake">drake::example_drake()</a></code>.</li>
 <li>Active maintenance. <a href="https://github.com/ropensci/drake">Drake</a> is actively developed and maintained, and <a href="https://github.com/ropensci/drake/issues">issues</a> are usually solved promptly.</li>
 <li>Presence on CRAN. At the time of writing, <a href="https://github.com/ropensci/drake">drake</a> is <a href="https://cran.r-project.org/package=drake">available on CRAN</a>, but <a href="https://github.com/richfitz/remake">remake</a> is not.</li>
 </ol>
@@ -561,7 +562,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <li><a href="https://github.com/kendonB">Kendon Bell</a></li>
 <li><a href="https://github.com/krlmlr">Kirill Müller</a></li>
 </ul>
-<p>Credit for images is <a href="https://github.com/ropensci/drake/blob/master/images/image-credit.html">attributed here</a>.</p>
+<p>Credit for images is <a href="https://github.com/ropensci/drake/blob/master/images/image-credit.md">attributed here</a>.</p>
 <p><a href="https://ropensci.org"><img src="http://ropensci.org/public_images/github_footer.png" alt="ropensci_footer"></a></p>
 </div>
 </div>
@@ -582,7 +583,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <p><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>William Michael Landau <br><small class="roles"> Author, maintainer </small>  </li>
+<li>William Michael Landau <br><small class="roles"> Author, maintainer </small> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
@@ -595,7 +596,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -8,11 +8,8 @@
 <title>Graphs with drake • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Graphs with drake">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -115,11 +112,8 @@
             <h3 class="subtitle">Visualize your workflow.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-22</h4>
-      
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/graph.Rmd"><code>vignettes/graph.Rmd</code></a></small>
-
-    </div>
+            <h4 class="date">2018-04-27</h4>
+          </div>
 
     
     
@@ -129,23 +123,23 @@
 <h1 class="hasAnchor">
 <a href="#dependency-reactivity" class="anchor"></a>Dependency reactivity</h1>
 <p>Initially, your entire project is out of date.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
-config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Same as drake_graph()</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(drake)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Same as drake_graph()</span></a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>After <code><a href="../reference/make.html">make()</a></code>, the whole project is all caught up.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">4</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">4</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/built.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>But when you change a dependency, some targets are out of date until the next <code><a href="../reference/make.html">make(my_plan)</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
-}
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 </div>
@@ -153,26 +147,26 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <h1 class="hasAnchor">
 <a href="#subgraphs" class="anchor"></a>Subgraphs</h1>
 <p>Graphs can grow enormous for serious projects, so there are multiple ways to focus on a manageable subgraph. The most brute-force way is to just pick a manual <code>subset</code> of nodes. However, with the <code>subset</code> argument, <code><a href="../reference/vis_drake_graph.html">vis_drake_graph()</a></code> may drop intermediate nodes and edges.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(
-  config,
-  <span class="dt">subset =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="kw"><a href="../reference/file_store.html">file_store</a></span>(<span class="st">"report.md"</span>))
-)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  config,</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="dt">subset =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="kw"><a href="../reference/file_store.html">file_store</a></span>(<span class="st">"report.md"</span>))</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/subset.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The rest of the subgraph functionality preserves connectedness. Use <code>targets_only</code> to ignore the imports.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/targetsonly.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>Similarly, you can just show downstream nodes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="st">"regression2_large"</span>))</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="kw">c</span>(<span class="st">"regression2_small"</span>, <span class="st">"regression2_large"</span>))</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/fromout.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>Or upstream ones.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="st">"small"</span>, <span class="dt">mode =</span> <span class="st">"in"</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="st">"small"</span>, <span class="dt">mode =</span> <span class="st">"in"</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/fromin.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>In fact, let us just take a small neighborhood around a target in both directions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="st">"small"</span>, <span class="dt">mode =</span> <span class="st">"all"</span>, <span class="dt">order =</span> <span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">from =</span> <span class="st">"small"</span>, <span class="dt">mode =</span> <span class="st">"all"</span>, <span class="dt">order =</span> <span class="dv">1</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/fromall.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The <code>report.md</code> node is drawn in somewhat, but it is still the farthest to the right in order to communicate <code>drake</code>’s parallel computing strategy.</p>
@@ -190,11 +184,11 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <h1 class="hasAnchor">
 <a href="#control-the-legend-" class="anchor"></a>Control the legend.</h1>
 <p>To remove superfluous information from the legend, set the <code>full_legend</code> argument to <code>FALSE</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">full_legend =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">full_legend =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/reg2-small-legend.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>To remove the legend altogether, set the <code>ncol_legend</code> argument to <code>0</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">ncol_legend =</span> <span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">ncol_legend =</span> <span class="dv">0</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/reg2-no-legend.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 </div>
@@ -228,7 +222,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>
