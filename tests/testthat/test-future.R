@@ -65,7 +65,7 @@ test_with_dir("can gracefully conclude a crashed worker", {
   for (caching in c("master", "worker")){
     con <- dbug()
     con$caching <- caching
-    con$execution_graph <- con$graph
+    con$schedule <- con$graph
     worker <- structure(list(), target = "myinput")
     class(worker) <- "Future"
     expect_false(is_empty_worker(worker))

@@ -61,7 +61,6 @@ drake_future_task <- function(target, meta, config, protect){
 
 new_worker <- function(id, target, config, protect){
   meta <- drake_meta(target = target, config = config)
-  meta$start <- proc.time()
   if (!should_build_target(
     target = target,
     meta = meta,
@@ -69,6 +68,7 @@ new_worker <- function(id, target, config, protect){
   )){
     return(empty_worker(target = target))
   }
+  meta$start <- proc.time()
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.

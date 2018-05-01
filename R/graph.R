@@ -230,11 +230,11 @@ exclude_imports_if <- function(config){
     return(config)
   }
   delete_these <- setdiff(
-    V(config$execution_graph)$name,
+    V(config$schedule)$name,
     config$plan$target
   )
-  config$execution_graph <- delete_vertices(
-    graph = config$execution_graph,
+  config$schedule <- delete_vertices(
+    graph = config$schedule,
     v = delete_these
   )
   config
