@@ -5,11 +5,8 @@ run_mclapply <- function(config){
   }
   config$workers <- as.character(seq_len(config$jobs))
   mc_initialize_cache(config)
-  
-  print(c(0L, seq_len(config$jobs)))
-  
   tmp <- mclapply(
-    X = c(0L, seq_len(config$jobs)),
+    X = c("0", config$workers),
     FUN = mclapply_process,
     mc.cores = config$jobs + 1,
     mc.preschedule = FALSE,
@@ -19,15 +16,10 @@ run_mclapply <- function(config){
 }
 
 mclapply_process <- function(id, config){
-  cat("id = ", id, "\n")
-  
-  if (id == 0L){
-    cat("launching master\n")
+  if (id == "0"){
     mclapply_master(config)
   } else {
-    cat("launching worker", worker, "\n")
     mclapply_worker(worker = id, config = config)
-    cat("launched", worker, "\n")
   }
 }
 
@@ -70,16 +62,21 @@ mclapply_master <- function(config){
 }
 
 mclapply_worker <- function(worker, config){
-  cat("worker", worker, "running \n")
-  saveRDS("MCLAPPLY WORKER", paste0("~/worker", worker, ".rds"))
   while (TRUE){
-    target <- config$cache$get(key = worker, namespace = "config")
+    target <- config$cache$get(key = worker, namespace = "workers")
     if (identical(target, FALSE)){
+      cat("Worker", worker, "done\n")
+      
       return()
     } else if (identical(target, TRUE)){
-      Sys.sleep(1e-9)
+      
+      cat("Worker", worker, "idle\n")
+      Sys.sleep(1e-1)
       next
     }
+    
+    cat("Worker", worker, "running target", target, "\n")
+    
     meta <- drake_meta(target = target, config = config)
     if (!should_build_target(
       target = target,
@@ -88,6 +85,9 @@ mclapply_worker <- function(worker, config){
     )){
       next
     }
+    
+    # TODO: pick up here
+    
     meta$start <- proc.time()
     do_prework(config = config, verbose_packages = FALSE)
     prune_envir(
