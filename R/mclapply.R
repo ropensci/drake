@@ -3,34 +3,48 @@ run_mclapply <- function(config){
   if (config$jobs < 2) {
     return(run_lapply(config = config))
   }
-  mc_initialize_mc_cache(config)
+  config$workers <- as.character(seq_len(config$jobs))
+  mc_initialize_cache(config)
+  
+  print(c(0L, seq_len(config$jobs)))
+  
   tmp <- mclapply(
     X = c(0L, seq_len(config$jobs)),
     FUN = mclapply_process,
     mc.cores = config$jobs + 1,
+    mc.preschedule = FALSE,
     config = config
   )
   invisible()
 }
 
 mclapply_process <- function(id, config){
+  cat("id = ", id, "\n")
+  
   if (id == 0L){
+    cat("launching master\n")
     mclapply_master(config)
   } else {
-    mclapply_worker(id = id, config = config)
+    cat("launching worker", worker, "\n")
+    mclapply_worker(worker = id, config = config)
+    cat("launched", worker, "\n")
   }
 }
 
 mclapply_master <- function(config){
   config$queue <- new_target_queue(config = config)
-  config$workers <- as.character(seq_len(config$jobs))
-  # While any targets are queued or running...
   while (mc_work_remains(config)){
     for (worker in config$workers){
-      if (mc_is_idle(worker)){
+      if (mc_is_idle(worker, config)){
+
+        cat("Worker", worker, "is idle.\n")
+
         mc_conclude_worker(worker = worker, config = config)
+        
+        cat("Worker", worker, "is concluded.\n")
+        
         # Pop the head target only if its priority is 0
-        next_target <- queue$pop0(what = "names")
+        next_target <- config$queue$pop0(what = "names")
         if (!length(next_target)){
           # It's hard to make this line run in a small test workflow
           # suitable enough for unit testing, but
@@ -45,11 +59,19 @@ mclapply_master <- function(config){
         )
       }
     }
-    Sys.sleep(1e-9)
+    Sys.sleep(1e-1)
   }
+  lapply(
+    X = config$workers,
+    FUN = function(worker){
+      config$cache$set(key = worker, value = FALSE, namespace = "workers")
+    }
+  )
 }
 
 mclapply_worker <- function(worker, config){
+  cat("worker", worker, "running \n")
+  saveRDS("MCLAPPLY WORKER", paste0("~/worker", worker, ".rds"))
   while (TRUE){
     target <- config$cache$get(key = worker, namespace = "config")
     if (identical(target, FALSE)){
@@ -79,7 +101,7 @@ mclapply_worker <- function(worker, config){
   }
 }
 
-mc_initialize_mc_cache <- function(config){
+mc_initialize_cache <- function(config){
   config$cache$clear(namespace = "workers")
   lapply(
     X = config$workers,
@@ -97,7 +119,7 @@ mc_initialize_mc_cache <- function(config){
 }
 
 mc_work_remains <- function(config){
-  !queue$empty() ||
+  !config$queue$empty() ||
     !mc_all_idle(config)
 }
 
@@ -111,7 +133,8 @@ mc_all_idle <- function(config){
 }
 
 mc_is_idle <- function(worker, config){
-  is.na(config$cache$get(key = worker, namespace = "workers"))
+  config$cache$get(key = worker, namespace = "workers")
+  identical(TRUE, config$cache$get(key = worker, namespace = "workers"))
 }
 
 mc_running_targets <- function(config){
@@ -134,6 +157,9 @@ mc_running_targets <- function(config){
 
 mc_conclude_worker <- function(worker, config){
   target <- config$cache$get(key = worker, namespace = "workers")
+  if (!is.character(target)){
+    return()
+  }
   config$cache$del(key = target, namespace = "protect")
   revdeps <- dependencies(
     targets = target,
@@ -141,6 +167,9 @@ mc_conclude_worker <- function(worker, config){
     reverse = TRUE
   ) %>%
     intersect(y = config$queue$list(what = "names"))
+  if (!get_attempt_flag(config) && target %in% config$plan$target){
+    set_attempt_flag(config)
+  }
   queue$decrease_key(names = revdeps)
   config$cache$set(key = worker, value = TRUE, namespace = "workers")
 }
