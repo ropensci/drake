@@ -159,7 +159,7 @@ mc_conclude_worker <- function(worker, config){
   if (!get_attempt_flag(config) && target %in% config$plan$target){
     set_attempt_flag(config)
   }
-  queue$decrease_key(names = revdeps)
+  config$queue$decrease_key(names = revdeps)
   mc_set_idle(worker = worker, config = config)
 }
 
