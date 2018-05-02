@@ -1,5 +1,11 @@
 drake_context("queue")
 
+test_with_dir("empty queue", {
+  config <- list(schedule = igraph::make_empty_graph())
+  q <- new_target_queue(config)
+  expect_equal(length(q$list()), 0)
+})
+
 test_with_dir("the priority queue works", {
   names <- c("foo", "bar", "baz", "Bob", "Amy", "Joe", "soup", "spren")
   priorities <- c(8, 2, 3, 7, 4, 1, 7, 5)

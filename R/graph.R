@@ -222,9 +222,10 @@ filter_upstream <- function(targets, graph){
   leaf_nodes(graph)
 }
 
+# This function will go away when we get rid of staged parallelism.
 exclude_imports_if <- function(config){
   if (!length(config$skip_imports)){
-    config$skip_imports <- FALSE
+    config$skip_imports <- FALSE # nocov
   }
   if (!config$skip_imports){
     return(config)

@@ -50,7 +50,7 @@ error_null <- function(e){
 }
 
 error_show <- function(e){
-  message("Error: ", e$message)
+  message("Error: ", e$message) # nocov
 }
 
 error_tibble_times <- function(e){
