@@ -1,4 +1,5 @@
 run_mclapply <- function(config){
+  do_prework(config = config, verbose_packages = FALSE)
   config$jobs <- safe_jobs(config$jobs)
   if (config$jobs < 2) {
     return(run_lapply(config = config))
@@ -28,76 +29,69 @@ mclapply_master <- function(config){
   while (mc_work_remains(config)){
     for (worker in config$workers){
       if (mc_is_idle(worker, config)){
-
-        cat("Worker", worker, "is idle.\n")
-
         mc_conclude_worker(worker = worker, config = config)
-        
-        cat("Worker", worker, "is concluded.\n")
-        
-        # Pop the head target only if its priority is 0
-        next_target <- config$queue$pop0(what = "names")
-        if (!length(next_target)){
-          # It's hard to make this line run in a small test workflow
-          # suitable enough for unit testing, but
-          # I did artificially stall targets and verified that this line
-          # is reached in the future::multisession backend as expected.
-          next # nocov
+        target <- config$queue$pop0(what = "names")
+
+        print(config$queue$list("priorities")) ## TODO: fix queue
+
+        if (!length(target)){
+          next
         }
-        config$cache$set(
-          key = worker,
-          value = next_target,
-          namespace = "workers"
-        )
+        mc_assign_worker(worker = worker, target = target, config = config)
       }
     }
     Sys.sleep(1e-1)
   }
-  lapply(
-    X = config$workers,
-    FUN = function(worker){
-      config$cache$set(key = worker, value = FALSE, namespace = "workers")
-    }
+  mc_terminate_workers(config)
+}
+
+mc_assign_worker <- function(worker, target, config){
+  config$cache$set(
+    key = worker,
+    value = target,
+    namespace = "workers"
   )
+}
+
+mc_terminate_workers <- function(config){
+  lapply(X = config$workers, FUN = mc_set_done, config = config)
+}
+
+mc_set_idle <- function(worker, config){
+  config$cache$set(key = worker, value = TRUE, namespace = "workers")
+}
+
+mc_set_done <- function(worker, config){
+  config$cache$set(key = worker, value = FALSE, namespace = "workers")
 }
 
 mclapply_worker <- function(worker, config){
   while (TRUE){
     target <- config$cache$get(key = worker, namespace = "workers")
     if (identical(target, FALSE)){
-      cat("Worker", worker, "done\n")
-      
       return()
     } else if (identical(target, TRUE)){
-      
-      cat("Worker", worker, "idle\n")
       Sys.sleep(1e-1)
       next
     }
-    
-    cat("Worker", worker, "running target", target, "\n")
-    
     meta <- drake_meta(target = target, config = config)
     if (!should_build_target(
       target = target,
       meta = meta,
       config = config
     )){
+      mc_set_idle(worker = worker, config = config)
       next
     }
-    
-    # TODO: pick up here
-    
     meta$start <- proc.time()
-    do_prework(config = config, verbose_packages = FALSE)
     prune_envir(
       targets = target,
       config = config,
       downstream = config$cache$list(namespace = "protect")
     )
     value <- build_and_store(target = target, meta = meta, config = config)
-    assign(x = target, value = vlaue, envir = config$envir)
-    invisible()
+    assign(x = target, value = value, envir = config$envir)
+    mc_set_idle(worker = worker, config = config)
   }
 }
 
@@ -105,9 +99,8 @@ mc_initialize_cache <- function(config){
   config$cache$clear(namespace = "workers")
   lapply(
     X = config$workers,
-    FUN = function(worker){
-      config$cache$set(key = worker, value = TRUE, namespace = "workers")
-    }
+    FUN = mc_set_idle,
+    config = config
   )
   lapply(
     X = igraph::V(config$schedule)$name,
@@ -141,14 +134,10 @@ mc_running_targets <- function(config){
   lapply(
     X = config$workers,
     FUN = function(worker){
-      if (is_idle(worker)){
+      if (mc_is_idle(worker = worker, config = config)){
         NULL
       } else {
-        # It's hard to make this line run in a small test workflow
-        # suitable enough for unit testing, but
-        # I did artificially stall targets and verified that this line
-        # is reached in the future::multisession backend as expected.
-        config$cache$get(key = worker, namespace = "workers") # nocov
+        config$cache$get(key = worker, namespace = "workers")
       }
     }
   ) %>%
@@ -171,7 +160,7 @@ mc_conclude_worker <- function(worker, config){
     set_attempt_flag(config)
   }
   queue$decrease_key(names = revdeps)
-  config$cache$set(key = worker, value = TRUE, namespace = "workers")
+  mc_set_idle(worker = worker, config = config)
 }
 
 warn_mclapply_windows <- function(

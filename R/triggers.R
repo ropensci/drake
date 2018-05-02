@@ -171,9 +171,6 @@ file_trigger <- function(target, meta, config){
 }
 
 should_build <- function(target, meta_list, config){
-  if (meta_list[[target]]$imported) {
-    return(TRUE)
-  }
   should_build_target(
     target = target,
     meta = meta_list[[target]],
@@ -182,6 +179,9 @@ should_build <- function(target, meta_list, config){
 }
 
 should_build_target <- function(target, meta, config){
+  if (meta$imported) {
+    return(TRUE)
+  }
   if (meta$missing){
     return(TRUE)
   }
