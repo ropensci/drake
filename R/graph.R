@@ -223,9 +223,11 @@ filter_upstream <- function(targets, graph){
 }
 
 # This function will go away when we get rid of staged parallelism.
+# No point in testing it.
+# nocov start
 exclude_imports_if <- function(config){
   if (!length(config$skip_imports)){
-    config$skip_imports <- FALSE # nocov
+    config$skip_imports <- FALSE
   }
   if (!config$skip_imports){
     return(config)
@@ -240,6 +242,7 @@ exclude_imports_if <- function(config){
   )
   config
 }
+# nocov end
 
 subset_graph <- function(graph, subset){
   if (!length(subset)){

@@ -48,16 +48,11 @@ test_with_dir("drake_build works as expected", {
   x <- cached()
   expect_equal(x, "a")
   o <- make(pl, envir = e)
-  expect_true("a" %in% ls(envir = e))
   expect_equal(justbuilt(o), "b")
-  remove(list = "a", envir = e)
-  expect_false("a" %in% ls(envir = e))
 
   # Can run without config
   o <- drake_build(b, envir = e)
-  expect_equal(o, e$b)
   expect_equal(o, readd(b))
-  expect_true("a" %in% ls(envir = e))
 
   # Replacing deps in environment
   expect_equal(e$a, 1)
@@ -73,6 +68,7 @@ test_with_dir("drake_build works as expected", {
   expect_equal(e$a, 1)
 
   # `replace` in loadd()
+  e$b <- 1
   expect_equal(e$b, 1)
   e$b <- 5
   loadd(b, envir = e, replace = FALSE)

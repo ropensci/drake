@@ -1,5 +1,4 @@
 run_mclapply <- function(config){
-  do_prework(config = config, verbose_packages = FALSE)
   config$jobs <- safe_jobs(config$jobs)
   if (config$jobs < 2) {
     return(run_lapply(config = config))
@@ -32,9 +31,12 @@ mc_master <- function(config){
     for (worker in config$workers){
       if (mc_is_idle(worker = worker, config = config)){
         mc_conclude_worker(worker = worker, config = config)
+        if (!config$queue$size()){
+          mc_set_done(worker = worker, config = config)
+          next
+        }
         target <- config$queue$pop0(what = "names")
         if (!length(target)){
-          mc_set_done(worker = worker, config = config)
           next
         }
         mc_set_target(worker = worker, target = target, config = config)
@@ -54,23 +56,11 @@ mc_worker <- function(worker, config){
       break
     }
     target <- mc_get_target(worker = worker, config = config)
-    meta <- drake_meta(target = target, config = config)
-    if (!should_build_target(
+    build_check_store(
       target = target,
-      meta = meta,
-      config = config
-    )){
-      mc_set_idle(worker = worker, config = config)
-      next
-    }
-    meta$start <- proc.time()
-    prune_envir(
-      targets = target,
       config = config,
       downstream = config$cache$list(namespace = "protect")
     )
-    value <- build_and_store(target = target, meta = meta, config = config)
-    assign(x = target, value = value, envir = config$envir)
     mc_set_idle(worker = worker, config = config)
   }
 }
@@ -105,13 +95,14 @@ mc_conclude_worker <- function(worker, config){
     reverse = TRUE
   ) %>%
     intersect(y = config$queue$list(what = "names"))
+  config$queue$decrease_key(names = revdeps)
   flag_attempt <- !get_attempt_flag(config) &&
     get_progress_single(target = target, cache = config$cache) == "finished" &&
     target %in% config$plan$target
   if (flag_attempt){
     set_attempt_flag(config)
   }
-  config$queue$decrease_key(names = revdeps)
+  mc_set_target(worker = worker, target = NA, config = config)
 }
 
 mc_work_remains <- function(config){
@@ -223,5 +214,5 @@ worker_mclapply <- function(targets, meta_list, config){
     config = config,
     mc.cores = jobs
   )
-  assign_to_envir(targets = targets, values = values, config = config)
+  assign_to_envir_batch(targets = targets, values = values, config = config)
 }

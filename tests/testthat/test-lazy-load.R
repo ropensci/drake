@@ -39,7 +39,7 @@ test_with_dir("lazy loading is actually lazy", {
   unload_these <- c(lazily_loaded, eagerly_loaded) %>%
     intersect(y = ls(envir = config$envir))
   remove(list = unload_these, envir = config$envir)
-  config <- make(
+  config <- drake_config(
     lazy_load = TRUE,
     plan = config$plan,
     targets = "combined",
@@ -47,21 +47,11 @@ test_with_dir("lazy loading is actually lazy", {
     verbose = FALSE,
     session_info = FALSE
   )
+  config$schedule <- config$graph
+  run_lapply(config)
   loaded <- ls(envir = config$envir)
   expect_true(all(lazily_loaded %in% loaded))
   expect_false(any(eagerly_loaded %in% loaded))
-  clean()
-  config <- make(
-    lazy_load = FALSE,
-    plan = config$plan,
-    targets = "combined",
-    envir = config$envir,
-    verbose = FALSE,
-    session_info = FALSE
-  )
-  loaded <- ls(envir = config$envir)
-  expect_true(all(lazily_loaded %in% loaded))
-  expect_true(all(eagerly_loaded %in% loaded))
 })
 
 test_with_dir("active bindings", {
