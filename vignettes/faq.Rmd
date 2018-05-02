@@ -11,6 +11,8 @@ vignette: >
 
 The [FAQ page](https://ropensci.github.io/drake/articles/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
 
+- [How to propagate wild cards into future steps](https://github.com/ropensci/drake/issues/367)
+- [How to speed up evaluation of a (very) large plan?](https://github.com/ropensci/drake/issues/366)
 - [evaluate `file.path` and variables in `file_out` and friends](https://github.com/ropensci/drake/issues/353)
 - [Working with HPC time limits](https://github.com/ropensci/drake/issues/349)
 - [How to debug file targets](https://github.com/ropensci/drake/issues/331)

@@ -38,8 +38,7 @@ tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
 <img src="https://ropensci.github.io/drake/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
 
-<table class="table">
-<thead><tr class="header">
+<table class="table"><thead><tr class="header">
 <th align="left">Release</th>
 <th align="left">Usage</th>
 <th align="left">Development</th>
@@ -142,22 +141,28 @@ plan <- drake_plan(
 plan
 ```
 
-Then, run the plan with `make()`.
+So far, we have just been setting the stage. Use `make()` to actually make your results. Targets are built in the correct order regardless of the row order of `plan`.
 
 ```{r make1}
 make(plan)
 ```
 
-You will more than likely want to go back and change things. A lot. For example, we forgot to give our histogram a bin width.
+Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
+
+```{r readddata1}
+readd(data) # See also loadd().
+```
+
+But you find mistakes. A lot. For example, we forgot to give our histogram a bin width.
 
 ```{r loaddhist, eval = FALSE}
-readd(hist) # See also loadd().
+readd(hist)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](https://ropensci.github.io/drake/images/hist1.png)
+<img src="https://ropensci.github.io/drake/images/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
 
-So let's change the function that creates the plot.
+So let's fix the plotting function.
 
 ```{r changefn}
 create_plot <- function(data) {
@@ -167,16 +172,19 @@ create_plot <- function(data) {
 }
 ```
 
-`Drake` notices. It can tell that the plot and `report.html` no longer match what your code is doing.
+
+`Drake` knows which results are affected.
 
 ```{r visdrakegraphreadme, eval = FALSE}
 config <- drake_config(plan)
 vis_drake_graph(config) # Interactive graph: hover, zoom, drag, etc.
 ```
 
-[![](./images/graph.png)](https://ropensci.github.io/drake/images/pitch3.html)
+<a href = "https://ropensci.github.io/drake/images/pitch3.html">
+<img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
+</a>
 
-The next `make()` just builds the plot and the report. No need to wrangle the data or fit the model all over again.
+The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
 ```{r justhistetc}
 make(plan)
@@ -187,7 +195,7 @@ loadd(hist)
 hist
 ```
 
-![](https://ropensci.github.io/drake/images/hist2.png)
+<img src="https://ropensci.github.io/drake/images/hist2.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
 
 # Reproducibility with confidence
 

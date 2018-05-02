@@ -8,11 +8,8 @@
 <title>Storage • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Storage">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -112,299 +109,355 @@
   <div class="col-md-9">
     <div class="page-header toc-ignore">
       <h1>Storage</h1>
-            <h3 class="subtitle">Caching, hashing, and customization</h3>
+            <h3 class="subtitle">Caches and hashes</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-22</h4>
-      
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/storage.Rmd"><code>vignettes/storage.Rmd</code></a></small>
-
-    </div>
+            <h4 class="date">2018-04-27</h4>
+          </div>
 
     
     
 <div class="contents">
 <p><code>Drake</code>’s <code><a href="../reference/make.html">make()</a></code> function generates your project’s output, and <code>drake</code> takes storing this output seriously. This guide explains how <code>drake</code> caches and hashes its data, and describes customization options that can increase convenience and speed.</p>
-<div id="storage-basics" class="section level1">
+<div id="caches" class="section level1">
 <h1 class="hasAnchor">
-<a href="#storage-basics" class="anchor"></a>Storage basics</h1>
-<p>When you run <code><a href="../reference/make.html">make()</a></code>, <code>drake</code> stores your imports and output targets in a hidden cache.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Get the code with drake_example("mtcars").</span>
-config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p>You can explore your cached data using functions like <code><a href="../reference/loadd.html">loadd()</a></code>, <code><a href="../reference/readd.html">readd()</a></code>, and <code><a href="../reference/cached.html">cached()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw"><a href="../reference/cached.html">cached</a></span>())
-## [1] "coef_regression1_large" "coef_regression1_small"
-## [3] "coef_regression2_large" "coef_regression2_small"
-## [5] "data.frame"             "knit"
-
-<span class="kw">head</span>(<span class="kw"><a href="../reference/readd.html">readd</a></span>(small))
-##       x    y
-## 1 3.730 17.3
-## 2 5.250 10.4
-## 3 3.730 17.3
-## 4 5.345 14.7
-## 5 3.190 24.4
-## 6 3.440 17.8
-
-<span class="kw"><a href="../reference/loadd.html">loadd</a></span>(large)
-
-<span class="kw">head</span>(large)
-##       x    y
-## 1 3.780 15.2
-## 2 3.170 15.8
-## 3 5.424 10.4
-## 4 5.250 10.4
-## 5 3.780 15.2
-## 6 3.570 14.3
-
-<span class="kw">rm</span>(large) <span class="co"># Does not remove `large` from the cache.</span></code></pre></div>
-</div>
-<div id="caches-as-r-objects" class="section level1">
-<h1 class="hasAnchor">
-<a href="#caches-as-r-objects" class="anchor"></a>Caches as R objects</h1>
-<p>The <a href="https://github.com/richfitz/storr">storr</a> package does the heavy lifting. A <code>storr</code> is an object in R that serves as an abstraction for a storage backend, usually a file system. See the <a href="https://cran.r-project.org/package=storr/vignettes/storr.html">main storr vignette</a> for a thorough walkthrough.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(config<span class="op">$</span>cache) <span class="co"># from `config &lt;- make(...)`</span>
-## [1] "storr" "R6"
-
-cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>() <span class="co"># Get the default cache from the last build.</span>
-
-<span class="kw">class</span>(cache)
-## [1] "storr" "R6"
-
-cache<span class="op">$</span><span class="kw">list</span>() <span class="co"># Functionality from storr</span>
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "data.frame"             "knit"                  
-##  [7] "large"                  "lm"                    
-##  [9] "mtcars"                 "nrow"                  
-## [11] "random_rows"            "reg1"                  
-## [13] "reg2"                   "regression1_large"     
-## [15] "regression1_small"      "regression2_large"     
-## [17] "regression2_small"      "\"report.md\""         
-## [19] "\"report.Rmd\""         "sample.int"            
-## [21] "simulate"               "small"                 
-## [23] "summary"                "summ_regression1_large"
-## [25] "summ_regression1_small" "summ_regression2_large"
-## [27] "summ_regression2_small" "suppressWarnings"
-
-<span class="kw">head</span>(cache<span class="op">$</span><span class="kw">get</span>(<span class="st">"small"</span>)) <span class="co"># Functionality from storr</span>
-##       x    y
-## 1 3.730 17.3
-## 2 5.250 10.4
-## 3 3.730 17.3
-## 4 5.345 14.7
-## 5 3.190 24.4
-## 6 3.440 17.8</code></pre></div>
+<a href="#caches" class="anchor"></a>Caches</h1>
+<p>When you run <code><a href="../reference/make.html">make()</a></code>, <code>drake</code> stores your imports and targets in a hidden cache.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(drake)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Get the code with drake_example("mtcars").</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">## Loading required package: methods</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">## target large</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">## target small</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">## target regression1_large</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">## target regression1_small</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">## target regression2_large</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">## target regression2_small</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">## target coef_regression1_large</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">## target coef_regression1_small</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">## target coef_regression2_large</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">## target coef_regression2_small</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">## target summ_regression1_large</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">## target summ_regression1_small</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">## target summ_regression2_large</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">## target summ_regression2_small</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">## target file "report.md"</a></code></pre></div>
+<p>You can explore your cached data using functions <code><a href="../reference/loadd.html">loadd()</a></code>, <code><a href="../reference/readd.html">readd()</a></code>, <code><a href="../reference/cached.html">cached()</a></code>, and others.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">head</span>(<span class="kw"><a href="../reference/cached.html">cached</a></span>())</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">## [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">## [3] "coef_regression1_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">## [5] "coef_regression2_large" "coef_regression2_small"</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">head</span>(<span class="kw"><a href="../reference/readd.html">readd</a></span>(small))</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">##       x    y</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">## 1 3.730 17.3</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">## 2 5.250 10.4</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">## 3 3.730 17.3</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">## 4 5.345 14.7</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">## 5 3.190 24.4</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">## 6 3.440 17.8</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(large)</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="kw">head</span>(large)</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">##       x    y</a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">## 1 3.780 15.2</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">## 2 3.170 15.8</a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">## 3 5.424 10.4</a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">## 4 5.250 10.4</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23">## 5 3.780 15.2</a>
+<a class="sourceLine" id="cb2-24" data-line-number="24">## 6 3.570 14.3</a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="kw">rm</span>(large) <span class="co"># Does not remove `large` from the cache.</span></a></code></pre></div>
+<p>By default, these objects live in a hidden <code>.drake</code> folder in your working directory.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/find_cache.html">find_cache</a></span>()</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">## [1] "/home/you/project/.drake"</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw"><a href="../reference/find_project.html">find_project</a></span>()</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">## [1] "/home/you/project"</a></code></pre></div>
+<p><code>Drake</code> (via <a href="https://github.com/richfitz/storr">storr</a>) has an object-like interface to these caches.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>()</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">cache<span class="op">$</span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">##  [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">##  [3] "coef_regression1_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">##  [5] "coef_regression2_large" "coef_regression2_small"</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">##  [7] "data.frame"             "knit"                  </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">##  [9] "large"                  "lm"                    </a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">## [11] "mtcars"                 "nrow"                  </a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">## [13] "random_rows"            "reg1"                  </a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">## [15] "reg2"                   "regression1_large"     </a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">## [17] "regression1_small"      "regression2_large"     </a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">## [19] "regression2_small"      "sample.int"            </a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">## [21] "simulate"               "small"                 </a>
+<a class="sourceLine" id="cb4-15" data-line-number="15">## [23] "summ_regression1_large" "summ_regression1_small"</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">## [25] "summ_regression2_large" "summ_regression2_small"</a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">## [27] "summary"                "suppressWarnings"</a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="kw">head</span>(cache<span class="op">$</span><span class="kw">get</span>(<span class="st">"small"</span>))</a>
+<a class="sourceLine" id="cb4-20" data-line-number="20">##       x    y</a>
+<a class="sourceLine" id="cb4-21" data-line-number="21">## 1 3.730 17.3</a>
+<a class="sourceLine" id="cb4-22" data-line-number="22">## 2 5.250 10.4</a>
+<a class="sourceLine" id="cb4-23" data-line-number="23">## 3 3.730 17.3</a>
+<a class="sourceLine" id="cb4-24" data-line-number="24">## 4 5.345 14.7</a>
+<a class="sourceLine" id="cb4-25" data-line-number="25">## 5 3.190 24.4</a>
+<a class="sourceLine" id="cb4-26" data-line-number="26">## 6 3.440 17.8</a>
+<a class="sourceLine" id="cb4-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb4-28" data-line-number="28"><span class="kw">tail</span>(cache<span class="op">$</span><span class="kw">get</span>(<span class="st">"small"</span>, <span class="dt">namespace =</span> <span class="st">"meta"</span>))</a>
+<a class="sourceLine" id="cb4-29" data-line-number="29">## $command</a>
+<a class="sourceLine" id="cb4-30" data-line-number="30">## [1] "{\n simulate(48) \n}"</a>
+<a class="sourceLine" id="cb4-31" data-line-number="31">## </a>
+<a class="sourceLine" id="cb4-32" data-line-number="32">## $depends</a>
+<a class="sourceLine" id="cb4-33" data-line-number="33">## [1] "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"</a>
+<a class="sourceLine" id="cb4-34" data-line-number="34">## </a>
+<a class="sourceLine" id="cb4-35" data-line-number="35">## $file</a>
+<a class="sourceLine" id="cb4-36" data-line-number="36">## [1] NA</a>
+<a class="sourceLine" id="cb4-37" data-line-number="37">## </a>
+<a class="sourceLine" id="cb4-38" data-line-number="38">## $start</a>
+<a class="sourceLine" id="cb4-39" data-line-number="39">##    user  system elapsed </a>
+<a class="sourceLine" id="cb4-40" data-line-number="40">##   3.567   0.194   5.924 </a>
+<a class="sourceLine" id="cb4-41" data-line-number="41">## </a>
+<a class="sourceLine" id="cb4-42" data-line-number="42">## $time_command</a>
+<a class="sourceLine" id="cb4-43" data-line-number="43">##    item   type elapsed  user system</a>
+<a class="sourceLine" id="cb4-44" data-line-number="44">## 1 small target   0.005 0.005      0</a>
+<a class="sourceLine" id="cb4-45" data-line-number="45">## </a>
+<a class="sourceLine" id="cb4-46" data-line-number="46">## $time_build</a>
+<a class="sourceLine" id="cb4-47" data-line-number="47">##    item   type elapsed  user system</a>
+<a class="sourceLine" id="cb4-48" data-line-number="48">## 1 small target   0.097 0.046      0</a>
+<a class="sourceLine" id="cb4-49" data-line-number="49"></a>
+<a class="sourceLine" id="cb4-50" data-line-number="50">cache<span class="op">$</span><span class="kw">list_namespaces</span>()</a>
+<a class="sourceLine" id="cb4-51" data-line-number="51">## [1] "config"   "kernels"  "meta"     "objects"  "progress" "session"</a></code></pre></div>
+<p>Create a new cache of your own with <code><a href="../reference/new_cache.html">new_cache()</a></code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">cache2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cache.html">new_cache</a></span>(<span class="dt">path =</span> <span class="st">"cache2"</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">file.exists</span>(<span class="st">"cache2"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">## [1] TRUE</a></code></pre></div>
+<p>You can use multiple caches simultaneously, default and non-default alike.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">config  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(<span class="dt">cache =</span> cache)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">## Unloading targets from environment:</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">##   small</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">##   coef_regression2_small</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">config2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(<span class="dt">cache =</span> cache2)</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">## character(0)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config2)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">##  [1] "\"report.md\""          "coef_regression1_large"</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">##  [3] "coef_regression1_small" "coef_regression2_large"</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">##  [5] "coef_regression2_small" "large"                 </a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">##  [7] "regression1_large"      "regression1_small"     </a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">##  [9] "regression2_large"      "regression2_small"     </a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">## [11] "small"                  "summ_regression1_large"</a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">## [13] "summ_regression1_small" "summ_regression2_large"</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">## [15] "summ_regression2_small"</a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">cache =</span> cache)</a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">## All targets are already up to date.</a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">cache =</span> cache2)</a>
+<a class="sourceLine" id="cb6-20" data-line-number="20">## target large</a>
+<a class="sourceLine" id="cb6-21" data-line-number="21">## target small</a>
+<a class="sourceLine" id="cb6-22" data-line-number="22">## target regression1_large</a>
+<a class="sourceLine" id="cb6-23" data-line-number="23">## target regression1_small</a>
+<a class="sourceLine" id="cb6-24" data-line-number="24">## target regression2_large</a>
+<a class="sourceLine" id="cb6-25" data-line-number="25">## target regression2_small</a>
+<a class="sourceLine" id="cb6-26" data-line-number="26">## target coef_regression1_large</a>
+<a class="sourceLine" id="cb6-27" data-line-number="27">## target coef_regression1_small</a>
+<a class="sourceLine" id="cb6-28" data-line-number="28">## target coef_regression2_large</a>
+<a class="sourceLine" id="cb6-29" data-line-number="29">## target coef_regression2_small</a>
+<a class="sourceLine" id="cb6-30" data-line-number="30">## target summ_regression1_large</a>
+<a class="sourceLine" id="cb6-31" data-line-number="31">## target summ_regression1_small</a>
+<a class="sourceLine" id="cb6-32" data-line-number="32">## target summ_regression2_large</a>
+<a class="sourceLine" id="cb6-33" data-line-number="33">## target summ_regression2_small</a>
+<a class="sourceLine" id="cb6-34" data-line-number="34">## target file "report.md"</a></code></pre></div>
+<p>There are a couple different ways to retrieve caches.</p>
+<ul>
+<li>
+<code><a href="../reference/get_cache.html">get_cache(path = "my_path")</a></code> assumes <code>my_path</code> is a project root containing a <code>.drake</code> folder. If it does not find a <code>.drake</code> folder in <code>my_path</code>, it searches up through the ancestors of <code>my_path</code> until it finds one.</li>
+<li>
+<code><a href="../reference/this_cache.html">this_cache(path = "my_path")</a></code> literally assumes <code>my_path</code> is the path to the cache, <code>.drake</code> folder or not.</li>
+<li>
+<code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_rds">storr::storr_rds("my_path", mangle_key = TRUE)</a></code> is analogous to <code><a href="../reference/this_cache.html">this_cache(path = "my_path")</a></code>.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">cache3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>(<span class="dt">path =</span> <span class="kw">getwd</span>()) <span class="co"># Finds the .drake folder in your directory.</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">head</span>(cache3<span class="op">$</span><span class="kw">list</span>())</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">## [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">## [3] "coef_regression1_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">## [5] "coef_regression2_large" "coef_regression2_small"</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">cache4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/this_cache.html">this_cache</a></span>(<span class="dt">path =</span> <span class="st">"cache2"</span>) <span class="co"># The cache folder is literally called cache2.</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">head</span>(cache4<span class="op">$</span><span class="kw">list</span>())</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">## [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">## [3] "coef_regression1_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">## [5] "coef_regression2_large" "coef_regression2_small"</a></code></pre></div>
+<p>Destroy caches to remove them from your file system.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">cache4<span class="op">$</span><span class="kw">destroy</span>()</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">cache2<span class="op">$</span><span class="kw">list</span>() <span class="co"># Same folder as cache4.</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">## character(0)</a></code></pre></div>
+<p>See <a href="https://github.com/richfitz/storr">storr</a> for more on <code>drake</code>’s caching infrastructure.</p>
 </div>
 <div id="hash-algorithms" class="section level1">
 <h1 class="hasAnchor">
 <a href="#hash-algorithms" class="anchor"></a>Hash algorithms</h1>
 <p>The concept of <a href="https://en.wikipedia.org/wiki/Hash_function">hashing</a> is central to <a href="https://github.com/richfitz/storr">storr</a>’s internals. <a href="https://github.com/richfitz/storr">Storr</a> uses hashes to label stored objects, and <code>drake</code> leverages these hashes to figure out which targets are up to date and which ones are outdated. A hash is like a target’s fingerprint, so the hash changes when the target changes. Regardless of the target’s size, the hash is always the same number of characters.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(digest) <span class="co"># package for hashing objects and files</span>
-smaller_data &lt;-<span class="st"> </span><span class="dv">12</span>
-larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
-
-<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(smaller_data) <span class="co"># compute the hash</span>
-## [1] "23c80a31c0713176016e6e18d76a5f31"
-
-<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "596bbaba4050b2324995eeaac8ded944"</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">library</span>(digest) <span class="co"># package for hashing objects and files</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">smaller_data &lt;-<span class="st"> </span><span class="dv">12</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(smaller_data) <span class="co"># compute the hash</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">## [1] "23c80a31c0713176016e6e18d76a5f31"</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">## [1] "eeb50dd1dd48b56f31688fb157336e7a"</a></code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "e1081e35288f527294cdd7507e8234c86d75ad2afdfc04936012d2caa004aae22608fc1c4b72167a0f68c903608e7ae23762394d7a3108f9de1c9bf36096b93a"
-
-<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "596bbaba4050b2324995eeaac8ded944"
-
-<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "ec3350adc1e008fc"
-
-<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "dc6a9422"</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">## [1] "e6bc69d10221a82927be59534031a562742396f8902c5675e28ff4e40a884b400b8de98a9644d4a6b519ac0b445cc5689c61f2796e001591f387aeba9563390d"</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">## [1] "eeb50dd1dd48b56f31688fb157336e7a"</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">## [1] "acff586fd89369a2"</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)</a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">## [1] "376f755d"</a></code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
 <a href="#which-hash-algorithm-should-you-choose" class="anchor"></a>Which hash algorithm should you choose?</h1>
 <p>Hashing is expensive, and unsurprisingly, shorter hashes are usually faster to compute. So why not always use <code>murmur32</code>? One reason is the risk of collisions: that is, when two different objects have the same hash. In general, shorter hashes have more frequent collisions. On the other hand, a longer hash is not always the answer. Besides the loss of speed, <code>drake</code> and <a href="https://github.com/richfitz/storr">storr</a> sometimes use hash keys as file names, and long hashes could violate the 260-character cap on Windows file paths. That is why <code>drake</code> uses a shorter hash algorithm for internal cache-related file names and a longer hash algorithm for everything else.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/default_short_hash_algo.html">default_short_hash_algo</a></span>()
-## [1] "xxhash64"
-
-<span class="kw"><a href="../reference/default_long_hash_algo.html">default_long_hash_algo</a></span>()
-## [1] "sha256"
-
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(cache)
-## [1] "xxhash64"
-
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(cache)
-## [1] "sha256"</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="../reference/default_short_hash_algo.html">default_short_hash_algo</a></span>()</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">## [1] "xxhash64"</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw"><a href="../reference/default_long_hash_algo.html">default_long_hash_algo</a></span>()</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">## [1] "sha256"</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(cache)</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">## [1] "xxhash64"</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(cache)</a>
+<a class="sourceLine" id="cb11-11" data-line-number="11">## [1] "sha256"</a></code></pre></div>
 </div>
-<div id="select-the-hash-algorithms-of-the-default-cache" class="section level1">
+<div id="select-the-hash-algorithms-of-the-cache" class="section level1">
 <h1 class="hasAnchor">
-<a href="#select-the-hash-algorithms-of-the-default-cache" class="anchor"></a>Select the hash algorithms of the default cache</h1>
-<p>For new projects, use <code><a href="../reference/new_cache.html">new_cache()</a></code> to set the hash algorithms of the default cache.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cache_path(cache) # Default cache from before. # nolint</span>
-
-<span class="co"># Start from scratch to reset both hash algorithms.</span>
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>)
-
-tmp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cache.html">new_cache</a></span>(
-  <span class="dt">path =</span> <span class="kw"><a href="../reference/default_cache_path.html">default_cache_path</a></span>(), <span class="co"># The `.drake/` folder.</span>
-  <span class="dt">short_hash_algo =</span> <span class="st">"crc32"</span>,
-  <span class="dt">long_hash_algo =</span> <span class="st">"sha1"</span>
-)</code></pre></div>
-<p>The cache at <code><a href="../reference/default_cache_path.html">default_cache_path()</a></code> (equivalently, the <code>.drake/</code> folder) is the default cache used for <code><a href="../reference/make.html">make()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># xxhash64 is the default_short_hash_algo()</span>
-## [1] "crc32"
-
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># sha256 is the default_long_hash_algo()</span>
-## [1] "sha1"</code></pre></div>
+<a href="#select-the-hash-algorithms-of-the-cache" class="anchor"></a>Select the hash algorithms of the cache</h1>
+<p>If you want to set the hash algorithms, do so right when the cache is first created.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># cache_path(cache) # Default cache from before. # nolint</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co"># Start from scratch to reset both hash algorithms.</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">tmp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cache.html">new_cache</a></span>(</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">  <span class="dt">path =</span> <span class="kw"><a href="../reference/default_cache_path.html">default_cache_path</a></span>(), <span class="co"># The `.drake/` folder.</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">  <span class="dt">short_hash_algo =</span> <span class="st">"crc32"</span>,</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">  <span class="dt">long_hash_algo =</span> <span class="st">"sha1"</span></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">)</a>
+<a class="sourceLine" id="cb12-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb12-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># xxhash64 is the default_short_hash_algo()</span></a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">## [1] "crc32"</a>
+<a class="sourceLine" id="cb12-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># sha256 is the default_long_hash_algo()</span></a>
+<a class="sourceLine" id="cb12-18" data-line-number="18">## [1] "sha1"</a></code></pre></div>
 <p>You can change the long hash algorithm without throwing away the cache, but your project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and all its supporting files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># empty</span>
-## character(0)
-
-config<span class="op">$</span>cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/configure_cache.html">configure_cache</a></span>(
-  config<span class="op">$</span>cache,
-  <span class="dt">long_hash_algo =</span> <span class="st">"murmur32"</span>,
-  <span class="dt">overwrite_hash_algos =</span> <span class="ot">TRUE</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># empty</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">## character(0)</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">config<span class="op">$</span>cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/configure_cache.html">configure_cache</a></span>(</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">  config<span class="op">$</span>cache,</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">  <span class="dt">long_hash_algo =</span> <span class="st">"murmur32"</span>,</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">  <span class="dt">overwrite_hash_algos =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">)</a></code></pre></div>
 <p>Below, the targets become outdated because the existing hash keys do not match the new hash algorithm.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config<span class="op">$</span>cache)
-<span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
-## [11] "small"                  "summ_regression1_large"
-## [13] "summ_regression1_small" "summ_regression2_large"
-## [15] "summ_regression2_small"
-
-config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># same as before</span>
-## [1] "crc32"
-
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># different from before</span>
-## [1] "murmur32"</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config<span class="op">$</span>cache)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">##  [1] "\"report.md\""          "coef_regression1_large"</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">##  [3] "coef_regression1_small" "coef_regression2_large"</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">##  [5] "coef_regression2_small" "large"                 </a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">##  [7] "regression1_large"      "regression1_small"     </a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">##  [9] "regression2_large"      "regression2_small"     </a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">## [11] "small"                  "summ_regression1_large"</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">## [13] "summ_regression1_small" "summ_regression2_large"</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">## [15] "summ_regression2_small"</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb14-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb14-14" data-line-number="14"><span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># same as before</span></a>
+<a class="sourceLine" id="cb14-15" data-line-number="15">## [1] "crc32"</a>
+<a class="sourceLine" id="cb14-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb14-17" data-line-number="17"><span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># different from before</span></a>
+<a class="sourceLine" id="cb14-18" data-line-number="18">## [1] "murmur32"</a></code></pre></div>
 </div>
-<div id="more-on-custom-caches" class="section level1">
+<div id="using-storr-directly" class="section level1">
 <h1 class="hasAnchor">
-<a href="#more-on-custom-caches" class="anchor"></a>More on custom caches</h1>
-<p>You do not need to use the default cache at the <code><a href="../reference/default_cache_path.html">default_cache_path()</a></code> (<code>.drake/</code>). However, if you use a different file system, such as the custom <code>faster_cache/</code> folder below, you will need to manually supply the cache to all functions that require one.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">faster_cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cache.html">new_cache</a></span>(
-  <span class="dt">path =</span> <span class="st">"faster_cache"</span>,
-  <span class="dt">short_hash_algo =</span> <span class="st">"murmur32"</span>,
-  <span class="dt">long_hash_algo =</span> <span class="st">"murmur32"</span>
-)
-
-<span class="co"># cache_path(faster_cache) # nolint</span>
-<span class="co"># cache_path(cache) # location of the previous cache # nolint</span>
-
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(faster_cache)
-## [1] "murmur32"
-
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(faster_cache)
-## [1] "murmur32"
-
-new_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">simple =</span> <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-)
-
-<span class="kw"><a href="../reference/make.html">make</a></span>(new_plan, <span class="dt">cache =</span> faster_cache)
-## target simple
-
-<span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">cache =</span> faster_cache)
-## [1] "simple"
-
-<span class="kw"><a href="../reference/readd.html">readd</a></span>(simple, <span class="dt">cache =</span> faster_cache)
-## [1] 2</code></pre></div>
-</div>
-<div id="recovering-the-cache" class="section level1">
-<h1 class="hasAnchor">
-<a href="#recovering-the-cache" class="anchor"></a>Recovering the cache</h1>
-<p>You can recover an old cache from the file system. You could use <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_rds">storr::storr_rds()</a></code> directly if you know the short hash algorithm, but <code><a href="../reference/this_cache.html">this_cache()</a></code> and <code><a href="../reference/recover_cache.html">recover_cache()</a></code> are safer for <code>drake</code>. <code><a href="../reference/get_cache.html">get_cache()</a></code> is similar, but it has a slightly different interface.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">old_cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/this_cache.html">this_cache</a></span>(<span class="st">"faste_cache"</span>) <span class="co"># Get a cache you know exists...</span>
-recovered &lt;-<span class="st"> </span><span class="kw"><a href="../reference/recover_cache.html">recover_cache</a></span>(<span class="st">"faster_cache"</span>) <span class="co"># or create a new one if missing.</span></code></pre></div>
-</div>
-<div id="custom-storr-caches" class="section level1">
-<h1 class="hasAnchor">
-<a href="#custom-storr-caches" class="anchor"></a>Custom <a href="https://github.com/richfitz/storr">storr</a> caches</h1>
+<a href="#using-storr-directly" class="anchor"></a>Using <code>storr</code> directly</h1>
 <p>If you want bypass <code>drake</code> and generate a cache directly from <a href="https://github.com/richfitz/storr">storr</a>, it is best to do so right from the beginning.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(storr)
-my_storr &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_rds">storr_rds</a></span>(<span class="st">"my_storr"</span>, <span class="dt">mangle_key =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/make.html">make</a></span>(new_plan, <span class="dt">cache =</span> my_storr)
-## Unloading targets from environment:
-##   simple
-## target simple
-
-<span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">cache =</span> my_storr)
-## [1] "simple"
-
-<span class="kw"><a href="../reference/readd.html">readd</a></span>(simple, <span class="dt">cache =</span> my_storr)
-## [1] 2</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">library</span>(storr)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">my_storr &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_rds">storr_rds</a></span>(<span class="st">"my_storr"</span>, <span class="dt">mangle_key =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">new_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">simple =</span> <span class="kw">sqrt</span>(<span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="kw"><a href="../reference/make.html">make</a></span>(new_plan, <span class="dt">cache =</span> my_storr)</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">## target simple</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">cache =</span> my_storr)</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">## [1] "simple" "sqrt"</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb15-10" data-line-number="10"><span class="kw"><a href="../reference/readd.html">readd</a></span>(simple, <span class="dt">cache =</span> my_storr)</a>
+<a class="sourceLine" id="cb15-11" data-line-number="11">## [1] 2</a></code></pre></div>
 <p>In addition to <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_rds">storr_rds()</a></code>, <code>drake</code> supports in-memory caches created from <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_environment">storr_environment()</a></code>. However, parallel computing is not supported these caches. The <code>jobs</code> argument must be 1, and the <code>parallelism</code> argument must be either <code>"mclapply"</code> or <code>"parLapply"</code>. (It is sufficient to leave the default values alone.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">memory_cache &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_environment">storr_environment</a></span>()
-other_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">some_data =</span> <span class="kw">rnorm</span>(<span class="dv">50</span>),
-  <span class="dt">more_data =</span> <span class="kw">rpois</span>(<span class="dv">75</span>, <span class="dt">lambda =</span> <span class="dv">10</span>),
-  <span class="dt">result =</span> <span class="kw">mean</span>(<span class="kw">c</span>(some_data, more_data))
-)
-
-<span class="kw"><a href="../reference/make.html">make</a></span>(other_plan, <span class="dt">cache =</span> memory_cache)
-## target more_data
-## target some_data
-## target result
-
-<span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">cache =</span> memory_cache)
-## [1] "c"         "mean"      "more_data" "result"    "rnorm"     "rpois"    
-## [7] "some_data"
-
-<span class="kw"><a href="../reference/readd.html">readd</a></span>(result, <span class="dt">cache =</span> memory_cache)
-## [1] 6.232917</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">memory_cache &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_environment">storr_environment</a></span>()</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">other_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">  <span class="dt">some_data =</span> <span class="kw">rnorm</span>(<span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">  <span class="dt">more_data =</span> <span class="kw">rpois</span>(<span class="dv">75</span>, <span class="dt">lambda =</span> <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">  <span class="dt">result =</span> <span class="kw">mean</span>(<span class="kw">c</span>(some_data, more_data))</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb16-8" data-line-number="8"><span class="kw"><a href="../reference/make.html">make</a></span>(other_plan, <span class="dt">cache =</span> memory_cache)</a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">## target more_data</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">## target some_data</a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">## target result</a>
+<a class="sourceLine" id="cb16-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb16-13" data-line-number="13"><span class="kw"><a href="../reference/cached.html">cached</a></span>(<span class="dt">cache =</span> memory_cache)</a>
+<a class="sourceLine" id="cb16-14" data-line-number="14">## [1] "c"         "mean"      "more_data" "result"    "rnorm"     "rpois"    </a>
+<a class="sourceLine" id="cb16-15" data-line-number="15">## [7] "some_data"</a>
+<a class="sourceLine" id="cb16-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb16-17" data-line-number="17"><span class="kw"><a href="../reference/readd.html">readd</a></span>(result, <span class="dt">cache =</span> memory_cache)</a>
+<a class="sourceLine" id="cb16-18" data-line-number="18">## [1] 6.232917</a></code></pre></div>
 <p>In theory, it should be possible to leverage serious databases using <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi()</a></code>. However, if you use such caches, please heed the following.</p>
 <ol style="list-style-type: decimal">
 <li>Be sure you have <a href="https://github.com/richfitz/storr">storr</a> version 1.1.3 or greater installed.</li>
 <li>Be careful about parallel computing. For example the <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code> cache is not thread-safe. Either use no parallel computing at all or set <code>parallelism = "future"</code> with <code>caching = "master"</code>. The <code>"future"</code> backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.</li>
 </ol>
 <p>The following example requires the <code>DBI</code> and <code>RSQLite</code> packages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydb &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">"my-db.sqlite"</span>)
-cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi</a></span>(
-  <span class="dt">tbl_data =</span> <span class="st">"data"</span>,
-  <span class="dt">tbl_keys =</span> <span class="st">"keys"</span>,
-  <span class="dt">con =</span> mydb
-)
-<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
-<span class="kw">unlink</span>(<span class="st">".drake"</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">cache =</span> cache)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">mydb &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">"my-db.sqlite"</span>)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi</a></span>(</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">  <span class="dt">tbl_data =</span> <span class="st">"data"</span>,</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">  <span class="dt">tbl_keys =</span> <span class="st">"keys"</span>,</a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">  <span class="dt">con =</span> mydb</a>
+<a class="sourceLine" id="cb17-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="kw">unlink</span>(<span class="st">".drake"</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">cache =</span> cache)</a></code></pre></div>
 </div>
 <div id="cleaning-up" class="section level1">
 <h1 class="hasAnchor">
 <a href="#cleaning-up" class="anchor"></a>Cleaning up</h1>
-<p>If you want to start from scratch, you can <code><a href="../reference/clean.html">clean()</a></code> the cache. Use the <code>destroy</code> argument to remove it completely. <code>cache$del()</code> and <code>cache$destroy()</code> are also options, but they leave output file targets dangling. By contrast, <code><a href="../reference/clean.html">clean(destroy = TRUE)</a></code> removes file targets generated by <code><a href="../reference/make.html">drake::make()</a></code>. <code><a href="../reference/drake_gc.html">drake_gc()</a></code> and <code><a href="../reference/clean.html">clean(..., garbage_collection = TRUE)</a></code> do garbage collection, and <code><a href="../reference/clean.html">clean(purge = TRUE)</a></code> removes all target-level data, not just the final output values.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(small, large)
-
-<span class="kw"><a href="../reference/cached.html">cached</a></span>() <span class="co"># 'small' and 'large' are gone</span>
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "data.frame"             "knit"                  
-##  [7] "lm"                     "mtcars"                
-##  [9] "nrow"                   "random_rows"           
-## [11] "reg1"                   "reg2"                  
-## [13] "regression1_large"      "regression1_small"     
-## [15] "regression2_large"      "regression2_small"     
-## [17] "\"report.md\""          "\"report.Rmd\""        
-## [19] "sample.int"             "simulate"              
-## [21] "summary"                "summ_regression1_large"
-## [23] "summ_regression1_small" "summ_regression2_large"
-## [25] "summ_regression2_small" "suppressWarnings"
-
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>)
-
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>, <span class="dt">cache =</span> faster_cache)
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>, <span class="dt">cache =</span> my_storr)</code></pre></div>
+<p>If you want to start from scratch, you can <code><a href="../reference/clean.html">clean()</a></code> the cache. Use the <code>destroy</code> argument to remove it completely. <code>cache$del()</code> and <code>cache$destroy()</code> are also options, but they leave output file targets dangling. By contrast, <code><a href="../reference/clean.html">clean(destroy = TRUE)</a></code> removes file targets generated by <code><a href="http://www.rdocumentation.org/packages/drake/topics/make">drake::make()</a></code>. <code><a href="../reference/drake_gc.html">drake_gc()</a></code> and <code><a href="../reference/clean.html">clean(..., garbage_collection = TRUE)</a></code> do garbage collection, and <code><a href="../reference/clean.html">clean(purge = TRUE)</a></code> removes all target-level data, not just the final output values.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="../reference/clean.html">clean</a></span>(small, large)</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="kw"><a href="../reference/cached.html">cached</a></span>() <span class="co"># 'small' and 'large' are gone</span></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">##  [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">##  [3] "coef_regression1_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">##  [5] "coef_regression2_large" "coef_regression2_small"</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">##  [7] "data.frame"             "knit"                  </a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">##  [9] "lm"                     "mtcars"                </a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">## [11] "nrow"                   "random_rows"           </a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">## [13] "reg1"                   "reg2"                  </a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">## [15] "regression1_large"      "regression1_small"     </a>
+<a class="sourceLine" id="cb18-12" data-line-number="12">## [17] "regression2_large"      "regression2_small"     </a>
+<a class="sourceLine" id="cb18-13" data-line-number="13">## [19] "sample.int"             "simulate"              </a>
+<a class="sourceLine" id="cb18-14" data-line-number="14">## [21] "summ_regression1_large" "summ_regression1_small"</a>
+<a class="sourceLine" id="cb18-15" data-line-number="15">## [23] "summ_regression2_large" "summ_regression2_small"</a>
+<a class="sourceLine" id="cb18-16" data-line-number="16">## [25] "summary"                "suppressWarnings"</a>
+<a class="sourceLine" id="cb18-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb18-18" data-line-number="18"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb18-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb18-20" data-line-number="20"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>, <span class="dt">cache =</span> my_storr)</a></code></pre></div>
 </div>
 </div>
   </div>
@@ -414,15 +467,11 @@ cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#storage-basics">Storage basics</a></li>
-      <li><a href="#caches-as-r-objects">Caches as R objects</a></li>
+<li><a href="#caches">Caches</a></li>
       <li><a href="#hash-algorithms">Hash algorithms</a></li>
       <li><a href="#which-hash-algorithm-should-you-choose">Which hash algorithm should you choose?</a></li>
-      <li><a href="#select-the-hash-algorithms-of-the-default-cache">Select the hash algorithms of the default cache</a></li>
-      <li><a href="#more-on-custom-caches">More on custom caches</a></li>
-      <li><a href="#recovering-the-cache">Recovering the cache</a></li>
-      <li>
-<a href="#custom-storr-caches">Custom </a><a href="https://github-com/richfitz/storr">storr</a> caches</li>
+      <li><a href="#select-the-hash-algorithms-of-the-cache">Select the hash algorithms of the cache</a></li>
+      <li><a href="#using-storr-directly">Using <code>storr</code> directly</a></li>
       <li><a href="#cleaning-up">Cleaning up</a></li>
       </ul>
 </div>
@@ -436,7 +485,7 @@ cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -8,11 +8,8 @@
 <title>The mtcars example • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="The mtcars example">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
-<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -115,11 +112,8 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-22</h4>
-      
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-mtcars.Rmd"><code>vignettes/example-mtcars.Rmd</code></a></small>
-
-    </div>
+            <h4 class="date">2018-04-27</h4>
+          </div>
 
     
     
@@ -129,716 +123,726 @@
 <h1 class="hasAnchor">
 <a href="#get-the-code-" class="anchor"></a>Get the code.</h1>
 <p>Write the code files to your workspace.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>)</a></code></pre></div>
 <p>The new <code>mtcars</code> folder now includes a file structure of a serious <code>drake</code> project, plus an <code>interactive-tutorial.R</code> to narrate the example. The code is also <a href="https://github.com/ropensci/drake/tree/master/inst/examples/mtcars">online here</a>.</p>
 </div>
 <div id="quick-examples" class="section level1">
 <h1 class="hasAnchor">
 <a href="#quick-examples" class="anchor"></a>Quick examples</h1>
 <p>Inspect and run your project.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
-<span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()            <span class="co"># Get the code with drake_example("mtcars").</span>
-config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan) <span class="co"># Master configuration list</span>
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)         <span class="co"># Hover, click, drag, zoom, pan.</span>
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)                   <span class="co"># Run the workflow.</span>
-<span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)                <span class="co"># Everything is up to date.</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(drake)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()            <span class="co"># Get the code with drake_example("mtcars").</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan) <span class="co"># Master configuration list</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)         <span class="co"># Hover, click, drag, zoom, pan.</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)                   <span class="co"># Run the workflow.</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)                <span class="co"># Everything is up to date.</span></a></code></pre></div>
 <p>Debug errors.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/failed.html">failed</a></span>()                   <span class="co"># Targets that failed in the most recent `make()`</span>
-context &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(large) <span class="co"># Diagnostic metadata: errors, warnings, etc.</span>
-error &lt;-<span class="st"> </span>context<span class="op">$</span>error
-<span class="kw">str</span>(error)                 <span class="co"># Object of class "error"</span>
-error<span class="op">$</span>message
-error<span class="op">$</span>call
-error<span class="op">$</span>calls                <span class="co"># Full traceback of nested calls leading up to the error. # nolint</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/failed.html">failed</a></span>()                   <span class="co"># Targets that failed in the most recent `make()`</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">context &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(large) <span class="co"># Diagnostic metadata: errors, warnings, etc.</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">error &lt;-<span class="st"> </span>context<span class="op">$</span>error</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">str</span>(error)                 <span class="co"># Object of class "error"</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">error<span class="op">$</span>message</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">error<span class="op">$</span>call</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">error<span class="op">$</span>calls                <span class="co"># Full traceback of nested calls leading up to the error. # nolint</span></a></code></pre></div>
 <p>Dive deeper into the built-in examples.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>) <span class="co"># Write the code files.</span>
-<span class="kw"><a href="../reference/drake_examples.html">drake_examples</a></span>()       <span class="co"># List the other examples.</span>
-<span class="kw">vignette</span>(<span class="st">"quickstart"</span>) <span class="co"># This vignette</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"mtcars"</span>) <span class="co"># Write the code files.</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="../reference/drake_examples.html">drake_examples</a></span>()       <span class="co"># List the other examples.</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">vignette</span>(<span class="st">"quickstart"</span>) <span class="co"># This vignette</span></a></code></pre></div>
 </div>
 <div id="the-motivation-of-the-mtcars-example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-motivation-of-the-mtcars-example" class="anchor"></a>The motivation of the mtcars example</h1>
 <p>Is there an association between the weight and the fuel efficiency of cars? To find out, we use the <code>mtcars</code> dataset from the <code>datasets</code> package. The <code>mtcars</code> dataset originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ?mtcars # more info</span>
-<span class="kw">head</span>(mtcars)
-##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># ?mtcars # more info</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">head</span>(mtcars)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</a></code></pre></div>
 <p>Here, <code>wt</code> is weight in tons, and <code>mpg</code> is fuel efficiency in miles per gallon. We want to figure out if there is an association between <code>wt</code> and <code>mpg</code>. The <code>mtcars</code> dataset itself only has 32 rows, so we generate two larger bootstrapped datasets and then analyze them with regression models. We summarize the regression models to see if there is an association.</p>
 </div>
 <div id="set-up-the-mtcars-example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#set-up-the-mtcars-example" class="anchor"></a>Set up the mtcars example</h1>
 <p>Before you run your project, you need to set up the workspace. In other words, you need to gather the “imports”: functions, pre-loaded data objects, and saved files that you want to be available before the real work begins.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr) <span class="co"># Drake knows which packages you load.</span>
-<span class="kw">library</span>(drake)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">library</span>(knitr) <span class="co"># Drake knows which packages you load.</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">library</span>(drake)</a></code></pre></div>
 <p>We need a function to bootstrap larger datasets from <code>mtcars</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pick a random subset of n rows from a dataset</span>
-random_rows &lt;-<span class="st"> </span><span class="cf">function</span>(data, n){
-  data[<span class="kw">sample.int</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(data), <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), ]
-}
-
-<span class="co"># Bootstrapped datasets from mtcars.</span>
-simulate &lt;-<span class="st"> </span><span class="cf">function</span>(n){
-  <span class="co"># Pick a random set of cars to bootstrap from the mtcars data.</span>
-  data &lt;-<span class="st"> </span><span class="kw">random_rows</span>(<span class="dt">data =</span> mtcars, <span class="dt">n =</span> n)
-
-  <span class="co"># x is the car's weight, and y is the fuel efficiency.</span>
-  <span class="kw">data.frame</span>(
-    <span class="dt">x =</span> data<span class="op">$</span>wt,
-    <span class="dt">y =</span> data<span class="op">$</span>mpg
-  )
-}</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Pick a random subset of n rows from a dataset</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">random_rows &lt;-<span class="st"> </span><span class="cf">function</span>(data, n){</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  data[<span class="kw">sample.int</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(data), <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), ]</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co"># Bootstrapped datasets from mtcars.</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">simulate &lt;-<span class="st"> </span><span class="cf">function</span>(n){</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">  <span class="co"># Pick a random set of cars to bootstrap from the mtcars data.</span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  data &lt;-<span class="st"> </span><span class="kw">random_rows</span>(<span class="dt">data =</span> mtcars, <span class="dt">n =</span> n)</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">  <span class="co"># x is the car's weight, and y is the fuel efficiency.</span></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12">  <span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb7-13" data-line-number="13">    <span class="dt">x =</span> data<span class="op">$</span>wt,</a>
+<a class="sourceLine" id="cb7-14" data-line-number="14">    <span class="dt">y =</span> data<span class="op">$</span>mpg</a>
+<a class="sourceLine" id="cb7-15" data-line-number="15">  )</a>
+<a class="sourceLine" id="cb7-16" data-line-number="16">}</a></code></pre></div>
 <p>We also need functions to apply the regression models we need for detecting associations.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Is fuel efficiency linearly related to weight?</span>
-reg1 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="op">+</span><span class="st"> </span>x, <span class="dt">data =</span> d)
-}
-
-<span class="co"># Is fuel efficiency related to the SQUARE of the weight?</span>
-reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
-  d<span class="op">$</span>x2 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">2</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x2, <span class="dt">data =</span> d)
-}</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Is fuel efficiency linearly related to weight?</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">reg1 &lt;-<span class="st"> </span><span class="cf">function</span>(d){</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="op">+</span><span class="st"> </span>x, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co"># Is fuel efficiency related to the SQUARE of the weight?</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">  d<span class="op">$</span>x2 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x2, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">}</a></code></pre></div>
 <p>We want to summarize the final results in an R Markdown report, so we need the following <code>report.Rmd</code> source file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"mtcars"</span>, <span class="st">"report.Rmd"</span>)
-report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(path, <span class="dt">package =</span> <span class="st">"drake"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)
-<span class="kw">file.copy</span>(<span class="dt">from =</span> report_file, <span class="dt">to =</span> <span class="kw">getwd</span>(), <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)
-## [1] TRUE</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">path &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"mtcars"</span>, <span class="st">"report.Rmd"</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(path, <span class="dt">package =</span> <span class="st">"drake"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw">file.copy</span>(<span class="dt">from =</span> report_file, <span class="dt">to =</span> <span class="kw">getwd</span>(), <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">## [1] TRUE</a></code></pre></div>
 <p>Here are the contents of the report. It will serve as a final summary of our work, and we will process it at the very end. Admittedly, some of the text spoils the punch line.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="kw">readLines</span>(<span class="st">"report.Rmd"</span>), <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)
-## ---
-## title: "Final results report for the mtcars example"
-## author: You
-## output: html_document
-## ---
-## 
-## # The weight and fuel efficiency of cars
-## 
-## Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` data originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
-## 
-## ```{r showmtcars}
-## # ?mtcars # more info
-## head(mtcars)
-## ```
-## 
-## Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generated two larger bootstrapped datasets. We called them `small` and `large`.
-## 
-## ```{r example_chunk}
-## library(drake)
-## head(readd(small)) # 48 rows
-## loadd(large)       # 64 rows
-## head(large)
-## ```
-## 
-## Then, we fit a couple regression models to the `small` and `large` to try to detect an association between `wt` and `mpg`. Here are the coefficients and p-values from one of the model fits.
-## 
-## ```{r second_example_chunk}
-## readd(coef_regression2_small)
-## ```
-## 
-## Since the p-value on `x2` is so small, there may be an association between weight and fuel efficiency after all.
-## 
-## # A note on knitr reports in drake projects.
-## 
-## Because of the calls to `readd()` and `loadd()`, `drake` knows that `small`, `large`, and `coef_regression2_small` are dependencies of this R Markdown report. This dependency relationship is what causes the report to be processed at the very end.</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">cat</span>(<span class="kw">readLines</span>(<span class="st">"report.Rmd"</span>), <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">## ---</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">## title: "Final results report for the mtcars example"</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">## author: You</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">## output: html_document</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">## ---</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">## </a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">## # The weight and fuel efficiency of cars</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">## </a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">## Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` data originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.</a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">## </a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">## ```{r showmtcars}</a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">## # ?mtcars # more info</a>
+<a class="sourceLine" id="cb10-14" data-line-number="14">## head(mtcars)</a>
+<a class="sourceLine" id="cb10-15" data-line-number="15">## ```</a>
+<a class="sourceLine" id="cb10-16" data-line-number="16">## </a>
+<a class="sourceLine" id="cb10-17" data-line-number="17">## Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generated two larger bootstrapped datasets. We called them `small` and `large`.</a>
+<a class="sourceLine" id="cb10-18" data-line-number="18">## </a>
+<a class="sourceLine" id="cb10-19" data-line-number="19">## ```{r example_chunk}</a>
+<a class="sourceLine" id="cb10-20" data-line-number="20">## library(drake)</a>
+<a class="sourceLine" id="cb10-21" data-line-number="21">## head(readd(small)) # 48 rows</a>
+<a class="sourceLine" id="cb10-22" data-line-number="22">## loadd(large)       # 64 rows</a>
+<a class="sourceLine" id="cb10-23" data-line-number="23">## head(large)</a>
+<a class="sourceLine" id="cb10-24" data-line-number="24">## ```</a>
+<a class="sourceLine" id="cb10-25" data-line-number="25">## </a>
+<a class="sourceLine" id="cb10-26" data-line-number="26">## Then, we fit a couple regression models to the `small` and `large` to try to detect an association between `wt` and `mpg`. Here are the coefficients and p-values from one of the model fits.</a>
+<a class="sourceLine" id="cb10-27" data-line-number="27">## </a>
+<a class="sourceLine" id="cb10-28" data-line-number="28">## ```{r second_example_chunk}</a>
+<a class="sourceLine" id="cb10-29" data-line-number="29">## readd(coef_regression2_small)</a>
+<a class="sourceLine" id="cb10-30" data-line-number="30">## ```</a>
+<a class="sourceLine" id="cb10-31" data-line-number="31">## </a>
+<a class="sourceLine" id="cb10-32" data-line-number="32">## Since the p-value on `x2` is so small, there may be an association between weight and fuel efficiency after all.</a>
+<a class="sourceLine" id="cb10-33" data-line-number="33">## </a>
+<a class="sourceLine" id="cb10-34" data-line-number="34">## # A note on knitr reports in drake projects.</a>
+<a class="sourceLine" id="cb10-35" data-line-number="35">## </a>
+<a class="sourceLine" id="cb10-36" data-line-number="36">## Because of the calls to `readd()` and `loadd()`, `drake` knows that `small`, `large`, and `coef_regression2_small` are dependencies of this R Markdown report. This dependency relationship is what causes the report to be processed at the very end.</a></code></pre></div>
 <p>Now, all our imports are set up. When the real work begins, <code>drake</code> will import functions and data objects from your R session environment</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ls</span>()
-## [1] "path"        "random_rows" "reg1"        "reg2"        "report_file"
-## [6] "simulate"</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">ls</span>()</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">## [1] "path"        "random_rows" "reg1"        "reg2"        "report_file"</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">## [6] "simulate"</a></code></pre></div>
 <p>and saved files from your file system.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>()
-##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
-##  [4] "drake.Rmd"            "example-gsp.Rmd"      "example-mtcars.Rmd"  
-##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
-## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
-## [13] "timing.Rmd"</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">list.files</span>()</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">##  [1] "best-practices_files"   "best-practices.html"   </a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">##  [3] "best-practices.Rmd"     "caution.html"          </a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">##  [5] "caution.Rmd"            "debug.html"            </a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">##  [7] "debug.Rmd"              "drake_files"           </a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">##  [9] "drake.html"             "drake.Rmd"             </a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">## [11] "example-gsp_files"      "example-gsp.html"      </a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">## [13] "example-gsp.Rmd"        "example-mtcars.html"   </a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">## [15] "example-mtcars.Rmd"     "example-packages_files"</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">## [17] "example-packages.html"  "example-packages.Rmd"  </a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">## [19] "faq.html"               "faq.Rmd"               </a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">## [21] "graph.html"             "graph.Rmd"             </a>
+<a class="sourceLine" id="cb12-13" data-line-number="13">## [23] "index.html"             "parallelism.html"      </a>
+<a class="sourceLine" id="cb12-14" data-line-number="14">## [25] "parallelism.Rmd"        "report.Rmd"            </a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">## [27] "storage.html"           "storage.Rmd"           </a>
+<a class="sourceLine" id="cb12-16" data-line-number="16">## [29] "timing.html"            "timing.Rmd"</a></code></pre></div>
 </div>
 <div id="the-workflow-plan-data-frame" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-workflow-plan-data-frame" class="anchor"></a>The workflow plan data frame</h1>
 <p>Now that your workspace of imports is prepared, we can outline the real work step by step in a workflow plan data frame.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
-my_plan
-## # A tibble: 15 x 2
-##    target                 command                                         
-##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
-##  2 small                  simulate(48)                                    
-##  3 large                  simulate(64)                                    
-##  4 regression1_small      reg1(small)                                     
-##  5 regression1_large      reg1(large)                                     
-##  6 regression2_small      reg2(small)                                     
-##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">my_plan</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">## # A tibble: 15 x 2</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">##    target                 command                                         </a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">##    &lt;chr&gt;                  &lt;chr&gt;                                           </a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">##  1 ""                     "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">##  2 small                  simulate(48)                                    </a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">##  3 large                  simulate(64)                                    </a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">##  4 regression1_small      reg1(small)                                     </a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">##  5 regression1_large      reg1(large)                                     </a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">##  6 regression2_small      reg2(small)                                     </a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">##  7 regression2_large      reg2(large)                                     </a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…</a>
+<a class="sourceLine" id="cb13-14" data-line-number="14">##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…</a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…</a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17">## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…</a>
+<a class="sourceLine" id="cb13-18" data-line-number="18">## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…</a>
+<a class="sourceLine" id="cb13-19" data-line-number="19">## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…</a>
+<a class="sourceLine" id="cb13-20" data-line-number="20">## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</a></code></pre></div>
 <p>Each row is an intermediate step, and each <strong>command</strong> generates a single <strong>target</strong>. A target is an output R object (cached when generated) or an output file (specified with single quotes), and a command just an ordinary piece of R code (not necessarily a single function call). Commands make use of R objects imported from your workspace, targets generated by other commands, and initial input files. These dependencies give your project an underlying network representation.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
-config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>) <span class="co"># Also drake_graph()</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># Hover, click, drag, zoom, and pan.</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>) <span class="co"># Also drake_graph()</span></a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>You can also check the dependencies of individual targets and imported functions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/deps.html">deps</a></span>(reg2)
-## [1] "lm"
-
-<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="dv">1</span>]) <span class="co"># Files like report.Rmd are single-quoted.</span>
-## [1] "coef_regression2_small" "knit"                  
-## [3] "large"                  "\"report.md\""         
-## [5] "\"report.Rmd\""         "small"
-
-<span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="kw">nrow</span>(my_plan)])
-## [1] "regression2_large" "summary"           "suppressWarnings"</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="../reference/deps.html">deps</a></span>(reg2)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">## [1] "lm"</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="dv">1</span>]) <span class="co"># Files like report.Rmd are single-quoted.</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">## [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">## [3] "coef_regression2_small" "knit"                  </a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">## [5] "large"                  "small"</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb15-9" data-line-number="9"><span class="kw"><a href="../reference/deps.html">deps</a></span>(my_plan<span class="op">$</span>command[<span class="kw">nrow</span>(my_plan)])</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">## [1] "regression2_large" "summary"           "suppressWarnings"</a></code></pre></div>
 <p>List all the reproducibly-tracked objects and files.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/tracked.html">tracked</a></span>(my_plan, <span class="dt">targets =</span> <span class="st">"small"</span>)
-## [1] "data.frame"  "mtcars"      "random_rows" "nrow"        "sample.int" 
-## [6] "small"       "simulate"
-
-<span class="kw"><a href="../reference/tracked.html">tracked</a></span>(my_plan)
-##  [1] "data.frame"             "mtcars"                
-##  [3] "random_rows"            "lm"                    
-##  [5] "nrow"                   "sample.int"            
-##  [7] "coef_regression2_small" "knit"                  
-##  [9] "large"                  "\"report.Rmd\""        
-## [11] "small"                  "simulate"              
-## [13] "reg1"                   "reg2"                  
-## [15] "regression1_small"      "summary"               
-## [17] "suppressWarnings"       "regression1_large"     
-## [19] "regression2_small"      "regression2_large"     
-## [21] "\"report.md\""          "summ_regression1_small"
-## [23] "summ_regression1_large" "summ_regression2_small"
-## [25] "summ_regression2_large" "coef_regression1_small"
-## [27] "coef_regression1_large" "coef_regression2_large"</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="../reference/tracked.html">tracked</a></span>(my_plan, <span class="dt">targets =</span> <span class="st">"small"</span>)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">## [1] "data.frame"  "mtcars"      "random_rows" "nrow"        "sample.int" </a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">## [6] "small"       "simulate"</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="kw"><a href="../reference/tracked.html">tracked</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">##  [1] "data.frame"             "mtcars"                </a>
+<a class="sourceLine" id="cb16-7" data-line-number="7">##  [3] "random_rows"            "lm"                    </a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">##  [5] "nrow"                   "sample.int"            </a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">##  [7] "\"report.Rmd\""         "coef_regression2_small"</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">##  [9] "knit"                   "large"                 </a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">## [11] "small"                  "simulate"              </a>
+<a class="sourceLine" id="cb16-12" data-line-number="12">## [13] "reg1"                   "reg2"                  </a>
+<a class="sourceLine" id="cb16-13" data-line-number="13">## [15] "regression1_small"      "summary"               </a>
+<a class="sourceLine" id="cb16-14" data-line-number="14">## [17] "suppressWarnings"       "regression1_large"     </a>
+<a class="sourceLine" id="cb16-15" data-line-number="15">## [19] "regression2_small"      "regression2_large"     </a>
+<a class="sourceLine" id="cb16-16" data-line-number="16">## [21] "\"report.md\""          "summ_regression1_small"</a>
+<a class="sourceLine" id="cb16-17" data-line-number="17">## [23] "summ_regression1_large" "summ_regression2_small"</a>
+<a class="sourceLine" id="cb16-18" data-line-number="18">## [25] "summ_regression2_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb16-19" data-line-number="19">## [27] "coef_regression1_large" "coef_regression2_large"</a></code></pre></div>
 <p>Check for circular reasoning, missing input files, and other pitfalls.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/check_plan.html">check_plan</a></span>(my_plan)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="../reference/check_plan.html">check_plan</a></span>(my_plan)</a></code></pre></div>
 </div>
 <div id="generate-the-workflow-plan" class="section level1">
 <h1 class="hasAnchor">
 <a href="#generate-the-workflow-plan" class="anchor"></a>Generate the workflow plan</h1>
 <p>The workflow plan data frame <code>my_plan</code> would be a pain to write by hand, so <code>drake</code> has functions to help you. Here are the commands to generate the bootstrapped datasets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_datasets &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">small =</span> <span class="kw">simulate</span>(<span class="dv">48</span>),
-  <span class="dt">large =</span> <span class="kw">simulate</span>(<span class="dv">64</span>))
-my_datasets
-## # A tibble: 2 x 2
-##   target command     
-##   &lt;chr&gt;  &lt;chr&gt;       
-## 1 small  simulate(48)
-## 2 large  simulate(64)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">my_datasets &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">  <span class="dt">small =</span> <span class="kw">simulate</span>(<span class="dv">48</span>),</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">  <span class="dt">large =</span> <span class="kw">simulate</span>(<span class="dv">64</span>))</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">my_datasets</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">##   target command     </a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">##   &lt;chr&gt;  &lt;chr&gt;       </a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">## 1 small  simulate(48)</a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">## 2 large  simulate(64)</a></code></pre></div>
 <p>For multiple replicates:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/expand_plan.html">expand_plan</a></span>(my_datasets, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"rep1"</span>, <span class="st">"rep2"</span>))
-## # A tibble: 4 x 2
-##   target     command     
-##   &lt;chr&gt;      &lt;chr&gt;       
-## 1 small_rep1 simulate(48)
-## 2 small_rep2 simulate(48)
-## 3 large_rep1 simulate(64)
-## 4 large_rep2 simulate(64)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="../reference/expand_plan.html">expand_plan</a></span>(my_datasets, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"rep1"</span>, <span class="st">"rep2"</span>))</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">## # A tibble: 4 x 2</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">##   target     command     </a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">##   &lt;chr&gt;      &lt;chr&gt;       </a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">## 1 small_rep1 simulate(48)</a>
+<a class="sourceLine" id="cb19-6" data-line-number="6">## 2 small_rep2 simulate(48)</a>
+<a class="sourceLine" id="cb19-7" data-line-number="7">## 3 large_rep1 simulate(64)</a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">## 4 large_rep2 simulate(64)</a></code></pre></div>
 <p>Here is a template for applying our regression models to our bootstrapped datasets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">methods &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">regression1 =</span> <span class="kw">reg1</span>(dataset__),
-  <span class="dt">regression2 =</span> <span class="kw">reg2</span>(dataset__))
-methods
-## # A tibble: 2 x 2
-##   target      command        
-##   &lt;chr&gt;       &lt;chr&gt;          
-## 1 regression1 reg1(dataset__)
-## 2 regression2 reg2(dataset__)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">methods &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="dt">regression1 =</span> <span class="kw">reg1</span>(dataset__),</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="dt">regression2 =</span> <span class="kw">reg2</span>(dataset__))</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">methods</a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6">##   target      command        </a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">##   &lt;chr&gt;       &lt;chr&gt;          </a>
+<a class="sourceLine" id="cb20-8" data-line-number="8">## 1 regression1 reg1(dataset__)</a>
+<a class="sourceLine" id="cb20-9" data-line-number="9">## 2 regression2 reg2(dataset__)</a></code></pre></div>
 <p>We evaluate the <code>dataset__</code> wildcard to generate all the regression commands we need.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_analyses &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plan_analyses.html">plan_analyses</a></span>(methods, <span class="dt">data =</span> my_datasets)
-my_analyses
-## # A tibble: 4 x 2
-##   target            command    
-##   &lt;chr&gt;             &lt;chr&gt;      
-## 1 regression1_small reg1(small)
-## 2 regression1_large reg1(large)
-## 3 regression2_small reg2(small)
-## 4 regression2_large reg2(large)</code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">my_analyses &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plan_analyses.html">plan_analyses</a></span>(methods, <span class="dt">data =</span> my_datasets)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">my_analyses</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">## # A tibble: 4 x 2</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">##   target            command    </a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">##   &lt;chr&gt;             &lt;chr&gt;      </a>
+<a class="sourceLine" id="cb21-6" data-line-number="6">## 1 regression1_small reg1(small)</a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">## 2 regression1_large reg1(large)</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">## 3 regression2_small reg2(small)</a>
+<a class="sourceLine" id="cb21-9" data-line-number="9">## 4 regression2_large reg2(large)</a></code></pre></div>
 <p>Next, we summarize each analysis of each dataset. We calculate descriptive statistics on the residuals, and we collect the regression coefficients and their p-values.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary_types &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">summ =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__<span class="op">$</span>residuals)),
-  <span class="dt">coef =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__))<span class="op">$</span>coefficients
-)
-summary_types
-## # A tibble: 2 x 2
-##   target command                                           
-##   &lt;chr&gt;  &lt;chr&gt;                                             
-## 1 summ   suppressWarnings(summary(analysis__$residuals))   
-## 2 coef   suppressWarnings(summary(analysis__))$coefficients
-
-results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plan_summaries.html">plan_summaries</a></span>(summary_types, <span class="dt">analyses =</span> my_analyses,
-  <span class="dt">datasets =</span> my_datasets, <span class="dt">gather =</span> <span class="ot">NULL</span>)
-results
-## # A tibble: 8 x 2
-##   target                 command                                          
-##   &lt;chr&gt;                  &lt;chr&gt;                                            
-## 1 summ_regression1_small suppressWarnings(summary(regression1_small$resid…
-## 2 summ_regression1_large suppressWarnings(summary(regression1_large$resid…
-## 3 summ_regression2_small suppressWarnings(summary(regression2_small$resid…
-## 4 summ_regression2_large suppressWarnings(summary(regression2_large$resid…
-## 5 coef_regression1_small suppressWarnings(summary(regression1_small))$coe…
-## 6 coef_regression1_large suppressWarnings(summary(regression1_large))$coe…
-## 7 coef_regression2_small suppressWarnings(summary(regression2_small))$coe…
-## 8 coef_regression2_large suppressWarnings(summary(regression2_large))$coe…</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">summary_types &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">  <span class="dt">summ =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__<span class="op">$</span>residuals)),</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">  <span class="dt">coef =</span> <span class="kw">suppressWarnings</span>(<span class="kw">summary</span>(analysis__))<span class="op">$</span>coefficients</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">)</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">summary_types</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb22-7" data-line-number="7">##   target command                                           </a>
+<a class="sourceLine" id="cb22-8" data-line-number="8">##   &lt;chr&gt;  &lt;chr&gt;                                             </a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">## 1 summ   suppressWarnings(summary(analysis__$residuals))   </a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">## 2 coef   suppressWarnings(summary(analysis__))$coefficients</a>
+<a class="sourceLine" id="cb22-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb22-12" data-line-number="12">results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plan_summaries.html">plan_summaries</a></span>(summary_types, <span class="dt">analyses =</span> my_analyses,</a>
+<a class="sourceLine" id="cb22-13" data-line-number="13">  <span class="dt">datasets =</span> my_datasets, <span class="dt">gather =</span> <span class="ot">NULL</span>)</a>
+<a class="sourceLine" id="cb22-14" data-line-number="14">results</a>
+<a class="sourceLine" id="cb22-15" data-line-number="15">## # A tibble: 8 x 2</a>
+<a class="sourceLine" id="cb22-16" data-line-number="16">##   target                 command                                          </a>
+<a class="sourceLine" id="cb22-17" data-line-number="17">##   &lt;chr&gt;                  &lt;chr&gt;                                            </a>
+<a class="sourceLine" id="cb22-18" data-line-number="18">## 1 summ_regression1_small suppressWarnings(summary(regression1_small$resid…</a>
+<a class="sourceLine" id="cb22-19" data-line-number="19">## 2 summ_regression1_large suppressWarnings(summary(regression1_large$resid…</a>
+<a class="sourceLine" id="cb22-20" data-line-number="20">## 3 summ_regression2_small suppressWarnings(summary(regression2_small$resid…</a>
+<a class="sourceLine" id="cb22-21" data-line-number="21">## 4 summ_regression2_large suppressWarnings(summary(regression2_large$resid…</a>
+<a class="sourceLine" id="cb22-22" data-line-number="22">## 5 coef_regression1_small suppressWarnings(summary(regression1_small))$coe…</a>
+<a class="sourceLine" id="cb22-23" data-line-number="23">## 6 coef_regression1_large suppressWarnings(summary(regression1_large))$coe…</a>
+<a class="sourceLine" id="cb22-24" data-line-number="24">## 7 coef_regression2_small suppressWarnings(summary(regression2_small))$coe…</a>
+<a class="sourceLine" id="cb22-25" data-line-number="25">## 8 coef_regression2_large suppressWarnings(summary(regression2_large))$coe…</a></code></pre></div>
 <p>The <code>gather</code> feature reduces a collection of targets to a single target. The resulting commands are long, so gathering is deactivated for the sake of readability.</p>
 <p>For your <code>knitr</code> reports, use <code><a href="../reference/knitr_in.html">knitr_in()</a></code> in your commands so that <code>report.Rmd</code> is a dependency and targets loaded with <code><a href="../reference/loadd.html">loadd()</a></code> and <code><a href="../reference/readd.html">readd()</a></code> in active code chunks are also dependencies. Use <code><a href="../reference/file_out.html">file_out()</a></code> to tell <code>drake</code> that the target is a file output. If the file is an output, you do not need to name the target. The target name will be the name of the output file in quotes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">report &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/knit">knit</a></span>(<span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>), <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
-)
-report
-## # A tibble: 1 x 2
-##   target          command                                                 
-##   &lt;chr&gt;           &lt;chr&gt;                                                   
-## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">report &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">  <span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/knit">knit</a></span>(<span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>), <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">)</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">report</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">## # A tibble: 1 x 2</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">##   target          command                                                 </a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">##   &lt;chr&gt;           &lt;chr&gt;                                                   </a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">## 1 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</a></code></pre></div>
 <p>Finally, consolidate your workflow using <code>rbind()</code>. Row order does not matter.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(report, my_datasets, my_analyses, results)
-my_plan
-## # A tibble: 15 x 2
-##    target                 command                                         
-##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
-##  2 small                  simulate(48)                                    
-##  3 large                  simulate(64)                                    
-##  4 regression1_small      reg1(small)                                     
-##  5 regression1_large      reg1(large)                                     
-##  6 regression2_small      reg2(small)                                     
-##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">my_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(report, my_datasets, my_analyses, results)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">my_plan</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">## # A tibble: 15 x 2</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">##    target                 command                                         </a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">##    &lt;chr&gt;                  &lt;chr&gt;                                           </a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">##  2 small                  simulate(48)                                    </a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">##  3 large                  simulate(64)                                    </a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">##  4 regression1_small      reg1(small)                                     </a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">##  5 regression1_large      reg1(large)                                     </a>
+<a class="sourceLine" id="cb24-11" data-line-number="11">##  6 regression2_small      reg2(small)                                     </a>
+<a class="sourceLine" id="cb24-12" data-line-number="12">##  7 regression2_large      reg2(large)                                     </a>
+<a class="sourceLine" id="cb24-13" data-line-number="13">##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…</a>
+<a class="sourceLine" id="cb24-14" data-line-number="14">##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…</a>
+<a class="sourceLine" id="cb24-15" data-line-number="15">## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…</a>
+<a class="sourceLine" id="cb24-16" data-line-number="16">## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…</a>
+<a class="sourceLine" id="cb24-17" data-line-number="17">## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…</a>
+<a class="sourceLine" id="cb24-18" data-line-number="18">## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…</a>
+<a class="sourceLine" id="cb24-19" data-line-number="19">## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…</a>
+<a class="sourceLine" id="cb24-20" data-line-number="20">## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</a></code></pre></div>
 </div>
 <div id="flexible-workflow-plan-generation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#flexible-workflow-plan-generation" class="anchor"></a>Flexible workflow plan generation</h1>
 <p>If your workflow does not fit the rigid datasets/analyses/summaries framework, consider using functions <code><a href="../reference/expand_plan.html">expand_plan()</a></code>, <code><a href="../reference/evaluate_plan.html">evaluate_plan()</a></code>, <code><a href="../reference/gather_plan.html">gather_plan()</a></code>, and <code><a href="../reference/reduce_plan.html">reduce_plan()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">data =</span> <span class="kw">simulate</span>(<span class="dt">center =</span> MU, <span class="dt">scale =</span> SIGMA))
-df
-## # A tibble: 1 x 2
-##   target command                             
-##   &lt;chr&gt;  &lt;chr&gt;                               
-## 1 data   simulate(center = MU, scale = SIGMA)
-
-df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/expand_plan.html">expand_plan</a></span>(df, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"rep1"</span>, <span class="st">"rep2"</span>))
-df
-## # A tibble: 2 x 2
-##   target    command                             
-##   &lt;chr&gt;     &lt;chr&gt;                               
-## 1 data_rep1 simulate(center = MU, scale = SIGMA)
-## 2 data_rep2 simulate(center = MU, scale = SIGMA)
-
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
-## # A tibble: 4 x 2
-##   target      command                            
-##   &lt;chr&gt;       &lt;chr&gt;                              
-## 1 data_rep1_1 simulate(center = 1, scale = SIGMA)
-## 2 data_rep1_2 simulate(center = 2, scale = SIGMA)
-## 3 data_rep2_1 simulate(center = 1, scale = SIGMA)
-## 4 data_rep2_2 simulate(center = 2, scale = SIGMA)
-
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">expand =</span> <span class="ot">FALSE</span>)
-## # A tibble: 2 x 2
-##   target    command                            
-##   &lt;chr&gt;     &lt;chr&gt;                              
-## 1 data_rep1 simulate(center = 1, scale = SIGMA)
-## 2 data_rep2 simulate(center = 2, scale = SIGMA)
-
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)), <span class="dt">expand =</span> <span class="ot">FALSE</span>)
-## # A tibble: 2 x 2
-##   target    command                          
-##   &lt;chr&gt;     &lt;chr&gt;                            
-## 1 data_rep1 simulate(center = 1, scale = 0.1)
-## 2 data_rep2 simulate(center = 2, scale = 1)
-
-<span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>)))
-## # A tibble: 12 x 2
-##    target          command                          
-##    &lt;chr&gt;           &lt;chr&gt;                            
-##  1 data_rep1_1_0.1 simulate(center = 1, scale = 0.1)
-##  2 data_rep1_1_1   simulate(center = 1, scale = 1)  
-##  3 data_rep1_1_10  simulate(center = 1, scale = 10) 
-##  4 data_rep1_2_0.1 simulate(center = 2, scale = 0.1)
-##  5 data_rep1_2_1   simulate(center = 2, scale = 1)  
-##  6 data_rep1_2_10  simulate(center = 2, scale = 10) 
-##  7 data_rep2_1_0.1 simulate(center = 1, scale = 0.1)
-##  8 data_rep2_1_1   simulate(center = 1, scale = 1)  
-##  9 data_rep2_1_10  simulate(center = 1, scale = 10) 
-## 10 data_rep2_2_0.1 simulate(center = 2, scale = 0.1)
-## 11 data_rep2_2_1   simulate(center = 2, scale = 1)  
-## 12 data_rep2_2_10  simulate(center = 2, scale = 10)
-
-<span class="kw"><a href="../reference/gather_plan.html">gather_plan</a></span>(df)
-## # A tibble: 1 x 2
-##   target command                                           
-##   &lt;chr&gt;  &lt;chr&gt;                                             
-## 1 target list(data_rep1 = data_rep1, data_rep2 = data_rep2)
-
-<span class="kw"><a href="../reference/gather_plan.html">gather_plan</a></span>(df, <span class="dt">target =</span> <span class="st">"my_summaries"</span>, <span class="dt">gather =</span> <span class="st">"rbind"</span>)
-## # A tibble: 1 x 2
-##   target       command                                            
-##   &lt;chr&gt;        &lt;chr&gt;                                              
-## 1 my_summaries rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)
-
-x_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(
-  <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">x =</span> VALUE),
-  <span class="dt">wildcard =</span> <span class="st">"VALUE"</span>,
-  <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>
-)
-x_plan
-## # A tibble: 8 x 2
-##   target command
-##   &lt;chr&gt;  &lt;chr&gt;  
-## 1 x_1    1      
-## 2 x_2    2      
-## 3 x_3    3      
-## 4 x_4    4      
-## 5 x_5    5      
-## 6 x_6    6      
-## 7 x_7    7      
-## 8 x_8    8
-
-x_plan
-## # A tibble: 8 x 2
-##   target command
-##   &lt;chr&gt;  &lt;chr&gt;  
-## 1 x_1    1      
-## 2 x_2    2      
-## 3 x_3    3      
-## 4 x_4    4      
-## 5 x_5    5      
-## 6 x_6    6      
-## 7 x_7    7      
-## 8 x_8    8
-<span class="kw"><a href="../reference/reduce_plan.html">reduce_plan</a></span>(
-  x_plan, <span class="dt">target =</span> <span class="st">"x_sum"</span>, <span class="dt">pairwise =</span> <span class="ot">TRUE</span>,
-  <span class="dt">begin =</span> <span class="st">"fun("</span>, <span class="dt">op =</span> <span class="st">", "</span>, <span class="dt">end =</span> <span class="st">")"</span>
-)
-## # A tibble: 7 x 2
-##   target  command              
-##   &lt;chr&gt;   &lt;chr&gt;                
-## 1 x_sum_1 fun(x_1, x_2)        
-## 2 x_sum_2 fun(x_3, x_4)        
-## 3 x_sum_3 fun(x_5, x_6)        
-## 4 x_sum_4 fun(x_7, x_8)        
-## 5 x_sum_5 fun(x_sum_1, x_sum_2)
-## 6 x_sum_6 fun(x_sum_3, x_sum_4)
-## 7 x_sum   fun(x_sum_5, x_sum_6)</code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">data =</span> <span class="kw">simulate</span>(<span class="dt">center =</span> MU, <span class="dt">scale =</span> SIGMA))</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">df</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">## # A tibble: 1 x 2</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4">##   target command                             </a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">##   &lt;chr&gt;  &lt;chr&gt;                               </a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">## 1 data   simulate(center = MU, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8">df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/expand_plan.html">expand_plan</a></span>(df, <span class="dt">values =</span> <span class="kw">c</span>(<span class="st">"rep1"</span>, <span class="st">"rep2"</span>))</a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">df</a>
+<a class="sourceLine" id="cb25-10" data-line-number="10">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb25-11" data-line-number="11">##   target    command                             </a>
+<a class="sourceLine" id="cb25-12" data-line-number="12">##   &lt;chr&gt;     &lt;chr&gt;                               </a>
+<a class="sourceLine" id="cb25-13" data-line-number="13">## 1 data_rep1 simulate(center = MU, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-14" data-line-number="14">## 2 data_rep2 simulate(center = MU, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb25-16" data-line-number="16"><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb25-17" data-line-number="17">## # A tibble: 4 x 2</a>
+<a class="sourceLine" id="cb25-18" data-line-number="18">##   target      command                            </a>
+<a class="sourceLine" id="cb25-19" data-line-number="19">##   &lt;chr&gt;       &lt;chr&gt;                              </a>
+<a class="sourceLine" id="cb25-20" data-line-number="20">## 1 data_rep1_1 simulate(center = 1, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-21" data-line-number="21">## 2 data_rep1_2 simulate(center = 2, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-22" data-line-number="22">## 3 data_rep2_1 simulate(center = 1, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-23" data-line-number="23">## 4 data_rep2_2 simulate(center = 2, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-24" data-line-number="24"></a>
+<a class="sourceLine" id="cb25-25" data-line-number="25"><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">wildcard =</span> <span class="st">"MU"</span>, <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">expand =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb25-26" data-line-number="26">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb25-27" data-line-number="27">##   target    command                            </a>
+<a class="sourceLine" id="cb25-28" data-line-number="28">##   &lt;chr&gt;     &lt;chr&gt;                              </a>
+<a class="sourceLine" id="cb25-29" data-line-number="29">## 1 data_rep1 simulate(center = 1, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-30" data-line-number="30">## 2 data_rep2 simulate(center = 2, scale = SIGMA)</a>
+<a class="sourceLine" id="cb25-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb25-32" data-line-number="32"><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)), <span class="dt">expand =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb25-33" data-line-number="33">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb25-34" data-line-number="34">##   target    command                          </a>
+<a class="sourceLine" id="cb25-35" data-line-number="35">##   &lt;chr&gt;     &lt;chr&gt;                            </a>
+<a class="sourceLine" id="cb25-36" data-line-number="36">## 1 data_rep1 simulate(center = 1, scale = 0.1)</a>
+<a class="sourceLine" id="cb25-37" data-line-number="37">## 2 data_rep2 simulate(center = 2, scale = 1)</a>
+<a class="sourceLine" id="cb25-38" data-line-number="38"></a>
+<a class="sourceLine" id="cb25-39" data-line-number="39"><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(df, <span class="dt">rules =</span> <span class="kw">list</span>(<span class="dt">MU =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">SIGMA =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>)))</a>
+<a class="sourceLine" id="cb25-40" data-line-number="40">## # A tibble: 12 x 2</a>
+<a class="sourceLine" id="cb25-41" data-line-number="41">##    target          command                          </a>
+<a class="sourceLine" id="cb25-42" data-line-number="42">##    &lt;chr&gt;           &lt;chr&gt;                            </a>
+<a class="sourceLine" id="cb25-43" data-line-number="43">##  1 data_rep1_1_0.1 simulate(center = 1, scale = 0.1)</a>
+<a class="sourceLine" id="cb25-44" data-line-number="44">##  2 data_rep1_1_1   simulate(center = 1, scale = 1)  </a>
+<a class="sourceLine" id="cb25-45" data-line-number="45">##  3 data_rep1_1_10  simulate(center = 1, scale = 10) </a>
+<a class="sourceLine" id="cb25-46" data-line-number="46">##  4 data_rep1_2_0.1 simulate(center = 2, scale = 0.1)</a>
+<a class="sourceLine" id="cb25-47" data-line-number="47">##  5 data_rep1_2_1   simulate(center = 2, scale = 1)  </a>
+<a class="sourceLine" id="cb25-48" data-line-number="48">##  6 data_rep1_2_10  simulate(center = 2, scale = 10) </a>
+<a class="sourceLine" id="cb25-49" data-line-number="49">##  7 data_rep2_1_0.1 simulate(center = 1, scale = 0.1)</a>
+<a class="sourceLine" id="cb25-50" data-line-number="50">##  8 data_rep2_1_1   simulate(center = 1, scale = 1)  </a>
+<a class="sourceLine" id="cb25-51" data-line-number="51">##  9 data_rep2_1_10  simulate(center = 1, scale = 10) </a>
+<a class="sourceLine" id="cb25-52" data-line-number="52">## 10 data_rep2_2_0.1 simulate(center = 2, scale = 0.1)</a>
+<a class="sourceLine" id="cb25-53" data-line-number="53">## 11 data_rep2_2_1   simulate(center = 2, scale = 1)  </a>
+<a class="sourceLine" id="cb25-54" data-line-number="54">## 12 data_rep2_2_10  simulate(center = 2, scale = 10)</a>
+<a class="sourceLine" id="cb25-55" data-line-number="55"></a>
+<a class="sourceLine" id="cb25-56" data-line-number="56"><span class="kw"><a href="../reference/gather_plan.html">gather_plan</a></span>(df)</a>
+<a class="sourceLine" id="cb25-57" data-line-number="57">## # A tibble: 1 x 2</a>
+<a class="sourceLine" id="cb25-58" data-line-number="58">##   target command                                           </a>
+<a class="sourceLine" id="cb25-59" data-line-number="59">##   &lt;chr&gt;  &lt;chr&gt;                                             </a>
+<a class="sourceLine" id="cb25-60" data-line-number="60">## 1 target list(data_rep1 = data_rep1, data_rep2 = data_rep2)</a>
+<a class="sourceLine" id="cb25-61" data-line-number="61"></a>
+<a class="sourceLine" id="cb25-62" data-line-number="62"><span class="kw"><a href="../reference/gather_plan.html">gather_plan</a></span>(df, <span class="dt">target =</span> <span class="st">"my_summaries"</span>, <span class="dt">gather =</span> <span class="st">"rbind"</span>)</a>
+<a class="sourceLine" id="cb25-63" data-line-number="63">## # A tibble: 1 x 2</a>
+<a class="sourceLine" id="cb25-64" data-line-number="64">##   target       command                                            </a>
+<a class="sourceLine" id="cb25-65" data-line-number="65">##   &lt;chr&gt;        &lt;chr&gt;                                              </a>
+<a class="sourceLine" id="cb25-66" data-line-number="66">## 1 my_summaries rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)</a>
+<a class="sourceLine" id="cb25-67" data-line-number="67"></a>
+<a class="sourceLine" id="cb25-68" data-line-number="68">x_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/evaluate_plan.html">evaluate_plan</a></span>(</a>
+<a class="sourceLine" id="cb25-69" data-line-number="69">  <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">x =</span> VALUE),</a>
+<a class="sourceLine" id="cb25-70" data-line-number="70">  <span class="dt">wildcard =</span> <span class="st">"VALUE"</span>,</a>
+<a class="sourceLine" id="cb25-71" data-line-number="71">  <span class="dt">values =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span></a>
+<a class="sourceLine" id="cb25-72" data-line-number="72">)</a>
+<a class="sourceLine" id="cb25-73" data-line-number="73">x_plan</a>
+<a class="sourceLine" id="cb25-74" data-line-number="74">## # A tibble: 8 x 2</a>
+<a class="sourceLine" id="cb25-75" data-line-number="75">##   target command</a>
+<a class="sourceLine" id="cb25-76" data-line-number="76">##   &lt;chr&gt;  &lt;chr&gt;  </a>
+<a class="sourceLine" id="cb25-77" data-line-number="77">## 1 x_1    1      </a>
+<a class="sourceLine" id="cb25-78" data-line-number="78">## 2 x_2    2      </a>
+<a class="sourceLine" id="cb25-79" data-line-number="79">## 3 x_3    3      </a>
+<a class="sourceLine" id="cb25-80" data-line-number="80">## 4 x_4    4      </a>
+<a class="sourceLine" id="cb25-81" data-line-number="81">## 5 x_5    5      </a>
+<a class="sourceLine" id="cb25-82" data-line-number="82">## 6 x_6    6      </a>
+<a class="sourceLine" id="cb25-83" data-line-number="83">## 7 x_7    7      </a>
+<a class="sourceLine" id="cb25-84" data-line-number="84">## 8 x_8    8</a>
+<a class="sourceLine" id="cb25-85" data-line-number="85"></a>
+<a class="sourceLine" id="cb25-86" data-line-number="86">x_plan</a>
+<a class="sourceLine" id="cb25-87" data-line-number="87">## # A tibble: 8 x 2</a>
+<a class="sourceLine" id="cb25-88" data-line-number="88">##   target command</a>
+<a class="sourceLine" id="cb25-89" data-line-number="89">##   &lt;chr&gt;  &lt;chr&gt;  </a>
+<a class="sourceLine" id="cb25-90" data-line-number="90">## 1 x_1    1      </a>
+<a class="sourceLine" id="cb25-91" data-line-number="91">## 2 x_2    2      </a>
+<a class="sourceLine" id="cb25-92" data-line-number="92">## 3 x_3    3      </a>
+<a class="sourceLine" id="cb25-93" data-line-number="93">## 4 x_4    4      </a>
+<a class="sourceLine" id="cb25-94" data-line-number="94">## 5 x_5    5      </a>
+<a class="sourceLine" id="cb25-95" data-line-number="95">## 6 x_6    6      </a>
+<a class="sourceLine" id="cb25-96" data-line-number="96">## 7 x_7    7      </a>
+<a class="sourceLine" id="cb25-97" data-line-number="97">## 8 x_8    8</a>
+<a class="sourceLine" id="cb25-98" data-line-number="98"><span class="kw"><a href="../reference/reduce_plan.html">reduce_plan</a></span>(</a>
+<a class="sourceLine" id="cb25-99" data-line-number="99">  x_plan, <span class="dt">target =</span> <span class="st">"x_sum"</span>, <span class="dt">pairwise =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb25-100" data-line-number="100">  <span class="dt">begin =</span> <span class="st">"fun("</span>, <span class="dt">op =</span> <span class="st">", "</span>, <span class="dt">end =</span> <span class="st">")"</span></a>
+<a class="sourceLine" id="cb25-101" data-line-number="101">)</a>
+<a class="sourceLine" id="cb25-102" data-line-number="102">## # A tibble: 7 x 2</a>
+<a class="sourceLine" id="cb25-103" data-line-number="103">##   target  command              </a>
+<a class="sourceLine" id="cb25-104" data-line-number="104">##   &lt;chr&gt;   &lt;chr&gt;                </a>
+<a class="sourceLine" id="cb25-105" data-line-number="105">## 1 x_sum_1 fun(x_1, x_2)        </a>
+<a class="sourceLine" id="cb25-106" data-line-number="106">## 2 x_sum_2 fun(x_3, x_4)        </a>
+<a class="sourceLine" id="cb25-107" data-line-number="107">## 3 x_sum_3 fun(x_5, x_6)        </a>
+<a class="sourceLine" id="cb25-108" data-line-number="108">## 4 x_sum_4 fun(x_7, x_8)        </a>
+<a class="sourceLine" id="cb25-109" data-line-number="109">## 5 x_sum_5 fun(x_sum_1, x_sum_2)</a>
+<a class="sourceLine" id="cb25-110" data-line-number="110">## 6 x_sum_6 fun(x_sum_3, x_sum_4)</a>
+<a class="sourceLine" id="cb25-111" data-line-number="111">## 7 x_sum   fun(x_sum_5, x_sum_6)</a></code></pre></div>
 </div>
 <div id="run-the-workflow" class="section level1">
 <h1 class="hasAnchor">
 <a href="#run-the-workflow" class="anchor"></a>Run the workflow</h1>
 <p>You may want to check for outdated or missing targets/imports first.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Targets that need to be (re)built.</span>
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
-## [11] "small"                  "summ_regression1_large"
-## [13] "summ_regression1_small" "summ_regression2_large"
-## [15] "summ_regression2_small"
-
-<span class="kw"><a href="../reference/missed.html">missed</a></span>(config) <span class="co"># Checks your workspace.</span>
-## character(0)</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Targets that need to be (re)built.</span></a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">##  [1] "\"report.md\""          "coef_regression1_large"</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">##  [3] "coef_regression1_small" "coef_regression2_large"</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">##  [5] "coef_regression2_small" "large"                 </a>
+<a class="sourceLine" id="cb26-6" data-line-number="6">##  [7] "regression1_large"      "regression1_small"     </a>
+<a class="sourceLine" id="cb26-7" data-line-number="7">##  [9] "regression2_large"      "regression2_small"     </a>
+<a class="sourceLine" id="cb26-8" data-line-number="8">## [11] "small"                  "summ_regression1_large"</a>
+<a class="sourceLine" id="cb26-9" data-line-number="9">## [13] "summ_regression1_small" "summ_regression2_large"</a>
+<a class="sourceLine" id="cb26-10" data-line-number="10">## [15] "summ_regression2_small"</a>
+<a class="sourceLine" id="cb26-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb26-12" data-line-number="12"><span class="kw"><a href="../reference/missed.html">missed</a></span>(config) <span class="co"># Checks your workspace.</span></a>
+<a class="sourceLine" id="cb26-13" data-line-number="13">## character(0)</a></code></pre></div>
 <p>Then just <code><a href="../reference/make.html">make(my_plan)</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## target large
-## target small
-## target regression1_large
-## target regression1_small
-## target regression2_large
-## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
-## target summ_regression1_large
-## target summ_regression1_small
-## target summ_regression2_large
-## target summ_regression2_small
-## target file "report.md"</code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">## target large</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">## target small</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">## target regression1_large</a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">## target regression1_small</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6">## target regression2_large</a>
+<a class="sourceLine" id="cb27-7" data-line-number="7">## target regression2_small</a>
+<a class="sourceLine" id="cb27-8" data-line-number="8">## target coef_regression1_large</a>
+<a class="sourceLine" id="cb27-9" data-line-number="9">## target coef_regression1_small</a>
+<a class="sourceLine" id="cb27-10" data-line-number="10">## target coef_regression2_large</a>
+<a class="sourceLine" id="cb27-11" data-line-number="11">## target coef_regression2_small</a>
+<a class="sourceLine" id="cb27-12" data-line-number="12">## target summ_regression1_large</a>
+<a class="sourceLine" id="cb27-13" data-line-number="13">## target summ_regression1_small</a>
+<a class="sourceLine" id="cb27-14" data-line-number="14">## target summ_regression2_large</a>
+<a class="sourceLine" id="cb27-15" data-line-number="15">## target summ_regression2_small</a>
+<a class="sourceLine" id="cb27-16" data-line-number="16">## target file "report.md"</a></code></pre></div>
 <p>For the <code>reg2()</code> model on the small dataset, the p-value on <code>x2</code> is so small that there may be an association between weight and fuel efficiency after all.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(coef_regression2_small)
-##              Estimate Std. Error   t value     Pr(&gt;|t|)
-## (Intercept) 27.504915 1.02496426 26.835000 9.676340e-30
-## x2          -0.708536 0.08285938 -8.551066 4.617125e-11</code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw"><a href="../reference/readd.html">readd</a></span>(coef_regression2_small)</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">##              Estimate Std. Error   t value     Pr(&gt;|t|)</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">## (Intercept) 27.504915 1.02496426 26.835000 9.676340e-30</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">## x2          -0.708536 0.08285938 -8.551066 4.617125e-11</a></code></pre></div>
 <p>The non-file dependencies of your last target are already loaded in your workspace.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ls</span>()
-##  [1] "coef_regression2_small" "config"                
-##  [3] "df"                     "large"                 
-##  [5] "methods"                "my_analyses"           
-##  [7] "my_datasets"            "my_plan"               
-##  [9] "path"                   "random_rows"           
-## [11] "reg1"                   "reg2"                  
-## [13] "report"                 "report_file"           
-## [15] "results"                "simulate"              
-## [17] "small"                  "summary_types"         
-## [19] "x_plan"</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Everything is up to date.</span>
-## character(0)
-
-<span class="kw"><a href="../reference/build_times.html">build_times</a></span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="co"># How long did it take to make each target?</span>
-## # A tibble: 28 x 5
-##    item                   type   elapsed        user           system     
-##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.004s         0.004s         0s         
-##  2 coef_regression1_small target 0.003s         0.003s         0s         
-##  3 coef_regression2_large target 0.003s         0.003s         0s         
-##  4 coef_regression2_small target 0.004s         0.003s         0s         
-##  5 data.frame             import 0.019s         0.019s         0s         
-##  6 knit                   import 0.019s         0.018s         0s         
-##  7 large                  target 0.048s         0.048s         0s         
-##  8 lm                     import 0.007s         0.007s         0s         
-##  9 mtcars                 import 0s             0.001s         0s         
-## 10 nrow                   import 0.004s         0.003s         0s         
-## # ... with 18 more rows</code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">ls</span>()</a>
+<a class="sourceLine" id="cb29-2" data-line-number="2">##  [1] "coef_regression2_small" "config"                </a>
+<a class="sourceLine" id="cb29-3" data-line-number="3">##  [3] "df"                     "large"                 </a>
+<a class="sourceLine" id="cb29-4" data-line-number="4">##  [5] "methods"                "my_analyses"           </a>
+<a class="sourceLine" id="cb29-5" data-line-number="5">##  [7] "my_datasets"            "my_plan"               </a>
+<a class="sourceLine" id="cb29-6" data-line-number="6">##  [9] "path"                   "random_rows"           </a>
+<a class="sourceLine" id="cb29-7" data-line-number="7">## [11] "reg1"                   "reg2"                  </a>
+<a class="sourceLine" id="cb29-8" data-line-number="8">## [13] "report"                 "report_file"           </a>
+<a class="sourceLine" id="cb29-9" data-line-number="9">## [15] "results"                "simulate"              </a>
+<a class="sourceLine" id="cb29-10" data-line-number="10">## [17] "small"                  "summary_types"         </a>
+<a class="sourceLine" id="cb29-11" data-line-number="11">## [19] "x_plan"</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Everything is up to date.</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">## character(0)</a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="kw"><a href="../reference/build_times.html">build_times</a></span>(<span class="dt">digits =</span> <span class="dv">4</span>) <span class="co"># How long did it take to make each target?</span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5">## # A tibble: 28 x 5</a>
+<a class="sourceLine" id="cb30-6" data-line-number="6">##    item                   type   elapsed        user           system     </a>
+<a class="sourceLine" id="cb30-7" data-line-number="7">##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;</a>
+<a class="sourceLine" id="cb30-8" data-line-number="8">##  1 "\"report.md\""        target 0.195s         0.076s         0.005s     </a>
+<a class="sourceLine" id="cb30-9" data-line-number="9">##  2 "\"report.Rmd\""       import 0.031s         0.001s         0.001s     </a>
+<a class="sourceLine" id="cb30-10" data-line-number="10">##  3 coef_regression1_large target 0.028s         0.008s         0s         </a>
+<a class="sourceLine" id="cb30-11" data-line-number="11">##  4 coef_regression1_small target 0.029s         0.007s         0s         </a>
+<a class="sourceLine" id="cb30-12" data-line-number="12">##  5 coef_regression2_large target 0.022s         0.008s         0s         </a>
+<a class="sourceLine" id="cb30-13" data-line-number="13">##  6 coef_regression2_small target 0.057s         0.006s         0.002s     </a>
+<a class="sourceLine" id="cb30-14" data-line-number="14">##  7 data.frame             import 0.242s         0.049s         0s         </a>
+<a class="sourceLine" id="cb30-15" data-line-number="15">##  8 knit                   import 0.05s          0.035s         0s         </a>
+<a class="sourceLine" id="cb30-16" data-line-number="16">##  9 large                  target 0.146s         0.096s         0.001s     </a>
+<a class="sourceLine" id="cb30-17" data-line-number="17">## 10 lm                     import 0.037s         0.016s         0.001s     </a>
+<a class="sourceLine" id="cb30-18" data-line-number="18">## # ... with 18 more rows</a></code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co"># Hover, click, drag, zoom, and pan.</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/built.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>Optionally, get <a href="http://datastorm-open.github.io/visNetwork/">visNetwork</a> nodes and edges so you can make your own plot with <code>visNetwork()</code> or <code><a href="../reference/render_drake_graph.html">render_drake_graph()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/dataframes_graph.html">dataframes_graph</a></span>(config)</code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw"><a href="../reference/dataframes_graph.html">dataframes_graph</a></span>(config)</a></code></pre></div>
 <p>Use <code><a href="../reference/readd.html">readd()</a></code> and <code><a href="../reference/loadd.html">loadd()</a></code> to load targets into your workspace. (They are cached in the hidden <code>.drake/</code> folder using <a href="https://CRAN.R-project.org/package=storr">storr</a>). There are many more functions for interacting with the cache.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(coef_regression2_large)
-##               Estimate Std. Error   t value     Pr(&gt;|t|)
-## (Intercept) 26.8613175 0.82963761  32.37717 1.485222e-40
-## x2          -0.6299583 0.05501956 -11.44972 6.167412e-17
-
-<span class="kw"><a href="../reference/loadd.html">loadd</a></span>(small)
-
-<span class="kw">head</span>(small)
-##       x    y
-## 1 3.730 17.3
-## 2 5.250 10.4
-## 3 3.730 17.3
-## 4 5.345 14.7
-## 5 3.190 24.4
-## 6 3.440 17.8
-
-<span class="kw">rm</span>(small)
-<span class="kw"><a href="../reference/cached.html">cached</a></span>(small, large)
-## small large 
-##  TRUE  TRUE
-
-<span class="kw"><a href="../reference/cached.html">cached</a></span>()
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "data.frame"             "knit"                  
-##  [7] "large"                  "lm"                    
-##  [9] "mtcars"                 "nrow"                  
-## [11] "random_rows"            "reg1"                  
-## [13] "reg2"                   "regression1_large"     
-## [15] "regression1_small"      "regression2_large"     
-## [17] "regression2_small"      "\"report.md\""         
-## [19] "\"report.Rmd\""         "sample.int"            
-## [21] "simulate"               "small"                 
-## [23] "summary"                "summ_regression1_large"
-## [25] "summ_regression1_small" "summ_regression2_large"
-## [27] "summ_regression2_small" "suppressWarnings"
-
-<span class="kw"><a href="../reference/built.html">built</a></span>()
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
-## [11] "small"                  "summ_regression1_large"
-## [13] "summ_regression1_small" "summ_regression2_large"
-## [15] "summ_regression2_small"
-
-<span class="kw"><a href="../reference/imported.html">imported</a></span>()
-##  [1] "data.frame"       "knit"             "lm"              
-##  [4] "mtcars"           "nrow"             "random_rows"     
-##  [7] "reg1"             "reg2"             "\"report.Rmd\""  
-## [10] "sample.int"       "simulate"         "summary"         
-## [13] "suppressWarnings"
-
-<span class="kw">head</span>(<span class="kw"><a href="../reference/read_drake_plan.html">read_drake_plan</a></span>())
-## # A tibble: 6 x 2
-##   target            command                                               
-##   &lt;chr&gt;             &lt;chr&gt;                                                 
-## 1 "\"report.md\""   "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\…
-## 2 small             simulate(48)                                          
-## 3 large             simulate(64)                                          
-## 4 regression1_small reg1(small)                                           
-## 5 regression1_large reg1(large)                                           
-## 6 regression2_small reg2(small)
-
-<span class="kw">head</span>(<span class="kw"><a href="../reference/progress.html">progress</a></span>()) <span class="co"># See also in_progress()</span>
-## coef_regression1_large coef_regression1_small coef_regression2_large 
-##             "finished"             "finished"             "finished" 
-## coef_regression2_small             data.frame                   knit 
-##             "finished"             "finished"             "finished"
-
-<span class="kw"><a href="../reference/progress.html">progress</a></span>(large)
-##      large 
-## "finished"
-
-<span class="co"># drake_session() # sessionInfo() of the last make() # nolint</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw"><a href="../reference/readd.html">readd</a></span>(coef_regression2_large)</a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">##               Estimate Std. Error   t value     Pr(&gt;|t|)</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">## (Intercept) 26.8613175 0.82963761  32.37717 1.485222e-40</a>
+<a class="sourceLine" id="cb33-4" data-line-number="4">## x2          -0.6299583 0.05501956 -11.44972 6.167412e-17</a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(small)</a>
+<a class="sourceLine" id="cb33-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb33-8" data-line-number="8"><span class="kw">head</span>(small)</a>
+<a class="sourceLine" id="cb33-9" data-line-number="9">##       x    y</a>
+<a class="sourceLine" id="cb33-10" data-line-number="10">## 1 3.730 17.3</a>
+<a class="sourceLine" id="cb33-11" data-line-number="11">## 2 5.250 10.4</a>
+<a class="sourceLine" id="cb33-12" data-line-number="12">## 3 3.730 17.3</a>
+<a class="sourceLine" id="cb33-13" data-line-number="13">## 4 5.345 14.7</a>
+<a class="sourceLine" id="cb33-14" data-line-number="14">## 5 3.190 24.4</a>
+<a class="sourceLine" id="cb33-15" data-line-number="15">## 6 3.440 17.8</a>
+<a class="sourceLine" id="cb33-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb33-17" data-line-number="17"><span class="kw">rm</span>(small)</a>
+<a class="sourceLine" id="cb33-18" data-line-number="18"><span class="kw"><a href="../reference/cached.html">cached</a></span>(small, large)</a>
+<a class="sourceLine" id="cb33-19" data-line-number="19">## small large </a>
+<a class="sourceLine" id="cb33-20" data-line-number="20">##  TRUE  TRUE</a>
+<a class="sourceLine" id="cb33-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb33-22" data-line-number="22"><span class="kw"><a href="../reference/cached.html">cached</a></span>()</a>
+<a class="sourceLine" id="cb33-23" data-line-number="23">##  [1] "\"report.md\""          "\"report.Rmd\""        </a>
+<a class="sourceLine" id="cb33-24" data-line-number="24">##  [3] "coef_regression1_large" "coef_regression1_small"</a>
+<a class="sourceLine" id="cb33-25" data-line-number="25">##  [5] "coef_regression2_large" "coef_regression2_small"</a>
+<a class="sourceLine" id="cb33-26" data-line-number="26">##  [7] "data.frame"             "knit"                  </a>
+<a class="sourceLine" id="cb33-27" data-line-number="27">##  [9] "large"                  "lm"                    </a>
+<a class="sourceLine" id="cb33-28" data-line-number="28">## [11] "mtcars"                 "nrow"                  </a>
+<a class="sourceLine" id="cb33-29" data-line-number="29">## [13] "random_rows"            "reg1"                  </a>
+<a class="sourceLine" id="cb33-30" data-line-number="30">## [15] "reg2"                   "regression1_large"     </a>
+<a class="sourceLine" id="cb33-31" data-line-number="31">## [17] "regression1_small"      "regression2_large"     </a>
+<a class="sourceLine" id="cb33-32" data-line-number="32">## [19] "regression2_small"      "sample.int"            </a>
+<a class="sourceLine" id="cb33-33" data-line-number="33">## [21] "simulate"               "small"                 </a>
+<a class="sourceLine" id="cb33-34" data-line-number="34">## [23] "summ_regression1_large" "summ_regression1_small"</a>
+<a class="sourceLine" id="cb33-35" data-line-number="35">## [25] "summ_regression2_large" "summ_regression2_small"</a>
+<a class="sourceLine" id="cb33-36" data-line-number="36">## [27] "summary"                "suppressWarnings"</a>
+<a class="sourceLine" id="cb33-37" data-line-number="37"></a>
+<a class="sourceLine" id="cb33-38" data-line-number="38"><span class="kw"><a href="../reference/built.html">built</a></span>()</a>
+<a class="sourceLine" id="cb33-39" data-line-number="39">##  [1] "\"report.md\""          "coef_regression1_large"</a>
+<a class="sourceLine" id="cb33-40" data-line-number="40">##  [3] "coef_regression1_small" "coef_regression2_large"</a>
+<a class="sourceLine" id="cb33-41" data-line-number="41">##  [5] "coef_regression2_small" "large"                 </a>
+<a class="sourceLine" id="cb33-42" data-line-number="42">##  [7] "regression1_large"      "regression1_small"     </a>
+<a class="sourceLine" id="cb33-43" data-line-number="43">##  [9] "regression2_large"      "regression2_small"     </a>
+<a class="sourceLine" id="cb33-44" data-line-number="44">## [11] "small"                  "summ_regression1_large"</a>
+<a class="sourceLine" id="cb33-45" data-line-number="45">## [13] "summ_regression1_small" "summ_regression2_large"</a>
+<a class="sourceLine" id="cb33-46" data-line-number="46">## [15] "summ_regression2_small"</a>
+<a class="sourceLine" id="cb33-47" data-line-number="47"></a>
+<a class="sourceLine" id="cb33-48" data-line-number="48"><span class="kw"><a href="../reference/imported.html">imported</a></span>()</a>
+<a class="sourceLine" id="cb33-49" data-line-number="49">##  [1] "\"report.Rmd\""   "data.frame"       "knit"            </a>
+<a class="sourceLine" id="cb33-50" data-line-number="50">##  [4] "lm"               "mtcars"           "nrow"            </a>
+<a class="sourceLine" id="cb33-51" data-line-number="51">##  [7] "random_rows"      "reg1"             "reg2"            </a>
+<a class="sourceLine" id="cb33-52" data-line-number="52">## [10] "sample.int"       "simulate"         "summary"         </a>
+<a class="sourceLine" id="cb33-53" data-line-number="53">## [13] "suppressWarnings"</a>
+<a class="sourceLine" id="cb33-54" data-line-number="54"></a>
+<a class="sourceLine" id="cb33-55" data-line-number="55"><span class="kw">head</span>(<span class="kw"><a href="../reference/read_drake_plan.html">read_drake_plan</a></span>())</a>
+<a class="sourceLine" id="cb33-56" data-line-number="56">## # A tibble: 6 x 2</a>
+<a class="sourceLine" id="cb33-57" data-line-number="57">##   target            command                                               </a>
+<a class="sourceLine" id="cb33-58" data-line-number="58">##   &lt;chr&gt;             &lt;chr&gt;                                                 </a>
+<a class="sourceLine" id="cb33-59" data-line-number="59">## 1 "\"report.md\""   "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\…</a>
+<a class="sourceLine" id="cb33-60" data-line-number="60">## 2 small             simulate(48)                                          </a>
+<a class="sourceLine" id="cb33-61" data-line-number="61">## 3 large             simulate(64)                                          </a>
+<a class="sourceLine" id="cb33-62" data-line-number="62">## 4 regression1_small reg1(small)                                           </a>
+<a class="sourceLine" id="cb33-63" data-line-number="63">## 5 regression1_large reg1(large)                                           </a>
+<a class="sourceLine" id="cb33-64" data-line-number="64">## 6 regression2_small reg2(small)</a>
+<a class="sourceLine" id="cb33-65" data-line-number="65"></a>
+<a class="sourceLine" id="cb33-66" data-line-number="66"><span class="kw">head</span>(<span class="kw"><a href="../reference/progress.html">progress</a></span>()) <span class="co"># See also in_progress()</span></a>
+<a class="sourceLine" id="cb33-67" data-line-number="67">##            "report.md"           "report.Rmd" coef_regression1_large </a>
+<a class="sourceLine" id="cb33-68" data-line-number="68">##             "finished"             "finished"             "finished" </a>
+<a class="sourceLine" id="cb33-69" data-line-number="69">## coef_regression1_small coef_regression2_large coef_regression2_small </a>
+<a class="sourceLine" id="cb33-70" data-line-number="70">##             "finished"             "finished"             "finished"</a>
+<a class="sourceLine" id="cb33-71" data-line-number="71"></a>
+<a class="sourceLine" id="cb33-72" data-line-number="72"><span class="kw"><a href="../reference/progress.html">progress</a></span>(large)</a>
+<a class="sourceLine" id="cb33-73" data-line-number="73">##      large </a>
+<a class="sourceLine" id="cb33-74" data-line-number="74">## "finished"</a>
+<a class="sourceLine" id="cb33-75" data-line-number="75"></a>
+<a class="sourceLine" id="cb33-76" data-line-number="76"><span class="co"># drake_session() # sessionInfo() of the last make() # nolint</span></a></code></pre></div>
 <p>The next time you run <code><a href="../reference/make.html">make(my_plan)</a></code>, nothing will build because <code>drake</code> knows everything is already up to date.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan) <span class="co"># Will use config later. See also drake_config().</span>
-## Unloading targets from environment:
-##   large
-##   coef_regression2_small
-## All targets are already up to date.</code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan) <span class="co"># Will use config later. See also drake_config().</span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">## Unloading targets from environment:</a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">##   large</a>
+<a class="sourceLine" id="cb34-4" data-line-number="4">##   coef_regression2_small</a>
+<a class="sourceLine" id="cb34-5" data-line-number="5">## All targets are already up to date.</a></code></pre></div>
 <p>But if you change one of your functions, commands, or other dependencies, drake will update the affected targets. Suppose we change the quadratic term to a cubic term in <code>reg2()</code>. We might want to do this if we suspect a cubic relationship between tons and miles per gallon.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
-}</code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb35-3" data-line-number="3">  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)</a>
+<a class="sourceLine" id="cb35-4" data-line-number="4">}</a></code></pre></div>
 <p>The targets that depend on <code>reg2()</code> need to be rebuilt.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-## [1] "coef_regression2_large" "coef_regression2_small"
-## [3] "regression2_large"      "regression2_small"     
-## [5] "\"report.md\""          "summ_regression2_large"
-## [7] "summ_regression2_small"</code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">## [1] "\"report.md\""          "coef_regression2_large"</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">## [3] "coef_regression2_small" "regression2_large"     </a>
+<a class="sourceLine" id="cb36-4" data-line-number="4">## [5] "regression2_small"      "summ_regression2_large"</a>
+<a class="sourceLine" id="cb36-5" data-line-number="5">## [7] "summ_regression2_small"</a></code></pre></div>
 <p><strong>Advanced</strong>: To find out why a target is out of date, you can load the <a href="https://github.com/richfitz/storr">storr</a> cache and compare the appropriate hash keys to the output of <code><a href="../reference/dependency_profile.html">dependency_profile()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/dependency_profile.html">dependency_profile</a></span>(<span class="dt">target =</span> <span class="st">"regression2_small"</span>, <span class="dt">config =</span> config)
-## $cached_command
-## [1] "{\n reg2(small) \n}"
-## 
-## $current_command
-## [1] "{\n reg2(small) \n}"
-## 
-## $cached_file_modification_time
-## NULL
-## 
-## $cached_dependency_hash
-## [1] "bff91683ab896912a57d3010b489e68a50294f7c46dc5c8bc80797a3a616194b"
-## 
-## $current_dependency_hash
-## [1] "8685dbd7c688d9ceca90b9c7cdde2e151e39a4882af35b18c9697a04c24e9d63"
-## 
-## $hashes_of_dependencies
-##               reg2              small 
-## "d47109544c89ca7a" "40fb781de184c741"
-
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>) <span class="co"># same</span>
-## [1] "40fb781de184c741"
-
-config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "540f6efdbcca7403"</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
-<span class="co"># Same as drake_graph():</span>
-<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw"><a href="../reference/dependency_profile.html">dependency_profile</a></span>(<span class="dt">target =</span> <span class="st">"regression2_small"</span>, <span class="dt">config =</span> config)</a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">## $cached_command</a>
+<a class="sourceLine" id="cb37-3" data-line-number="3">## [1] "{\n reg2(small) \n}"</a>
+<a class="sourceLine" id="cb37-4" data-line-number="4">## </a>
+<a class="sourceLine" id="cb37-5" data-line-number="5">## $current_command</a>
+<a class="sourceLine" id="cb37-6" data-line-number="6">## [1] "{\n reg2(small) \n}"</a>
+<a class="sourceLine" id="cb37-7" data-line-number="7">## </a>
+<a class="sourceLine" id="cb37-8" data-line-number="8">## $cached_file_modification_time</a>
+<a class="sourceLine" id="cb37-9" data-line-number="9">## NULL</a>
+<a class="sourceLine" id="cb37-10" data-line-number="10">## </a>
+<a class="sourceLine" id="cb37-11" data-line-number="11">## $cached_dependency_hash</a>
+<a class="sourceLine" id="cb37-12" data-line-number="12">## [1] "bff91683ab896912a57d3010b489e68a50294f7c46dc5c8bc80797a3a616194b"</a>
+<a class="sourceLine" id="cb37-13" data-line-number="13">## </a>
+<a class="sourceLine" id="cb37-14" data-line-number="14">## $current_dependency_hash</a>
+<a class="sourceLine" id="cb37-15" data-line-number="15">## [1] "8685dbd7c688d9ceca90b9c7cdde2e151e39a4882af35b18c9697a04c24e9d63"</a>
+<a class="sourceLine" id="cb37-16" data-line-number="16">## </a>
+<a class="sourceLine" id="cb37-17" data-line-number="17">## $hashes_of_dependencies</a>
+<a class="sourceLine" id="cb37-18" data-line-number="18">##               reg2              small </a>
+<a class="sourceLine" id="cb37-19" data-line-number="19">## "d47109544c89ca7a" "40fb781de184c741"</a>
+<a class="sourceLine" id="cb37-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb37-21" data-line-number="21">config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"small"</span>) <span class="co"># same</span></a>
+<a class="sourceLine" id="cb37-22" data-line-number="22">## [1] "40fb781de184c741"</a>
+<a class="sourceLine" id="cb37-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb37-24" data-line-number="24">config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span></a>
+<a class="sourceLine" id="cb37-25" data-line-number="25">## [1] "2ffd6a8f394111ad"</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Hover, click, drag, zoom, and pan.</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="co"># Same as drake_graph():</span></a>
+<a class="sourceLine" id="cb38-3" data-line-number="3"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</a></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The next <code><a href="../reference/make.html">make()</a></code> will rebuild the targets depending on <code>reg2()</code> and leave everything else alone.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## target regression2_large
-## target regression2_small
-## target coef_regression2_large
-## target coef_regression2_small
-## target summ_regression2_large
-## target summ_regression2_small
-## target file "report.md"</code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">## target regression2_large</a>
+<a class="sourceLine" id="cb39-3" data-line-number="3">## target regression2_small</a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">## target coef_regression2_large</a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">## target coef_regression2_small</a>
+<a class="sourceLine" id="cb39-6" data-line-number="6">## target summ_regression2_large</a>
+<a class="sourceLine" id="cb39-7" data-line-number="7">## target summ_regression2_small</a>
+<a class="sourceLine" id="cb39-8" data-line-number="8">## target file "report.md"</a></code></pre></div>
 <p>Trivial changes to whitespace and comments are totally ignored.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-    <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d) <span class="co"># I indented here.</span>
-}
-<span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Everything is up to date.</span>
-## character(0)</code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb40-3" data-line-number="3">    <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d) <span class="co"># I indented here.</span></a>
+<a class="sourceLine" id="cb40-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb40-5" data-line-number="5"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Everything is up to date.</span></a>
+<a class="sourceLine" id="cb40-6" data-line-number="6">## character(0)</a></code></pre></div>
 <p>Drake cares about nested functions too: nontrivial changes to <code>random_rows()</code> will propagate to <code>simulate()</code> and all the downstream targets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">random_rows &lt;-<span class="st"> </span><span class="cf">function</span>(data, n){
-  n &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-  data[<span class="kw">sample.int</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(data), <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), ]
-}
-
-<span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
-##  [1] "coef_regression1_large" "coef_regression1_small"
-##  [3] "coef_regression2_large" "coef_regression2_small"
-##  [5] "large"                  "regression1_large"     
-##  [7] "regression1_small"      "regression2_large"     
-##  [9] "regression2_small"      "\"report.md\""         
-## [11] "small"                  "summ_regression1_large"
-## [13] "summ_regression1_small" "summ_regression2_large"
-## [15] "summ_regression2_small"
-
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## Unloading targets from environment:
-##   small
-##   large
-##   coef_regression2_small
-## target large
-## target small
-## target regression1_large
-## target regression1_small
-## target regression2_large
-## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
-## target summ_regression1_large
-## target summ_regression1_small
-## target summ_regression2_large
-## target summ_regression2_small
-## target file "report.md"</code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">random_rows &lt;-<span class="st"> </span><span class="cf">function</span>(data, n){</a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">  n &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb41-3" data-line-number="3">  data[<span class="kw">sample.int</span>(<span class="dt">n =</span> <span class="kw">nrow</span>(data), <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>), ]</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb41-6" data-line-number="6"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)</a>
+<a class="sourceLine" id="cb41-7" data-line-number="7">##  [1] "\"report.md\""          "coef_regression1_large"</a>
+<a class="sourceLine" id="cb41-8" data-line-number="8">##  [3] "coef_regression1_small" "coef_regression2_large"</a>
+<a class="sourceLine" id="cb41-9" data-line-number="9">##  [5] "coef_regression2_small" "large"                 </a>
+<a class="sourceLine" id="cb41-10" data-line-number="10">##  [7] "regression1_large"      "regression1_small"     </a>
+<a class="sourceLine" id="cb41-11" data-line-number="11">##  [9] "regression2_large"      "regression2_small"     </a>
+<a class="sourceLine" id="cb41-12" data-line-number="12">## [11] "small"                  "summ_regression1_large"</a>
+<a class="sourceLine" id="cb41-13" data-line-number="13">## [13] "summ_regression1_small" "summ_regression2_large"</a>
+<a class="sourceLine" id="cb41-14" data-line-number="14">## [15] "summ_regression2_small"</a>
+<a class="sourceLine" id="cb41-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb41-16" data-line-number="16"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb41-17" data-line-number="17">## Unloading targets from environment:</a>
+<a class="sourceLine" id="cb41-18" data-line-number="18">##   small</a>
+<a class="sourceLine" id="cb41-19" data-line-number="19">##   large</a>
+<a class="sourceLine" id="cb41-20" data-line-number="20">##   coef_regression2_small</a>
+<a class="sourceLine" id="cb41-21" data-line-number="21">## target large</a>
+<a class="sourceLine" id="cb41-22" data-line-number="22">## target small</a>
+<a class="sourceLine" id="cb41-23" data-line-number="23">## target regression1_large</a>
+<a class="sourceLine" id="cb41-24" data-line-number="24">## target regression1_small</a>
+<a class="sourceLine" id="cb41-25" data-line-number="25">## target regression2_large</a>
+<a class="sourceLine" id="cb41-26" data-line-number="26">## target regression2_small</a>
+<a class="sourceLine" id="cb41-27" data-line-number="27">## target coef_regression1_large</a>
+<a class="sourceLine" id="cb41-28" data-line-number="28">## target coef_regression1_small</a>
+<a class="sourceLine" id="cb41-29" data-line-number="29">## target coef_regression2_large</a>
+<a class="sourceLine" id="cb41-30" data-line-number="30">## target coef_regression2_small</a>
+<a class="sourceLine" id="cb41-31" data-line-number="31">## target summ_regression1_large</a>
+<a class="sourceLine" id="cb41-32" data-line-number="32">## target summ_regression1_small</a>
+<a class="sourceLine" id="cb41-33" data-line-number="33">## target summ_regression2_large</a>
+<a class="sourceLine" id="cb41-34" data-line-number="34">## target summ_regression2_small</a>
+<a class="sourceLine" id="cb41-35" data-line-number="35">## target file "report.md"</a></code></pre></div>
 <p>Need to add new work on the fly? Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_simulation &lt;-<span class="st"> </span><span class="cf">function</span>(n){
-  <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(n), <span class="dt">y =</span> <span class="kw">rnorm</span>(n))
-}
-
-additions &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">new_data =</span> <span class="kw">new_simulation</span>(<span class="dv">36</span>) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">10</span>))
-additions
-## # A tibble: 1 x 2
-##   target   command                      
-##   &lt;chr&gt;    &lt;chr&gt;                        
-## 1 new_data new_simulation(36) + sqrt(10)
-
-my_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_plan, additions)
-my_plan
-## # A tibble: 16 x 2
-##    target                 command                                         
-##    &lt;chr&gt;                  &lt;chr&gt;                                           
-##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…
-##  2 small                  simulate(48)                                    
-##  3 large                  simulate(64)                                    
-##  4 regression1_small      reg1(small)                                     
-##  5 regression1_large      reg1(large)                                     
-##  6 regression2_small      reg2(small)                                     
-##  7 regression2_large      reg2(large)                                     
-##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…
-##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…
-## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…
-## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…
-## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…
-## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…
-## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…
-## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…
-## 16 new_data               new_simulation(36) + sqrt(10)
-
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## Unloading targets from environment:
-##   small
-##   large
-##   coef_regression2_small
-## target new_data</code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">new_simulation &lt;-<span class="st"> </span><span class="cf">function</span>(n){</a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">  <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(n), <span class="dt">y =</span> <span class="kw">rnorm</span>(n))</a>
+<a class="sourceLine" id="cb42-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb42-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb42-5" data-line-number="5">additions &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb42-6" data-line-number="6">  <span class="dt">new_data =</span> <span class="kw">new_simulation</span>(<span class="dv">36</span>) <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb42-7" data-line-number="7">additions</a>
+<a class="sourceLine" id="cb42-8" data-line-number="8">## # A tibble: 1 x 2</a>
+<a class="sourceLine" id="cb42-9" data-line-number="9">##   target   command                      </a>
+<a class="sourceLine" id="cb42-10" data-line-number="10">##   &lt;chr&gt;    &lt;chr&gt;                        </a>
+<a class="sourceLine" id="cb42-11" data-line-number="11">## 1 new_data new_simulation(36) + sqrt(10)</a>
+<a class="sourceLine" id="cb42-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb42-13" data-line-number="13">my_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(my_plan, additions)</a>
+<a class="sourceLine" id="cb42-14" data-line-number="14">my_plan</a>
+<a class="sourceLine" id="cb42-15" data-line-number="15">## # A tibble: 16 x 2</a>
+<a class="sourceLine" id="cb42-16" data-line-number="16">##    target                 command                                         </a>
+<a class="sourceLine" id="cb42-17" data-line-number="17">##    &lt;chr&gt;                  &lt;chr&gt;                                           </a>
+<a class="sourceLine" id="cb42-18" data-line-number="18">##  1 "\"report.md\""        "knit(knitr_in(\"report.Rmd\"), file_out(\"repo…</a>
+<a class="sourceLine" id="cb42-19" data-line-number="19">##  2 small                  simulate(48)                                    </a>
+<a class="sourceLine" id="cb42-20" data-line-number="20">##  3 large                  simulate(64)                                    </a>
+<a class="sourceLine" id="cb42-21" data-line-number="21">##  4 regression1_small      reg1(small)                                     </a>
+<a class="sourceLine" id="cb42-22" data-line-number="22">##  5 regression1_large      reg1(large)                                     </a>
+<a class="sourceLine" id="cb42-23" data-line-number="23">##  6 regression2_small      reg2(small)                                     </a>
+<a class="sourceLine" id="cb42-24" data-line-number="24">##  7 regression2_large      reg2(large)                                     </a>
+<a class="sourceLine" id="cb42-25" data-line-number="25">##  8 summ_regression1_small suppressWarnings(summary(regression1_small$resi…</a>
+<a class="sourceLine" id="cb42-26" data-line-number="26">##  9 summ_regression1_large suppressWarnings(summary(regression1_large$resi…</a>
+<a class="sourceLine" id="cb42-27" data-line-number="27">## 10 summ_regression2_small suppressWarnings(summary(regression2_small$resi…</a>
+<a class="sourceLine" id="cb42-28" data-line-number="28">## 11 summ_regression2_large suppressWarnings(summary(regression2_large$resi…</a>
+<a class="sourceLine" id="cb42-29" data-line-number="29">## 12 coef_regression1_small suppressWarnings(summary(regression1_small))$co…</a>
+<a class="sourceLine" id="cb42-30" data-line-number="30">## 13 coef_regression1_large suppressWarnings(summary(regression1_large))$co…</a>
+<a class="sourceLine" id="cb42-31" data-line-number="31">## 14 coef_regression2_small suppressWarnings(summary(regression2_small))$co…</a>
+<a class="sourceLine" id="cb42-32" data-line-number="32">## 15 coef_regression2_large suppressWarnings(summary(regression2_large))$co…</a>
+<a class="sourceLine" id="cb42-33" data-line-number="33">## 16 new_data               new_simulation(36) + sqrt(10)</a>
+<a class="sourceLine" id="cb42-34" data-line-number="34"></a>
+<a class="sourceLine" id="cb42-35" data-line-number="35"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb42-36" data-line-number="36">## Unloading targets from environment:</a>
+<a class="sourceLine" id="cb42-37" data-line-number="37">##   small</a>
+<a class="sourceLine" id="cb42-38" data-line-number="38">##   large</a>
+<a class="sourceLine" id="cb42-39" data-line-number="39">##   coef_regression2_small</a>
+<a class="sourceLine" id="cb42-40" data-line-number="40">## target new_data</a></code></pre></div>
 <p>If you ever need to erase your work, use <code><a href="../reference/clean.html">clean()</a></code>. The next <code><a href="../reference/make.html">make()</a></code> will rebuild any cleaned targets, so be careful. You may notice that by default, the size of the cache does not go down very much. To purge old data, you could use <code><a href="../reference/clean.html">clean(garbage_collection = TRUE, purge = TRUE)</a></code>. To do garbage collection without removing any important targets, use <code><a href="../reference/drake_gc.html">drake_gc()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Uncaches individual targets and imported objects.</span>
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(small, reg1, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Cleans all targets out of the cache.</span>
-<span class="kw"><a href="../reference/drake_gc.html">drake_gc</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Just garbage collection.</span>
-<span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># removes the cache entirely</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># Uncaches individual targets and imported objects.</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"><span class="kw"><a href="../reference/clean.html">clean</a></span>(small, reg1, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Cleans all targets out of the cache.</span></a>
+<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="kw"><a href="../reference/drake_gc.html">drake_gc</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># Just garbage collection.</span></a>
+<a class="sourceLine" id="cb43-5" data-line-number="5"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">destroy =</span> <span class="ot">TRUE</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>) <span class="co"># removes the cache entirely</span></a></code></pre></div>
 </div>
 <div id="automatic-watching-for-changed-dependencies" class="section level1">
 <h1 class="hasAnchor">
@@ -862,49 +866,49 @@ my_plan
 <h1 class="hasAnchor">
 <a href="#a-note-on-tidy-evaluation" class="anchor"></a>A note on tidy evaluation</h1>
 <p>Running commands in your R console is not always exactly like running them with <code><a href="../reference/make.html">make()</a></code>. That’s because <code><a href="../reference/make.html">make()</a></code> uses tidy evaluation as implemented in the <a href="https://github.com/tidyverse/rlang"><code>rlang</code> package</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This workflow plan uses rlang's quasiquotation operator `!!`.</span>
-my_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">list =</span> <span class="kw">c</span>(
-  <span class="dt">little_b =</span> <span class="st">"</span><span class="ch">\"</span><span class="st">b</span><span class="ch">\"</span><span class="st">"</span>,
-  <span class="dt">letter =</span> <span class="st">"!!little_b"</span>
-))
-my_plan
-## # A tibble: 2 x 2
-##   target   command   
-##   &lt;chr&gt;    &lt;chr&gt;     
-## 1 little_b "\"b\""   
-## 2 letter   !!little_b
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## target little_b
-## target letter
-<span class="kw"><a href="../reference/readd.html">readd</a></span>(letter)
-## [1] "b"</code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="co"># This workflow plan uses rlang's quasiquotation operator `!!`.</span></a>
+<a class="sourceLine" id="cb44-2" data-line-number="2">my_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">list =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb44-3" data-line-number="3">  <span class="dt">little_b =</span> <span class="st">"</span><span class="ch">\"</span><span class="st">b</span><span class="ch">\"</span><span class="st">"</span>,</a>
+<a class="sourceLine" id="cb44-4" data-line-number="4">  <span class="dt">letter =</span> <span class="st">"!!little_b"</span></a>
+<a class="sourceLine" id="cb44-5" data-line-number="5">))</a>
+<a class="sourceLine" id="cb44-6" data-line-number="6">my_plan</a>
+<a class="sourceLine" id="cb44-7" data-line-number="7">## # A tibble: 2 x 2</a>
+<a class="sourceLine" id="cb44-8" data-line-number="8">##   target   command   </a>
+<a class="sourceLine" id="cb44-9" data-line-number="9">##   &lt;chr&gt;    &lt;chr&gt;     </a>
+<a class="sourceLine" id="cb44-10" data-line-number="10">## 1 little_b "\"b\""   </a>
+<a class="sourceLine" id="cb44-11" data-line-number="11">## 2 letter   !!little_b</a>
+<a class="sourceLine" id="cb44-12" data-line-number="12"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)</a>
+<a class="sourceLine" id="cb44-13" data-line-number="13">## target little_b</a>
+<a class="sourceLine" id="cb44-14" data-line-number="14">## target letter</a>
+<a class="sourceLine" id="cb44-15" data-line-number="15"><span class="kw"><a href="../reference/readd.html">readd</a></span>(letter)</a>
+<a class="sourceLine" id="cb44-16" data-line-number="16">## [1] "b"</a></code></pre></div>
 <p>For the commands you specify the free-form <code>...</code> argument, <code><a href="../reference/drake_plan.html">drake_plan()</a></code> also supports tidy evaluation. For example, it supports quasiquotation with the <code>!!</code> argument. Use <code>tidy_evaluation = FALSE</code> or the <code>list</code> argument to suppress this behavior.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_variable &lt;-<span class="st"> </span><span class="dv">5</span>
-
-<span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
-  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
-  <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>)
-)
-## # A tibble: 3 x 2
-##   target command      
-##   &lt;chr&gt;  &lt;chr&gt;        
-## 1 a      5            
-## 2 b      5 + 1        
-## 3 d      !!my_variable
-
-<span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
-  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
-  <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>),
-  <span class="dt">tidy_evaluation =</span> <span class="ot">FALSE</span>
-)
-## # A tibble: 3 x 2
-##   target command            
-##   &lt;chr&gt;  &lt;chr&gt;              
-## 1 a      !(!my_variable)    
-## 2 b      !(!my_variable + 1)
-## 3 d      !!my_variable</code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">my_variable &lt;-<span class="st"> </span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb45-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb45-3" data-line-number="3"><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb45-4" data-line-number="4">  <span class="dt">a =</span> <span class="op">!!</span>my_variable,</a>
+<a class="sourceLine" id="cb45-5" data-line-number="5">  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb45-6" data-line-number="6">  <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>)</a>
+<a class="sourceLine" id="cb45-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb45-8" data-line-number="8">## # A tibble: 3 x 2</a>
+<a class="sourceLine" id="cb45-9" data-line-number="9">##   target command      </a>
+<a class="sourceLine" id="cb45-10" data-line-number="10">##   &lt;chr&gt;  &lt;chr&gt;        </a>
+<a class="sourceLine" id="cb45-11" data-line-number="11">## 1 a      5            </a>
+<a class="sourceLine" id="cb45-12" data-line-number="12">## 2 b      5 + 1        </a>
+<a class="sourceLine" id="cb45-13" data-line-number="13">## 3 d      !!my_variable</a>
+<a class="sourceLine" id="cb45-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb45-15" data-line-number="15"><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
+<a class="sourceLine" id="cb45-16" data-line-number="16">  <span class="dt">a =</span> <span class="op">!!</span>my_variable,</a>
+<a class="sourceLine" id="cb45-17" data-line-number="17">  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb45-18" data-line-number="18">  <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>),</a>
+<a class="sourceLine" id="cb45-19" data-line-number="19">  <span class="dt">tidy_evaluation =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb45-20" data-line-number="20">)</a>
+<a class="sourceLine" id="cb45-21" data-line-number="21">## # A tibble: 3 x 2</a>
+<a class="sourceLine" id="cb45-22" data-line-number="22">##   target command            </a>
+<a class="sourceLine" id="cb45-23" data-line-number="23">##   &lt;chr&gt;  &lt;chr&gt;              </a>
+<a class="sourceLine" id="cb45-24" data-line-number="24">## 1 a      !(!my_variable)    </a>
+<a class="sourceLine" id="cb45-25" data-line-number="25">## 2 b      !(!my_variable + 1)</a>
+<a class="sourceLine" id="cb45-26" data-line-number="26">## 3 d      !!my_variable</a></code></pre></div>
 <p>For instances of <code>!!</code> that remain in the workflow plan, <code><a href="../reference/make.html">make()</a></code> will run these commands in tidy fashion, evaluating the <code>!!</code> operator using the environment you provided.</p>
 </div>
 <div id="need-more-speed" class="section level1">
@@ -943,7 +947,7 @@ my_plan
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>

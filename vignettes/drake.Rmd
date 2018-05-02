@@ -38,83 +38,39 @@ rmd <- system.file(
 tmp <- file.copy(from = rmd, to = "report.Rmd")
 ```
 
-A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, which then turns into fitted models, summaries, and reports.
+A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, then turns into fitted models, summaries, and reports.
 
-<img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;">
+<img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
 
-# Plan your work.
+# Set the stage.
 
-To get started with `drake`, you need to plan out these data transformations.
+To set up a project, load your packages,
 
-```{r pitchplan}
-plan <- drake_plan(
-  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
-  data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)),
-  hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  knitr::knit(
-    knitr_in("report.Rmd"),
-    output = file_out("report.md"),
-    quiet = TRUE
-  )
-)
-plan
-```
-
-The commands usually reference supporting functions and packages. Simply load them into your R session.
-
-```{r pitchfunctions}
+```{r mainpackages}
 library(drake)
 library(tidyverse)
+```
+
+load your custom functions,
+
+```{r createplot1}
 create_plot <- function(data) {
   ggplot(data, aes(x = Petal.Width, fill = Species)) +
     geom_histogram()
 }
 ```
 
-Optionally, check that you have all the supporting files you need. For the current example, you can get the input dataset and the R Markdown report using `drake_example("main")`. Be sure to put `raw_data.xlsx` and `report.Rmd` in your working directory.
+check any supporting files (optional),
 
-```{r checkfiles}
+```{r suppfiles}
+# Get the files with drake_example("main").
 file.exists("raw_data.xlsx")
 file.exists("report.Rmd")
 ```
 
-Our workflow is now ready to run, but it is usually a good idea to check the dependency graph first.
+and plan what you are going to do.
 
-```{r pitchgraph1, eval = FALSE}
-config <- drake_config(plan)
-vis_drake_graph(config)
-```
-
-<iframe
-src = "https://ropensci.github.io/drake/images/pitch1.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
-
-The `make()` function actually does the work. The targets build in the correct order regardless of the order of the rows in your plan.
-
-```{r pitchmake1}
-make(plan)
-```
-
-The file `report.md` was written, and everything else was stored in a hidden `.drake/` folder. Inspect the intermediate data objects using `loadd()` and `readd()`.
-
-```{r pitchreadd}
-summary(readd(fit))
-```
-
-```{r pitchloadd}
-loadd(data, hist)
-data
-```
-
-# Go back and change things.
-
-Whether your code takes minutes, hours, or days to run, it is almost never quite right the first time. **You will want to go back and change things. A lot.** For example, our data has a superfluous `X__1` column. Let's change the plan to remove it.
-
-```{r pitchx1}
+```{r createplan}
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
@@ -124,37 +80,41 @@ plan <- drake_plan(
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
   rmarkdown::render(
     knitr_in("report.Rmd"),
-    output_file = file_out("report.md"),
+    output_file = file_out("report.html"),
     quiet = TRUE
   )
 )
+plan
 ```
 
-The changed command affects `data` and everything depending on it. Those targets are now out of date.
+# Make your results.
 
-```{r pitchgraph2, eval = FALSE}
-vis_drake_graph(config)
-```
+So far, we have just been setting the stage. Use `make()` to actually make your results. Targets are built in the correct order regardless of the row order of `plan`.
 
-<iframe
-src = "https://ropensci.github.io/drake/images/pitch2.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
-
-The next `make()` just builds the outdated targets and leaves `raw_data` alone.
-
-```{r pitchmake2}
+```{r make1}
 make(plan)
-
-readd(data)
-
-readd(hist)
 ```
 
-Oops, we forgot to pick a bin width for our histogram. Let's fix our plot function.
+Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
 
-```{r fixplot}
+```{r readddata1}
+readd(data) # See also loadd().
+```
+
+# Go back and fix things.
+
+You will find mistakes. A lot. For example, we forgot to give our histogram a bin width.
+
+```{r loaddhist, eval = FALSE}
+readd(hist)
+#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<img src="https://ropensci.github.io/drake/images/hist1.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+
+So let's fix the plotting function.
+
+```{r changefn}
 create_plot <- function(data) {
   ggplot(data, aes(x = Petal.Width, fill = Species)) +
     geom_histogram(binwidth = 0.25) +
@@ -162,10 +122,12 @@ create_plot <- function(data) {
 }
 ```
 
-Only the histogram and the report need to change.
 
-```{r pitchgraph3, eval = FALSE}
-vis_drake_graph(config)
+`Drake` knows which results are affected.
+
+```{r visdrakegraphreadme, eval = FALSE}
+config <- drake_config(plan)
+vis_drake_graph(config) # Interactive graph: hover, zoom, drag, etc.
 ```
 
 <iframe
@@ -174,15 +136,23 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The next `make()` skips all the data wrangling and model fitting steps.
+The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
-```{r histmake}
+```{r justhistetc}
 make(plan)
-
-readd(hist)
 ```
 
-Want to try out the code yourself? Use `drake_example("main")` to write the files.
+```{r hist2, eval = FALSE}
+loadd(hist)
+hist
+```
+
+<img src="https://ropensci.github.io/drake/images/hist2.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+
+
+# Try it yourself!
+
+Use `drake_example("main")` to get all the materials.
 
 ```{r endofline_pitch, echo = FALSE}
 clean(destroy = TRUE, verbose = FALSE)
