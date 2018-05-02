@@ -28,52 +28,30 @@ mclapply_master <- function(config){
   config$queue <- new_target_queue(config = config)
   while (mc_work_remains(config)){
     for (worker in config$workers){
-      if (mc_is_idle(worker, config)){
+      if (mc_is_idle(worker = worker, config = config)){
         mc_conclude_worker(worker = worker, config = config)
         target <- config$queue$pop0(what = "names")
-
-        print(config$queue$list("priorities")) ## TODO: fix queue
-
         if (!length(target)){
+          mc_set_done(worker = worker, config = config)
           next
         }
-        mc_assign_worker(worker = worker, target = target, config = config)
+        mc_set_target(worker = worker, target = target, config = config)
+        mc_set_running(worker = worker, config = config)
       }
     }
-    Sys.sleep(1e-1)
+    Sys.sleep(mc_wait)
   }
-  mc_terminate_workers(config)
-}
-
-mc_assign_worker <- function(worker, target, config){
-  config$cache$set(
-    key = worker,
-    value = target,
-    namespace = "workers"
-  )
-}
-
-mc_terminate_workers <- function(config){
-  lapply(X = config$workers, FUN = mc_set_done, config = config)
-}
-
-mc_set_idle <- function(worker, config){
-  config$cache$set(key = worker, value = TRUE, namespace = "workers")
-}
-
-mc_set_done <- function(worker, config){
-  config$cache$set(key = worker, value = FALSE, namespace = "workers")
 }
 
 mclapply_worker <- function(worker, config){
   while (TRUE){
-    target <- config$cache$get(key = worker, namespace = "workers")
-    if (identical(target, FALSE)){
-      return()
-    } else if (identical(target, TRUE)){
-      Sys.sleep(1e-1)
+    if (mc_is_idle(worker = worker, config = config)){
+      Sys.sleep(mc_wait)
       next
+    } else if (mc_is_done(worker = worker, config = config)){
+      break
     }
+    target <- mc_get_target(worker = worker, config = config)
     meta <- drake_meta(target = target, config = config)
     if (!should_build_target(
       target = target,
@@ -99,8 +77,10 @@ mc_initialize_cache <- function(config){
   config$cache$clear(namespace = "workers")
   lapply(
     X = config$workers,
-    FUN = mc_set_idle,
-    config = config
+    FUN = function(worker){
+      mc_set_idle(worker = worker, config = config)
+      mc_set_target(worker = worker, target = NA, config = config)
+    }
   )
   lapply(
     X = igraph::V(config$schedule)$name,
@@ -111,42 +91,9 @@ mc_initialize_cache <- function(config){
   invisible()
 }
 
-mc_work_remains <- function(config){
-  !config$queue$empty() ||
-    !mc_all_idle(config)
-}
-
-mc_all_idle <- function(config){
-  for (worker in config$workers){
-    if (!mc_is_idle(worker, config)){
-      return(FALSE)
-    }
-  }
-  TRUE
-}
-
-mc_is_idle <- function(worker, config){
-  config$cache$get(key = worker, namespace = "workers")
-  identical(TRUE, config$cache$get(key = worker, namespace = "workers"))
-}
-
-mc_running_targets <- function(config){
-  lapply(
-    X = config$workers,
-    FUN = function(worker){
-      if (mc_is_idle(worker = worker, config = config)){
-        NULL
-      } else {
-        config$cache$get(key = worker, namespace = "workers")
-      }
-    }
-  ) %>%
-    unlist
-}
-
 mc_conclude_worker <- function(worker, config){
-  target <- config$cache$get(key = worker, namespace = "workers")
-  if (!is.character(target)){
+  target <- config$cache$get(key = worker, namespace = "mc_target")
+  if (is.na(target)){
     return()
   }
   config$cache$del(key = target, namespace = "protect")
@@ -156,12 +103,99 @@ mc_conclude_worker <- function(worker, config){
     reverse = TRUE
   ) %>%
     intersect(y = config$queue$list(what = "names"))
-  if (!get_attempt_flag(config) && target %in% config$plan$target){
+  flag_attempt <- !get_attempt_flag(config) &&
+    get_progress_single(target = target, cache = config$cache) == "finished" &&
+    target %in% config$plan$target
+  if (flag_attempt){
     set_attempt_flag(config)
   }
   config$queue$decrease_key(names = revdeps)
-  mc_set_idle(worker = worker, config = config)
 }
+
+mc_work_remains <- function(config){
+  !config$queue$empty() ||
+    !mc_all_done(config)
+}
+
+mc_all_done <- function(config){
+  for (worker in config$workers){
+    if (!mc_is_done(worker, config)){
+      return(FALSE)
+    }
+  }
+  TRUE
+}
+
+mc_running_targets <- function(config){
+  Filter(
+    x = config$workers,
+    f = function(worker){
+      mc_is_running(worker = worker, config = config)
+    }
+  )
+}
+
+mc_is_status <- function(worker, status, config){
+  while (TRUE){
+    worker_status <- try(
+      config$cache$get(key = worker, namespace = "mc_status"),
+      silent = TRUE
+    )
+    if (worker_status %in% c("done", "idle", "running")){
+      break
+    }
+    Sys.sleep(mc_wait)
+  }
+  identical(status, worker_status)
+}
+
+mc_is_done <- function(worker, config){
+  mc_is_status(worker = worker, status = "done", config = config)
+}
+
+mc_is_idle <- function(worker, config){
+  mc_is_status(worker = worker, status = "idle", config = config)
+}
+
+mc_is_running <- function(worker, config){
+  mc_is_status(worker = worker, status = "running", config = config)
+}
+
+mc_set_status <- function(worker, status, config){
+  config$cache$set(key = worker, value = status, namespace = "mc_status")
+}
+
+mc_set_done <- function(worker, config){
+  mc_set_status(worker = worker, status = "done", config = config)
+}
+
+mc_set_idle <- function(worker, config){
+  mc_set_status(worker = worker, status = "idle", config = config)
+}
+
+mc_set_running <- function(worker, config){
+  mc_set_status(worker = worker, status = "running", config = config)
+}
+
+mc_get_target <- function(worker, config){
+  while (TRUE){
+    target <- try(
+      config$cache$get(key = worker, namespace = "mc_target"),
+      silent = TRUE
+    )
+    if (is.character(target)){
+      break
+    }
+    Sys.sleep(mc_wait)
+  }
+  target
+}
+
+mc_set_target <- function(worker, target, config){
+  config$cache$set(key = worker, value = target, namespace = "mc_target")
+}
+
+mc_wait <- 1e-9
 
 warn_mclapply_windows <- function(
   parallelism,
