@@ -222,19 +222,20 @@ filter_upstream <- function(targets, graph){
   leaf_nodes(graph)
 }
 
+# This function will go away when we get rid of staged parallelism.
 exclude_imports_if <- function(config){
   if (!length(config$skip_imports)){
-    config$skip_imports <- FALSE
+    config$skip_imports <- FALSE # nocov
   }
   if (!config$skip_imports){
     return(config)
   }
   delete_these <- setdiff(
-    V(config$execution_graph)$name,
+    V(config$schedule)$name,
     config$plan$target
   )
-  config$execution_graph <- delete_vertices(
-    graph = config$execution_graph,
+  config$schedule <- delete_vertices(
+    graph = config$schedule,
     v = delete_these
   )
   config

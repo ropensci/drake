@@ -54,10 +54,10 @@ parallel_stages <- function(
   }
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
-  config$execution_graph <- imports_graph(config = config)
+  config$schedule <- imports_graph(config = config)
   run_staged_parallelism(config = config, worker = worker_parallel_stages)
   targets_graph <- targets_graph(config = config)
-  config$execution_graph <- targets_graph
+  config$schedule <- targets_graph
   run_staged_parallelism(config = config, worker = worker_parallel_stages)
   out <- read_parallel_stages(config = config)
   if (!length(out)){
@@ -75,7 +75,7 @@ parallel_stages <- function(
   ) %>%
     setdiff(y = out$item)
   delete_these <- setdiff(V(targets_graph)$name, also_outdated)
-  config$execution_graph <- delete_vertices(
+  config$schedule <- delete_vertices(
     graph = targets_graph,
     v = delete_these
   )
@@ -88,7 +88,7 @@ parallel_stages <- function(
 
 run_staged_parallelism <- function(config, worker) {
   config <- exclude_imports_if(config = config)
-  while (length(V(config$execution_graph))){
+  while (length(V(config$schedule))){
     config <- parallel_stage(worker = worker, config = config)
   }
   invisible()
@@ -156,7 +156,7 @@ read_parallel_stages <- function(config){
 next_stage <- function(config = drake::read_drake_config()){
   config$stages_cache <- storr::storr_environment()
   config$stages_cache$clear()
-  config$execution_graph <- targets_graph(config = config)
+  config$schedule <- targets_graph(config = config)
   parallel_stage(worker = worker_next_stage, config = config)
   tryCatch(
     config$stages_cache$get(key = "next_stage"),
@@ -184,7 +184,7 @@ parallel_stage <- function(worker, config) {
   meta_list <- list()
   old_leaves <- NULL
   while (TRUE){
-    new_leaves <- leaf_nodes(graph = config$execution_graph) %>%
+    new_leaves <- leaf_nodes(graph = config$schedule) %>%
       setdiff(y = build_these) %>%
       sort
     # Probably will not encounter this, but it prevents
@@ -210,8 +210,8 @@ parallel_stage <- function(worker, config) {
     build_these <- c(build_these, new_leaves[do_build])
     if (!all(do_build)){
       trim_these <- new_leaves[!do_build]
-      config$execution_graph <- delete_vertices(
-        graph = config$execution_graph,
+      config$schedule <- delete_vertices(
+        graph = config$schedule,
         v = trim_these
       )
     } else {
@@ -226,7 +226,7 @@ parallel_stage <- function(worker, config) {
     worker(targets = build_these, meta_list = meta_list,
            config = config)
   }
-  config$execution_graph <-
-    delete_vertices(config$execution_graph, v = build_these)
+  config$schedule <-
+    delete_vertices(config$schedule, v = build_these)
   invisible(config)
 }
