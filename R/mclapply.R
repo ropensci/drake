@@ -132,15 +132,6 @@ mc_all_done <- function(config){
   TRUE
 }
 
-mc_running_targets <- function(config){
-  Filter(
-    x = config$workers,
-    f = function(worker){
-      mc_is_running(worker = worker, config = config)
-    }
-  )
-}
-
 mc_is_status <- function(worker, status, config){
   while (TRUE){
     worker_status <- try(
@@ -150,7 +141,7 @@ mc_is_status <- function(worker, status, config){
     if (worker_status %in% c("done", "idle", "running")){
       break
     }
-    Sys.sleep(mc_wait)
+    Sys.sleep(mc_wait) # nocov
   }
   identical(status, worker_status)
 }
@@ -161,10 +152,6 @@ mc_is_done <- function(worker, config){
 
 mc_is_idle <- function(worker, config){
   mc_is_status(worker = worker, status = "idle", config = config)
-}
-
-mc_is_running <- function(worker, config){
-  mc_is_status(worker = worker, status = "running", config = config)
 }
 
 mc_set_status <- function(worker, status, config){
@@ -192,7 +179,7 @@ mc_get_target <- function(worker, config){
     if (is.character(target)){
       break
     }
-    Sys.sleep(mc_wait)
+    Sys.sleep(mc_wait) # nocov
   }
   target
 }
