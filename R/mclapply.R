@@ -16,12 +16,18 @@ run_mclapply <- function(config){
   invisible()
 }
 
+mc_try <- function(code){
+  tryCatch(code, error = error_show)
+}
+
 mclapply_process <- function(id, config){
-  if (id == "0"){
-    mclapply_master(config)
-  } else {
-    mclapply_worker(worker = id, config = config)
-  }
+  mc_try({
+    if (id == "0"){
+      mclapply_master(config)
+    } else {
+      mclapply_worker(worker = id, config = config)
+    }
+  })
 }
 
 mclapply_master <- function(config){
