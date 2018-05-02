@@ -82,13 +82,9 @@ build_check_store <- function(
     downstream = downstream
   )
   value <- build_and_store(target = target, meta = meta, config = config)
-  if (target %in% config$plan$target){
-    if (!is_file(target)){
-      assign(x = target, value = value, envir = config$envir)
-    }
-    if (flag_attempt){
-      set_attempt_flag(config)
-    }
+  assign_to_envir(target = target, value = value, config = config)
+  if (flag_attempt && target %in% config$plan$target){
+    set_attempt_flag(config)
   }
 }
 

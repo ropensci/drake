@@ -1,4 +1,16 @@
-assign_to_envir <- function(targets, values, config){
+assign_to_envir <- function(target, value, config){
+  if (
+    identical(config$lazy_load, "eager") &&
+    !is_file(target) &&
+    target %in% config$plan$target
+  ){
+    assign(x = target, value = value, envir = config$envir)
+  }
+  invisible()
+}
+
+# Should go away when staged parallelism goes away.
+assign_to_envir_batch <- function(targets, values, config){
   if (config$lazy_load != "eager"){
     return()
   }
@@ -13,6 +25,7 @@ assign_to_envir <- function(targets, values, config){
   invisible()
 }
 
+# Same.
 assign_to_envir_single <- function(index, targets, values, config){
   target <- targets[index]
   value <- values[[index]]

@@ -47,7 +47,7 @@ prune_envir_parLapply <- function(targets = targets, config = config) { # nolint
 
 assign_to_envir_parLapply <- # nolint
   function(targets, values, config) {
-  assign_to_envir(targets = targets, values = values, config = config)
+  assign_to_envir_batch(targets = targets, values = values, config = config)
   if (identical(config$envir, globalenv()))
     clusterCall(cl = config$cluster, fun = assign_to_envir,
       targets = targets, values = values, config = config)

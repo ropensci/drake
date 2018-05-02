@@ -32,6 +32,28 @@ test_with_dir("no overt errors lazy load for the debug example", {
   expect_equal(outdated(config), character(0))
 })
 
+test_with_dir("lazy loading is actually lazy", {
+  lazily_loaded <- c("nextone", "yourinput")
+  eagerly_loaded <- "combined"
+  config <- dbug()
+  unload_these <- c(lazily_loaded, eagerly_loaded) %>%
+    intersect(y = ls(envir = config$envir))
+  remove(list = unload_these, envir = config$envir)
+  config <- drake_config(
+    lazy_load = TRUE,
+    plan = config$plan,
+    targets = "combined",
+    envir = config$envir,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  config$schedule <- config$graph
+  run_lapply(config)
+  loaded <- ls(envir = config$envir)
+  expect_true(all(lazily_loaded %in% loaded))
+  expect_false(any(eagerly_loaded %in% loaded))
+})
+
 test_with_dir("active bindings", {
   config <- dbug()
   if (identical(globalenv(), config$envir)){

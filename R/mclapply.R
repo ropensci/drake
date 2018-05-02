@@ -31,9 +31,12 @@ mc_master <- function(config){
     for (worker in config$workers){
       if (mc_is_idle(worker = worker, config = config)){
         mc_conclude_worker(worker = worker, config = config)
+        if (!config$queue$size()){
+          mc_set_done(worker = worker, config = config)
+          next
+        }
         target <- config$queue$pop0(what = "names")
         if (!length(target)){
-          mc_set_done(worker = worker, config = config)
           next
         }
         mc_set_target(worker = worker, target = target, config = config)
@@ -210,5 +213,5 @@ worker_mclapply <- function(targets, meta_list, config){
     config = config,
     mc.cores = jobs
   )
-  assign_to_envir(targets = targets, values = values, config = config)
+  assign_to_envir_batch(targets = targets, values = values, config = config)
 }
