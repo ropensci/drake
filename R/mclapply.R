@@ -5,10 +5,10 @@ run_mclapply <- function(config){
     return(run_lapply(config = config))
   }
   config$workers <- as.character(seq_len(config$jobs))
-  mc_initialize_cache(config)
+  mc_init_worker_cache(config)
   tmp <- mclapply(
     X = c("0", config$workers),
-    FUN = mclapply_process,
+    FUN = mc_process,
     mc.cores = config$jobs + 1,
     mc.preschedule = FALSE,
     config = config
@@ -16,21 +16,17 @@ run_mclapply <- function(config){
   invisible()
 }
 
-mc_try <- function(code){
-  tryCatch(code, error = error_show)
-}
-
-mclapply_process <- function(id, config){
-  mc_try({
+mc_process <- function(id, config){
+  try_message({
     if (id == "0"){
-      mclapply_master(config)
+      mc_master(config)
     } else {
-      mclapply_worker(worker = id, config = config)
+      mc_worker(worker = id, config = config)
     }
   })
 }
 
-mclapply_master <- function(config){
+mc_master <- function(config){
   config$queue <- new_target_queue(config = config)
   while (mc_work_remains(config)){
     for (worker in config$workers){
@@ -49,7 +45,7 @@ mclapply_master <- function(config){
   }
 }
 
-mclapply_worker <- function(worker, config){
+mc_worker <- function(worker, config){
   while (TRUE){
     if (mc_is_idle(worker = worker, config = config)){
       Sys.sleep(mc_wait)
@@ -79,7 +75,7 @@ mclapply_worker <- function(worker, config){
   }
 }
 
-mc_initialize_cache <- function(config){
+mc_init_worker_cache <- function(config){
   config$cache$clear(namespace = "workers")
   lapply(
     X = config$workers,
