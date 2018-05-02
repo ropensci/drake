@@ -25,6 +25,7 @@ knitr::opts_chunk$set(
   error = TRUE,
   warning = TRUE
 )
+pkgconfig::set_config("drake::strings_in_dots" = "literals")
 tmp <- file.create("data.csv")
 ```
 
@@ -133,6 +134,111 @@ Dangers:
 4. The return value of `source()` is formatted counter-intuitively. If `source(file_in("get_data.R"))` is the command for `my_data`, then `my_data` will always be a list with elements `"value"` and `"visible"`. In other words, `source(file_in("get_data.R"))$value` is really what you would want.
 
 In addition, this `source()`-based approach is simply inconvenient. `Drake` rebuilds `my_data` every time `get_data.R` changes, even when those changes are just extra comments or blank lines. On the other hand, in the previous plan that uses `my_data = get_data()`, `drake` does not trigger rebuilds when comments or whitespace in `get_data()` are modified. `Drake` is R-focused, not file-focused. If you embrace this viewpoint, your work will be easier.
+
+## File output targets
+
+In your plan, the `file_out()` function tells `drake` that your target is an external file rather than an ordinary R object.
+
+```{r fileplan}
+plan <- drake_plan(
+  writeLines(text = letters[1:6], con = file_out("file.txt"))
+)
+plan
+```
+
+Now, `make()` knows to expect a file called `file.txt`.
+
+```{r fileplan2}
+make(plan)
+```
+
+And if you manually mangle `file.txt` by accident, `make()` restores it to its reproducible state.
+
+```{r fileplan3}
+writeLines(text = "123", con = file_out("file.txt"))
+make(plan)
+make(plan)
+```
+
+But just because your command produces files does not mean you need to track them.
+
+```{r fileplan5, eval = FALSE}
+plan <- drake_plan(real_output = long_job())
+make(plan)
+list.files()
+## [1] "date-time.log" "error.log" "console.log" 
+```
+
+These log files probably have nothing to do with the objectives of your research. If that is the case, you can safely ignore them with no loss of reproducibility.
+
+Generally speaking, `drake` was designed to be as R-focused as possible, which means you should treat targets as R objects most of the time. External files are really an afterthought. This might be an uncomfortable notion. You may be accustomed to generating lots of files.
+
+```{r fileplan6}
+drake_plan(
+  write.csv(tabulate_results(data), file_out("results.csv")),
+  ggsave(my_ggplot(data), file = file_out("plot.pdf"))
+)
+```
+
+But R object targets are much more convenient in the long run. If you really want to display them, consolidate them all in an R Markdown report at the end of the pipeline to reduce the number of output files.
+
+```{r rmdready, echo = FALSE}
+invisible(file.create("report.Rmd"))
+```
+
+```{r fileplan7}
+drake_plan(
+  tab_results = tabulate_results(data),
+  data_plot = my_ggplot(data),
+  rmarkdown::render(
+    knitr_in("report.Rmd"), # References tab_results` and data_plot in active code chunks using loadd() or readd().
+    output_file = file_out("report.html")
+  )
+)
+```
+
+But sometimes, you may unavoidably have multiple important files for each target. For example, maybe you work with spatial data and use the [`sf` package](https://github.com/r-spatial/sf). 
+
+```{r sf, eval = FALSE}
+st_write(spatial_data, "spatial_data.shp", driver = "ESRI Shapefile")
+
+## Creates:
+##   - "spatial_data.shp"
+##   - "spatial_data.shx"
+##   - "spatial_data.prj"
+##   - "spatial_data.dbf"
+```
+
+Later targets may depend on many of these files, but there can only be one output file per target. So what do we do? Spoof `drake`: pick one file to be the real target, and let the other files be targets that depend on it.
+
+```{r sf2}
+library(drake)
+library(magrittr)
+drake_plan(
+  st_write(spatial_data, file_out("spatial_data.shp"), driver = "ESRI Shapefile"),
+  c(file_out("spatial_data.EXTN"), file_in("spatial_data.shp")),
+  out = process_shx(file_in("spatial_data.EXTN"))
+) %>%
+  evaluate_plan(wildcard = "EXTN", values = c("shx", "prj", "dbj"))
+```
+
+But be warned: If you manually mangle `spatial_data.shx`, `spatial_data.prj` or `spatial_data.dbj` later on, `make()` will not restore them. Having lots of output files can also slow down the construction of workflow plan data frames (ref: [issue 366](https://github.com/ropensci/drake/issues/366)).
+
+It may actually be safer to divide the workflow into two pipelines with separate caches and separate plans. That way, all the output files from the first pipeline, tracked or not tracked, become inputs to the second pipeline. An overarching R script can run both pipelines back to back.
+
+```{r separate, eval = FALSE}
+plan1 <- drake_plan(
+  st_write(spatial_data, file_out("spatial_data.shp"), driver = "ESRI Shapefile")
+)
+plan2 <- drake_plan(out = process_shx(file_in("spatial_data.EXTN")))%>%
+  evaluate_plan(wildcard = "EXTN", values = c("shx", "prj", "dbj"))
+cache1 <- new_cache(path = "cache1")
+cache2 <- new_cache(path = "cache2")
+make(plan1, cache = cache1)
+make(plan2, cache = cache2)
+```
+
+See the [storage guide](https://ropensci.github.io/drake/articles/storage.html) for more on caching, particularly functions `get_cache()` and `this_cache()`.
 
 ## R Markdown and knitr reports
 
@@ -359,5 +465,7 @@ readd(logs)
 
 ```{r endofline_bestpractices, echo = F}
 clean(destroy = TRUE, verbose = FALSE)
-unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
+unlink(
+  c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db", "file.txt")
+)
 ```
