@@ -19,13 +19,20 @@ or knitr report source file. — deps • drake</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="List the dependencies of a function, workflow plan command,
+or knitr report source file. — deps" />
+
+<meta property="og:description" content="Intended for debugging and checking your project.
+The dependency structure of the components of your analysis
+decides which targets are built and when." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -134,6 +141,7 @@ or knitr report source file. — deps • drake</title>
     <div class="page-header">
     <h1>List the dependencies of a function, workflow plan command,
 or knitr report source file.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/dependencies.R'><code>R/dependencies.R</code></a></small>
     </div>
 
     
@@ -175,8 +183,8 @@ they are dependencies of <code>"report.md"</code>, not <code>"report.Rmd"</code>
 <p>The <code><a href='file_store.html'>file_store()</a></code> function
 alerts <code>drake</code> utility functions to file names by
 enclosing them in literal double quotes.
-(For example, <code><a href='file_store.html'>file_store("report.Rmd")</a></code> is just <code>"\"report.Rmd\""</code>.)
-    <code>Drake</code> takes special precautions so that a target/import
+(For example, <code><a href='file_store.html'>file_store("report.Rmd")</a></code> is just <code>"\"report.Rmd\""</code>.)</p>
+<p><code>Drake</code> takes special precautions so that a target/import
 does not depend on itself. For example, <code>deps(f)`` might return</code>"f"<code>if</code>f()` is a recursive function, but <code><a href='make.html'>make()</a></code> just ignores
 this conflict and runs as expected. In other words, <code><a href='make.html'>make()</a></code>
 automatically removes all self-referential loops in the dependency
@@ -202,7 +210,7 @@ network.</p>
 <span class='co'># Get the dependencies of workflow plan commands.</span>
 <span class='co'># Here, the dependencies could be R functions/objects from your workspace</span>
 <span class='co'># or packages, imported files, or other targets in the workflow plan.</span>
-<span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] "\"tracked_input_file.rds\"" "readRDS"                   
+<span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] "some_object"</div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] "readRDS"                    "\"tracked_input_file.rds\""
 #&gt; [3] "x"                         </div><div class='input'><span class='fu'>deps</span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>3</span>])</div><div class='output co'>#&gt; [1] "f" "g" "w" "x" "y" "z"</div><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
@@ -233,7 +241,7 @@ network.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -241,3 +249,4 @@ network.</p>
 
   </body>
 </html>
+

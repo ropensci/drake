@@ -19,13 +19,20 @@ of the last call to <code><a href='make.html'>make()</a></code>. — drake_sessi
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Return the <code>sessionInfo()</code>
+of the last call to <code><a href='make.html'>make()</a></code>. — drake_session" />
+
+<meta property="og:description" content="By default, session info is saved
+during make() to ensure reproducibility.
+Your loaded packages and their versions are recorded, for example." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -134,6 +141,7 @@ of the last call to <code><a href='make.html'>make()</a></code>. — drake_sessi
     <div class="page-header">
     <h1>Return the <code>sessionInfo()</code>
 of the last call to <code><a href='make.html'>make()</a></code>.</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/progress.R'><code>R/progress.R</code></a></small>
     </div>
 
     
@@ -224,7 +232,7 @@ call to <code><a href='make.html'>make()</a></code></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -232,3 +240,4 @@ call to <code><a href='make.html'>make()</a></code></p>
 
   </body>
 </html>
+

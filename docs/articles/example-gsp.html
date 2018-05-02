@@ -8,8 +8,11 @@
 <title>Example: gross state products • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Example: gross state products">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -112,8 +115,11 @@
             <h3 class="subtitle">Generate lots of tasks with ease.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-04-27</h4>
-          </div>
+            <h4 class="date">2018-05-01</h4>
+      
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-gsp.Rmd"><code>vignettes/example-gsp.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -123,7 +129,7 @@
 <h1 class="hasAnchor">
 <a href="#get-the-code-" class="anchor"></a>Get the code.</h1>
 <p>Write the code files to your workspace.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"gsp"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_example.html">drake_example</a></span>(<span class="st">"gsp"</span>)</code></pre></div>
 <p>The new <code>gsp</code> folder now includes a file structure of a serious <code>drake</code> project, plus an <code>interactive-tutorial.R</code> to narrate the example. The code is also <a href="https://github.com/ropensci/drake/tree/master/inst/examples/gsp">online here</a>.</p>
 </div>
 <div id="objective-and-methods" class="section level1">
@@ -162,153 +168,153 @@
 <li>
 <code>unemp</code>: state unemployment rate.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(Ecdat)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">data</span>(Produc)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">head</span>(Produc)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">##     state year     pcap     hwy   water    util       pc   gsp    emp</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">## 1 ALABAMA 1970 15032.67 7325.80 1655.68 6051.20 35793.80 28418 1010.5</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">## 2 ALABAMA 1971 15501.94 7525.94 1721.02 6254.98 37299.91 29375 1021.9</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">## 3 ALABAMA 1972 15972.41 7765.42 1764.75 6442.23 38670.30 31303 1072.3</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">## 4 ALABAMA 1973 16406.26 7907.66 1742.41 6756.19 40084.01 33430 1135.5</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">## 5 ALABAMA 1974 16762.67 8025.52 1734.85 7002.29 42057.31 33749 1169.8</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">## 6 ALABAMA 1975 17316.26 8158.23 1752.27 7405.76 43971.71 33604 1155.4</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">##   unemp</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">## 1   4.7</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">## 2   5.2</a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">## 3   4.7</a>
-<a class="sourceLine" id="cb2-15" data-line-number="15">## 4   3.9</a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">## 5   5.5</a>
-<a class="sourceLine" id="cb2-17" data-line-number="17">## 6   7.7</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Ecdat)
+<span class="kw">data</span>(Produc)
+<span class="kw">head</span>(Produc)
+##     state year     pcap     hwy   water    util       pc   gsp    emp
+## 1 ALABAMA 1970 15032.67 7325.80 1655.68 6051.20 35793.80 28418 1010.5
+## 2 ALABAMA 1971 15501.94 7525.94 1721.02 6254.98 37299.91 29375 1021.9
+## 3 ALABAMA 1972 15972.41 7765.42 1764.75 6442.23 38670.30 31303 1072.3
+## 4 ALABAMA 1973 16406.26 7907.66 1742.41 6756.19 40084.01 33430 1135.5
+## 5 ALABAMA 1974 16762.67 8025.52 1734.85 7002.29 42057.31 33749 1169.8
+## 6 ALABAMA 1975 17316.26 8158.23 1752.27 7405.76 43971.71 33604 1155.4
+##   unemp
+## 1   4.7
+## 2   5.2
+## 3   4.7
+## 4   3.9
+## 5   5.5
+## 6   7.7</code></pre></div>
 </div>
 <div id="analysis" class="section level1">
 <h1 class="hasAnchor">
 <a href="#analysis" class="anchor"></a>Analysis</h1>
 <p>First, we load the required packages. <code>Drake</code> is aware of all the packages you load with <code>library()</code> or <code>require()</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(drake)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">library</span>(Ecdat) <span class="co"># econometrics datasets</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">library</span>(knitr)</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">library</span>(ggplot2)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
+<span class="kw">library</span>(Ecdat) <span class="co"># econometrics datasets</span>
+<span class="kw">library</span>(knitr)
+<span class="kw">library</span>(ggplot2)</code></pre></div>
 <p>Next, set up our workflow plan data frame in stages. We start with the models. Each model has 3 predictors, and we try all 84 possible models.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">predictors &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">colnames</span>(Produc), <span class="st">"gsp"</span>)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">combos &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">combn</span>(predictors, <span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">head</span>(combos)</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">##      [,1]    [,2]   [,3]   </a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">## [1,] "state" "year" "pcap" </a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">## [2,] "state" "year" "hwy"  </a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">## [3,] "state" "year" "water"</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">## [4,] "state" "year" "util" </a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">## [5,] "state" "year" "pc"   </a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">## [6,] "state" "year" "emp"</a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">targets &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, paste, <span class="dt">collapse =</span> <span class="st">"_"</span>)</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">commands &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, <span class="cf">function</span>(row){</a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">  covariates &lt;-<span class="st"> </span><span class="kw">paste</span>(row, <span class="dt">collapse =</span> <span class="st">" + "</span>)</a>
-<a class="sourceLine" id="cb4-14" data-line-number="14">  formula &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"as.formula(</span><span class="ch">\"</span><span class="st">gsp ~ "</span>, covariates, <span class="st">"</span><span class="ch">\"</span><span class="st">)"</span>)</a>
-<a class="sourceLine" id="cb4-15" data-line-number="15">  command &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"lm("</span>, formula, <span class="st">", data = Produc)"</span>)</a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">})</a>
-<a class="sourceLine" id="cb4-17" data-line-number="17">model_plan &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">target =</span> targets, <span class="dt">command =</span> commands)</a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="kw">head</span>(model_plan)</a>
-<a class="sourceLine" id="cb4-20" data-line-number="20">##             target</a>
-<a class="sourceLine" id="cb4-21" data-line-number="21">## 1  state_year_pcap</a>
-<a class="sourceLine" id="cb4-22" data-line-number="22">## 2   state_year_hwy</a>
-<a class="sourceLine" id="cb4-23" data-line-number="23">## 3 state_year_water</a>
-<a class="sourceLine" id="cb4-24" data-line-number="24">## 4  state_year_util</a>
-<a class="sourceLine" id="cb4-25" data-line-number="25">## 5    state_year_pc</a>
-<a class="sourceLine" id="cb4-26" data-line-number="26">## 6   state_year_emp</a>
-<a class="sourceLine" id="cb4-27" data-line-number="27">##                                                       command</a>
-<a class="sourceLine" id="cb4-28" data-line-number="28">## 1  lm(as.formula("gsp ~ state + year + pcap"), data = Produc)</a>
-<a class="sourceLine" id="cb4-29" data-line-number="29">## 2   lm(as.formula("gsp ~ state + year + hwy"), data = Produc)</a>
-<a class="sourceLine" id="cb4-30" data-line-number="30">## 3 lm(as.formula("gsp ~ state + year + water"), data = Produc)</a>
-<a class="sourceLine" id="cb4-31" data-line-number="31">## 4  lm(as.formula("gsp ~ state + year + util"), data = Produc)</a>
-<a class="sourceLine" id="cb4-32" data-line-number="32">## 5    lm(as.formula("gsp ~ state + year + pc"), data = Produc)</a>
-<a class="sourceLine" id="cb4-33" data-line-number="33">## 6   lm(as.formula("gsp ~ state + year + emp"), data = Produc)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">predictors &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">colnames</span>(Produc), <span class="st">"gsp"</span>)
+combos &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">combn</span>(predictors, <span class="dv">3</span>))
+<span class="kw">head</span>(combos)
+##      [,1]    [,2]   [,3]   
+## [1,] "state" "year" "pcap" 
+## [2,] "state" "year" "hwy"  
+## [3,] "state" "year" "water"
+## [4,] "state" "year" "util" 
+## [5,] "state" "year" "pc"   
+## [6,] "state" "year" "emp"
+targets &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, paste, <span class="dt">collapse =</span> <span class="st">"_"</span>)
+commands &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, function(row){
+  covariates &lt;-<span class="st"> </span><span class="kw">paste</span>(row, <span class="dt">collapse =</span> <span class="st">" + "</span>)
+  formula &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"as.formula(</span><span class="ch">\"</span><span class="st">gsp ~ "</span>, covariates, <span class="st">"</span><span class="ch">\"</span><span class="st">)"</span>)
+  command &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"lm("</span>, formula, <span class="st">", data = Produc)"</span>)
+})
+model_plan &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">target =</span> targets, <span class="dt">command =</span> commands)
+
+<span class="kw">head</span>(model_plan)
+##             target
+## 1  state_year_pcap
+## 2   state_year_hwy
+## 3 state_year_water
+## 4  state_year_util
+## 5    state_year_pc
+## 6   state_year_emp
+##                                                       command
+## 1  lm(as.formula("gsp ~ state + year + pcap"), data = Produc)
+## 2   lm(as.formula("gsp ~ state + year + hwy"), data = Produc)
+## 3 lm(as.formula("gsp ~ state + year + water"), data = Produc)
+## 4  lm(as.formula("gsp ~ state + year + util"), data = Produc)
+## 5    lm(as.formula("gsp ~ state + year + pc"), data = Produc)
+## 6   lm(as.formula("gsp ~ state + year + emp"), data = Produc)</code></pre></div>
 <p>Next, we make a plan to judge each model based on its root mean squared prediction error (RMSPE).</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">commands &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"get_rmspe("</span>, targets, <span class="st">", data = Produc)"</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">targets &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"rmspe_"</span>, targets)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">rmspe_plan &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">target =</span> targets, <span class="dt">command =</span> commands)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw">head</span>(rmspe_plan)</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">##                   target                                    command</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">## 1  rmspe_state_year_pcap  get_rmspe(state_year_pcap, data = Produc)</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">## 2   rmspe_state_year_hwy   get_rmspe(state_year_hwy, data = Produc)</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">## 3 rmspe_state_year_water get_rmspe(state_year_water, data = Produc)</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">## 4  rmspe_state_year_util  get_rmspe(state_year_util, data = Produc)</a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">## 5    rmspe_state_year_pc    get_rmspe(state_year_pc, data = Produc)</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">## 6   rmspe_state_year_emp   get_rmspe(state_year_emp, data = Produc)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">commands &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"get_rmspe("</span>, targets, <span class="st">", data = Produc)"</span>)
+targets &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"rmspe_"</span>, targets)
+rmspe_plan &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">target =</span> targets, <span class="dt">command =</span> commands)
+
+<span class="kw">head</span>(rmspe_plan)
+##                   target                                    command
+## 1  rmspe_state_year_pcap  get_rmspe(state_year_pcap, data = Produc)
+## 2   rmspe_state_year_hwy   get_rmspe(state_year_hwy, data = Produc)
+## 3 rmspe_state_year_water get_rmspe(state_year_water, data = Produc)
+## 4  rmspe_state_year_util  get_rmspe(state_year_util, data = Produc)
+## 5    rmspe_state_year_pc    get_rmspe(state_year_pc, data = Produc)
+## 6   rmspe_state_year_emp   get_rmspe(state_year_emp, data = Produc)</code></pre></div>
 <p>We need to define a function to get the RMSPE for each model.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">get_rmspe &lt;-<span class="st"> </span><span class="cf">function</span>(lm_fit, data){</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">  y &lt;-<span class="st"> </span>data<span class="op">$</span>gsp</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">  yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(lm_fit, <span class="dt">data =</span> data)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">  terms &lt;-<span class="st"> </span><span class="kw">attr</span>(<span class="kw">summary</span>(lm_fit)<span class="op">$</span>terms, <span class="st">"term.labels"</span>)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">  <span class="kw">data.frame</span>(</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">    <span class="dt">rmspe =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>((y <span class="op">-</span><span class="st"> </span>yhat)<span class="op">^</span><span class="dv">2</span>)), <span class="co"># nolint</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="dt">X1 =</span> terms[<span class="dv">1</span>],</a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="dt">X2 =</span> terms[<span class="dv">2</span>],</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">    <span class="dt">X3 =</span> terms[<span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb6-10" data-line-number="10">  )</a>
-<a class="sourceLine" id="cb6-11" data-line-number="11">}</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_rmspe &lt;-<span class="st"> </span>function(lm_fit, data){
+  y &lt;-<span class="st"> </span>data$gsp
+  yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(lm_fit, <span class="dt">data =</span> data)
+  terms &lt;-<span class="st"> </span><span class="kw">attr</span>(<span class="kw">summary</span>(lm_fit)$terms, <span class="st">"term.labels"</span>)
+  <span class="kw">data.frame</span>(
+    <span class="dt">rmspe =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>((y -<span class="st"> </span>yhat)^<span class="dv">2</span>)), <span class="co"># nolint</span>
+    <span class="dt">X1 =</span> terms[<span class="dv">1</span>],
+    <span class="dt">X2 =</span> terms[<span class="dv">2</span>],
+    <span class="dt">X3 =</span> terms[<span class="dv">3</span>]
+  )
+}</code></pre></div>
 <p>In our current plan, RMSPE is distributed over 84 targets (one for each model). Let’s plan to combine them all together in a single data frame.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">rmspe_results_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gather_plan.html">gather_plan</a></span>(</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">plan =</span> rmspe_plan,</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="dt">target =</span> <span class="st">"rmspe"</span>,</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="dt">gather =</span> <span class="st">"rbind"</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rmspe_results_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gather_plan.html">gather_plan</a></span>(
+  <span class="dt">plan =</span> rmspe_plan,
+  <span class="dt">target =</span> <span class="st">"rmspe"</span>,
+  <span class="dt">gather =</span> <span class="st">"rbind"</span>
+)</code></pre></div>
 <p>At the end, let’s generate a pdf plot of the RMSPE scores and a <a href="https://yihui.name/knitr/">knitr</a> report.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">output_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggsave">ggsave</a></span>(</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">    <span class="dt">filename =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"rmspe.pdf"</span>),</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">    <span class="dt">plot =</span> <span class="kw">plot_rmspe</span>(rmspe)</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">  ),</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">  <span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/knit">knit</a></span>(<span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>), <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">## Warning: knitr/rmarkdown report 'report.Rmd' does not exist and cannot be</a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">## inspected for dependencies.</a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11">## Warning: knitr/rmarkdown report 'report.Rmd' does not exist and cannot be</a>
-<a class="sourceLine" id="cb8-12" data-line-number="12">## inspected for dependencies.</a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="kw">head</span>(output_plan)</a>
-<a class="sourceLine" id="cb8-15" data-line-number="15">## # A tibble: 2 x 2</a>
-<a class="sourceLine" id="cb8-16" data-line-number="16">##   target          command                                                 </a>
-<a class="sourceLine" id="cb8-17" data-line-number="17">##   &lt;chr&gt;           &lt;chr&gt;                                                   </a>
-<a class="sourceLine" id="cb8-18" data-line-number="18">## 1 "\"rmspe.pdf\"" "ggsave(filename = file_out(\"rmspe.pdf\"), plot = plot…</a>
-<a class="sourceLine" id="cb8-19" data-line-number="19">## 2 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggsave">ggsave</a></span>(
+    <span class="dt">filename =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"rmspe.pdf"</span>),
+    <span class="dt">plot =</span> <span class="kw">plot_rmspe</span>(rmspe)
+  ),
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/knit">knit</a></span>(<span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>), <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.md"</span>), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
+)
+## Warning: knitr/rmarkdown report 'report.Rmd' does not exist and cannot be
+## inspected for dependencies.
+
+## Warning: knitr/rmarkdown report 'report.Rmd' does not exist and cannot be
+## inspected for dependencies.
+
+<span class="kw">head</span>(output_plan)
+## # A tibble: 2 x 2
+##   target          command                                                 
+##   &lt;chr&gt;           &lt;chr&gt;                                                   
+## 1 "\"rmspe.pdf\"" "ggsave(filename = file_out(\"rmspe.pdf\"), plot = plot…
+## 2 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\")…</code></pre></div>
 <p>We see warnings above because our R Markdown report <code>report.Rmd</code> does not exist yet. You can find it <a href="https://github.com/ropensci/drake/blob/master/inst/examples/gsp/report.Rmd">here</a>, and the code below generates it.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">local &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"gsp"</span>, <span class="st">"report.Rmd"</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">path =</span> local, <span class="dt">package =</span> <span class="st">"drake"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw">file.copy</span>(<span class="dt">from =</span> path, <span class="dt">to =</span> <span class="st">"report.Rmd"</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">## [1] TRUE</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">local &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"examples"</span>, <span class="st">"gsp"</span>, <span class="st">"report.Rmd"</span>)
+path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">path =</span> local, <span class="dt">package =</span> <span class="st">"drake"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)
+<span class="kw">file.copy</span>(<span class="dt">from =</span> path, <span class="dt">to =</span> <span class="st">"report.Rmd"</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)
+## [1] TRUE</code></pre></div>
 <p>At this point, we can gather together the whole workflow plan.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">whole_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(model_plan, rmspe_plan, rmspe_results_plan, output_plan)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">whole_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(model_plan, rmspe_plan, rmspe_results_plan, output_plan)</code></pre></div>
 <p>Before we run the project, we need to define the <code>plot_rmspe()</code> function.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">plot_rmspe &lt;-<span class="st"> </span><span class="cf">function</span>(rmspe){</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(rmspe) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_histogram">geom_histogram</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> rmspe), <span class="dt">bins =</span> <span class="dv">30</span>)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">}</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_rmspe &lt;-<span class="st"> </span>function(rmspe){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(rmspe) +
+<span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_histogram">geom_histogram</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> rmspe), <span class="dt">bins =</span> <span class="dv">30</span>)
+}</code></pre></div>
 <p>Now, we can run the project</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="../reference/make.html">make</a></span>(whole_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">## Saving 7 x 5 in image</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(whole_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
+## Saving 7 x 5 in image</code></pre></div>
 </div>
 <div id="results" class="section level1">
 <h1 class="hasAnchor">
 <a href="#results" class="anchor"></a>Results</h1>
 <p>Here are the root mean squared prediction errors of all the models.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readd.html">readd</a></span>(rmspe)</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(plot_rmspe)</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="kw">plot_rmspe</span>(<span class="dt">rmspe =</span> results)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/readd.html">readd</a></span>(rmspe)
+
+<span class="kw"><a href="../reference/loadd.html">loadd</a></span>(plot_rmspe)
+
+<span class="kw">library</span>(ggplot2)
+<span class="kw">plot_rmspe</span>(<span class="dt">rmspe =</span> results)</code></pre></div>
 <p><img src="example-gsp_files/figure-html/masterrmspeplot-1.png" width="672"></p>
 <p>And here are the best models. The best variables are in the top row under <code>X1</code>, <code>X2</code>, and <code>X3</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">head</span>(results[<span class="kw">order</span>(results<span class="op">$</span>rmspe, <span class="dt">decreasing =</span> <span class="ot">FALSE</span>), ])</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">##                          rmspe    X1    X2    X3</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">## rmspe_state_hwy_emp   2613.669 state   hwy   emp</a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">## rmspe_state_water_emp 2664.842 state water   emp</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">## rmspe_state_util_emp  2665.744 state  util   emp</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">## rmspe_state_pc_emp    2666.058 state    pc   emp</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7">## rmspe_state_pcap_emp  2675.336 state  pcap   emp</a>
-<a class="sourceLine" id="cb14-8" data-line-number="8">## rmspe_state_emp_unemp 2692.687 state   emp unemp</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(results[<span class="kw">order</span>(results$rmspe, <span class="dt">decreasing =</span> <span class="ot">FALSE</span>), ])
+##                          rmspe    X1    X2    X3
+## rmspe_state_hwy_emp   2613.669 state   hwy   emp
+## rmspe_state_water_emp 2664.842 state water   emp
+## rmspe_state_util_emp  2665.744 state  util   emp
+## rmspe_state_pc_emp    2666.058 state    pc   emp
+## rmspe_state_pcap_emp  2675.336 state  pcap   emp
+## rmspe_state_emp_unemp 2692.687 state   emp unemp</code></pre></div>
 </div>
 <div id="comparison-with-gnu-make" class="section level1">
 <h1 class="hasAnchor">
@@ -375,7 +381,7 @@ report.md: report.Rmd
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

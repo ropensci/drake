@@ -1,6 +1,6 @@
-urls:
-  reference: https://github.com/ropensci/drake/reference
-  article: https://github.com/ropensci/drake/articles
+pandoc: 1.16.0.2
+pkgdown: 0.1.0.9000
+pkgdown_sha: 7cbafcd6b97e5108ccde816a00d300152534a192
 articles:
   best-practices: best-practices.html
   caution: caution.html
@@ -14,4 +14,7 @@ articles:
   parallelism: parallelism.html
   storage: storage.html
   timing: timing.html
+urls:
+  reference: https://github.com/ropensci/drake/reference
+  article: https://github.com/ropensci/drake/articles
 

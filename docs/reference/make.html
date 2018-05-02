@@ -18,13 +18,22 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Run your project (build the outdated targets). — make" />
+
+<meta property="og:description" content="This is the central, most important function
+of the drake package. It runs all the steps of your
+workflow in the correct order, skipping any work
+that is already up to date.
+See https://github.com/ropensci/drake/blob/master/README.md#documentation
+for an overview of the documentation." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -132,6 +141,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Run your project (build the outdated targets).</h1>
+    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/make.R'><code>R/make.R</code></a></small>
     </div>
 
     
@@ -320,7 +330,7 @@ and then once again for each target right before that target is built.</p></td>
       <th>prepend</th>
       <td><p>lines to prepend to the Makefile if <code>parallelism</code>
 is <code>"Makefile"</code>. See the vignettes
-(<code><a href='https://cran.rstudio.com/web/packages/drake/vignettes/drake.html'>vignette(package = "drake")</a></code>)
+(<code><a href='../articles/drake.html'>vignette(package = "drake")</a></code>)
 to learn how to use <code>prepend</code>
 to take advantage of multiple nodes of a supercomputer.</p></td>
     </tr>
@@ -457,7 +467,9 @@ with <code>assign()</code>.</p></li>
 <code><a href='http://www.rdocumentation.org/packages/bindr/topics/create_env'>bindr::populate_env()</a></code>.</p></li>
 <li><p><code>TRUE</code>: same as <code>"promise"</code>.</p></li>
 <li><p><code>FALSE</code>: same as <code>"eager"</code>.</p></li>
-</ul><p><code>lazy_load</code> should not be <code>"promise"</code>
+</ul>
+
+<p><code>lazy_load</code> should not be <code>"promise"</code>
 for <code>"parLapply"</code> parallelism combined with <code>jobs</code> greater than 1.
 For local multi-session parallelism and lazy loading, try
 <code>library(future); future::plan(multisession)</code> and then
@@ -621,7 +633,7 @@ for more details.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -629,3 +641,4 @@ for more details.</p>
 
   </body>
 </html>
+

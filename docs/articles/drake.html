@@ -8,8 +8,11 @@
 <title>drake • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="drake">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -112,8 +115,11 @@
             <h3 class="subtitle">The main example</h3>
                         <h4 class="author">Will Landau and Kirill Müller</h4>
             
-            <h4 class="date">2018-04-27</h4>
-          </div>
+            <h4 class="date">2018-05-01</h4>
+      
+      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/drake.Rmd"><code>vignettes/drake.Rmd</code></a></small>
+
+    </div>
 
     
     
@@ -124,98 +130,98 @@
 <h1 class="hasAnchor">
 <a href="#set-the-stage-" class="anchor"></a>Set the stage.</h1>
 <p>To set up a project, load your packages,</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(drake)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
+<span class="kw">library</span>(tidyverse)</code></pre></div>
 <p>load your custom functions,</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">    </span><span class="kw">geom_histogram</span>()</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">}</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
+<span class="st">    </span><span class="kw">geom_histogram</span>()
+}</code></pre></div>
 <p>check any supporting files (optional),</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Get the files with drake_example("main").</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">file.exists</span>(<span class="st">"raw_data.xlsx"</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">## [1] TRUE</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">file.exists</span>(<span class="st">"report.Rmd"</span>)</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">## [1] TRUE</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the files with drake_example("main").</span>
+<span class="kw">file.exists</span>(<span class="st">"raw_data.xlsx"</span>)
+## [1] TRUE
+<span class="kw">file.exists</span>(<span class="st">"report.Rmd"</span>)
+## [1] TRUE</code></pre></div>
 <p>and plan what you are going to do.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="dt">raw_data =</span> readxl<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/readxl/topics/read_excel">read_excel</a></span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="dt">data =</span> raw_data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_inorder">fct_inorder</a></span>(Species)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>X__<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species, data),</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">  rmarkdown<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rmarkdown/topics/render">render</a></span>(</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">    <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">    <span class="dt">output_file =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.html"</span>),</a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">    <span class="dt">quiet =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">  )</a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">)</a>
-<a class="sourceLine" id="cb4-14" data-line-number="14">plan</a>
-<a class="sourceLine" id="cb4-15" data-line-number="15">## # A tibble: 5 x 2</a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">##   target            command                                               </a>
-<a class="sourceLine" id="cb4-17" data-line-number="17">##   &lt;chr&gt;             &lt;chr&gt;                                                 </a>
-<a class="sourceLine" id="cb4-18" data-line-number="18">## 1 raw_data          "readxl::read_excel(file_in(\"raw_data.xlsx\"))"      </a>
-<a class="sourceLine" id="cb4-19" data-line-number="19">## 2 data              "raw_data %&gt;% mutate(Species = forcats::fct_inorder(S…</a>
-<a class="sourceLine" id="cb4-20" data-line-number="20">## 3 hist              create_plot(data)                                     </a>
-<a class="sourceLine" id="cb4-21" data-line-number="21">## 4 fit               lm(Sepal.Width ~ Petal.Width + Species, data)         </a>
-<a class="sourceLine" id="cb4-22" data-line-number="22">## 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
+  <span class="dt">raw_data =</span> readxl::<span class="kw">read_excel</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
+  <span class="dt">data =</span> raw_data %&gt;%
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats::<span class="kw">fct_inorder</span>(Species)) %&gt;%
+<span class="st">    </span><span class="kw">select</span>(-X__1),
+  <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
+  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width +<span class="st"> </span>Species, data),
+  rmarkdown::<span class="kw">render</span>(
+    <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
+    <span class="dt">output_file =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.html"</span>),
+    <span class="dt">quiet =</span> <span class="ot">TRUE</span>
+  )
+)
+plan
+## # A tibble: 5 x 2
+##   target            command                                               
+##   &lt;chr&gt;             &lt;chr&gt;                                                 
+## 1 raw_data          "readxl::read_excel(file_in(\"raw_data.xlsx\"))"      
+## 2 data              "raw_data %&gt;% mutate(Species = forcats::fct_inorder(S…
+## 3 hist              create_plot(data)                                     
+## 4 fit               lm(Sepal.Width ~ Petal.Width + Species, data)         
+## 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…</code></pre></div>
 </div>
 <div id="make-your-results-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#make-your-results-" class="anchor"></a>Make your results.</h1>
 <p>So far, we have just been setting the stage. Use <code><a href="../reference/make.html">make()</a></code> to actually make your results. Targets are built in the correct order regardless of the row order of <code>plan</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">## Loading required package: methods</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">## target raw_data</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">## target data</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">## target fit</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">## target hist</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">## target file "report.html"</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
+## Loading required package: methods
+## target raw_data
+## target data
+## target fit
+## target hist
+## target file "report.html"</code></pre></div>
 <p>Except for files like <code>report.html</code>, your output is stored in a hidden <code>.drake/</code> folder. Reading it back is easy.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/readd.html">readd</a></span>(data) <span class="co"># See also loadd().</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">## # A tibble: 150 x 5</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  </a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">##  1         5.10        3.50         1.40       0.200 setosa </a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">##  2         4.90        3.00         1.40       0.200 setosa </a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">##  3         4.70        3.20         1.30       0.200 setosa </a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">##  4         4.60        3.10         1.50       0.200 setosa </a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">##  5         5.00        3.60         1.40       0.200 setosa </a>
-<a class="sourceLine" id="cb6-10" data-line-number="10">##  6         5.40        3.90         1.70       0.400 setosa </a>
-<a class="sourceLine" id="cb6-11" data-line-number="11">##  7         4.60        3.40         1.40       0.300 setosa </a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">##  8         5.00        3.40         1.50       0.200 setosa </a>
-<a class="sourceLine" id="cb6-13" data-line-number="13">##  9         4.40        2.90         1.40       0.200 setosa </a>
-<a class="sourceLine" id="cb6-14" data-line-number="14">## 10         4.90        3.10         1.50       0.100 setosa </a>
-<a class="sourceLine" id="cb6-15" data-line-number="15">## # ... with 140 more rows</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(data) <span class="co"># See also loadd().</span>
+## # A tibble: 150 x 5
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1         5.10        3.50         1.40       0.200 setosa 
+##  2         4.90        3.00         1.40       0.200 setosa 
+##  3         4.70        3.20         1.30       0.200 setosa 
+##  4         4.60        3.10         1.50       0.200 setosa 
+##  5         5.00        3.60         1.40       0.200 setosa 
+##  6         5.40        3.90         1.70       0.400 setosa 
+##  7         4.60        3.40         1.40       0.300 setosa 
+##  8         5.00        3.40         1.50       0.200 setosa 
+##  9         4.40        2.90         1.40       0.200 setosa 
+## 10         4.90        3.10         1.50       0.100 setosa 
+## # ... with 140 more rows</code></pre></div>
 </div>
 <div id="go-back-and-fix-things-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#go-back-and-fix-things-" class="anchor"></a>Go back and fix things.</h1>
 <p>You will find mistakes. A lot. For example, we forgot to give our histogram a bin width.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="../reference/readd.html">readd</a></span>(hist)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(hist)
+<span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="https://ropensci.github.io/drake/images/hist1.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 <p>So let’s fix the plotting function.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">}</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
+<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) +
+<span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)
+}</code></pre></div>
 <p><code>Drake</code> knows which results are affected.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(plan)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Interactive graph: hover, zoom, drag, etc.</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(plan)
+<span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config) <span class="co"># Interactive graph: hover, zoom, drag, etc.</span></code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/pitch3.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>The next <code><a href="../reference/make.html">make()</a></code> just builds <code>hist</code> and <code>report.html</code>. No point in wasting time on the data or model.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">## Unloading targets from environment:</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">##   fit</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">##   hist</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">## target hist</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">## target file "report.html"</a></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(hist)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">hist</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
+## Unloading targets from environment:
+##   fit
+##   hist
+## target hist
+## target file "report.html"</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(hist)
+hist</code></pre></div>
 <p><img src="https://ropensci.github.io/drake/images/hist2.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 </div>
 <div id="try-it-yourself" class="section level1">
@@ -247,7 +253,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
