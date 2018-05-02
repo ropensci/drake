@@ -223,6 +223,10 @@ make_session <- function(config){
     cache = config$cache,
     jobs = config$jobs
   )
+  remove(
+    list = intersect(config$plan$target, ls(envir = config$envir)),
+    envir = config$envir
+  )
   return(invisible(config))
 }
 

@@ -1,5 +1,4 @@
 run_mclapply <- function(config){
-  do_prework(config = config, verbose_packages = FALSE)
   config$jobs <- safe_jobs(config$jobs)
   if (config$jobs < 2) {
     return(run_lapply(config = config))
@@ -54,23 +53,11 @@ mc_worker <- function(worker, config){
       break
     }
     target <- mc_get_target(worker = worker, config = config)
-    meta <- drake_meta(target = target, config = config)
-    if (!should_build_target(
+    build_check_store(
       target = target,
-      meta = meta,
-      config = config
-    )){
-      mc_set_idle(worker = worker, config = config)
-      next
-    }
-    meta$start <- proc.time()
-    prune_envir(
-      targets = target,
       config = config,
       downstream = config$cache$list(namespace = "protect")
     )
-    value <- build_and_store(target = target, meta = meta, config = config)
-    assign(x = target, value = value, envir = config$envir)
     mc_set_idle(worker = worker, config = config)
   }
 }
