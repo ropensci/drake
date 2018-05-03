@@ -36,14 +36,14 @@ test_with_dir("migrate_drake_project() an up to date cache", {
   file.rename(from = default_cache_path(), to = "old")
   expect_error(this_cache(path = "old"))
   cache <- this_cache(path = "old", force = TRUE)
-  expect_true(migrate_drake_project(path = "old", jobs = 2))
+  expect_true(migrate_drake_project(path = "old"))
   load_mtcars_example()
   config <- make(my_plan, cache = cache, session_info = FALSE)
  # expect_equal(justbuilt(config = config), character(0)) # r-lib/covr#289 # nolint
   clean(cache = cache)
   expect_equal(cached(cache = cache), character(0))
   # Already migrated, nothing to do
-  expect_true(migrate_drake_project(path = "old", jobs = 2))
+  expect_true(suppressWarnings(migrate_drake_project(path = "old", jobs = 2)))
 })
 
 test_with_dir("migrate_drake_project() a partially outdated cache", {

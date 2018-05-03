@@ -52,6 +52,13 @@ migrate_drake_project <- function(
   if (is.null(cache)){
     return(invisible(TRUE))
   }
+  if (jobs > 1){
+    warning(
+      "Parallelism no longer supported in migrate_drake_project(). ",
+      "Please select jobs <= 1.",
+      call. = FALSE
+    )
+  }
   version <- drake_session(cache = cache)$otherPkgs$drake$Version # nolint
   backup <- backup_cache_path(path = path, old = version)
   message("Backing up ", path, " to a backup cache at ", backup)
@@ -60,8 +67,8 @@ migrate_drake_project <- function(
   message("Migrating cache at ", path, " for your system's drake.")
   config <- read_drake_config(cache = cache)
   config$cache <- cache
-  config$parallelism <- "mclapply"
-  config$jobs <- safe_jobs_imports(jobs)
+  config$parallelism <- "parLapply"
+  config$jobs <- 1
   config$hook <- migrate_hook
   config$envir <- new.env(parent = globalenv())
   config$verbose <- TRUE
@@ -75,7 +82,7 @@ migrate_drake_project <- function(
     sort
   config$cache$clear(namespace = "depends")
   store_drake_config(config = config)
-  run_mclapply(config = config)
+  run_lapply(config = config)
   message("Checking for outdated targets.")
   config$hook <- empty_hook
   outdated <- outdated(config = config) %>%
