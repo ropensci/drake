@@ -2,9 +2,9 @@ run_future_lapply <- function(config){
   prepare_distributed(config = config)
   config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)
-  callr::r_bg(
+  px <- callr::r_bg(
     func = function(config){
-      drake::mc_master(config)
+      drake::mc_process(worker = "0", config)
     },
     args = list(config = config)
   )
@@ -18,10 +18,16 @@ run_future_lapply <- function(config){
 }
 
 fl_worker <- function(worker, cache_path){
-  try_message({
-    config <- recover_drake_config(cache_path = cache_path)
-    config$schedule <- targets_graph(config)
-    do_prework(config = config, verbose_packages = FALSE)
-    mc_worker(worker = worker, config = config)
-  })
+  tryCatch(
+    expr = {
+      config <- recover_drake_config(cache_path = cache_path)
+      on.exit(mc_set_done(worker = worker, config = config))
+      config$schedule <- targets_graph(config)
+      do_prework(config = config, verbose_packages = FALSE)
+      mc_worker(worker = worker, config = config)
+    },
+    error = function(e){
+      error_process(e = e, id = id, config = config)
+    }
+  )
 }

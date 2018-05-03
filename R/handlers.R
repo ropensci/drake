@@ -56,3 +56,10 @@ error_tibble_times <- function(e){
     call. = FALSE
   )
 }
+
+error_process <- function(e, id, config){
+  set_attempt_flag(config = config)
+  message("Error: ", e$message)
+  config$cache$set(key = id, value = e, namespace = "mc_fail")
+  stop("make() failed.")
+}

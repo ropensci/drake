@@ -37,13 +37,7 @@ mc_process <- function(id, config){
       }
     },
     error = function(e){
-      # Should not reproduce in unit tests:
-      # nocov start
-      set_attempt_flag(config = config)
-      message("Error: ", e$message)
-      config$cache$set(key = id, value = e, namespace = "mc_fail")
-      stop("make() failed.")
-      # nocov end
+      error_process(e = e, id = id, config = config)
     }
   )
 }
