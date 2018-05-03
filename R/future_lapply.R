@@ -4,7 +4,7 @@ run_future_lapply <- function(config){
   mc_init_worker_cache(config)
   px <- callr::r_bg(
     func = function(config){
-      drake::mc_process(worker = "0", config)
+      drake::mc_process(id = "0", config)
     },
     args = list(config = config)
   )
