@@ -30,7 +30,7 @@ mc_master <- function(config){
   while (mc_work_remains(config)){
     for (worker in config$workers){
       if (mc_is_idle(worker = worker, config = config)){
-        mc_conclude_worker(worker = worker, config = config)
+        mc_conclude_target(worker = worker, config = config)
         if (!config$queue$size()){
           mc_set_done(worker = worker, config = config)
           next
@@ -83,7 +83,7 @@ mc_init_worker_cache <- function(config){
   invisible()
 }
 
-mc_conclude_worker <- function(worker, config){
+mc_conclude_target <- function(worker, config){
   target <- config$cache$get(key = worker, namespace = "mc_target")
   if (is.na(target)){
     return()
