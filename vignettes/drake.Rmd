@@ -40,7 +40,7 @@ tmp <- file.copy(from = rmd, to = "report.Rmd")
 
 A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, then turns into fitted models, summaries, and reports.
 
-<img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+<img src="./tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
 
 # Set the stage.
 
@@ -110,7 +110,7 @@ readd(hist)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="https://ropensci.github.io/drake/images/hist1.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+<img src="./hist1.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
 
 So let's fix the plotting function.
 
@@ -147,7 +147,7 @@ loadd(hist)
 hist
 ```
 
-<img src="https://ropensci.github.io/drake/images/hist2.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+<img src="./hist2.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
 
 
 # Try it yourself!
