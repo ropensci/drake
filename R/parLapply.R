@@ -3,8 +3,9 @@ run_parLapply <- function(config) { # nolint
   if (config$jobs < 2) {
     return(run_lapply(config = config))
   }
+  config$workers <- as.character(seq_len(config$jobs))
   console_parLapply(config) # nolint
-  config$cluster <- makePSOCKcluster(config$jobs)
+  config$cluster <- makePSOCKcluster(config$jobs + 1)
   on.exit(stopCluster(cl = config$cluster))
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
@@ -16,39 +17,12 @@ run_parLapply <- function(config) { # nolint
   })
   clusterCall(cl = config$cluster, fun = do_prework, config = config,
     verbose_packages = FALSE)
-  run_staged_parallelism(
-    config = config,
-    worker = worker_parLapply # nolint
-  )
-}
-
-worker_parLapply <- function(targets, meta_list, config) { # nolint
-  prune_envir_parLapply(targets = targets, config = config) # nolint
-  values <- parLapply(
+  mc_init_worker_cache(config)
+  parLapply(
     cl = config$cluster,
-    X = targets,
-    fun = drake_build_worker,
-    meta_list = meta_list,
+    X = c("0", config$workers),
+    fun = mc_process,
     config = config
   )
-  assign_to_envir_parLapply( # nolint
-    targets = targets,
-    values = values,
-    config = config
-  )
-}
-
-prune_envir_parLapply <- function(targets = targets, config = config) { # nolint
-  prune_envir(targets = targets, config = config)
-  if (identical(config$envir, globalenv()))
-    clusterCall(cl = config$cluster, fun = prune_envir, targets = targets,
-      config = config)
-}
-
-assign_to_envir_parLapply <- # nolint
-  function(targets, values, config) {
-  assign_to_envir_batch(targets = targets, values = values, config = config)
-  if (identical(config$envir, globalenv()))
-    clusterCall(cl = config$cluster, fun = assign_to_envir,
-      targets = targets, values = values, config = config)
+  invisible()
 }

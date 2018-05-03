@@ -121,9 +121,11 @@ mc_all_done <- function(config){
 
 mc_is_status <- function(worker, status, config){
   while (TRUE){
-    worker_status <- try(
-      config$cache$get(key = worker, namespace = "mc_status"),
-      silent = TRUE
+    worker_status <- suppressWarnings(
+      try(
+        config$cache$get(key = worker, namespace = "mc_status"),
+        silent = TRUE
+      )
     )
     if (worker_status %in% c("done", "idle", "running")){
       break
@@ -159,9 +161,11 @@ mc_set_running <- function(worker, config){
 
 mc_get_target <- function(worker, config){
   while (TRUE){
-    target <- try(
-      config$cache$get(key = worker, namespace = "mc_target"),
-      silent = TRUE
+    target <- suppressWarnings(
+      try(
+        config$cache$get(key = worker, namespace = "mc_target"),
+        silent = TRUE
+      )
     )
     if (is.character(target)){
       break
