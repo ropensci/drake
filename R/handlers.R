@@ -33,10 +33,6 @@ handle_build_exceptions <- function(target, meta, config){
   }
 }
 
-try_message <- function(code){
-  tryCatch(code, error = error_message)
-}
-
 error_character0 <- function(e){
   character(0)
 }
