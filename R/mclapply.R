@@ -28,13 +28,24 @@ run_mclapply <- function(config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_process <- function(id, config){
-  try_message({
-    if (id == "0"){
-      mc_master(config)
-    } else {
-      mc_worker(worker = id, config = config)
+  tryCatch(
+    expr = {
+      if (id == "0"){
+        mc_master(config)
+      } else {
+        mc_worker(worker = id, config = config)
+      }
+    },
+    error = function(e){
+      # Should not reproduce in unit tests:
+      # nocov start
+      set_attempt_flag(config = config)
+      message("Error: ", e$message)
+      config$cache$set(key = id, value = e, namespace = "mc_fail")
+      stop("make() failed.")
+      # nocov end
     }
-  })
+  )
 }
 
 #' @title Internal function to launch
@@ -49,6 +60,7 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
+  on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
   while (mc_work_remains(config)){
     for (worker in config$workers){
@@ -71,6 +83,7 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
+  on.exit(mc_set_done(worker = worker, config = config))
   while (TRUE){
     if (mc_is_idle(worker = worker, config = config)){
       Sys.sleep(mc_wait)
@@ -129,8 +142,12 @@ mc_conclude_target <- function(worker, config){
 }
 
 mc_work_remains <- function(config){
-  !config$queue$empty() ||
-    !mc_all_done(config)
+  empty <- config$queue$empty()
+  all_done <- mc_all_done(config)
+  if (!empty && all_done){
+    stop("workers finished without completing their work.") # nocov
+  }
+  !empty || !all_done
 }
 
 mc_all_done <- function(config){
@@ -172,6 +189,14 @@ mc_set_status <- function(worker, status, config){
 
 mc_set_done <- function(worker, config){
   mc_set_status(worker = worker, status = "done", config = config)
+}
+
+mc_set_done_all <- function(config){
+  lapply(
+    X = config$workers,
+    FUN = mc_set_done,
+    config = config
+  )
 }
 
 mc_set_idle <- function(worker, config){
