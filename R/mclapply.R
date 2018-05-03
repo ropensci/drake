@@ -15,6 +15,18 @@ run_mclapply <- function(config){
   invisible()
 }
 
+#' @title Internal function to launch
+#' a master process or persistent worker.
+#' @description For internal use only.
+#' Exported ony for the purpose of
+#' using persistent workers in
+#' `make(paralellism = "parLapply", jobs = n)`,
+#' where `n > 1`.
+#' @keywords internal
+#' @export
+#' @param id character scalar with the job id
+#' @param config `drake_config()` list
+#' @return nothing important
 mc_process <- function(id, config){
   try_message({
     if (id == "0"){
@@ -30,7 +42,7 @@ mc_master <- function(config){
   while (mc_work_remains(config)){
     for (worker in config$workers){
       if (mc_is_idle(worker = worker, config = config)){
-        mc_conclude_worker(worker = worker, config = config)
+        mc_conclude_target(worker = worker, config = config)
         if (!config$queue$size()){
           mc_set_done(worker = worker, config = config)
           next
@@ -83,7 +95,7 @@ mc_init_worker_cache <- function(config){
   invisible()
 }
 
-mc_conclude_worker <- function(worker, config){
+mc_conclude_target <- function(worker, config){
   target <- config$cache$get(key = worker, namespace = "mc_target")
   if (is.na(target)){
     return()
