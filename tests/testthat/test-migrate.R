@@ -56,7 +56,7 @@ test_with_dir("migrate_drake_project() a partially outdated cache", {
   plan <- cache$get("plan", namespace = "config")
   plan$command[plan$target == "small"] <- "simulate(6)"
   cache$set(key = "plan", value = plan, namespace = "config")
-  expect_true(migrate_drake_project(path = "old", jobs = 1))
+  expect_true(suppressWarnings(migrate_drake_project(path = "old", jobs = 2)))
   out <- c("\"report.md\"", plan$target[grep("small", plan$target)])
   config <- load_mtcars_example(cache = cache)
   out2 <- outdated(config = config)
