@@ -12,7 +12,7 @@ run_future_lapply <- function(config){
   finish_distributed(config = config)
 }
 
-fl_worker <- function(worker, config){
+fl_worker <- function(worker, cache_path){
   try_message({
     config <- recover_drake_config(cache_path = cache_path)
     config$schedule <- targets_graph(config)

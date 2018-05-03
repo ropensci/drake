@@ -1,7 +1,7 @@
 drake_context("future")
 
 test_with_dir("future package functionality", {
-  future::plan(future::multicore)
+  future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
