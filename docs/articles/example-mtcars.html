@@ -115,7 +115,7 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-01</h4>
+            <h4 class="date">2018-05-03</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-mtcars.Rmd"><code>vignettes/example-mtcars.Rmd</code></a></small>
 
@@ -255,8 +255,9 @@ report_file &lt;-<span class="st"> </span><span class="kw">system.file</span>(pa
 ##  [1] "best-practices.Rmd"   "caution.Rmd"          "debug.Rmd"           
 ##  [4] "drake.Rmd"            "example-gsp.Rmd"      "example-mtcars.Rmd"  
 ##  [7] "example-packages.Rmd" "faq.Rmd"              "graph.Rmd"           
-## [10] "parallelism.Rmd"      "report.Rmd"           "storage.Rmd"         
-## [13] "timing.Rmd"</code></pre></div>
+## [10] "hist1.png"            "hist2.png"            "parallelism.Rmd"     
+## [13] "report.Rmd"           "storage.Rmd"          "tidydag.png"         
+## [16] "timing.Rmd"</code></pre></div>
 </div>
 <div id="the-workflow-plan-data-frame" class="section level1">
 <h1 class="hasAnchor">
@@ -560,16 +561,16 @@ x_plan
 ## target large
 ## target small
 ## target regression1_large
-## target regression1_small
 ## target regression2_large
+## target regression1_small
 ## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
 ## target summ_regression1_large
-## target summ_regression1_small
+## target coef_regression1_large
 ## target summ_regression2_large
+## target coef_regression2_large
+## target summ_regression1_small
+## target coef_regression1_small
+## target coef_regression2_small
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>For the <code>reg2()</code> model on the small dataset, the p-value on <code>x2</code> is so small that there may be an association between weight and fuel efficiency after all.</p>
@@ -579,16 +580,10 @@ x_plan
 ## x2          -0.708536 0.08285938 -8.551066 4.617125e-11</code></pre></div>
 <p>The non-file dependencies of your last target are already loaded in your workspace.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ls</span>()
-##  [1] "coef_regression2_small" "config"                
-##  [3] "df"                     "large"                 
-##  [5] "methods"                "my_analyses"           
-##  [7] "my_datasets"            "my_plan"               
-##  [9] "path"                   "random_rows"           
-## [11] "reg1"                   "reg2"                  
-## [13] "report"                 "report_file"           
-## [15] "results"                "simulate"              
-## [17] "small"                  "summary_types"         
-## [19] "x_plan"</code></pre></div>
+##  [1] "config"        "df"            "methods"       "my_analyses"  
+##  [5] "my_datasets"   "my_plan"       "path"          "random_rows"  
+##  [9] "reg1"          "reg2"          "report"        "report_file"  
+## [13] "results"       "simulate"      "summary_types" "x_plan"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># Everything is up to date.</span>
 ## character(0)
 
@@ -596,15 +591,15 @@ x_plan
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.004s         0.004s         0s         
-##  2 coef_regression1_small target 0.003s         0.003s         0s         
+##  1 coef_regression1_large target 0.004s         0.003s         0s         
+##  2 coef_regression1_small target 0.004s         0.003s         0s         
 ##  3 coef_regression2_large target 0.004s         0.004s         0s         
-##  4 coef_regression2_small target 0.003s         0.003s         0s         
-##  5 data.frame             import 0.022s         0.018s         0.004s     
-##  6 knit                   import 0.017s         0.017s         0s         
+##  4 coef_regression2_small target 0.003s         0.004s         0s         
+##  5 data.frame             import 0.018s         0.018s         0s         
+##  6 knit                   import 0.016s         0.016s         0s         
 ##  7 large                  target 0.048s         0.048s         0s         
-##  8 lm                     import 0.008s         0.008s         0s         
-##  9 mtcars                 import 0.001s         0.001s         0s         
+##  8 lm                     import 0.008s         0.007s         0s         
+##  9 mtcars                 import 0.001s         0s             0s         
 ## 10 nrow                   import 0.004s         0.004s         0s         
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
@@ -694,9 +689,6 @@ x_plan
 <span class="co"># drake_session() # sessionInfo() of the last make() # nolint</span></code></pre></div>
 <p>The next time you run <code><a href="../reference/make.html">make(my_plan)</a></code>, nothing will build because <code>drake</code> knows everything is already up to date.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan) <span class="co"># Will use config later. See also drake_config().</span>
-## Unloading targets from environment:
-##   large
-##   coef_regression2_small
 ## All targets are already up to date.</code></pre></div>
 <p>But if you change one of your functions, commands, or other dependencies, drake will update the affected targets. Suppose we change the quadratic term to a cubic term in <code>reg2()</code>. We might want to do this if we suspect a cubic relationship between tons and miles per gallon.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d) {
@@ -734,7 +726,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "40fb781de184c741"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "0962ba7631949709"</code></pre></div>
+## [1] "9fe475e2e91326a5"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
@@ -744,9 +736,9 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
 ## target regression2_large
 ## target regression2_small
+## target summ_regression2_large
 ## target coef_regression2_large
 ## target coef_regression2_small
-## target summ_regression2_large
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>Trivial changes to whitespace and comments are totally ignored.</p>
@@ -773,23 +765,19 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [15] "summ_regression2_small"
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## Unloading targets from environment:
-##   small
-##   large
-##   coef_regression2_small
 ## target large
 ## target small
 ## target regression1_large
-## target regression1_small
 ## target regression2_large
+## target regression1_small
 ## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
 ## target summ_regression1_large
-## target summ_regression1_small
+## target coef_regression1_large
 ## target summ_regression2_large
+## target coef_regression2_large
+## target summ_regression1_small
+## target coef_regression1_small
+## target coef_regression2_small
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>Need to add new work on the fly? Just append rows to the workflow plan. If the rest of your workflow is up to date, only the new work is run.</p>
@@ -828,10 +816,6 @@ my_plan
 ## 16 new_data               new_simulation(36) + sqrt(10)
 
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## Unloading targets from environment:
-##   small
-##   large
-##   coef_regression2_small
 ## target new_data</code></pre></div>
 <p>If you ever need to erase your work, use <code><a href="../reference/clean.html">clean()</a></code>. The next <code><a href="../reference/make.html">make()</a></code> will rebuild any cleaned targets, so be careful. You may notice that by default, the size of the cache does not go down very much. To purge old data, you could use <code><a href="../reference/clean.html">clean(garbage_collection = TRUE, purge = TRUE)</a></code>. To do garbage collection without removing any important targets, use <code><a href="../reference/drake_gc.html">drake_gc()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Uncaches individual targets and imported objects.</span>

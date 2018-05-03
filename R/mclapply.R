@@ -15,6 +15,18 @@ run_mclapply <- function(config){
   invisible()
 }
 
+#' @title Internal function to launch
+#' a master process or persistent worker.
+#' @description For internal use only.
+#' Exported ony for the purpose of
+#' using persistent workers in
+#' `make(paralellism = "parLapply", jobs = n)`,
+#' where `n > 1`.
+#' @keywords internal
+#' @export
+#' @param id character scalar with the job id
+#' @param config `drake_config()` list
+#' @return nothing important
 mc_process <- function(id, config){
   try_message({
     if (id == "0"){

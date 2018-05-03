@@ -151,6 +151,7 @@ So far, we have just been setting the stage. Use `make()` to do the real work. T
 
 ``` r
 make(plan)
+#> Loading required package: methods
 #> target raw_data
 #> target data
 #> target fit
@@ -165,11 +166,11 @@ readd(data) # See also loadd().
 #> # A tibble: 150 x 5
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 #>          <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-#> 1         5.10        3.50         1.40       0.200 setosa 
-#> 2         4.90        3.00         1.40       0.200 setosa 
-#> 3         4.70        3.20         1.30       0.200 setosa 
-#> 4         4.60        3.10         1.50       0.200 setosa 
-#> 5         5.00        3.60         1.40       0.200 setosa 
+#> 1          5.1         3.5          1.4         0.2 setosa 
+#> 2          4.9         3            1.4         0.2 setosa 
+#> 3          4.7         3.2          1.3         0.2 setosa 
+#> 4          4.6         3.1          1.5         0.2 setosa 
+#> 5          5           3.6          1.4         0.2 setosa 
 #> # ... with 145 more rows
 ```
 

@@ -115,7 +115,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-01</h4>
+            <h4 class="date">2018-05-03</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/caution.Rmd"><code>vignettes/caution.Rmd</code></a></small>
 
@@ -319,14 +319,14 @@ myplan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 ## target out
 
 <span class="kw">ls</span>() <span class="co"># Check that your workspace did not change.</span>
-## [1] "bad_plan"    "envir"       "error"       "f"           "letter"     
-## [6] "little_b"    "myplan"      "my_plan"     "my_variable"
+## [1] "bad_plan"    "envir"       "error"       "f"           "myplan"     
+## [6] "my_plan"     "my_variable"
 
 <span class="kw">ls</span>(envir) <span class="co"># Check your evaluation environment.</span>
-## [1] "f"   "g"   "out"
+## [1] "f" "g"
 
 envir$out
-## [1] 3 4 5
+## NULL
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(out)
 ## [1] 3 4 5</code></pre></div>
@@ -386,10 +386,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "199cab8b3c6f3722dc94850fa92cff34"
+## [1] "e4d32bde52cb3a2a40660c3a78a5d4ed"
 example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "ef452319e5d4500642f11daf2dffc672"</code></pre></div>
+## [1] "69abe14719d380fdb79dcd573ebde88d"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>

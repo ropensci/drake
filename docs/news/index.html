@@ -143,6 +143,9 @@
 <a href="#version-5-1-4" class="anchor"></a>Version 5.1.4<small> Unreleased </small>
 </h1>
 <ul>
+<li>Remove staged parallelism from the <code>"mclapply"</code> backend. Now uses persistent workers and a master process.</li>
+<li>Remove the appearance of staged parallelism from single-job <code><a href="../reference/make.html">make()</a></code>’s.</li>
+<li>Calls to <code><a href="../reference/make.html">make()</a></code> no longer leave targets in the user’s environment.</li>
 <li>Attempt to fix a Solaris CRAN check error. The test at <a href="https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3" class="uri">https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3</a> was previously failing on CRAN’s Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.</li>
 <li>Add an <code>upstream_only</code> argument to <code><a href="../reference/failed.html">failed()</a></code> so users can list failed targets that do not have any failed dependencies. Naturally accompanies <code><a href="../reference/make.html">make(keep_going = TRUE)</a></code>.</li>
 <li>Add an RStudio R Markdown template compatible with <a href="https://krlmlr.github.io/drake-pitch/" class="uri">https://krlmlr.github.io/drake-pitch/</a>.</li>

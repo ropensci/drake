@@ -115,7 +115,7 @@
             <h3 class="subtitle">Refresh your project without restarting from scratch.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-01</h4>
+            <h4 class="date">2018-05-03</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-packages.Rmd"><code>vignettes/example-packages.Rmd</code></a></small>
 
@@ -139,13 +139,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-04-24 18295   dplyr
-## 2 2018-04-25 18638   dplyr
-## 3 2018-04-26 17500   dplyr
-## 4 2018-04-27 17750   dplyr
-## 5 2018-04-28 15220   dplyr
-## 6 2018-04-29 15063   dplyr
-## 7 2018-04-30 18128   dplyr</code></pre></div>
+## 1 2018-04-25 18638   dplyr
+## 2 2018-04-26 17500   dplyr
+## 3 2018-04-27 17750   dplyr
+## 4 2018-04-28 15220   dplyr
+## 5 2018-04-29 15063   dplyr
+## 6 2018-04-30 18128   dplyr
+## 7 2018-05-01 13497   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -258,8 +258,8 @@ whole_plan
 ## target older
 ## target recent: trigger "always"
 ## target averages_older
-## target averages_recent
 ## target plot_older
+## target averages_recent
 ## target plot_recent
 ## target file "report.md"
 ## Used non-default triggers. Some targets may not be up to date.
@@ -268,9 +268,9 @@ whole_plan
 ## # A tibble: 3 x 2
 ##   package mean_downloads
 ##   &lt;chr&gt;            &lt;dbl&gt;
-## 1 ggplot2         17063.
-## 2 knitr           11402.
-## 3 Rcpp            24658.
+## 1 ggplot2         17348.
+## 2 knitr           11579.
+## 3 Rcpp            25000.
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ## # A tibble: 3 x 2
@@ -287,11 +287,6 @@ whole_plan
 <p><img src="example-packages_files/figure-html/firstmakepackages-2.png" width="672"></p>
 <p>Because we used triggers, each <code><a href="../reference/make.html">make()</a></code> rebuilds the <code>recent</code> target to get the latest download numbers for today. If the newly-downloaded data are the same as last time and nothing else changes, <code>drake</code> skips all the other targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(whole_plan)
-## Unloading targets from environment:
-##   averages_recent
-##   plot_older
-##   plot_recent
-##   averages_older
 ## target recent: trigger "always"
 ## Used non-default triggers. Some targets may not be up to date.</code></pre></div>
 <p>To visualize the build behavior, plot the dependency network. Target <code>recent</code> and everything depending on it is always out of date because of the <code>"always"</code> trigger. If you rerun the project tomorrow, the <code>recent</code> dataset will have shifted one day forward, so <code><a href="../reference/make.html">make()</a></code> will refresh <code>averages_recent</code>, <code>plot_recent</code>, and <code>report.md</code>. Targets <code>averages_older</code> and <code>plot_older</code> should be unaffected, so <code>drake</code> will skip them.</p>

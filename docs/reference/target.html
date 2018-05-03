@@ -185,8 +185,8 @@ arguments as columns.</p>
 <span class='no'>plan</span></div><div class='output co'>#&gt; # A tibble: 2 x 4
 #&gt;   target       command                               trigger custom_column
 #&gt;   &lt;chr&gt;        &lt;chr&gt;                                 &lt;chr&gt;           &lt;dbl&gt;
-#&gt; 1 website_data "download_data(\"www.your_url.com\")" always             5.
-#&gt; 2 analysis     analyze(website_data)                 any               NA </div><div class='input'><span class='co'># make(plan) # nolint</span>
+#&gt; 1 website_data "download_data(\"www.your_url.com\")" always              5
+#&gt; 2 analysis     analyze(website_data)                 any                NA</div><div class='input'><span class='co'># make(plan) # nolint</span>
 <span class='co'># Call target() inside or outside drake_plan().</span>
 <span class='fu'>target</span>(
   <span class='kw'>command</span> <span class='kw'>=</span> <span class='fu'>download_data</span>(<span class='st'>"www.your_url.com"</span>),
@@ -195,7 +195,7 @@ arguments as columns.</p>
 )</div><div class='output co'>#&gt; # A tibble: 1 x 3
 #&gt;   command                               trigger custom_column
 #&gt;   &lt;chr&gt;                                 &lt;chr&gt;           &lt;dbl&gt;
-#&gt; 1 "download_data(\"www.your_url.com\")" always             5.</div></pre>
+#&gt; 1 "download_data(\"www.your_url.com\")" always              5</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
