@@ -27,7 +27,7 @@ fl_worker <- function(worker, cache_path){
       mc_worker(worker = worker, config = config)
     },
     error = function(e){
-      error_process(e = e, id = id, config = config)
+      error_process(e = e, id = worker, config = config)
     }
   )
 }
