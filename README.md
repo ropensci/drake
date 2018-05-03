@@ -147,11 +147,10 @@ plan
 #> 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…
 ```
 
-So far, we have just been setting the stage. Use `make()` to actually make your results. Targets are built in the correct order regardless of the row order of `plan`.
+So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
 
 ``` r
 make(plan)
-#> Loading required package: methods
 #> target raw_data
 #> target data
 #> target fit
@@ -174,7 +173,7 @@ readd(data) # See also loadd().
 #> # ... with 145 more rows
 ```
 
-But you find mistakes. A lot. For example, we forgot to give our histogram a bin width.
+You may look back on your work and see room for improvement, but it's all good! The whole point of `drake` is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.
 
 ``` r
 readd(hist)
@@ -206,9 +205,6 @@ The next `make()` just builds `hist` and `report.html`. No point in wasting time
 
 ``` r
 make(plan)
-#> Unloading targets from environment:
-#>   fit
-#>   hist
 #> target hist
 #> target file "report.html"
 ```
@@ -232,9 +228,6 @@ Suppose you are reviewing someone else's data analysis project for reproducibili
 
 ``` r
 make(plan)
-#> Unloading targets from environment:
-#>   fit
-#>   hist
 #> All targets are already up to date.
 
 config <- drake_config(plan)

@@ -89,7 +89,7 @@ plan
 
 # Make your results.
 
-So far, we have just been setting the stage. Use `make()` to actually make your results. Targets are built in the correct order regardless of the row order of `plan`.
+So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
 
 ```{r make1}
 make(plan)
@@ -103,7 +103,7 @@ readd(data) # See also loadd().
 
 # Go back and fix things.
 
-You will find mistakes. A lot. For example, we forgot to give our histogram a bin width.
+You may look back on your work and see room for improvement, but it's all good! The whole point of `drake` is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.
 
 ```{r loaddhist, eval = FALSE}
 readd(hist)
