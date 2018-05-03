@@ -245,7 +245,7 @@ plan
 <span class="co">#&gt; 3 hist              create_plot(data)                                     </span>
 <span class="co">#&gt; 4 fit               lm(Sepal.Width ~ Petal.Width + Species, data)         </span>
 <span class="co">#&gt; 5 "\"report.html\"" "rmarkdown::render(knitr_in(\"report.Rmd\"), output_f…</span></code></pre></div>
-<p>So far, we have just been setting the stage. Use <code><a href="reference/make.html">make()</a></code> to actually make your results. Targets are built in the correct order regardless of the row order of <code>plan</code>.</p>
+<p>So far, we have just been setting the stage. Use <code><a href="reference/make.html">make()</a></code> to do the real work. Targets are built in the correct order regardless of the row order of <code>plan</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
 <span class="co">#&gt; Loading required package: methods</span>
 <span class="co">#&gt; target raw_data</span>
@@ -258,13 +258,13 @@ plan
 <span class="co">#&gt; # A tibble: 150 x 5</span>
 <span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
 <span class="co">#&gt;          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  </span>
-<span class="co">#&gt; 1         5.10        3.50         1.40       0.200 setosa </span>
-<span class="co">#&gt; 2         4.90        3.00         1.40       0.200 setosa </span>
-<span class="co">#&gt; 3         4.70        3.20         1.30       0.200 setosa </span>
-<span class="co">#&gt; 4         4.60        3.10         1.50       0.200 setosa </span>
-<span class="co">#&gt; 5         5.00        3.60         1.40       0.200 setosa </span>
+<span class="co">#&gt; 1          5.1         3.5          1.4         0.2 setosa </span>
+<span class="co">#&gt; 2          4.9         3            1.4         0.2 setosa </span>
+<span class="co">#&gt; 3          4.7         3.2          1.3         0.2 setosa </span>
+<span class="co">#&gt; 4          4.6         3.1          1.5         0.2 setosa </span>
+<span class="co">#&gt; 5          5           3.6          1.4         0.2 setosa </span>
 <span class="co">#&gt; # ... with 145 more rows</span></code></pre></div>
-<p>But you find mistakes. A lot. For example, we forgot to give our histogram a bin width.</p>
+<p>You may look back on your work and see room for improvement, but it’s all good! The whole point of <code>drake</code> is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/readd.html">readd</a></span>(hist)
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="https://ropensci.github.io/drake/images/hist1.png" alt="hist1" align="center" style="border: none; float: center;" width="500px"></p>
@@ -280,9 +280,6 @@ plan
 <p><a href="https://ropensci.github.io/drake/images/pitch3.html"> <img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style="border: none; float: center;" width="500px"></a></p>
 <p>The next <code><a href="reference/make.html">make()</a></code> just builds <code>hist</code> and <code>report.html</code>. No point in wasting time on the data or model.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
-<span class="co">#&gt; Unloading targets from environment:</span>
-<span class="co">#&gt;   fit</span>
-<span class="co">#&gt;   hist</span>
 <span class="co">#&gt; target hist</span>
 <span class="co">#&gt; target file "report.html"</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/loadd.html">loadd</a></span>(hist)
@@ -298,9 +295,6 @@ hist</code></pre></div>
 <a href="#evidence" class="anchor"></a>Evidence</h2>
 <p>Suppose you are reviewing someone else’s data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results without the help of the original author? With <code>drake</code>, it is quick and easy to find out.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/make.html">make</a></span>(plan)
-<span class="co">#&gt; Unloading targets from environment:</span>
-<span class="co">#&gt;   fit</span>
-<span class="co">#&gt;   hist</span>
 <span class="co">#&gt; All targets are already up to date.</span>
 
 config &lt;-<span class="st"> </span><span class="kw"><a href="reference/drake_config.html">drake_config</a></span>(plan)

@@ -115,7 +115,7 @@
             <h3 class="subtitle">Caches and hashes</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-01</h4>
+            <h4 class="date">2018-05-03</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/storage.Rmd"><code>vignettes/storage.Rmd</code></a></small>
 
@@ -136,16 +136,16 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
 ## target large
 ## target small
 ## target regression1_large
-## target regression1_small
 ## target regression2_large
+## target regression1_small
 ## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
 ## target summ_regression1_large
-## target summ_regression1_small
+## target coef_regression1_large
 ## target summ_regression2_large
+## target coef_regression2_large
+## target summ_regression1_small
+## target coef_regression1_small
+## target coef_regression2_small
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>You can explore your cached data using functions <code><a href="../reference/loadd.html">loadd()</a></code>, <code><a href="../reference/readd.html">readd()</a></code>, <code><a href="../reference/cached.html">cached()</a></code>, and others.</p>
@@ -221,7 +221,7 @@ cache$<span class="kw">list</span>()
 ## 
 ## $start
 ##    user  system elapsed 
-##   3.004   0.091   3.090 
+##   2.775   0.073   2.847 
 ## 
 ## $time_command
 ##    item   type elapsed  user system
@@ -229,7 +229,7 @@ cache$<span class="kw">list</span>()
 ## 
 ## $time_build
 ##    item   type elapsed  user system
-## 1 small target   0.037 0.037      0
+## 1 small target   0.031 0.031      0
 
 cache$<span class="kw">list_namespaces</span>()
 ## [1] "config"   "kernels"  "meta"     "objects"  "progress" "session"</code></pre></div>
@@ -239,9 +239,6 @@ cache$<span class="kw">list_namespaces</span>()
 ## [1] TRUE</code></pre></div>
 <p>You can use multiple caches simultaneously, default and non-default alike.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(<span class="dt">cache =</span> cache)
-## Unloading targets from environment:
-##   small
-##   coef_regression2_small
 config2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(<span class="dt">cache =</span> cache2)
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
 ## character(0)
@@ -260,16 +257,16 @@ config2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dra
 ## target large
 ## target small
 ## target regression1_large
-## target regression1_small
 ## target regression2_large
+## target regression1_small
 ## target regression2_small
-## target coef_regression1_large
-## target coef_regression1_small
-## target coef_regression2_large
-## target coef_regression2_small
 ## target summ_regression1_large
-## target summ_regression1_small
+## target coef_regression1_large
 ## target summ_regression2_large
+## target coef_regression2_large
+## target summ_regression1_small
+## target coef_regression1_small
+## target coef_regression2_small
 ## target summ_regression2_small
 ## target file "report.md"</code></pre></div>
 <p>There are a couple different ways to retrieve caches.</p>
@@ -309,19 +306,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "a79c3817e3ead3d11d3183768a129f1f"</code></pre></div>
+## [1] "49d0cab0966a875a260aaffc68a9570f"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "8f4013b4884507463946e4dd5256e7555a5fad426825b4238bad63020750178f11b9f4e85c86b00b1b62525e71c5a4b6fb08272f5e837d9ed78d81a8f7952d9d"
+## [1] "c2de8c5cb3d991f5e84ae17bf5c4677408b87762732f2b5ebff698bdb594a1dcece895cc497530c8ccb5712ada2b56bd9a6dfac25eb1704cefce9de164091529"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "a79c3817e3ead3d11d3183768a129f1f"
+## [1] "49d0cab0966a875a260aaffc68a9570f"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "c8279b5ef700b14e"
+## [1] "255d2716a13bd942"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "37ac164f"</code></pre></div>
+## [1] "9878900f"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">

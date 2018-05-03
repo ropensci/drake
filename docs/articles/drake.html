@@ -115,7 +115,7 @@
             <h3 class="subtitle">The main example</h3>
                         <h4 class="author">Will Landau and Kirill Müller</h4>
             
-            <h4 class="date">2018-05-01</h4>
+            <h4 class="date">2018-05-03</h4>
       
       <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/drake.Rmd"><code>vignettes/drake.Rmd</code></a></small>
 
@@ -125,7 +125,7 @@
     
 <div class="contents">
 <p>A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, then turns into fitted models, summaries, and reports.</p>
-<p><img src="https://ropensci.github.io/drake/images/tidydag.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
+<p><img src="/home/landau/projects/drake/vignettes/tidydag.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 <div id="set-the-stage-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#set-the-stage-" class="anchor"></a>Set the stage.</h1>
@@ -170,7 +170,7 @@ plan
 <div id="make-your-results-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#make-your-results-" class="anchor"></a>Make your results.</h1>
-<p>So far, we have just been setting the stage. Use <code><a href="../reference/make.html">make()</a></code> to actually make your results. Targets are built in the correct order regardless of the row order of <code>plan</code>.</p>
+<p>So far, we have just been setting the stage. Use <code><a href="../reference/make.html">make()</a></code> to do the real work. Targets are built in the correct order regardless of the row order of <code>plan</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
 ## Loading required package: methods
 ## target raw_data
@@ -183,25 +183,25 @@ plan
 ## # A tibble: 150 x 5
 ##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
-##  1         5.10        3.50         1.40       0.200 setosa 
-##  2         4.90        3.00         1.40       0.200 setosa 
-##  3         4.70        3.20         1.30       0.200 setosa 
-##  4         4.60        3.10         1.50       0.200 setosa 
-##  5         5.00        3.60         1.40       0.200 setosa 
-##  6         5.40        3.90         1.70       0.400 setosa 
-##  7         4.60        3.40         1.40       0.300 setosa 
-##  8         5.00        3.40         1.50       0.200 setosa 
-##  9         4.40        2.90         1.40       0.200 setosa 
-## 10         4.90        3.10         1.50       0.100 setosa 
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
 ## # ... with 140 more rows</code></pre></div>
 </div>
 <div id="go-back-and-fix-things-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#go-back-and-fix-things-" class="anchor"></a>Go back and fix things.</h1>
-<p>You will find mistakes. A lot. For example, we forgot to give our histogram a bin width.</p>
+<p>You may look back on your work and see room for improvement, but it’s all good! The whole point of <code>drake</code> is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(hist)
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="https://ropensci.github.io/drake/images/hist1.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
+<p><img src="/home/landau/projects/drake/vignettes/hist1.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 <p>So let’s fix the plotting function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
   <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
@@ -215,14 +215,11 @@ plan
 </iframe>
 <p>The next <code><a href="../reference/make.html">make()</a></code> just builds <code>hist</code> and <code>report.html</code>. No point in wasting time on the data or model.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(plan)
-## Unloading targets from environment:
-##   fit
-##   hist
 ## target hist
 ## target file "report.html"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(hist)
 hist</code></pre></div>
-<p><img src="https://ropensci.github.io/drake/images/hist2.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
+<p><img src="/home/landau/projects/drake/vignettes/hist2.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 </div>
 <div id="try-it-yourself" class="section level1">
 <h1 class="hasAnchor">
