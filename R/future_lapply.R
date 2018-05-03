@@ -1,20 +1,28 @@
 run_future_lapply <- function(config){
   prepare_distributed(config = config)
-  run_staged_parallelism(config = config, worker = worker_future_lapply)
+  config$workers <- as.character(seq_len(config$jobs))
+  mc_init_worker_cache(config)
+  tmp <- future.apply::future_lapply(
+    X = c("0", config$workers),
+    FUN = fl_process,
+    cache_path = config$cache$driver$path,
+    future.globals = FALSE
+  )
   finish_distributed(config = config)
 }
 
-worker_future_lapply <- function(targets, meta_list, config){
-  targets <- intersect(targets, config$plan$target)
-  # Probably will not encounter this, but it is better to have:
-  if (!length(targets)){ # nocov # nolint
-    return()             # nocov
-  }                      # nocov
-  future.apply::future_lapply(
-    X = targets,
-    FUN = build_distributed,
-    cache_path = config$cache$driver$path,
-    meta_list = meta_list,
-    future.globals = FALSE
-  )
+fl_process <- function(id, cache_path){
+  config <- recover_drake_config(cache_path = cache_path)
+  try_message({
+    if (id == "0"){
+      mc_master(config)
+    } else {
+      fl_worker(worker = id, config = config)
+    }
+  })
+}
+
+fl_worker <- function(worker, config){
+  do_prework(config = config, verbose_packages = FALSE)
+  mc_worker(worker = worker, config = config)
 }
