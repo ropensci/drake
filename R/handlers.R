@@ -53,10 +53,6 @@ error_null <- function(e){
   NULL
 }
 
-error_message <- function(e){
-  message("Error: ", e$message) # nocov
-}
-
 error_tibble_times <- function(e){
   stop(
     "Failed converting a data frame of times to a tibble. ",
