@@ -37,6 +37,17 @@ mc_process <- function(id, config){
   })
 }
 
+#' @title Internal function to launch
+#' a master process.
+#' @description For internal use only.
+#' Exported ony for the purpose of
+#' using persistent workers in
+#' `make(paralellism = "future_lapply", jobs = n)`,
+#' where `n > 1`.
+#' @keywords internal
+#' @export
+#' @param config `drake_config()` list
+#' @return nothing important
 mc_master <- function(config){
   config$queue <- new_target_queue(config = config)
   while (mc_work_remains(config)){
