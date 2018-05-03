@@ -5,9 +5,7 @@ run_parLapply <- function(config) { # nolint
   }
   config$workers <- as.character(seq_len(config$jobs))
   console_parLapply(config) # nolint
-  if (is.null(config$cluster)){
-    config$cluster <- makePSOCKcluster(config$jobs + 1)
-  }
+  config$cluster <- makePSOCKcluster(config$jobs + 1)
   on.exit(stopCluster(cl = config$cluster))
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
