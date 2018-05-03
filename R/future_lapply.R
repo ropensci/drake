@@ -2,7 +2,12 @@ run_future_lapply <- function(config){
   prepare_distributed(config = config)
   config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)
-  callr::r_bg(func = mc_master, args = list(config = config))
+  callr::r_bg(
+    func = function(config){
+      drake::mc_master(config)
+    },
+    args = list(config = config)
+  )
   tmp <- future.apply::future_lapply(
     X = config$workers,
     FUN = fl_worker,
