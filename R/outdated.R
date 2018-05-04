@@ -1,10 +1,10 @@
 first_outdated <- function(config) {
   graph <- targets_graph(config)
-  build_these <- character(0)
+  out <- character(0)
   old_leaves <- NULL
   while (TRUE){
     new_leaves <- leaf_nodes(graph) %>%
-      setdiff(y = build_these) %>%
+      setdiff(y = out) %>%
       sort
     do_build <- lightly_parallelize(
       X = new_leaves,
@@ -13,7 +13,7 @@ first_outdated <- function(config) {
       config = config
     ) %>%
       unlist
-    build_these <- c(build_these, new_leaves[do_build])
+    out <- c(out, new_leaves[do_build])
     if (all(do_build)){
       break
     } else {
@@ -21,7 +21,7 @@ first_outdated <- function(config) {
     }
     old_leaves <- new_leaves
   }
-  new_leaves
+  out
 }
 
 #' @title List the targets that are out of date.
