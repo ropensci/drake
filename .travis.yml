@@ -20,10 +20,10 @@ r_packages:
 script:
   - |
     R CMD build .
-    travis_wait 20 R CMD check drake*tar.gz --no-tests
-    travis_wait 20 Rscript -e 'covr::codecov()'
+    travis_wait 20 R CMD check drake*tar.gz
 
 after_success:
+  - Rscript -e 'covr::codecov()'
   - Rscript -e 'lintr::lint_package()'
 
 after_failure:
