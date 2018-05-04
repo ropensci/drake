@@ -44,6 +44,7 @@ finish_distributed <- function(config){
 build_distributed <- function(target, meta_list, cache_path){
   config <- recover_drake_config(cache_path = cache_path)
   config$hook({
+    eval(parse(text = "base::require(drake, quietly = TRUE)"))
     do_prework(config = config, verbose_packages = FALSE)
     prune_envir(targets = target, config = config)
   })
