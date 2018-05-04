@@ -25,9 +25,9 @@ test_with_dir("force loading a non-back-compatible cache", {
 })
 
 test_with_dir("null cases for migrate_drake_project()", {
-  expect_true(migrate_drake_project(path = "not_found"))
+  expect_true(suppressWarnings(migrate_drake_project(path = "not_found")))
   x <- new_cache(path = "path")
-  expect_true(migrate_drake_project(path = "path"))
+  expect_true(suppressWarnings(migrate_drake_project(path = "path")))
   expect_silent(tmp <- null_proc_time())
 })
 
@@ -36,7 +36,7 @@ test_with_dir("migrate_drake_project() an up to date cache", {
   file.rename(from = default_cache_path(), to = "old")
   expect_error(this_cache(path = "old"))
   cache <- this_cache(path = "old", force = TRUE)
-  expect_true(migrate_drake_project(path = "old"))
+  expect_true(suppressWarnings(migrate_drake_project(path = "old")))
   load_mtcars_example()
   config <- make(my_plan, cache = cache, session_info = FALSE)
  # expect_equal(justbuilt(config = config), character(0)) # r-lib/covr#289 # nolint

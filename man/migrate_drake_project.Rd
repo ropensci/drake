@@ -20,6 +20,7 @@ that is, outdated targets remain outdated and up to date targets
 remain up to date.
 }
 \description{
+Deprecated on May 4, 2018.
 Migrate a project/cache from drake 4.4.0 or earlier
 to be compatible with the version of drake on your system.
 }
