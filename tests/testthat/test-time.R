@@ -58,9 +58,26 @@ test_with_dir("build time the same after superfluous make", {
 test_with_dir("runtime predictions", {
   con <- dbug()
   testrun(con)
-  p0 <- predict_runtime(config = con, jobs = 1)
-  p1 <- predict_runtime(config = con, jobs = 1, default_time = 1e3)
-  p2 <- predict_runtime(config = con, jobs = 2, default_time = 1e3)
-  expect_true(p0 < p1)
-  expect_true(p1 < p2)
+  p1 <- predict_runtime(config = con, jobs = 1)
+  p2 <- predict_runtime(
+    config = con,
+    jobs = 1,
+    default_time = 1e3,
+    from_scratch = FALSE
+  )
+  p3 <- predict_runtime(
+    config = con,
+    jobs = 1,
+    default_time = 1e3,
+    from_scratch = TRUE
+  )
+  p4 <- predict_runtime(
+    config = con,
+    jobs = 2,
+    default_time = 1e3,
+    from_scratch = TRUE
+  )
+  expect_true(p1 < p3)
+  expect_true(p2 < p3)
+  expect_true(p4 < p3)
 })
