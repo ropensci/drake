@@ -18,7 +18,7 @@ run_mclapply <- function(config){
 #' @title Internal function to launch
 #' a master process or persistent worker.
 #' @description For internal use only.
-#' Exported ony for the purpose of
+#' Exported only for the purpose of
 #' using persistent workers in
 #' `make(paralellism = "parLapply", jobs = n)`,
 #' where `n > 1`.
@@ -45,7 +45,7 @@ mc_process <- function(id, config){
 #' @title Internal function to launch
 #' a master process.
 #' @description For internal use only.
-#' Exported ony for the purpose of
+#' Exported only for the purpose of
 #' using persistent workers in
 #' `make(paralellism = "future_lapply", jobs = n)`,
 #' where `n > 1`.

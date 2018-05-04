@@ -2,6 +2,7 @@ run_future_lapply <- function(config){
   prepare_distributed(config = config)
   config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)
+  console_persistent_workers(config)
   px <- callr::r_bg(
     func = function(config){
       drake::mc_process(id = "0", config)

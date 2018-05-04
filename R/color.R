@@ -8,6 +8,7 @@ colors <- c(
   cache = "skyblue1",
   check = "skyblue1",
   connect = "skyblue1",
+  launch = "skyblue1",
   load = "#ff9933",
   unload = "#ff7221",
   trigger = "maroon",

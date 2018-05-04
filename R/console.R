@@ -140,6 +140,16 @@ console_nondefault_triggers <- function(){
     message
 }
 
+console_persistent_workers <- function(config){
+  if (config$verbose > 3){
+    finish_console(
+      text = paste("launch ", config$jobs, "persistent workers + master"),
+      pattern = "launch",
+      verbose = config$verbose
+    )
+  }
+}
+
 finish_console <- function(text, pattern, verbose){
   if (!verbose){
     return(invisible())
