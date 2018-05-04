@@ -34,6 +34,19 @@ console_import <- function(target, config){
   finish_console(text = text, pattern = pattern, verbose = config$verbose)
 }
 
+console_skip <- function(target, config){
+  if (config$verbose < 4){
+    return()
+  }
+  pattern <- "skip"
+  text <- target
+  if (is_file(target)){
+    text <- paste0("file ", text)
+  }
+  text <- paste(pattern, text)
+  finish_console(text = text, pattern = pattern, verbose = config$verbose)
+}
+
 console_target <- function(target, config){
   pattern <- "target"
   text <- target
@@ -138,6 +151,17 @@ console_nondefault_triggers <- function(){
     colors["trigger"]
   ) %>%
     message
+}
+
+console_persistent_workers <- function(config){
+  if (config$verbose < 2){
+    return()
+  }
+  finish_console(
+    text = paste("launch", config$jobs, "persistent workers + master"),
+    pattern = "launch",
+    verbose = config$verbose
+  )
 }
 
 finish_console <- function(text, pattern, verbose){

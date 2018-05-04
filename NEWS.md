@@ -1,6 +1,6 @@
 # Version 5.1.4
 
-- Remove staged parallelism from the `"mclapply"` backend. Now uses persistent workers and a master process.
+- Remove staged parallelism from all the `lapply()`-like backends (`parallelism =` `"mclapply"`, `"parLapply"`, and `"future_lapply"`). Now, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate `callr::r_bg()` process.
 - Remove the appearance of staged parallelism from single-job `make()`'s.
 - Calls to `make()` no longer leave targets in the user's environment.
 - Attempt to fix a Solaris CRAN check error. The test at https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3 was previously failing on CRAN's Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.

@@ -18,7 +18,7 @@ run_mclapply <- function(config){
 #' @title Internal function to launch
 #' a master process or persistent worker.
 #' @description For internal use only.
-#' Exported ony for the purpose of
+#' Exported only for the purpose of
 #' using persistent workers in
 #' `make(paralellism = "parLapply", jobs = n)`,
 #' where `n > 1`.
@@ -37,13 +37,7 @@ mc_process <- function(id, config){
       }
     },
     error = function(e){
-      # Should not reproduce in unit tests:
-      # nocov start
-      set_attempt_flag(config = config)
-      message("Error: ", e$message)
-      config$cache$set(key = id, value = e, namespace = "mc_fail")
-      stop("make() failed.")
-      # nocov end
+      error_process(e = e, id = id, config = config) # nocov
     }
   )
 }
@@ -51,7 +45,7 @@ mc_process <- function(id, config){
 #' @title Internal function to launch
 #' a master process.
 #' @description For internal use only.
-#' Exported ony for the purpose of
+#' Exported only for the purpose of
 #' using persistent workers in
 #' `make(paralellism = "future_lapply", jobs = n)`,
 #' where `n > 1`.
@@ -84,6 +78,7 @@ mc_master <- function(config){
 
 mc_worker <- function(worker, config){
   on.exit(mc_set_done(worker = worker, config = config))
+  mc_set_ready(worker = worker, config = config)
   while (TRUE){
     if (mc_is_idle(worker = worker, config = config)){
       Sys.sleep(mc_wait)
@@ -106,7 +101,7 @@ mc_init_worker_cache <- function(config){
   lapply(
     X = config$workers,
     FUN = function(worker){
-      mc_set_idle(worker = worker, config = config)
+      mc_set_not_ready(worker = worker, config = config)
       mc_set_target(worker = worker, target = NA, config = config)
     }
   )
@@ -150,63 +145,6 @@ mc_work_remains <- function(config){
   !empty || !all_done
 }
 
-mc_all_done <- function(config){
-  for (worker in config$workers){
-    if (!mc_is_done(worker, config)){
-      return(FALSE)
-    }
-  }
-  TRUE
-}
-
-mc_is_status <- function(worker, status, config){
-  while (TRUE){
-    worker_status <- suppressWarnings(
-      try(
-        config$cache$get(key = worker, namespace = "mc_status"),
-        silent = TRUE
-      )
-    )
-    if (worker_status %in% c("done", "idle", "running")){
-      break
-    }
-    Sys.sleep(mc_wait) # nocov
-  }
-  identical(status, worker_status)
-}
-
-mc_is_done <- function(worker, config){
-  mc_is_status(worker = worker, status = "done", config = config)
-}
-
-mc_is_idle <- function(worker, config){
-  mc_is_status(worker = worker, status = "idle", config = config)
-}
-
-mc_set_status <- function(worker, status, config){
-  config$cache$set(key = worker, value = status, namespace = "mc_status")
-}
-
-mc_set_done <- function(worker, config){
-  mc_set_status(worker = worker, status = "done", config = config)
-}
-
-mc_set_done_all <- function(config){
-  lapply(
-    X = config$workers,
-    FUN = mc_set_done,
-    config = config
-  )
-}
-
-mc_set_idle <- function(worker, config){
-  mc_set_status(worker = worker, status = "idle", config = config)
-}
-
-mc_set_running <- function(worker, config){
-  mc_set_status(worker = worker, status = "running", config = config)
-}
-
 mc_get_target <- function(worker, config){
   while (TRUE){
     target <- suppressWarnings(
@@ -227,7 +165,78 @@ mc_set_target <- function(worker, target, config){
   config$cache$set(key = worker, value = target, namespace = "mc_target")
 }
 
-mc_wait <- 1e-9
+mc_is_status <- function(worker, status, config){
+  while (TRUE){
+    worker_status <- suppressWarnings(
+      try(
+        config$cache$get(key = worker, namespace = "mc_status"),
+        silent = TRUE
+      )
+    )
+    if (worker_status %in% c("not ready", "idle", "running", "done")){
+      break
+    }
+    Sys.sleep(mc_wait) # nocov
+  }
+  identical(status, worker_status)
+}
+
+mc_is_not_ready <- function(worker, config){
+  mc_is_status(worker = worker, status = "not ready", config = config)
+}
+
+mc_is_idle <- function(worker, config){
+  mc_is_status(worker = worker, status = "idle", config = config)
+}
+
+mc_is_done <- function(worker, config){
+  mc_is_status(worker = worker, status = "done", config = config)
+}
+
+mc_all_done <- function(config){
+  for (worker in config$workers){
+    if (!mc_is_done(worker, config)){
+      return(FALSE)
+    }
+  }
+  TRUE
+}
+
+mc_set_status <- function(worker, status, config){
+  config$cache$set(key = worker, value = status, namespace = "mc_status")
+}
+
+mc_set_not_ready <- function(worker, config){
+  mc_set_status(worker = worker, status = "not ready", config = config)
+}
+
+mc_set_ready <- function(worker, config){
+  if (mc_is_not_ready(worker = worker, config = config)){
+    mc_set_idle(worker = worker, config = config)
+  }
+}
+
+mc_set_idle <- function(worker, config){
+  mc_set_status(worker = worker, status = "idle", config = config)
+}
+
+mc_set_running <- function(worker, config){
+  mc_set_status(worker = worker, status = "running", config = config)
+}
+
+mc_set_done <- function(worker, config){
+  mc_set_status(worker = worker, status = "done", config = config)
+}
+
+mc_set_done_all <- function(config){
+  lapply(
+    X = config$workers,
+    FUN = mc_set_done,
+    config = config
+  )
+}
+
+mc_wait <- 2e-1
 
 warn_mclapply_windows <- function(
   parallelism,
@@ -254,7 +263,7 @@ warn_mclapply_windows <- function(
   }
 }
 
-# Get rid of this:
+# TODO: get rid of this:
 
 worker_mclapply <- function(targets, meta_list, config){
   prune_envir(targets = targets, config = config)

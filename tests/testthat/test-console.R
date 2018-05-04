@@ -118,3 +118,17 @@ test_with_dir("console_many_targets() works", {
   expect_true(is.character(tmp))
   expect_true(nchar(tmp) <= getOption("width") + 20)
 })
+
+test_with_dir("console_persistent_workers", {
+  con <- dbug()
+  expect_silent(console_persistent_workers(con))
+  con$verbose <- 4
+  expect_message(console_persistent_workers(con))
+})
+
+test_with_dir("console_skip", {
+  con <- dbug()
+  expect_silent(console_skip("bla", con))
+  con$verbose <- 4
+  expect_message(console_skip(file_store("bla"), con))
+})

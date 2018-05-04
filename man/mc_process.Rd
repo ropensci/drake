@@ -17,7 +17,7 @@ nothing important
 }
 \description{
 For internal use only.
-Exported ony for the purpose of
+Exported only for the purpose of
 using persistent workers in
 \code{make(paralellism = "parLapply", jobs = n)},
 where \code{n > 1}.

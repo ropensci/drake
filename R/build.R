@@ -73,6 +73,7 @@ build_check_store <- function(
     meta = meta,
     config = config
   )){
+    console_skip(target = target, config = config)
     return()
   }
   meta$start <- proc.time()
