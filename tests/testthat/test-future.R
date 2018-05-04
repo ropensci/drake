@@ -9,18 +9,14 @@ test_with_dir("future package functionality", {
   caching <- c(rep("worker", 2), "master")
   for (i in 1:3){
     clean(destroy = TRUE)
-    withr::with_options(
-      new = list(mc.cores = 2), code = {
-        config <- make(
-          e$my_plan,
-          envir = e,
-          parallelism = backends[i],
-          caching = caching[i],
-          jobs = 1,
-          verbose = FALSE,
-          session_info = FALSE
-        )
-      }
+    config <- make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[i],
+      caching = caching[i],
+      jobs = 1,
+      verbose = FALSE,
+      session_info = FALSE
     )
     expect_equal(
       outdated(config),
