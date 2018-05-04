@@ -278,7 +278,7 @@ make_session <- function(config){
 #' })
 #' }
 make_imports <- function(config = drake::read_drake_config()){
-  config$schedule <- imports_graph(config = config)
+  config$graph <- imports_graph(config = config)
   config$jobs <- jobs_imports(jobs = config$jobs)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
@@ -327,7 +327,7 @@ imports_graph <- function(config){
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()){
-  config$schedule <- targets_graph(config = config)
+  config$graph <- targets_graph(config = config)
   config$jobs <- jobs_targets(jobs = config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
@@ -340,7 +340,6 @@ targets_graph <- function(config){
 }
 
 make_imports_targets <- function(config){
-  config$schedule <- config$graph
   config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)

@@ -41,29 +41,13 @@ finish_distributed <- function(config){
   unlink(file, force = TRUE)
 }
 
-build_distributed <- function(target, meta_list, cache_path){
+build_distributed <- function(target, cache_path){
   config <- recover_drake_config(cache_path = cache_path)
   config$hook({
     eval(parse(text = "base::require(drake, quietly = TRUE)"))
     do_prework(config = config, verbose_packages = FALSE)
-    prune_envir(targets = target, config = config)
   })
-  if (is.null(meta_list)){
-    meta_list <- meta_list(targets = target, config = config)
-    do_build <- should_build_target(
-      target = target,
-      meta = meta_list[[target]],
-      config = config
-    )
-    if (!do_build){
-      return(invisible())
-    }
-  }
-  build_and_store(
-    target = target,
-    meta = meta_list[[target]],
-    config = config
-  )
+  build_check_store(target = target, config = config)
   invisible()
 }
 

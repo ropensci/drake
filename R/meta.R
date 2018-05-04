@@ -1,18 +1,3 @@
-meta_list <- function(targets, config) {
-  console_many_targets(targets = targets,
-    pattern = "check", color = "check",
-    config = config)
-  out <- lightly_parallelize(
-    X = targets,
-    FUN = drake_meta,
-    jobs = config$jobs,
-    config = config
-  )
-  names(out) <- lapply(out, "[[", "target") %>%
-    unlist
-  out
-}
-
 #' @title Compute the initial pre-build metadata of a target or import.
 #' @description The metadata helps determine if the
 #' target is up to date or outdated. The metadata of imports

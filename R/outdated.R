@@ -1,3 +1,29 @@
+first_outdated <- function(config) {
+  graph <- targets_graph(config)
+  build_these <- character(0)
+  old_leaves <- NULL
+  while (TRUE){
+    new_leaves <- leaf_nodes(graph) %>%
+      setdiff(y = build_these) %>%
+      sort
+    do_build <- lightly_parallelize(
+      X = new_leaves,
+      FUN = should_build_target,
+      jobs = config$jobs,
+      config = config
+    ) %>%
+      unlist
+    build_these <- c(build_these, new_leaves[do_build])
+    if (all(do_build)){
+      break
+    } else {
+      graph <- delete_vertices(graph, v = new_leaves[!do_build])
+    }
+    old_leaves <- new_leaves
+  }
+  new_leaves
+}
+
 #' @title List the targets that are out of date.
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()].
@@ -49,7 +75,7 @@ outdated <-  function(
   if (make_imports){
     make_imports(config = config)
   }
-  first_targets <- next_stage(config = config)
+  first_targets <- first_outdated(config = config)
   later_targets <- downstream_nodes(
     from = first_targets,
     graph = config$graph,

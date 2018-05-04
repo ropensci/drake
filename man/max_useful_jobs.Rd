@@ -36,16 +36,8 @@ A numeric scalar, the maximum number of useful jobs for
 \code{\link{make}(..., jobs = ...)}.
 }
 \description{
-The best number of \code{jobs}
-should be somewhere between 1 and \code{max_useful_jobs(...)}.
-Any additional jobs more than \code{max_useful_jobs(...)}
-should be superfluous, and could even slow you down for
-\code{make(..., parallelism = 'parLapply')}.
-}
-\details{
-Set the \code{imports} argument to change your assumptions about
-how fast objects/files are imported.
-IMPORTANT: you must be in the root directory of your project.
+Any more jobs, and you may have too many to be useful.
+Note: this is only a rough guess based on the topology of the graph.
 }
 \examples{
 \dontrun{

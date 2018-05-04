@@ -1,13 +1,7 @@
 #' @title Suggest an upper bound on the jobs in the next call
 #'   to `make(..., jobs = YOUR_CHOICE)`.
-#' @description The best number of `jobs`
-#' should be somewhere between 1 and `max_useful_jobs(...)`.
-#' Any additional jobs more than `max_useful_jobs(...)`
-#' should be superfluous, and could even slow you down for
-#' `make(..., parallelism = 'parLapply')`.
-#' @details Set the `imports` argument to change your assumptions about
-#' how fast objects/files are imported.
-#' IMPORTANT: you must be in the root directory of your project.
+#' @description Any more jobs, and you may have too many to be useful.
+#' Note: this is only a rough guess based on the topology of the graph.
 #' @export
 #'
 #' @return A numeric scalar, the maximum number of useful jobs for
@@ -43,12 +37,10 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan) # Standard drake configuration list.
-#' # Look at the graph. The work proceeds column by column
-#' # in parallelizable stages. The maximum number of useful jobs
-#' # is determined by the number and kind of targets/imports
-#' # in the columns.
+#' # Look at the graph. You can get an idea of how many jobs to submit
+#' # by looking at the tallest columns.
 #' vis_drake_graph(config = config)
-#' # Should be 8 because everythign is out of date.
+#' # Should be 8 because everything is out of date.
 #' max_useful_jobs(config = config) # 8
 #' # Take into account targets and imported files.
 #' max_useful_jobs(config = config, imports = 'files') # 8
@@ -85,18 +77,21 @@ max_useful_jobs <- function(
   imports = c("files", "all", "none"),
   from_scratch = FALSE
 ){
-  nodes <- parallel_stages(config = config, from_scratch = from_scratch)
   imports <- match.arg(imports)
+  nodes <- dataframes_graph(config, from_scratch = from_scratch)$nodes
   if (imports == "none"){
-    nodes <- nodes[!nodes$imported, ]
+    nodes <- nodes[nodes$status != "imported", ]
   } else if (imports == "files"){
-    nodes <- nodes[!nodes$imported | nodes$file, ]
+    nodes <- nodes[nodes$status != "imported" | nodes$type == "file", ]
+  }
+  if (!from_scratch){
+    nodes <- nodes[nodes$status != "outdated",]
   }
   if (!nrow(nodes)){
     return(0)
   }
-  stage <- NULL
-  n_per_stage <- group_by(nodes, stage) %>%
+  level <- NULL
+  n_per_level <- group_by(nodes, level) %>%
     mutate(nrow = n())
-  max(n_per_stage$nrow)
+  max(n_per_level$nrow)
 }

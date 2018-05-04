@@ -106,7 +106,7 @@ mc_init_worker_cache <- function(config){
     }
   )
   lapply(
-    X = igraph::V(config$schedule)$name,
+    X = igraph::V(config$graph)$name,
     FUN = function(target){
       config$cache$set(key = target, value = TRUE, namespace = "protect")
     }
@@ -261,19 +261,4 @@ warn_mclapply_windows <- function(
       call. = FALSE
     )
   }
-}
-
-# TODO: get rid of this:
-
-worker_mclapply <- function(targets, meta_list, config){
-  prune_envir(targets = targets, config = config)
-  jobs <- safe_jobs(config$jobs)
-  values <- mclapply(
-    X = targets,
-    FUN = drake_build_worker,
-    meta_list = meta_list,
-    config = config,
-    mc.cores = jobs
-  )
-  assign_to_envir_batch(targets = targets, values = values, config = config)
 }

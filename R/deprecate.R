@@ -805,6 +805,53 @@ plot_graph <- function(
   )
 }
 
+#' @title Defunct
+#' @description This function is now moot because
+#' staged parallelism in `drake` was replaced
+#' by a much better scheduling algorithm.
+#' @export
+#' @keywords internal
+#' @details Made defunct on May 4, 2018
+#' @examples
+#' # Do not use this function.
+#' @return A data frame of times of the worst-case scenario
+#'   rate-limiting targets in each parallelizable stage.
+#' @param config option internal runtime parameter list of
+#'   \code{\link{make}(...)},
+#'   produced by both [make()] and
+#'   [drake_config()].
+#' @param targets Character vector, names of targets.
+#'   Find the rate-limiting times for building these targets
+#'   plus dependencies.
+#'   Defaults to all targets.
+#' @param from_scratch logical, whether to assume
+#'   next hypothetical call to [make()]
+#'   is a build from scratch (after [clean()]).
+#' @param targets_only logical, whether to factor in just the
+#'   targets or use times from everything, including the imports.
+#' @param future_jobs hypothetical number of jobs
+#'   assumed for the predicted runtime.
+#'   assuming this number of jobs.
+#' @param digits number of digits for rounding the times.
+rate_limiting_times <- function(
+  config = drake::read_drake_config(),
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = FALSE,
+  future_jobs = 1,
+  digits = 3
+){
+  .Defunct(
+    package = "drake",
+    msg = c(
+      "The rate_limiting_times() function is moot ",
+      "because drake has replaced staged parallelism ",
+      "with a much better algorithm. ",
+      "Do not use rate_limiting_times()."
+    )
+  )
+}
+
 #' @title Deprecated function `read_config`
 #' @description Use [read_drake_config()] instead.
 #' @details Deprecated on 2017-11-12.
@@ -1068,6 +1115,37 @@ session <- function(
     search = search,
     cache = cache,
     verbose = verbose
+  )
+}
+
+#' @title Defunct function
+#' @description Staged parallelism is removed from drake,
+#' so this function is moot.
+#' Drake uses a much better parallel algorithm now.
+#' @details Made defunct on May 4, 2018.
+#' @export
+#' @keywords internal
+#' @return A data frame of information spelling out how
+#'   targets are divided into parallelizable stages
+#'   (according to the `stage` column).
+#' @param config An configuration list output by
+#'   [make()] or [drake_config()].
+#' @param from_scratch logical, whether to assume
+#'   that the next [make()] will run from scratch
+#'   so that all targets are attempted.
+#' @examples
+#' # Do not use this function.
+parallel_stages <- function(
+  config = drake::read_drake_config(),
+  from_scratch = FALSE
+){
+  .Defunct(
+    package = "drake",
+    msg = c(
+      "Staged parallelism is removed from drake, ",
+      "so the parallel_stages() function is moot. ",
+      "Drake uses a much better parallel algorithm now."
+    )
   )
 }
 
