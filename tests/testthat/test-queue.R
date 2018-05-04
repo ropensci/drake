@@ -1,7 +1,7 @@
 drake_context("queue")
 
 test_with_dir("empty queue", {
-  config <- list(schedule = igraph::make_empty_graph())
+  config <- list(graph = igraph::make_empty_graph())
   q <- new_target_queue(config)
   expect_equal(length(q$list()), 0)
 })
