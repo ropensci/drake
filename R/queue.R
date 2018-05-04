@@ -1,5 +1,4 @@
 new_target_queue <- function(config){
-  config$graph <- config$schedule
   targets <- V(config$graph)$name
   if (!length(targets)){
     return(R6_priority_queue$new())

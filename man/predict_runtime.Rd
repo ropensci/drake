@@ -7,7 +7,7 @@
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
   from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
   digits = NULL, type = c("elapsed", "user", "system"), jobs = 1,
-  jobs_sims = 1, sims = 10)
+  jobs_sims = 1, sims = 1)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of

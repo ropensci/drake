@@ -61,7 +61,7 @@ predict_runtime <- function(
   type = c("elapsed", "user", "system"),
   jobs = 1,
   jobs_sims = 1,
-  sims = 10
+  sims = 1
 ){
   if (!is.null(future_jobs)){
     warning(

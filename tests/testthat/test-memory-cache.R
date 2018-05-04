@@ -43,7 +43,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_equal(long_hash(con$cache), default_long_hash_algo())
 
   x <- predict_runtime(con)
-  y <- rate_limiting_times(con, from_scratch = TRUE)
   expect_true(length(x) > 0)
   expect_true(nrow(y) > 0)
 

@@ -13,23 +13,6 @@ test_with_dir("Recursive functions are okay", {
   make(x, cache = cache, session_info = FALSE)
 })
 
-test_with_dir("drake searches past outdated targets for parallel stages", {
-  plan <- drake_plan(
-    a = 1,
-    b = a,
-    d = b,
-    e = d,
-    c = a,
-    f = c
-  )
-  config <- make(plan, targets = c("a", "b", "c", "d"), session_info = FALSE)
-  config <- drake_config(plan)
-  stages <- parallel_stages(config)
-  expect_equal(sort(stages$item), c("e", "f"))
-  expect_equal(length(unique(stages$stage)), 1)
-  expect_equal(sort(next_stage(config)), sort(c("e", "f")))
-})
-
 test_with_dir("Supplied graph is not an igraph.", {
   expect_error(prune_drake_graph(12345, to = "node"))
 })
