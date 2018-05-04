@@ -125,3 +125,10 @@ test_with_dir("console_persistent_workers", {
   con$verbose <- 4
   expect_message(console_persistent_workers(con))
 })
+
+test_with_dir("console_skip", {
+  con <- dbug()
+  expect_silent(console_skip("bla", con))
+  con$verbose <- 4
+  expect_message(console_persistent_workers("bla", con))
+})
