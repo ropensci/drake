@@ -1,11 +1,11 @@
 first_outdated <- function(config) {
-  graph <- targets_graph(config)
+  graph <- config$graph
   out <- character(0)
   old_leaves <- NULL
   while (TRUE){
     new_leaves <- leaf_nodes(graph) %>%
       setdiff(y = out) %>%
-      sort
+      intersect(y = config$plan$target)
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = should_build_target,
