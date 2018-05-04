@@ -114,6 +114,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(drake_unquote("x", deep = TRUE))
   cache <- storr::storr_environment()
   expect_warning(configure_cache(cache, log_progress = TRUE))
+  expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
 })
 
 test_with_dir("deprecated arguments", {

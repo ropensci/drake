@@ -90,21 +90,6 @@ test_with_dir("Supplied graph is pruned.", {
   expect_false(any(exclude %in% vertices))
 })
 
-test_with_dir("same graphical arrangements for distributed parallelism", {
-  e <- new.env()
-  x <- drake_plan(a = 1, b = f(2))
-  e$f <- function(x) x
-  con <- drake_config(x, envir = e, verbose = FALSE)
-  expect_equal(2, max_useful_jobs(config = con))
-  expect_equal(2, max_useful_jobs(config = con))
-  con$parallelism <- "Makefile"
-  expect_equal(2, max_useful_jobs(config = con))
-  expect_equal(2, max_useful_jobs(config = con))
-  y <- drake_plan(a = 1, b = 2)
-  tmp <- dataframes_graph(config = con)
-  expect_true(is.list(tmp))
-})
-
 test_with_dir("graphing args are not ignored (mtcars example)", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))

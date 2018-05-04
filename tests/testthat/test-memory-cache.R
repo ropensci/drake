@@ -70,7 +70,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   p <- vis_drake_graph(con, file = "graph.html")
   expect_false(file.exists(default_cache_path()))
 
-  m1 <- max_useful_jobs(con)
   expect_equal(m1, 4)
   expect_false(file.exists(default_cache_path()))
 

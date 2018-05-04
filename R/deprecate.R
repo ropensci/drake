@@ -579,6 +579,67 @@ load_basic_example <- function(
   )
 }
 
+#' @title Deprecated function
+#' @description Do not use this function. `Drake`'s parallel algorithm
+#'   has changed since version 5.1.2, so `max_useful_jobs()`
+#'   will give you the wrong idea of how many jobs to use. Instead,
+#'   use the [predict_runtime()] function with a sensible value
+#'   for `manual_times` and `default_time`
+#'   to cover any targets not built so far.
+#' @details Deprecated on May 4, 2018.
+#' @export
+#' @keywords internal
+#' @return A numeric scalar, the maximum number of useful jobs for
+#'   \code{\link{make}(..., jobs = ...)}.
+#' @seealso [predict_runtime()]
+#' @param config internal configuration list of \code{\link{make}(...)},
+#'   produced also with [drake_config()].
+#' @param imports Set the `imports` argument to change your
+#'   assumptions about how fast objects/files are imported.
+#' @param from_scratch logical, whether to assume
+#'   the next [make()] will run from scratch
+#'   so that all targets are attempted.
+#' @examples
+#' # Do not use this function. Use predict_runtime() instead.
+#' # Pay special attention to the manual_times and default_time
+#' # arguments.
+max_useful_jobs <- function(
+  config = drake::read_drake_config(),
+  imports = c("files", "all", "none"),
+  from_scratch = FALSE
+){
+  .Deprecated(
+    "predict_runtime",
+    package = "drake",
+    msg = c(
+      "Do not use max_useful_jobs(). ",
+      "Drake's parallel scheduling algorithm has changed, ",
+      "so max_useful_jobs() will give you the wrong idea about ",
+      "how many jobs to assign to `make()`. For a better estimate, ",
+      "play around with predict_runtime() with sensible values, ",
+      "for manual_times and default_time."
+    )
+  )
+  imports <- match.arg(imports)
+  nodes <- dataframes_graph(config, from_scratch = from_scratch)$nodes
+  if (imports == "none"){
+    nodes <- nodes[nodes$status != "imported", ]
+  } else if (imports == "files"){
+    nodes <- nodes[nodes$status != "imported" | nodes$type == "file", ]
+  }
+  if (!from_scratch){
+    nodes <- nodes[nodes$status != "outdated",]
+  }
+  if (!nrow(nodes)){
+    return(0)
+  }
+  level <- NULL
+  n_per_level <- group_by(nodes, level) %>%
+    mutate(nrow = n())
+  max(n_per_level$nrow)
+}
+
+
 #' @title Deprecated function `plan`
 #' @description Use [drake_plan()] instead.
 #' @details Deprecated on 2017-10.
