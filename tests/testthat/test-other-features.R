@@ -103,8 +103,8 @@ test_with_dir("shapes", {
   expect_equal(color_of("bluhlaksjdf"), color_of("other"))
 })
 
-test_with_dir("make() with imports_only", {
-  expect_silent(make(drake_plan(x = 1), imports_only = TRUE,
+test_with_dir("make() with skip_targets", {
+  expect_silent(make(drake_plan(x = 1), skip_targets = TRUE,
     verbose = FALSE, session_info = FALSE))
   expect_false(cached(x))
 })

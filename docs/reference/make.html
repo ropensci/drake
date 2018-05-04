@@ -161,7 +161,7 @@ for an overview of the documentation.</p>
   <span class='kw'>prepend</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>command</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_Makefile_command'>default_Makefile_command</a></span>(),
   <span class='kw'>args</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_Makefile_args'>default_Makefile_args</a></span>(<span class='kw'>jobs</span> <span class='kw'>=</span> <span class='no'>jobs</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>),
   <span class='kw'>recipe_command</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_recipe_command'>default_recipe_command</a></span>(), <span class='kw'>log_progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>imports_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>Inf</span>, <span class='kw'>cpu</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>elapsed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>skip_targets</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>Inf</span>, <span class='kw'>cpu</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>elapsed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>retries</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>return_config</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>graph</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_trigger'>default_trigger</a></span>(), <span class='kw'>skip_imports</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>skip_safety_checks</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>config</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>lazy_load</span> <span class='kw'>=</span> <span class='st'>"eager"</span>,
@@ -380,7 +380,7 @@ and speed with
 will no longer work if you do that.</p></td>
     </tr>
     <tr>
-      <th>imports_only</th>
+      <th>skip_targets</th>
       <td><p>logical, whether to skip building the targets
 in <code>plan</code> and just import objects and files.</p></td>
     </tr>

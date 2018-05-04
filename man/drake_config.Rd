@@ -16,10 +16,10 @@ drake_config(plan = read_drake_plan(),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
   log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
-  imports_only = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
+  skip_targets = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
-  session = NULL)
+  session = NULL, imports_only = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -236,7 +236,7 @@ Ignored if \code{plan} has a \code{trigger} column.
 Must be in \code{\link[=triggers]{triggers()}}.
 See \link{triggers} for explanations of the choices.}
 
-\item{imports_only}{logical, whether to skip building the targets
+\item{skip_targets}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
 
 \item{skip_imports}{logical, whether to totally neglect to
@@ -326,6 +326,8 @@ If \code{session} is \code{NULL} (default), then \code{\link[=make]{make()}} wil
 your current R session as the master session. This is slightly faster,
 but it causes \code{\link[=make]{make()}} to populate your workspace/environment
 with the last few targets it builds.}
+
+\item{imports_only}{deprecated. Use \code{skip_targets} instead.}
 }
 \value{
 The master internal configuration list of a project.

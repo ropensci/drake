@@ -1,9 +1,11 @@
 # Version 5.1.4
 
 - Remove staged parallelism from all the `lapply()`-like backends (`parallelism =` `"mclapply"`, `"parLapply"`, and `"future_lapply"`). Now, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate `callr::r_bg()` process.
-- Remove the appearance of staged parallelism from single-job `make()`'s.
+- Remove the appearance of staged parallelism from single-job `make()`'s. (Previously, there were "check" messages and a call to `staged_parallelism()`.)
 - Calls to `make()` no longer leave targets in the user's environment.
 - Attempt to fix a Solaris CRAN check error. The test at https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3 was previously failing on CRAN's Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.
+- Deprecate the `imports_only` argument to `make()` and `drake_config()` in favor of `skip_targets`.
+- For non-distributed parallel backends, stop waiting for all the imports to finish before the targets begin.
 - Add an `upstream_only` argument to `failed()` so users can list failed targets that do not have any failed dependencies. Naturally accompanies `make(keep_going = TRUE)`.
 - Add an RStudio R Markdown template compatible with https://krlmlr.github.io/drake-pitch/.
 - Remove `plyr` as a dependency.

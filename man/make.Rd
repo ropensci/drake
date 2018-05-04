@@ -12,12 +12,13 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), log_progress = TRUE,
-  imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
+  skip_targets = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
   trigger = drake::default_trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
-  caching = "worker", keep_going = FALSE, session = NULL)
+  caching = "worker", keep_going = FALSE, session = NULL,
+  imports_only = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -200,7 +201,7 @@ and speed with
 \code{\link[=progress]{progress()}} and \code{\link[=in_progress]{in_progress()}}
 will no longer work if you do that.}
 
-\item{imports_only}{logical, whether to skip building the targets
+\item{skip_targets}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
 
 \item{timeout}{Seconds of overall time to allow before imposing
@@ -332,6 +333,8 @@ If \code{session} is \code{NULL} (default), then \code{\link[=make]{make()}} wil
 your current R session as the master session. This is slightly faster,
 but it causes \code{\link[=make]{make()}} to populate your workspace/environment
 with the last few targets it builds.}
+
+\item{imports_only}{deprecated. Use \code{skip_targets} instead.}
 }
 \value{
 The master internal configuration list, mostly
