@@ -2,11 +2,12 @@
 % Please edit documentation in R/predict_runtime.R
 \name{predict_runtime}
 \alias{predict_runtime}
-\title{Predict the elapsed runtime of the next call to \code{make()}.}
+\title{Simulate the runtime of the next call to \code{make()}.}
 \usage{
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
-  future_jobs = 1, from_scratch = FALSE, targets_only = FALSE,
-  digits = 3)
+  from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
+  digits = NULL, type = c("elapsed", "user", "system"), jobs = 1,
+  jobs_sims = 1, sims = 10)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -19,10 +20,6 @@ Predict the runtime of building these targets
 plus dependencies.
 Defaults to all targets.}
 
-\item{future_jobs}{hypothetical number of jobs
-assumed for the predicted runtime.
-assuming this number of jobs.}
-
 \item{from_scratch}{logical, whether to predict a
 \code{\link[=make]{make()}} build from scratch or to
 take into account the fact that some targets may be
@@ -32,47 +29,52 @@ already up to date and therefore skipped.}
 just the targets into the calculations or use the
 build times for everything, including the imports}
 
+\item{future_jobs}{deprecated}
+
 \item{digits}{number of digits for rounding the time}
+
+\item{type}{character scalar: \code{"elapsed"}, \code{"user"}, or \code{"system"}}
+
+\item{jobs}{the \code{jobs} argument of your next planned
+\code{make()}. How many targets to do you plan
+to have running simultaneously?}
+
+\item{jobs_sims}{Number of jobs to use right now
+to speed up the runtime predictions.}
+
+\item{sims}{Number of times to simulate the runtime. Downgrades to 1
+if \code{jobs} is 1.}
 }
 \value{
-A \code{lubridate} \code{Duration} object
-with the predicted runtime of the next \code{\link[=make]{make()}}.
+Simulated runtimes. This is a single \code{lubridate} duration
+(seconds) if \code{jobs} is 1 and a vector if \code{jobs} is any larger.
 }
 \description{
-This function simply sums the elapsed build times
-from \code{\link[=rate_limiting_times]{rate_limiting_times()}}, and this
-feature is experimental.
-To date, the accuracy/precision of the results
-has not yet been confirmed by performance studies.
-}
-\details{
-For the results to make sense, the previous build times
-of all targets need to be available (automatically cached
-by \code{\link[=make]{make()}}). Otherwise, \code{predict_runtime()}
-will warn you and tell you which targets have missing times.
+Simulate the runtime of the next \code{make()}
+by crudely emulating virtual parallel workers.
+Basically, the workers repeatedly grab random available targets
+and the observed runtimes are added up per worker. The runtime
+is the largest of any of the worker times. Set the number of workers
+with \code{jobs}.
 }
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- make(my_plan) # Run the project, build the targets.
-predict_runtime(config, digits = 4) # Everything is up to date.
-predict_runtime(config, digits = 4, from_scratch = TRUE) # 1 job
+predict_runtime(config, from_scratch = TRUE) # 1 job
 # Assumes you clean() out your project and start from scratch with 2 jobs.
-predict_runtime(config, future_jobs = 2, digits = 4, from_scratch = TRUE)
+predict_runtime(config, jobs = 4, from_scratch = TRUE)
 # Predict the runtime of just building targets
 # "small" and "large".
 predict_runtime(
   config,
   targets = c("small", "large"),
-  from_scratch = TRUE,
-  digits = 4
+  from_scratch = TRUE
 )
 })
 }
 }
 \seealso{
-\code{\link[=rate_limiting_times]{rate_limiting_times()}},
-\code{\link[=build_times]{build_times()}}
-\code{\link[=make]{make()}}
+\code{\link[=build_times]{build_times()}}, \code{\link[=make]{make()}}
 }

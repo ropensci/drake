@@ -2,8 +2,8 @@
 % Please edit documentation in R/max_useful_jobs.R
 \name{max_useful_jobs}
 \alias{max_useful_jobs}
-\title{Suggest an upper bound on the jobs in the next call
-to \code{make(..., jobs = YOUR_CHOICE)}.}
+\title{Suggest a ROUGH upper bound on the jobs in the next call
+to \code{make(..., jobs = n)}.}
 \usage{
 max_useful_jobs(config = drake::read_drake_config(), imports = c("files",
   "all", "none"), from_scratch = FALSE)
@@ -38,18 +38,17 @@ A numeric scalar, the maximum number of useful jobs for
 \description{
 Any more jobs, and you may have too many to be useful.
 Note: this is only a rough guess based on the topology of the graph.
+See \code{\link[=predict_runtime]{predict_runtime()}} for a slightly better but still rough guess.
 }
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan) # Standard drake configuration list.
-# Look at the graph. The work proceeds column by column
-# in parallelizable stages. The maximum number of useful jobs
-# is determined by the number and kind of targets/imports
-# in the columns.
+# Look at the graph. You can get an idea of how many jobs to submit
+# by looking at the tallest columns.
 vis_drake_graph(config = config)
-# Should be 8 because everythign is out of date.
+# Should be 8 because everything is out of date.
 max_useful_jobs(config = config) # 8
 # Take into account targets and imported files.
 max_useful_jobs(config = config, imports = 'files') # 8
@@ -83,6 +82,6 @@ max_useful_jobs(config, from_scratch = TRUE, imports = 'none') # 8
 }
 }
 \seealso{
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}, \code{\link[=build_drake_graph]{build_drake_graph()}},
+\code{\link[=predict_runtime]{predict_runtime()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}, \code{\link[=build_drake_graph]{build_drake_graph()}},
 \code{\link[=shell_file]{shell_file()}}, \code{\link[=drake_config]{drake_config()}}
 }

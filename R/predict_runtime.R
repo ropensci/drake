@@ -1,4 +1,4 @@
-#' @title Predict the runtime of the next call to `make()`.
+#' @title Simulate the runtime of the next call to `make()`.
 #' @description Simulate the runtime of the next `make()`
 #' by crudely emulating virtual parallel workers.
 #' Basically, the workers repeatedly grab random available targets
@@ -61,7 +61,7 @@ predict_runtime <- function(
   type = c("elapsed", "user", "system"),
   jobs = 1,
   jobs_sims = 1,
-  sims = 1e3
+  sims = 10
 ){
   if (!is.null(future_jobs)){
     warning(
@@ -77,7 +77,7 @@ predict_runtime <- function(
     targets_only = targets_only
   )
   type <- match.arg(type)
-  times <- times[times$item %in% V(graph)$name, ]
+  times <- times[times$item %in% V(config$graph)$name, ]
   times$time <- as.numeric(times[[type]])
   untimed <- setdiff(V(config$graph)$name, times$item)
   if (targets_only){
@@ -97,50 +97,53 @@ predict_runtime <- function(
     ]
   }
   if (jobs <= 1){
-    return(sum(times$time))
+    return(dseconds(sum(times$time)))
   }
-  times <- as.data.frame(times)
-  rownames(times) <- times$item
-  simulate_runtimes(
+  graph <- igraph::set_vertex_attr(
+    config$graph,
+    name = "time",
+    value = 0
+  ) %>%
+    igraph::set_vertex_attr(
+      name = "time",
+      index = times$item,
+      value = times$time
+    )
+  simulate_runs(
     graph = graph,
-    times = times,
     jobs = jobs,
+    jobs_sims = jobs_sims,
     sims = sims
   )
 }
 
-simulate_runtimes = function(graph, times, jobs, jobs_sims, sims){
+simulate_runs = function(graph, jobs, jobs_sims, sims){
   lightly_parallelize(
     X = seq_len(sims),
-    FUN = simulate_runtime,
+    FUN = simulate_run,
     jobs = jobs_sims,
     graph = graph,
-    times = times,
     workers = jobs
-  )
+  ) %>%
+    unlist %>%
+    lubridate::dseconds()
 }
 
-simulate_runtime <- function(sim, graph, times, workers){
-  
-  print(sim)
-  
+simulate_run <- function(sim, graph, times, workers){
   totals <- rep(0, workers)
   while(length(V(graph))){
-    leaves <- leaf_nodes(graph)
-    leaf_times <- times[leaves, ]
-    size <- min(nrow(leaf_times), workers)
-    index <- sample.int(n = nrow(leaf_times), size = size)
-    leaf_times <- leaf_times[index, ]
-    increments <- leaf_times$time
-    if (length(increments) < length(totals)){
-      increments <- c(
-        increments,
-        rep(0, length(totals) - length(increments))
+    available_leaves <- leaf_nodes(graph)
+    size <- min(length(available_leaves), workers)
+    leaves <- sample(available_leaves, size = size)
+    leaf_times <- V(graph)$time[V(graph)$name %in% leaves]
+    if (length(leaf_times) < length(totals)){
+      leaf_times <- c(
+        leaf_times,
+        rep(0, length(totals) - length(leaf_times))
       )
     }
-    totals <- totals + sample(increments)
-    graph <- delete_vertices(graph, v = leaf_times$item)
-    times <- times[setdiff(times$item, leaf_times$item), ]
+    totals <- totals + sample(leaf_times)
+    graph <- delete_vertices(graph, v = leaves)
   }
   max(totals)
 }

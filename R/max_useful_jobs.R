@@ -1,13 +1,14 @@
-#' @title Suggest an upper bound on the jobs in the next call
-#'   to `make(..., jobs = YOUR_CHOICE)`.
+#' @title Suggest a ROUGH upper bound on the jobs in the next call
+#'   to `make(..., jobs = n)`.
 #' @description Any more jobs, and you may have too many to be useful.
 #' Note: this is only a rough guess based on the topology of the graph.
+#' See [predict_runtime()] for a slightly better but still rough guess.
 #' @export
 #'
 #' @return A numeric scalar, the maximum number of useful jobs for
 #'   \code{\link{make}(..., jobs = ...)}.
 #'
-#' @seealso [vis_drake_graph()], [build_drake_graph()],
+#' @seealso [predict_runtime()], [vis_drake_graph()], [build_drake_graph()],
 #'   [shell_file()], [drake_config()]
 #'
 #' @param config internal configuration list of \code{\link{make}(...)},
