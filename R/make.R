@@ -230,10 +230,10 @@ make_session <- function(config){
 make_with_schedules <- function(config){
   if (config$skip_imports && config$skip_targets){
     invisible(config)
-  } else if (config$skip_imports){
-    make_targets(config = config)
   } else if (config$skip_targets){
     make_imports(config = config)
+  } else if (config$skip_imports){
+    make_targets(config = config)
   } else if (
     config$parallelism %in% parallelism_choices(distributed_only = TRUE)
   ){
@@ -333,6 +333,7 @@ make_targets <- function(config = drake::read_drake_config()){
 }
 
 make_imports_targets <- function(config){
+  config$schedule <- config$graph
   config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
