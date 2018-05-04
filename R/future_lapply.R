@@ -5,7 +5,7 @@ run_future_lapply <- function(config){
   console_persistent_workers(config)
   px <- callr::r_bg(
     func = function(config){
-      drake::mc_process(id = "0", config)
+      drake::mc_process(id = "0", config) # nocov
     },
     args = list(config = config)
   )
@@ -28,7 +28,7 @@ fl_worker <- function(worker, cache_path){
       mc_worker(worker = worker, config = config)
     },
     error = function(e){
-      error_process(e = e, id = worker, config = config)
+      error_process(e = e, id = worker, config = config) # nocov
     }
   )
 }

@@ -99,6 +99,13 @@ test_with_dir("error handlers", {
   expect_equal(error_character0(1), character(0))
   expect_null(error_null(1))
   expect_error(error_tibble_times(123))
+  expect_error(
+    error_process(
+      e = list(message = 5),
+      id = "2",
+      config = dbug()),
+    regexp = "failed"
+  )
 })
 
 test_with_dir("error when file target names do not match actual filenames", {
