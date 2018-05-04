@@ -326,6 +326,8 @@ If \code{session} is \code{NULL} (default), then \code{\link[=make]{make()}} wil
 your current R session as the master session. This is slightly faster,
 but it causes \code{\link[=make]{make()}} to populate your workspace/environment
 with the last few targets it builds.}
+
+\item{imports_only}{deprecated. Use \code{skip_targets} instead.}
 }
 \value{
 The master internal configuration list of a project.

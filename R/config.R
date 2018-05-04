@@ -78,6 +78,8 @@
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
+#' @param imports_only deprecated. Use `skip_targets` instead.
+#'
 #' @param parallelism character, type of parallelism to use.
 #'   To list the options, call [parallelism_choices()].
 #'   For detailed explanations, see \code{?\link{parallelism_choices}},
