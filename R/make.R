@@ -221,7 +221,9 @@ make_session <- function(config){
     make_targets(config = config)
   } else if (config$skip_targets){
     make_imports(config = config)
-  } else if (parallelism %in% parallelism_choices(distributed = TRUE)){
+  } else if (
+    config$parallelism %in% parallelism_choices(distributed_only = TRUE)
+  ){
     make_imports(config = config)
     make_targets(config = config)
   } else {
