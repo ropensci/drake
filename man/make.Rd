@@ -12,7 +12,7 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), log_progress = TRUE,
-  imports_only = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
+  skip_targets = FALSE, timeout = Inf, cpu = NULL, elapsed = NULL,
   retries = 0, force = FALSE, return_config = NULL, graph = NULL,
   trigger = drake::default_trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
@@ -200,7 +200,7 @@ and speed with
 \code{\link[=progress]{progress()}} and \code{\link[=in_progress]{in_progress()}}
 will no longer work if you do that.}
 
-\item{imports_only}{logical, whether to skip building the targets
+\item{skip_targets}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
 
 \item{timeout}{Seconds of overall time to allow before imposing

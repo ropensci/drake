@@ -89,7 +89,7 @@ make <- function(
   ),
   recipe_command = drake::default_recipe_command(),
   log_progress = TRUE,
-  imports_only = FALSE,
+  skip_targets = FALSE,
   timeout = Inf,
   cpu = NULL,
   elapsed = NULL,
@@ -107,7 +107,8 @@ make <- function(
   seed = NULL,
   caching = "worker",
   keep_going = FALSE,
-  session = NULL
+  session = NULL,
+  imports_only = NULL
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -143,7 +144,7 @@ make <- function(
       force = force,
       graph = graph,
       trigger = trigger,
-      imports_only = imports_only,
+      skip_targets = skip_targets,
       skip_imports = skip_imports,
       skip_safety_checks = skip_safety_checks,
       lazy_load = lazy_load,
@@ -151,7 +152,8 @@ make <- function(
       cache_log_file = cache_log_file,
       caching = caching,
       keep_going = keep_going,
-      session = session
+      session = session,
+      imports_only = imports_only
     )
   }
   make_with_config(config = config)
@@ -215,7 +217,7 @@ make_session <- function(config){
   if (!config$skip_imports){
     make_imports(config = config)
   }
-  if (!config$imports_only){
+  if (!config$skip_targets){
     make_targets(config = config)
   }
   drake_cache_log_file(

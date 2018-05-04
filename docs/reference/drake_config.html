@@ -183,7 +183,7 @@ and it could lead to false negative results from
   <span class='kw'>recipe_command</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_recipe_command'>default_recipe_command</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>Inf</span>,
   <span class='kw'>cpu</span> <span class='kw'>=</span> <span class='no'>timeout</span>, <span class='kw'>elapsed</span> <span class='kw'>=</span> <span class='no'>timeout</span>, <span class='kw'>retries</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>log_progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>graph</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_trigger'>default_trigger</a></span>(),
-  <span class='kw'>imports_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_imports</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_safety_checks</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>skip_targets</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_imports</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_safety_checks</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>lazy_load</span> <span class='kw'>=</span> <span class='st'>"eager"</span>, <span class='kw'>session_info</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>caching</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"worker"</span>, <span class='st'>"master"</span>), <span class='kw'>keep_going</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -448,7 +448,7 @@ Must be in <code><a href='triggers.html'>triggers()</a></code>.
 See <a href='triggers.html'>triggers</a> for explanations of the choices.</p></td>
     </tr>
     <tr>
-      <th>imports_only</th>
+      <th>skip_targets</th>
       <td><p>logical, whether to skip building the targets
 in <code>plan</code> and just import objects and files.</p></td>
     </tr>

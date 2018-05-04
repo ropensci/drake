@@ -116,7 +116,13 @@ test_with_dir("deprecate misc utilities", {
 
 test_with_dir("deprecated arguments", {
   pl <- drake_plan(a = 1, b = a)
-  con <- drake_config(plan = pl, session_info = FALSE)
+  expect_warning(
+    con <- drake_config(
+      plan = pl,
+      session_info = FALSE,
+      imports_only = FALSE
+    )
+  )
   expect_warning(drake_build(a, config = con, meta = list()))
 })
 

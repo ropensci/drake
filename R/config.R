@@ -75,7 +75,7 @@
 #'   For example, \code{function(code){force(code)}} is a good hook
 #'   and \code{function(code){message("Avoiding the code")}} is a bad hook.
 #'
-#' @param imports_only logical, whether to skip building the targets
+#' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
 #' @param parallelism character, type of parallelism to use.
@@ -366,7 +366,7 @@ drake_config <- function(
   log_progress = FALSE,
   graph = NULL,
   trigger = drake::default_trigger(),
-  imports_only = FALSE,
+  skip_targets = FALSE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   lazy_load = "eager",
@@ -375,9 +375,16 @@ drake_config <- function(
   seed = NULL,
   caching = c("worker", "master"),
   keep_going = FALSE,
-  session = NULL
+  session = NULL,
+  imports_only = NULL
 ){
   force(envir)
+  if (!is.null(imports_only)){
+    warning(
+      "Argument imports_only is deprecated. Use skip_targets instead.",
+      call. = FALSE
+    ) # May 4, 2018
+  }
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(plan, targets)
   parallelism <- match.arg(
@@ -422,7 +429,7 @@ drake_config <- function(
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed, trigger = trigger,
     timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
-    imports_only = imports_only, skip_imports = skip_imports,
+    skip_targets = skip_targets, skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks, log_progress = log_progress,
     lazy_load = lazy_load, session_info = session_info,
     cache_log_file = cache_log_file, caching = match.arg(caching),
