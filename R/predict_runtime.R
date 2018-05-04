@@ -1,10 +1,15 @@
-#' @title Simulate the runtime of the next call to `make()`.
-#' @description Simulate the runtime of the next `make()`
-#' by crudely emulating virtual parallel workers.
-#' Basically, the workers repeatedly grab random available targets
-#' and the observed runtimes are added up per worker. The runtime
-#' is the largest of any of the worker times. Set the number of workers
-#' with `jobs`. 
+#' @title Predict the elapsed runtime of the next call to `make()`.
+#' @description Take the past recorded runtimes times from
+#'   [build_times()] and use them to predict how the targets
+#'   will be distributed among the available workers in the
+#'   next [make()]. Then, predict the overall runtime to be the
+#'   runtime of the slowest (busiest) workers. See Details for some
+#'   caveats.
+#' @details The prediction is only a rough approximation. It assumes
+#'   that the overhead of initializing [make()] and any workers is
+#'   negligible. It also assumes a single blanket value (the
+#'   `default_time` argument) for each target where there is no
+#'   past recorded runtime.
 #' @export
 #' @seealso [build_times()], [make()]
 #' @examples
@@ -44,13 +49,10 @@
 #' @param jobs the `jobs` argument of your next planned
 #'   `make()`. How many targets to do you plan
 #'   to have running simultaneously?
-#' @param jobs_sims Number of jobs to use right now
-#'   to speed up the runtime predictions.
 #' @param future_jobs deprecated
 #' @param digits number of digits for rounding the time
-#' @param type character scalar: `"elapsed"`, `"user"`, or `"system"`
-#' @param sims Number of times to simulate the runtime. Downgrades to 1
-#'   if `jobs` is 1.
+#' @param default_time number of seconds to assume for any
+#'   target or import with no recorded runtime to use.
 predict_runtime <- function(
   config = drake::read_drake_config(),
   targets = NULL,
@@ -60,8 +62,7 @@ predict_runtime <- function(
   digits = NULL,
   type = c("elapsed", "user", "system"),
   jobs = 1,
-  jobs_sims = 1,
-  sims = 1
+  default_time = 0
 ){
   if (!is.null(future_jobs)){
     warning(
@@ -73,77 +74,63 @@ predict_runtime <- function(
   }
   times <- build_times(
     config = config,
-    targets = targets,
     targets_only = targets_only
   )
   type <- match.arg(type)
   times <- times[times$item %in% V(config$graph)$name, ]
-  times$time <- as.numeric(times[[type]])
   untimed <- setdiff(V(config$graph)$name, times$item)
   if (targets_only){
     untimed <- setdiff(untimed, times$item[times$type == "import"])
   }
   if (length(untimed)){
     warning(
-      "Untimed targets not factored into runtime prediction:\n",
+      "Some targets were never actually timed. Assuming a runtime of ",
+      default_time, "\n",
       multiline_message(untimed),
       call. = FALSE
     )
   }
-  if (!from_scratch){
+  if (from_scratch){
     times <- times[
       times$item %in% outdated(config) |
         times$type == "import",
     ]
   }
-  if (jobs <= 1){
-    return(dseconds(sum(times$time)))
-  }
-  graph <- igraph::set_vertex_attr(
+  config$graph <- igraph::set_vertex_attr(
     config$graph,
     name = "time",
-    value = 0
+    value = default_time
   ) %>%
     igraph::set_vertex_attr(
       name = "time",
       index = times$item,
-      value = times$time
+      value = times$elapsed
     )
-  simulate_runs(
-    graph = graph,
-    jobs = jobs,
-    jobs_sims = jobs_sims,
-    sims = sims
-  )
-}
-
-simulate_runs = function(graph, jobs, jobs_sims, sims){
-  lightly_parallelize(
-    X = seq_len(sims),
-    FUN = simulate_run,
-    jobs = jobs_sims,
-    graph = graph,
-    workers = jobs
-  ) %>%
-    unlist %>%
-    lubridate::dseconds()
-}
-
-simulate_run <- function(sim, graph, times, workers){
-  totals <- rep(0, workers)
-  while(length(V(graph))){
-    available_leaves <- leaf_nodes(graph)
-    size <- min(length(available_leaves), workers)
-    leaves <- sample(available_leaves, size = size)
-    leaf_times <- V(graph)$time[V(graph)$name %in% leaves]
-    if (length(leaf_times) < length(totals)){
-      leaf_times <- c(
-        leaf_times,
-        rep(0, length(totals) - length(leaf_times))
-      )
-    }
-    totals <- totals + sample(leaf_times)
-    graph <- delete_vertices(graph, v = leaves)
+  if (!is.null(targets)){
+    config$graph <- prune_drake_graph(graph = config$graph, to = targets)
   }
-  max(totals)
+  balance_load(config = config, jobs = jobs)
+}
+
+balance_load <- function(config, jobs){
+  queue <- new_target_queue(config)
+  worker_targets <- lapply(seq_len(jobs), function(id){
+    character(0)
+  })
+  worker_times <- rep(0, jobs)
+  while(!queue$empty()){
+    target <- queue$pop()
+    i <- which.min(worker_times)
+    worker_targets[[i]] <- c(worker_targets[[i]], target)
+    worker_times[i] <- worker_times[i] +
+      V(config$graph)$time[V(config$graph)$name == target]
+    revdeps <- dependencies(
+      targets = target,
+      config = config,
+      reverse = TRUE
+    ) %>%
+      intersect(y = queue$list(what = "names"))
+    queue$decrease_key(names = revdeps)
+  }
+  dseconds(max(worker_times))
 }

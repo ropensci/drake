@@ -55,11 +55,12 @@ test_with_dir("build time the same after superfluous make", {
   expect_equal(b1[b1$item == "y", ], b2[b2$item == "y", ])
 })
 
-test_with_dir("runtime simulations", {
+test_with_dir("runtime predictions", {
   con <- dbug()
   testrun(con)
-  p1 <- predict_runtime(config = con, jobs = 1)
-  p2 <- predict_runtime(config = con, jobs = 2, sims = 4)
-  expect_equal(length(p1), 1)
-  expect_equal(length(p2), 4)
+  p0 <- predict_runtime(config = con, jobs = 1)
+  p1 <- predict_runtime(config = con, jobs = 1, default_time = 1e3)
+  p2 <- predict_runtime(config = con, jobs = 2, default_time = 1e3)
+  expect_true(p0 < p1)
+  expect_true(p1 < p2)
 })
