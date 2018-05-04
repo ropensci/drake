@@ -66,6 +66,7 @@ migrate_drake_project <- function(
   file.copy(from = path, to = backup, recursive = TRUE)
   message("Migrating cache at ", path, " for your system's drake.")
   config <- read_drake_config(cache = cache)
+  config$schedule <- config$graph
   config$cache <- cache
   config$parallelism <- "parLapply"
   config$jobs <- 1

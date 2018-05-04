@@ -628,7 +628,7 @@ max_useful_jobs <- function(
     nodes <- nodes[nodes$status != "imported" | nodes$type == "file", ]
   }
   if (!from_scratch){
-    nodes <- nodes[nodes$status != "outdated",]
+    nodes <- nodes[nodes$status != "outdated", ]
   }
   if (!nrow(nodes)){
     return(0)

@@ -131,12 +131,13 @@ predict_runtime <- function(
 }
 
 balance_load <- function(config, jobs){
+  config$schedule <- config$graph
   queue <- new_target_queue(config)
   worker_targets <- lapply(seq_len(jobs), function(id){
     character(0)
   })
   worker_times <- rep(0, jobs)
-  while(!queue$empty()){
+  while (!queue$empty()){
     target <- queue$pop()
     i <- which.min(worker_times)
     worker_targets[[i]] <- c(worker_targets[[i]], target)
