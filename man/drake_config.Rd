@@ -19,7 +19,7 @@ drake_config(plan = read_drake_plan(),
   skip_targets = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
-  session = NULL)
+  session = NULL, imports_only = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.

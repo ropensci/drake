@@ -210,15 +210,22 @@ global_imports <- function(config){
 #' @export
 #' @inheritParams make_with_config
 make_session <- function(config){
+  if (config$skip_imports && config$skip_targets){
+    return(invisible(config))
+  }
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
   do_prework(config = config, verbose_packages = config$verbose)
-  if (!config$skip_imports){
-    make_imports(config = config)
-  }
-  if (!config$skip_targets){
+  if (config$skip_imports){
     make_targets(config = config)
+  } else if (config$skip_targets){
+    make_imports(config = config)
+  } else if (parallelism %in% parallelism_choices(distributed = TRUE)){
+    make_imports(config = config)
+    make_targets(config = config)
+  } else {
+    make_imports_targets(config = config)
   }
   drake_cache_log_file(
     file = config$cache_log_file,
@@ -328,6 +335,14 @@ make_targets <- function(config = drake::read_drake_config()){
 targets_graph <- function(config){
   delete_these <- setdiff(V(config$graph)$name, config$plan$target)
   delete_vertices(config$graph, v = delete_these)
+}
+
+make_imports_targets <- function(config){
+  config$schedule <- config$graph
+  config$jobs <- max(config$jobs)
+  run_parallel_backend(config = config)
+  console_up_to_date(config = config)
+  invisible(config)
 }
 
 initialize_session <- function(config){

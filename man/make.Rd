@@ -17,7 +17,8 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   trigger = drake::default_trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
-  caching = "worker", keep_going = FALSE, session = NULL)
+  caching = "worker", keep_going = FALSE, session = NULL,
+  imports_only = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.

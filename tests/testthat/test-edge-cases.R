@@ -1,5 +1,19 @@
 drake_context("edge cases")
 
+test_with_dir("skip everything", {
+  f <- function(x){
+    x
+  }
+  pl <- drake_plan(a = f(0))
+  con <- make(
+    pl,
+    session_info = FALSE,
+    skip_targets = TRUE,
+    skip_imports = TRUE
+  )
+  expect_equal(justbuilt(con), character(0))
+})
+
 test_with_dir("can keep going", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
