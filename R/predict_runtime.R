@@ -49,7 +49,7 @@
 #'   `make()`. How many targets to do you plan
 #'   to have running simultaneously?
 #' @param future_jobs deprecated
-#' @param digits number of digits for rounding the time
+#' @param digits deprecated
 #' @param forced_times a named numeric vector with targets/imports
 #'   as names and values as hypothetical runtimes in seconds.
 #'   Use this argument to overwrite any of the existing build times
@@ -64,16 +64,14 @@ predict_runtime <- function(
   targets_only = FALSE,
   future_jobs = NULL,
   digits = NULL,
-  type = c("elapsed", "user", "system"),
   jobs = 1,
   forced_times = numeric(0),
   default_time = 0
 ){
-  if (!is.null(future_jobs)){
+  if (!is.null(future_jobs) || !is.null(digits)){
     warning(
-      "The `future_jobs` argument is deprecated ",
-      "because the name is awkward. ",
-      "Use `jobs` instead.",
+      "The `future_jobs` and `digits` arguments ",
+      "of predict_runtime() are deprecated.",
       call. = FALSE
     )
   }
