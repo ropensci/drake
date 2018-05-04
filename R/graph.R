@@ -229,3 +229,13 @@ subset_graph <- function(graph, subset){
   subset <- intersect(subset, V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
 }
+
+imports_graph <- function(config){
+  delete_these <- intersect(config$plan$target, V(config$graph)$name)
+  delete_vertices(config$graph, v = delete_these)
+}
+
+targets_graph <- function(config){
+  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
+  delete_vertices(config$graph, v = delete_these)
+}

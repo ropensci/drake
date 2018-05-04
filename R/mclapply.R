@@ -106,7 +106,7 @@ mc_init_worker_cache <- function(config){
     }
   )
   lapply(
-    X = igraph::V(config$graph)$name,
+    X = igraph::V(config$schedule)$name,
     FUN = function(target){
       config$cache$set(key = target, value = TRUE, namespace = "protect")
     }

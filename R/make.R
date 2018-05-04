@@ -210,14 +210,27 @@ global_imports <- function(config){
 #' @export
 #' @inheritParams make_with_config
 make_session <- function(config){
-  if (config$skip_imports && config$skip_targets){
-    return(invisible(config))
-  }
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
   do_prework(config = config, verbose_packages = config$verbose)
-  if (config$skip_imports){
+  make_with_schedules(config = config)
+  drake_cache_log_file(
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs
+  )
+  remove(
+    list = intersect(config$plan$target, ls(envir = config$envir)),
+    envir = config$envir
+  )
+  return(invisible(config))
+}
+
+make_with_schedules <- function(config){
+  if (config$skip_imports && config$skip_targets){
+    invisible(config)
+  } else if (config$skip_imports){
     make_targets(config = config)
   } else if (config$skip_targets){
     make_imports(config = config)
@@ -229,16 +242,6 @@ make_session <- function(config){
   } else {
     make_imports_targets(config = config)
   }
-  drake_cache_log_file(
-    file = config$cache_log_file,
-    cache = config$cache,
-    jobs = config$jobs
-  )
-  remove(
-    list = intersect(config$plan$target, ls(envir = config$envir)),
-    envir = config$envir
-  )
-  return(invisible(config))
 }
 
 #' @title Just make the imports.
@@ -278,16 +281,11 @@ make_session <- function(config){
 #' })
 #' }
 make_imports <- function(config = drake::read_drake_config()){
-  config$graph <- imports_graph(config = config)
+  config$schedule <- imports_graph(config = config)
   config$jobs <- jobs_imports(jobs = config$jobs)
   config$parallelism <- use_default_parallelism(config$parallelism)
   run_parallel_backend(config = config)
   invisible(config)
-}
-
-imports_graph <- function(config){
-  delete_these <- intersect(config$plan$target, V(config$graph)$name)
-  delete_vertices(config$graph, v = delete_these)
 }
 
 #' @title Just build the targets.
@@ -327,16 +325,11 @@ imports_graph <- function(config){
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()){
-  config$graph <- targets_graph(config = config)
+  config$schedule <- targets_graph(config = config)
   config$jobs <- jobs_targets(jobs = config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
-}
-
-targets_graph <- function(config){
-  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
-  delete_vertices(config$graph, v = delete_these)
 }
 
 make_imports_targets <- function(config){
