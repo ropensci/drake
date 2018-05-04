@@ -79,7 +79,6 @@ predict_runtime <- function(
     config = config,
     targets_only = targets_only
   )
-  type <- match.arg(type)
   times <- times[times$item %in% V(config$graph)$name, ]
   untimed <- setdiff(V(config$graph)$name, times$item)
   if (targets_only){
