@@ -6,8 +6,7 @@
 \usage{
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
   from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
-  digits = NULL, type = c("elapsed", "user", "system"), jobs = 1,
-  forced_times = numeric(0), default_time = 0)
+  digits = NULL, jobs = 1, forced_times = numeric(0), default_time = 0)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -31,7 +30,7 @@ build times for everything, including the imports}
 
 \item{future_jobs}{deprecated}
 
-\item{digits}{number of digits for rounding the time}
+\item{digits}{deprecated}
 
 \item{jobs}{the \code{jobs} argument of your next planned
 \code{make()}. How many targets to do you plan
