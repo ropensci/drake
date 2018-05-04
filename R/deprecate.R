@@ -584,7 +584,7 @@ load_basic_example <- function(
 #'   has changed since version 5.1.2, so `max_useful_jobs()`
 #'   will give you the wrong idea of how many jobs to use. Instead,
 #'   use the [predict_runtime()] function with a sensible value
-#'   for `manual_times` and `default_time`
+#'   for `forced_times` and `default_time`
 #'   to cover any targets not built so far.
 #' @details Deprecated on May 4, 2018.
 #' @export
@@ -601,7 +601,7 @@ load_basic_example <- function(
 #'   so that all targets are attempted.
 #' @examples
 #' # Do not use this function. Use predict_runtime() instead.
-#' # Pay special attention to the manual_times and default_time
+#' # Pay special attention to the force_times and default_time
 #' # arguments.
 max_useful_jobs <- function(
   config = drake::read_drake_config(),
@@ -617,7 +617,7 @@ max_useful_jobs <- function(
       "so max_useful_jobs() will give you the wrong idea about ",
       "how many jobs to assign to `make()`. For a better estimate, ",
       "play around with predict_runtime() with sensible values, ",
-      "for manual_times and default_time."
+      "for force_times and default_time."
     )
   )
   imports <- match.arg(imports)

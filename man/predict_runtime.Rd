@@ -2,12 +2,12 @@
 % Please edit documentation in R/predict_runtime.R
 \name{predict_runtime}
 \alias{predict_runtime}
-\title{Simulate the runtime of the next call to \code{make()}.}
+\title{Predict the elapsed runtime of the next call to \code{make()}.}
 \usage{
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
   from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
   digits = NULL, type = c("elapsed", "user", "system"), jobs = 1,
-  jobs_sims = 1, sims = 1)
+  forced_times = numeric(0), default_time = 0)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -33,29 +33,36 @@ build times for everything, including the imports}
 
 \item{digits}{number of digits for rounding the time}
 
-\item{type}{character scalar: \code{"elapsed"}, \code{"user"}, or \code{"system"}}
-
 \item{jobs}{the \code{jobs} argument of your next planned
 \code{make()}. How many targets to do you plan
 to have running simultaneously?}
 
-\item{jobs_sims}{Number of jobs to use right now
-to speed up the runtime predictions.}
+\item{forced_times}{a named numeric vector with targets/imports
+as names and values as hypothetical runtimes in seconds.
+Use this argument to overwrite any of the existing build times
+or the \code{default_time}.}
 
-\item{sims}{Number of times to simulate the runtime. Downgrades to 1
-if \code{jobs} is 1.}
+\item{default_time}{number of seconds to assume for any
+target or import with no recorded runtime (from \code{\link[=build_times]{build_times()}})
+or anything in \code{forced_times}.}
 }
 \value{
 Simulated runtimes. This is a single \code{lubridate} duration
 (seconds) if \code{jobs} is 1 and a vector if \code{jobs} is any larger.
 }
 \description{
-Simulate the runtime of the next \code{make()}
-by crudely emulating virtual parallel workers.
-Basically, the workers repeatedly grab random available targets
-and the observed runtimes are added up per worker. The runtime
-is the largest of any of the worker times. Set the number of workers
-with \code{jobs}.
+Take the past recorded runtimes times from
+\code{\link[=build_times]{build_times()}} and use them to predict how the targets
+will be distributed among the available workers in the
+next \code{\link[=make]{make()}}. Then, predict the overall runtime to be the
+runtime of the slowest (busiest) workers. See Details for some
+caveats.
+}
+\details{
+The prediction is only a rough approximation. It assumes
+that the overhead of initializing \code{\link[=make]{make()}} and any workers is
+negligible. Use the \code{default_time} and \code{forced_times} arguments
+to adjust the assumptions as needed.
 }
 \examples{
 \dontrun{
