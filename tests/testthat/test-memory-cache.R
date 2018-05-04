@@ -70,9 +70,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   p <- vis_drake_graph(con, file = "graph.html")
   expect_false(file.exists(default_cache_path()))
 
-  expect_equal(m1, 4)
-  expect_false(file.exists(default_cache_path()))
-
   p1 <- progress(verbose = FALSE)
   unlink(default_cache_path(), recursive = TRUE)
   p2 <- progress(cache = cache, verbose = FALSE)
