@@ -109,7 +109,7 @@ dataframes_graph <- function(
   build_times = "build",
   digits = 3,
   targets_only = FALSE,
-  split_columns = FALSE,
+  split_columns = NULL,
   font_size = 20,
   from_scratch = FALSE,
   make_imports = TRUE,
@@ -118,14 +118,15 @@ dataframes_graph <- function(
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }
+  if (!is.null(split_columns)){
+    warning("Argument split_columns is deprecated.", call. = FALSE)
+  }
   config$build_times <- resolve_build_times(build_times)
   config$digits <- digits
   config$font_size <- font_size
   config$from_scratch <- from_scratch
   config$make_imports <- make_imports
-  config$split_columns <- split_columns
   config <- get_raw_node_category_data(config)
-  config$stages <- graphing_parallel_stages(config)
   config$graph <- get_neighborhood(
     graph = config$graph,
     from = from,

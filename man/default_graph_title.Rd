@@ -8,9 +8,7 @@
 default_graph_title(split_columns = FALSE)
 }
 \arguments{
-\item{split_columns}{logical, whether the columns were split
-in \code{\link[=dataframes_graph]{dataframes_graph()}} or \code{\link[=vis_drake_graph]{vis_drake_graph()}}
-with the \code{split_columns} argument.}
+\item{split_columns}{deprecated}
 }
 \value{
 a character scalar with the default graph title for

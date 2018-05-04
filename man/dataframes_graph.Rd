@@ -8,7 +8,7 @@ behind \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
 dataframes_graph(config = drake::read_drake_config(), from = NULL,
   mode = c("out", "in", "all"), order = NULL, subset = NULL,
   build_times = "build", digits = 3, targets_only = FALSE,
-  split_columns = FALSE, font_size = 20, from_scratch = FALSE,
+  split_columns = NULL, font_size = 20, from_scratch = FALSE,
   make_imports = TRUE, full_legend = TRUE)
 }
 \arguments{

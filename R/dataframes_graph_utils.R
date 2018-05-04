@@ -39,16 +39,25 @@ categorize_nodes <- function(config) {
 configure_nodes <- function(config){
   rownames(config$nodes) <- config$nodes$label
   config$nodes <- categorize_nodes(config = config)
-  config$nodes <- resolve_levels(config = config)
   config$nodes <- style_nodes(config = config)
+  config$nodes <- resolve_levels(config = config)
   if (config$build_times != "none"){
     config$nodes <- append_build_times(config = config)
   }
-  if (config$split_columns){
-    config$nodes <- split_node_columns(nodes = config$nodes)
-  }
-  config$nodes <- shrink_levels(config$nodes)
   hover_text(config = config)
+}
+
+resolve_levels <- function(config){
+  config$nodes$level <- level <- 0
+  graph <- config$graph
+  while (length(V(graph))){
+    level <- level + 1
+    leaves <- leaf_nodes(graph) %>%
+      intersect(y = config$nodes$id)
+    config$nodes[leaves, "level"] <- level
+    graph <- igraph::delete_vertices(graph = graph, v = leaves)
+  }
+  config$nodes
 }
 
 #' @title Return the default title of the graph for
@@ -59,17 +68,11 @@ configure_nodes <- function(config){
 #' @seealso [dataframes_graph()], [vis_drake_graph()]
 #' @return a character scalar with the default graph title for
 #'   [vis_drake_graph()].
-#' @param split_columns logical, whether the columns were split
-#'   in [dataframes_graph()] or [vis_drake_graph()]
-#'   with the `split_columns` argument.
+#' @param split_columns deprecated
 #' @examples
 #' default_graph_title()
 default_graph_title <- function(split_columns = FALSE){
-  out <- "Dependency graph"
-  if (split_columns){
-    out <- paste(out, "with split columns")
-  }
-  out
+  "Dependency graph"
 }
 
 file_hover_text <- Vectorize(function(quoted_file, targets){
@@ -133,12 +136,6 @@ get_raw_node_category_data <- function(config){
     jobs = config$jobs
   )
   config
-}
-
-graphing_parallel_stages <- function(config){
-  stages <- parallel_stages(config, from_scratch = TRUE)
-  rownames(stages) <- stages$item
-  stages
 }
 
 hover_text <- function(config) {
@@ -254,56 +251,6 @@ resolve_build_times <- function(build_times){
     }
   }
   build_times
-}
-
-resolve_levels <- function(config) { # nolint
-  with(config, {
-    stages <- stages[nodes$id, ]
-    nodes$level <- stages[rownames(nodes), "stage"]
-    nodes
-  })
-}
-
-shrink_levels <- function(nodes){
-  nodes <- nodes[order(nodes$level), ]
-  nodes$level <- c(0, cumsum(diff(nodes$level) > 0))
-  nodes
-}
-
-# https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks-in-r
-split_levels <- function(old_levels, max_reps){
-  n_nodes <- length(old_levels)
-  n_levels <- floor(n_nodes / max_reps) + (n_nodes %% max_reps > 0)
-  index <- seq_along(along.with = old_levels)
-  new_levels <- split(index, sort(index %% n_levels)) %>%
-    lapply(FUN = function(substage){
-      rep(max(substage), length(substage))
-    }) %>%
-    unlist %>%
-    unname
-  new_levels <- new_levels - min(new_levels)
-  new_levels / (max(new_levels) + 1) + min(old_levels)
-}
-
-split_node_columns <- function(nodes){
-  max_reps <- nrow(nodes) %>%
-    sqrt %>%
-    ceiling
-  # group_by() %>% mutate() doesn't work here.
-  # Groups aren't actually selected, the whole nodes data frame
-  # just repeated. I do not know why.
-  nodes <- lapply(
-    X = split(nodes, f = nodes$level),
-    FUN = function(stage){
-      stage$level <- split_levels(
-        old_levels = stage$level, max_reps = max_reps)
-      stage
-    }
-  ) %>%
-    do.call(what = rbind)
-  rownames(nodes) <- nodes$id
-  nodes$level <- as.integer(as.factor(nodes$level))
-  nodes
 }
 
 style_nodes <- function(config) {

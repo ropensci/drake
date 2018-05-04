@@ -29,7 +29,7 @@ vis_drake_graph <- function(
   config = drake::read_drake_config(),
   file = character(0), selfcontained = FALSE,
   build_times = "build", digits = 3, targets_only = FALSE,
-  split_columns = FALSE, font_size = 20,
+  split_columns = NULL, font_size = 20,
   layout = "layout_with_sugiyama", main = NULL,
   direction = "LR", hover = TRUE,
   navigationButtons = TRUE, # nolint
@@ -145,7 +145,8 @@ render_drake_graph <- function(
   out <- visNetwork::visNetwork(
     nodes = graph_dataframes$nodes,
     edges = graph_dataframes$edges,
-    main = main, ...
+    main = main,
+    ...
   ) %>%
     visNetwork::visHierarchicalLayout(direction = direction)
   if (length(ncol_legend) && ncol_legend > 0){

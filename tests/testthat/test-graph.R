@@ -93,10 +93,7 @@ test_with_dir("graph functions work", {
   tmp <- vis_drake_graph(config, full_legend = FALSE)
   dev.off()
   unlink("Rplots.pdf", force = TRUE)
-  expect_true(is.character(default_graph_title(
-    split_columns = FALSE)))
-  expect_true(is.character(default_graph_title(
-    split_columns = TRUE)))
+  expect_true(is.character(default_graph_title()))
 })
 
 test_with_dir("Supplied graph is pruned.", {
@@ -145,6 +142,8 @@ test_with_dir("graphing args are not ignored (mtcars example)", {
     tmp <- dataframes_graph(
       config = config, build_times = FALSE, from_scratch = TRUE))
   expect_warning(
+    tmp <- dataframes_graph(config = config, split_columns = TRUE))
+  expect_warning(
     tmp <- dataframes_graph(config = config, build_times = FALSE))
   tmpcopy <- dataframes_graph(config = config,
     make_imports = FALSE, build_times = "none")
@@ -157,19 +156,17 @@ test_with_dir("graphing args are not ignored (mtcars example)", {
   tmp3 <- dataframes_graph(config = config, build_times = "none",
     targets_only = TRUE)
   tmp4 <- dataframes_graph(config = config, build_times = "none",
-    split_columns = TRUE)
-  tmp5 <- dataframes_graph(config = config, build_times = "none",
-    targets_only = TRUE, split_columns = TRUE)
+    targets_only = TRUE)
+  tmp5 <- dataframes_graph(config = config, build_times = "build",
+    targets_only = TRUE)
   tmp6 <- dataframes_graph(config = config, build_times = "build",
-    targets_only = TRUE, split_columns = TRUE)
-  tmp7 <- dataframes_graph(config = config, build_times = "build",
-    targets_only = TRUE, split_columns = TRUE, from_scratch = FALSE)
+    targets_only = TRUE, from_scratch = FALSE)
   expect_warning(
-    tmp8 <- dataframes_graph(config = config, build_times = "none",
+    tmp7 <- dataframes_graph(config = config, build_times = "none",
                              from = c("small", "not_found"))
   )
   expect_error(
-    tmp9 <- dataframes_graph(config = config, build_times = "none",
+    tmp8 <- dataframes_graph(config = config, build_times = "none",
                              from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)
