@@ -37,7 +37,7 @@ mc_process <- function(id, config){
       }
     },
     error = function(e){
-      error_process(e = e, id = id, config = config)
+      error_process(e = e, id = id, config = config) # nocov
     }
   )
 }
