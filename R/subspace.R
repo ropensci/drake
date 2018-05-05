@@ -42,13 +42,13 @@ set_in_subspaces <- function(key, values, subspaces, namespace, cache){
   stopifnot(identical(length(values), length(subspaces)))
   if (cache$exists(key = key, namespace = namespace)){
     object <- cache$get(key = key, namespace = namespace)
-    for(i in seq_along(values)){
+    for (i in seq_along(values)){
       object[[subspaces[i]]] <- values[[i]]
     }
     cache$set(key = key, value = object, namespace = namespace)
   } else {
     object <- list(target = key)
-    for(i in seq_along(values)){
+    for (i in seq_along(values)){
       object[[i + 1]] <- values[[i]]
     }
     names(object) <- c("target", subspaces)
