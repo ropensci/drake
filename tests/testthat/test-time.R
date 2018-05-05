@@ -23,7 +23,7 @@ test_with_dir("proc_time runtimes can be fetched", {
   })
   set_in_subspaces(
     key = key,
-    values = t,
+    values = list(x = t),
     subspaces = "time_build",
     namespace = "meta",
     cache = cache

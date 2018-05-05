@@ -31,9 +31,6 @@ next_stage <- function(config, schedule) {
 
 run_mclapply_staged <- function(config){
   config$jobs <- safe_jobs(config$jobs)
-  if (config$jobs < 2 && !length(config$debug)) {
-    return(run_lapply(config = config))
-  }
   schedule <- config$schedule
   while(length(V(schedule)$name)){
     stage <- next_stage(config = config, schedule = schedule)
@@ -95,12 +92,15 @@ run_parLapply_staged <- function(config) { # nolint
     } else if (any(stage$build %in% config$plan$target)){
       set_attempt_flag(config)
     }
-    clusterCall(
-      cl = config$cluster,
-      fun = prune_envir,
-      targets = stage$build,
-      config = config
-    )
+    prune_envir(targets = stage$build, config = config)
+    if (identical(config$envir, globalenv())){
+      clusterCall(
+        cl = config$cluster,
+        fun = prune_envir,
+        targets = stage$build,
+        config = config
+      )
+    }
     tmp <- parLapply(
       cl = config$cluster,
       X = stage$build,
