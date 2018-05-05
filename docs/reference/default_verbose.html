@@ -25,11 +25,16 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Default verbosity for <code>drake</code> — default_verbose" />
 
 <meta property="og:description" content="Set with pkgconfig: for example,
 pkgconfig::set_config("drake::verbose" = 2)." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,8 +57,12 @@ pkgconfig::set_config("drake::verbose" = 2)." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -126,6 +135,7 @@ pkgconfig::set_config("drake::verbose" = 2)." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -133,17 +143,20 @@ pkgconfig::set_config("drake::verbose" = 2)." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Default verbosity for <code>drake</code></h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/console.R'><code>R/console.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/console.R'><code>R/console.R</code></a></small>
+    <div class="hidden name"><code>default_verbose.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Set with <code>pkgconfig</code>: for example,
 <code><a href='http://www.rdocumentation.org/packages/pkgconfig/topics/set_config'>pkgconfig::set_config("drake::verbose" = 2)</a></code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>default_verbose</span>()</pre>
         
@@ -175,6 +188,8 @@ the default <code>verbose</code> argument to <code>drake</code> functions.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

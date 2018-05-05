@@ -25,10 +25,15 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Output a random tip about drake. — drake_tip" />
 
 <meta property="og:description" content="Tips are usually related to news and usage." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -125,6 +134,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -132,16 +142,19 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Output a random tip about drake.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/tips.R'><code>R/tips.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/tips.R'><code>R/tips.R</code></a></small>
+    <div class="hidden name"><code>drake_tip.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Tips are usually related to news and usage.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_tip</span>()</pre>
         
@@ -177,6 +190,8 @@
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

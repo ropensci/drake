@@ -25,7 +25,12 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Changelog" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -48,8 +53,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -122,6 +131,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -129,24 +139,28 @@
       
       </header>
 
-      <div class="row">
-
-  <div class="col-md-9">
+<div class="row">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Change log <small></small></h1>
-      <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+      <h1>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/ropensci/drake/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="contents">
     <div id="version-5-1-4" class="section level1">
 <h1 class="page-header">
 <a href="#version-5-1-4" class="anchor"></a>Version 5.1.4<small> Unreleased </small>
 </h1>
 <ul>
-<li>Remove staged parallelism from the <code>"mclapply"</code> backend. Now uses persistent workers and a master process.</li>
-<li>Remove the appearance of staged parallelism from single-job <code><a href="../reference/make.html">make()</a></code>’s.</li>
+<li>Remove staged parallelism from all the <code>lapply()</code>-like backends (<code>parallelism =</code> <code>"mclapply"</code>, <code>"parLapply"</code>, and <code>"future_lapply"</code>). Now, <code>drake</code> uses persistent workers and a master process. In the case of <code>"future_lapply"</code> parallelism, the master process is a separate <code><a href="http://www.rdocumentation.org/packages/callr/topics/r_bg">callr::r_bg()</a></code> process.</li>
+<li>Remove the appearance of staged parallelism from single-job <code><a href="../reference/make.html">make()</a></code>’s. (Previously, there were “check” messages and a call to <code>staged_parallelism()</code>.)</li>
+<li>Remove all remnants of staged parallelism internals.</li>
+<li>Improve <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code>. It is a more sensible way to go about predicting runtimes with multiple jobs. Likely to be more accurate.</li>
 <li>Calls to <code><a href="../reference/make.html">make()</a></code> no longer leave targets in the user’s environment.</li>
 <li>Attempt to fix a Solaris CRAN check error. The test at <a href="https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3" class="uri">https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3</a> was previously failing on CRAN’s Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.</li>
+<li>Deprecate the <code>imports_only</code> argument to <code><a href="../reference/make.html">make()</a></code> and <code><a href="../reference/drake_config.html">drake_config()</a></code> in favor of <code>skip_targets</code>.</li>
+<li>Deprecate <code><a href="../reference/migrate_drake_project.html">migrate_drake_project()</a></code>.</li>
+<li>Deprecate <code><a href="../reference/max_useful_jobs.html">max_useful_jobs()</a></code>.</li>
+<li>For non-distributed parallel backends, stop waiting for all the imports to finish before the targets begin.</li>
 <li>Add an <code>upstream_only</code> argument to <code><a href="../reference/failed.html">failed()</a></code> so users can list failed targets that do not have any failed dependencies. Naturally accompanies <code><a href="../reference/make.html">make(keep_going = TRUE)</a></code>.</li>
 <li>Add an RStudio R Markdown template compatible with <a href="https://krlmlr.github.io/drake-pitch/" class="uri">https://krlmlr.github.io/drake-pitch/</a>.</li>
 <li>Remove <code>plyr</code> as a dependency.</li>
@@ -325,7 +339,7 @@
 <li>Add a <code>purge</code> argument to <code><a href="../reference/clean.html">clean()</a></code> to optionally remove all target-level information.</li>
 <li>Add a <code>namespace</code> argument to <code><a href="../reference/cached.html">cached()</a></code> so users can inspect individual <code>storr</code> namespaces.</li>
 <li>Change <code>verbose</code> to numeric: 0 = print nothing, 1 = print progress on imports only, 2 = print everything.</li>
-<li>Add a new <code><a href="../reference/next_stage.html">next_stage()</a></code> function to report the targets to be made in the next parallelizable stage.</li>
+<li>Add a new <code>next_stage()</code> function to report the targets to be made in the next parallelizable stage.</li>
 <li>Add a new <code>session_info</code> argument to <code><a href="../reference/make.html">make()</a></code>. Apparently, <code>sessionInfo()</code> is a bottleneck for small <code><a href="../reference/make.html">make()</a></code>s, so there is now an option to suppress it. This is mostly for the sake of speeding up unit tests.</li>
 <li>Add a new <code>log_progress</code> argument to <code><a href="../reference/make.html">make()</a></code> to suppress progress logging. This increases storage efficiency and speeds some projects up a tiny bit.</li>
 <li>Add an optional <code>namespace</code> argument to <code><a href="../reference/loadd.html">loadd()</a></code> and <code><a href="../reference/readd.html">readd()</a></code>. You can now load and read from non-default <code>storr</code> namespaces.</li>
@@ -388,7 +402,6 @@
 </h1>
 <p>Version 1.0.1 is on CRAN! I’m already working on a massive update, though. 2.0.0 is cleaner and more powerful.</p>
 </div>
-    </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -421,6 +434,8 @@
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

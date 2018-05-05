@@ -26,12 +26,17 @@ to <code><a href='make.html'>make()</a></code> for your system. — default_para
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Show the default <code>parallelism</code> argument
 to <code><a href='make.html'>make()</a></code> for your system. — default_parallelism" />
 
 <meta property="og:description" content="Returns 'parLapply' for Windows machines
 and 'mclapply' for other platforms." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +59,12 @@ and 'mclapply' for other platforms." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -128,6 +137,7 @@ and 'mclapply' for other platforms." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -135,18 +145,21 @@ and 'mclapply' for other platforms." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Show the default <code>parallelism</code> argument
 to <code><a href='make.html'>make()</a></code> for your system.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/parallel_ui.R'><code>R/parallel_ui.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/parallel_ui.R'><code>R/parallel_ui.R</code></a></small>
+    <div class="hidden name"><code>default_parallelism.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Returns <code>'parLapply'</code> for Windows machines
 and <code>'mclapply'</code> for other platforms.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>default_parallelism</span>()</pre>
         
@@ -156,7 +169,7 @@ and <code>'mclapply'</code> for other platforms.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='make.html'>make()</a></code>, <code><a href='shell_file.html'>shell_file()</a></code></p>
+    <div class='dont-index'><p><code><a href='make.html'>make()</a></code>, <code><a href='shell_file.html'>shell_file()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -187,6 +200,8 @@ and <code>'mclapply'</code> for other platforms.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

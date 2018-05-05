@@ -94,7 +94,7 @@ a.anchor {
 
 .contents h1, .contents h2, .contents h3, .contents h4 {
   padding-top: 60px;
-  margin-top: -60px;
+  margin-top: -40px;
 }
 
 /* Static header placement on mobile devices */
@@ -134,7 +134,6 @@ a.anchor {
 /* Reference index & topics ----------------------------------------------- */
 
 .ref-index th {font-weight: normal;}
-.ref-index h2 {font-size: 20px;}
 
 .ref-index td {vertical-align: top;}
 .ref-index .alias {width: 40%;}
@@ -217,4 +216,12 @@ a.sourceLine:hover {
 
 .hasCopyButton:hover button.btn-copy-ex {
   visibility: visible;
+}
+
+/* mark.js ----------------------------*/
+
+mark {
+  background-color: rgba(255, 255, 51, 0.5);
+  border-bottom: 2px solid rgba(255, 153, 51, 0.3);
+  padding: 1px;
 }

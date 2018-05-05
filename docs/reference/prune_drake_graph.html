@@ -25,12 +25,17 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Prune the dependency network of your project. — prune_drake_graph" />
 
 <meta property="og:description" content="igraph objects are used
 internally to represent the dependency network of your workflow.
 See config(my_plan)$graph from the mtcars example." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +58,12 @@ See config(my_plan)$graph from the mtcars example." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -127,6 +136,7 @@ See config(my_plan)$graph from the mtcars example." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -134,22 +144,25 @@ See config(my_plan)$graph from the mtcars example." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prune the dependency network of your project.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/graph.R'><code>R/graph.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/graph.R'><code>R/graph.R</code></a></small>
+    <div class="hidden name"><code>prune_drake_graph.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p><code>igraph</code> objects are used
 internally to represent the dependency network of your workflow.
 See <code><a href='config.html'>config</a>(my_plan)$graph</code> from the mtcars example.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>prune_drake_graph</span>(<span class='no'>graph</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='kw pkg'>igraph</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/igraph/topics/V'>V</a></span>(<span class='no'>graph</span>)$<span class='no'>name</span>, <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -181,8 +194,8 @@ remove the vertices after <code>to</code> from the graph.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='build_drake_graph.html'>build_drake_graph()</a></code>, <code><a href='config.html'>config()</a></code>,
-<code><a href='make.html'>make()</a></code></p>
+    <div class='dont-index'><p><code><a href='build_drake_graph.html'>build_drake_graph()</a></code>, <code><a href='config.html'>config()</a></code>,
+<code><a href='make.html'>make()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -230,6 +243,8 @@ remove the vertices after <code>to</code> from the graph.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

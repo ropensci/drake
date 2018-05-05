@@ -26,6 +26,9 @@ escaped quotes from character strings. — drake_unquote • drake</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Remove leading and trailing
 escaped quotes from character strings. — drake_unquote" />
 
@@ -34,6 +37,8 @@ In workflow plan data frame commands,
 single-quoted targets denote physical files,
 and double-quoted strings are treated as ordinary string literals." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -56,8 +61,12 @@ and double-quoted strings are treated as ordinary string literals." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -130,6 +139,7 @@ and double-quoted strings are treated as ordinary string literals." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -137,24 +147,27 @@ and double-quoted strings are treated as ordinary string literals." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Remove leading and trailing
 escaped quotes from character strings.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/strings.R'><code>R/strings.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/strings.R'><code>R/strings.R</code></a></small>
+    <div class="hidden name"><code>drake_unquote.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Quotes are important in drake.
 In workflow plan data frame commands,
 single-quoted targets denote physical files,
 and double-quoted strings are treated as ordinary string literals.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_unquote</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>deep</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -175,7 +188,7 @@ the elements</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='drake_quotes.html'>drake_quotes()</a></code>, <code><a href='drake_strings.html'>drake_strings()</a></code></p>
+    <div class='dont-index'><p><code><a href='drake_quotes.html'>drake_quotes()</a></code>, <code><a href='drake_strings.html'>drake_strings()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -209,6 +222,8 @@ the elements</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

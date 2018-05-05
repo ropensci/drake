@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -27,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -109,21 +113,21 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Graphs with drake</h1>
             <h3 class="subtitle">Visualize your workflow.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-03</h4>
+            <h4 class="date">2018-05-05</h4>
       
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/graph.Rmd"><code>vignettes/graph.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/graph.Rmd"><code>vignettes/graph.Rmd</code></a></small>
+      <div class="hidden name"><code>graph.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <p><code>Drake</code> has powerful visuals to help you plan your project. You can generate an interactive workflow network with either <code><a href="../reference/vis_drake_graph.html">drake_graph()</a></code> or <code><a href="../reference/vis_drake_graph.html">vis_drake_graph()</a></code>. Then click, drag, hover, zoom, and pan. Use either the mouse or the green buttons near the bottom.</p>
 <div id="dependency-reactivity" class="section level1">
 <h1 class="hasAnchor">
@@ -141,9 +145,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <iframe src="https://ropensci.github.io/drake/images/built.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>But when you change a dependency, some targets are out of date until the next <code><a href="../reference/make.html">make(my_plan)</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
-  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
+  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
@@ -203,7 +207,6 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <a href="#more-flexibility" class="anchor"></a>More flexibility</h1>
 <p>We have only scratched the surface of <code><a href="../reference/vis_drake_graph.html">vis_drake_graph()</a></code>. The help files (<code><a href="../reference/vis_drake_graph.html">?vis_drake_graph</a></code>) document much more functionality. In particular, the <code><a href="../reference/dataframes_graph.html">dataframes_graph()</a></code> and <code><a href="../reference/render_drake_graph.html">render_drake_graph()</a></code> functions let you customize your own <a href="http://datastorm-open.github.io/visNetwork/">visNetwork graph</a>.</p>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -233,6 +236,8 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

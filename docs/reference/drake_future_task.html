@@ -25,11 +25,16 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Task passed to individual futures in the <code>"future"</code> backend — drake_future_task" />
 
 <meta property="og:description" content="For internal use only. Only exported to make available
 to futures." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,8 +57,12 @@ to futures." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -126,6 +135,7 @@ to futures." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -133,21 +143,24 @@ to futures." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Task passed to individual futures in the <code>"future"</code> backend</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/future.R'><code>R/future.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/future.R'><code>R/future.R</code></a></small>
+    <div class="hidden name"><code>drake_future_task.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>For internal use only. Only exported to make available
 to futures.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_future_task</span>(<span class='no'>target</span>, <span class='no'>meta</span>, <span class='no'>config</span>, <span class='no'>protect</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -197,6 +210,8 @@ dependencies available in <code>config$envir</code>.</p></td>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

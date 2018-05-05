@@ -25,12 +25,17 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Deprecated function <code>workflow</code> — workflow" />
 
 <meta property="og:description" content="Turns a named collection of command/target pairs into
 a workflow plan data frame for make() and
 check()." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +58,12 @@ check()." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -127,6 +136,7 @@ check()." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -134,23 +144,26 @@ check()." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Deprecated function <code>workflow</code></h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/deprecate.R'><code>R/deprecate.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/deprecate.R'><code>R/deprecate.R</code></a></small>
+    <div class="hidden name"><code>workflow.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Turns a named collection of command/target pairs into
 a workflow plan data frame for <code><a href='make.html'>make()</a></code> and
 <code><a href='check.html'>check()</a></code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>workflow</span>(<span class='no'>...</span>, <span class='kw'>list</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>file_targets</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>strings_in_dots</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"filenames"</span>, <span class='st'>"literals"</span>))</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -210,6 +223,8 @@ a workflow plan data frame for <code><a href='make.html'>make()</a></code> and
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

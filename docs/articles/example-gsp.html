@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -27,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -109,21 +113,21 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Example: gross state products</h1>
             <h3 class="subtitle">Generate lots of tasks with ease.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-03</h4>
+            <h4 class="date">2018-05-05</h4>
       
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-gsp.Rmd"><code>vignettes/example-gsp.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/example-gsp.Rmd"><code>vignettes/example-gsp.Rmd</code></a></small>
+      <div class="hidden name"><code>example-gsp.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <p>The following data analysis workflow shows off <code>drake</code>’s ability to generate lots of reproducibly-tracked tasks with ease. The same technique would be cumbersome, even intractable, with <a href="https://www.gnu.org/software/make/">GNU Make</a>.</p>
 <div id="get-the-code-" class="section level1">
 <h1 class="hasAnchor">
@@ -206,7 +210,7 @@ combos &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">
 ## [5,] "state" "year" "pc"   
 ## [6,] "state" "year" "emp"
 targets &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, paste, <span class="dt">collapse =</span> <span class="st">"_"</span>)
-commands &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, function(row){
+commands &lt;-<span class="st"> </span><span class="kw">apply</span>(combos, <span class="dv">1</span>, <span class="cf">function</span>(row){
   covariates &lt;-<span class="st"> </span><span class="kw">paste</span>(row, <span class="dt">collapse =</span> <span class="st">" + "</span>)
   formula &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"as.formula(</span><span class="ch">\"</span><span class="st">gsp ~ "</span>, covariates, <span class="st">"</span><span class="ch">\"</span><span class="st">)"</span>)
   command &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"lm("</span>, formula, <span class="st">", data = Produc)"</span>)
@@ -242,12 +246,12 @@ rmspe_plan &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<spa
 ## 5    rmspe_state_year_pc    get_rmspe(state_year_pc, data = Produc)
 ## 6   rmspe_state_year_emp   get_rmspe(state_year_emp, data = Produc)</code></pre></div>
 <p>We need to define a function to get the RMSPE for each model.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_rmspe &lt;-<span class="st"> </span>function(lm_fit, data){
-  y &lt;-<span class="st"> </span>data$gsp
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_rmspe &lt;-<span class="st"> </span><span class="cf">function</span>(lm_fit, data){
+  y &lt;-<span class="st"> </span>data<span class="op">$</span>gsp
   yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(lm_fit, <span class="dt">data =</span> data)
-  terms &lt;-<span class="st"> </span><span class="kw">attr</span>(<span class="kw">summary</span>(lm_fit)$terms, <span class="st">"term.labels"</span>)
+  terms &lt;-<span class="st"> </span><span class="kw">attr</span>(<span class="kw">summary</span>(lm_fit)<span class="op">$</span>terms, <span class="st">"term.labels"</span>)
   <span class="kw">data.frame</span>(
-    <span class="dt">rmspe =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>((y -<span class="st"> </span>yhat)^<span class="dv">2</span>)), <span class="co"># nolint</span>
+    <span class="dt">rmspe =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>((y <span class="op">-</span><span class="st"> </span>yhat)<span class="op">^</span><span class="dv">2</span>)), <span class="co"># nolint</span>
     <span class="dt">X1 =</span> terms[<span class="dv">1</span>],
     <span class="dt">X2 =</span> terms[<span class="dv">2</span>],
     <span class="dt">X3 =</span> terms[<span class="dv">3</span>]
@@ -287,13 +291,13 @@ path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span cla
 <p>At this point, we can gather together the whole workflow plan.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">whole_plan &lt;-<span class="st"> </span><span class="kw">rbind</span>(model_plan, rmspe_plan, rmspe_results_plan, output_plan)</code></pre></div>
 <p>Before we run the project, we need to define the <code>plot_rmspe()</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_rmspe &lt;-<span class="st"> </span>function(rmspe){
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(rmspe) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_rmspe &lt;-<span class="st"> </span><span class="cf">function</span>(rmspe){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(rmspe) <span class="op">+</span>
 <span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_histogram">geom_histogram</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> rmspe), <span class="dt">bins =</span> <span class="dv">30</span>)
 }</code></pre></div>
 <p>Now, we can run the project</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(whole_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
-## Saving 7 x 5 in image</code></pre></div>
+## Saving 7.29 x 4.51 in image</code></pre></div>
 </div>
 <div id="results" class="section level1">
 <h1 class="hasAnchor">
@@ -305,9 +309,9 @@ path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span cla
 
 <span class="kw">library</span>(ggplot2)
 <span class="kw">plot_rmspe</span>(<span class="dt">rmspe =</span> results)</code></pre></div>
-<p><img src="example-gsp_files/figure-html/masterrmspeplot-1.png" width="672"></p>
+<p><img src="example-gsp_files/figure-html/masterrmspeplot-1.png" width="700"></p>
 <p>And here are the best models. The best variables are in the top row under <code>X1</code>, <code>X2</code>, and <code>X3</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(results[<span class="kw">order</span>(results$rmspe, <span class="dt">decreasing =</span> <span class="ot">FALSE</span>), ])
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(results[<span class="kw">order</span>(results<span class="op">$</span>rmspe, <span class="dt">decreasing =</span> <span class="ot">FALSE</span>), ])
 ##                          rmspe    X1    X2    X3
 ## rmspe_state_hwy_emp   2613.669 state   hwy   emp
 ## rmspe_state_water_emp 2664.842 state water   emp
@@ -354,7 +358,6 @@ report.md: report.Rmd
 <li>Yves Croissant (2016). Ecdat: Data Sets for Econometrics. R package version 0.3-1. <a href="https://CRAN.R-project.org/package=Ecdat" class="uri">https://CRAN.R-project.org/package=Ecdat</a>.</li>
 </ul>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -386,6 +389,8 @@ report.md: report.Rmd
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

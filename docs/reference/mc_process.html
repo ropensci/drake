@@ -26,15 +26,20 @@ a master process or persistent worker. — mc_process • drake</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Internal function to launch
 a master process or persistent worker. — mc_process" />
 
 <meta property="og:description" content="For internal use only.
-Exported ony for the purpose of
+Exported only for the purpose of
 using persistent workers in
 make(paralellism = "parLapply", jobs = n),
 where n &gt; 1." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -57,8 +62,12 @@ where n &gt; 1." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -131,6 +140,7 @@ where n &gt; 1." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -138,25 +148,28 @@ where n &gt; 1." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Internal function to launch
 a master process or persistent worker.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/mclapply.R'><code>R/mclapply.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/mclapply.R'><code>R/mclapply.R</code></a></small>
+    <div class="hidden name"><code>mc_process.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>For internal use only.
-Exported ony for the purpose of
+Exported only for the purpose of
 using persistent workers in
 <code><a href='make.html'>make(paralellism = "parLapply", jobs = n)</a></code>,
 where <code>n &gt; 1</code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>mc_process</span>(<span class='no'>id</span>, <span class='no'>config</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -197,6 +210,8 @@ where <code>n &gt; 1</code>.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -26,6 +26,9 @@ or more overarching targets. — gather_plan • drake</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Write commands to combine several targets into one
 or more overarching targets. — gather_plan" />
 
@@ -33,6 +36,8 @@ or more overarching targets. — gather_plan" />
 target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -55,8 +60,12 @@ a collection of existing targets in another workflow plan data frame." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -129,6 +138,7 @@ a collection of existing targets in another workflow plan data frame." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -136,23 +146,26 @@ a collection of existing targets in another workflow plan data frame." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write commands to combine several targets into one
 or more overarching targets.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/generate.R'><code>R/generate.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/generate.R'><code>R/generate.R</code></a></small>
+    <div class="hidden name"><code>gather_plan.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Creates a new workflow plan data frame with a single new
 target. This new target is a list, vector, or other aggregate of
 a collection of existing targets in another workflow plan data frame.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>gather_plan</span>(<span class='kw'>plan</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"target"</span>, <span class='kw'>gather</span> <span class='kw'>=</span> <span class='st'>"list"</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -227,6 +240,8 @@ prespecified targets into one additional target downstream.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -27,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -109,21 +113,21 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Example: R package download trends</h1>
             <h3 class="subtitle">Refresh your project without restarting from scratch.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-03</h4>
+            <h4 class="date">2018-05-05</h4>
       
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/example-packages.Rmd"><code>vignettes/example-packages.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/example-packages.Rmd"><code>vignettes/example-packages.Rmd</code></a></small>
+      <div class="hidden name"><code>example-packages.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <p>This vignette explores R package download trends using the <code>cranlogs</code> package.</p>
 <div id="get-the-code-" class="section level1">
 <h1 class="hasAnchor">
@@ -139,13 +143,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-04-25 18638   dplyr
-## 2 2018-04-26 17500   dplyr
-## 3 2018-04-27 17750   dplyr
-## 4 2018-04-28 15220   dplyr
-## 5 2018-04-29 15063   dplyr
-## 6 2018-04-30 18128   dplyr
-## 7 2018-05-01 13497   dplyr</code></pre></div>
+## 1 2018-04-28 15220   dplyr
+## 2 2018-04-29 15063   dplyr
+## 3 2018-04-30 18128   dplyr
+## 4 2018-05-01 13497   dplyr
+## 5 2018-05-02 16898   dplyr
+## 6 2018-05-03 16914   dplyr
+## 7 2018-05-04 13771   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -200,13 +204,13 @@ output_types
 ## 1 averages make_my_table(dataset__)
 ## 2 plot     make_my_plot(dataset__)</code></pre></div>
 <p>We need to define functions to summarize and plot the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span>function(downloads){
-  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(downloads, package) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
+  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(downloads, package) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="dt">mean_downloads =</span> <span class="kw">mean</span>(count))
 }
 
-make_my_plot &lt;-<span class="st"> </span>function(downloads){
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) +
+make_my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) <span class="op">+</span>
 <span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> date, <span class="dt">y =</span> count, <span class="dt">group =</span> package, <span class="dt">color =</span> package))
 }</code></pre></div>
 <p>Below, the targets <code>recent</code> and <code>older</code> each take turns substituting the <code>dataset__</code> wildcard. Thus, <code>output_plan</code> has four rows.</p>
@@ -268,9 +272,9 @@ whole_plan
 ## # A tibble: 3 x 2
 ##   package mean_downloads
 ##   &lt;chr&gt;            &lt;dbl&gt;
-## 1 ggplot2         17348.
-## 2 knitr           11579.
-## 3 Rcpp            25000.
+## 1 ggplot2         17956.
+## 2 knitr           11655.
+## 3 Rcpp            25055.
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ## # A tibble: 3 x 2
@@ -300,7 +304,6 @@ whole_plan
 <a href="#what-remote-data-sources-in-general" class="anchor"></a>What remote data sources in general?</h1>
 <p>When you rely on data from the internet, you should trigger a new download when the data change remotely. <a href="https://github.com/ropensci/drake/blob/master/vignettes/best-practices.Rmd#remote-data-sources">This section of the best practices guide</a> explains how to automatically refresh the data when the online timestamp changes.</p>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -329,6 +332,8 @@ whole_plan
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

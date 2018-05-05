@@ -25,11 +25,16 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="List the targets that are out of date. — outdated" />
 
 <meta property="og:description" content="Outdated targets will be rebuilt in the next
 make()." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,8 +57,12 @@ make()." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -126,6 +135,7 @@ make()." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -133,21 +143,24 @@ make()." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>List the targets that are out of date.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/outdated.R'><code>R/outdated.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/outdated.R'><code>R/outdated.R</code></a></small>
+    <div class="hidden name"><code>outdated.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Outdated targets will be rebuilt in the next
 <code><a href='make.html'>make()</a></code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>outdated</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/read_drake_config'>read_drake_config</a></span>(), <span class='kw'>make_imports</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -186,8 +199,8 @@ See the details in the help file for <code><a href='drake_config.html'>drake_con
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='missed.html'>missed()</a></code>, <code><a href='drake_plan.html'>drake_plan()</a></code>,
-<code><a href='make.html'>make()</a></code>, <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code></p>
+    <div class='dont-index'><p><code><a href='missed.html'>missed()</a></code>, <code><a href='drake_plan.html'>drake_plan()</a></code>,
+<code><a href='make.html'>make()</a></code>, <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -236,6 +249,8 @@ See the details in the help file for <code><a href='drake_config.html'>drake_con
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

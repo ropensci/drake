@@ -26,12 +26,17 @@ from one of the built-in drake examples. — drake_batchtools_tmpl_file • drak
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Write the batchtools template file
 from one of the built-in drake examples. — drake_batchtools_tmpl_file" />
 
 <meta property="og:description" content="If there are multiple template files in the example,
 only the first one (alphabetically) is written." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -54,8 +59,12 @@ only the first one (alphabetically) is written." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -128,6 +137,7 @@ only the first one (alphabetically) is written." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -135,23 +145,26 @@ only the first one (alphabetically) is written." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write the batchtools template file
 from one of the built-in drake examples.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/parallel_ui.R'><code>R/parallel_ui.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/parallel_ui.R'><code>R/parallel_ui.R</code></a></small>
+    <div class="hidden name"><code>drake_batchtools_tmpl_file.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>If there are multiple template files in the example,
 only the first one (alphabetically) is written.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_batchtools_tmpl_file</span>(<span class='kw'>example</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/drake_examples'>drake_examples</a></span>(), <span class='kw'>to</span> <span class='kw'>=</span> <span class='fu'>getwd</span>(),
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -178,8 +191,8 @@ but a batchtools template file is written.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='drake_examples.html'>drake_examples()</a></code>, <code><a href='drake_example.html'>drake_example()</a></code>,
-<code><a href='shell_file.html'>shell_file()</a></code></p>
+    <div class='dont-index'><p><code><a href='drake_examples.html'>drake_examples()</a></code>, <code><a href='drake_example.html'>drake_example()</a></code>,
+<code><a href='shell_file.html'>shell_file()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -226,6 +239,8 @@ but a batchtools template file is written.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,11 +25,16 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Configure the hash algorithms, etc. of a drake cache. — configure_cache" />
 
 <meta property="og:description" content="The purpose of this function is
 to prepare the cache to be called from make()." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,8 +57,12 @@ to prepare the cache to be called from make()." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -126,6 +135,7 @@ to prepare the cache to be called from make()." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -133,17 +143,20 @@ to prepare the cache to be called from make()." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Configure the hash algorithms, etc. of a drake cache.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/cache.R'><code>R/cache.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/cache.R'><code>R/cache.R</code></a></small>
+    <div class="hidden name"><code>configure_cache.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>The purpose of this function is
 to prepare the cache to be called from <code><a href='make.html'>make()</a></code>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>configure_cache</span>(<span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>),
   <span class='kw'>short_hash_algo</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_short_hash_algo'>default_short_hash_algo</a></span>(<span class='kw'>cache</span> <span class='kw'>=</span> <span class='no'>cache</span>),
@@ -151,7 +164,7 @@ to prepare the cache to be called from <code><a href='make.html'>make()</a></cod
   <span class='kw'>log_progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite_hash_algos</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(), <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -211,8 +224,8 @@ for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/top
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='default_short_hash_algo.html'>default_short_hash_algo()</a></code>,
-<code><a href='default_long_hash_algo.html'>default_long_hash_algo()</a></code></p>
+    <div class='dont-index'><p><code><a href='default_short_hash_algo.html'>default_short_hash_algo()</a></code>,
+<code><a href='default_long_hash_algo.html'>default_long_hash_algo()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -262,6 +275,8 @@ for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/top
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

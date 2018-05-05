@@ -25,14 +25,20 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Predict the elapsed runtime of the next call to <code>make()</code>. — predict_runtime" />
 
-<meta property="og:description" content="This function simply sums the elapsed build times
-from rate_limiting_times(), and this
-feature is experimental.
-To date, the accuracy/precision of the results
-has not yet been confirmed by performance studies." />
+<meta property="og:description" content="Take the past recorded runtimes times from
+build_times() and use them to predict how the targets
+will be distributed among the available workers in the
+next make(). Then, predict the overall runtime to be the
+runtime of the slowest (busiest) workers. See Details for some
+caveats." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -55,8 +61,12 @@ has not yet been confirmed by performance studies." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -129,6 +139,7 @@ has not yet been confirmed by performance studies." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -136,26 +147,30 @@ has not yet been confirmed by performance studies." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Predict the elapsed runtime of the next call to <code>make()</code>.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/predict_runtime.R'><code>R/predict_runtime.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/predict_runtime.R'><code>R/predict_runtime.R</code></a></small>
+    <div class="hidden name"><code>predict_runtime.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>This function simply sums the elapsed build times
-from <code><a href='rate_limiting_times.html'>rate_limiting_times()</a></code>, and this
-feature is experimental.
-To date, the accuracy/precision of the results
-has not yet been confirmed by performance studies.</p>
+    <p>Take the past recorded runtimes times from
+<code><a href='build_times.html'>build_times()</a></code> and use them to predict how the targets
+will be distributed among the available workers in the
+next <code><a href='make.html'>make()</a></code>. Then, predict the overall runtime to be the
+runtime of the slowest (busiest) workers. See Details for some
+caveats.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>predict_runtime</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/read_drake_config'>read_drake_config</a></span>(), <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>future_jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>targets_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
+  <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>targets_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>future_jobs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>known_times</span> <span class='kw'>=</span> <span class='fu'>numeric</span>(<span class='fl'>0</span>), <span class='kw'>default_time</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -173,12 +188,6 @@ plus dependencies.
 Defaults to all targets.</p></td>
     </tr>
     <tr>
-      <th>future_jobs</th>
-      <td><p>hypothetical number of jobs
-assumed for the predicted runtime.
-assuming this number of jobs.</p></td>
-    </tr>
-    <tr>
       <th>from_scratch</th>
       <td><p>logical, whether to predict a
 <code><a href='make.html'>make()</a></code> build from scratch or to
@@ -192,28 +201,49 @@ just the targets into the calculations or use the
 build times for everything, including the imports</p></td>
     </tr>
     <tr>
+      <th>future_jobs</th>
+      <td><p>deprecated</p></td>
+    </tr>
+    <tr>
       <th>digits</th>
-      <td><p>number of digits for rounding the time</p></td>
+      <td><p>deprecated</p></td>
+    </tr>
+    <tr>
+      <th>jobs</th>
+      <td><p>the <code>jobs</code> argument of your next planned
+<code><a href='make.html'>make()</a></code>. How many targets to do you plan
+to have running simultaneously?</p></td>
+    </tr>
+    <tr>
+      <th>known_times</th>
+      <td><p>a named numeric vector with targets/imports
+as names and values as hypothetical runtimes in seconds.
+Use this argument to overwrite any of the existing build times
+or the <code>default_time</code>.</p></td>
+    </tr>
+    <tr>
+      <th>default_time</th>
+      <td><p>number of seconds to assume for any
+target or import with no recorded runtime (from <code><a href='build_times.html'>build_times()</a></code>)
+or anything in <code>known_times</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>lubridate</code> <code>Duration</code> object
-with the predicted runtime of the next <code><a href='make.html'>make()</a></code>.</p>
+    <p>Simulated runtimes. This is a single <code>lubridate</code> duration
+(seconds) if <code>jobs</code> is 1 and a vector if <code>jobs</code> is any larger.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For the results to make sense, the previous build times
-of all targets need to be available (automatically cached
-by <code><a href='make.html'>make()</a></code>). Otherwise, <code>predict_runtime()</code>
-will warn you and tell you which targets have missing times.</p>
+    <p>The prediction is only a rough approximation. It assumes
+that the overhead of initializing <code><a href='make.html'>make()</a></code> and any workers is
+negligible. Use the <code>default_time</code> and <code>known_times</code> arguments
+to adjust the assumptions as needed.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='rate_limiting_times.html'>rate_limiting_times()</a></code>,
-<code><a href='build_times.html'>build_times()</a></code>
-<code><a href='make.html'>make()</a></code></p>
+    <div class='dont-index'><p><code><a href='build_times.html'>build_times()</a></code>, <code><a href='make.html'>make()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -221,17 +251,15 @@ will warn you and tell you which targets have missing times.</p>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
 <span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='make.html'>make</a></span>(<span class='no'>my_plan</span>) <span class='co'># Run the project, build the targets.</span>
-<span class='fu'>predict_runtime</span>(<span class='no'>config</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>) <span class='co'># Everything is up to date.</span>
-<span class='fu'>predict_runtime</span>(<span class='no'>config</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># 1 job</span>
+<span class='fu'>predict_runtime</span>(<span class='no'>config</span>, <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># 1 job</span>
 <span class='co'># Assumes you clean() out your project and start from scratch with 2 jobs.</span>
-<span class='fu'>predict_runtime</span>(<span class='no'>config</span>, <span class='kw'>future_jobs</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>predict_runtime</span>(<span class='no'>config</span>, <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># Predict the runtime of just building targets</span>
 <span class='co'># "small" and "large".</span>
 <span class='fu'>predict_runtime</span>(
   <span class='no'>config</span>,
   <span class='kw'>targets</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"small"</span>, <span class='st'>"large"</span>),
-  <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>
+  <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )
 })
 <span class='co'># }</span></pre>
@@ -264,6 +292,8 @@ will warn you and tell you which targets have missing times.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

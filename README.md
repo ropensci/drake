@@ -151,7 +151,6 @@ So far, we have just been setting the stage. Use `make()` to do the real work. T
 
 ``` r
 make(plan)
-#> Loading required package: methods
 #> target raw_data
 #> target data
 #> target fit
@@ -373,6 +372,16 @@ Presentations
 -   <https://krlmlr.github.io/drake-pitch>
 -   <https://krlmlr.github.io/slides/drake-sib-zurich>
 -   <https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html>
+
+Real example projects
+---------------------
+
+Here are some real-world applications of `drake` in the wild.
+
+-   [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
+-   [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
+
+If you have a project of your own, we would love to add it. [Click here to edit the `README.Rmd` file](https://github.com/ropensci/drake/edit/master/README.Rmd).
 
 Context and history
 -------------------

@@ -333,6 +333,15 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - https://krlmlr.github.io/slides/drake-sib-zurich
 - https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html
 
+## Real example projects
+
+Here are some real-world applications of `drake` in the wild.
+
+- [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
+- [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
+
+If you have a project of your own, we would love to add it. [Click here to edit the `README.Rmd` file](https://github.com/ropensci/drake/edit/master/README.Rmd).
+
 ## Context and history
 
 For context and history, check out [this post on the rOpenSci blog](https://ropensci.org/blog/2018/02/06/drake/) and [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).

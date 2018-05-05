@@ -26,6 +26,9 @@ to represent the state of the cache. — drake_cache_log_file • drake</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Generate a flat text log file
 to represent the state of the cache. — drake_cache_log_file" />
 
@@ -41,6 +44,8 @@ This way, your data is versioned alongside your code
 in a easy-to-view format. Hopefully, this functionality
 is a step toward better data versioning tools." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -63,8 +68,12 @@ is a step toward better data versioning tools." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -137,6 +146,7 @@ is a step toward better data versioning tools." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -144,14 +154,16 @@ is a step toward better data versioning tools." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate a flat text log file
 to represent the state of the cache.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/cache_log.R'><code>R/cache_log.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/cache_log.R'><code>R/cache_log.R</code></a></small>
+    <div class="hidden name"><code>drake_cache_log_file.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This functionality is like
 <code><a href='make.html'>make</a>(..., cache_log_file = TRUE)</code>,
@@ -165,13 +177,14 @@ This way, your data is versioned alongside your code
 in a easy-to-view format. Hopefully, this functionality
 is a step toward better data versioning tools.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_cache_log_file</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"drake_cache.log"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'>getwd</span>(),
   <span class='kw'>search</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>path</span>, <span class='kw'>search</span> <span class='kw'>=</span> <span class='no'>search</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(), <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>targets_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -229,12 +242,12 @@ include the hashes of both targets and imports.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='drake_cache_log.html'>drake_cache_log()</a></code>,
+    <div class='dont-index'><p><code><a href='drake_cache_log.html'>drake_cache_log()</a></code>,
 <code><a href='make.html'>make()</a></code>,
 <code><a href='get_cache.html'>get_cache()</a></code>,
 <code><a href='default_long_hash_algo.html'>default_long_hash_algo()</a></code>,
 <code><a href='short_hash.html'>short_hash()</a></code>,
-<code><a href='long_hash.html'>long_hash()</a></code></p>
+<code><a href='long_hash.html'>long_hash()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -282,6 +295,8 @@ include the hashes of both targets and imports.</p></td>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

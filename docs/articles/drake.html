@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -27,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -109,23 +113,23 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>drake</h1>
             <h3 class="subtitle">The main example</h3>
                         <h4 class="author">Will Landau and Kirill Müller</h4>
             
-            <h4 class="date">2018-05-03</h4>
+            <h4 class="date">2018-05-05</h4>
       
-      <small>Source: <a href="https:/github.com/ropensci/drake/blob/master/vignettes/drake.Rmd"><code>vignettes/drake.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/drake.Rmd"><code>vignettes/drake.Rmd</code></a></small>
+      <div class="hidden name"><code>drake.Rmd</code></div>
 
     </div>
 
     
     
-<div class="contents">
 <p>A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, then turns into fitted models, summaries, and reports.</p>
-<p><img src="/home/landau/projects/drake/vignettes/tidydag.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
+<p><img src="tidydag.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 <div id="set-the-stage-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#set-the-stage-" class="anchor"></a>Set the stage.</h1>
@@ -133,8 +137,8 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
 <span class="kw">library</span>(tidyverse)</code></pre></div>
 <p>load your custom functions,</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
-  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_histogram</span>()
 }</code></pre></div>
 <p>check any supporting files (optional),</p>
@@ -145,13 +149,13 @@
 ## [1] TRUE</code></pre></div>
 <p>and plan what you are going to do.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">raw_data =</span> readxl::<span class="kw">read_excel</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
-  <span class="dt">data =</span> raw_data %&gt;%
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats::<span class="kw">fct_inorder</span>(Species)) %&gt;%
-<span class="st">    </span><span class="kw">select</span>(-X__1),
+  <span class="dt">raw_data =</span> readxl<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/readxl/topics/read_excel">read_excel</a></span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"raw_data.xlsx"</span>)),
+  <span class="dt">data =</span> raw_data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Species =</span> forcats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/fct_inorder">fct_inorder</a></span>(Species)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>X__<span class="dv">1</span>),
   <span class="dt">hist =</span> <span class="kw">create_plot</span>(data),
-  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width +<span class="st"> </span>Species, data),
-  rmarkdown::<span class="kw">render</span>(
+  <span class="dt">fit =</span> <span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species, data),
+  rmarkdown<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/rmarkdown/topics/render">render</a></span>(
     <span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>),
     <span class="dt">output_file =</span> <span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"report.html"</span>),
     <span class="dt">quiet =</span> <span class="ot">TRUE</span>
@@ -201,11 +205,11 @@ plan
 <p>You may look back on your work and see room for improvement, but it’s all good! The whole point of <code>drake</code> is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/readd.html">readd</a></span>(hist)
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
-<p><img src="/home/landau/projects/drake/vignettes/hist1.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
+<p><img src="hist1.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 <p>So let’s fix the plotting function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span>function(data) {
-  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) +
-<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">create_plot &lt;-<span class="st"> </span><span class="cf">function</span>(data) {
+  <span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> Petal.Width, <span class="dt">fill =</span> Species)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.25</span>) <span class="op">+</span>
 <span class="st">    </span><span class="kw">theme_gray</span>(<span class="dv">20</span>)
 }</code></pre></div>
 <p><code>Drake</code> knows which results are affected.</p>
@@ -219,13 +223,12 @@ plan
 ## target file "report.html"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/loadd.html">loadd</a></span>(hist)
 hist</code></pre></div>
-<p><img src="/home/landau/projects/drake/vignettes/hist2.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
+<p><img src="hist2.png" alt="tidydag" align="center" style="border: none; float: center;" width="500px"></p>
 </div>
 <div id="try-it-yourself" class="section level1">
 <h1 class="hasAnchor">
 <a href="#try-it-yourself" class="anchor"></a>Try it yourself!</h1>
 <p>Use <code><a href="../reference/drake_example.html">drake_example("main")</a></code> to get all the materials.</p>
-</div>
 </div>
   </div>
 
@@ -255,6 +258,8 @@ hist</code></pre></div>
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

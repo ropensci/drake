@@ -26,6 +26,9 @@ used internally in <code><a href='make.html'>make()</a></code>. — drake_config
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Create the internal runtime parameter list
 used internally in <code><a href='make.html'>make()</a></code>. — drake_config" />
 
@@ -44,6 +47,8 @@ Modifying the targets element afterwards will have no effect
 and it could lead to false negative results from
 outdated()" />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -66,8 +71,12 @@ outdated()" />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -140,6 +149,7 @@ outdated()" />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -147,14 +157,16 @@ outdated()" />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create the internal runtime parameter list
 used internally in <code><a href='make.html'>make()</a></code>.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/config.R'><code>R/config.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/config.R'><code>R/config.R</code></a></small>
+    <div class="hidden name"><code>drake_config.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This configuration list
 is also required for functions such as <code><a href='outdated.html'>outdated()</a></code> and
@@ -171,6 +183,7 @@ Modifying the <code>targets</code> element afterwards will have no effect
 and it could lead to false negative results from
 <code><a href='outdated.html'>outdated()</a></code></p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_config</span>(<span class='kw'>plan</span> <span class='kw'>=</span> <span class='fu'><a href='read_drake_plan.html'>read_drake_plan</a></span>(),
   <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/possible_targets'>possible_targets</a></span>(<span class='no'>plan</span>), <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'>parent.frame</span>(),
@@ -186,9 +199,9 @@ and it could lead to false negative results from
   <span class='kw'>skip_targets</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_imports</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_safety_checks</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>lazy_load</span> <span class='kw'>=</span> <span class='st'>"eager"</span>, <span class='kw'>session_info</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>caching</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"worker"</span>, <span class='st'>"master"</span>), <span class='kw'>keep_going</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>imports_only</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -555,6 +568,10 @@ your current R session as the master session. This is slightly faster,
 but it causes <code><a href='make.html'>make()</a></code> to populate your workspace/environment
 with the last few targets it builds.</p></td>
     </tr>
+    <tr>
+      <th>imports_only</th>
+      <td><p>deprecated. Use <code>skip_targets</code> instead.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -563,8 +580,8 @@ with the last few targets it builds.</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='make_with_config.html'>make_with_config()</a></code>, <code><a href='make.html'>make()</a></code>,
-<code><a href='drake_plan.html'>drake_plan()</a></code>, <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code></p>
+    <div class='dont-index'><p><code><a href='make_with_config.html'>make_with_config()</a></code>, <code><a href='make.html'>make()</a></code>,
+<code><a href='drake_plan.html'>drake_plan()</a></code>, <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -612,6 +629,8 @@ with the last few targets it builds.</p></td>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -25,12 +25,17 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Return the default short hash algorithm for <code>make()</code>. — default_short_hash_algo" />
 
 <meta property="og:description" content="See the advanced storage tutorial
 at https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd
 for details." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +58,12 @@ for details." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -127,6 +136,7 @@ for details." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -134,22 +144,25 @@ for details." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Return the default short hash algorithm for <code>make()</code>.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/hash.R'><code>R/hash.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/hash.R'><code>R/hash.R</code></a></small>
+    <div class="hidden name"><code>default_short_hash_algo.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>See the advanced storage tutorial
 at <a href='https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd'>https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd</a>
 for details.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>default_short_hash_algo</span>(<span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -170,7 +183,7 @@ hash algorithm that drake picks for you.</p></td>
 
     <p>The short algorithm must be among <code><a href='available_hash_algos.html'>available_hash_algos</a>{}</code>,
 which is just the collection of algorithms available to the <code>algo</code>
-argument in <code><a href='http://www.rdocumentation.org/packages/digest/topics/digest'>digest::digest()</a></code>.</p>
+argument in <code><a href='http://www.rdocumentation.org/packages/digest/topics/digest'>digest::digest()</a></code>. <br /> <br /></p>
 <p>If you express no preference for a hash, drake will use
 the short hash for the existing project, or
 <code>default_short_hash_algo()</code> for a new project.
@@ -179,7 +192,7 @@ fresh projects (see <code><a href='clean.html'>clean</a>(destroy = TRUE)</code>)
 For a project that already exists, if you supply a hash algorithm,
 drake will warn you and then ignore your choice, opting instead for
 the hash algorithm already chosen for the project
-in a previous <code><a href='make.html'>make()</a></code>.</p>
+in a previous <code><a href='make.html'>make()</a></code>. <br /> <br /></p>
 <p>Drake uses both a short hash algorithm
 and a long hash algorithm. The shorter hash has fewer characters,
 and it is used to generate the names of internal cache files
@@ -191,7 +204,7 @@ to avoid collisions.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='make.html'>make()</a></code>, <code><a href='available_hash_algos.html'>available_hash_algos()</a></code></p>
+    <div class='dont-index'><p><code><a href='make.html'>make()</a></code>, <code><a href='available_hash_algos.html'>available_hash_algos()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -235,6 +248,8 @@ to avoid collisions.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -26,6 +26,9 @@ or knitr report source file. — deps • drake</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="List the dependencies of a function, workflow plan command,
 or knitr report source file. — deps" />
 
@@ -33,6 +36,8 @@ or knitr report source file. — deps" />
 The dependency structure of the components of your analysis
 decides which targets are built and when." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -55,8 +60,12 @@ decides which targets are built and when." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -129,6 +138,7 @@ decides which targets are built and when." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -136,23 +146,26 @@ decides which targets are built and when." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>List the dependencies of a function, workflow plan command,
 or knitr report source file.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/dependencies.R'><code>R/dependencies.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/dependencies.R'><code>R/dependencies.R</code></a></small>
+    <div class="hidden name"><code>deps.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Intended for debugging and checking your project.
 The dependency structure of the components of your analysis
 decides which targets are built and when.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>deps</span>(<span class='no'>x</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -246,6 +259,8 @@ network.</p>
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

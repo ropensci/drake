@@ -25,12 +25,17 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Show drake's color palette. — drake_palette" />
 
 <meta property="og:description" content="This function is
 used in both the console and vis_drake_graph()
 Your console must have the crayon package enabled." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -53,8 +58,12 @@ Your console must have the crayon package enabled." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -127,6 +136,7 @@ Your console must have the crayon package enabled." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -134,18 +144,21 @@ Your console must have the crayon package enabled." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Show drake's color palette.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/color.R'><code>R/color.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/color.R'><code>R/color.R</code></a></small>
+    <div class="hidden name"><code>drake_palette.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function is
 used in both the console and <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code>
 Your console must have the crayon package enabled.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>drake_palette</span>()</pre>
         
@@ -175,12 +188,14 @@ please both <code>drake_palette()</code> and
 #&gt; <span class='message'>import</span>
 #&gt; <span class='message'>import_node</span>
 #&gt; <span class='message'>in_progress</span>
+#&gt; <span class='message'>launch</span>
 #&gt; <span class='message'>load</span>
 #&gt; <span class='message'>missing</span>
 #&gt; <span class='message'>missing_node</span>
 #&gt; <span class='message'>other</span>
 #&gt; <span class='message'>outdated</span>
 #&gt; <span class='message'>retry</span>
+#&gt; <span class='message'>skip</span>
 #&gt; <span class='message'>target</span>
 #&gt; <span class='message'>trigger</span>
 #&gt; <span class='message'>unload</span>
@@ -215,6 +230,8 @@ please both <code>drake_palette()</code> and
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

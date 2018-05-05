@@ -26,6 +26,9 @@ to <code><a href='make.html'>make()</a></code>. — failed • drake</title>
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="List the targets that failed in the last call
 to <code><a href='make.html'>make()</a></code>. — failed" />
 
@@ -33,6 +36,8 @@ to <code><a href='make.html'>make()</a></code>. — failed" />
 diagnose() should eliminate the strict need
 for ordinary error messages printed to the console." />
 <meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -55,8 +60,12 @@ for ordinary error messages printed to the console." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">drake</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">drake</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -129,6 +138,7 @@ for ordinary error messages printed to the console." />
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -136,25 +146,28 @@ for ordinary error messages printed to the console." />
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>List the targets that failed in the last call
 to <code><a href='make.html'>make()</a></code>.</h1>
-    <small>Source: <a href='https:/github.com/ropensci/drake/blob/master/R/progress.R'><code>R/progress.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/progress.R'><code>R/progress.R</code></a></small>
+    <div class="hidden name"><code>failed.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Together, functions <code>failed</code> and
 <code><a href='diagnose.html'>diagnose()</a></code> should eliminate the strict need
 for ordinary error messages printed to the console.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>failed</span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'>getwd</span>(), <span class='kw'>search</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>path</span> <span class='kw'>=</span>
   <span class='no'>path</span>, <span class='kw'>search</span> <span class='kw'>=</span> <span class='no'>search</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>),
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(), <span class='kw'>upstream_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -203,9 +216,9 @@ Naturally accompanies <code><a href='make.html'>make(keep_going = TRUE)</a></cod
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='diagnose.html'>diagnose()</a></code>, <code><a href='session.html'>session()</a></code>,
+    <div class='dont-index'><p><code><a href='diagnose.html'>diagnose()</a></code>, <code><a href='session.html'>session()</a></code>,
 <code><a href='built.html'>built()</a></code>, <code><a href='imported.html'>imported()</a></code>,
-<code><a href='readd.html'>readd()</a></code>, <code><a href='drake_plan.html'>drake_plan()</a></code>, <code><a href='make.html'>make()</a></code></p>
+<code><a href='readd.html'>readd()</a></code>, <code><a href='drake_plan.html'>drake_plan()</a></code>, <code><a href='make.html'>make()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -248,6 +261,8 @@ Naturally accompanies <code><a href='make.html'>make(keep_going = TRUE)</a></cod
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>
