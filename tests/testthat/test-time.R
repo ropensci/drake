@@ -76,21 +76,21 @@ test_with_dir("runtime predictions", {
   p2 <- predict_runtime(
     config = con,
     jobs = 1,
-    default_time = 1e3,
+    default_time = Inf,
     from_scratch = FALSE
   ) %>%
     as.numeric
   p3 <- predict_runtime(
     config = con,
     jobs = 1,
-    default_time = 1e3,
+    default_time = Inf,
     from_scratch = TRUE
   ) %>%
     as.numeric
   p4 <- predict_runtime(
     config = con,
     jobs = 2,
-    default_time = 1e3,
+    default_time = Inf,
     from_scratch = TRUE
   ) %>%
     as.numeric
@@ -131,8 +131,7 @@ test_with_dir("runtime predictions", {
     targets = targets
   ) %>%
     as.numeric
-  expect_true(p1 < p3 && p2 < p3 && p4 < p3)
-  expect_true(p1 < 1e3 && p2 < 1e3 && p3 < 1e3)
+  expect_true(all(is.finite(c(p1, p2, p3, p4))))
   expect_equal(p5, 0, tolerance = 1e-6)
   expect_equal(p6, 70, tolerance = 1e-6)
   expect_equal(p7, 37, tolerance = 1e-6)
