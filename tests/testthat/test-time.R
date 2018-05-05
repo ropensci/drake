@@ -59,6 +59,8 @@ test_with_dir("runtime predictions", {
   con <- dbug()
   expect_warning(p0 <- as.numeric(predict_runtime(con)))
   expect_true(p0 < 1e4)
+  expect_warning(p0 <- as.numeric(predict_runtime(con, targets_only = TRUE)))
+  expect_equal(p0, 0)
   expect_warning(p0 <- as.numeric(predict_runtime(con, default_time = 1e4)))
   expect_true(p0 > 6e4 && p0 < 7e4)
   expect_warning(
@@ -68,6 +70,7 @@ test_with_dir("runtime predictions", {
   )
   expect_true(p0 > 3e4 && p0 < 4e4)
   testrun(con)
+  expect_warning(predict_runtime(con, digits = 1))
   p1 <- predict_runtime(config = con, jobs = 1) %>%
     as.numeric
   p2 <- predict_runtime(
@@ -91,7 +94,7 @@ test_with_dir("runtime predictions", {
     from_scratch = TRUE
   ) %>%
     as.numeric
-  forced_times <- c(
+  known_times <- c(
     a = 0, b = 0, c = 0, f = 0, g = 0, h = 0, i = 0, j = 0,
     readRDS = 0, saveRDS = 0,
     "\"saveRDS\"" = 0, "\"input.rds\"" = 0,
@@ -106,7 +109,7 @@ test_with_dir("runtime predictions", {
     jobs = 1,
     default_time = Inf,
     from_scratch = FALSE,
-    forced_times = forced_times,
+    known_times = known_times,
     targets = targets
   ) %>%
     as.numeric
@@ -115,7 +118,7 @@ test_with_dir("runtime predictions", {
     jobs = 1,
     default_time = Inf,
     from_scratch = TRUE,
-    forced_times = forced_times,
+    known_times = known_times,
     targets = targets
   ) %>%
     as.numeric
@@ -124,7 +127,7 @@ test_with_dir("runtime predictions", {
     jobs = 2,
     default_time = Inf,
     from_scratch = TRUE,
-    forced_times = forced_times,
+    known_times = known_times,
     targets = targets
   ) %>%
     as.numeric

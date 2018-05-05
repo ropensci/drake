@@ -27,7 +27,7 @@ Do not use this function. \code{Drake}'s parallel algorithm
 has changed since version 5.1.2, so \code{max_useful_jobs()}
 will give you the wrong idea of how many jobs to use. Instead,
 use the \code{\link[=predict_runtime]{predict_runtime()}} function with a sensible value
-for \code{forced_times} and \code{default_time}
+for \code{known_times} and \code{default_time}
 to cover any targets not built so far.
 }
 \details{

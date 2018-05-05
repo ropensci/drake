@@ -584,7 +584,7 @@ load_basic_example <- function(
 #'   has changed since version 5.1.2, so `max_useful_jobs()`
 #'   will give you the wrong idea of how many jobs to use. Instead,
 #'   use the [predict_runtime()] function with a sensible value
-#'   for `forced_times` and `default_time`
+#'   for `known_times` and `default_time`
 #'   to cover any targets not built so far.
 #' @details Deprecated on May 4, 2018.
 #' @export
@@ -620,6 +620,7 @@ max_useful_jobs <- function(
       "for force_times and default_time."
     )
   )
+  # nocov start
   imports <- match.arg(imports)
   nodes <- dataframes_graph(config, from_scratch = from_scratch)$nodes
   if (imports == "none"){
@@ -637,6 +638,7 @@ max_useful_jobs <- function(
   n_per_level <- group_by(nodes, level) %>%
     mutate(nrow = n())
   max(n_per_level$nrow)
+  # nocov end
 }
 
 

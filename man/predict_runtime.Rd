@@ -6,7 +6,7 @@
 \usage{
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
   from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
-  digits = NULL, jobs = 1, forced_times = numeric(0), default_time = 0)
+  digits = NULL, jobs = 1, known_times = numeric(0), default_time = 0)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -36,14 +36,14 @@ build times for everything, including the imports}
 \code{make()}. How many targets to do you plan
 to have running simultaneously?}
 
-\item{forced_times}{a named numeric vector with targets/imports
+\item{known_times}{a named numeric vector with targets/imports
 as names and values as hypothetical runtimes in seconds.
 Use this argument to overwrite any of the existing build times
 or the \code{default_time}.}
 
 \item{default_time}{number of seconds to assume for any
 target or import with no recorded runtime (from \code{\link[=build_times]{build_times()}})
-or anything in \code{forced_times}.}
+or anything in \code{known_times}.}
 }
 \value{
 Simulated runtimes. This is a single \code{lubridate} duration
@@ -60,7 +60,7 @@ caveats.
 \details{
 The prediction is only a rough approximation. It assumes
 that the overhead of initializing \code{\link[=make]{make()}} and any workers is
-negligible. Use the \code{default_time} and \code{forced_times} arguments
+negligible. Use the \code{default_time} and \code{known_times} arguments
 to adjust the assumptions as needed.
 }
 \examples{

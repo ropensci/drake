@@ -7,7 +7,7 @@
 #'   caveats.
 #' @details The prediction is only a rough approximation. It assumes
 #'   that the overhead of initializing [make()] and any workers is
-#'   negligible. Use the `default_time` and `forced_times` arguments
+#'   negligible. Use the `default_time` and `known_times` arguments
 #'   to adjust the assumptions as needed.
 #' @export
 #' @seealso [build_times()], [make()]
@@ -50,13 +50,13 @@
 #'   to have running simultaneously?
 #' @param future_jobs deprecated
 #' @param digits deprecated
-#' @param forced_times a named numeric vector with targets/imports
+#' @param known_times a named numeric vector with targets/imports
 #'   as names and values as hypothetical runtimes in seconds.
 #'   Use this argument to overwrite any of the existing build times
 #'   or the `default_time`.
 #' @param default_time number of seconds to assume for any
 #'   target or import with no recorded runtime (from [build_times()])
-#'   or anything in `forced_times`.
+#'   or anything in `known_times`.
 predict_runtime <- function(
   config = drake::read_drake_config(),
   targets = NULL,
@@ -65,7 +65,7 @@ predict_runtime <- function(
   future_jobs = NULL,
   digits = NULL,
   jobs = 1,
-  forced_times = numeric(0),
+  known_times = numeric(0),
   default_time = 0
 ){
   if (!is.null(future_jobs) || !is.null(digits)){
@@ -79,24 +79,23 @@ predict_runtime <- function(
     config = config,
     targets_only = targets_only
   )
+  if (targets_only){
+    config$graph <- targets_graph(config)
+  }
   times <- times[times$item %in% V(config$graph)$name, ]
   untimed <- setdiff(V(config$graph)$name, times$item)
-  if (targets_only){
-    untimed <- setdiff(untimed, times$item[times$type == "import"]) %>%
-      setdiff()
-  }
   if (length(untimed)){
     warning(
       "Some targets were never actually timed, ",
-      "And no hypothetical time was specified in `forced_times`",
+      "And no hypothetical time was specified in `known_times`",
       "Assuming a runtime of ",
       default_time, " for these targets:\n",
       multiline_message(untimed),
       call. = FALSE
     )
   }
-  keep_forced_times <- intersect(names(forced_times), V(config$graph)$name)
-  forced_times <- forced_times[keep_forced_times]
+  keep_known_times <- intersect(names(known_times), V(config$graph)$name)
+  known_times <- known_times[keep_known_times]
   config$graph <- igraph::set_vertex_attr(
     config$graph,
     name = "time",
@@ -109,8 +108,8 @@ predict_runtime <- function(
     ) %>%
     igraph::set_vertex_attr(
       name = "time",
-      index = names(forced_times),
-      value = forced_times
+      index = names(known_times),
+      value = known_times
     )
   if (!from_scratch){
     skip <- setdiff(config$plan$target, outdated(config))
