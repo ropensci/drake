@@ -98,8 +98,9 @@ test_with_dir("mclapply and lapply", {
 
 test_with_dir("staged mclapply and lapply", {
   config <- dbug()
+  env <- config$envir
   config$parallelism <- "parLapply_staged"
-  config$jobs <- 1
+  config$jobs <- 2
   config$debug <- TRUE
   out <- make(config = config)
   expect_true(length(justbuilt(out)) > 0)
@@ -107,9 +108,12 @@ test_with_dir("staged mclapply and lapply", {
   suppressWarnings(out <- make(config = config))
   expect_true(is.numeric(readd(final)))
   expect_equal(justbuilt(out), character(0))
+  expect_true(is.numeric(readd(final)))
+  expect_equal(justbuilt(out), character(0))
   skip_on_os("windows")
   config$parallelism <- "mclapply_staged"
   clean()
+  config$envir <- env
   suppressWarnings(out <- make(config = config))
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))

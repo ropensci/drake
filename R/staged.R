@@ -75,9 +75,6 @@ run_parLapply_staged <- function(config) { # nolint
     return(run_lapply(config = config))
   }
   eval(parse(text = "require(drake)"))
-  if (config$jobs < 2 && !length(config$debug)) {
-    return(run_lapply(config = config))
-  }
   config$workers <- as.character(seq_len(config$jobs))
   console_parLapply(config) # nolint
   config$cluster <- makePSOCKcluster(config$jobs + 1)
@@ -113,12 +110,16 @@ run_parLapply_staged <- function(config) { # nolint
     }
     prune_envir(targets = stage$targets, config = config)
     if (identical(config$envir, globalenv())){
+      # Regular unit tests should not modify the global environment.
+      # Tests in tests/scenarios/all.R cover these lines.
+      # nocov start
       clusterCall(
         cl = config$cluster,
         fun = prune_envir,
         targets = stage$targets,
         config = config
       )
+      # nocov end
     }
     tmp <- parLapply(
       cl = config$cluster,
