@@ -38,14 +38,20 @@ get_from_subspace <- function(key, subspace, namespace, cache){
   }
 }
 
-set_in_subspace <- function(key, value, subspace, namespace, cache){
+set_in_subspaces <- function(key, values, subspaces, namespace, cache){
+  stopifnot(identical(length(values), length(subspaces)))
   if (cache$exists(key = key, namespace = namespace)){
     object <- cache$get(key = key, namespace = namespace)
-    object[[subspace]] <- value
+    for (i in seq_along(values)){
+      object[[subspaces[i]]] <- values[[i]]
+    }
     cache$set(key = key, value = object, namespace = namespace)
   } else {
-    object <- list(key, value)
-    names(object) <- c("target", subspace)
+    object <- list(target = key)
+    for (i in seq_along(values)){
+      object[[i + 1]] <- values[[i]]
+    }
+    names(object) <- c("target", subspaces)
     cache$set(key = key, value = object, namespace = namespace)
   }
 }

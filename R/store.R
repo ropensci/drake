@@ -95,13 +95,12 @@ store_failure <- function(target, meta, config){
     value = "failed",
     config = config
   )
-  for (field in c("messages", "warnings", "error")){
-    set_in_subspace(
-      key = target,
-      value = meta[[field]],
-      subspace = field,
-      namespace = "meta",
-      cache = config$cache
-    )
-  }
+  subspaces <- intersect(c("messages", "warnings", "error"), names(meta))
+  set_in_subspaces(
+    key = target,
+    values = meta[subspaces],
+    subspaces = subspaces,
+    namespace = "meta",
+    cache = config$cache
+  )
 }
