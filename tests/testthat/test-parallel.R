@@ -100,6 +100,9 @@ test_with_dir("staged mclapply and lapply", {
   config <- dbug()
   env <- config$envir
   config$parallelism <- "parLapply_staged"
+  config$jobs <- 1
+  out <- make(config = config)
+  clean()
   config$jobs <- 2
   config$debug <- TRUE
   out <- make(config = config)
