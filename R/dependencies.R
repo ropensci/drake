@@ -355,7 +355,7 @@ safe_find_globals <- function(expr){
     find_globals(expr),
     error = function(e){
       warning(
-        "could not resolve implicit dependencies of code:",
+        "could not resolve implicit dependencies of code: ",
         head(deparse(expr)),
         call. = FALSE
       )
