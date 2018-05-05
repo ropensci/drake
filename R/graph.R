@@ -11,6 +11,7 @@
 #'   the workflow plan dependency network.
 #' @inheritParams drake_config
 #' @param sanitize_plan logical, whether to sanitize the workflow plan first.
+#' @param sanitize_targets logical, whether to sanitize the targets first.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -26,13 +27,16 @@ build_drake_graph <- function(
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
-  sanitize_plan = TRUE
+  sanitize_plan = TRUE,
+  sanitize_targets = TRUE
 ){
   force(envir)
   if (sanitize_plan){
     plan <- sanitize_plan(plan)
   }
-  targets <- sanitize_targets(plan, targets)
+  if (sanitize_targets){
+    targets <- sanitize_targets(plan, targets)
+  }
   imports <- as.list(envir)
   unload_conflicts(
     imports = names(imports),

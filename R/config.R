@@ -415,7 +415,7 @@ drake_config <- function(
   if (is.null(graph)){
     graph <- build_drake_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs,
-      sanitize_plan = FALSE)
+      sanitize_plan = FALSE, sanitize_targets = FALSE)
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
