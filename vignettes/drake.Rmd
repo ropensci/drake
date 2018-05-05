@@ -21,7 +21,8 @@ clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
   collapse = TRUE,
-  warning = TRUE
+  warning = TRUE,
+  error = TRUE
 )
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
 dat <- system.file(
