@@ -82,7 +82,7 @@ run_parLapply_staged <- function(config) { # nolint
   clusterExport(
     cl = config$cluster, varlist = "config",
     envir = environment())
-  if (identical(config$envir, globalenv()) || config$debug){
+  if (identical(config$envir, globalenv()) || length(config$debug)){
     clusterExport(
       cl = config$cluster,
       varlist = ls(globalenv(),
