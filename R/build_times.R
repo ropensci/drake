@@ -38,6 +38,7 @@ build_times <- function(
   jobs = 1,
   type = c("build", "command")
 ){
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   if (is.null(cache)){
     return(empty_times())
   }

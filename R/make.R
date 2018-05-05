@@ -210,25 +210,11 @@ global_imports <- function(config){
 #' @export
 #' @inheritParams make_with_config
 make_session <- function(config){
-  if (config$skip_imports && config$skip_targets){
-    return(invisible(config))
-  }
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
   do_prework(config = config, verbose_packages = config$verbose)
-  if (config$skip_imports){
-    make_targets(config = config)
-  } else if (config$skip_targets){
-    make_imports(config = config)
-  } else if (
-    config$parallelism %in% parallelism_choices(distributed_only = TRUE)
-  ){
-    make_imports(config = config)
-    make_targets(config = config)
-  } else {
-    make_imports_targets(config = config)
-  }
+  make_with_schedules(config = config)
   drake_cache_log_file(
     file = config$cache_log_file,
     cache = config$cache,
@@ -239,6 +225,23 @@ make_session <- function(config){
     envir = config$envir
   )
   return(invisible(config))
+}
+
+make_with_schedules <- function(config){
+  if (config$skip_imports && config$skip_targets){
+    invisible(config)
+  } else if (config$skip_targets){
+    make_imports(config = config)
+  } else if (config$skip_imports){
+    make_targets(config = config)
+  } else if (
+    config$parallelism %in% parallelism_choices(distributed_only = TRUE)
+  ){
+    make_imports(config = config)
+    make_targets(config = config)
+  } else {
+    make_imports_targets(config = config)
+  }
 }
 
 #' @title Just make the imports.
@@ -285,11 +288,6 @@ make_imports <- function(config = drake::read_drake_config()){
   invisible(config)
 }
 
-imports_graph <- function(config){
-  delete_these <- intersect(config$plan$target, V(config$graph)$name)
-  delete_vertices(config$graph, v = delete_these)
-}
-
 #' @title Just build the targets.
 #' @description [make()] is the central, most important function
 #' of the drake package. [make()] runs all the steps of your
@@ -332,11 +330,6 @@ make_targets <- function(config = drake::read_drake_config()){
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
-}
-
-targets_graph <- function(config){
-  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
-  delete_vertices(config$graph, v = delete_these)
 }
 
 make_imports_targets <- function(config){

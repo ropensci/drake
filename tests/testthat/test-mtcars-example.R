@@ -12,15 +12,7 @@ test_with_dir("mtcars example works", {
   config <- drake_config(my_plan, envir = e,
     jobs = jobs, parallelism = parallelism,
     verbose = FALSE, caching = caching)
-
-  expect_equal(max_useful_jobs(config), 8)
   expect_false(file.exists("Makefile"))
-  expect_equal(max_useful_jobs(imports = "files",
-    config = config), 8)
-  expect_true(max_useful_jobs(imports = "all",
-    config = config) >= 8)
-  expect_equal(max_useful_jobs(imports = "none",
-    config = config), 8)
 
   dats <- c("small", "large")
   config$targets <- dats
@@ -50,20 +42,10 @@ test_with_dir("mtcars example works", {
   # Code coverage should cover every line of file_hash().
   expect_true(is.character(file_hash(
     target = "\"report.Rmd\"", config = con, size_cutoff = -1)))
-
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-
   expect_equal(outdated(config), character(0))
-  expect_equal(max_useful_jobs(config = config), 1)
-  expect_equal(max_useful_jobs(imports = "files",
-    config = config), 1)
-  expect_true(max_useful_jobs(imports = "all",
-    config = config) >= 8)
-  expect_equal(max_useful_jobs(imports = "none",
-    config = config), 0)
-
   e$reg2 <- function(d) {
     d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d)
@@ -76,16 +58,6 @@ test_with_dir("mtcars example works", {
     sort(c("\"report.md\"", "coef_regression2_large",
       "coef_regression2_small", "regression2_large", "regression2_small",
       "summ_regression2_large", "summ_regression2_small")))
-  expect_equal(max_useful_jobs(config = config), 4)
-  expect_equal(max_useful_jobs(config = config,
-    from_scratch = TRUE), 8)
-  expect_equal(max_useful_jobs(imports = "files",
-    config = config), 4)
-  expect_true(max_useful_jobs(imports = "all",
-    config = config) >= 8)
-  expect_equal(max_useful_jobs(imports = "none",
-    config = config), 4)
-
   testrun(config)
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,

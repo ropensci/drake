@@ -170,15 +170,10 @@ file_trigger <- function(target, meta, config){
   )
 }
 
-should_build <- function(target, meta_list, config){
-  should_build_target(
-    target = target,
-    meta = meta_list[[target]],
-    config = config
-  )
-}
-
-should_build_target <- function(target, meta, config){
+should_build_target <- function(target, meta = NULL, config){
+  if (is.null(meta)){
+    meta <- drake_meta(target = target, config = config)
+  }
   if (meta$imported) {
     return(TRUE)
   }

@@ -42,11 +42,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_equal(short_hash(con$cache), "murmur32")
   expect_equal(long_hash(con$cache), default_long_hash_algo())
 
-  x <- predict_runtime(con)
-  y <- rate_limiting_times(con, from_scratch = TRUE)
-  expect_true(length(x) > 0)
-  expect_true(nrow(y) > 0)
-
   expect_equal(cached(verbose = FALSE), character(0))
   targets <- con$plan$target
   expect_true(all(targets %in% cached(cache = cache, verbose = FALSE)))
@@ -73,10 +68,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_false(file.exists(default_cache_path()))
 
   p <- vis_drake_graph(con, file = "graph.html")
-  expect_false(file.exists(default_cache_path()))
-
-  m1 <- max_useful_jobs(con)
-  expect_equal(m1, 4)
   expect_false(file.exists(default_cache_path()))
 
   p1 <- progress(verbose = FALSE)

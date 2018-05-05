@@ -9,33 +9,6 @@ assign_to_envir <- function(target, value, config){
   invisible()
 }
 
-# Should go away when staged parallelism goes away.
-assign_to_envir_batch <- function(targets, values, config){
-  if (config$lazy_load != "eager"){
-    return() # nocov
-  }
-  lightly_parallelize(
-    X = seq_along(along.with = targets),
-    FUN = assign_to_envir_single,
-    jobs = config$jobs,
-    targets = targets,
-    values = values,
-    config = config
-  )
-  invisible()
-}
-
-# Same.
-assign_to_envir_single <- function(index, targets, values, config){
-  target <- targets[index]
-  value <- values[[index]]
-  if (is_file(target) | !(target %in% config$plan$target)){
-    return()
-  }
-  assign(x = target, value = value, envir = config$envir) # nocov
-  invisible() # nocov
-}
-
 prune_envir <- function(targets, config, downstream = NULL){
   if (is.null(downstream)){
     downstream <- downstream_nodes(

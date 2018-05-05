@@ -24,7 +24,7 @@ time_stamps <- function(config){
   stamp_dir <- time_stamp_dir(cache_path)
   dir_empty(stamp_dir)
   write_time_stamp_template(cache_path)
-  build_these <- next_stage(config = config)
+  build_these <- first_outdated(config = config)
   if (length(build_these)){
     set_attempt_flag(config = config)
   }

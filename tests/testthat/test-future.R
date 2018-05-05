@@ -15,7 +15,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 1,
-      verbose = FALSE,
+      verbose = 4,
       session_info = FALSE
     )
     expect_equal(

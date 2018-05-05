@@ -222,32 +222,20 @@ filter_upstream <- function(targets, graph){
   leaf_nodes(graph)
 }
 
-# This function will go away when we get rid of staged parallelism.
-# No point in testing it.
-# nocov start
-exclude_imports_if <- function(config){
-  if (!length(config$skip_imports)){
-    config$skip_imports <- FALSE
-  }
-  if (!config$skip_imports){
-    return(config)
-  }
-  delete_these <- setdiff(
-    V(config$schedule)$name,
-    config$plan$target
-  )
-  config$schedule <- delete_vertices(
-    graph = config$schedule,
-    v = delete_these
-  )
-  config
-}
-# nocov end
-
 subset_graph <- function(graph, subset){
   if (!length(subset)){
     return(graph)
   }
   subset <- intersect(subset, V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
+}
+
+imports_graph <- function(config){
+  delete_these <- intersect(config$plan$target, V(config$graph)$name)
+  delete_vertices(config$graph, v = delete_these)
+}
+
+targets_graph <- function(config){
+  delete_these <- setdiff(V(config$graph)$name, config$plan$target)
+  delete_vertices(config$graph, v = delete_these)
 }

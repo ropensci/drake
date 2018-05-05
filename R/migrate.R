@@ -9,7 +9,8 @@
 #'   A migration is successful if the transition preserves target status:
 #'   that is, outdated targets remain outdated and up to date targets
 #'   remain up to date.
-#' @description Migrate a project/cache from drake 4.4.0 or earlier
+#' @description Deprecated on May 4, 2018.
+#' Migrate a project/cache from drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @details Drake versions after 4.4.0
 #' have a different internal structure for the cache.
@@ -48,6 +49,13 @@
 migrate_drake_project <- function(
   path = drake::default_cache_path(), jobs = 1
 ){
+  .Deprecated(
+    package = "drake",
+    msg = c(
+      "migrate_drake_project() is deprecated. Please run ",
+      "make() again on projects built with drake version <= 4.4.0"
+    )
+  )
   cache <- should_migrate(path = path)
   if (is.null(cache)){
     return(invisible(TRUE))
@@ -66,6 +74,7 @@ migrate_drake_project <- function(
   file.copy(from = path, to = backup, recursive = TRUE)
   message("Migrating cache at ", path, " for your system's drake.")
   config <- read_drake_config(cache = cache)
+  config$schedule <- config$graph
   config$cache <- cache
   config$parallelism <- "parLapply"
   config$jobs <- 1
@@ -73,7 +82,6 @@ migrate_drake_project <- function(
   config$envir <- new.env(parent = globalenv())
   config$verbose <- TRUE
   config$trigger <- "any"
-  config$schedule <- config$graph
   config$lazy_load <- FALSE
   config$log_progress <- FALSE
   config$session_info <- TRUE

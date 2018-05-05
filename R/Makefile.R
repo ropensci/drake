@@ -119,11 +119,7 @@ mk <- function(
 ){
   config <- recover_drake_config(cache_path)
   old_hash <- self_hash(target = target, config = config)
-  build_distributed(
-    target = target,
-    meta_list = NULL,
-    cache_path = cache_path
-  )
+  build_distributed(target = target, cache_path = cache_path)
   new_hash <- self_hash(target = target, config = config)
   if (!identical(old_hash, new_hash)){
     file <- time_stamp_file(target = target, config = config)

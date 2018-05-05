@@ -107,11 +107,14 @@ test_with_dir("deprecated example(s)_drake functions", {
 })
 
 test_with_dir("deprecate misc utilities", {
+  expect_error(parallel_stages(1), regexp = "parallelism")
+  expect_error(rate_limiting_times(1), regexp = "parallelism")
   expect_warning(as_file("x"))
   expect_warning(as_drake_filename("x"))
   expect_warning(drake_unquote("x", deep = TRUE))
   cache <- storr::storr_environment()
   expect_warning(configure_cache(cache, log_progress = TRUE))
+  expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
 })
 
 test_with_dir("deprecated arguments", {

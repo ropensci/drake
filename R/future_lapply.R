@@ -23,7 +23,6 @@ fl_worker <- function(worker, cache_path){
     expr = {
       config <- recover_drake_config(cache_path = cache_path)
       on.exit(mc_set_done(worker = worker, config = config))
-      config$schedule <- targets_graph(config)
       do_prework(config = config, verbose_packages = FALSE)
       mc_worker(worker = worker, config = config)
     },
