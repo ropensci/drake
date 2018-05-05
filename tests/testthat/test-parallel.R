@@ -1,5 +1,10 @@
 drake_context("parallel")
 
+test_with_dir("safe_jobs()", {
+  expect_error(safe_jobs(1:3))
+  expect_true(is.numeric(safe_jobs(1)))
+})
+
 test_with_dir("check_jobs()", {
   expect_error(check_jobs(NULL), regexp = "length")
   expect_error(check_jobs(-1), regexp = "jobs > 0")
@@ -71,38 +76,24 @@ test_with_dir("shell_file() writes correctly", {
 
 test_with_dir("mclapply and lapply", {
   config <- dbug()
-  make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 1, parallelism = "mclapply", session_info = FALSE)
-  expect_true(is.numeric(readd(final)))
-  clean()
-  make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 1, parallelism = "parLapply", session_info = FALSE)
-  expect_true(is.numeric(readd(final)))
-  expect_true(is.numeric(readd(final)))
-  clean()
-  skip_on_cran()
-  # should demote to 1 job on Windows
-  suppressWarnings(
-    out <- make(plan = config$plan, envir = config$envir, verbose = FALSE,
-      jobs = 2, parallelism = "mclapply", session_info = FALSE)
-  )
+  config$parallelism <- "parLapply"
+  config$jobs <- 1
+  config$debug <- TRUE
+  out <- make(config = config)
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
-  suppressWarnings(
-    out <- make(plan = config$plan, envir = config$envir, verbose = FALSE,
-      jobs = 2, parallelism = "mclapply", session_info = FALSE)
-  )
-  expect_equal(justbuilt(out), character(0))
+  suppressWarnings(out <- make(config = config))
   expect_true(is.numeric(readd(final)))
+  expect_equal(justbuilt(out), character(0))
+  skip_on_os("windows")
+  config$parallelism <- "mclapply"
   clean()
-  out <- make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 2, parallelism = "parLapply", session_info = FALSE)
+  suppressWarnings(out <- make(config = config))
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
-  out <- make(plan = config$plan, envir = config$envir, verbose = FALSE,
-    jobs = 2, parallelism = "parLapply", session_info = FALSE)
-  expect_equal(justbuilt(out), character(0))
+  suppressWarnings(out <- make(config = config))
   expect_true(is.numeric(readd(final)))
+  expect_equal(justbuilt(out), character(0))
 })
 
 test_with_dir("lightly_parallelize_atomic() is correct", {

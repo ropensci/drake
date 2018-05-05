@@ -1,6 +1,5 @@
 run_mclapply <- function(config){
-  config$jobs <- safe_jobs(config$jobs)
-  if (config$jobs < 2) {
+  if (config$jobs < 2 && !length(config$debug)) {
     return(run_lapply(config = config))
   }
   config$workers <- as.character(seq_len(config$jobs))
@@ -65,11 +64,10 @@ mc_master <- function(config){
           next
         }
         target <- config$queue$pop0(what = "names")
-        if (!length(target)){
-          next
+        if (length(target)){
+          mc_set_target(worker = worker, target = target, config = config)
+          mc_set_running(worker = worker, config = config)
         }
-        mc_set_target(worker = worker, target = target, config = config)
-        mc_set_running(worker = worker, config = config)
       }
     }
     Sys.sleep(mc_wait)

@@ -1,6 +1,6 @@
 run_parLapply <- function(config) { # nolint
   eval(parse(text = "require(drake)"))
-  if (config$jobs < 2) {
+  if (config$jobs < 2 && !length(config$debug)) {
     return(run_lapply(config = config))
   }
   config$workers <- as.character(seq_len(config$jobs))
