@@ -128,21 +128,6 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
   do_rehash
 }
 
-update_file_hash <- function(target, hash, mtime, config){
-  set_in_subspaces(
-    key = target,
-    values = list(hash = hash, mtime = mtime),
-    subspaces = c("file", "mtime"),
-    namespace = "meta",
-    cache = config$cache
-  )
-  config$cache$set(
-    key = target,
-    value = hash,
-    namespace = "kernels"
-  )
-}
-
 file_hash <- function(target, config, size_cutoff = 1e5) {
   if (is_file(target)) {
     filename <- drake::drake_unquote(target)
@@ -174,14 +159,7 @@ file_hash <- function(target, config, size_cutoff = 1e5) {
     size_cutoff = size_cutoff)
   old_hash_exists <- config$cache$exists(key = target, namespace = "kernels")
   if (do_rehash || !old_hash_exists){
-    hash <- rehash_file(target = target, config = config)
-    update_file_hash(
-      target = target,
-      hash = hash,
-      mtime = new_mtime,
-      config = config
-    )
-    hash
+    rehash_file(target = target, config = config)
   } else {
     config$cache$get(key = target, namespace = "kernels")
   }
