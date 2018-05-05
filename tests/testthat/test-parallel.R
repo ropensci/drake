@@ -96,6 +96,28 @@ test_with_dir("mclapply and lapply", {
   expect_equal(justbuilt(out), character(0))
 })
 
+test_with_dir("staged mclapply and lapply", {
+  config <- dbug()
+  config$parallelism <- "parLapply_staged"
+  config$jobs <- 1
+  config$debug <- TRUE
+  out <- make(config = config)
+  expect_true(length(justbuilt(out)) > 0)
+  expect_true(is.numeric(readd(final)))
+  suppressWarnings(out <- make(config = config))
+  expect_true(is.numeric(readd(final)))
+  expect_equal(justbuilt(out), character(0))
+  skip_on_os("windows")
+  config$parallelism <- "mclapply_staged"
+  clean()
+  suppressWarnings(out <- make(config = config))
+  expect_true(length(justbuilt(out)) > 0)
+  expect_true(is.numeric(readd(final)))
+  suppressWarnings(out <- make(config = config))
+  expect_true(is.numeric(readd(final)))
+  expect_equal(justbuilt(out), character(0))
+})
+
 test_with_dir("lightly_parallelize_atomic() is correct", {
   withr::with_seed(seed = 2017, code = {
     x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)

@@ -73,18 +73,18 @@ test_with_dir("subspaces", {
   lst <- list_subspace(
     subspace = "y", namespace = "x", cache = x, jobs = 1)
   expect_equal(lst, character(0))
-  set_in_subspace(
+  set_in_subspaces(
     key = "a",
-    value = 1,
+    values = 1,
     namespace = "x",
-    subspace = "y",
+    subspaces = "y",
     cache = x
   )
-  set_in_subspace(
+  set_in_subspaces(
     key = "b",
-    value = 2,
+    values = 2,
     namespace = "x",
-    subspace = "y",
+    subspaces = "y",
     cache = x
   )
   lst <- list_subspace(

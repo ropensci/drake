@@ -5,11 +5,11 @@ test_with_dir("can ignore a bad time", {
   make(x, verbose = FALSE)
   cache <- get_cache()
   expect_equal(nrow(build_times()), 2)
-  set_in_subspace(
+  set_in_subspaces(
     key = "a",
-    subspace = "time_build",
+    subspaces = "time_build",
     namespace = "meta",
-    value = NA,
+    values = NA,
     cache = cache
   )
   expect_equal(nrow(build_times()), 1)
@@ -21,10 +21,10 @@ test_with_dir("proc_time runtimes can be fetched", {
   t <- system.time({
     z <- 1
   })
-  set_in_subspace(
+  set_in_subspaces(
     key = key,
-    value = t,
-    subspace = "time_build",
+    values = t,
+    subspaces = "time_build",
     namespace = "meta",
     cache = cache
   )
