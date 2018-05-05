@@ -109,7 +109,6 @@ reference:
   - '`diagnose`'
   - '`drake_meta`'
   - '`knitr_deps`'
-  - '`migrate_drake_project`'
   - '`missed`'
   - '`outdated`'
   - '`tracked`'
@@ -122,8 +121,6 @@ reference:
   - '`default_recipe_command`'
   - '`drake_batchtools_tmpl_file`'
   - '`Makefile_recipe`'
-  - '`max_useful_jobs`'
-  - '`next_stage`'
   - '`parallelism_choices`'
   - '`parallel_stages`'
   - '`r_recipe_wildcard`'
@@ -132,7 +129,6 @@ reference:
   contents:
   - '`build_times`'
   - '`predict_runtime`'
-  - '`rate_limiting_times`'
 - title: Cache usage
   contents:
   - '`built`'
