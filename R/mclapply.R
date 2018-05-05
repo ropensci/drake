@@ -56,18 +56,17 @@ mc_master <- function(config){
   on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
   while (mc_work_remains(config)){
-    for (worker in config$workers){
-      if (mc_is_idle(worker = worker, config = config)){
-        mc_conclude_target(worker = worker, config = config)
-        if (!config$queue$size()){
-          mc_set_done(worker = worker, config = config)
-          next
-        }
-        target <- config$queue$pop0(what = "names")
-        if (length(target)){
-          mc_set_target(worker = worker, target = target, config = config)
-          mc_set_running(worker = worker, config = config)
-        }
+    idle_workers <- mc_list_idle(config)
+    for (worker in idle_workers){
+      mc_conclude_target(worker = worker, config = config)
+      if (!config$queue$size()){
+        mc_set_done(worker = worker, config = config)
+        next
+      }
+      target <- config$queue$pop0(what = "names")
+      if (length(target)){
+        mc_set_target(worker = worker, target = target, config = config)
+        mc_set_running(worker = worker, config = config)
       }
     }
     Sys.sleep(mc_wait)
@@ -88,14 +87,14 @@ mc_worker <- function(worker, config){
     build_check_store(
       target = target,
       config = config,
-      downstream = config$cache$list(namespace = "protect")
+      downstream = config$cache$list(namespace = "mc_protect")
     )
     mc_set_idle(worker = worker, config = config)
   }
 }
 
 mc_init_worker_cache <- function(config){
-  config$cache$clear(namespace = "workers")
+  lapply(mc_worker_namespaces, config$cache$clear)
   lapply(
     X = config$workers,
     FUN = function(worker){
@@ -106,7 +105,7 @@ mc_init_worker_cache <- function(config){
   lapply(
     X = igraph::V(config$schedule)$name,
     FUN = function(target){
-      config$cache$set(key = target, value = TRUE, namespace = "protect")
+      config$cache$set(key = target, value = TRUE, namespace = "mc_protect")
     }
   )
   invisible()
@@ -117,7 +116,7 @@ mc_conclude_target <- function(worker, config){
   if (is.na(target)){
     return()
   }
-  config$cache$del(key = target, namespace = "protect")
+  config$cache$del(key = target, namespace = "mc_protect")
   revdeps <- dependencies(
     targets = target,
     config = config,
@@ -143,6 +142,10 @@ mc_work_remains <- function(config){
   !empty || !all_done
 }
 
+mc_set_target <- function(worker, target, config){
+  config$cache$set(key = worker, value = target, namespace = "mc_target")
+}
+
 mc_get_target <- function(worker, config){
   while (TRUE){
     target <- suppressWarnings(
@@ -159,36 +162,32 @@ mc_get_target <- function(worker, config){
   target
 }
 
-mc_set_target <- function(worker, target, config){
-  config$cache$set(key = worker, value = target, namespace = "mc_target")
-}
-
 mc_is_status <- function(worker, status, config){
   while (TRUE){
-    worker_status <- suppressWarnings(
-      try(
-        config$cache$get(key = worker, namespace = "mc_status"),
+    suppressWarnings(
+      out <- try(
+        config$cache$exists(key = worker, namespace = status),
         silent = TRUE
       )
     )
-    if (worker_status %in% c("not ready", "idle", "running", "done")){
+    if (is.logical(out)){
       break
     }
     Sys.sleep(mc_wait) # nocov
   }
-  identical(status, worker_status)
+  out
 }
 
 mc_is_not_ready <- function(worker, config){
-  mc_is_status(worker = worker, status = "not ready", config = config)
+  mc_is_status(worker = worker, status = "mc_not_ready", config = config)
 }
 
 mc_is_idle <- function(worker, config){
-  mc_is_status(worker = worker, status = "idle", config = config)
+  mc_is_status(worker = worker, status = "mc_idle", config = config)
 }
 
 mc_is_done <- function(worker, config){
-  mc_is_status(worker = worker, status = "done", config = config)
+  mc_is_status(worker = worker, status = "mc_done", config = config)
 }
 
 mc_all_done <- function(config){
@@ -200,12 +199,34 @@ mc_all_done <- function(config){
   TRUE
 }
 
-mc_set_status <- function(worker, status, config){
-  config$cache$set(key = worker, value = status, namespace = "mc_status")
+mc_list_idle <- function(config){
+  while (TRUE){
+    suppressWarnings(
+      out <- try(
+        config$cache$list(namespace = "mc_idle"),
+        silent = TRUE
+      )
+    )
+    if (is.character(out)){
+      break
+    }
+    Sys.sleep(mc_wait) # nocov
+  }
+  out
 }
 
-mc_set_not_ready <- function(worker, config){
-  mc_set_status(worker = worker, status = "not ready", config = config)
+mc_set_status <- function(worker, status, config){
+  mc_unset_status(worker = worker, config = config)
+  config$cache$set(key = worker, value = TRUE, namespace = status)
+}
+
+mc_unset_status <- function(worker, config){
+  lapply(
+    X = mc_worker_namespaces,
+    FUN = function(namespace){
+      config$cache$del(key = worker, namespace = namespace)
+    }
+  )
 }
 
 mc_set_ready <- function(worker, config){
@@ -214,16 +235,20 @@ mc_set_ready <- function(worker, config){
   }
 }
 
+mc_set_not_ready <- function(worker, config){
+  mc_set_status(worker = worker, status = "mc_not_ready", config = config)
+}
+
 mc_set_idle <- function(worker, config){
-  mc_set_status(worker = worker, status = "idle", config = config)
+  mc_set_status(worker = worker, status = "mc_idle", config = config)
 }
 
 mc_set_running <- function(worker, config){
-  mc_set_status(worker = worker, status = "running", config = config)
+  mc_set_status(worker = worker, status = "mc_running", config = config)
 }
 
 mc_set_done <- function(worker, config){
-  mc_set_status(worker = worker, status = "done", config = config)
+  mc_set_status(worker = worker, status = "mc_done", config = config)
 }
 
 mc_set_done_all <- function(config){
@@ -235,6 +260,8 @@ mc_set_done_all <- function(config){
 }
 
 mc_wait <- 2e-1
+
+mc_worker_namespaces <- c("mc_not_ready", "mc_idle", "mc_running", "mc_done")
 
 warn_mclapply_windows <- function(
   parallelism,
