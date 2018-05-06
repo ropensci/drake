@@ -88,7 +88,7 @@ mc_worker <- function(worker, config){
     build_check_store(
       target = target,
       config = config,
-      downstream = config$cache$list(namespace = "protect")
+      downstream = config$cache$list(namespace = "mc_protect")
     )
     mc_set_idle(worker = worker, config = config)
   }
@@ -106,7 +106,7 @@ mc_init_worker_cache <- function(config){
   lapply(
     X = igraph::V(config$schedule)$name,
     FUN = function(target){
-      config$cache$set(key = target, value = TRUE, namespace = "protect")
+      config$cache$set(key = target, value = TRUE, namespace = "mc_protect")
     }
   )
   invisible()
@@ -117,7 +117,7 @@ mc_conclude_target <- function(worker, config){
   if (is.na(target)){
     return()
   }
-  config$cache$del(key = target, namespace = "protect")
+  config$cache$del(key = target, namespace = "mc_protect")
   revdeps <- dependencies(
     targets = target,
     config = config,
