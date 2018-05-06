@@ -38,6 +38,7 @@
 #' }
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom bindr populate_env
+#' @importFrom callr r_bg
 #' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style
 #' @importFrom digest digest
@@ -49,7 +50,7 @@
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree edge induced_subgraph is_dag make_empty_graph plot.igraph
-#'   simplify subcomponent V vertex
+#'   simplify subcomponent topo_sort V vertex
 #' @importFrom knitr knit
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
