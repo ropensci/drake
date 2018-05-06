@@ -130,18 +130,15 @@
 <p><code>Drake</code> is not only a reproducibility tool, but also a high-performance computing engine. To activate parallel computing, just set the <code>jobs</code> argument of <code><a href="../reference/make.html">make()</a></code> to a value greater than 1. Below, up to 2 targets can run simultaneously at any given time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(drake)
 <span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>()
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">2</span>)
-## Loading required package: methods</code></pre></div>
+<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>To deploy serious long workflows, we recommend putting the call to <code><a href="../reference/make.html">make()</a></code> in a script (say, <code>make.R</code>) and running it in an unobtrusive background process that persists after you log out. In the Linux command line, this is straightforward.</p>
 <pre><code>nohup nice -19 R CMD BATCH make.R &amp;
 </code></pre>
-<p>It is usually that simple. Every workflow has a network of dependencies that dictates what <code>drake</code> can run in parallel and when.</p>
+<p>When you deploy your project, <code>drake</code> uses the dependency network to figure out how to run your work in parallel. You as the user do not have to micromanage when individual targets are built.</p>
 <iframe src="https://ropensci.github.io/drake/images/outdated.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>There are multiple ways to walk this graph and multiple ways to launch workers, and every project has its own needs. Thus, <code>drake</code> supports multiple parallel backends. Choose the backend with the <code>parallelism</code> argument.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
-## load parallel socket cluster with 2 workers
-## All targets are already up to date.</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>List your options with <code><a href="../reference/parallelism_choices.html">parallelism_choices()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/parallelism_choices.html">parallelism_choices</a></span>()
 ## [1] "mclapply"         "parLapply"        "mclapply_staged" 
@@ -156,17 +153,17 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Algorithm: persistent</td>
+<td align="left">Schedule: persistent</td>
 <td align="center">“mclapply”, “parLapply”</td>
 <td align="right">“future_lapply”</td>
 </tr>
 <tr class="even">
-<td align="left">Algorithm: transient</td>
+<td align="left">Schedule: transient</td>
 <td align="center"></td>
 <td align="right">“future”, “Makefile”</td>
 </tr>
 <tr class="odd">
-<td align="left">Algorithm: staged</td>
+<td align="left">Schedule: staged</td>
 <td align="center">“mclapply_staged”, “parLapply_staged”</td>
 <td align="right"></td>
 </tr>
@@ -292,7 +289,9 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(future
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, <code>drake</code> uses <code>mclapply()</code> or <code>parLapply()</code> to process the targets in parallel. Generally, those stages are the columns int the dependency graph. But if some targets are already up to date, <code>drake</code> skips ahead to pack as many targets as possible into the next stage.</p>
-<p><img src="staged.png" alt="staged" align="center" style="border: none; float: center;" width="500px"></p>
+<center>
+<img src="staged.png" alt="staged" align="center" style="border: none; float: center;" width="500px">
+</center>
 <p>Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
 ## 

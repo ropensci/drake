@@ -1,6 +1,7 @@
 #' @title Reconfigure an old project (built with drake <= 4.4.0)
 #'   to be compatible with later versions of drake.
 #' @export
+#' @keywords internal
 #' @seealso [rescue_cache()], [make()]
 #' @param path Full path to the cache
 #' @param jobs number of jobs for light parallelism.

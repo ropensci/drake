@@ -342,10 +342,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "5aa557b11753e1b7fcca5aaef986ac4d"
+## [1] "6da73696904c86ff804ebab528fd47f3"
 example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "98056c57094b3e775d2f065ae9aa9d6f"</code></pre></div>
+## [1] "99090a2ebb0d5e0882334c51ed5b0eee"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>

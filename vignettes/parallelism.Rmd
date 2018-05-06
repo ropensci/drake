@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 `Drake` is not only a reproducibility tool, but also a high-performance computing engine. To activate parallel computing, just set the `jobs` argument of `make()` to a value greater than 1. Below, up to 2 targets can run simultaneously at any given time.
 
-```{r a, run = FALSE}
+```{r a, eval = FALSE}
 library(drake)
 load_mtcars_example()
 make(my_plan, jobs = 2)
@@ -37,7 +37,7 @@ To deploy serious long workflows, we recommend putting the call to `make()` in a
 <pre><code>nohup nice -19 R CMD BATCH make.R &
 </code></pre>
 
-It is usually that simple. Every workflow has a network of dependencies that dictates what `drake` can run in parallel and when.
+When you deploy your project, `drake` uses the dependency network to figure out how to run your work in parallel. You as the user do not have to micromanage when individual targets are built.
 
 <iframe
 src = "https://ropensci.github.io/drake/images/outdated.html"
@@ -47,7 +47,7 @@ style="border: none; box-shadow: none">
 
 There are multiple ways to walk this graph and multiple ways to launch workers, and every project has its own needs. Thus, `drake` supports multiple parallel backends. Choose the backend with the `parallelism` argument.
 
-```{r b, run = FALSE}
+```{r b, eval = FALSE}
 make(my_plan, parallelism = "parLapply", jobs = 2)
 ```
 
@@ -61,9 +61,9 @@ The backends vary widely in terms of how the workers deploy and how they are sch
 
 |                       | Deploy: local | Deploy: remote |
 | --------------------- |:-------------:| -----:|
-| Algorithm: persistent | "mclapply", "parLapply" | "future_lapply" |
-| Algorithm: transient  | | "future", "Makefile" |
-| Algorithm: staged     | "mclapply_staged", "parLapply_staged" | |
+| Schedule: persistent | "mclapply", "parLapply" | "future_lapply" |
+| Schedule: transient  | | "future", "Makefile" |
+| Schedule: staged     | "mclapply_staged", "parLapply_staged" | |
 
 The next sections describe how and when to use each scheduling algorithm and deployment strategy.
 
@@ -253,7 +253,9 @@ make(my_plan, parallelism = "parLapply_staged", jobs = 2)
 
 Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Generally, those stages are the columns int the dependency graph. But if some targets are already up to date, `drake` skips ahead to pack as many targets as possible into the next stage.
 
+<center>
 <img src="./staged.png" alt="staged" align="center" style = "border: none; float: center;" width = "500px">
+</center>
 
 Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.
 
