@@ -378,6 +378,8 @@ Real example projects
 
 Here are some real-world applications of `drake` in the wild.
 
+-   [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
+-   [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
 -   [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
 -   [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
 

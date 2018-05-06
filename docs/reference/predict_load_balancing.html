@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Predict the elapsed runtime of the next call to <code>make()</code>
-for non-staged parallel backends. — predict_runtime • drake</title>
+<title>Predict the load balancing of the next call to <code>make()</code>
+for non-staged parallel backends. — predict_load_balancing • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -29,15 +29,13 @@ for non-staged parallel backends. — predict_runtime • drake</title>
 
 
 
-<meta property="og:title" content="Predict the elapsed runtime of the next call to <code>make()</code>
-for non-staged parallel backends. — predict_runtime" />
+<meta property="og:title" content="Predict the load balancing of the next call to <code>make()</code>
+for non-staged parallel backends. — predict_load_balancing" />
 
 <meta property="og:description" content="Take the past recorded runtimes times from
 build_times() and use them to predict how the targets
 will be distributed among the available workers in the
-next make(). Then, predict the overall runtime to be the
-runtime of the slowest (busiest) workers. See Details for some
-caveats." />
+next make()." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -152,10 +150,10 @@ caveats." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Predict the elapsed runtime of the next call to <code>make()</code>
+    <h1>Predict the load balancing of the next call to <code>make()</code>
 for non-staged parallel backends.</h1>
     <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/predict_runtime.R'><code>R/predict_runtime.R</code></a></small>
-    <div class="hidden name"><code>predict_runtime.Rd</code></div>
+    <div class="hidden name"><code>predict_load_balancing.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -163,13 +161,11 @@ for non-staged parallel backends.</h1>
     <p>Take the past recorded runtimes times from
 <code><a href='build_times.html'>build_times()</a></code> and use them to predict how the targets
 will be distributed among the available workers in the
-next <code><a href='make.html'>make()</a></code>. Then, predict the overall runtime to be the
-runtime of the slowest (busiest) workers. See Details for some
-caveats.</p>
+next <code><a href='make.html'>make()</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>predict_runtime</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/read_drake_config'>read_drake_config</a></span>(), <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>predict_load_balancing</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/read_drake_config'>read_drake_config</a></span>(), <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>targets_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>future_jobs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>digits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>known_times</span> <span class='kw'>=</span> <span class='fu'>numeric</span>(<span class='fl'>0</span>), <span class='kw'>default_time</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
@@ -232,12 +228,18 @@ or anything in <code>known_times</code>.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A data frame with one row per persistent worker.
+Each row has the targets in the worker and the total runtime
+of that worker.</p>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The prediction is only a rough approximation.
 The algorithm that emulates the workers is not perfect,
 and it may turn out to perform poorly in some edge cases.
-It also assumes you are using one of the backends with persistent workers
+It assumes you are using one of the backends with persistent workers
 (<code>"mclapply"</code>, <code>"parLapply"</code>, or <code>"future_lapply"</code>),
 though the transient worker backends <code>"future"</code> and <code>"Makefile"</code>
 should be similar. The prediction does not apply
@@ -266,13 +268,13 @@ to adjust the assumptions as needed.</p>
 <span class='fu'>names</span>(<span class='no'>known_times</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fu'><a href='file_store.html'>file_store</a></span>(<span class='st'>"report.md"</span>), <span class='no'>my_plan</span>$<span class='no'>target</span>[-<span class='fl'>1</span>])
 <span class='no'>known_times</span>
 <span class='co'># Predict the runtime</span>
-<span class='fu'>predict_runtime</span>(
+<span class='fu'><a href='predict_runtime.html'>predict_runtime</a></span>(
   <span class='no'>config</span>,
   <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>7</span>,
   <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>known_times</span> <span class='kw'>=</span> <span class='no'>known_times</span>
 )
-<span class='fu'>predict_runtime</span>(
+<span class='fu'><a href='predict_runtime.html'>predict_runtime</a></span>(
   <span class='no'>config</span>,
   <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>8</span>,
   <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -282,7 +284,7 @@ to adjust the assumptions as needed.</p>
 <span class='co'># 8 would be a good guess: https://ropensci.github.io/drake/images/outdated.html # nolint</span>
 <span class='co'># It's because of load balancing.</span>
 <span class='co'># Below, each row is a persistent worker.</span>
-<span class='no'>balance</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='predict_load_balancing.html'>predict_load_balancing</a></span>(
+<span class='no'>balance</span> <span class='kw'>&lt;-</span> <span class='fu'>predict_load_balancing</span>(
   <span class='no'>config</span>,
   <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>7</span>,
   <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -303,6 +305,8 @@ to adjust the assumptions as needed.</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
       <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>

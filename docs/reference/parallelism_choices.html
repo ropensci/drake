@@ -252,8 +252,8 @@ Also, Windows users will need to download and install Rtools.</p></dd>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># See all the parallel computing options.</span>
-<span class='fu'>parallelism_choices</span>()</div><div class='output co'>#&gt; [1] "mclapply"      "parLapply"     "future"        "future_lapply"
-#&gt; [5] "Makefile"     </div><div class='input'><span class='co'># See just the distributed computing options.</span>
+<span class='fu'>parallelism_choices</span>()</div><div class='output co'>#&gt; [1] "mclapply"         "parLapply"        "mclapply_staged"  "parLapply_staged"
+#&gt; [5] "future"           "future_lapply"    "Makefile"        </div><div class='input'><span class='co'># See just the distributed computing options.</span>
 <span class='fu'>parallelism_choices</span>(<span class='kw'>distributed_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "future"        "future_lapply" "Makefile"     </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

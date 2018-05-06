@@ -129,6 +129,7 @@ reference:
   contents:
   - '`build_times`'
   - '`predict_runtime`'
+  - '`predict_load_balancing`'
 - title: Cache usage
   contents:
   - '`built`'

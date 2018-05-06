@@ -1,11 +1,113 @@
-#' @title Predict the elapsed runtime of the next call to `make()`.
+#' @title Predict the elapsed runtime of the next call to `make()`
+#'   for non-staged parallel backends.
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the
 #'   next [make()]. Then, predict the overall runtime to be the
 #'   runtime of the slowest (busiest) workers. See Details for some
 #'   caveats.
-#' @details The prediction is only a rough approximation. It assumes
+#' @details The prediction is only a rough approximation.
+#'   The algorithm that emulates the workers is not perfect,
+#'   and it may turn out to perform poorly in some edge cases.
+#'   It also assumes you are using one of the backends with persistent workers
+#'   (`"mclapply"`, `"parLapply"`, or `"future_lapply"`),
+#'   though the transient worker backends `"future"` and `"Makefile"`
+#'   should be similar. The prediction does not apply
+#'   to staged parallelism backends such as
+#'   `make(parallelism = "mclapply_staged")` or
+#'   `make(parallelism = "parLapply_staged")`.
+#'   The function also assumes
+#'   that the overhead of initializing [make()] and any workers is
+#'   negligible. Use the `default_time` and `known_times` arguments
+#'   to adjust the assumptions as needed.
+#' @export
+#' @inheritParams predict_load_balancing
+#' @seealso [build_times()], [make()]
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' config <- make(my_plan) # Run the project, build the targets.
+#' # The predictions use the cached build times of the targets,
+#' # but if you expect your target runtimes
+#' # to be different, you can specify them (in seconds).
+#' known_times <- c(5, rep(7200, nrow(my_plan) - 1))
+#' names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
+#' known_times
+#' # Predict the runtime
+#' predict_runtime(
+#'   config,
+#'   jobs = 7,
+#'   from_scratch = TRUE,
+#'   known_times = known_times
+#' )
+#' predict_runtime(
+#'   config,
+#'   jobs = 8,
+#'   from_scratch = TRUE,
+#'   known_times = known_times
+#' )
+#' # Why isn't 8 jobs any better?
+#' # 8 would be a good guess: https://ropensci.github.io/drake/images/outdated.html # nolint
+#' # It's because of load balancing.
+#' # Below, each row is a persistent worker.
+#' balance <- predict_load_balancing(
+#'   config,
+#'   jobs = 7,
+#'   from_scratch = TRUE,
+#'   known_times = known_times,
+#'   targets_only = TRUE
+#' )
+#' balance
+#' max(balance$time)
+#' # Each worker gets 2 rate-limiting targets.
+#' balance$time
+#' # Even if you add another worker, there will be still be workers
+#' # with two heavy targets.
+#' })
+#' }
+predict_runtime <- function(
+  config = drake::read_drake_config(),
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = FALSE,
+  future_jobs = NULL,
+  digits = NULL,
+  jobs = 1,
+  known_times = numeric(0),
+  default_time = 0
+){
+  balance <- predict_load_balancing(
+    config = config,
+    targets = targets,
+    from_scratch = from_scratch,
+    targets_only = targets_only,
+    future_jobs = future_jobs,
+    digits = digits,
+    jobs = jobs,
+    known_times = known_times,
+    default_time = default_time
+  )
+  dseconds(max(balance$time))
+}
+
+#' @title Predict the load balancing of the next call to `make()`
+#'   for non-staged parallel backends.
+#' @description Take the past recorded runtimes times from
+#'   [build_times()] and use them to predict how the targets
+#'   will be distributed among the available workers in the
+#'   next [make()].
+#' @details The prediction is only a rough approximation.
+#'   The algorithm that emulates the workers is not perfect,
+#'   and it may turn out to perform poorly in some edge cases.
+#'   It assumes you are using one of the backends with persistent workers
+#'   (`"mclapply"`, `"parLapply"`, or `"future_lapply"`),
+#'   though the transient worker backends `"future"` and `"Makefile"`
+#'   should be similar. The prediction does not apply
+#'   to staged parallelism backends such as
+#'   `make(parallelism = "mclapply_staged")` or
+#'   `make(parallelism = "parLapply_staged")`.
+#'   The function also assumes
 #'   that the overhead of initializing [make()] and any workers is
 #'   negligible. Use the `default_time` and `known_times` arguments
 #'   to adjust the assumptions as needed.
@@ -16,20 +118,47 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
-#' predict_runtime(config, from_scratch = TRUE) # 1 job
-#' # Assumes you clean() out your project and start from scratch with 2 jobs.
-#' predict_runtime(config, jobs = 4, from_scratch = TRUE)
-#' # Predict the runtime of just building targets
-#' # "small" and "large".
+#' # The predictions use the cached build times of the targets,
+#' # but if you expect your target runtimes
+#' # to be different, you can specify them (in seconds).
+#' known_times <- c(5, rep(7200, nrow(my_plan) - 1))
+#' names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
+#' known_times
+#' # Predict the runtime
 #' predict_runtime(
 #'   config,
-#'   targets = c("small", "large"),
-#'   from_scratch = TRUE
+#'   jobs = 7,
+#'   from_scratch = TRUE,
+#'   known_times = known_times
 #' )
+#' predict_runtime(
+#'   config,
+#'   jobs = 8,
+#'   from_scratch = TRUE,
+#'   known_times = known_times
+#' )
+#' # Why isn't 8 jobs any better?
+#' # 8 would be a good guess: https://ropensci.github.io/drake/images/outdated.html # nolint
+#' # It's because of load balancing.
+#' # Below, each row is a persistent worker.
+#' balance <- predict_load_balancing(
+#'   config,
+#'   jobs = 7,
+#'   from_scratch = TRUE,
+#'   known_times = known_times,
+#'   targets_only = TRUE
+#' )
+#' balance
+#' max(balance$time)
+#' # Each worker gets 2 rate-limiting targets.
+#' balance$time
+#' # Even if you add another worker, there will be still be workers
+#' # with two heavy targets.
 #' })
 #' }
-#' @return Simulated runtimes. This is a single `lubridate` duration
-#'   (seconds) if `jobs` is 1 and a vector if `jobs` is any larger.
+#' @return A data frame with one row per persistent worker.
+#'   Each row has the targets in the worker and the total runtime
+#'   of that worker.
 #' @param config option internal runtime parameter list of
 #'   \code{\link{make}(...)},
 #'   produced by both [make()] and
@@ -57,7 +186,8 @@
 #' @param default_time number of seconds to assume for any
 #'   target or import with no recorded runtime (from [build_times()])
 #'   or anything in `known_times`.
-predict_runtime <- function(
+
+predict_load_balancing <- function(
   config = drake::read_drake_config(),
   targets = NULL,
   from_scratch = FALSE,
@@ -147,5 +277,9 @@ balance_load <- function(config, jobs){
       intersect(y = queue$list(what = "names"))
     queue$decrease_key(names = revdeps)
   }
-  dseconds(max(worker_times))
+  tibble::tibble(
+    worker = seq_len(jobs),
+    targets = worker_targets,
+    time = dseconds(worker_times)
+  )
 }

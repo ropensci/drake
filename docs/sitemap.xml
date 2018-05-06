@@ -328,6 +328,9 @@
     <loc>https://github.com/ropensci/drake/reference/possible_targets.html</loc>
   </url>
   <url>
+    <loc>https://github.com/ropensci/drake/reference/predict_load_balancing.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/ropensci/drake/reference/predict_runtime.html</loc>
   </url>
   <url>
@@ -338,6 +341,9 @@
   </url>
   <url>
     <loc>https://github.com/ropensci/drake/reference/prune_drake_graph.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/ropensci/drake/reference/prune_envir.html</loc>
   </url>
   <url>
     <loc>https://github.com/ropensci/drake/reference/r_recipe_wildcard.html</loc>
