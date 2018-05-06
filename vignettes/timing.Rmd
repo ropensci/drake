@@ -1,5 +1,5 @@
 ---
-title: "Time logging"
+title: "Time: logging, prediction, and strategy"
 author: "Will Landau"
 date: "`r Sys.Date()`"
 output:
@@ -40,7 +40,7 @@ build_times(digits = 8, targets_only = TRUE)
 
 For `drake` version 4.1.0 and earlier, `build_times()` just measures the elapsed runtime of each command in `my_plan$command`. For later versions, the build times also account for all the internal operations in `drake:::build()`, such as [storage and hashing](https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd).
 
-# Predicting runtime
+# Predict total runtime
 
 Drake uses these times to predict the runtime of the next `make()`. At this moment, everything is up to date in the current example, so the next `make()` should be fast. Here, we only factor in the times of the formal targets in the workflow plan, excluding any imports.
 
@@ -145,7 +145,7 @@ max(balance$time) / 3600
 balance$targets
 ```
 
-But be warned: if you use the staged parallel backends `make(parallelism = "mclapply_staged")` or `make(parallelism = "parLapply_staged")`, the maximum number of useful jobs really will be 8. Here, if all targets are out of date, the dependency graph is divided into conditionally independent columns and parallelism is only applied in within each column. If some targets are already up to date, those targets are skipped, and each stage is packed with as many outdated targets as possible. Either way, each stage needs to wait for the last target to finish. So if you have computationally expensive targets, this approach is not recommended. However, staged parallelism remains a fast option for workflows with a large number of small, conditionally independent targets.
+But be warned: if you use the staged parallel backends `make(parallelism = "mclapply_staged")` or `make(parallelism = "parLapply_staged")`, the maximum number of useful jobs really will be 8. Here, if all targets are out of date, the dependency graph is divided into conditionally independent columns and parallelism is only applied in within each column. If some targets are already up to date, those targets are skipped, and each stage is packed with as many outdated targets as possible. Either way, each stage needs to wait for the last target to finish. So if you have computationally expensive targets, this approach is not recommended. However, staged parallelism remains a fast, low-overhead option for workflows with a large number of small, conditionally independent targets.
 
 ```{r endofline_timing, echo = F}
 clean(destroy = TRUE, verbose = FALSE)

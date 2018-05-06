@@ -315,7 +315,7 @@ The articles below are tutorials taken from the [package vignettes](https://gith
 - [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
 - [Graphs with drake](https://ropensci.github.io/drake/articles/graph.html)
 - [Parallel computing](https://ropensci.github.io/drake/articles/parallelism.html)
-- [Time logging](https://ropensci.github.io/drake/articles/timing.html)
+- [Time: logging, prediction, and strategy](https://ropensci.github.io/drake/articles/timing.html)
 - [Storage](https://ropensci.github.io/drake/articles/storage.html)
 
 ## Examples

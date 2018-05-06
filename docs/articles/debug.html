@@ -79,7 +79,7 @@
       <a href="../articles/parallelism.html">Parallel computing</a>
     </li>
     <li>
-      <a href="../articles/timing.html">Time logging</a>
+      <a href="../articles/timing.html">Timing: logging, prediction, and strategy</a>
     </li>
     <li>
       <a href="../articles/storage.html">Storage</a>
@@ -333,7 +333,7 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ## [1] "d47109544c89ca7a"
 
 config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "348aa8896035e7c1"</code></pre></div>
+## [1] "f62caa211496753d"</code></pre></div>
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -346,12 +346,12 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
-##  $ start       :Class 'proc_time'  Named num [1:5] 4.541 0.087 4.709 0.073 0.01
+##  $ start       :Class 'proc_time'  Named num [1:5] 4.532 0.087 4.736 0.074 0.008
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.002
+##   ..$ elapsed: num 0.003
 ##   ..$ user   : num 0.002
 ##   ..$ system : num 0
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
@@ -371,21 +371,21 @@ config$cache$<span class="kw">get_hash</span>(<span class="dt">key =</span> <spa
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
 ##  $ depends     : chr "bdd361b34107fb7901742c60d249a999aa71a93380029cf534be513f6ab40789"
 ##  $ file        : chr "65f43df5f3fb7d0e2b78b2fa2ada9a635a7557780e79e08805156d60b53e7abc"
-##  $ start       :Class 'proc_time'  Named num [1:5] 4.722 0.099 4.902 0.073 0.01
+##  $ start       :Class 'proc_time'  Named num [1:5] 4.716 0.095 4.929 0.074 0.008
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
 ##   ..$ elapsed: num 0.043
-##   ..$ user   : num 0.043
-##   ..$ system : num 0
-##  $ mtime       : POSIXct[1:1], format: "2018-05-06 08:47:12"
+##   ..$ user   : num 0.035
+##   ..$ system : num 0.008
+##  $ mtime       : POSIXct[1:1], format: "2018-05-06 08:55:24"
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
 ##   ..$ elapsed: num 0.046
-##   ..$ user   : num 0.046
-##   ..$ system : num 0</code></pre></div>
+##   ..$ user   : num 0.038
+##   ..$ system : num 0.008</code></pre></div>
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
 </div>
@@ -456,7 +456,7 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
-## &lt;bytecode: 0x8305f30&gt;
+## &lt;bytecode: 0x8e8b8a0&gt;
 
 reg2 &lt;-<span class="st"> </span>function(d) {
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -668,7 +668,7 @@ f
 ##   }
 ##   x
 ## }
-## &lt;bytecode: 0x829fb50&gt;
+## &lt;bytecode: 0x8bdd080&gt;
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
 f &lt;-<span class="st"> </span>function(x){

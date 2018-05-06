@@ -79,7 +79,7 @@
       <a href="../articles/parallelism.html">Parallel computing</a>
     </li>
     <li>
-      <a href="../articles/timing.html">Time logging</a>
+      <a href="../articles/timing.html">Timing: logging, prediction, and strategy</a>
     </li>
     <li>
       <a href="../articles/storage.html">Storage</a>
@@ -342,10 +342,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "12bf8651cb3e200c270d5137cb34e34b"
+## [1] "b9b50e19469fad2b01c7f34481496be6"
 example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "f412bf818d045fc6e568b559ba06e8d1"</code></pre></div>
+## [1] "114164a38c6d24e37308fa976ab6fbe8"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>

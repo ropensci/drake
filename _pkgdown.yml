@@ -28,7 +28,7 @@ navbar:
       href: articles/graph.html
     - text: Parallel computing
       href: articles/parallelism.html
-    - text: Time logging
+    - text: "Timing: logging, prediction, and strategy"
       href: articles/timing.html
     - text: Storage
       href: articles/storage.html
@@ -125,7 +125,7 @@ reference:
   - '`parallel_stages`'
   - '`r_recipe_wildcard`'
   - '`shell_file`'
-- title: Timing
+- title: Time
   contents:
   - '`build_times`'
   - '`predict_runtime`'

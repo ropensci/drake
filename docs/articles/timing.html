@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Time logging • drake</title>
+<title>Time: logging, prediction, and strategy • drake</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Time logging">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Time: logging, prediction, and strategy">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -79,7 +79,7 @@
       <a href="../articles/parallelism.html">Parallel computing</a>
     </li>
     <li>
-      <a href="../articles/timing.html">Time logging</a>
+      <a href="../articles/timing.html">Timing: logging, prediction, and strategy</a>
     </li>
     <li>
       <a href="../articles/storage.html">Storage</a>
@@ -115,7 +115,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Time logging</h1>
+      <h1>Time: logging, prediction, and strategy</h1>
                         <h4 class="author">Will Landau</h4>
             
             <h4 class="date">2018-05-06</h4>
@@ -137,15 +137,15 @@
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.007s         0.006s         0.001s     
-##  2 coef_regression1_small target 0.007s         0.007s         0s         
-##  3 coef_regression2_large target 0.006s         0.005s         0s         
-##  4 coef_regression2_small target 0.008s         0.007s         0.001s     
-##  5 data.frame             import 0.035s         0.023s         0.008s     
-##  6 knit                   import 0.029s         0.024s         0.004s     
-##  7 large                  target 0.012s         0.011s         0s         
-##  8 lm                     import 0.015s         0.015s         0s         
-##  9 mtcars                 import 0.003s         0.003s         0.001s     
+##  1 coef_regression1_large target 0.008s         0.008s         0s         
+##  2 coef_regression1_small target 0.007s         0.006s         0s         
+##  3 coef_regression2_large target 0.006s         0.006s         0.001s     
+##  4 coef_regression2_small target 0.007s         0.007s         0s         
+##  5 data.frame             import 0.033s         0.02s          0.011s     
+##  6 knit                   import 0.027s         0.027s         0s         
+##  7 large                  target 0.008s         0.003s         0.005s     
+##  8 lm                     import 0.014s         0.014s         0s         
+##  9 mtcars                 import 0.003s         0.003s         0s         
 ## 10 nrow                   import 0.006s         0.006s         0s         
 ## # ... with 18 more rows
 
@@ -154,38 +154,38 @@
 ## # A tibble: 4 x 5
 ##   item                   type   elapsed        user           system      
 ## * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durati&gt;
-## 1 coef_regression1_large target 0.007s         0.006s         0.001s      
-## 2 coef_regression1_small target 0.007s         0.007s         0s          
-## 3 coef_regression2_large target 0.006s         0.005s         0s          
-## 4 coef_regression2_small target 0.008s         0.007s         0.001s
+## 1 coef_regression1_large target 0.008s         0.008s         0s          
+## 2 coef_regression1_small target 0.007s         0.006s         0s          
+## 3 coef_regression2_large target 0.006s         0.006s         0.001s      
+## 4 coef_regression2_small target 0.007s         0.007s         0s
 
 <span class="kw"><a href="../reference/build_times.html">build_times</a></span>(<span class="dt">digits =</span> <span class="dv">8</span>, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
 ## # A tibble: 15 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.007s         0.006s         0.001s     
-##  2 coef_regression1_small target 0.007s         0.007s         0s         
-##  3 coef_regression2_large target 0.006s         0.005s         0s         
-##  4 coef_regression2_small target 0.008s         0.007s         0.001s     
-##  5 large                  target 0.012s         0.011s         0s         
-##  6 regression1_large      target 0.008s         0.008s         0s         
-##  7 regression1_small      target 0.008s         0.006s         0.001s     
-##  8 regression2_large      target 0.007s         0.008s         0s         
-##  9 regression2_small      target 0.005s         0.002s         0.003s     
-## 10 "\"report.md\""        target 0.05s          0.045s         0.004s     
-## 11 small                  target 0.008s         0.007s         0s         
-## 12 summ_regression1_large target 0.005s         0.003s         0.001s     
-## 13 summ_regression1_small target 0.005s         0.001s         0.004s     
-## 14 summ_regression2_large target 0.007s         0.006s         0.001s     
-## 15 summ_regression2_small target 0.009s         0.008s         0.001s</code></pre></div>
+##  1 coef_regression1_large target 0.008s         0.008s         0s         
+##  2 coef_regression1_small target 0.007s         0.006s         0s         
+##  3 coef_regression2_large target 0.006s         0.006s         0.001s     
+##  4 coef_regression2_small target 0.007s         0.007s         0s         
+##  5 large                  target 0.008s         0.003s         0.005s     
+##  6 regression1_large      target 0.009s         0.009s         0s         
+##  7 regression1_small      target 0.008s         0.004s         0.004s     
+##  8 regression2_large      target 0.009s         0.009s         0.001s     
+##  9 regression2_small      target 0.007s         0.005s         0.001s     
+## 10 "\"report.md\""        target 0.044s         0.029s         0.016s     
+## 11 small                  target 0.008s         0.006s         0.003s     
+## 12 summ_regression1_large target 0.009s         0.005s         0.004s     
+## 13 summ_regression1_small target 0.005s         0.004s         0.002s     
+## 14 summ_regression2_large target 0.005s         0.004s         0s         
+## 15 summ_regression2_small target 0.008s         0.007s         0.001s</code></pre></div>
 <p>For <code>drake</code> version 4.1.0 and earlier, <code><a href="../reference/build_times.html">build_times()</a></code> just measures the elapsed runtime of each command in <code>my_plan$command</code>. For later versions, the build times also account for all the internal operations in <code>drake:::build()</code>, such as <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage and hashing</a>.</p>
-<div id="predicting-runtime" class="section level1">
+<div id="predict-total-runtime" class="section level1">
 <h1 class="hasAnchor">
-<a href="#predicting-runtime" class="anchor"></a>Predicting runtime</h1>
+<a href="#predict-total-runtime" class="anchor"></a>Predict total runtime</h1>
 <p>Drake uses these times to predict the runtime of the next <code><a href="../reference/make.html">make()</a></code>. At this moment, everything is up to date in the current example, so the next <code><a href="../reference/make.html">make()</a></code> should be fast. Here, we only factor in the times of the formal targets in the workflow plan, excluding any imports.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 <span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
-## [1] "0.152s"</code></pre></div>
+## [1] "0.148s"</code></pre></div>
 <p>Suppose we change a dependency to make some targets out of date. Now, even though, the next <code><a href="../reference/make.html">make()</a></code> should take a little longer.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
   d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
@@ -193,10 +193,10 @@
 }
 
 <span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
-## [1] "0.152s"</code></pre></div>
+## [1] "0.148s"</code></pre></div>
 <p>But what if you plan on starting from scratch next time, either after <code><a href="../reference/clean.html">clean()</a></code> or with <code><a href="../reference/make.html">make(..., trigger = "always")</a></code>?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(config, <span class="dt">from_scratch =</span> <span class="ot">TRUE</span>, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
-## [1] "0.152s"</code></pre></div>
+## [1] "0.148s"</code></pre></div>
 </div>
 <div id="strategize-your-high-performance-computing" class="section level1">
 <h1 class="hasAnchor">
@@ -296,7 +296,7 @@ balance$targets
 ## 
 ## [[7]]
 ## [1] "summ_regression1_large" "summ_regression2_small"</code></pre></div>
-<p>But be warned: if you use the staged parallel backends <code><a href="../reference/make.html">make(parallelism = "mclapply_staged")</a></code> or <code><a href="../reference/make.html">make(parallelism = "parLapply_staged")</a></code>, the maximum number of useful jobs really will be 8. Here, if all targets are out of date, the dependency graph is divided into conditionally independent columns and parallelism is only applied in within each column. If some targets are already up to date, those targets are skipped, and each stage is packed with as many outdated targets as possible. Either way, each stage needs to wait for the last target to finish. So if you have computationally expensive targets, this approach is not recommended. However, staged parallelism remains a fast option for workflows with a large number of small, conditionally independent targets.</p>
+<p>But be warned: if you use the staged parallel backends <code><a href="../reference/make.html">make(parallelism = "mclapply_staged")</a></code> or <code><a href="../reference/make.html">make(parallelism = "parLapply_staged")</a></code>, the maximum number of useful jobs really will be 8. Here, if all targets are out of date, the dependency graph is divided into conditionally independent columns and parallelism is only applied in within each column. If some targets are already up to date, those targets are skipped, and each stage is packed with as many outdated targets as possible. Either way, each stage needs to wait for the last target to finish. So if you have computationally expensive targets, this approach is not recommended. However, staged parallelism remains a fast, low-overhead option for workflows with a large number of small, conditionally independent targets.</p>
 </div>
   </div>
 
@@ -305,7 +305,7 @@ balance$targets
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#predicting-runtime">Predicting runtime</a></li>
+<li><a href="#predict-total-runtime">Predict total runtime</a></li>
       <li><a href="#strategize-your-high-performance-computing">Strategize your high-performance computing</a></li>
       </ul>
 </div>
