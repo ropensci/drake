@@ -287,6 +287,29 @@ images <- function(){
   )
   unlink("raw_data.xlsx")
 
+  # Staged parallelism
+  library(dplyr)
+  N <- 500
+  gen_data <- function() {
+    tibble(a = seq_len(N), b = 1, c = 2, d = 3)
+  }
+  plan_data <- drake_plan(
+    data = gen_data()
+  )
+  plan_sub <-
+    gen_data() %>%
+    transmute(
+      target = paste0("data", a),
+      command = paste0("data[", a, ", ]")
+    )
+  plan <- bind_rows(plan_data, plan_sub)
+  config <- drake_config(plan)
+  vis_drake_graph(
+    config, width = "100%",
+    height = "500px", selfcontained = TRUE,
+    file = html_out("staged.html")
+  )
+
   # Clean up the rest.
   clean(destroy = TRUE)
   unlink(c("figure", "report.Rmd"), recursive = TRUE)
