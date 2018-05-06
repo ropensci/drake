@@ -489,12 +489,11 @@ For local multi-session parallelism and lazy loading, try
 <code>library(future); future::plan(multisession)</code> and then
 <code>make(..., parallelism = "future_lapply", lazy_load = "bind")</code>.</p>
 <p>If <code>lazy_load</code> is <code>"eager"</code>,
-drake prunes the execution environment before every
-parallelizable stages, removing all superfluous targets
-and then loading any dependencies it will need
-for the targets in the current parallelizable stage.
+drake prunes the execution environment before each target/stage,
+removing all superfluous targets
+and then loading any dependencies it will need for building.
 In other words, drake prepares the environment in advance
-for all the whole collection of targets in the stage.
+and tries to be memory efficient.
 If <code>lazy_load</code> is <code>"bind"</code> or <code>"promise"</code>, drake assigns
 promises to load any dependencies at the last minute.
 Lazy loading may be more memory efficient in some use cases, but

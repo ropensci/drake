@@ -225,7 +225,7 @@ cache$<span class="kw">list</span>()
 ## 
 ## $start
 ##    user  system elapsed 
-##   2.854   0.083   2.931 
+##   2.728   0.060   2.794 
 ## 
 ## $time_command
 ##    item   type elapsed  user system
@@ -233,7 +233,7 @@ cache$<span class="kw">list</span>()
 ## 
 ## $time_build
 ##    item   type elapsed  user system
-## 1 small target   0.034 0.034  0.001
+## 1 small target   0.032 0.031      0
 
 cache$<span class="kw">list_namespaces</span>()
 ## [1] "config"   "kernels"  "meta"     "objects"  "progress" "session"</code></pre></div>
@@ -310,19 +310,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "5677e3175bc51030e212f0f13a91f05e"</code></pre></div>
+## [1] "be7bc3d27c1a19babd3f1df2b93f1e95"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "1b02651902150c0c12297adc7616b388ffa0fa3ca931880266b45bcb11c72623254be96ffec9fd831001cf6f0f0d1b885abe6bed5c8baa43799a12daaf9e7371"
+## [1] "74a20bc56187681a4b2e14cfd5046bc71c47eaccf38284add2367d176987dfc80e630d5942f31621b0ff6b428d76b562faabb3139ac9a0e48ca473209962226d"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "5677e3175bc51030e212f0f13a91f05e"
+## [1] "be7bc3d27c1a19babd3f1df2b93f1e95"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "33a429f93223650b"
+## [1] "04c175a1630bdd29"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "675e19b8"</code></pre></div>
+## [1] "7a8c6481"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
