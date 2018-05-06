@@ -262,12 +262,11 @@
 #'   `make(..., parallelism = "future_lapply", lazy_load = "bind")`.
 #'
 #'   If `lazy_load` is `"eager"`,
-#'   drake prunes the execution environment before every
-#'   parallelizable stages, removing all superfluous targets
-#'   and then loading any dependencies it will need
-#'   for the targets in the current parallelizable stage.
+#'   drake prunes the execution environment before each target/stage,
+#'   removing all superfluous targets
+#'   and then loading any dependencies it will need for building.
 #'   In other words, drake prepares the environment in advance
-#'   for all the whole collection of targets in the stage.
+#'   and tries to be memory efficient.
 #'   If `lazy_load` is `"bind"` or `"promise"`, drake assigns
 #'   promises to load any dependencies at the last minute.
 #'   Lazy loading may be more memory efficient in some use cases, but
