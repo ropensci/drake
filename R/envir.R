@@ -9,6 +9,21 @@ assign_to_envir <- function(target, value, config){
   invisible()
 }
 
+#' @title Prune the evaluation environment
+#' @description Load targets that you need to build the targets
+#'   and unload the ones you will never need again in the
+#'   current runthrough of the pipeline. This function should
+#'   not be used directly by users. Only exported for
+#'   internal reasons.
+#' @export
+#' @keywords internal
+#' @return nothing
+#' @param targets character vector of targets
+#' @param config [drake_config()] list
+#' @param downstream optional, character vector of any targets
+#'   assumed to be downstream.
+#' @examples
+#' # Users should use make().
 prune_envir <- function(targets, config, downstream = NULL){
   if (is.null(downstream)){
     downstream <- downstream_nodes(

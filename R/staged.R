@@ -115,7 +115,12 @@ run_parLapply_staged <- function(config) { # nolint
       # nocov start
       clusterCall(
         cl = config$cluster,
-        fun = prune_envir,
+        fun = function(targets, config) {
+          config$verbose <- FALSE
+          suppressWarnings(
+            drake::prune_envir(targets = targets, config = config)
+          )
+        },
         targets = stage$targets,
         config = config
       )
