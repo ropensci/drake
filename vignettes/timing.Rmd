@@ -91,7 +91,7 @@ for (jobs in 1:12){
 library(ggplot2)
 ggplot(data.frame(time = time / 3600, jobs = ordered(1:12), group = 1)) +
   geom_line(aes(x = jobs, y = time, group = group)) +
-  scale_y_continuous(breaks = 0:10 * 4) +
+  scale_y_continuous(breaks = 0:10 * 4, limits = c(0, 29)) +
   theme_gray(12) +
   xlab("`jobs` argument to make()") +
   ylab("Predicted runtime of make() (hours)")
