@@ -268,9 +268,12 @@ echo "module load R; $*" | qsub -sync y -cwd -j y
 )</code></pre></div>
 </div>
 </div>
-<div id="persistent-and-transient-scheduling" class="section level1">
+<div id="scheduling-algorithms" class="section level1">
 <h1 class="hasAnchor">
-<a href="#persistent-and-transient-scheduling" class="anchor"></a>Persistent and transient scheduling</h1>
+<a href="#scheduling-algorithms" class="anchor"></a>Scheduling algorithms</h1>
+<div id="persistent-scheduling" class="section level2">
+<h2 class="hasAnchor">
+<a href="#persistent-scheduling" class="anchor"></a>Persistent scheduling</h2>
 <p>Backends “mclapply”, “parLapply”, and “future_lapply” launch persistent workers.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
@@ -280,16 +283,20 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <iframe width="560" height="315" src="https://www.youtube.com/embed/oCvrEFQOYoA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
 </iframe>
 <p>The <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/predict_load_balancing.html">predict_load_balancing()</a></code> functions emulate persistent workers, and the predictions also apply to transient workers. See the <a href="https://ropensci.github.io/drake/articles/timing.html">timing guide</a> for a demonstration.</p>
+</div>
+<div id="transient-scheduling" class="section level2">
+<h2 class="hasAnchor">
+<a href="#transient-scheduling" class="anchor"></a>Transient scheduling</h2>
 <p>Persistent workers are great because they minimize overhead: all the workers are created at the beginning, and then you never have to create any more for the rest of the runthrough. Unfortunately, computing clusters usually limit the amount of time each worker can stay running. That is why <code>drake</code> also supports transient workers in backends <code>"future"</code> and <code>"Makefile"</code>. Here, the master process creates a new worker for each target individually, and the worker dies after it finishes its single target. For the <code>"future"</code> backend, the master is just the existing process calling <code><a href="../reference/make.html">make()</a></code>. The following video demonstrates the concept.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/raWL7dyqndQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/aiAdaqKX_a8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
 </iframe>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(future<span class="op">::</span>multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 </div>
-<div id="staged-scheduling" class="section level1">
-<h1 class="hasAnchor">
-<a href="#staged-scheduling" class="anchor"></a>Staged scheduling</h1>
+<div id="staged-scheduling" class="section level2">
+<h2 class="hasAnchor">
+<a href="#staged-scheduling" class="anchor"></a>Staged scheduling</h2>
 <p>Backends <code>"mclapply_staged"</code> and <code>"parLapply_staged"</code> support staged scheduling.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
@@ -350,6 +357,7 @@ plan
 <iframe src="https://ropensci.github.io/drake/images/staged.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 </div>
+</div>
 <div id="final-thoughts" class="section level1">
 <h1 class="hasAnchor">
 <a href="#final-thoughts" class="anchor"></a>Final thoughts</h1>
@@ -386,8 +394,13 @@ plan
       <li><a href="#makefile"><code>"Makefile</code>"</a></li>
       </ul>
 </li>
-      <li><a href="#persistent-and-transient-scheduling">Persistent and transient scheduling</a></li>
+      <li>
+<a href="#scheduling-algorithms">Scheduling algorithms</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#persistent-scheduling">Persistent scheduling</a></li>
+      <li><a href="#transient-scheduling">Transient scheduling</a></li>
       <li><a href="#staged-scheduling">Staged scheduling</a></li>
+      </ul>
+</li>
       <li>
 <a href="#final-thoughts">Final thoughts</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#debugging">Debugging</a></li>

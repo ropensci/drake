@@ -220,8 +220,9 @@ make(
 )
 ```
 
+# Scheduling algorithms
 
-# Persistent and transient scheduling
+## Persistent scheduling
 
 Backends  "mclapply", "parLapply", and "future_lapply" launch persistent workers.
 
@@ -238,9 +239,11 @@ In each of these calls to `make()`, three processes launch: two workers and one 
 
 The `predict_runtime()` and `predict_load_balancing()` functions emulate persistent workers, and the predictions also apply to transient workers. See the [timing guide](https://ropensci.github.io/drake/articles/timing.html) for a demonstration.
 
+## Transient scheduling
+
 Persistent workers are great because they minimize overhead: all the workers are created at the beginning, and then you never have to create any more for the rest of the runthrough. Unfortunately, computing clusters usually limit the amount of time each worker can stay running. That is why `drake` also supports transient workers in backends `"future"` and `"Makefile"`. Here, the master process creates a new worker for each target individually, and the worker dies after it finishes its single target. For the `"future"` backend, the master is just the existing process calling `make()`. The following video demonstrates the concept.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/raWL7dyqndQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/aiAdaqKX_a8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 ```{r transient, eval = FALSE}
 future::plan(future::multisession)
@@ -248,7 +251,7 @@ make(my_plan, parallelism = "future", jobs = 2)
 make(my_plan, parallelism = "Makefile", jobs = 2)
 ```
 
-# Staged scheduling
+## Staged scheduling
 
 Backends `"mclapply_staged"` and `"parLapply_staged"` support staged scheduling.
 

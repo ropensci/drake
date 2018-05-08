@@ -333,7 +333,7 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ## [1] "d47109544c89ca7a"
 
 config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "e89da24c2e9d1150"</code></pre></div>
+## [1] "db06025d92f76b31"</code></pre></div>
 <p>In <code>drake</code>, the “kernel” of a target or import is the piece of the output that is reproducibly tracked. For ordinary R objects, the kernel is just the object itself. For custom external files, it is a separate hash. But for functions, the kernel is the deparsed body of the function, together with the dependency hash if the function is imported (see <code>drake:::store_function()</code>).</p>
 <p>The internal functions <code>drake:::meta()</code> and <code>drake:::meta_list()</code> compute the metadata on each target that <code>drake</code> uses to decide which targets to build and which to skip (via <code>drake:::should_build_target()</code>). Then, after the target/import is processed, <code>drake:::finish_meta()</code> updates the metadata (except for the <code>$missing</code> element) before it is cached. See <code><a href="../reference/diagnose.html">diagnose()</a></code> to read available metadata, along with any errors, warnings, and messages generated during the build.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(small))
@@ -346,19 +346,19 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ##  $ command     : chr "{\n simulate(48) \n}"
 ##  $ depends     : chr "5aa9da170b33b159cfd382e15229d7efe6d6a5777d1c69e71b0c6a1188ee5116"
 ##  $ file        : chr NA
-##  $ start       :Class 'proc_time'  Named num [1:5] 4.821 0.107 5.029 0.091 0.011
+##  $ start       :Class 'proc_time'  Named num [1:5] 4.867 0.116 5.14 0.093 0.008
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.002
+##   ..$ elapsed: num 0.003
 ##   ..$ user   : num 0.003
 ##   ..$ system : num 0
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "small"
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.031
-##   ..$ user   : num 0.032
+##   ..$ elapsed: num 0.03
+##   ..$ user   : num 0.029
 ##   ..$ system : num 0
 
 <span class="kw">str</span>(<span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(<span class="st">"</span><span class="ch">\"</span><span class="st">report.md</span><span class="ch">\"</span><span class="st">"</span>))
@@ -371,20 +371,20 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ##  $ command     : chr "{\n knit(knitr_in(\"report.Rmd\"), file_out(\"report.md\"), quiet = TRUE) \n}"
 ##  $ depends     : chr "bdd361b34107fb7901742c60d249a999aa71a93380029cf534be513f6ab40789"
 ##  $ file        : chr "65f43df5f3fb7d0e2b78b2fa2ada9a635a7557780e79e08805156d60b53e7abc"
-##  $ start       :Class 'proc_time'  Named num [1:5] 5.016 0.112 5.237 0.091 0.011
+##  $ start       :Class 'proc_time'  Named num [1:5] 5.065 0.116 5.343 0.093 0.008
 ##   .. ..- attr(*, "names")= chr [1:5] "user.self" "sys.self" "elapsed" "user.child" ...
 ##  $ time_command:'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.045
-##   ..$ user   : num 0.045
+##   ..$ elapsed: num 0.043
+##   ..$ user   : num 0.042
 ##   ..$ system : num 0
-##  $ mtime       : POSIXct[1:1], format: "2018-05-08 00:18:53"
+##  $ mtime       : POSIXct[1:1], format: "2018-05-08 01:05:46"
 ##  $ time_build  :'data.frame':    1 obs. of  5 variables:
 ##   ..$ item   : chr "\"report.md\""
 ##   ..$ type   : chr "target"
-##   ..$ elapsed: num 0.048
-##   ..$ user   : num 0.048
+##   ..$ elapsed: num 0.046
+##   ..$ user   : num 0.045
 ##   ..$ system : num 0</code></pre></div>
 <p>If your target’s last build succeeded, then <code><a href="../reference/diagnose.html">diagnose(your_target)</a></code> has the most current information from that build. But if your target failed, then only <code>diagnose(your_target)$error</code>, <code>diagnose(your_target)$warnings</code>, and <code>diagnose(your_target)$messages</code> correspond to the failure, and all the other metadata correspond to the last build that completed without an error.</p>
 </div>
@@ -456,7 +456,7 @@ reg2
 ##   d$x3 &lt;- d$x ^ 3
 ##   lm(y ~ x3, data = d)
 ## }
-## &lt;bytecode: 0x83216e8&gt;
+## &lt;bytecode: 0x71fa4e0&gt;
 
 reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
   d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
@@ -514,8 +514,6 @@ withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 ## target x
 ## target y
 ## retry y: 1 of 2
-## [2018-05-08 00:18:56] TimeoutException: reached elapsed time limit
-## [cpu=0.001s, elapsed=0.001s]
 ## Warning: No message sink to remove.</code></pre></div>
 <p>To tailor these settings to each individual target, create new <code>timeout</code>, <code>cpu</code>, <code>elapsed</code>, or <code>retries</code> columns in your workflow plan. These columns override the analogous arguments to <code><a href="../reference/make.html">make()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/clean.html">clean</a></span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)
@@ -533,8 +531,6 @@ withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
   <span class="dt">new =</span> <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(debug_plan, <span class="dt">timeout =</span> <span class="ot">Inf</span>, <span class="dt">retries =</span> <span class="dv">0</span>)
 )
-## Unloading targets from environment:
-##   x
 ## target x
 ## target y
 ## fail y
@@ -666,7 +662,7 @@ f
 ##   }
 ##   x
 ## }
-## &lt;bytecode: 0x6f44748&gt;
+## &lt;bytecode: 0x8e3ed68&gt;
 
 <span class="co"># Aha! The error was in f(). Let's fix it and try again.</span>
 f &lt;-<span class="st"> </span><span class="cf">function</span>(x){
