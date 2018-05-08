@@ -119,7 +119,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-06</h4>
+            <h4 class="date">2018-05-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/caution.Rmd"><code>vignettes/caution.Rmd</code></a></small>
       <div class="hidden name"><code>caution.Rmd</code></div>
@@ -147,8 +147,8 @@
 <a href="#commands-are-not-perfectly-flexible-" class="anchor"></a>Commands are NOT perfectly flexible.</h2>
 <p>In your workflow plan data frame (produced by <code><a href="../reference/drake_plan.html">drake_plan()</a></code> and accepted by <code><a href="../reference/make.html">make()</a></code>), your commands can usually be flexible R expressions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">target1 =</span> <span class="dv">1</span> +<span class="st"> </span><span class="dv">1</span> -<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">sqrt</span>(<span class="dv">3</span>)),
-  <span class="dt">target2 =</span> <span class="kw">my_function</span>(web_scraped_data) %&gt;%<span class="st"> </span>my_tidy
+  <span class="dt">target1 =</span> <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">sqrt</span>(<span class="dv">3</span>)),
+  <span class="dt">target2 =</span> <span class="kw">my_function</span>(web_scraped_data) <span class="op">%&gt;%</span><span class="st"> </span>my_tidy
 )
 ## # A tibble: 2 x 2
 ##   target  command                                  
@@ -187,7 +187,6 @@ my_plan
 ## 1 little_b "\"b\""   
 ## 2 letter   !!little_b
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan)
-## Loading required package: methods
 ## target little_b
 ## target letter
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(letter)
@@ -196,8 +195,8 @@ my_plan
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_variable &lt;-<span class="st"> </span><span class="dv">5</span>
 
 <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> !!my_variable,
-  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
+  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
+  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
   <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>)
 )
 ## # A tibble: 3 x 2
@@ -208,8 +207,8 @@ my_plan
 ## 3 d      !!my_variable
 
 <span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(
-  <span class="dt">a =</span> !!my_variable,
-  <span class="dt">b =</span> !!my_variable +<span class="st"> </span><span class="dv">1</span>,
+  <span class="dt">a =</span> <span class="op">!!</span>my_variable,
+  <span class="dt">b =</span> <span class="op">!!</span>my_variable <span class="op">+</span><span class="st"> </span><span class="dv">1</span>,
   <span class="dt">list =</span> <span class="kw">c</span>(<span class="dt">d =</span> <span class="st">"!!my_variable"</span>),
   <span class="dt">tidy_evaluation =</span> <span class="ot">FALSE</span>
 )
@@ -229,13 +228,13 @@ my_plan
 <span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>()
 ## [1] "letter"   "little_b"
 
-f &lt;-<span class="st"> </span>function(){
+f &lt;-<span class="st"> </span><span class="cf">function</span>(){
   <span class="kw">stop</span>(<span class="st">"unusual error"</span>)
 }
 
 bad_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">target =</span> <span class="kw">f</span>())
 
-withr::<span class="kw">with_message_sink</span>(
+withr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/withr/topics/with_sink">with_message_sink</a></span>(
   <span class="kw">stdout</span>(),
   <span class="kw"><a href="../reference/make.html">make</a></span>(bad_plan)
 )
@@ -248,15 +247,15 @@ withr::<span class="kw">with_message_sink</span>(
 <span class="kw"><a href="../reference/failed.html">failed</a></span>() <span class="co"># From the last make() only</span>
 ## [1] "target"
 
-error &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(target)$error <span class="co"># See also warnings and messages.</span>
+error &lt;-<span class="st"> </span><span class="kw"><a href="../reference/diagnose.html">diagnose</a></span>(target)<span class="op">$</span>error <span class="co"># See also warnings and messages.</span>
 
-error$message
+error<span class="op">$</span>message
 ## [1] "unusual error"
 
-error$call
+error<span class="op">$</span>call
 ## f()
 
-error$calls <span class="co"># View the traceback.</span>
+error<span class="op">$</span>calls <span class="co"># View the traceback.</span>
 ## [[1]]
 ## local({
 ##     f()
@@ -310,7 +309,7 @@ error$calls <span class="co"># View the traceback.</span>
 <li>
 <p><code><a href="../reference/make.html">make(..., lazy_load = TRUE, parallelism = "parLapply", jobs = 2)</a></code> does not work. If you want to use local multisession parallelism with multiple jobs and lazy loading, try <code>"future_lapply"</code> parallelism instead.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multisession)
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(multisession)
 <span class="kw"><a href="../reference/load_mtcars_example.html">load_mtcars_example</a></span>() <span class="co"># Get the code with drake_example("mtcars").</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">lazy_load =</span> <span class="ot">TRUE</span>, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>)</code></pre></div>
 </li>
@@ -336,18 +335,18 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   <span class="st">"example_class"</span>,
   <span class="dt">private =</span> <span class="kw">list</span>(<span class="dt">data =</span> <span class="kw">list</span>()),
   <span class="dt">public =</span> <span class="kw">list</span>(
-    <span class="dt">initialize =</span> function(<span class="dt">data =</span> <span class="kw">list</span>()) {
-      private$data &lt;-<span class="st"> </span>data
+    <span class="dt">initialize =</span> <span class="cf">function</span>(<span class="dt">data =</span> <span class="kw">list</span>()) {
+      private<span class="op">$</span>data &lt;-<span class="st"> </span>data
     }
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "7aa7ff63ae17f6afc7e0aede80f891bd"
-example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
+## [1] "6a1cfe8a8e6828defba50f4a3f68d556"
+example_object &lt;-<span class="st"> </span>example_class<span class="op">$</span><span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "64f03b5c788ed9d5b2aac534484dc056"</code></pre></div>
+## [1] "14d95261fac216d0e2017f2c65a95fb9"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class$<span class="kw">new</span>(<span class="dv">1234</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class<span class="op">$</span><span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># Builds `example_target` again because `example_class` changed.</span></code></pre></div>
 <p>The same behavior affects objects containing functions more broadly, not just <code>R6</code> classes. For more on this edge case, see <a href="https://github.com/ropensci/drake/issues/345">issue 345</a>.</p>
@@ -374,9 +373,9 @@ example_object &lt;-<span class="st"> </span>example_class$<span class="kw">new<
 ?tracked
 ?vis_drake_graph</a></code></pre></div>
 <p><code>Drake</code> can be fooled into skipping objects that should be treated as dependencies. For example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span>function(){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="cf">function</span>(){
   b &lt;-<span class="st"> </span><span class="kw">get</span>(<span class="st">"x"</span>, <span class="dt">envir =</span> <span class="kw">globalenv</span>()) <span class="co"># x is incorrectly ignored</span>
-  digest::<span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(file_dependency)
+  digest<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(file_dependency)
 }
 
 <span class="kw"><a href="../reference/deps.html">deps</a></span>(f)
@@ -398,12 +397,12 @@ command &lt;-<span class="st"> "x &lt;- digest::digest(file_in(</span><span clas
 <p>Similarly, <code><a href="../reference/file_out.html">file_out()</a></code> in a command tells <code>drake</code> that the result of a command is an output file. Clearly, this is inappropriate for imported functions, but <code>drake</code> will look anyway. Do not try to use <code><a href="../reference/file_out.html">file_out()</a></code> or <code><a href="../reference/knitr_in.html">knitr_in()</a></code> inside your custom imported functions. <code>Drake</code> only pays attention to them in proper commands in your workflow plan data frame. However, <code><a href="../reference/file_in.html">file_in()</a></code> is perfectly fine if your imported function needs a file in order to run. Here are some examples.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># toally_fine() will depend on the imported data.csv file.</span>
 <span class="co"># But make sure data.csv is an imported file and not a file target.</span>
-totally_okay &lt;-<span class="st"> </span>function(x, y, z){
+totally_okay &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, z){
   <span class="kw">read.csv</span>(<span class="kw"><a href="../reference/file_in.html">file_in</a></span>(<span class="st">"data.csv"</span>))
 }
 
 <span class="co"># file_out() is for file targets, so `drake` will ignore it.</span>
-avoid_this &lt;-<span class="st"> </span>function(x, y, z){
+avoid_this &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, z){
   <span class="kw">read.csv</span>(<span class="kw"><a href="../reference/file_out.html">file_out</a></span>(<span class="st">"data.csv"</span>))
 }
 
@@ -411,7 +410,7 @@ avoid_this &lt;-<span class="st"> </span>function(x, y, z){
 <span class="co"># in their active code chunks (explicitly referenced with loadd() and readd().</span>
 <span class="co"># Drake just treats knitr_in() as an ordinary file input in this case.</span>
 <span class="co"># You should really be using file_in() instead.</span>
-avoid_this &lt;-<span class="st"> </span>function(x, y, z){
+avoid_this &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, z){
   <span class="kw">read.csv</span>(<span class="kw"><a href="../reference/knitr_in.html">knitr_in</a></span>(<span class="st">"report.Rmd"</span>))
 }</code></pre></div>
 </div>
@@ -420,11 +419,11 @@ avoid_this &lt;-<span class="st"> </span>function(x, y, z){
 <a href="#functions-produced-by-vectorize" class="anchor"></a>Functions produced by <code>Vectorize()</code>
 </h2>
 <p>With functions produced by <code>Vectorize()</code>, detecting dependencies is especially hard because the body of every such function is</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">args &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">as.list</span>(<span class="kw">match.call</span>())[-1L], eval, <span class="kw">parent.frame</span>())
-names &lt;-<span class="st"> </span>if (<span class="kw">is.null</span>(<span class="kw">names</span>(args)))
-    <span class="kw">character</span>(<span class="kw">length</span>(args)) else <span class="kw">names</span>(args)
-dovec &lt;-<span class="st"> </span>names %in%<span class="st"> </span>vectorize.args
-<span class="kw">do.call</span>(<span class="st">"mapply"</span>, <span class="kw">c</span>(<span class="dt">FUN =</span> FUN, args[dovec], <span class="dt">MoreArgs =</span> <span class="kw">list</span>(args[!dovec]),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">args &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">as.list</span>(<span class="kw">match.call</span>())[<span class="op">-</span>1L], eval, <span class="kw">parent.frame</span>())
+names &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="kw">is.null</span>(<span class="kw">names</span>(args)))
+    <span class="kw">character</span>(<span class="kw">length</span>(args)) <span class="cf">else</span> <span class="kw">names</span>(args)
+dovec &lt;-<span class="st"> </span>names <span class="op">%in%</span><span class="st"> </span>vectorize.args
+<span class="kw">do.call</span>(<span class="st">"mapply"</span>, <span class="kw">c</span>(<span class="dt">FUN =</span> FUN, args[dovec], <span class="dt">MoreArgs =</span> <span class="kw">list</span>(args[<span class="op">!</span>dovec]),
     <span class="dt">SIMPLIFY =</span> SIMPLIFY, <span class="dt">USE.NAMES =</span> USE.NAMES))</code></pre></div>
 <p>Thus, if <code>f</code> is constructed with <code>Vectorize(g, ...)</code>, <code>drake</code> searches <code>g()</code> for dependencies, not <code>f()</code>. In fact, if <code>drake</code> sees that <code>environment(f)[["FUN"]]</code> exists and is a function, then <code>environment(f)[["FUN"]]</code> will be analyzed instead of <code>f()</code>. Furthermore, if <code>f()</code> is the output of <code>Vectorize()</code>, then <code>drake</code> reproducibly tracks <code>environment(f)[["FUN"]]</code> rather than <code>f()</code> itself. Thus, if the configuration settings of vectorization change (such as which arguments are vectorized), but the core element-wise functionality remains the same, then <code><a href="../reference/make.html">make()</a></code> will not react. Also, if you hover over the <code>f</code> node in <code><a href="../reference/vis_drake_graph.html">vis_drake_graph(hover = TRUE)</a></code>, then you will see the body of <code>environment(f)[["FUN"]]</code>, not the body of <code>f()</code>.</p>
 </div>
@@ -499,12 +498,12 @@ dovec &lt;-<span class="st"> </span>names %in%<span class="st"> </span>vectorize
 <h2 class="hasAnchor">
 <a href="#zombie-processes" class="anchor"></a>Zombie processes</h2>
 <p>Some parallel backends, particularly <code>mclapply</code> and <code><a href="http://www.rdocumentation.org/packages/future/topics/multicore">future::multicore</a></code>, may create zombie processes. Zombie children are not usually harmful, but you may wish to kill them yourself. The following function by <a href="https://github.com/CarlBoneri">Carl Boneri</a> should work on Unix-like systems. For a discussion, see <a href="https://github.com/ropensci/drake/issues/116">drake issue 116</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fork_kill_zombies &lt;-<span class="st"> </span>function(){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fork_kill_zombies &lt;-<span class="st"> </span><span class="cf">function</span>(){
   <span class="kw">require</span>(inline)
   includes &lt;-<span class="st"> "#include &lt;sys/wait.h&gt;"</span>
   code &lt;-<span class="st"> "int wstat; while (waitpid(-1, &amp;wstat, WNOHANG) &gt; 0) {};"</span>
 
-  wait &lt;-<span class="st"> </span>inline::<span class="kw">cfunction</span>(
+  wait &lt;-<span class="st"> </span>inline<span class="op">::</span><span class="kw">cfunction</span>(
     <span class="dt">body =</span> code,
     <span class="dt">includes =</span> includes,
     <span class="dt">convention =</span> <span class="st">".C"</span>
