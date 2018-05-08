@@ -15,6 +15,7 @@ vignette: >
 ```{r suppression, echo = F}
 suppressMessages(suppressWarnings(library(future)))
 suppressMessages(suppressWarnings(library(drake)))
+suppressMessages(suppressWarnings(library(dplyr)))
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(

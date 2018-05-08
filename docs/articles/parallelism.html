@@ -305,18 +305,6 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 </iframe>
 <p>However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
-## 
-## Attaching package: 'dplyr'
-## The following objects are masked from 'package:drake':
-## 
-##     contains, ends_with, everything, matches, num_range, one_of,
-##     starts_with
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
 <span class="kw">library</span>(drake)
 
 N &lt;-<span class="st"> </span><span class="dv">500</span>
