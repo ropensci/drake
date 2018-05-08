@@ -262,7 +262,7 @@ make(my_plan, parallelism = "parLapply_staged", jobs = 2)
 
 Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/WJsw66L5rxE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/sZ9n0yIu__k" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.
 
