@@ -301,7 +301,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, <code>drake</code> uses <code>mclapply()</code> or <code>parLapply()</code> to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/sZ9n0yIu__k" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EEK-5sIixf0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
 </iframe>
 <p>However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
