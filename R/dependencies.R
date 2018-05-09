@@ -6,7 +6,7 @@
 #' @details If the argument is a `knitr` report
 #'   (for example, `file_store("report.Rmd")` or `"\"report.Rmd\""`)
 #'   the the dependencies of the expected compiled
-#'   output will be given. For example, `deps(file_store("report.Rmd"))`
+#'   output will be given. For example, `deps_code(file_store("report.Rmd"))`
 #'   will return target names found in calls to [loadd()]
 #'   and [readd()] in active code chunks.
 #'   These [loadd()]/[readd()] targets are needed
@@ -20,16 +20,17 @@
 #'   (For example, `file_store("report.Rmd")` is just `"\"report.Rmd\""`.)
 #'
 #'   `Drake` takes special precautions so that a target/import
-#'   does not depend on itself. For example, `deps(f)`` might return
+#'   does not depend on itself. For example, `deps_code(f)`` might return
 #'   `"f"` if `f()` is a recursive function, but [make()] just ignores
 #'   this conflict and runs as expected. In other words, [make()]
 #'   automatically removes all self-referential loops in the dependency
 #'   network.
+#' @seealso deps_targets make drake_plan drake_config
 #' @export
-#' @param x Either a function or a string.
-#'   Strings are commands from your workflow plan data frame.
+#' @param x a language object (code), character string (code as text),
+#'   or imported function to analyze for dependencies.
 #' @return A character vector, names of dependencies.
-#'   Files wrapped in single quotes.
+#'   Files wrapped in escaped double quotes.
 #'   The other names listed are functions or generic R objects.
 #' @examples
 #' # Your workflow likely depends on functions in your workspace.
@@ -40,7 +41,7 @@
 #' # Find the dependencies of f. These could be R objects/functions
 #' # in your workspace or packages. Any file names or target names
 #' # will be ignored.
-#' deps(f)
+#' deps_code(f)
 #' # Define a workflow plan data frame that uses your function f().
 #' my_plan <- drake_plan(
 #'   x = 1 + some_object,
@@ -51,18 +52,20 @@
 #' # Get the dependencies of workflow plan commands.
 #' # Here, the dependencies could be R functions/objects from your workspace
 #' # or packages, imported files, or other targets in the workflow plan.
-#' deps(my_plan$command[1])
-#' deps(my_plan$command[2])
-#' deps(my_plan$command[3])
+#' deps_code(my_plan$command[1])
+#' deps_code(my_plan$command[2])
+#' deps_code(my_plan$command[3])
+#' # New: you can also supply language objects.
+#' deps_code(expression(x + 123))
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Dependencies of the knitr-generated targets like 'report.md'
 #' # include targets/imports referenced with `readd()` or `loadd()`.
-#' deps(file_store("report.Rmd"))
+#' deps_code(file_store("report.Rmd"))
 #' })
 #' }
-deps <- function(x){
+deps_code <- function(x){
   if (is.function(x)){
     out <- import_dependencies(x)
   } else if (is_file(x) && file.exists(drake_unquote(x))){
@@ -70,9 +73,46 @@ deps <- function(x){
   } else if (is.character(x)){
     out <- command_dependencies(x)
   } else{
-    stop("x must be a character scalar or function.")
+    out <- code_dependencies(x)
   }
   clean_dependency_list(out)
+}
+
+#' @title List the dependencies of one or more targets
+#' @description Intended for debugging and checking your project.
+#'   The dependency structure of the components of your analysis
+#'   decides which targets are built and when.
+#' @details Unlike [deps_code()], `deps_targets()` allows you to
+#'   specify a set of targets and get their dependencies. This assumes
+#'   you have an output list from [drake_config()]. which resolves
+#'   the dependency graph.
+#' @seealso deps_code make drake_plan drake_config
+#' @export
+#' @param targets a character vector of target names
+#' @param config an output list from [drake_config()]
+#' @param reverse logical, whether to compute reverse dependencies
+#'   (targets immediately downstream) instead of ordinary dependencies. 
+#' @return A character vector, names of dependencies.
+#'   Files wrapped in escaped double quotes.
+#'   The other names listed are functions or generic R objects.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' # Dependencies of the knitr-generated targets like 'report.md'
+#' # include targets/imports referenced with `readd()` or `loadd()`.
+#' config <- drake_config(my_plan)
+#' deps_targets(file_store("report.md"), config = config)
+#' deps_targets("regression1_small", config = config)
+#' deps_targets(c("small", "large"), config = config, reverse = TRUE)
+#' })
+#' }
+deps_targets <- function(
+  targets,
+  config = read_drake_config(),
+  reverse = FALSE
+){
+  dependencies(targets = targets, config = config, reverse = reverse)
 }
 
 #' @title Return the detailed dependency profile
@@ -86,7 +126,7 @@ deps <- function(x){
 #'   when examining the dependencies of the target.
 #' @export
 #' @seealso [read_drake_meta()],
-#'   [deps()], [make()],
+#'   [deps_code()], [make()],
 #'   [config()]
 #' @param target name of the target
 #' @param config configuration list output by
@@ -462,12 +502,8 @@ is_callish <- function(x){
   length(x) > 0 && is.language(x) && (is.call(x) || is.recursive(x))
 }
 
-# This function is just to set up the prefixes and patterns below.
-# Existing tests will fail if the output is incorrect.
-# pair_text is not really needed currently, but in case we have synonyms,
-# we might keep it around for now.
 pair_text <- function(x, y){
-  apply(expand.grid(x, y), 1, paste0, collapse = "") # nocov
+  apply(expand.grid(x, y), 1, paste0, collapse = "")
 }
 
 drake_prefix <- c("", "drake::", "drake:::")

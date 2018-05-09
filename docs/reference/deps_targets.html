@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tell <code>drake</code> that you want information
-on a <em>file</em> (target or import), not an ordinary object. — file_store • drake</title>
+<title>List the dependencies of one or more targets — deps_targets • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -29,16 +28,11 @@ on a <em>file</em> (target or import), not an ordinary object. — file_store �
 
 
 
-<meta property="og:title" content="Tell <code>drake</code> that you want information
-on a <em>file</em> (target or import), not an ordinary object. — file_store" />
+<meta property="og:title" content="List the dependencies of one or more targets — deps_targets" />
 
-<meta property="og:description" content="This function simply wraps literal double quotes around
-the argument x so drake knows it is the name of a file.
-Use when you are calling functions like deps_code(): for example,
-deps_code(file_store("report.md")). See the examples for details.
-Internally, drake wraps the names of file targets/imports
-inside literal double quotes to avoid confusion between
-files and generic R objects." />
+<meta property="og:description" content="Intended for debugging and checking your project.
+The dependency structure of the components of your analysis
+decides which targets are built and when." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -153,60 +147,68 @@ files and generic R objects." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tell <code>drake</code> that you want information
-on a <em>file</em> (target or import), not an ordinary object.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/strings.R'><code>R/strings.R</code></a></small>
-    <div class="hidden name"><code>file_store.Rd</code></div>
+    <h1>List the dependencies of one or more targets</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/dependencies.R'><code>R/dependencies.R</code></a></small>
+    <div class="hidden name"><code>deps_targets.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function simply wraps literal double quotes around
-the argument <code>x</code> so <code>drake</code> knows it is the name of a file.
-Use when you are calling functions like <code><a href='deps_code.html'>deps_code()</a></code>: for example,
-<code><a href='deps_code.html'>deps_code(file_store("report.md"))</a></code>. See the examples for details.
-Internally, <code>drake</code> wraps the names of file targets/imports
-inside literal double quotes to avoid confusion between
-files and generic R objects.</p>
+    <p>Intended for debugging and checking your project.
+The dependency structure of the components of your analysis
+decides which targets are built and when.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>file_store</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>deps_targets</span>(<span class='no'>targets</span>, <span class='kw'>config</span> <span class='kw'>=</span> <span class='fu'><a href='read_drake_config.html'>read_drake_config</a></span>(), <span class='kw'>reverse</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>character string to be turned into a filename
-understandable by drake (i.e., a string with literal
-single quotes on both ends).</p></td>
+      <th>targets</th>
+      <td><p>a character vector of target names</p></td>
+    </tr>
+    <tr>
+      <th>config</th>
+      <td><p>an output list from <code><a href='drake_config.html'>drake_config()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>reverse</th>
+      <td><p>logical, whether to compute reverse dependencies
+(targets immediately downstream) instead of ordinary dependencies.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A single-quoted character string: i.e., a filename
-understandable by drake.</p>
+    <p>A character vector, names of dependencies.
+Files wrapped in escaped double quotes.
+The other names listed are functions or generic R objects.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Unlike <code><a href='deps_code.html'>deps_code()</a></code>, <code>deps_targets()</code> allows you to
+specify a set of targets and get their dependencies. This assumes
+you have an output list from <code><a href='drake_config.html'>drake_config()</a></code>. which resolves
+the dependency graph.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>deps_code make drake_plan drake_config</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='co'># Wraps the string in single quotes.</span>
-  <span class='fu'>file_store</span>(<span class='st'>"my_file.rds"</span>) <span class='co'># "'my_file.rds'"</span></div><div class='output co'>#&gt; [1] "\"my_file.rds\""</div><div class='input'>  </div><span class='co'># NOT RUN {</span>
-  <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"contain side effects"</span>, {
-  <span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
-  <span class='fu'><a href='make.html'>make</a></span>(<span class='no'>my_plan</span>) <span class='co'># Run the workflow to build the targets</span>
-  <span class='fu'>list.files</span>() <span class='co'># Should include input "report.Rmd" and output "report.md".</span>
-  <span class='fu'>head</span>(<span class='fu'><a href='readd.html'>readd</a></span>(<span class='no'>small</span>)) <span class='co'># You can use symbols for ordinary objects.</span>
-  <span class='co'># But if you want to read cached info on files, use `file_store()`.</span>
-  <span class='fu'><a href='readd.html'>readd</a></span>(<span class='fu'>file_store</span>(<span class='st'>"report.md"</span>), <span class='kw'>character_only</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># File fingerprint.</span>
-  <span class='fu'><a href='deps_code.html'>deps_code</a></span>(<span class='fu'>file_store</span>(<span class='st'>"report.Rmd"</span>))
-  <span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_config.html'>drake_config</a></span>(<span class='no'>my_plan</span>)
-  <span class='fu'><a href='dependency_profile.html'>dependency_profile</a></span>(<span class='fu'>file_store</span>(<span class='st'>"report.Rmd"</span>), <span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>)
-  <span class='fu'><a href='loadd.html'>loadd</a></span>(<span class='kw'>list</span> <span class='kw'>=</span> <span class='fu'>file_store</span>(<span class='st'>"report.md"</span>))
-  <span class='fu'>get</span>(<span class='fu'>file_store</span>(<span class='st'>"report.md"</span>))
-  })
-
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
+<span class='co'># Dependencies of the knitr-generated targets like 'report.md'</span>
+<span class='co'># include targets/imports referenced with `readd()` or `loadd()`.</span>
+<span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_config.html'>drake_config</a></span>(<span class='no'>my_plan</span>)
+<span class='fu'>deps_targets</span>(<span class='fu'><a href='file_store.html'>file_store</a></span>(<span class='st'>"report.md"</span>), <span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>)
+<span class='fu'>deps_targets</span>(<span class='st'>"regression1_small"</span>, <span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>)
+<span class='fu'>deps_targets</span>(<span class='fu'>c</span>(<span class='st'>"small"</span>, <span class='st'>"large"</span>), <span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>, <span class='kw'>reverse</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+})
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -215,6 +217,10 @@ understandable by drake.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

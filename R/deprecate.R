@@ -321,6 +321,56 @@ deprecate_wildcard <- function(plan, old, replacement){
   plan
 }
 
+#' @title Deprecated.
+#'   List the dependencies of a function, workflow plan command,
+#'   or knitr report source file.
+#' @description Deprecated. Use [deps_code()] or [deps_targets()] instead.
+#'   These functions are intended for debugging and checking your project.
+#'   The dependency structure of the components of your analysis
+#'   decides which targets are built and when.
+#' @details If the argument is a `knitr` report
+#'   (for example, `file_store("report.Rmd")` or `"\"report.Rmd\""`)
+#'   the the dependencies of the expected compiled
+#'   output will be given. For example, `deps(file_store("report.Rmd"))`
+#'   will return target names found in calls to [loadd()]
+#'   and [readd()] in active code chunks.
+#'   These [loadd()]/[readd()] targets are needed
+#'   in order to run `knit(knitr_in("report.Rmd"))`
+#'   to produce the output file `"report.md"`, so technically,
+#'   they are dependencies of `"report.md"`, not `"report.Rmd"`.
+#'
+#'   The [file_store()] function
+#'   alerts `drake` utility functions to file names by
+#'   enclosing them in literal double quotes.
+#'   (For example, `file_store("report.Rmd")` is just `"\"report.Rmd\""`.)
+#'
+#'   `Drake` takes special precautions so that a target/import
+#'   does not depend on itself. For example, `deps(f)`` might return
+#'   `"f"` if `f()` is a recursive function, but [make()] just ignores
+#'   this conflict and runs as expected. In other words, [make()]
+#'   automatically removes all self-referential loops in the dependency
+#'   network.
+#' @export
+#' @keywords internal
+#' @param x Either a function or a string.
+#'   Strings are commands from your workflow plan data frame.
+#' @return A character vector, names of dependencies.
+#'   Files wrapped in single quotes.
+#'   The other names listed are functions or generic R objects.
+#' @examples
+#' # See deps_code() for examples.
+deps <- function(x){
+  .Deprecated(
+    "deps_code()",
+    package = "drake",
+    msg = paste(
+      "drake::deps() is deprecated.",
+      "Use deps_code() or deps_targets() instead."
+    )
+  )
+  deps_code(x)
+}
+
 # Deprecated on 2018-02-15
 doc_of_function_call <- function(expr){
   args <- as.list(expr)[-1]

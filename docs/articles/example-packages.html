@@ -143,13 +143,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-04-29 15063   dplyr
-## 2 2018-04-30 18128   dplyr
-## 3 2018-05-01 13497   dplyr
-## 4 2018-05-02 16898   dplyr
-## 5 2018-05-03 16914   dplyr
-## 6 2018-05-04 13771   dplyr
-## 7 2018-05-05  8174   dplyr</code></pre></div>
+## 1 2018-05-01 13497   dplyr
+## 2 2018-05-02 16898   dplyr
+## 3 2018-05-03 16914   dplyr
+## 4 2018-05-04 13771   dplyr
+## 5 2018-05-05  8174   dplyr
+## 7 2018-05-06     0   dplyr
+## 6 2018-05-07 14605   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -204,13 +204,13 @@ output_types
 ## 1 averages make_my_table(dataset__)
 ## 2 plot     make_my_plot(dataset__)</code></pre></div>
 <p>We need to define functions to summarize and plot the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
-  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(downloads, package) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span>function(downloads){
+  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(downloads, package) %&gt;%
 <span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="dt">mean_downloads =</span> <span class="kw">mean</span>(count))
 }
 
-make_my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) <span class="op">+</span>
+make_my_plot &lt;-<span class="st"> </span>function(downloads){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) +
 <span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> date, <span class="dt">y =</span> count, <span class="dt">group =</span> package, <span class="dt">color =</span> package))
 }</code></pre></div>
 <p>Below, the targets <code>recent</code> and <code>older</code> each take turns substituting the <code>dataset__</code> wildcard. Thus, <code>output_plan</code> has four rows.</p>
@@ -258,6 +258,7 @@ whole_plan
 ## 7 "\"report.md\"" "knit(knitr_in(\"report.Rmd\"), file_out(\"repo… any</code></pre></div>
 <p>Now, we run the project to download the data and analyze it. The results will be summarized in the knitted report, <code>report.md</code>, but you can also read the results directly from the cache.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(whole_plan)
+## Loading required package: methods
 ## target older
 ## target recent: trigger "always"
 ## target averages_older
@@ -271,9 +272,9 @@ whole_plan
 ## # A tibble: 3 x 2
 ##   package mean_downloads
 ##   &lt;chr&gt;            &lt;dbl&gt;
-## 1 ggplot2         17670.
-## 2 knitr           11435.
-## 3 Rcpp            24546.
+## 1 ggplot2         17428.
+## 2 knitr           11265.
+## 3 Rcpp            24092.
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ## # A tibble: 3 x 2

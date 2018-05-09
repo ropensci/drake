@@ -177,11 +177,11 @@ style="border: none; box-shadow: none">
 You can also check the dependencies of individual targets and imported functions.
 
 ```{r checkdeps}
-deps(reg2)
+deps_code(reg2)
 
-deps(my_plan$command[1]) # Files like report.Rmd are single-quoted.
+deps_code(my_plan$command[1]) # Files like report.Rmd are single-quoted.
 
-deps(my_plan$command[nrow(my_plan)])
+deps_code(my_plan$command[nrow(my_plan)])
 ```
 
 List all the reproducibly-tracked objects and files.

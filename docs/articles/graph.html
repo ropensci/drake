@@ -145,9 +145,9 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drak
 <iframe src="https://ropensci.github.io/drake/images/built.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
 <p>But when you change a dependency, some targets are out of date until the next <code><a href="../reference/make.html">make(my_plan)</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
-  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
+  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config)</code></pre></div>
 <iframe src="https://ropensci.github.io/drake/images/reg2.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">

@@ -95,17 +95,17 @@ See the [rendered graph vignette](https://cran.r-project.org/package=drake/vigne
 Programmatically, several functions can help you check immediate dependencies.
 
 ```{r checkdepsdebug}
-deps(reg2)
+deps_code(reg2)
 
 # knitr_in() makes sure your target depends on `report.Rmd`
 # and any dependencies loaded with loadd() and readd()
 # in the report's active code chunks.
-deps(my_plan$command[1])
+deps_code(my_plan$command[1])
 
-deps(my_plan$command[nrow(my_plan)])
+deps_code(my_plan$command[nrow(my_plan)])
 ```
 
-`Drake` takes special precautions so that a target/import does not depend on itself. For example, `deps(f)` might return `"f"` if `f()` is a recursive function, but `make()` just ignores this conflict and runs as expected. In other words, `make()` automatically removes all self-referential loops in the dependency network.
+`Drake` takes special precautions so that a target/import does not depend on itself. For example, `deps_code(f)` might return `"f"` if `f()` is a recursive function, but `make()` just ignores this conflict and runs as expected. In other words, `make()` automatically removes all self-referential loops in the dependency network.
 
 List all the reproducibly-tracked objects and files, including imports and targets.
 

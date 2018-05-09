@@ -1,6 +1,6 @@
 #' @title Find the drake dependencies of a dynamic knitr report target.
 #' @export
-#' @seealso [deps()],
+#' @seealso [deps_code()],
 #'   [make()], [load_mtcars_example()]
 #' @description To enable drake to watch for the dependencies
 #' of a knitr report, the command in your workflow plan data frame

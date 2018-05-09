@@ -50,10 +50,10 @@
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code: drake_example("mtcars")
 #' # Check the dependencies of an imported function.
-#' deps(reg1)
+#' deps_code(reg1)
 #' # Check the dependencies of commands in the workflow plan.
-#' deps(my_plan$command[1])
-#' deps(my_plan$command[4])
+#' deps_code(my_plan$command[1])
+#' deps_code(my_plan$command[4])
 #' # Plot the interactive network visualization of the workflow.
 #' config <- drake_config(my_plan)
 #' vis_drake_graph(config)

@@ -260,10 +260,10 @@ the file, <code>report.Rmd</code>.</p>
 <span class='co'># Populate your workspace and write 'report.Rmd'.</span>
 <span class='fu'>load_mtcars_example</span>() <span class='co'># Get the code: drake_example("mtcars")</span>
 <span class='co'># Check the dependencies of an imported function.</span>
-<span class='fu'><a href='deps.html'>deps</a></span>(<span class='no'>reg1</span>)
+<span class='fu'><a href='deps_code.html'>deps_code</a></span>(<span class='no'>reg1</span>)
 <span class='co'># Check the dependencies of commands in the workflow plan.</span>
-<span class='fu'><a href='deps.html'>deps</a></span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])
-<span class='fu'><a href='deps.html'>deps</a></span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>4</span>])
+<span class='fu'><a href='deps_code.html'>deps_code</a></span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>1</span>])
+<span class='fu'><a href='deps_code.html'>deps_code</a></span>(<span class='no'>my_plan</span>$<span class='no'>command</span>[<span class='fl'>4</span>])
 <span class='co'># Plot the interactive network visualization of the workflow.</span>
 <span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_config.html'>drake_config</a></span>(<span class='no'>my_plan</span>)
 <span class='fu'><a href='vis_drake_graph.html'>vis_drake_graph</a></span>(<span class='no'>config</span>)

@@ -29,7 +29,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
     sort(c(ns, "g", "runif", "sqrt"))
   )
   command <- "digest::digest(stats::rnorm(runif(stats::rpois(100))))"
-  d <- sort(deps(command))
+  d <- sort(deps_code(command))
   expect_equal(
     d,
     sort(

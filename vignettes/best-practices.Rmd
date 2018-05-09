@@ -304,7 +304,7 @@ tracked(plan)
 # But the `digest()` function has dependencies too.
 # Because `drake` knows `digest()` is from a package,
 # it ignores these dependencies by default.
-head(deps(digest), 10)
+head(deps_code(digest), 10)
 ```
 
 ### The solution

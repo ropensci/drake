@@ -22,6 +22,8 @@
 - Deprecate `load_basic_example()` in favor of `load_mtcars_example()`.
 - Refocus the `README.md` file on the main example rather than the mtcars example.
 - Use a `README.Rmd` file to generate `README.md`.
+- Add function `deps_targets()`.
+- Deprecate function `deps()` in favor of `deps_code()`
 
 # Version 5.1.2
 

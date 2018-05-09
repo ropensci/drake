@@ -41,6 +41,6 @@ try(knitr_deps("'report.md'"), silent = FALSE) # error
 }
 }
 \seealso{
-\code{\link[=deps]{deps()}},
+\code{\link[=deps_code]{deps_code()}},
 \code{\link[=make]{make()}}, \code{\link[=load_mtcars_example]{load_mtcars_example()}}
 }

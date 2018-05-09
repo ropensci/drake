@@ -249,3 +249,7 @@ test_with_dir("make(session = callr::r_vanilla)", {
     rm(list = rm_these, envir = con$envir)
   }
 })
+
+test_with_dir("misc utils", {
+  expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
+})

@@ -37,6 +37,6 @@ dependency_profile(file_store("report.md"), config = con)
 }
 \seealso{
 \code{\link[=read_drake_meta]{read_drake_meta()}},
-\code{\link[=deps]{deps()}}, \code{\link[=make]{make()}},
+\code{\link[=deps_code]{deps_code()}}, \code{\link[=make]{make()}},
 \code{\link[=config]{config()}}
 }

@@ -66,7 +66,7 @@ plan <- drake_plan(x = f(1))
 tracked(plan)
 
 # But the digest() function has dependencies too.
-head(deps(digest))
+head(deps_code(digest))
 
 # Why doesn't `drake` import them? Because it knows `digest()`
 # is from a package, and it doesn't usually dive into functions

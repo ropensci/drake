@@ -102,7 +102,7 @@
 #' # code chunks to find dependencies.
 #' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 #' # are loaded in with calls to `loadd()` and `readd()`.
-#' deps("report.Rmd")
+#' deps_code("report.Rmd")
 #' # You can create your own custom columns too.
 #' # See ?triggers for more on triggers.
 #' drake_plan(

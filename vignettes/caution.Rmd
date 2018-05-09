@@ -198,8 +198,8 @@ The same behavior affects objects containing functions more broadly, not just `R
 It is common practice to use a literal dot (`.`) to carry an object through a [`magrittr`](https://github.com/tidyverse/magrittr) pipeline. Due to some tricky  limitations in static code analysis, `drake` never treats the dot (`.`) as a dependency, even if you use it as an ordinary variable outside of a [`tidyverse`](https://www.tidyverse.org/) context.
 
 ```{r depsdot}
-deps("sqrt(x + y + .)")
-deps("dplyr::filter(complete.cases(.))")
+deps_code("sqrt(x + y + .)")
+deps_code("dplyr::filter(complete.cases(.))")
 ```
 
 ## Triggers and skipped imports
@@ -224,13 +224,13 @@ f <- function(){
   digest::digest(file_dependency)
 }
 
-deps(f)
+deps_code(f)
 
 command <- "x <- digest::digest(file_in(\"input_file.rds\")); assign(\"x\", 1); x" # nolint
-deps(command)
+deps_code(command)
 ```
 
-`Drake` takes special precautions so that a target/import does not depend on itself. For example, `deps(f)` might return `"f"` if `f()` is a recursive function, but `make()` just ignores this conflict and runs as expected. In other words, `make()` automatically removes all self-referential loops in the dependency network.
+`Drake` takes special precautions so that a target/import does not depend on itself. For example, `deps_code(f)` might return `"f"` if `f()` is a recursive function, but `make()` just ignores this conflict and runs as expected. In other words, `make()` automatically removes all self-referential loops in the dependency network.
 
 ## Dependencies of `knitr` reports
 

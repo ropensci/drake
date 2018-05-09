@@ -191,9 +191,10 @@ workflow_graph <- build_drake_graph(my_plan) # igraph object
 check_plan(my_plan)
 
 # Check the dependencies of individual functions and commands.
-deps(reg1)
-deps(my_plan$command[1])
-deps(my_plan$command[nrow(my_plan)])
+# See also deps_targets().
+deps_code(reg1)
+deps_code(my_plan$command[1])
+deps_code(my_plan$command[nrow(my_plan)])
 
 # List objects that are reproducibly tracked.
 "small" %in% tracked(my_plan)

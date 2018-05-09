@@ -10,16 +10,16 @@ test_with_dir("safe_find_globals", {
 test_with_dir("unparsable commands are handled correctly", {
   x <- "bluh$"
   expect_false(is_parsable(x))
-  expect_error(deps(x))
+  expect_error(deps_code(x))
 })
 
 test_with_dir("magrittr dot is ignored", {
   expect_equal(
-    sort(deps("sqrt(x + y + .)")),
+    sort(deps_code("sqrt(x + y + .)")),
     sort(c("sqrt", "x", "y"))
   )
   expect_equal(
-    sort(deps("dplyr::filter(complete.cases(.))")),
+    sort(deps_code("dplyr::filter(complete.cases(.))")),
     sort(c("complete.cases", "dplyr::filter"))
   )
 })
@@ -55,9 +55,9 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     sort(c("\"report.Rmd\"", "\"x\""))
   )
   expect_equal(y$to, rep("f", 2))
-  expect_equal(sort(deps(f)), sort(c("\"report.Rmd\"", "\"x\"")))
+  expect_equal(sort(deps_code(f)), sort(c("\"report.Rmd\"", "\"x\"")))
   expect_equal(
-    sort(deps(cmd)),
+    sort(deps_code(cmd)),
     sort(
       c("coef_regression2_small", "large",
         "\"report.Rmd\"", "small", "\"x\"", "\"y\""
@@ -67,21 +67,21 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
 })
 
 test_with_dir(
-  "deps() correctly reports dependencies of functions and commands", {
-  expect_equal(deps(""), character(0))
+  "deps_code() correctly reports dependencies of functions and commands", {
+  expect_equal(deps_code(""), character(0))
   expect_equal(length(command_dependencies(NA)), 0)
   expect_equal(length(command_dependencies(NULL)), 0)
   expect_equal(length(command_dependencies(character(0))), 0)
-  expect_equal(deps(base::c), character(0))
-  expect_equal(deps(base::list), character(0))
-  expect_error(deps(NA))
+  expect_equal(deps_code(base::c), character(0))
+  expect_equal(deps_code(base::list), character(0))
+  expect_equal(deps_code(NA), character(0))
   f <- function(x, y) {
     out <- x + y + g(x)
     saveRDS(out, "out.rds")
   }
   expect_false(is_vectorized(f))
   expect_false(is_vectorized("char"))
-  expect_equal(sort(deps(f)), sort(c("g", "saveRDS")))
+  expect_equal(sort(deps_code(f)), sort(c("g", "saveRDS")))
   my_plan <- drake_plan(
     x = 1 + some_object,
     my_target = x + readRDS(file_in("tracked_input_file.rds")),
@@ -90,13 +90,13 @@ test_with_dir(
     meta = read.table(file_in("file_in")),
     strings_in_dots = "literals"
   )
-  expect_equal(deps(my_plan$command[1]), "some_object")
-  expect_equal(sort(deps(my_plan$command[2])),
+  expect_equal(deps_code(my_plan$command[1]), "some_object")
+  expect_equal(sort(deps_code(my_plan$command[2])),
     sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))
-  expect_equal(sort(deps(my_plan$command[3])), sort(c("f", "g", "w",
+  expect_equal(sort(deps_code(my_plan$command[3])), sort(c("f", "g", "w",
     "x", "y", "z")))
-  expect_equal(sort(deps(my_plan$command[4])), sort(c("read.csv")))
-  expect_equal(sort(deps(my_plan$command[5])),
+  expect_equal(sort(deps_code(my_plan$command[4])), sort(c("read.csv")))
+  expect_equal(sort(deps_code(my_plan$command[5])),
     sort(c("read.table", "\"file_in\"")))
 })
 
@@ -135,8 +135,8 @@ test_with_dir("Vectorized nested functions work", {
   config$envir <- e
   config$plan <- drake_plan(a = f(1:10))
   config$targets <- "a"
-  expect_equal(deps(e$f), "g")
-  expect_equal(deps(e$g), "y")
+  expect_equal(deps_code(e$f), "g")
+  expect_equal(deps_code(e$g), "y")
 
   config <- testrun(config)
   if ("a" %in% ls(config$envir)){
@@ -160,4 +160,30 @@ test_with_dir("Vectorized nested functions work", {
   config <- testrun(config)
   expect_equal(justbuilt(config), "a")
   expect_equal(readd(a), 12:21)
+})
+
+test_with_dir("deps_targets()", {
+  load_mtcars_example(cache = storr::storr_environment())
+  config <- drake_config(my_plan, cache = storr::storr_environment())
+  expect_equal(
+    sort(deps_targets(file_store("report.md"), config = config)),
+    sort(
+      c(
+        "coef_regression2_small", "knit", "large",
+        file_store("report.Rmd"), "small"
+      )
+    )
+  )
+  expect_equal(
+    sort(deps_targets("regression1_small", config = config)),
+    sort(c("reg1", "small"))
+  )
+  expect_equal(
+    sort(deps_targets(c("small", "large"), config = config, reverse = TRUE)),
+    sort(c(
+      "regression1_large", "regression1_small",
+      "regression2_large", "regression2_small",
+      file_store("report.md")
+    ))
+  )
 })
