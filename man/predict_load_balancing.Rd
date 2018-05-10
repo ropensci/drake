@@ -7,7 +7,8 @@ for non-staged parallel backends.}
 \usage{
 predict_load_balancing(config = drake::read_drake_config(), targets = NULL,
   from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
-  digits = NULL, jobs = 1, known_times = numeric(0), default_time = 0)
+  digits = NULL, jobs = 1, known_times = numeric(0), default_time = 0,
+  warn = TRUE)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -45,6 +46,11 @@ or the \code{default_time}.}
 \item{default_time}{number of seconds to assume for any
 target or import with no recorded runtime (from \code{\link[=build_times]{build_times()}})
 or anything in \code{known_times}.}
+
+\item{warn}{logical, whether to warn the user about
+any targets with no available runtime, either in
+\code{known_times} or \code{\link[=build_times]{build_times()}}. The times for these
+targets default to \code{default_time}.}
 }
 \value{
 A data frame with one row per persistent worker.
