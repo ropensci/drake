@@ -122,7 +122,8 @@ The `plan()` function from the [`future`](https://github.com/HenrikBengtsson/fut
 library(future)
 future::plan(multisession)
 make(my_plan, parallelism = "future", jobs = 2)
-make(my_plan, parallelism = "future_lapply", jobs = 2) # Same tech, different scheduling.
+# Same technology, different scheduling:
+make(my_plan, parallelism = "future_lapply", jobs = 2)
 ```
 
 To deploy to a cluster (say, a [SLURM](https://slurm.schedmd.com/) cluster), you need the [`batchtools`](https://github.com/mllg/batchtools) and [`future.batchtools`](https://github.com/HenrikBengtsson/future.batchtools) packages.
@@ -142,7 +143,8 @@ Load the template file your `future::plan()` and call `make()` to run the projec
 ```{r futurebatchtools2, eval = FALSE}
 future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl")
 make(my_plan, parallelism = "future", jobs = 2)
-make(my_plan, parallelism = "future_lapply", jobs = 2) # Same tech, different scheduling.
+# Same technology, different scheduling:
+make(my_plan, parallelism = "future_lapply", jobs = 2)
 ```
 
 See packages [`future`](https://github.com/HenrikBengtsson/future), [`future.batchtools`](https://github.com/HenrikBengtsson/future.batchtools), and [`batchtools`](https://github.com/mllg/batchtools) for more options. For example, the alternatives for `future::plan()` are listed [here](https://github.com/HenrikBengtsson/future#controlling-how-futures-are-resolved) and [here](https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend).
@@ -261,7 +263,7 @@ make(my_plan, parallelism = "mclapply_staged", jobs = 2)
 make(my_plan, parallelism = "parLapply_staged", jobs = 2)
 ```
 
-Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.
+Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback. <a href="#note1" id="note1ref">[1]</a>
 
 <iframe width="640" height="360" src="https://www.powtoon.com/embed/fkwJXrmh0hz/" frameborder="0"></iframe>
 
@@ -324,6 +326,9 @@ Above, `drake` only builds the missing targets. This skips much of the [time-con
 
 See the [timing vignette](https://github.com/ropensci/drake/blob/master/vignettes/timing.Rmd) for explanations of functions `predict_runtime()` and `predict_load_balancing()`, which can help you plan and strategize deployment.
 
+# Footnotes
+
+<a id="note1" href="#note1ref">[1]</a> The video of staged parallelism is an oversimplification. It holds mostly true for `make(parallelism = "parLapply_staged")`, but `make(parallelism = "mclapply_staged")` is a bit different. In the former case, each stage is a call to `parLapply()`, which recycles existing workers on a pre-built parallel socket (PSOCK) cluster. But in the latter, every stage is a new call to `mclapply()`, which launches a brand new batch of workers. In that sense, workers in `make(parallelism = "parLapply_staged")` are sort of persistent, and workers in `make(parallelism = "mclapply_staged")` are sort of transient for some projects.
 
 ```{r endofline_quickstart, echo = F}
 clean(destroy = TRUE, verbose = FALSE)
