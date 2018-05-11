@@ -458,3 +458,17 @@ test_with_dir("bind_plans()", {
   )
   expect_equal(plan3, plan4)
 })
+
+test_with_dir("spaces in target names are replaced only when appropriate", {
+  expect_warning(
+    pl <- drake_plan(a = x__, file_out("x__")) %>%
+      evaluate_plan(wildcard = "x__", values = c("b  \n  x y", "a x"))
+  )
+  pl2 <- tibble::tibble(
+    target = c("a_b_x_y", "a_a_x", "\"b  \n  x y\"", "\"a x\""),
+    command = c(
+      "b  \n  x y", "a x", "file_out(\"b  \n  x y\")", "file_out(\"a x\")"
+    )
+  )
+  expect_equal(pl, pl2)
+})

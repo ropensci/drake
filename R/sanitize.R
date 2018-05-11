@@ -73,10 +73,11 @@ sanitize_nodes <- function(nodes, choices){
 }
 
 repair_target_names <- function(x){
+  x <- stringi::stri_trim_both(x)
   illegals <- c(
     ":", "\\+", "\\-", "\\*", "\\^",
     "\\(", "\\)", "\\[", "\\]", "^_",
-    "\\\""
+    "\\\"", "\\s+"
   ) %>%
     paste(collapse = "|")
   non_files <- x[is_not_file(x)]
@@ -85,7 +86,6 @@ repair_target_names <- function(x){
   } else {
     return(x)
   }
-  x <- stringi::stri_trim_both(x)
   x[is_not_file(x)] <- gsub(illegals, "_", x[is_not_file(x)])
   x <- gsub("^_", "", x)
   x[!nzchar(x)] <- "X"
