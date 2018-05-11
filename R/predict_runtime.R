@@ -75,7 +75,8 @@ predict_runtime <- function(
   digits = NULL,
   jobs = 1,
   known_times = numeric(0),
-  default_time = 0
+  default_time = 0,
+  warn = TRUE
 ){
   balance <- predict_load_balancing(
     config = config,
@@ -86,7 +87,8 @@ predict_runtime <- function(
     digits = digits,
     jobs = jobs,
     known_times = known_times,
-    default_time = default_time
+    default_time = default_time,
+    warn = warn
   )
   dseconds(max(balance$time))
 }
@@ -186,7 +188,10 @@ predict_runtime <- function(
 #' @param default_time number of seconds to assume for any
 #'   target or import with no recorded runtime (from [build_times()])
 #'   or anything in `known_times`.
-
+#' @param warn logical, whether to warn the user about
+#'   any targets with no available runtime, either in
+#'   `known_times` or [build_times()]. The times for these
+#'   targets default to `default_time`.
 predict_load_balancing <- function(
   config = drake::read_drake_config(),
   targets = NULL,
@@ -196,7 +201,8 @@ predict_load_balancing <- function(
   digits = NULL,
   jobs = 1,
   known_times = numeric(0),
-  default_time = 0
+  default_time = 0,
+  warn = TRUE
 ){
   if (!is.null(future_jobs) || !is.null(digits)){
     warning(
@@ -213,11 +219,12 @@ predict_load_balancing <- function(
     config$graph <- targets_graph(config)
   }
   times <- times[times$item %in% V(config$graph)$name, ]
-  untimed <- setdiff(V(config$graph)$name, times$item)
+  untimed <- setdiff(V(config$graph)$name, times$item) %>%
+    setdiff(y = names(known_times))
   if (length(untimed)){
     warning(
       "Some targets were never actually timed, ",
-      "And no hypothetical time was specified in `known_times`",
+      "And no hypothetical time was specified in `known_times`. ",
       "Assuming a runtime of ",
       default_time, " for these targets:\n",
       multiline_message(untimed),
