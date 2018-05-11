@@ -62,7 +62,8 @@ tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
 <tr class="even">
 <td align="left"><a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a></td>
 <td align="left"></td>
-<td align="left"></td>
+<td align="left"><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
+</td>
 </tr>
 </tbody>
 </table>
