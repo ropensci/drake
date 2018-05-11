@@ -149,7 +149,7 @@ make(my_plan, parallelism = "future_lapply", jobs = 2)
 
 See packages [`future`](https://github.com/HenrikBengtsson/future), [`future.batchtools`](https://github.com/HenrikBengtsson/future.batchtools), and [`batchtools`](https://github.com/mllg/batchtools) for more options. For example, the alternatives for `future::plan()` are listed [here](https://github.com/HenrikBengtsson/future#controlling-how-futures-are-resolved) and [here](https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend).
 
-## `"Makefile`"
+## `"Makefile"`
 
 Here, `drake` actually writes, configures, and runs a proper [`Makefile`](https://www.gnu.org/software/make/) to run the targets.
 
