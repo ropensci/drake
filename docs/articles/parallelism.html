@@ -118,7 +118,7 @@
       <h1>High-performance computing with drake</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-09</h4>
+            <h4 class="date">2018-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd"><code>vignettes/parallelism.Rmd</code></a></small>
       <div class="hidden name"><code>parallelism.Rmd</code></div>
@@ -204,7 +204,8 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>) <span class="co"># Same tech, different scheduling.</span></code></pre></div>
+<span class="co"># Same technology, different scheduling:</span>
+<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>To deploy to a cluster (say, a <a href="https://slurm.schedmd.com/">SLURM</a> cluster), you need the <a href="https://github.com/mllg/batchtools"><code>batchtools</code></a> and <a href="https://github.com/HenrikBengtsson/future.batchtools"><code>future.batchtools</code></a> packages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future.batchtools)</code></pre></div>
 <p>You also need <a href="https://github.com/mllg/batchtools/tree/master/inst/templates">template file</a> to configure <a href="https://github.com/mllg/batchtools"><code>batchtools</code></a> the remote resources, such as the memory and wall time limits. Use <code><a href="../reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file()</a></code> to write one of the examples from the <a href="https://github.com/ropensci/drake/tree/master/inst/examples"><code><a href="../reference/drake_example.html">drake_example()</a></code> files</a>. You will probably need to edit it manually to match your resources and needs.</p>
@@ -212,7 +213,8 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <p>Load the template file your <code><a href="http://www.rdocumentation.org/packages/future/topics/plan">future::plan()</a></code> and call <code><a href="../reference/make.html">make()</a></code> to run the project.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
-<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>) <span class="co"># Same tech, different scheduling.</span></code></pre></div>
+<span class="co"># Same technology, different scheduling:</span>
+<span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>See packages <a href="https://github.com/HenrikBengtsson/future"><code>future</code></a>, <a href="https://github.com/HenrikBengtsson/future.batchtools"><code>future.batchtools</code></a>, and <a href="https://github.com/mllg/batchtools"><code>batchtools</code></a> for more options. For example, the alternatives for <code><a href="http://www.rdocumentation.org/packages/future/topics/plan">future::plan()</a></code> are listed <a href="https://github.com/HenrikBengtsson/future#controlling-how-futures-are-resolved">here</a> and <a href="https://github.com/HenrikBengtsson/future.batchtools#choosing-batchtools-backend">here</a>.</p>
 </div>
 <div id="makefile" class="section level2">
@@ -300,7 +302,7 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <p>Backends <code>"mclapply_staged"</code> and <code>"parLapply_staged"</code> support staged scheduling.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
-<p>Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, <code>drake</code> uses <code>mclapply()</code> or <code>parLapply()</code> to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.</p>
+<p>Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, <code>drake</code> uses <code>mclapply()</code> or <code>parLapply()</code> to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback. <a href="#note1" id="note1ref">[1]</a></p>
 <iframe width="640" height="360" src="https://www.powtoon.com/embed/fkwJXrmh0hz/" frameborder="0">
 </iframe>
 <p>However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.</p>
@@ -368,6 +370,11 @@ plan
 <p>See the <a href="https://github.com/ropensci/drake/blob/master/vignettes/timing.Rmd">timing vignette</a> for explanations of functions <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/predict_load_balancing.html">predict_load_balancing()</a></code>, which can help you plan and strategize deployment.</p>
 </div>
 </div>
+<div id="footnotes" class="section level1">
+<h1 class="hasAnchor">
+<a href="#footnotes" class="anchor"></a>Footnotes</h1>
+<p><a id="note1" href="#note1ref">[1]</a> The video of staged parallelism is an oversimplification. It holds mostly true for <code><a href="../reference/make.html">make(parallelism = "parLapply_staged")</a></code>, but <code><a href="../reference/make.html">make(parallelism = "mclapply_staged")</a></code> is a bit different. In the former case, each stage is a call to <code>parLapply()</code>, which recycles existing workers on a pre-built parallel socket (PSOCK) cluster. But in the latter, every stage is a new call to <code>mclapply()</code>, which launches a brand new batch of workers. In that sense, workers in <code><a href="../reference/make.html">make(parallelism = "parLapply_staged")</a></code> are sort of persistent, and workers in <code><a href="../reference/make.html">make(parallelism = "mclapply_staged")</a></code> are sort of transient for some projects.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -396,6 +403,7 @@ plan
       <li><a href="#more-resources">More resources</a></li>
       </ul>
 </li>
+      <li><a href="#footnotes">Footnotes</a></li>
       </ul>
 </div>
       </div>

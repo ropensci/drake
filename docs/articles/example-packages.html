@@ -119,7 +119,7 @@
             <h3 class="subtitle">Refresh your project without restarting from scratch.</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-09</h4>
+            <h4 class="date">2018-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/example-packages.Rmd"><code>vignettes/example-packages.Rmd</code></a></small>
       <div class="hidden name"><code>example-packages.Rmd</code></div>
@@ -143,13 +143,13 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cranlogs)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/cranlogs/topics/cran_downloads">cran_downloads</a></span>(<span class="dt">packages =</span> <span class="st">"dplyr"</span>, <span class="dt">when =</span> <span class="st">"last-week"</span>)
 ##         date count package
-## 1 2018-05-01 13497   dplyr
-## 2 2018-05-02 16898   dplyr
-## 3 2018-05-03 16914   dplyr
-## 4 2018-05-04 13771   dplyr
-## 5 2018-05-05  8174   dplyr
+## 1 2018-05-03 16914   dplyr
+## 2 2018-05-04 13771   dplyr
+## 3 2018-05-05  8174   dplyr
 ## 7 2018-05-06     0   dplyr
-## 6 2018-05-07 14605   dplyr</code></pre></div>
+## 4 2018-05-07 14605   dplyr
+## 5 2018-05-08 15992   dplyr
+## 6 2018-05-09 15511   dplyr</code></pre></div>
 <p>Above, each count is the number of times <code>dplyr</code> was downloaded from the RStudio CRAN mirror on the given day. To stay up to date with the latest download statistics, we need to refresh the data frequently. With <code>drake</code>, we can bring all our work up to date without restarting everything from scratch.</p>
 </div>
 <div id="analysis" class="section level1">
@@ -272,9 +272,9 @@ whole_plan
 ## # A tibble: 3 x 2
 ##   package mean_downloads
 ##   &lt;chr&gt;            &lt;dbl&gt;
-## 1 ggplot2         17428.
-## 2 knitr           11265.
-## 3 Rcpp            24092.
+## 1 ggplot2         17788.
+## 2 knitr           11480.
+## 3 Rcpp            24512.
 
 <span class="kw"><a href="../reference/readd.html">readd</a></span>(averages_older)
 ## # A tibble: 3 x 2

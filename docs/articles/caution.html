@@ -119,7 +119,7 @@
             <h3 class="subtitle">Cautionary notes for drake</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-09</h4>
+            <h4 class="date">2018-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/caution.Rmd"><code>vignettes/caution.Rmd</code></a></small>
       <div class="hidden name"><code>caution.Rmd</code></div>
@@ -342,10 +342,10 @@ example_class &lt;-<span class="st"> </span><span class="kw"><a href="http://www
   )
 )
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class)
-## [1] "44259ccf5a3971b60a0eb403683bc4bb"
+## [1] "f602cc12207f94708c41b6592d23c682"
 example_object &lt;-<span class="st"> </span>example_class<span class="op">$</span><span class="kw">new</span>(<span class="dt">data =</span> <span class="dv">1234</span>)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(example_class) <span class="co"># example_class changed</span>
-## [1] "c23210f005bc76ef4854e99b3f7c5bfd"</code></pre></div>
+## [1] "e8631f028ef71ce6eb5035ef91a50919"</code></pre></div>
 <p><code>Drake</code> detects this type strange change and unavoidably rebuilds targets.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_plan.html">drake_plan</a></span>(<span class="dt">example_target =</span> example_class<span class="op">$</span><span class="kw">new</span>(<span class="dv">1234</span>))
 <span class="kw"><a href="../reference/make.html">make</a></span>(plan) <span class="co"># `example_class` changes because it is referenced.</span>

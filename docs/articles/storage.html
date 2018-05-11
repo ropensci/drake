@@ -119,7 +119,7 @@
             <h3 class="subtitle">Caches and hashes</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-09</h4>
+            <h4 class="date">2018-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd"><code>vignettes/storage.Rmd</code></a></small>
       <div class="hidden name"><code>storage.Rmd</code></div>
@@ -225,15 +225,15 @@ cache<span class="op">$</span><span class="kw">list</span>()
 ## 
 ## $start
 ##    user  system elapsed 
-##   2.688   0.112   2.794 
+##   3.075   0.105   3.187 
 ## 
 ## $time_command
 ##    item   type elapsed  user system
-## 1 small target   0.002 0.002      0
+## 1 small target   0.009 0.008      0
 ## 
 ## $time_build
 ##    item   type elapsed  user system
-## 1 small target   0.031 0.031  0.001
+## 1 small target    0.04 0.038  0.001
 
 cache<span class="op">$</span><span class="kw">list_namespaces</span>()
 ## [1] "config"   "kernels"  "meta"     "objects"  "progress" "session"</code></pre></div>
@@ -310,19 +310,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "02c1a146f966d317aebae420b5e859b1"</code></pre></div>
+## [1] "c18e4d780cdf757dd567eed575ca5cb1"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "8df7b1a40c7e4ab908b2705989b3156cc17b24d0ffaa76cccc50adcfabaa6ecc3e35aa6c06f2e9518b3476974586ed70aa0f7e12b11528d8b2032b1a12179636"
+## [1] "6f150972fe742bd36eb7731364d10620735ca48884993f812f5ad8e1709f2accc6e2cc18054793945df044519438e5f7d294776206d091a346778df511a25faa"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "02c1a146f966d317aebae420b5e859b1"
+## [1] "c18e4d780cdf757dd567eed575ca5cb1"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "55710364c02fe2ea"
+## [1] "11fa295e4e17e1cc"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "6e553ebb"</code></pre></div>
+## [1] "f893c153"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">

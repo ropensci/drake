@@ -119,7 +119,7 @@
             <h3 class="subtitle">A thorough walkthrough of drake’s main functionality</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-09</h4>
+            <h4 class="date">2018-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/example-mtcars.Rmd"><code>vignettes/example-mtcars.Rmd</code></a></small>
       <div class="hidden name"><code>example-mtcars.Rmd</code></div>
@@ -595,16 +595,16 @@ x_plan
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.004s         0.002s         0.002s     
-##  2 coef_regression1_small target 0.003s         0.004s         0s         
-##  3 coef_regression2_large target 0.003s         0.003s         0s         
+##  1 coef_regression1_large target 0.005s         0.004s         0s         
+##  2 coef_regression1_small target 0.004s         0.003s         0s         
+##  3 coef_regression2_large target 0.004s         0.004s         0s         
 ##  4 coef_regression2_small target 0.003s         0.004s         0s         
-##  5 data.frame             import 0.02s          0.02s          0s         
-##  6 knit                   import 0.016s         0.016s         0s         
-##  7 large                  target 0.047s         0.047s         0s         
-##  8 lm                     import 0.008s         0.008s         0s         
-##  9 mtcars                 import 0s             0s             0s         
-## 10 nrow                   import 0.004s         0.004s         0s         
+##  5 data.frame             import 0.019s         0.019s         0s         
+##  6 knit                   import 0.017s         0.017s         0s         
+##  7 large                  target 0.053s         0.054s         0.001s     
+##  8 lm                     import 0.011s         0.01s          0s         
+##  9 mtcars                 import 0.001s         0.001s         0s         
+## 10 nrow                   import 0.004s         0.005s         0s         
 ## # ... with 18 more rows</code></pre></div>
 <p>See also <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/rate_limiting_times.html">rate_limiting_times()</a></code>.</p>
 <p>In the new graph, the black nodes from before are now green.</p>
@@ -730,7 +730,7 @@ config<span class="op">$</span>cache<span class="op">$</span><span class="kw">ge
 ## [1] "40fb781de184c741"
 
 config<span class="op">$</span>cache<span class="op">$</span><span class="kw">get_hash</span>(<span class="dt">key =</span> <span class="st">"reg2"</span>) <span class="co"># different</span>
-## [1] "867622eb534678d3"</code></pre></div>
+## [1] "64891d654aa31e21"</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hover, click, drag, zoom, and pan.</span>
 <span class="co"># Same as drake_graph():</span>
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(config, <span class="dt">width =</span> <span class="st">"100%"</span>, <span class="dt">height =</span> <span class="st">"500px"</span>)</code></pre></div>
