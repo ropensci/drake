@@ -15,14 +15,18 @@ vignette: >
 
 ```{r, echo = F}
 suppressMessages(suppressWarnings(library(drake)))
-suppressMessages(suppressWarnings(library(tidyverse)))
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(ggplot2)))
 unlink(".drake", recursive = TRUE)
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
   collapse = TRUE,
   warning = TRUE,
-  error = TRUE
+  error = TRUE,
+  fig.width = 6,
+  fig.height = 6,
+  fig.align = "center"
 )
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
 dat <- system.file(
@@ -49,7 +53,8 @@ To set up a project, load your packages,
 
 ```{r mainpackages}
 library(drake)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 ```
 
 load your custom functions,

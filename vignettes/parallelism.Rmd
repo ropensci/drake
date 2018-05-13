@@ -263,7 +263,7 @@ make(my_plan, parallelism = "mclapply_staged", jobs = 2)
 make(my_plan, parallelism = "parLapply_staged", jobs = 2)
 ```
 
-Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback. <a href="#note1" id="note1ref">[1]</a>
+Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.<sup><a href="#note1" id="note1ref">[1]</a></sup>
 
 <iframe width="640" height="360" src="https://www.powtoon.com/embed/fkwJXrmh0hz/" frameborder="0"></iframe>
 

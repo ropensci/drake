@@ -19,7 +19,10 @@ unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 knitr::opts_chunk$set(
   collapse = TRUE,
   error = TRUE,
-  warning = TRUE
+  warning = TRUE,
+  fig.width = 6,
+  fig.height = 6,
+  fig.align = "center"
 )
 ```
 
@@ -80,7 +83,7 @@ How many parallel jobs should you use in the next `make()`? The `predict_runtime
 
 ```{r predictjobs}
 time <- c()
-for (jobs in 1:12){
+for (jobs in 1:15){
   time[jobs] <- predict_runtime(
     config,
     jobs = jobs,
@@ -89,7 +92,7 @@ for (jobs in 1:12){
   )
 }
 library(ggplot2)
-ggplot(data.frame(time = time / 3600, jobs = ordered(1:12), group = 1)) +
+ggplot(data.frame(time = time / 3600, jobs = ordered(1:15), group = 1)) +
   geom_line(aes(x = jobs, y = time, group = group)) +
   scale_y_continuous(breaks = 0:10 * 4, limits = c(0, 29)) +
   theme_gray(12) +
@@ -122,7 +125,7 @@ future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl")
 make(my_plan, parallelism = "future", jobs = 7, verbose = 4)
 ```
 
-But why 7 jobs? Why not 8? 8 seems more intuitive when you look at the dependency graph and see a column of 8 targets.
+But why 7 jobs? From the dependency graph, the column of 8 targets makes it seem like there would be a speed improvement from 7 jobs to 8.
 
 <iframe
 src = "https://ropensci.github.io/drake/images/outdated.html"
@@ -130,7 +133,7 @@ width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
 
-The key is to think in terms of load balancing for persistent workers (transient workers should be similar here). Each free worker moves to each next free target as soon as possible, minimizing idle time. This splits the 14 computationally expensive targets evenly over the 7 workers. If you add another worker, you will still have workers with two expensive targets, each of which will run for 4 hours.
+But the key is to think in terms of load balancing for persistent workers (transient workers should be similar here). Each free worker moves to each next free target as soon as possible, minimizing idle time. This splits the 14 computationally expensive targets evenly over the 7 workers. If you add another worker, you will still have workers with two expensive targets, each of which will run for 4 hours.
 
 ```{r predict_load}
 balance <- predict_load_balancing(
