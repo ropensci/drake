@@ -128,7 +128,6 @@ create_plot <- function(data) {
 }
 ```
 
-
 `Drake` knows which results are affected.
 
 ```{r visdrakegraphreadme, eval = FALSE}
