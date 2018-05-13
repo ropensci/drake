@@ -22,19 +22,19 @@ navbar:
       href: articles/example-mtcars.html
     - text: "General best practices for drake projects"
       href: articles/best-practices.html
-    - text: Debugging and testing drake projects
+    - text: "Debugging and testing drake projects"
       href: articles/debug.html
-    - text: Graphs with drake
+    - text: "Visualizing dependency graphs"
       href: articles/graph.html
-    - text: Parallel computing
+    - text: "High-performance computing"
       href: articles/parallelism.html
     - text: "Timing: logging, prediction, and strategy"
       href: articles/timing.html
-    - text: Storage
+    - text: "Storage: caches and hashes"
       href: articles/storage.html
-    - text: Caution
+    - text: "Cautionary notes"
       href: articles/caution.html
-    - text: Frequently-asked questions
+    - text: "Frequently-asked questions"
       href: articles/faq.html
   - text: News
     href: news/index.html

@@ -73,19 +73,19 @@
       <a href="../articles/debug.html">Debugging and testing drake projects</a>
     </li>
     <li>
-      <a href="../articles/graph.html">Graphs with drake</a>
+      <a href="../articles/graph.html">Visualizing dependency graphs</a>
     </li>
     <li>
-      <a href="../articles/parallelism.html">Parallel computing</a>
+      <a href="../articles/parallelism.html">High-performance computing</a>
     </li>
     <li>
       <a href="../articles/timing.html">Timing: logging, prediction, and strategy</a>
     </li>
     <li>
-      <a href="../articles/storage.html">Storage</a>
+      <a href="../articles/storage.html">Storage: caches and hashes</a>
     </li>
     <li>
-      <a href="../articles/caution.html">Caution</a>
+      <a href="../articles/caution.html">Cautionary notes</a>
     </li>
     <li>
       <a href="../articles/faq.html">Frequently-asked questions</a>
@@ -204,13 +204,13 @@ output_types
 ## 1 averages make_my_table(dataset__)
 ## 2 plot     make_my_plot(dataset__)</code></pre></div>
 <p>We need to define functions to summarize and plot the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span>function(downloads){
-  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(downloads, package) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">make_my_table &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
+  <span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(downloads, package) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="dt">mean_downloads =</span> <span class="kw">mean</span>(count))
 }
 
-make_my_plot &lt;-<span class="st"> </span>function(downloads){
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) +
+make_my_plot &lt;-<span class="st"> </span><span class="cf">function</span>(downloads){
+  <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(downloads) <span class="op">+</span>
 <span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> date, <span class="dt">y =</span> count, <span class="dt">group =</span> package, <span class="dt">color =</span> package))
 }</code></pre></div>
 <p>Below, the targets <code>recent</code> and <code>older</code> each take turns substituting the <code>dataset__</code> wildcard. Thus, <code>output_plan</code> has four rows.</p>
