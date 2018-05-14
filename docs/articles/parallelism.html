@@ -283,16 +283,20 @@ echo "module load R; $*" | qsub -sync y -cwd -j y
 future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(future<span class="op">::</span>multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>In each of these calls to <code><a href="../reference/make.html">make()</a></code>, three processes launch: two workers and one master. Whenever a worker is idle, the master assigns it the next available target (whose dependencies have been built). The workers keep running until there are no more targets to build. The following video demonstrates the concept.</p>
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/" frameborder="0">
+<div style="text-align: center">
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/">
 </iframe>
+</div>
 <p>The <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/predict_load_balancing.html">predict_load_balancing()</a></code> functions emulate persistent workers, and the predictions also apply to transient workers. See the <a href="https://ropensci.github.io/drake/articles/timing.html">timing guide</a> for a demonstration.</p>
 </div>
 <div id="transient-scheduling" class="section level2">
 <h2 class="hasAnchor">
 <a href="#transient-scheduling" class="anchor"></a>Transient scheduling</h2>
 <p>Persistent workers are great because they minimize overhead: all the workers are created at the beginning, and then you never have to create any more for the rest of the runthrough. Unfortunately, computing clusters usually limit the amount of time each worker can stay running. That is why <code>drake</code> also supports transient workers in backends <code>"future"</code> and <code>"Makefile"</code>. Here, the master process creates a new worker for each target individually, and the worker dies after it finishes its single target. For the <code>"future"</code> backend, the master is just the existing process calling <code><a href="../reference/make.html">make()</a></code>. The following video demonstrates the concept.</p>
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/cHIdOqudELB/" frameborder="0">
+<div style="text-align: center">
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/cHIdOqudELB/">
 </iframe>
+</div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(future<span class="op">::</span>multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
@@ -304,8 +308,10 @@ future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, <code>drake</code> uses <code>mclapply()</code> or <code>parLapply()</code> to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.<sup><a href="#note1" id="note1ref">[1]</a></sup></p>
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/dQKbGttIYud/" frameborder="0">
+<div style="text-align: center">
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/dQKbGttIYud/">
 </iframe>
+</div>
 <p>However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(drake)
@@ -345,8 +351,10 @@ plan
 ## # ... with 491 more rows</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(plan)
 <span class="kw"><a href="../reference/vis_drake_graph.html">vis_drake_graph</a></span>(plan)</code></pre></div>
+<div style="text-align: center">
 <iframe src="https://ropensci.github.io/drake/images/staged.html" width="100%" height="600px" allowtransparency="true" style="border: none; box-shadow: none">
 </iframe>
+</div>
 </div>
 </div>
 <div id="final-thoughts" class="section level1">
