@@ -165,7 +165,7 @@ console_persistent_workers <- function(config){
 }
 
 finish_console <- function(text, pattern, verbose){
-  if (!verbose){
+  if (verbose < 1){
     return(invisible())
   }
   crop_text(x = text) %>%

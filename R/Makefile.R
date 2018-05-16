@@ -144,7 +144,7 @@ mk <- function(
 #' default_Makefile_args(jobs = 4, verbose = TRUE)
 default_Makefile_args <- function(jobs, verbose){
   out <- paste0("--jobs=", jobs_targets(jobs))
-  if (!verbose){
+  if (verbose < 1){
     out <- c(out, "--silent")
   }
   return(out)

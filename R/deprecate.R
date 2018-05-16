@@ -296,7 +296,7 @@ default_system2_args <- function(jobs, verbose){
     )
   )
   out <- paste0("--jobs=", jobs)
-  if (!verbose){
+  if (verbose < 1){
     out <- c(out, "--silent")
   }
   return(out)
