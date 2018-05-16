@@ -5,10 +5,6 @@ sudo: false
 cache: packages
 
 # Added manually by Will Landau
-addons:
-  apt:
-    update: true
-
 branches:
   except:
   - gh-pages
