@@ -100,7 +100,7 @@ ggplot(data.frame(time = time / 3600, jobs = ordered(1:12), group = 1)) +
   ylab("Predicted runtime of make() (hours)")
 ```
 
-We see considerable speed gains up to 4 jobs, but then we have to double the jobs to shave off another 2 hours. The extra time savings may be worth your while in a pinch, but otherwise 4 is a solid choice.
+We see serious potential speed gains up to 4 jobs, but beyond that point, we have to double the jobs to shave off another 2 hours. Your choice of `jobs` for `make()` ultimately depends on the runtime you can tolerate and the computing resources at your disposal.
 
 ```{r endofline_timing, echo = F}
 clean(destroy = TRUE, verbose = FALSE)
