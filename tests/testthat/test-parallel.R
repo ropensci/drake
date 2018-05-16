@@ -79,7 +79,7 @@ test_with_dir("mclapply and lapply", {
   config$parallelism <- "parLapply"
   config$jobs <- 1
   config$debug <- TRUE
-  out <- make(config = config)
+  suppressWarnings(out <- make(config = config))
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
   suppressWarnings(out <- make(config = config))
