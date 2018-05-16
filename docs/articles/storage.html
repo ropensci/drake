@@ -119,7 +119,7 @@
             <h3 class="subtitle">Caches and hashes</h3>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-13</h4>
+            <h4 class="date">2018-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd"><code>vignettes/storage.Rmd</code></a></small>
       <div class="hidden name"><code>storage.Rmd</code></div>
@@ -187,7 +187,7 @@ config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make
 <p><code>Drake</code> (via <a href="https://github.com/richfitz/storr">storr</a>) has an object-like interface to these caches.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>()
 
-cache<span class="op">$</span><span class="kw">list</span>()
+cache$<span class="kw">list</span>()
 ##  [1] "coef_regression1_large" "coef_regression1_small"
 ##  [3] "coef_regression2_large" "coef_regression2_small"
 ##  [5] "data.frame"             "knit"                  
@@ -203,7 +203,7 @@ cache<span class="op">$</span><span class="kw">list</span>()
 ## [25] "summ_regression1_small" "summ_regression2_large"
 ## [27] "summ_regression2_small" "suppressWarnings"
 
-<span class="kw">head</span>(cache<span class="op">$</span><span class="kw">get</span>(<span class="st">"small"</span>))
+<span class="kw">head</span>(cache$<span class="kw">get</span>(<span class="st">"small"</span>))
 ##       x    y
 ## 1 3.730 17.3
 ## 2 5.250 10.4
@@ -212,7 +212,7 @@ cache<span class="op">$</span><span class="kw">list</span>()
 ## 5 3.190 24.4
 ## 6 3.440 17.8
 
-<span class="kw">tail</span>(cache<span class="op">$</span><span class="kw">get</span>(<span class="st">"small"</span>, <span class="dt">namespace =</span> <span class="st">"meta"</span>))
+<span class="kw">tail</span>(cache$<span class="kw">get</span>(<span class="st">"small"</span>, <span class="dt">namespace =</span> <span class="st">"meta"</span>))
 ## $command
 ## [1] "{\n simulate(48) \n}"
 ## 
@@ -224,17 +224,17 @@ cache<span class="op">$</span><span class="kw">list</span>()
 ## 
 ## $start
 ##    user  system elapsed 
-##   2.777   0.139   2.920 
+##   2.314   0.094   2.400 
 ## 
 ## $time_command
 ##    item   type elapsed  user system
-## 1 small target   0.003 0.002      0
+## 1 small target   0.002 0.003      0
 ## 
 ## $time_build
 ##    item   type elapsed  user system
-## 1 small target   0.026 0.025      0
+## 1 small target   0.014 0.014      0
 
-cache<span class="op">$</span><span class="kw">list_namespaces</span>()
+cache$<span class="kw">list_namespaces</span>()
 ## [1] "config"   "kernels"  "meta"     "objects"  "progress" "session"</code></pre></div>
 <p>Create a new cache of your own with <code><a href="../reference/new_cache.html">new_cache()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cache2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cache.html">new_cache</a></span>(<span class="dt">path =</span> <span class="st">"cache2"</span>)
@@ -282,18 +282,18 @@ config2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dra
 <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_rds">storr::storr_rds("my_path", mangle_key = TRUE)</a></code> is analogous to <code><a href="../reference/this_cache.html">this_cache(path = "my_path")</a></code>.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cache3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_cache.html">get_cache</a></span>(<span class="dt">path =</span> <span class="kw">getwd</span>()) <span class="co"># Finds the .drake folder in your directory.</span>
-<span class="kw">head</span>(cache3<span class="op">$</span><span class="kw">list</span>())
+<span class="kw">head</span>(cache3$<span class="kw">list</span>())
 ## [1] "coef_regression1_large" "coef_regression1_small"
 ## [3] "coef_regression2_large" "coef_regression2_small"
 ## [5] "data.frame"             "knit"
 cache4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/this_cache.html">this_cache</a></span>(<span class="dt">path =</span> <span class="st">"cache2"</span>) <span class="co"># The cache folder is literally called cache2.</span>
-<span class="kw">head</span>(cache4<span class="op">$</span><span class="kw">list</span>())
+<span class="kw">head</span>(cache4$<span class="kw">list</span>())
 ## [1] "coef_regression1_large" "coef_regression1_small"
 ## [3] "coef_regression2_large" "coef_regression2_small"
 ## [5] "data.frame"             "knit"</code></pre></div>
 <p>Destroy caches to remove them from your file system.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cache4<span class="op">$</span><span class="kw">destroy</span>()
-cache2<span class="op">$</span><span class="kw">list</span>() <span class="co"># Same folder as cache4.</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cache4$<span class="kw">destroy</span>()
+cache2$<span class="kw">list</span>() <span class="co"># Same folder as cache4.</span>
 ## character(0)</code></pre></div>
 <p>See <a href="https://github.com/richfitz/storr">storr</a> for more on <code>drake</code>’s caching infrastructure.</p>
 </div>
@@ -309,19 +309,19 @@ larger_data &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span cl
 ## [1] "23c80a31c0713176016e6e18d76a5f31"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data)
-## [1] "758587831fc32b64b96ea2cfcec3be05"</code></pre></div>
+## [1] "0311fd1511547b0017aaf520ea037257"</code></pre></div>
 <p>However, different hash algorithms vary in length.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"sha512"</span>)
-## [1] "cad8074d56bb5dc048c6b3d549743444e6958accdcb3f3ec87a7483aa97743698aeb9840e4997f67448c3dd0f8054ed48fbfb626dc125a0cf09354edfad47317"
+## [1] "6d881832eed64bc1a5ec15a15dc3118c8911d0f2fa595fe7ce82daf552a0a53e03cd513dd6eb5e0bfac7ed6ef1eb64a833b5c363bb75726b5dcb01db12d2ca66"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"md5"</span>)
-## [1] "758587831fc32b64b96ea2cfcec3be05"
+## [1] "0311fd1511547b0017aaf520ea037257"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"xxhash64"</span>)
-## [1] "3ec729b727e187d7"
+## [1] "a5b95096f7393e81"
 
 <span class="kw"><a href="http://www.rdocumentation.org/packages/digest/topics/digest">digest</a></span>(larger_data, <span class="dt">algo =</span> <span class="st">"murmur32"</span>)
-## [1] "4474c330"</code></pre></div>
+## [1] "7e207d16"</code></pre></div>
 </div>
 <div id="which-hash-algorithm-should-you-choose" class="section level1">
 <h1 class="hasAnchor">
@@ -356,22 +356,22 @@ tmp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_cac
 
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># xxhash64 is the default_short_hash_algo()</span>
+<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config$cache) <span class="co"># xxhash64 is the default_short_hash_algo()</span>
 ## [1] "crc32"
 
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># sha256 is the default_long_hash_algo()</span>
+<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config$cache) <span class="co"># sha256 is the default_long_hash_algo()</span>
 ## [1] "sha1"</code></pre></div>
 <p>You can change the long hash algorithm without throwing away the cache, but your project will rebuild from scratch. As for the short hash, you are committed until you delete the cache and all its supporting files.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config) <span class="co"># empty</span>
 ## character(0)
 
-config<span class="op">$</span>cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/configure_cache.html">configure_cache</a></span>(
-  config<span class="op">$</span>cache,
+config$cache &lt;-<span class="st"> </span><span class="kw"><a href="../reference/configure_cache.html">configure_cache</a></span>(
+  config$cache,
   <span class="dt">long_hash_algo =</span> <span class="st">"murmur32"</span>,
   <span class="dt">overwrite_hash_algos =</span> <span class="ot">TRUE</span>
 )</code></pre></div>
 <p>Below, the targets become outdated because the existing hash keys do not match the new hash algorithm.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config<span class="op">$</span>cache)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">cache =</span> config$cache)
 <span class="kw"><a href="../reference/outdated.html">outdated</a></span>(config)
 ##  [1] "coef_regression1_large" "coef_regression1_small"
 ##  [3] "coef_regression2_large" "coef_regression2_small"
@@ -384,10 +384,10 @@ config<span class="op">$</span>cache &lt;-<span class="st"> </span><span class="
 
 config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 
-<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># same as before</span>
+<span class="kw"><a href="../reference/short_hash.html">short_hash</a></span>(config$cache) <span class="co"># same as before</span>
 ## [1] "crc32"
 
-<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config<span class="op">$</span>cache) <span class="co"># different from before</span>
+<span class="kw"><a href="../reference/long_hash.html">long_hash</a></span>(config$cache) <span class="co"># different from before</span>
 ## [1] "murmur32"</code></pre></div>
 </div>
 <div id="using-storr-directly" class="section level1">
@@ -430,8 +430,8 @@ other_plan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <li>Be careful about parallel computing. For example the <code><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr::storr_dbi()</a></code> cache is not thread-safe. Either use no parallel computing at all or set <code>parallelism = "future"</code> with <code>caching = "master"</code>. The <code>"future"</code> backend is currently experimental, but it allows the master process to do all the caching in order to avoid race conditions.</li>
 </ol>
 <p>The following example requires the <code>DBI</code> and <code>RSQLite</code> packages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydb &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">"my-db.sqlite"</span>)
-cache &lt;-<span class="st"> </span>storr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi</a></span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mydb &lt;-<span class="st"> </span>DBI::<span class="kw">dbConnect</span>(RSQLite::<span class="kw">SQLite</span>(), <span class="st">"my-db.sqlite"</span>)
+cache &lt;-<span class="st"> </span>storr::<span class="kw"><a href="http://www.rdocumentation.org/packages/storr/topics/storr_dbi">storr_dbi</a></span>(
   <span class="dt">tbl_data =</span> <span class="st">"data"</span>,
   <span class="dt">tbl_keys =</span> <span class="st">"keys"</span>,
   <span class="dt">con =</span> mydb
