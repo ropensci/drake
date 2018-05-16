@@ -105,7 +105,7 @@ test_with_dir("staged mclapply and lapply", {
   clean()
   config$jobs <- 2
   config$debug <- TRUE
-  out <- make(config = config)
+  suppressWarnings(out <- make(config = config))
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
   suppressWarnings(out <- make(config = config))
