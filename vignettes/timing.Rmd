@@ -79,11 +79,11 @@ names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
 known_times
 ```
 
-How many parallel jobs should you use in the next `make()`? The `predict_runtime()` function can help you decide. `predict_runtime(jobs = n)` simulates how the targets are be distributed among `n` workers and then reports the virtual runtime of the busiest worker.
+How many parallel jobs should you use in the next `make()`? The `predict_runtime()` function can help you decide. `predict_runtime(jobs = n)` simulates persistent parallel workers and reports the estimated total runtime of `make(jobs = n)`. (See also `predict_load_balancing()`.)
 
 ```{r predictjobs}
 time <- c()
-for (jobs in 1:16){
+for (jobs in 1:12){
   time[jobs] <- predict_runtime(
     config,
     jobs = jobs,
@@ -92,7 +92,7 @@ for (jobs in 1:16){
   )
 }
 library(ggplot2)
-ggplot(data.frame(time = time / 3600, jobs = ordered(1:16), group = 1)) +
+ggplot(data.frame(time = time / 3600, jobs = ordered(1:12), group = 1)) +
   geom_line(aes(x = jobs, y = time, group = group)) +
   scale_y_continuous(breaks = 0:10 * 4, limits = c(0, 29)) +
   theme_gray(16) +
@@ -100,55 +100,7 @@ ggplot(data.frame(time = time / 3600, jobs = ordered(1:16), group = 1)) +
   ylab("Predicted runtime of make() (hours)")
 ```
 
-Now, let's say your laptop has 4 single-threaded cores, so you cannot realistically see major performance improvements beyond 4 jobs. Theoretically, if your assumptions about `known_times` are correct, you should still be able to finish in about 8 hours.
-
-```{r laptop, eval = FALSE}
-make(my_plan, jobs = 4)
-```
-
-But you can chop the time in half if you set `jobs` to 7 and send your targets to a computing cluster. See the [parallelism computing guide](https://ropensci.github.io/drake/articles/parallelism.html) for more on how this works.
-
-```{r timing_future, eval = FALSE}
-# Log into the cluster's head node / login node and start R.
-$ ssh you@login_node.your_cluster.com
-# Deployment to the cluster happens through future and future.batchtools.
-library(future.batchtools)
-# Write batchtools.slurm.tmpl that tells future.batchtools
-# how to talk to the compute nodes on the cluster.
-# You should modify and tailor it to your specific computing resource needs.
-# For example, make sure your wall time limit is over 2 hours.
-drake_batchtools_tmpl_file("slurm")
-# Connect future to the cluster.
-future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl")
-# Each target goes to its own node on the cluster,
-# with up to 7 targets running at a time.
-make(my_plan, parallelism = "future", jobs = 7, verbose = 4)
-```
-
-But why 7 jobs? From the dependency graph, the column of 8 targets makes it seem like there would be a speed improvement from 7 jobs to 8.
-
-<iframe
-src = "https://ropensci.github.io/drake/images/outdated.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
-
-But the key is to think in terms of load balancing for persistent workers (transient workers should be similar here). Each free worker moves to each next free target as soon as possible, minimizing idle time. This splits the 14 computationally expensive targets evenly over the 7 workers. If you add another worker, you will still have workers with two expensive targets, each of which will run for 4 hours.
-
-```{r predict_load}
-balance <- predict_load_balancing(
-  config,
-  jobs = 7,
-  from_scratch = TRUE,
-  targets_only = TRUE,
-  known_times = known_times
-)
-balance
-max(balance$time) / 3600
-balance$targets
-```
-
-But be warned: if you use the staged parallel backends `make(parallelism = "mclapply_staged")` or `make(parallelism = "parLapply_staged")`, the maximum number of useful jobs really will be 8. Here, if all targets are out of date, the dependency graph is divided into conditionally independent columns and parallelism is only applied in within each column. If some targets are already up to date, those targets are skipped, and each stage is packed with as many outdated targets as possible. Either way, each stage needs to wait for the last target to finish. So if you have computationally expensive targets, this approach is not recommended. However, staged parallelism remains a fast, low-overhead option for workflows with a large number of small, conditionally independent targets.
+We see considerable speed gains up to 4 jobs, but then we have to double the jobs to shave off another 2 hours. The extra time savings may be worth your while in a pinch, but otherwise 4 is a solid choice.
 
 ```{r endofline_timing, echo = F}
 clean(destroy = TRUE, verbose = FALSE)
