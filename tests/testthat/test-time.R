@@ -68,7 +68,7 @@ test_with_dir("runtime predictions", {
       predict_runtime(con, default_time = 1e4, jobs = 2)
     )
   )
-  expect_true(p0 > 3e4 - 10 && p0 < 4e4)
+  expect_true(p0 > 4e4 - 10 && p0 < 6e4 + 10)
   testrun(con)
   expect_warning(predict_runtime(con, digits = 1))
   p1 <- predict_runtime(config = con, jobs = 1) %>%
@@ -134,5 +134,5 @@ test_with_dir("runtime predictions", {
   expect_true(all(is.finite(c(p1, p2, p3, p4))))
   expect_equal(p5, 0, tolerance = 1e-6)
   expect_equal(p6, 70, tolerance = 1e-6)
-  expect_equal(p7, 37, tolerance = 1e-6)
+  expect_equal(p7, 43, tolerance = 1e-6)
 })

@@ -90,7 +90,7 @@ predict_runtime <- function(
     default_time = default_time,
     warn = warn
   )
-  dseconds(max(balance$time))
+  balance$total_runtime
 }
 
 #' @title Predict the load balancing of the next call to `make()`
@@ -158,9 +158,9 @@ predict_runtime <- function(
 #' # with two heavy targets.
 #' })
 #' }
-#' @return A data frame with one row per persistent worker.
-#'   Each row has the targets in the worker and the total runtime
-#'   of that worker.
+#' @return A list with (1) the total runtime and (2) a list
+#'   of the names of the targets assigned to each worker.
+#'   For each worker, targets are listed in the order they are assigned.
 #' @param config option internal runtime parameter list of
 #'   \code{\link{make}(...)},
 #'   produced by both [make()] and
@@ -263,30 +263,66 @@ predict_load_balancing <- function(
   balance_load(config = config, jobs = jobs)
 }
 
+# Taken directly from mc_master()
+# and modified to simulate the workers.
 balance_load <- function(config, jobs){
+  # Mostly the same setup for mc_master().
+  config$cache <- storr::storr_environment()
+  config$jobs <- jobs
+  config$workers <- as.character(seq_len(config$jobs))
   config$schedule <- config$graph
-  queue <- new_target_queue(config)
-  worker_targets <- lapply(seq_len(jobs), function(id){
+  config$queue <- new_target_queue(config = config)
+  mc_init_worker_cache(config)
+  lapply(config$workers, mc_set_ready, config = config)
+  targets <- lapply(config$workers, function(id){
     character(0)
   })
-  worker_times <- rep(0, jobs)
-  while (!queue$empty()){
-    target <- queue$pop()
-    i <- which.min(worker_times)
-    worker_targets[[i]] <- c(worker_targets[[i]], target)
-    worker_times[i] <- worker_times[i] +
-      V(config$graph)$time[V(config$graph)$name == target]
-    revdeps <- dependencies(
-      targets = target,
-      config = config,
-      reverse = TRUE
-    ) %>%
-      intersect(y = queue$list(what = "names"))
-    queue$decrease_key(names = revdeps)
+  total_runtime <- 0
+  step_times <- rep(0, config$jobs)
+  names(step_times) <- names(targets) <- config$workers
+  while (mc_work_remains(config)){
+    is_running <- vapply(
+      X = config$workers,
+      FUN = mc_is_running,
+      FUN.VALUE = logical(1),
+      config = config
+    )
+    # Simulate how the master process waits for the next worker to finish.
+    if (any(is_running)){
+      next_idle_worker <- names(which.min(step_times[is_running]))
+      mc_set_idle(worker = next_idle_worker, config = config)
+      step <- min(step_times[is_running])
+      step_times[is_running] <- step_times[is_running] - step
+      total_runtime <- total_runtime + step
+    }
+    # Mostly the same as the main loop of mc_master()
+    for (worker in config$workers){
+      if (mc_is_idle(worker = worker, config = config)){
+        mc_conclude_target(worker = worker, config = config)
+        step_times[worker] <- 0 # Added: make sure to reset the worker's time.
+        if (!config$queue$size()){
+          mc_set_done(worker = worker, config = config)
+          next
+        }
+        target <- config$queue$pop0(what = "names")
+        if (length(target)){
+          # Added line: get the time that the worker will spend on the target.
+          step_times[worker] <- igraph::vertex_attr(
+            graph = config$graph,
+            name = "time",
+            index = target
+          )
+          # Added line: record that the target was assigned.
+          targets[[worker]] <- c(targets[[worker]], target)
+          mc_set_target(worker = worker, target = target, config = config)
+          mc_set_running(worker = worker, config = config)
+        }
+      }
+    }
   }
-  tibble::tibble(
-    worker = seq_len(jobs),
-    targets = worker_targets,
-    time = dseconds(worker_times)
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
+  list(
+    total_runtime = lubridate::dseconds(total_runtime),
+    targets_per_worker = targets
   )
 }

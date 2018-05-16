@@ -6,7 +6,8 @@ run_parallel_backend <- function(config){
 }
 
 parallel_filter <- function(x, f, jobs = 1, ...){
-  index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...)
+  index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...) %>%
+    unlist
   x[as.logical(index)]
 }
 

@@ -53,9 +53,9 @@ any targets with no available runtime, either in
 targets default to \code{default_time}.}
 }
 \value{
-A data frame with one row per persistent worker.
-Each row has the targets in the worker and the total runtime
-of that worker.
+A list with (1) the total runtime and (2) a list
+of the names of the targets assigned to each worker.
+For each worker, targets are listed in the order they are assigned.
 }
 \description{
 Take the past recorded runtimes times from

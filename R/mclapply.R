@@ -187,6 +187,10 @@ mc_is_idle <- function(worker, config){
   mc_is_status(worker = worker, status = "idle", config = config)
 }
 
+mc_is_running <- function(worker, config){
+  mc_is_status(worker = worker, status = "running", config = config)
+}
+
 mc_is_done <- function(worker, config){
   mc_is_status(worker = worker, status = "done", config = config)
 }
