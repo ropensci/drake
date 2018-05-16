@@ -121,5 +121,5 @@ balance$time
 }
 }
 \seealso{
-\code{\link[=build_times]{build_times()}}, \code{\link[=make]{make()}}
+\code{\link[=predict_load_balancing]{predict_load_balancing()}}, \code{\link[=build_times]{build_times()}}, \code{\link[=make]{make()}}
 }

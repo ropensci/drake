@@ -22,7 +22,7 @@
 #'   to adjust the assumptions as needed.
 #' @export
 #' @inheritParams predict_load_balancing
-#' @seealso [build_times()], [make()]
+#' @seealso [predict_load_balancing()], [build_times()], [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -114,7 +114,7 @@ predict_runtime <- function(
 #'   negligible. Use the `default_time` and `known_times` arguments
 #'   to adjust the assumptions as needed.
 #' @export
-#' @seealso [build_times()], [make()]
+#' @seealso [predict_runtime()], [build_times()], [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
