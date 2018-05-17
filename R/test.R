@@ -60,8 +60,13 @@ nobuild <- function(config) {
 #' file.exists("world.txt") # FALSE
 #' }
 test_with_dir <- function(desc, ...){
-  new <- tempfile()
-  dir_empty(new)
+  while(file.exists(new <- tempfile())){
+    Sys.sleep(mc_wait)
+  }
+  while(!file.exists(new)){
+    dir.create(new)
+    Sys.sleep(mc_wait)
+  }
   with_dir(
     new = new,
     code = {
@@ -69,6 +74,7 @@ test_with_dir <- function(desc, ...){
       test_that(desc = desc, ...)
     }
   )
+  unlink(new, recursive = TRUE)
   invisible()
 }
 

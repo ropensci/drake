@@ -238,7 +238,7 @@ mc_set_done_all <- function(config){
   )
 }
 
-mc_wait <- 2e-1
+mc_wait <- 1e-9
 
 warn_mclapply_windows <- function(
   parallelism,
