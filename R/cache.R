@@ -1,3 +1,11 @@
+assert_cache <- function(cache){
+  cache_exists <- inherits(x = cache$driver, what = "driver_environment") ||
+    file.exists(cache$driver$path)
+  if (!cache_exists){
+    stop("drake cache missing.", call. = FALSE)
+  }
+}
+
 #' @title Return the file path where the cache is stored,
 #' if applicable.
 #' @export

@@ -36,9 +36,8 @@ test_with_dir("future package functionality", {
   )
   expect_equal(justbuilt(config), character(0))
 
-  # Workers can wait for dependencies.
+  # There can be more virtual workers than actual workers.
   e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
-  future::plan(future::multicore)
   make(
     e$my_plan,
     envir = e,

@@ -8,7 +8,6 @@ run_mclapply <- function(config){
     X = c("0", config$workers),
     FUN = mc_process,
     mc.cores = config$jobs + 1,
-    mc.preschedule = FALSE,
     config = config
   )
   invisible()
@@ -56,6 +55,7 @@ mc_master <- function(config){
   on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
   while (mc_work_remains(config)){
+    assert_cache(config$cache)
     for (worker in config$workers){
       if (mc_is_idle(worker = worker, config = config)){
         mc_conclude_target(worker = worker, config = config)
@@ -145,6 +145,7 @@ mc_work_remains <- function(config){
 
 mc_get_target <- function(worker, config){
   while (TRUE){
+    assert_cache(config$cache)
     target <- suppressWarnings(
       try(
         config$cache$get(key = worker, namespace = "mc_target"),
@@ -165,6 +166,7 @@ mc_set_target <- function(worker, target, config){
 
 mc_is_status <- function(worker, status, config){
   while (TRUE){
+    assert_cache(config$cache)
     worker_status <- suppressWarnings(
       try(
         config$cache$get(key = worker, namespace = "mc_status"),
