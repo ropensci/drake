@@ -60,6 +60,10 @@ nobuild <- function(config) {
 #' file.exists("world.txt") # FALSE
 #' }
 test_with_dir <- function(desc, ...){
+  if (!file.exists(tempdir())){
+    # Should always exist but sometimes gets removed.
+    dir.create(tempdir()) # nocov
+  }
   while (file.exists(new <- tempfile())){
     # Should always be a new file.
     Sys.sleep(mc_wait) # nocov
@@ -75,7 +79,6 @@ test_with_dir <- function(desc, ...){
       test_that(desc = desc, ...)
     }
   )
-  unlink(new, recursive = TRUE)
   invisible()
 }
 

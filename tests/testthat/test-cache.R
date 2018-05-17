@@ -8,6 +8,12 @@ test_with_dir("dependency profile", {
     target = "a", config = config)))
 })
 
+test_with_dir("Missing cache", {
+  s <- storr::storr_rds("s")
+  unlink(s$driver$path, recursive = TRUE)
+  expect_error(assert_cache(s), regexp = "drake cache missing")
+})
+
 test_with_dir("Cache namespaces", {
   x <- cache_namespaces()
   y <- target_namespaces()
