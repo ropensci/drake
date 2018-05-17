@@ -60,10 +60,11 @@ nobuild <- function(config) {
 #' file.exists("world.txt") # FALSE
 #' }
 test_with_dir <- function(desc, ...){
-  while(file.exists(new <- tempfile())){
-    Sys.sleep(mc_wait)
+  while (file.exists(new <- tempfile())){
+    # Should always be a new file.
+    Sys.sleep(mc_wait) # nocov
   }
-  while(!file.exists(new)){
+  while (!file.exists(new)){
     dir.create(new)
     Sys.sleep(mc_wait)
   }
