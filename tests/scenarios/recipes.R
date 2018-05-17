@@ -21,7 +21,7 @@ test_with_dir("custom Makefile recipes work", {
   con <- make(my_plan,
     envir = e, jobs = jobs, parallelism = parallelism,
     verbose = verbose, return_config = TRUE)
-  expect_equal(sort(justbuilt(con)), sort(my_plan$target))
+  expect_equal(sort(justbuilt(con)), sort(con$plan$target))
   clean()
 
   cmds <- c(
@@ -36,7 +36,7 @@ test_with_dir("custom Makefile recipes work", {
     con <- make(my_plan, recipe_command = cmd,
       envir = e, jobs = jobs, parallelism = parallelism,
       verbose = verbose, return_config = TRUE)
-    expect_equal(sort(justbuilt(con)), sort(my_plan$target))
+    expect_equal(sort(justbuilt(con)), sort(con$plan$target))
     clean()
   }
 })
