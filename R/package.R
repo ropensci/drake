@@ -73,6 +73,6 @@
 #'   packageVersion read.csv sessionInfo type.convert unzip write.table
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout
 #'   visIgraphLayout visInteraction visLegend visNetwork visSave
-#' @importFrom withr with_dir with_options with_output_sink
+#' @importFrom withr local_dir with_dir with_options with_output_sink
 #'   with_preserve_seed with_seed
 NULL

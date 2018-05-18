@@ -60,25 +60,13 @@ nobuild <- function(config) {
 #' file.exists("world.txt") # FALSE
 #' }
 test_with_dir <- function(desc, ...){
-  if (!file.exists(tempdir())){
-    # Should always exist but sometimes gets removed.
-    dir.create(tempdir()) # nocov
-  }
   while (file.exists(new <- tempfile())){
-    # Should always be a new file.
-    Sys.sleep(mc_wait) # nocov
+    Sys.sleep(1e-9)
   }
-  while (!file.exists(new)){
-    dir.create(new)
-    Sys.sleep(mc_wait)
-  }
-  with_dir(
-    new = new,
-    code = {
-      set_test_backend()
-      test_that(desc = desc, ...)
-    }
-  )
+  dir.create(new)
+  withr::local_dir(new)
+  set_test_backend()
+  test_that(desc = desc, ...)
   invisible()
 }
 
