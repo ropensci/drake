@@ -72,7 +72,7 @@ run_mclapply_staged <- function(config){
 
 run_parLapply_staged <- function(config) { # nolint
   if (config$jobs < 2 && !length(config$debug)) {
-    return(run_lapply(config = config))
+    return(run_loop(config = config))
   }
   eval(parse(text = "require(drake)"))
   config$workers <- as.character(seq_len(config$jobs))

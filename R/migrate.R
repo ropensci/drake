@@ -91,7 +91,7 @@ migrate_drake_project <- function(
     sort
   config$cache$clear(namespace = "depends")
   store_drake_config(config = config)
-  run_lapply(config = config)
+  run_loop(config = config)
   message("Checking for outdated targets.")
   config$hook <- empty_hook
   outdated <- outdated(config = config) %>%

@@ -1,6 +1,6 @@
 run_mclapply <- function(config){
   if (config$jobs < 2 && !length(config$debug)) {
-    return(run_lapply(config = config))
+    return(run_loop(config = config))
   }
   config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)

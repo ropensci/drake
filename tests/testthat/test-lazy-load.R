@@ -48,7 +48,7 @@ test_with_dir("lazy loading is actually lazy", {
     session_info = FALSE
   )
   config$schedule <- config$graph
-  run_lapply(config)
+  run_loop(config)
   loaded <- ls(envir = config$envir)
   expect_true(all(lazily_loaded %in% loaded))
   expect_false(any(eagerly_loaded %in% loaded))
