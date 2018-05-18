@@ -1,6 +1,11 @@
-library(testthat)
 devtools::load_all()
-withr::with_options(
-  list(warnPartialMatchArgs = FALSE),
-  test_scenarios()
-)
+for (scenario in testing_scenario_names()){
+  cat(scenario, "\n")
+  system2(
+    command = "R",
+    args = paste0(
+      "CMD BATCH '--args ",
+      scenario, "' one.R ", scenario, ".out"
+    )
+  )
+}
