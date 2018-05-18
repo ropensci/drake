@@ -29,7 +29,7 @@ prune_envir <- function(targets, config, downstream = NULL){
     downstream <- downstream_nodes(
       from = targets,
       graph = config$graph,
-      jobs = config$jobs
+      jobs = 1
     )
   }
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
