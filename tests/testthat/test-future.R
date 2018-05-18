@@ -5,9 +5,9 @@ test_with_dir("future package functionality", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
-  backends <- c("future_lapply", rep("future", 2))
-  caching <- c(rep("worker", 2), "master")
-  for (i in 1:3){
+  backends <- rep("future", 2)
+  caching <- c("worker", "master")
+  for (i in 1:2){
     clean(destroy = TRUE)
     config <- make(
       e$my_plan,
@@ -28,8 +28,8 @@ test_with_dir("future package functionality", {
   config <- make(
     e$my_plan,
     envir = e,
-    parallelism = backends[3],
-    caching = caching[3],
+    parallelism = backends[2],
+    caching = caching[2],
     jobs = 1,
     verbose = FALSE,
     session_info = FALSE
@@ -41,8 +41,8 @@ test_with_dir("future package functionality", {
   make(
     e$my_plan,
     envir = e,
-    parallelism = backends[3],
-    caching = caching[3],
+    parallelism = backends[2],
+    caching = caching[2],
     jobs = c(imports = 1, targets = 2),
     verbose = FALSE,
     session_info = FALSE
