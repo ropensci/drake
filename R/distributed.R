@@ -31,7 +31,9 @@ prepare_distributed <- function(config){
     envir = globalenv(),
     file = globalenv_file(config$cache_path)
   )
-  config$cache$set(key = "envir", value = config$envir, namespace = "config")
+  for (item in c("envir", "schedule")){
+    config$cache$set(key = item, value = config[[item]], namespace = "config")
+  }
   invisible()
 }
 
