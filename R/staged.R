@@ -54,7 +54,7 @@ run_mclapply_staged <- function(config){
     } else if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(config)
     }
-    prune_envir(targets = stage$targets, config = config)
+    prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
     tmp <- mclapply(
       X = stage$targets,
       FUN = function(target){
@@ -108,7 +108,7 @@ run_parLapply_staged <- function(config) { # nolint
     } else if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(config)
     }
-    prune_envir(targets = stage$targets, config = config)
+    prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
     if (identical(config$envir, globalenv())){
       # Regular unit tests should not modify the global environment.
       # Tests in tests/scenarios/all.R cover these lines.

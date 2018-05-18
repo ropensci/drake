@@ -4,7 +4,7 @@
 \alias{prune_envir}
 \title{Prune the evaluation environment}
 \usage{
-prune_envir(targets, config, downstream = NULL)
+prune_envir(targets, config, downstream = NULL, jobs = 1)
 }
 \arguments{
 \item{targets}{character vector of targets}
@@ -13,6 +13,8 @@ prune_envir(targets, config, downstream = NULL)
 
 \item{downstream}{optional, character vector of any targets
 assumed to be downstream.}
+
+\item{jobs}{number of jobs for local parallel computing}
 }
 \value{
 nothing

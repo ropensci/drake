@@ -22,32 +22,36 @@ assign_to_envir <- function(target, value, config){
 #' @param config [drake_config()] list
 #' @param downstream optional, character vector of any targets
 #'   assumed to be downstream.
+#' @param jobs number of jobs for local parallel computing
 #' @examples
 #' # Users should use make().
-prune_envir <- function(targets, config, downstream = NULL){
+prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
   if (is.null(downstream)){
     downstream <- downstream_nodes(
       from = targets,
       graph = config$graph,
-      jobs = 1
+      jobs = jobs
     )
   }
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
   target_deps <- nonfile_target_dependencies(
     targets = targets,
-    config = config
+    config = config,
+    jobs = jobs
   )
   downstream_deps <- nonfile_target_dependencies(
     targets = downstream,
-    config = config
+    config = config,
+    jobs = jobs
   )
   load_these <- setdiff(target_deps, targets) %>%
     setdiff(y = already_loaded)
-  load_these <- exclude_unloadable(targets = load_these, config = config)
+  load_these <- exclude_unloadable(
+    targets = load_these, config = config, jobs = jobs)
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
-    parallel_filter(f = is_not_file, jobs = config$jobs) %>%
+    parallel_filter(f = is_not_file, jobs = jobs) %>%
     intersect(y = already_loaded)
   if (length(discard_these)){
     console_many_targets(
@@ -87,12 +91,13 @@ flexible_get <- function(target, envir) {
   get(fun, envir = getNamespace(pkg))
 }
 
-exclude_unloadable <- function(targets, config){
+exclude_unloadable <- function(targets, config, jobs = jobs){
   unloadable <- parallel_filter(
     x = targets,
     f = function(target){
       !config$cache$exists(key = target)
-    }
+    },
+    jobs = jobs
   )
   if (length(unloadable)){
     warning(

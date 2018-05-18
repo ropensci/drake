@@ -220,9 +220,9 @@ dependencies <- function(targets, config, reverse = FALSE){
     clean_dependency_list()
 }
 
-nonfile_target_dependencies <- function(targets, config){
+nonfile_target_dependencies <- function(targets, config, jobs = 1){
   deps <- dependencies(targets = targets, config = config)
-  out <- parallel_filter(x = deps, f = is_not_file, jobs = config$jobs)
+  out <- parallel_filter(x = deps, f = is_not_file, jobs = jobs)
   intersect(out, config$plan$target)
 }
 
