@@ -4,7 +4,7 @@ for (scenario in testing_scenario_names()){
   system2(
     command = "R",
     args = paste0(
-      "CMD BATCH '--args ",
+      "CMD BATCH --no-save '--args ",
       scenario, "' one.R ", scenario, ".out"
     )
   )
