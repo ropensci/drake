@@ -61,7 +61,8 @@ nobuild <- function(config) {
 #' }
 test_with_dir <- function(desc, ...){
   while (file.exists(new <- tempfile())){
-    Sys.sleep(1e-9)
+    # Should not reach this part of the loop.
+    Sys.sleep(1e-9) # nocov
   }
   dir.create(new)
   withr::local_dir(new)
