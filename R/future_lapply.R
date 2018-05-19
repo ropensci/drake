@@ -3,9 +3,10 @@ run_future_lapply <- function(config){
   config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)
   console_persistent_workers(config)
-  system2(
+  path <- normalizePath(config$cache_path, winslash = "/")
+  tmp <- system2(
     "Rscript",
-    paste0("-e 'drake::fl_master(cache_path = \"", config$cache_path, "\")'"),
+    c("-e", paste0("drake::fl_master('", path, "')")),
     wait = FALSE
   )
   future.apply::future_lapply(
