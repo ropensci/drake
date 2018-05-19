@@ -6,7 +6,7 @@ run_future_lapply <- function(config){
   path <- normalizePath(config$cache_path, winslash = "/")
   tmp <- system2(
     "Rscript",
-    c("-e", paste0("drake::fl_master('", path, "')")),
+    shQuote(c("-e", paste0("drake::fl_master('", path, "')"))),
     wait = FALSE
   )
   future.apply::future_lapply(
