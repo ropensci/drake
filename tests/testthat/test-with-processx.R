@@ -14,22 +14,3 @@ test_with_dir("make(session = callr::r_vanilla)", {
     rm(list = rm_these, envir = con$envir)
   }
 })
-
-test_with_dir("future_lapply (which uses processx)", {
-  future::plan(future::sequential)
-  scenario <- get_testing_scenario()
-  e <- eval(parse(text = scenario$envir))
-  load_mtcars_example(envir = e)
-  config <- make(
-    e$my_plan,
-    envir = e,
-    parallelism = "future_lapply",
-    jobs = 1,
-    verbose = 4,
-    session_info = FALSE
-  )
-  expect_equal(
-    outdated(config),
-    character(0)
-  )
-})
