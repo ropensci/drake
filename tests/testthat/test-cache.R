@@ -202,6 +202,8 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
   expect_equal(sort(cached(search = FALSE, no_imported_objects = TRUE)),
     sort(c("\"input.rds\"", builds)))
+  expect_true(is_cached(targets = "\"input.rds\"", no_imported_objects = TRUE,
+    cache = config$cache, jobs = 1, namespace = config$cache$default_namespace))
   expect_true(all(cached(search = FALSE, list = all)))
   expect_equal(
     length(cached(search = FALSE, i, list = imported(files_only = FALSE))),

@@ -237,4 +237,7 @@ test_with_dir("unique_random_string() works", {
 
 test_with_dir("misc utils", {
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
+  config <- list(plan = data.frame(x = 1, y = 2))
+  expect_error(check_drake_config(config), regexp = "columns")
+  expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
 })

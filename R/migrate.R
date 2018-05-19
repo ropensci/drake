@@ -304,8 +304,10 @@ legacy_file_hash <- function(target, config, size_cutoff = 1e5) {
   } else {
     return(as.character(NA))
   }
-  if (!file.exists(filename))
-    return(as.character(NA))
+  if (!file.exists(filename)){
+    # Little point in covering all the lines of deprecated functions.
+    return(as.character(NA)) # nocov
+  }
   old_mtime <- ifelse(
     target %in% config$cache$list(namespace = "filemtime"),
     config$cache$get(

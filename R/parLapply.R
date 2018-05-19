@@ -9,9 +9,12 @@ run_parLapply <- function(config) { # nolint
   on.exit(stopCluster(cl = config$cluster))
   clusterExport(cl = config$cluster, varlist = "config",
     envir = environment())
-  if (identical(config$envir, globalenv()))
-    clusterExport(cl = config$cluster, varlist = ls(globalenv(),
-      all.names = TRUE), envir = globalenv())
+  if (identical(config$envir, globalenv())){
+    # We should not use globalenv() in regular unit tests.
+    # drake has other tests for that.
+    clusterExport(cl = config$cluster, varlist = ls(globalenv(), # nocov
+      all.names = TRUE), envir = globalenv())                    # nocov
+  }
   clusterCall(cl = config$cluster, fun = function(){
     eval(parse(text = "require(drake)"))
   })

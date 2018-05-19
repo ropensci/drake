@@ -91,12 +91,13 @@ cached <- function(
   }
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
-  if (!length(targets))
+  if (!length(targets)) {
     list_cache(no_imported_objects = no_imported_objects,
       cache = cache, namespace = namespace, jobs = jobs)
-  else
+  } else {
     is_cached(targets = targets, no_imported_objects = no_imported_objects,
       cache = cache, namespace = namespace, jobs = jobs)
+  }
 }
 
 is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
@@ -212,8 +213,9 @@ imported <- function(
 # from base::remove()
 targets_from_dots <- function(dots, list) {
   if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
-    is.character(x), NA, USE.NAMES = FALSE)))
-    stop("... must contain names or character strings")
+    is.character(x), NA, USE.NAMES = FALSE))){
+    stop("... must contain names or character strings", call. = FALSE)
+  }
   names <- vapply(dots, as.character, "")
   targets <- c(names, list) %>% unique
   standardize_filename(targets)
