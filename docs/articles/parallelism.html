@@ -118,7 +118,7 @@
       <h1>High-performance computing with drake</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-16</h4>
+            <h4 class="date">2018-05-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd"><code>vignettes/parallelism.Rmd</code></a></small>
       <div class="hidden name"><code>parallelism.Rmd</code></div>
@@ -147,23 +147,23 @@
 <p>The backends vary widely in terms of how the workers deploy and how they are scheduled.</p>
 <table class="table">
 <thead><tr class="header">
-<th align="left"></th>
+<th></th>
 <th align="center">Deploy: local</th>
 <th align="right">Deploy: remote</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Schedule: persistent</td>
+<td>Schedule: persistent</td>
 <td align="center">“mclapply”, “parLapply”</td>
 <td align="right">“future_lapply”</td>
 </tr>
 <tr class="even">
-<td align="left">Schedule: transient</td>
+<td>Schedule: transient</td>
 <td align="center"></td>
 <td align="right">“future”, “Makefile”</td>
 </tr>
 <tr class="odd">
-<td align="left">Schedule: staged</td>
+<td>Schedule: staged</td>
 <td align="center">“mclapply_staged”, “parLapply_staged”</td>
 <td align="right"></td>
 </tr>
@@ -202,7 +202,7 @@
 </h2>
 <p>The <code><a href="../reference/plan.html">plan()</a></code> function from the <a href="https://github.com/HenrikBengtsson/future"><code>future</code></a> package configures how and where the workers will deploy on the next <code><a href="../reference/make.html">make()</a></code>. For example, the following code uses <a href="https://github.com/HenrikBengtsson/future"><code>future</code></a>’s <code>multisession</code> backend, which is analogous to <code>drake</code>’s <code>"parLapply"</code> parallelism.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multisession)
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="co"># Same technology, different scheduling:</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
@@ -211,7 +211,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(multis
 <p>You also need <a href="https://github.com/mllg/batchtools/tree/master/inst/templates">template file</a> to configure <a href="https://github.com/mllg/batchtools"><code>batchtools</code></a> the remote resources, such as the memory and wall time limits. Use <code><a href="../reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file()</a></code> to write one of the examples from the <a href="https://github.com/ropensci/drake/tree/master/inst/examples"><code><a href="../reference/drake_example.html">drake_example()</a></code> files</a>. You will probably need to edit it manually to match your resources and needs.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file</a></span>(<span class="st">"slurm"</span>) <span class="co"># Write batchtools.slurm.tmpl.</span></code></pre></div>
 <p>Load the template file your <code><a href="http://www.rdocumentation.org/packages/future/topics/plan">future::plan()</a></code> and call <code><a href="../reference/make.html">make()</a></code> to run the project.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(batchtools_slurm, <span class="dt">template =</span> <span class="st">"batchtools.slurm.tmpl"</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="co"># Same technology, different scheduling:</span>
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
@@ -280,11 +280,11 @@ echo "module load R; $*" | qsub -sync y -cwd -j y
 <p>Backends “mclapply”, “parLapply”, and “future_lapply” launch persistent workers.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"mclapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
-future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(future::multisession)
+future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(future<span class="op">::</span>multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future_lapply"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>In each of these calls to <code><a href="../reference/make.html">make()</a></code>, three processes launch: two workers and one master. Whenever a worker is idle, the master assigns it the next available target (whose dependencies have been built). The workers keep running until there are no more targets to build. The following video demonstrates the concept.</p>
 <div style="text-align: center">
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/">
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/" frameborder="0">
 </iframe>
 </div>
 <p>The <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> and <code><a href="../reference/predict_load_balancing.html">predict_load_balancing()</a></code> functions emulate persistent workers, and the predictions also apply to transient workers. See the <a href="https://ropensci.github.io/drake/articles/timing.html">timing guide</a> for a demonstration.</p>
@@ -294,10 +294,10 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(future
 <a href="#transient-scheduling" class="anchor"></a>Transient scheduling</h2>
 <p>Persistent workers are great because they minimize overhead: all the workers are created at the beginning, and then you never have to create any more for the rest of the runthrough. Unfortunately, computing clusters usually limit the amount of time each worker can stay running. That is why <code>drake</code> also supports transient workers in backends <code>"future"</code> and <code>"Makefile"</code>. Here, the master process creates a new worker for each target individually, and the worker dies after it finishes its single target. For the <code>"future"</code> backend, the master is just the existing process calling <code><a href="../reference/make.html">make()</a></code>. The following video demonstrates the concept.</p>
 <div style="text-align: center">
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/cHIdOqudELB/">
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/cHIdOqudELB/" frameborder="0">
 </iframe>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(future::multisession)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(future<span class="op">::</span>multisession)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"future"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"Makefile"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 </div>
@@ -309,7 +309,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(future
 <span class="kw"><a href="../reference/make.html">make</a></span>(my_plan, <span class="dt">parallelism =</span> <span class="st">"parLapply_staged"</span>, <span class="dt">jobs =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, <code>drake</code> uses <code>mclapply()</code> or <code>parLapply()</code> to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.<sup><a href="#note1" id="note1ref">[1]</a></sup></p>
 <div style="text-align: center">
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/dQKbGttIYud/">
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/dQKbGttIYud/" frameborder="0">
 </iframe>
 </div>
 <p>However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.</p>
@@ -318,7 +318,7 @@ future::<span class="kw"><a href="../reference/plan.html">plan</a></span>(future
 
 N &lt;-<span class="st"> </span><span class="dv">500</span>
 
-gen_data &lt;-<span class="st"> </span>function() {
+gen_data &lt;-<span class="st"> </span><span class="cf">function</span>() {
   <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="dt">a =</span> <span class="kw">seq_len</span>(N), <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">c =</span> <span class="dv">2</span>, <span class="dt">d =</span> <span class="dv">3</span>)
 }
 
@@ -327,7 +327,7 @@ plan_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/d
 )
 
 plan_sub &lt;-
-<span class="st">  </span><span class="kw">gen_data</span>() %&gt;%
+<span class="st">  </span><span class="kw">gen_data</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(
     <span class="dt">target =</span> <span class="kw">paste0</span>(<span class="st">"data"</span>, a),
     <span class="dt">command =</span> <span class="kw">paste0</span>(<span class="st">"data["</span>, a, <span class="st">", ]"</span>)

@@ -118,7 +118,7 @@
       <h1>Time: logging, prediction, and strategy</h1>
                         <h4 class="author">Will Landau</h4>
             
-            <h4 class="date">2018-05-16</h4>
+            <h4 class="date">2018-05-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/drake/blob/master/vignettes/timing.Rmd"><code>vignettes/timing.Rmd</code></a></small>
       <div class="hidden name"><code>timing.Rmd</code></div>
@@ -136,16 +136,16 @@
 ## # A tibble: 28 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.006s         0.004s         0.002s     
-##  2 coef_regression1_small target 0.004s         0.003s         0.001s     
-##  3 coef_regression2_large target 0.007s         0.006s         0.001s     
+##  1 coef_regression1_large target 0.015s         0.004s         0s         
+##  2 coef_regression1_small target 0.004s         0.004s         0s         
+##  3 coef_regression2_large target 0.024s         0.003s         0s         
 ##  4 coef_regression2_small target 0.004s         0.002s         0.001s     
-##  5 data.frame             import 0.031s         0.031s         0s         
-##  6 knit                   import 0.03s          0.03s          0.001s     
-##  7 large                  target 0.01s          0.005s         0.004s     
-##  8 lm                     import 0.011s         0.006s         0.005s     
-##  9 mtcars                 import 0.004s         0.004s         0s         
-## 10 nrow                   import 0.007s         0.006s         0.001s     
+##  5 data.frame             import 0.029s         0.021s         0.009s     
+##  6 knit                   import 0.074s         0.018s         0.007s     
+##  7 large                  target 0.007s         0.007s         0s         
+##  8 lm                     import 0.011s         0.005s         0.005s     
+##  9 mtcars                 import 0.002s         0.003s         0s         
+## 10 nrow                   import 0.005s         0.005s         0.001s     
 ## # ... with 18 more rows
 
 <span class="co"># `dplyr`-style `tidyselect` commands</span>
@@ -153,30 +153,30 @@
 ## # A tibble: 4 x 5
 ##   item                   type   elapsed        user           system      
 ## * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durati&gt;
-## 1 coef_regression1_large target 0.006s         0.004s         0.002s      
-## 2 coef_regression1_small target 0.004s         0.003s         0.001s      
-## 3 coef_regression2_large target 0.007s         0.006s         0.001s      
+## 1 coef_regression1_large target 0.015s         0.004s         0s          
+## 2 coef_regression1_small target 0.004s         0.004s         0s          
+## 3 coef_regression2_large target 0.024s         0.003s         0s          
 ## 4 coef_regression2_small target 0.004s         0.002s         0.001s
 
 <span class="kw"><a href="../reference/build_times.html">build_times</a></span>(<span class="dt">digits =</span> <span class="dv">8</span>, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
 ## # A tibble: 15 x 5
 ##    item                   type   elapsed        user           system     
 ##  * &lt;chr&gt;                  &lt;chr&gt;  &lt;S4: Duration&gt; &lt;S4: Duration&gt; &lt;S4: Durat&gt;
-##  1 coef_regression1_large target 0.006s         0.004s         0.002s     
-##  2 coef_regression1_small target 0.004s         0.003s         0.001s     
-##  3 coef_regression2_large target 0.007s         0.006s         0.001s     
+##  1 coef_regression1_large target 0.015s         0.004s         0s         
+##  2 coef_regression1_small target 0.004s         0.004s         0s         
+##  3 coef_regression2_large target 0.024s         0.003s         0s         
 ##  4 coef_regression2_small target 0.004s         0.002s         0.001s     
-##  5 large                  target 0.01s          0.005s         0.004s     
-##  6 regression1_large      target 0.007s         0s             0.007s     
-##  7 regression1_small      target 0.007s         0.005s         0.001s     
-##  8 regression2_large      target 0.007s         0.006s         0.001s     
-##  9 regression2_small      target 0.004s         0.002s         0.002s     
-## 10 "\"report.md\""        target 0.042s         0.042s         0s         
-## 11 small                  target 0.007s         0.004s         0.004s     
-## 12 summ_regression1_large target 0.011s         0.011s         0s         
-## 13 summ_regression1_small target 0.006s         0.006s         0s         
-## 14 summ_regression2_large target 0.006s         0.005s         0s         
-## 15 summ_regression2_small target 0.005s         0s             0.005s</code></pre></div>
+##  5 large                  target 0.007s         0.007s         0s         
+##  6 regression1_large      target 0.005s         0.005s         0s         
+##  7 regression1_small      target 0.004s         0.004s         0s         
+##  8 regression2_large      target 0.016s         0.006s         0s         
+##  9 regression2_small      target 0.004s         0.004s         0s         
+## 10 "\"report.md\""        target 0.04s          0.04s          0s         
+## 11 small                  target 0.025s         0.006s         0.001s     
+## 12 summ_regression1_large target 0.012s         0.013s         0s         
+## 13 summ_regression1_small target 0.004s         0.003s         0s         
+## 14 summ_regression2_large target 0.019s         0.007s         0.001s     
+## 15 summ_regression2_small target 0.021s         0.004s         0s</code></pre></div>
 <p>For <code>drake</code> version 4.1.0 and earlier, <code><a href="../reference/build_times.html">build_times()</a></code> just measures the elapsed runtime of each command in <code>my_plan$command</code>. For later versions, the build times also account for all the internal operations in <code>drake:::build()</code>, such as <a href="https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd">storage and hashing</a>.</p>
 <div id="predict-total-runtime" class="section level1">
 <h1 class="hasAnchor">
@@ -184,25 +184,25 @@
 <p>Drake uses these times to predict the runtime of the next <code><a href="../reference/make.html">make()</a></code>. At this moment, everything is up to date in the current example, so the next <code><a href="../reference/make.html">make()</a></code> should be fast. Here, we only factor in the times of the formal targets in the workflow plan, excluding any imports.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">config &lt;-<span class="st"> </span><span class="kw"><a href="../reference/drake_config.html">drake_config</a></span>(my_plan, <span class="dt">verbose =</span> <span class="ot">FALSE</span>)
 <span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
-## [1] "0.133s"</code></pre></div>
+## [1] "0.204s"</code></pre></div>
 <p>Suppose we change a dependency to make some targets out of date. Now, even though, the next <code><a href="../reference/make.html">make()</a></code> should take a little longer.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span>function(d){
-  d$x3 &lt;-<span class="st"> </span>d$x ^<span class="st"> </span><span class="dv">3</span>
-  <span class="kw">lm</span>(y ~<span class="st"> </span>x3, <span class="dt">data =</span> d)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg2 &lt;-<span class="st"> </span><span class="cf">function</span>(d){
+  d<span class="op">$</span>x3 &lt;-<span class="st"> </span>d<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">3</span>
+  <span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x3, <span class="dt">data =</span> d)
 }
 
 <span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(config, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
-## [1] "0.133s"</code></pre></div>
+## [1] "0.204s"</code></pre></div>
 <p>But what if you plan on starting from scratch next time, either after <code><a href="../reference/clean.html">clean()</a></code> or with <code><a href="../reference/make.html">make(..., trigger = "always")</a></code>?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(config, <span class="dt">from_scratch =</span> <span class="ot">TRUE</span>, <span class="dt">targets_only =</span> <span class="ot">TRUE</span>)
-## [1] "0.133s"</code></pre></div>
+## [1] "0.204s"</code></pre></div>
 </div>
 <div id="strategize-your-high-performance-computing" class="section level1">
 <h1 class="hasAnchor">
 <a href="#strategize-your-high-performance-computing" class="anchor"></a>Strategize your high-performance computing</h1>
 <p>Let’s say you are scaling up your workflow. You just put bigger data and heavier computation in your custom code, and the next time you run <code><a href="../reference/make.html">make()</a></code>, your targets will take much longer to build. In fact, you estimate that every target except for your R Markdown report will take two hours to complete. Let’s write down these known times in seconds.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">known_times &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="kw">rep</span>(<span class="dv">7200</span>, <span class="kw">nrow</span>(my_plan) -<span class="st"> </span><span class="dv">1</span>))
-<span class="kw">names</span>(known_times) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw"><a href="../reference/file_store.html">file_store</a></span>(<span class="st">"report.md"</span>), my_plan$target[-<span class="dv">1</span>])
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">known_times &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="kw">rep</span>(<span class="dv">7200</span>, <span class="kw">nrow</span>(my_plan) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))
+<span class="kw">names</span>(known_times) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw"><a href="../reference/file_store.html">file_store</a></span>(<span class="st">"report.md"</span>), my_plan<span class="op">$</span>target[<span class="op">-</span><span class="dv">1</span>])
 known_times
 ##            "report.md"                  small                  large 
 ##                      5                   7200                   7200 
@@ -216,7 +216,7 @@ known_times
 ##                   7200                   7200                   7200</code></pre></div>
 <p>How many parallel jobs should you use in the next <code><a href="../reference/make.html">make()</a></code>? The <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code> function can help you decide. <code><a href="../reference/predict_runtime.html">predict_runtime(jobs = n)</a></code> simulates persistent parallel workers and reports the estimated total runtime of <code><a href="../reference/make.html">make(jobs = n)</a></code>. (See also <code><a href="../reference/predict_load_balancing.html">predict_load_balancing()</a></code>.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">time &lt;-<span class="st"> </span><span class="kw">c</span>()
-for (jobs in <span class="dv">1</span>:<span class="dv">12</span>){
+<span class="cf">for</span> (jobs <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>){
   time[jobs] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/predict_runtime.html">predict_runtime</a></span>(
     config,
     <span class="dt">jobs =</span> jobs,
@@ -225,11 +225,11 @@ for (jobs in <span class="dv">1</span>:<span class="dv">12</span>){
   )
 }
 <span class="kw">library</span>(ggplot2)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw">data.frame</span>(<span class="dt">time =</span> time /<span class="st"> </span><span class="dv">3600</span>, <span class="dt">jobs =</span> <span class="kw">ordered</span>(<span class="dv">1</span>:<span class="dv">12</span>), <span class="dt">group =</span> <span class="dv">1</span>)) +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> jobs, <span class="dt">y =</span> time, <span class="dt">group =</span> group)) +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous">scale_y_continuous</a></span>(<span class="dt">breaks =</span> <span class="dv">0</span>:<span class="dv">10</span> *<span class="st"> </span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">29</span>)) +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_gray</a></span>(<span class="dv">16</span>) +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"jobs argument of make()"</span>) +
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw">data.frame</span>(<span class="dt">time =</span> time <span class="op">/</span><span class="st"> </span><span class="dv">3600</span>, <span class="dt">jobs =</span> <span class="kw">ordered</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>), <span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> jobs, <span class="dt">y =</span> time, <span class="dt">group =</span> group)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous">scale_y_continuous</a></span>(<span class="dt">breaks =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">10</span> <span class="op">*</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">29</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_gray</a></span>(<span class="dv">16</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">xlab</a></span>(<span class="st">"jobs argument of make()"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ylab</a></span>(<span class="st">"Predicted runtime of make() (hours)"</span>)</code></pre></div>
 <p><img src="timing_files/figure-html/predictjobs-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We see serious potential speed gains up to 4 jobs, but beyond that point, we have to double the jobs to shave off another 2 hours. Your choice of <code>jobs</code> for <code><a href="../reference/make.html">make()</a></code> ultimately depends on the runtime you can tolerate and the computing resources at your disposal.</p>

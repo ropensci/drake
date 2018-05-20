@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prune the evaluation environment — prune_envir • drake</title>
+<title>Run the master process of the "future_lapply" backend. — fl_master • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -28,13 +28,9 @@
 
 
 
-<meta property="og:title" content="Prune the evaluation environment — prune_envir" />
+<meta property="og:title" content="Run the master process of the "future_lapply" backend. — fl_master" />
 
-<meta property="og:description" content="Load targets that you need to build the targets
-and unload the ones you will never need again in the
-current runthrough of the pipeline. This function should
-not be used directly by users. Only exported for
-internal reasons." />
+<meta property="og:description" content="Users should not need to call this function directly." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,52 +145,35 @@ internal reasons." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Prune the evaluation environment</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/envir.R'><code>R/envir.R</code></a></small>
-    <div class="hidden name"><code>prune_envir.Rd</code></div>
+    <h1>Run the master process of the "future_lapply" backend.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/future_lapply.R'><code>R/future_lapply.R</code></a></small>
+    <div class="hidden name"><code>fl_master.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Load targets that you need to build the targets
-and unload the ones you will never need again in the
-current runthrough of the pipeline. This function should
-not be used directly by users. Only exported for
-internal reasons.</p>
+    <p>Users should not need to call this function directly.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>prune_envir</span>(<span class='no'>targets</span>, <span class='no'>config</span>, <span class='kw'>downstream</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>fl_master</span>(<span class='no'>cache_path</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>targets</th>
-      <td><p>character vector of targets</p></td>
-    </tr>
-    <tr>
-      <th>config</th>
-      <td><p><code><a href='drake_config.html'>drake_config()</a></code> list</p></td>
-    </tr>
-    <tr>
-      <th>downstream</th>
-      <td><p>optional, character vector of any targets
-assumed to be downstream.</p></td>
-    </tr>
-    <tr>
-      <th>jobs</th>
-      <td><p>number of jobs for local parallel computing</p></td>
+      <th>cache_path</th>
+      <td><p>path to the drake cache</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>nothing</p>
+    <p><code>NULL</code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># Users should use make().
+    <pre class="examples"><div class='input'># No examples here. This function is not for end users.
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -239,7 +239,7 @@ make(my_plan, parallelism = "future_lapply", jobs = 2)
 In each of these calls to `make()`, three processes launch: two workers and one master. Whenever a worker is idle, the master assigns it the next available target (whose dependencies have been built). The workers keep running until there are no more targets to build. The following video demonstrates the concept.
 
 <div style = "text-align: center">
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/"></iframe>
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/" frameborder="0"></iframe>
 </div>
 
 The `predict_runtime()` and `predict_load_balancing()` functions emulate persistent workers, and the predictions also apply to transient workers. See the [timing guide](https://ropensci.github.io/drake/articles/timing.html) for a demonstration.
@@ -249,7 +249,7 @@ The `predict_runtime()` and `predict_load_balancing()` functions emulate persist
 Persistent workers are great because they minimize overhead: all the workers are created at the beginning, and then you never have to create any more for the rest of the runthrough. Unfortunately, computing clusters usually limit the amount of time each worker can stay running. That is why `drake` also supports transient workers in backends `"future"` and `"Makefile"`. Here, the master process creates a new worker for each target individually, and the worker dies after it finishes its single target. For the `"future"` backend, the master is just the existing process calling `make()`. The following video demonstrates the concept.
 
 <div style = "text-align: center">
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/cHIdOqudELB/"></iframe>
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/cHIdOqudELB/" frameborder="0"></iframe>
 </div>
 
 ```{r transient, eval = FALSE}
@@ -270,7 +270,7 @@ make(my_plan, parallelism = "parLapply_staged", jobs = 2)
 Here, the dependency network is divided into separate stages of conditionally independent targets. Within each stage, `drake` uses `mclapply()` or `parLapply()` to process the targets in parallel. Stages run one after the other, so the slowest target in the current stage needs to complete before the next stage begins. So we lose a lot of parallel efficiency. The following video demonstrates the major drawback.<sup><a href="#note1" id="note1ref">[1]</a></sup>
 
 <div style = "text-align: center">
-<iframe width="700" height="434" src="https://www.powtoon.com/embed/dQKbGttIYud/"></iframe>
+<iframe width="700" height="434" src="https://www.powtoon.com/embed/dQKbGttIYud/" frameborder="0"></iframe>
 </div>
 
 However, because there is no formal master process in each stage, overhead is extremely low. This lack of overhead can make staged parallelism a great choice for projects with a small number of large stages: tall dependency graphs with most of the work in the tallest stages.
