@@ -235,7 +235,7 @@ make_with_schedules <- function(config){
   } else if (config$skip_imports){
     make_targets(config = config)
   } else if (
-    config$parallelism %in% parallelism_choices(distributed_only = TRUE)
+    length(unique(config$parallelism)) > 1
   ){
     make_imports(config = config)
     make_targets(config = config)
@@ -282,8 +282,8 @@ make_with_schedules <- function(config){
 #' }
 make_imports <- function(config = drake::read_drake_config()){
   config$schedule <- imports_graph(config = config)
-  config$jobs <- jobs_imports(jobs = config$jobs)
-  config$parallelism <- use_default_parallelism(config$parallelism)
+  config$jobs <- imports_setting(config$jobs)
+  config$parallelism <- imports_setting(config$parallelism)
   run_parallel_backend(config = config)
   invisible(config)
 }
@@ -326,7 +326,8 @@ make_imports <- function(config = drake::read_drake_config()){
 #' }
 make_targets <- function(config = drake::read_drake_config()){
   config$schedule <- targets_graph(config = config)
-  config$jobs <- jobs_targets(jobs = config$jobs)
+  config$jobs <- targets_setting(config$jobs)
+  config$parallelism <- targets_setting(config$parallelism)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
@@ -334,6 +335,7 @@ make_targets <- function(config = drake::read_drake_config()){
 
 make_imports_targets <- function(config){
   config$schedule <- config$graph
+  config$parallelism <- config$parallelism[1]
   config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
@@ -342,7 +344,7 @@ make_imports_targets <- function(config){
 
 initialize_session <- function(config){
   if (config$log_progress){
-    clear_progress(cache = config$cache, jobs = jobs_imports(config$jobs))
+    clear_progress(cache = config$cache, jobs = imports_setting(config$jobs))
   }
   config$cache$clear(namespace = "session")
   if (config$session_info){

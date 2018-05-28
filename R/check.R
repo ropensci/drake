@@ -129,3 +129,21 @@ check_jobs <- function(jobs){
     }
   }
 }
+
+check_parallelism <- function(parallelism){
+  stopifnot(length(parallelism) > 0)
+  stopifnot(is.character(parallelism))
+  if (length(parallelism) > 1){
+    if (
+      is.null(names(parallelism)) ||
+      !identical(sort(names(parallelism)), sort(c("imports", "targets")))
+    ){
+      stop(
+        "In the `parallelism` argument, you must either give a character scalar ",
+        "or a named character vector with names 'imports' and 'targets'.",
+        call. = FALSE
+      )
+    }
+  }
+}
+

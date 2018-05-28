@@ -24,12 +24,12 @@ test_with_dir("jobs_imports()", {
   expect_equal(jobs_imports(c(imports = 8, targets = 12)), 8)
 })
 
-test_with_dir("jobs_targets()", {
-  expect_equal(jobs_targets(8), 8)
-  expect_error(jobs_targets(c(8, 12)))
-  expect_error(jobs_targets(c(8, 1)))
-  expect_equal(jobs_targets(c(targets = 8, imports = 12)), 8)
-  expect_equal(jobs_targets(c(imports = 8, targets = 12)), 12)
+test_with_dir("targets_setting()", {
+  expect_equal(targets_setting(8), 8)
+  expect_error(targets_setting(c(8, 12)))
+  expect_error(targets_setting(c(8, 1)))
+  expect_equal(targets_setting(c(targets = 8, imports = 12)), 8)
+  expect_equal(targets_setting(c(imports = 8, targets = 12)), 12)
 })
 
 test_with_dir("parallelism not found for testrun()", {

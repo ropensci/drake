@@ -28,21 +28,21 @@ lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...){
   values[index]
 }
 
-jobs_imports <- function(jobs){
-  check_jobs(jobs)
-  if (length(jobs) < 2){
-    jobs
+# x is parallelism or jobs
+imports_setting <- function(x){
+  if (length(x) < 2){
+    x
   } else {
-    unname(jobs["imports"])
+    unname(x["imports"])
   }
 }
 
-jobs_targets <- function(jobs){
-  check_jobs(jobs)
-  if (length(jobs) < 2){
-    jobs
+# x is parallelism or jobs
+targets_setting <- function(x){
+  if (length(x) < 2){
+    x
   } else {
-    unname(jobs["targets"])
+    unname(x["targets"])
   }
 }
 
@@ -52,7 +52,7 @@ safe_jobs <- function(jobs){
 }
 
 safe_jobs_imports <- function(jobs){
-  ifelse(on_windows(), 1, jobs_imports(jobs = jobs))
+  ifelse(on_windows(), 1, imports_setting(jobs))
 }
 
 on_windows <- function(){
