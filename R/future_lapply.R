@@ -3,8 +3,13 @@ run_future_lapply <- function(config){
   mc_init_worker_cache(config)
   console_persistent_workers(config)
   path <- normalizePath(config$cache_path, winslash = "/")
-  tmp <- system2(
+  rscript <- grep(
     "Rscript",
+    dir(R.home("bin"), full.names = TRUE),
+    value = TRUE
+  )
+  tmp <- system2(
+    rscript,
     shQuote(c("-e", paste0("drake::fl_master('", path, "')"))),
     wait = FALSE
   )
