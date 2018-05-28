@@ -365,7 +365,7 @@ evaluate_plan(
 )
 ```
 
-But what if some metrics do not make sense? For example, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use multiple wildcards and make some combinations of values are left out.
+But what if some metrics do not make sense? For example, what if `schoolC` is a completely privately-funded school? With no public funds, `check_public_funds(schoolC)` may quit in error if we are not careful. This is where setting up workflow plans gets tricky. You may need to use an explicit grid of wildcard values.
 
 ```{r rulesgridschools}
 library(magrittr)
@@ -378,7 +378,22 @@ rules_grid <- tibble::tibble(
   print()
 ```
 
-Then, alternately choose `expand = TRUE` and `expand = FALSE` when evaluating the wildcards.
+Then, expand out your plan manually.
+
+```{r rulesgrid2}
+plan <- drake_plan(
+  credits = check_credit_hours("school_", "funding_", "cohort_"),
+  students = check_students("school_", "funding_", "cohort_"),
+  grads = check_graduations("school_", "funding_", "cohort_"),
+  public_funds = check_public_funding("school_", "funding_", "cohort_"),
+  strings_in_dots = "literals"
+)[c(rep(1, 4), rep(2, 2), rep(3, 4)), ]
+suffixes <- apply(rules_grid, 1, paste, sep = "_")
+plan$target <- paste(plan$target, suffixes, sep = "_")
+plan
+```
+
+Finally, call `evaluate_plan()` with `expand = FALSE` and `always_rename = TRUE`.
 
 ```{r rulesgridevalplan}
 drake_plan(
@@ -387,17 +402,12 @@ drake_plan(
   grads = check_graduations("school_", "funding_", "cohort_"),
   public_funds = check_public_funding("school_", "funding_", "cohort_"),
   strings_in_dots = "literals"
-) %>% evaluate_plan(
-    wildcard = "school_",
-    values = rules_grid$school_,
-    expand = TRUE
-  ) %>%
+)[c(rep(1, 4), rep(2, 2), rep(3, 4)), ] %>%
   evaluate_plan(
-    wildcard = "funding_",
     rules = rules_grid,
-    expand = FALSE
-  ) %>%
-  DT::datatable()
+    expand = FALSE,
+    always_rename = TRUE
+  )
 ```
 
 Thanks to [Alex Axthelm](https://github.com/AlexAxthelm) for this example in [issue 235](https://github.com/ropensci/drake/issues/235).

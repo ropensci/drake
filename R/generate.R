@@ -63,6 +63,11 @@ dataset_wildcard <- function(){
 #'   is replaced with the next entry in the `values` vector,
 #'   and the values are recycled.
 #'
+#' @param always_rename logical. If `TRUE`, always rename
+#'   targets according to the wildcard values, regardless of the
+#'   value of `expand`. If `FALSE`, only rename targets if
+#'   `expand` is `TRUE`.
+#'
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -95,10 +100,18 @@ evaluate_plan <- function(
   rules = NULL,
   wildcard = NULL,
   values = NULL,
-  expand = TRUE
+  expand = TRUE,
+  always_rename = FALSE
 ){
   if (!is.null(rules)){
-    return(evaluations(plan = plan, rules = rules, expand = expand))
+    return(
+      evaluations(
+        plan = plan,
+        rules = rules,
+        expand = expand,
+        always_rename = always_rename
+      )
+    )
   }
   if (is.null(wildcard) | is.null(values)){
     return(plan)
@@ -115,6 +128,8 @@ evaluate_plan <- function(
   matching <- plan[matches, ]
   if (expand){
     matching <- expand_plan(matching, values)
+  } else if (always_rename){
+    matching$target <- paste(matching$target, values, sep = "_")
   }
   values <- rep(values, length.out = nrow(matching))
   matching$command <- Vectorize(
@@ -130,13 +145,14 @@ evaluate_plan <- function(
   out[[minor]] <- NULL
   out[[major]] <- NULL
   rownames(out) <- NULL
-  sanitize_plan(out)
+  sanitize_plan(out, allow_duplicated_targets = TRUE)
 }
 
 evaluations <- function(
   plan,
   rules = NULL,
-  expand = TRUE
+  expand = TRUE,
+  always_rename = FALSE
   ){
   if (is.null(rules)){
     return(plan)
@@ -147,8 +163,9 @@ evaluations <- function(
       plan,
       wildcard = names(rules)[index],
       values = rules[[index]],
-      expand = expand
-      )
+      expand = expand,
+      always_rename = always_rename
+    )
   }
   return(plan)
 }

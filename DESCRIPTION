@@ -86,7 +86,6 @@ Suggests:
   cranlogs,
   curl,
   DBI,
-  DT,
   Ecdat,
   forcats,
   future.batchtools,

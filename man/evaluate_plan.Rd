@@ -6,7 +6,7 @@
 workflow plan data frame from a template data frame.}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
-  expand = TRUE)
+  expand = TRUE, always_rename = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by
@@ -32,6 +32,11 @@ if multiple values are assigned to a single wildcard.
 If \code{FALSE}, each occurrence of the wildcard
 is replaced with the next entry in the \code{values} vector,
 and the values are recycled.}
+
+\item{always_rename}{logical. If \code{TRUE}, always rename
+targets according to the wildcard values, regardless of the
+value of \code{expand}. If \code{FALSE}, only rename targets if
+\code{expand} is \code{TRUE}.}
 }
 \value{
 A workflow plan data frame with the wildcards evaluated.
