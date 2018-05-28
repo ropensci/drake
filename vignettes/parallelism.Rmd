@@ -52,6 +52,16 @@ There are multiple ways to walk this graph and multiple ways to launch workers, 
 make(my_plan, parallelism = "parLapply", jobs = 2)
 ```
 
+You can use a different backend for the imports than you select for the targets. If you do so, you force all the imports to be processed before any of the targets are built, but you might want to do so anyway. For example, staged scheduling could be great for imports even when it is not be the right choice for the targets (more on that later).
+
+```{r run2differentbackends, eval = FALSE}
+make(
+  my_plan,
+  parallelism = c(imports = "mclapply_staged", targets = "mclapply"),
+  jobs = 2
+)
+```
+
 List your options with `parallelism_choices()`.
 
 ```{r choices}

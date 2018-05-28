@@ -1,11 +1,15 @@
 run_future_lapply <- function(config){
   prepare_distributed(config = config)
-  config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)
   console_persistent_workers(config)
   path <- normalizePath(config$cache_path, winslash = "/")
-  tmp <- system2(
+  rscript <- grep(
     "Rscript",
+    dir(R.home("bin"), full.names = TRUE),
+    value = TRUE
+  )
+  tmp <- system2(
+    rscript,
     shQuote(c("-e", paste0("drake::fl_master('", path, "')"))),
     wait = FALSE
   )
@@ -28,7 +32,6 @@ run_future_lapply <- function(config){
 #' # No examples here. This function is not for end users.
 fl_master <- function(cache_path){
   config <- recover_drake_config(cache_path)
-  config$workers <- as.character(seq_len(config$jobs))
   drake::mc_process(id = "0", config = config)
 }
 

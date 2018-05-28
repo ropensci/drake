@@ -16,20 +16,30 @@ test_with_dir("check_jobs()", {
   expect_silent(check_jobs(c(imports = 5, targets = 6)))
 })
 
-test_with_dir("jobs_imports()", {
-  expect_equal(jobs_imports(8), 8)
-  expect_error(jobs_imports(c(8, 12)))
-  expect_error(jobs_imports(c(8, 1)))
-  expect_equal(jobs_imports(c(targets = 8, imports = 12)), 12)
-  expect_equal(jobs_imports(c(imports = 8, targets = 12)), 8)
+test_with_dir("check_parallelism()", {
+  expect_error(check_parallelism(NULL), regexp = "length")
+  expect_error(check_parallelism(-1), regexp = "character")
+  expect_error(
+    check_parallelism(c(a = "x", targets = "y")), regexp = "character")
+  expect_error(
+    check_parallelism(c("mclapply", "mclapply")), regexp = "with names")
+  expect_silent(check_parallelism("mclapply"))
+  expect_silent(
+    check_parallelism(c(targets = "mclapply", imports = "mclapply")))
+  expect_silent(
+    check_parallelism(c(imports = "parLapply", targets = "future")))
 })
 
-test_with_dir("jobs_targets()", {
-  expect_equal(jobs_targets(8), 8)
-  expect_error(jobs_targets(c(8, 12)))
-  expect_error(jobs_targets(c(8, 1)))
-  expect_equal(jobs_targets(c(targets = 8, imports = 12)), 8)
-  expect_equal(jobs_targets(c(imports = 8, targets = 12)), 12)
+test_with_dir("imports_setting()", {
+  expect_equal(imports_setting(8), 8)
+  expect_equal(imports_setting(c(targets = 8, imports = 12)), 12)
+  expect_equal(imports_setting(c(imports = 8, targets = 12)), 8)
+})
+
+test_with_dir("targets_setting()", {
+  expect_equal(targets_setting(8), 8)
+  expect_equal(targets_setting(c(targets = 8, imports = 12)), 8)
+  expect_equal(targets_setting(c(imports = 8, targets = 12)), 12)
 })
 
 test_with_dir("parallelism not found for testrun()", {

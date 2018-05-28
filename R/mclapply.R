@@ -247,13 +247,9 @@ warn_mclapply_windows <- function(
   jobs,
   os = this_os()
 ){
-  parallelism <- match.arg(
-    parallelism,
-    choices = parallelism_choices(distributed_only = FALSE)
-  )
   if (
-    identical(parallelism, "mclapply") &&
-    jobs_targets(jobs) > 1 &&
+    "mclapply" %in% parallelism &&
+    targets_setting(jobs) > 1 &&
     identical(os, "windows")
   ){
     warning(
