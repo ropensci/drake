@@ -84,6 +84,13 @@ R6_priority_queue <- R6::R6Class(
       private$data <- private$data[-index]
       private$return_value(x = x, what = what)
     },
+    # Peek at the head node of the queue
+    # if and only if its priority is 0.
+    peek0 = function(what = "names"){
+      if (!self$empty() && private$data[1] < 1){
+        self$peek(n = 1, what = what)
+      }
+    },
     # Extract the head node of the queue
     # if and only if its priority is 0.
     pop0 = function(what = "names"){

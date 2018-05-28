@@ -63,8 +63,14 @@ mc_master <- function(config){
           mc_set_done(worker = worker, config = config)
           next
         }
-        target <- config$queue$pop0(what = "names")
-        if (length(target)){
+        target <- config$queue$peek0(what = "names")
+        should_assign <- mc_should_assign_target(
+          worker = worker,
+          target = target,
+          config = config
+        )
+        if (should_assign){
+          config$queue$pop0(what = "names")
           mc_set_target(worker = worker, target = target, config = config)
           mc_set_running(worker = worker, config = config)
         }
@@ -261,4 +267,24 @@ warn_mclapply_windows <- function(
       call. = FALSE
     )
   }
+}
+
+mc_should_assign_target <- function(worker, target, config){
+  if (!length(target)){
+    return(FALSE)
+  }
+  if (!length(config$plan$workers) || !(target %in% config$plan$target)){
+    return(TRUE)
+  }
+  allowed_workers <- as.integer(
+    unlist(
+      config$plan$workers[config$plan$target == target]
+    )
+  )
+  allowed_workers <- allowed_workers %% config$jobs
+  allowed_workers[allowed_workers == 0] <- config$jobs
+  if (!length(allowed_workers)){
+    return(TRUE)
+  }
+  as.integer(worker) %in% allowed_workers
 }
