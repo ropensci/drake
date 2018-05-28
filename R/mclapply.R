@@ -273,7 +273,10 @@ mc_should_assign_target <- function(worker, target, config){
   if (!length(target)){
     return(FALSE)
   }
-  if (!length(config$plan$workers) || !(target %in% config$plan$target)){
+  if (
+    !("workers" %in% colnames(config$plan)) ||
+    !(target %in% config$plan$target)
+  ){
     return(TRUE)
   }
   allowed_workers <- as.integer(
