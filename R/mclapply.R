@@ -63,14 +63,14 @@ mc_master <- function(config){
           mc_set_done(worker = worker, config = config)
           next
         }
-        target <- config$queue$peek0(what = "names")
+        target <- config$queue$peek0()
         should_assign <- mc_should_assign_target(
           worker = worker,
           target = target,
           config = config
         )
         if (should_assign){
-          config$queue$pop0(what = "names")
+          config$queue$pop0()
           mc_set_target(worker = worker, target = target, config = config)
           mc_set_running(worker = worker, config = config)
         }
@@ -129,7 +129,7 @@ mc_conclude_target <- function(worker, config){
     config = config,
     reverse = TRUE
   ) %>%
-    intersect(y = config$queue$list(what = "names"))
+    intersect(y = config$queue$list())
   config$queue$decrease_key(names = revdeps)
   flag_attempt <- !get_attempt_flag(config) &&
     get_progress_single(target = target, cache = config$cache) == "finished" &&
