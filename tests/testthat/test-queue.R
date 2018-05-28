@@ -37,7 +37,7 @@ test_with_dir("the priority queue works", {
     target = c("spren", "bar", "Joe", "baz", "Amy", "soup", "Bob", "foo"),
     ndeps = c(0, 0, 1, 3, 4, 7, 7, 8),
     priority = c(1, 2, 1, 2, 1, 1, 2, 2),
-    stringsAsFactors = FALSE   
+    stringsAsFactors = FALSE
   )
   expect_equal(x$data, y)
   expect_equal(x$peek0(), "spren")
@@ -50,7 +50,7 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equal(x$data, y[-1:-2, ])
-  
+
   priorities[targets == "bar"] <- 1
   priorities[targets == "spren"] <- 2
   x <- R6_priority_queue$new(
@@ -65,7 +65,7 @@ test_with_dir("the priority queue works", {
     target = c("bar", "spren", "Joe", "baz", "Amy", "soup", "Bob", "foo"),
     ndeps = c(0, 0, 1, 3, 4, 7, 7, 8),
     priority = c(1, 2, 1, 2, 1, 1, 2, 2),
-    stringsAsFactors = FALSE   
+    stringsAsFactors = FALSE
   )
   expect_equal(x$data, y)
   expect_equal(x$peek0(), "bar")
