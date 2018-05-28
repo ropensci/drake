@@ -322,6 +322,19 @@
 #'   but it causes [make()] to populate your workspace/environment
 #'   with the last few targets it builds.
 #'
+#' @param pruning_strategy Character scalar, either `"speed"` (default)
+#'   or `"memory"`. These are alternative approaches to how `drake`
+#'   keeps non-import dependencies in memory when it builds a target.
+#'   If `pruning_strategy` is `"memory"`, `drake` removes all targets
+#'   from memory (i.e. `config$envir`) except the direct dependencies
+#'   of the target is about to build. This is suitable for data so large
+#'   that the optimal strategy is to minimize memory consumption.
+#'   If `pruning_strategy` is `"speed"`, `drake` loads all the dependencies
+#'   and keeps in memory everything that will eventually be a
+#'   dependency of a downstream target. This strategy consumes more
+#'   memory, but does more to minimize the number of times data is
+#'   read from storage/disk.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -377,7 +390,8 @@ drake_config <- function(
   caching = c("worker", "master"),
   keep_going = FALSE,
   session = NULL,
-  imports_only = NULL
+  imports_only = NULL,
+  pruning_strategy = c("speed", "memory")
 ){
   force(envir)
   if (!is.null(imports_only)){
@@ -418,6 +432,7 @@ drake_config <- function(
   }
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
+  pruning_strategy <- match.arg(pruning_strategy)
   list(
     plan = plan, targets = targets, envir = envir,
     cache = cache, cache_path = cache_path, fetch_cache = fetch_cache,
@@ -433,7 +448,7 @@ drake_config <- function(
     lazy_load = lazy_load, session_info = session_info,
     cache_log_file = cache_log_file, caching = match.arg(caching),
     evaluator = future::plan("next"), keep_going = keep_going,
-    session = session
+    session = session, pruning_strategy = pruning_strategy
   )
 }
 

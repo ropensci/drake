@@ -108,7 +108,8 @@ make <- function(
   caching = "worker",
   keep_going = FALSE,
   session = NULL,
-  imports_only = NULL
+  imports_only = NULL,
+  pruning_strategy = c("speed", "memory")
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -153,7 +154,8 @@ make <- function(
       caching = caching,
       keep_going = keep_going,
       session = session,
-      imports_only = imports_only
+      imports_only = imports_only,
+      pruning_strategy = pruning_strategy
     )
   }
   make_with_config(config = config)

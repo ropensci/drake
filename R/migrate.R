@@ -89,6 +89,7 @@ migrate_drake_project <- function(
   config$outdated <- legacy_outdated(config) %>%
     as.character %>%
     sort
+  config$pruning_strategy <- "speed"
   config$cache$clear(namespace = "depends")
   store_drake_config(config = config)
   run_loop(config = config)
