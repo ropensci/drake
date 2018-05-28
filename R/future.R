@@ -12,7 +12,7 @@ run_future <- function(config){
           queue = queue
         )
         # Pop the head target only if its priority is 0
-        next_target <- queue$pop0(what = "names")
+        next_target <- queue$pop0()
         if (!length(next_target)){
           # It's hard to make this line run in a small test workflow
           # suitable enough for unit testing, but
@@ -21,7 +21,7 @@ run_future <- function(config){
           next # nocov
         }
         running <- running_targets(workers = workers, config = config)
-        protect <- c(running, queue$list(what = "names"))
+        protect <- c(running, queue$list())
         workers[[id]] <- new_worker(
           id = id,
           target = next_target,
@@ -192,8 +192,8 @@ decrease_revdep_keys <- function(worker, config, queue){
     config = config,
     reverse = TRUE
   ) %>%
-    intersect(y = queue$list(what = "names"))
-  queue$decrease_key(names = revdeps)
+    intersect(y = queue$list())
+  queue$decrease_key(targets = revdeps)
 }
 
 conclude_worker <- function(worker, config, queue){

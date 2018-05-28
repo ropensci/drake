@@ -58,6 +58,9 @@ R6_priority_queue <- R6::R6Class(
     empty = function(){
       self$size() < 1
     },
+    list = function(){
+      self$data$target
+    },
     sort = function(){
       ndeps <- priority <- NULL
       self$data <- dplyr::arrange(self$data, ndeps, priority)
