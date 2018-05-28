@@ -78,14 +78,3 @@ parallelism_warnings <- function(config){
     os = this_os()
   )
 }
-
-use_default_parallelism <- function(parallelism){
-  parallelism <- match.arg(
-    parallelism,
-    choices = parallelism_choices(distributed_only = FALSE)
-  )
-  if (parallelism %in% parallelism_choices(distributed_only = TRUE)){
-    parallelism <- default_parallelism()
-  }
-  parallelism
-}

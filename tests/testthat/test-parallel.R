@@ -16,6 +16,20 @@ test_with_dir("check_jobs()", {
   expect_silent(check_jobs(c(imports = 5, targets = 6)))
 })
 
+test_with_dir("check_parallelism()", {
+  expect_error(check_parallelism(NULL), regexp = "length")
+  expect_error(check_parallelism(-1), regexp = "character")
+  expect_error(
+    check_parallelism(c(a = "x", targets = "y")), regexp = "character")
+  expect_error(
+    check_parallelism(c("mclapply", "mclapply")), regexp = "with names")
+  expect_silent(check_parallelism("mclapply"))
+  expect_silent(
+    check_parallelism(c(targets = "mclapply", imports = "mclapply")))
+  expect_silent(
+    check_parallelism(c(imports = "parLapply", targets = "future")))
+})
+
 test_with_dir("imports_setting()", {
   expect_equal(imports_setting(8), 8)
   expect_equal(imports_setting(c(targets = 8, imports = 12)), 12)

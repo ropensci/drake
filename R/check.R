@@ -139,11 +139,11 @@ check_parallelism <- function(parallelism){
       !identical(sort(names(parallelism)), sort(c("imports", "targets")))
     ){
       stop(
-        "In the `parallelism` argument, you must either give a character scalar ",
-        "or a named character vector with names 'imports' and 'targets'.",
+        "In the `parallelism` argument, you must either ",
+        "give a character scalar or a named character vector ",
+        "with names 'imports' and 'targets'.",
         call. = FALSE
       )
     }
   }
 }
-

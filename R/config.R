@@ -544,7 +544,7 @@ parse_jobs <- function(jobs){
 
 parse_parallelism <- function(parallelism){
   check_parallelism(parallelism)
-  for(i in seq_along(parallelism)){
+  for (i in seq_along(parallelism)){
     parallelism[i] <- match.arg(
       arg = parallelism[i],
       choices = parallelism_choices(distributed_only = FALSE)
