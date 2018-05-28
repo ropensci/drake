@@ -26,6 +26,7 @@
 - Use a `README.Rmd` file to generate `README.md`.
 - Add function `deps_targets()`.
 - Deprecate function `deps()` in favor of `deps_code()`
+- Add a `pruning_strategy` argument to `make()` and `drake_config()` so the user can decide how `drake` keeps non-import dependencies in memory when it builds a target.
 
 # Version 5.1.2
 
