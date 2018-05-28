@@ -472,3 +472,17 @@ test_with_dir("spaces in target names are replaced only when appropriate", {
   )
   expect_equal(pl, pl2)
 })
+
+test_with_dir("parse the optional workers column", {
+  x <- list(10, 4, -1, 18, c(0, 4, 10, 123), numeric(0), 123)
+  y <- list(
+    as.integer(4),
+    as.integer(3),
+    as.integer(1),
+    as.integer(5),
+    as.integer(c(2, 3, 4, 6)),
+    integer(0),
+    as.integer(6)
+  )
+  expect_equal(y, parse_workers(x))
+})
