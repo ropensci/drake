@@ -27,6 +27,7 @@
 - Add function `deps_targets()`.
 - Deprecate function `deps()` in favor of `deps_code()`
 - Add a `pruning_strategy` argument to `make()` and `drake_config()` so the user can decide how `drake` keeps non-import dependencies in memory when it builds a target.
+- Add optional custom (experimental) "workers" and "priorities" columns to the `drake` plans to help users customize scheduling.
 
 # Version 5.1.2
 

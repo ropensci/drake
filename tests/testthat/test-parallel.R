@@ -150,3 +150,14 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
     expect_identical(x, y)
   })
 })
+
+test_with_dir("worker & priority cols don't generate overt problems", {
+  envir <- new.env(parent = globalenv())
+  cache <- storr::storr_environment()
+  load_mtcars_example(envir = envir, cache = cache)
+  my_plan <- envir$my_plan
+  my_plan$workers <- my_plan$priority <- seq_len(nrow(my_plan))
+  make(my_plan, envir = envir, cache = cache,
+       session_info = FALSE, pruning_strategy = "memory")
+  expect_true(file_store("report.md") %in% cache$list())
+})
