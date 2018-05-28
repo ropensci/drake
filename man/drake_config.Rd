@@ -19,7 +19,8 @@ drake_config(plan = read_drake_plan(),
   skip_targets = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
-  session = NULL, imports_only = NULL)
+  session = NULL, imports_only = NULL, pruning_strategy = c("speed",
+  "memory"))
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -327,6 +328,19 @@ but it causes \code{\link[=make]{make()}} to populate your workspace/environment
 with the last few targets it builds.}
 
 \item{imports_only}{deprecated. Use \code{skip_targets} instead.}
+
+\item{pruning_strategy}{Character scalar, either \code{"speed"} (default)
+or \code{"memory"}. These are alternative approaches to how \code{drake}
+keeps non-import dependencies in memory when it builds a target.
+If \code{pruning_strategy} is \code{"memory"}, \code{drake} removes all targets
+from memory (i.e. \code{config$envir}) except the direct dependencies
+of the target is about to build. This is suitable for data so large
+that the optimal strategy is to minimize memory consumption.
+If \code{pruning_strategy} is \code{"speed"}, \code{drake} loads all the dependencies
+and keeps in memory everything that will eventually be a
+dependency of a downstream target. This strategy consumes more
+memory, but does more to minimize the number of times data is
+read from storage/disk.}
 }
 \value{
 The master internal configuration list of a project.

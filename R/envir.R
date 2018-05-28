@@ -26,12 +26,14 @@ assign_to_envir <- function(target, value, config){
 #' @examples
 #' # Users should use make().
 prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
-  if (is.null(downstream)){
+  if (is.null(downstream) && config$pruning_strategy == "speed"){
     downstream <- downstream_nodes(
       from = targets,
       graph = config$graph,
       jobs = jobs
     )
+  } else if (config$pruning_strategy == "memory"){
+    downstream <- NULL
   }
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
