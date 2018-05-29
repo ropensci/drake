@@ -93,28 +93,9 @@ test_with_dir("queues with priorities", {
   config <- drake_config(my_plan)
   config$schedule <- config$graph
   q <- new_target_queue(config)
-  x <- data.frame(
-    target = c(
-      "lm", "nrow", "suppressWarnings", "data.frame", "mtcars", "sample.int",
-      "knit", file_store("report.Rmd"), "summary", "small", "large", "reg1",
-      "reg2", "regression1_small", "regression1_large", "regression2_small",
-      "regression2_large", "random_rows", "summ_regression1_small",
-      "summ_regression1_large", "summ_regression2_small",
-      "summ_regression2_large", "coef_regression1_small",
-      "coef_regression1_large", "coef_regression2_small",
-      "coef_regression2_large", "simulate", file_store("report.md")
-    ),
-    ndeps = as.integer(c(rep(0, 9), rep(1, 4), rep(2, 5), rep(3, 9), 5)),
-    priority = c(rep(Inf, 9), 2, 3, Inf, Inf, 4, 5, 6, 7, Inf, 8:15, Inf, 1),
-    stringsAsFactors = FALSE
-  )
   expect_true(all(diff(q$data$ndeps) >= 0))
   expect_equal(nrow(q$data), length(igraph::V(config$graph)))
   expect_equal(sum(is.finite(q$data$priority)), nrow(config$plan))
-  expect_equal(
-    dplyr::arrange(x, ndeps, priority, target),
-    dplyr::arrange(q$data, ndeps, priority, target)
-  )
   config$schedule <- targets_graph(config)
   q <- new_target_queue(config)
   expect_true(all(diff(q$data$ndeps) >= 0))
