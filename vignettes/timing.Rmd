@@ -106,3 +106,5 @@ We see serious potential speed gains up to 4 jobs, but beyond that point, we hav
 clean(destroy = TRUE, verbose = FALSE)
 unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
 ```
+
+A final note on predicting runtime: the output of `predict_runtime()` and `predict_load_balancing()` also depends the optional `workers` column of your `drake_plan()`. If you micromanage which workers are allowed to build which targets, you may minimize reads from disk, but you could also slow down your workflow if you are not careful. See the [high-performance computing guide](https://ropensci.github.io/drake/articles/parallelism.html) for more.

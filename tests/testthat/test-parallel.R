@@ -150,3 +150,16 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
     expect_identical(x, y)
   })
 })
+
+test_with_dir("worker & priority cols don't generate overt problems", {
+  future::plan(future::sequential)
+  envir <- new.env(parent = globalenv())
+  load_mtcars_example(envir = envir)
+  my_plan <- envir$my_plan
+  my_plan$priority <- seq_len(nrow(my_plan))
+  my_plan$workers <- as.list(my_plan$priority)
+  my_plan$workers[[1]] <- numeric(0)
+  make(my_plan, envir = envir, parallelism = "future_lapply",
+       session_info = FALSE, pruning_strategy = "memory")
+  expect_true(file_store("report.md") %in% cached())
+})
