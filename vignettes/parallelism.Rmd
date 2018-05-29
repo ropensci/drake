@@ -252,7 +252,28 @@ In each of these calls to `make()`, three processes launch: two workers and one 
 <iframe width="700" height="434" src="https://www.powtoon.com/embed/bUfSIaXjrw5/" frameborder="0"></iframe>
 </div>
 
-The `predict_runtime()` and `predict_load_balancing()` functions emulate persistent workers, and the predictions also apply to transient workers. See the [timing guide](https://ropensci.github.io/drake/articles/timing.html) for a demonstration.
+For staged scheduling, you can micromanage which workers can run which targets. This column can be an integer vector or a list of integer vectors. Simply set an optional `workers` column in your `drake_plan()`. Why would you wish to do this? Consider the `mtcars` example.
+
+```{r workerscol}
+load_mtcars_example()
+my_plan$workers <- 1
+my_plan$workers[grepl("large", my_plan$target)] <- 2
+my_plan
+```
+
+Here, one of the workers is in charge of all the targets that have to do with the `large` dataset. That way, we do not need other workers to read `large` from disk. If reads from disk take a long time, this could speed up your workflow. On the other hand, delegating all the `large` targets to worker 2 could prevent worker 1 from sharing the computational load, which could slow things down. Ultimately, you as the user need to make these tradeoffs. Also, the `workers` column only applies to the persistent scheduling backends.
+
+Similarly, you can set an optional `priority` column for your `drake_plan()`.
+
+```{r prioritycol}
+plan <- drake_plan(A = build(), B = stuff())
+plan$priority <- c(1, 2)
+plan
+```
+
+Because of the `priority` column, if targets `A` and `B` are both ready to build, then `A` will be assigned to a worker first. Custom priorities apply to the staged scheduling backends, plus the `"future"` backend.
+
+The `predict_runtime()` and `predict_load_balancing()` functions emulate persistent workers, and the predictions also apply to transient workers. See the [timing guide](https://ropensci.github.io/drake/articles/timing.html) for a demonstration. These functions also respond to the `workers` column.
 
 ## Transient scheduling
 

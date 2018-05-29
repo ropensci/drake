@@ -64,3 +64,12 @@ test_with_dir("prune_envir in full build", {
     c("a_x", "c_y", "s_b_x", "t_a_z", "y")
   )
 })
+
+test_with_dir("alt strategy for pruning", {
+  envir <- new.env(parent = globalenv())
+  cache <- storr::storr_environment()
+  load_mtcars_example(envir = envir, cache = cache)
+  make(envir$my_plan, envir = envir, cache = cache,
+       session_info = FALSE, pruning_strategy = "memory")
+  expect_true(file_store("report.md") %in% cache$list())
+})

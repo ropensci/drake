@@ -304,8 +304,14 @@ balance_load <- function(config, jobs){
           mc_set_done(worker = worker, config = config)
           next
         }
-        target <- config$queue$pop0(what = "names")
-        if (length(target)){
+        target <- config$queue$peek0()
+        should_assign <- mc_should_assign_target(
+          worker = worker,
+          target = target,
+          config = config
+        )
+        if (should_assign){
+          config$queue$pop0()
           # Added line: get the time that the worker will spend on the target.
           step_times[worker] <- igraph::vertex_attr(
             graph = config$graph,
