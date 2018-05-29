@@ -12,10 +12,10 @@ new_target_queue <- function(config){
     jobs = config$jobs
   ) %>%
     unlist
+  priorities <- rep(Inf, length(targets))
+  names(priorities) <- targets
   if ("priority" %in% colnames(config$plan)){
-    priorities <- config$plan$priority
-  } else {
-    priorities <- rep(0, length(targets))
+    priorities[config$plan$target] <- config$plan$priority
   }
   R6_priority_queue$new(
     targets = targets,
