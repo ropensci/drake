@@ -15,7 +15,10 @@ new_target_queue <- function(config){
   priorities <- rep(Inf, length(targets))
   names(priorities) <- targets
   if ("priority" %in% colnames(config$plan)){
-    priorities[config$plan$target] <- config$plan$priority
+    prioritized <- intersect(targets, config$plan$target)
+    set_priorities <- config$plan$priority
+    names(set_priorities) <- config$plan$target
+    priorities[prioritized] <- set_priorities[prioritized]
   }
   R6_priority_queue$new(
     targets = targets,

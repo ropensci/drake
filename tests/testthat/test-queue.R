@@ -87,7 +87,7 @@ test_with_dir("the priority queue works", {
   expect_equal(x$data, y[-1:-2, ])
 })
 
-test_with_dir("queue with priorities", {
+test_with_dir("queues with priorities", {
   load_mtcars_example(cache = storr::storr_environment())
   my_plan$priority <- seq_len(nrow(my_plan))
   config <- drake_config(my_plan)
@@ -115,4 +115,17 @@ test_with_dir("queue with priorities", {
     dplyr::arrange(x, ndeps, priority, target),
     dplyr::arrange(q$data, ndeps, priority, target)
   )
+  config$schedule <- targets_graph(config)
+  q <- new_target_queue(config)
+  expect_true(all(diff(q$data$ndeps) >= 0))
+  expect_equal(sort(q$data$target), sort(config$plan$target))
+  expect_true(all(is.finite(q$data$priority)))
+  config$schedule <- imports_graph(config)
+  q <- new_target_queue(config)
+  expect_true(all(diff(q$data$ndeps) >= 0))
+  expect_equal(
+    sort(q$data$target),
+    sort(setdiff(igraph::V(config$graph)$name, config$plan$target))
+  )
+  expect_false(any(is.finite(q$data$priority)))
 })
