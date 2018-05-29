@@ -43,7 +43,18 @@ R6_priority_queue <- R6::R6Class(
       ndeps = integer(0),
       priorities = numeric(0)
     ){
-      stopifnot(length(targets) == length(ndeps))
+      if (
+        length(targets) != length(ndeps) ||
+        length(ndeps) != length(priorities)
+      ){
+        stop(
+          "Cannot create priority queue:\nlength(targets) = ",
+          length(targets),
+          ", length(ndeps) = ", length(ndeps),
+          ", length(priorities) = ", length(priorities),
+          call. = FALSE
+        )
+      }
       self$data <- data.frame(
         target = targets,
         ndeps = ndeps,

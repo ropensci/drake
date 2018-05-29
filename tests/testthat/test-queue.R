@@ -6,6 +6,13 @@ test_with_dir("empty queue", {
   expect_equal(nrow(q$data), 0)
 })
 
+test_with_dir("bad queue", {
+  expect_error(
+    R6_priority_queue$new(1:2, 1:4, 1:3),
+    regexp = "priority queue"
+  )
+})
+
 test_with_dir("the priority queue works", {
   targets <- c("foo", "bar", "baz", "Bob", "Amy", "Joe", "soup", "spren")
   ndeps <- c(8, 2, 3, 7, 4, 1, 7, 5)

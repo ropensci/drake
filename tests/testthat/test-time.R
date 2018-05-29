@@ -147,3 +147,23 @@ test_with_dir("runtime predictions", {
   expect_equal(p7, 43, tolerance = 1e-6)
   expect_equal(p8, 70, tolerance = 1e-6)
 })
+
+test_with_dir("load balancing with custom worker assignemnts", {
+  config <- load_mtcars_example()
+  config$plan$workers <- 1
+  config$plan$workers[grepl("large", config$plan$target)] <- 2
+  suppressWarnings(
+    x <- predict_load_balancing(config, default_time = 2, jobs = 2))
+  expect_false(any(grep("large", x$targets_per_worker[[1]])))
+  expect_true(any(grep("large", x$targets_per_worker[[2]])))
+  expect_false(any(grep("small", x$targets_per_worker[[2]])))
+  expect_true(any(grep("small", x$targets_per_worker[[1]])))
+  config$plan$workers <- 1
+  config$plan$workers[grepl("small", config$plan$target)] <- 2
+  suppressWarnings(
+    x <- predict_load_balancing(config, default_time = 2, jobs = 2))
+  expect_false(any(grep("large", x$targets_per_worker[[2]])))
+  expect_true(any(grep("large", x$targets_per_worker[[1]])))
+  expect_false(any(grep("small", x$targets_per_worker[[1]])))
+  expect_true(any(grep("small", x$targets_per_worker[[2]])))
+})
