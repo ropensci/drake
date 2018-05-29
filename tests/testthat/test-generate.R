@@ -324,7 +324,7 @@ test_with_dir("non-expanded grid, issue 235", {
     rules_grid, cohort_ = c("2012", "2013", "2014", "2015"))
   rules_grid <- dplyr::filter(
     rules_grid, !(school_ == "schoolB" & cohort_ %in% c("2012", "2013")))
-  
+
   plan <- drake_plan(
     credits = check_credit_hours("school_", "funding_", "cohort_"),
     students = check_students("school_", "funding_", "cohort_"),
