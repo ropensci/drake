@@ -1,4 +1,4 @@
-# Version 5.1.4
+# Version 5.2.0
 
 - Remove staged parallelism from all the `lapply()`-like backends (`parallelism =` `"mclapply"`, `"parLapply"`, and `"future_lapply"`). Now, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate `callr::r_bg()` process.
 - Remove the appearance of staged parallelism from single-job `make()`'s.
