@@ -28,6 +28,8 @@
 - Deprecate function `deps()` in favor of `deps_code()`
 - Add a `pruning_strategy` argument to `make()` and `drake_config()` so the user can decide how `drake` keeps non-import dependencies in memory when it builds a target.
 - Add optional custom (experimental) "workers" and "priorities" columns to the `drake` plans to help users customize scheduling.
+- Add a `makefile_path` argument to `make()` and `drake_config()` to avoid potential conflicts between user-side custom `Makefile`s and the one written by `make(parallelism = "Makefile")`.
+- Document batch mode for long workflows in the HPC vignette.
 
 # Version 5.1.2
 

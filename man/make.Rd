@@ -18,7 +18,8 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
   caching = "worker", keep_going = FALSE, session = NULL,
-  imports_only = NULL, pruning_strategy = c("speed", "memory"))
+  imports_only = NULL, pruning_strategy = c("speed", "memory"),
+  makefile_path = "Makefile")
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -347,6 +348,12 @@ and keeps in memory everything that will eventually be a
 dependency of a downstream target. This strategy consumes more
 memory, but does more to minimize the number of times data is
 read from storage/disk.}
+
+\item{makefile_path}{Path to the \code{Makefile} for
+\code{make(parallelism = "Makefile")}. If you set this argument to a
+non-default value, you are responsible for supplying this same
+path to the \code{args} argument so \code{make} knows where to find it.
+Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")} # nolint}
 }
 \value{
 The master internal configuration list, mostly

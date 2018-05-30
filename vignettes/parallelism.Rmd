@@ -33,10 +33,35 @@ load_mtcars_example()
 make(my_plan, jobs = 2)
 ```
 
-To deploy serious long workflows, we recommend putting the call to `make()` in a script (say, `make.R`) and running it in an unobtrusive background process that persists after you log out. In the Linux command line, this is straightforward.
+# Batch mode for long workflows
 
-<pre><code>nohup nice -19 R CMD BATCH make.R &
+To deploy serious long workflows, we recommend putting the call to `make()` in a script (say, `drake_work.R`) and running it in an unobtrusive background process that persists after you log out. In the Linux command line, this is straightforward.
+
+<pre><code>nohup nice -19 R CMD BATCH drake_work.R &
 </code></pre>
+
+Or, you could call `drake` inside an overarching [`Makefile`](https://www.gnu.org/software/make/) that chains multiple stages together in a larger reproducible pipeline. (See [Karl Broman's post](http://kbroman.org/minimal_make/) on [`Makefile`](https://www.gnu.org/software/make/)s for reproducible research.)
+
+<pre><code>all: final_output.pdf
+
+final_output.pdf: python_magic.py results_summary.csv
+    python python_magic.py
+
+results_summary.csv: drake_work.R
+    Rscript drake_work.R
+
+clean:
+    rm -rf .drake
+</code></pre>
+
+Then, run your whole pipleine in a persistent background process.
+
+<pre><code>nohup nice -19 R CMD BATCH make &
+</code></pre>
+
+If you do write a custom [`Makefile`](https://www.gnu.org/software/make/) at the root of your project and you plan to use `make(parallelism = "Makefile")`, please read about `make(parallelism = "Makefile")` later in this document to avoid potential conflicts between your [`Makefile`](https://www.gnu.org/software/make/) and the one `drake` writes.
+
+# Let drake schedule your targets.
 
 When you deploy your project, `drake` uses the dependency network to figure out how to run your work in parallel. You as the user do not have to micromanage when individual targets are built.
 
@@ -45,6 +70,8 @@ src = "https://ropensci.github.io/drake/images/outdated.html"
 width = "100%" height = "600px" allowtransparency="true"
 style="border: none; box-shadow: none">
 </iframe>
+
+# Parallel backends
 
 There are multiple ways to walk this graph and multiple ways to launch workers, and every project has its own needs. Thus, `drake` supports multiple parallel backends. Choose the backend with the `parallelism` argument.
 
@@ -175,6 +202,17 @@ make(
   parallelism = "Makefile",
   command = "lsmake",
   args = c("--touch", "--silent")
+)
+```
+
+If `drake`'s `Makefile` conflicts with a `Makefile` you already wrote yourself, `drake` does not overwrite your `Makefile`. Instead, `make()` tells you about the conflict and then stops running. To force `drake` to use a different `Makefile` that does not conflict with yours, pass the file path to the `makefile_path` argument and set the `--file` argument in `args`.
+
+```{r custommakefilepath, eval = FALSE}
+make(
+  my_plan,
+  parallelism = "Makefile",
+  makefile_path = "my_folder/my_makefile",
+  args = "--file=my_folder/my_makefile"
 )
 ```
 
