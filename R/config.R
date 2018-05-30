@@ -335,6 +335,12 @@
 #'   memory, but does more to minimize the number of times data is
 #'   read from storage/disk.
 #'
+#' @param makefile_path Path to the `Makefile` for
+#'   `make(parallelism = "Makefile")`. If you set this argument to a
+#'   non-default value, you are responsible for supplying this same
+#'   path to the `args` argument so `make` knows where to find it.
+#'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")` # nolint
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -391,7 +397,8 @@ drake_config <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("speed", "memory")
+  pruning_strategy = c("speed", "memory"),
+  makefile_path = "Makefile"
 ){
   force(envir)
   if (!is.null(imports_only)){
@@ -448,7 +455,8 @@ drake_config <- function(
     lazy_load = lazy_load, session_info = session_info,
     cache_log_file = cache_log_file, caching = match.arg(caching),
     evaluator = future::plan("next"), keep_going = keep_going,
-    session = session, pruning_strategy = pruning_strategy
+    session = session, pruning_strategy = pruning_strategy,
+    makefile_path = makefile_path
   )
 }
 

@@ -1,5 +1,25 @@
 drake_context("Makefile")
 
+test_with_dir("Makefile path and conflicts", {
+  load_mtcars_example(cache = storr::storr_environment())
+  file <- "non_standard_makefile"
+  config <- drake_config(
+    my_plan,
+    cache = storr::storr_environment(),
+    makefile_path = file
+  )
+  expect_false(file.exists(file))
+  write_makefile(config)
+  expect_true(file.exists(file))
+  expect_silent(write_makefile(config))
+  unlink(file)
+  write.csv(mtcars, file)
+  expect_error(
+    write_makefile(config),
+    regexp = "already exists and was not created by drake"
+  )
+})
+
 test_with_dir("recipe commands", {
   expect_message(Makefile_recipe())
   expect_message(Makefile_recipe(recipe_command = "R -e 'R_RECIPE' -q"))
@@ -35,11 +55,15 @@ test_with_dir("no Makefile for make_imports()", {
 test_with_dir("prepend arg works", {
   config <- dbug()
   config$verbose <- FALSE
+  store_drake_config(config = config)
+  run_Makefile(config, run = FALSE)
+  lines <- readLines("Makefile")
+  expect_false(any(grepl("# add", lines, fixed = TRUE)))
   config$prepend <- "# add"
   store_drake_config(config = config)
   run_Makefile(config, run = FALSE)
   lines <- readLines("Makefile")
-  expect_true(grepl("# add", lines[1], fixed = TRUE))
+  expect_true(any(grepl("# add", lines, fixed = TRUE)))
 })
 
 test_with_dir("files inside directories can be timestamped", {

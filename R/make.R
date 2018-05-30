@@ -109,7 +109,8 @@ make <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("speed", "memory")
+  pruning_strategy = c("speed", "memory"),
+  makefile_path = "Makefile"
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -155,7 +156,8 @@ make <- function(
       keep_going = keep_going,
       session = session,
       imports_only = imports_only,
-      pruning_strategy = pruning_strategy
+      pruning_strategy = pruning_strategy,
+      makefile_path = makefile_path
     )
   }
   make_with_config(config = config)
