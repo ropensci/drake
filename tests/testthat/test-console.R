@@ -1,10 +1,12 @@
 drake_context("console")
 
 test_with_dir("console_cache", {
-  expect_silent(console_cache("12345", verbose = TRUE))
-  expect_message(console_cache("12345", verbose = 2))
-  expect_silent(console_cache(NULL, verbose = TRUE))
-  expect_message(console_cache(NULL, verbose = 2))
+  expect_silent(
+    console_cache(config = list(cache_path = "123", verbose = TRUE)))
+  expect_message(
+    console_cache(config = list(cache_path = "123", verbose = 2)))
+  expect_silent(console_cache(config = list(verbose = TRUE)))
+  expect_message(console_cache(config = list(verbose = 2)))
 })
 
 test_with_dir("console_up_to_date", {
@@ -131,4 +133,28 @@ test_with_dir("console_skip", {
   expect_silent(console_skip("bla", con))
   con$verbose <- 4
   expect_message(console_skip(file_store("bla"), con))
+})
+
+test_with_dir("console to file", {
+  load_mtcars_example()
+  cache <- storr::storr_environment()
+  expect_false(file.exists("log.txt"))
+  tmp <- capture.output({
+      make(
+        my_plan, cache = cache, verbose = 4, session_info = FALSE,
+        console = "log.txt"
+      )
+      make(
+        my_plan, cache = cache, verbose = 4, session_info = FALSE,
+        console = "log.txt"
+      )
+      make(
+        my_plan, cache = cache, verbose = 4, session_info = FALSE,
+        trigger = "always", console = "log.txt"
+      )
+    },
+    type = "message"
+  )
+  expect_equal(tmp, character(0))
+  expect_true(length(readLines("log.txt")) > 0)
 })

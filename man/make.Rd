@@ -7,8 +7,9 @@
 make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = drake::default_verbose(),
   hook = default_hook, cache = drake::get_cache(verbose = verbose, force =
-  force), fetch_cache = NULL, parallelism = drake::default_parallelism(),
-  jobs = 1, packages = rev(.packages()), prework = character(0),
+  force, console = console), fetch_cache = NULL,
+  parallelism = drake::default_parallelism(), jobs = 1,
+  packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), log_progress = TRUE,
@@ -19,7 +20,7 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
   caching = "worker", keep_going = FALSE, session = NULL,
   imports_only = NULL, pruning_strategy = c("speed", "memory"),
-  makefile_path = "Makefile")
+  makefile_path = "Makefile", console = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -354,6 +355,11 @@ read from storage/disk.}
 non-default value, you are responsible for supplying this same
 path to the \code{args} argument so \code{make} knows where to find it.
 Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")} # nolint}
+
+\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
+output will be printed to the R console using \code{message()}.
+Otherwise, \code{console} should be the name of a flat file.
+Console output will be appended to that file.}
 }
 \value{
 The master internal configuration list, mostly

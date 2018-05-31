@@ -30,6 +30,7 @@
 - Add optional custom (experimental) "workers" and "priorities" columns to the `drake` plans to help users customize scheduling.
 - Add a `makefile_path` argument to `make()` and `drake_config()` to avoid potential conflicts between user-side custom `Makefile`s and the one written by `make(parallelism = "Makefile")`.
 - Document batch mode for long workflows in the HPC vignette.
+- Add a `console` argument to `make()` and `drake_config()` so users can redirect console output to a file.
 
 # Version 5.1.2
 

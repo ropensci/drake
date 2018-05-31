@@ -26,7 +26,8 @@ build_drake_graph <- function(
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
-  sanitize_plan = TRUE
+  sanitize_plan = TRUE,
+  console = NULL
 ){
   force(envir)
   if (sanitize_plan){
@@ -42,11 +43,12 @@ build_drake_graph <- function(
   )
   import_names <- setdiff(names(imports), targets)
   imports <- imports[import_names]
+  config <- list(verbose = verbose, console = console)
   console_many_targets(
     targets = names(imports),
     pattern = "connect",
     type = "import",
-    config = list(verbose = verbose)
+    config = config
   )
   imports_edges <- lightly_parallelize(
     X = seq_along(imports),
@@ -59,7 +61,7 @@ build_drake_graph <- function(
     targets = plan$target,
     pattern = "connect",
     type = "target",
-    config = list(verbose = verbose)
+    config = config
   )
   commands_edges <- lightly_parallelize(
     X = seq_len(nrow(plan)),
