@@ -99,7 +99,7 @@ get_cache <- function(
 #' in-memory caches such as `storr_environment()`.
 #' @return A drake/storr cache at the specified path, if it exists.
 #' @inheritParams cached
-#' @inheritParams config
+#' @inheritParams drake_config
 #' @param path file path of the cache
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
@@ -172,7 +172,7 @@ drake_fetch_rds <- function(path){
 #' @export
 #' @return A newly created drake cache as a storr object.
 #' @inheritParams cached
-#' @inheritParams config
+#' @inheritParams drake_config
 #' @seealso [default_short_hash_algo()],
 #'   [default_long_hash_algo()],
 #'   [make()]
@@ -247,7 +247,7 @@ new_cache <- function(
 #' in-memory caches such as [storr_environment()].
 #' @return A drake/storr cache.
 #' @inheritParams cached
-#' @inheritParams config
+#' @inheritParams drake_config
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
 #'   See [default_short_hash_algo()] and

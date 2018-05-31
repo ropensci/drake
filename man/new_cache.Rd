@@ -37,6 +37,11 @@ See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} and
 \code{\link[=make]{make()}}}
 
 \item{...}{other arguments to the cache constructor}
+
+\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
+output will be printed to the R console using \code{message()}.
+Otherwise, \code{console} should be the name of a flat file.
+Console output will be appended to that file.}
 }
 \value{
 A newly created drake cache as a storr object.

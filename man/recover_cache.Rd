@@ -36,6 +36,20 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{3:}{in addition, print any potentially missing items.}
 \item{4:}{in addition, print imports. Full verbosity.}
 }}
+
+\item{fetch_cache}{character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
+but customized. This feature is experimental. It will turn out
+to be necessary if you are using both custom non-RDS caches
+and distributed parallelism (\code{parallelism = "future_lapply"}
+or \code{"Makefile"}) because the distributed R sessions
+need to know how to load the cache.}
+
+\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
+output will be printed to the R console using \code{message()}.
+Otherwise, \code{console} should be the name of a flat file.
+Console output will be appended to that file.}
 }
 \value{
 A drake/storr cache.
