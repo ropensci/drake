@@ -67,6 +67,9 @@ console_cache <- function(config){
   if (config$verbose < 2){
     return()
   }
+  if (is.null(config$cache_path)){
+    config$cache_path <- default_cache_path()
+  }
   paste("cache", config$cache_path) %>%
     finish_console(pattern = "cache", config = config)
 }
@@ -170,7 +173,7 @@ finish_console <- function(text, pattern, config){
 }
 
 write_to_console <- function(msg, config){
-  if(is.null(config$console)){
+  if (is.null(config$console)){
     message(msg, sep = "")
   } else {
     write(x = msg, sep = "", file = config$console, append = TRUE)
