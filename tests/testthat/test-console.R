@@ -132,3 +132,27 @@ test_with_dir("console_skip", {
   con$verbose <- 4
   expect_message(console_skip(file_store("bla"), con))
 })
+
+test_with_dir("console to file", {
+  load_mtcars_example()
+  cache <- storr::storr_environment()
+  expect_error(readLines("log.txt"))
+  tmp <- capture.output({
+      make(
+        my_plan, cache = cache, verbose = 4, session_info = FALSE,
+        console = "log.txt"
+      )
+      make(
+        my_plan, cache = cache, verbose = 4, session_info = FALSE,
+        console = "log.txt"
+      )
+      make(
+        my_plan, cache = cache, verbose = 4, session_info = FALSE,
+        trigger = "always", console = "log.txt"
+      )
+    },
+    type = "message"
+  )
+  expect_equal(tmp, character(0))
+  expect_true(length(readLines("log.txt")) > 0)
+})
