@@ -39,6 +39,11 @@ running version of drake.}
 The purpose of this code is to fetch the \code{storr} cache
 with a command like \code{storr_rds()} or \code{storr_dbi()},
 but customized. This feature is experimental.}
+
+\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
+output will be printed to the R console using \code{message()}.
+Otherwise, \code{console} should be the name of a flat file.
+Console output will be appended to that file.}
 }
 \value{
 A drake/storr cache in a folder called \code{.drake/},

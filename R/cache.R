@@ -54,6 +54,7 @@ force_cache_path <- function(cache = NULL){
 #' @return A drake/storr cache in a folder called `.drake/`,
 #'   if available. `NULL` otherwise.
 #' @inheritParams cached
+#' @inheritParams drake_config
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
