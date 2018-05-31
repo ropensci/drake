@@ -341,6 +341,11 @@
 #'   path to the `args` argument so `make` knows where to find it.
 #'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")` # nolint
 #'
+#' @param console character scalar or `NULL`. If `console` is `NULL`, console
+#'   output will be printed to the R console using `message()`.
+#'   Otherwise, `console` should be the name of a flat file.
+#'   Console output will be appended to that file.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -365,7 +370,8 @@ drake_config <- function(
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   hook = default_hook,
-  cache = drake::get_cache(verbose = verbose, force = force),
+  cache = drake::get_cache(
+    verbose = verbose, force = force, console = console),
   fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -398,7 +404,8 @@ drake_config <- function(
   session = NULL,
   imports_only = NULL,
   pruning_strategy = c("speed", "memory"),
-  makefile_path = "Makefile"
+  makefile_path = "Makefile",
+  console = NULL
 ){
   force(envir)
   if (!is.null(imports_only)){
@@ -417,7 +424,11 @@ drake_config <- function(
   )
   if (is.null(cache)) {
     cache <- recover_cache(
-      force = force, verbose = verbose, fetch_cache = fetch_cache)
+      force = force,
+      verbose = verbose,
+      fetch_cache = fetch_cache,
+      console = console
+    )
   }
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -433,7 +444,7 @@ drake_config <- function(
   if (is.null(graph)){
     graph <- build_drake_graph(plan = plan, targets = targets,
       envir = envir, verbose = verbose, jobs = jobs,
-      sanitize_plan = FALSE)
+      sanitize_plan = FALSE, console = console)
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
@@ -456,7 +467,7 @@ drake_config <- function(
     cache_log_file = cache_log_file, caching = match.arg(caching),
     evaluator = future::plan("next"), keep_going = keep_going,
     session = session, pruning_strategy = pruning_strategy,
-    makefile_path = makefile_path
+    makefile_path = makefile_path, console = console
   )
 }
 

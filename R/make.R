@@ -75,7 +75,8 @@ make <- function(
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   hook = default_hook,
-  cache = drake::get_cache(verbose = verbose, force = force),
+  cache = drake::get_cache(
+    verbose = verbose, force = force, console = console),
   fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -110,7 +111,8 @@ make <- function(
   session = NULL,
   imports_only = NULL,
   pruning_strategy = c("speed", "memory"),
-  makefile_path = "Makefile"
+  makefile_path = "Makefile",
+  console = NULL
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -157,7 +159,8 @@ make <- function(
       session = session,
       imports_only = imports_only,
       pruning_strategy = pruning_strategy,
-      makefile_path = makefile_path
+      makefile_path = makefile_path,
+      console = console
     )
   }
   make_with_config(config = config)

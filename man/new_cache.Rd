@@ -7,7 +7,7 @@
 new_cache(path = drake::default_cache_path(),
   verbose = drake::default_verbose(), type = NULL,
   short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo(), ...)
+  long_hash_algo = drake::default_long_hash_algo(), ..., console = NULL)
 }
 \arguments{
 \item{path}{file path to the cache if the cache

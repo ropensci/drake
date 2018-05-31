@@ -79,7 +79,8 @@ get_cache <- function(
   search = TRUE,
   verbose = drake::default_verbose(),
   force = FALSE,
-  fetch_cache = NULL
+  fetch_cache = NULL,
+  console = NULL
 ){
   if (search){
     path <- find_cache(path = path)
@@ -88,7 +89,7 @@ get_cache <- function(
   }
   this_cache(
     path = path, force = force, verbose = verbose,
-    fetch_cache = fetch_cache
+    fetch_cache = fetch_cache, console = console
   )
 }
 
@@ -98,14 +99,11 @@ get_cache <- function(
 #' in-memory caches such as `storr_environment()`.
 #' @return A drake/storr cache at the specified path, if it exists.
 #' @inheritParams cached
+#' @inheritParams config
 #' @param path file path of the cache
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
-#' @param fetch_cache character vector containing lines of code.
-#'   The purpose of this code is to fetch the `storr` cache
-#'   with a command like [storr_rds()] or [storr_dbi()],
-#'   but customized. This feature is experimental.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -122,14 +120,21 @@ get_cache <- function(
 this_cache <- function(
   path = drake::default_cache_path(), force = FALSE,
   verbose = drake::default_verbose(),
-  fetch_cache = NULL
+  fetch_cache = NULL,
+  console = NULL
 ){
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing & is.null(fetch_cache)){
     return(NULL)
   }
   if (!is.null(path)){
-    console_cache(path = path, verbose = verbose)
+    console_cache(
+      config = list(
+        cache_path = path,
+        verbose = verbose,
+        console = console
+      )
+    )
   }
   fetch_cache <- as.character(fetch_cache)
   if (length(fetch_cache) && nzchar(fetch_cache)){
@@ -167,6 +172,7 @@ drake_fetch_rds <- function(path){
 #' @export
 #' @return A newly created drake cache as a storr object.
 #' @inheritParams cached
+#' @inheritParams config
 #' @seealso [default_short_hash_algo()],
 #'   [default_long_hash_algo()],
 #'   [make()]
@@ -197,7 +203,8 @@ new_cache <- function(
   type = NULL,
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(),
-  ...
+  ...,
+  console = NULL
 ){
   if (!is.null(type)){
     warning(
@@ -220,7 +227,13 @@ new_cache <- function(
     long_hash_algo = long_hash_algo,
     overwrite_hash_algos = FALSE
   )
-  console_cache(path = cache_path(cache), verbose = verbose)
+  console_cache(
+    config = list(
+      cache_path = cache_path(cache),
+      verbose = verbose,
+      console = console
+    )
+  )
   cache
 }
 
@@ -234,6 +247,7 @@ new_cache <- function(
 #' in-memory caches such as [storr_environment()].
 #' @return A drake/storr cache.
 #' @inheritParams cached
+#' @inheritParams config
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
 #'   See [default_short_hash_algo()] and
@@ -244,10 +258,6 @@ new_cache <- function(
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
-#' @param fetch_cache character vector containing lines of code.
-#'   The purpose of this code is to fetch the `storr` cache
-#'   with a command like [storr_rds()] or [storr_dbi()],
-#'   but customized.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -263,11 +273,12 @@ recover_cache <- function(
   long_hash_algo = drake::default_long_hash_algo(),
   force = FALSE,
   verbose = drake::default_verbose(),
-  fetch_cache = NULL
+  fetch_cache = NULL,
+  console = NULL
 ){
   cache <- this_cache(
     path = path, force = force, verbose = verbose,
-    fetch_cache = fetch_cache
+    fetch_cache = fetch_cache, console = console
   )
   if (is.null(cache)){
     cache <- new_cache(
@@ -275,7 +286,8 @@ recover_cache <- function(
       verbose = verbose,
       short_hash_algo = short_hash_algo,
       long_hash_algo = long_hash_algo,
-      fetch_cache = fetch_cache
+      fetch_cache = fetch_cache,
+      console = console
     )
   }
   cache

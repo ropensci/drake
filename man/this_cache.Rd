@@ -5,7 +5,7 @@
 \title{Get the cache at the exact file path specified.}
 \usage{
 this_cache(path = drake::default_cache_path(), force = FALSE,
-  verbose = drake::default_verbose(), fetch_cache = NULL)
+  verbose = drake::default_verbose(), fetch_cache = NULL, console = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -25,11 +25,6 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{3:}{in addition, print any potentially missing items.}
 \item{4:}{in addition, print imports. Full verbosity.}
 }}
-
-\item{fetch_cache}{character vector containing lines of code.
-The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
-but customized. This feature is experimental.}
 }
 \value{
 A drake/storr cache at the specified path, if it exists.

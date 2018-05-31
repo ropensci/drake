@@ -18,7 +18,7 @@ console_missing <- function(target, config){
     text <- paste0("file ", text)
   }
   text <- paste(pattern, text)
-  finish_console(text = text, pattern = pattern, verbose = config$verbose)
+  finish_console(text = text, pattern = pattern, config = config)
 }
 
 console_import <- function(target, config){
@@ -31,7 +31,7 @@ console_import <- function(target, config){
     text <- paste0("file ", text)
   }
   text <- paste(pattern, text)
-  finish_console(text = text, pattern = pattern, verbose = config$verbose)
+  finish_console(text = text, pattern = pattern, config = config)
 }
 
 console_skip <- function(target, config){
@@ -44,7 +44,7 @@ console_skip <- function(target, config){
     text <- paste0("file ", text)
   }
   text <- paste(pattern, text)
-  finish_console(text = text, pattern = pattern, verbose = config$verbose)
+  finish_console(text = text, pattern = pattern, config = config)
 }
 
 console_target <- function(target, config){
@@ -60,18 +60,15 @@ console_target <- function(target, config){
     trigger_text <- color(x = "trigger", color = color_of("trigger"))
     text <- paste0(text, ": ", trigger_text, " \"", trigger, "\"")
   }
-  finish_console(text = text, pattern = pattern, verbose = config$verbose)
+  finish_console(text = text, pattern = pattern, config = config)
 }
 
-console_cache <- function(path, verbose){
-  if (verbose < 2){
+console_cache <- function(config){
+  if (config$verbose < 2){
     return()
   }
-  if (!length(path)){
-    path <- default_cache_path()
-  }
-  paste("cache", path) %>%
-    finish_console(pattern = "cache", verbose = verbose)
+  paste("cache", config$cache_path) %>%
+    finish_console(pattern = "cache", config = config)
 }
 
 console_many_targets <- function(
@@ -92,19 +89,18 @@ console_many_targets <- function(
     ": ",
     paste(targets, collapse = ", ")
   ) %>%
-    finish_console(pattern = pattern, verbose = config$verbose)
+    finish_console(pattern = pattern, config = config)
 }
 
 console_parLapply <- function(config){ # nolint
   text <- paste("load parallel socket cluster with", config$jobs, "workers")
-  finish_console(text = text, pattern = "load",
-    verbose = config$verbose)
+  finish_console(text = text, pattern = "load", config = config)
 }
 
 console_retry <- function(target, error, retries, config){
   if (retries <= config$retries){
     text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
-    finish_console(text = text, pattern = "retry", verbose = config$verbose)
+    finish_console(text = text, pattern = "retry", config = config)
   }
 }
 
@@ -115,23 +111,23 @@ console_up_to_date <- function(config){
   any_attempted <- get_attempt_flag(config = config)
   default_triggers <- using_default_triggers(config)
   if (!any_attempted && default_triggers && !config$skip_imports){
-    console_all_up_to_date()
+    console_all_up_to_date(config = config)
     return(invisible())
   }
   if (config$skip_imports){
-    console_skipped_imports()
+    console_skipped_imports(config = config)
   }
   if (!default_triggers){
-    console_nondefault_triggers()
+    console_nondefault_triggers(config = config)
   }
 }
 
-console_all_up_to_date <- function(){
+console_all_up_to_date <- function(config){
   color("All targets are already up to date.", colors["target"]) %>%
-      message
+    write_to_console(config = config)
 }
 
-console_skipped_imports <- function(){
+console_skipped_imports <- function(config){
   color(
     paste(
       "Skipped the imports.",
@@ -139,10 +135,10 @@ console_skipped_imports <- function(){
     ),
     colors["trigger"]
   ) %>%
-    message
+    write_to_console(config = config)
 }
 
-console_nondefault_triggers <- function(){
+console_nondefault_triggers <- function(config){
   color(
     paste(
       "Used non-default triggers.",
@@ -150,7 +146,7 @@ console_nondefault_triggers <- function(){
     ),
     colors["trigger"]
   ) %>%
-    message
+    write_to_console(config = config)
 }
 
 console_persistent_workers <- function(config){
@@ -160,17 +156,25 @@ console_persistent_workers <- function(config){
   finish_console(
     text = paste("launch", config$jobs, "persistent workers + master"),
     pattern = "launch",
-    verbose = config$verbose
+    config = config
   )
 }
 
-finish_console <- function(text, pattern, verbose){
-  if (verbose < 1){
+finish_console <- function(text, pattern, config){
+  if (config$verbose < 1){
     return(invisible())
   }
-  crop_text(x = text) %>%
-    color_grep(pattern = pattern, color = color_of(pattern)) %>%
-    message(sep = "")
+  msg <- crop_text(x = text) %>%
+    color_grep(pattern = pattern, color = color_of(pattern))
+  write_to_console(msg = msg, config = config)
+}
+
+write_to_console <- function(msg, config){
+  if(is.null(config$console)){
+    message(msg, sep = "")
+  } else {
+    write(x = msg, sep = "", file = config$console, append = TRUE)
+  }
 }
 
 crop_text <- Vectorize(function(x, width = getOption("width")) {

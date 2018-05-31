@@ -19,7 +19,7 @@ handle_build_exceptions <- function(target, meta, config){
   if (inherits(meta$error, "error")){
     if (config$verbose){
       text <- paste("fail", target)
-      finish_console(text = text, pattern = "fail", verbose = config$verbose)
+      finish_console(text = text, pattern = "fail", config = config)
     }
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going){
