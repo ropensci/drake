@@ -213,7 +213,9 @@ mc_all_done <- function(config){
 }
 
 mc_set_status <- function(worker, status, config){
-  config$cache$set(key = worker, value = status, namespace = "mc_status")
+  suppressWarnings(
+    config$cache$set(key = worker, value = status, namespace = "mc_status")
+  )
 }
 
 mc_set_not_ready <- function(worker, config){

@@ -179,11 +179,10 @@ finish_console <- function(text, pattern, config){
 }
 
 drake_message <- function(..., config){
-  if (is.null(config$console)){
-    message(..., sep = "")
-  } else {
+  if (!is.null(config$console)){
     write(x = paste0(...), file = config$console, append = TRUE)
   }
+  message(..., sep = "")
 }
 
 drake_warning <- function(..., config){
