@@ -161,6 +161,7 @@ test_with_dir("console to file", {
 
 test_with_dir("drake_warning() and drake_error()", {
   plan <- drake_plan(x = {
+    message("some_message")
     warning("some_warning")
     stop("some_error")
   })
@@ -175,6 +176,7 @@ test_with_dir("drake_warning() and drake_error()", {
     session_info = FALSE
   ))
   x <- readLines("log.txt")
+  expect_true(any(grepl("some_message", x)))
   expect_true(any(grepl("some_warning", x)))
   expect_true(any(grepl("some_error", x)))
 })
