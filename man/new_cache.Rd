@@ -41,7 +41,12 @@ See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} and
 \item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
 output will be printed to the R console using \code{message()}.
 Otherwise, \code{console} should be the name of a flat file.
-Console output will be appended to that file.}
+Console output will be appended to that file. To suppress
+the default color-coding characters, you will need to
+run \code{options(crayon.enabled = FALSE)} in your session
+before \code{make()}. And if you use parallel computing, you
+will need to set this option in the \code{prework} too: for example,
+\code{make(jobs = 2, prework = "options(crayon.enabled = FALSE)")}.}
 }
 \value{
 A newly created drake cache as a storr object.
