@@ -12,7 +12,9 @@ get_attempt_flag <- function(config){
 }
 
 set_attempt_flag <- function(config){
-  config$cache$set(
-    key = "attempt", value = TRUE, namespace = "session")
+  suppressWarnings(
+    config$cache$set(
+      key = "attempt", value = TRUE, namespace = "session")
+  )
   invisible()
 }
