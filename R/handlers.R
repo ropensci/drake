@@ -17,6 +17,13 @@ handle_build_exceptions <- function(target, meta, config){
       config = config
     )
   }
+  if (length(meta$output) && config$verbose){
+    drake_message(
+      "Target ", target, " console output:\n",
+      multiline_message(meta$output),
+      config = config
+    )
+  }
   if (inherits(meta$error, "error")){
     if (config$verbose){
       text <- paste("fail", target)

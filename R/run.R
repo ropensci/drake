@@ -21,24 +21,27 @@ one_build <- function(target, meta, config){
 run_command <- function(target, meta, config){
   warnings <- messages <- NULL
   parsed_command <- preprocess_command(target = target, config = config)
-  capture.output(
-    meta$time_command <- system.time(
-      withCallingHandlers(
-        value <- evaluate::try_capture_stack(
-          quoted_code = parsed_command,
-          env = config$envir
+  meta$output <- capture.output(
+    tmp <- capture.output(
+      meta$time_command <- system.time(
+        withCallingHandlers(
+          value <- evaluate::try_capture_stack(
+            quoted_code = parsed_command,
+            env = config$envir
+          ),
+          warning = function(w){
+            warnings <<- c(warnings, w$message)
+          },
+          message = function(m){
+            msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
+            messages <<- c(messages, msg)
+          }
         ),
-        warning = function(w){
-          warnings <<- c(warnings, w$message)
-        },
-        message = function(m){
-          msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
-          messages <<- c(messages, msg)
-        }
+        gcFirst = FALSE # for performance
       ),
-      gcFirst = FALSE # for performance
+      type = "message"
     ),
-    type = "message"
+    type = "output"
   )
   meta$warnings <- warnings
   meta$messages <- messages
