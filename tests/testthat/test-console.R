@@ -158,3 +158,23 @@ test_with_dir("console to file", {
   expect_equal(tmp, character(0))
   expect_true(length(readLines("log.txt")) > 0)
 })
+
+test_with_dir("drake_warning() and drake_error()", {
+  plan <- drake_plan(x = {
+    warning("some_warning")
+    stop("some_error")
+  })
+  expect_error(make(
+    plan, cache = storr::storr_environment(),
+    session_info = FALSE
+  ))
+  expect_false(file.exists("log.txt"))
+  expect_error(make(
+    plan, console = "log.txt",
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  ))
+  x <- readLines("log.txt")
+  expect_true(any(grepl("some_warning", x)))
+  expect_true(any(grepl("some_error", x)))
+})
