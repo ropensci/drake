@@ -7,7 +7,7 @@ choose_seed <- function(supplied, cache){
   if (seed_conflict){
     stop(
       "You supplied a seed of ", supplied,
-      "to either make() or drake_config(). ",
+      " to either make() or drake_config(). ",
       "Your project already has a different seed: ", previous, ". ",
       "Use read_drake_seed() to see the seed for yourself. ",
       "To reset the project's seed, you will have to destroy the cache ",

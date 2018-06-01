@@ -137,21 +137,21 @@ announce_build <- function(target, meta, config){
 }
 
 conclude_build <- function(target, value, meta, config){
-  check_processed_file(target)
+  check_processed_file(target, config)
   handle_build_exceptions(target = target, meta = meta, config = config)
   store_target(target = target, value = value, meta = meta, config = config)
   invisible(value)
 }
 
-check_processed_file <- function(target){
+check_processed_file <- function(target, config){
   if (!is_file(target)){
     return()
   }
   if (!file.exists(drake::drake_unquote(target))){
-    warning(
+    drake_warning(
       "File ", target, " was built or processed,\n",
       "but the file itself does not exist.",
-      call. = FALSE
+      config = config
     )
   }
 }

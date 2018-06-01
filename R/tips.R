@@ -31,7 +31,7 @@ drake_tip <- function() {
   sample(tips, 1)
 }
 
-drake_message <- function() {
+drake_tip_message <- function() {
   packageStartupMessage(drake_tip())
 }
 

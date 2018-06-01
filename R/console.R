@@ -127,7 +127,7 @@ console_up_to_date <- function(config){
 
 console_all_up_to_date <- function(config){
   color("All targets are already up to date.", colors["target"]) %>%
-    write_to_console(config = config)
+    drake_message(config = config)
 }
 
 console_skipped_imports <- function(config){
@@ -138,7 +138,7 @@ console_skipped_imports <- function(config){
     ),
     colors["trigger"]
   ) %>%
-    write_to_console(config = config)
+    drake_message(config = config)
 }
 
 console_nondefault_triggers <- function(config){
@@ -149,7 +149,7 @@ console_nondefault_triggers <- function(config){
     ),
     colors["trigger"]
   ) %>%
-    write_to_console(config = config)
+    drake_message(config = config)
 }
 
 console_persistent_workers <- function(config){
@@ -167,17 +167,47 @@ finish_console <- function(text, pattern, config){
   if (config$verbose < 1){
     return(invisible())
   }
-  msg <- crop_text(x = text) %>%
-    color_grep(pattern = pattern, color = color_of(pattern))
-  write_to_console(msg = msg, config = config)
+  msg <- crop_text(x = text)
+  if (is.null(config$console)){
+    msg <- color_grep(
+      text = msg,
+      pattern = pattern,
+      color = color_of(pattern)
+    )
+  }
+  drake_message(msg, config = config)
 }
 
-write_to_console <- function(msg, config){
+drake_message <- function(..., config){
   if (is.null(config$console)){
-    message(msg, sep = "")
+    message(..., sep = "")
   } else {
-    write(x = msg, sep = "", file = config$console, append = TRUE)
+    write(x = paste0(...), file = config$console, append = TRUE)
   }
+}
+
+drake_warning <- function(..., config){
+  if (!is.null(config$console)){
+    write(
+      x = paste0("Warning: ", ...),
+      sep = "",
+      file = config$console,
+      append = TRUE
+    )
+  }
+  warning(..., call. = FALSE)
+}
+
+drake_error <- function(..., config){
+  if (!is.null(config$console)){
+    write(
+      x = paste0("Error: ", ...),
+      sep = "",
+      file = config$console,
+      append = TRUE
+    )
+  }
+  stop(..., call. = FALSE)
 }
 
 crop_text <- Vectorize(function(x, width = getOption("width")) {

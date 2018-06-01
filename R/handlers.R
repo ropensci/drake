@@ -3,17 +3,18 @@ handle_build_exceptions <- function(target, meta, config){
     warn_opt <- max(1, getOption("warn"))
     withr::with_options(
       new = list(warn = warn_opt),
-      warning(
+      drake_warning(
         "target ", target, " warnings:\n",
         multiline_message(meta$warnings),
-        call. = FALSE
+        config = config
       )
     )
   }
   if (length(meta$messages) && config$verbose){
-    message(
+    drake_message(
       "Target ", target, " messages:\n",
-      multiline_message(meta$messages)
+      multiline_message(meta$messages),
+      config = config
     )
   }
   if (inherits(meta$error, "error")){
@@ -23,11 +24,11 @@ handle_build_exceptions <- function(target, meta, config){
     }
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going){
-      stop(
-        "Target `", target, "`` failed. Call `diagnose(", target,
+      drake_error(
+        "Target `", target, "` failed. Call `diagnose(", target,
         ")` for details. Error message:\n  ",
         meta$error$message,
-        call. = FALSE
+        config = config
       )
     }
   }
@@ -59,7 +60,8 @@ error_tibble_times <- function(e){
 
 error_process <- function(e, id, config){
   set_attempt_flag(config = config)
-  message("Error: ", e$message)
+  drake_message("Error: ", e$message, config = config)
+  drake_message("Call: ", e$call, config = config)
   config$cache$set(key = id, value = e, namespace = "mc_fail")
-  stop("make() failed.")
+  drake_error("make() failed.", config = config)
 }

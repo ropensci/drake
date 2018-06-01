@@ -49,8 +49,10 @@ check_drake_config <- function(config) {
   }
   stopifnot(is.data.frame(config$plan))
   if (!all(c("target", "command") %in% colnames(config$plan))){
-    stop("The columns of your workflow plan data frame ",
-      "must include 'target' and 'command'.")
+    stop(
+      "The columns of your workflow plan data frame ",
+      "must include 'target' and 'command'."
+    )
   }
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
