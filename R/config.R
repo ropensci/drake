@@ -344,7 +344,12 @@
 #' @param console character scalar or `NULL`. If `console` is `NULL`, console
 #'   output will be printed to the R console using `message()`.
 #'   Otherwise, `console` should be the name of a flat file.
-#'   Console output will be appended to that file.
+#'   Console output will be appended to that file. To suppress
+#'   the default color-coding characters, you will need to
+#'   run `options(crayon.enabled = FALSE)` in your session
+#'   before `make()`. And if you use parallel computing, you
+#'   will need to set this option in the `prework` too: for example,
+#'   `make(jobs = 2, prework = "options(crayon.enabled = FALSE)")`.
 #'
 #' @examples
 #' \dontrun{
