@@ -77,11 +77,13 @@ build_check_store <- function(
     return()
   }
   meta$start <- proc.time()
-  prune_envir(
-    targets = target,
-    config = config,
-    downstream = downstream
-  )
+  config$hook({
+    prune_envir(
+      targets = target,
+      config = config,
+      downstream = downstream
+    )
+  })
   value <- build_and_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   if (flag_attempt && target %in% config$plan$target){
