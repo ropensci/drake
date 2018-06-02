@@ -164,7 +164,7 @@ console_persistent_workers <- function(config){
 }
 
 finish_console <- function(text, pattern, config){
-  if (config$verbose < 1){
+  if (is.null(config$verbose) || config$verbose < 1){
     return(invisible())
   }
   msg <- crop_text(x = text)

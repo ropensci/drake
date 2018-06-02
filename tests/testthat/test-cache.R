@@ -29,6 +29,13 @@ test_with_dir("clean() works if there is no cache already", {
   expect_false(file.exists(default_cache_path()))
 })
 
+test_with_dir("can exclude bad targets from loadd()", {
+  plan <- drake_plan(a = TRUE)
+  make(plan)
+  expect_silent(loadd(a, b, lazy = FALSE))
+  expect_equal(a, TRUE)
+})
+
 test_with_dir("bad/corrupt caches, no progress, no seed", {
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
