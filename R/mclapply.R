@@ -152,6 +152,7 @@ mc_get <- function(worker, namespace, config){
   out <- NA
   while (is.na(out)){
     out <- safe_get(key = worker, namespace = namespace, config = config)
+    Sys.sleep(mc_wait)
   }
   out
 }
@@ -246,7 +247,7 @@ mc_set_done_all <- function(config){
 }
 
 mc_with_lock <- function(code, worker, config){
-  on.exit(config$cache$del(key = worker, namespace = "mc_lock"))
+  on.exit(just_try(config$cache$del(key = worker, namespace = "mc_lock")))
   while (config$cache$exists(key = worker, namespace = "mc_lock")){
     Sys.sleep(mc_wait)
   }
