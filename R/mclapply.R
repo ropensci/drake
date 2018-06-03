@@ -255,7 +255,7 @@ mc_with_lock <- function(code, worker, config){
   force(code)
 }
 
-mc_wait <- 1e-6
+mc_wait <- 1e-9
 
 warn_mclapply_windows <- function(
   parallelism,
