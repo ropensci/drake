@@ -81,7 +81,10 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
-  on.exit(mc_set_done(worker = worker, config = config))
+  # The first line is just in case of errors.
+  # Yes, we call just_try() to set the worker to "done",
+  # but only if mc_worker() ends on a bad note anyway.
+  on.exit(just_try(mc_set_done(worker = worker, config = config)))
   mc_set_ready(worker = worker, config = config)
   while (TRUE){
     if (mc_is_idle(worker = worker, config = config)){
