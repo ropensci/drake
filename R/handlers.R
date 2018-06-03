@@ -65,3 +65,8 @@ error_process <- function(e, id, config){
   config$cache$set(key = id, value = e, namespace = "mc_fail")
   drake_error("make() failed.", config = config)
 }
+
+# Should be used as sparingly as possible.
+just_try <- function(code){
+  try(suppressWarnings(code), silent = TRUE)
+}

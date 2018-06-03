@@ -175,7 +175,6 @@ running_targets <- function(workers, config){
 }
 
 initialize_workers <- function(config){
-  config$cache$clear(namespace = "workers")
   out <- list()
   for (i in seq_len(config$jobs))
     out[[i]] <- empty_worker(target = NA)
