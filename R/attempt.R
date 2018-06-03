@@ -3,18 +3,12 @@
 # in the current make() session.
 
 get_attempt_flag <- function(config){
-  flag <- safe_get(
-    key = "attempt",
-    namespace = "session",
-    config = config
-  )
-  ifelse(is.na(flag), FALSE, flag)
+  length(config$cache$list(namespace = "attempt")) > 0
 }
 
-set_attempt_flag <- function(config){
-  suppressWarnings(
-    config$cache$set(
-      key = "attempt", value = TRUE, namespace = "session")
-  )
+# Allows different keys for thread safety.
+set_attempt_flag <- function(key = "_attempt", config){
+  config$cache$set(
+    key = as.character(key), value = TRUE, namespace = "attempt")
   invisible()
 }

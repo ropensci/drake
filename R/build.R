@@ -87,7 +87,7 @@ build_check_store <- function(
   value <- build_and_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   if (flag_attempt && target %in% config$plan$target){
-    set_attempt_flag(config)
+    set_attempt_flag(key = target, config = config)
   }
 }
 

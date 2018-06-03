@@ -26,7 +26,7 @@ time_stamps <- function(config){
   write_time_stamp_template(cache_path)
   build_these <- first_outdated(config = config)
   if (length(build_these)){
-    set_attempt_flag(config = config)
+    set_attempt_flag(key = "_attempt", config = config)
   }
   stamp_these <- setdiff(config$plan$target, build_these)
   lightly_parallelize(

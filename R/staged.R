@@ -52,7 +52,7 @@ run_mclapply_staged <- function(config){
     if (!length(stage$targets)){
       break
     } else if (any(stage$targets %in% config$plan$target)){
-      set_attempt_flag(config)
+      set_attempt_flag(key = "_attempt", config = config)
     }
     prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
     tmp <- mclapply(
@@ -106,7 +106,7 @@ run_parLapply_staged <- function(config) { # nolint
     if (!length(stage$targets)){
       break
     } else if (any(stage$targets %in% config$plan$target)){
-      set_attempt_flag(config)
+      set_attempt_flag(key = "_attempt", config = config)
     }
     prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
     if (identical(config$envir, globalenv())){

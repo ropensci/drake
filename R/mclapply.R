@@ -131,11 +131,8 @@ mc_conclude_target <- function(worker, config){
   ) %>%
     intersect(y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
-  flag_attempt <- !get_attempt_flag(config) &&
-    get_progress_single(target = target, cache = config$cache) == "finished" &&
-    target %in% config$plan$target
-  if (flag_attempt){
-    set_attempt_flag(config)
+  if (target %in% config$plan$target){
+    set_attempt_flag(key = worker, config = config)
   }
   mc_set_target(worker = worker, target = NA, config = config)
 }

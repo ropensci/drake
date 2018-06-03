@@ -351,9 +351,19 @@ make_imports_targets <- function(config){
 
 initialize_session <- function(config){
   if (config$log_progress){
-    clear_progress(cache = config$cache, jobs = imports_setting(config$jobs))
+    clear_tmp_namespace(
+      cache = config$cache,
+      jobs = imports_setting(config$jobs),
+      namespace = "progress"
+    )
   }
-  config$cache$clear(namespace = "session")
+  for (namespace in c("attempt", "session")){
+    clear_tmp_namespace(
+      cache = config$cache,
+      jobs = imports_setting(config$jobs),
+      namespace = namespace
+    )
+  }
   if (config$session_info){
     config$cache$set(
       key = "sessionInfo",

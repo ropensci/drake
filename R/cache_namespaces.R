@@ -12,6 +12,7 @@ cache_namespaces <- function(
 ){
   c(
     target_namespaces(default = default),
+    "attempt",
     "config",
     "session"
   ) %>%

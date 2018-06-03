@@ -15,7 +15,7 @@ test_with_dir("console_up_to_date", {
   expect_silent(console_up_to_date(con))
   con$verbose <- TRUE
   expect_silent(console_up_to_date(con))
-  con$cache$clear(namespace = "session")
+  con$cache$clear(namespace = "attempt")
   con <- make(pl, verbose = FALSE, session_info = FALSE)
   con$verbose <- TRUE
   expect_message(console_up_to_date(con))

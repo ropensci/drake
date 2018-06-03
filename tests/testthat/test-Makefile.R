@@ -98,7 +98,7 @@ test_with_dir("mtcars Makefile stuff works", {
   config$verbose <- FALSE
   cache_path <- cache_path(config$cache)
   initialize_session(config = config)
-  set_attempt_flag(config = config)
+  set_attempt_flag(key = "_attempt", config = config)
   config$recipe_command <- "Rscript -e"
   store_drake_config(config = config)
   run_Makefile(config, run = FALSE, debug = TRUE)

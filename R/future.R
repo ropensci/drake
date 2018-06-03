@@ -206,7 +206,7 @@ conclude_worker <- function(worker, config, queue){
   if (is_empty_worker(worker)){
     return(out)
   }
-  set_attempt_flag(config = config)
+  set_attempt_flag(key = "_attempt", config = config)
   build <- resolve_worker_value(worker = worker, config = config)
   if (config$caching == "worker"){
     return(out)

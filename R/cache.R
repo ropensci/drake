@@ -401,14 +401,15 @@ configure_cache <- function(
   cache
 }
 
-clear_progress <- function(cache, jobs){
+clear_tmp_namespace <- function(cache, jobs, namespace){
   lightly_parallelize(
     X = cache$list(),
     FUN = function(target){
-      cache$del(key = target, namespace = "progress")
+      cache$del(key = target, namespace = namespace)
     },
     jobs = jobs
   )
+  cache$clear(namespace = namespace)
   invisible()
 }
 

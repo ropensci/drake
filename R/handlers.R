@@ -59,7 +59,7 @@ error_tibble_times <- function(e){
 }
 
 error_process <- function(e, id, config){
-  set_attempt_flag(config = config)
+  set_attempt_flag(key = id, config = config)
   drake_message("Error: ", e$message, config = config)
   drake_message("Call: ", e$call, config = config)
   config$cache$set(key = id, value = e, namespace = "mc_fail")
