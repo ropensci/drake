@@ -452,11 +452,11 @@ is_default_cache <- function(cache){
 }
 
 safe_get <- function(key, namespace, config){
-  if (config$cache$exists(key = key, namespace = namespace)){
-    config$cache$get(key = key, namespace = namespace)
-  } else {
-    NA
+  out <- just_try(config$cache$get(key = key, namespace = namespace))
+  if (inherits(out, "try-error")){
+    out <- NA
   }
+  out
 }
 
 kernel_exists <- function(target, config){
