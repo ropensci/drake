@@ -26,7 +26,7 @@ run_mclapply <- function(config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_process <- function(id, config){
-  tryCatch(
+  withCallingHandlers(
     expr = {
       if (id == "0"){
         mc_master(config)
@@ -36,6 +36,9 @@ mc_process <- function(id, config){
     },
     error = function(e){
       error_process(e = e, id = id, config = config) # nocov
+    },
+    warning = function(e){
+      warning_process(e = e, id = id, config = config) # nocov
     }
   )
 }

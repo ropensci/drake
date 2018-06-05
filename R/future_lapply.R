@@ -36,7 +36,7 @@ fl_master <- function(cache_path){
 }
 
 fl_worker <- function(worker, cache_path){
-  tryCatch(
+  withCallingHandlers(
     expr = {
       config <- recover_drake_config(cache_path = cache_path)
       on.exit(mc_set_done(worker = worker, config = config))
@@ -45,6 +45,9 @@ fl_worker <- function(worker, cache_path){
     },
     error = function(e){
       error_process(e = e, id = worker, config = config) # nocov
+    },
+    warning = function(e){
+      warning_process(e = e, id = id, config = config) # nocov
     }
   )
 }
