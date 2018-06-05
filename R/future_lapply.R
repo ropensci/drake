@@ -47,7 +47,7 @@ fl_worker <- function(worker, cache_path){
       error_process(e = e, id = worker, config = config) # nocov
     },
     warning = function(e){
-      warning_process(e = e, id = id, config = config) # nocov
+      warning_process(e = e, id = worker, config = config) # nocov
     }
   )
 }
