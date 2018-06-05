@@ -84,10 +84,7 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
-  # The first line is just in case of errors.
-  # Yes, we call just_try() to set the worker to "done",
-  # but only if mc_worker() ends on a bad note anyway.
-  on.exit(just_try(mc_set_done(worker = worker, config = config)))
+  on.exit(mc_set_done(worker = worker, config = config))
   mc_set_ready(worker = worker, config = config)
   while (TRUE){
     if (mc_is_idle(worker = worker, config = config)){
@@ -246,7 +243,10 @@ mc_set_running <- function(worker, config){
 }
 
 mc_set_done <- function(worker, config){
-  mc_set_status(worker = worker, status = "done", config = config)
+  # May be called more than necessary in varying execution order,
+  # and that is okay. Should be a better situation with a
+  # proper message queue.
+  just_try(mc_set_status(worker = worker, status = "done", config = config))
 }
 
 mc_set_done_all <- function(config){
