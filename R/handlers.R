@@ -60,11 +60,15 @@ error_tibble_times <- function(e){
 
 warning_process <- function(e, id, config){
   set_attempt_flag(key = id, config = config)
-  e$calls <- sys.calls()
+  stack <- sys.calls()
   drake_message("Error: ", e$message, config = config)
   drake_message("Call: ", e$call, config = config)
-  drake_message("Stack:\n", multiline_message(e$calls), config = config)
-  config$cache$set(key = id, value = e, namespace = "mc_fail")
+  drake_message("Stack:\n", multiline_message(stack), config = config)
+  config$cache$set(
+    key = id,
+    value = list(error = e, stack = stack),
+    namespace = "mc_fail"
+  )
 }
 
 error_process <- function(e, id, config){
