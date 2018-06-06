@@ -157,12 +157,14 @@ mc_work_remains <- function(config){
 }
 
 mc_get <- function(worker, namespace, config){
+  just_try({
   out <- NA
   while (is.na(out)){
     out <- safe_get(key = worker, namespace = namespace, config = config)
     Sys.sleep(mc_wait)
   }
   out
+  })
 }
 
 mc_get_target <- function(worker, config){
@@ -199,10 +201,12 @@ mc_all_done <- function(config){
 }
 
 mc_set <- function(worker, value, namespace, config){
+  just_try(
   mc_with_lock(
     config$cache$set(key = worker, value = value, namespace = namespace),
     worker = worker,
     config = config
+  )
   )
 }
 

@@ -234,9 +234,11 @@ set_progress <- function(target, value, config){
   if (!config$log_progress){
     return()
   }
-  config$cache$set(
-    key = target,
-    value = value,
-    namespace = "progress"
+  just_try(
+    config$cache$set(
+      key = target,
+      value = value,
+      namespace = "progress"
+    )
   )
 }

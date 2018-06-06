@@ -63,7 +63,6 @@ warning_process <- function(e, id, config){
   stack <- sys.calls()
   drake_message("Error: ", e$message, config = config)
   drake_message("Call: ", e$call, config = config)
-  drake_message("Stack:\n", multiline_message(stack), config = config)
   config$cache$set(
     key = id,
     value = list(error = e, stack = stack),
