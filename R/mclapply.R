@@ -260,7 +260,7 @@ mc_set_done_all <- function(config){
 mc_with_lock <- function(code, worker, config){
   on.exit(just_try(config$cache$del(key = worker, namespace = "mc_lock")))
   while (config$cache$exists(key = worker, namespace = "mc_lock")){
-    Sys.sleep(mc_wait)
+    Sys.sleep(mc_wait) # nocov
   }
   config$cache$set(key = worker, value = TRUE, namespace = "mc_lock")
   force(code)
