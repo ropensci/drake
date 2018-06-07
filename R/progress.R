@@ -235,14 +235,6 @@ set_progress <- function(target, value, config){
     return()
   }
   stopifnot(value %in% drake_progress_values)
-  if(F){
-  config$cache$duplicate(
-    key_src = value,
-    key_dest = target,
-    namespace_src = "progress_values",
-    namespace_dest = "progress"
-  )
-  }
   config$cache$set(key = target, value = value, namespace = "progress")
 }
 
