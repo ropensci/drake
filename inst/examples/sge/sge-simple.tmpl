@@ -20,6 +20,9 @@
 # to the same file.
 #$ -j y
 
+# Redirect the log files to where batchtools can find them.
+#$ -o <%= log.file %>
+
 ## Use environment variables
 #$ -V
 
