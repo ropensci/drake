@@ -107,6 +107,7 @@ mc_init_worker_cache <- function(config){
   for (namespace in c("mc_protect", "mc_status", "mc_target")){
     config$cache$clear(namespace = namespace)
   }
+  fs::dir_create(file.path(config$scratch_dir, "lock"))
   lapply(
     X = config$workers,
     FUN = function(worker){
@@ -201,6 +202,14 @@ mc_all_done <- function(config){
 }
 
 mc_set_status <- function(worker, status, config){
+  on.exit(flock::unlock(status_lock))
+  status_lock <- flock::lock(
+    file.path(
+      config$scratch_dir,
+      "lock",
+      paste0("worker", worker, "_status.lock")
+    )
+  )
   config$cache$duplicate(
     key_src = status,
     key_dest = worker,
@@ -235,7 +244,7 @@ mc_set_done <- function(worker, config){
   # May be called more than necessary in varying execution order,
   # and that is okay. Should be a better situation with a
   # proper message queue.
-  just_try(mc_set_status(worker = worker, status = "done", config = config))
+  mc_set_status(worker = worker, status = "done", config = config)
 }
 
 mc_set_done_all <- function(config){
