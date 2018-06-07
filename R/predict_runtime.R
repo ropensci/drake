@@ -267,7 +267,10 @@ predict_load_balancing <- function(
 # and modified to simulate the workers.
 balance_load <- function(config, jobs){
   # Mostly the same setup for mc_master().
-  config$cache <- storr::storr_environment()
+  config$cache <- configure_cache(
+    cache = storr::storr_environment(),
+    init_common_values = TRUE
+  )
   config$jobs <- jobs
   config$workers <- as.character(seq_len(config$jobs))
   config$schedule <- config$graph
