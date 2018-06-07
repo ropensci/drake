@@ -8,7 +8,8 @@ configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
   log_progress = FALSE, overwrite_hash_algos = FALSE,
-  verbose = drake::default_verbose(), jobs = 1, set_drake_version = TRUE)
+  verbose = drake::default_verbose(), jobs = 1,
+  init_common_values = FALSE)
 }
 \arguments{
 \item{cache}{cache to configure}
@@ -47,8 +48,10 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 
 \item{jobs}{number of jobs for parallel processing}
 
-\item{set_drake_version}{logical, whether to set the initial \code{drake}
-version in the cache. Not always a thread safe operation.}
+\item{init_common_values}{logical, whether to set the initial \code{drake}
+version in the cache and other common values.
+Not always a thread safe operation, so should only be \code{TRUE}
+on the master process}
 }
 \value{
 A drake/storr cache.

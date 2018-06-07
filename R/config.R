@@ -437,7 +437,8 @@ drake_config <- function(
   cache <- configure_cache(
     cache = cache,
     overwrite_hash_algos = FALSE,
-    jobs = jobs
+    jobs = jobs,
+    init_common_values = TRUE
   )
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- match.arg(arg = trigger, choices = triggers())

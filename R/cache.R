@@ -147,7 +147,7 @@ this_cache <- function(
     cache = cache,
     long_hash_algo = "md5",
     overwrite_hash_algos = FALSE,
-    set_drake_version = FALSE
+    init_common_values = FALSE
   )
   if (!force){
     assert_compatible_cache(cache = cache)
@@ -341,8 +341,10 @@ default_cache_path <- function(){
 #'
 #' @param jobs number of jobs for parallel processing
 #'
-#' @param set_drake_version logical, whether to set the initial `drake`
-#'   version in the cache. Not always a thread safe operation.
+#' @param init_common_values logical, whether to set the initial `drake`
+#'   version in the cache and other common values.
+#'   Not always a thread safe operation, so should only be `TRUE`
+#'   on the master process
 #'
 #' @examples
 #' \dontrun{
@@ -372,7 +374,7 @@ configure_cache <- function(
   overwrite_hash_algos = FALSE,
   verbose = drake::default_verbose(),
   jobs = 1,
-  set_drake_version = TRUE
+  init_common_values = FALSE
 ){
   short_hash_algo <- match.arg(short_hash_algo,
     choices = available_hash_algos())
@@ -402,15 +404,15 @@ configure_cache <- function(
   }
   chosen_algo <- short_hash(cache)
   check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
-  if (set_drake_version){
-    set_initial_drake_version(cache)
+  if (init_common_values){
+    init_common_values(cache)
   }
-  init_common_values(cache)
   cache
 }
 
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache){
+  set_initial_drake_version(cache)
   common_values <- list(
     TRUE, FALSE, "finished", "in progress", "failed",
     "not ready", "ready", "running", "idle", "done"
