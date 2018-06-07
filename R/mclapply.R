@@ -104,9 +104,10 @@ mc_worker <- function(worker, config){
 }
 
 mc_init_worker_cache <- function(config){
-  for (namespace in c("mc_lock", "mc_protect", "mc_status", "mc_target")){
+  for (namespace in c("mc_protect", "mc_status", "mc_target")){
     config$cache$clear(namespace = namespace)
   }
+  fs::dir_create(file.path(config$scratch_dir, "lock"))
   lapply(
     X = config$workers,
     FUN = function(worker){
@@ -144,6 +145,8 @@ mc_conclude_target <- function(worker, config){
   ){
     set_attempt_flag(key = worker, config = config)
   }
+  # For the sake of the master process, so that the same target
+  # does not get concluded twice:
   mc_set_target(worker = worker, target = NA, config = config)
 }
 
@@ -157,14 +160,12 @@ mc_work_remains <- function(config){
 }
 
 mc_get <- function(worker, namespace, config){
-  just_try({
   out <- NA
   while (is.na(out)){
     out <- safe_get(key = worker, namespace = namespace, config = config)
     Sys.sleep(mc_wait)
   }
   out
-  })
 }
 
 mc_get_target <- function(worker, config){
@@ -200,32 +201,25 @@ mc_all_done <- function(config){
   TRUE
 }
 
-mc_set <- function(worker, value, namespace, config){
-  just_try(
-  mc_with_lock(
-    config$cache$set(key = worker, value = value, namespace = namespace),
-    worker = worker,
-    config = config
-  )
-  )
-}
-
 mc_set_status <- function(worker, status, config){
-  mc_set(
-    worker = worker,
-    value = status,
-    namespace = "mc_status",
-    config = config
+  on.exit(filelock::unlock(status_lock))
+  status_lock <- filelock::lock(
+    file.path(
+      config$scratch_dir,
+      "lock",
+      paste0("worker", worker, "_status.lock")
+    )
+  )
+  config$cache$duplicate(
+    key_src = status,
+    key_dest = worker,
+    namespace_src = "common",
+    namespace_dest = "mc_status"
   )
 }
 
 mc_set_target <- function(worker, target, config){
-  mc_set(
-    worker = worker,
-    value = target,
-    namespace = "mc_target",
-    config = config
-  )
+  config$cache$set(key = worker, value = target, namespace = "mc_target")
 }
 
 mc_set_not_ready <- function(worker, config){
@@ -250,7 +244,7 @@ mc_set_done <- function(worker, config){
   # May be called more than necessary in varying execution order,
   # and that is okay. Should be a better situation with a
   # proper message queue.
-  just_try(mc_set_status(worker = worker, status = "done", config = config))
+  mc_set_status(worker = worker, status = "done", config = config)
 }
 
 mc_set_done_all <- function(config){
@@ -259,15 +253,6 @@ mc_set_done_all <- function(config){
     FUN = mc_set_done,
     config = config
   )
-}
-
-mc_with_lock <- function(code, worker, config){
-  on.exit(just_try(config$cache$del(key = worker, namespace = "mc_lock")))
-  while (config$cache$exists(key = worker, namespace = "mc_lock")){
-    Sys.sleep(mc_wait) # nocov
-  }
-  config$cache$set(key = worker, value = TRUE, namespace = "mc_lock")
-  force(code)
 }
 
 mc_wait <- 1e-9

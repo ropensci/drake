@@ -6,6 +6,7 @@ Thumbs.db
 *.dcf
 *.log
 *.nav
+.nfs*
 *.out
 *.snm
 *.Rout
