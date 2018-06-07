@@ -227,7 +227,8 @@ new_cache <- function(
     cache = cache,
     short_hash_algo = short_hash_algo,
     long_hash_algo = long_hash_algo,
-    overwrite_hash_algos = FALSE
+    overwrite_hash_algos = FALSE,
+    init_common_values = TRUE
   )
   console_cache(
     config = list(
