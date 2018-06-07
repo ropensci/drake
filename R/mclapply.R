@@ -144,6 +144,8 @@ mc_conclude_target <- function(worker, config){
   ){
     set_attempt_flag(key = worker, config = config)
   }
+  # For the sake of the master process, so that the same target
+  # does not get concluded twice:
   mc_set_target(worker = worker, target = NA, config = config)
 }
 
