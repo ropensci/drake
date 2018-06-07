@@ -234,17 +234,10 @@ set_progress <- function(target, value, config){
   if (!config$log_progress){
     return()
   }
-  stopifnot(value %in% drake_progress_values)
-  config$cache$set(key = target, value = value, namespace = "progress")
-}
-
-drake_progress_values <- c("finished", "in progress", "failed")
-
-# Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
-init_progress_values <- function(cache){
-  cache$mset(
-    key = drake_progress_values,
-    value = drake_progress_values,
-    namespace = "progress_values"
+  config$cache$duplicate(
+    key_src = value,
+    key_dest = target,
+    namespace_src = "common",
+    namespace_dest = "progress"
   )
 }

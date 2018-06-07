@@ -152,7 +152,6 @@ this_cache <- function(
   if (!force){
     assert_compatible_cache(cache = cache)
   }
-  init_progress_values(cache)
   cache
 }
 
@@ -406,7 +405,21 @@ configure_cache <- function(
   if (set_drake_version){
     set_initial_drake_version(cache)
   }
+  init_common_values(cache)
   cache
+}
+
+# Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
+init_common_values <- function(cache){
+  common_values <- list(
+    TRUE, FALSE, "finished", "in progress", "failed",
+    "not ready", "ready", "running", "idle", "done"
+  )
+  cache$mset(
+    key = as.character(common_values),
+    value = common_values,
+    namespace = "common"
+  )
 }
 
 clear_tmp_namespace <- function(cache, jobs, namespace){
