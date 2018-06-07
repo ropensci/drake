@@ -44,7 +44,7 @@
 #' @importFrom digest digest
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
 #' @importFrom evaluate try_capture_stack
-#' @importFrom flock lock unlock
+#' @importFrom filelock lock unlock
 #' @importFrom formatR tidy_source
 #' @importFrom future future plan resolved value
 #' @importFrom future.apply future_lapply

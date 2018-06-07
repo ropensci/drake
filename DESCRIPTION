@@ -57,7 +57,7 @@ Imports:
   evaluate,
   digest,
   dplyr,
-  flock,
+  filelock,
   formatR,
   future,
   future.apply,

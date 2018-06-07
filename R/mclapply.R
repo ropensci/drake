@@ -202,8 +202,8 @@ mc_all_done <- function(config){
 }
 
 mc_set_status <- function(worker, status, config){
-  on.exit(flock::unlock(status_lock))
-  status_lock <- flock::lock(
+  on.exit(filelock::unlock(status_lock))
+  status_lock <- filelock::lock(
     file.path(
       config$scratch_dir,
       "lock",
