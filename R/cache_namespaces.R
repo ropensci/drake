@@ -14,6 +14,7 @@ cache_namespaces <- function(
     target_namespaces(default = default),
     "attempt",
     "config",
+    "progress_values",
     "session"
   ) %>%
     sort

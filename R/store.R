@@ -54,15 +54,15 @@ finalize_storage <- function(target, value, meta, config){
 }
 
 store_object <- function(target, value, meta, config) {
-  hash <- config$cache$set(
+  config$cache$set(
     key = target,
-    value = value,
-    namespace = config$cache$default_namespace
+    value = value
   )
-  config$cache$driver$set_hash(
-    key = target,
-    namespace = "kernels",
-    hash = hash
+  config$cache$duplicate(
+    key_src = target,
+    key_dest = target,
+    namespace_src = config$cache$default_namespace,
+    namespace_dest = "kernels"
   )
 }
 

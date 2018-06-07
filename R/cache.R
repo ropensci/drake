@@ -152,6 +152,7 @@ this_cache <- function(
   if (!force){
     assert_compatible_cache(cache = cache)
   }
+  init_progress_values(cache)
   cache
 }
 
