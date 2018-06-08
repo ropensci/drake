@@ -6,7 +6,7 @@ mc_lock <- function(code, db){
 
 mc_ack <- function(msg){
   mc_lock({
-      DBI::dbDisconnect(msg$lock)
+      try(DBI::dbDisconnect(msg$lock), silent = TRUE)
       liteq::ack(msg)
     },
     msg$db
