@@ -54,15 +54,16 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
-  on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
   while (TRUE){
+    
+    browser()
+    
     assignment_queues <- mc_message_queues(config, "assignments")
-    completed_queues <- mc_message_queues(config, "completed")
     if (!mc_work_remains(assignment_queues, config)){
       return()
     }
-    mc_clear_completed_queues(completed_queues, config)
+    mc_clear_completed_targets(config)
     mc_assign_targets(assignment_queues, config)
     Sys.sleep(mc_wait)
   }
@@ -73,38 +74,54 @@ mc_assign_targets <- function(assignemnt_queues, config){
     return()
   }
   while(length(target <- config$queue$peek0()) > 0){
-    can_assign <- vapply(
-      X = mc_worker_ids(assignment_queues),
-      FUN = mc_can_assign_target,
-      FUN.VALUE = logical(0),
-      target = target,
-      config = config
+    worker_ids <- vapply(
+      assignment_queues, mc_worker_id, FUN.VALUE = integer(1)
     )
-    queues <- assignment_queues[can_assign]
-    backlog <- lapply(queues, mc_message_count)
-    queue <- queues[[which.min(backlog)]]
+    backlog <- vapply(
+      assignment_queues, mc_message_count, FUN.VALUE = numeric(1)
+    ) %>%
+      stats::setNames(nm = worker_ids)
+    can_assign <- vapply(
+      worker_ids, mc_can_assign_target, FUN.VALUE = logical(1),
+      target = target, config = config
+    )
+    backlog <- backlog[can_assign]
+    index <- as.integer(names(which.min(backlog)))
+    queue <- assignment_queues[[index]]
     mc_publish(queue, title = "target", message = target)
   }
+}
+
+# x could be a queue or a message
+mc_worker_id <- function(x){
+  fs::path_file(fs::path_ext_remove(x$db))
+}
+
+mc_message_count <- function(queue){
+  nrow(mc_list_messages(queue))
 }
 
 mc_message_queues <- function(config, type){
   lapply(
     mc_list_dbs(config),
     function(db){
-      ensure_queue(type, db = db)
+      liteq::ensure_queue(type, db = db)
     }
   )
 }
 
+mc_db_file <- function(worker, config){
+  file.path(config$scratch_dir, paste0(worker, ".db"))
+}
+
 mc_worker <- function(worker, config){
-  on.exit(unlink(db, force = TRUE))
-  db <- file.path(config$scratch_dir, worker, ".db")
-  assignments <- ensure_queue("assignments", db = db)
-  completed <- ensure_queue("completed", db = db)
+  db <- mc_db_file(worker = worker, config = config)
+  assignments <- liteq::ensure_queue("assignments", db = db)
+  completed <- liteq::ensure_queue("completed", db = db)
   while (TRUE){
-    if (!file.exists(db)){
-      return()
-    }
+    
+    browser()
+    
     while (is.null(msg <- mc_try_consume(assignments))){
       Sys.sleep(mc_wait)
     }
@@ -135,7 +152,8 @@ mc_init_worker_cache <- function(config){
   invisible()
 }
 
-mc_clear_completed_queues <- function(completed_queues, config){
+mc_clear_completed_targets <- function(config){
+  completed_queues <- mc_message_queues(config, "completed")
   targets <- character(0)
   for(queue in completed_queues){
     while (!is.null(msg <- mc_try_consume(queue))){
@@ -168,7 +186,7 @@ mc_conclude_target <- function(target, config){
 
 mc_list_dbs <- function(config){
   list.files(config$scratch_dir) %>%
-    grep(".db$", fixed = TRUE, value = TRUE) 
+    grep(pattern = ".db$", value = TRUE) 
 }
 
 mc_work_remains <- function(assignment_queues, config){
@@ -180,10 +198,6 @@ mc_work_remains <- function(assignment_queues, config){
     },
     FUN.VALUE = integer(1)
   )
-  all_done <- all(n_pending_targets < 1)
-  if (!empty && all_done){
-    stop("workers finished without completing their work.") # nocov
-  }
   !empty || !all_done
 }
 
@@ -214,7 +228,7 @@ warn_mclapply_windows <- function(
   }
 }
 
-mc_should_assign_target <- function(worker, target, config){
+mc_can_assign_target <- function(worker, target, config){
   if (!length(target)){
     return(FALSE)
   }
