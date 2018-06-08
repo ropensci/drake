@@ -1,3 +1,7 @@
+####################################
+### HIGH-LEVEL PROCESS FUNCTIONS ###
+####################################
+
 run_mclapply <- function(config){
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
@@ -69,52 +73,6 @@ mc_master <- function(config){
   }
 }
 
-mc_assign_targets <- function(assignment_queues, config){
-  if (!length(assignment_queues)){
-    return()
-  }
-  while(length(target <- config$queue$peek0()) > 0){
-    worker_ids <- vapply(
-      assignment_queues, mc_worker_id, FUN.VALUE = character(1)
-    )
-    backlog <- vapply(
-      assignment_queues, mc_message_count, FUN.VALUE = numeric(1)
-    ) %>%
-      stats::setNames(nm = worker_ids)
-    can_assign <- vapply(
-      worker_ids, mc_can_assign_target, FUN.VALUE = logical(1),
-      target = target, config = config
-    )
-    backlog <- backlog[can_assign]
-    index <- as.integer(names(which.min(backlog)))
-    queue <- assignment_queues[[index]]
-    mc_publish(queue, title = target, message = "target")
-    config$queue$pop0()
-  }
-}
-
-# x could be a queue or a message
-mc_worker_id <- function(x){
-  fs::path_file(fs::path_ext_remove(x$db))
-}
-
-mc_message_count <- function(queue){
-  nrow(mc_list_messages(queue))
-}
-
-mc_message_queues <- function(config, type){
-  lapply(
-    mc_list_dbs(config),
-    function(db){
-      liteq::ensure_queue(type, db = db)
-    }
-  )
-}
-
-mc_db_file <- function(worker, config){
-  file.path(config$scratch_dir, paste0(worker, ".db"))
-}
-
 mc_worker <- function(worker, config){
   db <- mc_db_file(worker = worker, config = config)
   assignments <- liteq::ensure_queue("assignments", db = db)
@@ -140,6 +98,10 @@ mc_worker <- function(worker, config){
   }
 }
 
+##################################
+### MID-LEVEL SUPPORTING IDEAS ###
+##################################
+
 mc_init_worker_cache <- function(config){
   for (namespace in c("mc_protect")){
     config$cache$clear(namespace = namespace)
@@ -152,6 +114,65 @@ mc_init_worker_cache <- function(config){
     }
   )
   invisible()
+}
+
+mc_work_remains <- function(assignment_queues, config){
+  empty <- config$queue$empty()
+  n_pending_targets <- vapply(
+    X = assignment_queues,
+    FUN = function(queue){
+      nrow(mc_list_messages(queue))
+    },
+    FUN.VALUE = integer(1)
+  )
+  !empty || !all_done
+}
+
+mc_assign_targets <- function(assignment_queues, config){
+  if (!length(assignment_queues)){
+    return()
+  }
+  while(length(target <- config$queue$peek0()) > 0){
+    worker_ids <- vapply(
+      assignment_queues, mc_worker_id, FUN.VALUE = character(1)
+    )
+    backlog <- vapply(
+      assignment_queues, mc_message_count, FUN.VALUE = numeric(1)
+    ) %>%
+      stats::setNames(nm = worker_ids)
+    can_assign <- vapply(
+      worker_ids, mc_can_assign_target, FUN.VALUE = logical(1),
+      target = target, config = config
+    )
+    backlog <- backlog[can_assign]
+    index <- as.integer(names(which.min(backlog)))
+    queue <- assignment_queues[[index]]
+    mc_publish(queue, title = target, message = "target")
+    config$queue$pop0()
+  }
+}
+
+mc_can_assign_target <- function(worker, target, config){
+  if (!length(target)){
+    return(FALSE)
+  }
+  if (
+    !("workers" %in% colnames(config$plan)) ||
+    !(target %in% config$plan$target)
+  ){
+    return(TRUE)
+  }
+  allowed_workers <- as.integer(
+    unlist(
+      config$plan$workers[config$plan$target == target]
+    )
+  )
+  allowed_workers <- allowed_workers %% config$jobs
+  allowed_workers[allowed_workers == 0] <- config$jobs
+  if (!length(allowed_workers)){
+    return(TRUE)
+  }
+  as.integer(worker) %in% allowed_workers
 }
 
 mc_clear_completed_targets <- function(config){
@@ -186,21 +207,35 @@ mc_conclude_target <- function(target, config){
   }
 }
 
+#######################
+### LOW-LEVEL UTILS ###
+#######################
+
+# x could be a queue or a message
+mc_worker_id <- function(x){
+  fs::path_file(fs::path_ext_remove(x$db))
+}
+
+mc_message_count <- function(queue){
+  nrow(mc_list_messages(queue))
+}
+
+mc_message_queues <- function(config, type){
+  lapply(
+    mc_list_dbs(config),
+    function(db){
+      liteq::ensure_queue(type, db = db)
+    }
+  )
+}
+
+mc_db_file <- function(worker, config){
+  file.path(config$scratch_dir, paste0(worker, ".db"))
+}
+
 mc_list_dbs <- function(config){
   list.files(config$scratch_dir, full.names = TRUE) %>%
     grep(pattern = ".db$", value = TRUE) 
-}
-
-mc_work_remains <- function(assignment_queues, config){
-  empty <- config$queue$empty()
-  n_pending_targets <- vapply(
-    X = assignment_queues,
-    FUN = function(queue){
-      nrow(mc_list_messages(queue))
-    },
-    FUN.VALUE = integer(1)
-  )
-  !empty || !all_done
 }
 
 mc_set_done_all <- function(config){
@@ -228,27 +263,4 @@ warn_mclapply_windows <- function(
       call. = FALSE
     )
   }
-}
-
-mc_can_assign_target <- function(worker, target, config){
-  if (!length(target)){
-    return(FALSE)
-  }
-  if (
-    !("workers" %in% colnames(config$plan)) ||
-    !(target %in% config$plan$target)
-  ){
-    return(TRUE)
-  }
-  allowed_workers <- as.integer(
-    unlist(
-      config$plan$workers[config$plan$target == target]
-    )
-  )
-  allowed_workers <- allowed_workers %% config$jobs
-  allowed_workers[allowed_workers == 0] <- config$jobs
-  if (!length(allowed_workers)){
-    return(TRUE)
-  }
-  as.integer(worker) %in% allowed_workers
 }
