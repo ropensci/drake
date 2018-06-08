@@ -2,10 +2,9 @@ run_mclapply <- function(config){
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
-  config$workers <- as.character(seq_len(config$jobs))
   mc_init_worker_cache(config)
   tmp <- mclapply(
-    X = c("0", config$workers),
+    X = c(0, seq_len(config$jobs)),
     FUN = mc_process,
     mc.cores = config$jobs + 1,
     config = config
@@ -28,7 +27,7 @@ run_mclapply <- function(config){
 mc_process <- function(id, config){
   withCallingHandlers(
     expr = {
-      if (id == "0"){
+      if (id < 1){
         mc_master(config)
       } else {
         mc_worker(worker = id, config = config)
@@ -58,24 +57,48 @@ mc_master <- function(config){
   on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
   while (TRUE){
-    outboxes <- mc_outboxes(config)
-    inboxes <- mc_inboxes(config)
-    if (!mc_work_remains(outboxes = outboxes, config = config)){
+    assignment_queues <- mc_message_queues(config, "assignments")
+    completed_queues <- mc_message_queues(config, "completed")
+    if (!mc_work_remains(assignment_queues, config)){
       return()
     }
-    mc_clear_outboxes(outboxes = outboxes, config = config)
-    mc_assign_targets(inboxes = inboxes, config = config)
+    mc_clear_completed_queues(completed_queues, config)
+    mc_assign_targets(assignment_queues, config)
     Sys.sleep(mc_wait)
   }
 }
 
+mc_assign_targets <- function(assignemnt_queues, config){
+  if (!length(assignment_queues)){
+    return()
+  }
+  while(length(target <- config$queue$peek0()) > 0){
+    
+    
+  }
+}
+
+mc_message_queues <- function(config, type){
+  lapply(
+    mc_list_dbs(config),
+    function(db){
+      ensure_queue(type, db = db)
+    }
+  )
+}
+
 mc_worker <- function(worker, config){
-  on.exit(file.remove(db))
+  on.exit(mc_delete_queue(meta, force = TRUE))
   db <- file.path(config$scratch_dir, worker, ".db")
-  inbox <- ensure_queue("upcoming_targets", db = db)
-  outbox <- ensure_queue("finished_targets", db = db)
+  assignments <- mc_ensure_queue("assignments", db = db)
+  completed <- mc_ensure_queue("completed", db = db)
+  meta <- mc_ensure_queue("meta", db = db)
+  mc_publish(meta, "status", "active")
   while (TRUE){
-    while (is.null(msg <- mc_try_consume(inbox))){
+    if (!file.exists(db)){
+      return()
+    }
+    while (is.null(msg <- mc_try_consume(assignments))){
       Sys.sleep(mc_wait)
     }
     if (identical(msg$title, "done")){
@@ -87,7 +110,7 @@ mc_worker <- function(worker, config){
       config = config,
       downstream = config$cache$list(namespace = "mc_protect")
     )
-    mc_publish(queue = outbox, title = "target", message = target)
+    mc_publish(queue = completed, title = "target", message = target)
   }
 }
 
@@ -105,11 +128,19 @@ mc_init_worker_cache <- function(config){
   invisible()
 }
 
-mc_conclude_target <- function(worker, config){
-  target <- config$cache$get(key = worker, namespace = "mc_target")
-  if (is.na(target)){
-    return()
+mc_clear_completed_queues <- function(completed_queues, config){
+  targets <- character(0)
+  for(queue in completed_queues){
+    while (!is.null(msg <- mc_try_consume(queue))){
+      if (identical(msg$title, "target")){
+        mc_conclude_target(target = msg$message, config = config)
+      }
+      mc_ack(msg)
+    }
   }
+}
+
+mc_conclude_target <- function(target, config){
   config$cache$del(key = target, namespace = "mc_protect")
   revdeps <- dependencies(
     targets = target,
@@ -126,114 +157,34 @@ mc_conclude_target <- function(worker, config){
   ){
     set_attempt_flag(key = worker, config = config)
   }
-  # For the sake of the master process, so that the same target
-  # does not get concluded twice:
-  mc_set_target(worker = worker, target = NA, config = config)
 }
 
-mc_work_remains <- function(config){
+mc_list_dbs <- function(config){
+  list.files(config$scratch_dir) %>%
+    grep(".db$", fixed = TRUE, value = TRUE) 
+}
+
+mc_work_remains <- function(assignment_queues, config){
   empty <- config$queue$empty()
-  all_done <- mc_all_done(config)
+  n_pending_targets <- vapply(
+    X = assignment_queues,
+    FUN = function(queue){
+      nrow(mc_list_messages(queue))
+    },
+    FUN.VALUE = integer(1)
+  )
+  all_done <- all(n_pending_targets < 1)
   if (!empty && all_done){
     stop("workers finished without completing their work.") # nocov
   }
   !empty || !all_done
 }
 
-mc_get <- function(worker, namespace, config){
-  out <- NA
-  while (is.na(out)){
-    out <- safe_get(key = worker, namespace = namespace, config = config)
-    Sys.sleep(mc_wait)
-  }
-  out
-}
-
-mc_get_target <- function(worker, config){
-  mc_get(worker = worker, namespace = "mc_target", config = config)
-}
-
-mc_get_status <- function(worker, config){
-  mc_get(worker = worker, namespace = "mc_status", config = config)
-}
-
-mc_is_not_ready <- function(worker, config){
-  identical("not ready", mc_get_status(worker = worker, config = config))
-}
-
-mc_is_idle <- function(worker, config){
-  identical("idle", mc_get_status(worker = worker, config = config))
-}
-
-mc_is_running <- function(worker, config){
-  identical("running", mc_get_status(worker = worker, config = config))
-}
-
-mc_is_done <- function(worker, config){
-  identical("done", mc_get_status(worker = worker, config = config))
-}
-
-mc_all_done <- function(config){
-  for (worker in config$workers){
-    if (!mc_is_done(worker, config)){
-      return(FALSE)
-    }
-  }
-  TRUE
-}
-
-mc_set_status <- function(worker, status, config){
-  on.exit(filelock::unlock(status_lock))
-  status_lock <- filelock::lock(
-    file.path(
-      config$scratch_dir,
-      "lock",
-      paste0("worker", worker, "_status.lock")
-    )
-  )
-  config$cache$duplicate(
-    key_src = status,
-    key_dest = worker,
-    namespace_src = "common",
-    namespace_dest = "mc_status"
-  )
-}
-
-mc_set_target <- function(worker, target, config){
-  config$cache$set(key = worker, value = target, namespace = "mc_target")
-}
-
-mc_set_not_ready <- function(worker, config){
-  mc_set_status(worker = worker, status = "not ready", config = config)
-}
-
-mc_set_ready <- function(worker, config){
-  if (mc_is_not_ready(worker = worker, config = config)){
-    mc_set_idle(worker = worker, config = config)
-  }
-}
-
-mc_set_idle <- function(worker, config){
-  mc_set_status(worker = worker, status = "idle", config = config)
-}
-
-mc_set_running <- function(worker, config){
-  mc_set_status(worker = worker, status = "running", config = config)
-}
-
-mc_set_done <- function(worker, config){
-  # May be called more than necessary in varying execution order,
-  # and that is okay. Should be a better situation with a
-  # proper message queue.
-  mc_set_status(worker = worker, status = "done", config = config)
-}
-
 mc_set_done_all <- function(config){
-  lapply(
-    X = config$workers,
-    FUN = mc_set_done,
-    config = config
-  )
+  lapply(mc_list_dbs(config), function(db){
+    meta <- mc_ensure_queue("meta", db = db)
+    mc_delete_queue(meta, force = TRUE)
+  })
 }
 
 mc_wait <- 1e-9

@@ -38,3 +38,7 @@ mc_try_consume <- function(queue){
 mc_consume <- function(queue){
   mc_lock(liteq::consume(queue), queue$db)
 }
+
+mc_delete_queue <- function(queue, force = TRUE){
+  mc_lock(liteq::delete_queue(queue, force = force))
+}
