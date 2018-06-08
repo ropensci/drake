@@ -58,11 +58,9 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
+  on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
   while (TRUE){
-    
-    browser()
-    
     assignment_queues <- mc_message_queues(config, "assignments")
     if (!mc_work_remains(assignment_queues, config)){
       return()
@@ -75,12 +73,9 @@ mc_master <- function(config){
 
 mc_worker <- function(worker, config){
   db <- mc_db_file(worker = worker, config = config)
-  assignments <- liteq::ensure_queue("assignments", db = db)
-  completed <- liteq::ensure_queue("completed", db = db)
+  assignments <- mc_ensure_queue("assignments", db = db)
+  completed <- mc_ensure_queue("completed", db = db)
   while (TRUE){
-    
-    browser()
-    
     while (is.null(msg <- mc_try_consume(assignments))){
       Sys.sleep(mc_wait)
     }
@@ -125,7 +120,7 @@ mc_work_remains <- function(assignment_queues, config){
     },
     FUN.VALUE = integer(1)
   )
-  !empty || !all_done
+  !empty || n_pending_targets > 0
 }
 
 mc_assign_targets <- function(assignment_queues, config){
@@ -224,7 +219,7 @@ mc_message_queues <- function(config, type){
   lapply(
     mc_list_dbs(config),
     function(db){
-      liteq::ensure_queue(type, db = db)
+      mc_ensure_queue(type, db = db)
     }
   )
 }
