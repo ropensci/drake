@@ -41,6 +41,7 @@
 #' @importFrom callr r_bg
 #' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style
+#' @importFrom DBI dbDisconnect
 #' @importFrom digest digest
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
 #' @importFrom evaluate try_capture_stack
@@ -54,6 +55,8 @@
 #'   degree edge induced_subgraph is_dag make_empty_graph plot.igraph
 #'   simplify subcomponent topo_sort V vertex vertex_attr
 #' @importFrom knitr knit
+#' @importFrom liteq ack consume delete_queue ensure_queue list_messages
+#'   publish requeue_failed_messages try_consume
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster

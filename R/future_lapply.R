@@ -14,7 +14,7 @@ run_future_lapply <- function(config){
     wait = FALSE
   )
   future.apply::future_lapply(
-    X = c(0, seq_len(config$jobs)),
+    X = seq_len(config$jobs),
     FUN = fl_worker,
     cache_path = config$cache$driver$path,
     future.globals = FALSE
@@ -39,7 +39,6 @@ fl_worker <- function(worker, cache_path){
   withCallingHandlers(
     expr = {
       config <- recover_drake_config(cache_path = cache_path)
-      on.exit(mc_set_done(worker = worker, config = config))
       do_prework(config = config, verbose_packages = FALSE)
       mc_worker(worker = worker, config = config)
     },

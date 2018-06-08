@@ -44,6 +44,7 @@ mc_process <- function(id, config){
       warning_process(e = e, id = id, config = config) # nocov
     }
   )
+  invisible()
 }
 
 #' @title Internal function to launch
@@ -117,9 +118,7 @@ mc_work_remains <- function(assignment_queues, config){
   empty <- config$queue$empty()
   n_pending_targets <- vapply(
     X = assignment_queues,
-    FUN = function(queue){
-      nrow(mc_list_messages(queue))
-    },
+    FUN = mc_count_targets,
     FUN.VALUE = integer(1)
   )
   !empty || n_pending_targets > 0
@@ -217,8 +216,8 @@ mc_list_dbs <- function(config){
 
 mc_conclude_workers <- function(config){
   lapply(
-    seq_len(config$jobs),
-    function(worker){
+    X = config$workers,
+    FUN = function(worker){
       queue <- mc_ensure_queue(
         "assignments", db = mc_db_file(worker, config)
       )

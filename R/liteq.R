@@ -5,7 +5,12 @@ mc_lock <- function(code, db){
 }
 
 mc_ack <- function(msg){
-  mc_lock(liteq::ack(msg), msg$db)
+  mc_lock({
+      DBI::dbDisconnect(msg$lock)
+      liteq::ack(msg)
+    },
+    msg$db
+  )
 }
 
 mc_delete_queue <- function(queue){
@@ -18,6 +23,12 @@ mc_ensure_queue <- function(name, db){
 
 mc_list_messages <- function(queue){
   mc_lock(liteq::list_messages(queue), queue$db)
+}
+
+mc_count_targets <- function(queue){
+  m <- mc_list_messages(queue)
+  m <- m[m$message == "target", ]
+  nrow(m)
 }
 
 mc_publish <- function(queue, title, message){
@@ -37,8 +48,4 @@ mc_try_consume <- function(queue){
 
 mc_consume <- function(queue){
   mc_lock(liteq::consume(queue), queue$db)
-}
-
-mc_delete_queue <- function(queue, force = TRUE){
-  mc_lock(liteq::delete_queue(queue, force = force))
 }
