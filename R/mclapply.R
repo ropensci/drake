@@ -137,9 +137,9 @@ mc_assign_targets <- function(assignment_queues, config){
 }
 
 mc_preferred_queue <- function(assignment_queues, target, config){
-  if ("workers" %in% colnames(config$plan) && target %in% config$plan$target){
+  if ("worker" %in% colnames(config$plan) && target %in% config$plan$target){
     db <- mc_db_file(
-      worker = config$plan$workers[config$plan$target == target],
+      worker = config$plan$worker[config$plan$target == target],
       config = config
     )
     dbs <- vapply(
@@ -166,29 +166,6 @@ mc_preferred_queue <- function(assignment_queues, target, config){
     FUN.VALUE = integer(1)
   )
   assignment_queues[[which.min(backlog)]]
-}
-
-mc_can_assign_target <- function(worker, target, config){
-  if (!length(target)){
-    return(FALSE)
-  }
-  if (
-    !("workers" %in% colnames(config$plan)) ||
-    !(target %in% config$plan$target)
-  ){
-    return(TRUE)
-  }
-  allowed_workers <- as.integer(
-    unlist(
-      config$plan$workers[config$plan$target == target]
-    )
-  )
-  allowed_workers <- allowed_workers %% config$jobs
-  allowed_workers[allowed_workers == 0] <- config$jobs
-  if (!length(allowed_workers)){
-    return(TRUE)
-  }
-  as.integer(worker) %in% allowed_workers
 }
 
 mc_clear_completed_targets <- function(config){
