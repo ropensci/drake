@@ -69,13 +69,13 @@ mc_master <- function(config){
   }
 }
 
-mc_assign_targets <- function(assignemnt_queues, config){
+mc_assign_targets <- function(assignment_queues, config){
   if (!length(assignment_queues)){
     return()
   }
   while(length(target <- config$queue$peek0()) > 0){
     worker_ids <- vapply(
-      assignment_queues, mc_worker_id, FUN.VALUE = integer(1)
+      assignment_queues, mc_worker_id, FUN.VALUE = character(1)
     )
     backlog <- vapply(
       assignment_queues, mc_message_count, FUN.VALUE = numeric(1)
@@ -88,7 +88,8 @@ mc_assign_targets <- function(assignemnt_queues, config){
     backlog <- backlog[can_assign]
     index <- as.integer(names(which.min(backlog)))
     queue <- assignment_queues[[index]]
-    mc_publish(queue, title = "target", message = target)
+    mc_publish(queue, title = target, message = "target")
+    config$queue$pop0()
   }
 }
 
@@ -125,16 +126,17 @@ mc_worker <- function(worker, config){
     while (is.null(msg <- mc_try_consume(assignments))){
       Sys.sleep(mc_wait)
     }
-    if (identical(msg$title, "done")){
+    if (identical(msg$message, "done")){
       return()
     }
-    target <- msg$message
+    target <- msg$title
     build_check_store(
       target = target,
       config = config,
       downstream = config$cache$list(namespace = "mc_protect")
     )
-    mc_publish(queue = completed, title = "target", message = target)
+    mc_ack(msg)
+    mc_publish(queue = completed, title = target, message = "target")
   }
 }
 
@@ -185,7 +187,7 @@ mc_conclude_target <- function(target, config){
 }
 
 mc_list_dbs <- function(config){
-  list.files(config$scratch_dir) %>%
+  list.files(config$scratch_dir, full.names = TRUE) %>%
     grep(pattern = ".db$", value = TRUE) 
 }
 
