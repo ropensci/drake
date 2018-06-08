@@ -25,10 +25,8 @@ mc_list_messages <- function(queue){
   mc_lock(liteq::list_messages(queue), queue$db)
 }
 
-mc_count_targets <- function(queue){
-  m <- mc_list_messages(queue)
-  m <- m[m$message == "target", ]
-  nrow(m)
+mc_count_messages <- function(queue){
+  nrow(mc_list_messages(queue))
 }
 
 mc_publish <- function(queue, title, message){

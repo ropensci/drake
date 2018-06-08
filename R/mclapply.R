@@ -116,12 +116,12 @@ mc_init_worker_cache <- function(config){
 
 mc_work_remains <- function(assignment_queues, config){
   empty <- config$queue$empty()
-  n_pending_targets <- vapply(
+  n_worker_messages <- vapply(
     X = assignment_queues,
-    FUN = mc_count_targets,
+    FUN = mc_count_messages,
     FUN.VALUE = integer(1)
   )
-  !empty || n_pending_targets > 0
+  !empty || n_worker_messages > 0
 }
 
 mc_assign_targets <- function(assignment_queues, config){
@@ -130,10 +130,42 @@ mc_assign_targets <- function(assignment_queues, config){
   }
   while(!is.null(target <- config$queue$peek0())){
     index <- sample.int(length(assignment_queues), 1)
-    queue <- assignment_queues[[index]]
+    queue <- mc_preferred_queue(assignment_queues, target, config)
     mc_publish(queue, title = target, message = "target")
     config$queue$pop0()
   }
+}
+
+mc_preferred_queue <- function(assignment_queues, target, config){
+  if ("workers" %in% colnames(config$plan) && target %in% config$plan$target){
+    db <- mc_db_file(
+      worker = config$plan$workers[config$plan$target == target],
+      config = config
+    )
+    dbs <- vapply(
+      assignment_queues,
+      function(queue){
+        queue$db
+      },
+      FUN.VALUE = character(1)
+    )
+    if (db %in% dbs){
+      return(assignment_queues[db == dbs][[1]])
+    } else {
+      drake_warning(
+        "Preferred worker for target `",
+        target,
+        "` does not exist (yet).",
+        config = config
+      )
+    }
+  }
+  backlog <- vapply(
+    assignment_queues,
+    mc_count_messages,
+    FUN.VALUE = integer(1)
+  )
+  assignment_queues[[which.min(backlog)]]
 }
 
 mc_can_assign_target <- function(worker, target, config){
