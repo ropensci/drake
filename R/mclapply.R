@@ -58,7 +58,7 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
-  on.exit(mc_set_done_all(config))
+  on.exit(mc_conclude_workers(config))
   config$queue <- new_target_queue(config = config)
   while (TRUE){
     assignment_queues <- mc_message_queues(config, "assignments")
@@ -86,7 +86,8 @@ mc_worker <- function(worker, config){
     build_check_store(
       target = target,
       config = config,
-      downstream = config$cache$list(namespace = "mc_protect")
+      downstream = config$cache$list(namespace = "mc_protect"),
+      flag_attempt = TRUE
     )
     mc_ack(msg)
     mc_publish(queue = completed, title = target, message = "target")
@@ -192,14 +193,6 @@ mc_conclude_target <- function(target, config){
   ) %>%
     intersect(y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
-  if (
-    identical(
-      get_progress_single(target = target, cache = config$cache),
-      "finished"
-    ) && target %in% config$plan$target
-  ){
-    set_attempt_flag(key = worker, config = config)
-  }
 }
 
 #######################
@@ -233,8 +226,16 @@ mc_list_dbs <- function(config){
     grep(pattern = ".db$", value = TRUE) 
 }
 
-mc_set_done_all <- function(config){
-  lapply(mc_list_dbs(config), unlink, force = TRUE)
+mc_conclude_workers <- function(config){
+  lapply(
+    seq_len(config$jobs),
+    function(worker){
+      queue <- mc_ensure_queue(
+        "assignments", db = mc_db_file(worker, config)
+      )
+      mc_publish(queue, title = "done", message = "done")
+    }
+  )
 }
 
 mc_wait <- 1e-9
