@@ -57,64 +57,45 @@ mc_process <- function(id, config){
 mc_master <- function(config){
   on.exit(mc_set_done_all(config))
   config$queue <- new_target_queue(config = config)
-  while (mc_work_remains(config)){
-    assert_cache(config$cache)
-    for (worker in config$workers){
-      if (mc_is_idle(worker = worker, config = config)){
-        mc_conclude_target(worker = worker, config = config)
-        if (!config$queue$size()){
-          mc_set_done(worker = worker, config = config)
-          next
-        }
-        target <- config$queue$peek0()
-        should_assign <- mc_should_assign_target(
-          worker = worker,
-          target = target,
-          config = config
-        )
-        if (should_assign){
-          config$queue$pop0()
-          mc_set_target(worker = worker, target = target, config = config)
-          mc_set_running(worker = worker, config = config)
-        }
-      }
+  while (TRUE){
+    outboxes <- mc_outboxes(config)
+    inboxes <- mc_inboxes(config)
+    if (!mc_work_remains(outboxes = outboxes, config = config)){
+      return()
     }
+    mc_clear_outboxes(outboxes = outboxes, config = config)
+    mc_assign_targets(inboxes = inboxes, config = config)
     Sys.sleep(mc_wait)
   }
 }
 
 mc_worker <- function(worker, config){
-  on.exit(mc_set_done(worker = worker, config = config))
-  mc_set_ready(worker = worker, config = config)
+  on.exit(file.remove(db))
+  db <- file.path(config$scratch_dir, worker, ".db")
+  inbox <- ensure_queue("upcoming_targets", db = db)
+  outbox <- ensure_queue("finished_targets", db = db)
   while (TRUE){
-    if (mc_is_idle(worker = worker, config = config)){
+    while (is.null(msg <- mc_try_consume(inbox))){
       Sys.sleep(mc_wait)
-      next
-    } else if (mc_is_done(worker = worker, config = config)){
-      break
     }
-    target <- mc_get_target(worker = worker, config = config)
+    if (identical(msg$title, "done")){
+      return()
+    }
+    target <- msg$message
     build_check_store(
       target = target,
       config = config,
       downstream = config$cache$list(namespace = "mc_protect")
     )
-    mc_set_idle(worker = worker, config = config)
+    mc_publish(queue = outbox, title = "target", message = target)
   }
 }
 
 mc_init_worker_cache <- function(config){
-  for (namespace in c("mc_protect", "mc_status", "mc_target")){
+  for (namespace in c("mc_protect")){
     config$cache$clear(namespace = namespace)
   }
-  fs::dir_create(file.path(config$scratch_dir, "lock"))
-  lapply(
-    X = config$workers,
-    FUN = function(worker){
-      mc_set_not_ready(worker = worker, config = config)
-      mc_set_target(worker = worker, target = NA, config = config)
-    }
-  )
+  fs::dir_create(file.path(config$scratch_dir))
   lapply(
     X = igraph::V(config$schedule)$name,
     FUN = function(target){
