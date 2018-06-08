@@ -103,6 +103,7 @@ mc_init_worker_cache <- function(config){
     config$cache$clear(namespace = namespace)
   }
   fs::dir_create(file.path(config$scratch_dir))
+  dir_empty(config$scratch_dir)
   lapply(
     X = igraph::V(config$schedule)$name,
     FUN = function(target){
