@@ -128,20 +128,8 @@ mc_assign_targets <- function(assignment_queues, config){
   if (!length(assignment_queues)){
     return()
   }
-  while(length(target <- config$queue$peek0()) > 0){
-    worker_ids <- vapply(
-      assignment_queues, mc_worker_id, FUN.VALUE = character(1)
-    )
-    backlog <- vapply(
-      assignment_queues, mc_message_count, FUN.VALUE = numeric(1)
-    ) %>%
-      stats::setNames(nm = worker_ids)
-    can_assign <- vapply(
-      worker_ids, mc_can_assign_target, FUN.VALUE = logical(1),
-      target = target, config = config
-    )
-    backlog <- backlog[can_assign]
-    index <- as.integer(names(which.min(backlog)))
+  while(!is.null(target <- config$queue$peek0())){
+    index <- sample.int(length(assignment_queues), 1)
     queue <- assignment_queues[[index]]
     mc_publish(queue, title = target, message = "target")
     config$queue$pop0()
