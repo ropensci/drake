@@ -159,8 +159,8 @@ mc_clear_completed_targets <- function(config){
   targets <- character(0)
   for(queue in completed_queues){
     while (!is.null(msg <- mc_try_consume(queue))){
-      if (identical(msg$title, "target")){
-        mc_conclude_target(target = msg$message, config = config)
+      if (identical(msg$message, "target")){
+        mc_conclude_target(target = msg$title, config = config)
       }
       mc_ack(msg)
     }
