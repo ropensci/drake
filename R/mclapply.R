@@ -73,8 +73,17 @@ mc_assign_targets <- function(assignemnt_queues, config){
     return()
   }
   while(length(target <- config$queue$peek0()) > 0){
-    
-    
+    can_assign <- vapply(
+      X = mc_worker_ids(assignment_queues),
+      FUN = mc_can_assign_target,
+      FUN.VALUE = logical(0),
+      target = target,
+      config = config
+    )
+    queues <- assignment_queues[can_assign]
+    backlog <- lapply(queues, mc_message_count)
+    queue <- queues[[which.min(backlog)]]
+    mc_publish(queue, title = "target", message = target)
   }
 }
 
@@ -88,12 +97,10 @@ mc_message_queues <- function(config, type){
 }
 
 mc_worker <- function(worker, config){
-  on.exit(mc_delete_queue(meta, force = TRUE))
+  on.exit(unlink(db, force = TRUE))
   db <- file.path(config$scratch_dir, worker, ".db")
-  assignments <- mc_ensure_queue("assignments", db = db)
-  completed <- mc_ensure_queue("completed", db = db)
-  meta <- mc_ensure_queue("meta", db = db)
-  mc_publish(meta, "status", "active")
+  assignments <- ensure_queue("assignments", db = db)
+  completed <- ensure_queue("completed", db = db)
   while (TRUE){
     if (!file.exists(db)){
       return()
@@ -181,10 +188,7 @@ mc_work_remains <- function(assignment_queues, config){
 }
 
 mc_set_done_all <- function(config){
-  lapply(mc_list_dbs(config), function(db){
-    meta <- mc_ensure_queue("meta", db = db)
-    mc_delete_queue(meta, force = TRUE)
-  })
+  lapply(mc_list_dbs(config), unlink, force = TRUE)
 }
 
 mc_wait <- 1e-9

@@ -1,6 +1,9 @@
 mc_lock <- function(code, db){
   on.exit(filelock::unlock(db_lock))
   db_lock <- filelock::lock(fs::path_ext_set(db, "lock"))
+  if (!file.exists(db)){
+    return()
+  }
   force(code)
 }
 
