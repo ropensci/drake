@@ -50,7 +50,7 @@ mc_refresh_queue_lists <- function(config){
   config
 }
 
-mc_assign_targets <- function(config){
+mc_assign_ready_targets <- function(config){
   if (!length(config$mc_ready_queues)){
     return()
   }
@@ -82,7 +82,7 @@ mc_preferred_queue <- function(target, config){
   config$mc_ready_queues[[which.min(backlog)]]
 }
 
-mc_clear_done <- function(config){
+mc_conclude_done_targets <- function(config){
   for (queue in config$mc_done_queues){
     while (!is.null(msg <- mc_try_consume(queue))){
       if (identical(msg$message, "target")){

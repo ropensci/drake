@@ -57,13 +57,10 @@ mc_process <- function(id, config){
 mc_master <- function(config){
   on.exit(mc_conclude_workers(config))
   config$queue <- new_target_queue(config = config)
-  while (TRUE){
+  while (!config$queue$empty()){
     config <- mc_refresh_queue_lists(config)
-    mc_clear_done(config)
-    mc_assign_targets(config)
-    if (config$queue$empty()){
-      return()
-    }
+    mc_conclude_done_targets(config)
+    mc_assign_ready_targets(config)
     Sys.sleep(mc_wait)
   }
 }
