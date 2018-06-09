@@ -35,3 +35,7 @@ mc_publish <- function(queue, title, message){
 mc_try_consume <- function(queue){
   mc_lock(liteq::try_consume(queue), queue$db)
 }
+
+mc_destroy <- function(queue){
+  mc_lock(unlink(queue$db, force = TRUE), queue$db)
+}

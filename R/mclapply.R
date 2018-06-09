@@ -31,7 +31,7 @@ run_mclapply <- function(config){
 mc_process <- function(id, config){
   withCallingHandlers(
     expr = {
-      if (id == "worker0"){
+      if (identical(id, mc_worker_id(0))){
         mc_master(config)
       } else {
         mc_worker(worker = id, config = config)
@@ -63,17 +63,23 @@ mc_master <- function(config){
   config$queue <- new_target_queue(config = config)
   while (TRUE){
     config <- refresh_queue_lists(config)
-    if (!mc_work_remains(assignment_queues, config)){
+    if (mc_master_done(config)){
       return()
     }
-    mc_clear_completed_targets(config)
-    mc_assign_targets(assignment_queues, config)
+    mc_clear_done_targets(config)
+    mc_assign_targets(config)
     Sys.sleep(mc_wait)
   }
 }
 
 mc_refresh_queue_lists <- function(config){
   for(namespace in c("mc_ready_db", "mc_done_db")){
+    possible_dbs <- unlist(
+      config$cache$mget(config$cache$list(namespace), namespace)
+    )
+    if (!length(possible_dbs)){
+      next
+    }
     field <- gsub("db$", "queues", namespace)
     old_dbs <- vapply(
       X = config[[field]],
@@ -82,19 +88,28 @@ mc_refresh_queue_lists <- function(config){
       },
       FUN.VALUE = character(1)
     )
-    possible_dbs <- unlist(
-      config$cache$mget(config$cache$list(namespace), namespace)
-    )
     names(possible_dbs) <- config$cache$list(namespace)
     created_dbs <- possible_dbs[file.exists(possible_dbs)]
     new_dbs <- created_dbs[!(created_dbs %in% old_dbs)] # keeps names
     new_queues <- lapply(new_dbs, mc_ensure_queue)
     config[[field]] <- c(config[[field]], new_queues)
+    still_exists <- vapply(
+      X = config[[field]],
+      FUN = function(queue){
+        file.exists(queue$db)
+      },
+      FUN.VALUE = logical(1)
+    )
+    config[[field]] <- config[[field]][still_exists]
   }
   config
 }
 
 mc_worker <- function(worker, config){
+  on.exit({
+    mc_destroy(ready_queue)
+    mc_destroy(done_queue)
+  })
   ready_queue <- config$cache$get(key = worker, namespace = "mc_ready_db") %>%
     mc_ensure_queue
   done_queue <- config$cache$get(key = worker, namespace = "mc_done_db") %>%
@@ -147,14 +162,10 @@ mc_init_worker_cache <- function(config){
   invisible()
 }
 
-mc_work_remains <- function(assignment_queues, config){
-  empty <- config$queue$empty()
-  n_worker_messages <- vapply(
-    X = assignment_queues,
-    FUN = mc_count_messages,
-    FUN.VALUE = integer(1)
-  )
-  !empty || n_worker_messages > 0
+mc_master_done <- function(config){
+  config$queue$empty() &&
+    length(config$mc_ready_queues) < 1 &&
+    length(config$mc_done_queues) < 1
 }
 
 mc_assign_targets <- function(assignment_queues, config){
@@ -169,42 +180,29 @@ mc_assign_targets <- function(assignment_queues, config){
   }
 }
 
-mc_preferred_queue <- function(assignment_queues, target, config){
+mc_preferred_queue <- function(target, config){
   if ("worker" %in% colnames(config$plan) && target %in% config$plan$target){
-    db <- mc_db_file(
-      worker = config$plan$worker[config$plan$target == target],
-      config = config
-    )
-    dbs <- vapply(
-      assignment_queues,
-      function(queue){
-        queue$db
-      },
-      FUN.VALUE = character(1)
-    )
-    if (db %in% dbs){
-      return(assignment_queues[db == dbs][[1]])
+    worker <- mc_worker_id(config$plan$worker[config$plan$target == target])
+    if (worker %in% names(config$mc_ready_queues)){
+      return(config$mc_ready_queues[[worker]])
     } else {
       drake_warning(
         "Preferred worker for target `",
-        target,
-        "` does not exist (yet).",
+        target, "` (", worker, ") does not exist (yet).",
         config = config
       )
     }
   }
   backlog <- vapply(
-    assignment_queues,
+    config$mc_ready_queues,
     mc_count_messages,
     FUN.VALUE = integer(1)
   )
-  assignment_queues[[which.min(backlog)]]
+  config$mc_ready_queues[[which.min(backlog)]]
 }
 
 mc_clear_completed_targets <- function(config){
-  completed_queues <- mc_message_queues(config, "completed")
-  targets <- character(0)
-  for(queue in completed_queues){
+  for(queue in config$mc_done_queues){
     while (!is.null(msg <- mc_try_consume(queue))){
       if (identical(msg$message, "target")){
         mc_conclude_target(target = msg$title, config = config)
@@ -234,31 +232,12 @@ mc_worker_id <- function(x){
   paste0("worker_", x)
 }
 
-mc_message_count <- function(queue){
-  nrow(mc_list_messages(queue))
-}
-
-mc_message_queues <- function(config, type){
-  lapply(
-    mc_list_dbs(config),
-    function(db){
-      mc_ensure_queue(type, db = db)
-    }
-  )
-}
-
-mc_list_dbs <- function(config){
-  list.files(config$scratch_dir, full.names = TRUE) %>%
-    grep(pattern = ".db$", value = TRUE) 
-}
-
 mc_conclude_workers <- function(config){
   lapply(
-    X = config$workers,
+    X = config$cache$list("mc_ready_db"),
     FUN = function(worker){
-      queue <- mc_ensure_queue(
-        "assignments", db = mc_db_file(worker, config)
-      )
+      queue <- config$cache$get(key = worker, namespace = "mc_ready_db") %>%
+        mc_ensure_queue
       mc_publish(queue, title = "done", message = "done")
     }
   )
