@@ -63,7 +63,9 @@ mc_assign_ready_targets <- function(config){
 
 mc_preferred_queue <- function(target, config){
   if ("worker" %in% colnames(config$plan) && target %in% config$plan$target){
-    worker <- mc_worker_id(config$plan$worker[config$plan$target == target])
+    worker <- mc_worker_id(
+      config$plan[["worker"]][config$plan$target == target]
+    )
     if (worker %in% names(config$mc_ready_queues)){
       return(config$mc_ready_queues[[worker]])
     } else {
