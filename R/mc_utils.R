@@ -3,15 +3,14 @@ mc_init_worker_cache <- function(config){
   for (namespace in namespaces){
     config$cache$clear(namespace = namespace)
   }
- # temp_dir <- file.path(config$cache_path, "mc")
-#  unlink(temp_dir, recursive = TRUE, force = TRUE)
+  dir_empty(temp_dir <- file.path(config$cache_path, "mc"))
   lapply(
     X = seq_len(config$jobs),
     FUN = function(worker){
       for (namespace in c("mc_ready_db", "mc_done_db")){
         config$cache$set(
           key = mc_worker_id(worker),
-          value = tempfile(), #file.path(temp_dir, tempfile()),
+          value = file.path(temp_dir, tempfile()),
           namespace = namespace
         )
       }
