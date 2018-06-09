@@ -72,7 +72,6 @@ warning_process <- function(e, id, config){
 
 error_process <- function(e, id, config){
   warning_process(e, id, config)
-  unlink(config$scratch_dir, recursive = TRUE, force = TRUE)
   drake_error("make() failed.", config = config)
 }
 

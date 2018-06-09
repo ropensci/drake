@@ -22,7 +22,7 @@ run_parLapply <- function(config) { # nolint
   mc_init_worker_cache(config)
   parLapply(
     cl = config$cluster,
-    X = c(0, seq_len(config$jobs)),
+    X = mc_worker_id(c(0, seq_len(config$jobs))),
     fun = mc_process,
     config = config
   )

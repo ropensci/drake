@@ -13,12 +13,8 @@ mc_ack <- function(msg){
   )
 }
 
-mc_delete_queue <- function(queue){
-  mc_lock(liteq::delete_queue(queue), queue$db)
-}
-
-mc_ensure_queue <- function(name, db){
-  mc_lock(liteq::ensure_queue(name = name, db = db), db)
+mc_ensure_queue <- function(db){
+  mc_lock(liteq::ensure_queue(name = "jobs", db = db), db)
 }
 
 mc_list_messages <- function(queue){
@@ -36,14 +32,6 @@ mc_publish <- function(queue, title, message){
   )
 }
 
-mc_requeue_failed_messages <- function(queue){
-  mc_lock(liteq::requeue_failed_messages(queue), queue$db)
-}
-
 mc_try_consume <- function(queue){
   mc_lock(liteq::try_consume(queue), queue$db)
-}
-
-mc_consume <- function(queue){
-  mc_lock(liteq::consume(queue), queue$db)
 }

@@ -8,7 +8,7 @@ run_mclapply <- function(config){
   }
   mc_init_worker_cache(config)
   tmp <- mclapply(
-    X = c(0, seq_len(config$jobs)),
+    X = mc_worker_id(c(0, seq_len(config$jobs))),
     FUN = mc_process,
     mc.cores = config$jobs + 1,
     config = config
@@ -31,7 +31,7 @@ run_mclapply <- function(config){
 mc_process <- function(id, config){
   withCallingHandlers(
     expr = {
-      if (id < 1){
+      if (id == "worker0"){
         mc_master(config)
       } else {
         mc_worker(worker = id, config = config)
@@ -62,7 +62,7 @@ mc_master <- function(config){
   on.exit(mc_conclude_workers(config))
   config$queue <- new_target_queue(config = config)
   while (TRUE){
-    assignment_queues <- mc_message_queues(config, "assignments")
+    config <- refresh_queue_lists(config)
     if (!mc_work_remains(assignment_queues, config)){
       return()
     }
@@ -72,12 +72,33 @@ mc_master <- function(config){
   }
 }
 
+mc_refresh_queue_lists <- function(config){
+  for(namespace in c("mc_ready_db", "mc_done_db")){
+    old_dbs <- vapply(
+      X = config[[namespace]],
+      FUN = function(queue){
+        queue$db
+      },
+      FUN.VALUE = character(1)
+    )
+    possible_dbs <- unlist(
+      config$cache$mget(config$cache$list(namespace), namespace)
+    )
+    names(possible_dbs) <- config$cache$list(namespace)
+    created_dbs <- possible_dbs[file.exists(possible_dbs)]
+    new_dbs <- created_dbs[!(created_dbs %in% old_dbs)] # keeps names
+    new_queues <- lapply(new_dbs, mc_ensure_queue)
+    config[[namespace]] <- c(config[[namespace]], new_queues)
+  }
+}
+
 mc_worker <- function(worker, config){
-  db <- mc_db_file(worker = worker, config = config)
-  assignments <- mc_ensure_queue("assignments", db = db)
-  completed <- mc_ensure_queue("completed", db = db)
+  ready_queue <- config$cache$get(key = worker, namespace = "mc_ready_db") %>%
+    mc_ensure_queue
+  done_queue <- config$cache$get(key = worker, namespace = "mc_done_db") %>%
+    mc_ensure_queue
   while (TRUE){
-    while (is.null(msg <- mc_try_consume(assignments))){
+    while (is.null(msg <- mc_try_consume(ready_queue))){
       Sys.sleep(mc_wait)
     }
     if (identical(msg$message, "done")){
@@ -91,7 +112,7 @@ mc_worker <- function(worker, config){
       flag_attempt = TRUE
     )
     mc_ack(msg)
-    mc_publish(queue = completed, title = target, message = "target")
+    mc_publish(queue = done_queue, title = target, message = "target")
   }
 }
 
@@ -100,11 +121,21 @@ mc_worker <- function(worker, config){
 ##################################
 
 mc_init_worker_cache <- function(config){
-  for (namespace in c("mc_protect")){
+  for (namespace in c("mc_protect", "mc_ready_db", "mc_done_db")){
     config$cache$clear(namespace = namespace)
   }
-  fs::dir_create(file.path(config$scratch_dir))
-  dir_empty(config$scratch_dir)
+  lapply(
+    X = seq_len(config$jobs),
+    FUN = function(worker){
+      for (namespace in c("mc_ready_db", "mc_done_db")){
+        config$cache$set(
+          key = mc_worker_id(worker),
+          value = tempfile(),
+          namespace = namespace
+        )
+      }
+    }
+  )
   lapply(
     X = igraph::V(config$schedule)$name,
     FUN = function(target){
@@ -198,7 +229,7 @@ mc_conclude_target <- function(target, config){
 
 # x could be a queue or a message
 mc_worker_id <- function(x){
-  fs::path_file(fs::path_ext_remove(x$db))
+  paste0("worker_", x)
 }
 
 mc_message_count <- function(queue){
@@ -212,10 +243,6 @@ mc_message_queues <- function(config, type){
       mc_ensure_queue(type, db = db)
     }
   )
-}
-
-mc_db_file <- function(worker, config){
-  file.path(config$scratch_dir, paste0(worker, ".db"))
 }
 
 mc_list_dbs <- function(config){
