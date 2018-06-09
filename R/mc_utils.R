@@ -26,7 +26,7 @@ mc_init_worker_cache <- function(config){
 }
 
 mc_refresh_queue_lists <- function(config){
-  for(namespace in c("mc_ready_db", "mc_done_db")){
+  for (namespace in c("mc_ready_db", "mc_done_db")){
     possible_dbs <- unlist(
       config$cache$mget(config$cache$list(namespace), namespace)
     )
@@ -54,7 +54,7 @@ mc_assign_targets <- function(config){
   if (!length(config$mc_ready_queues)){
     return()
   }
-  while(!is.null(target <- config$queue$peek0())){
+  while (!is.null(target <- config$queue$peek0())){
     mc_preferred_queue(target = target, config = config) %>%
       mc_publish(title = target, message = "target")
     config$queue$pop0()
@@ -83,7 +83,7 @@ mc_preferred_queue <- function(target, config){
 }
 
 mc_clear_done <- function(config){
-  for(queue in config$mc_done_queues){
+  for (queue in config$mc_done_queues){
     while (!is.null(msg <- mc_try_consume(queue))){
       if (identical(msg$message, "target")){
         mc_conclude_target(target = msg$title, config = config)
