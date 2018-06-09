@@ -74,8 +74,9 @@ mc_master <- function(config){
 
 mc_refresh_queue_lists <- function(config){
   for(namespace in c("mc_ready_db", "mc_done_db")){
+    field <- gsub("db$", "queues", namespace)
     old_dbs <- vapply(
-      X = config[[namespace]],
+      X = config[[field]],
       FUN = function(queue){
         queue$db
       },
@@ -88,8 +89,9 @@ mc_refresh_queue_lists <- function(config){
     created_dbs <- possible_dbs[file.exists(possible_dbs)]
     new_dbs <- created_dbs[!(created_dbs %in% old_dbs)] # keeps names
     new_queues <- lapply(new_dbs, mc_ensure_queue)
-    config[[namespace]] <- c(config[[namespace]], new_queues)
+    config[[field]] <- c(config[[field]], new_queues)
   }
+  config
 }
 
 mc_worker <- function(worker, config){
