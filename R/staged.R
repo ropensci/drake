@@ -75,7 +75,6 @@ run_parLapply_staged <- function(config) { # nolint
     return(run_loop(config = config))
   }
   eval(parse(text = "require(drake)"))
-  config$workers <- as.character(seq_len(config$jobs))
   console_parLapply(config) # nolint
   config$cluster <- makePSOCKcluster(config$jobs)
   on.exit(stopCluster(cl = config$cluster))

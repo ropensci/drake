@@ -1,7 +1,6 @@
 ---
 title: "drake"
-subtitle: "The main example"
-author: "Will Landau and Kirill Müller"
+author: "Will Landau"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -13,153 +12,84 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = F}
-suppressMessages(suppressWarnings(library(drake)))
-suppressMessages(suppressWarnings(library(dplyr)))
-suppressMessages(suppressWarnings(library(ggplot2)))
-unlink(".drake", recursive = TRUE)
-clean(destroy = TRUE, verbose = FALSE)
-unlink(c("Makefile", "report.Rmd", "shell.sh", "STDIN.o*", "Thumbs.db"))
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  warning = TRUE,
-  error = TRUE,
-  fig.width = 6,
-  fig.height = 6,
-  fig.align = "center"
-)
-pkgconfig::set_config("drake::strings_in_dots" = "literals")
-dat <- system.file(
-  file.path("examples", "main", "raw_data.xlsx"),
-  package = "drake",
-  mustWork = TRUE
-)
-tmp <- file.copy(from = dat, to = "raw_data.xlsx")
-rmd <- system.file(
-  file.path("examples", "main", "report.Rmd"),
-  package = "drake",
-  mustWork = TRUE
-)
-tmp <- file.copy(from = rmd, to = "report.Rmd")
-```
+# Learn about drake
 
-A typical data analysis workflow is a sequence of data transformations. Raw data becomes tidy data, then turns into fitted models, summaries, and reports.
+The main resources to learn `drake` are
 
-<img src="./tidydag.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+1. The [full manual](https://ropenscilabs.github.io/drake-manual/)
+2. The [package website](https://ropensci.github.io/drake/)
+3. [Kirill Müller](https://github.com/krlmlr)'s [`drake` workshop from March 5, 2018](https://github.com/krlmlr/drake-sib-zurich).
 
-# Set the stage.
+## Cheat sheet
 
-To set up a project, load your packages,
+Thanks to [Kirill](https://github.com/krlmlr) for preparing a [`drake` cheat sheet](https://github.com/krlmlr/drake-sib-zurich/blob/master/cheat-sheet.pdf) for the [workshop](https://github.com/krlmlr/drake-sib-zurich).
 
-```{r mainpackages}
-library(drake)
-library(dplyr)
-library(ggplot2)
-```
+## Frequently asked questions
 
-load your custom functions,
+The [FAQ page](https://ropensci.github.io/drake/articles/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
 
-```{r createplot1}
-create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram()
-}
-```
+## Function reference
 
-check any supporting files (optional),
+The [reference section](https://ropensci.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
 
-```{r suppfiles}
-# Get the files with drake_example("main").
-file.exists("raw_data.xlsx")
-file.exists("report.Rmd")
-```
+- `drake_plan()`: create a workflow data frame (like `my_plan`).
+- `make()`: build your project.
+- `loadd()`: load one or more built targets into your R session.
+- `readd()`: read and return a built target.
+- `drake_config()`: create a master configuration list for other user-side functions.
+- `vis_drake_graph()`: show an interactive visual network representation of your workflow.
+- `outdated()`: see which targets will be built in the next `make()`.
+- `deps()`: check the dependencies of a command or function.
+- `failed()`: list the targets that failed to build in the last `make()`.
+- `diagnose()`: return the full context of a build, including errors, warnings, and messages.
 
-and plan what you are going to do.
+## Tutorials
 
-```{r createplan}
-plan <- drake_plan(
-  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
-  data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)) %>%
-    select(-X__1),
-  hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  rmarkdown::render(
-    knitr_in("report.Rmd"),
-    output_file = file_out("report.html"),
-    quiet = TRUE
-  )
-)
-plan
-```
+Thanks to [Kirill](https://github.com/krlmlr) for constructing two interactive [`learnr`](https://rstudio.github.io/learnr/) tutorials: [one supporting `drake` itself](https://krlmlr.shinyapps.io/cooking-drake-tutorial/), and a [prerequisite walkthrough](https://krlmlr.shinyapps.io/cooking-tutorial/) of the [`cooking` package](https://github.com/krlmlr/cooking).
 
-# Make your results.
+## Examples
 
-So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
+`Drake` also has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. The beginner-oriented examples are listed below. They help you learn `drake`'s main features, and they show one way to organize the files of `drake` projects.
 
-```{r make1}
-make(plan)
-```
+- `main`: `drake`'s main example, based on [Kirill Müller's `drake` pitch](https://krlmlr.github.io/drake-pitch/). This is the most accessible example for beginners.
+- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
+- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
+- `mtcars`: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use `load_mtcars_example()` to set up the project in your workspace.
 
-Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
+## Presentations
 
-```{r readddata1}
-readd(data) # See also loadd().
-```
+- https://krlmlr.github.io/drake-pitch
+- https://krlmlr.github.io/slides/drake-sib-zurich
+- https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html
 
-# Go back and fix things.
+## Real example projects
 
-You may look back on your work and see room for improvement, but it's all good! The whole point of `drake` is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.
+Here are some real-world applications of `drake` in the wild.
 
-```{r loaddhist, eval = FALSE}
-readd(hist)
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
+- [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
+- [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
+- [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
+- [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
 
-<img src="./hist1.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
+If you have a project of your own, we would love to add it. [Click here to edit the `README.Rmd` file](https://github.com/ropensci/drake/edit/master/README.Rmd).
 
-So let's fix the plotting function.
+## Context and history
 
-```{r changefn}
-create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram(binwidth = 0.25) +
-    theme_gray(20)
-}
-```
+For context and history, check out [this post on the rOpenSci blog](https://ropensci.org/blog/2018/02/06/drake/) and [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
 
-`Drake` knows which results are affected.
+# Acknowledgements
 
-```{r visdrakegraphreadme, eval = FALSE}
-config <- drake_config(plan)
-vis_drake_graph(config) # Interactive graph: hover, zoom, drag, etc.
-```
+Special thanks to [Jarad Niemi](http://www.jarad.me/), my advisor from [graduate school](http://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. He originally set me down the path that led to `drake`.
 
-<iframe
-src = "https://ropensci.github.io/drake/images/pitch3.html"
-width = "100%" height = "600px" allowtransparency="true"
-style="border: none; box-shadow: none">
-</iframe>
+Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https://github.com/benmarwick), and [Peter Slaughter](https://github.com/gothub) for [reviewing drake for rOpenSci](https://github.com/ropensci/onboarding/issues/156), and to [Maëlle Salmon](https://github.com/maelle) for such active involvement as the editor. Thanks also to the following people for contributing early in development.
 
-The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
+- [Alex Axthelm](https://github.com/AlexAxthelm)
+- [Chan-Yub Park](https://github.com/mrchypark)
+- [Daniel Falster](https://github.com/dfalster)
+- [Eric Nantz](https://github.com/thercast)
+- [Henrik Bengtsson](https://github.com/HenrikBengtsson)
+- [Ian Watson](https://github.com/IanAWatson)
+- [Jasper Clarkberg](https://github.com/dapperjapper)
+- [Kendon Bell](https://github.com/kendonB)
+- [Kirill M&uuml;ller](https://github.com/krlmlr)
 
-```{r justhistetc}
-make(plan)
-```
-
-```{r hist2, eval = FALSE}
-loadd(hist)
-hist
-```
-
-<img src="./hist2.png" alt="tidydag" align="center" style = "border: none; float: center;" width = "500px">
-
-
-# Try it yourself!
-
-Use `drake_example("main")` to get all the materials.
-
-```{r endofline_pitch, echo = FALSE}
-clean(destroy = TRUE, verbose = FALSE)
-unlink(c("report.Rmd", "raw_data.xlsx", "STDIN.o*", "Thumbs.db"))
-```

@@ -118,7 +118,7 @@ mc_conclude_workers <- function(config){
 
 mc_get_worker_queue <- function(worker, namespace, config){
   while (!config$cache$exists(key = worker, namespace = namespace)){
-    Sys.sleep(mc_wait)
+    Sys.sleep(mc_wait) # nocov
   }
   config$cache$get(key = worker, namespace = namespace) %>%
     mc_ensure_queue
@@ -176,10 +176,6 @@ mc_publish <- function(queue, title, message){
 
 mc_try_consume <- function(queue){
   mc_lock(liteq::try_consume(queue), queue$db)
-}
-
-mc_set_done <- function(queue){
-  mc_publish()
 }
 
 mc_wait <- 1e-9
