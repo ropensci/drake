@@ -170,9 +170,10 @@ test_with_dir("preferred queue may not be there", {
   expect_warning(mc_preferred_queue("small", config))
 })
 
-test_with_dir("can refresh message queues when there are actually none", {
+test_with_dir("null cases for message queues", {
   config <- list(cache = storr::storr_environment())
   config <- mc_refresh_queue_lists(config)
   expect_null(config$mc_ready_queues)
   expect_null(config$mc_done_queues)
+  expect_null(mc_assign_ready_targets(config))
 })
