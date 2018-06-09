@@ -1,7 +1,3 @@
-####################################
-### HIGH-LEVEL PROCESS FUNCTIONS ###
-####################################
-
 run_mclapply <- function(config){
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
