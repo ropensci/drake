@@ -40,7 +40,7 @@ mc_refresh_queue_lists <- function(config){
     old_dbs <- vapply(
       X = config[[field]],
       FUN = function(queue){
-        queue$db
+        queue$path
       },
       FUN.VALUE = character(1)
     )
@@ -58,8 +58,8 @@ mc_assign_ready_targets <- function(config){
     return()
   }
   while (!is.null(target <- config$queue$peek0())){
-    mc_preferred_queue(target = target, config = config) %>%
-      mc_publish(title = target, message = "target")
+    queue <- mc_preferred_queue(target = target, config = config)
+    queue$push(title = target, message = "target")
     config$queue$pop0()
   }
 }
@@ -91,7 +91,7 @@ mc_preferred_queue <- function(target, config){
 
 mc_conclude_done_targets <- function(config){
   for (queue in config$mc_done_queues){
-    while (!is.null(messages <- queue$pop(-1))){
+    while (nrow(messages <- queue$pop(-1)) > 0){
       for (i in seq_len(nrow(messages))){
         msg <- messages[i, ]
         if (identical(msg$message, "target")){

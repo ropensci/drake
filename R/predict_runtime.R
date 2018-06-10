@@ -294,7 +294,7 @@ balance_load <- function(config, jobs){
     current_targets <- vapply(
       config$mc_ready_queues,
       function(queue){
-        messages <- mc_list_messages(queue)
+        messages <- queue$list(1)
         if (nrow(messages)){
           messages$title[1]
         } else {
@@ -335,12 +335,11 @@ balance_load <- function(config, jobs){
     worker <- names(which.min(time_remaining[is_running]))
     ready_queue <- config$mc_ready_queues[[worker]]
     done_queue <- config$mc_done_queues[[worker]]
-    msg <- mc_try_consume(ready_queue)
-    if (!is.null(msg)){
+    msg <- ready_queue$pop(1)
+    if (nrow(msg) > 0){
       target <- msg$title
-      mc_ack(msg)
       targets[[worker]] <- c(targets[[worker]], target)
-      mc_publish(done_queue, title = target, message = "target")
+      done_queue$push(title = target, message = "target")
     }
   }
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate

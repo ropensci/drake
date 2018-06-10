@@ -54,7 +54,7 @@ R6_message_queue <- R6::R6Class(
         )
       }
       out <- read.table(
-        self$db, 
+        self$db,
         sep = "|",
         skip = private$mq_get_head() - 1,
         nrows = n,
