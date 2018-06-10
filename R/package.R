@@ -64,7 +64,7 @@
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int
 #' @importFrom R6 R6Class
-#' @importFrom R.utils isPackageLoaded withTimeout
+#' @importFrom R.utils countLines isPackageLoaded withTimeout
 #' @importFrom rlang expr exprs
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames

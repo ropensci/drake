@@ -1,4 +1,4 @@
-drake_context("queue")
+drake_context("priority queue")
 
 test_with_dir("empty queue", {
   config <- list(schedule = igraph::make_empty_graph())
