@@ -1,6 +1,7 @@
 drake_context("future")
 
 test_with_dir("future package functionality", {
+  skip()
   future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
