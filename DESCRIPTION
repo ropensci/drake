@@ -89,7 +89,8 @@ Suggests:
   MASS,
   methods,
   RSQLite,
-  rmarkdown
+  rmarkdown,
+  tidyr
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1
