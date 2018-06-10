@@ -286,9 +286,6 @@ balance_load <- function(config, jobs){
   lapply(workers, mc_get_ready_queue, config = config)
   lapply(workers, mc_get_done_queue, config = config)
   while (TRUE){
-    
-    
-    
     # Run one iteration of mc_master()
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)

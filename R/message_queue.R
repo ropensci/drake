@@ -43,6 +43,26 @@ R6_message_queue <- R6::R6Class(
         quote = FALSE
       )
     },
+    mq_log = function(){
+      if (length(scan(self$db, quiet = TRUE, what = character())) < 1){
+        return(
+          data.frame(
+            title = character(0),
+            message = character(0),
+            stringsAsFactors = FALSE
+          )
+        )
+      }
+      private$parse_db(
+        read.table(
+          self$db,
+          sep = "|",
+          stringsAsFactors = FALSE,
+          header = FALSE,
+          quote = ""
+        )
+      )
+    },
     mq_list = function(n){
       if (private$mq_count() < 1){
         return(
@@ -53,19 +73,23 @@ R6_message_queue <- R6::R6Class(
           )
         )
       }
-      out <- read.table(
-        self$db,
-        sep = "|",
-        skip = private$mq_get_head() - 1,
-        nrows = n,
-        stringsAsFactors = FALSE,
-        header = FALSE,
-        quote = ""
+      out <- private$parse_db(
+        read.table(
+          self$db,
+          sep = "|",
+          skip = private$mq_get_head() - 1,
+          nrows = n,
+          stringsAsFactors = FALSE,
+          header = FALSE,
+          quote = ""
+        )
       )
-      colnames(out) <- c("title", "message")
-      out$title <- base64url::base64_urldecode(out$title)
-      out$message <- base64url::base64_urldecode(out$message)
-      out
+    },
+    parse_db = function(x){
+      colnames(x) <- c("title", "message")
+      x$title <- base64url::base64_urldecode(x$title)
+      x$message <- base64url::base64_urldecode(x$message)
+      x
     }
   ),
   public = list(
@@ -91,6 +115,9 @@ R6_message_queue <- R6::R6Class(
     },
     empty = function(){
       self$count() < 1
+    },
+    log = function(){
+      private$mq_exclusive(private$mq_log())
     },
     list = function(n = -1){
       private$mq_exclusive(private$mq_list(n = n))

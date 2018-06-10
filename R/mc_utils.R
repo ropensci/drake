@@ -30,25 +30,15 @@ mc_init_worker_cache <- function(config){
 
 mc_refresh_queue_lists <- function(config){
   for (namespace in c("mc_ready_db", "mc_done_db")){
-    possible_dbs <- unlist(
-      config$cache$mget(config$cache$list(namespace), namespace)
-    )
-    if (!length(possible_dbs)){
-      next
-    }
     field <- gsub("db$", "queues", namespace)
-    old_dbs <- vapply(
-      X = config[[field]],
-      FUN = function(queue){
-        queue$path
-      },
-      FUN.VALUE = character(1)
-    )
-    names(possible_dbs) <- config$cache$list(namespace)
-    created_dbs <- possible_dbs[file.exists(possible_dbs)]
-    new_dbs <- created_dbs[!(created_dbs %in% old_dbs)] # keeps names
-    new_queues <- lapply(new_dbs, message_queue)
-    config[[field]] <- c(config[[field]], new_queues)
+    unlogged_workers <- setdiff(
+      config$cache$list(namespace), names(config[[field]]))
+    for (worker in unlogged_workers){
+      path <- config$cache$get(key = worker, namespace = namespace)
+      if (file.exists(path)){
+        config[[field]][[worker]] <- message_queue(path)
+      }
+    }
   }
   config
 }
