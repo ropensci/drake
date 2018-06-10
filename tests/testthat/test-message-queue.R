@@ -1,7 +1,7 @@
 drake_context("message queue")
 
 test_with_dir("custom message queue works", {
-  q <- message_queue(tempfile(), create = TRUE)
+  q <- message_queue(tempfile())
   expect_true(file.exists(q$path))
   expect_true(file.exists(q$db))
   expect_true(file.exists(q$head))
