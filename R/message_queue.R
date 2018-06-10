@@ -1,13 +1,13 @@
-message_queue <- function(path, create){
-  R6_message_queue$new(path = path, create = create)
+message_queue <- function(path){
+  R6_message_queue$new(path = path)
 }
 
 R6_message_queue <- R6::R6Class(
   classname = "R6_message_queue",
   private = list(
-    mq_exclusive = function(code){
+    mq_exclusive = function(code, file = self$lock){
       on.exit(filelock::unlock(x))
-      x <- filelock::lock(self$lock)
+      x <- filelock::lock(file)
       force(code)
     },
     mq_get_head = function(){
@@ -73,21 +73,22 @@ R6_message_queue <- R6::R6Class(
     db = character(0),
     head = character(0),
     lock = character(0),
-    initialize = function(path, create = TRUE){
+    initialize = function(path){
       self$path <- path
       self$db <- file.path(self$path, "db")
       self$head <- file.path(self$path, "head")
       self$lock <- file.path(self$path, "lock")
-      if (create){
-        fs::file_chmod(fs::dir_create(self$path), mode = "777")
-        private$mq_exclusive({
-          fs::file_chmod(fs::file_create(self$db), mode = "777")
-          fs::file_chmod(fs::file_create(self$head), mode = "777")
-          if (length(private$mq_get_head()) < 1){
-            private$mq_set_head(1)
-          }
-        })
-      }
+      private$mq_exclusive(
+        code = fs::dir_create(self$path),
+        file = fs::path_ext_set("self$path", "lock")
+      )
+      private$mq_exclusive({
+        fs::file_create(self$db)
+        fs::file_create(self$head)
+        if (length(private$mq_get_head()) < 1){
+          private$mq_set_head(1)
+        }
+      })
     },
     count = function(){
       private$mq_exclusive(private$mq_count())

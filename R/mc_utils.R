@@ -47,7 +47,7 @@ mc_refresh_queue_lists <- function(config){
     names(possible_dbs) <- config$cache$list(namespace)
     created_dbs <- possible_dbs[file.exists(possible_dbs)]
     new_dbs <- created_dbs[!(created_dbs %in% old_dbs)] # keeps names
-    new_queues <- lapply(new_dbs, message_queue, create = FALSE)
+    new_queues <- lapply(new_dbs, message_queue)
     config[[field]] <- c(config[[field]], new_queues)
   }
   config
@@ -130,7 +130,7 @@ mc_get_worker_queue <- function(worker, namespace, config){
     Sys.sleep(mc_wait) # nocov
   }
   config$cache$get(key = worker, namespace = namespace) %>%
-    message_queue(create = TRUE)
+    message_queue
 }
 
 mc_get_ready_queue <- function(worker, config){
