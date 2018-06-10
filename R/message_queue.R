@@ -59,7 +59,8 @@ R6_message_queue <- R6::R6Class(
           sep = "|",
           stringsAsFactors = FALSE,
           header = FALSE,
-          quote = ""
+          quote = "",
+          na.strings = NULL
         )
       )
     },
@@ -81,7 +82,8 @@ R6_message_queue <- R6::R6Class(
           nrows = n,
           stringsAsFactors = FALSE,
           header = FALSE,
-          quote = ""
+          quote = "",
+          na.strings = NULL
         )
       )
     },
