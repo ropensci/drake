@@ -51,7 +51,6 @@ Depends:
   R (>= 3.2.0)
 Imports:
   bindr,
-  callr,
   CodeDepends,
   crayon,
   evaluate,
@@ -85,6 +84,7 @@ Imports:
   withr
 Suggests: 
   abind,
+  callr,
   DBI,
   MASS,
   methods,
