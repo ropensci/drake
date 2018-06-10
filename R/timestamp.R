@@ -83,7 +83,7 @@ time_stamp_template <- function(cache_path){
 
 dir_empty <- function(x){
   unlink(x, recursive = TRUE, force = TRUE)
-  dir.create(x)
+  fs::dir_create(x)
 }
 
 file_overwrite <- function(x){

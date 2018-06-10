@@ -272,66 +272,79 @@ balance_load <- function(config, jobs){
     init_common_values = TRUE
   )
   config$jobs <- jobs
-  config$workers <- as.character(seq_len(config$jobs))
   config$schedule <- config$graph
-  config$queue <- new_target_queue(config = config)
+  config$queue <- new_priority_queue(config = config)
   mc_init_worker_cache(config)
-  lapply(config$workers, mc_set_ready, config = config)
-  targets <- lapply(config$workers, function(id){
+  workers <- config$cache$list("mc_ready_db")
+  targets <- lapply(workers, function(worker){
     character(0)
   })
   total_runtime <- 0
-  step_times <- rep(0, config$jobs)
-  names(step_times) <- names(targets) <- config$workers
-  while (mc_work_remains(config)){
-    is_running <- vapply(
-      X = config$workers,
-      FUN = mc_is_running,
-      FUN.VALUE = logical(1),
-      config = config
-    )
-    # Simulate how the master process waits for the next worker to finish.
-    if (any(is_running)){
-      next_idle_worker <- names(which.min(step_times[is_running]))
-      mc_set_idle(worker = next_idle_worker, config = config)
-      step <- min(step_times[is_running])
-      step_times[is_running] <- step_times[is_running] - step
-      total_runtime <- total_runtime + step
-    }
-    # Mostly the same as the main loop of mc_master()
-    for (worker in config$workers){
-      if (mc_is_idle(worker = worker, config = config)){
-        mc_conclude_target(worker = worker, config = config)
-        step_times[worker] <- 0 # Added: make sure to reset the worker's time.
-        if (!config$queue$size()){
-          mc_set_done(worker = worker, config = config)
-          next
+  time_remaining <- rep(0, length(workers))
+  old_targets <- rep("", length(workers))
+  names(time_remaining) <- names(targets) <- names(old_targets) <- workers
+  lapply(workers, mc_get_ready_queue, config = config)
+  lapply(workers, mc_get_done_queue, config = config)
+  while (TRUE){
+    # Run one iteration of mc_master()
+    config <- mc_refresh_queue_lists(config)
+    mc_conclude_done_targets(config)
+    mc_assign_ready_targets(config)
+    # List the running targets and their runtimes
+    current_targets <- vapply(
+      config$mc_ready_queues,
+      function(queue){
+        messages <- queue$list(1)
+        if (nrow(messages)){
+          messages$title[1]
+        } else {
+          ""
         }
-        target <- config$queue$peek0()
-        should_assign <- mc_should_assign_target(
-          worker = worker,
-          target = target,
-          config = config
-        )
-        if (should_assign){
-          config$queue$pop0()
-          # Added line: get the time that the worker will spend on the target.
-          step_times[worker] <- igraph::vertex_attr(
+      },
+      FUN.VALUE = character(1)
+    )
+    is_running <- nzchar(current_targets)
+    if (!any(is_running)){
+      break
+    }
+    times <- vapply(
+      current_targets,
+      function(target){
+        if (identical(target, "")){
+          0
+        } else {
+          igraph::vertex_attr(
             graph = config$graph,
             name = "time",
             index = target
           )
-          # Added line: record that the target was assigned.
-          targets[[worker]] <- c(targets[[worker]], target)
-          mc_set_target(worker = worker, target = target, config = config)
-          mc_set_running(worker = worker, config = config)
         }
-      }
+      },
+      FUN.VALUE = numeric(1)
+    )
+    # For the workers that just got new targets,
+    # increment the time they will remain running.
+    index <- current_targets != old_targets
+    time_remaining[index] <- time_remaining[index] + times[index]
+    old_targets <- current_targets
+    # Move time forward until soonest target finishes.
+    step <- min(time_remaining[is_running])
+    worker <- names(which.min(time_remaining[is_running]))
+    time_remaining[is_running] <- time_remaining[is_running] - step
+    total_runtime <- total_runtime + step
+    # Finish the target.
+    ready_queue <- config$mc_ready_queues[[worker]]
+    done_queue <- config$mc_done_queues[[worker]]
+    msg <- ready_queue$pop(1)
+    if (nrow(msg) > 0){
+      target <- msg$title
+      targets[[worker]] <- c(targets[[worker]], target)
+      done_queue$push(title = target, message = "target")
     }
   }
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   list(
     total_runtime = lubridate::dseconds(total_runtime),
-    targets_per_worker = targets
+    targets = targets
   )
 }

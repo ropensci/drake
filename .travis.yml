@@ -16,14 +16,17 @@ r_packages:
   - lintr
 
 # From Jim Hester, for avoiding timeouts
+# From Jim Hester, for avoiding timeouts
 script:
   - |
     R CMD build .
-    travis_wait 20 R CMD check drake*tar.gz
-
+    travis_wait 20 R CMD check drake*tar.gz --no-tests
+    travis_wait 20 Rscript -e 'covr::codecov()'
 after_success:
-  - travis_wait 20 Rscript -e 'covr::codecov()'
   - Rscript -e 'lintr::lint_package()'
+
+after_failure:
+- find *Rcheck -name '*fail' -print -exec cat '{}' \;
 
 after_failure:
   - find *Rcheck -name '*fail' -print -exec cat '{}' \;

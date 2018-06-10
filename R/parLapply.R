@@ -3,7 +3,6 @@ run_parLapply <- function(config) { # nolint
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
-  config$workers <- as.character(seq_len(config$jobs))
   console_parLapply(config) # nolint
   config$cluster <- makePSOCKcluster(config$jobs + 1)
   on.exit(stopCluster(cl = config$cluster))
@@ -23,7 +22,7 @@ run_parLapply <- function(config) { # nolint
   mc_init_worker_cache(config)
   parLapply(
     cl = config$cluster,
-    X = c("0", config$workers),
+    X = mc_worker_id(c(0, seq_len(config$jobs))),
     fun = mc_process,
     config = config
   )

@@ -13,9 +13,6 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   if ("trigger" %in% colnames(plan)){
     plan$trigger <- parse_triggers(plan$trigger)
   }
-  if ("workers" %in% colnames(plan)){
-    plan$workers <- parse_workers(plan$workers)
-  }
   plan <- file_outs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
   plan <- plan[nzchar(plan$target), ]
@@ -45,7 +42,7 @@ drake_plan_columns <- function(){
     "priority",
     "retries",
     "timeout",
-    "workers"
+    "worker"
   )
 }
 
@@ -130,13 +127,4 @@ parse_triggers <- function(x){
   x[is.na(x) | !nzchar(x)] <- "any"
   assert_legal_triggers(x)
   x
-}
-
-parse_workers <- function(x){
-  levels <- sort(as.integer(unique(unlist(x))))
-  keys <- seq_along(levels)
-  names(keys) <- as.character(levels)
-  lapply(x, function(y) {
-    unname(keys[as.character(y)])
-  })
 }

@@ -157,9 +157,23 @@ test_with_dir("worker & priority cols don't generate overt problems", {
   load_mtcars_example(envir = envir)
   my_plan <- envir$my_plan
   my_plan$priority <- seq_len(nrow(my_plan))
-  my_plan$workers <- as.list(my_plan$priority)
-  my_plan$workers[[1]] <- numeric(0)
+  my_plan$worker <- 1
   make(my_plan, envir = envir, parallelism = "future_lapply",
        session_info = FALSE, pruning_strategy = "memory")
   expect_true(file_store("report.md") %in% cached())
+})
+
+test_with_dir("preferred queue may not be there", {
+  load_mtcars_example(cache = storr::storr_environment())
+  my_plan$worker <- 17
+  config <- drake_config(my_plan, cache = storr::storr_environment())
+  expect_warning(mc_preferred_queue("small", config))
+})
+
+test_with_dir("null cases for message queues", {
+  config <- list(cache = storr::storr_environment())
+  config <- mc_refresh_queue_lists(config)
+  expect_null(config$mc_ready_queues)
+  expect_null(config$mc_done_queues)
+  expect_null(mc_assign_ready_targets(config))
 })

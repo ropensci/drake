@@ -1,10 +1,4 @@
 run_parallel_backend <- function(config){
-  config$workers <- as.character(seq_len(config$jobs))
-  config$cache$set(
-    key = "workers",
-    value = config$workers,
-    namespace = "config"
-  )
   get(
     paste0("run_", config$parallelism),
     envir = getNamespace("drake")

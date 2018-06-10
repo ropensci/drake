@@ -1,8 +1,8 @@
-drake_context("queue")
+drake_context("priority queue")
 
 test_with_dir("empty queue", {
   config <- list(schedule = igraph::make_empty_graph())
-  q <- new_target_queue(config)
+  q <- new_priority_queue(config)
   expect_equal(nrow(q$data), 0)
 })
 
@@ -92,17 +92,17 @@ test_with_dir("queues with priorities", {
   my_plan$priority <- seq_len(nrow(my_plan))
   config <- drake_config(my_plan)
   config$schedule <- config$graph
-  q <- new_target_queue(config)
+  q <- new_priority_queue(config)
   expect_true(all(diff(q$data$ndeps) >= 0))
   expect_equal(nrow(q$data), length(igraph::V(config$graph)))
   expect_equal(sum(is.finite(q$data$priority)), nrow(config$plan))
   config$schedule <- targets_graph(config)
-  q <- new_target_queue(config)
+  q <- new_priority_queue(config)
   expect_true(all(diff(q$data$ndeps) >= 0))
   expect_equal(sort(q$data$target), sort(config$plan$target))
   expect_true(all(is.finite(q$data$priority)))
   config$schedule <- imports_graph(config)
-  q <- new_target_queue(config)
+  q <- new_priority_queue(config)
   expect_true(all(diff(q$data$ndeps) >= 0))
   expect_equal(
     sort(q$data$target),

@@ -61,7 +61,7 @@ error_tibble_times <- function(e){
 warning_process <- function(e, id, config){
   set_attempt_flag(key = id, config = config)
   stack <- sys.calls()
-  drake_message("Error: ", e$message, config = config)
+  drake_message("Warning: ", e$message, config = config)
   drake_message("Call: ", e$call, config = config)
   config$cache$set(
     key = id,

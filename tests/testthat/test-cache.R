@@ -24,6 +24,11 @@ test_with_dir("Cache namespaces", {
   expect_false(all(y %in% z))
 })
 
+test_with_dir("safe_get", {
+  con <- list(cache = storr::storr_environment())
+  expect_true(is.na(safe_get(key = "x", namespace = "y", config = con)))
+})
+
 test_with_dir("clean() works if there is no cache already", {
   clean(list = "no_cache")
   expect_false(file.exists(default_cache_path()))
