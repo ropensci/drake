@@ -73,7 +73,7 @@ R6_message_queue <- R6::R6Class(
           )
         )
       }
-      out <- private$parse_db(
+      private$parse_db(
         read.table(
           self$db,
           sep = "|",
