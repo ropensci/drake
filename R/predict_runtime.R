@@ -286,6 +286,9 @@ balance_load <- function(config, jobs){
   lapply(workers, mc_get_ready_queue, config = config)
   lapply(workers, mc_get_done_queue, config = config)
   while (TRUE){
+    
+    
+    
     # Run one iteration of mc_master()
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
@@ -329,10 +332,20 @@ balance_load <- function(config, jobs){
     old_targets <- current_targets
     # Move time forward until soonest target finishes.
     step <- min(time_remaining[is_running])
+    worker <- names(which.min(time_remaining[is_running]))
+    
+    if (!length(worker)){
+      stop("No worker.\nRemaining times = ", paste(time_remaining, collapse = " "),
+           "\nstep = ", step,
+           "\nis_running = ", paste(is_running, collapse = " "),
+           "\nlength(config$mc_ready_queues) = ",
+           length(config$mc_ready_queues), "\ntimes = ", paste(times, collapse = " "), 
+           "\ncurrent_targets = ", paste(current_targets, collapse = " "))
+    }
+    
     time_remaining[is_running] <- time_remaining[is_running] - step
     total_runtime <- total_runtime + step
     # Finish the target.
-    worker <- names(which.min(time_remaining[is_running]))
     ready_queue <- config$mc_ready_queues[[worker]]
     done_queue <- config$mc_done_queues[[worker]]
     msg <- ready_queue$pop(1)
