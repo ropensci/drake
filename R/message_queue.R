@@ -5,9 +5,9 @@ message_queue <- function(path){
 R6_message_queue <- R6::R6Class(
   classname = "R6_message_queue",
   private = list(
-    mq_exclusive = function(code, file = self$lock){
+    mq_exclusive = function(code){
       on.exit(filelock::unlock(x))
-      x <- filelock::lock(file)
+      x <- filelock::lock(self$lock)
       force(code)
     },
     mq_get_head = function(){
