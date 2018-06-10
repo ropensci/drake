@@ -330,16 +330,6 @@ balance_load <- function(config, jobs){
     # Move time forward until soonest target finishes.
     step <- min(time_remaining[is_running])
     worker <- names(which.min(time_remaining[is_running]))
-    
-    if (!length(worker)){
-      stop("No worker.\nRemaining times = ", paste(time_remaining, collapse = " "),
-           "\nstep = ", step,
-           "\nis_running = ", paste(is_running, collapse = " "),
-           "\nlength(config$mc_ready_queues) = ",
-           length(config$mc_ready_queues), "\ntimes = ", paste(times, collapse = " "), 
-           "\ncurrent_targets = ", paste(current_targets, collapse = " "))
-    }
-    
     time_remaining[is_running] <- time_remaining[is_running] - step
     total_runtime <- total_runtime + step
     # Finish the target.
