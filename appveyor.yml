@@ -50,7 +50,6 @@ environment:
   global:
     WARNINGS_ARE_ERRORS: 1
     USE_RTOOLS: true
-    PKG_TYPE: "source"
 
   matrix:
     - R_VERSION: release
