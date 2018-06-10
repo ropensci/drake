@@ -74,14 +74,10 @@ R6_message_queue <- R6::R6Class(
     head = character(0),
     lock = character(0),
     initialize = function(path){
-      self$path <- path
+      self$path <- fs::dir_create(path)
       self$db <- file.path(self$path, "db")
       self$head <- file.path(self$path, "head")
       self$lock <- file.path(self$path, "lock")
-      private$mq_exclusive(
-        code = fs::dir_create(self$path),
-        file = fs::path_ext_set("self$path", "lock")
-      )
       private$mq_exclusive({
         fs::file_create(self$db)
         fs::file_create(self$head)

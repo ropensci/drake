@@ -47,7 +47,7 @@
 #' @importFrom formatR tidy_source
 #' @importFrom future future plan resolved value
 #' @importFrom future.apply future_lapply
-#' @importFrom fs dir_create
+#' @importFrom fs dir_create file_create
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree edge induced_subgraph is_dag make_empty_graph plot.igraph
