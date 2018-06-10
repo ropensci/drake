@@ -1,7 +1,5 @@
 drake_context("parallel")
 
-if(F){
-
 test_with_dir("safe_jobs()", {
   expect_error(safe_jobs(1:3))
   expect_true(is.numeric(safe_jobs(1)))
@@ -154,7 +152,6 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 })
 
 test_with_dir("worker & priority cols don't generate overt problems", {
-  skip()
   future::plan(future::sequential)
   envir <- new.env(parent = globalenv())
   load_mtcars_example(envir = envir)
@@ -180,4 +177,3 @@ test_with_dir("null cases for message queues", {
   expect_null(config$mc_done_queues)
   expect_null(mc_assign_ready_targets(config))
 })
-}
