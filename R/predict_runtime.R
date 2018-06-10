@@ -273,7 +273,7 @@ balance_load <- function(config, jobs){
   )
   config$jobs <- jobs
   config$schedule <- config$graph
-  config$queue <- new_target_queue(config = config)
+  config$queue <- new_priority_queue(config = config)
   mc_init_worker_cache(config)
   workers <- config$cache$list("mc_ready_db")
   targets <- lapply(workers, function(worker){

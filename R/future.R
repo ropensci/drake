@@ -1,5 +1,5 @@
 run_future <- function(config){
-  queue <- new_target_queue(config = config)
+  queue <- new_priority_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
   while (work_remains(queue = queue, workers = workers, config = config)){

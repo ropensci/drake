@@ -1,3 +1,7 @@
+message_queue <- function(path, create){
+  R6_message_queue$new(path = path, create = create)
+}
+
 R6_message_queue <- R6::R6Class(
   classname = "R6_message_queue",
   private = list(
@@ -17,17 +21,13 @@ R6_message_queue <- R6::R6Class(
         R.utils::countLines(self$db) - private$mq_get_head() + 1
       )
     },
-    mq_pop = function(){
-      out <- private$mq_list(1)
-      if (!nrow(out)){
-        return(out)
-      }
-      new_head <- private$mq_get_head() + 1
+    mq_pop = function(n){
+      out <- private$mq_list(n = n)
+      new_head <- private$mq_get_head() + nrow(out)
       private$mq_set_head(new_head)
       out
     },
     mq_push = function(title, message){
-      stopifnot(length(title) == 1 && length(message) == 1)
       out <- data.frame(
         title = base64url::base64_urlencode(as.character(title)),
         message = base64url::base64_urlencode(as.character(message)),
@@ -73,19 +73,21 @@ R6_message_queue <- R6::R6Class(
     db = character(0),
     head = character(0),
     lock = character(0),
-    initialize = function(path){
-      self$path <- fs::dir_create(path)
+    initialize = function(path, create = TRUE){
+      self$path <- path
+      self$db <- file.path(self$path, "db")
+      self$head <- file.path(self$path, "head")
       self$lock <- file.path(self$path, "lock")
-      private$mq_exclusive({
-        self$db <- fs::file_create(file.path(self$path, "db"))
-        self$head <- fs::file_create(file.path(self$path, "head"))
-        if (length(private$mq_get_head()) < 1){
-          private$mq_set_head(1)
-        }
-        fs::file_chmod(self$path, mode = "777")
-        fs::file_chmod(self$db, mode = "777")
-        fs::file_chmod(self$head, mode = "777")
-      })
+      if (create){
+        fs::file_chmod(fs::dir_create(self$path), mode = "777")
+        private$mq_exclusive({
+          fs::file_chmod(fs::file_create(self$db), mode = "777")
+          fs::file_chmod(fs::file_create(self$head), mode = "777")
+          if (length(private$mq_get_head()) < 1){
+            private$mq_set_head(1)
+          }
+        })
+      }
     },
     count = function(){
       private$mq_exclusive(private$mq_count())
@@ -96,8 +98,8 @@ R6_message_queue <- R6::R6Class(
     list = function(n = -1){
       private$mq_exclusive(private$mq_list(n = n))
     },
-    pop = function(){
-      private$mq_exclusive(private$mq_pop())
+    pop = function(n = 1){
+      private$mq_exclusive(private$mq_pop(n = n))
     },
     push = function(title, message){
       private$mq_exclusive(private$mq_push(title = title, message = message))

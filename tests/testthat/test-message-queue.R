@@ -1,7 +1,7 @@
 drake_context("message queue")
 
 test_with_dir("custom message queue works", {
-  q <- R6_message_queue$new(tempfile())
+  q <- message_queue(tempfile(), create = TRUE)
   expect_true(file.exists(q$path))
   expect_true(file.exists(q$db))
   expect_true(file.exists(q$head))
@@ -30,16 +30,16 @@ test_with_dir("custom message queue works", {
     stringsAsFactors = FALSE
   )
   expect_equal(q$list(), full_df)
-  o <- q$pop()
+  o <- q$pop(1)
   expect_false(q$empty())
   expect_equal(q$count(), 2)
   expect_equal(scan(q$head, quiet = TRUE), 2)
   expect_equal(hash, digest::digest(q$db, file = TRUE))
   expect_equal(q$list()$title, full_df[-1, "title"])
   expect_equal(q$list()$message, full_df[-1, "message"])
-  for(i in 1:25){
-    q$pop()
-  }
+  out <- q$pop(-1)
+  expect_equal(out$title, full_df[-1, "title"])
+  expect_equal(out$message, full_df[-1, "message"])
   expect_true(q$empty())
   expect_equal(q$count(), 0)
   expect_equal(scan(q$head, quiet = TRUE), 4)

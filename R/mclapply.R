@@ -56,7 +56,7 @@ mc_process <- function(id, config){
 #' @return nothing important
 mc_master <- function(config){
   on.exit(mc_conclude_workers(config))
-  config$queue <- new_target_queue(config = config)
+  config$queue <- new_priority_queue(config = config)
   while (!config$queue$empty()){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
@@ -69,21 +69,23 @@ mc_worker <- function(worker, config){
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
-    while (is.null(msg <- mc_try_consume(ready_queue))){
+    while (nrow(messages <- ready_queue$pop(-1)) < 1){
       Sys.sleep(mc_wait)
     }
-    if (identical(msg$message, "done")){
-      return()
+    for (i in seq_len(nrow(messages))){
+      msg <- messages[i, ]
+      if (identical(msg$message, "done")){
+        return()
+      }
+      target <- msg$title
+      build_check_store(
+        target = target,
+        config = config,
+        downstream = config$cache$list(namespace = "mc_protect"),
+        flag_attempt = TRUE
+      )
+      done_queue$push(title = target, message = "target")
     }
-    target <- msg$title
-    build_check_store(
-      target = target,
-      config = config,
-      downstream = config$cache$list(namespace = "mc_protect"),
-      flag_attempt = TRUE
-    )
-    mc_ack(msg)
-    mc_publish(queue = done_queue, title = target, message = "target")
   }
 }
 
