@@ -265,7 +265,7 @@ Ideally, independent observers should be able to read your code and understand i
 
 -   The [workflow plan data frame](https://ropensci.github.io/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
 -   `Drake` takes care of the parallel scheduling and high-performance computing (HPC) for you. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.
--   You can [generate large collections of targets](https://ropensci.github.io/drake/articles/best-practices.html#generating-workflow-plan-data-frames) without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow
+-   You can [generate large collections of targets](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan) without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow
 
 Aggressively scale up.
 ======================
@@ -321,7 +321,7 @@ Thanks to [Kirill](https://github.com/krlmlr) for preparing a [`drake` cheat she
 Frequently asked questions
 --------------------------
 
-The [FAQ page](https://ropensci.github.io/drake/articles/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
+The [FAQ page](https://ropenscilabs.github.io/drake-manual/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
 
 Function reference
 ------------------
@@ -384,8 +384,8 @@ Help and troubleshooting
 The following resources document many known issues and challenges.
 
 -   [Frequently-asked questions](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22Frequently+Asked+Question%22).
--   [Cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html)
--   [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
+-   [Cautionary notes and edge cases](https://ropenscilabs.github.io/drake-manual/caution.html)
+-   [Debugging and testing drake projects](https://ropenscilabs.github.io/drake-manual/debug.html)
 -   [Other known issues](https://github.com/ropensci/drake/issues) (please search both open and closed ones).
 
 If you are still having trouble, please submit a [new issue](https://github.com/ropensci/drake/issues/new) with a bug report or feature request, along with a minimal reproducible example where appropriate.
