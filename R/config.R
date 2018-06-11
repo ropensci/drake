@@ -417,6 +417,7 @@ drake_config <- function(
   ensure_workers = TRUE
 ){
   force(envir)
+  unlink(console)
   if (!is.null(imports_only)){
     warning(
       "Argument imports_only is deprecated. Use skip_targets instead.",
