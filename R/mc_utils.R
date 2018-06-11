@@ -49,7 +49,7 @@ mc_refresh_queue_lists <- function(config){
     for (worker in unlogged_workers){
       path <- config$cache$get(key = worker, namespace = namespace)
       if (file.exists(path)){
-        config[[field]][[worker]] <- bbqr::bbqr(path)
+        config[[field]][[worker]] <- txtq::txtq(path)
       }
     }
   }
@@ -132,7 +132,7 @@ mc_get_worker_queue <- function(worker, namespace, config){
   while (!config$cache$exists(key = worker, namespace = namespace)){
     Sys.sleep(mc_wait) # nocov
   }
-  bbqr::bbqr(config$cache$get(key = worker, namespace = namespace))
+  txtq::txtq(config$cache$get(key = worker, namespace = namespace))
 }
 
 mc_get_ready_queue <- function(worker, config){

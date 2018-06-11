@@ -38,7 +38,7 @@
 #' }
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom base64url base64_urldecode base64_urlencode
-#' @importFrom bbqr bbqr
+#' @importFrom txtq txtq
 #' @importFrom bindr populate_env
 #' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style

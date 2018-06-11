@@ -51,7 +51,7 @@ Depends:
   R (>= 3.2.0)
 Imports:
   base64url,
-  bbqr,
+  txtq,
   bindr,
   CodeDepends,
   crayon,
@@ -94,7 +94,7 @@ Suggests:
   rmarkdown,
   tidyr
 Remotes:
-  wlandau/bbqr
+  wlandau/txtq
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1
