@@ -28,6 +28,19 @@ mc_init_worker_cache <- function(config){
   invisible()
 }
 
+mc_ensure_workers <- function(config){
+  paths <- vapply(
+    X = config$cache$list(namespace = "mc_ready_db"),
+    FUN = function(worker){
+      config$cache$get(key = worker, namespace = "mc_ready_db")
+    },
+    FUN.VALUE = character(1)
+  )
+  while (!all(file.exists(paths))){
+    Sys.sleep(mc_wait) # nocov
+  }
+}
+
 mc_refresh_queue_lists <- function(config){
   for (namespace in c("mc_ready_db", "mc_done_db")){
     field <- gsub("db$", "queues", namespace)

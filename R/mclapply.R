@@ -57,6 +57,9 @@ mc_process <- function(id, config){
 mc_master <- function(config){
   on.exit(mc_conclude_workers(config))
   config$queue <- new_priority_queue(config = config)
+  if (!isFALSE(config$ensure_workers)){
+    mc_ensure_workers(config)
+  }
   while (!config$queue$empty()){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)

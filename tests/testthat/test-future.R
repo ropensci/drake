@@ -46,7 +46,8 @@ test_with_dir("future package functionality", {
     caching = caching[3],
     jobs = c(imports = 1, targets = 2),
     verbose = FALSE,
-    session_info = FALSE
+    session_info = FALSE,
+    ensure_workers = FALSE
   )
 })
 
