@@ -27,7 +27,7 @@ build_drake_graph <- function(
   verbose = drake::default_verbose(),
   jobs = 1,
   sanitize_plan = TRUE,
-  console = NULL
+  console_log_file = NULL
 ){
   force(envir)
   if (sanitize_plan){
@@ -43,7 +43,7 @@ build_drake_graph <- function(
   )
   import_names <- setdiff(names(imports), targets)
   imports <- imports[import_names]
-  config <- list(verbose = verbose, console = console)
+  config <- list(verbose = verbose, console_log_file = console_log_file)
   console_many_targets(
     targets = names(imports),
     pattern = "connect",

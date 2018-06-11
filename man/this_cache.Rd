@@ -5,7 +5,8 @@
 \title{Get the cache at the exact file path specified.}
 \usage{
 this_cache(path = drake::default_cache_path(), force = FALSE,
-  verbose = drake::default_verbose(), fetch_cache = NULL, console = NULL)
+  verbose = drake::default_verbose(), fetch_cache = NULL,
+  console_log_file = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -35,9 +36,10 @@ and distributed parallelism (\code{parallelism = "future_lapply"}
 or \code{"Makefile"}) because the distributed R sessions
 need to know how to load the cache.}
 
-\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
-output will be printed to the R console using \code{message()}.
-Otherwise, \code{console} should be the name of a flat file.
+\item{console_log_file}{character scalar or \code{NULL}.
+If \code{NULL}, console output will be printed
+to the R console using \code{message()}.
+Otherwise, \code{console_log_file} should be the name of a flat file.
 Console output will be appended to that file.}
 }
 \value{

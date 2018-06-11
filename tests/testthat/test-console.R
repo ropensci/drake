@@ -142,15 +142,15 @@ test_with_dir("console to file", {
   tmp <- capture.output({
       make(
         my_plan, cache = cache, verbose = 4, session_info = FALSE,
-        console = "log.txt"
+        console_log_file = "log.txt"
       )
       make(
         my_plan, cache = cache, verbose = 4, session_info = FALSE,
-        console = "log.txt"
+        console_log_file = "log.txt"
       )
       make(
         my_plan, cache = cache, verbose = 4, session_info = FALSE,
-        trigger = "always", console = "log.txt"
+        trigger = "always", console_log_file = "log.txt"
       )
     },
     type = "message"
@@ -173,7 +173,7 @@ test_with_dir("drake_warning() and drake_error()", {
   )))
   expect_false(file.exists("log.txt"))
   expect_error(expect_warning(make(
-    plan, console = "log.txt",
+    plan, console_log_file = "log.txt",
     cache = storr::storr_environment(),
     session_info = FALSE
   )))

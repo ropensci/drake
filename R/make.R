@@ -76,7 +76,7 @@ make <- function(
   verbose = drake::default_verbose(),
   hook = default_hook,
   cache = drake::get_cache(
-    verbose = verbose, force = force, console = console),
+    verbose = verbose, force = force, console_log_file = console_log_file),
   fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -112,7 +112,7 @@ make <- function(
   imports_only = NULL,
   pruning_strategy = c("speed", "memory"),
   makefile_path = "Makefile",
-  console = NULL,
+  console_log_file = NULL,
   ensure_workers = TRUE
 ){
   force(envir)
@@ -161,7 +161,7 @@ make <- function(
       imports_only = imports_only,
       pruning_strategy = pruning_strategy,
       makefile_path = makefile_path,
-      console = console,
+      console_log_file = console_log_file,
       ensure_workers = ensure_workers
     )
   }

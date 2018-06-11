@@ -168,7 +168,7 @@ finish_console <- function(text, pattern, config){
     return(invisible())
   }
   msg <- crop_text(x = text)
-  if (is.null(config$console)){
+  if (is.null(config$console_log_file)){
     msg <- color_grep(
       text = msg,
       pattern = pattern,
@@ -179,18 +179,18 @@ finish_console <- function(text, pattern, config){
 }
 
 drake_message <- function(..., config){
-  if (!is.null(config$console)){
-    write(x = paste0(...), file = config$console, append = TRUE)
+  if (!is.null(config$console_log_file)){
+    write(x = paste0(...), file = config$console_log_file, append = TRUE)
   }
   message(..., sep = "")
 }
 
 drake_warning <- function(..., config){
-  if (!is.null(config$console)){
+  if (!is.null(config$console_log_file)){
     write(
       x = paste0("Warning: ", ...),
       sep = "",
-      file = config$console,
+      file = config$console_log_file,
       append = TRUE
     )
   }
@@ -198,11 +198,11 @@ drake_warning <- function(..., config){
 }
 
 drake_error <- function(..., config){
-  if (!is.null(config$console)){
+  if (!is.null(config$console_log_file)){
     write(
       x = paste0("Error: ", ...),
       sep = "",
-      file = config$console,
+      file = config$console_log_file,
       append = TRUE
     )
   }

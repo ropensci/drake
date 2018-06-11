@@ -81,7 +81,7 @@ get_cache <- function(
   verbose = drake::default_verbose(),
   force = FALSE,
   fetch_cache = NULL,
-  console = NULL
+  console_log_file = NULL
 ){
   if (search){
     path <- find_cache(path = path)
@@ -90,7 +90,7 @@ get_cache <- function(
   }
   this_cache(
     path = path, force = force, verbose = verbose,
-    fetch_cache = fetch_cache, console = console
+    fetch_cache = fetch_cache, console_log_file = console_log_file
   )
 }
 
@@ -122,7 +122,7 @@ this_cache <- function(
   path = drake::default_cache_path(), force = FALSE,
   verbose = drake::default_verbose(),
   fetch_cache = NULL,
-  console = NULL
+  console_log_file = NULL
 ){
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing & is.null(fetch_cache)){
@@ -133,7 +133,7 @@ this_cache <- function(
       config = list(
         cache_path = path,
         verbose = verbose,
-        console = console
+        console_log_file = console_log_file
       )
     )
   }
@@ -206,7 +206,7 @@ new_cache <- function(
   short_hash_algo = drake::default_short_hash_algo(),
   long_hash_algo = drake::default_long_hash_algo(),
   ...,
-  console = NULL
+  console_log_file = NULL
 ){
   if (!is.null(type)){
     warning(
@@ -235,7 +235,7 @@ new_cache <- function(
     config = list(
       cache_path = cache_path(cache),
       verbose = verbose,
-      console = console
+      console_log_file = console_log_file
     )
   )
   cache
@@ -278,11 +278,11 @@ recover_cache <- function(
   force = FALSE,
   verbose = drake::default_verbose(),
   fetch_cache = NULL,
-  console = NULL
+  console_log_file = NULL
 ){
   cache <- this_cache(
     path = path, force = force, verbose = verbose,
-    fetch_cache = fetch_cache, console = console
+    fetch_cache = fetch_cache, console_log_file = console_log_file
   )
   if (is.null(cache)){
     cache <- new_cache(
@@ -291,7 +291,7 @@ recover_cache <- function(
       short_hash_algo = short_hash_algo,
       long_hash_algo = long_hash_algo,
       fetch_cache = fetch_cache,
-      console = console
+      console_log_file = console_log_file
     )
   }
   cache

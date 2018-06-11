@@ -7,7 +7,7 @@
 make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   envir = parent.frame(), verbose = drake::default_verbose(),
   hook = default_hook, cache = drake::get_cache(verbose = verbose, force =
-  force, console = console), fetch_cache = NULL,
+  force, console_log_file = console_log_file), fetch_cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -20,7 +20,8 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
   caching = "worker", keep_going = FALSE, session = NULL,
   imports_only = NULL, pruning_strategy = c("speed", "memory"),
-  makefile_path = "Makefile", console = NULL, ensure_workers = TRUE)
+  makefile_path = "Makefile", console_log_file = NULL,
+  ensure_workers = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -355,9 +356,10 @@ non-default value, you are responsible for supplying this same
 path to the \code{args} argument so \code{make} knows where to find it.
 Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")} # nolint}
 
-\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
-output will be printed to the R console using \code{message()}.
-Otherwise, \code{console} should be the name of a flat file.
+\item{console_log_file}{character scalar or \code{NULL}.
+If \code{NULL}, console output will be printed
+to the R console using \code{message()}.
+Otherwise, \code{console_log_file} should be the name of a flat file.
 Console output will be appended to that file.}
 
 \item{ensure_workers}{logical, whether the master process

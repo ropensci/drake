@@ -6,7 +6,7 @@
 \usage{
 get_cache(path = getwd(), search = TRUE,
   verbose = drake::default_verbose(), force = FALSE, fetch_cache = NULL,
-  console = NULL)
+  console_log_file = NULL)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -40,9 +40,10 @@ The purpose of this code is to fetch the \code{storr} cache
 with a command like \code{storr_rds()} or \code{storr_dbi()},
 but customized. This feature is experimental.}
 
-\item{console}{character scalar or \code{NULL}. If \code{console} is \code{NULL}, console
-output will be printed to the R console using \code{message()}.
-Otherwise, \code{console} should be the name of a flat file.
+\item{console_log_file}{character scalar or \code{NULL}.
+If \code{NULL}, console output will be printed
+to the R console using \code{message()}.
+Otherwise, \code{console_log_file} should be the name of a flat file.
 Console output will be appended to that file.}
 }
 \value{
