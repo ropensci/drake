@@ -1,3 +1,4 @@
+roxygen2::roxygenize()
 rmarkdown::render("README.Rmd")
 unlink("docs", recursive = TRUE)
 pkgdown::build_site()
