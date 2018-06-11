@@ -21,14 +21,17 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
 
 <meta property="og:title" content="Function reference" />
+
 
 
 <!-- mathjax -->
@@ -106,6 +109,7 @@
     <table class="ref-index">
 
     <colgroup>
+      
       <col class="alias" />
       <col class="title" />
     </colgroup>
@@ -118,19 +122,19 @@
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_example.html">drake_example()</a></code> </p>
         </td>
         <td><p>Save the source code files of a drake example.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_examples.html">drake_examples()</a></code> </p>
         </td>
         <td><p>List the names of all the drake examples.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake-package.html">drake-package</a></code> </p>
         </td>
@@ -139,13 +143,13 @@
 and a scalable, R-focused solution for reproducibility
 and high-performance computing.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_tip.html">drake_tip()</a></code> </p>
         </td>
         <td><p>Output a random tip about drake.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="load_mtcars_example.html">load_mtcars_example()</a></code> </p>
         </td>
@@ -159,38 +163,38 @@ and high-performance computing.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="make.html">make()</a></code> </p>
         </td>
         <td><p>Run your project (build the outdated targets).</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_config.html">drake_config()</a></code> </p>
         </td>
         <td><p>Create the internal runtime parameter list
 used internally in <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_build.html">drake_build()</a></code> </p>
         </td>
         <td><p>Build/process a single target or import.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="make_imports.html">make_imports()</a></code> </p>
         </td>
         <td><p>Just make the imports.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="make_targets.html">make_targets()</a></code> </p>
         </td>
         <td><p>Just build the targets.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="make_with_config.html">make_with_config()</a></code> </p>
         </td>
@@ -205,105 +209,105 @@ on an existing internal configuration list.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_plan.html">drake_plan()</a></code> </p>
         </td>
         <td><p>Create a workflow plan data frame
 for the <code>plan</code> argument of <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="bind_plans.html">bind_plans()</a></code> </p>
         </td>
         <td><p>Row-bind together drake plans</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="file_in.html">file_in()</a></code> </p>
         </td>
         <td><p>Declare the file inputs of a workflow plan command.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="file_out.html">file_out()</a></code> </p>
         </td>
         <td><p>Declare the file outputs of a workflow plan command.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="file_store.html">file_store()</a></code> </p>
         </td>
         <td><p>Tell <code>drake</code> that you want information
 on a <em>file</em> (target or import), not an ordinary object.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="knitr_in.html">knitr_in()</a></code> </p>
         </td>
         <td><p>Declare the <code>knitr</code>/<code>rmarkdown</code> source files
 of a workflow plan command.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="ignore.html">ignore()</a></code> </p>
         </td>
         <td><p>Ignore components of commands and imported functions.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="target.html">target()</a></code> </p>
         </td>
         <td><p>Define custom columns in a <code>drake_plan()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="analysis_wildcard.html">analysis_wildcard()</a></code> </p>
         </td>
         <td><p>Show the analysis wildcard
 used in <code>plan_summaries()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="dataset_wildcard.html">dataset_wildcard()</a></code> </p>
         </td>
         <td><p>Show the dataset wildcard
 used in <code>plan_analyses()</code> and <code>plan_summaries()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="evaluate_plan.html">evaluate_plan()</a></code> </p>
         </td>
         <td><p>Use wildcard templating to create a
 workflow plan data frame from a template data frame.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="expand_plan.html">expand_plan()</a></code> </p>
         </td>
         <td><p>Create replicates of targets.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="gather_plan.html">gather_plan()</a></code> </p>
         </td>
         <td><p>Write commands to combine several targets into one
 or more overarching targets.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="reduce_plan.html">reduce_plan()</a></code> </p>
         </td>
         <td><p>Write commands to reduce several targets down to one.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="plan_analyses.html">plan_analyses()</a></code> </p>
         </td>
         <td><p>Generate a workflow plan data frame to
 analyze multiple datasets using multiple methods of analysis.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="plan_summaries.html">plan_summaries()</a></code> </p>
         </td>
@@ -318,46 +322,46 @@ multiple analyses of multiple datasets multiple ways.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="build_drake_graph.html">build_drake_graph()</a></code> </p>
         </td>
         <td><p>Create the <code>igraph</code> dependency network of your project.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_palette.html">drake_palette()</a></code> </p>
         </td>
         <td><p>Show drake's color palette.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="dataframes_graph.html">dataframes_graph()</a></code> </p>
         </td>
         <td><p>Create the underlying node and edge data frames
 behind <code>vis_drake_graph()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="legend_nodes.html">legend_nodes()</a></code> </p>
         </td>
         <td><p>Create the nodes data frame used in the legend
 of <code>vis_drake_graph()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="prune_drake_graph.html">prune_drake_graph()</a></code> </p>
         </td>
         <td><p>Prune the dependency network of your project.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="render_drake_graph.html">render_drake_graph()</a></code> </p>
         </td>
         <td><p>Render a visualization using the data frames
 generated by <code>dataframes_graph()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="vis_drake_graph.html">vis_drake_graph()</a></code> </p>
         </td>
@@ -372,77 +376,77 @@ of your drake project.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="check_plan.html">check_plan()</a></code> </p>
         </td>
         <td><p>Check a workflow plan data frame for obvious errors.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_trigger.html">default_trigger()</a></code> </p>
         </td>
         <td><p>Return the default trigger.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="dependency_profile.html">dependency_profile()</a></code> </p>
         </td>
         <td><p>Return the detailed dependency profile
 of the target.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="deps_code.html">deps_code()</a></code> </p>
         </td>
         <td><p>List the dependencies of a function, workflow plan command,
 or knitr report source file.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="deps_targets.html">deps_targets()</a></code> </p>
         </td>
         <td><p>List the dependencies of one or more targets</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="diagnose.html">diagnose()</a></code> </p>
         </td>
         <td><p>Get diagnostic metadata on a target.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_meta.html">drake_meta()</a></code> </p>
         </td>
         <td><p>Compute the initial pre-build metadata of a target or import.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="knitr_deps.html">knitr_deps()</a></code> </p>
         </td>
         <td><p>Find the drake dependencies of a dynamic knitr report target.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="missed.html">missed()</a></code> </p>
         </td>
         <td><p>Report any import objects required by your drake_plan
 plan but missing from your workspace.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="outdated.html">outdated()</a></code> </p>
         </td>
         <td><p>List the targets that are out of date.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="tracked.html">tracked()</a></code> </p>
         </td>
         <td><p>List the targets and imports
 that are reproducibly tracked.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="triggers.html">triggers()</a></code> </p>
         </td>
@@ -456,42 +460,42 @@ that are reproducibly tracked.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_Makefile_args.html">default_Makefile_args()</a></code> </p>
         </td>
         <td><p>Return the default value of the
 <code>args</code> argument to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_Makefile_command.html">default_Makefile_command()</a></code> </p>
         </td>
         <td><p>Give the default <code>command</code>
 argument to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_parallelism.html">default_parallelism()</a></code> </p>
         </td>
         <td><p>Show the default <code>parallelism</code> argument
 to <code>make()</code> for your system.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_recipe_command.html">default_recipe_command()</a></code> </p>
         </td>
         <td><p>Show the default
 recipe command for <code>make(..., parallelism = "Makefile")</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_batchtools_tmpl_file.html">drake_batchtools_tmpl_file()</a></code> </p>
         </td>
         <td><p>Write the batchtools template file
 from one of the built-in drake examples.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="Makefile_recipe.html">Makefile_recipe()</a></code> </p>
         </td>
@@ -499,26 +503,26 @@ from one of the built-in drake examples.</p></td>
 see what your <code>Makefile</code> recipes
 will look like in advance.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="parallelism_choices.html">parallelism_choices()</a></code> </p>
         </td>
         <td><p>List the types of supported parallel computing in drake.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="parallel_stages.html">parallel_stages()</a></code> </p>
         </td>
         <td><p>Defunct function</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="r_recipe_wildcard.html">r_recipe_wildcard()</a></code> </p>
         </td>
         <td><p>Show the R recipe wildcard
 for <code>make(..., parallelism = "Makefile")</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="shell_file.html">shell_file()</a></code> </p>
         </td>
@@ -533,20 +537,20 @@ for <code>make(..., parallelism = "Makefile")</code>.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="build_times.html">build_times()</a></code> </p>
         </td>
         <td><p>List the time it took to build each target/import.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="predict_runtime.html">predict_runtime()</a></code> </p>
         </td>
         <td><p>Predict the elapsed runtime of the next call to <code>make()</code>
 for non-staged parallel backends.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="predict_load_balancing.html">predict_load_balancing()</a></code> </p>
         </td>
@@ -561,83 +565,83 @@ for non-staged parallel backends.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="built.html">built()</a></code> </p>
         </td>
         <td><p>List all the built targets (non-imports) in the cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="cached.html">cached()</a></code> </p>
         </td>
         <td><p>Enumerate cached targets or check if a target is cached.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="clean.html">clean()</a></code> </p>
         </td>
         <td><p>Remove targets/imports from the cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_cache_log.html">drake_cache_log()</a></code> </p>
         </td>
         <td><p>Get a table that represents the state of the cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_cache_log_file.html">drake_cache_log_file()</a></code> </p>
         </td>
         <td><p>Generate a flat text log file
 to represent the state of the cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_gc.html">drake_gc()</a></code> </p>
         </td>
         <td><p>Do garbage collection on the drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_session.html">drake_session()</a></code> </p>
         </td>
         <td><p>Return the <code>sessionInfo()</code>
 of the last call to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="failed.html">failed()</a></code> </p>
         </td>
         <td><p>List the targets that failed in the last call
 to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="find_cache.html">find_cache()</a></code> </p>
         </td>
         <td><p>Search up the file system for the nearest drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="find_project.html">find_project()</a></code> </p>
         </td>
         <td><p>Search up the file system
 for the nearest root path of a drake project.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="get_cache.html">get_cache()</a></code> </p>
         </td>
         <td><p>Get the drake cache, optionally searching up the file system.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="imported.html">imported()</a></code> </p>
         </td>
         <td><p>List all the imports in the drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="in_progress.html">in_progress()</a></code> </p>
         </td>
@@ -645,53 +649,53 @@ for the nearest root path of a drake project.</p></td>
 (1) are currently being built during a <code>make()</code>, or
 (2) were being built if the last <code>make()</code> quit unexpectedly.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="loadd.html">loadd()</a></code> </p>
         </td>
         <td><p>Load one or more targets or imports from the drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="progress.html">progress()</a></code> </p>
         </td>
         <td><p>Get the build progress of your targets
 during a <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="read_drake_config.html">read_drake_config()</a></code> </p>
         </td>
         <td><p>Read the cached <code>drake_config()</code>
 list from the last <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="read_drake_graph.html">read_drake_graph()</a></code> </p>
         </td>
         <td><p>Read the igraph dependency network
 from your last attempted call to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="read_drake_plan.html">read_drake_plan()</a></code> </p>
         </td>
         <td><p>Read the workflow plan
 from your last attempted call to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="read_drake_seed.html">read_drake_seed()</a></code> </p>
         </td>
         <td><p>Read the pseudo-random number generator seed of the project.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="readd.html">readd()</a></code> </p>
         </td>
         <td><p>Read and return a drake target/import from the cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="rescue_cache.html">rescue_cache()</a></code> </p>
         </td>
@@ -706,26 +710,26 @@ to throwing <code>storr</code>-related errors.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="available_hash_algos.html">available_hash_algos()</a></code> </p>
         </td>
         <td><p>List the available hash algorithms for drake caches.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="cache_namespaces.html">cache_namespaces()</a></code> </p>
         </td>
         <td><p>List all the <code>storr</code> cache namespaces used by drake.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="cache_path.html">cache_path()</a></code> </p>
         </td>
         <td><p>Return the file path where the cache is stored,
 if applicable.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="cleaned_namespaces.html">cleaned_namespaces()</a></code> </p>
         </td>
@@ -733,56 +737,56 @@ if applicable.</p></td>
 list the <code>storr</code> namespaces that are cleaned
 during a call to <code>clean()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="configure_cache.html">configure_cache()</a></code> </p>
         </td>
         <td><p>Configure the hash algorithms, etc. of a drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_cache_path.html">default_cache_path()</a></code> </p>
         </td>
         <td><p>Return the default file path of the drake/storr cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_long_hash_algo.html">default_long_hash_algo()</a></code> </p>
         </td>
         <td><p>Return the default long hash algorithm for <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_short_hash_algo.html">default_short_hash_algo()</a></code> </p>
         </td>
         <td><p>Return the default short hash algorithm for <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="long_hash.html">long_hash()</a></code> </p>
         </td>
         <td><p>Get the long hash algorithm of a drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="new_cache.html">new_cache()</a></code> </p>
         </td>
         <td><p>Make a new <code>drake</code> cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="recover_cache.html">recover_cache()</a></code> </p>
         </td>
         <td><p>Load an existing drake files system cache if it exists
 or create a new one otherwise.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="short_hash.html">short_hash()</a></code> </p>
         </td>
         <td><p>Get the short hash algorithm of a drake cache.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="target_namespaces.html">target_namespaces()</a></code> </p>
         </td>
@@ -790,7 +794,7 @@ or create a new one otherwise.</p></td>
 list the <code>storr</code> cache namespaces
 that store target-level information.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="this_cache.html">this_cache()</a></code> </p>
         </td>
@@ -804,34 +808,34 @@ that store target-level information.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="default_hook.html">default_hook()</a></code> </p>
         </td>
         <td><p>Default <code>hook</code> argument to <code>make()</code>.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="empty_hook.html">empty_hook()</a></code> </p>
         </td>
         <td><p>A <code>hook</code> argument to <code>make()</code>
 for which no targets get built and no imports get processed.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="message_sink_hook.html">message_sink_hook()</a></code> </p>
         </td>
         <td><p>An example <code>hook</code> argument to
 <code>make()</code> that redirects error messages to files.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="output_sink_hook.html">output_sink_hook()</a></code> </p>
         </td>
         <td><p>An example <code>hook</code> argument to
 <code>make()</code> that redirects output messages to files.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="silencer_hook.html">silencer_hook()</a></code> </p>
         </td>
@@ -846,26 +850,26 @@ for which no targets get built and no imports get processed.</p></td>
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_quotes.html">drake_quotes()</a></code> </p>
         </td>
         <td><p>Put quotes around each element of a character vector.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_strings.html">drake_strings()</a></code> </p>
         </td>
         <td><p>Turn valid expressions into character strings.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="drake_unquote.html">drake_unquote()</a></code> </p>
         </td>
         <td><p>Remove leading and trailing
 escaped quotes from character strings.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="expose_imports.html">expose_imports()</a></code> </p>
         </td>
