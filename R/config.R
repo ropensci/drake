@@ -477,7 +477,8 @@ drake_config <- function(
     cache_log_file = cache_log_file, caching = match.arg(caching),
     evaluator = future::plan("next"), keep_going = keep_going,
     session = session, pruning_strategy = pruning_strategy,
-    makefile_path = makefile_path, console = console
+    makefile_path = makefile_path, console = console,
+    ensure_workers = ensure_workers
   )
 }
 
