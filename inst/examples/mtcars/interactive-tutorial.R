@@ -201,8 +201,6 @@ deps_code(my_plan$command[nrow(my_plan)])
 tracked(my_plan, targets = "small")
 tracked(my_plan)
 
-# See vignette("caution") for more a deeper dive into possible pitfalls.
-
 
 ################################
 ### SINGLE PROCESS EXECUTION ###

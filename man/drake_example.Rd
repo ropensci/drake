@@ -26,15 +26,15 @@ with the same name as the drake example.}
 \description{
 Copy a folder of code files for a
 drake example to the current working directory.
-Call \code{drake_example("mtcars")} to generate the code files from the
-mtcars example vignette: \code{vignette("example-mtcars")}.
+Call \code{drake_example("mtcars")} to generate the code files from
+https://ropenscilabs.github.io/drake-manual/mtcars.html.
 To see the names of all the examples, run \code{\link[=drake_examples]{drake_examples()}}.
 }
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 drake_examples() # List all the drake examples.
-# Sets up the same example as the mtcars example vignette.
+# Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
 drake_example("mtcars")
 # Sets up the SLURM example.
 drake_example("slurm")

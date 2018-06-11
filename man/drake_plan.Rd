@@ -85,7 +85,7 @@ you may append to your workflow plan data frame:
 \item \code{trigger}: a character vector of triggers. A trigger is a rule for
 when to cause a target to (re)build. See \code{\link[=triggers]{triggers()}} for your options.
 For a walkthrough, see
-\url{https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+\url{https://ropenscilabs.github.io/drake-manual/debug.html}
 \item \code{retries}: number of times to retry a target if it fails
 to build the first time.
 \item \code{timeout}: Seconds of overall time to allow before imposing

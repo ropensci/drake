@@ -28,7 +28,7 @@ first_outdated <- function(config) {
 #'   [make()].
 #' @details `outdated()` is sensitive to the alternative triggers
 #' described at
-#' <https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers>. # nolint
+#' <https://ropenscilabs.github.io/drake-manual/debug.html>. # nolint
 #' For example, even if `outdated(...)` shows everything up to date,
 #' `outdated(..., trigger = "always")` will show
 #' all targets out of date.
@@ -61,7 +61,7 @@ first_outdated <- function(config) {
 #' # Now, everything should be up to date (no targets listed).
 #' outdated(config = config)
 #' # outdated() is sensitive to triggers.
-#' # See the "debug" vignette for more on triggers.
+#' # See the debugging guide: https://ropenscilabs.github.io/drake-manual/debug.html # nolint
 #' config$trigger <- "always"
 #' outdated(config = config)
 #' })

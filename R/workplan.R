@@ -19,7 +19,7 @@
 #' - `trigger`: a character vector of triggers. A trigger is a rule for
 #' when to cause a target to (re)build. See [triggers()] for your options.
 #' For a walkthrough, see
-#' <https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers>. # nolint
+#' <https://ropenscilabs.github.io/drake-manual/debug.html>
 #' - `retries`: number of times to retry a target if it fails
 #'   to build the first time.
 #' - `timeout`: Seconds of overall time to allow before imposing

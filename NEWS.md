@@ -19,7 +19,7 @@
 - Handle duplicated targets better in `drake_plan()` and `bind_plans()`.
 - Add a true function `target()` to help create drake plans with custom columns.
 - In `drake_gc()`, clean out disruptive files in `storr`s with mangled keys (re: https://github.com/ropensci/drake/issues/198).
-- Make the `drake.Rmd` vignette focus on Kirill's slides: https://krlmlr.github.io/drake-pitch
+- Move all the vignettes to the up and coming user manual: https://ropenscilabs.github.io/drake-manual/
 - Rename the "basic example" to the "mtcars example".
 - Deprecate `load_basic_example()` in favor of `load_mtcars_example()`.
 - Refocus the `README.md` file on the main example rather than the mtcars example.

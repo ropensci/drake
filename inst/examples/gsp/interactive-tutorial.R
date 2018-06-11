@@ -27,8 +27,8 @@
 # We take the best variables to be
 # the triplet in the model with the lowest RMSPE.
 #
-# Also see the example-gsp.Rmd vignette:
-# https://github.com/ropensci/drake/blob/master/vignettes/example-gsp.Rmd
+# Also see the corresponding chapter of the user manual:
+# https://ropenscilabs.github.io/drake-manual/example-gsp.html
 
 library(drake)
 library(Ecdat) # econometrics datasets

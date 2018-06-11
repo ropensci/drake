@@ -1,8 +1,8 @@
 #' @title Save the source code files of a drake example.
 #' @description Copy a folder of code files for a
 #' drake example to the current working directory.
-#' Call `drake_example("mtcars")` to generate the code files from the
-#' mtcars example vignette: `vignette("example-mtcars")`.
+#' Call `drake_example("mtcars")` to generate the code files from 
+#' https://ropenscilabs.github.io/drake-manual/mtcars.html.
 #' To see the names of all the examples, run [drake_examples()].
 #' @seealso [drake_examples()], [make()],
 #'   [shell_file()], [drake_batchtools_tmpl_file()]
@@ -20,7 +20,7 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' drake_examples() # List all the drake examples.
-#' # Sets up the same example as the mtcars example vignette.
+#' # Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
 #' drake_example("mtcars")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
@@ -48,10 +48,8 @@ drake_example <- function(
 }
 
 #' @title List the names of all the drake examples.
-#' @description The `'mtcars'` example is the one from the
-#' mtcars example vignette: `vignette("example-mtcars")`.
-#' All are in the `inst/examples/` folder
-#' of the package source code.
+#' @description The `'mtcars'` example is
+#'   documented at https://ropenscilabs.github.io/drake-manual/mtcars.html.
 #' @export
 #' @seealso [drake_example()], [make()]
 #' @return Names of all the drake examples.
@@ -59,7 +57,7 @@ drake_example <- function(
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' drake_examples() # List all the drake examples.
-#' # Sets up the same example as the mtcars example vignette.
+#' # Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
 #' drake_example("mtcars")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")

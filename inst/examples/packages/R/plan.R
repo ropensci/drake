@@ -33,8 +33,8 @@ data_plan <- drake_plan(
 # The latest download data needs to be refreshed every day,
 # so in data_plan above, we use triggers
 # to force `recent` to always build.
-# For more on triggers, see the vignette on debugging and testing:
-# https://ropensci.github.io/drake/articles/debug.htmll#test-with-triggers- # nolint
+# For more on triggers, see the guide to debugging and testing:
+# https://ropenscilabs.github.io/drake-manual/debug.html # nolint
 
 # We want to summarize each set of
 # download statistics a couple different ways.

@@ -9,8 +9,8 @@
 #' to see if there is an association.
 #' @details Use \code{\link{drake_example}("mtcars")} to get the code
 #' for the mtcars example. The included R script is a detailed,
-#' heavily-commented walkthrough. The mtcars example vignette at
-#' <https://github.com/ropensci/drake/blob/master/vignettes/example-mtcars.Rmd> # nolint
+#' heavily-commented walkthrough. The chapter of the user manual at
+#' <https://ropenscilabs.github.io/drake-manual/mtcars.html> # nolint
 #' also walks through the mtcars example.
 #' This function also writes/overwrites
 #' the file, `report.Rmd`.

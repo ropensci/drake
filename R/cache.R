@@ -211,7 +211,8 @@ new_cache <- function(
   if (!is.null(type)){
     warning(
       "The 'type' argument of new_cache() is deprecated. ",
-      "Please see the storage vignette for the new cache interface."
+      "Please see the storage guide in the manual for the new cache API:",
+      "https://ropenscilabs.github.io/drake-manual/store.html"
     )
   }
   cache <- storr::storr_rds(

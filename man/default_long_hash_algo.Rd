@@ -18,7 +18,7 @@ A character vector naming a hash algorithm.
 }
 \description{
 See the advanced storage tutorial
-at \url{https://github.com/ropensci/drake/blob/master/vignettes/storage.Rmd}
+at \url{https://ropenscilabs.github.io/drake-manual/store.html}
 for details.
 }
 \details{

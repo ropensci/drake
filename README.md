@@ -270,7 +270,7 @@ Ideally, independent observers should be able to read your code and understand i
 Aggressively scale up.
 ======================
 
-Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. `Drake` knows what to do. Parallelism is implicit and automatic. See the [parallelism vignette](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd) for all the details.
+Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. `Drake` knows what to do. Parallelism is implicit and automatic. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/hpc.html) for all the details.
 
 ``` r
 # Use the spare cores on your local machine.
@@ -309,8 +309,9 @@ Documentation
 
 The main resources to learn `drake` are
 
-1.  The [documentation website](https://ropensci.github.io/drake/)
-2.  [Kirill Müller](https://github.com/krlmlr)'s [`drake` workshop from March 5, 2018](https://github.com/krlmlr/drake-sib-zurich).
+1.  The [user manual](https://ropenscilabs.github.io/drake-manual/), which contains a friendly introduction and several long-form tutorials.
+2.  The [documentation website](https://ropensci.github.io/drake/), which serves as a quicker reference.
+3.  [Kirill Müller](https://github.com/krlmlr)'s [`drake` workshop from March 5, 2018](https://github.com/krlmlr/drake-sib-zurich).
 
 Cheat sheet
 -----------
@@ -342,20 +343,6 @@ Tutorials
 ---------
 
 Thanks to [Kirill](https://github.com/krlmlr) for constructing two interactive [`learnr`](https://rstudio.github.io/learnr/) tutorials: [one supporting `drake` itself](https://krlmlr.shinyapps.io/cooking-drake-tutorial/), and a [prerequisite walkthrough](https://krlmlr.shinyapps.io/cooking-tutorial/) of the [`cooking` package](https://github.com/krlmlr/cooking).
-
-The articles below are tutorials taken from the [package vignettes](https://github.com/ropensci/drake/tree/master/vignettes).
-
--   [Get started](https://ropensci.github.io/drake/articles/drake.html)
--   [Example: R package download trends](https://ropensci.github.io/drake/articles/example-packages.html)
--   [Example: gross state products](https://ropensci.github.io/drake/articles/example-gsp.html)
--   [`mtcars` example](https://ropensci.github.io/drake/articles/example-mtcars.html)
--   [General best practices](https://ropensci.github.io/drake/articles/best-practices.html)
--   [Cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html)
--   [Debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html)
--   [Graphs with drake](https://ropensci.github.io/drake/articles/graph.html)
--   [Parallel computing](https://ropensci.github.io/drake/articles/parallelism.html)
--   [Time: logging, prediction, and strategy](https://ropensci.github.io/drake/articles/timing.html)
--   [Storage](https://ropensci.github.io/drake/articles/storage.html)
 
 Examples
 --------
@@ -424,7 +411,7 @@ The original idea of a time-saving reproducible build system extends back at lea
 There are several reasons for R users to prefer `drake` instead.
 
 -   `Drake` already has a [Make](http://kbroman.org/minimal_make/)-powered parallel backend. Just run `make(..., parallelism = "Makefile", jobs = 2)` to enjoy most of the original benefits of [Make](http://kbroman.org/minimal_make/) itself.
--   Improved scalability. With [Make](http://kbroman.org/minimal_make/), you must write a potentially large and cumbersome [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile) by hand. But with `drake`, you can use [wildcard templating](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan) to automatically generate massive collections of targets with minimal code.
+-   Improved scalability. With [Make](http://kbroman.org/minimal_make/), you must write a potentially large and cumbersome [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile) by hand. But with `drake`, you can use [wildcard templating](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan) to automatically generate massive collections of targets with minimal code.
 -   Lower overhead for light-weight tasks. For each [Make](http://kbroman.org/minimal_make/) target that uses R, a brand new R session must spawn. For projects with thousands of small targets, that means more time may be spent loading R sessions than doing the actual work. With `make(..., parallelism = "mclapply, jobs = 4")`, `drake` launches 4 persistent workers up front and efficiently processes the targets in R.
 -   Convenient organization of output. With [Make](http://kbroman.org/minimal_make/), the user must save each target as a file. `Drake` saves all the results for you automatically in a [storr cache](https://github.com/richfitz/storr) so you do not have to micromanage the results.
 
@@ -433,10 +420,10 @@ Remake
 
 [Drake](https://github.com/ropensci/drake) overlaps with its direct predecessor, [remake](https://github.com/richfitz/remake). In fact, [drake](https://github.com/ropensci/drake) owes its core ideas to [remake](https://github.com/richfitz/remake) and [Rich Fitzjohn](https://github.com/richfitz/remake). [Remake](https://github.com/richfitz/remake)'s development repository lists several [real-world applications](https://github.com/richfitz/remake/blob/master/README.md#real-world-examples). [Drake](https://github.com/ropensci/drake) surpasses [remake](https://github.com/richfitz/remake) in several important ways, including but not limited to the following.
 
-1.  High-performance computing. [Remake](https://github.com/richfitz/remake) has no native parallel computing support. [Drake](https://github.com/ropensci/drake), on the other hand, has a [vast arsenal](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd) of parallel computing options, from local multicore computing to serious distributed computing. Thanks to [future](github.com/HenrikBengtsson/future), [future.batchtools](github.com/HenrikBengtsson/future.batchtools), and [batchtools](github.com/mllg/batchtools), it is straightforward to configure a [drake](https://github.com/ropensci/drake) project for most popular job schedulers, such as [SLURM](https://github.com/ropensci/drake/tree/master/inst/examples/slurm), [TORQUE](https://github.com/ropensci/drake/tree/master/inst/examples/torque), and the [Sun/Univa Grid Engine](https://github.com/ropensci/drake/tree/master/inst/examples/sge), as well as systems contained in [Docker images](https://github.com/ropensci/drake/tree/master/inst/examples/Docker-psock).
-2.  A friendly interface. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow, which leads to some of the same scalability problems as [Make](https://www.gnu.org/software/make/). [Drake](https://github.com/ropensci/drake)'s data-frame-based interface and [wildcard templating functionality](https://github.com/ropensci/drake/blob/master/vignettes/quickstart.Rmd#generate-the-workflow-plan) easily generate workflows at scale.
-3.  Thorough documentation. [Drake](https://github.com/ropensci/drake) contains [several vignettes](https://github.com/ropensci/drake/tree/master/vignettes), a [comprehensive README](https://github.com/ropensci/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/ropensci/drake/tree/master/inst/examples) that users can write with `drake::example_drake()`.
-4.  Active maintenance. [Drake](https://github.com/ropensci/drake) is actively developed and maintained, and [issues](https://github.com/ropensci/drake/issues) are usually solved promptly.
+1.  High-performance computing. [Remake](https://github.com/richfitz/remake) has no native parallel computing support. [Drake](https://github.com/ropensci/drake), on the other hand, has a thorough selection of parallel computing technologies and scheduling algorithms. Thanks to [future](github.com/HenrikBengtsson/future), [future.batchtools](github.com/HenrikBengtsson/future.batchtools), and [batchtools](github.com/mllg/batchtools), it is straightforward to configure a [drake](https://github.com/ropensci/drake) project for most popular job schedulers, such as [SLURM](https://github.com/ropensci/drake/tree/master/inst/examples/slurm), [TORQUE](https://github.com/ropensci/drake/tree/master/inst/examples/torque), and the [Sun/Univa Grid Engine](https://github.com/ropensci/drake/tree/master/inst/examples/sge), as well as systems contained in [Docker images](https://github.com/ropensci/drake/tree/master/inst/examples/Docker-psock).
+2.  A friendly interface. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow, which leads to some of the same scalability problems as [Make](https://www.gnu.org/software/make/). [Drake](https://github.com/ropensci/drake)'s data-frame-based interface and [wildcard templating functionality](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan) easily generate workflows at scale.
+3.  Thorough documentation. [Drake](https://github.com/ropensci/drake) contains [thorough user manual](https://ropenscilabs.github.io/drake-manual/), a [reference website](https://ropensci.github.io/drake/), a [comprehensive README](https://github.com/ropensci/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/ropensci/drake/tree/master/inst/examples) that users can write with `drake::example_drake()`.
+4.  Active maintenance. [Drake](https://github.com/ropensci/drake) is actively developed and maintained, and [issues](https://github.com/ropensci/drake/issues) are usually addressed promptly.
 5.  Presence on CRAN. At the time of writing, [drake](https://github.com/ropensci/drake) is [available on CRAN](https://cran.r-project.org/package=drake), but [remake](https://github.com/richfitz/remake) is not.
 
 Memoise
@@ -465,7 +452,7 @@ Factual's Drake
 Other pipeline toolkits
 -----------------------
 
-There are [countless other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline). The `drake` package distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and [wide selection of parallel computing backends](https://github.com/ropensci/drake/blob/master/vignettes/parallelism.Rmd#parallel-backends).
+There are [countless other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline). The `drake` package distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and a [thorough selection of parallel computing technologies and scheduling algorithms](https://ropenscilabs.github.io/drake-manual/hpc.html).
 
 Acknowledgements
 ================

@@ -28,7 +28,7 @@ Outdated targets will be rebuilt in the next
 \details{
 \code{outdated()} is sensitive to the alternative triggers
 described at
-\url{https://github.com/ropensci/drake/blob/master/vignettes/debug.Rmd#test-with-triggers}. # nolint
+\url{https://ropenscilabs.github.io/drake-manual/debug.html}. # nolint
 For example, even if \code{outdated(...)} shows everything up to date,
 \code{outdated(..., trigger = "always")} will show
 all targets out of date.
@@ -49,7 +49,7 @@ config <- make(my_plan) # Run the projects, build the targets.
 # Now, everything should be up to date (no targets listed).
 outdated(config = config)
 # outdated() is sensitive to triggers.
-# See the "debug" vignette for more on triggers.
+# See the debugging guide: https://ropenscilabs.github.io/drake-manual/debug.html # nolint
 config$trigger <- "always"
 outdated(config = config)
 })

@@ -24,8 +24,8 @@ cran_downloads(packages = "dplyr", when = "last-week")
 # With `drake`, we can bring all our work up to date
 # without restarting everything from scratch.
 #
-# Also see the example-packages.Rmd vignette,
-# https://github.com/ropensci/drake/blob/master/vignettes/example-packages.Rmd # nolint
+# This example is paired with a chapter of the user manual:
+# https://ropenscilabs.github.io/drake-manual/example-packages.html
 
 ################
 ### ANALYSIS ###
@@ -112,8 +112,8 @@ whole_plan <- rbind(
 
 # The latest download data needs to be refreshed every day, so we use
 # triggers to force `recent` to always build.
-# For more on triggers, see the vignette on debugging and testing:
-# https://ropensci.github.io/drake/articles/debug.htmll#test-with-triggers- # nolint
+# For more on triggers, see the guide on debugging and testing:
+# https://ropenscilabs.github.io/drake-manual/debug.html # nolint
 
 whole_plan$trigger <- "any" # default trigger
 whole_plan$trigger[whole_plan$target == "recent"] <- "always"

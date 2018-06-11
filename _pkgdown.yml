@@ -11,52 +11,16 @@ navbar:
   - text: Reference
     href: reference/index.html
   - text: FAQ
-    href: articles/faq.html
-  - text: Articles
-    menu:
-    - text: "Example: R package download trends"
-      href: articles/example-packages.html
-    - text: "Example: gross state products"
-      href: articles/example-gsp.html
-    - text: "Example: mtcars and workflow plan generation"
-      href: articles/example-mtcars.html
-    - text: "General best practices for drake projects"
-      href: articles/best-practices.html
-    - text: "Debugging and testing drake projects"
-      href: articles/debug.html
-    - text: "Visualizing dependency graphs"
-      href: articles/graph.html
-    - text: "High-performance computing"
-      href: articles/parallelism.html
-    - text: "Timing: logging, prediction, and strategy"
-      href: articles/timing.html
-    - text: "Storage: caches and hashes"
-      href: articles/storage.html
-    - text: "Cautionary notes"
-      href: articles/caution.html
-    - text: "Frequently-asked questions"
-      href: articles/faq.html
+    href: https://ropenscilabs.github.io/drake-manual/faq.html
   - text: News
     href: news/index.html
   right:
   - icon: fa-github fa-lg
     href: https://github.com/ropensci/drake
 articles:
-- title: General vignettes
+- title: Vignettes
   contents:
   - '`drake`'
-  - '`example-packages`'
-  - '`example-gsp`'
-  - '`example-mtcars`'
-  - '`best-practices`'
-  - '`caution`'
-- title: Specialized walkthroughs
-  contents:
-  - '`debug`'
-  - '`graph`'
-  - '`parallelism`'
-  - '`timing`'
-  - '`storage`'
 reference:
 - title: Help
   contents:
