@@ -345,6 +345,15 @@
 #'   Otherwise, `console` should be the name of a flat file.
 #'   Console output will be appended to that file.
 #'
+#' @param ensure_workers logical, whether the master process
+#'   should wait for the workers to post before assigning them
+#'   targets. Should usually be `TRUE`. Set to `FALSE`
+#'   for `make(parallelism = "future_lapply", jobs = n)`
+#'   (`n > 1`) when combined with `future::plan(future::sequential)`. 
+#'   This argument only applies to parallel computing with persistent workers
+#'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
+#'   `"parLapply"`, or `"future_lapply"`).
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -404,7 +413,8 @@ drake_config <- function(
   imports_only = NULL,
   pruning_strategy = c("speed", "memory"),
   makefile_path = "Makefile",
-  console = NULL
+  console = NULL,
+  ensure_workers = TRUE
 ){
   force(envir)
   if (!is.null(imports_only)){
@@ -467,7 +477,8 @@ drake_config <- function(
     cache_log_file = cache_log_file, caching = match.arg(caching),
     evaluator = future::plan("next"), keep_going = keep_going,
     session = session, pruning_strategy = pruning_strategy,
-    makefile_path = makefile_path, console = console
+    makefile_path = makefile_path, console = console,
+    ensure_workers = ensure_workers
   )
 }
 

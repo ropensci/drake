@@ -177,3 +177,17 @@ test_with_dir("null cases for message queues", {
   expect_null(config$mc_done_queues)
   expect_null(mc_assign_ready_targets(config))
 })
+
+test_with_dir("ensure_workers can be disabled", {
+  load_mtcars_example()
+  future::plan(future::sequential)
+  config <- drake_config(my_plan)
+  make(my_plan, skip_targets = TRUE)
+  expect_true(length(outdated(config)) >= nrow(my_plan))
+  make(
+    my_plan, jobs = 2, skip_imports = TRUE,
+    parallelism = "future_lapply",
+    session_info = FALSE, ensure_workers = FALSE
+  )
+  expect_equal(outdated(config), character(0))
+})

@@ -20,7 +20,8 @@ drake_config(plan = read_drake_plan(),
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
   session = NULL, imports_only = NULL, pruning_strategy = c("speed",
-  "memory"), makefile_path = "Makefile", console = NULL)
+  "memory"), makefile_path = "Makefile", console = NULL,
+  ensure_workers = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -351,6 +352,15 @@ Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile"
 output will be printed to the R console using \code{message()}.
 Otherwise, \code{console} should be the name of a flat file.
 Console output will be appended to that file.}
+
+\item{ensure_workers}{logical, whether the master process
+should wait for the workers to post before assigning them
+targets. Should usually be \code{TRUE}. Set to \code{FALSE}
+for \code{make(parallelism = "future_lapply", jobs = n)}
+(\code{n > 1}) when combined with \code{future::plan(future::sequential)}.
+This argument only applies to parallel computing with persistent workers
+(\code{make(parallelism = x)}, where \code{x} could be \code{"mclapply"},
+\code{"parLapply"}, or \code{"future_lapply"}).}
 }
 \value{
 The master internal configuration list of a project.
