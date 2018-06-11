@@ -21,7 +21,7 @@ These are the possible values of the
 }
 \details{
 See the
-\href{https://ropensci.github.io/drake/articles/parallelism.html}{parallel computing guide} # nolint
+\href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing guide} # nolint
 for details on the parallel backends.
 }
 \examples{

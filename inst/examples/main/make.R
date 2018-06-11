@@ -1,4 +1,4 @@
-# Walkthrough: https://ropensci.github.io/drake/articles/drake.html
+# Walkthrough: https://ropenscilabs.github.io/drake-manual/intro.html
 # Slides: https://krlmlr.github.io/drake-pitch
 # Code: drake_example("main") # nolint
 

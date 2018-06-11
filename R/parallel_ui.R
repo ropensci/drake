@@ -58,7 +58,7 @@ drake_batchtools_tmpl_file <- function(
 #'   computing supported.
 #'
 #' @details See the
-#'   [parallel computing guide](https://ropensci.github.io/drake/articles/parallelism.html) # nolint
+#'   [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/hpc.html) # nolint
 #'   for details on the parallel backends.
 #'
 #' @param distributed_only logical, whether to return only

@@ -17,7 +17,8 @@ drake_tip <- function() {
     "Use drake_example(\"main\") to generate the code files
      for a friendly example workflow.",
 
-    "Check out the documentation website: https://ropensci.github.io/drake/",
+    "Check out the reference website (https://ropensci.github.io/drake/)
+     and user manual (https://ropenscilabs.github.io/drake-manual/).",
 
     "Use suppressPackageStartupMessages() to eliminate
      package startup messages like this one.",

@@ -48,7 +48,7 @@
 #'   known_times = known_times
 #' )
 #' # Why isn't 8 jobs any better?
-#' # 8 would be a good guess: https://ropensci.github.io/drake/images/outdated.html # nolint
+#' # 8 would be a good guess based on the layout of the workflow graph.
 #' # It's because of load balancing.
 #' # Below, each row is a persistent worker.
 #' balance <- predict_load_balancing(
@@ -140,7 +140,7 @@ predict_runtime <- function(
 #'   known_times = known_times
 #' )
 #' # Why isn't 8 jobs any better?
-#' # 8 would be a good guess: https://ropensci.github.io/drake/images/outdated.html # nolint
+#' # 8 would be a good guess based on the layout of the workflow graph.
 #' # It's because of load balancing.
 #' # Below, each row is a persistent worker.
 #' balance <- predict_load_balancing(
