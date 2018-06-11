@@ -182,3 +182,18 @@ test_with_dir("drake_warning() and drake_error()", {
   expect_true(any(grepl("some_warning", x)))
   expect_true(any(grepl("some_error", x)))
 })
+
+test_with_dir("show_source()", {
+  plan <- drake_plan(x = rnorm(15))
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  config <- drake_config(plan, cache = cache)
+  expect_message(show_source(x, config), regexp = "command")
+  expect_message(show_source(rnorm, config), regexp = "import")
+  expect_silent(loadd(x, cache = cache, show_source = FALSE))
+  expect_silent(readd(x, cache = cache, show_source = FALSE))
+  expect_message(loadd(x, cache = cache, show_source = TRUE))
+  expect_message(y <- readd(x, cache = cache, show_source = TRUE))
+  expect_true(is.numeric(x))
+  expect_true(is.numeric(y))
+})

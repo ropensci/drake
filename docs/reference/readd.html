@@ -119,7 +119,8 @@
 
     <pre class="usage"><span class='fu'>readd</span>(<span class='no'>target</span>, <span class='kw'>character_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'>getwd</span>(), <span class='kw'>search</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>path</span>, <span class='kw'>search</span> <span class='kw'>=</span> <span class='no'>search</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>),
-  <span class='kw'>namespace</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>())</pre>
+  <span class='kw'>namespace</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(),
+  <span class='kw'>show_source</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,6 +174,12 @@ for example, <code><a href='http://www.rdocumentation.org/packages/pkgconfig/top
 <dt>3:</dt><dd><p>in addition, print any potentially missing items.</p></dd>
 <dt>4:</dt><dd><p>in addition, print imports. Full verbosity.</p></dd>
 </dl></td>
+    </tr>
+    <tr>
+      <th>show_source</th>
+      <td><p>logical, option to show the command
+that produced the target or indicate that the object
+was imported (using <code><a href='show_source.html'>show_source()</a></code>).</p></td>
     </tr>
     </table>
     

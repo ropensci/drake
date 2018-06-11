@@ -118,6 +118,7 @@ reference:
   - '`read_drake_seed`'
   - '`readd`'
   - '`rescue_cache`'
+  - '`show_source`'
 - title: Cache configuration
   contents:
   - '`available_hash_algos`'

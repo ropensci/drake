@@ -127,7 +127,7 @@ to arguments <code>...</code> or <code>list</code>.</p>
   <span class='kw'>search</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>path</span>, <span class='kw'>search</span> <span class='kw'>=</span> <span class='no'>search</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>), <span class='kw'>namespace</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'>parent.frame</span>(), <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(), <span class='kw'>deps</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>lazy</span> <span class='kw'>=</span> <span class='st'>"eager"</span>,
-  <span class='kw'>graph</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>graph</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_source</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -237,6 +237,12 @@ it will be read from the cache.</p></td>
       <td><p>logical. If <code>FALSE</code>,
 items already in your environment
 will not be replaced.</p></td>
+    </tr>
+    <tr>
+      <th>show_source</th>
+      <td><p>logical, option to show the command
+that produced the target or indicate that the object
+was imported (using <code><a href='show_source.html'>show_source()</a></code>).</p></td>
     </tr>
     </table>
     

@@ -142,8 +142,9 @@
 <li>Add a <code>pruning_strategy</code> argument to <code><a href="../reference/make.html">make()</a></code> and <code><a href="../reference/drake_config.html">drake_config()</a></code> so the user can decide how <code>drake</code> keeps non-import dependencies in memory when it builds a target.</li>
 <li>Add optional custom (experimental) “workers” and “priorities” columns to the <code>drake</code> plans to help users customize scheduling.</li>
 <li>Add a <code>makefile_path</code> argument to <code><a href="../reference/make.html">make()</a></code> and <code><a href="../reference/drake_config.html">drake_config()</a></code> to avoid potential conflicts between user-side custom <code>Makefile</code>s and the one written by <code><a href="../reference/make.html">make(parallelism = "Makefile")</a></code>.</li>
-<li>Document batch mode for long workflows in the HPC vignette.</li>
+<li>Document batch mode for long workflows in the HPC guide.</li>
 <li>Add a <code>console</code> argument to <code><a href="../reference/make.html">make()</a></code> and <code><a href="../reference/drake_config.html">drake_config()</a></code> so users can redirect console output to a file.</li>
+<li>Make it easier for the user to find out where a target in the cache came from: <code><a href="../reference/show_source.html">show_source()</a></code>, <code><a href="../reference/readd.html">readd(show_source = TRUE)</a></code>, <code><a href="../reference/loadd.html">loadd(show_source = TRUE)</a></code>.</li>
 </ul>
 </div>
     <div id="version-5-1-2" class="section level1">

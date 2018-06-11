@@ -235,3 +235,38 @@ default_verbose <- function(){
   default <- pkgconfig::get_config("drake::verbose")
   ifelse(!length(default), 1, default)
 }
+
+#' @title Show how a target/import was produced.
+#' @description Show the command that produced a target
+#'   or indicate that the object or file was imported.
+#' @export
+#' @param target symbol denoting the target or import
+#'   or a character vector if character_only is `TRUE`.
+#' @param config a [drake_config()] list
+#' @param character_only logical, whether to interpret
+#'   `target` as a symbol (`FALSE`) or character vector
+#'   (`TRUE`).
+#' @examples
+#' \dontrun{
+#' plan <- drake_plan(x = rnorm(15))
+#' make(plan)
+#' config <- drake_config(plan)
+#' show_source(x, config)
+#' show_source(rnorm, config)
+#' }
+show_source <- function(target, config, character_only = FALSE){
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
+  cache <- config$cache
+  meta <- diagnose(target = target, cache = cache, character_only = TRUE)
+  prefix <- ifelse(is_file(target), "File ", "Object ")
+  if (meta$imported){
+    message(prefix, target, " was imported.")
+  } else {
+    command <- gsub("^\\{\n ", "", meta$command)
+    command <- gsub(" \n\\}$", "", command)
+    message(
+      prefix, target, " was build from command:\n  ", target, " = ", command)
+  }
+}

@@ -29,8 +29,9 @@
 - Add a `pruning_strategy` argument to `make()` and `drake_config()` so the user can decide how `drake` keeps non-import dependencies in memory when it builds a target.
 - Add optional custom (experimental) "workers" and "priorities" columns to the `drake` plans to help users customize scheduling.
 - Add a `makefile_path` argument to `make()` and `drake_config()` to avoid potential conflicts between user-side custom `Makefile`s and the one written by `make(parallelism = "Makefile")`.
-- Document batch mode for long workflows in the HPC vignette.
+- Document batch mode for long workflows in the HPC guide.
 - Add a `console` argument to `make()` and `drake_config()` so users can redirect console output to a file.
+- Make it easier for the user to find out where a target in the cache came from: `show_source()`, `readd(show_source = TRUE)`, `loadd(show_source = TRUE)`.
 
 # Version 5.1.2
 

@@ -15,6 +15,9 @@
 #'   (just like `character.only` in [library()]).
 #' @param namespace optional character string,
 #'   name of the `storr` namespace to read from.
+#' @param show_source logical, option to show the command
+#'   that produced the target or indicate that the object
+#'   was imported (using [show_source()]).
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -34,7 +37,8 @@ readd <- function(
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   namespace = NULL,
-  verbose = drake::default_verbose()
+  verbose = drake::default_verbose(),
+  show_source = FALSE
 ){
   # if the cache is null after trying get_cache:
   if (is.null(cache)){
@@ -45,6 +49,13 @@ readd <- function(
   }
   if (is.null(namespace)){
     namespace <- cache$default_namespace
+  }
+  if (show_source){
+    show_source(
+      target = target,
+      config = list(cache = cache),
+      character_only = TRUE
+    )
   }
   cache$get(
     standardize_filename(target),
@@ -68,6 +79,7 @@ readd <- function(
 #' @return `NULL`
 #'
 #' @inheritParams cached
+#' @inheritParams readd
 #'
 #' @param ... targets to load from the cache: as names (symbols),
 #'   character strings, or `dplyr`-style `tidyselect`
@@ -170,7 +182,8 @@ loadd <- function(
   deps = FALSE,
   lazy = "eager",
   graph = NULL,
-  replace = TRUE
+  replace = TRUE,
+  show_source = FALSE
 ){
   force(envir)
   if (is.null(cache)){
@@ -211,6 +224,14 @@ loadd <- function(
     cache = cache,
     jobs = jobs
   )
+  if (show_source){
+    lapply(
+      X = targets,
+      FUN = show_source,
+      config = list(cache = cache),
+      character_only = TRUE
+    )
+  }
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
     namespace = namespace, envir = envir,
