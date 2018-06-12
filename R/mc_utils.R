@@ -42,8 +42,8 @@ mc_ensure_workers <- function(config){
 }
 
 mc_work_remains <- function(config){
-  if (config$queue$empty()){
-    return(FALSE)
+  if (!config$queue$empty()){
+    return(TRUE)
   }
   backlog <- vapply(
     config$mc_ready_queues,
