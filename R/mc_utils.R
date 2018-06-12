@@ -74,10 +74,12 @@ mc_assign_ready_targets <- function(config){
   if (!length(config$mc_ready_queues)){
     return()
   }
-  while (!is.null(target <- config$queue$peek0())){
+  for (target in config$queue$list0()){
     queue <- mc_preferred_queue(target = target, config = config)
-    queue$push(title = target, message = "target")
-    config$queue$pop0()
+    if (!is.null(queue)){
+      queue$push(title = target, message = "target")
+      config$queue$remove(target = target)
+    }
   }
 }
 
@@ -96,14 +98,12 @@ mc_preferred_queue <- function(target, config){
       )
     }
   }
-  backlog <- vapply(
-    config$mc_ready_queues,
-    function(queue){
-      queue$count()
-    },
-    FUN.VALUE = integer(1)
-  )
-  config$mc_ready_queues[[which.min(backlog)]]
+  for (queue in config$mc_ready_queues){
+    if (queue$empty()){
+      return(queue)
+    }
+  }
+  return(NULL)
 }
 
 mc_conclude_done_targets <- function(config){
