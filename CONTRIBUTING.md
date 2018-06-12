@@ -2,7 +2,7 @@
 
 Maintainers and other contributors must follow this repository's [code of conduct](https://github.com/ropensci/drake/blob/master/CONDUCT.md).
 
-# Suggestions and bug reports
+# Comments, feature requests, bug reports, and other feedback
 
 `Drake` thrives on the suggestions and bug reports you submit to the [issue tracker](https://github.com/ropensci/drake/issues). Before posting, please search both the open and closed issues to help us avoid duplication.
 
