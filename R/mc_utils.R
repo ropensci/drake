@@ -41,6 +41,20 @@ mc_ensure_workers <- function(config){
   }
 }
 
+mc_work_remains <- function(config){
+  if (config$queue$empty()){
+    return(FALSE)
+  }
+  backlog <- vapply(
+    config$mc_ready_queues,
+    function(queue){
+      queue$count()
+    },
+    FUN.VALUE = integer(1)
+  )
+  any(backlog > 0)
+}
+
 mc_refresh_queue_lists <- function(config){
   for (namespace in c("mc_ready_db", "mc_done_db")){
     field <- gsub("db$", "queues", namespace)

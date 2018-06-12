@@ -60,7 +60,7 @@ mc_master <- function(config){
   if (!isFALSE(config$ensure_workers)){
     mc_ensure_workers(config)
   }
-  while (!config$queue$empty()){
+  while (mc_work_remains(config)){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
     mc_assign_ready_targets(config)
