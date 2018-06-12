@@ -37,15 +37,12 @@
 #' })
 #' }
 #' @references <https://github.com/ropensci/drake>
-#' @importFrom base64url base64_urldecode base64_urlencode
-#' @importFrom txtq txtq
 #' @importFrom bindr populate_env
 #' @importFrom CodeDepends getInputs
 #' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
 #' @importFrom evaluate try_capture_stack
-#' @importFrom filelock lock unlock
 #' @importFrom formatR tidy_source
 #' @importFrom future future plan resolved value
 #' @importFrom future.apply future_lapply
@@ -72,6 +69,7 @@
 #' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select
+#' @importFrom txtq txtq
 #' @importFrom utils capture.output compareVersion head installed.packages
 #'   packageVersion read.csv sessionInfo type.convert unzip write.table
 #' @importFrom visNetwork toVisNetworkData visEvents visHierarchicalLayout

@@ -50,15 +50,12 @@ Authors@R: c(
 Depends:
   R (>= 3.2.0)
 Imports:
-  base64url,
-  txtq,
   bindr,
   CodeDepends,
   crayon,
   evaluate,
   digest,
   dplyr,
-  filelock,
   formatR,
   future,
   future.apply,
@@ -81,6 +78,7 @@ Imports:
   testthat,
   tibble,
   tidyselect (>= 0.2.4),
+  txtq,
   utils,
   visNetwork,
   withr
