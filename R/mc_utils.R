@@ -78,7 +78,7 @@ mc_assign_ready_targets <- function(config){
     queue <- mc_preferred_queue(target = target, config = config)
     if (!is.null(queue)){
       queue$push(title = target, message = "target")
-      config$queue$remove(target = target)
+      config$queue$remove(targets = target)
     }
   }
 }
