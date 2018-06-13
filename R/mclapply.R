@@ -72,10 +72,11 @@ mc_worker <- function(worker, config){
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
-    while (nrow(msg <- ready_queue$pop()) < 1){
+    while (nrow(msg <- ready_queue$list(1)) < 1){
       Sys.sleep(mc_wait)
     }
     if (identical(msg$message, "done")){
+      ready_queue$pop(1)
       return()
     }
     target <- msg$title
@@ -85,6 +86,7 @@ mc_worker <- function(worker, config){
       downstream = config$cache$list(namespace = "mc_protect"),
       flag_attempt = TRUE
     )
+    ready_queue$pop(1)
     done_queue$push(title = target, message = "target")
   }
 }
