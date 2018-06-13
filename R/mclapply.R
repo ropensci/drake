@@ -60,7 +60,7 @@ mc_master <- function(config){
   if (!isFALSE(config$ensure_workers)){
     mc_ensure_workers(config)
   }
-  while (!config$queue$empty()){
+  while (mc_work_remains(config)){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
     mc_assign_ready_targets(config)
@@ -72,23 +72,20 @@ mc_worker <- function(worker, config){
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
-    while (nrow(messages <- ready_queue$pop(-1)) < 1){
+    while (nrow(msg <- ready_queue$pop()) < 1){
       Sys.sleep(mc_wait)
     }
-    for (i in seq_len(nrow(messages))){
-      msg <- messages[i, ]
-      if (identical(msg$message, "done")){
-        return()
-      }
-      target <- msg$title
-      build_check_store(
-        target = target,
-        config = config,
-        downstream = config$cache$list(namespace = "mc_protect"),
-        flag_attempt = TRUE
-      )
-      done_queue$push(title = target, message = "target")
+    if (identical(msg$message, "done")){
+      return()
     }
+    target <- msg$title
+    build_check_store(
+      target = target,
+      config = config,
+      downstream = config$cache$list(namespace = "mc_protect"),
+      flag_attempt = TRUE
+    )
+    done_queue$push(title = target, message = "target")
   }
 }
 

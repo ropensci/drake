@@ -42,6 +42,7 @@ test_with_dir("targets_setting()", {
   expect_equal(targets_setting(c(imports = 8, targets = 12)), 12)
 })
 
+
 test_with_dir("parallelism not found for testrun()", {
   config <- list(parallelism = "not found", verbose = FALSE)
   suppressWarnings(expect_error(testrun(config)))
@@ -149,18 +150,6 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
     y <- gsub("_text", "", unlist(out1))
     expect_identical(x, y)
   })
-})
-
-test_with_dir("worker & priority cols don't generate overt problems", {
-  future::plan(future::sequential)
-  envir <- new.env(parent = globalenv())
-  load_mtcars_example(envir = envir)
-  my_plan <- envir$my_plan
-  my_plan$priority <- seq_len(nrow(my_plan))
-  my_plan$worker <- 1
-  make(my_plan, envir = envir, parallelism = "future_lapply",
-       session_info = FALSE, pruning_strategy = "memory")
-  expect_true(file_store("report.md") %in% cached())
 })
 
 test_with_dir("preferred queue may not be there", {

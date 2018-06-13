@@ -95,6 +95,16 @@ R6_priority_queue <- R6::R6Class(
         out
       }
     },
+    # Get all the ready targets
+    list0 = function(){
+      if (!self$empty() && self$data$ndeps[1] < 1){
+        self$data$target[self$data$ndeps < 1]
+      }
+    },
+    remove = function(targets){
+      self$data <- self$data[!(self$data$target %in% targets), ]
+      invisible()
+    },
     # This is all wrong and inefficient.
     # Needs the actual decrease-key algorithm
     decrease_key = function(targets){

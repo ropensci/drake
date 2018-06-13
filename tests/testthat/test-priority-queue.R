@@ -48,6 +48,7 @@ test_with_dir("the priority queue works", {
   )
   expect_equal(x$data, y)
   expect_equal(x$peek0(), "spren")
+  expect_equal(sort(x$list0()), sort(c("bar", "spren")))
   expect_equal(x$data, y)
   expect_equal(x$pop0(), "spren")
   expect_equal(x$peek0(), "bar")
@@ -85,6 +86,17 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equal(x$data, y[-1:-2, ])
+
+  expect_null(x$list0())
+  z <- y[-1:-2, ]
+  expect_true(all(c("soup", "Bob") %in% x$data$target))
+  expect_equal(nrow(x$data), 6)
+  x$remove(c("soup", "Bob"))
+  expect_false(all(c("soup", "Bob") %in% x$data$target))
+  expect_equal(nrow(x$data), 4)
+  expect_equal(x$data, z[-4:-5, ])
+  x$remove(c("soup", "Bob"))
+  expect_equal(x$data, z[-4:-5, ])
 })
 
 test_with_dir("queues with priorities", {
