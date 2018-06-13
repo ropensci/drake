@@ -1,7 +1,6 @@
-drake_context("always skipped")
-
-# A more convenient master switch than testthat::skip():
 if (FALSE){
+
+drake_context("always skipped")
 
 test_with_dir("make() uses the worker column of the plan", {
   future::plan(future::sequential)
@@ -28,4 +27,4 @@ test_with_dir("make() uses the worker column of the plan", {
   expect_true(length(intersect(q4$log()$title, my_plan$target)) > 1)
 })
 
-} # For skipping all tests in this file.
+}
