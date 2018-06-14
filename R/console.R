@@ -167,20 +167,18 @@ finish_console <- function(text, pattern, config){
   if (is.null(config$verbose) || config$verbose < 1){
     return(invisible())
   }
-  msg <- crop_text(x = text)
-  if (is.null(config$console_log_file)){
-    msg <- color_grep(
-      text = msg,
-      pattern = pattern,
-      color = color_of(pattern)
-    )
-  }
+  msg <- crop_text(x = text) %>%
+   color_grep(pattern = pattern, color = color_of(pattern))
   drake_message(msg, config = config)
 }
 
 drake_message <- function(..., config){
   if (!is.null(config$console_log_file)){
-    write(x = paste0(...), file = config$console_log_file, append = TRUE)
+    write(
+      x = crayon::strip_style(paste0(...)),
+      file = config$console_log_file,
+      append = TRUE
+    )
   }
   message(..., sep = "")
 }
@@ -188,7 +186,7 @@ drake_message <- function(..., config){
 drake_warning <- function(..., config){
   if (!is.null(config$console_log_file)){
     write(
-      x = paste0("Warning: ", ...),
+      x = crayon::strip_style(paste0("Warning: ", ...)),
       sep = "",
       file = config$console_log_file,
       append = TRUE
@@ -200,7 +198,7 @@ drake_warning <- function(..., config){
 drake_error <- function(..., config){
   if (!is.null(config$console_log_file)){
     write(
-      x = paste0("Error: ", ...),
+      x = crayon::strip_style(paste0("Error: ", ...)),
       sep = "",
       file = config$console_log_file,
       append = TRUE
