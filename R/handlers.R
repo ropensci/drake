@@ -59,7 +59,6 @@ error_tibble_times <- function(e){
 }
 
 warning_process <- function(e, id, config){
-  set_attempt_flag(key = id, config = config)
   stack <- sys.calls()
   drake_message("Warning: ", e$message, config = config)
   drake_message("Call: ", e$call, config = config)
@@ -71,6 +70,7 @@ warning_process <- function(e, id, config){
 }
 
 error_process <- function(e, id, config){
+  set_attempt_flag(key = id, config = config)
   warning_process(e, id, config)
   drake_error("make() failed.", config = config)
 }
