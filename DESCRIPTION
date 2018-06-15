@@ -93,6 +93,7 @@ Suggests:
   abind,
   callr,
   DBI,
+  future.batchtools,
   MASS,
   methods,
   RSQLite,

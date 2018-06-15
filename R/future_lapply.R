@@ -50,3 +50,27 @@ fl_worker <- function(worker, cache_path){
     }
   )
 }
+
+warn_future_lapply <- function(config){
+  if (!("future_lapply" %in% config$parallelism)){
+    return()
+  }
+  if (inherits(future::plan(), "batchtools")){
+    drake_warning(
+      "a batchtools-powered future::plan() and ",
+      "\"future_lapply\" parallelism are selected together.\n",
+      "For these settings, file latency issues ",
+      "among the nodes of your computing cluster ",
+      "could undermine the integrity of the results.\n",
+      "Also, the future_lapply()-style ",
+      "persistent workers could terminate early ",
+      "if your cluster has strict wall time limits.\n",
+      "Either continue at your own risk ",
+      "or select make(parallelism = \"future\") instead.\n",
+      "For more information, please visit ",
+      "https://github.com/ropensci/drake/issues/416 and ",
+      "https://github.com/ropensci/drake/issues/417",
+      config = config
+    )
+  }
+}
