@@ -1,10 +1,11 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Description: A general-purpose workflow manager for data analysis,
+Description: A general-purpose computational engine for data analysis,
   drake rebuilds intermediate data objects when their dependencies change,
   and it skips work when the results are already up to date.
-  Not every runthrough starts from scratch,
-  and completed workflows have tangible evidence of reproducibility.
+  Not every execution starts from scratch,
+  and completed projects have tangible evidence
+  that they are reproducible.
   Extensive documentation, from beginner-friendly tutorials
   to practical examples and more, is available at the reference website
   (https://ropensci.github.io/drake/) and the online manual
