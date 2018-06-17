@@ -94,14 +94,11 @@ Suggests:
   abind,
   callr,
   DBI,
-  future.batchtools,
   MASS,
   methods,
   RSQLite,
   rmarkdown,
   tidyr
-Remotes:
-  wlandau/txtq
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

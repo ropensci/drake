@@ -108,15 +108,8 @@ mc_preferred_queue <- function(target, config){
 
 mc_conclude_done_targets <- function(config){
   for (queue in config$mc_done_queues){
-    while (nrow(messages <- queue$pop(-1)) > 0){
-      for (i in seq_len(nrow(messages))){
-        msg <- messages[i, ]
-        if (identical(msg$message, "target")){
-          mc_conclude_target(target = msg$title, config = config)
-        } else {
-          drake_error("illegal message type in the done queue", config = config) # nocov # nolint
-        }
-      }
+    while (nrow(msg <- queue$pop(1)) > 0){
+      mc_conclude_target(target = msg$title, config = config)
     }
   }
 }
