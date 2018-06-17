@@ -203,9 +203,6 @@ test_with_dir("checksum functionality", {
   expect_false(
     mc_is_good_checksum(
       target = "combined", checksum = bad, config = config))
-  expect_silent(
-    mc_wait_checksum(
-      target = "combined", checksum = checksum, config = config))
   expect_error(
     mc_wait_checksum(
       target = "combined", checksum = bad, config = config, timeout = 0.1))
