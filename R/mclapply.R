@@ -87,7 +87,8 @@ mc_worker <- function(worker, config){
       flag_attempt = TRUE
     )
     ready_queue$pop(1)
-    done_queue$push(title = target, message = "target")
+    message <- mc_get_checksum(target = target, config = config)
+    done_queue$push(title = target, message = message)
   }
 }
 

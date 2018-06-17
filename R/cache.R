@@ -484,6 +484,14 @@ safe_get <- function(key, namespace, config){
   out
 }
 
+safe_get_hash <- function(key, namespace, config){
+  out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
+  if (inherits(out, "try-error")){
+    out <- NA
+  }
+  out
+}
+
 kernel_exists <- function(target, config){
   config$cache$exists(key = target, namespace = "kernels")
 }

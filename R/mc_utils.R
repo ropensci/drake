@@ -106,9 +106,13 @@ mc_preferred_queue <- function(target, config){
   return(NULL)
 }
 
-mc_conclude_done_targets <- function(config){
+mc_conclude_done_targets <- function(config, wait_for_checksums = TRUE){
   for (queue in config$mc_done_queues){
     while (nrow(msg <- queue$pop(1)) > 0){
+      if (wait_for_checksums){
+        mc_wait_checksum(
+          target = msg$title, checksum = msg$message, config = config)
+      }
       mc_conclude_target(target = msg$title, config = config)
     }
   }
@@ -156,6 +160,43 @@ mc_get_done_queue <- function(worker, config){
 
 mc_worker_id <- function(x){
   paste0("worker_", x)
+}
+
+mc_get_checksum <- function(target, config){
+  paste(
+    safe_get_hash(
+      key = target,
+      namespace = config$cache$default_namespace,
+      config = config
+    ),
+    safe_get_hash(key = target, namespace = "kernels", config = config),
+    safe_get_hash(key = target, namespace = "meta", config = config),
+    sep = " "
+  )
+}
+
+mc_is_good_checksum <- function(target, checksum, config){
+  stamp <- mc_get_checksum(target = target, config = config)
+  if (!identical(stamp, checksum)){
+    return(FALSE)
+  }
+  all(
+    vapply(
+      X = unlist(strsplit(stamp, " ")),
+      FUN = config$cache$exists_object,
+      FUN.VALUE = logical(1)
+    )
+  )
+}
+
+mc_wait_checksum <- function(target, checksum, config, timeout = 300){
+  R.utils::withTimeout(
+    while (!mc_is_good_checksum(target, checksum, config)){
+      Sys.sleep(mc_wait)
+    },
+    timeout = timeout
+  )
+  invisible()
 }
 
 mc_wait <- 1e-9
