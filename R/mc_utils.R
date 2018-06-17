@@ -190,13 +190,21 @@ mc_is_good_checksum <- function(target, checksum, config){
 }
 
 mc_wait_checksum <- function(target, checksum, config, timeout = 300){
-  R.utils::withTimeout(
-    while (!mc_is_good_checksum(target, checksum, config)){
-      Sys.sleep(mc_wait)
-    },
-    timeout = timeout
+  interval <- 0.01 # Should be longer than mc_wait.
+  i <- 0
+  while (i < timeout / interval){
+    if (mc_is_good_checksum(target, checksum, config)){
+      return();
+    } else {
+      Sys.sleep(interval)
+    }
+    i <- i + 1
+  }
+  drake_error(
+    "Target `", target, "` did not download from your ",
+    "network file system. Checksum verification timed out after about ",
+    timeout, " seconds.", config = config
   )
-  invisible()
 }
 
 mc_wait <- 1e-9

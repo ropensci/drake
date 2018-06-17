@@ -189,12 +189,9 @@ test_with_dir("checksum functionality", {
   config <- dbug()
   config$cache <- storr::storr_environment()
   make(config = config)
+  checksum <- mc_get_checksum(target = "combined", config = config)
   bad <- "askldfklhjsdfkj"
-  expect_false(
-    grepl("NA",
-      checksum <- mc_get_checksum(target = "combined", config = config)
-    )
-  )
+  expect_false(grepl("NA", checksum))
   expect_true(
     grepl("NA", mc_get_checksum(target = bad, config = config)))
   expect_true(
@@ -203,6 +200,9 @@ test_with_dir("checksum functionality", {
   expect_false(
     mc_is_good_checksum(
       target = "combined", checksum = bad, config = config))
+  expect_silent(
+    mc_wait_checksum(
+      target = "combined", checksum = checksum, config = config, timeout = 0.1))
   expect_error(
     mc_wait_checksum(
       target = "combined", checksum = bad, config = config, timeout = 0.1))
