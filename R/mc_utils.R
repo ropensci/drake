@@ -194,7 +194,7 @@ mc_wait_checksum <- function(target, checksum, config, timeout = 300){
   i <- 0
   while (i < timeout / interval){
     if (mc_is_good_checksum(target, checksum, config)){
-      return();
+      return()
     } else {
       Sys.sleep(interval)
     }
