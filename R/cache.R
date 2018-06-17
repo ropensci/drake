@@ -415,10 +415,7 @@ configure_cache <- function(
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache){
   set_initial_drake_version(cache)
-  common_values <- list(
-    TRUE, FALSE, "finished", "in progress", "failed",
-    "not ready", "ready", "running", "idle", "done"
-  )
+  common_values <- list(TRUE, FALSE, "finished", "in progress", "failed")
   cache$mset(
     key = as.character(common_values),
     value = common_values,
