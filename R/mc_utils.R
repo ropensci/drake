@@ -171,6 +171,7 @@ mc_get_checksum <- function(target, config){
     ),
     safe_get_hash(key = target, namespace = "kernels", config = config),
     safe_get_hash(key = target, namespace = "meta", config = config),
+    safe_get_hash(key = target, namespace = "attempt", config = config),
     sep = " "
   )
 }
@@ -182,8 +183,8 @@ mc_is_good_checksum <- function(target, checksum, config){
   }
   all(
     vapply(
-      X = unlist(strsplit(stamp, " ")),
-      FUN = config$cache$exists_object,
+      X = unlist(strsplit(stamp, " "))[1:3],
+      config$cache$exists_object,
       FUN.VALUE = logical(1)
     )
   )
