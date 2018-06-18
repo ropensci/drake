@@ -86,6 +86,7 @@ test_with_dir("shell_file() writes correctly", {
 })
 
 test_with_dir("mclapply and lapply", {
+  skip_on_cran() # too slow for CRAN
   config <- dbug()
   config$parallelism <- "parLapply"
   config$jobs <- 1
@@ -112,6 +113,7 @@ test_with_dir("mclapply and lapply", {
 })
 
 test_with_dir("staged mclapply and lapply", {
+  skip_on_cran() # too slow for CRAN
   config <- dbug()
   env <- config$envir
   config$parallelism <- "parLapply_staged"
@@ -172,6 +174,7 @@ test_with_dir("null cases for message queues", {
 })
 
 test_with_dir("ensure_workers can be disabled", {
+  skip_on_cran() # too slow for CRAN
   load_mtcars_example()
   future::plan(future::sequential)
   config <- drake_config(my_plan)
