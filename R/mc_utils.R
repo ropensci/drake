@@ -182,7 +182,7 @@ mc_is_good_checksum <- function(target, checksum, config){
     return(FALSE)
   }
   if (identical("failed", get_progress_single(target, cache = config$cache))){
-    return(TRUE)
+    return(TRUE) # covered with parallel processes # nocov
   }
   all(
     vapply(
