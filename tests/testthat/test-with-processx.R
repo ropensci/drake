@@ -1,6 +1,7 @@
 drake_context("with processx")
 
 if (!identical(getOption("drake_no_processx"), TRUE)){
+  skip_on_cran() # could mess up uses of parallel
   test_with_dir("make(session = callr::r_vanilla)", {
     con <- dbug()
     con$envir <- dbug_envir(globalenv())
