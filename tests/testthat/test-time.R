@@ -150,6 +150,7 @@ test_with_dir("runtime predictions", {
 })
 
 test_with_dir("load balancing with custom worker assignemnts", {
+  skip_on_cran() # low priority
   config <- load_mtcars_example()
   config$plan$worker <- 1
   config$plan$worker[grepl("large", config$plan$target)] <- 2

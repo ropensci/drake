@@ -7,6 +7,7 @@ test_with_dir("empty triggers return logical", {
 })
 
 test_with_dir("triggers work as expected", {
+  skip_on_cran() # too slow for CRAN
   con <- dbug()
   con$plan$trigger <- "missing"
   con <- testrun(config = con)
