@@ -1,9 +1,9 @@
 # Version 5.2.0
 
-- Remove staged parallelism from all the `lapply()`-like backends (`parallelism =` `"mclapply"`, `"parLapply"`, and `"future_lapply"`). Now, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate `callr::r_bg()` process.
+- Sequester staged parallelism in backends "mclapply_staged" and "parLapply_staged". For the other `lapply`-like backends, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate background process called by `Rscript`.
 - Remove the appearance of staged parallelism from single-job `make()`'s.
 (Previously, there were "check" messages and a call to `staged_parallelism()`.)
-- Remove all remnants of staged parallelism internals.
+- Remove uncontained remnants of staged parallelism internals.
 - Allow different parallel backends for imports vs targets. For example, `make(parallelism = c(imports = "mclapply_staged", targets = "mclapply")`.
 - Fix a bug in environment pruning. Previously, dependencies of downstream targets were being dropped from memory in `make(jobs = 1)`. Now, they are kept in memory until no downstream target needs them (for `make(jobs = 1)`).
 - Improve `predict_runtime()`. It is a more sensible way to go about predicting runtimes with multiple jobs. Likely to be more accurate.
