@@ -1,6 +1,7 @@
 drake_context("migrate")
 
 test_with_dir("force loading a non-back-compatible cache", {
+  skip_on_cran() # low priority
   expect_null(assert_compatible_cache(NULL))
   expect_null(get_cache())
   expect_null(this_cache())
@@ -25,6 +26,7 @@ test_with_dir("force loading a non-back-compatible cache", {
 })
 
 test_with_dir("null cases for migrate_drake_project()", {
+  skip_on_cran() # low priority
   expect_true(suppressWarnings(migrate_drake_project(path = "not_found")))
   x <- new_cache(path = "path")
   expect_true(suppressWarnings(migrate_drake_project(path = "path")))
@@ -32,6 +34,7 @@ test_with_dir("null cases for migrate_drake_project()", {
 })
 
 test_with_dir("migrate_drake_project() an up to date cache", {
+  skip_on_cran() # low priority
   write_v4.3.0_project() # nolint
   file.rename(from = default_cache_path(), to = "old")
   expect_error(this_cache(path = "old"))
@@ -47,6 +50,7 @@ test_with_dir("migrate_drake_project() an up to date cache", {
 })
 
 test_with_dir("migrate_drake_project() a partially outdated cache", {
+  skip_on_cran() # low priority
   write_v4.3.0_project() # nolint
   file.rename(from = default_cache_path(), to = "old")
   cache <- this_cache(path = "old", force = TRUE)
@@ -64,11 +68,13 @@ test_with_dir("migrate_drake_project() a partially outdated cache", {
 })
 
 test_with_dir("migration_result()", {
+  skip_on_cran() # low priority
   expect_error(migration_result(FALSE, "backup"))
   expect_message(migration_result(TRUE, "backup"))
 })
 
 test_with_dir("Null cases in legacy functions", {
+  skip_on_cran() # low priority
   write_v4.3.0_project() # nolint
   cache <- this_cache(force = TRUE)
   cache$set(key = "\"report.md\"", value = Inf, namespace = "filemtime")
@@ -87,6 +93,7 @@ test_with_dir("Null cases in legacy functions", {
 })
 
 test_with_dir("edge cases in the legacy functions. (no glaring errors)", {
+  skip_on_cran() # low priority
   con <- dbug()
   testrun(con)
   target <- "\"intermediatefile.rds\""

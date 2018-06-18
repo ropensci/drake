@@ -1,6 +1,7 @@
 drake_context("future")
 
 test_with_dir("future package functionality", {
+  skip_on_cran() # too slow for CRAN
   future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
@@ -59,6 +60,7 @@ test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {
+  skip_on_cran() # too slow for CRAN
   for (caching in c("master", "worker")){
     con <- dbug()
     con$caching <- caching

@@ -56,6 +56,7 @@ test_with_dir("build time the same after superfluous make", {
 })
 
 test_with_dir("runtime predictions", {
+  skip_on_cran() # too slow for CRAN
   con <- dbug()
   expect_warning(p0 <- as.numeric(predict_runtime(con)))
   expect_true(p0 < 1e4)

@@ -27,3 +27,6 @@ after_success:
 
 after_failure:
   - find *Rcheck -name '*fail' -print -exec cat '{}' \;
+
+env:
+  - NOT_CRAN=true
