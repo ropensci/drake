@@ -194,13 +194,12 @@ mc_is_good_checksum <- function(target, checksum, config){
 }
 
 mc_wait_checksum <- function(target, checksum, config, timeout = 300){
-  interval <- 0.01 # Should be longer than mc_wait.
   i <- 0
-  while (i < timeout / interval){
+  while (i < timeout / mc_wait){
     if (mc_is_good_checksum(target, checksum, config)){
       return()
     } else {
-      Sys.sleep(interval)
+      Sys.sleep(mc_wait)
     }
     i <- i + 1
   }
@@ -211,4 +210,4 @@ mc_wait_checksum <- function(target, checksum, config, timeout = 300){
   )
 }
 
-mc_wait <- 1e-9
+mc_wait <- 0.01
