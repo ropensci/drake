@@ -30,7 +30,7 @@ run_future <- function(config){
         )
       }
     }
-    Sys.sleep(1e-9)
+    Sys.sleep(mc_wait)
   }
 }
 
