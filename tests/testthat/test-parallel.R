@@ -187,8 +187,7 @@ test_with_dir("ensure_workers can be disabled", {
 
 test_with_dir("checksum functionality", {
   config <- dbug()
-  config$cache <- storr::storr_environment()
-  make(config = config)
+  testrun(config)
   checksum <- mc_get_checksum(target = "combined", config = config)
   bad <- "askldfklhjsdfkj"
   expect_false(grepl("NA", checksum))
