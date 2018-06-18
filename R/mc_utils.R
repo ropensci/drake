@@ -181,7 +181,7 @@ mc_is_good_checksum <- function(target, checksum, config){
   if (!identical(stamp, checksum)){
     return(FALSE)
   }
-  if(identical("failed", get_progress_single(target, cache = config$cache))){
+  if (identical("failed", get_progress_single(target, cache = config$cache))){
     return(TRUE)
   }
   all(
