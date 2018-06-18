@@ -352,6 +352,7 @@ make_imports_targets <- function(config){
 }
 
 initialize_session <- function(config){
+  init_common_values(config$cache)
   if (config$log_progress){
     clear_tmp_namespace(
       cache = config$cache,
