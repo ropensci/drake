@@ -86,13 +86,3 @@ test_with_dir("can gracefully conclude a crashed worker", {
     clean(destroy = TRUE)
   }
 })
-
-test_with_dir("warning: future_lapply + batchtools", {
-  config <- drake_config(
-    drake_plan(x = 1), session_info = FALSE, verbose = FALSE)
-  config$parallelism <- "future_lapply"
-  future::plan(future::sequential)
-  expect_silent(tmp <- check_drake_config(config = config))
-  future::plan(future.batchtools::batchtools_local)
-  expect_warning(check_drake_config(config = config), regexp = "batchtools")
-})

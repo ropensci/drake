@@ -106,17 +106,14 @@ mc_preferred_queue <- function(target, config){
   return(NULL)
 }
 
-mc_conclude_done_targets <- function(config){
+mc_conclude_done_targets <- function(config, wait_for_checksums = TRUE){
   for (queue in config$mc_done_queues){
-    while (nrow(messages <- queue$pop(-1)) > 0){
-      for (i in seq_len(nrow(messages))){
-        msg <- messages[i, ]
-        if (identical(msg$message, "target")){
-          mc_conclude_target(target = msg$title, config = config)
-        } else {
-          drake_error("illegal message type in the done queue", config = config) # nocov # nolint
-        }
+    while (nrow(msg <- queue$pop(1)) > 0){
+      if (wait_for_checksums){
+        mc_wait_checksum(
+          target = msg$title, checksum = msg$message, config = config)
       }
+      mc_conclude_target(target = msg$title, config = config)
     }
   }
 }
@@ -163,6 +160,52 @@ mc_get_done_queue <- function(worker, config){
 
 mc_worker_id <- function(x){
   paste0("worker_", x)
+}
+
+mc_get_checksum <- function(target, config){
+  paste(
+    safe_get_hash(
+      key = target,
+      namespace = config$cache$default_namespace,
+      config = config
+    ),
+    safe_get_hash(key = target, namespace = "kernels", config = config),
+    safe_get_hash(key = target, namespace = "meta", config = config),
+    safe_get_hash(key = target, namespace = "attempt", config = config),
+    sep = " "
+  )
+}
+
+mc_is_good_checksum <- function(target, checksum, config){
+  stamp <- mc_get_checksum(target = target, config = config)
+  if (!identical(stamp, checksum)){
+    return(FALSE)
+  }
+  all(
+    vapply(
+      X = unlist(strsplit(stamp, " "))[1:3], # Exclude attempt flag (often NA).
+      config$cache$exists_object,
+      FUN.VALUE = logical(1)
+    )
+  )
+}
+
+mc_wait_checksum <- function(target, checksum, config, timeout = 300){
+  interval <- 0.01 # Should be longer than mc_wait.
+  i <- 0
+  while (i < timeout / interval){
+    if (mc_is_good_checksum(target, checksum, config)){
+      return()
+    } else {
+      Sys.sleep(interval)
+    }
+    i <- i + 1
+  }
+  drake_error(
+    "Target `", target, "` did not download from your ",
+    "network file system. Checksum verification timed out after about ",
+    timeout, " seconds.", config = config
+  )
 }
 
 mc_wait <- 1e-9

@@ -288,7 +288,7 @@ balance_load <- function(config, jobs){
   while (TRUE){
     # Run one iteration of mc_master()
     config <- mc_refresh_queue_lists(config)
-    mc_conclude_done_targets(config)
+    mc_conclude_done_targets(config, wait_for_checksums = FALSE)
     mc_assign_ready_targets(config)
     # List the running targets and their runtimes
     current_targets <- vapply(

@@ -8,7 +8,11 @@ get_attempt_flag <- function(config){
 
 # Allows different keys for thread safety.
 set_attempt_flag <- function(key = "_attempt", config){
-  config$cache$set(
-    key = as.character(key), value = TRUE, namespace = "attempt")
+  config$cache$duplicate(
+    key_src = "TRUE",
+    key_dest = as.character(key),
+    namespace_src = "common",
+    namespace_dest = "attempt"
+  )
   invisible()
 }

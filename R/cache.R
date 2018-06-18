@@ -415,10 +415,7 @@ configure_cache <- function(
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache){
   set_initial_drake_version(cache)
-  common_values <- list(
-    TRUE, FALSE, "finished", "in progress", "failed",
-    "not ready", "ready", "running", "idle", "done"
-  )
+  common_values <- list(TRUE, FALSE, "finished", "in progress", "failed")
   cache$mset(
     key = as.character(common_values),
     value = common_values,
@@ -478,6 +475,14 @@ is_default_cache <- function(cache){
 
 safe_get <- function(key, namespace, config){
   out <- just_try(config$cache$get(key = key, namespace = namespace))
+  if (inherits(out, "try-error")){
+    out <- NA
+  }
+  out
+}
+
+safe_get_hash <- function(key, namespace, config){
+  out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
   if (inherits(out, "try-error")){
     out <- NA
   }
