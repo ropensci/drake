@@ -423,6 +423,7 @@ find_globals <- function(expr){
     inputs@inputs,
     names(inputs@functions)
   ) %>%
+    base::union(inputs@nsevalVars) %>%
     setdiff(y = c(formals, drake_fn_patterns, ".")) %>%
     Filter(f = is_parsable)
 }
