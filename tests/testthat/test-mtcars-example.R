@@ -1,6 +1,7 @@
 drake_context("mtcars example")
 
 test_with_dir("mtcars example works", {
+  skip_on_cran() # too slow for CRAN
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs

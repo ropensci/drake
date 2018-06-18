@@ -1,6 +1,7 @@
 drake_context("envir")
 
 test_with_dir("prune_envir() warns if loading missing deps", {
+  skip_on_cran() # low priority for CRAN
   con <- drake_config(drake_plan(a = 1, b = a))
   expect_warning(
     prune_envir(targets = "b", config = con),
@@ -9,6 +10,7 @@ test_with_dir("prune_envir() warns if loading missing deps", {
 })
 
 test_with_dir("prune_envir in full build", {
+  skip_on_cran() # low priority for CRAN
   # drake_plan with lots of nested deps This will fail if
   # prune_envir() doesn't work.
   datasets <- drake_plan(x = 1, y = 2, z = 3)
@@ -66,6 +68,7 @@ test_with_dir("prune_envir in full build", {
 })
 
 test_with_dir("alt strategy for pruning", {
+  skip_on_cran() # low priority for CRAN
   envir <- new.env(parent = globalenv())
   cache <- storr::storr_environment()
   load_mtcars_example(envir = envir, cache = cache)

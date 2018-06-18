@@ -56,6 +56,7 @@ test_with_dir("parallelism_choices", {
 })
 
 test_with_dir("parallelism warnings", {
+  skip_on_cran() # too slow for CRAN
   config <- dbug()
   suppressWarnings(parallelism_warnings(config))
   expect_silent(
@@ -143,6 +144,7 @@ test_with_dir("staged mclapply and lapply", {
 })
 
 test_with_dir("lightly_parallelize_atomic() is correct", {
+  skip_on_cran() # too slow for CRAN
   withr::with_seed(seed = 2017, code = {
     x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
     append <- function(x){
@@ -159,6 +161,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 })
 
 test_with_dir("preferred queue may not be there", {
+  skip_on_cran() # too slow for CRAN
   load_mtcars_example(cache = storr::storr_environment())
   my_plan$worker <- 17
   config <- drake_config(my_plan, cache = storr::storr_environment())
@@ -189,6 +192,7 @@ test_with_dir("ensure_workers can be disabled", {
 })
 
 test_with_dir("checksum functionality", {
+  skip_on_cran() # too slow for CRAN
   config <- dbug()
   config$parallelism <- "parLapply"
   config$jobs <- 1

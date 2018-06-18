@@ -214,7 +214,7 @@ test_with_dir("make() and check_plan() trim outer whitespace in target names", {
   stat <- c(a = "finished", b = "finished", c = "finished",
             d = "finished")
   expect_equal(progress(), stat)
-
+  skip_on_cran() # low priority for CRAN
   expect_warning(
     con <- make(
       x,
@@ -228,6 +228,7 @@ test_with_dir("make() and check_plan() trim outer whitespace in target names", {
 })
 
 test_with_dir("make() plays nicely with tibbles", {
+  skip_on_cran() # low priority for CRAN
   skip_if_not_installed("pillar")
   skip_if_not_installed("tibble")
   x <- tibble::tribble(~target, ~command, "nothing", 1)
