@@ -183,7 +183,7 @@ mc_is_good_checksum <- function(target, checksum, config){
   }
   all(
     vapply(
-      X = unlist(strsplit(stamp, " "))[1:3],
+      X = unlist(strsplit(stamp, " "))[1:3], # Exclude attempt flag (often NA).
       config$cache$exists_object,
       FUN.VALUE = logical(1)
     )
