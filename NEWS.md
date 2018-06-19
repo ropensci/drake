@@ -1,3 +1,11 @@
+# Version 5.2.2
+
+- Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
+
+# Version 5.2.1
+
+- Skip several long-running and low-priority tests on CRAN.
+
 # Version 5.2.0
 
 - Sequester staged parallelism in backends "mclapply_staged" and "parLapply_staged". For the other `lapply`-like backends, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate background process called by `Rscript`.
