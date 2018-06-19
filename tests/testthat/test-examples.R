@@ -1,6 +1,7 @@
 drake_context("examples")
 
 test_with_dir("examples are listed and written", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_examples()
   expect_true(is.character(x) & length(x) > 0)
   for (i in x){
@@ -16,6 +17,7 @@ test_with_dir("examples are listed and written", {
 })
 
 test_with_dir("overwrites of report.Rmd handled correctly", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example(overwrite = TRUE)
   load_mtcars_example(overwrite = FALSE)
   expect_warning(load_mtcars_example(overwrite = TRUE))

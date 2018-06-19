@@ -1,11 +1,13 @@
 drake_context("parallel")
 
 test_with_dir("safe_jobs()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(safe_jobs(1:3))
   expect_true(is.numeric(safe_jobs(1)))
 })
 
 test_with_dir("check_jobs()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(check_jobs(NULL), regexp = "length")
   expect_error(check_jobs(-1), regexp = "jobs > 0")
   expect_error(check_jobs(c(-1, 1)), regexp = "jobs > 0")
@@ -17,6 +19,7 @@ test_with_dir("check_jobs()", {
 })
 
 test_with_dir("check_parallelism()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(check_parallelism(NULL), regexp = "length")
   expect_error(check_parallelism(-1), regexp = "character")
   expect_error(
@@ -31,12 +34,14 @@ test_with_dir("check_parallelism()", {
 })
 
 test_with_dir("imports_setting()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(imports_setting(8), 8)
   expect_equal(imports_setting(c(targets = 8, imports = 12)), 12)
   expect_equal(imports_setting(c(imports = 8, targets = 12)), 8)
 })
 
 test_with_dir("targets_setting()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(targets_setting(8), 8)
   expect_equal(targets_setting(c(targets = 8, imports = 12)), 8)
   expect_equal(targets_setting(c(imports = 8, targets = 12)), 12)
@@ -44,11 +49,13 @@ test_with_dir("targets_setting()", {
 
 
 test_with_dir("parallelism not found for testrun()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- list(parallelism = "not found", verbose = FALSE)
   suppressWarnings(expect_error(testrun(config)))
 })
 
 test_with_dir("parallelism_choices", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_true(
     length(parallelism_choices(distributed_only = TRUE)) <
     length(parallelism_choices(distributed_only = FALSE))
@@ -56,6 +63,7 @@ test_with_dir("parallelism_choices", {
 })
 
 test_with_dir("parallelism warnings", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   suppressWarnings(parallelism_warnings(config))
   expect_silent(
@@ -67,6 +75,7 @@ test_with_dir("parallelism warnings", {
 })
 
 test_with_dir("shell_file() writes correctly", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_false(file.exists("shell.sh"))
   shell_file()
   expect_true(file.exists("shell.sh"))
@@ -86,6 +95,7 @@ test_with_dir("shell_file() writes correctly", {
 })
 
 test_with_dir("mclapply and lapply", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$parallelism <- "parLapply"
   config$jobs <- 1
@@ -112,6 +122,7 @@ test_with_dir("mclapply and lapply", {
 })
 
 test_with_dir("staged mclapply and lapply", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   env <- config$envir
   config$parallelism <- "parLapply_staged"
@@ -141,6 +152,7 @@ test_with_dir("staged mclapply and lapply", {
 })
 
 test_with_dir("lightly_parallelize_atomic() is correct", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   withr::with_seed(seed = 2017, code = {
     x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
     append <- function(x){
@@ -157,6 +169,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 })
 
 test_with_dir("preferred queue may not be there", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example(cache = storr::storr_environment())
   my_plan$worker <- 17
   config <- drake_config(my_plan, cache = storr::storr_environment())
@@ -164,6 +177,7 @@ test_with_dir("preferred queue may not be there", {
 })
 
 test_with_dir("null cases for message queues", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- list(cache = storr::storr_environment())
   config <- mc_refresh_queue_lists(config)
   expect_null(config$mc_ready_queues)
@@ -172,6 +186,7 @@ test_with_dir("null cases for message queues", {
 })
 
 test_with_dir("ensure_workers can be disabled", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
   future::plan(future::sequential)
   config <- drake_config(my_plan)
@@ -186,6 +201,7 @@ test_with_dir("ensure_workers can be disabled", {
 })
 
 test_with_dir("checksum functionality", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$parallelism <- "parLapply"
   config$jobs <- 1

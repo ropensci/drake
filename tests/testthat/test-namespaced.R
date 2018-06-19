@@ -1,6 +1,7 @@
 drake_context("namespaced")
 
 test_with_dir("function_dependencies() works on :: and :::", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_false("g" %in% ls())
   crazy <- function(x, y) {
     z <- g(x) + y
@@ -44,6 +45,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
 })
 
 test_with_dir("namespaced drake_plan works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenarios <- get_testing_scenario()
   envir <- dbug()$envir
   rm(list = ls(envir), envir = envir)

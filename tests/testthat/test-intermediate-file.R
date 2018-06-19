@@ -1,6 +1,7 @@
 drake_context("intermediate file")
 
 test_with_dir("responses to intermediate file", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   testrun(config)
 

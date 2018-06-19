@@ -1,6 +1,7 @@
 drake_context("import object")
 
 test_with_dir("responses to imported objects and functions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   testrun(config)
 

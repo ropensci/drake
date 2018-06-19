@@ -1,6 +1,7 @@
 drake_context("other features")
 
 test_with_dir("Can standardize commands from expr or lang", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- parse(text = c("f(x +2) + 2", "!!y"))
   y <- standardize_command(x[[1]])
   x <- parse(text = "f(x +2) + 2")
@@ -13,6 +14,7 @@ test_with_dir("Can standardize commands from expr or lang", {
 })
 
 test_with_dir("build_target() does not need to access cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1))
   meta <- drake_meta(target = "x", config = config)
   config$cache <- NULL
@@ -25,6 +27,7 @@ test_with_dir("build_target() does not need to access cache", {
 })
 
 test_with_dir("cache log files and make()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = 1)
   make(x, session_info = FALSE)
   expect_false(file.exists("drake_cache.log"))
@@ -37,6 +40,7 @@ test_with_dir("cache log files and make()", {
 })
 
 test_with_dir("drake_build works as expected", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   pl <- drake_plan(a = 1, b = a)
@@ -81,6 +85,7 @@ test_with_dir("drake_build works as expected", {
 })
 
 test_with_dir("colors and shapes", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_message(drake_palette())
   expect_is(color_of("target"), "character")
   expect_is(color_of("import"), "character")
@@ -94,6 +99,7 @@ test_with_dir("colors and shapes", {
 })
 
 test_with_dir("shapes", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_is(shape_of("target"), "character")
   expect_is(shape_of("import"), "character")
   expect_is(shape_of("not found"), "character")
@@ -104,12 +110,14 @@ test_with_dir("shapes", {
 })
 
 test_with_dir("make() with skip_targets", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_silent(make(drake_plan(x = 1), skip_targets = TRUE,
     verbose = FALSE, session_info = FALSE))
   expect_false(cached(x))
 })
 
 test_with_dir("in_progress() works and errors are handled correctly", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(in_progress(), character(0))
   bad_plan <- drake_plan(x = function_doesnt_exist())
   expect_error(
@@ -131,6 +139,7 @@ test_with_dir("in_progress() works and errors are handled correctly", {
 })
 
 test_with_dir("warnings and messages are caught", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(in_progress(), character(0))
   f <- function(x){
     warning("my first warn")
@@ -149,6 +158,7 @@ test_with_dir("warnings and messages are caught", {
 })
 
 test_with_dir("missed() works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # May have been loaded in a globalenv() testing scenario
   remove_these <- intersect(ls(envir = globalenv()), c("f", "g"))
   rm(list = remove_these, envir = globalenv())
@@ -159,6 +169,7 @@ test_with_dir("missed() works", {
 })
 
 test_with_dir(".onLoad() warns correctly and .onAttach() works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- ".RData"
   expect_false(file.exists(f))
   expect_silent(drake:::.onLoad())
@@ -172,6 +183,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 })
 
 test_with_dir("check_drake_config() via check_plan() and make()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
   suppressWarnings(expect_error(check_plan(y, envir = config$envir)))
@@ -202,6 +214,7 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
 })
 
 test_with_dir("targets can be partially specified", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$targets <- "\"intermediatefile.rds\""
   testrun(config)
@@ -217,10 +230,12 @@ test_with_dir("targets can be partially specified", {
 })
 
 test_with_dir("file_store quotes properly", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(file_store("x"), "\"x\"")
 })
 
 test_with_dir("unique_random_string() works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   set.seed(2017)
   x <- unique_random_string(n = 15)
   y <- unique_random_string(exclude = "a", n = 10)
@@ -236,6 +251,7 @@ test_with_dir("unique_random_string() works", {
 })
 
 test_with_dir("misc utils", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
   config <- list(plan = data.frame(x = 1, y = 2))
   expect_error(check_drake_config(config), regexp = "columns")

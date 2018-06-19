@@ -1,12 +1,14 @@
 drake_context("triggers")
 
 test_with_dir("empty triggers return logical", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_identical(depends_trigger("x", list(), list()), FALSE)
   expect_identical(command_trigger("x", list(), list()), FALSE)
   expect_identical(file_trigger("x", list(), list()), FALSE)
 })
 
 test_with_dir("triggers work as expected", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   con$plan$trigger <- "missing"
   con <- testrun(config = con)
@@ -91,6 +93,7 @@ test_with_dir("triggers work as expected", {
 })
 
 test_with_dir("all triggers bring targets up to date", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   for (trigger in triggers()){
     clean(destroy = TRUE)
     con <- dbug()
@@ -108,6 +111,7 @@ test_with_dir("all triggers bring targets up to date", {
 
 # Similar enough to the triggers to include here:
 test_with_dir("make(..., skip_imports = TRUE) works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   verbose <- max(con$jobs) < 2 &&
     targets_setting(con$parallelism) == "parLapply"

@@ -1,6 +1,7 @@
 drake_context("import file")
 
 test_with_dir("responses to imported file", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_silent(check_plan(plan = config$plan, envir = config$envir))
   expect_warning(

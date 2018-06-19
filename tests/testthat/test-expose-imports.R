@@ -1,6 +1,7 @@
 drake_context("expose imports")
 
 test_with_dir("expose_imports() works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   evalq(

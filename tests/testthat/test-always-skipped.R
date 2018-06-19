@@ -3,6 +3,7 @@ if (FALSE){
 drake_context("always skipped")
 
 test_with_dir("make() uses the worker column of the plan", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time restrictions).
   future::plan(future::sequential)
   envir <- new.env(parent = globalenv())
   load_mtcars_example(envir = envir)

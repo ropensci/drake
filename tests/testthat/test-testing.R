@@ -1,9 +1,11 @@
 drake_context("testing")
 
 test_with_dir("test_with_dir() clears out files", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   for (i in 1:10){
     expect_silent(
       test_with_dir("test", {
+        skip_on_cran()
         expect_false(file.exists("x"))
         file.create("x")
         expect_true(file.exists("x"))
@@ -13,6 +15,7 @@ test_with_dir("test_with_dir() clears out files", {
 })
 
 test_with_dir("set_testing_scenario", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   original <- get_testing_scenario_name()
   original_opt <- getOption(test_option_name)
   with_all_options({
@@ -28,6 +31,7 @@ test_with_dir("set_testing_scenario", {
 })
 
 test_with_dir("testing utils", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   path <- system.file("DESCRIPTION", package = "drake")
   testfiles <- unit_test_files(path = path)
   expect_equal(basename(testfiles), "testthat")
@@ -44,8 +48,10 @@ test_with_dir("testing utils", {
 })
 
 test_with_dir("test_with_dir() evaluates inside the testing envir", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   some_outside_object <- 4
   test_with_dir("nested test", {
+    skip_on_cran()
     some_nested_object <- 1
     expect_true("some_nested_object" %in% ls())
     expect_false("some_outside_object" %in% ls())
@@ -55,6 +61,7 @@ test_with_dir("test_with_dir() evaluates inside the testing envir", {
 })
 
 test_with_dir("test_scenarios()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   old_scenario <- getOption(test_option_name)
   wd <- getwd()
   some_outside_object <- 4

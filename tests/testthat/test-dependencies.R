@@ -1,6 +1,7 @@
 drake_context("dependencies")
 
 test_with_dir("safe_find_globals", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(
     safe_find_globals(new.env()),
     regexp = "implicit dependencies"
@@ -8,12 +9,14 @@ test_with_dir("safe_find_globals", {
 })
 
 test_with_dir("unparsable commands are handled correctly", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
   expect_false(is_parsable(x))
   expect_error(deps_code(x))
 })
 
 test_with_dir("magrittr dot is ignored", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
     sort(deps_code("sqrt(x + y + .)")),
     sort(c("sqrt", "x", "y"))
@@ -25,6 +28,7 @@ test_with_dir("magrittr dot is ignored", {
 })
 
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
   f <- function(){
     file_in("x")
@@ -68,6 +72,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
 
 test_with_dir(
   "deps_code() correctly reports dependencies of functions and commands", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(deps_code(""), character(0))
   expect_equal(length(command_dependencies(NA)), 0)
   expect_equal(length(command_dependencies(NULL)), 0)
@@ -101,6 +106,7 @@ test_with_dir(
 })
 
 test_with_dir("tracked() works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(
     tracked(plan = config$plan, envir = config$envir, verbose = FALSE))
@@ -116,6 +122,7 @@ test_with_dir("tracked() works", {
 })
 
 test_with_dir("missing files via check_plan()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_silent(check_plan(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
@@ -126,6 +133,7 @@ test_with_dir("missing files via check_plan()", {
 })
 
 test_with_dir("Vectorized nested functions work", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   e <- new.env(parent = globalenv())
   eval(parse(text = "f <- Vectorize(function(x) g(x), \"x\")"),
        envir = e)
@@ -163,6 +171,7 @@ test_with_dir("Vectorized nested functions work", {
 })
 
 test_with_dir("deps_targets()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example(cache = storr::storr_environment())
   config <- drake_config(my_plan, cache = storr::storr_environment())
   expect_equal(

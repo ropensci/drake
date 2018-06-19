@@ -1,6 +1,7 @@
 drake_context("reproducible random numbers")
 
 test_with_dir("Random targets are reproducible", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   env <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism

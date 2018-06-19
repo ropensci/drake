@@ -1,6 +1,7 @@
 drake_context("deprecation")
 
 test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
   on.exit(
     pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
@@ -16,14 +17,17 @@ test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
 })
 
 test_with_dir("deprecation: examples", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(load_basic_example())
 })
 
 test_with_dir("deprecation: future", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(backend())
 })
 
 test_with_dir("deprecation: make() and config()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   expect_warning(make(drake_plan(x = 1), return_config = TRUE,
     verbose = FALSE, session_info = FALSE))
@@ -31,6 +35,7 @@ test_with_dir("deprecation: make() and config()", {
 })
 
 test_with_dir("deprecation: cache functions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x = 1)
   expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
   expect_silent(make(plan, verbose = FALSE, session_info = FALSE))
@@ -46,6 +51,7 @@ test_with_dir("deprecation: cache functions", {
 })
 
 test_with_dir("drake_plan deprecation", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl1 <- expect_warning(drake::plan(x = 1, y = x))
   pl2 <- drake_plan(x = 1, y = x)
   pl3 <- expect_warning(plan_drake(x = 1, y = x))
@@ -61,6 +67,7 @@ test_with_dir("drake_plan deprecation", {
 })
 
 test_with_dir("drake version checks in previous caches", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # We need to be able to set the drake version
   # to check back compatibility.
   plan <- drake_plan(x = 1)
@@ -74,6 +81,7 @@ test_with_dir("drake version checks in previous caches", {
 })
 
 test_with_dir("generative templating deprecation", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(drake::evaluate(drake_plan()))
   expect_warning(drake::expand(drake_plan()))
   expect_warning(drake::gather(drake_plan()))
@@ -93,6 +101,7 @@ test_with_dir("generative templating deprecation", {
 })
 
 test_with_dir("deprecated graphing functions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1)
   expect_warning(build_graph(pl))
   con <- drake_config(plan = pl)
@@ -102,11 +111,13 @@ test_with_dir("deprecated graphing functions", {
 })
 
 test_with_dir("deprecated example(s)_drake functions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(example_drake())
   expect_warning(examples_drake())
 })
 
 test_with_dir("deprecate misc utilities", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(parallel_stages(1), regexp = "parallelism")
   expect_error(rate_limiting_times(1), regexp = "parallelism")
   expect_warning(as_file("x"))
@@ -119,6 +130,7 @@ test_with_dir("deprecate misc utilities", {
 })
 
 test_with_dir("deprecated arguments", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1, b = a)
   expect_warning(
     con <- drake_config(
@@ -131,6 +143,7 @@ test_with_dir("deprecated arguments", {
 })
 
 test_with_dir("old file API", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(x <- drake_plan(
     file.csv = write.csv(mtcars, file = "file.csv"),
     strings_in_dots = "literals",

@@ -1,6 +1,7 @@
 drake_context("mtcars example")
 
 test_with_dir("mtcars example works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs

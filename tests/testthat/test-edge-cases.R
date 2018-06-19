@@ -1,7 +1,7 @@
 drake_context("edge cases")
 
 test_with_dir("skip everything", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function(x){
     x
   }
@@ -16,7 +16,7 @@ test_with_dir("skip everything", {
 })
 
 test_with_dir("can keep going", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -59,7 +59,7 @@ test_with_dir("can keep going", {
 })
 
 test_with_dir("failed targets do not become up to date", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   fail <- FALSE
   plan <- drake_plan(
     d = 3,
@@ -86,7 +86,7 @@ test_with_dir("failed targets do not become up to date", {
 })
 
 test_with_dir("drake_plan_override() quits correctly in error", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   con$plan$missing <- "nope"
   expect_error(
@@ -96,7 +96,7 @@ test_with_dir("drake_plan_override() quits correctly in error", {
 })
 
 test_with_dir("config and make without safety checks", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(
     file = readRDS(file_in("my_file.rds")),
     strings_in_dots = "literals"
@@ -108,13 +108,13 @@ test_with_dir("config and make without safety checks", {
 })
 
 test_with_dir("Strings stay strings, not symbols", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_silent(x <- drake_plan(a = "A", strings_in_dots = "literals"))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
 test_with_dir("error handlers", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(error_na(1), NA)
   expect_false(error_false(1))
   expect_equal(error_character0(1), character(0))
@@ -130,18 +130,19 @@ test_with_dir("error handlers", {
 })
 
 test_with_dir("error when file target names do not match actual filenames", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(x <- drake_plan(y = 1, file_targets = TRUE))
   expect_warning(expect_error(make(x, verbose = FALSE, session_info = FALSE)))
 })
 
 test_with_dir("clean a nonexistent cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   clean(list = "no_cache")
   expect_false(file.exists(default_cache_path()))
 })
 
 test_with_dir("stringsAsFactors can be TRUE", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function(x) {
     return(x)
   }
@@ -156,7 +157,7 @@ test_with_dir("stringsAsFactors can be TRUE", {
 # Target/import conflicts are unpredictable. A warning should
 # be enough.
 test_with_dir("target conflicts with current import or another target", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$plan <- rbind(config$plan, data.frame(target = "f",
     command = "1+1"))
@@ -167,7 +168,7 @@ test_with_dir("target conflicts with current import or another target", {
 })
 
 test_with_dir("target conflicts with previous import", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   testrun(config)
   config$plan$command[2] <- "g(1+1)"
@@ -180,7 +181,7 @@ test_with_dir("target conflicts with previous import", {
 })
 
 test_with_dir("true targets can be functions", {
-   # low priority for CRAN
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   generator <- function() return(function(x) {
     x + 1
   })

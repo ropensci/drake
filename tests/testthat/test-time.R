@@ -1,6 +1,7 @@
 drake_context("time")
 
 test_with_dir("can ignore a bad time", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = 1, b = 2)
   make(x, verbose = FALSE)
   cache <- get_cache()
@@ -16,6 +17,7 @@ test_with_dir("can ignore a bad time", {
 })
 
 test_with_dir("proc_time runtimes can be fetched", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   cache <- storr::storr_rds("cache")
   key <- "x"
   t <- system.time({
@@ -33,6 +35,7 @@ test_with_dir("proc_time runtimes can be fetched", {
 })
 
 test_with_dir("build times works if no targets are built", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cached(), character(0))
   expect_equal(nrow(build_times(search = FALSE)), 0)
   my_plan <- drake_plan(x = 1)
@@ -42,6 +45,7 @@ test_with_dir("build times works if no targets are built", {
 })
 
 test_with_dir("build time the same after superfluous make", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(y = Sys.sleep(0.25))
   c1 <- make(x, verbose = FALSE, session_info = FALSE)
   expect_equal(justbuilt(c1), "y")
@@ -56,6 +60,7 @@ test_with_dir("build time the same after superfluous make", {
 })
 
 test_with_dir("runtime predictions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   expect_warning(p0 <- as.numeric(predict_runtime(con)))
   expect_true(p0 < 1e4)
@@ -149,6 +154,7 @@ test_with_dir("runtime predictions", {
 })
 
 test_with_dir("load balancing with custom worker assignemnts", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- load_mtcars_example()
   config$plan$worker <- 1
   config$plan$worker[grepl("large", config$plan$target)] <- 2

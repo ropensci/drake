@@ -1,6 +1,7 @@
 drake_context("memory cache")
 
 test_with_dir("storr_environment is usable", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- storr_environment(hash_algorithm = "murmur32") %>%
     configure_cache(
       long_hash_algo = "sha1",
@@ -19,6 +20,7 @@ test_with_dir("storr_environment is usable", {
 })
 
 test_with_dir("arbitrary storr in-memory cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_false(file.exists(default_cache_path()))
   parallelism <- default_parallelism()
   jobs <- 1

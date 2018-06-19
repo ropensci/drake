@@ -1,6 +1,7 @@
 drake_context("graph")
 
 test_with_dir("Recursive functions are okay", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   factorial <- function(n){
     if (n == 0){
       1
@@ -14,10 +15,12 @@ test_with_dir("Recursive functions are okay", {
 })
 
 test_with_dir("Supplied graph is not an igraph.", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(prune_drake_graph(12345, to = "node"))
 })
 
 test_with_dir("graph does not fail if input file is binary", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(
     y = readRDS(file_in("input.rds")),
     strings_in_dots = "literals"
@@ -29,11 +32,13 @@ test_with_dir("graph does not fail if input file is binary", {
 })
 
 test_with_dir("null graph", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- dataframes_graph(config = list(graph = igraph::make_empty_graph()))
   expect_equal(x, null_graph())
 })
 
 test_with_dir("circular non-DAG drake_plans quit in error", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = b, b = c, c = a)
   expect_error(tmp <- capture.output(check_plan(x)))
   expect_error(
@@ -52,6 +57,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
 })
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   con2 <- drake_config(drake_plan(a = 1), verbose = FALSE)
   expect_warning(
@@ -66,6 +72,7 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
 })
 
 test_with_dir("graph functions work", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_equal(
     class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
@@ -80,6 +87,7 @@ test_with_dir("graph functions work", {
 })
 
 test_with_dir("Supplied graph is pruned.", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
   graph <- build_drake_graph(my_plan)
   con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
@@ -91,6 +99,7 @@ test_with_dir("Supplied graph is pruned.", {
 })
 
 test_with_dir("graphing args are not ignored (mtcars example)", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs

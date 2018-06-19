@@ -1,12 +1,14 @@
 drake_context("priority queue")
 
 test_with_dir("empty queue", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- list(schedule = igraph::make_empty_graph())
   q <- new_priority_queue(config)
   expect_equal(nrow(q$data), 0)
 })
 
 test_with_dir("bad queue", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(
     R6_priority_queue$new(1:2, 1:4, 1:3),
     regexp = "priority queue"
@@ -14,6 +16,7 @@ test_with_dir("bad queue", {
 })
 
 test_with_dir("the priority queue works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   targets <- c("foo", "bar", "baz", "Bob", "Amy", "Joe", "soup", "spren")
   ndeps <- c(8, 2, 3, 7, 4, 1, 7, 5)
   priorities <- c(rep(2, 4), rep(1, 4))
@@ -100,6 +103,7 @@ test_with_dir("the priority queue works", {
 })
 
 test_with_dir("queues with priorities", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example(cache = storr::storr_environment())
   my_plan$priority <- seq_len(nrow(my_plan))
   config <- drake_config(my_plan)

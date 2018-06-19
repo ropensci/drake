@@ -1,6 +1,7 @@
 drake_context("Makefile")
 
 test_with_dir("Makefile path and conflicts", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example(cache = storr::storr_environment())
   file <- "non_standard_makefile"
   config <- drake_config(
@@ -21,6 +22,7 @@ test_with_dir("Makefile path and conflicts", {
 })
 
 test_with_dir("recipe commands", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_message(Makefile_recipe())
   expect_message(Makefile_recipe(recipe_command = "R -e 'R_RECIPE' -q"))
   my_plan <- drake_plan(y = 1)
@@ -39,6 +41,7 @@ test_with_dir("recipe commands", {
 })
 
 test_with_dir("no Makefile for make_imports()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cached(), character(0))
   x <- drake_plan(a = ls())
   expect_false(file.exists("Makefile"))
@@ -53,6 +56,7 @@ test_with_dir("no Makefile for make_imports()", {
 })
 
 test_with_dir("prepend arg works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$verbose <- FALSE
   store_drake_config(config = config)
@@ -67,6 +71,7 @@ test_with_dir("prepend arg works", {
 })
 
 test_with_dir("files inside directories can be timestamped", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan({
     dir.create("t1"); saveRDS(1, file_out("t1/t2"))
   })
@@ -92,6 +97,7 @@ test_with_dir("files inside directories can be timestamped", {
 })
 
 test_with_dir("mtcars Makefile stuff works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   make(config$plan, targets = "combined", envir = config$envir,
     verbose = FALSE, session_info = FALSE)
@@ -141,6 +147,7 @@ test_with_dir("mtcars Makefile stuff works", {
 })
 
 test_with_dir("Makefile stuff in globalenv()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   targ <- "drake_TESTGLOBAL_target"
   drake_TESTGLOBAL_plan <- data.frame(target = targ, command = 1)
   drake_TESTGLOBAL_config <- make(
@@ -172,6 +179,7 @@ test_with_dir("Makefile stuff in globalenv()", {
 })
 
 test_with_dir("packages are loaded in prework", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("abind")
   skip_if_not_installed("MASS")
 

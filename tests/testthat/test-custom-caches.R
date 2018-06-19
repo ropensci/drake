@@ -1,6 +1,7 @@
 drake_context("custom caches")
 
 test_with_dir("cache_path finding", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- new_cache("x")
   expect_true(is.character(cache_path(x)))
   expect_null(cache_path(NULL))
@@ -8,12 +9,14 @@ test_with_dir("cache_path finding", {
 })
 
 test_with_dir("fancy cache features, bad paths", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   saveRDS(1, file = "exists")
   suppressWarnings(expect_error(x <- new_cache("exists")))
   expect_silent(tmp <- uncache(targets = "targ", cache = NULL))
 })
 
 test_with_dir("null hashes", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- new_cache("x")
   x$del("short_hash_algo", namespace = "config")
   expect_null(short_hash(x))
@@ -25,6 +28,7 @@ test_with_dir("null hashes", {
 })
 
 test_with_dir("First configure", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- new_cache()
   expect_equal(short_hash(x), default_short_hash_algo())
   expect_equal(long_hash(x), default_long_hash_algo())
@@ -62,6 +66,7 @@ test_with_dir("First configure", {
 })
 
 test_with_dir("Pick the hashes", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- new_cache("new",
     short_hash_algo = "murmur32",
     long_hash_algo = "crc32"
@@ -90,6 +95,7 @@ test_with_dir("Pick the hashes", {
 })
 
 test_with_dir("totally off the default cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   saveRDS("stuff", file = "some_file")
   con <- dbug()
   unlink(default_cache_path(), recursive = TRUE)
@@ -112,6 +118,7 @@ test_with_dir("totally off the default cache", {
 })
 
 test_with_dir("use two differnt file system caches", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   saveRDS("stuff", file = "some_file")
   targ <- "DRAKE_TEST_target"
   my_plan <- data.frame(

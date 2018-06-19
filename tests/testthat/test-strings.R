@@ -4,6 +4,7 @@ drake_context("strings")
 # https://github.com/ropensci/eply
 
 test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(drake_quotes(), character(0))
   expect_equal(drake_quotes(single = T), character(0))
   expect_equal(drake_quotes(drake_strings(x, y)), c("\"x\"", "\"y\""))
@@ -27,6 +28,7 @@ test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
 })
 
 test_with_dir("Function drake_strings() is correct.", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(character(0), drake_strings())
   expect_equal("1", drake_strings(1))
   expect_equal(

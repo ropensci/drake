@@ -1,6 +1,7 @@
 drake_context("cache")
 
 test_with_dir("dependency profile", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- make(drake_plan(a = 1), session_info = FALSE)
   expect_error(dependency_profile(
     target = "notfound", config = config))
@@ -9,12 +10,14 @@ test_with_dir("dependency profile", {
 })
 
 test_with_dir("Missing cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   s <- storr::storr_rds("s")
   unlink(s$driver$path, recursive = TRUE)
   expect_error(assert_cache(s), regexp = "drake cache missing")
 })
 
 test_with_dir("Cache namespaces", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- cache_namespaces()
   y <- target_namespaces()
   z <- cleaned_namespaces()
@@ -25,16 +28,19 @@ test_with_dir("Cache namespaces", {
 })
 
 test_with_dir("safe_get", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- list(cache = storr::storr_environment())
   expect_true(is.na(safe_get(key = "x", namespace = "y", config = con)))
 })
 
 test_with_dir("clean() works if there is no cache already", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   clean(list = "no_cache")
   expect_false(file.exists(default_cache_path()))
 })
 
 test_with_dir("can exclude bad targets from loadd()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(a = TRUE)
   make(plan)
   expect_silent(loadd(a, b, lazy = FALSE))
@@ -50,6 +56,7 @@ test_with_dir("can exclude bad targets from loadd()", {
 })
 
 test_with_dir("bad/corrupt caches, no progress, no seed", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
   x <- drake_plan(a = 1)
@@ -71,6 +78,7 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
 })
 
 test_with_dir("non-existent caches", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(0, nrow(drake_cache_log()))
   check_storr_short_hash(NULL, "BLAH")
   expect_equal(find_cache(), NULL)
@@ -86,12 +94,14 @@ test_with_dir("non-existent caches", {
 })
 
 test_with_dir("try to rescue non-existent stuff", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_null(rescue_cache())
   cache <- storr_rds("dummy_cache")
   expect_silent(rescue_del(key = "no_key", cache = cache, namespace = "none"))
 })
 
 test_with_dir("subspaces", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   lst <- list_subspace(
     subspace = "y", namespace = "x", cache = NULL, jobs = 1)
   expect_equal(lst, character(0))
@@ -119,6 +129,7 @@ test_with_dir("subspaces", {
 })
 
 test_with_dir("cache functions work", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # May have been loaded in a globalenv() testing scenario # nolint
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
   rm(list = remove_these, envir = globalenv())

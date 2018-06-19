@@ -1,6 +1,7 @@
 drake_context("console")
 
 test_with_dir("console_cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_silent(
     console_cache(config = list(cache_path = "123", verbose = TRUE)))
   expect_message(
@@ -10,6 +11,7 @@ test_with_dir("console_cache", {
 })
 
 test_with_dir("console_up_to_date", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1)
   con <- make(pl, verbose = FALSE, session_info = FALSE)
   expect_silent(console_up_to_date(con))
@@ -22,6 +24,7 @@ test_with_dir("console_up_to_date", {
 })
 
 test_with_dir("verbose consoles", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- list(verbose = 2)
   expect_silent(console_missing("\"myfile\"", config))
   expect_silent(console_import("\"myfile\"", config))
@@ -34,6 +37,7 @@ test_with_dir("verbose consoles", {
 })
 
 test_with_dir("console_parLapply", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- list(verbose = TRUE)
   expect_message(console_parLapply(config = config)) # nolint
   config <- list(verbose = FALSE)
@@ -41,6 +45,7 @@ test_with_dir("console_parLapply", {
 })
 
 test_with_dir("multiline message cap", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   n <- 100
   x1 <- "aldksjf"
   x2 <- rep(x1, n)
@@ -53,6 +58,7 @@ test_with_dir("multiline message cap", {
 })
 
 test_with_dir("console", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$verbose <- TRUE
   expect_silent(console(imported = TRUE, target = "myinput",
@@ -96,6 +102,7 @@ test_with_dir("console", {
 })
 
 test_with_dir("console_many_targets() works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- list(verbose = FALSE)
   expect_silent(console_many_targets(
     targets = character(0), pattern = "check", config = config))
@@ -122,6 +129,7 @@ test_with_dir("console_many_targets() works", {
 })
 
 test_with_dir("console_persistent_workers", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   expect_silent(console_persistent_workers(con))
   con$verbose <- 4
@@ -129,6 +137,7 @@ test_with_dir("console_persistent_workers", {
 })
 
 test_with_dir("console_skip", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
   expect_silent(console_skip("bla", con))
   con$verbose <- 4
@@ -136,6 +145,7 @@ test_with_dir("console_skip", {
 })
 
 test_with_dir("console to file", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
   cache <- storr::storr_environment()
   expect_false(file.exists("log.txt"))
@@ -160,6 +170,7 @@ test_with_dir("console to file", {
 })
 
 test_with_dir("drake_warning() and drake_error()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x = {
       message("some_message")
       warning("some_warning")
@@ -184,6 +195,7 @@ test_with_dir("drake_warning() and drake_error()", {
 })
 
 test_with_dir("show_source()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x = rnorm(15))
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE)
