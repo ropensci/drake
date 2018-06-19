@@ -91,7 +91,6 @@ test_with_dir("Supplied graph is pruned.", {
 })
 
 test_with_dir("graphing args are not ignored (mtcars example)", {
-  skip_on_cran() # too slow for CRAN
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs

@@ -1,7 +1,6 @@
 drake_context("dbi cache")
 
 test_with_dir("storr_dbi is usable", {
-  skip_on_cran() # low priority
   skip_if_not_installed("DBI")
   skip_if_not_installed("RSQLite")
 
