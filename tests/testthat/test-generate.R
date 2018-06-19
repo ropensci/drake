@@ -1,7 +1,6 @@
 drake_context("generate")
 
 test_with_dir("empty generative args", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = 1, b = FUNCTION())
   expect_equal(evaluate_plan(x), x)
   expect_equal(evaluations(x), x)
@@ -9,7 +8,6 @@ test_with_dir("empty generative args", {
 })
 
 test_with_dir("evaluate, expand, and gather", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
@@ -80,7 +78,6 @@ test_with_dir("evaluate, expand, and gather", {
 })
 
 test_with_dir("analyses and summaries", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   datasets <- drake_plan(small = simulate(5), large = simulate(50))
   methods <- drake_plan(
     regression1 = reg1(dataset__),
@@ -320,7 +317,6 @@ test_with_dir("reduce_plan()", {
 })
 
 test_with_dir("non-expanded grid, issue 235", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   rules_grid <- tibble::tibble(
     school_ =  c("schoolA", "schoolB", "schoolC"),
     funding_ = c("public", "public", "private")

@@ -1,16 +1,6 @@
 drake_context("mtcars example")
 
-test_with_dir("just run the mtcars example", {
-  load_mtcars_example()
-  cache <- storr::storr_environment()
-  make(my_plan, cache = cache, session_info = FALSE)
-  config <- drake_config(my_plan, cache = cache)
-  jb <- justbuilt(config)
-  expect_true("\"report.md\"" %in% jb)
-})
-
 test_with_dir("mtcars example works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
