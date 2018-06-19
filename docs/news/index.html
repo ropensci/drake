@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">drake</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9000</span>
       </span>
     </div>
 
@@ -112,9 +112,9 @@
 <a href="#version-5-2-0" class="anchor"></a>Version 5.2.0<small> Unreleased </small>
 </h1>
 <ul>
-<li>Remove staged parallelism from all the <code>lapply()</code>-like backends (<code>parallelism =</code> <code>"mclapply"</code>, <code>"parLapply"</code>, and <code>"future_lapply"</code>). Now, <code>drake</code> uses persistent workers and a master process. In the case of <code>"future_lapply"</code> parallelism, the master process is a separate <code><a href="http://www.rdocumentation.org/packages/callr/topics/r_bg">callr::r_bg()</a></code> process.</li>
+<li>Sequester staged parallelism in backends “mclapply_staged” and “parLapply_staged”. For the other <code>lapply</code>-like backends, <code>drake</code> uses persistent workers and a master process. In the case of <code>"future_lapply"</code> parallelism, the master process is a separate background process called by <code>Rscript</code>.</li>
 <li>Remove the appearance of staged parallelism from single-job <code><a href="../reference/make.html">make()</a></code>’s. (Previously, there were “check” messages and a call to <code>staged_parallelism()</code>.)</li>
-<li>Remove all remnants of staged parallelism internals.</li>
+<li>Remove uncontained remnants of staged parallelism internals.</li>
 <li>Allow different parallel backends for imports vs targets. For example, <code>make(parallelism = c(imports = "mclapply_staged", targets = "mclapply")</code>.</li>
 <li>Fix a bug in environment pruning. Previously, dependencies of downstream targets were being dropped from memory in <code><a href="../reference/make.html">make(jobs = 1)</a></code>. Now, they are kept in memory until no downstream target needs them (for <code><a href="../reference/make.html">make(jobs = 1)</a></code>).</li>
 <li>Improve <code><a href="../reference/predict_runtime.html">predict_runtime()</a></code>. It is a more sensible way to go about predicting runtimes with multiple jobs. Likely to be more accurate.</li>

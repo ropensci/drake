@@ -66,7 +66,7 @@ for an overview of the documentation." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">drake</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.1.3.9001</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9000</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@ for an overview of the documentation.</p>
     <pre class="usage"><span class='fu'>make</span>(<span class='kw'>plan</span> <span class='kw'>=</span> <span class='fu'><a href='read_drake_plan.html'>read_drake_plan</a></span>(), <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/possible_targets'>possible_targets</a></span>(<span class='no'>plan</span>),
   <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'>parent.frame</span>(), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_verbose'>default_verbose</a></span>(),
   <span class='kw'>hook</span> <span class='kw'>=</span> <span class='no'>default_hook</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/get_cache'>get_cache</a></span>(<span class='kw'>verbose</span> <span class='kw'>=</span> <span class='no'>verbose</span>, <span class='kw'>force</span> <span class='kw'>=</span>
-  <span class='no'>force</span>, <span class='kw'>console</span> <span class='kw'>=</span> <span class='no'>console</span>), <span class='kw'>fetch_cache</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>force</span>, <span class='kw'>console_log_file</span> <span class='kw'>=</span> <span class='no'>console_log_file</span>), <span class='kw'>fetch_cache</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>parallelism</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_parallelism'>default_parallelism</a></span>(), <span class='kw'>jobs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>packages</span> <span class='kw'>=</span> <span class='fu'>rev</span>(<span class='fu'>.packages</span>()), <span class='kw'>prework</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>),
   <span class='kw'>prepend</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>command</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/default_Makefile_command'>default_Makefile_command</a></span>(),
@@ -143,7 +143,8 @@ for an overview of the documentation.</p>
   <span class='kw'>session_info</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>caching</span> <span class='kw'>=</span> <span class='st'>"worker"</span>, <span class='kw'>keep_going</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>imports_only</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pruning_strategy</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"speed"</span>, <span class='st'>"memory"</span>),
-  <span class='kw'>makefile_path</span> <span class='kw'>=</span> <span class='st'>"Makefile"</span>, <span class='kw'>console</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>makefile_path</span> <span class='kw'>=</span> <span class='st'>"Makefile"</span>, <span class='kw'>console_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ensure_workers</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -550,11 +551,23 @@ path to the <code>args</code> argument so <code>make</code> knows where to find 
 Example: <code>make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")</code> # nolint</p></td>
     </tr>
     <tr>
-      <th>console</th>
-      <td><p>character scalar or <code>NULL</code>. If <code>console</code> is <code>NULL</code>, console
-output will be printed to the R console using <code>message()</code>.
-Otherwise, <code>console</code> should be the name of a flat file.
+      <th>console_log_file</th>
+      <td><p>character scalar or <code>NULL</code>.
+If <code>NULL</code>, console output will be printed
+to the R console using <code>message()</code>.
+Otherwise, <code>console_log_file</code> should be the name of a flat file.
 Console output will be appended to that file.</p></td>
+    </tr>
+    <tr>
+      <th>ensure_workers</th>
+      <td><p>logical, whether the master process
+should wait for the workers to post before assigning them
+targets. Should usually be <code>TRUE</code>. Set to <code>FALSE</code>
+for <code>make(parallelism = "future_lapply", jobs = n)</code>
+(<code>n &gt; 1</code>) when combined with <code><a href='http://www.rdocumentation.org/packages/future/topics/plan'>future::plan(future::sequential)</a></code>.
+This argument only applies to parallel computing with persistent workers
+(<code>make(parallelism = x)</code>, where <code>x</code> could be <code>"mclapply"</code>,
+<code>"parLapply"</code>, or <code>"future_lapply"</code>).</p></td>
     </tr>
     </table>
     
