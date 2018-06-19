@@ -1,7 +1,6 @@
 drake_context("full build")
 
 test_with_dir("scratch build with custom filesystem cache.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   unlink(default_cache_path(), recursive = TRUE)
   path <- "my_cache"

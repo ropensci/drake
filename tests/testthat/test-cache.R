@@ -129,7 +129,6 @@ test_with_dir("subspaces", {
 })
 
 test_with_dir("cache functions work", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # May have been loaded in a globalenv() testing scenario # nolint
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
   rm(list = remove_these, envir = globalenv())

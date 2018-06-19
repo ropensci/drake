@@ -1,7 +1,6 @@
 drake_context("command changes")
 
 test_with_dir("changes to commands are handled well", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_equal(
     sort(outdated(config)),

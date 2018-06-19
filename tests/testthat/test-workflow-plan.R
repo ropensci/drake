@@ -1,7 +1,6 @@
 drake_context("workflow plan")
 
 test_with_dir("duplicated targets", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(
     drake_plan(
       a = 1,
