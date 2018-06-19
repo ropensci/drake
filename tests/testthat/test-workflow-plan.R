@@ -494,3 +494,18 @@ test_with_dir("spaces in target names are replaced only when appropriate", {
   )
   expect_equal(pl, pl2)
 })
+
+test_with_dir("conflicts in wildcard names/values", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(a = 1, b = 2)
+  rules1 <- list(plant = 1:2, seed = 3:4, plantseed = 5:6)
+  rules2 <- list(
+    plant = c("grow", "tall"),
+    bean = c("legume", "stalk"),
+    example = c("bean", "stalk")
+  )
+  expect_error(
+    evaluate_plan(plan, rules = rules1), regexp = "wildcard name")
+  expect_error(
+    evaluate_plan(plan, rules = rules2), regexp = "replacement value")
+})

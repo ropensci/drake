@@ -104,6 +104,7 @@ evaluate_plan <- function(
   always_rename = FALSE
 ){
   if (!is.null(rules)){
+    check_wildcard_rules(rules)
     return(
       evaluations(
         plan = plan,
@@ -168,6 +169,32 @@ evaluations <- function(
     )
   }
   return(plan)
+}
+
+check_wildcard_rules <- function(rules){
+  wildcards <- names(rules)
+  all_values <- unlist(rules)
+  for (i in seq_along(wildcards)){
+    matches <- grep(wildcards[i], all_values, value = TRUE)
+    if (length(matches)){
+      stop(
+        "No wildcard name can match the name of any replacement value. ",
+        "Conflicts: \"", wildcards[i], "\" with:\n",
+        multiline_message(paste0("\"", matches, "\"")),
+        call. = FALSE
+      )
+    }
+    matches <- grep(wildcards[i], wildcards[-i], value = TRUE)
+    if (length(matches)){
+      stop(
+        "The name of a wildcard cannot be a substring ",
+        "of any other wildcard name. ",
+        "Conflicts: \"", wildcards[i], "\" with:\n",
+        multiline_message(paste0("\"", matches, "\"")),
+        call. = FALSE
+      )
+    }
+  }
 }
 
 #' @title Create replicates of targets.
