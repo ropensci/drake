@@ -299,10 +299,8 @@ install_github("ropensci/drake")
 ```
 
 -   You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
--   For `make(..., parallelism = "Makefile")`, Windows users need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
--   If you want to build [the vignettes](https://github.com/ropensci/drake/tree/master/vignettes) when you install the development version, you must
-    1.  Install all the packages in the `Suggests:` field of the [DESCRIPTION file](https://github.com/ropensci/drake/blob/master/DESCRIPTION), including [cranlogs](https://cran.r-project.org/package=cranlogs) and [Ecdat](https://cran.r-project.org/package=Ecdat). All these packages are available through the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org), and you can install them with `install.packages()`.
-    2.  Set the `build` argument to `TRUE` in `install_github()`.
+-   For `make(parallelism = "Makefile")`, Windows users may need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
+-   To use `make(parallelism = "future")` and `make(parallelism = "future_lapply")` to deploy your work to a computing cluster (see the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/hpc.html)), you will need the [`future.batchtools`](https://github.com/HenrikBengtsson/future.batchtools) package.
 
 Documentation
 =============
