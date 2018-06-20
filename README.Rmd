@@ -238,7 +238,7 @@ Ideally, independent observers should be able to read your code and understand i
 
 Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. `Drake` knows what to do. Parallelism is implicit and automatic. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/hpc.html) for all the details.
 
-```r
+```{r scaleupreadme, eval = FALSE}
 # Use the spare cores on your local machine.
 make(plan, jobs = 4)
 
@@ -253,7 +253,7 @@ make(plan, parallelism = "future_lapply")
 
 You can choose among different versions of `drake`.
 
-```r
+```{r installreadme, eval = FALSE}
 # Install the latest stable release from CRAN.
 install.packages("drake")
 
