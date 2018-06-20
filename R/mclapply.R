@@ -35,9 +35,6 @@ mc_process <- function(id, config){
     },
     error = function(e){
       error_process(e = e, id = id, config = config) # nocov
-    },
-    warning = function(w){
-      warning_process(w = w, id = id, config = config) # nocov
     }
   )
   invisible()
@@ -64,7 +61,7 @@ mc_master <- function(config){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
     if (mc_abort_with_errored_workers(config)){
-      return() # nocov
+      return() # tested in "test-always-skipped.R" # nocov
     }
     mc_assign_ready_targets(config)
     Sys.sleep(mc_wait)
@@ -83,12 +80,23 @@ mc_worker <- function(worker, config){
       return()
     }
     target <- msg$title
-    build_check_store(
-      target = target,
-      config = config,
-      downstream = config$cache$list(namespace = "mc_protect"),
-      flag_attempt = TRUE
+    out <- try(
+      build_check_store(
+        target = target,
+        config = config,
+        downstream = config$cache$list(namespace = "mc_protect"),
+        flag_attempt = TRUE
+      )
     )
+    if (inherits(out, "try-error")){
+      config$cache$set(
+        key = worker,
+        value = paste0(worker, " failed building target ", target, "."),
+        namespace = "mc_error"
+      )
+      set_attempt_flag(key = worker, config = config)
+      return()
+    }
     ready_queue$pop(1)
     message <- mc_get_checksum(target = target, config = config)
     done_queue$push(title = target, message = message)

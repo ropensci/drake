@@ -1,6 +1,6 @@
 mc_init_worker_cache <- function(config){
   namespaces <- c(
-    "mc_protect", "mc_ready_db", "mc_done_db", "mc_error", "mc_warning")
+    "mc_protect", "mc_ready_db", "mc_done_db", "mc_error")
   for (namespace in namespaces){
     config$cache$clear(namespace = namespace)
   }
@@ -214,10 +214,10 @@ mc_wait_checksum <- function(target, checksum, config, timeout = 300){
 mc_abort_with_errored_workers <- function(config){
   if (length(failed_workers <- config$cache$list("mc_error"))){
     if (!identical(config$keep_going, TRUE)){
-      drake_warning(
-        "errored workers (check the \"mc_error\" storr namespace): \n",
+      warning(
+        "failed workers:\n",
         multiline_message(failed_workers),
-        config = config
+        call. = FALSE
       )
       return(TRUE)
     }

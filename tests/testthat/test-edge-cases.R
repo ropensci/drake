@@ -127,13 +127,6 @@ test_with_dir("error handlers", {
       config = dbug()),
     regexp = "5"
   )
-  expect_warning(
-    warning_process(
-      w = list(message = 5),
-      id = "2",
-      config = dbug()),
-    regexp = "5"
-  )
   config <- dbug()
   config$cache$set("worker_1", TRUE, "mc_error")
   config$keep_going <- FALSE

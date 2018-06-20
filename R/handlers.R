@@ -58,16 +58,6 @@ error_tibble_times <- function(e){
   )
 }
 
-warning_process <- function(w, id, config){
-  drake_warning("Warning: ", w$message, config = config)
-  drake_warning("Call: ", w$call, config = config)
-  config$cache$set(
-    key = id,
-    value = list(warning = w),
-    namespace = "mc_warning"
-  )
-}
-
 error_process <- function(e, id, config){
   stack <- sys.calls()
   drake_warning("Error: ", e$message, config = config)
