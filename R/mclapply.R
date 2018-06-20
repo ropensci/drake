@@ -88,6 +88,8 @@ mc_worker <- function(worker, config){
         flag_attempt = TRUE
       )
     )
+    # Tested in test-always-skipped.R (multi-process error msgs are annoying).
+    # nocov start
     if (inherits(out, "try-error")){
       config$cache$set(
         key = worker,
@@ -97,6 +99,7 @@ mc_worker <- function(worker, config){
       set_attempt_flag(key = worker, config = config)
       return()
     }
+    # nocov end
     ready_queue$pop(1)
     message <- mc_get_checksum(target = target, config = config)
     done_queue$push(title = target, message = message)
