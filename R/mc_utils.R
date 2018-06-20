@@ -211,22 +211,18 @@ mc_wait_checksum <- function(target, checksum, config, timeout = 300){
   )
 }
 
-mc_handle_errored_workers <- function(config){
+mc_abort_with_errored_workers <- function(config){
   if (length(failed_workers <- config$cache$list("mc_error"))){
     if (!identical(config$keep_going, TRUE)){
-      drake_error(
+      drake_warning(
         "errored workers (check the \"mc_error\" storr namespace): \n",
         multiline_message(failed_workers),
         config = config
       )
-    } else {
-      drake_warning(
-        "errored workers (check the \"mc_warning\" storr namespace): \n",
-        multiline_message(failed_workers),
-        config = config
-      )
+      return(TRUE)
     }
   }
+  FALSE
 }
 
 mc_wait <- 0.01

@@ -63,7 +63,9 @@ mc_master <- function(config){
   while (mc_work_remains(config)){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
-    mc_handle_errored_workers(config)
+    if (mc_abort_with_errored_workers(config)){
+      return()
+    }
     mc_assign_ready_targets(config)
     Sys.sleep(mc_wait)
   }
