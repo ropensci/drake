@@ -36,8 +36,8 @@ mc_process <- function(id, config){
     error = function(e){
       error_process(e = e, id = id, config = config) # nocov
     },
-    warning = function(e){
-      warning_process(e = e, id = id, config = config) # nocov
+    warning = function(w){
+      warning_process(w = w, id = id, config = config) # nocov
     }
   )
   invisible()
@@ -63,6 +63,7 @@ mc_master <- function(config){
   while (mc_work_remains(config)){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
+    mc_handle_errored_workers(config)
     mc_assign_ready_targets(config)
     Sys.sleep(mc_wait)
   }

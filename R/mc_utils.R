@@ -1,5 +1,6 @@
 mc_init_worker_cache <- function(config){
-  namespaces <- c("mc_protect", "mc_ready_db", "mc_done_db")
+  namespaces <- c(
+    "mc_protect", "mc_ready_db", "mc_done_db", "mc_error", "mc_warning")
   for (namespace in namespaces){
     config$cache$clear(namespace = namespace)
   }
@@ -208,6 +209,24 @@ mc_wait_checksum <- function(target, checksum, config, timeout = 300){
     "network file system. Checksum verification timed out after about ",
     timeout, " seconds.", config = config
   )
+}
+
+mc_handle_errored_workers <- function(config){
+  if (length(failed_workers <- config$cache$list("mc_error"))){
+    if (!identical(config$keep_going, TRUE)){
+      drake_error(
+        "errored workers (check the \"mc_error\" storr namespace): \n",
+        multiline_message(failed_workers),
+        config = config
+      )
+    } else {
+      drake_warning(
+        "errored workers (check the \"mc_warning\" storr namespace): \n",
+        multiline_message(failed_workers),
+        config = config
+      )
+    }
+  }
 }
 
 mc_wait <- 0.01
