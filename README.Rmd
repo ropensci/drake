@@ -71,7 +71,7 @@ tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
 
 # The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
-`drake` &mdash; or, Data Frames in R for Make &mdash; is a general-purpose workflow manager for data-driven tasks. It rebuilds intermediate data objects when their dependencies change, and it skips work when the results are already up to date. Not every runthrough starts from scratch, and completed workflows have tangible evidence of reproducibility. `Drake` is more scalable than [`knitr`](https://github.com/yihui/knitr), more thorough than [memoization](https://github.com/r-lib/memoise), and more R-focused than [other pipeline toolkits](https://github.com/pditommaso/awesome-pipeline) such as [GNU Make](www.gnu.org/software/make/), [`remake`](https://github.com/richfitz/remake), and [snakemake](https://snakemake.readthedocs.io).
+`drake` &mdash; or, Data Frames in R for Make &mdash; is a general-purpose workflow manager for data-driven tasks. It rebuilds intermediate data objects when their dependencies change, and it skips work when the results are already up to date. Not every runthrough starts from scratch, and completed workflows have tangible evidence of reproducibility. `Drake` is more scalable than [`knitr`](https://github.com/yihui/knitr), more thorough than [memoization](https://github.com/r-lib/memoise), and more R-focused than [other pipeline toolkits](https://github.com/pditommaso/awesome-pipeline) such as [GNU Make](https://www.gnu.org/software/make/), [`remake`](https://github.com/richfitz/remake), and [snakemake](https://snakemake.readthedocs.io).
 
 # What gets done stays done.
 
