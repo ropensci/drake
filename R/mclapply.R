@@ -64,7 +64,7 @@ mc_master <- function(config){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
     if (mc_abort_with_errored_workers(config)){
-      return()
+      return() # nocov
     }
     mc_assign_ready_targets(config)
     Sys.sleep(mc_wait)
