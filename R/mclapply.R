@@ -52,7 +52,10 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
-  on.exit(mc_conclude_workers(config))
+  on.exit({
+    mc_conclude_workers(config)
+    gc()
+  })
   config$queue <- new_priority_queue(config = config)
   if (!identical(config$ensure_workers, FALSE)){
     mc_ensure_workers(config)
@@ -69,6 +72,7 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
+  on.exit(gc())
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
