@@ -73,6 +73,7 @@ mc_worker <- function(worker, config){
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
     while (nrow(msg <- ready_queue$list(1)) < 1){
+      gc()
       Sys.sleep(mc_wait)
     }
     if (identical(msg$message, "done")){
