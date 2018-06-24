@@ -263,6 +263,26 @@ library(devtools)
 install_github("ropensci/drake")
 ```
 
+You may encounter an error due to [`CodeDepends`](https://github.com/duncantl/CodeDepends) (ref: [duncantl/CodeDepends#30](https://github.com/duncantl/CodeDepends/issues/30), [duncantl/CodeDepends#34](https://github.com/duncantl/CodeDepends/issues/34))
+
+```{r graphinstall1, eval = FALSE}
+install.packages("drake")
+#> ...
+#> ERROR: dependency ‘graph’ is not available for package ‘CodeDepends’
+#> ...
+```
+
+This is because `drake` depends on [`CodeDepends`](https://github.com/duncantl/CodeDepends), which depends on [`graph`](https://www.bioconductor.org/packages/release/bioc/html/graph.html), which is not on [CRAN](https://cran.r-project.org). Simply install [`graph`](https://www.bioconductor.org/packages/release/bioc/html/graph.html) from [Bioconductor](https://www.bioconductor.org) and proceed.
+
+```{r graphinstall2, eval = FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("graph")
+install.packages("CodeDepends")
+install.packages("drake")
+```
+
+A few technical details:
+
 - You must properly install `drake` using `install.packages()`, `devtools::install_github()`, or similar. It is not enough to use `devtools::load_all()`, particularly for the parallel computing functionality, in which multiple R sessions initialize and then try to `require(drake)`.
 - For `make(parallelism = "Makefile")`, Windows users may need to download and install [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
 - To use `make(parallelism = "future")` or `make(parallelism = "future_lapply")` to deploy your work to a computing cluster (see the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/hpc.html)), you will need the [`future.batchtools`](https://github.com/HenrikBengtsson/future.batchtools) package.
