@@ -6,6 +6,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
   crazy <- function(x, y) {
     z <- g(x) + y
     k <- "local"
+    j <- TRUE
     h <- function(x) {
       digest::digest(x)
     }
@@ -27,7 +28,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
   expect_equal(sort(find_namespaced_functions(crazy)), ns)
   expect_equal(
     unname(sort(unlist(code_dependencies(crazy)))),
-    sort(c(ns, "g", "runif", "sqrt"))
+    sort(c(ns, "g", "runif", "sqrt", "local"))
   )
   command <- "digest::digest(stats::rnorm(runif(stats::rpois(100))))"
   d <- sort(deps_code(command))

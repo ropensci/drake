@@ -358,6 +358,9 @@ code_dependencies <- function(expr){
         expr <- function(){} # nolint: curly braces are necessary
       }
       walk(body(expr))
+    } else if (is.name(expr)) {
+      new_globals <- setdiff(x = wide_deparse(expr), y = drake_fn_patterns)
+      results$globals <<- c(results$globals, new_globals)
     } else if (is.character(expr)) {
       results$strings <<- c(results$strings, expr)
     } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
@@ -385,7 +388,7 @@ code_dependencies <- function(expr){
     }
   }
   walk(expr)
-  results$globals <- find_globals(expr)
+  results$globals <- intersect(results$globals, find_globals(expr))
   results[purrr::map_int(results, length) > 0]
 }
 
@@ -400,14 +403,14 @@ find_globals <- function(expr){
 
 find_globals_single <- function(fun){
   if (!is.function(fun)){
-    f <- function(){}
+    f <- function(){} # nolint
     body(f) <- fun
     fun <- f
   }
   if (typeof(fun) != "closure"){
     return(character(0))
   }
-  codetools::findGlobals(fun = fun, merge = TRUE) %>%
+  codetools::findGlobals(fun = unwrap_function(fun), merge = TRUE) %>%
     setdiff(y = c(drake_fn_patterns, ".")) %>%
     Filter(f = is_parsable)
 }
@@ -416,7 +419,7 @@ analyze_loadd <- function(expr){
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
   out <- base::union(
-    code_dependencies(expr[!nzchar(names(expr))])$globals,
+    code_dependencies(expr[which_unnamed(expr)])$globals,
     code_dependencies(expr[["list"]])$strings
   )
   list(loadd = setdiff(out, drake_fn_patterns))
@@ -426,7 +429,7 @@ analyze_readd <- function(expr){
   expr <- match.call(drake::readd, as.call(expr))
   expr <- expr[-1]
   out <- unlist(c(
-    code_dependencies(expr[!nzchar(names(expr))])[c("globals", "strings")],
+    code_dependencies(expr[which_unnamed(expr)])[c("globals", "strings")],
     code_dependencies(expr[["target"]])[c("globals", "strings")]
   ))
   list(readd = setdiff(out, drake_fn_patterns))
@@ -472,6 +475,14 @@ recurse_ignore <- function(x) {
     }
   }
   x
+}
+
+which_unnamed <- function(x){
+  if (!length(names(x))){
+    rep(TRUE, length(x))
+  } else {
+    !nzchar(names(x))
+  }
 }
 
 is_callish <- function(x){
