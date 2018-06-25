@@ -404,6 +404,9 @@ find_globals_single <- function(fun){
     body(f) <- fun
     fun <- f
   }
+  if (typeof(fun) != "closure"){
+    return(character(0))
+  }
   codetools::findGlobals(fun = fun, merge = TRUE) %>%
     setdiff(y = c(drake_fn_patterns, ".")) %>%
     Filter(f = is_parsable)
