@@ -392,19 +392,10 @@ code_dependencies <- function(expr){
   results[purrr::map_int(results, length) > 0]
 }
 
-find_globals <- function(expr){
-  if (is.expression(expr)){
-    lapply(expr, find_globals_single) %>%
-      clean_dependency_list
-  } else {
-    find_globals_single(expr)
-  }
-}
-
-find_globals_single <- function(fun){
+find_globals <- function(fun){
   if (!is.function(fun)){
     f <- function(){} # nolint
-    body(f) <- fun
+    body(f) <- as.call(append(as.list(body(f)), fun))
     fun <- f
   }
   if (typeof(fun) != "closure"){
