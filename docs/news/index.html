@@ -112,6 +112,7 @@
 <a href="#version-5-2-2" class="anchor"></a>Version 5.2.2<small> Unreleased </small>
 </h1>
 <ul>
+<li>Depend on <code>codetools</code> rather than <code>CodeDepends</code> for finding global variables.</li>
 <li>Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.</li>
 <li>Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating <code><a href="../reference/drake_plan.html">drake_plan()</a></code>s.</li>
 <li>Prevent persistent workers from hanging when a target fails.</li>
