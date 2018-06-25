@@ -409,21 +409,19 @@ find_globals <- function(fun){
 analyze_loadd <- function(expr){
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
-  out <- base::union(
-    code_dependencies(expr[which_unnamed(expr)])$globals,
-    code_dependencies(expr[["list"]])$strings
+  unnamed <- code_dependencies(expr[which_unnamed(expr)])
+  out <- c(
+    unnamed$globals,
+    unnamed$strings,
+    code_dependencies(expr["list"])$strings
   )
   list(loadd = setdiff(out, drake_fn_patterns))
 }
 
 analyze_readd <- function(expr){
   expr <- match.call(drake::readd, as.call(expr))
-  expr <- expr[-1]
-  out <- unlist(c(
-    code_dependencies(expr[which_unnamed(expr)])[c("globals", "strings")],
-    code_dependencies(expr[["target"]])[c("globals", "strings")]
-  ))
-  list(readd = setdiff(out, drake_fn_patterns))
+  deps <- unlist(code_dependencies(expr["target"])[c("globals", "strings")])
+  list(readd = setdiff(deps, drake_fn_patterns))
 }
 
 analyze_file_in <- function(expr){
