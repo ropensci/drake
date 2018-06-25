@@ -25,13 +25,13 @@ library(drake)
 var <- 10
 var2 <- list(17, var, "ignore", "ignore2")
 
-out <- readd(target1)
+out <- readd(target1, character_only = dont_detect_this)
 loadd(target2)
 out <- drake::readd(character_only = FALSE, target = target3)
 drake::loadd(target4, list = "target5")
 out <- drake:::readd(target = "target6")
 drake:::loadd(target7, target8)
-drake:::loadd(target9, list = c("target10", "target11"))
+drake:::loadd(target9, list = c("target10", "target11"), nothing = to_see)
 loadd(list = c("target12", "target13"))
 
 out <- drasadfke::readd(ignore1)
