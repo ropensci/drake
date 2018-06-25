@@ -263,6 +263,7 @@ library(devtools)
 install_github("ropensci/drake")
 ```
 
+
 If you are installing the current CRAN version (5.2.1), you may encounter an error due to [`CodeDepends`](https://github.com/duncantl/CodeDepends) (ref: [duncantl/CodeDepends#30](https://github.com/duncantl/CodeDepends/issues/30), [duncantl/CodeDepends#34](https://github.com/duncantl/CodeDepends/issues/34)).
 
 ```{r graphinstall1, eval = FALSE}
