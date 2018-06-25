@@ -231,7 +231,7 @@ import_dependencies <- function(expr){
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
-  deps$file_out <- deps$loadd <- deps$readd <- NULL
+  deps$file_out <- deps$loadd <- deps$readd <- deps$strings <- NULL
   deps
 }
 
@@ -244,6 +244,7 @@ command_dependencies <- function(command){
   }
   command <- as.character(command)
   deps <- code_dependencies(parse(text = command))
+  deps$strings <- NULL
 
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
@@ -357,10 +358,11 @@ code_dependencies <- function(expr){
         expr <- function(){} # nolint: curly braces are necessary
       }
       walk(body(expr))
-    } else if (is.name(expr) || is.atomic(expr)) {
-      new_globals <- setdiff(
-        x = wide_deparse(expr), y = drake_fn_patterns)
+    } else if (is.name(expr)) {
+      new_globals <- setdiff(x = wide_deparse(expr), y = drake_fn_patterns)
       results$globals <<- c(results$globals, new_globals)
+    } else if (is.character(expr)) {
+      results$strings <<- c(results$strings, expr)
     } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
       new_results <- list()
       if (is_loadd_call(expr)){
@@ -386,97 +388,62 @@ code_dependencies <- function(expr){
     }
   }
   walk(expr)
-  results$globals <- intersect(results$globals, safe_find_globals(expr))
+  results$globals <- intersect(results$globals, find_globals(expr))
   results[purrr::map_int(results, length) > 0]
 }
 
-safe_find_globals <- function(expr){
-  tryCatch(
-    find_globals(expr),
-    error = function(e){
-      warning(
-        "could not resolve implicit dependencies of code: ",
-        head(deparse(expr)),
-        call. = FALSE
-      )
-      character(0)
-    }
-  )
-}
-
-quiet_get_inputs <- function(expr){
-  # Warning: In collector$results(reset = reset) :
-  #  partial argument match of 'reset' to 'resetState'
-  suppressWarnings(CodeDepends::getInputs(expr))
-}
-
-find_globals <- function(expr){
-  if (is.function(expr)){
-    expr <- unwrap_function(expr)
-    formals <- names(formals(expr))
-    expr <- body(expr)
-  } else {
-    formals <- character(0)
+find_globals <- function(fun){
+  if (!is.function(fun)){
+    f <- function(){} # nolint
+    body(f) <- as.call(append(as.list(body(f)), fun))
+    fun <- f
   }
-  inputs <- quiet_get_inputs(expr)
-  base::union(
-    inputs@inputs,
-    names(inputs@functions)
-  ) %>%
-    base::union(inputs@nsevalVars) %>%
-    setdiff(y = c(formals, drake_fn_patterns, ".")) %>%
+  if (typeof(fun) != "closure"){
+    return(character(0))
+  }
+  codetools::findGlobals(fun = unwrap_function(fun), merge = TRUE) %>%
+    setdiff(y = c(drake_fn_patterns, ".")) %>%
     Filter(f = is_parsable)
 }
 
 analyze_loadd <- function(expr){
   expr <- match.call(drake::loadd, as.call(expr))
-  args <- parse_loadd_arg_list(expr)
-  out <- c(unnamed_in_list(args), args[["list"]])
+  expr <- expr[-1]
+  unnamed <- code_dependencies(expr[which_unnamed(expr)])
+  out <- c(
+    unnamed$globals,
+    unnamed$strings,
+    code_dependencies(expr["list"])$strings
+  )
   list(loadd = setdiff(out, drake_fn_patterns))
 }
 
 analyze_readd <- function(expr){
   expr <- match.call(drake::readd, as.call(expr))
-  args <- parse_loadd_arg_list(expr)
-  list(readd = setdiff(args[["target"]], drake_fn_patterns))
+  deps <- unlist(code_dependencies(expr["target"])[c("globals", "strings")])
+  list(readd = setdiff(deps, drake_fn_patterns))
 }
 
 analyze_file_in <- function(expr){
-  inputs <- quiet_get_inputs(expr)
-  deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
+  expr <- expr[-1]
+  deps <- drake_quotes(code_dependencies(expr)$strings, single = FALSE)
   list(file_in = deps)
 }
 
 analyze_file_out <- function(expr){
-  inputs <- quiet_get_inputs(expr)
-  deps <- drake_quotes(c(inputs@strings, inputs@files), single = FALSE)
+  expr <- expr[-1]
+  deps <- drake_quotes(code_dependencies(expr)$strings, single = FALSE)
   list(file_out = deps)
 }
 
 analyze_knitr_in <- function(expr){
-  inputs <- quiet_get_inputs(expr)
-  files <- c(inputs@strings, inputs@files)
+  expr <- expr[-1]
+  files <- code_dependencies(expr)$strings
   out <- lapply(files, knitr_deps_list) %>%
     Reduce(f = merge_lists)
   files <- drake_quotes(files, single = FALSE)
   out$knitr_in <- base::union(out$knitr_in, files)
   out
-}
-
-parse_loadd_arg_list <- function(expr){
-  lapply(as.list(expr)[-1], function(arg){
-    inputs <- quiet_get_inputs(arg)
-    c(inputs@strings, inputs@inputs)
-  })
-}
-
-unnamed_in_list <- function(x){
-  if (!length(names(x))){
-    out <- x
-  } else {
-    out <- x[!nzchar(names(x))]
-  }
-  unlist(out)
 }
 
 ignore_ignore <- function(expr){
@@ -497,6 +464,14 @@ recurse_ignore <- function(x) {
     }
   }
   x
+}
+
+which_unnamed <- function(x){
+  if (!length(names(x))){
+    rep(TRUE, length(x))
+  } else {
+    !nzchar(names(x))
+  }
 }
 
 is_callish <- function(x){

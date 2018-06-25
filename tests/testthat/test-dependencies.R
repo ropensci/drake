@@ -1,13 +1,5 @@
 drake_context("dependencies")
 
-test_with_dir("safe_find_globals", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_warning(
-    safe_find_globals(new.env()),
-    regexp = "implicit dependencies"
-  )
-})
-
 test_with_dir("unparsable commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"

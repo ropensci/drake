@@ -38,7 +38,7 @@
 #' }
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom bindr populate_env
-#' @importFrom CodeDepends getInputs
+#' @importFrom codetools findGlobals
 #' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
@@ -63,7 +63,7 @@
 #' @importFrom rlang expr exprs
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames
-#' @importFrom storr encode64 storr_environment storr_rds
+#' @importFrom storr storr_environment storr_rds
 #' @importFrom stringi stri_extract_all_regex stri_rand_strings
 #'   stri_split_fixed stri_trim_both
 #' @importFrom testthat context expect_false expect_true test_dir test_that
