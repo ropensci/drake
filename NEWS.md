@@ -1,6 +1,6 @@
 # Version 5.2.2
 
-- Relinquish `CodeDepends` and `codetools` as dependencies. `drake` now uses its own self-sufficient static code analysis for detecting dependencies among targets and imports.
+- Depend on `codetools` rather than `CodeDepends` for finding global variables.
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
 - Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating `drake_plan()`s.
 - Prevent persistent workers from hanging when a target fails.
