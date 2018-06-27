@@ -9,4 +9,5 @@ library(drake)
 future::plan(batchtools_sge, template = "sge-simple.tmpl")
 
 load_mtcars_example()
-make(my_plan, parallelism = "future", jobs = 4)
+make(my_plan, parallelism = "future", jobs = 4) # transient workers
+# make(my_plan, parallelism = "future_lapply", jobs = 4) # persistent workers

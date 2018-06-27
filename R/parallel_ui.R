@@ -78,6 +78,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "parLapply_staged"
   )
   distributed <- c(
+    "clustermq_persistent",
     "future",
     "future_lapply",
     "Makefile"
