@@ -155,7 +155,8 @@ test_with_dir("runtime predictions", {
 
 test_with_dir("load balancing with custom worker assignemnts", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- load_mtcars_example()
+  load_mtcars_example()
+  config <- drake_config(my_plan)
   config$plan$worker <- 1
   config$plan$worker[grepl("large", config$plan$target)] <- 2
   suppressWarnings(
