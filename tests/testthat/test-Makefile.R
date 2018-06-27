@@ -2,7 +2,7 @@ drake_context("Makefile")
 
 test_with_dir("Makefile path and conflicts", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example(cache = storr::storr_environment())
+  load_mtcars_example()
   file <- "non_standard_makefile"
   config <- drake_config(
     my_plan,

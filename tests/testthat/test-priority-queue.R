@@ -104,9 +104,9 @@ test_with_dir("the priority queue works", {
 
 test_with_dir("queues with priorities", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example(cache = storr::storr_environment())
+  load_mtcars_example()
   my_plan$priority <- seq_len(nrow(my_plan))
-  config <- drake_config(my_plan)
+  config <- drake_config(my_plan, cache = storr::storr_environment())
   config$schedule <- config$graph
   q <- new_priority_queue(config)
   expect_true(all(diff(q$data$ndeps) >= 0))

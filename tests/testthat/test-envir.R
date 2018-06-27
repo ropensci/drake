@@ -71,7 +71,7 @@ test_with_dir("alt strategy for pruning", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   envir <- new.env(parent = globalenv())
   cache <- storr::storr_environment()
-  load_mtcars_example(envir = envir, cache = cache)
+  load_mtcars_example(envir = envir)
   make(envir$my_plan, envir = envir, cache = cache,
        session_info = FALSE, pruning_strategy = "memory")
   expect_true(file_store("report.md") %in% cache$list())

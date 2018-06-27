@@ -26,7 +26,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   jobs <- 1
   envir <- eval(parse(text = get_testing_scenario()$envir))
   cache <- storr::storr_environment(hash_algorithm = "murmur32")
-  load_mtcars_example(envir = envir, cache = cache)
+  load_mtcars_example(envir = envir)
   my_plan <- envir$my_plan
   con <- make(
     my_plan,

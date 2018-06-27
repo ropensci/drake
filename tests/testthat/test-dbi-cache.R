@@ -36,7 +36,8 @@ test_with_dir("storr_dbi is usable", {
   # parallelism <- scenario$parallelism # nolint
   # jobs <- scenario$jobs # nolint
 
-  con <- load_mtcars_example(envir = e)
+  load_mtcars_example(envir = e)
+  con <- drake_config(e$my_plan, envir = e)
   con$cache$destroy()
 
   # Need to fix richfitz/storr#60 before using the full workflow plan.

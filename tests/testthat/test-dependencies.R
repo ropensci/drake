@@ -164,7 +164,7 @@ test_with_dir("Vectorized nested functions work", {
 
 test_with_dir("deps_targets()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example(cache = storr::storr_environment())
+  load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
   expect_equal(
     sort(deps_targets(file_store("report.md"), config = config)),

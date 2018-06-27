@@ -644,12 +644,8 @@ load_basic_example <- function(
   )
   load_mtcars_example(
     envir = envir,
-    seed = seed,
-    cache = cache,
     report_file = report_file,
     overwrite = overwrite,
-    to = to,
-    verbose = verbose,
     force = force
   )
 }

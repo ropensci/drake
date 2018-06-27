@@ -14,43 +14,10 @@ Defaults to your workspace.
 For an insulated workspace,
 set \code{envir = new.env(parent = globalenv())}.}
 
-\item{seed}{integer, the root pseudo-random seed to use for your project.
-To ensure reproducibility across different R sessions,
-\code{set.seed()} and \code{.Random.seed} are ignored and have no affect on
-\code{drake} workflows. Conversely, \code{\link[=make]{make()}} does not change \code{.Random.seed},
-even when pseudo-random numbers are generated.
-
-On the first call to \code{\link[=make]{make()}} or \code{\link[=drake_config]{drake_config()}}, \code{drake}
-uses the random number generator seed from the \code{seed} argument.
-Here, if the \code{seed} is \code{NULL} (default), \code{drake} uses a \code{seed} of \code{0}.
-On subsequent \code{\link[=make]{make()}}s for existing projects, the project's
-cached seed will be used in order to ensure reproducibility.
-Thus, the \code{seed} argument must either be \code{NULL} or the same
-seed from the project's cache (usually the \code{.drake/} folder).
-To reset the random number generator seed for a project,
-use \code{clean(destroy = TRUE)}.}
-
-\item{cache}{Optional \code{storr} cache to use.}
-
 \item{report_file}{where to write the report file \code{report.Rmd}.}
 
 \item{overwrite}{logical, whether to overwrite an
 existing file \code{report.Rmd}}
-
-\item{to}{deprecated, where to write the dynamic report source file
-\code{report.Rmd}}
-
-\item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
-\describe{
-\item{0 or \code{FALSE}:}{print nothing.}
-\item{1 or \code{TRUE}:}{print only targets to build.}
-\item{2:}{in addition, print checks and cache info.}
-\item{3:}{in addition, print any potentially missing items.}
-\item{4:}{in addition, print imports. Full verbosity.}
-}}
 
 \item{force}{logical, whether to force the loading of a
 non-back-compatible cache from a previous version of drake.}

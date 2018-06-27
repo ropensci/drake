@@ -170,7 +170,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 
 test_with_dir("preferred queue may not be there", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example(cache = storr::storr_environment())
+  load_mtcars_example()
   my_plan$worker <- 17
   config <- drake_config(my_plan, cache = storr::storr_environment())
   expect_warning(mc_preferred_queue("small", config))

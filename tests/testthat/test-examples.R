@@ -19,9 +19,9 @@ test_with_dir("overwrites of report.Rmd handled correctly", {
   load_mtcars_example(overwrite = TRUE)
   load_mtcars_example(overwrite = FALSE)
   expect_warning(load_mtcars_example(overwrite = TRUE))
-  expect_warning(load_mtcars_example(to = "a", report_file = "b"))
-  expect_true(file.exists("b"))
   expect_false(file.exists("a"))
+  load_mtcars_example(report_file = "a")
+  expect_true(file.exists("a"))
 })
 
 test_with_dir("example template files", {
