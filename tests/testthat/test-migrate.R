@@ -16,7 +16,7 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_true(inherits(this_cache(force = TRUE), "storr"))
   expect_true(inherits(recover_cache(force = TRUE), "storr"))
   load_mtcars_example(force = TRUE)
-  config <- drake_config(my_plan)
+  config <- drake_config(my_plan, force = TRUE)
   expect_true(length(outdated(config)) > 0)
   expect_error(make(my_plan, verbose = FALSE, session_info = FALSE))
   make(my_plan, verbose = FALSE, force = TRUE)
