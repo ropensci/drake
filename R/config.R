@@ -370,7 +370,7 @@
 #' # Show a visNetwork graph
 #' vis_drake_graph(config = con)
 #' # Get the underlying node/edge data frames of the graph.
-#' dataframes_graph(config = con)
+#' drake_graph_info(config = con)
 #' })
 #' }
 drake_config <- function(

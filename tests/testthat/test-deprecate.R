@@ -106,7 +106,7 @@ test_with_dir("deprecated graphing functions", {
   expect_warning(build_graph(pl))
   con <- drake_config(plan = pl)
   expect_warning(out <- plot_graph(config = con))
-  df <- dataframes_graph(config = con)
+  df <- drake_graph_info(config = con)
   expect_warning(out <- render_graph(df))
 })
 
@@ -127,6 +127,9 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(configure_cache(cache, log_progress = TRUE))
   expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
   expect_warning(deps(123))
+  load_mtcars_example()
+  config <- drake_config(my_plan)
+  expect_warning(tmp <- dataframes_graph(config))
 })
 
 test_with_dir("deprecated arguments", {

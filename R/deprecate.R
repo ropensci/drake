@@ -275,6 +275,56 @@ config <- function(
   )
 }
 
+#' @title Deprecated function `dataframes_graph`
+#' @description Use [drake_graph_info()] instead.
+#' @details Deprecated on 2018-06-27.
+#' @seealso [drake_graph_info()]
+#' @export
+#' @keywords internal
+#' @return `args` for \code{\link{system2}(command, args)}
+#' @inheritParams drake_graph_info
+#' @examples
+#' # See ?drake_graph_info for examples.
+dataframes_graph <- function(
+  config = drake::read_drake_config(),
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  split_columns = NULL,
+  font_size = 20,
+  from_scratch = FALSE,
+  make_imports = TRUE,
+  full_legend = TRUE
+) {
+  .Deprecated(
+    "dataframes_graph",
+    package = "drake",
+    msg = paste(
+      "dataframes_graph() is deprecated.",
+      "Use drake_graph_info() instead."
+    )
+  )
+  drake_graph_info(
+    config = config,
+    from = from,
+    mode = mode,
+    order = order,
+    subset = subset,
+    build_times = build_times,
+    digits = digits,
+    targets_only = targets_only,
+    split_columns = split_columns,
+    font_size = font_size,
+    from_scratch = from_scratch,
+    make_imports = make_imports,
+    full_legend = full_legend
+  )
+}
+
 #' @title Deprecated function `default_system2_args`
 #' @description Use [default_Makefile_args()] instead.
 #' @details Deprecated on 2017-10.
@@ -394,7 +444,7 @@ doc_of_function_call <- function(expr){
 
 #' @title Deprecated. Get a template file for execution on a cluster.
 #' @description Deprecated. Use [drake_hpc_template_file()] instead.
-#' @details Deprecated on June 27, 2018.
+#' @details Deprecated on 2018-06-27.
 #' @export
 #' @keywords internal
 #' @inheritParams drake_hpc_template_file
@@ -693,7 +743,7 @@ max_useful_jobs <- function(
   )
   # nocov start
   imports <- match.arg(imports)
-  nodes <- dataframes_graph(config, from_scratch = from_scratch)$nodes
+  nodes <- drake_graph_info(config, from_scratch = from_scratch)$nodes
   if (imports == "none"){
     nodes <- nodes[nodes$status != "imported", ]
   } else if (imports == "files"){

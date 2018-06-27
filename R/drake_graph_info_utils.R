@@ -65,7 +65,7 @@ resolve_levels <- function(config){
 #' @description For internal use only.
 #' @export
 #' @keywords internal
-#' @seealso [dataframes_graph()], [vis_drake_graph()]
+#' @seealso [drake_graph_info()], [vis_drake_graph()]
 #' @return a character scalar with the default graph title for
 #'   [vis_drake_graph()].
 #' @param split_columns deprecated
@@ -159,7 +159,7 @@ hover_text_width <- 250
 #' @export
 #' @seealso [drake_palette()],
 #'   [vis_drake_graph()],
-#'   [dataframes_graph()]
+#'   [drake_graph_info()]
 #' @description Output a `visNetwork`-friendly
 #' data frame of nodes. It tells you what
 #' the colors and shapes mean

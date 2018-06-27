@@ -76,9 +76,9 @@
 #' config <- drake_config(my_plan) # my_plan loaded with load_mtcars_example()
 #' # Get a list of data frames representing the nodes, edges,
 #' # and legend nodes of the visNetwork graph from vis_drake_graph().
-#' raw_graph <- dataframes_graph(config = config)
+#' raw_graph <- drake_graph_info(config = config)
 #' # Choose a subset of the graph.
-#' smaller_raw_graph <- dataframes_graph(
+#' smaller_raw_graph <- drake_graph_info(
 #'   config = config,
 #'   from = c("small", "reg2"),
 #'   mode = "in"
@@ -94,7 +94,7 @@
 #'   visHierarchicalLayout(direction = 'UD')
 #' })
 #' }
-dataframes_graph <- function(
+drake_graph_info <- function(
   config = drake::read_drake_config(),
   from = NULL,
   mode = c("out", "in", "all"),

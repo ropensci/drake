@@ -33,7 +33,7 @@ test_with_dir("graph does not fail if input file is binary", {
 
 test_with_dir("null graph", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- dataframes_graph(config = list(graph = igraph::make_empty_graph()))
+  x <- drake_graph_info(config = list(graph = igraph::make_empty_graph()))
   expect_equal(x, null_graph())
 })
 
@@ -116,34 +116,34 @@ test_with_dir("graphing args are not ignored (mtcars example)", {
 
   # Different graph configurations should be checked manually.
   expect_warning(
-    tmp <- dataframes_graph(
+    tmp <- drake_graph_info(
       config = config, build_times = FALSE, from_scratch = TRUE))
   expect_warning(
-    tmp <- dataframes_graph(config = config, split_columns = TRUE))
+    tmp <- drake_graph_info(config = config, split_columns = TRUE))
   expect_warning(
-    tmp <- dataframes_graph(config = config, build_times = FALSE))
-  tmpcopy <- dataframes_graph(config = config,
+    tmp <- drake_graph_info(config = config, build_times = FALSE))
+  tmpcopy <- drake_graph_info(config = config,
     make_imports = FALSE, build_times = "none")
-  tmp0 <- dataframes_graph(config = config, build_times = "none",
+  tmp0 <- drake_graph_info(config = config, build_times = "none",
     subset = c("small", "regression2_large"))
-  tmp1 <- dataframes_graph(config = config, build_times = "none",
+  tmp1 <- drake_graph_info(config = config, build_times = "none",
     from = "small")
-  tmp2 <- dataframes_graph(config = config, build_times = "none",
+  tmp2 <- drake_graph_info(config = config, build_times = "none",
     from = "small", targets_only = TRUE)
-  tmp3 <- dataframes_graph(config = config, build_times = "none",
+  tmp3 <- drake_graph_info(config = config, build_times = "none",
     targets_only = TRUE)
-  tmp4 <- dataframes_graph(config = config, build_times = "none",
+  tmp4 <- drake_graph_info(config = config, build_times = "none",
     targets_only = TRUE)
-  tmp5 <- dataframes_graph(config = config, build_times = "build",
+  tmp5 <- drake_graph_info(config = config, build_times = "build",
     targets_only = TRUE)
-  tmp6 <- dataframes_graph(config = config, build_times = "build",
+  tmp6 <- drake_graph_info(config = config, build_times = "build",
     targets_only = TRUE, from_scratch = FALSE)
   expect_warning(
-    tmp7 <- dataframes_graph(config = config, build_times = "none",
+    tmp7 <- drake_graph_info(config = config, build_times = "none",
                              from = c("small", "not_found"))
   )
   expect_error(
-    tmp8 <- dataframes_graph(config = config, build_times = "none",
+    tmp8 <- drake_graph_info(config = config, build_times = "none",
                              from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)

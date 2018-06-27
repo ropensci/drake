@@ -59,7 +59,7 @@ reference:
   contents:
   - '`build_drake_graph`'
   - '`drake_palette`'
-  - '`dataframes_graph`'
+  - '`drake_graph_info`'
   - '`legend_nodes`'
   - '`prune_drake_graph`'
   - '`render_drake_graph`'

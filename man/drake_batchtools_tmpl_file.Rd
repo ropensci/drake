@@ -19,7 +19,7 @@ same name.}
 Deprecated. Use \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}} instead.
 }
 \details{
-Deprecated on June 27, 2018.
+Deprecated on 2018-06-27.
 }
 \examples{
 # See drake_hpc_template_file() for examples.
