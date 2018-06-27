@@ -1,5 +1,6 @@
 # From https://github.com/mschubert/clustermq/wiki/SGE
 #$ -N {{ job_name }}               # job name
+#$ -t 1-{{ n_jobs }}               # submit jobs as array
 #$ -j y                            # combine stdout/error in one file
 #$ -o {{ log_file | /dev/null }}   # output file
 #$ -cwd                            # use pwd as work dir
