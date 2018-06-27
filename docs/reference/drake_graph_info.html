@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deprecated function <code>dataframes_graph</code> — dataframes_graph • drake</title>
+<title>Create the underlying node and edge data frames
+behind <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code>. — drake_graph_info • drake</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +31,11 @@
 
 
 
-<meta property="og:title" content="Deprecated function <code>dataframes_graph</code> — dataframes_graph" />
+<meta property="og:title" content="Create the underlying node and edge data frames
+behind <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code>. — drake_graph_info" />
 
-<meta property="og:description" content="Use drake_graph_info() instead." />
+<meta property="og:description" content="With the returned data frames,
+you can plot your own custom visNetwork graph." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,18 +109,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deprecated function <code>dataframes_graph</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/deprecate.R'><code>R/deprecate.R</code></a></small>
-    <div class="hidden name"><code>dataframes_graph.Rd</code></div>
+    <h1>Create the underlying node and edge data frames
+behind <code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code>.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/drake/blob/master/R/drake_graph_info.R'><code>R/drake_graph_info.R</code></a></small>
+    <div class="hidden name"><code>drake_graph_info.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Use <code><a href='drake_graph_info.html'>drake_graph_info()</a></code> instead.</p>
+    <p>With the returned data frames,
+you can plot your own custom <code>visNetwork</code> graph.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>dataframes_graph</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/read_drake_config'>read_drake_config</a></span>(), <span class='kw'>from</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>drake_graph_info</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='kw pkg'>drake</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/drake/topics/read_drake_config'>read_drake_config</a></span>(), <span class='kw'>from</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>mode</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"out"</span>, <span class='st'>"in"</span>, <span class='st'>"all"</span>), <span class='kw'>order</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>subset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>build_times</span> <span class='kw'>=</span> <span class='st'>"build"</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>targets_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>split_columns</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>font_size</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>from_scratch</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -217,20 +222,41 @@ node types used are printed in the legend.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>args</code> for <code>system2(command, args)</code></p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Deprecated on 2018-06-27.</p>
+    <p>A list of three data frames: one for nodes,
+one for edges, and one for
+the legend nodes. The list also contains the
+default title of the graph.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='drake_graph_info.html'>drake_graph_info()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='vis_drake_graph.html'>vis_drake_graph()</a></code>, <code><a href='build_drake_graph.html'>build_drake_graph()</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># See ?drake_graph_info for examples.
-</div></pre>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
+<span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
+<span class='no'>config</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_config.html'>drake_config</a></span>(<span class='no'>my_plan</span>) <span class='co'># my_plan loaded with load_mtcars_example()</span>
+<span class='co'># Get a list of data frames representing the nodes, edges,</span>
+<span class='co'># and legend nodes of the visNetwork graph from vis_drake_graph().</span>
+<span class='no'>raw_graph</span> <span class='kw'>&lt;-</span> <span class='fu'>drake_graph_info</span>(<span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>)
+<span class='co'># Choose a subset of the graph.</span>
+<span class='no'>smaller_raw_graph</span> <span class='kw'>&lt;-</span> <span class='fu'>drake_graph_info</span>(
+  <span class='kw'>config</span> <span class='kw'>=</span> <span class='no'>config</span>,
+  <span class='kw'>from</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"small"</span>, <span class='st'>"reg2"</span>),
+  <span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"in"</span>
+)
+<span class='co'># Inspect the raw graph.</span>
+<span class='fu'>str</span>(<span class='no'>raw_graph</span>)
+<span class='co'># Use the data frames to plot your own custom visNetwork graph.</span>
+<span class='co'># For example, you can omit the legend nodes</span>
+<span class='co'># and change the direction of the graph.</span>
+<span class='fu'>library</span>(<span class='no'>magrittr</span>)
+<span class='fu'>library</span>(<span class='no'>visNetwork</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/visNetwork/topics/visNetwork'>visNetwork</a></span>(<span class='kw'>nodes</span> <span class='kw'>=</span> <span class='no'>raw_graph</span>$<span class='no'>nodes</span>, <span class='kw'>edges</span> <span class='kw'>=</span> <span class='no'>raw_graph</span>$<span class='no'>edges</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/visNetwork/topics/visHierarchicalLayout'>visHierarchicalLayout</a></span>(<span class='kw'>direction</span> <span class='kw'>=</span> <span class='st'>'UD'</span>)
+})
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -238,8 +264,6 @@ node types used are printed in the legend.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       
