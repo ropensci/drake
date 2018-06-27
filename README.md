@@ -559,9 +559,14 @@ organize the files of `drake` projects.
 
 ## Presentations
 
-  - <https://krlmlr.github.io/drake-pitch>
-  - <https://krlmlr.github.io/slides/drake-sib-zurich>
-  - <https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html>
+  - [Kirill’s `drake` pitch](https://krlmlr.github.io/drake-pitch)
+  - [`drake` + cooking with
+    Kirill](https://krlmlr.github.io/slides/drake-sib-zurich)
+  - [`drake` + cooking
+    exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html)
+  - [Christine Stawitz](https://github.com/cstawitz)’s [R-Ladies Seattle
+    talk on
+    June 25, 2018](https://github.com/cstawitz/RLadies_Sea_Drake)
 
 ## Real example projects
 
