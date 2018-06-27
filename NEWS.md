@@ -1,4 +1,4 @@
-# Version 5.2.2
+# Version 5.2.1.9000
 
 - Depend on `codetools` rather than `CodeDepends` for finding global variables.
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
