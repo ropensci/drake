@@ -170,3 +170,12 @@ test_with_dir("old file API", {
   )
   expect_equal(sort(justbuilt(config)), sort(c("contents", "\"file.csv\"")))
 })
+
+test_with_dir("example template files (deprecated)", {
+  expect_false(file.exists("slurm_future.tmpl"))
+  expect_warning(
+    drake_batchtools_tmpl_file("slurm_future.tmpl"),
+    regexp = "deprecated"
+  )
+  expect_true(file.exists("slurm_future.tmpl"))
+})

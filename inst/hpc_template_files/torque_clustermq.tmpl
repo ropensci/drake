@@ -1,0 +1,9 @@
+# From https://github.com/mschubert/clustermq/wiki/Torque
+#PBS -N {{ job_name }}
+#PBS -l nodes={{ n_jobs }}:ppn=1,walltime={{ walltime | 30:00 }}
+#PBS -o {{ log_file | /dev/null }}
+#PBS -q default
+#PBS -j oe
+module load R
+ulimit -v $(( 1024 * {{ memory | 4096 }} ))
+R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

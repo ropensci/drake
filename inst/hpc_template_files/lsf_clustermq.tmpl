@@ -1,0 +1,10 @@
+# From https://github.com/mschubert/clustermq/wiki/LSF
+#BSUB-J {{ job_name }}[1-{{ n_jobs }}]  # name of the job / array jobs
+#BSUB-o {{ log_file | /dev/null }}      # stdout + stderr
+#BSUB-M {{ memory | 4096 }}             # Memory requirements in Mbytes
+#BSUB-R rusage[mem={{ memory | 4096 }}] # Memory requirements in Mbytes
+##BSUB-q default                        # name of the queue (uncomment)
+##BSUB-W {{ walltime | 6:00 }}          # walltime (uncomment)
+module load R
+ulimit -v $(( 1024 * {{ memory | 4096 }} ))
+R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

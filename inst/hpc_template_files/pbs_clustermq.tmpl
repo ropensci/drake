@@ -1,0 +1,10 @@
+# From https://github.com/mschubert/clustermq/wiki/PBS
+#PBS -N {{ job_name }}
+#PBS -l select=1:ncpus={{ cores | 1 }}
+#PBS -l walltime={{ walltime | 1:00:00 }}
+#PBS -q default
+#PBS -o {{ log_file | /dev/null }}
+#PBS -j oe
+module load R
+ulimit -v $(( 1024 * {{ memory | 4096 }} ))
+R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

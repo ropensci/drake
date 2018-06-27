@@ -12,8 +12,6 @@ test_with_dir("examples are listed and written", {
     unlink(i, recursive = TRUE, force = TRUE)
   }
   expect_warning(drake_example(destination = getwd()))
-  expect_silent(drake_batchtools_tmpl_file("slurm"))
-  expect_error(drake_batchtools_tmpl_file("mtcars"))
 })
 
 test_with_dir("overwrites of report.Rmd handled correctly", {
@@ -24,4 +22,12 @@ test_with_dir("overwrites of report.Rmd handled correctly", {
   expect_warning(load_mtcars_example(to = "a", report_file = "b"))
   expect_true(file.exists("b"))
   expect_false(file.exists("a"))
+})
+
+test_with_dir("example template files", {
+  expect_true(is.character(drake_hpc_template_files()))
+  expect_true(length(drake_hpc_template_files()) > 0)
+  expect_false(file.exists("slurm_future.tmpl"))
+  expect_silent(drake_hpc_template_file("slurm_future.tmpl"))
+  expect_true(file.exists("slurm_future.tmpl"))
 })

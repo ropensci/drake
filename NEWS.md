@@ -4,6 +4,8 @@
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
 - Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating `drake_plan()`s.
 - Prevent persistent workers from hanging when a target fails.
+- Move the example template files to https://github.com/ropensci/drake/tree/master/inst/hpc_template_files.
+- Deprecate `drake_batchtools_tmpl_file()` in favor of `drake_hpc_template_file()` and `drake_hpc_template_files()`.
 
 # Version 5.2.1
 

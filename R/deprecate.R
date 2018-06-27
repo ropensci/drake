@@ -392,6 +392,31 @@ doc_of_function_call <- function(expr){
   }
 }
 
+#' @title Deprecated. Get a template file for execution on a cluster.
+#' @description Deprecated. Use [drake_hpc_template_file()] instead.
+#' @details Deprecated on June 27, 2018.
+#' @export
+#' @keywords internal
+#' @inheritParams drake_hpc_template_file
+#' @param example name of template file
+#' @examples
+#' # See drake_hpc_template_file() for examples.
+drake_batchtools_tmpl_file <- function(
+  example = drake::drake_hpc_template_files(),
+  to = getwd(),
+  overwrite = FALSE
+){
+  .Deprecated(
+    "drake_batchtools_tmpl_file",
+    package = "drake",
+    msg = paste(
+      "drake_batchtools_tmpl_file() is deprecated. ",
+      "Use drake_hpc_template_file() instead."
+    )
+  )
+  drake_hpc_template_file(file = example, to = to, overwrite = overwrite)
+}
+
 #' @title Deprecated function `evaluate`
 #' @description Use [evaluate_plan()] instead.
 #' @details Deprecated on 2017-11-12.

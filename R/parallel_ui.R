@@ -1,15 +1,15 @@
-#' @title Write the batchtools template file
-#' from one of the built-in drake examples.
-#' @description If there are multiple template files in the example,
-#' only the first one (alphabetically) is written.
+#' @title Write a template file for deploying
+#'   work to a cluster / job scheduler.
+#' @description See the example files from
+#'  [drake_examples()] and [drake_example()]
+#'   for example usage.
 #' @export
-#' @seealso [drake_examples()], [drake_example()],
+#' @seealso [drake_hpc_template_files()],
+#'   [drake_examples()], [drake_example()],
 #'   [shell_file()]
 #' @return `NULL` is returned,
 #'   but a batchtools template file is written.
-#' @param example Name of the drake example
-#'   from which to take the template file.
-#'   Must be listed in [drake_examples()].
+#' @param file Name of the template file, including the "tmpl" extension.
 #' @param to Character vector, where to write the file.
 #' @param overwrite Logical, whether to overwrite an existing file of the
 #'   same name.
@@ -17,36 +17,63 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # List the drake examples. Only some have template files.
-#' drake_examples()
-#' # Write the batchtools template file from the SLURM example.
-#' drake_batchtools_tmpl_file("slurm") # Writes batchtools.slurm.tmpl.
-#' # Find batchtools.slurm.tmpl with the rest of the example's files.
-#' drake_example("slurm") # Writes a new 'slurm' folder with more files.
-#' # Run the mtcars example with a
-#' # SLURM-powered parallel backend. Requires SLURM.
+#' # List the available template files.
+#' drake_hpc_template_files()
+#' # Write a SLURM template file from the SLURM example.
+#' drake_hpc_template_file("slurm_future.tmpl") # Writes slurm_future.tmpl.
 #' library(future.batchtools)
-#' # future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl") # nolint
-#' # make(my_plan, parallelism = "future_lapply") # nolint
+#' # future::plan(batchtools_slurm, template = "slurm_future.tmpl") # nolint
+#' # make(my_plan, parallelism = "future", jobs = 2) # nolint
 #' })
 #' }
-drake_batchtools_tmpl_file <- function(
-  example = drake::drake_examples(),
+drake_hpc_template_file <- function(
+  file = drake::drake_hpc_template_files(),
   to = getwd(),
   overwrite = FALSE
 ){
-  example <- match.arg(example)
-  dir <- system.file(file.path("examples", example), package = "drake",
-    mustWork = TRUE)
-  files <- list.files(dir)
-  template_files <- files[grepl("\\.tmpl$", files)]
-  if (!length(template_files)){
-    stop("No template files found for the ", example, " example.")
-  }
-  file <- file.path(dir, template_files[1])
-  file.copy(from = file, to = to,
+  file <- match.arg(file)
+  dir <- system.file(
+    "hpc_template_files",
+    package = "drake",
+    mustWork = TRUE
+  )
+  file.copy(from = file.path(dir, file), to = to,
     overwrite = overwrite, recursive = TRUE)
   invisible()
+}
+
+#' @title List the available example template files for deploying
+#'   work to a cluster / job scheduler.
+#' @description See the example files from
+#'  [drake_examples()] and [drake_example()]
+#'   for example usage.
+#' @export
+#' @seealso [drake_hpc_template_file()],
+#'   [drake_examples()], [drake_example()],
+#'   [shell_file()]
+#' @return a character vector of example tempalte files that
+#'   you can write with [drake_hpc_template_file()].
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' # List the available template files.
+#' drake_hpc_template_files()
+#' # Write a SLURM template file from the SLURM example.
+#' drake_hpc_template_file("slurm_future.tmpl") # Writes slurm_future.tmpl.
+#' library(future.batchtools)
+#' # future::plan(batchtools_slurm, template = "slurm_future.tmpl") # nolint
+#' # make(my_plan, parallelism = "future", jobs = 2) # nolint
+#' })
+#' }
+drake_hpc_template_files <- function(){
+  dir(
+    system.file(
+      "hpc_template_files",
+      package = "drake",
+      mustWork = TRUE
+    )
+  )
 }
 
 #' @title List the types of supported parallel computing in drake.
@@ -108,7 +135,7 @@ default_parallelism <- function() {
 #' @description This function also does a `chmod +x`
 #' to enable execute permissions.
 #' @seealso [make()], [max_useful_jobs()],
-#'   [parallelism_choices()], [drake_batchtools_tmpl_file()],
+#'   [parallelism_choices()], [drake_hpc_template_file()],
 #'   [drake_example()], [drake_examples()]
 #' @export
 #' @return The return value of the call to [file.copy()] that
