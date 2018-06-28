@@ -45,10 +45,8 @@ finish_distributed <- function(config){
 
 build_distributed <- function(target, cache_path){
   config <- recover_drake_config(cache_path = cache_path)
-  config$hook({
-    eval(parse(text = "base::require(drake, quietly = TRUE)"))
-    do_prework(config = config, verbose_packages = FALSE)
-  })
+  eval(parse(text = "base::require(drake, quietly = TRUE)"))
+  do_prework(config = config, verbose_packages = FALSE)
   build_check_store(target = target, config = config)
   invisible()
 }

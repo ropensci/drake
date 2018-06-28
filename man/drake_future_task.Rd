@@ -4,7 +4,7 @@
 \alias{drake_future_task}
 \title{Task passed to individual futures in the \code{"future"} backend}
 \usage{
-drake_future_task(target, meta, config, protect)
+drake_future_task(target, meta, config)
 }
 \arguments{
 \item{target}{name of the target}

@@ -45,17 +45,13 @@ run_future <- function(config){
 #' @param config [drake_config()] list
 #' @param protect Names of targets that still need their
 #' dependencies available in `config$envir`.
-drake_future_task <- function(target, meta, config, protect){
-  config$hook({
-    do_prework(config = config, verbose_packages = FALSE)
-    prune_envir(
-      targets = target, config = config, downstream = protect)
-  })
+drake_future_task <- function(target, meta, config){
+  do_prework(config = config, verbose_packages = FALSE)
   if (config$caching == "worker"){
     build_and_store(
       target = target, meta = meta, config = config, announce = FALSE)
   } else {
-    config$hook(just_build(target = target, meta = meta, config = config))
+    just_build(target = target, meta = meta, config = config)
   }
 }
 
@@ -68,6 +64,7 @@ new_worker <- function(id, target, config, protect){
   )){
     return(empty_worker(target = target))
   }
+  prune_envir(targets = target, config = config, downstream = protect)
   meta$start <- proc.time()
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
@@ -78,8 +75,7 @@ new_worker <- function(id, target, config, protect){
     DRAKE_GLOBALS__ = list(
       target = target,
       meta = meta,
-      config = config,
-      protect = protect
+      config = config
     )
   )
   if (identical(config$envir, globalenv())){
@@ -105,8 +101,7 @@ new_worker <- function(id, target, config, protect){
       expr = drake_future_task(
         target = DRAKE_GLOBALS__$target,
         meta = DRAKE_GLOBALS__$meta,
-        config = DRAKE_GLOBALS__$config,
-        protect = DRAKE_GLOBALS__$protect
+        config = DRAKE_GLOBALS__$config
       ),
       packages = "drake",
       globals = globals,
@@ -210,14 +205,12 @@ conclude_worker <- function(worker, config, queue){
   if (config$caching == "worker"){
     return(out)
   }
-  config$hook({
-    conclude_build(
-      target = build$target,
-      value = build$value,
-      meta = build$meta,
-      config = config
-    )
-  })
+  conclude_build(
+    target = build$target,
+    value = build$value,
+    meta = build$meta,
+    config = config
+  )
   out
 }
 
