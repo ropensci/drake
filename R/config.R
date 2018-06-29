@@ -306,6 +306,18 @@
 #'   use `clean(destroy = TRUE)`.
 #'
 #' @param caching character string, only applies to `"future"` parallelism.
+#'   Can be either `"master"` or `"worker"`.
+#'   - `"master"`: Targets are built by remote workers and sent back to
+#'     the master process. Then, the master process saves them to the
+#'     cache (`config$cache`, usually a file system `storr`).
+#'     Appropriate if remote workers do not have access to the file system
+#'     of the calling R session. Targets are cached one at a time,
+#'     which may be slow in some situations.
+#'   - `"worker"`: Remote workers not only build the targets, but also
+#'     save them to the cache. Here, caching happens in parallel.
+#'     However, remote workers need to have access to the file system
+#'     of the calling R session. Transferring target data across
+#'     a network can be slow.
 #'
 #' @param keep_going logical, whether to still keep running [make()]
 #'   if targets fail.

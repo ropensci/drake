@@ -312,7 +312,21 @@ seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
-\item{caching}{character string, only applies to \code{"future"} parallelism.}
+\item{caching}{character string, only applies to \code{"future"} parallelism.
+Can be either \code{"master"} or \code{"worker"}.
+\itemize{
+\item \code{"master"}: Targets are built by remote workers and sent back to
+the master process. Then, the master process saves them to the
+cache (\code{config$cache}, usually a file system \code{storr}).
+Appropriate if remote workers do not have access to the file system
+of the calling R session. Targets are cached one at a time,
+which may be slow in some situations.
+\item \code{"worker"}: Remote workers not only build the targets, but also
+save them to the cache. Here, caching happens in parallel.
+However, remote workers need to have access to the file system
+of the calling R session. Transferring target data across
+a network can be slow.
+}}
 
 \item{keep_going}{logical, whether to still keep running \code{\link[=make]{make()}}
 if targets fail.}
