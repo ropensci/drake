@@ -1,4 +1,7 @@
-mc_init_worker_cache <- function(config){
+mc_init_worker_cache <- function(config, jobs = NULL){
+  if(is.null(jobs)){
+    jobs <- config$jobs
+  }
   namespaces <- c(
     "mc_protect", "mc_ready_db", "mc_done_db", "mc_error")
   for (namespace in namespaces){
@@ -6,7 +9,7 @@ mc_init_worker_cache <- function(config){
   }
   dir_empty(worker_dir <- file.path(config$cache_path, "workers"))
   lapply(
-    X = seq_len(config$jobs),
+    X = seq_len(jobs),
     FUN = function(worker){
       worker <- mc_worker_id(worker)
       for (type in c("ready", "done")){
