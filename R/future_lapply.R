@@ -1,6 +1,6 @@
 run_future_lapply <- function(config){
   prepare_distributed(config = config)
-  mc_init_worker_cache(config)
+  mc_init_worker_cache(config, jobs = future::nbrOfWorkers())
   console_persistent_workers(config)
   path <- normalizePath(config$cache_path, winslash = "/")
   rscript <- grep(
