@@ -1,5 +1,5 @@
 mc_init_worker_cache <- function(config, jobs = NULL){
-  if(is.null(jobs)){
+  if (is.null(jobs)){
     jobs <- config$jobs
   }
   namespaces <- c(
