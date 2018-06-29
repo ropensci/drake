@@ -14,7 +14,7 @@ run_future_lapply <- function(config){
     wait = FALSE
   )
   future.apply::future_lapply(
-    X = mc_worker_id(seq_len(config$jobs)),
+    X = mc_worker_id(seq_len(future::nbrOfWorkers)),
     FUN = fl_worker,
     cache_path = config$cache$driver$path,
     future.globals = FALSE
