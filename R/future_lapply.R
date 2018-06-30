@@ -1,6 +1,6 @@
 run_future_lapply <- function(config){
   prepare_distributed(config = config)
-  mc_init_worker_cache(config)
+  mc_init_worker_cache(config, jobs = future::nbrOfWorkers())
   console_persistent_workers(config)
   path <- normalizePath(config$cache_path, winslash = "/")
   rscript <- grep(
@@ -14,7 +14,7 @@ run_future_lapply <- function(config){
     wait = FALSE
   )
   future.apply::future_lapply(
-    X = mc_worker_id(seq_len(config$jobs)),
+    X = mc_worker_id(seq_len(future::nbrOfWorkers())),
     FUN = fl_worker,
     cache_path = config$cache$driver$path,
     future.globals = FALSE
