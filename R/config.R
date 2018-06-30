@@ -100,17 +100,6 @@
 #'   for imports and at most 4 jobs at a time for targets, call
 #'   `make(..., jobs = c(imports = 2, targets = 4))`.
 #'
-#'   For `"future_lapply"` parallelism, `jobs`
-#'   only applies to the imports.
-#'   To set the max number of jobs for `"future_lapply"`
-#'   parallelism, set the `workers`
-#'   argument where it exists: for example, call
-#'   `future::plan(multisession(workers = 4))`,
-#'   then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
-#'   You might also try `options(mc.cores = jobs)`,
-#'   or see `future::.options`
-#'   for environment variables that set the max number of jobs.
-#'
 #'   If `parallelism` is `"Makefile"`,  Makefile-level parallelism is
 #'   only used for targets in your workflow plan data frame, not imports.  To
 #'   process imported objects and files, drake selects the best parallel backend
