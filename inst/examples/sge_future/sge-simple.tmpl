@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# This is a batchtools configuration file
+# for the Sun/Univa Grid Engine.
+# It resembles https://github.com/mllg/batchtools/blob/master/inst/templates/sge-simple.tmpl,
+# but it is specifically tailored for drake.
+# Drake has some special requirements.
+
+# Each line beginning with `#$` contains flags to qsub.
+# In this case, we are going to write the equivalent of
+# qsub -cwd -j y -V
+# Enter `man qsub` in the Linux terminal for details.
+
+# First, we point the job's working directory to the
+# directory in which you called `drake::make()`.
+#$ -cwd
+
+# For convenience, we direct console output
+# and error messages (stdout and stderr)
+# to the same file.
+#$ -j y
+
+# Redirect the log files to where batchtools can find them.
+#$ -o <%= log.file %>
+
+## Use environment variables
+#$ -V
+
+# You may have to change the following to 'module load R-3.4.2' or similar.
+# Just be sure to name the correct environment module.
+# See 'module avail' or 'module avail R'.
+module load R
+
+# Run the work.
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
+exit 0

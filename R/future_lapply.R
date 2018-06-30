@@ -10,19 +10,19 @@ run_future_lapply <- function(config){
   )
   tmp <- system2(
     rscript,
-    shQuote(c("-e", paste0("drake::fl_master('", path, "')"))),
+    shQuote(c("-e", paste0("drake::remote_master('", path, "')"))),
     wait = FALSE
   )
   future.apply::future_lapply(
     X = mc_worker_id(seq_len(config$jobs)),
-    FUN = fl_worker,
-    cache_path = config$cache$driver$path,
+    FUN = remote_worker,
+    cache_path = config$cache_path,
     future.globals = FALSE
   )
   finish_distributed(config = config)
 }
 
-#' @title Run the master process of the "future_lapply" backend.
+#' @title Run the master process of remote persistent worker backends.
 #' @description Users should not need to call this function directly.
 #' @export
 #' @keywords internal
@@ -30,12 +30,21 @@ run_future_lapply <- function(config){
 #' @param cache_path path to the drake cache
 #' @examples
 #' # No examples here. This function is not for end users.
-fl_master <- function(cache_path){
+remote_master <- function(cache_path){
   config <- recover_drake_config(cache_path)
   drake::mc_process(id = mc_worker_id(0), config = config)
 }
 
-fl_worker <- function(worker, cache_path){
+#' @title Run a remote persistent worker
+#' @description Users should not need to call this function directly.
+#' @export
+#' @keywords internal
+#' @return `NULL`
+#' @param worker the worker ID
+#' @param cache_path path to the drake cache
+#' @examples
+#' # No examples here. This function is not for end users.
+remote_worker <- function(worker, cache_path){
   withCallingHandlers(
     expr = {
       config <- recover_drake_config(cache_path = cache_path)

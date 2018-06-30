@@ -1,0 +1,8 @@
+#$ -N {{ job_name }}               # job name
+#$ -V                              # use environment variable
+#$ -j y                            # combine stdout/error in one file
+#$ -cwd                            # use pwd as work dir
+#$ -pe smp 2                       # Request 2 cores per job.
+module load R
+ulimit -v $(( 1024 * {{ memory | 4096 }} ))
+R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

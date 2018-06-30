@@ -1,0 +1,61 @@
+#!/bin/bash
+
+## Modified from  https://github.com/mllg/batchtools/blob/master/inst/templates/
+## Job Resource Interface Definition
+##
+## ntasks [integer(1)]:       Number of required tasks,
+##                            Set larger than 1 if you want to further parallelize
+##                            with MPI within your job.
+## ncpus [integer(1)]:        Number of required cpus per task,
+##                            Set larger than 1 if you want to further parallelize
+##                            with multicore/parallel within each task.
+## walltime [integer(1)]:     Walltime for this job, in minutes.
+##                            Must be at least 1 minute.
+## memory   [integer(1)]:     Memory in megabytes for each cpu.
+##                            Must be at least 100 (when I tried lower values my
+##                            jobs did not start at all).
+##
+## Default resources can be set in your .batchtools.conf.R by defining the variable
+## 'default.resources' as a named list.
+
+<%
+# relative paths are not handled well by Slurm
+log.file = normalizePath(log.file, winslash = "/", mustWork = FALSE)
+
+#########################
+# Set defaults if needed.
+
+if (!"ncpus" %in% names(resources)) {
+  resources$ncpus = 1
+}
+
+if (!"walltime" %in% names(resources)) {
+  # Default time format is minutes but we later divide by 60 so set time in secs.
+  # Set 48 hours by default. This is excessive for drake's built-in examples.
+  resources$walltime = 48 * 3600
+}
+-%>
+
+#SBATCH --job-name=<%= job.name %>
+#SBATCH --output=<%= log.file %>
+#SBATCH --error=<%= log.file %>
+#SBATCH --time=<%= ceiling(resources$walltime / 60) %>
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=<%= resources$ncpus %>
+#SBATCH --mem-per-cpu=<%= resources$memory %>
+
+<%= if (array.jobs) sprintf("#SBATCH --array=1-%i", nrow(jobs)) else "" %>
+
+## Initialize work environment like
+## source /etc/profile
+source /etc/profile
+
+## module add ...
+
+# Load R if we are using the built-in R module.
+# Comment out if using a custom compiled version of R.
+# module load R
+
+## Run R:
+## we merge R output with stdout from SLURM, which gets then logged via --output option
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
