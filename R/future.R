@@ -1,6 +1,6 @@
 run_future <- function(config){
   queue <- new_priority_queue(config = config)
-  workers <- initialize_workers(config)
+  workers <- initialize_workers()
   # While any targets are queued or running...
   while (work_remains(queue = queue, workers = workers, config = config)){
     for (id in seq_along(workers)){
@@ -169,9 +169,9 @@ running_targets <- function(workers, config){
     unlist
 }
 
-initialize_workers <- function(config){
+initialize_workers <- function(){
   out <- list()
-  for (i in seq_len(config$jobs))
+  for (i in seq_len(future::nbrOfWorkers()))
     out[[i]] <- empty_worker(target = NA)
   out
 }
