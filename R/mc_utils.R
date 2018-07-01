@@ -6,7 +6,7 @@ mc_init_worker_cache <- function(config){
   }
   dir_empty(worker_dir <- file.path(config$cache_path, "workers"))
   lapply(
-    X = seq_len(config$jobs),
+    X = seq_len(targets_setting(config$jobs)),
     FUN = function(worker){
       worker <- mc_worker_id(worker)
       for (type in c("ready", "done")){

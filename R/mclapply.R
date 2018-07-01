@@ -1,10 +1,10 @@
 run_mclapply <- function(config){
-  if (config$jobs < 2 && !length(config$debug)) {
+  if (targets_setting(config$jobs) < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
   mc_init_worker_cache(config)
   tmp <- mclapply(
-    X = mc_worker_id(c(0, seq_len(config$jobs))),
+    X = mc_worker_id(c(0, seq_len(targets_setting(config$jobs)))),
     FUN = mc_process,
     mc.cores = config$jobs + 1,
     config = config
