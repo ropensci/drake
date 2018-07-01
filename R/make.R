@@ -250,7 +250,7 @@ make_with_schedules <- function(config){
     make_imports(config = config)
     make_targets(config = config)
   } else {
-    # config$jobs_imports == config$jobs_targets here 
+    # config$jobs_imports == config$jobs_targets here
     config$jobs <- config$jobs_imports
     make_imports_targets(config = config)
   }
