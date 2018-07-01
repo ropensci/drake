@@ -171,7 +171,7 @@ running_targets <- function(workers, config){
 
 initialize_workers <- function(config){
   out <- list()
-  for (i in seq_len(config$jobs))
+  for (i in seq_len(targets_setting(config$jobs)))
     out[[i]] <- empty_worker(target = NA)
   out
 }
