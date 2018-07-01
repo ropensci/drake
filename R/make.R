@@ -244,7 +244,8 @@ make_with_schedules <- function(config){
   } else if (config$skip_imports){
     make_targets(config = config)
   } else if (
-    length(unique(config$parallelism)) > 1
+    (length(unique(config$parallelism)) > 1) |
+      (config$jobs_imports != config$jobs_targets)
   ){
     make_imports(config = config)
     make_targets(config = config)
