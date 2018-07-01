@@ -24,7 +24,6 @@ paper.md
 README.md
 README.Rmd
 README.html
-README.Rmd
 TESTS.md
 TODO.md
 TROUBLESHOOTING.md
@@ -47,3 +46,4 @@ vignettes/.*_files
 ^docs\.R$
 ^images\.R$
 ^_pkgdown\.yml$
+^codemeta\.json$
