@@ -9,7 +9,7 @@ new_priority_queue <- function(config){
     FUN = function(target){
       length(dependencies(targets = target, config = config))
     },
-    jobs = config$jobs
+    jobs = config$jobs_imports
   ) %>%
     unlist
   priorities <- rep(Inf, length(targets))

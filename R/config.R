@@ -467,7 +467,9 @@ drake_config <- function(
   list(
     plan = plan, targets = targets, envir = envir,
     cache = cache, cache_path = cache_path, fetch_cache = fetch_cache,
-    parallelism = parallelism, jobs = jobs, verbose = verbose, hook = hook,
+    parallelism = parallelism, jobs = jobs,
+    jobs_imports = jobs["imports"], jobs_targets = jobs["targets"],
+    verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
