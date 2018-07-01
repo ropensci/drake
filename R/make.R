@@ -250,6 +250,8 @@ make_with_schedules <- function(config){
     make_imports(config = config)
     make_targets(config = config)
   } else {
+    # config$jobs_imports == config$jobs_targets here 
+    config$jobs <- config$jobs_imports
     make_imports_targets(config = config)
   }
 }
@@ -346,7 +348,6 @@ make_targets <- function(config = drake::read_drake_config()){
 make_imports_targets <- function(config){
   config$schedule <- config$graph
   config$parallelism <- config$parallelism[1]
-  config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
