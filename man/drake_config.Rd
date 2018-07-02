@@ -115,17 +115,6 @@ have different parallelism needs. To use at most 2 jobs at a time
 for imports and at most 4 jobs at a time for targets, call
 \code{make(..., jobs = c(imports = 2, targets = 4))}.
 
-For \code{"future_lapply"} parallelism, \code{jobs}
-only applies to the imports.
-To set the max number of jobs for \code{"future_lapply"}
-parallelism, set the \code{workers}
-argument where it exists: for example, call
-\code{future::plan(multisession(workers = 4))},
-then call \code{\link{make}(your_plan, parallelism = "future_lapply")}.
-You might also try \code{options(mc.cores = jobs)},
-or see \code{future::.options}
-for environment variables that set the max number of jobs.
-
 If \code{parallelism} is \code{"Makefile"},  Makefile-level parallelism is
 only used for targets in your workflow plan data frame, not imports.  To
 process imported objects and files, drake selects the best parallel backend
