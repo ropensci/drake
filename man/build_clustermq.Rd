@@ -4,10 +4,12 @@
 \alias{build_clustermq}
 \title{Build a target using the clustermq backend}
 \usage{
-build_clustermq(target, config)
+build_clustermq(target, meta_list, config)
 }
 \arguments{
 \item{target}{name of the target}
+
+\item{meta_list}{list of metadata}
 
 \item{config}{internal configuration list}
 }

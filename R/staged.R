@@ -194,6 +194,7 @@ run_clustermq_staged <- function(config){
     }
     export$config <- config
     export$meta_list <- stage$meta_list
+    meta_list <- NULL
     tmp <- lightly_parallelize(
       X = stage$targets,
       FUN = function(target){
@@ -208,7 +209,11 @@ run_clustermq_staged <- function(config){
     builds <- clustermq::Q(
       stage$targets,
       fun = function(target){
-        drake::build_clustermq(target = target, config = config)
+        drake::build_clustermq(
+          target = target,
+          meta_list = meta_list,
+          config = config
+        )
       },
       workers = workers,
       export = export
@@ -235,7 +240,8 @@ run_clustermq_staged <- function(config){
 #' @export
 #' @keywords internal
 #' @inheritParams drake_build
-build_clustermq <- function(target, config){
+#' @param meta_list list of metadata
+build_clustermq <- function(target, meta_list, config){
   do_prework(config = config, verbose_packages = FALSE)
   build <- just_build(
     target = target,
