@@ -205,11 +205,15 @@ run_clustermq_staged <- function(config){
       stage$targets,
       fun = function(target){
         drake::do_prework(config = config, verbose_packages = FALSE)
-        drake::just_build(
+        build <- drake::just_build(
           target = target,
           meta = meta_list[[target]],
           config = config
         )
+        if (drake::is_file(target)){
+          build$checksum <- drake::rehash_file(target, config = config)
+        }
+        build
       },
       n_jobs = workers$workers,
       workers = workers,
@@ -218,6 +222,7 @@ run_clustermq_staged <- function(config){
     tmp <- lightly_parallelize(
       X = builds,
       FUN = function(build){
+        wait_for_file(build = build, config = config)
         conclude_build(
           target = build$target,
           value = build$value,
@@ -225,7 +230,8 @@ run_clustermq_staged <- function(config){
           config = config
         )
       },
-      jobs = config$jobs_imports
+      jobs = config$jobs_imports,
+      config = config
     )
   }
   invisible()
@@ -238,4 +244,20 @@ clustermq_exports <- function(config){
   }
   export$config <- config
   export
+}
+
+wait_for_file <- function(build, config){
+  if (!length(build$checksum)){
+    return()
+  }
+  R.utils::withTimeout({
+      while (!file.exists(drake_unquote(build$target))){
+        Sys.sleep(mc_wait)
+      }
+      while(!identical(rehash_file(build$target, config), build$checksum)){
+        Sys.sleep(mc_wait)
+      }
+    },
+    timeout = 60
+  )
 }
