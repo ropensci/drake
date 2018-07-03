@@ -210,7 +210,6 @@ run_clustermq_staged <- function(config){
       fun = function(target){
         drake::build_clustermq(target = target, config = config)
       },
-      n_jobs = workers$workers,
       workers = workers,
       export = export
     )
