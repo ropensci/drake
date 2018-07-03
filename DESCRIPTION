@@ -93,6 +93,7 @@ Imports:
 Suggests: 
   abind,
   callr,
+  clustermq,
   DBI,
   MASS,
   methods,

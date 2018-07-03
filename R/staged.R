@@ -160,3 +160,118 @@ run_future_lapply_staged <- function(config){
   }
   invisible()
 }
+
+run_clustermq_staged <- function(config){
+  if (!requireNamespace("clustermq")){
+    # nocov start
+    drake_error(
+      "to use make(parallelism = \"clustermq_staged\"), ",
+      "you must install the clustermq package: ",
+      "https://github.com/mschubert/clustermq.",
+      config = config
+    )
+    # nocov end
+  }
+  schedule <- config$schedule
+  workers <- clustermq::workers(n_jobs = config$jobs)
+  on.exit(workers$finalize())
+  while (length(V(schedule)$name)){
+    stage <- next_stage(config = config, schedule = schedule)
+    schedule <- stage$schedule
+    if (!length(stage$targets)){
+      break
+    } else if (any(stage$targets %in% config$plan$target)){
+      set_attempt_flag(key = "_attempt", config = config)
+    }
+    prune_envir(
+      targets = stage$targets,
+      config = config,
+      jobs = config$jobs_imports
+    )
+    export <- list()
+    if (identical(config$envir, globalenv())){
+      export <- as.list(config$envir, all.names = TRUE) # nocov
+    }
+    export$config <- config
+    export$meta_list <- stage$meta_list
+    meta_list <- NULL
+    tmp <- lightly_parallelize(
+      X = stage$targets,
+      FUN = function(target){
+        announce_build(
+          target = target,
+          meta = stage$meta_list[[target]],
+          config = config
+        )
+      },
+      jobs = config$jobs_imports
+    )
+    builds <- clustermq::Q(
+      stage$targets,
+      fun = function(target){
+        # This call is actually tested in tests/testthat/test-clustermq.R.
+        # nocov start
+        drake::build_clustermq(
+          target = target,
+          meta_list = meta_list,
+          config = config
+        )
+        # nocov end
+      },
+      workers = workers,
+      export = export
+    )
+    tmp <- lightly_parallelize(
+      X = builds,
+      FUN = function(build){
+        wait_for_file(build = build, config = config)
+        conclude_build(
+          target = build$target,
+          value = build$value,
+          meta = build$meta,
+          config = config
+        )
+      },
+      jobs = config$jobs_imports
+    )
+  }
+  invisible()
+}
+
+#' @title Build a target using the clustermq backend
+#' @description For internal use only
+#' @export
+#' @keywords internal
+#' @inheritParams drake_build
+#' @param meta_list list of metadata
+build_clustermq <- function(target, meta_list, config){
+  # This function is actually tested in tests/testthat/test-clustermq.R.
+  # nocov start
+  do_prework(config = config, verbose_packages = FALSE)
+  build <- just_build(
+    target = target,
+    meta = meta_list[[target]],
+    config = config
+  )
+  if (is_file(target)){
+    build$checksum <- rehash_file(target, config = config)
+  }
+  build
+  # nocov end
+}
+
+wait_for_file <- function(build, config){
+  if (!length(build$checksum)){
+    return()
+  }
+  R.utils::withTimeout({
+      while (!file.exists(drake_unquote(build$target))){
+        Sys.sleep(mc_wait) # nocov
+      }
+      while (!identical(rehash_file(build$target, config), build$checksum)){
+        Sys.sleep(mc_wait) # nocov
+      }
+    },
+    timeout = 60
+  )
+}

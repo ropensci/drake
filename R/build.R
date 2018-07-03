@@ -1,9 +1,6 @@
 #' @title Build/process a single target or import.
 #' @export
-#' @description For internal use only.
-#' the only reason this function is exported
-#' is to set up parallel socket (PSOCK) clusters
-#' without much of a fuss.
+#' @description Also load the target's dependencies beforehand.
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which
