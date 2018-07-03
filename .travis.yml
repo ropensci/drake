@@ -15,6 +15,7 @@ r_packages:
   - clustermq
   - covr
   - lintr
+  - rzmq
 
 # From Jim Hester, for avoiding timeouts
 script:
