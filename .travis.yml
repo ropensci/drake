@@ -11,11 +11,15 @@ branches:
 
 warnings_are_errors: true
 
+addons:
+  apt:
+    packages:
+      - libzmq3-dev
+
 r_packages:
   - clustermq
   - covr
   - lintr
-  - rzmq
 
 # From Jim Hester, for avoiding timeouts
 script:
