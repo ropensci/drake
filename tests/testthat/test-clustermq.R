@@ -21,4 +21,12 @@ test_with_dir("clustermq_staged parallelism", {
   )
   config <- drake_config(e$my_plan, envir = e)
   expect_equal(outdated(config), character(0))
+  make(
+    e$my_plan,
+    parallelism = "clustermq_staged",
+    jobs = jobs,
+    envir = e,
+    verbose = 4
+  )
+  expect_equal(justbuilt(config), character(0))
 })

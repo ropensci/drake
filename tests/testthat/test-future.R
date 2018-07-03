@@ -26,12 +26,12 @@ test_with_dir("future package functionality", {
   }
 
   # Stuff is already up to date.
-  for (i in 3:4){
+  for (i in 1:4){
     config <- make(
       e$my_plan,
       envir = e,
-      parallelism = backends[3],
-      caching = caching[3],
+      parallelism = backends[i],
+      caching = caching[i],
       jobs = 1,
       verbose = FALSE,
       session_info = FALSE

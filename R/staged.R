@@ -229,7 +229,7 @@ run_clustermq_staged <- function(config){
           config = config
         )
       },
-      jobs = 1 # Could use config$jobs_imports, but memory would blow up.
+      jobs = config$jobs_imports
     )
   }
   invisible()
@@ -260,10 +260,10 @@ wait_for_file <- function(build, config){
   }
   R.utils::withTimeout({
       while (!file.exists(drake_unquote(build$target))){
-        Sys.sleep(mc_wait)
+        Sys.sleep(mc_wait) # nocov
       }
       while (!identical(rehash_file(build$target, config), build$checksum)){
-        Sys.sleep(mc_wait)
+        Sys.sleep(mc_wait) # nocov
       }
     },
     timeout = 60
