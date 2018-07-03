@@ -107,6 +107,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
   distributed <- c(
     "future",
     "future_lapply",
+    "future_lapply_staged",
     "Makefile"
   )
   if (distributed_only){

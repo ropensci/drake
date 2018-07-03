@@ -71,24 +71,7 @@ new_worker <- function(id, target, config, protect){
   # Avoid potential name conflicts with other globals.
   # When we solve #296, the need for such a clumsy workaround
   # should go away.
-  globals <- list(
-    DRAKE_GLOBALS__ = list(
-      target = target,
-      meta = meta,
-      config = config
-    )
-  )
-  if (identical(config$envir, globalenv())){
-    # Unit tests should not modify global env # nocov
-    if (exists("DRAKE_GLOBALS__", config$envir)){ # nocov # nolint
-      warning( # nocov
-        "Do not define an object named `DRAKE_GLOBALS__` ", # nocov
-        "in the global environment", # nocov
-        call. = FALSE # nocov
-      ) # nocov
-    } # nocov
-    globals <- c(globals, as.list(config$envir, all.names = TRUE)) # nocov
-  }
+  globals <- future_globals(target = target, meta = meta, config = config)
   evaluator <- drake_plan_override(
     target = target,
     field = "evaluator",
@@ -109,6 +92,28 @@ new_worker <- function(id, target, config, protect){
     ),
     target = target
   )
+}
+
+future_globals <- function(target, meta, config){
+  globals <- list(
+    DRAKE_GLOBALS__ = list(
+      target = target,
+      meta = meta,
+      config = config
+    )
+  )
+  if (identical(config$envir, globalenv())){
+    # Unit tests should not modify global env # nocov
+    if (exists("DRAKE_GLOBALS__", config$envir)){ # nocov # nolint
+      warning( # nocov
+        "Do not define an object named `DRAKE_GLOBALS__` ", # nocov
+        "in the global environment", # nocov
+        call. = FALSE # nocov
+      ) # nocov
+    } # nocov
+    globals <- c(globals, as.list(config$envir, all.names = TRUE)) # nocov
+  }
+  globals
 }
 
 empty_worker <- function(target){
