@@ -230,8 +230,7 @@ run_clustermq_staged <- function(config){
           config = config
         )
       },
-      jobs = config$jobs_imports,
-      config = config
+      jobs = 1 # Could use config$jobs_imports, but memory would blow up.
     )
   }
   invisible()
@@ -254,7 +253,7 @@ wait_for_file <- function(build, config){
       while (!file.exists(drake_unquote(build$target))){
         Sys.sleep(mc_wait)
       }
-      while(!identical(rehash_file(build$target, config), build$checksum)){
+      while (!identical(rehash_file(build$target, config), build$checksum)){
         Sys.sleep(mc_wait)
       }
     },
