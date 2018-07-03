@@ -160,3 +160,53 @@ run_future_lapply_staged <- function(config){
   }
   invisible()
 }
+
+run_clustermq_staged <- function(config){
+  if (!requireNamespace("clustermq")){
+    # nocov start
+    drake_error(
+      "to use make(parallelism = \"clustermq_staged\"), ",
+      "you must install the clustermq package: ",
+      "https://github.com/mschubert/clustermq.",
+      config = config
+    )
+    # nocov end
+  }
+  schedule <- config$schedule
+  workers <- clustermq::workers(n_jobs = config$jobs)
+  export <- list()
+  if (identical(config$envir, globalenv())){
+    export <- as.list(config$envir, all.names = TRUE)
+    export <- export[setdiff(names(export), config$plan$target)]
+  }
+  export$config <- config
+  while (length(V(schedule)$name)){
+    stage <- next_stage(config = config, schedule = schedule)
+    schedule <- stage$schedule
+    if (!length(stage$targets)){
+      break
+    } else if (any(stage$targets %in% config$plan$target)){
+      set_attempt_flag(key = "_attempt", config = config)
+    }
+    prune_envir(
+      targets = stage$targets,
+      config = config,
+      jobs = config$jobs_imports
+    )
+    export$meta_list <- stage$meta_list
+    values <- clustermq::Q(
+      stage$targets,
+      fun = function(target){
+        build_target(
+          target = target,
+          meta = meta_list[[target]],
+          config = config
+        )
+      },
+      n_jobs = config$jobs,
+      workers = workers,
+      export = export
+    )
+  }
+  invisible()
+}
