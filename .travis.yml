@@ -12,6 +12,7 @@ branches:
 warnings_are_errors: true
 
 r_packages:
+  - clustermq
   - covr
   - lintr
 
