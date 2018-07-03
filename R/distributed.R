@@ -43,11 +43,16 @@ finish_distributed <- function(config){
   unlink(file, force = TRUE)
 }
 
-build_distributed <- function(target, cache_path){
+build_distributed <- function(target, cache_path, check = TRUE){
   config <- recover_drake_config(cache_path = cache_path)
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   do_prework(config = config, verbose_packages = FALSE)
-  build_check_store(target = target, config = config)
+  if (check){
+    build_check_store(target = target, config = config)
+  } else {
+    prune_envir(targets = target, config = config)
+    build_and_store(target = target, config = config)
+  }
   invisible()
 }
 

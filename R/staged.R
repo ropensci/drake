@@ -14,7 +14,7 @@ next_stage <- function(config, schedule) {
     new_meta <- lightly_parallelize(
       X = new_leaves,
       FUN = drake_meta,
-      jobs = config$jobs,
+      jobs = config$jobs_imports,
       config = config
     )
     names(new_meta) <- new_leaves
@@ -27,7 +27,7 @@ next_stage <- function(config, schedule) {
           config = config
         )
       },
-      jobs = config$jobs
+      jobs = config$jobs_imports
     ) %>%
       unlist
     targets <- c(targets, new_leaves[do_build])
@@ -135,6 +135,27 @@ run_parLapply_staged <- function(config) { # nolint
           config = config
         )
       }
+    )
+  }
+  invisible()
+}
+
+run_future_lapply_staged <- function(config){
+  prepare_distributed(config = config)
+  schedule <- config$schedule
+  while (length(V(schedule)$name)){
+    stage <- next_stage(config = config, schedule = schedule)
+    schedule <- stage$schedule
+    if (!length(stage$targets)){
+      break
+    } else if (any(stage$targets %in% config$plan$target)){
+      set_attempt_flag(key = "_attempt", config = config)
+    }
+    tmp <- future.apply::future_lapply(
+      X = stage$targets,
+      FUN = build_distributed,
+      cache_path = config$cache_path,
+      check = FALSE
     )
   }
   invisible()
