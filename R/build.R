@@ -1,9 +1,6 @@
 #' @title Build/process a single target or import.
 #' @export
-#' @description For internal use only.
-#' the only reason this function is exported
-#' is to set up parallel socket (PSOCK) clusters
-#' without much of a fuss.
+#' @description Also load the target's dependencies beforehand.
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which
@@ -114,6 +111,14 @@ build_and_store <- function(target, config, meta = NULL, announce = TRUE){
   })
 }
 
+#' @title Build/process a single target or import.
+#' @description For internal use only.
+#' the only reason this function is exported
+#' is to allow `make(parallelism = "clustermq_staged")`.
+#' @export
+#' @keywords internal
+#' @return a list containing the target's value and metadata
+#' @inheritParams drake_build
 just_build <- function(target, meta, config){
   if (meta$imported) {
     process_import(target = target, meta = meta, config = config)

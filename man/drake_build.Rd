@@ -37,10 +37,7 @@ will not be replaced.}
 The value of the target right after it is built.
 }
 \description{
-For internal use only.
-the only reason this function is exported
-is to set up parallel socket (PSOCK) clusters
-without much of a fuss.
+Also load the target's dependencies beforehand.
 }
 \examples{
 \dontrun{

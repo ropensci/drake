@@ -174,12 +174,7 @@ run_clustermq_staged <- function(config){
   }
   schedule <- config$schedule
   workers <- clustermq::workers(n_jobs = config$jobs)
-  export <- list()
-  if (identical(config$envir, globalenv())){
-    export <- as.list(config$envir, all.names = TRUE)
-    export <- export[setdiff(names(export), config$plan$target)]
-  }
-  export$config <- config
+  on.exit(workers$finalize())
   while (length(V(schedule)$name)){
     stage <- next_stage(config = config, schedule = schedule)
     schedule <- stage$schedule
@@ -193,20 +188,54 @@ run_clustermq_staged <- function(config){
       config = config,
       jobs = config$jobs_imports
     )
+    export <- clustermq_exports(config = config)
     export$meta_list <- stage$meta_list
-    values <- clustermq::Q(
+    tmp <- lightly_parallelize(
+      X = stage$targets,
+      FUN = function(target){
+        announce_build(
+          target = target,
+          meta = stage$meta_list[[target]],
+          config = config
+        )
+      },
+      jobs = config$jobs_imports
+    )
+    builds <- clustermq::Q(
       stage$targets,
       fun = function(target){
-        build_target(
+        drake::do_prework(config = config, verbose_packages = FALSE)
+        drake::just_build(
           target = target,
           meta = meta_list[[target]],
           config = config
         )
       },
-      n_jobs = config$jobs,
+      n_jobs = workers$workers,
       workers = workers,
       export = export
     )
+    tmp <- lightly_parallelize(
+      X = builds,
+      FUN = function(build){
+        conclude_build(
+          target = build$target,
+          value = build$value,
+          meta = build$meta,
+          config = config
+        )
+      },
+      jobs = config$jobs_imports
+    )
   }
   invisible()
+}
+
+clustermq_exports <- function(config){
+  export <- list()
+  if (identical(config$envir, globalenv())){
+    export <- as.list(config$envir, all.names = TRUE)
+  }
+  export$config <- config
+  export
 }

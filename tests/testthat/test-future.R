@@ -26,16 +26,18 @@ test_with_dir("future package functionality", {
   }
 
   # Stuff is already up to date.
-  config <- make(
-    e$my_plan,
-    envir = e,
-    parallelism = backends[3],
-    caching = caching[3],
-    jobs = 1,
-    verbose = FALSE,
-    session_info = FALSE
-  )
-  expect_equal(justbuilt(config), character(0))
+  for (i in 3:4){
+    config <- make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[3],
+      caching = caching[3],
+      jobs = 1,
+      verbose = FALSE,
+      session_info = FALSE
+    )
+    expect_equal(justbuilt(config), character(0))
+  }
 
   # Workers can wait for dependencies.
   e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
