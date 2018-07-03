@@ -110,7 +110,6 @@ self_hash <- Vectorize(function(target, config) {
 },
 "target", USE.NAMES = FALSE)
 
-#' @export
 rehash_file <- function(target, config) {
   digest::digest(
     object = drake::drake_unquote(target),

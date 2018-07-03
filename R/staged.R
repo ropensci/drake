@@ -188,7 +188,11 @@ run_clustermq_staged <- function(config){
       config = config,
       jobs = config$jobs_imports
     )
-    export <- clustermq_exports(config = config)
+    export <- list()
+    if (identical(config$envir, globalenv())){
+      export <- as.list(config$envir, all.names = TRUE)
+    }
+    export$config <- config
     export$meta_list <- stage$meta_list
     tmp <- lightly_parallelize(
       X = stage$targets,
@@ -204,16 +208,7 @@ run_clustermq_staged <- function(config){
     builds <- clustermq::Q(
       stage$targets,
       fun = function(target){
-        drake::do_prework(config = config, verbose_packages = FALSE)
-        build <- drake::just_build(
-          target = target,
-          meta = meta_list[[target]],
-          config = config
-        )
-        if (drake::is_file(target)){
-          build$checksum <- drake::rehash_file(target, config = config)
-        }
-        build
+        drake::build_clustermq(target = target, config = config)
       },
       n_jobs = workers$workers,
       workers = workers,
@@ -236,13 +231,22 @@ run_clustermq_staged <- function(config){
   invisible()
 }
 
-clustermq_exports <- function(config){
-  export <- list()
-  if (identical(config$envir, globalenv())){
-    export <- as.list(config$envir, all.names = TRUE)
+#' @title Build a target using the clustermq backend
+#' @description For internal use only
+#' @export
+#' @keywords internal
+#' @inheritParams drake_build
+build_clustermq <- function(target, config){
+  do_prework(config = config, verbose_packages = FALSE)
+  build <- just_build(
+    target = target,
+    meta = meta_list[[target]],
+    config = config
+  )
+  if (is_file(target)){
+    build$checksum <- rehash_file(target, config = config)
   }
-  export$config <- config
-  export
+  build
 }
 
 wait_for_file <- function(build, config){

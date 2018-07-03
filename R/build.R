@@ -111,14 +111,6 @@ build_and_store <- function(target, config, meta = NULL, announce = TRUE){
   })
 }
 
-#' @title Build/process a single target or import.
-#' @description For internal use only.
-#' the only reason this function is exported
-#' is to allow `make(parallelism = "clustermq_staged")`.
-#' @export
-#' @keywords internal
-#' @return a list containing the target's value and metadata
-#' @inheritParams drake_build
 just_build <- function(target, meta, config){
   if (meta$imported) {
     process_import(target = target, meta = meta, config = config)

@@ -2,7 +2,6 @@ safe_grepl <- function(pattern, x, ...){
   tryCatch(grepl(pattern, x, ...), error = error_false)
 }
 
-#' @export
 is_file <- function(x){
   safe_grepl(pattern = quotes_regex, x = x)
 }
