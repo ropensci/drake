@@ -190,7 +190,7 @@ run_clustermq_staged <- function(config){
     )
     export <- list()
     if (identical(config$envir, globalenv())){
-      export <- as.list(config$envir, all.names = TRUE)
+      export <- as.list(config$envir, all.names = TRUE) # nocov
     }
     export$config <- config
     export$meta_list <- stage$meta_list
@@ -209,11 +209,14 @@ run_clustermq_staged <- function(config){
     builds <- clustermq::Q(
       stage$targets,
       fun = function(target){
+        # This call is actually tested in tests/testthat/test-clustermq.R.
+        # nocov start
         drake::build_clustermq(
           target = target,
           meta_list = meta_list,
           config = config
         )
+        # nocov end
       },
       workers = workers,
       export = export
@@ -242,6 +245,8 @@ run_clustermq_staged <- function(config){
 #' @inheritParams drake_build
 #' @param meta_list list of metadata
 build_clustermq <- function(target, meta_list, config){
+  # This function is actually tested in tests/testthat/test-clustermq.R.
+  # nocov start
   do_prework(config = config, verbose_packages = FALSE)
   build <- just_build(
     target = target,
@@ -252,6 +257,7 @@ build_clustermq <- function(target, meta_list, config){
     build$checksum <- rehash_file(target, config = config)
   }
   build
+  # nocov end
 }
 
 wait_for_file <- function(build, config){
