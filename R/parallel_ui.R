@@ -105,8 +105,10 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "parLapply_staged"
   )
   distributed <- c(
+    "clustermq_staged",
     "future",
     "future_lapply",
+    "future_lapply_staged",
     "Makefile"
   )
   if (distributed_only){
