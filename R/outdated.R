@@ -49,6 +49,8 @@ first_outdated <- function(config) {
 #'   See the details in the help file for [drake_config()].
 #' @param make_imports logical, whether to make the imports first.
 #'   Set to `FALSE` to save some time and risk obsolete output.
+#' @param do_prework, whether to do the `prework`
+#'   normally supplied to [make()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -68,9 +70,12 @@ first_outdated <- function(config) {
 #' }
 outdated <-  function(
   config = drake::read_drake_config(),
-  make_imports = TRUE
+  make_imports = TRUE,
+  do_prework = TRUE
 ){
-  do_prework(config = config, verbose_packages = config$verbose)
+  if (do_prework){
+    do_prework(config = config, verbose_packages = config$verbose)
+  }
   if (make_imports){
     make_imports(config = config)
   }

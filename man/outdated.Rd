@@ -4,7 +4,8 @@
 \alias{outdated}
 \title{List the targets that are out of date.}
 \usage{
-outdated(config = drake::read_drake_config(), make_imports = TRUE)
+outdated(config = drake::read_drake_config(), make_imports = TRUE,
+  do_prework = TRUE)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -17,6 +18,9 @@ See the details in the help file for \code{\link[=drake_config]{drake_config()}}
 
 \item{make_imports}{logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
+
+\item{do_prework, }{whether to do the \code{prework}
+normally supplied to \code{\link[=make]{make()}}.}
 }
 \value{
 Character vector of the names of outdated targets.
