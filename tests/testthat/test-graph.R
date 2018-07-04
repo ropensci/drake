@@ -88,7 +88,8 @@ test_with_dir("Supplied graph is pruned.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
   con0 <- drake_config(my_plan)
-  con <- drake_config(my_plan, targets = c("small", "large"), graph = con0$graph)
+  con <- drake_config(
+    my_plan, targets = c("small", "large"), graph = con0$graph)
   vertices <- V(con$graph)$name
   include <- c("small", "simulate", "data.frame", "sample.int", "large")
   exclude <- setdiff(my_plan$target, include)
