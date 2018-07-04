@@ -216,8 +216,7 @@
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
-#'   The graph is constructed by [build_drake_graph()].
-#'   You can also get one from \code{\link{config}(my_plan)$graph}.
+#'   You can also get one from \code{\link{drake_config}(my_plan)$graph}.
 #'   Overrides `skip_imports`.
 #'
 #' @param trigger Name of the trigger to apply to all targets.
@@ -356,6 +355,10 @@
 #'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
 #'   `"parLapply"`, or `"future_lapply"`).
 #'
+#' @param protocol an environment with configuration info
+#'   on how to build the targets. You can supply a `protocol`
+#'   from a previous `config` with this argument.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -416,7 +419,8 @@ drake_config <- function(
   pruning_strategy = c("speed", "memory"),
   makefile_path = "Makefile",
   console_log_file = NULL,
-  ensure_workers = TRUE
+  ensure_workers = TRUE,
+  protocol = NULL
 ){
   force(envir)
   unlink(console_log_file)
@@ -454,10 +458,14 @@ drake_config <- function(
   )
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- match.arg(arg = trigger, choices = triggers())
+  if (is.null(protocol)){
+    protocol <- initialize_protocol(
+      plan = plan, targets = targets, envir = envir,
+      verbose = verbose, jobs = jobs, console_log_file = console_log_file
+    )
+  }
   if (is.null(graph)){
-    graph <- build_drake_graph(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, jobs = jobs,
-      sanitize_plan = FALSE, console_log_file = console_log_file)
+    graph <- build_igraph(targets = targets, protocol = protocol, jobs = jobs)
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
@@ -472,6 +480,7 @@ drake_config <- function(
     verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
     args = args, recipe_command = recipe_command, graph = graph,
+    protocol = protocol,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed, trigger = trigger,

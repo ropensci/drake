@@ -22,7 +22,7 @@ drake_config(plan = read_drake_plan(),
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
   session = NULL, imports_only = NULL, pruning_strategy = c("speed",
   "memory"), makefile_path = "Makefile", console_log_file = NULL,
-  ensure_workers = TRUE)
+  ensure_workers = TRUE, protocol = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -218,8 +218,7 @@ will no longer work if you do that.}
 
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.
-The graph is constructed by \code{\link[=build_drake_graph]{build_drake_graph()}}.
-You can also get one from \code{\link{config}(my_plan)$graph}.
+You can also get one from \code{\link{drake_config}(my_plan)$graph}.
 Overrides \code{skip_imports}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
@@ -366,6 +365,10 @@ for \code{make(parallelism = "future_lapply", jobs = n)}
 This argument only applies to parallel computing with persistent workers
 (\code{make(parallelism = x)}, where \code{x} could be \code{"mclapply"},
 \code{"parLapply"}, or \code{"future_lapply"}).}
+
+\item{protocol}{an environment with configuration info
+on how to build the targets. You can supply a \code{protocol}
+from a previous \code{config} with this argument.}
 }
 \value{
 The master internal configuration list of a project.

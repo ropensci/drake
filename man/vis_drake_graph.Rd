@@ -138,5 +138,5 @@ vis_drake_graph(
 }
 }
 \seealso{
-\code{\link[=build_drake_graph]{build_drake_graph()}}
+\code{\link[=drake_graph_info]{drake_graph_info()}}, \code{\link[=render_drake_graph]{render_drake_graph()}}
 }

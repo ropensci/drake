@@ -5,7 +5,7 @@
 #' [drake_graph_info()] and [render_drake_graph()].
 #' @export
 #' @aliases drake_graph
-#' @seealso [build_drake_graph()]
+#' @seealso [drake_graph_info()], [render_drake_graph()]
 #' @return A visNetwork graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_drake_graph

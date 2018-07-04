@@ -66,7 +66,7 @@ for an overview of the documentation." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">drake</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9001</span>
       </span>
     </div>
 
@@ -254,16 +254,6 @@ download and install Rtools.</p>
 have different parallelism needs. To use at most 2 jobs at a time
 for imports and at most 4 jobs at a time for targets, call
 <code>make(..., jobs = c(imports = 2, targets = 4))</code>.</p>
-<p>For <code>"future_lapply"</code> parallelism, <code>jobs</code>
-only applies to the imports.
-To set the max number of jobs for <code>"future_lapply"</code>
-parallelism, set the <code>workers</code>
-argument where it exists: for example, call
-<code><a href='http://www.rdocumentation.org/packages/future/topics/plan'>future::plan(multisession(workers = 4))</a></code>,
-then call <code>make(your_plan, parallelism = "future_lapply")</code>.
-You might also try <code>options(mc.cores = jobs)</code>,
-or see <code>future::.options</code>
-for environment variables that set the max number of jobs.</p>
 <p>If <code>parallelism</code> is <code>"Makefile"</code>,  Makefile-level parallelism is
 only used for targets in your workflow plan data frame, not imports.  To
 process imported objects and files, drake selects the best parallel backend
@@ -405,8 +395,7 @@ is always invisibly returned.</p></td>
       <th>graph</th>
       <td><p>An <code>igraph</code> object from the previous <code>make()</code>.
 Supplying a pre-built graph could save time.
-The graph is constructed by <code><a href='build_drake_graph.html'>build_drake_graph()</a></code>.
-You can also get one from <code><a href='config.html'>config</a>(my_plan)$graph</code>.
+You can also get one from <code><a href='drake_config.html'>drake_config</a>(my_plan)$graph</code>.
 Overrides <code>skip_imports</code>.</p></td>
     </tr>
     <tr>
@@ -503,7 +492,20 @@ use <code><a href='clean.html'>clean(destroy = TRUE)</a></code>.</p></td>
     </tr>
     <tr>
       <th>caching</th>
-      <td><p>character string, only applies to <code>"future"</code> parallelism.</p></td>
+      <td><p>character string, only applies to <code>"future"</code> parallelism.
+Can be either <code>"master"</code> or <code>"worker"</code>.</p><ul>
+<li><p><code>"master"</code>: Targets are built by remote workers and sent back to
+the master process. Then, the master process saves them to the
+cache (<code>config$cache</code>, usually a file system <code>storr</code>).
+Appropriate if remote workers do not have access to the file system
+of the calling R session. Targets are cached one at a time,
+which may be slow in some situations.</p></li>
+<li><p><code>"worker"</code>: Remote workers not only build the targets, but also
+save them to the cache. Here, caching happens in parallel.
+However, remote workers need to have access to the file system
+of the calling R session. Transferring target data across
+a network can be slow.</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>keep_going</th>

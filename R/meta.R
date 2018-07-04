@@ -1,4 +1,5 @@
-#' @title Compute the initial pre-build metadata of a target or import.
+#' @title Compute the initial pre-build trigger-related
+#'   metadata of a target or import.
 #' @description The metadata helps determine if the
 #' target is up to date or outdated. The metadata of imports
 #' is used to compute the metadata of targets.
