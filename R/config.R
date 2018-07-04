@@ -355,8 +355,8 @@
 #'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
 #'   `"parLapply"`, or `"future_lapply"`).
 #'
-#' @param meta an environment used as a hash table for quickly
-#'   looking up target/import-level metadata. You can supply a `meta`
+#' @param protocol an environment with configuration info
+#'   on how to build the targets. You can supply a `protocol`
 #'   from a previous `config` with this argument.
 #'
 #' @examples
@@ -420,7 +420,7 @@ drake_config <- function(
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE,
-  meta = NULL
+  protocol = NULL
 ){
   force(envir)
   unlink(console_log_file)
@@ -458,14 +458,14 @@ drake_config <- function(
   )
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- match.arg(arg = trigger, choices = triggers())
-  if (is.null(meta)){
-    meta <- initialize_meta_lookup(
+  if (is.null(protocol)){
+    protocol <- initialize_protocol(
       plan = plan, targets = targets, envir = envir,
       verbose = verbose, jobs = jobs, console_log_file = console_log_file
     )
   }
   if (is.null(graph)){
-    graph <- build_igraph(targets = targets, meta = meta, jobs = jobs)
+    graph <- build_igraph(targets = targets, protocol = protocol, jobs = jobs)
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
@@ -479,7 +479,8 @@ drake_config <- function(
     jobs_imports = jobs["imports"], jobs_targets = jobs["targets"],
     verbose = verbose, hook = hook,
     prepend = prepend, prework = prework, command = command,
-    args = args, recipe_command = recipe_command, graph = graph, meta = meta,
+    args = args, recipe_command = recipe_command, graph = graph,
+    protocol = protocol,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
     seed = seed, trigger = trigger,

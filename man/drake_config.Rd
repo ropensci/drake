@@ -22,7 +22,7 @@ drake_config(plan = read_drake_plan(),
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
   session = NULL, imports_only = NULL, pruning_strategy = c("speed",
   "memory"), makefile_path = "Makefile", console_log_file = NULL,
-  ensure_workers = TRUE, meta = NULL)
+  ensure_workers = TRUE, protocol = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -366,8 +366,8 @@ This argument only applies to parallel computing with persistent workers
 (\code{make(parallelism = x)}, where \code{x} could be \code{"mclapply"},
 \code{"parLapply"}, or \code{"future_lapply"}).}
 
-\item{meta}{an environment used as a hash table for quickly
-looking up target/import-level metadata. You can supply a \code{meta}
+\item{protocol}{an environment with configuration info
+on how to build the targets. You can supply a \code{protocol}
 from a previous \code{config} with this argument.}
 }
 \value{

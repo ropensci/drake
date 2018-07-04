@@ -1,5 +1,5 @@
-build_igraph <- function(targets, meta, jobs){
-  as.list(meta) %>%
+build_igraph <- function(targets, protocol, jobs){
+  as.list(protocol) %>%
     purrr::map(.f = target_meta_to_edges) %>%
     do.call(what = rbind) %>%
     igraph::graph_from_data_frame() %>%
