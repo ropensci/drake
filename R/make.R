@@ -335,7 +335,10 @@ make_imports <- function(config = drake::read_drake_config()){
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()){
-  config$schedule <- targets_graph(config = config)
+  up_to_date <- outdated(config, do_prework = FALSE, make_imports = FALSE) %>%
+    setdiff(x = config$plan$target)
+  config$schedule <- targets_graph(config = config) %>%
+    igraph::delete_vertices(v = up_to_date)
   config$jobs <- targets_setting(config$jobs)
   config$parallelism <- targets_setting(config$parallelism)
   run_parallel_backend(config = config)
