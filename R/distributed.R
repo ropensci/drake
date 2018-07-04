@@ -27,7 +27,7 @@ prepare_distributed <- function(config){
   # Always save globalenv() because config$envir could inherit from it
   # and so drake might look for stuff there.
   save(
-    list = ls(globalenv(), all.names = TRUE),
+    list = setdiff(ls(globalenv(), all.names = TRUE), config$plan$target),
     envir = globalenv(),
     file = globalenv_file(config$cache_path)
   )

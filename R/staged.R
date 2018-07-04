@@ -147,7 +147,8 @@ run_future_lapply_staged <- function(config){
     stage <- next_stage(config = config, schedule = schedule)
     schedule <- stage$schedule
     if (!length(stage$targets)){
-      break
+      # Keep in case outdated targets are ever back in the schedule.
+      break # nocov
     } else if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
@@ -179,7 +180,8 @@ run_clustermq_staged <- function(config){
     stage <- next_stage(config = config, schedule = schedule)
     schedule <- stage$schedule
     if (!length(stage$targets)){
-      break
+      # Keep in case outdated targets are ever back in the schedule.
+      break # nocov
     } else if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
