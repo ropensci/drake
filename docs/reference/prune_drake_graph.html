@@ -63,7 +63,7 @@ See config(my_plan)$graph from the mtcars example." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">drake</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9001</span>
       </span>
     </div>
 
@@ -155,7 +155,7 @@ remove the vertices after <code>to</code> from the graph.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='build_drake_graph.html'>build_drake_graph()</a></code>, <code><a href='config.html'>config()</a></code>,
+    <div class='dont-index'><p><code><a href='config.html'>config()</a></code>,
 <code><a href='make.html'>make()</a></code></p></div>
     
 
@@ -164,8 +164,7 @@ remove the vertices after <code>to</code> from the graph.</p>
 <span class='fu'><a href='test_with_dir.html'>test_with_dir</a></span>(<span class='st'>"Quarantine side effects."</span>, {
 <span class='fu'><a href='load_mtcars_example.html'>load_mtcars_example</a></span>() <span class='co'># Get the code with drake_example("mtcars").</span>
 <span class='co'># Build the igraph object representing the workflow dependency network.</span>
-<span class='co'># You could also use drake_config(my_plan)$graph</span>
-<span class='no'>graph</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='build_drake_graph.html'>build_drake_graph</a></span>(<span class='no'>my_plan</span>)
+<span class='no'>graph</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='drake_config.html'>drake_config</a></span>(<span class='no'>my_plan</span>)$<span class='no'>graph</span>
 <span class='co'># The default plotting is not the greatest,</span>
 <span class='co'># but you will get the idea.</span>
 <span class='fu'>plot</span>(<span class='no'>graph</span>)

@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">drake</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">5.2.1.9001</span>
       </span>
     </div>
 
@@ -112,6 +112,8 @@
 <a href="#version-5-2-1-9000" class="anchor"></a>Version 5.2.1.9000<small> Unreleased </small>
 </h1>
 <ul>
+<li>Implement <code><a href="../reference/make.html">make(parallelism = "clustermq_staged")</a></code>, a <code>clustermq</code>-based staged parallelism backend (see <a href="https://github.com/ropensci/drake/pull/452" class="uri">https://github.com/ropensci/drake/pull/452</a>).</li>
+<li>Implement <code><a href="../reference/make.html">make(parallelism = "future_lapply_staged")</a></code>, a <code>future</code>-based staged parallelism backend (see <a href="https://github.com/ropensci/drake/pull/450" class="uri">https://github.com/ropensci/drake/pull/450</a>).</li>
 <li>Depend on <code>codetools</code> rather than <code>CodeDepends</code> for finding global variables.</li>
 <li>Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.</li>
 <li>Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating <code><a href="../reference/drake_plan.html">drake_plan()</a></code>s.</li>
@@ -275,7 +277,7 @@
 <code><a href="../reference/backend.html">backend()</a></code> =&gt; <code><a href="http://www.rdocumentation.org/packages/future/topics/plan">future::plan()</a></code>
 </li>
 <li>
-<code><a href="../reference/build_graph.html">build_graph()</a></code> =&gt; <code><a href="../reference/build_drake_graph.html">build_drake_graph()</a></code>
+<code><a href="../reference/build_graph.html">build_graph()</a></code> =&gt; <code><a href="../reference/build_graph.html">build_drake_graph()</a></code>
 </li>
 <li>
 <code><a href="../reference/check.html">check()</a></code> =&gt; <code><a href="../reference/check_plan.html">check_plan()</a></code>
