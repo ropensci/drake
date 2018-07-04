@@ -35,23 +35,27 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     mustWork = TRUE
   )
   file.copy(from = path, to = getwd(), overwrite = TRUE)
-  x <- commands_edges("\"y\"", cmd)
-  y <- imports_edges("f", f)
-  expect_equal(
-    sort(x$from),
-    sort(
-      c("coef_regression2_small", "large",
-        "\"report.Rmd\"", "small", "\"x\""
-      )
-    )
+  x <- command_dependencies(cmd)
+  x0 <- list(
+    file_in = "\"x\"", file_out = "\"y\"", loadd = "large",
+    readd = c("small", "coef_regression2_small"),
+    knitr_in = "\"report.Rmd\"")
+  expect_equal(length(x), length(x0))
+  for (i in names(x)){
+    expect_equal(sort(x[[i]]), sort(x0[[i]]) )
+  }
+  y <- import_dependencies(f)
+  y0 <- list(
+    file_in = "\"x\"",
+    knitr_in = "\"report.Rmd\"",
+    loadd = "large",
+    readd = c("small", "coef_regression2_small")
   )
-  expect_equal(x$to, rep("\"y\"", 5))
-  expect_equal(
-    sort(y$from),
-    sort(c("\"report.Rmd\"", "\"x\""))
-  )
-  expect_equal(y$to, rep("f", 2))
-  expect_equal(sort(deps_code(f)), sort(c("\"report.Rmd\"", "\"x\"")))
+  expect_equal(length(y), length(y0))
+  for (i in names(y)){
+    expect_equal(sort(y[[i]]), sort(y0[[i]]) )
+  }
+  expect_equal(sort(deps_code(f)), sort(unname(unlist(y))))
   expect_equal(
     sort(deps_code(cmd)),
     sort(

@@ -2,7 +2,8 @@
 % Please edit documentation in R/meta.R
 \name{drake_meta}
 \alias{drake_meta}
-\title{Compute the initial pre-build metadata of a target or import.}
+\title{Compute the initial pre-build trigger-related
+metadata of a target or import.}
 \usage{
 drake_meta(target, config = drake::read_drake_config())
 }

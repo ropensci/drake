@@ -57,7 +57,6 @@ reference:
   - '`plan_summaries`'
 - title: Network graphs and visualization
   contents:
-  - '`build_drake_graph`'
   - '`drake_palette`'
   - '`drake_graph_info`'
   - '`legend_nodes`'

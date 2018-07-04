@@ -225,8 +225,7 @@ is always invisibly returned.}
 
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.
-The graph is constructed by \code{\link[=build_drake_graph]{build_drake_graph()}}.
-You can also get one from \code{\link{config}(my_plan)$graph}.
+You can also get one from \code{\link{drake_config}(my_plan)$graph}.
 Overrides \code{skip_imports}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.

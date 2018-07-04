@@ -200,11 +200,12 @@ tracked <- function(
   verbose = drake::default_verbose()
 ){
   force(envir)
-  graph <- build_drake_graph(
+  config <- drake_config(
     plan = plan, targets = targets, envir = envir,
-    jobs = jobs, verbose = verbose
+    verbose = verbose, jobs = jobs,
+    cache = storr::storr_environment()
   )
-  V(graph)$name
+  V(config$graph)$name
 }
 
 dependencies <- function(targets, config, reverse = FALSE){
@@ -231,7 +232,7 @@ import_dependencies <- function(expr){
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
-  deps$file_out <- deps$loadd <- deps$readd <- deps$strings <- NULL
+  deps$file_out <- deps$strings <- NULL
   deps
 }
 

@@ -1,106 +1,29 @@
-#' @title Create the `igraph` dependency network of your project.
-#' @description This function returns an igraph object representing how
-#' the targets in your workflow plan data frame
-#' depend on each other.
-#' (`help(package = "igraph")`). To plot the graph, call
-#' to [plot.igraph()] on your graph, or just use
-#' [vis_drake_graph()] from the start.
-#' @seealso [vis_drake_graph()]
-#' @export
-#' @return An igraph object representing
-#'   the workflow plan dependency network.
-#' @inheritParams drake_config
-#' @param sanitize_plan logical, whether to sanitize the workflow plan first.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Make the igraph network connecting all the targets and imports.
-#' g <- build_drake_graph(my_plan)
-#' class(g) # "igraph"
-#' })
-#' }
-build_drake_graph <- function(
-  plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
-  envir = parent.frame(),
-  verbose = drake::default_verbose(),
-  jobs = 1,
-  sanitize_plan = TRUE,
-  console_log_file = NULL
-){
-  force(envir)
-  if (sanitize_plan){
-    plan <- sanitize_plan(plan)
-  }
-  targets <- sanitize_targets(plan, targets)
-  imports <- as.list(envir)
-  unload_conflicts(
-    imports = names(imports),
-    targets = plan$target,
-    envir = envir,
-    verbose = verbose
-  )
-  import_names <- setdiff(names(imports), targets)
-  imports <- imports[import_names]
-  config <- list(verbose = verbose, console_log_file = console_log_file)
-  console_many_targets(
-    targets = names(imports),
-    pattern = "connect",
-    type = "import",
-    config = config
-  )
-  imports_edges <- lightly_parallelize(
-    X = seq_along(imports),
-    FUN = function(i){
-      imports_edges(name = import_names[[i]], value = imports[[i]])
-    },
-    jobs = jobs
-  )
-  console_many_targets(
-    targets = plan$target,
-    pattern = "connect",
-    type = "target",
-    config = config
-  )
-  commands_edges <- lightly_parallelize(
-    X = seq_len(nrow(plan)),
-    FUN = function(i){
-      commands_edges(target = plan$target[i], command = plan$command[i])
-    },
-    jobs = jobs
-  )
-  c(imports_edges, commands_edges) %>%
+build_igraph <- function(targets, meta, jobs){
+  as.list(meta) %>%
+    purrr::map(.f = target_meta_to_edges) %>%
     do.call(what = rbind) %>%
     igraph::graph_from_data_frame() %>%
     prune_drake_graph(to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
 }
 
-commands_edges <- function(target, command){
-  deps <- command_dependencies(command)
-  code_deps_to_edges(target = target, deps = deps)
-}
-
-imports_edges <- function(name, value){
-  deps <- import_dependencies(value)
-  code_deps_to_edges(target = name, deps = deps)
-}
-
-code_deps_to_edges <- function(target, deps){
-  inputs <- clean_dependency_list(deps[setdiff(names(deps), "file_out")])
+target_meta_to_edges <- function(deps){
+  name <- deps$name
+  deps <- deps[
+    c("globals", "namespaced", "file_in", "knitr_in", "loadd", "readd")]
+  inputs <- clean_dependency_list(deps)
   edges <- NULL
   if (length(inputs)){
-    data.frame(from = inputs, to = target, stringsAsFactors = FALSE)
+    data.frame(from = inputs, to = name, stringsAsFactors = FALSE)
   } else {
     # Loops will be removed.
-    data.frame(from = target, to = target, stringsAsFactors = FALSE)
+    data.frame(from = name, to = name, stringsAsFactors = FALSE)
   }
 }
 
 #' @title Prune the dependency network of your project.
 #' @export
-#' @seealso [build_drake_graph()], [config()],
+#' @seealso [config()],
 #'   [make()]
 #' @description `igraph` objects are used
 #' internally to represent the dependency network of your workflow.
@@ -120,8 +43,7 @@ code_deps_to_edges <- function(target, deps){
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Build the igraph object representing the workflow dependency network.
-#' # You could also use drake_config(my_plan)$graph
-#' graph <- build_drake_graph(my_plan)
+#' graph <- drake_config(my_plan)$graph
 #' # The default plotting is not the greatest,
 #' # but you will get the idea.
 #' plot(graph)

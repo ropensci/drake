@@ -104,17 +104,18 @@ backend <- function(...){
 }
 
 #' @title Deprecated function `build_graph`
-#' @description Use [build_drake_graph()] instead.
+#' @description Use `drake_config()$graph` instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso [build_drake_graph()]
-#' @return The same return value as [build_drake_graph()].
-#' @param plan Same as for [build_drake_graph()].
-#' @param targets Same as for [build_drake_graph()].
-#' @param envir Same as for [build_drake_graph()].
-#' @param verbose Same as for [build_drake_graph()].
-#' @param jobs Same as for [build_drake_graph()].
+#' @aliases build_drake_graph
+#' @seealso [drake_config()]
+#' @return The same return value as `drake_config()$graph`.
+#' @param plan Same as for `drake_config()$graph`.
+#' @param targets Same as for `drake_config()$graph`.
+#' @param envir Same as for `drake_config()$graph`.
+#' @param verbose Same as for `drake_config()$graph`.
+#' @param jobs Same as for `drake_config()$graph`.
 #' @examples
 #' # See ?as_drake_filename for examples.
 build_graph <- function(
@@ -130,14 +131,16 @@ build_graph <- function(
     msg = paste(
       "drake::build_graph() is deprecated",
       "due to possible name conflicts.",
-      "Use build_drake_graph() instead."
+      "Use `drake_config()$graph` instead."
     )
   )
-  build_drake_graph(
+  drake_config(
     plan = plan, targets = targets, envir = envir, verbose = verbose,
-    jobs = jobs
-  )
+    jobs = jobs, cache = storr::storr_environment()
+  )$graph
 }
+
+build_drake_graph <- build_graph
 
 #' @title Deprecated function `check`
 #' @description Use [check_plan()] instead.

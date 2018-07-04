@@ -74,8 +74,6 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
 test_with_dir("graph functions work", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  expect_equal(
-    class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
   pdf(NULL)
   tmp <- vis_drake_graph(config)
   dev.off()
@@ -89,8 +87,8 @@ test_with_dir("graph functions work", {
 test_with_dir("Supplied graph is pruned.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
-  graph <- build_drake_graph(my_plan)
-  con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
+  con0 <- drake_config(my_plan)
+  con <- drake_config(my_plan, targets = c("small", "large"), graph = con0$graph)
   vertices <- V(con$graph)$name
   include <- c("small", "simulate", "data.frame", "sample.int", "large")
   exclude <- setdiff(my_plan$target, include)
