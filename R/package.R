@@ -49,8 +49,9 @@
 #' @importFrom fs dir_create file_create
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices components delete_vertices
-#'   degree edge induced_subgraph is_dag make_empty_graph plot.igraph
-#'   simplify subcomponent topo_sort V vertex vertex_attr
+#'   degree edge igraph_opt igraph_options induced_subgraph is_dag
+#'   make_empty_graph plot.igraph simplify subcomponent topo_sort
+#'   V vertex vertex_attr
 #' @importFrom knitr knit
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%

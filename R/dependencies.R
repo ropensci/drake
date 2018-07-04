@@ -211,13 +211,17 @@ dependencies <- function(targets, config, reverse = FALSE){
   if (!length(targets)){
     return(character(0))
   }
-  adjacent_vertices(
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = FALSE)
+  index <- adjacent_vertices(
     graph = config$graph,
     v = targets,
     mode = ifelse(reverse, "out", "in")
   ) %>%
-    lapply(FUN = names) %>%
-    clean_dependency_list()
+    unlist %>%
+    unique
+  igraph::V(config$graph)$name[index + 1]
 }
 
 nonfile_target_dependencies <- function(targets, config, jobs = 1){
