@@ -86,6 +86,7 @@ build_check_store <- function(
   if (flag_attempt && target %in% config$plan$target){
     set_attempt_flag(key = target, config = config)
   }
+  gc()
 }
 
 build_and_store <- function(target, config, meta = NULL, announce = TRUE){

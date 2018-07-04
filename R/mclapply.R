@@ -104,7 +104,6 @@ mc_worker <- function(worker, config){
     ready_queue$pop(1)
     message <- mc_get_checksum(target = target, config = config)
     done_queue$push(title = target, message = message)
-    gc()
   }
 }
 
