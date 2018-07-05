@@ -11,8 +11,8 @@ library(drake)
 # Create the template file. You may have to modify it.
 drake_hpc_template_file("torque_clustermq.tmpl")
 
-# Use future::plan(multicore) instead for a dry run.
+# Configure clustermq.
 options(clustermq.scheduler = "torque", template = "torque_clustermq.tmpl")
 
 load_mtcars_example()
-make(my_plan, parallelism = "clustermq", jobs = 4)
+make(my_plan, parallelism = "clustermq_staged", jobs = 4)

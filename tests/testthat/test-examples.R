@@ -27,7 +27,7 @@ test_with_dir("overwrites of report.Rmd handled correctly", {
 test_with_dir("example template files", {
   expect_true(is.character(drake_hpc_template_files()))
   expect_true(length(drake_hpc_template_files()) > 0)
-  expect_false(file.exists("slurm_future.tmpl"))
-  expect_silent(drake_hpc_template_file("slurm_future.tmpl"))
-  expect_true(file.exists("slurm_future.tmpl"))
+  expect_false(file.exists("slurm_batchtools.tmpl"))
+  expect_silent(drake_hpc_template_file("slurm_batchtools.tmpl"))
+  expect_true(file.exists("slurm_batchtools.tmpl"))
 })

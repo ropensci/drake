@@ -175,10 +175,10 @@ test_with_dir("old file API", {
 })
 
 test_with_dir("example template files (deprecated)", {
-  expect_false(file.exists("slurm_future.tmpl"))
+  expect_false(file.exists("slurm_batchtools.tmpl"))
   expect_warning(
-    drake_batchtools_tmpl_file("slurm_future.tmpl"),
+    drake_batchtools_tmpl_file("slurm_batchtools.tmpl"),
     regexp = "deprecated"
   )
-  expect_true(file.exists("slurm_future.tmpl"))
+  expect_true(file.exists("slurm_batchtools.tmpl"))
 })
