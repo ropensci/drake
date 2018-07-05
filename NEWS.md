@@ -3,6 +3,7 @@
 - Implement `make(parallelism = "clustermq_staged")`, a `clustermq`-based staged parallelism backend (see https://github.com/ropensci/drake/pull/452).
 - Implement `make(parallelism = "future_lapply_staged")`, a `future`-based staged parallelism backend (see https://github.com/ropensci/drake/pull/450).
 - Depend on `codetools` rather than `CodeDepends` for finding global variables.
+- Detect `loadd()` and `readd()` dependencies in `knitr` reports referenced with `knitr_in()` inside imported functions. Previously, this feature was only available in explicit `knitr_in()` calls in commands.
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
 - Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating `drake_plan()`s.
 - Prevent persistent workers from hanging when a target fails.
