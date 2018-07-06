@@ -344,7 +344,7 @@ with the last few targets it builds.}
 approach that \code{drake} takes regarding when to unload targets
 from memory. Choices:
 \itemize{
-\item \code{"lookahead"} (default0: keep loaded targets in memory until they are
+\item \code{"lookahead"} (default): keep loaded targets in memory until they are
 no longer needed as dependencies in downstream build steps.
 Then, unload them from the environment. This step avoids
 keeping unneeded data in memory and minimizes expensive
