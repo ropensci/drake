@@ -1,5 +1,8 @@
 # Version 5.2.1.9000
 
+- Implement a `trace` argument to `evaluate_plan()` to optionally add indicator columns to show which targets got expanded/evaluated with which wildcard values.
+- Rename the `always_rename` argument to `rename` in `evaluate_plan()`.
+- Add a `rename` argument to `expand_plan()`.
 - Implement `make(parallelism = "clustermq_staged")`, a `clustermq`-based staged parallelism backend (see https://github.com/ropensci/drake/pull/452).
 - Implement `make(parallelism = "future_lapply_staged")`, a `future`-based staged parallelism backend (see https://github.com/ropensci/drake/pull/450).
 - Depend on `codetools` rather than `CodeDepends` for finding global variables.

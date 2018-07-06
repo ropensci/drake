@@ -64,7 +64,10 @@ check_drake_config <- function(config) {
 }
 
 assert_standard_columns <- function(config){
-  x <- setdiff(colnames(config$plan), drake_plan_columns())
+  x <- setdiff(
+    colnames(config$plan),
+    c(drake_plan_columns(), attr(config$plan, "wildcards"))
+  )
   if (length(x)){
     warning(
       "Non-standard columns in workflow plan:\n",
