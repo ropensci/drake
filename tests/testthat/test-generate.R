@@ -399,6 +399,7 @@ test_with_dir("evaluate_plan() and trace", {
   )
   expect_equal(x, y)
   expect_equal(attr(x, "wildcards"), "MU")
+  expect_silent(assert_standard_columns(list(plan = x)))
   
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
