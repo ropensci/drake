@@ -135,7 +135,13 @@ drake_graph_info <- function(
     )
   }
   network_data <- visNetwork::toVisNetworkData(config$graph)
-  config$nodes <- network_data$nodes
+  config$nodes <- merge(
+    x = network_data$nodes,
+    y = config$plan,
+    by.x = "id",
+    by.y = "target",
+    all.x = TRUE
+  )
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
   config$edges <- network_data$edges
