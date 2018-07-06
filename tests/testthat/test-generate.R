@@ -400,7 +400,7 @@ test_with_dir("evaluate_plan() and trace", {
   expect_equal(x, y)
   expect_equal(attr(x, "wildcards"), "MU")
   expect_silent(assert_standard_columns(list(plan = x)))
-  
+
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
   y <- tibble::tibble(
@@ -510,4 +510,20 @@ test_with_dir("evaluate_plan() and trace", {
   )
   expect_equal(x, y)
   expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
+})
+
+test_with_dir("make() with wildcard columns", {
+  plan <- evaluate_plan(
+    drake_plan(x = rnorm(n__)),
+    wildcard = "n__",
+    values = 1:2,
+    trace = TRUE
+  )
+  expect_equal(nrow(plan), 2)
+  expect_true("n__" %in% colnames(plan))
+  con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
+  expect_true(all(plan$target %in% cached(cache = con$cache)))
+  expect_identical(con$plan, plan)
+  expect_equal(attr(plan, "wildcards"), "n__")
+  expect_equal(attr(con$plan, "wildcards"), "n__")
 })
