@@ -398,7 +398,8 @@ test_with_dir("evaluate_plan() and trace", {
     MU = as.character(c(NA, 1, 2, NA, NA, NA))
   )
   expect_equal(x, y)
-
+  expect_equal(attr(x, "wildcards"), "MU")
+  
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
   y <- tibble::tibble(
@@ -421,6 +422,7 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA = as.character(c(NA, 1, NA, NA, 2, NA))
   )
   expect_equal(x, y)
+  expect_equal(attr(x, "wildcards"), "SIGMA")
 
   x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
   y <- tibble::tibble(
@@ -447,6 +449,7 @@ test_with_dir("evaluate_plan() and trace", {
     MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA))
   )
   expect_equal(x, y)
+  expect_equal(attr(x, "wildcards"), "MU")
 
   x <- evaluate_plan(
     plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
@@ -471,6 +474,7 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA = as.character(c(NA, 3, NA, NA, 4, NA))
   )
   expect_equal(x, y)
+  expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
 
   x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
   y <- tibble::tibble(
@@ -504,4 +508,5 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA = as.character(c(NA, 3, 4, 3, 4, NA, NA, NA, 3, 4, NA))
   )
   expect_equal(x, y)
+  expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
 })

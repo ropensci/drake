@@ -1,4 +1,5 @@
 sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
+  wildcards <- attr(plan, "wildcards")
   plan <- as_tibble(plan)
   for (field in drake_plan_non_factors()){
     if (!is.null(plan[[field]])){
@@ -22,7 +23,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   if (!allow_duplicated_targets) {
     plan <- handle_duplicated_targets(plan[, cols])
   }
-  plan
+  structure(plan, wildcards = wildcards)
 }
 
 drake_plan_non_factors <- function(){

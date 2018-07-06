@@ -166,6 +166,12 @@ evaluate_single_wildcard <- function(
   out[[minor]] <- NULL
   out[[major]] <- NULL
   rownames(out) <- NULL
+  if (trace){
+    out <- structure(
+      out,
+      wildcards = base::union(attr(plan, "wildcards"), wildcard)
+    )
+  }
   sanitize_plan(out, allow_duplicated_targets = TRUE)
 }
 
