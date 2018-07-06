@@ -461,29 +461,55 @@ drake_config <- function(
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }
+  all_targets <- intersect(igraph::V(graph)$name, plan$target)
+  all_imports <- setdiff(igraph::V(graph)$name, all_targets)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   pruning_strategy <- match.arg(pruning_strategy)
   list(
-    plan = plan, targets = targets, envir = envir,
-    cache = cache, cache_path = cache_path, fetch_cache = fetch_cache,
-    parallelism = parallelism, jobs = jobs,
-    jobs_imports = jobs["imports"], jobs_targets = jobs["targets"],
-    verbose = verbose, hook = hook,
-    prepend = prepend, prework = prework, command = command,
-    args = args, recipe_command = recipe_command, graph = graph,
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    cache = cache,
+    cache_path = cache_path,
+    fetch_cache = fetch_cache,
+    parallelism = parallelism,
+    jobs = jobs,
+    jobs_imports = jobs["imports"],
+    jobs_targets = jobs["targets"],
+    verbose = verbose,
+    hook = hook,
+    prepend = prepend,
+    prework = prework,
+    command = command,
+    args = args,
+    recipe_command = recipe_command,
+    graph = graph,
     short_hash_algo = cache$get("short_hash_algo", namespace = "config"),
     long_hash_algo = cache$get("long_hash_algo", namespace = "config"),
-    seed = seed, trigger = trigger,
-    timeout = timeout, cpu = cpu, elapsed = elapsed, retries = retries,
-    skip_targets = skip_targets, skip_imports = skip_imports,
-    skip_safety_checks = skip_safety_checks, log_progress = log_progress,
-    lazy_load = lazy_load, session_info = session_info,
-    cache_log_file = cache_log_file, caching = match.arg(caching),
-    evaluator = future::plan("next"), keep_going = keep_going,
-    session = session, pruning_strategy = pruning_strategy,
-    makefile_path = makefile_path, console_log_file = console_log_file,
-    ensure_workers = ensure_workers
+    seed = seed,
+    trigger = trigger,
+    timeout = timeout,
+    cpu = cpu,
+    elapsed = elapsed,
+    retries = retries,
+    skip_targets = skip_targets,
+    skip_imports = skip_imports,
+    skip_safety_checks = skip_safety_checks,
+    log_progress = log_progress,
+    lazy_load = lazy_load,
+    session_info = session_info,
+    cache_log_file = cache_log_file,
+    caching = match.arg(caching),
+    evaluator = future::plan("next"),
+    keep_going = keep_going,
+    session = session,
+    pruning_strategy = pruning_strategy,
+    makefile_path = makefile_path,
+    console_log_file = console_log_file,
+    ensure_workers = ensure_workers,
+    all_targets = all_targets,
+    all_imports = all_imports
   )
 }
 

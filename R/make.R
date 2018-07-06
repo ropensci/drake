@@ -336,7 +336,7 @@ make_imports <- function(config = drake::read_drake_config()){
 #' }
 make_targets <- function(config = drake::read_drake_config()){
   up_to_date <- outdated(config, do_prework = FALSE, make_imports = FALSE) %>%
-    setdiff(x = config$plan$target)
+    setdiff(x = config$all_targets)
   config$schedule <- targets_graph(config = config) %>%
     igraph::delete_vertices(v = up_to_date)
   config$jobs <- targets_setting(config$jobs)

@@ -205,3 +205,17 @@ test_with_dir("true targets can be functions", {
   myfunction <- readd(myfunction)
   expect_equal(myfunction(4), 5)
 })
+
+test_with_dir("GitHub issue 460", {
+  plan <- drake_plan(a = rnorm(1), b = a, c = b)
+  config <- drake_config(
+    plan,
+    targets = "b",
+    cache = storr::storr_environment()
+  )
+  expect_equal(sort(config$all_targets), sort(letters[1:2]))
+  expect_equal(
+    intersect(config$all_imports, config$all_targets), character(0))
+  expect_true("rnorm" %in% config$all_imports)
+  make_targets(config)
+})
