@@ -110,7 +110,7 @@ make <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("speed", "memory"),
+  pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE

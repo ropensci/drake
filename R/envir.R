@@ -26,14 +26,21 @@ assign_to_envir <- function(target, value, config){
 #' @examples
 #' # Users should use make().
 prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
-  if (is.null(downstream) && !identical(config$pruning_strategy, "memory")){
-    downstream <- downstream_nodes(
-      from = targets,
-      graph = config$graph,
+  if (identical(config$pruning_strategy, "lookahead")){
+    if (is.null(downstream)){
+      downstream <- downstream_nodes(
+        from = targets,
+        graph = config$graph,
+        jobs = jobs
+      )
+    }
+    downstream_deps <- nonfile_target_dependencies(
+      targets = downstream,
+      config = config,
       jobs = jobs
     )
-  } else if (identical(config$pruning_strategy, "memory")){
-    downstream <- NULL
+  } else {
+    downstream <- downstream_deps <- NULL
   }
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
@@ -42,27 +49,24 @@ prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
     config = config,
     jobs = jobs
   )
-  downstream_deps <- nonfile_target_dependencies(
-    targets = downstream,
-    config = config,
-    jobs = jobs
-  )
+  if (!identical(config$pruning_strategy, "speed")){
+    keep_these <- c(target_deps, downstream_deps)
+    discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
+      parallel_filter(f = is_not_file, jobs = jobs) %>%
+      intersect(y = already_loaded)
+    if (length(discard_these)){
+      console_many_targets(
+        discard_these,
+        pattern = "unload",
+        config = config
+      )
+      rm(list = discard_these, envir = config$envir)
+    }
+  }
   load_these <- setdiff(target_deps, targets) %>%
     setdiff(y = already_loaded)
   load_these <- exclude_unloadable(
     targets = load_these, config = config, jobs = jobs)
-  keep_these <- c(target_deps, downstream_deps)
-  discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
-    parallel_filter(f = is_not_file, jobs = jobs) %>%
-    intersect(y = already_loaded)
-  if (length(discard_these)){
-    console_many_targets(
-      discard_these,
-      pattern = "unload",
-      config = config
-    )
-    rm(list = discard_these, envir = config$envir)
-  }
   if (length(load_these)){
     if (config$lazy_load == "eager"){
       console_many_targets(

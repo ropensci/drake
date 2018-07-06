@@ -322,18 +322,22 @@
 #'   but it causes [make()] to populate your workspace/environment
 #'   with the last few targets it builds.
 #'
-#' @param pruning_strategy Character scalar, either `"speed"` (default)
-#'   or `"memory"`. These are alternative approaches to how `drake`
-#'   keeps non-import dependencies in memory when it builds a target.
-#'   If `pruning_strategy` is `"memory"`, `drake` removes all targets
-#'   from memory (i.e. `config$envir`) except the direct dependencies
-#'   of the target is about to build. This is suitable for data so large
-#'   that the optimal strategy is to minimize memory consumption.
-#'   If `pruning_strategy` is `"speed"`, `drake` loads all the dependencies
-#'   and keeps in memory everything that will eventually be a
-#'   dependency of a downstream target. This strategy consumes more
-#'   memory, but does more to minimize the number of times data is
-#'   read from storage/disk.
+#' @param pruning_strategy Character scalar, name of the
+#'   approach that `drake` takes regarding when to unload targets
+#'   from memory. Choices:
+#'   - `"lookahead"` (default0: keep loaded targets in memory until they are
+#'     no longer needed as dependencies in downstream build steps.
+#'     Then, unload them from the environment. This step avoids
+#'     keeping unneeded data in memory and minimizes expensive
+#'     reads from the cache. However, it requires looking ahead
+#'     in the dependency graph, which could add overhead for every
+#'     target of projects with lots of targets.
+#'   - `"speed"`: Once a target is loaded in memory, just keep it there.
+#'     Maximizes speed, but hogs memory.
+#'   - `"memory"`: For each target, unload everything from memory
+#'     except the target's direct dependencies. Conserves memory,
+#'     but sacrifices speed because each new target needs to reload
+#'     any previously unloaded targets from the cache.
 #'
 #' @param makefile_path Path to the `Makefile` for
 #'   `make(parallelism = "Makefile")`. If you set this argument to a
@@ -413,7 +417,7 @@ drake_config <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("speed", "memory"),
+  pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE

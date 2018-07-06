@@ -67,12 +67,14 @@ test_with_dir("prune_envir in full build", {
   )
 })
 
-test_with_dir("alt strategy for pruning", {
+test_with_dir("all pruning strategies work", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  envir <- new.env(parent = globalenv())
-  cache <- storr::storr_environment()
-  load_mtcars_example(envir = envir)
-  make(envir$my_plan, envir = envir, cache = cache,
-       session_info = FALSE, pruning_strategy = "memory")
-  expect_true(file_store("report.md") %in% cache$list())
+  for (pruning_strategy in c("lookahead", "speed", "memory")){
+    envir <- new.env(parent = globalenv())
+    cache <- storr::storr_environment()
+    load_mtcars_example(envir = envir)
+    make(envir$my_plan, envir = envir, cache = cache,
+         session_info = FALSE, pruning_strategy = pruning_strategy)
+    expect_true(file_store("report.md") %in% cache$list())
+  }
 })
