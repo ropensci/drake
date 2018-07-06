@@ -166,7 +166,7 @@ evaluate_single_wildcard <- function(
   out[[minor]] <- NULL
   out[[major]] <- NULL
   rownames(out) <- NULL
-  sanitize_plan(out, allow_duplicated_targets = TRUE) 
+  sanitize_plan(out, allow_duplicated_targets = TRUE)
 }
 
 evaluate_wildcard_rules <- function(
@@ -305,7 +305,7 @@ gather_plan <- function(
 #' @param end character, code to place at the end
 #'   of each step in the reduction
 #' @param pairwise logical, whether to create multiple
-#'   new targets, one for each pair/step in the reduction (`TRUE`), 
+#'   new targets, one for each pair/step in the reduction (`TRUE`),
 #'   or to do the reduction all in one command.
 #' @examples
 #' # Workflow plan for datasets:
