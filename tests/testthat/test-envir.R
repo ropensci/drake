@@ -50,7 +50,7 @@ test_with_dir("prune_envir in full build", {
   testrun(config)
   expect_true(all(plan$target %in% cached()))
 
-  # Check that the right things are loaded and the right things
+  # Check that the right targets are loaded and the right targets
   # are discarded
   remove(list = ls(config$envir), envir = config$envir)
   expect_equal(ls(config$envir), character(0))
