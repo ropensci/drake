@@ -234,22 +234,6 @@ test_with_dir("file_store quotes properly", {
   expect_equal(file_store("x"), "\"x\"")
 })
 
-test_with_dir("unique_random_string() works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  set.seed(2017)
-  x <- unique_random_string(n = 15)
-  y <- unique_random_string(exclude = "a", n = 10)
-  expect_equal(nchar(x), 15)
-  expect_equal(nchar(y), 10)
-  exclude <- c(letters, LETTERS, 1:9)
-  for (i in 1:10){
-    expect_equal(
-      unique_random_string(exclude = exclude, n = 1),
-      "X0"
-    )
-  }
-})
-
 test_with_dir("misc utils", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))

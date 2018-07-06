@@ -65,7 +65,7 @@
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames
 #' @importFrom storr storr_environment storr_rds
-#' @importFrom stringi stri_extract_all_regex stri_rand_strings
+#' @importFrom stringi stri_extract_all_regex
 #'   stri_split_fixed stri_trim_both
 #' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom tibble as_tibble tibble

@@ -63,10 +63,14 @@ dataset_wildcard <- function(){
 #'   is replaced with the next entry in the `values` vector,
 #'   and the values are recycled.
 #'
-#' @param always_rename logical. If `TRUE`, always rename
-#'   targets according to the wildcard values, regardless of the
-#'   value of `expand`. If `FALSE`, only rename targets if
-#'   `expand` is `TRUE`.
+#' @param rename logical, whether to rename the targets
+#'   based on the values supplied for the wildcards
+#'   (based on `values` or `rules`).
+#'
+#' @param trace logical, whether to add columns that
+#'   trace the wildcard expansion process. These new
+#'   columns indicate which targets were evaluated with which
+#'   wildcards.
 #'
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
@@ -101,35 +105,48 @@ evaluate_plan <- function(
   wildcard = NULL,
   values = NULL,
   expand = TRUE,
-  always_rename = FALSE
+  rename = expand,
+  trace = FALSE
 ){
   if (!is.null(rules)){
     check_wildcard_rules(rules)
-    return(
-      evaluations(
-        plan = plan,
-        rules = rules,
-        expand = expand,
-        always_rename = always_rename
-      )
+    evaluate_wildcard_rules(
+      plan = plan,
+      rules = rules,
+      expand = expand,
+      rename = rename,
+      trace = trace
     )
+  } else if (!is.null(wildcard) && !is.null(values)){
+    evaluate_single_wildcard(
+      plan = plan,
+      wildcard = wildcard,
+      values = values,
+      expand = expand,
+      rename = rename,
+      trace = trace
+    )
+  } else {
+    plan
   }
-  if (is.null(wildcard) | is.null(values)){
-    return(plan)
-  }
+}
+
+evaluate_single_wildcard <- function(
+  plan, wildcard, values, expand, rename, trace
+){
   values <- as.character(values)
   matches <- grepl(wildcard, plan$command, fixed = TRUE)
   if (!any(matches)){
     return(plan)
   }
-  major <- unique_random_string(exclude = colnames(plan))
-  minor <- unique_random_string(exclude = c(colnames(plan), major))
-  plan[[minor]] <- seq_len(nrow(plan))
-  plan[[major]] <- plan[[minor]]
+  major <- digest::digest(tempfile())
+  minor <- digest::digest(tempfile())
+  plan[[major]] <- seq_len(nrow(plan))
+  plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]
   if (expand){
-    matching <- expand_plan(matching, values)
-  } else if (always_rename){
+    matching <- expand_plan(matching, values, rename = rename)
+  } else if (rename){
     matching$target <- paste(matching$target, values, sep = "_")
   }
   values <- rep(values, length.out = nrow(matching))
@@ -137,41 +154,45 @@ evaluate_plan <- function(
     function(value, command){
       gsub(wildcard, value, command, fixed = TRUE)
     }
-    )(values, matching$command)
+  )(values, matching$command)
+  if (trace){
+    matching[[wildcard]] <- values
+  }
   rownames(matching) <- NULL
   rownames(plan) <- NULL
   matching[[minor]] <- seq_len(nrow(matching))
-  out <- rbind(matching, plan[!matches, ])
+  out <- dplyr::bind_rows(matching, plan[!matches, ])
   out <- out[order(out[[major]], out[[minor]]), ]
   out[[minor]] <- NULL
   out[[major]] <- NULL
   rownames(out) <- NULL
+  if (trace){
+    out <- structure(
+      out,
+      wildcards = base::union(attr(plan, "wildcards"), wildcard)
+    )
+  }
   sanitize_plan(out, allow_duplicated_targets = TRUE)
 }
 
-evaluations <- function(
-  plan,
-  rules = NULL,
-  expand = TRUE,
-  always_rename = FALSE
-  ){
-  if (is.null(rules)){
-    return(plan)
-  }
-  stopifnot(is.list(rules))
+evaluate_wildcard_rules <- function(
+  plan, rules, expand, rename, trace
+){
   for (index in seq_len(length(rules))){
-    plan <- evaluate_plan(
+    plan <- evaluate_single_wildcard(
       plan,
       wildcard = names(rules)[index],
       values = rules[[index]],
       expand = expand,
-      always_rename = always_rename
+      rename = rename,
+      trace = trace
     )
   }
-  return(plan)
+  plan
 }
 
 check_wildcard_rules <- function(rules){
+  stopifnot(is.list(rules))
   wildcards <- names(rules)
   all_values <- unlist(rules)
   for (i in seq_along(wildcards)){
@@ -206,6 +227,8 @@ check_wildcard_rules <- function(rules){
 #' @param plan workflow plan data frame
 #' @param values values to expand over. These will be appended to
 #'   the names of the new targets.
+#' @param rename logical, whether to rename the targets
+#'   based on the `values`. See the examples for a demo.
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -214,7 +237,10 @@ check_wildcard_rules <- function(rules){
 #' # Create replicates. If you want repeat targets,
 #' # this is convenient.
 #' expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
-expand_plan <- function(plan, values = NULL){
+#' # Choose whether to rename the targets based on the values.
+#' expand_plan(datasets, values = 1:3, rename = TRUE)
+#' expand_plan(datasets, values = 1:3, rename = FALSE)
+expand_plan <- function(plan, values = NULL, rename = TRUE){
   if (!length(values)){
     return(plan)
   }
@@ -223,7 +249,9 @@ expand_plan <- function(plan, values = NULL){
   plan <- plan[repeat_targets, ]
   values <- as.character(values)
   values <- rep(values, times = nrows)
-  plan$target <- paste(plan$target, values, sep = "_")
+  if (rename){
+    plan$target <- paste(plan$target, values, sep = "_")
+  }
   rownames(plan) <- NULL
   sanitize_plan(plan, allow_duplicated_targets = TRUE)
 }
@@ -283,7 +311,7 @@ gather_plan <- function(
 #' @param end character, code to place at the end
 #'   of each step in the reduction
 #' @param pairwise logical, whether to create multiple
-#'   new targets, one for each pair/step in the reduction (`TRUE`), 
+#'   new targets, one for each pair/step in the reduction (`TRUE`),
 #'   or to do the reduction all in one command.
 #' @examples
 #' # Workflow plan for datasets:
@@ -524,16 +552,4 @@ with_analyses_only <- function(plan){
     )
   }
   return(plan[has_analysis, ])
-}
-
-unique_random_string <- function(n = 30, exclude = NULL){
-  if (!length(exclude)){
-    return(stri_rand_strings(1, n))
-  }
-  out <- exclude[1]
-  while (out %in% exclude){
-    out <- stri_rand_strings(1, n)
-    next
-  }
-  make.names(out)
 }

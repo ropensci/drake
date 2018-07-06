@@ -20,8 +20,8 @@ drake_config(plan = read_drake_plan(),
   skip_targets = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
-  session = NULL, imports_only = NULL, pruning_strategy = c("speed",
-  "memory"), makefile_path = "Makefile", console_log_file = NULL,
+  session = NULL, imports_only = NULL, pruning_strategy = c("lookahead",
+  "speed", "memory"), makefile_path = "Makefile", console_log_file = NULL,
   ensure_workers = TRUE)
 }
 \arguments{
@@ -333,18 +333,24 @@ with the last few targets it builds.}
 
 \item{imports_only}{deprecated. Use \code{skip_targets} instead.}
 
-\item{pruning_strategy}{Character scalar, either \code{"speed"} (default)
-or \code{"memory"}. These are alternative approaches to how \code{drake}
-keeps non-import dependencies in memory when it builds a target.
-If \code{pruning_strategy} is \code{"memory"}, \code{drake} removes all targets
-from memory (i.e. \code{config$envir}) except the direct dependencies
-of the target is about to build. This is suitable for data so large
-that the optimal strategy is to minimize memory consumption.
-If \code{pruning_strategy} is \code{"speed"}, \code{drake} loads all the dependencies
-and keeps in memory everything that will eventually be a
-dependency of a downstream target. This strategy consumes more
-memory, but does more to minimize the number of times data is
-read from storage/disk.}
+\item{pruning_strategy}{Character scalar, name of the
+approach that \code{drake} takes regarding when to unload targets
+from memory. Choices:
+\itemize{
+\item \code{"lookahead"} (default): keep loaded targets in memory until they are
+no longer needed as dependencies in downstream build steps.
+Then, unload them from the environment. This step avoids
+keeping unneeded data in memory and minimizes expensive
+reads from the cache. However, it requires looking ahead
+in the dependency graph, which could add overhead for every
+target of projects with lots of targets.
+\item \code{"speed"}: Once a target is loaded in memory, just keep it there.
+Maximizes speed, but hogs memory.
+\item \code{"memory"}: For each target, unload everything from memory
+except the target's direct dependencies. Conserves memory,
+but sacrifices speed because each new target needs to reload
+any previously unloaded targets from the cache.
+}}
 
 \item{makefile_path}{Path to the \code{Makefile} for
 \code{make(parallelism = "Makefile")}. If you set this argument to a
