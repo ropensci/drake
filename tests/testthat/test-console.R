@@ -119,7 +119,7 @@ test_with_dir("console_many_targets() works", {
   tmp <- evaluate_promise(
     console_many_targets(
       targets = LETTERS,
-      pattern = unique_random_string(n = 400),
+      pattern = paste0(rep("0123456789", 40), collapse = ""),
       config = config
     ),
     print = TRUE

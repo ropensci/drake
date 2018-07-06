@@ -3,7 +3,7 @@ drake_context("generate")
 test_with_dir("empty generative args", {
   x <- drake_plan(a = 1, b = FUNCTION())
   expect_equal(evaluate_plan(x), x)
-  expect_equal(evaluations(x), x)
+  expect_equal(evaluate_wildcard_rules(x, rules = NULL), x)
   expect_equal(expand_plan(x), x)
 })
 
@@ -15,14 +15,23 @@ test_with_dir("evaluate, expand, and gather", {
   expect_equal(m1, df)
 
   x <- expand_plan(df, values = c("rep1", "rep2"))
-  y <- tibble(
+  y <- tibble::tibble(
     target = c("data_rep1", "data_rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
   expect_equal(x, y)
 
+  x1 <- expand_plan(df, values = c("rep1", "rep2"), rename = TRUE)
+  x2 <- expand_plan(df, values = c("rep1", "rep2"), rename = FALSE)
+  y2 <- tibble::tibble(
+    target = c("data", "data"),
+    command = rep("simulate(center = MU, scale = SIGMA)", 2)
+  )
+  expect_equal(x1, y)
+  expect_equal(x2, y2)
+
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
-  y <- tibble(
+  y <- tibble::tibble(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
       "simulate(center = 1, scale = SIGMA)",
@@ -337,7 +346,7 @@ test_with_dir("non-expanded grid, issue 235", {
     plan,
     rules = rules_grid,
     expand = FALSE,
-    always_rename = TRUE
+    rename = TRUE
   )
   expect_equal(nrow(plan), 10)
   expect_equal(
@@ -355,4 +364,144 @@ test_with_dir("non-expanded grid, issue 235", {
       "grads_schoolC_private_2015"
     )
   )
+})
+
+test_with_dir("evaluate_plan() and trace", {
+  plan <- drake_plan(
+    top = 3,
+    data = simulate(center = MU, scale = SIGMA),
+    mus = c(MU, x),
+    simple = 1,
+    sigmas = c(SIGMA, y),
+    cheap = 2
+  )
+
+  x <- evaluate_plan(
+    plan, trace = TRUE, wildcard = "MU", values = 1:2, expand = FALSE)
+  y <- tibble::tibble(
+    target = c(
+      "top",
+      "data",
+      "mus",
+      "simple",
+      "sigmas",
+      "cheap"
+    ),
+    command = c(
+      3,
+      "simulate(center = 1, scale = SIGMA)",
+      "c(2, x)",
+      1,
+      "c(SIGMA, y)",
+      2
+    ),
+    MU = as.character(c(NA, 1, 2, NA, NA, NA))
+  )
+  expect_equal(x, y)
+
+  x <- evaluate_plan(
+    plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
+  y <- tibble::tibble(
+    target = c(
+      "top",
+      "data",
+      "mus",
+      "simple",
+      "sigmas",
+      "cheap"
+    ),
+    command = c(
+      3,
+      "simulate(center = MU, scale = 1)",
+      "c(MU, x)",
+      1,
+      "c(2, y)",
+      2
+    ),
+    SIGMA = as.character(c(NA, 1, NA, NA, 2, NA))
+  )
+  expect_equal(x, y)
+
+  x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
+  y <- tibble::tibble(
+    target = c(
+      "top",
+      "data_1",
+      "data_2",
+      "mus_1",
+      "mus_2",
+      "simple",
+      "sigmas",
+      "cheap"
+    ),
+    command = c(
+      3,
+      "simulate(center = 1, scale = SIGMA)",
+      "simulate(center = 2, scale = SIGMA)",
+      "c(1, x)",
+      "c(2, x)",
+      1,
+      "c(SIGMA, y)",
+      2
+    ),
+    MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA))
+  )
+  expect_equal(x, y)
+
+  x <- evaluate_plan(
+    plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
+  y <- tibble::tibble(
+    target = c(
+      "top",
+      "data",
+      "mus",
+      "simple",
+      "sigmas",
+      "cheap"
+    ),
+    command = c(
+      3,
+      "simulate(center = 1, scale = 3)",
+      "c(2, x)",
+      1,
+      "c(4, y)",
+      2
+    ),
+    MU = as.character(c(NA, 1, 2, NA, NA, NA)),
+    SIGMA = as.character(c(NA, 3, NA, NA, 4, NA))
+  )
+  expect_equal(x, y)
+
+  x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
+  y <- tibble::tibble(
+    target = c(
+      "top",
+      "data_1_3",
+      "data_1_4",
+      "data_2_3",
+      "data_2_4",
+      "mus_1",
+      "mus_2",
+      "simple",
+      "sigmas_3",
+      "sigmas_4",
+      "cheap"
+    ),
+    command = c(
+      3,
+      "simulate(center = 1, scale = 3)",
+      "simulate(center = 1, scale = 4)",
+      "simulate(center = 2, scale = 3)",
+      "simulate(center = 2, scale = 4)",
+      "c(1, x)",
+      "c(2, x)",
+      1,
+      "c(3, y)",
+      "c(4, y)",
+      2
+    ),
+    MU = as.character(c(NA, 1, 1, 2, 2, 1, 2, NA, NA, NA, NA)),
+    SIGMA = as.character(c(NA, 3, 4, 3, 4, NA, NA, NA, 3, 4, NA))
+  )
+  expect_equal(x, y)
 })
