@@ -20,11 +20,10 @@ r_packages:
   - clustermq
   - covr
   - lintr
-  - roxygen2
-  - rmarkdown
+  - pkgdown
 
 before_script:
-  - chmod +x ./docs.sh
+  - chmod +x ./pkgdown.sh
 
 # From Jim Hester, for avoiding timeouts
 script:
@@ -36,8 +35,8 @@ script:
 
 after_success:
   - Rscript -e 'lintr::lint_package()'
-  - Rscript docs.R
-  - ./docs.sh
+  - Rscript pkgdown.R
+  - ./pkgdown.sh
 
 after_failure:
   - find *Rcheck -name '*fail' -print -exec cat '{}' \;
