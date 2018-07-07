@@ -252,7 +252,7 @@ make(plan, parallelism = "future_lapply")
 
 # Installation
 
-You can choose among different versions of `drake`.
+You can choose among different versions of `drake`. The CRAN release often lags behind the [online manual](https://ropenscilabs.github.io/drake-manual/) but may have more bugs.
 
 ```{r installreadme, eval = FALSE}
 # Install the latest stable release from CRAN.

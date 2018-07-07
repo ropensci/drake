@@ -44,7 +44,7 @@ test_with_dir("evaluate, expand, and gather", {
 
   x3 <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
     expand = FALSE)
-  y <- tibble(
+  y <- tibble::tibble(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
       "simulate(center = 1, scale = a)",
@@ -55,9 +55,23 @@ test_with_dir("evaluate, expand, and gather", {
   )
   expect_equal(x3, y)
 
+  x3a <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
+                      expand = FALSE, rename = TRUE)
+  y <- tibble::tibble(
+    target = c(
+      "data_rep1_1_a", "data_rep1_2_b", "data_rep2_1_a", "data_rep2_2_b"),
+    command = c(
+      "simulate(center = 1, scale = a)",
+      "simulate(center = 2, scale = b)",
+      "simulate(center = 1, scale = a)",
+      "simulate(center = 2, scale = b)"
+    )
+  )
+  expect_equal(x3a, y)
+
   x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
     expand = FALSE)
-  y <- tibble(
+  y <- tibble::tibble(
     target = c("data_rep1", "data_rep2"),
     command = c(
       "simulate(center = 1, scale = 0.1)",
@@ -72,14 +86,14 @@ test_with_dir("evaluate, expand, and gather", {
   expect_equal(6, length(unique(x5$command)))
 
   x6 <- gather_plan(x)
-  y <- tibble(
+  y <- tibble::tibble(
     target = "target",
     command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
   expect_equal(x6, y)
 
   x7 <- gather_plan(x, target = "my_summaries", gather = "rbind")
-  y <- tibble(
+  y <- tibble::tibble(
     target = "my_summaries",
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
