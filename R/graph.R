@@ -123,11 +123,11 @@ code_deps_to_edges <- function(target, deps){
 #' graph <- build_drake_graph(my_plan)
 #' # The default plotting is not the greatest,
 #' # but you will get the idea.
-#' plot(graph)
+#' # plot(graph) # nolint
 #' # Prune the graph: that is, remove the nodes downstream
 #' # from 'small' and 'large'
 #' pruned <- prune_drake_graph(graph = graph, to = c("small", "large"))
-#' plot(pruned)
+#' # plot(pruned) # nolint
 #' })
 #' }
 prune_drake_graph <- function(
