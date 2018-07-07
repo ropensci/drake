@@ -102,6 +102,18 @@
 #' library(visNetwork)
 #' visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) %>%
 #'   visHierarchicalLayout(direction = 'UD')
+#' # Optionally visualize clusters.
+#' config$plan$large_data <- grepl("large", config$plan$target)
+#' graph <- drake_graph_info(
+#'   config, group = "large_data", clusters = c(TRUE, FALSE))
+#' tail(graph$nodes)
+#' render_drake_graph(graph)
+#' # You can even use clusters given to you for free in the `graph$nodes`
+#' # data frame.
+#' graph <- drake_graph_info(
+#'   config, group = "status", clusters = "imported")
+#' tail(graph$nodes)
+#' render_drake_graph(graph)
 #' })
 #' }
 drake_graph_info <- function(
@@ -117,7 +129,7 @@ drake_graph_info <- function(
   font_size = 20,
   from_scratch = FALSE,
   make_imports = TRUE,
-  full_legend = TRUE,
+  full_legend = FALSE,
   group = NULL,
   clusters = NULL
 ) {
@@ -162,7 +174,9 @@ drake_graph_info <- function(
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
   }
-  config <- cluster_nodes(config)
+  if (length(config$group)){
+    config <- cluster_nodes(config)
+  }
   list(
     nodes = as_tibble(config$nodes),
     edges = as_tibble(config$edges),

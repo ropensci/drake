@@ -2,6 +2,7 @@ shapes <- c(
   object = "dot",
   file = "square",
   funct = "triangle",
+  cluster = "diamond",
   other = "dot"
 )
 

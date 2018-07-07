@@ -1219,7 +1219,7 @@ read_plan <- function(
 #' @export
 #' @keywords internal
 #' @return Same as for [render_drake_graph()].
-#' @param graph_dataframes Same as for [render_drake_graph()].
+#' @param graph_info Same as for [render_drake_graph()].
 #' @param file Same as for [render_drake_graph()].
 #' @param layout Same as for [render_drake_graph()].
 #' @param direction Same as for [render_drake_graph()].
@@ -1232,12 +1232,12 @@ read_plan <- function(
 #' @examples
 #' # See ?render_drake_graph for examples.
 render_graph <- function(
-  graph_dataframes,
+  graph_info,
   file = character(0),
   layout = "layout_with_sugiyama",
   direction = "LR",
   hover = TRUE,
-  main = graph_dataframes$default_title,
+  main = graph_info$default_title,
   selfcontained = FALSE,
   navigationButtons = TRUE, # nolint
   ncol_legend = 1,
@@ -1253,7 +1253,7 @@ render_graph <- function(
     )
   )
   render_drake_graph(
-    graph_dataframes = graph_dataframes,
+    graph_info = graph_info,
     file = file,
     layout = layout,
     direction = direction,

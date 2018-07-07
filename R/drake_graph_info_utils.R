@@ -37,26 +37,27 @@ categorize_nodes <- function(config) {
 }
 
 cluster_nodes <- function(config){
-  if (!length(config$group) || !length(config$clusters)){
-    return()
-  }
   for (cluster in config$clusters){
     index <- config$nodes[[config$group]] == cluster
     index[is.na(index)] <- FALSE
+    if (!any(index)){
+      next
+    }
     new_node <- config$nodes[index, ]
     status <- cluster_status(new_node$status)
     new_node <- new_node[which.max(new_node$level), ]
     new_node$status <- status
-    new_node$color <- colors[status]
-    rownames(new_node) <- new_node$id <- new_node$label <-
+    new_node$type <- "cluster"
+    new_node <- style_nodes(
+      config = list(nodes = new_node, font_size = config$font_size))
+    rownames(new_node) <- new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
-    new_node$shape <- "diamond"
-    matching <- config$nodes$label[index]
+    matching <- config$nodes$id[index]
     new_node$hover_label <- paste(matching, collapse = ", ") %>%
       crop_text(width = hover_text_width)
     config$nodes <- rbind(config$nodes[!index, ], new_node)
-    config$edges$from[config$edges$from %in% matching] <- new_node$label
-    config$edges$to[config$edges$to %in% matching] <- new_node$label
+    config$edges$from[config$edges$from %in% matching] <- new_node$id
+    config$edges$to[config$edges$to %in% matching] <- new_node$id
   }
   config$nodes$level <- as.integer(ordered(config$nodes$level))
   config$edges <- config$edges[!duplicated(config$edges), ]
@@ -67,11 +68,11 @@ cluster_nodes <- function(config){
 cluster_status <- function(statuses){
   precedence <- c(
     "other",
-    "import_node",
-    "up_to_date",
-    "missing_node",
+    "imported",
+    "up to date",
+    "missing",
     "outdated",
-    "in_progress",
+    "in progress",
     "failed"
   )
   out <- "other"
@@ -230,7 +231,8 @@ legend_nodes <- function(font_size = 20) {
       "Missing",
       "Object",
       "Function",
-      "File"
+      "File",
+      "Cluster"
     ),
     color = color_of(c(
       "up_to_date",
@@ -239,12 +241,13 @@ legend_nodes <- function(font_size = 20) {
       "failed",
       "import_node",
       "missing_node",
-      rep("generic", 3)
+      rep("generic", 4)
     )),
     shape = shape_of(c(
       rep("object", 7),
       "funct",
-      "file"
+      "file",
+      "cluster"
     )),
     font.color = "black",
     font.size = font_size
@@ -312,6 +315,7 @@ style_nodes <- function(config) {
     nodes[nodes$type == "object", "shape"] <- shape_of("object")
     nodes[nodes$type == "file", "shape"] <- shape_of("file")
     nodes[nodes$type == "function", "shape"] <- shape_of("funct")
+    nodes[nodes$type == "cluster", "shape"] <- shape_of("cluster")
     nodes
   })
 }

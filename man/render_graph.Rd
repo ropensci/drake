@@ -4,13 +4,13 @@
 \alias{render_graph}
 \title{Deprecated function \code{render_graph}}
 \usage{
-render_graph(graph_dataframes, file = character(0),
+render_graph(graph_info, file = character(0),
   layout = "layout_with_sugiyama", direction = "LR", hover = TRUE,
-  main = graph_dataframes$default_title, selfcontained = FALSE,
+  main = graph_info$default_title, selfcontained = FALSE,
   navigationButtons = TRUE, ncol_legend = 1, ...)
 }
 \arguments{
-\item{graph_dataframes}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
+\item{graph_info}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 
 \item{file}{Same as for \code{\link[=render_drake_graph]{render_drake_graph()}}.}
 

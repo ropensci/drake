@@ -9,7 +9,7 @@ drake_graph_info(config = drake::read_drake_config(), from = NULL,
   mode = c("out", "in", "all"), order = NULL, subset = NULL,
   build_times = "build", digits = 3, targets_only = FALSE,
   split_columns = NULL, font_size = 20, from_scratch = FALSE,
-  make_imports = TRUE, full_legend = TRUE, group = NULL,
+  make_imports = TRUE, full_legend = FALSE, group = NULL,
   clusters = NULL)
 }
 \arguments{
@@ -117,6 +117,18 @@ library(magrittr)
 library(visNetwork)
 visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
   visHierarchicalLayout(direction = 'UD')
+# Optionally visualize clusters.
+config$plan$large_data <- grepl("large", config$plan$target)
+graph <- drake_graph_info(
+  config, group = "large_data", clusters = c(TRUE, FALSE))
+tail(graph$nodes)
+render_drake_graph(graph)
+# You can even use clusters given to you for free in the `graph$nodes`
+# data frame.
+graph <- drake_graph_info(
+  config, group = "status", clusters = "imported")
+tail(graph$nodes)
+render_drake_graph(graph)
 })
 }
 }
