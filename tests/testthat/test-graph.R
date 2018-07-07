@@ -174,6 +174,16 @@ test_with_dir("clusters", {
   plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
   cache <- storr::storr_environment()
   config <- drake_config(plan, cache = cache)
+  o1 <- drake_graph_info(config)
+  o1$nodes$level <- as.integer(o1$nodes$level)
+  o2 <- drake_graph_info(config, group = "n__", clusters = "asdfae")
+  o3 <- drake_graph_info(config, group = "n__")
+  o4 <- drake_graph_info(config, group = "adfe")
+  o1$nodes$label <- o2$nodes$label <- o3$nodes$label <- o4$nodes$label <-
+    NULL
+  expect_equal(o1$nodes, o2$nodes)
+  expect_equal(o1$nodes, o3$nodes)
+  expect_equal(o1$nodes, o4$nodes)
   o <- drake_graph_info(config, group = "n__", clusters = "1")
   expect_equal(nrow(o$nodes), 5)
   expect_equal(
@@ -184,7 +194,7 @@ test_with_dir("clusters", {
   expect_equal(node$id, "n__: 1")
   expect_equal(node$type, "cluster")
   expect_equal(node$shape, unname(shape_of("cluster")))
-  o <- drake_graph_info(config, group = "n__", clusters = c("1", "2"))
+  o <- drake_graph_info(config, group = "n__", clusters = c("1", "2", "bla"))
   expect_equal(nrow(o$nodes), 4)
   expect_equal(
     sort(o$nodes$id),
