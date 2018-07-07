@@ -17,7 +17,8 @@ cran-comments.md
 cran-comments.html
 CONTRIBUTING.md
 CONTRIBUTING.html
-gh-pages.sh
+pkgdown.R
+pkgdown.sh
 paper.bib
 paper.md
 README.md
