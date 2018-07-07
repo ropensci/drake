@@ -95,11 +95,11 @@ Suggests:
   callr,
   clustermq,
   DBI,
+  ggplot2,
   MASS,
   methods,
   RSQLite,
-  rmarkdown,
-  tidyr
+  rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

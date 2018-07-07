@@ -325,47 +325,6 @@ test_with_dir("reduce_plan()", {
   expect_equal(readd(x_sum), out)
 })
 
-test_with_dir("non-expanded grid, issue 235", {
-  rules_grid <- tibble::tibble(
-    school_ =  c("schoolA", "schoolB", "schoolC"),
-    funding_ = c("public", "public", "private")
-  )
-  rules_grid <- tidyr::crossing(
-    rules_grid, cohort_ = c("2012", "2013", "2014", "2015"))
-  rules_grid <- dplyr::filter(
-    rules_grid, !(school_ == "schoolB" & cohort_ %in% c("2012", "2013")))
-
-  plan <- drake_plan(
-    credits = check_credit_hours("school_", "funding_", "cohort_"),
-    students = check_students("school_", "funding_", "cohort_"),
-    grads = check_graduations("school_", "funding_", "cohort_"),
-    public_funds = check_public_funding("school_", "funding_", "cohort_"),
-    strings_in_dots = "literals"
-  )[c(rep(1, 4), rep(2, 2), rep(3, 4)), ]
-  plan <- evaluate_plan(
-    plan,
-    rules = rules_grid,
-    expand = FALSE,
-    rename = TRUE
-  )
-  expect_equal(nrow(plan), 10)
-  expect_equal(
-    plan$target,
-    c(
-      "credits_schoolA_public_2012",
-      "credits_schoolA_public_2013",
-      "credits_schoolA_public_2014",
-      "credits_schoolA_public_2015",
-      "students_schoolB_public_2014",
-      "students_schoolB_public_2015",
-      "grads_schoolC_private_2012",
-      "grads_schoolC_private_2013",
-      "grads_schoolC_private_2014",
-      "grads_schoolC_private_2015"
-    )
-  )
-})
-
 test_with_dir("evaluate_plan() and trace", {
   plan <- drake_plan(
     top = 3,

@@ -17,7 +17,7 @@ options(tibble.print_min = 5, tibble.print_max = 5)
 
 ```{r mainexample, echo = FALSE}
 suppressMessages(suppressWarnings(library(drake)))
-suppressMessages(suppressWarnings(library(tidyverse)))
+suppressMessages(suppressWarnings(library(dplyr)))
 clean(destroy = TRUE, verbose = FALSE)
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
 dat <- system.file(
@@ -103,7 +103,8 @@ To set up a project, load your packages,
 
 ```{r mainpackages}
 library(drake)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 ```
 
 load your custom functions,
