@@ -44,16 +44,43 @@ cluster_nodes <- function(config){
     index <- config$nodes[[config$group]] == cluster
     index[is.na(index)] <- FALSE
     new_node <- config$nodes[index, ]
+    status <- cluster_status(new_node$status)
     new_node <- new_node[which.max(new_node$level), ]
+    new_node$status <- status
+    new_node$color <- colors[status]
     rownames(new_node) <- new_node$id <- new_node$label <-
       paste0(config$group, ": ", cluster)
     new_node$shape <- "diamond"
     matching <- config$nodes$label[index]
+    new_node$hover_label <- paste(matching, collapse = ", ") %>%
+      crop_text(width = hover_text_width)
     config$nodes <- rbind(config$nodes[!index, ], new_node)
     config$edges$from[config$edges$from %in% matching] <- new_node$label
     config$edges$to[config$edges$to %in% matching] <- new_node$label
   }
+  config$nodes$level <- as.integer(ordered(config$nodes$level))
   config$edges <- config$edges[!duplicated(config$edges), ]
+  config$edges <- config$edges[config$edges$from != config$edges$to, ]
+  config
+}
+
+cluster_status <- function(statuses){
+  precedence <- c(
+    "other",
+    "import_node",
+    "up_to_date",
+    "missing_node",
+    "outdated",
+    "in_progress",
+    "failed"
+  )
+  out <- "other"
+  for (status in precedence){
+    if (status %in% statuses){
+      out <- status
+    }
+  }
+  out
 }
 
 configure_nodes <- function(config){

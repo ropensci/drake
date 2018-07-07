@@ -39,6 +39,8 @@ vis_drake_graph <- function(
   full_legend = TRUE,
   make_imports = TRUE,
   from_scratch = FALSE,
+  group = NULL,
+  clusters = NULL,
   ...
 ){
   raw_graph <- drake_graph_info(
@@ -54,7 +56,9 @@ vis_drake_graph <- function(
     font_size = font_size,
     make_imports = make_imports,
     from_scratch = from_scratch,
-    full_legend = full_legend
+    full_legend = full_legend,
+    group = group,
+    clusters = clusters
   )
   if (is.null(main)){
     main <- raw_graph$default_title
