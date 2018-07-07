@@ -36,6 +36,26 @@ categorize_nodes <- function(config) {
   })
 }
 
+cluster_nodes <- function(config){
+  if (!length(config$group) || !length(config$clusters)){
+    return()
+  }
+  for (cluster in config$clusters){
+    index <- config$nodes[[config$group]] == cluster
+    index[is.na(index)] <- FALSE
+    new_node <- config$nodes[index, ]
+    new_node <- new_node[which.max(new_node$level), ]
+    rownames(new_node) <- new_node$id <- new_node$label <-
+      paste0(config$group, ": ", cluster)
+    new_node$shape <- "diamond"
+    matching <- config$nodes$label[index]
+    config$nodes <- rbind(config$nodes[!index, ], new_node)
+    config$edges$from[config$edges$from %in% matching] <- new_node$label
+    config$edges$to[config$edges$to %in% matching] <- new_node$label
+  }
+  config$edges <- config$edges[!duplicated(config$edges), ]
+}
+
 configure_nodes <- function(config){
   rownames(config$nodes) <- config$nodes$label
   config$nodes <- categorize_nodes(config = config)

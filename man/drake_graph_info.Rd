@@ -9,7 +9,8 @@ drake_graph_info(config = drake::read_drake_config(), from = NULL,
   mode = c("out", "in", "all"), order = NULL, subset = NULL,
   build_times = "build", digits = 3, targets_only = FALSE,
   split_columns = NULL, font_size = 20, from_scratch = FALSE,
-  make_imports = TRUE, full_legend = TRUE)
+  make_imports = TRUE, full_legend = TRUE, group = NULL,
+  clusters = NULL)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -72,6 +73,16 @@ Set to \code{FALSE} to increase speed and risk using obsolete information.}
 \item{full_legend}{logical. If \code{TRUE}, all the node types
 are printed in the legend. If \code{FALSE}, only the
 node types used are printed in the legend.}
+
+\item{group}{optional character scalar, name of the column used to
+group nodes into columns. All the columns names of your \code{config$plan}
+are choices. The other choices (such as \code{"status"}) are column names
+in the \code{nodes} . To group nodes into clusters in the graph,
+you must also supply the \code{clusters} argument.}
+
+\item{clusters}{optional character vector of values to cluster on.
+These values must be elements of the column of the \code{nodes} data frame
+that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 }
 \value{
 A list of three data frames: one for nodes,
