@@ -44,7 +44,7 @@ colors <- c(
 #' # Show part of the palette as an interactive visNetwork graph.
 #' # These are the nodes in the legend of the graph visualizations.
 #' \dontrun{
-#' visNetwork::visNetwork(nodes = legend_nodes())
+#' # visNetwork::visNetwork(nodes = legend_nodes()) # nolint
 #' }
 drake_palette <- function(){
   out <- lapply(
