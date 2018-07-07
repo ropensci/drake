@@ -69,6 +69,16 @@
 #'   are printed in the legend. If `FALSE`, only the
 #'   node types used are printed in the legend.
 #'
+#' @param group optional character scalar, name of the column used to
+#'   group nodes into columns. All the columns names of your `config$plan`
+#'   are choices. The other choices (such as `"status"`) are column names
+#'   in the `nodes` . To group nodes into clusters in the graph,
+#'   you must also supply the `clusters` argument.
+#'
+#' @param clusters optional character vector of values to cluster on.
+#'   These values must be elements of the column of the `nodes` data frame
+#'   that you specify in the `group` argument to `drake_graph_info()`.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -92,6 +102,18 @@
 #' library(visNetwork)
 #' visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) %>%
 #'   visHierarchicalLayout(direction = 'UD')
+#' # Optionally visualize clusters.
+#' config$plan$large_data <- grepl("large", config$plan$target)
+#' graph <- drake_graph_info(
+#'   config, group = "large_data", clusters = c(TRUE, FALSE))
+#' tail(graph$nodes)
+#' render_drake_graph(graph)
+#' # You can even use clusters given to you for free in the `graph$nodes`
+#' # data frame.
+#' graph <- drake_graph_info(
+#'   config, group = "status", clusters = "imported")
+#' tail(graph$nodes)
+#' render_drake_graph(graph)
 #' })
 #' }
 drake_graph_info <- function(
@@ -107,7 +129,9 @@ drake_graph_info <- function(
   font_size = 20,
   from_scratch = FALSE,
   make_imports = TRUE,
-  full_legend = TRUE
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL
 ) {
   if (!length(V(config$graph)$name)){
     return(null_graph())
@@ -120,6 +144,8 @@ drake_graph_info <- function(
   config$font_size <- font_size
   config$from_scratch <- from_scratch
   config$make_imports <- make_imports
+  config$group <- group
+  config$clusters <- clusters
   config <- get_raw_node_category_data(config)
   config$graph <- get_neighborhood(
     graph = config$graph,
@@ -147,6 +173,9 @@ drake_graph_info <- function(
   config$edges <- network_data$edges
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
+  }
+  if (length(config$group)){
+    config <- cluster_nodes(config)
   }
   list(
     nodes = as_tibble(config$nodes),

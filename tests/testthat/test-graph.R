@@ -167,3 +167,54 @@ test_with_dir("graphing args are not ignored (mtcars example)", {
   vis_drake_graph(config = config, file = file)
   expect_true(file.exists(file))
 })
+
+test_with_dir("clusters", {
+  skip_on_cran()
+  plan <- drake_plan(x = rnorm(n__), y = rexp(n__))
+  plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
+  cache <- storr::storr_environment()
+  config <- drake_config(plan, cache = cache)
+  o1 <- drake_graph_info(config)
+  o1$nodes$level <- as.integer(o1$nodes$level)
+  o2 <- drake_graph_info(config, group = "n__", clusters = "asdfae")
+  o3 <- drake_graph_info(config, group = "n__")
+  o4 <- drake_graph_info(config, group = "adfe")
+  o1$nodes$label <- o2$nodes$label <- o3$nodes$label <- o4$nodes$label <-
+    NULL
+  expect_equal(o1$nodes, o2$nodes)
+  expect_equal(o1$nodes, o3$nodes)
+  expect_equal(o1$nodes, o4$nodes)
+  o <- drake_graph_info(config, group = "n__", clusters = "1")
+  expect_equal(nrow(o$nodes), 5)
+  expect_equal(
+    sort(o$nodes$id),
+    sort(c("rexp", "rnorm", "x_2", "y_2", "n__: 1"))
+  )
+  node <- o$nodes[o$nodes$id == "n__: 1", ]
+  expect_equal(node$id, "n__: 1")
+  expect_equal(node$type, "cluster")
+  expect_equal(node$shape, unname(shape_of("cluster")))
+  o <- drake_graph_info(config, group = "n__", clusters = c("1", "2", "bla"))
+  expect_equal(nrow(o$nodes), 4)
+  expect_equal(
+    sort(o$nodes$id),
+    sort(c("rexp", "rnorm", "n__: 1", "n__: 2"))
+  )
+  for (x in c("n__: 1", "n__: 2")){
+    node <- o$nodes[o$nodes$id == x, ]
+    expect_equal(node$id, x)
+    expect_equal(node$type, "cluster")
+    expect_equal(node$shape, unname(shape_of("cluster")))
+  }
+  make(plan, targets = c("x_1", "y_2"), cache = cache, session_info = FALSE)
+  o <- drake_graph_info(config, group = "status", clusters = "up to date")
+  expect_equal(nrow(o$nodes), 5)
+  expect_equal(
+    sort(o$nodes$id),
+    sort(c("rexp", "rnorm", "x_2", "y_1", "status: up to date"))
+  )
+  node <- o$nodes[o$nodes$id == "status: up to date", ]
+  expect_equal(node$id, "status: up to date")
+  expect_equal(node$type, "cluster")
+  expect_equal(node$shape, unname(shape_of("cluster")))
+})

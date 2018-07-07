@@ -12,7 +12,8 @@ vis_drake_graph(config = drake::read_drake_config(), file = character(0),
   layout = "layout_with_sugiyama", main = NULL, direction = "LR",
   hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
   "in", "all"), order = NULL, subset = NULL, ncol_legend = 1,
-  full_legend = TRUE, make_imports = TRUE, from_scratch = FALSE, ...)
+  full_legend = FALSE, make_imports = TRUE, from_scratch = FALSE,
+  group = NULL, clusters = NULL, ...)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -110,6 +111,16 @@ will be made from scratch on the next \code{\link[=make]{make()}}.
 Makes all targets outdated, but keeps information about
 build progress in previous \code{\link[=make]{make()}}s.}
 
+\item{group}{optional character scalar, name of the column used to
+group nodes into columns. All the columns names of your \code{config$plan}
+are choices. The other choices (such as \code{"status"}) are column names
+in the \code{nodes} . To group nodes into clusters in the graph,
+you must also supply the \code{clusters} argument.}
+
+\item{clusters}{optional character vector of values to cluster on.
+These values must be elements of the column of the \code{nodes} data frame
+that you specify in the \code{group} argument to \code{drake_graph_info()}.}
+
 \item{...}{arguments passed to \code{\link[=visNetwork]{visNetwork()}}.}
 }
 \value{
@@ -134,6 +145,14 @@ vis_drake_graph(
   from = c("small", "reg2"),
   to = "summ_regression2_small"
 )
+# Optionally visualize clusters.
+config$plan$large_data <- grepl("large", config$plan$target)
+vis_drake_graph(
+  config, group = "large_data", clusters = c(TRUE, FALSE))
+# You can even use clusters given to you for free in the `graph$nodes`
+# data frame of `drake_graph_info()`.
+vis_drake_graph(
+  config, group = "status", clusters = "imported")
 })
 }
 }
