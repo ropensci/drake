@@ -108,14 +108,11 @@ resolve_levels <- function(config){
   config$nodes
 }
 
-#' @title Return the default title of the graph for
-#'   [vis_drake_graph()].
+#' @title Return the default title for graph visualizations
 #' @description For internal use only.
 #' @export
 #' @keywords internal
-#' @seealso [drake_graph_info()], [vis_drake_graph()]
-#' @return a character scalar with the default graph title for
-#'   [vis_drake_graph()].
+#' @return a character scalar with the default graph title
 #' @param split_columns deprecated
 #' @examples
 #' default_graph_title()
@@ -203,20 +200,17 @@ hover_text <- function(config) {
 hover_text_width <- 250
 
 #' @title Create the nodes data frame used in the legend
-#'   of [vis_drake_graph()].
+#'   of the graph visualizations.
 #' @export
-#' @seealso [drake_palette()],
-#'   [vis_drake_graph()],
-#'   [drake_graph_info()]
 #' @description Output a `visNetwork`-friendly
 #' data frame of nodes. It tells you what
 #' the colors and shapes mean
-#' in [vis_drake_graph()].
+#' in the graph visualizations.
 #' @param font_size font size of the node label text
-#' @return A data frame of legend nodes for [vis_drake_graph()].
+#' @return A data frame of legend nodes for the graph visualizations.
 #' @examples
 #' \dontrun{
-#' # Show the legend nodes used in vis_drake_graph().
+#' # Show the legend nodes used in graph visualizations.
 #' # For example, you may want to inspect the color palette more closely.
 #' visNetwork::visNetwork(nodes = legend_nodes())
 #' }

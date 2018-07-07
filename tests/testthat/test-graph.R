@@ -19,7 +19,7 @@ test_with_dir("Supplied graph is not an igraph.", {
   expect_error(prune_drake_graph(12345, to = "node"))
 })
 
-test_with_dir("graph does not fail if input file is binary", {
+test_with_dir("visNetwork dep graph does not fail if input file is binary", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(
     y = readRDS(file_in("input.rds")),
@@ -71,11 +71,16 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
   )
 })
 
-test_with_dir("graph functions work", {
+test_with_dir("build_drake_graph() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_equal(
     class(build_drake_graph(config$plan, verbose = FALSE)), "igraph")
+})
+
+test_with_dir("dependency visNetwork runs", {
+  skip_on_cran()
+  config <- dbug()
   pdf(NULL)
   tmp <- vis_drake_graph(config)
   dev.off()
@@ -98,23 +103,12 @@ test_with_dir("Supplied graph is pruned.", {
   expect_false(any(exclude %in% vertices))
 })
 
-test_with_dir("graphing args are not ignored (mtcars example)", {
+test_with_dir("we can generate different visNetwork dependency graphs", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  scenario <- get_testing_scenario()
-  e <- eval(parse(text = scenario$envir))
-  jobs <- scenario$jobs
-  parallelism <- scenario$parallelism
+  load_mtcars_example()
+  config <- drake_config(my_plan)
 
-  load_mtcars_example(envir = e)
-  my_plan <- e$my_plan
-  config <- drake_config(my_plan, envir = e,
-                         jobs = jobs, parallelism = parallelism,
-                         verbose = FALSE)
-
-  tmp <- vis_drake_graph(config = config)
-  expect_false(file.exists("Makefile"))
-
-  # Different graph configurations should be checked manually.
+  # Different graph configurations should be checked visually.
   expect_warning(
     tmp <- drake_graph_info(
       config = config, build_times = FALSE, from_scratch = TRUE))

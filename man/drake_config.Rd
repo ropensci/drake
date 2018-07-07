@@ -102,7 +102,7 @@ For detailed explanations, see the
 of the user manual.}
 
 \item{jobs}{number of parallel processes or jobs to run.
-See \code{\link[=max_useful_jobs]{max_useful_jobs()}} or \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+See \code{\link[=predict_runtime]{predict_runtime()}}
 to help figure out what the number of jobs should be.
 Windows users should not set \code{jobs > 1} if
 \code{parallelism} is \code{"mclapply"} because
@@ -378,8 +378,8 @@ The master internal configuration list of a project.
 }
 \description{
 This configuration list
-is also required for functions such as \code{\link[=outdated]{outdated()}} and
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}. It is meant to be specific to
+is also required for functions such as \code{\link[=outdated]{outdated()}}.
+It is meant to be specific to
 a single call to \code{\link[=make]{make()}}, and you should not modify
 it by hand afterwards. If you later plan to call \code{\link[=make]{make()}}
 with different arguments (especially \code{targets}),
@@ -402,16 +402,10 @@ con <- drake_config(my_plan)
 # because they use the configuration list.
 outdated(config = con) # Which targets are out of date?
 missed(config = con) # Which imports are missing?
-# In make(..., jobs = n), it would be silly to set `n` higher than this:
-max_useful_jobs(config = con)
-# Show a visNetwork graph
-vis_drake_graph(config = con)
-# Get the underlying node/edge data frames of the graph.
-drake_graph_info(config = con)
 })
 }
 }
 \seealso{
 \code{\link[=make_with_config]{make_with_config()}}, \code{\link[=make]{make()}},
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+\code{\link[=drake_plan]{drake_plan()}}.
 }

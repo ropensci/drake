@@ -101,7 +101,7 @@ For detailed explanations, see the
 of the user manual.}
 
 \item{jobs}{number of parallel processes or jobs to run.
-See \code{\link[=max_useful_jobs]{max_useful_jobs()}} or \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+See \code{\link[=predict_runtime]{predict_runtime()}}
 to help figure out what the number of jobs should be.
 Windows users should not set \code{jobs > 1} if
 \code{parallelism} is \code{"mclapply"} because
@@ -409,11 +409,9 @@ reg2 = function(d){
   lm(y ~ x3, data = d)
 }
 outdated(config) # Some targets depend on reg2().
-vis_drake_graph(config) # See how they fit in an interactive graph.
 make(my_plan) # Rebuild just the outdated targets.
 outdated(config) # Everything is up to date again.
 make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
-vis_drake_graph(config) # The colors changed in the graph.
 clean() # Start from scratch.
 # Run with at most 2 jobs at a time for the imports
 # and at most 4 jobs at a time for the targets.
@@ -442,9 +440,10 @@ readd(letter) # "b"
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}},
-\code{\link[=vis_drake_graph]{vis_drake_graph()}},
+\code{\link[=drake_config]{drake_config()}},
+\code{\link[=evaluate_plan]{evaluate_plan()}},
+\code{\link[=outdated]{outdated()}},
 \code{\link[=parallelism_choices]{parallelism_choices()}},
-\code{\link[=max_useful_jobs]{max_useful_jobs()}},
 \code{\link[=triggers]{triggers()}},
 \code{\link[=make_with_config]{make_with_config()}}
 }

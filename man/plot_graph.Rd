@@ -17,64 +17,64 @@ plot_graph(plan = read_drake_plan(),
   ncol_legend = 1, make_imports = TRUE, from_scratch = FALSE, ...)
 }
 \arguments{
-\item{plan}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{plan}{deprecated}
 
-\item{envir}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{envir}{deprecated}
 
-\item{verbose}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{verbose}{deprecated}
 
-\item{hook}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{hook}{deprecated}
 
-\item{cache}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{cache}{deprecated}
 
-\item{jobs}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{jobs}{deprecated}
 
-\item{packages}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{packages}{deprecated}
 
-\item{prework}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{prework}{deprecated}
 
-\item{config}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{config}{deprecated}
 
-\item{file}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{file}{deprecated}
 
-\item{build_times}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{build_times}{deprecated}
 
-\item{digits}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{digits}{deprecated}
 
-\item{targets_only}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{targets_only}{deprecated}
 
-\item{split_columns}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{split_columns}{deprecated}
 
-\item{font_size}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{font_size}{deprecated}
 
-\item{layout}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{layout}{deprecated}
 
-\item{main}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{main}{deprecated}
 
-\item{direction}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{direction}{deprecated}
 
-\item{hover}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{hover}{deprecated}
 
-\item{navigationButtons}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}. # nolint}
+\item{navigationButtons}{deprecated}
 
-\item{from}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{from}{deprecated}
 
-\item{mode}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{mode}{deprecated}
 
-\item{order}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{order}{deprecated}
 
-\item{subset}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{subset}{deprecated}
 
-\item{ncol_legend}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{ncol_legend}{deprecated}
 
-\item{make_imports}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{make_imports}{deprecated}
 
-\item{from_scratch}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{from_scratch}{deprecated}
 
-\item{...}{Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\item{...}{deprecated}
 }
 \value{
-Same as for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
+a \code{visNetwork} graph
 }
 \description{
 Use \code{\link[=vis_drake_graph]{vis_drake_graph()}} instead.
@@ -84,8 +84,5 @@ Deprecated on 2017-10.
 }
 \examples{
 # See ?vis_drake_graph for examples.
-}
-\seealso{
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }
 \keyword{internal}

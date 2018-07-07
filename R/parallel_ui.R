@@ -20,9 +20,9 @@
 #' # List the available template files.
 #' drake_hpc_template_files()
 #' # Write a SLURM template file from the SLURM example.
-#' drake_hpc_template_file("slurm_future.tmpl") # Writes slurm_future.tmpl.
+#' drake_hpc_template_file("slurm_batchtools.tmpl") # Writes slurm_batchtools.tmpl.
 #' library(future.batchtools)
-#' # future::plan(batchtools_slurm, template = "slurm_future.tmpl") # nolint
+#' # future::plan(batchtools_slurm, template = "slurm_batchtools.tmpl") # nolint
 #' # make(my_plan, parallelism = "future", jobs = 2) # nolint
 #' })
 #' }
@@ -60,9 +60,9 @@ drake_hpc_template_file <- function(
 #' # List the available template files.
 #' drake_hpc_template_files()
 #' # Write a SLURM template file from the SLURM example.
-#' drake_hpc_template_file("slurm_future.tmpl") # Writes slurm_future.tmpl.
+#' drake_hpc_template_file("slurm_batchtools.tmpl") # Writes slurm_batchtools.tmpl.
 #' library(future.batchtools)
-#' # future::plan(batchtools_slurm, template = "slurm_future.tmpl") # nolint
+#' # future::plan(batchtools_slurm, template = "slurm_batchtools.tmpl") # nolint
 #' # make(my_plan, parallelism = "future", jobs = 2) # nolint
 #' })
 #' }

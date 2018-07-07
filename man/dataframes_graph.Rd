@@ -11,66 +11,31 @@ dataframes_graph(config = drake::read_drake_config(), from = NULL,
   make_imports = TRUE, full_legend = TRUE)
 }
 \arguments{
-\item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
-You can get one as a return value from \code{\link[=make]{make()}} as well.}
+\item{config}{deprecated}
 
-\item{from}{Optional collection of target/import names.
-If \code{from} is nonempty,
-the graph will restrict itself to
-a neighborhood of \code{from}.
-Control the neighborhood with
-\code{mode} and \code{order}.}
+\item{from}{deprecated}
 
-\item{mode}{Which direction to branch out in the graph
-to create a neighborhood around \code{from}.
-Use \code{"in"} to go upstream,
-\code{"out"} to go downstream,
-and \code{"all"} to go both ways and disregard
-edge direction altogether.}
+\item{mode}{deprecated}
 
-\item{order}{How far to branch out to create
-a neighborhood around \code{from} (measured
-in the number of nodes). Defaults to
-as far as possible.}
+\item{order}{deprecated}
 
-\item{subset}{Optional character vector of of target/import names.
-Subset of nodes to display in the graph.
-Applied after \code{from}, \code{mode}, and \code{order}.
-Be advised: edges are only kept for adjacent nodes in \code{subset}.
-If you do not select all the intermediate nodes,
-edges will drop from the graph.}
+\item{subset}{deprecated}
 
-\item{build_times}{character string or logical.
-If character, the choices are
-1. \code{"build"}: runtime of the command plus the time
-it take to store the target or import.
-2. \code{"command"}: just the runtime of the command.
-3. \code{"none"}: no build times.
-If logical, \code{build_times} selects whether to show the
-times from `build_times(..., type = "build")`` or use
-no build times at all. See \code{\link[=build_times]{build_times()}} for details.}
+\item{build_times}{deprecated}
 
-\item{digits}{number of digits for rounding the build times}
+\item{digits}{deprecated}
 
-\item{targets_only}{logical,
-whether to skip the imports and only include the
-targets in the workflow plan.}
+\item{targets_only}{deprecated}
 
-\item{split_columns}{logical, deprecated.}
+\item{split_columns}{deprecated}
 
-\item{font_size}{numeric, font size of the node labels in the graph}
+\item{font_size}{deprecated}
 
-\item{from_scratch}{logical, whether to assume all the targets
-will be made from scratch on the next \code{\link[=make]{make()}}.
-Makes all targets outdated, but keeps information about
-build progress in previous \code{\link[=make]{make()}}s.}
+\item{from_scratch}{deprecated}
 
-\item{make_imports}{logical, whether to make the imports first.
-Set to \code{FALSE} to increase speed and risk using obsolete information.}
+\item{make_imports}{deprecated}
 
-\item{full_legend}{logical. If \code{TRUE}, all the node types
-are printed in the legend. If \code{FALSE}, only the
-node types used are printed in the legend.}
+\item{full_legend}{deprecated}
 }
 \value{
 \code{args} for \code{\link{system2}(command, args)}
@@ -83,8 +48,5 @@ Deprecated on 2018-06-27.
 }
 \examples{
 # See ?drake_graph_info for examples.
-}
-\seealso{
-\code{\link[=drake_graph_info]{drake_graph_info()}}
 }
 \keyword{internal}

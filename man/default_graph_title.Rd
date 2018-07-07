@@ -2,8 +2,7 @@
 % Please edit documentation in R/drake_graph_info_utils.R
 \name{default_graph_title}
 \alias{default_graph_title}
-\title{Return the default title of the graph for
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\title{Return the default title for graph visualizations}
 \usage{
 default_graph_title(split_columns = FALSE)
 }
@@ -11,16 +10,12 @@ default_graph_title(split_columns = FALSE)
 \item{split_columns}{deprecated}
 }
 \value{
-a character scalar with the default graph title for
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}.
+a character scalar with the default graph title
 }
 \description{
 For internal use only.
 }
 \examples{
 default_graph_title()
-}
-\seealso{
-\code{\link[=drake_graph_info]{drake_graph_info()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }
 \keyword{internal}

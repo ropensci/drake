@@ -30,8 +30,7 @@ test_with_dir("Contain side effects", {
 # The mtcars example (`drake_example("mtcars")`)
 # already has a demonstration
 load_mtcars_example()
-config <- make(my_plan)
-vis_drake_graph(config)
+make(my_plan)
 # Now how did drake magically know that
 # `small`, `large`, and `coef_regression2_small` were
 # dependencies of the output file `report.md`?

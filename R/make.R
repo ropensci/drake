@@ -7,9 +7,10 @@
 #' for an overview of the documentation.
 #' @seealso 
 #'   [drake_plan()],
-#'   [vis_drake_graph()],
+#'   [drake_config()],
+#'   [evaluate_plan()],
+#'   [outdated()],
 #'   [parallelism_choices()],
-#'   [max_useful_jobs()],
 #'   [triggers()],
 #'   [make_with_config()]
 #' @export
@@ -39,11 +40,9 @@
 #'   lm(y ~ x3, data = d)
 #' }
 #' outdated(config) # Some targets depend on reg2().
-#' vis_drake_graph(config) # See how they fit in an interactive graph.
 #' make(my_plan) # Rebuild just the outdated targets.
 #' outdated(config) # Everything is up to date again.
 #' make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
-#' vis_drake_graph(config) # The colors changed in the graph.
 #' clean() # Start from scratch.
 #' # Run with at most 2 jobs at a time for the imports
 #' # and at most 4 jobs at a time for the targets.

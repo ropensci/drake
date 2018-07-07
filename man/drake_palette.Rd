@@ -12,14 +12,14 @@ but the actual return value is \code{NULL}.
 }
 \description{
 This function is
-used in both the console and \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+used in both the console and graph visualizations.
 Your console must have the crayon package enabled.
 }
 \details{
 This palette applies to console output
 (internal functions \code{console()} and
 \code{console_many_targets()}) and the node colors
-in \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
+in the graph visualizations.
 So if you want to contribute improvements to the palette,
 please both \code{drake_palette()} and
 \code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}
@@ -28,7 +28,7 @@ please both \code{drake_palette()} and
 # Show drake's color palette as text.
 drake_palette()
 # Show part of the palette as an interactive visNetwork graph.
-# These are the nodes in the legend of vis_drake_graph().
+# These are the nodes in the legend of the graph visualizations.
 \dontrun{
 visNetwork::visNetwork(nodes = legend_nodes())
 }

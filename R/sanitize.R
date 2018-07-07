@@ -58,7 +58,7 @@ sanitize_nodes <- function(nodes, choices){
     stop(
       "All import/target names are invalid ",
       "in argument 'targets', 'from', or 'subset' ",
-      "for make(), vis_drake_graph(), or similar.",
+      "for make() or similar function.",
       call. = FALSE
     )
   }

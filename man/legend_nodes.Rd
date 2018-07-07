@@ -3,7 +3,7 @@
 \name{legend_nodes}
 \alias{legend_nodes}
 \title{Create the nodes data frame used in the legend
-of \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+of the graph visualizations.}
 \usage{
 legend_nodes(font_size = 20)
 }
@@ -11,23 +11,18 @@ legend_nodes(font_size = 20)
 \item{font_size}{font size of the node label text}
 }
 \value{
-A data frame of legend nodes for \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
+A data frame of legend nodes for the graph visualizations.
 }
 \description{
 Output a \code{visNetwork}-friendly
 data frame of nodes. It tells you what
 the colors and shapes mean
-in \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
+in the graph visualizations.
 }
 \examples{
 \dontrun{
-# Show the legend nodes used in vis_drake_graph().
+# Show the legend nodes used in graph visualizations.
 # For example, you may want to inspect the color palette more closely.
 visNetwork::visNetwork(nodes = legend_nodes())
 }
-}
-\seealso{
-\code{\link[=drake_palette]{drake_palette()}},
-\code{\link[=vis_drake_graph]{vis_drake_graph()}},
-\code{\link[=drake_graph_info]{drake_graph_info()}}
 }

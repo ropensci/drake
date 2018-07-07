@@ -2,10 +2,9 @@
 #' @description This function returns an igraph object representing how
 #' the targets in your workflow plan data frame
 #' depend on each other.
-#' (`help(package = "igraph")`). To plot the graph, call
-#' to [plot.igraph()] on your graph, or just use
-#' [vis_drake_graph()] from the start.
-#' @seealso [vis_drake_graph()]
+#' (`help(package = "igraph")`). To plot this graph, call
+#' to [plot.igraph()] on your graph. See the online manual
+#' for enhanced graph visualization functionality.
 #' @export
 #' @return An igraph object representing
 #'   the workflow plan dependency network.

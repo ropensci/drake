@@ -430,19 +430,12 @@ read_drake_config <- function(
 
 #' @title Read the igraph dependency network
 #'   from your last attempted call to [make()].
-#' @description For more user-friendly graphing utilities,
-#' see [vis_drake_graph()]
-#' and related functions.
-#' @seealso [vis_drake_graph()], [read_drake_config()]
+#' @description To build the targets, [make()]
+#'   advances along the graph from leaves to roots.
 #' @export
 #' @return An `igraph` object representing the dependency
 #'   network of the workflow.
-#'
 #' @inheritParams cached
-#'
-#' @param ... arguments to [visNetwork()] via
-#'   [vis_drake_graph()]
-#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -457,8 +450,7 @@ read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose(),
-  ...
+  verbose = drake::default_verbose()
 ){
   if (is.null(cache)){
     cache <- get_cache(path = path, search = search, verbose = verbose)

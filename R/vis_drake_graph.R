@@ -12,7 +12,8 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' config <- load_mtcars_example() # Get the code with drake_example("mtcars").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
 #' config <- make(my_plan) # Run the project, build the targets.

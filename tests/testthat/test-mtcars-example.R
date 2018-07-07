@@ -22,13 +22,6 @@ test_with_dir("mtcars example works", {
     target = "small", config = con)))
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
 
-  # Should probably check the actual build times in the labels.
-  tmp1 <- drake_graph_info(config = config,
-    make_imports = FALSE)
-  tmp2 <- drake_graph_info(config = config)
-  expect_true(is.data.frame(tmp1$nodes))
-  expect_true(is.data.frame(tmp2$nodes))
-
   expect_equal(sort(justbuilt(con)), sort(dats))
   remove_these <- intersect(dats, ls(config$envir))
   rm(list = remove_these, envir = config$envir)

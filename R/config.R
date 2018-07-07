@@ -1,8 +1,8 @@
 #' @title Create the internal runtime parameter list
 #'   used internally in [make()].
 #' @description This configuration list
-#' is also required for functions such as [outdated()] and
-#' [vis_drake_graph()]. It is meant to be specific to
+#' is also required for functions such as [outdated()].
+#' It is meant to be specific to
 #' a single call to [make()], and you should not modify
 #' it by hand afterwards. If you later plan to call [make()]
 #' with different arguments (especially `targets`),
@@ -17,7 +17,7 @@
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make_with_config()], [make()],
-#'   [drake_plan()], [vis_drake_graph()]
+#'   [drake_plan()].
 #' @param plan workflow plan data frame.
 #'   A workflow plan data frame is a data frame
 #'   with a `target` column and a `command` column.
@@ -87,7 +87,7 @@
 #'   of the user manual.
 #'
 #' @param jobs number of parallel processes or jobs to run.
-#'   See [max_useful_jobs()] or [vis_drake_graph()]
+#'   See [predict_runtime()]
 #'   to help figure out what the number of jobs should be.
 #'   Windows users should not set `jobs > 1` if
 #'   `parallelism` is `"mclapply"` because
@@ -370,12 +370,6 @@
 #' # because they use the configuration list.
 #' outdated(config = con) # Which targets are out of date?
 #' missed(config = con) # Which imports are missing?
-#' # In make(..., jobs = n), it would be silly to set `n` higher than this:
-#' max_useful_jobs(config = con)
-#' # Show a visNetwork graph
-#' vis_drake_graph(config = con)
-#' # Get the underlying node/edge data frames of the graph.
-#' drake_graph_info(config = con)
 #' })
 #' }
 drake_config <- function(

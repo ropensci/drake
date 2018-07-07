@@ -22,7 +22,8 @@ file system.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-config <- load_mtcars_example() # Get the code with drake_example("mtcars").
+load_mtcars_example() # Get the code with drake_example("mtcars").
+config <- drake_config(my_plan)
 missed(config) # All the imported files and objects should be present.
 rm(reg1) # Remove an import dependency from you workspace.
 missed(config) # Should report that reg1 is missing.

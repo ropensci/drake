@@ -278,11 +278,22 @@ config <- function(
 #' @title Deprecated function `dataframes_graph`
 #' @description Use [drake_graph_info()] instead.
 #' @details Deprecated on 2018-06-27.
-#' @seealso [drake_graph_info()]
 #' @export
 #' @keywords internal
 #' @return `args` for \code{\link{system2}(command, args)}
-#' @inheritParams drake_graph_info
+#' @param config deprecated
+#' @param from deprecated
+#' @param mode deprecated
+#' @param order deprecated
+#' @param subset deprecated
+#' @param build_times deprecated
+#' @param digits deprecated
+#' @param targets_only deprecated
+#' @param split_columns deprecated
+#' @param font_size deprecated
+#' @param from_scratch deprecated
+#' @param make_imports deprecated
+#' @param full_legend deprecated
 #' @examples
 #' # See ?drake_graph_info for examples.
 dataframes_graph <- function(
@@ -881,38 +892,37 @@ plan_drake <- function(
 #' @title Deprecated function `plot_graph`
 #' @description Use [vis_drake_graph()] instead.
 #' @details Deprecated on 2017-10.
-#' @seealso [vis_drake_graph()]
 #' @export
 #' @keywords internal
-#' @return Same as for [vis_drake_graph()].
-#' @param plan Same as for [vis_drake_graph()].
-#' @param envir Same as for [vis_drake_graph()].
-#' @param hook Same as for [vis_drake_graph()].
-#' @param cache Same as for [vis_drake_graph()].
-#' @param jobs Same as for [vis_drake_graph()].
-#' @param packages Same as for [vis_drake_graph()].
-#' @param prework Same as for [vis_drake_graph()].
-#' @param verbose Same as for [vis_drake_graph()].
-#' @param config Same as for [vis_drake_graph()].
-#' @param file Same as for [vis_drake_graph()].
-#' @param build_times Same as for [vis_drake_graph()].
-#' @param digits Same as for [vis_drake_graph()].
-#' @param targets_only Same as for [vis_drake_graph()].
-#' @param split_columns Same as for [vis_drake_graph()].
-#' @param font_size Same as for [vis_drake_graph()].
-#' @param layout Same as for [vis_drake_graph()].
-#' @param main Same as for [vis_drake_graph()].
-#' @param direction Same as for [vis_drake_graph()].
-#' @param hover Same as for [vis_drake_graph()].
-#' @param navigationButtons Same as for [vis_drake_graph()]. # nolint
-#' @param from Same as for [vis_drake_graph()].
-#' @param mode Same as for [vis_drake_graph()].
-#' @param order Same as for [vis_drake_graph()].
-#' @param subset Same as for [vis_drake_graph()].
-#' @param ncol_legend Same as for [vis_drake_graph()].
-#' @param make_imports Same as for [vis_drake_graph()].
-#' @param from_scratch Same as for [vis_drake_graph()].
-#' @param ... Same as for [vis_drake_graph()].
+#' @return a `visNetwork` graph
+#' @param plan deprecated
+#' @param envir deprecated
+#' @param hook deprecated
+#' @param cache deprecated
+#' @param jobs deprecated
+#' @param packages deprecated
+#' @param prework deprecated
+#' @param verbose deprecated
+#' @param config deprecated
+#' @param file deprecated
+#' @param build_times deprecated
+#' @param digits deprecated
+#' @param targets_only deprecated
+#' @param split_columns deprecated
+#' @param font_size deprecated
+#' @param layout deprecated
+#' @param main deprecated
+#' @param direction deprecated
+#' @param hover deprecated
+#' @param navigationButtons deprecated
+#' @param from deprecated
+#' @param mode deprecated
+#' @param order deprecated
+#' @param subset deprecated
+#' @param ncol_legend deprecated
+#' @param make_imports deprecated
+#' @param from_scratch deprecated
+#' @param ... deprecated
 #' @examples
 #' # See ?vis_drake_graph for examples.
 plot_graph <- function(
@@ -1215,20 +1225,19 @@ read_plan <- function(
 #' @title Deprecated function `render_graph`
 #' @description Use [render_drake_graph()] instead.
 #' @details Deprecated on 2017-10.
-#' @seealso [render_drake_graph()]
 #' @export
 #' @keywords internal
-#' @return Same as for [render_drake_graph()].
-#' @param graph_info Same as for [render_drake_graph()].
-#' @param file Same as for [render_drake_graph()].
-#' @param layout Same as for [render_drake_graph()].
-#' @param direction Same as for [render_drake_graph()].
-#' @param hover Same as for [render_drake_graph()].
-#' @param main Same as for [render_drake_graph()].
-#' @param selfcontained Same as for [render_drake_graph()].
-#' @param navigationButtons Same as for [render_drake_graph()]. # nolint
-#' @param ncol_legend Same as for [render_drake_graph()].
-#' @param ... Same as for [render_drake_graph()].
+#' @return a `visNetwork` graph.
+#' @param graph_info deprecated
+#' @param file deprecated
+#' @param layout deprecated
+#' @param direction deprecated
+#' @param hover deprecated
+#' @param main deprecated
+#' @param selfcontained deprecated
+#' @param navigationButtons deprecated
+#' @param ncol_legend deprecated
+#' @param ... deprecated
 #' @examples
 #' # See ?render_drake_graph for examples.
 render_graph <- function(

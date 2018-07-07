@@ -60,6 +60,6 @@ outdated(config = config)
 }
 }
 \seealso{
-\code{\link[=missed]{missed()}}, \code{\link[=drake_plan]{drake_plan()}},
-\code{\link[=make]{make()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+\code{\link[=drake_config]{drake_config()}}, \code{\link[=missed]{missed()}}, \code{\link[=drake_plan]{drake_plan()}},
+\code{\link[=make]{make()}}
 }

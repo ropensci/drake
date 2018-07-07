@@ -1,6 +1,6 @@
 # Below, the colors from "target" through
 # "fail" are for the console. The rest
-# are for vis_drake_graph().
+# are for graph visualizations.
 colors <- c(
   target = "green3",
   import = "dodgerblue3",
@@ -27,12 +27,12 @@ colors <- c(
 #' @title Show drake's color palette.
 #' @export
 #' @description This function is
-#' used in both the console and [vis_drake_graph()]
+#' used in both the console and graph visualizations.
 #' Your console must have the crayon package enabled.
 #' @details This palette applies to console output
 #' (internal functions `console()` and
 #' `console_many_targets()`) and the node colors
-#' in [vis_drake_graph()].
+#' in the graph visualizations.
 #' So if you want to contribute improvements to the palette,
 #' please both `drake_palette()` and
 #' \code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}
@@ -42,7 +42,7 @@ colors <- c(
 #' # Show drake's color palette as text.
 #' drake_palette()
 #' # Show part of the palette as an interactive visNetwork graph.
-#' # These are the nodes in the legend of vis_drake_graph().
+#' # These are the nodes in the legend of the graph visualizations.
 #' \dontrun{
 #' visNetwork::visNetwork(nodes = legend_nodes())
 #' }

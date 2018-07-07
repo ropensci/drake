@@ -55,9 +55,10 @@ deps_code(my_plan$command[1])
 deps_code(my_plan$command[4])
 # Plot the interactive network visualization of the workflow.
 config <- drake_config(my_plan)
-vis_drake_graph(config)
+outdated(config) # Which targets are out of date?
 # Run the workflow to build all the targets in the plan.
 make(my_plan)
+outdated(config) # Everything should be up to date.
 # For the reg2() model on the small dataset,
 # the p-value is so small that there may be an association
 # between weight and fuel efficiency after all.

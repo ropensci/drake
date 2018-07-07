@@ -51,7 +51,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 }}
 
 \item{jobs}{number of parallel processes or jobs to run.
-See \code{\link[=max_useful_jobs]{max_useful_jobs()}} or \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+See \code{\link[=predict_runtime]{predict_runtime()}}
 to help figure out what the number of jobs should be.
 Windows users should not set \code{jobs > 1} if
 \code{parallelism} is \code{"mclapply"} because
@@ -89,9 +89,9 @@ the workflow plan dependency network.
 This function returns an igraph object representing how
 the targets in your workflow plan data frame
 depend on each other.
-(\code{help(package = "igraph")}). To plot the graph, call
-to \code{\link[=plot.igraph]{plot.igraph()}} on your graph, or just use
-\code{\link[=vis_drake_graph]{vis_drake_graph()}} from the start.
+(\code{help(package = "igraph")}). To plot this graph, call
+to \code{\link[=plot.igraph]{plot.igraph()}} on your graph. See the online manual
+for enhanced graph visualization functionality.
 }
 \examples{
 \dontrun{
@@ -102,7 +102,4 @@ g <- build_drake_graph(my_plan)
 class(g) # "igraph"
 })
 }
-}
-\seealso{
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}
 }

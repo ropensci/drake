@@ -315,9 +315,8 @@ drake_plan_override <- function(target, field, config){
 #' plan
 #' # Drake knows "\"mtcars.csv\"" is the first target
 #' # and a dependency of `contents`. See for yourself:
-#' config <- make(plan)
+#' make(plan)
 #' file.exists("mtcars.csv")
-#' vis_drake_graph(config)
 #' # See also `knitr_in()`. `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
@@ -359,9 +358,8 @@ file_in <- function(...){
 #' plan
 #' # Drake knows "\"mtcars.csv\"" is the first target
 #' # and a dependency of `contents`. See for yourself:
-#' config <- make(plan)
+#' make(plan)
 #' file.exists("mtcars.csv")
-#' vis_drake_graph(config)
 #' # See also `knitr_in()`. `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
@@ -402,8 +400,7 @@ file_out <- function(path){
 #' # The mtcars example (`drake_example("mtcars")`)
 #' # already has a demonstration
 #' load_mtcars_example()
-#' config <- make(my_plan)
-#' vis_drake_graph(config)
+#' make(my_plan)
 #' # Now how did drake magically know that
 #' # `small`, `large`, and `coef_regression2_small` were
 #' # dependencies of the output file `report.md`?

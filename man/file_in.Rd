@@ -36,9 +36,8 @@ suppressWarnings(
 plan
 # Drake knows "\\"mtcars.csv\\"" is the first target
 # and a dependency of `contents`. See for yourself:
-config <- make(plan)
+make(plan)
 file.exists("mtcars.csv")
-vis_drake_graph(config)
 # See also `knitr_in()`. `knitr_in()` is like `file_in()`
 # except that it analyzes active code chunks in your `knitr`
 # source file and detects non-file dependencies.

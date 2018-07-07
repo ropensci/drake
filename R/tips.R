@@ -25,9 +25,8 @@ drake_tip <- function() {
 
     "Drake quickstart:
      load_mtcars_example();
-     vis_drake_graph(my_plan);
      make(my_plan);
-     vis_drake_graph(my_plan)"
+     readd(small)"
   ) %>% wrap_text
   sample(tips, 1)
 }

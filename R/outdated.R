@@ -37,8 +37,8 @@ first_outdated <- function(config) {
 #' If needed, rerun [drake_config()] early and often.
 #' See the details in the help file for [drake_config()].
 #' @export
-#' @seealso [missed()], [drake_plan()],
-#'   [make()], [vis_drake_graph()]
+#' @seealso [drake_config()], [missed()], [drake_plan()],
+#'   [make()]
 #' @return Character vector of the names of outdated targets.
 #' @param config option internal runtime parameter list of
 #'   \code{\link{make}(...)},
@@ -106,7 +106,8 @@ outdated <-  function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' config <- load_mtcars_example() # Get the code with drake_example("mtcars").
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' config <- drake_config(my_plan)
 #' missed(config) # All the imported files and objects should be present.
 #' rm(reg1) # Remove an import dependency from you workspace.
 #' missed(config) # Should report that reg1 is missing.
