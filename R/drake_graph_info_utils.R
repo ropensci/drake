@@ -212,7 +212,7 @@ hover_text_width <- 250
 #' \dontrun{
 #' # Show the legend nodes used in graph visualizations.
 #' # For example, you may want to inspect the color palette more closely.
-#' visNetwork::visNetwork(nodes = legend_nodes())
+#' # visNetwork::visNetwork(nodes = legend_nodes()) # nolint
 #' }
 legend_nodes <- function(font_size = 20) {
   out <- tibble(
