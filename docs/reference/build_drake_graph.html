@@ -196,16 +196,6 @@ download and install Rtools.</p>
 have different parallelism needs. To use at most 2 jobs at a time
 for imports and at most 4 jobs at a time for targets, call
 <code><a href='make.html'>make(..., jobs = c(imports = 2, targets = 4))</a></code>.</p>
-<p>For <code>"future_lapply"</code> parallelism, <code>jobs</code>
-only applies to the imports.
-To set the max number of jobs for <code>"future_lapply"</code>
-parallelism, set the <code>workers</code>
-argument where it exists: for example, call
-<code><a href='http://www.rdocumentation.org/packages/future/topics/plan'>future::plan(multisession(workers = 4))</a></code>,
-then call <code><a href='make.html'>make</a>(your_plan, parallelism = "future_lapply")</code>.
-You might also try <code>options(mc.cores = jobs)</code>,
-or see <code>future::.options</code>
-for environment variables that set the max number of jobs.</p>
 <p>If <code>parallelism</code> is <code>"Makefile"</code>,  Makefile-level parallelism is
 only used for targets in your workflow plan data frame, not imports.  To
 process imported objects and files, drake selects the best parallel backend

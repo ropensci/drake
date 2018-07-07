@@ -161,8 +161,8 @@ and it could lead to false negative results from
   <span class='kw'>skip_targets</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_imports</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>skip_safety_checks</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>lazy_load</span> <span class='kw'>=</span> <span class='st'>"eager"</span>, <span class='kw'>session_info</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cache_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>caching</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"worker"</span>, <span class='st'>"master"</span>), <span class='kw'>keep_going</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>imports_only</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pruning_strategy</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"speed"</span>,
-  <span class='st'>"memory"</span>), <span class='kw'>makefile_path</span> <span class='kw'>=</span> <span class='st'>"Makefile"</span>, <span class='kw'>console_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>session</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>imports_only</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pruning_strategy</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lookahead"</span>,
+  <span class='st'>"speed"</span>, <span class='st'>"memory"</span>), <span class='kw'>makefile_path</span> <span class='kw'>=</span> <span class='st'>"Makefile"</span>, <span class='kw'>console_log_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ensure_workers</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -273,16 +273,6 @@ download and install Rtools.</p>
 have different parallelism needs. To use at most 2 jobs at a time
 for imports and at most 4 jobs at a time for targets, call
 <code><a href='make.html'>make(..., jobs = c(imports = 2, targets = 4))</a></code>.</p>
-<p>For <code>"future_lapply"</code> parallelism, <code>jobs</code>
-only applies to the imports.
-To set the max number of jobs for <code>"future_lapply"</code>
-parallelism, set the <code>workers</code>
-argument where it exists: for example, call
-<code><a href='http://www.rdocumentation.org/packages/future/topics/plan'>future::plan(multisession(workers = 4))</a></code>,
-then call <code><a href='make.html'>make</a>(your_plan, parallelism = "future_lapply")</code>.
-You might also try <code>options(mc.cores = jobs)</code>,
-or see <code>future::.options</code>
-for environment variables that set the max number of jobs.</p>
 <p>If <code>parallelism</code> is <code>"Makefile"</code>,  Makefile-level parallelism is
 only used for targets in your workflow plan data frame, not imports.  To
 process imported objects and files, drake selects the best parallel backend
@@ -510,7 +500,20 @@ use <code><a href='clean.html'>clean(destroy = TRUE)</a></code>.</p></td>
     </tr>
     <tr>
       <th>caching</th>
-      <td><p>character string, only applies to <code>"future"</code> parallelism.</p></td>
+      <td><p>character string, only applies to <code>"future"</code> parallelism.
+Can be either <code>"master"</code> or <code>"worker"</code>.</p><ul>
+<li><p><code>"master"</code>: Targets are built by remote workers and sent back to
+the master process. Then, the master process saves them to the
+cache (<code>config$cache</code>, usually a file system <code>storr</code>).
+Appropriate if remote workers do not have access to the file system
+of the calling R session. Targets are cached one at a time,
+which may be slow in some situations.</p></li>
+<li><p><code>"worker"</code>: Remote workers not only build the targets, but also
+save them to the cache. Here, caching happens in parallel.
+However, remote workers need to have access to the file system
+of the calling R session. Transferring target data across
+a network can be slow.</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>keep_going</th>
@@ -536,18 +539,23 @@ with the last few targets it builds.</p></td>
     </tr>
     <tr>
       <th>pruning_strategy</th>
-      <td><p>Character scalar, either <code>"speed"</code> (default)
-or <code>"memory"</code>. These are alternative approaches to how <code>drake</code>
-keeps non-import dependencies in memory when it builds a target.
-If <code>pruning_strategy</code> is <code>"memory"</code>, <code>drake</code> removes all targets
-from memory (i.e. <code>config$envir</code>) except the direct dependencies
-of the target is about to build. This is suitable for data so large
-that the optimal strategy is to minimize memory consumption.
-If <code>pruning_strategy</code> is <code>"speed"</code>, <code>drake</code> loads all the dependencies
-and keeps in memory everything that will eventually be a
-dependency of a downstream target. This strategy consumes more
-memory, but does more to minimize the number of times data is
-read from storage/disk.</p></td>
+      <td><p>Character scalar, name of the
+approach that <code>drake</code> takes regarding when to unload targets
+from memory. Choices:</p><ul>
+<li><p><code>"lookahead"</code> (default): keep loaded targets in memory until they are
+no longer needed as dependencies in downstream build steps.
+Then, unload them from the environment. This step avoids
+keeping unneeded data in memory and minimizes expensive
+reads from the cache. However, it requires looking ahead
+in the dependency graph, which could add overhead for every
+target of projects with lots of targets.</p></li>
+<li><p><code>"speed"</code>: Once a target is loaded in memory, just keep it there.
+Maximizes speed, but hogs memory.</p></li>
+<li><p><code>"memory"</code>: For each target, unload everything from memory
+except the target's direct dependencies. Conserves memory,
+but sacrifices speed because each new target needs to reload
+any previously unloaded targets from the cache.</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>makefile_path</th>

@@ -1,5 +1,4 @@
 roxygen2::roxygenize()
-codemetar::write_codemeta()
 rmarkdown::render("README.Rmd")
 unlink("docs", recursive = TRUE)
 pkgdown::build_site()
