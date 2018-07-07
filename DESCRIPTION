@@ -95,11 +95,9 @@ Suggests:
   callr,
   clustermq,
   DBI,
-  ggplot2,
   MASS,
   methods,
   RSQLite,
-  readxl,
   rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8

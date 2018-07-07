@@ -19,8 +19,11 @@ addons:
 r_packages:
   - clustermq
   - covr
+  - forcats
+  - ggplot2
   - lintr
   - pkgdown
+  - readxl
 
 before_script:
   - chmod +x ./pkgdown.sh
