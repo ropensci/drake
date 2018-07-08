@@ -53,7 +53,7 @@ in_progress()
 }
 }
 \seealso{
-\code{\link[=diagnose]{diagnose()}}, \code{\link[=session]{session()}},
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=drake_session]{drake_session()}},
 \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
 \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

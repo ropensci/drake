@@ -23,7 +23,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 }}
 }
 \value{
-\code{args} for \code{\link{system2}(command, args)}
+\code{args} for \code{system2(command, args)}
 }
 \description{
 For \code{make(..., parallelism = "Makefile")},

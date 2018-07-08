@@ -8,7 +8,7 @@ default_long_hash_algo(cache = NULL)
 }
 \arguments{
 \item{cache}{optional drake cache.
-When you \code{\link{configure_cache}(cache)} without
+When you \code{configure_cache(cache)} without
 supplying a long hash algorithm,
 \code{default_long_hash_algo(cache)} is the long
 hash algorithm that drake picks for you.}
@@ -22,7 +22,7 @@ at \url{https://ropenscilabs.github.io/drake-manual/store.html}
 for details.
 }
 \details{
-The long algorithm must be among \code{\link{available_hash_algos}{}},
+The long algorithm must be among \code{\link[=available_hash_algos]{available_hash_algos()}},
 which is just the collection of algorithms available to the \code{algo}
 argument in \code{digest::digest()}. \cr \cr
 
@@ -30,7 +30,7 @@ If you express no preference for a hash, drake will use
 the long hash for the existing project, or
 \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} for a new project.
 If you do supply a hash algorithm, it will only apply to
-fresh projects (see \code{\link{clean}(destroy = TRUE)}).
+fresh projects (see \code{clean(destroy = TRUE)}).
 For a project that already exists, if you supply a hash algorithm,
 drake will warn you and then ignore your choice, opting instead for
 the hash algorithm already chosen for the project

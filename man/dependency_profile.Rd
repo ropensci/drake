@@ -11,7 +11,7 @@ dependency_profile(target, config = drake::read_drake_config())
 \item{target}{name of the target}
 
 \item{config}{configuration list output by
-\code{\link[=config]{config()}} or \code{\link[=make]{make()}}}
+\code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}}
 }
 \value{
 A list of information that drake takes into account
@@ -36,7 +36,7 @@ dependency_profile(file_store("report.md"), config = con)
 }
 }
 \seealso{
-\code{\link[=read_drake_meta]{read_drake_meta()}},
+\code{\link[=diagnose]{diagnose()}},
 \code{\link[=deps_code]{deps_code()}}, \code{\link[=make]{make()}},
-\code{\link[=config]{config()}}
+\code{\link[=drake_config]{drake_config()}}
 }

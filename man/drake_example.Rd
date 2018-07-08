@@ -43,5 +43,5 @@ drake_example("slurm")
 }
 \seealso{
 \code{\link[=drake_examples]{drake_examples()}}, \code{\link[=make]{make()}},
-\code{\link[=shell_file]{shell_file()}}, \code{\link[=drake_batchtools_tmpl_file]{drake_batchtools_tmpl_file()}}
+\code{\link[=shell_file]{shell_file()}}, \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}}
 }

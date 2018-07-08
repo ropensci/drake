@@ -13,7 +13,7 @@ progress(..., list = character(0), no_imported_objects = FALSE,
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
 or character strings (quoted). Similar to \code{...} in
-\code{\link{remove}(...)}.}
+\code{remove()} and \code{rm()}.}
 
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
@@ -76,7 +76,7 @@ progress(no_imported_objects = TRUE) # Ignore imported R objects.
 }
 }
 \seealso{
-\code{\link[=diagnose]{diagnose()}}, \code{\link[=session]{session()}},
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=drake_session]{drake_session()}},
 \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
 \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

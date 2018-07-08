@@ -35,7 +35,7 @@ colors <- c(
 #' in the graph visualizations.
 #' So if you want to contribute improvements to the palette,
 #' please both `drake_palette()` and
-#' \code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}
+#' `visNetwork::visNetwork(nodes = legend_nodes())`
 #' @return There is a console message,
 #'   but the actual return value is `NULL`.
 #' @examples

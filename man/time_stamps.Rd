@@ -3,7 +3,7 @@
 \name{time_stamps}
 \alias{time_stamps}
 \title{Write dummy timestamp files for
-\code{\link{make}(..., parallelism = "Makefile")}.}
+\code{make(..., parallelism = "Makefile")}.}
 \usage{
 time_stamps(config)
 }

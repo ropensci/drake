@@ -54,5 +54,5 @@ suppressWarnings(check_plan(my_plan))
 }
 }
 \seealso{
-\code{ink{drake_plan}}, \code{\link[=make]{make()}}
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

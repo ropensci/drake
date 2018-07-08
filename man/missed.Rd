@@ -8,8 +8,7 @@ plan but missing from your workspace.}
 missed(config = drake::read_drake_config())
 }
 \arguments{
-\item{config}{internal runtime parameter list of
-\code{\link{make}(...)},
+\item{config}{internal runtime parameter list
 produced by both \code{\link[=drake_config]{drake_config()}} and \code{\link[=make]{make()}}.}
 }
 \value{

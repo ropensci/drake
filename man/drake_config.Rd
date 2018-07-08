@@ -83,8 +83,7 @@ For example, \code{function(code){force(code)}} is a good hook
 and \code{function(code){message("Avoiding the code")}} is a bad hook.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
-See also \code{\link[=get_cache]{get_cache()}}, \code{\link[=this_cache]{this_cache()}},
-and \code{\link[=recover_cache]{recover_cache()}}}
+See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}
 
 \item{fetch_cache}{character vector containing lines of code.
 The purpose of this code is to fetch the \code{storr} cache
@@ -164,7 +163,7 @@ Defaults to the usual \code{"make"}
 but it could also be
 \code{"lsmake"} on supporting systems, for example.
 \code{command} and \code{args} are executed via
-\code{\link{system2}(command, args)} to run the Makefile.
+\code{system2(command, args)} to run the Makefile.
 If \code{args} has something like \code{"--jobs=2"}, or if
 \code{jobs >= 2} and \code{args} is left alone, targets
 will be distributed over independent parallel R sessions
@@ -175,7 +174,7 @@ distributed computing. For advanced users only. If set,
 \code{jobs} and \code{verbose} are overwritten as they apply to the
 Makefile.
 \code{command} and \code{args} are executed via
-\code{\link{system2}(command, args)} to run the Makefile.
+\code{system2(command, args)} to run the Makefile.
 If \code{args} has something like \code{"--jobs=2"}, or if
 \code{jobs >= 2} and \code{args} is left alone, targets
 will be distributed over independent parallel R sessions
@@ -219,7 +218,7 @@ will no longer work if you do that.}
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.
 The graph is constructed by \code{\link[=build_drake_graph]{build_drake_graph()}}.
-You can also get one from \code{\link{config}(my_plan)$graph}.
+You can also get one from \code{drake_config(my_plan)$graph}.
 Overrides \code{skip_imports}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.

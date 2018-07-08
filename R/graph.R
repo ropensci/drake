@@ -99,11 +99,11 @@ code_deps_to_edges <- function(target, deps){
 
 #' @title Prune the dependency network of your project.
 #' @export
-#' @seealso [build_drake_graph()], [config()],
+#' @seealso [build_drake_graph()], [drake_config()],
 #'   [make()]
 #' @description `igraph` objects are used
 #' internally to represent the dependency network of your workflow.
-#' See \code{\link{config}(my_plan)$graph} from the mtcars example.
+#' See `drake_config(my_plan)$graph` from the mtcars example.
 #' @details For a supplied graph, take the subgraph of all combined
 #' incoming paths to the vertices in `to`. In other words,
 #' remove the vertices after `to` from the graph.

@@ -7,7 +7,7 @@
 make_imports(config = drake::read_drake_config())
 }
 \arguments{
-\item{config}{a configuration list returned by \code{\link[=config]{config()}}}
+\item{config}{a configuration list returned by \code{\link[=drake_config]{drake_config()}}}
 }
 \value{
 The master internal configuration list
@@ -46,6 +46,6 @@ make_targets(config = con)
 }
 }
 \seealso{
-\code{\link[=make]{make()}}, \code{\link[=config]{config()}},
+\code{\link[=make]{make()}}, \code{\link[=drake_config]{drake_config()}},
 \code{\link[=make_targets]{make_targets()}}
 }

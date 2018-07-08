@@ -5,7 +5,7 @@
 #' https://ropenscilabs.github.io/drake-manual/mtcars.html.
 #' To see the names of all the examples, run [drake_examples()].
 #' @seealso [drake_examples()], [make()],
-#'   [shell_file()], [drake_batchtools_tmpl_file()]
+#'   [shell_file()], [drake_hpc_template_file()]
 #' @export
 #' @return `NULL`
 #' @param example name of the example.

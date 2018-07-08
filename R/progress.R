@@ -31,7 +31,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 #'   (1) are currently being built during a [make()], or
 #'   (2) were being built if the last [make()] quit unexpectedly.
 #' @description Similar to [progress()].
-#' @seealso [diagnose()], [session()],
+#' @seealso [diagnose()], [drake_session()],
 #'   [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
@@ -61,7 +61,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @description Together, functions `failed` and
 #' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
-#' @seealso [diagnose()], [session()],
+#' @seealso [diagnose()], [drake_session()],
 #'   [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
@@ -104,7 +104,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' @description Objects that drake imported, built, or attempted
 #' to build are listed as `"finished"` or `"in progress"`.
 #' Skipped objects are not listed.
-#' @seealso [diagnose()], [session()],
+#' @seealso [diagnose()], [drake_session()],
 #'   [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
@@ -116,7 +116,7 @@ failed <- function(path = getwd(), search = TRUE,
 #'
 #' @param ... objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
-#'   \code{\link{remove}(...)}.
+#'   `remove()` and `rm()`.
 #'
 #' @param list character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].

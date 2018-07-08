@@ -2,7 +2,7 @@
 #'   to represent the state of the cache.
 #' @description
 #' This functionality is like
-#' \code{\link{make}(..., cache_log_file = TRUE)},
+#' `make(..., cache_log_file = TRUE)`,
 #' but separated and more customizable.
 #' The `drake_cache_log_file()` function writes a flat text file
 #' to represents the state of all the targets and imports in the cache.
@@ -80,7 +80,7 @@ drake_cache_log_file <- function(
 #' @title Get a table that represents the state of the cache.
 #' @description
 #' This functionality is like
-#' \code{\link{make}(..., cache_log_file = TRUE)},
+#' `make(..., cache_log_file = TRUE)`,
 #' but separated and more customizable. Hopefully, this functionality
 #' is a step toward better data versioning tools.
 #' @details A hash is a fingerprint of an object's value.

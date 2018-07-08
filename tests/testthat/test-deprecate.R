@@ -182,3 +182,22 @@ test_with_dir("example template files (deprecated)", {
   )
   expect_true(file.exists("slurm_batchtools.tmpl"))
 })
+
+test_with_dir("plan set 1", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  for (tidy_evaluation in c(TRUE, FALSE)){
+    expect_warning(x <- drake_plan(
+      a = c,
+      b = "c",
+      list = c(c = "d", d = "readRDS('e')"),
+      tidy_evaluation = tidy_evaluation,
+      strings_in_dots = "filenames"
+    ))
+    y <- tibble(
+      target = letters[1:4],
+      command = c("c", "'c'",
+      "d", "readRDS('e')"))
+    expect_equal(x, y)
+    expect_warning(check_plan(x))
+  }
+})

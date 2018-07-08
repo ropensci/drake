@@ -16,7 +16,7 @@
 #' @export
 #' @return The master internal configuration list, mostly
 #'   containing arguments to `make()` and important objects
-#'   constructed along the way. See [config()]
+#'   constructed along the way. See [drake_config()]
 #'   for more details.
 #' @inheritParams drake_config
 #' @param config Master configuration list produced by both
@@ -31,7 +31,6 @@
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' outdated(config) # Which targets need to be (re)built?
-#' my_jobs = max_useful_jobs(config) # Depends on what is up to date.
 #' make(my_plan, jobs = 2) # Build what needs to be built.
 #' outdated(config) # Everything is up to date.
 #' # Change one of your imported function dependencies.
@@ -274,11 +273,11 @@ make_with_schedules <- function(config){
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
 #' @export
-#' @seealso [make()], [config()],
+#' @seealso [make()], [drake_config()],
 #'   [make_targets()]
 #' @return The master internal configuration list
 #'   used by [make()].
-#' @param config a configuration list returned by [config()]
+#' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -318,11 +317,11 @@ make_imports <- function(config = drake::read_drake_config()){
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
 #' @export
-#' @seealso [make()], [config()],
+#' @seealso [make()], [drake_config()],
 #'   [make_imports()]
 #' @return The master internal configuration list
 #'   used by [make()].
-#' @param config a configuration list returned by [config()]
+#' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

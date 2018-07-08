@@ -10,7 +10,7 @@ plan_summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 \arguments{
 \item{plan}{workflow plan data frame with commands for the summaries.
 Use the \code{analysis__} and \code{dataset__} wildcards
-just like the \code{dataset__} wildcard in \code{\link[=analyses]{analyses()}}.}
+just like the \code{dataset__} wildcard in \code{\link[=plan_analyses]{plan_analyses()}}.}
 
 \item{analyses}{workflow plan data frame of analysis instructions}
 
@@ -19,7 +19,7 @@ or import the datasets.}
 
 \item{gather}{Character vector, names of functions to gather the
 summaries. If not \code{NULL}, the length must be the number of
-rows in the \code{plan}. See the \code{\link[=gather]{gather()}} function
+rows in the \code{plan}. See the \code{\link[=gather_plan]{gather_plan()}} function
 for more.}
 }
 \value{

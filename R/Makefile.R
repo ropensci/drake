@@ -162,7 +162,7 @@ mk <- function(
 #' It is an internal function, and most users do not need to
 #' worry about it.
 #' @export
-#' @return `args` for \code{\link{system2}(command, args)}
+#' @return `args` for `system2(command, args)`
 #' @inheritParams drake_config
 #' @param jobs number of jobs
 #' @examples

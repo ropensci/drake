@@ -12,7 +12,6 @@ predict_runtime(config = drake::read_drake_config(), targets = NULL,
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
-\code{\link{make}(...)},
 produced by both \code{\link[=make]{make()}} and
 \code{\link[=drake_config]{drake_config()}}.}
 

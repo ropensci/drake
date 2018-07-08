@@ -1,7 +1,7 @@
 #' @title Read and return a drake target/import from the cache.
 #' @description Does not delete the item from the cache.
 #' @seealso [loadd()], [cached()],
-#'   [built()], \code{link{imported}}, [drake_plan()],
+#'   [built()], [imported()], [drake_plan()],
 #'   [make()]
 #' @export
 #' @return The cached value of the `target`.

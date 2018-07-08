@@ -72,6 +72,6 @@ readd(file_store("report.md"), character_only = TRUE)
 }
 \seealso{
 \code{\link[=loadd]{loadd()}}, \code{\link[=cached]{cached()}},
-\code{\link[=built]{built()}}, \code{link{imported}}, \code{\link[=drake_plan]{drake_plan()}},
+\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}},
 \code{\link[=make]{make()}}
 }

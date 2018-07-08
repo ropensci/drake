@@ -34,7 +34,7 @@ shell_file()
 }
 }
 \seealso{
-\code{\link[=make]{make()}}, \code{\link[=max_useful_jobs]{max_useful_jobs()}},
+\code{\link[=make]{make()}}
 \code{\link[=parallelism_choices]{parallelism_choices()}}, \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}},
 \code{\link[=drake_example]{drake_example()}}, \code{\link[=drake_examples]{drake_examples()}}
 }

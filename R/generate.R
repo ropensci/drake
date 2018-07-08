@@ -287,8 +287,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE){
 #' @param plan workflow plan data frame of prespecified targets
 #' @param target name of the new aggregated target
 #' @param gather function used to gather the targets. Should be
-#'   one of \code{\link{list}(...)}, \code{\link{c}(...)},
-#'   \code{\link{rbind}(...)}, or similar.
+#'   one of `list(...)`, `c(...)`, `rbind(...)`, or similar.
 #' @examples
 #' # Workflow plan for datasets:
 #' datasets <- drake_plan(
@@ -465,13 +464,13 @@ plan_analyses <- function(plan, datasets){
 #'   analyses of multiple datasets in multiple ways.
 #' @param plan workflow plan data frame with commands for the summaries.
 #'   Use the `analysis__` and `dataset__` wildcards
-#'   just like the `dataset__` wildcard in [analyses()].
+#'   just like the `dataset__` wildcard in [plan_analyses()].
 #' @param analyses workflow plan data frame of analysis instructions
 #' @param datasets workflow plan data frame with instructions to make
 #'   or import the datasets.
 #' @param gather Character vector, names of functions to gather the
 #'   summaries. If not `NULL`, the length must be the number of
-#'   rows in the `plan`. See the [gather()] function
+#'   rows in the `plan`. See the [gather_plan()] function
 #'   for more.
 #' @examples
 #' # Create the part of the workflow plan data frame for the datasets.

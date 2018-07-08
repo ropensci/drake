@@ -71,8 +71,8 @@
 #'   For your own custom hooks, treat the first argument as the code
 #'   that builds a target, and make sure this argument is actually evaluated.
 #'   Otherwise, the code will not run and none of your targets will build.
-#'   For example, \code{function(code){force(code)}} is a good hook
-#'   and \code{function(code){message("Avoiding the code")}} is a bad hook.
+#'   For example, `function(code){force(code)}` is a good hook
+#'   and `function(code){message("Avoiding the code")}` is a bad hook.
 #'
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
@@ -148,7 +148,7 @@
 #'   but it could also be
 #'   `"lsmake"` on supporting systems, for example.
 #'   `command` and `args` are executed via
-#'   \code{\link{system2}(command, args)} to run the Makefile.
+#'   `system2(command, args)` to run the Makefile.
 #'   If `args` has something like `"--jobs=2"`, or if
 #'   `jobs >= 2` and `args` is left alone, targets
 #'   will be distributed over independent parallel R sessions
@@ -159,7 +159,7 @@
 #'   `jobs` and `verbose` are overwritten as they apply to the
 #'   Makefile.
 #'   `command` and `args` are executed via
-#'   \code{\link{system2}(command, args)} to run the Makefile.
+#'   `system2(command, args)` to run the Makefile.
 #'   If `args` has something like `"--jobs=2"`, or if
 #'   `jobs >= 2` and `args` is left alone, targets
 #'   will be distributed over independent parallel R sessions
@@ -178,8 +178,7 @@
 #'   will no longer work if you do that.
 #'
 #' @param cache drake cache as created by [new_cache()].
-#'   See also [get_cache()], [this_cache()],
-#'   and [recover_cache()]
+#'   See also [get_cache()] and [this_cache()].
 #'
 #' @param fetch_cache character vector containing lines of code.
 #'   The purpose of this code is to fetch the `storr` cache
@@ -216,7 +215,7 @@
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
 #'   The graph is constructed by [build_drake_graph()].
-#'   You can also get one from \code{\link{config}(my_plan)$graph}.
+#'   You can also get one from `drake_config(my_plan)$graph`.
 #'   Overrides `skip_imports`.
 #'
 #' @param trigger Name of the trigger to apply to all targets.

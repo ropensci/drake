@@ -91,7 +91,7 @@ deps_code <- function(x){
 #' @param targets a character vector of target names
 #' @param config an output list from [drake_config()]
 #' @param reverse logical, whether to compute reverse dependencies
-#'   (targets immediately downstream) instead of ordinary dependencies. 
+#'   (targets immediately downstream) instead of ordinary dependencies.
 #' @return A character vector, names of dependencies.
 #'   Files wrapped in escaped double quotes.
 #'   The other names listed are functions or generic R objects.
@@ -125,12 +125,12 @@ deps_targets <- function(
 #' @return A list of information that drake takes into account
 #'   when examining the dependencies of the target.
 #' @export
-#' @seealso [read_drake_meta()],
+#' @seealso [diagnose()],
 #'   [deps_code()], [make()],
-#'   [config()]
+#'   [drake_config()]
 #' @param target name of the target
 #' @param config configuration list output by
-#'   [config()] or [make()]
+#'   [drake_config()] or [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -252,6 +252,7 @@ command_dependencies <- function(command){
 
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
+
   use_new_file_api <- identical(
     pkgconfig::get_config("drake::strings_in_dots"),
     "literals"

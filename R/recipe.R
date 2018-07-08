@@ -1,4 +1,4 @@
-#' @title For \code{\link{make}(..., parallelism = "Makefile")},
+#' @title For `make(..., parallelism = "Makefile")`,
 #'   see what your `Makefile` recipes
 #'   will look like in advance.
 #' @export
@@ -85,7 +85,7 @@ Makefile_recipe <- function( # nolint
 }
 
 #' @title Show the default
-#'   recipe command for \code{\link{make}(..., parallelism = "Makefile")}.
+#'   recipe command for `make(..., parallelism = "Makefile")`.
 #' @export
 #' @seealso [Makefile_recipe()]
 #' @description See the help file of [Makefile_recipe()]
@@ -98,7 +98,7 @@ default_recipe_command <- function(){
 }
 
 #' @title Show the R recipe wildcard
-#'   for \code{\link{make}(..., parallelism = "Makefile")}.
+#'   for `make(..., parallelism = "Makefile")`.
 #' @export
 #' @seealso [default_recipe_command()]
 #' @description Relevant to `"Makefile"` parallelism only.

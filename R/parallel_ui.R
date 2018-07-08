@@ -136,7 +136,7 @@ default_parallelism <- function() {
 #'   `make(..., parallelism = 'Makefile', prepend = 'SHELL=./shell.sh')`.
 #' @description This function also does a `chmod +x`
 #' to enable execute permissions.
-#' @seealso [make()], [max_useful_jobs()],
+#' @seealso [make()]
 #'   [parallelism_choices()], [drake_hpc_template_file()],
 #'   [drake_example()], [drake_examples()]
 #' @export

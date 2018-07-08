@@ -11,7 +11,7 @@ cached(..., list = character(0), no_imported_objects = FALSE,
 \arguments{
 \item{...}{objects to load from the cache, as names (unquoted)
 or character strings (quoted). Similar to \code{...} in
-\code{\link{remove}(...)}.}
+\code{remove()}.}
 
 \item{list}{character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}

@@ -13,7 +13,7 @@
 #'
 #' @param ... objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
-#'   \code{\link{remove}(...)}.
+#'   `remove()`.
 #'
 #' @param list character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
@@ -128,8 +128,7 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs){
 #' @title List all the built targets (non-imports) in the cache.
 #' @description Targets are listed in the workflow plan
 #' data frame (see [drake_plan()].
-#' @seealso [cached()], [loadd()],
-#'   \code{link{imported}}
+#' @seealso [cached()], [loadd()], [imported()]
 #' @export
 #' @return Character vector naming the built targets in the cache.
 #' @inheritParams cached

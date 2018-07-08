@@ -3,7 +3,7 @@
 \name{r_recipe_wildcard}
 \alias{r_recipe_wildcard}
 \title{Show the R recipe wildcard
-for \code{\link{make}(..., parallelism = "Makefile")}.}
+for \code{make(..., parallelism = "Makefile")}.}
 \usage{
 r_recipe_wildcard()
 }

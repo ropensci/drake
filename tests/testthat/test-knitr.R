@@ -1,3 +1,4 @@
+# All deprecated functionality
 drake_context("knitr")
 
 test_with_dir("empty cases", {

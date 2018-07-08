@@ -22,7 +22,7 @@ This palette applies to console output
 in the graph visualizations.
 So if you want to contribute improvements to the palette,
 please both \code{drake_palette()} and
-\code{visNetwork::visNetwork(nodes = \link{legend_nodes}())}
+\code{visNetwork::visNetwork(nodes = legend_nodes())}
 }
 \examples{
 # Show drake's color palette as text.

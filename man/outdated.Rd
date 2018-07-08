@@ -8,8 +8,7 @@ outdated(config = drake::read_drake_config(), make_imports = TRUE,
   do_prework = TRUE)
 }
 \arguments{
-\item{config}{option internal runtime parameter list of
-\code{\link{make}(...)},
+\item{config}{option internal runtime parameter list
 produced with \code{\link[=drake_config]{drake_config()}}.
 You must use a fresh \code{config} argument with an up-to-date
 \code{config$targets} element that was never modified by hand.

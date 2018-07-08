@@ -7,7 +7,7 @@
 #' and then analyze them with regression models.
 #' Finally, we summarize the regression models
 #' to see if there is an association.
-#' @details Use \code{\link{drake_example}("mtcars")} to get the code
+#' @details Use `drake_example("mtcars")` to get the code
 #' for the mtcars example. The included R script is a detailed,
 #' heavily-commented walkthrough. The chapter of the user manual at
 #' <https://ropenscilabs.github.io/drake-manual/mtcars.html> # nolint

@@ -2,7 +2,7 @@
 % Please edit documentation in R/recipe.R
 \name{Makefile_recipe}
 \alias{Makefile_recipe}
-\title{For \code{\link{make}(..., parallelism = "Makefile")},
+\title{For \code{make(..., parallelism = "Makefile")},
 see what your \code{Makefile} recipes
 will look like in advance.}
 \usage{

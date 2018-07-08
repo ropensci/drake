@@ -93,10 +93,10 @@ test_with_dir("mtcars example works", {
     strings_in_dots = "literals"
   )
   suppressWarnings(con <- drake_config(plan = x))
-  for (target in c("a", "d")){
+  for (target in c("a")){
     expect_true("small" %in% dependencies(targets = target, config = con))
   }
-  for (target in c("b", "c", "e", "f")){
+  for (target in c("b", "c")){
     expect_false("small" %in% dependencies(targets = target, config = con))
   }
 })

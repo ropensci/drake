@@ -47,7 +47,7 @@ in the cache
 }
 \description{
 This functionality is like
-\code{\link{make}(..., cache_log_file = TRUE)},
+\code{make(..., cache_log_file = TRUE)},
 but separated and more customizable. Hopefully, this functionality
 is a step toward better data versioning tools.
 }

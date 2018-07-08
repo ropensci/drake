@@ -162,7 +162,6 @@ predict_runtime <- function(
 #'   of the names of the targets assigned to each worker.
 #'   For each worker, targets are listed in the order they are assigned.
 #' @param config option internal runtime parameter list of
-#'   \code{\link{make}(...)},
 #'   produced by both [make()] and
 #'   [drake_config()].
 #' @param targets Character vector, names of targets.

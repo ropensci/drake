@@ -54,6 +54,5 @@ built() # List all the cached targets (built objects and files).
 }
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}},
-\code{link{imported}}
+\code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}}, \code{\link[=imported]{imported()}}
 }

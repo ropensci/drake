@@ -40,8 +40,7 @@ first_outdated <- function(config) {
 #' @seealso [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
-#' @param config option internal runtime parameter list of
-#'   \code{\link{make}(...)},
+#' @param config option internal runtime parameter list
 #'   produced with [drake_config()].
 #'   You must use a fresh `config` argument with an up-to-date
 #'   `config$targets` element that was never modified by hand.
@@ -99,8 +98,7 @@ outdated <-  function(
 #' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
 #'
-#' @param config internal runtime parameter list of
-#'   \code{\link{make}(...)},
+#' @param config internal runtime parameter list
 #'   produced by both [drake_config()] and [make()].
 #'
 #' @examples

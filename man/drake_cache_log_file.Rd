@@ -50,7 +50,7 @@ There is no return value, but a log file is generated.
 }
 \description{
 This functionality is like
-\code{\link{make}(..., cache_log_file = TRUE)},
+\code{make(..., cache_log_file = TRUE)},
 but separated and more customizable.
 The \code{drake_cache_log_file()} function writes a flat text file
 to represents the state of all the targets and imports in the cache.

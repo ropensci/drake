@@ -8,7 +8,7 @@ default_short_hash_algo(cache = NULL)
 }
 \arguments{
 \item{cache}{optional drake cache.
-When you \code{\link{configure_cache}(cache)} without
+When you \code{\link[=configure_cache]{configure_cache()}} without
 supplying a short hash algorithm,
 \code{default_short_hash_algo(cache)} is the short
 hash algorithm that drake picks for you.}
@@ -22,7 +22,7 @@ at \url{https://ropenscilabs.github.io/drake-manual/store.html}
 for details.
 }
 \details{
-The short algorithm must be among \code{\link{available_hash_algos}{}},
+The short algorithm must be among \code{\link[=available_hash_algos]{available_hash_algos()}},
 which is just the collection of algorithms available to the \code{algo}
 argument in \code{\link[digest:digest]{digest::digest()}}. \cr \cr
 
@@ -30,7 +30,7 @@ If you express no preference for a hash, drake will use
 the short hash for the existing project, or
 \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} for a new project.
 If you do supply a hash algorithm, it will only apply to
-fresh projects (see \code{\link{clean}(destroy = TRUE)}).
+fresh projects (see \code{clean(destroy = TRUE)}).
 For a project that already exists, if you supply a hash algorithm,
 drake will warn you and then ignore your choice, opting instead for
 the hash algorithm already chosen for the project

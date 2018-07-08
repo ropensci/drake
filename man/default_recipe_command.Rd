@@ -3,7 +3,7 @@
 \name{default_recipe_command}
 \alias{default_recipe_command}
 \title{Show the default
-recipe command for \code{\link{make}(..., parallelism = "Makefile")}.}
+recipe command for \code{make(..., parallelism = "Makefile")}.}
 \usage{
 default_recipe_command()
 }

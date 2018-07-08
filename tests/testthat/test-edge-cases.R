@@ -101,7 +101,7 @@ test_with_dir("config and make without safety checks", {
     file = readRDS(file_in("my_file.rds")),
     strings_in_dots = "literals"
   )
-  expect_warning(tmp <- config(x, verbose = FALSE))
+  tmp <- drake_config(x, verbose = FALSE)
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
   expect_silent(check_drake_config(config = tmp))

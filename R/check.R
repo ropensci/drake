@@ -2,7 +2,7 @@
 #' @description Possible obvious errors include
 #' circular dependencies and
 #' missing input files.
-#' @seealso \code{ink{drake_plan}}, [make()]
+#' @seealso [drake_plan()], [make()]
 #' @export
 #' @return Invisibly return `plan`.
 #' @inheritParams cached

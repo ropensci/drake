@@ -21,7 +21,7 @@ argument in \code{\link[digest:digest]{digest::digest()}}.
 See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} for more.}
 
 \item{long_hash_algo}{long hash algorithm for drake.
-The long algorithm must be among \code{\link{available_hash_algos}{}},
+The long algorithm must be among \code{\link[=available_hash_algos]{available_hash_algos()}},
 which is just the collection of algorithms available to the \code{algo}
 argument in \code{digest::digest()}.
 See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} for more.}

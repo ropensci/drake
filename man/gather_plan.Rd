@@ -13,8 +13,7 @@ gather_plan(plan = NULL, target = "target", gather = "list")
 \item{target}{name of the new aggregated target}
 
 \item{gather}{function used to gather the targets. Should be
-one of \code{\link{list}(...)}, \code{\link{c}(...)},
-\code{\link{rbind}(...)}, or similar.}
+one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
 }
 \value{
 A workflow plan data frame that aggregates multiple

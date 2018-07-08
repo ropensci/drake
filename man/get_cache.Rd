@@ -70,5 +70,5 @@ x$list() # Or x$list(namespace = x$default_namespace)
 }
 \seealso{
 \code{\link[=this_cache]{this_cache()}}, \code{\link[=new_cache]{new_cache()}},
-\code{\link[=recover_cache]{recover_cache()}}, \code{\link[=config]{config()}}
+\code{\link[=recover_cache]{recover_cache()}}, \code{\link[=drake_config]{drake_config()}}
 }
