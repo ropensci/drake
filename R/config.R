@@ -16,8 +16,7 @@
 #' [outdated()]
 #' @export
 #' @return The master internal configuration list of a project.
-#' @seealso [make_with_config()], [make()],
-#'   [drake_plan()].
+#' @seealso [make()], [drake_plan()], [vis_drake_graph()]
 #' @param plan workflow plan data frame.
 #'   A workflow plan data frame is a data frame
 #'   with a `target` column and a `command` column.
@@ -366,6 +365,7 @@
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Construct the master internal configuration list.
 #' con <- drake_config(my_plan)
+#' vis_drake_graph(config)
 #' # These functions are faster than otherwise
 #' # because they use the configuration list.
 #' outdated(config = con) # Which targets are out of date?

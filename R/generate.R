@@ -105,6 +105,20 @@ dataset_wildcard <- function(){
 #' plan <- drake_plan(x = rnorm(n__), y = rexp(n__))
 #' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
 #' print(plan)
+#' # With the `trace` argument,
+#' # you can generate columns that show how the wildcards
+#' # were evaluated. Then you can visualize the wildcard groups
+#' # as clusters.
+#' plan <- drake_plan(x = rnorm(n__), y = rexp(n__))
+#' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
+#' print(plan)
+#' cache <- storr::storr_environment()
+#' config <- drake_config(plan, cache = cache)
+#' vis_drake_graph(config, group = "n__", clusters = "1")
+#' vis_drake_graph(config, group = "n__", clusters = c("1", "2"))
+#' make(plan, targets = c("x_1", "y_2"), cache = cache)
+#' # Optionally cluster on columns supplied by `drake_graph_info()$nodes`.
+#' vis_drake_graph(config, group = "status", clusters = "up to date")
 evaluate_plan <- function(
   plan,
   rules = NULL,

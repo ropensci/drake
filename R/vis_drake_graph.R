@@ -137,6 +137,8 @@ vis_drake_graph <- function(
 #' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
 #' config <- drake_config(my_plan) # Internal configuration list
+#' vis_drake_graph(config) # Jump straight to the interactive graph.
+#' # Get the node and edge info that vis_drake_graph() just plotted:
 #' graph <- drake_graph_info(config)
 #' # You can pass the data frames right to render_drake_graph()
 #' # (as in vis_drake_graph()) or you can create

@@ -212,3 +212,17 @@ test_with_dir("clusters", {
   expect_equal(node$type, "cluster")
   expect_equal(node$shape, unname(shape_of("cluster")))
 })
+
+test_with_dir("can get the graph info when a file is missing", {
+  load_mtcars_example()
+  unlink("report.Rmd")
+  expect_warning(
+    config <- drake_config(
+      my_plan,
+      cache = storr::storr_environment(),
+      session_info = FALSE
+    )
+  )
+  expect_warning(o <- drake_graph_info(config))
+  expect_true("missing" %in% o$nodes$status)
+})
