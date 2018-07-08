@@ -243,4 +243,7 @@ test_with_dir("static graphs", {
   make(config = config)
   gg <- static_drake_graph(config)
   expect_true(inherits(gg, "ggplot"))
+  if ("package:ggraph" %in% search()){
+    eval(parse(text = "detach('package:ggraph', unload = TRUE)"))
+  }
 })

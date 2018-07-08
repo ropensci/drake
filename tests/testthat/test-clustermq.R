@@ -29,4 +29,7 @@ test_with_dir("clustermq_staged parallelism", {
     verbose = 4
   )
   expect_equal(justbuilt(config), character(0))
+  if ("package:clustermq" %in% search()){
+    eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
+  }
 })
