@@ -88,17 +88,19 @@ Imports:
   tidyselect (>= 0.2.4),
   txtq,
   utils,
-  visNetwork,
   withr
 Suggests: 
   abind,
   callr,
   clustermq,
   DBI,
+  ggplot2,
+  ggraph,
   MASS,
   methods,
   RSQLite,
-  rmarkdown
+  rmarkdown,
+  visNetwork
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1

@@ -1,3 +1,15 @@
+assert_pkgs <- function(pkgs){
+  for (pkg in pkgs){
+    if (!requireNamespace(pkg, quietly = TRUE)){
+      stop(
+        "package ", pkg, " not installed. ",
+        "Install with install.packages(\"", pkg, "\").",
+        call. = FALSE
+      )
+    }
+  }
+}
+
 safe_grepl <- function(pattern, x, ...){
   tryCatch(grepl(pattern, x, ...), error = error_false)
 }

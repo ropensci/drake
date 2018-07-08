@@ -4,9 +4,9 @@
 #' this function is divided into
 #' [drake_graph_info()] and [render_drake_graph()].
 #' @export
-#' @aliases drake_graph
-#' @seealso [build_drake_graph()]
-#' @return A visNetwork graph.
+#' @seealso [render_drake_graph()], [static_drake_graph()],
+#'   [render_static_drake_graph()]
+#' @return A `visNetwork` graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_drake_graph
 #' @examples
@@ -16,7 +16,7 @@
 #' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
-#' config <- make(my_plan) # Run the project, build the targets.
+#' make(my_plan) # Run the project, build the targets.
 #' vis_drake_graph(config) # The red nodes from before are now green.
 #' # Plot a subgraph of the workflow.
 #' vis_drake_graph(
@@ -52,7 +52,8 @@ vis_drake_graph <- function(
   clusters = NULL,
   ...
 ){
-  raw_graph <- drake_graph_info(
+  assert_pkgs("visNetwork")
+  graph_info <- drake_graph_info(
     config = config,
     from = from,
     mode = mode,
@@ -70,9 +71,9 @@ vis_drake_graph <- function(
     clusters = clusters
   )
   if (is.null(main)){
-    main <- raw_graph$default_title
+    main <- graph_info$default_title
   }
-  render_drake_graph(raw_graph, file = file, selfcontained = selfcontained,
+  render_drake_graph(graph_info, file = file, selfcontained = selfcontained,
     layout = layout, direction = direction,
     navigationButtons = navigationButtons, # nolint
     hover = hover, main = main,
@@ -85,7 +86,9 @@ vis_drake_graph <- function(
 #' [vis_drake_graph()], which typical users
 #' call more often.
 #' @export
-#' @return A visNetwork graph.
+#' @seealso [vis_drake_graph()], [static_drake_graph()],
+#'   [render_static_drake_graph()]
+#' @return A `visNetwork` graph.
 #'
 #' @inheritParams drake_graph_info
 #'
@@ -110,7 +113,7 @@ vis_drake_graph <- function(
 #'   external resources placed in an adjacent directory. If `TRUE`,
 #'   pandoc is required.
 #'
-#' @param direction an argument to [visNetwork::visHierarchicalLayout()]
+#' @param direction an argument to `visNetwork::visHierarchicalLayout()`
 #'   indicating the direction of the graph.
 #'   Options include 'LR', 'RL', 'DU', and 'UD'.
 #'   At the time of writing this, the letters must be capitalized,
@@ -128,7 +131,7 @@ vis_drake_graph <- function(
 #' @param ncol_legend number of columns in the legend nodes.
 #'   To remove the legend entirely, set `ncol_legend` to `NULL` or `0`.
 #'
-#' @param ... arguments passed to [visNetwork()].
+#' @param ... arguments passed to `visNetwork()`.
 #'
 #' @examples
 #' \dontrun{
@@ -164,6 +167,7 @@ render_drake_graph <- function(
   ncol_legend = 1,
   ...
 ){
+  assert_pkgs("visNetwork")
   out <- visNetwork::visNetwork(
     nodes = graph_info$nodes,
     edges = graph_info$edges,

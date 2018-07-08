@@ -219,3 +219,10 @@ test_with_dir("GitHub issue 460", {
   expect_true("rnorm" %in% config$all_imports)
   make_targets(config)
 })
+
+test_with_dir("assert_pkgs", {
+  skip_on_cran()
+  expect_error(assert_pkgs("_$$$blabla"), regexp = "not installed")
+  expect_error(
+    assert_pkgs(c("digest", "_$$$blabla")), regexp = "not installed")
+})
