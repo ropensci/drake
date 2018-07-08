@@ -225,7 +225,8 @@ test_with_dir("packages are loaded in prework", {
   }
   if (R.utils::isPackageLoaded("MASS")){
     # Suppress goodpractice::gp(): legitimate need for detach()
-    eval(parse(text = "detach('package:MASS', unload = TRUE)"))
+    suppressWarnings(
+      eval(parse(text = "detach('package:MASS', unload = TRUE)")))
   }
   expect_error(abind(1))
   expect_error(deparse(body(lda)))
