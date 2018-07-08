@@ -26,7 +26,7 @@ or 'layout_as_tree'.
 Be careful with 'layout_as_tree': the graph is a directed
 acyclic graph, but not necessarily a tree.}
 
-\item{direction}{an argument to \code{\link[visNetwork:visHierarchicalLayout]{visNetwork::visHierarchicalLayout()}}
+\item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
 indicating the direction of the graph.
 Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized,
@@ -50,10 +50,10 @@ pandoc is required.}
 \item{ncol_legend}{number of columns in the legend nodes.
 To remove the legend entirely, set \code{ncol_legend} to \code{NULL} or \code{0}.}
 
-\item{...}{arguments passed to \code{\link[=visNetwork]{visNetwork()}}.}
+\item{...}{arguments passed to \code{visNetwork()}.}
 }
 \value{
-A visNetwork graph.
+A \code{visNetwork} graph.
 }
 \description{
 This function is called inside
@@ -86,4 +86,8 @@ graph <- drake_graph_info(
 render_drake_graph(graph)
 })
 }
+}
+\seealso{
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}, \code{\link[=static_drake_graph]{static_drake_graph()}},
+\code{\link[=render_static_drake_graph]{render_static_drake_graph()}}
 }

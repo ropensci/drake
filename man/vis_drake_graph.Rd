@@ -2,7 +2,6 @@
 % Please edit documentation in R/vis_drake_graph.R
 \name{vis_drake_graph}
 \alias{vis_drake_graph}
-\alias{drake_graph}
 \title{Show an interactive visual network representation
 of your drake project.}
 \usage{
@@ -57,7 +56,7 @@ acyclic graph, but not necessarily a tree.}
 
 \item{main}{character string, title of the graph}
 
-\item{direction}{an argument to \code{\link[visNetwork:visHierarchicalLayout]{visNetwork::visHierarchicalLayout()}}
+\item{direction}{an argument to \code{visNetwork::visHierarchicalLayout()}
 indicating the direction of the graph.
 Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized,
@@ -121,10 +120,10 @@ you must also supply the \code{clusters} argument.}
 These values must be elements of the column of the \code{nodes} data frame
 that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
-\item{...}{arguments passed to \code{\link[=visNetwork]{visNetwork()}}.}
+\item{...}{arguments passed to \code{visNetwork()}.}
 }
 \value{
-A visNetwork graph.
+A \code{visNetwork} graph.
 }
 \description{
 To save time for repeated plotting,
@@ -138,7 +137,7 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
-config <- make(my_plan) # Run the project, build the targets.
+make(my_plan) # Run the project, build the targets.
 vis_drake_graph(config) # The red nodes from before are now green.
 # Plot a subgraph of the workflow.
 vis_drake_graph(
@@ -158,5 +157,6 @@ vis_drake_graph(
 }
 }
 \seealso{
-\code{\link[=build_drake_graph]{build_drake_graph()}}
+\code{\link[=render_drake_graph]{render_drake_graph()}}, \code{\link[=static_drake_graph]{static_drake_graph()}},
+\code{\link[=render_static_drake_graph]{render_static_drake_graph()}}
 }
