@@ -124,9 +124,3 @@ render_static_drake_graph <- function(
     ggplot2::ggtitle(main) +
     ggplot2::labs(x = "", y = "")
 }
-
-rescale_01 <- function(x){
-  x <- x - min(x)
-  mx <- max(x)
-  x / ifelse(mx < .Machine$double.eps, 1, mx)
-}

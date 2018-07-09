@@ -78,3 +78,9 @@ clean_dependency_list <- function(x){
     unique() %>%
     sort()
 }
+
+rescale_01 <- function(x){
+  x <- x - min(x)
+  mx <- max(x)
+  x / ifelse(mx < .Machine$double.eps, 1, mx)
+}
