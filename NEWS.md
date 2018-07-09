@@ -1,5 +1,7 @@
 # Version 5.2.1.9000
 
+- Add `static_drake_graph()` and `render_static_drake_graph()` for `ggplot2`/`ggraph` static graph visualizations.
+- Add `group` and `clusters` arguments to `vis_drake_graph()`, `static_drake_graph()`, and `drake_graph_info()` to optionally condense nodes into clusters.
 - Implement a `trace` argument to `evaluate_plan()` to optionally add indicator columns to show which targets got expanded/evaluated with which wildcard values.
 - Rename the `always_rename` argument to `rename` in `evaluate_plan()`.
 - Add a `rename` argument to `expand_plan()`.
@@ -12,6 +14,8 @@
 - Prevent persistent workers from hanging when a target fails.
 - Move the example template files to https://github.com/ropensci/drake/tree/master/inst/hpc_template_files.
 - Deprecate `drake_batchtools_tmpl_file()` in favor of `drake_hpc_template_file()` and `drake_hpc_template_files()`.
+- Add a `garbage_collection` argument to `make()`. If `TRUE`, `gc()` is called after every new build of a target.
+- Remove redundant calls to `sanitize_plan()` in `make()`.
 
 # Version 5.2.1
 
