@@ -26,10 +26,10 @@ test_with_dir("build_target() does not need to access cache", {
   )
 })
 
-test_with_dir("cache log files and make()", {
+test_with_dir("cache log files, gc, and make()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = 1)
-  make(x, session_info = FALSE)
+  make(x, session_info = FALSE, garbage_collection = TRUE)
   expect_false(file.exists("drake_cache.log"))
   make(x, session_info = FALSE)
   expect_false(file.exists("drake_cache.log"))
@@ -191,7 +191,7 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
     expect_error(
       make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
   y <- data.frame(target = character(0), command = character(0))
-  expect_error(check_plan(y, envir = config$envir))
+  expect_error(suppressWarnings(check_plan(y, envir = config$envir)))
   suppressWarnings(
     expect_error(
       make(y, envir = config$envir, hook = silencer_hook,

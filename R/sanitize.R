@@ -48,7 +48,6 @@ drake_plan_columns <- function(){
 }
 
 sanitize_targets <- function(plan, targets){
-  plan <- sanitize_plan(plan)
   targets <- repair_target_names(targets)
   sanitize_nodes(nodes = targets, choices = plan$target)
 }

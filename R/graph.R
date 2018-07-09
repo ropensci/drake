@@ -9,7 +9,11 @@
 #' @return An igraph object representing
 #'   the workflow plan dependency network.
 #' @inheritParams drake_config
-#' @param sanitize_plan logical, whether to sanitize the workflow plan first.
+#' @param sanitize_plan logical, deprecated. If you must,
+#'   call `drake:::sanitize_plan()` to sanitize the plan
+#'   and/or `drake:::sanitize_targets()` to sanitize the targets
+#'   (or just get `plan` and `targets` and `graph` from
+#'   [drake_config()]).
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -21,18 +25,20 @@
 #' }
 build_drake_graph <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = plan$target,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
-  sanitize_plan = TRUE,
+  sanitize_plan = FALSE,
   console_log_file = NULL
 ){
   force(envir)
   if (sanitize_plan){
-    plan <- sanitize_plan(plan)
+    warning(
+      "The `sanitize_plan` argument to `build_drake_graph()` is deprecated.",
+      call. = FALSE
+    )
   }
-  targets <- sanitize_targets(plan, targets)
   imports <- as.list(envir)
   unload_conflicts(
     imports = names(imports),

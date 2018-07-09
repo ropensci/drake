@@ -28,7 +28,7 @@
 silencer_hook <- function(code){
   output_sink_hook(
     message_sink_hook(
-      force(code)
+      code
     )
   )
 }
@@ -65,7 +65,7 @@ message_sink_hook <- function(code){
     close(message)
   })
   sink(message, type = "message")
-  force(code)
+  code
 }
 
 #' @title An example `hook` argument to
@@ -98,7 +98,7 @@ output_sink_hook <- function(code){
   output <- paste0("output", Sys.getpid(), ".txt")
   on.exit(suppressWarnings(sink(type = "output")))
   sink(output, type = "output")
-  force(code)
+  code
 }
 
 #' @title A `hook` argument to [make()]
@@ -139,5 +139,5 @@ empty_hook <- function(code){
 #' })
 #' }
 default_hook <- function(code){
-  force(code)
+  code
 }

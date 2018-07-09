@@ -104,16 +104,11 @@ test_with_dir(
 test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  x <- sort(
-    tracked(plan = config$plan, envir = config$envir, verbose = FALSE))
+  x <- sort(tracked(config))
   y <- sort(c("\"intermediatefile.rds\"",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
     "c", "b", "a", "saveRDS", "\"input.rds\"", "readRDS"))
-  expect_equal(x, y)
-  x <- sort(tracked(plan = config$plan, targets = "myinput",
-    envir = config$envir, verbose = FALSE))
-  y <- sort(c("myinput", "\"input.rds\"", "readRDS"))
   expect_equal(x, y)
 })
 

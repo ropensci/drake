@@ -24,7 +24,7 @@
 #' }
 check_plan <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = NULL,
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
   verbose = drake::default_verbose(),

@@ -4,10 +4,9 @@
 \alias{build_drake_graph}
 \title{Create the \code{igraph} dependency network of your project.}
 \usage{
-build_drake_graph(plan = read_drake_plan(),
-  targets = drake::possible_targets(plan), envir = parent.frame(),
-  verbose = drake::default_verbose(), jobs = 1, sanitize_plan = TRUE,
-  console_log_file = NULL)
+build_drake_graph(plan = read_drake_plan(), targets = plan$target,
+  envir = parent.frame(), verbose = drake::default_verbose(), jobs = 1,
+  sanitize_plan = FALSE, console_log_file = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -73,7 +72,11 @@ most 4 jobs for targets, run
 \code{make(..., parallelism = "Makefile", jobs = c(imports = 2, targets = 4))} or
 \code{make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")}.}
 
-\item{sanitize_plan}{logical, whether to sanitize the workflow plan first.}
+\item{sanitize_plan}{logical, deprecated. If you must,
+call \code{drake:::sanitize_plan()} to sanitize the plan
+and/or \code{drake:::sanitize_targets()} to sanitize the targets
+(or just get \code{plan} and \code{targets} and \code{graph} from
+\code{\link[=drake_config]{drake_config()}}).}
 
 \item{console_log_file}{character scalar or \code{NULL}.
 If \code{NULL}, console output will be printed

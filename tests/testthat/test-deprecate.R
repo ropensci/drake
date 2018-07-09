@@ -104,6 +104,7 @@ test_with_dir("deprecated graphing functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1)
   expect_warning(build_graph(pl))
+  expect_warning(build_drake_graph(pl, sanitize_plan = TRUE))
   con <- drake_config(plan = pl)
   expect_warning(out <- plot_graph(config = con))
   df <- drake_graph_info(config = con)

@@ -46,7 +46,8 @@
 #' plan <- drake_plan(x = f(1))
 #'
 #' # Here are the reproducibly tracked objects in the workflow.
-#' tracked(plan)
+#' config <- drake_config(plan)
+#' tracked(config)
 #'
 #' # But the digest() function has dependencies too.
 #' head(deps_code(digest))
@@ -57,7 +58,8 @@
 #' # a package's inner functions.
 #'
 #' expose_imports(digest)
-#' new_objects <- tracked(plan)
+#' config <- drake_config(plan)
+#' new_objects <- tracked(config)
 #' head(new_objects, 10)
 #' length(new_objects)
 #'
@@ -81,7 +83,8 @@
 #' g <- function(x){
 #'   digest::digest(x) # Was previously just digest()
 #' }
-#' tracked(plan)
+#' config <- drake_config(plan)
+#' tracked(config)
 #' })
 #' }
 expose_imports <- function(

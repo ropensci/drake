@@ -71,7 +71,7 @@
 #' }
 make <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = NULL,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   hook = default_hook,

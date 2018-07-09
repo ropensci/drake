@@ -376,7 +376,7 @@
 #' }
 drake_config <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = NULL,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   hook = default_hook,
@@ -428,7 +428,11 @@ drake_config <- function(
     ) # May 4, 2018
   }
   plan <- sanitize_plan(plan)
-  targets <- sanitize_targets(plan, targets)
+  if (is.null(targets)){
+    targets <- plan$target
+  } else {
+    targets <- sanitize_targets(plan, targets)
+  }
   parallelism <- parse_parallelism(parallelism)
   jobs <- parse_jobs(jobs)
   prework <- add_packages_to_prework(
@@ -552,29 +556,6 @@ do_prework <- function(config, verbose_packages) {
   for (code in config$prework) wrapper(eval(parse(text = code),
     envir = config$envir))
   invisible()
-}
-
-#' @title List the possible targets for the `targets`
-#'   argument to [make()], given a workflow plan
-#'   data frame.
-#' @description Intended for internal use only.
-#' @seealso [make()]
-#' @keywords internal
-#' @export
-#' @return Character vector of possible targets given the workflow plan.
-#' @param plan workflow plan data frame
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # List the possible targets you could choose for the
-#' # `targets` argument to make(). You may choose any subset.
-#' possible_targets(my_plan)
-#' })
-#' }
-possible_targets <- function(plan = read_drake_plan()) {
-  plan <- sanitize_plan(plan)
-  as.character(plan$target)
 }
 
 #' @title Store an internal configuration list

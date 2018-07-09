@@ -119,7 +119,7 @@ backend <- function(...){
 #' # See ?as_drake_filename for examples.
 build_graph <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = plan$target,
   envir = parent.frame(),
   verbose = 1,
   jobs = 1
@@ -155,7 +155,7 @@ build_graph <- function(
 #' # See ?check_plan for examples.
 check <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = plan$target,
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),
   verbose = TRUE
@@ -213,7 +213,7 @@ check <- function(
 #' # See ?drake_config for the examples.
 config <- function(
   plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
+  targets = plan$target,
   envir = parent.frame(),
   verbose = 1,
   hook = default_hook,
@@ -926,7 +926,7 @@ plan_drake <- function(
 #' @examples
 #' # See ?vis_drake_graph for examples.
 plot_graph <- function(
-  plan = read_drake_plan(), targets = drake::possible_targets(plan),
+  plan = read_drake_plan(), targets = plan$target,
   envir = parent.frame(), verbose = 1,
   hook = default_hook,
   cache = drake::get_cache(verbose = verbose),

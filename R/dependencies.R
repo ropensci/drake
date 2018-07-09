@@ -177,34 +177,18 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
-#' @inheritParams cached
-#' @param plan workflow plan data frame, same as for function
-#'   [make()].
-#' @param targets names of targets to build, same as for function
-#'   [make()].
-#' @param envir environment to import from, same as for function
-#'   [make()].
+#' @param config An output list from [drake_config()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Load the canonical example for drake.
 #' # List all the targets/imports that are reproducibly tracked.
-#' tracked(my_plan)
+#' config <- drake_config(my_plan)
+#' tracked(config)
 #' })
 #' }
-tracked <- function(
-  plan = read_drake_plan(),
-  targets = drake::possible_targets(plan),
-  envir = parent.frame(),
-  jobs = 1,
-  verbose = drake::default_verbose()
-){
-  force(envir)
-  graph <- build_drake_graph(
-    plan = plan, targets = targets, envir = envir,
-    jobs = jobs, verbose = verbose
-  )
-  V(graph)$name
+tracked <- function(config){
+  sort(V(config$graph)$name)
 }
 
 dependencies <- function(targets, config, reverse = FALSE){
