@@ -79,8 +79,8 @@ clean_dependency_list <- function(x){
     sort()
 }
 
-rescale_01 <- function(x){
-  x <- x - min(x)
-  mx <- max(x)
-  x / ifelse(mx < .Machine$double.eps, 1, mx)
+padded_scale <- function(x){
+  r <- range(x)
+  pad <- 0.2 * (r[2] - r[1])
+  c(r[1] - pad, r[2] + pad)
 }

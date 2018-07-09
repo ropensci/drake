@@ -102,8 +102,8 @@ render_static_drake_graph <- function(
   shapes <- gsub("dot", "circle", shapes)
   layout <- ggraph::create_layout(graph, layout = "sugiyama")
   tmp <- layout$x
-  layout$x <- rescale_01(-layout$y)
-  layout$y <- rescale_01(tmp)
+  layout$x <- -layout$y
+  layout$y <- tmp
   layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
   ggraph::ggraph(layout) +
@@ -114,11 +114,11 @@ render_static_drake_graph <- function(
     ) +
     ggraph::geom_node_text(ggplot2::aes(label = label)) +
     ggraph::geom_edge_link(
-      arrow = ggplot2::arrow(),
+      arrow = ggplot2::arrow(length = ggplot2::unit(4, "mm")),
       alpha = 0.25
     ) +
-    ggplot2::xlim(c(-0.2, 1.2)) +
-    ggplot2::ylim(c(-0.2, 1.2)) +
+    ggplot2::xlim(padded_scale(layout$x)) +
+    ggplot2::ylim(padded_scale(layout$y)) +
     ggplot2::scale_color_manual(values = colors) +
     ggplot2::scale_shape_manual(values = shapes) +
     ggplot2::ggtitle(main) +
