@@ -21,7 +21,7 @@ make(plan = read_drake_plan(), targets = drake::possible_targets(plan),
   caching = "worker", keep_going = FALSE, session = NULL,
   imports_only = NULL, pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile", console_log_file = NULL,
-  ensure_workers = TRUE)
+  ensure_workers = TRUE, garbage_collection = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -378,6 +378,9 @@ for \code{make(parallelism = "future_lapply", jobs = n)}
 This argument only applies to parallel computing with persistent workers
 (\code{make(parallelism = x)}, where \code{x} could be \code{"mclapply"},
 \code{"parLapply"}, or \code{"future_lapply"}).}
+
+\item{garbage_collection}{logical, whether to call \code{gc()} each time
+a target is built during \code{\link[=make]{make()}}.}
 }
 \value{
 The master internal configuration list, mostly

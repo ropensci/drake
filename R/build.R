@@ -86,7 +86,6 @@ build_check_store <- function(
   if (flag_attempt && target %in% config$plan$target){
     set_attempt_flag(key = target, config = config)
   }
-  gc()
 }
 
 build_and_store <- function(target, config, meta = NULL, announce = TRUE){
@@ -157,6 +156,9 @@ check_processed_file <- function(target, config){
 }
 
 build_target <- function(target, meta, config){
+  if (identical(config$garbage_collection, TRUE)){
+    on.exit(gc())
+  }
   retries <- 0
   max_retries <- drake_plan_override(
     target = target,

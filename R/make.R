@@ -113,7 +113,8 @@ make <- function(
   pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile",
   console_log_file = NULL,
-  ensure_workers = TRUE
+  ensure_workers = TRUE,
+  garbage_collection = FALSE
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -162,7 +163,8 @@ make <- function(
       pruning_strategy = pruning_strategy,
       makefile_path = makefile_path,
       console_log_file = console_log_file,
-      ensure_workers = ensure_workers
+      ensure_workers = ensure_workers,
+      garbage_collection = garbage_collection
     )
   }
   make_with_config(config = config)

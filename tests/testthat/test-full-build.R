@@ -2,6 +2,7 @@ drake_context("full build")
 
 test_with_dir("scratch build with custom filesystem cache.", {
   config <- dbug()
+  config$garbage_collection <- TRUE
   unlink(default_cache_path(), recursive = TRUE)
   path <- "my_cache"
   config$cache <- cache <- new_cache(

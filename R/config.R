@@ -358,6 +358,9 @@
 #'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
 #'   `"parLapply"`, or `"future_lapply"`).
 #'
+#' @param garbage_collection logical, whether to call `gc()` each time
+#'   a target is built during [make()].
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -413,7 +416,8 @@ drake_config <- function(
   pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile",
   console_log_file = NULL,
-  ensure_workers = TRUE
+  ensure_workers = TRUE,
+  garbage_collection = FALSE
 ){
   force(envir)
   unlink(console_log_file)
@@ -506,7 +510,8 @@ drake_config <- function(
     console_log_file = console_log_file,
     ensure_workers = ensure_workers,
     all_targets = all_targets,
-    all_imports = all_imports
+    all_imports = all_imports,
+    garbage_collection = garbage_collection
   )
 }
 

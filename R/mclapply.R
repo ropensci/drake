@@ -69,7 +69,6 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
-  on.exit(gc())
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
