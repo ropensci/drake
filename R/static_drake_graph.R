@@ -102,8 +102,9 @@ render_static_drake_graph <- function(
   shapes <- gsub("dot", "circle", shapes)
   layout <- ggraph::create_layout(graph, layout = "sugiyama")
   tmp <- layout$x
-  layout$x <- -layout$y
-  layout$y <- tmp
+  layout$x <- rescale_01(-layout$y)
+  layout$y <- rescale_01(tmp)
+  layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
   ggraph::ggraph(layout) +
     ggraph::geom_node_point(
@@ -113,16 +114,19 @@ render_static_drake_graph <- function(
     ) +
     ggraph::geom_node_text(ggplot2::aes(label = label)) +
     ggraph::geom_edge_link(
-      ggplot2::aes(
-        start_cap = ggraph::label_rect(node1.name),
-        end_cap = ggraph::label_rect(node2.name)
-      ),
       arrow = ggplot2::arrow(),
       alpha = 0.25
     ) +
+    ggplot2::xlim(c(-0.2, 1.2)) +
+    ggplot2::ylim(c(-0.2, 1.2)) +
     ggplot2::scale_color_manual(values = colors) +
     ggplot2::scale_shape_manual(values = shapes) +
-    ggplot2::labs(x = "", y = "") +
-    ggplot2::theme_void() +
-    ggplot2::ggtitle(main)
+    ggplot2::ggtitle(main) +
+    ggplot2::labs(x = "", y = "")
+}
+
+rescale_01 <- function(x){
+  x <- x - min(x)
+  mx <- max(x)
+  x / ifelse(mx < .Machine$double.eps, 1, mx)
 }
