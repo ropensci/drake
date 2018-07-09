@@ -16,6 +16,7 @@
 - Deprecate `drake_batchtools_tmpl_file()` in favor of `drake_hpc_template_file()` and `drake_hpc_template_files()`.
 - Add a `garbage_collection` argument to `make()`. If `TRUE`, `gc()` is called after every new build of a target.
 - Remove redundant calls to `sanitize_plan()` in `make()`.
+- Change `tracked()` to accept only a `drake_config()` object as an argument. Yes, it is technically a breaking change, but it is only a small break, and it is the correct API choice.
 
 # Version 5.2.1
 
