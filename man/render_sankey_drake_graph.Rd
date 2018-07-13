@@ -31,7 +31,11 @@ A \code{visNetwork} graph.
 \description{
 This function is called inside
 \code{\link[=sankey_drake_graph]{sankey_drake_graph()}}, which typical users
-call more often.
+call more often. A legend is unfortunately unavailable
+for the graph itself
+(\url{https://github.com/christophergandrud/networkD3/issues/240})
+but you can see what all the colors mean with
+\code{visNetwork::visNetwork(drake::legend_nodes())}.
 }
 \examples{
 \dontrun{
@@ -41,6 +45,8 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 # of nodes, edges, and legend nodes.
 config <- drake_config(my_plan) # Internal configuration list
 sankey_drake_graph(config) # Jump straight to the interactive graph.
+# Show the legend separately.
+visNetwork::visNetwork(nodes = drake::legend_nodes())
 # Get the node and edge info that sankey_drake_graph() just plotted:
 graph <- drake_graph_info(config)
 # You can pass the data frames right to render_sankey_drake_graph()

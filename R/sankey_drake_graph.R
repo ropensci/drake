@@ -2,6 +2,11 @@
 #' @description To save time for repeated plotting,
 #' this function is divided into
 #' [drake_graph_info()] and [render_sankey_drake_graph()].
+#' A legend is unfortunately unavailable
+#' for the graph itself
+#' (<https://github.com/christophergandrud/networkD3/issues/240>)
+#' but you can see what all the colors mean with
+#' `visNetwork::visNetwork(drake::legend_nodes())`.
 #' @export
 #' @seealso [render_sankey_drake_graph()], [vis_drake_graph()],
 #'   [static_drake_graph()]
@@ -15,6 +20,8 @@
 #' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' sankey_drake_graph(config, width = '100%') # The width is passed to visNetwork
+#' # Show the legend separately.
+#' visNetwork::visNetwork(nodes = drake::legend_nodes())
 #' make(my_plan) # Run the project, build the targets.
 #' sankey_drake_graph(config) # The black nodes from before are now green.
 #' # Plot a subgraph of the workflow.
@@ -72,7 +79,11 @@ sankey_drake_graph <- function(
 #' @title Render a Sankey diagram from[drake_graph_info()].
 #' @description This function is called inside
 #' [sankey_drake_graph()], which typical users
-#' call more often.
+#' call more often. A legend is unfortunately unavailable
+#' for the graph itself
+#' (<https://github.com/christophergandrud/networkD3/issues/240>)
+#' but you can see what all the colors mean with
+#' `visNetwork::visNetwork(drake::legend_nodes())`.
 #' @export
 #' @seealso [sankey_drake_graph()], [vis_drake_graph()],
 #'   [static_drake_graph()]
@@ -105,6 +116,8 @@ sankey_drake_graph <- function(
 #' # of nodes, edges, and legend nodes.
 #' config <- drake_config(my_plan) # Internal configuration list
 #' sankey_drake_graph(config) # Jump straight to the interactive graph.
+#' # Show the legend separately.
+#' visNetwork::visNetwork(nodes = drake::legend_nodes())
 #' # Get the node and edge info that sankey_drake_graph() just plotted:
 #' graph <- drake_graph_info(config)
 #' # You can pass the data frames right to render_sankey_drake_graph()

@@ -93,6 +93,11 @@ A \code{visNetwork} graph.
 To save time for repeated plotting,
 this function is divided into
 \code{\link[=drake_graph_info]{drake_graph_info()}} and \code{\link[=render_sankey_drake_graph]{render_sankey_drake_graph()}}.
+A legend is unfortunately unavailable
+for the graph itself
+(\url{https://github.com/christophergandrud/networkD3/issues/240})
+but you can see what all the colors mean with
+\code{visNetwork::visNetwork(drake::legend_nodes())}.
 }
 \examples{
 \dontrun{
@@ -101,6 +106,8 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 sankey_drake_graph(config, width = '100\%') # The width is passed to visNetwork
+# Show the legend separately.
+visNetwork::visNetwork(nodes = drake::legend_nodes())
 make(my_plan) # Run the project, build the targets.
 sankey_drake_graph(config) # The black nodes from before are now green.
 # Plot a subgraph of the workflow.
