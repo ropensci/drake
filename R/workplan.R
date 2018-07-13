@@ -335,17 +335,14 @@ file_in <- function(...){
 #'   for a full explanation.
 #' @export
 #' @seealso [file_in()], [knitr_in()], [ignore()]
-#' @return A character string, the file path of the file output.
-#' @param path Character string of length 1. File path
-#'   of the file output of a command in your
-#'   workflow plan data frame.
-#' @param ... Do not use. For informative input handling only.
+#' @return A character vector of declared output file paths.
+#' @param ... Character vector of output file paths.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_out("summaries.txt")
+#' file_out("summaries.txt", "output.csv")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
@@ -367,17 +364,7 @@ file_in <- function(...){
 #' # in your report.
 #' })
 #' }
-file_out <- function(path){
-  if (length(path) != 1){
-    warning(
-      "In file_out(), the `path` argument must ",
-      "have length 1. Supplied length = ", length(path), ". ",
-      "using first file output: ", path[1], ".",
-      call. = FALSE
-    )
-  }
-  as.character(path[1])
-}
+file_out <- file_in
 
 #' @title Declare the `knitr`/`rmarkdown` source files
 #'   of a workflow plan command.

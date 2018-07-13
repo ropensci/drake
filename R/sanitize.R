@@ -14,7 +14,6 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   if ("trigger" %in% colnames(plan)){
     plan$trigger <- parse_triggers(plan$trigger)
   }
-  plan <- file_outs_to_targets(plan)
   plan$target <- repair_target_names(plan$target)
   plan <- plan[nzchar(plan$target), ]
   plan$command[is.na(plan$command)] <- ""
@@ -91,36 +90,6 @@ repair_target_names <- function(x){
   x <- gsub("^_", "", x)
   x[!nzchar(x)] <- "X"
   make.unique(x, sep = "_")
-}
-
-file_outs_to_targets <- function(plan){
-  index <- grepl("file_out", plan$command, fixed = TRUE)
-  plan$target[index] <- vapply(
-    plan$command[index],
-    single_file_out,
-    character(1)
-  )
-  plan$target[is_file(plan$target)] <-
-    plan$target[is_file(plan$target)] %>%
-    gsub(pattern = "^'|'$", replacement = "\"")
-  plan
-}
-
-single_file_out <- function(command){
-  file_out <- command_dependencies(command)$file_out
-  if (length(file_out) < 1){
-    stop("found an empty file_out() in command: ", command, call. = FALSE)
-  }
-  if (length(file_out) > 1){
-    warning(
-      "Multiple file outputs found for command `", command, "`. ",
-      "Choosing ", file_out[1], " as the target name.",
-      call. = FALSE
-    )
-    file_out[1]
-  } else {
-    file_out
-  }
 }
 
 parse_triggers <- function(x){
