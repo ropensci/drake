@@ -51,7 +51,14 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     imported = !(target %in% config$plan$target),
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_object(list(seed = config$seed, target = target))
+    seed = seed_from_object(list(seed = config$seed, target = target)),
+    output_files = unlist(
+      igraph::vertex_attr(
+        graph = config$graph,
+        name = "output_files",
+        index = target
+      )
+    )
   )
   trigger <- get_trigger(target = target, config = config)
   # Need to make sure meta includes all these
