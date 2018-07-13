@@ -61,7 +61,8 @@ build_drake_graph <- function(
       imports_edges(name = import_names[[i]], value = imports[[i]])
     },
     jobs = jobs
-  )
+  ) %>%
+    do.call(what = dplyr::bind_rows)
   console_many_targets(
     targets = plan$target,
     pattern = "connect",
@@ -81,7 +82,8 @@ build_drake_graph <- function(
       code_deps_to_edges(target = plan$target[i], deps = commands_deps[[i]])
     },
     jobs = jobs
-  )
+  ) %>%
+    do.call(what = dplyr::bind_rows)
   file_outs <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
@@ -89,10 +91,10 @@ build_drake_graph <- function(
     },
     jobs = jobs
   ) %>%
-    setNames(nm = plan$target)
-  file_outs <- file_outs[which_nonempty(file_outs)]
-  graph <- c(imports_edges, commands_edges) %>%
-    do.call(what = dplyr::bind_rows) %>%
+    setNames(nm = plan$target) %>%
+    select_nonempty
+  commands_edges <- connect_file_outs(commands_edges, file_outs)
+  graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
     igraph::graph_from_data_frame()
   if (length(file_outs)){
     graph <- igraph::set_vertex_attr(
@@ -264,4 +266,12 @@ imports_graph <- function(config){
 targets_graph <- function(config){
   delete_these <- setdiff(V(config$graph)$name, config$plan$target)
   delete_vertices(config$graph, v = delete_these)
+}
+
+connect_file_outs <- function(commands_edges, file_outs){
+  file_outs <- utils::stack(file_outs)
+  file_outs$ind <- as.character(file_outs$ind)
+  index <- match(commands_edges$from, table = file_outs$values)
+  commands_edges$from[is.finite(index)] <- file_outs$ind[na.omit(index)]
+  commands_edges
 }

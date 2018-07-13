@@ -85,12 +85,13 @@ padded_scale <- function(x){
   c(r[1] - pad, r[2] + pad)
 }
 
-which_nonempty <- function(x){
-  vapply(
+select_nonempty <- function(x){
+  index <- vapply(
     X = x,
     FUN = function(y){
       length(y) > 0
     },
     FUN.VALUE = logical(1)
   )
+  x[index]
 }
