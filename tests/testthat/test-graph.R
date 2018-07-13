@@ -234,7 +234,7 @@ test_with_dir("file_out()/file_in() connections", {
   expect_equal(dependencies("out1", config, reverse = TRUE), character(0))
   expect_equal(
     sort(dependencies("saver1", config, reverse = TRUE)),
-    sort(c("out1","reader1", "reader2", "reader3"))
+    sort(c("out1", "reader1", "reader2", "reader3"))
   )
   expect_equal(dependencies("reader3", config, reverse = TRUE), character(0))
   expect_equal(
