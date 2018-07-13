@@ -98,6 +98,7 @@ Suggests:
   ggraph,
   MASS,
   methods,
+  networkD3,
   RSQLite,
   rmarkdown,
   visNetwork

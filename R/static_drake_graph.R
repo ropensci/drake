@@ -3,7 +3,7 @@
 #' @description This function requries packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
-#' @seealso [vis_drake_graph()], [render_drake_graph()],
+#' @seealso [vis_drake_graph()], [sankey_drake_graph()],
 #'   [render_static_drake_graph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
@@ -63,7 +63,7 @@ static_drake_graph <- function(
 #' @description This function requries packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
-#' @seealso [vis_drake_graph()], [render_drake_graph()], [static_drake_graph()]
+#' @seealso [vis_drake_graph()], [sankey_drake_graph()], [static_drake_graph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_graph_info
