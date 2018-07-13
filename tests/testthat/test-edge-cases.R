@@ -226,3 +226,17 @@ test_with_dir("assert_pkgs", {
   expect_error(
     assert_pkgs(c("digest", "_$$$blabla")), regexp = "not installed")
 })
+
+test_with_dir("warning when file_out() files not produced", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = {
+      fs::file_create(file_out("a"))
+      file_out("b", "c")
+    }
+  )
+  expect_warning(
+    make(plan, cache = storr::storr_environment(), session_info = FALSE),
+    regexp = "Missing files for target"
+  )
+})
