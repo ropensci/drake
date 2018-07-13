@@ -121,7 +121,18 @@ clean <- function(
   if (!length(targets) && is.null(c(...))){
     targets <- cache$list()
   }
-  uncache(targets = targets, cache = cache, jobs = jobs, purge = purge)
+  if (purge){
+    namespaces <- target_namespaces(default = cache$default_namespace)
+  } else {
+    namespaces <- cleaned_namespaces(default = cache$default_namespace)
+  }
+  lightly_parallelize(
+    X = targets,
+    FUN = clean_single_target,
+    jobs = jobs,
+    cache = cache,
+    namespaces = namespaces
+  )
   if (destroy){
     cache$destroy()
   }
@@ -131,64 +142,19 @@ clean <- function(
   invisible()
 }
 
-uncache <- function(targets, cache, jobs, purge){
-  if (is.null(cache)){
-    return()
-  }
-  if (purge){
-    namespaces <- target_namespaces(default = cache$default_namespace)
-  } else {
-    namespaces <- cleaned_namespaces(default = cache$default_namespace)
-  }
+clean_single_target <- function(target, cache, namespaces){
+  output_files <- get_from_subspace(
+    key = target,
+    subspace = "output_files",
+    namespace = "meta",
+    cache = cache
+  )
+  unlink(drake_unquote(output_files), recursive = TRUE, force = TRUE)
   for (namespace in namespaces){
-    if (!length(targets)){
-      remove_these <- cache$list(namespace = namespace)
-    } else {
-      remove_these <- parallel_filter(
-        x = targets,
-        f = function(target){
-          cache$exists(key = target, namespace = namespace)
-        },
-        jobs = jobs
-      )
+    for (key in c(target, output_files)){
+      cache$del(key = key, namespace = namespace)
     }
-    files <- parallel_filter(
-      x = remove_these, f = is_existing_file, jobs = jobs)
-    lightly_parallelize(
-      X = files,
-      FUN = remove_file_target,
-      jobs = jobs,
-      cache = cache
-    )
-    lightly_parallelize(
-      X = remove_these,
-      FUN = uncache_single,
-      jobs = jobs,
-      cache = cache,
-      namespace = namespace
-    )
   }
-  invisible()
-}
-
-uncache_single <- function(target, cache, namespace){
-  cache$del(target, namespace = namespace)
-  invisible()
-}
-
-remove_file_target <- function(target, cache){
-  if (
-    is_file(target) &&
-    cache$exists(key = target, namespace = "meta") &&
-    !is_imported(
-      target = target,
-      cache = cache
-    )
-  ){
-    drake_unquote(target) %>%
-      unlink(recursive = TRUE, force = TRUE)
-  }
-  invisible()
 }
 
 #' @title Do garbage collection on the drake cache.
