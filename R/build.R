@@ -136,13 +136,13 @@ announce_build <- function(target, meta, config){
 }
 
 conclude_build <- function(target, value, meta, config){
-  check_output_files(target = target, meta = meta, config = config)
+  assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
   store_target(target = target, value = value, meta = meta, config = config)
   invisible(value)
 }
 
-check_output_files <- function(target, meta, config){
+assert_output_files <- function(target, meta, config){
   missing_files <- Filter(x = meta$output_files, f = function(x){
     !file.exists(drake::drake_unquote(x))
   })
