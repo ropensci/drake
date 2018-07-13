@@ -150,6 +150,7 @@ render_sankey_drake_graph <- function(
   timed <- grepl("\n", nodes$label)
   nodes$label <- gsub("\n", " (", nodes$label)
   nodes$label[timed] <- paste0(nodes$label[timed], ")")
+  nodes$status <- gsub(pattern = " ", replacement = "_", x = nodes$status)
   edges <- as.data.frame(graph_info$edges)
   edges$src <- as.integer(match(edges$from, table = nodes$id) - 1)
   edges$target <- as.integer(match(edges$to, table = nodes$id) - 1)
