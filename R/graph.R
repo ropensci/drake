@@ -269,6 +269,9 @@ targets_graph <- function(config){
 }
 
 connect_file_outs <- function(commands_edges, file_outs){
+  if (!length(file_outs)){
+    return(commands_edges)
+  }
   file_outs <- utils::stack(file_outs)
   file_outs$ind <- as.character(file_outs$ind)
   index <- match(commands_edges$from, table = file_outs$values)
