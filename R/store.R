@@ -1,4 +1,24 @@
-store_target <- function(target, value, meta, config) {
+store_outputs <- function(target, value, meta, config){
+  store_single_output(
+    target = target,
+    value = value,
+    meta = meta,
+    config = config
+  )
+  for (file in meta$output_files){
+    meta$name <- file
+    meta$mtime <- file.mtime(drake::drake_unquote(file))
+    meta$file <- safe_rehash_file(target = file, config = config)
+    store_single_output(
+      target = file,
+      value = meta$file,
+      meta = meta,
+      config = config
+    )
+  }
+}
+
+store_single_output <- function(target, value, meta, config) {
   # Failed targets need to stay invalidated,
   # even when `config$keep_going` is `TRUE`.
   if (inherits(meta$error, "error")){

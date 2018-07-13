@@ -47,6 +47,7 @@
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
   meta <- list(
+    name = target,
     target = target,
     imported = !(target %in% config$plan$target),
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
@@ -124,6 +125,14 @@ rehash_file <- function(target, config) {
     file = TRUE,
     serialize = FALSE
   )
+}
+
+safe_rehash_file <- function(target, config){
+  if (file.exists(drake_unquote(target))){
+    rehash_file(target = target, config = config)
+  } else {
+    as.character(NA)
+  }
 }
 
 should_rehash_file <- function(filename, new_mtime, old_mtime,

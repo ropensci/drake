@@ -155,19 +155,24 @@ depends_trigger <- function(target, meta, config){
 }
 
 file_trigger <- function(target, meta, config){
-  if (is.null(meta$file) || !is_file(target)){
-    return(FALSE)
+  for (file in meta$output_files){
+    if (!file.exists(drake_unquote(file))){
+      return(TRUE)
+    }
+    old_file_hash <- safe_get(
+      key = file,
+      namespace = "kernels",
+      config = config
+    )
+    if (is.na(old_file_hash)){
+      return(TRUE)
+    }
+    new_file_hash <- file_hash(target = file, config = config)
+    if (!identical(old_file_hash, new_file_hash)){
+      return(TRUE)
+    }
   }
-  if (!file.exists(drake_unquote(target))){
-    return(TRUE)
-  }
-  tryCatch(
-    !identical(
-      config$cache$get(target, namespace = "kernels"),
-      meta$file
-    ),
-    error = error_false
-  )
+  FALSE
 }
 
 should_build_target <- function(target, meta = NULL, config){
