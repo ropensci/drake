@@ -4,8 +4,8 @@
 #' this function is divided into
 #' [drake_graph_info()] and [render_drake_graph()].
 #' @export
-#' @seealso [render_drake_graph()], [static_drake_graph()],
-#'   [render_static_drake_graph()]
+#' @seealso [render_drake_graph()], [sankey_drake_graph()],
+#'   [static_drake_graph()]
 #' @return A `visNetwork` graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_drake_graph
@@ -86,8 +86,8 @@ vis_drake_graph <- function(
 #' [vis_drake_graph()], which typical users
 #' call more often.
 #' @export
-#' @seealso [vis_drake_graph()], [static_drake_graph()],
-#'   [render_static_drake_graph()]
+#' @seealso [vis_drake_graph()], [sankey_drake_graph()],
+#'   [static_drake_graph()]
 #' @return A `visNetwork` graph.
 #'
 #' @inheritParams drake_graph_info
