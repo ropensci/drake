@@ -495,7 +495,6 @@ kernel_exists <- function(target, config){
 
 target_exists <- kernel_exists
 
-
 assert_compatible_cache <- function(cache){
   if (is.null(cache)){
     return()
@@ -513,7 +512,6 @@ assert_compatible_cache <- function(cache){
   }
   current <- packageVersion("drake")
   path <- cache$driver$path
-  newpath <- backup_cache_path(path = path, old = old)
   stop(
     "The project at '", path, "' was previously built by drake ", old, ". ",
     "You are running drake ", current, ", which is not back-compatible. ",
@@ -521,4 +519,3 @@ assert_compatible_cache <- function(cache){
     call. = FALSE
   )
 }
-
