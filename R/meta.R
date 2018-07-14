@@ -68,6 +68,10 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
       )
     )
   )
+  # For imported files.
+  if (is_file(target)) {
+    meta$mtime <- file.mtime(drake::drake_unquote(target))
+  }
   trigger <- get_trigger(target = target, config = config)
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),

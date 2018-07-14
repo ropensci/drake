@@ -23,11 +23,11 @@ store_outputs <- function(target, value, meta, config){
       config = config
     )
   }
-  meta$name <- target
   if (length(meta$output_files) || is.null(meta$output_file_hash)){
     meta$output_file_hash <- file_dependency_hash(
       target = target, config = config, which = "output_files")
   }
+  meta$name <- target
   store_single_output(
     target = target,
     value = value,

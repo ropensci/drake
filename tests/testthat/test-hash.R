@@ -34,10 +34,12 @@ test_with_dir("stress test file hash", {
     cache = storr::storr_environment()
   )
   make(config = con)
-  expect_true(
-    is.character(file_hash(file_store("report.md"), config = con, 0)))
-  expect_true(
-    is.character(file_hash(file_store("report.md"), config = con, Inf)))
+  # Can debug file_hash() to make sure hashing is skipped
+  # at the appropriate times.
+  for (file in file_store(c("report.Rmd"))){
+    expect_true(is.character(file_hash(file, config = con, 0)))
+    expect_true(is.character(file_hash(file, config = con, Inf)))
+  }
 })
 
 test_with_dir("stress test hashing decisions", {
