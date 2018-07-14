@@ -162,17 +162,14 @@ file_trigger <- function(target, meta, config){
       return(TRUE)
     }
   }
-  for(file in c(meta$output_files, meta$input_files)){
-    old_file_hash <- safe_get(
-      key = file,
-      namespace = "kernels",
-      config = config
+  for (hash_name in c("input_file_hash", "output_file_hash")){
+    old_file_hash <- get_from_subspace(
+      key = target,
+      subspace = hash_name,
+      namespace = "meta",
+      cache = config$cache
     )
-    if (is.na(old_file_hash)){
-      return(TRUE)
-    }
-    new_file_hash <- file_hash(target = file, config = config)
-    if (!identical(old_file_hash, new_file_hash)){
+    if (!identical(old_file_hash, meta[[hash_name]])){
       return(TRUE)
     }
   }

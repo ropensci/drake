@@ -4,7 +4,7 @@
 #' is used to compute the metadata of targets.
 #' @details Target metadata is computed
 #' with `drake_meta()`, and then
-#' `drake:::finish_meta()` completes the metadata
+#' `drake:::store_outputs()` completes the metadata
 #' after the target is built.
 #' In other words, the output of `drake_meta()` corresponds
 #' to the state of the target immediately before [make()]
@@ -15,8 +15,8 @@
 #' @export
 #' @return A list of metadata on a target. Does not include
 #'   the file modification time if the target is a file.
-#'   That piece is provided later in [make()] by
-#'   `drake:::finish_meta`.
+#'   That piece is computed later in [make()] by
+#'   `drake:::store_outputs()`.
 #' @param target Character scalar, name of the target
 #'   to get metadata.
 #' @param config Master internal configuration list produced
@@ -76,49 +76,41 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$command <- get_standardized_command(target = target, config = config)
   }
   if (trigger %in% triggers_with_depends()){
-    meta$depends <- dependency_hash(target = target, config = config)
+    meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
   if (trigger %in% triggers_with_file()){
-    meta$file <- file_hash(target = target, config = config)
-  }
-  meta
-}
-
-finish_meta <- function(target, meta, config){
-  if (is_file(target)) {
-    # Keep an updated modification time for each file.
-    meta$mtime <- file.mtime(drake::drake_unquote(target))
-    # If the target is a file output, then we know
-    # it needs to be rehashed.
-    if (!meta$imported){
-      meta$file <- rehash_file(target = target, config = config)
-    }
-  }
-  # If the user selected a non-default trigger,
-  # some of these fields might not be populated.
-  # Empty fields need to be filled so that the target
-  # can appear up to date in the next make().
-  if (is.null(meta$file)){
-    meta$file <- file_hash(target = target, config = config)
-  }
-  if (is.null(meta$command)){
-    meta$command <- get_standardized_command(target = target, config = config)
-  }
-  if (is.null(meta$depends)){
-    meta$depends <- dependency_hash(target = target, config = config)
+    meta$input_file_hash <- file_dependency_hash(
+      target = target, config = config, which = "input_files")
+    meta$output_file_hash <- file_dependency_hash(
+      target = target, config = config, which = "output_files")
   }
   meta
 }
 
 dependency_hash <- function(target, config) {
-  objects <- dependencies(target, config)
-  input_files <- unlist(igraph::vertex_attr(
+  dependencies(target, config) %>%
+    sort %>%
+    self_hash(config = config) %>%
+    digest::digest(algo = config$long_hash_algo)
+}
+
+file_dependency_hash <- function(
+  target,
+  config,
+  which = c("input_files", "output_files")
+){
+  which <- match.arg(which)
+  files <- unlist(igraph::vertex_attr(
     graph = config$graph,
-    name = "input_files",
+    name = which,
     index = target
   ))
-  sort(c(objects, input_files)) %>%
-    self_hash(config = config) %>%
+  vapply(
+    X = sort(files),
+    FUN = file_hash,
+    FUN.VALUE = character(1),
+    config = config
+  ) %>%
     digest::digest(algo = config$long_hash_algo)
 }
 
