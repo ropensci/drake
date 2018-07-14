@@ -194,7 +194,7 @@ test_with_dir("can get the graph info when a file is missing", {
       session_info = FALSE
     )
   )
-  expect_warning(o <- drake_graph_info(config))
+  suppressWarnings(o <- drake_graph_info(config))
   expect_true("missing" %in% o$nodes$status)
 })
 
