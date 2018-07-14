@@ -18,7 +18,7 @@ test_with_dir("triggers work as expected", {
   con$plan$trigger[1] <- 5
   expect_error(testrun(con))
   con$plan$trigger[1] <- "missing"
-  
+
   # Change a command.
   cmd <- con$plan$command[con$plan$target == "combined"]
   con$plan$command[con$plan$target == "combined"] <-
