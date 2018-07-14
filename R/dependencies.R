@@ -25,7 +25,7 @@
 #'   this conflict and runs as expected. In other words, [make()]
 #'   automatically removes all self-referential loops in the dependency
 #'   network.
-#' @seealso deps_targets make drake_plan drake_config
+#' @seealso deps_targets deps_files make drake_plan drake_config
 #' @export
 #' @param x a language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
@@ -112,7 +112,15 @@ deps_targets <- function(
   config = read_drake_config(),
   reverse = FALSE
 ){
-  dependencies(targets = targets, config = config, reverse = reverse)
+  c(
+    dependencies(targets = targets, config = config, reverse = reverse),
+    igraph::vertex_attr(
+      graph = config$graph,
+      name = "input_files",
+      index = targets
+    )
+  ) %>%
+    clean_dependency_list
 }
 
 #' @title Return the detailed dependency profile
