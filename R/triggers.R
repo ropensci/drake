@@ -157,6 +157,9 @@ depends_trigger <- function(target, meta, config){
 # We really need a file dependency hash just for all the files.
 # Maybe that's the role of meta$file
 file_trigger <- function(target, meta, config){
+  if (!length(target) || !length(config) || !length(meta)){
+    return(FALSE)
+  }
   for (file in meta$output_files){
     if (!file.exists(drake_unquote(file))){
       return(TRUE)
