@@ -188,10 +188,12 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' })
 #' }
 tracked <- function(config){
-  objects <- V(config$graph)$name
-  input_files <- unlist(V(config$graph)$input_files)
-  output_files <- unlist(V(config$graph)$output_files)
-  clean_dependency_list(c(objects, input_files, output_files))
+  c(
+    V(config$graph)$name,
+    V(config$graph)$input_files,
+    V(config$graph)$output_files
+  ) %>%
+    clean_dependency_list
 }
 
 dependencies <- function(targets, config, reverse = FALSE){
