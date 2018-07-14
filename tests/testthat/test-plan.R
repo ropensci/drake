@@ -1,4 +1,4 @@
-drake_context("workflow plan")
+drake_context("plan")
 
 test_with_dir("duplicated targets", {
   expect_error(
@@ -91,15 +91,12 @@ test_with_dir("File functions handle input", {
   expect_equal(
     knitr_in(1, "x", "y"), c("1", "x", "y")
   )
-  expect_warning(expect_equal(file_out(c(1, "x", "y")), "1"))
-  expect_error(file_out(1, "x", "y"))
+  expect_equal(
+    file_out(1, "x", "y"), c("1", "x", "y")
+  )
   expect_equal(
     code_dependencies(quote(file_out(c("file1", "file2")))),
     list(file_out = drake_quotes(c("file1", "file2"), single = FALSE))
-  )
-  expect_error(
-    single_file_out(""),
-    regexp = "found an empty"
   )
 })
 
@@ -108,7 +105,7 @@ test_with_dir("edge cases for plans", {
   # empty plan
   expect_equal(
     drake_plan(),
-    tibble(
+    tibble::tibble(
       target = character(0),
       command = character(0)
     )
@@ -116,7 +113,7 @@ test_with_dir("edge cases for plans", {
   # no target names
   expect_equal(
     drake_plan(a, b),
-    tibble(
+    tibble::tibble(
       target = c("drake_target_1", "drake_target_2"),
       command = c("a", "b")
     )
@@ -128,7 +125,7 @@ test_with_dir("edge cases for plans", {
   # incomplete target names
   expect_equal(
     drake_plan(a = 1, b),
-    tibble(
+    tibble::tibble(
       target = c("a", "drake_target_1"),
       command = c("1", "b")
     )
@@ -136,15 +133,15 @@ test_with_dir("edge cases for plans", {
   # too many file outputs
   expect_warning(expect_equal(
     drake_plan(a = file_out("file1", "file2")),
-    tibble(
-      target = c("\"file1\""),
+    tibble::tibble(
+      target = "a",
       command = "file_out('file1', 'file2')"
     )
   ))
   expect_warning(expect_equal(
     drake_plan(a = file_out(c("file1", "file2"))),
-    tibble(
-      target = c("\"file1\""),
+    tibble::tibble(
+      target = "a",
       command = "file_out(c('file1', 'file2'))"
     )
   ))
@@ -178,7 +175,7 @@ test_with_dir("plan set 3", {
     strings_in_dots = "literals", file_targets = TRUE,
     tidy_evaluation = tidy_evaluation))
   y <- tibble::tibble(
-    target = drake::drake_quotes(letters[1:4], single = FALSE),
+    target = drake::drake_quotes(letters[1:4], single = TRUE),
     command = c("c", "\"c\"", "d", "readRDS('e')"))
   expect_equal(x, y)
   }
@@ -468,7 +465,8 @@ test_with_dir("spaces in target names are replaced only when appropriate", {
       evaluate_plan(wildcard = "x__", values = c("b  \n  x y", "a x"))
   )
   pl2 <- tibble::tibble(
-    target = c("a_b_x_y", "a_a_x", "\"b  \n  x y\"", "\"a x\""),
+    target = c(
+      "a_b_x_y", "a_a_x", "drake_target_1_b_x_y", "drake_target_1_a_x"),
     command = c(
       "b  \n  x y", "a x", "file_out(\"b  \n  x y\")", "file_out(\"a x\")"
     )
