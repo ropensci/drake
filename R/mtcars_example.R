@@ -131,7 +131,7 @@ load_mtcars_example <- function(
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
 
   report <- tibble(
-    target = "report_file_path",
+    target = "report",
     command = 'knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)' # nolint  
   )
 

@@ -166,7 +166,7 @@ test_with_dir("deps_targets()", {
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
   expect_equal(
-    sort(deps_targets("report_file_path", config = config)),
+    sort(deps_targets("report", config = config)),
     sort(
       c(
         "coef_regression2_small", "knit", "large",
@@ -183,7 +183,7 @@ test_with_dir("deps_targets()", {
     sort(c(
       "regression1_large", "regression1_small",
       "regression2_large", "regression2_small",
-      "report_file_path"
+      "report"
     ))
   )
   config <- dbug()

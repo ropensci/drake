@@ -2,3 +2,5 @@
 
 library(drake)
 library(knitr)
+
+pkgconfig::set_config("drake::strings_in_dots" = "literals")

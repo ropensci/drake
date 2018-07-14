@@ -57,7 +57,7 @@ output_plan <- plan_analyses(
 # in a dynamic knitr report.
 
 report_plan <- drake_plan(
-  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
+  report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 # And we complete the workflow plan data frame by

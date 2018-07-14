@@ -54,7 +54,7 @@ results <- plan_summaries(
 # Drake knows to put report.md in the "target" column when it comes
 # time to make().
 report <- drake_plan(
-  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
+  report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 # Row order doesn't matter in the workflow my_plan.

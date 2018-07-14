@@ -40,8 +40,8 @@ rmspe_results_plan <- gather_plan(
 
 # Plan some final output.
 output_plan <- drake_plan(
-  ggsave(filename = file_out("rmspe.pdf"), plot = plot_rmspe(rmspe)),
-  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
+  plot = ggsave(filename = file_out("rmspe.pdf"), plot = plot_rmspe(rmspe)),
+  report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 # Put together the whole plan.
