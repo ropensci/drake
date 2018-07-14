@@ -213,7 +213,7 @@ run_clustermq_staged <- function(config){
       fun = function(target){
         # This call is actually tested in tests/testthat/test-clustermq.R.
         # nocov start
-        drake::build_clustermq(
+        drake::build_clustermq_staged(
           target = target,
           meta_list = meta_list,
           config = config
@@ -246,10 +246,11 @@ run_clustermq_staged <- function(config){
 #' @keywords internal
 #' @inheritParams drake_build
 #' @param meta_list list of metadata
-build_clustermq <- function(target, meta_list, config){
+build_clustermq_staged <- function(target, meta_list, config){
   # This function is actually tested in tests/testthat/test-clustermq.R.
   # nocov start
   do_prework(config = config, verbose_packages = FALSE)
+  meta_list[[target]]$start <- proc.time()
   build <- just_build(
     target = target,
     meta = meta_list[[target]],
