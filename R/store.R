@@ -4,12 +4,15 @@ store_outputs <- function(target, value, meta, config){
   if (inherits(meta$error, "error")){
     return()
   }
+  if (is.null(meta$command)){
+    meta$command <- get_standardized_command(target = target, config = config)
+  }
+  if (is.null(meta$dependency_hash)){
+    meta$dependency_hash <- dependency_hash(target = target, config = config)
+  }
   if (is.null(meta$input_file_hash)){
     meta$input_file_hash <- file_dependency_hash(
       target = target, config = config, which = "input_files")
-  }
-  if (is.null(meta$command)){
-    meta$command <- get_standardized_command(target = target, config = config)
   }
   for (file in meta$output_files){
     meta$name <- file
