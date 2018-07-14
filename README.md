@@ -132,7 +132,7 @@ plan <- drake_plan(
     select(-X__1),
   hist = create_plot(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  rmarkdown::render(
+  report = rmarkdown::render(
     knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
     quiet = TRUE
@@ -140,13 +140,13 @@ plan <- drake_plan(
 )
 plan
 #> # A tibble: 5 x 2
-#>   target         command                                                  
-#> * <chr>          <chr>                                                    
-#> 1 raw_data       "readxl::read_excel(file_in(\"raw_data.xlsx\"))"         
-#> 2 data           "raw_data %>% mutate(Species = forcats::fct_inorder(Spec…
-#> 3 hist           create_plot(data)                                        
-#> 4 fit            lm(Sepal.Width ~ Petal.Width + Species, data)            
-#> 5 drake_target_1 "rmarkdown::render(knitr_in(\"report.Rmd\"), output_file…
+#>   target   command                                                        
+#> * <chr>    <chr>                                                          
+#> 1 raw_data "readxl::read_excel(file_in(\"raw_data.xlsx\"))"               
+#> 2 data     "raw_data %>% mutate(Species = forcats::fct_inorder(Species)) …
+#> 3 hist     create_plot(data)                                              
+#> 4 fit      lm(Sepal.Width ~ Petal.Width + Species, data)                  
+#> 5 report   "rmarkdown::render(knitr_in(\"report.Rmd\"), output_file = fil…
 ```
 
 So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
@@ -157,7 +157,7 @@ make(plan)
 #> target data
 #> target fit
 #> target hist
-#> target drake_target_1
+#> target report
 ```
 
 Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
@@ -208,7 +208,7 @@ The next `make()` just builds `hist` and `report.html`. No point in wasting time
 ``` r
 make(plan)
 #> target hist
-#> target drake_target_1
+#> target report
 ```
 
 ``` r
@@ -251,7 +251,7 @@ make(plan) # Independently re-create the results from the code and input data.
 #> target data
 #> target fit
 #> target hist
-#> target drake_target_1
+#> target report
 ```
 
 Independent replication
