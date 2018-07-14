@@ -199,7 +199,7 @@ prune_drake_graph <- function(
   ignore <- lightly_parallelize(
     X = to,
     FUN = function(vertex){
-      subcomponent(graph = graph, v = vertex, mode = "in")$name
+      drake_subcomponent(graph = graph, v = vertex, mode = "in")$name
     },
     jobs = jobs
   ) %>%
@@ -244,7 +244,7 @@ downstream_nodes <- function(from, graph, jobs){
   lightly_parallelize(
     X = from,
     FUN = function(node){
-      subcomponent(graph, v = node, mode = "out")$name
+      drake_subcomponent(graph, v = node, mode = "out")$name
     },
     jobs = jobs
   ) %>%
@@ -291,4 +291,11 @@ connect_output_files <- function(commands_edges, output_files){
   index <- match(commands_edges$from, table = output_files$values)
   commands_edges$from[is.finite(index)] <- output_files$ind[na.omit(index)]
   commands_edges
+}
+
+drake_subcomponent <- function(...){
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = TRUE)
+  igraph::subcomponent(...)
 }
