@@ -1,5 +1,6 @@
-# Version 5.2.1.9000
+# Version 5.2.1.9001
 
+- Allow multiple output files per command.
 - Add Sankey diagram visuals: `sankey_drake_graph()` and `render_sankey_drake_graph()`.
 - Add `static_drake_graph()` and `render_static_drake_graph()` for `ggplot2`/`ggraph` static graph visualizations.
 - Add `group` and `clusters` arguments to `vis_drake_graph()`, `static_drake_graph()`, and `drake_graph_info()` to optionally condense nodes into clusters.

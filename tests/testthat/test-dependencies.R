@@ -105,7 +105,7 @@ test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
-  y <- sort(c("\"intermediatefile.rds\"",
+  y <- sort(c("\"intermediatefile.rds\"", "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
     "c", "b", "a", "saveRDS", "\"input.rds\"", "readRDS"))
