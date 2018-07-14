@@ -216,7 +216,7 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
 test_with_dir("targets can be partially specified", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  config$targets <- "\"intermediatefile.rds\""
+  config$targets <- "drake_target_1"
   testrun(config)
   expect_true(file.exists("intermediatefile.rds"))
   expect_error(readd(final, search = FALSE))

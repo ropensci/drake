@@ -131,6 +131,7 @@ test_with_dir("deprecate misc utilities", {
   load_mtcars_example()
   config <- drake_config(my_plan)
   expect_warning(tmp <- dataframes_graph(config))
+  expect_warning(migrate_drake_project())
 })
 
 test_with_dir("deprecated arguments", {

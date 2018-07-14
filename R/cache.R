@@ -494,3 +494,31 @@ kernel_exists <- function(target, config){
 }
 
 target_exists <- kernel_exists
+
+
+assert_compatible_cache <- function(cache){
+  if (is.null(cache)){
+    return()
+  }
+  err <- try(
+    old <- drake_version(session_info = drake_session(cache = cache)), # nolint
+    silent = TRUE
+  )
+  if (inherits(err, "try-error")){
+    return(invisible())
+  }
+  comparison <- compareVersion(old, "4.4.0")
+  if (comparison > 0){
+    return(invisible())
+  }
+  current <- packageVersion("drake")
+  path <- cache$driver$path
+  newpath <- backup_cache_path(path = path, old = old)
+  stop(
+    "The project at '", path, "' was previously built by drake ", old, ". ",
+    "You are running drake ", current, ", which is not back-compatible. ",
+    "Run make(..., force = TRUE) to update.",
+    call. = FALSE
+  )
+}
+
