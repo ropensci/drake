@@ -106,7 +106,7 @@ store_function <- function(target, value, meta, config){
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
   if (meta$imported){
-    string <- c(string, meta$depends)
+    string <- c(string, meta$dependency_hash)
   }
   config$cache$set(
     key = target,

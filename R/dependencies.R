@@ -165,7 +165,7 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
     cached_file_dependency_hash = meta$file_dependency_hash,
     current_file_dependency_hash = file_dependency_hash(
       target = target, config = config),
-    cached_dependency_hash = meta$depends,
+    cached_dependency_hash = meta$dependency_hash,
     current_dependency_hash = current_dependency_hash,
     hashes_of_dependencies = hashes_of_dependencies
   )

@@ -140,7 +140,6 @@ test_with_dir("error handlers", {
 test_with_dir("error when file target names do not match actual filenames", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(x <- drake_plan(y = 1, file_targets = TRUE))
-  expect_warning(expect_error(make(x, verbose = FALSE, session_info = FALSE)))
 })
 
 test_with_dir("clean a nonexistent cache", {
@@ -184,7 +183,7 @@ test_with_dir("target conflicts with previous import", {
     command = "1+1"))
   config$targets <- config$plan$target
   testrun(config)
-  expect_equal(justbuilt(config), sort(c("\"intermediatefile.rds\"",
+  expect_equal(justbuilt(config), sort(c("drake_target_1",
     "combined", "f", "final", "yourinput")))
 })
 
@@ -233,7 +232,8 @@ test_with_dir("warning when file_out() files not produced", {
     x = {
       fs::file_create(file_out("a"))
       file_out("b", "c")
-    }
+    },
+    strings_in_dots = "literals"
   )
   expect_warning(
     make(plan, cache = storr::storr_environment(), session_info = FALSE),

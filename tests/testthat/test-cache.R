@@ -224,7 +224,10 @@ test_with_dir("cache functions work", {
     imports)
   expect_equal(imported(files_only = TRUE, search = FALSE),
     "\"input.rds\"")
-  expect_equal(sort(built(search = FALSE)), sort(c(config$plan$target, out_files)))
+  expect_equal(
+    sort(built(search = FALSE)),
+    sort(c(config$plan$target, out_files))
+  )
   twopiece <- sort(c(built(search = FALSE), imported(search = FALSE,
     files_only = FALSE)))
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)

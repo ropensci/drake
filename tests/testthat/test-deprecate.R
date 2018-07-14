@@ -161,18 +161,6 @@ test_with_dir("old file API", {
   expect_warning(check_plan(z))
   expect_warning(make(z, session_info = FALSE) -> config)
   expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
-  expect_true(is.character(readd("'file.csv'")))
-  expect_error(is.character(`"file.csv"`))
-  expect_silent(loadd("'file.csv'", verbose = FALSE))
-  expect_true(is.character(`"file.csv"`))
-  expect_equal(
-    z,
-    tibble::tibble(
-      target = c("\"file.csv\"", "contents"),
-      command = c("write.csv(mtcars, file = \"file.csv\")", "read.csv('file.csv')") # nolint
-    )
-  )
-  expect_equal(sort(justbuilt(config)), sort(c("contents", "\"file.csv\"")))
 })
 
 test_with_dir("example template files (deprecated)", {
