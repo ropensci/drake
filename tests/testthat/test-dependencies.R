@@ -186,4 +186,11 @@ test_with_dir("deps_targets()", {
       "report_file_path"
     ))
   )
+  config <- dbug()
+  deps <- sort(deps_targets(config$targets, config))
+  truth <- sort(c(
+    "combined", "saveRDS", "f", "g", "myinput",
+    "nextone", "yourinput", "\"input.rds\"", "readRDS", "drake_target_1"
+  ))
+  expect_equal(deps, truth)
 })
