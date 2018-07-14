@@ -240,3 +240,7 @@ test_with_dir("warning when file_out() files not produced", {
     regexp = "Missing files for target"
   )
 })
+
+test_with_dir("file hash of a non-file", {
+  expect_true(is.na(file_hash("asdf", list())))
+})

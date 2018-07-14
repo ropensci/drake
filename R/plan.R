@@ -6,10 +6,13 @@
 #' argument to supply them as character strings.
 #' @details A workflow plan data frame is a data frame
 #' with a `target` column and a `command` column.
-#' Targets are the objects and files that drake generates,
+#' Targets are the R objects that `drake` generates,
 #' and commands are the pieces of R code that produce them.
 #'
-#' To use custom files in your workflow plan,
+#' The commands that return targets may also depend on
+#' external files and create multiple external files.
+#' To signal that you are creating and/or depending on
+#' custom files in your commands,
 #' use the [file_in()], [knitr_in()], and
 #' [file_out()] functions in your commands.
 #' the examples in this help file provide some guidance.
