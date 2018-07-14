@@ -84,24 +84,26 @@ build_drake_graph <- function(
     jobs = jobs
   ) %>%
     do.call(what = dplyr::bind_rows)
-  file_outs <- lightly_parallelize(
-    X = seq_len(nrow(plan)),
-    FUN = function(i){
-      commands_deps[[i]]$file_out
-    },
-    jobs = jobs
-  ) %>%
-    setNames(nm = plan$target) %>%
-    select_nonempty
-  commands_edges <- connect_file_outs(commands_edges, file_outs)
+  output_files <- deps_to_igraph_attr(plan, commands_deps, "file_out", jobs)
+  input_files <- deps_to_igraph_attr(
+    plan, commands_deps, c("file_in", "knitr_in"), jobs)
+  commands_edges <- connect_output_files(commands_edges, output_files)
   graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
     igraph::graph_from_data_frame()
-  if (length(file_outs)){
+  if (length(output_files)){
     graph <- igraph::set_vertex_attr(
       graph = graph,
       name = "output_files",
-      index = names(file_outs),
-      value = file_outs
+      index = names(output_files),
+      value = output_files
+    )
+  }
+  if (length(input_files)){
+    graph <- igraph::set_vertex_attr(
+      graph = graph,
+      name = "input_files",
+      index = names(input_files),
+      value = input_files
     )
   }
   prune_drake_graph(graph = graph, to = targets, jobs = jobs) %>%
@@ -122,6 +124,18 @@ code_deps_to_edges <- function(target, deps){
     # Loops will be removed.
     data.frame(from = target, to = target, stringsAsFactors = FALSE)
   }
+}
+
+deps_to_igraph_attr <- function(plan, commands_deps, fields, jobs){
+  lightly_parallelize(
+    X = seq_len(nrow(plan)),
+    FUN = function(i){
+      unlist(commands_deps[[i]][fields])
+    },
+    jobs = jobs
+  ) %>%
+    setNames(nm = plan$target) %>%
+    select_nonempty
 }
 
 #' @title Prune the dependency network of your project.
@@ -268,13 +282,13 @@ targets_graph <- function(config){
   delete_vertices(config$graph, v = delete_these)
 }
 
-connect_file_outs <- function(commands_edges, file_outs){
-  if (!length(file_outs)){
+connect_output_files <- function(commands_edges, output_files){
+  if (!length(output_files)){
     return(commands_edges)
   }
-  file_outs <- utils::stack(file_outs)
-  file_outs$ind <- as.character(file_outs$ind)
-  index <- match(commands_edges$from, table = file_outs$values)
-  commands_edges$from[is.finite(index)] <- file_outs$ind[na.omit(index)]
+  output_files <- utils::stack(output_files)
+  output_files$ind <- as.character(output_files$ind)
+  index <- match(commands_edges$from, table = output_files$values)
+  commands_edges$from[is.finite(index)] <- output_files$ind[na.omit(index)]
   commands_edges
 }

@@ -59,6 +59,13 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
         name = "output_files",
         index = target
       )
+    ),
+    input_files = unlist(
+      igraph::vertex_attr(
+        graph = config$graph,
+        name = "input_files",
+        index = target
+      )
     )
   )
   trigger <- get_trigger(target = target, config = config)

@@ -154,11 +154,15 @@ depends_trigger <- function(target, meta, config){
   !identical(depends, meta$depends)
 }
 
+# We really need a file dependency hash just for all the files.
+# Maybe that's the role of meta$file
 file_trigger <- function(target, meta, config){
   for (file in meta$output_files){
     if (!file.exists(drake_unquote(file))){
       return(TRUE)
     }
+  }
+  for(file in c(meta$output_files, meta$input_files)){
     old_file_hash <- safe_get(
       key = file,
       namespace = "kernels",
