@@ -23,10 +23,6 @@ standardize_filename <- function(text){
   text
 }
 
-is_existing_file <- function(x){
-  is_file(x) & file.exists(drake_unquote(x))
-}
-
 is_not_file <- function(x){
   !is_file(x)
 }

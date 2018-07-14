@@ -24,7 +24,7 @@ test_with_dir("responses to intermediate file", {
   testrun(config)
   expect_equal(justbuilt(config), sort(config$plan$target))
   expect_equal(outdated(config), character(0))
-  
+
   # check missing and then replace file exactly as before
   final0 <- readd(final, search = FALSE)
   val <- readRDS("intermediatefile.rds")
@@ -43,7 +43,7 @@ test_with_dir("responses to intermediate file", {
     expect_equal(justbuilt(config), "drake_target_1")
     expect_equal(final0, readd(final, search = FALSE))
   }
-  
+
   # break a file
   for (file in c("intermediatefile.rds", "out2.rds")){
     unlink(file, force = TRUE)

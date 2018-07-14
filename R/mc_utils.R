@@ -173,6 +173,7 @@ mc_get_checksum <- function(target, config){
     safe_get_hash(key = target, namespace = "kernels", config = config),
     safe_get_hash(key = target, namespace = "meta", config = config),
     safe_get_hash(key = target, namespace = "attempt", config = config),
+    file_dependency_hash(target, config, "output_files"),
     sep = " "
   )
 }

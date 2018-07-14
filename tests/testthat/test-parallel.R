@@ -103,8 +103,7 @@ test_with_dir("mclapply and lapply", {
   suppressWarnings(out <- make(config = config))
   expect_false(
     grepl("NA", mc_get_checksum(target = "combined", config = config)))
-  expect_true(
-    grepl("NA", mc_get_checksum(target = "askldfklhjsdfkj", config = config)))
+  expect_error(mc_get_checksum(target = "askldfklhjsdfkj", config = config))
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
   suppressWarnings(out <- make(config = config))
@@ -210,8 +209,7 @@ test_with_dir("checksum functionality", {
   checksum <- mc_get_checksum(target = "combined", config = config)
   bad <- "askldfklhjsdfkj"
   expect_false(grepl("NA", checksum))
-  expect_true(
-    grepl("NA", mc_get_checksum(target = bad, config = config)))
+  expect_error(mc_get_checksum(target = bad, config = config))
   expect_true(
     mc_is_good_checksum(
       target = "combined", checksum = checksum, config = config))

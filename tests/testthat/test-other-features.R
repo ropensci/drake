@@ -240,4 +240,5 @@ test_with_dir("misc utils", {
   config <- list(plan = data.frame(x = 1, y = 2))
   expect_error(check_drake_config(config), regexp = "columns")
   expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
+  empty_hook()
 })

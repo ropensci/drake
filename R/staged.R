@@ -255,22 +255,22 @@ build_clustermq <- function(target, meta_list, config){
     meta = meta_list[[target]],
     config = config
   )
-  if (is_file(target)){
-    build$checksum <- rehash_file(target, config = config)
-  }
+  build$checksum <- file_dependency_hash(target, config, "output_files")
   build
   # nocov end
 }
 
 wait_for_file <- function(build, config){
-  if (!length(build$checksum)){
-    return()
-  }
   R.utils::withTimeout({
-      while (!file.exists(drake_unquote(build$target))){
+      while (!all(file.exists(drake_unquote(build$meta$output_files)))){
         Sys.sleep(mc_wait) # nocov
       }
-      while (!identical(rehash_file(build$target, config), build$checksum)){
+      while (
+        !identical(
+          file_dependency_hash(build$target, config, "output_files"),
+          build$checksum
+        )
+      ){
         Sys.sleep(mc_wait) # nocov
       }
     },
