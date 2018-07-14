@@ -12,7 +12,6 @@ test_with_dir("fancy cache features, bad paths", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   saveRDS(1, file = "exists")
   suppressWarnings(expect_error(x <- new_cache("exists")))
-  expect_silent(tmp <- uncache(targets = "targ", cache = NULL))
 })
 
 test_with_dir("null hashes", {
