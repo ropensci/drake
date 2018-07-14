@@ -111,7 +111,13 @@ finish_meta <- function(target, meta, config){
 }
 
 dependency_hash <- function(target, config) {
-  dependencies(target, config) %>%
+  objects <- dependencies(target, config)
+  input_files <- unlist(igraph::vertex_attr(
+    graph = config$graph,
+    name = "input_files",
+    index = target
+  ))
+  sort(c(objects, input_files)) %>%
     self_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }

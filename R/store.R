@@ -1,4 +1,14 @@
 store_outputs <- function(target, value, meta, config){
+  # Failed targets need to stay invalidated,
+  # even when `config$keep_going` is `TRUE`.
+  if (inherits(meta$error, "error")){
+    return()
+  }
+  meta <- finish_meta(
+    target = target,
+    meta = meta,
+    config = config
+  )
   store_single_output(
     target = target,
     value = value,
@@ -19,16 +29,6 @@ store_outputs <- function(target, value, meta, config){
 }
 
 store_single_output <- function(target, value, meta, config) {
-  # Failed targets need to stay invalidated,
-  # even when `config$keep_going` is `TRUE`.
-  if (inherits(meta$error, "error")){
-    return()
-  }
-  meta <- finish_meta(
-    target = target,
-    meta = meta,
-    config = config
-  )
   if (is_file(target)) {
     store_object(
       target = target,

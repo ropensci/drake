@@ -48,7 +48,8 @@ test_with_dir("changes to commands are handled well", {
   nobuild(config)
 
   # command changed for an intermediate file
-  config$plan$command[1] <- "saveRDS(combined + 1, drake_target_1)"
+  config$plan$command[1] <-
+    "saveRDS(combined + 1, file_out(\"intermediatefile.rds\"))"
   config <- testrun(config)
   expect_equal(
     justbuilt(config),
