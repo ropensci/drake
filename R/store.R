@@ -1,18 +1,47 @@
-store_target <- function(target, value, meta, config) {
+store_outputs <- function(target, value, meta, config){
   # Failed targets need to stay invalidated,
   # even when `config$keep_going` is `TRUE`.
   if (inherits(meta$error, "error")){
     return()
   }
-  meta <- finish_meta(
+  if (is.null(meta$command)){
+    meta$command <- get_standardized_command(target = target, config = config)
+  }
+  if (is.null(meta$dependency_hash)){
+    meta$dependency_hash <- dependency_hash(target = target, config = config)
+  }
+  if (is.null(meta$input_file_hash)){
+    meta$input_file_hash <- file_dependency_hash(
+      target = target, config = config, which = "input_files")
+  }
+  for (file in meta$output_files){
+    meta$name <- file
+    meta$mtime <- file.mtime(drake::drake_unquote(file))
+    store_single_output(
+      target = file,
+      meta = meta,
+      config = config
+    )
+  }
+  if (length(meta$output_files) || is.null(meta$output_file_hash)){
+    meta$output_file_hash <- file_dependency_hash(
+      target = target, config = config, which = "output_files")
+  }
+  meta$name <- target
+  store_single_output(
     target = target,
+    value = value,
     meta = meta,
     config = config
   )
+}
+
+store_single_output <- function(target, value, meta, config) {
   if (is_file(target)) {
+    # Imported files are stored this way.
     store_object(
       target = target,
-      value = meta$file,
+      value = safe_rehash_file(target = target, config = config),
       meta = meta,
       config = config
     )
@@ -80,7 +109,7 @@ store_function <- function(target, value, meta, config){
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
   if (meta$imported){
-    string <- c(string, meta$depends)
+    string <- c(string, meta$dependency_hash)
   }
   config$cache$set(
     key = target,

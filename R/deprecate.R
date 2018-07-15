@@ -773,7 +773,33 @@ max_useful_jobs <- function(
   # nocov end
 }
 
-
+#' @title Deprecated: reconfigure an old project (built with drake <= 4.4.0)
+#'   to be compatible with later versions of drake.
+#' @export
+#' @keywords internal
+#' @seealso [rescue_cache()], [make()]
+#' @param path Full path to the cache.
+#' @param jobs number of jobs for light parallelism.
+#' @description Deprecated on May 4, 2018.
+#' This function was intended to migrate a project/cache from
+#' drake 4.4.0 or earlier
+#' to be compatible with the version of drake on your system.
+#' @examples
+#' \dontrun{
+#' # This function is deprecated.
+#' }
+migrate_drake_project <- function(
+  path = drake::default_cache_path(), jobs = 1
+){
+  .Deprecated(
+    package = "drake",
+    msg = c(
+      "migrate_drake_project() is deprecated. Please run ",
+      "make() again on projects built with drake version <= 4.4.0"
+    )
+  )
+}
+  
 #' @title Deprecated function `plan`
 #' @description Use [drake_plan()] instead.
 #' @details Deprecated on 2017-10.

@@ -39,9 +39,7 @@ envir_code <- function(x){
 # For the table of possible testing scenarios x.
 apply_skip_os <- function(x){
   x$skip_os <- ""
-  skip_on_windows <-
-    x$parallelism == "mclapply" &
-    x$jobs > 1
+  skip_on_windows <- grepl("mclapply|clustermq", x$parallelism)
   x$skip_os[skip_on_windows] <- "windows"
   x
 }

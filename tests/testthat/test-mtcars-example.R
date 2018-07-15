@@ -28,7 +28,7 @@ test_with_dir("mtcars example works", {
   config$targets <- config$plan$target
   con <- testrun(config)
   jb <- justbuilt(con)
-  expect_true("\"report.md\"" %in% jb)
+  expect_true("report" %in% jb)
   expect_false(any(dats %in% jb))
 
   # Check that file is not rehashed.
@@ -48,7 +48,7 @@ test_with_dir("mtcars example works", {
     verbose = FALSE)
   expect_equal(
     sort(outdated(config = config)),
-    sort(c("\"report.md\"", "coef_regression2_large",
+    sort(c("report", "coef_regression2_large",
       "coef_regression2_small", "regression2_large", "regression2_small",
       "summ_regression2_large", "summ_regression2_small")))
   testrun(config)

@@ -23,10 +23,6 @@ standardize_filename <- function(text){
   text
 }
 
-is_existing_file <- function(x){
-  is_file(x) & file.exists(drake_unquote(x))
-}
-
 is_not_file <- function(x){
   !is_file(x)
 }
@@ -83,4 +79,15 @@ padded_scale <- function(x){
   r <- range(x)
   pad <- 0.2 * (r[2] - r[1])
   c(r[1] - pad, r[2] + pad)
+}
+
+select_nonempty <- function(x){
+  index <- vapply(
+    X = x,
+    FUN = function(y){
+      length(y) > 0
+    },
+    FUN.VALUE = logical(1)
+  )
+  x[index]
 }

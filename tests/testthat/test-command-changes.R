@@ -5,7 +5,7 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     sort(outdated(config)),
     sort(c(
-      "\"intermediatefile.rds\"",
+      "drake_target_1",
       "combined",
       "final",
       "myinput",
@@ -25,7 +25,7 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     sort(outdated(config)),
     sort(c(
-      "\"intermediatefile.rds\"",
+      "drake_target_1",
       "combined",
       "final",
       "yourinput"
@@ -38,7 +38,7 @@ test_with_dir("changes to commands are handled well", {
   expect_equal(
     justbuilt(config),
     sort(c(
-      "\"intermediatefile.rds\"",
+      "drake_target_1",
       "combined",
       "final",
       "yourinput"
@@ -48,10 +48,11 @@ test_with_dir("changes to commands are handled well", {
   nobuild(config)
 
   # command changed for an intermediate file
-  config$plan$command[1] <- "saveRDS(combined + 1, \"intermediatefile.rds\")"
+  config$plan$command[1] <-
+    "saveRDS(combined + 1, file_out(\"intermediatefile.rds\"))"
   config <- testrun(config)
   expect_equal(
     justbuilt(config),
-    sort(c("\"intermediatefile.rds\"", "final"))
+    sort(c("drake_target_1", "final"))
   )
 })

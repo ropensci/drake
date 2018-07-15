@@ -194,10 +194,54 @@ test_with_dir("can get the graph info when a file is missing", {
       session_info = FALSE
     )
   )
-  expect_warning(o <- drake_graph_info(config))
+  suppressWarnings(o <- drake_graph_info(config))
   expect_true("missing" %in% o$nodes$status)
 })
 
 test_with_dir("misc graph utils", {
   expect_true(is.character(default_graph_title()))
+})
+
+test_with_dir("file_out()/file_in() connections", {
+  plan <- drake_plan(
+    out1 = saver1,
+    saver1 = file_out("a", "b", "c"),
+    reader3 = file_in("b", "d"),
+    saver2 = file_out("d"),
+    out2 = reader2,
+    reader1 = file_in("c", "d"),
+    reader2 = file_in("a", "b"),
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(
+    plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_equal(dependencies("out1", config), "saver1")
+  expect_equal(dependencies("saver1", config), character(0))
+  expect_equal(
+    sort(dependencies("reader3", config)),
+    sort(c("saver1", "saver2"))
+  )
+  expect_equal(dependencies("saver2", config), character(0))
+  expect_equal(dependencies("out2", config), "reader2")
+  expect_equal(
+    sort(dependencies("reader1", config)),
+    sort(c("saver1", "saver2"))
+  )
+  expect_equal(dependencies("reader2", config), "saver1")
+  expect_equal(dependencies("out1", config, reverse = TRUE), character(0))
+  expect_equal(
+    sort(dependencies("saver1", config, reverse = TRUE)),
+    sort(c("out1", "reader1", "reader2", "reader3"))
+  )
+  expect_equal(dependencies("reader3", config, reverse = TRUE), character(0))
+  expect_equal(
+    sort(dependencies("saver2", config, reverse = TRUE)),
+    sort(c("reader1", "reader3"))
+  )
+  expect_equal(dependencies("out2", config, reverse = TRUE), character(0))
+  expect_equal(dependencies("reader1", config, reverse = TRUE), character(0))
+  expect_equal(dependencies("reader2", config, reverse = TRUE), "out2")
 })

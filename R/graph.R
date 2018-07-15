@@ -61,30 +61,53 @@ build_drake_graph <- function(
       imports_edges(name = import_names[[i]], value = imports[[i]])
     },
     jobs = jobs
-  )
+  ) %>%
+    do.call(what = dplyr::bind_rows)
   console_many_targets(
     targets = plan$target,
     pattern = "connect",
     type = "target",
     config = config
   )
-  commands_edges <- lightly_parallelize(
+  commands_deps <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
-      commands_edges(target = plan$target[i], command = plan$command[i])
+      command_dependencies(command = plan$command[i])
     },
     jobs = jobs
   )
-  c(imports_edges, commands_edges) %>%
-    do.call(what = rbind) %>%
-    igraph::graph_from_data_frame() %>%
-    prune_drake_graph(to = targets, jobs = jobs) %>%
+  commands_edges <- lightly_parallelize(
+    X = seq_len(nrow(plan)),
+    FUN = function(i){
+      code_deps_to_edges(target = plan$target[i], deps = commands_deps[[i]])
+    },
+    jobs = jobs
+  ) %>%
+    do.call(what = dplyr::bind_rows)
+  output_files <- deps_to_igraph_attr(plan, commands_deps, "file_out", jobs)
+  input_files <- deps_to_igraph_attr(
+    plan, commands_deps, c("file_in", "knitr_in"), jobs)
+  commands_edges <- connect_output_files(commands_edges, output_files)
+  graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
+    igraph::graph_from_data_frame()
+  if (length(output_files)){
+    graph <- igraph::set_vertex_attr(
+      graph = graph,
+      name = "output_files",
+      index = names(output_files),
+      value = output_files
+    )
+  }
+  if (length(input_files)){
+    graph <- igraph::set_vertex_attr(
+      graph = graph,
+      name = "input_files",
+      index = names(input_files),
+      value = input_files
+    )
+  }
+  prune_drake_graph(graph = graph, to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
-}
-
-commands_edges <- function(target, command){
-  deps <- command_dependencies(command)
-  code_deps_to_edges(target = target, deps = deps)
 }
 
 imports_edges <- function(name, value){
@@ -101,6 +124,18 @@ code_deps_to_edges <- function(target, deps){
     # Loops will be removed.
     data.frame(from = target, to = target, stringsAsFactors = FALSE)
   }
+}
+
+deps_to_igraph_attr <- function(plan, commands_deps, fields, jobs){
+  lightly_parallelize(
+    X = seq_len(nrow(plan)),
+    FUN = function(i){
+      unlist(commands_deps[[i]][fields])
+    },
+    jobs = jobs
+  ) %>%
+    setNames(nm = plan$target) %>%
+    select_nonempty
 }
 
 #' @title Prune the dependency network of your project.
@@ -164,7 +199,7 @@ prune_drake_graph <- function(
   ignore <- lightly_parallelize(
     X = to,
     FUN = function(vertex){
-      subcomponent(graph = graph, v = vertex, mode = "in")$name
+      drake_subcomponent(graph = graph, v = vertex, mode = "in")$name
     },
     jobs = jobs
   ) %>%
@@ -209,7 +244,7 @@ downstream_nodes <- function(from, graph, jobs){
   lightly_parallelize(
     X = from,
     FUN = function(node){
-      subcomponent(graph, v = node, mode = "out")$name
+      drake_subcomponent(graph, v = node, mode = "out")$name
     },
     jobs = jobs
   ) %>%
@@ -245,4 +280,22 @@ imports_graph <- function(config){
 targets_graph <- function(config){
   delete_these <- setdiff(V(config$graph)$name, config$plan$target)
   delete_vertices(config$graph, v = delete_these)
+}
+
+connect_output_files <- function(commands_edges, output_files){
+  if (!length(output_files)){
+    return(commands_edges)
+  }
+  output_files <- utils::stack(output_files)
+  output_files$ind <- as.character(output_files$ind)
+  index <- match(commands_edges$from, table = output_files$values)
+  commands_edges$from[is.finite(index)] <- output_files$ind[na.omit(index)]
+  commands_edges
+}
+
+drake_subcomponent <- function(...){
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = TRUE)
+  igraph::subcomponent(...)
 }

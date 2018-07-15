@@ -49,9 +49,9 @@
 #' @importFrom fs dir_create file_create
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom igraph adjacent_vertices components delete_vertices
-#'   degree edge igraph_opt igraph_options induced_subgraph is_dag
-#'   make_empty_graph plot.igraph simplify subcomponent topo_sort
-#'   V vertex vertex_attr
+#'   degree edge edges igraph_opt igraph_options induced_subgraph is_dag
+#'   make_empty_graph plot.igraph set_vertex_attr simplify subcomponent
+#'   topo_sort V vertex vertex_attr
 #' @importFrom knitr knit
 #' @importFrom lubridate dseconds duration
 #' @importFrom magrittr %>%
@@ -72,7 +72,7 @@
 #' @importFrom tidyselect vars_select
 #' @importFrom txtq txtq
 #' @importFrom utils capture.output compareVersion head installed.packages
-#'   packageVersion read.csv sessionInfo type.convert unzip write.table
+#'   packageVersion read.csv sessionInfo stack type.convert unzip write.table
 #' @importFrom withr local_dir with_dir with_options with_output_sink
 #'   with_preserve_seed with_seed
 NULL

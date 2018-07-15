@@ -70,33 +70,7 @@ test_with_dir("prepend arg works", {
   expect_true(any(grepl("# add", lines, fixed = TRUE)))
 })
 
-test_with_dir("files inside directories can be timestamped", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan <- drake_plan({
-    dir.create("t1"); saveRDS(1, file_out("t1/t2"))
-  })
-  file <- plan$target[1]
-  config <- drake_config(plan = plan, targets = plan$target[1],
-    parallelism = "parLapply", verbose = FALSE,
-    envir = new.env(), cache = NULL)
-  path <- cache_path(config$cache)
-  store_drake_config(config = config)
-  run_Makefile(config, run = FALSE)
-  prepare_distributed(config = config)
-  expect_silent(mk(config$plan$target[1], cache_path = path))
-  expect_true(file.exists("t1"))
-  expect_true(file.exists(drake::drake_unquote(file)))
-  unlink("t1", recursive = TRUE, force = TRUE)
-  expect_false(file.exists("t1"))
-
-  expect_silent(make(config$plan, verbose = FALSE, session_info = FALSE))
-  expect_true(file.exists("t1"))
-  expect_true(file.exists(drake::drake_unquote(file)))
-  unlink("t1", recursive = TRUE, force = TRUE)
-  expect_false(file.exists("t1"))
-})
-
-test_with_dir("mtcars Makefile stuff works", {
+test_with_dir("basic Makefile stuff works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   make(config$plan, targets = "combined", envir = config$envir,
@@ -131,12 +105,12 @@ test_with_dir("mtcars Makefile stuff works", {
   ))
   expect_equal(stamps, stamps2)
 
-  targ <- "\"intermediatefile.rds\""
-  expect_false(file.exists(drake::drake_unquote(targ)))
+  targ <- "drake_target_1"
+  expect_false(file.exists("intermediatefile.rds"))
   config$cache$del(key = targ, namespace = "progress")
   mk(targ, cache_path = cache_path)
   expect_equal(unname(progress(list = targ)), "finished")
-  expect_true(file.exists(drake::drake_unquote(targ)))
+  expect_true(file.exists("intermediatefile.rds"))
   config$cache$del(key = targ, namespace = "progress")
   mk(targ, cache_path = cache_path) # Verify behavior when target is current
   expect_equal(unname(progress(list = targ)), "not built or imported")

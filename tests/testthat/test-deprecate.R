@@ -131,6 +131,8 @@ test_with_dir("deprecate misc utilities", {
   load_mtcars_example()
   config <- drake_config(my_plan)
   expect_warning(tmp <- dataframes_graph(config))
+  expect_warning(migrate_drake_project())
+  expect_null(warn_single_quoted_files(character(0), list()))
 })
 
 test_with_dir("deprecated arguments", {
@@ -161,18 +163,6 @@ test_with_dir("old file API", {
   expect_warning(check_plan(z))
   expect_warning(make(z, session_info = FALSE) -> config)
   expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
-  expect_true(is.character(readd("'file.csv'")))
-  expect_error(is.character(`"file.csv"`))
-  expect_silent(loadd("'file.csv'", verbose = FALSE))
-  expect_true(is.character(`"file.csv"`))
-  expect_equal(
-    z,
-    tibble::tibble(
-      target = c("\"file.csv\"", "contents"),
-      command = c("write.csv(mtcars, file = \"file.csv\")", "read.csv('file.csv')") # nolint
-    )
-  )
-  expect_equal(sort(justbuilt(config)), sort(c("contents", "\"file.csv\"")))
 })
 
 test_with_dir("example template files (deprecated)", {
@@ -201,4 +191,30 @@ test_with_dir("plan set 1", {
     expect_equal(x, y)
     expect_warning(check_plan(x))
   }
+})
+
+test_with_dir("force loading a non-back-compatible cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_null(assert_compatible_cache(NULL))
+  expect_null(get_cache())
+  expect_null(this_cache())
+  expect_true(inherits(recover_cache(), "storr"))
+  write_v4.3.0_project() # nolint
+  suppressWarnings({
+    expect_error(get_cache())
+    expect_error(this_cache())
+    expect_error(recover_cache())
+  })
+  expect_true(inherits(get_cache(force = TRUE), "storr"))
+  expect_true(inherits(this_cache(force = TRUE), "storr"))
+  expect_true(inherits(recover_cache(force = TRUE), "storr"))
+  load_mtcars_example(force = TRUE)
+  config <- drake_config(my_plan, force = TRUE)
+  expect_true(length(outdated(config)) > 0)
+  expect_error(make(my_plan, verbose = FALSE, session_info = FALSE))
+  make(my_plan, verbose = FALSE, force = TRUE)
+  expect_equal(outdated(config), character(0))
+  expect_true(length(cached()) > 0)
+  clean()
+  expect_true(length(cached()) == 0)
 })

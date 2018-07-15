@@ -213,7 +213,7 @@ run_clustermq_staged <- function(config){
       fun = function(target){
         # This call is actually tested in tests/testthat/test-clustermq.R.
         # nocov start
-        drake::build_clustermq(
+        drake::build_clustermq_staged(
           target = target,
           meta_list = meta_list,
           config = config
@@ -246,31 +246,32 @@ run_clustermq_staged <- function(config){
 #' @keywords internal
 #' @inheritParams drake_build
 #' @param meta_list list of metadata
-build_clustermq <- function(target, meta_list, config){
+build_clustermq_staged <- function(target, meta_list, config){
   # This function is actually tested in tests/testthat/test-clustermq.R.
   # nocov start
   do_prework(config = config, verbose_packages = FALSE)
+  meta_list[[target]]$start <- proc.time()
   build <- just_build(
     target = target,
     meta = meta_list[[target]],
     config = config
   )
-  if (is_file(target)){
-    build$checksum <- rehash_file(target, config = config)
-  }
+  build$checksum <- file_dependency_hash(target, config, "output_files")
   build
   # nocov end
 }
 
 wait_for_file <- function(build, config){
-  if (!length(build$checksum)){
-    return()
-  }
   R.utils::withTimeout({
-      while (!file.exists(drake_unquote(build$target))){
+      while (!all(file.exists(drake_unquote(build$meta$output_files)))){
         Sys.sleep(mc_wait) # nocov
       }
-      while (!identical(rehash_file(build$target, config), build$checksum)){
+      while (
+        !identical(
+          file_dependency_hash(build$target, config, "output_files"),
+          build$checksum
+        )
+      ){
         Sys.sleep(mc_wait) # nocov
       }
     },

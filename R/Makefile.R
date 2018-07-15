@@ -94,13 +94,8 @@ build_recipe <- function(target, recipe_command,
   if (is.null(cache_path)){
     cache_path <- cache_value_macro
   }
-  if (is_file(target)){
-    target <- paste0("drake::file_store(\"",
-      drake::drake_unquote(target), "\")")
-  } else{
-    target <- drake::drake_quotes(
-      drake::drake_unquote(target), single = FALSE)
-  }
+  target <- drake::drake_quotes(
+    drake::drake_unquote(target), single = FALSE)
   r_recipe <- paste0("drake::mk(target = ", target,
     ", cache_path = \"", cache_path, "\")")
   if (!safe_grepl(r_recipe_wildcard(), recipe_command, fixed = TRUE)){
@@ -144,14 +139,25 @@ mk <- function(
   cache_path = drake::default_cache_path()
 ){
   config <- recover_drake_config(cache_path)
-  old_hash <- self_hash(target = target, config = config)
+  old_hash <- makefile_hash(target = target, config = config)
   build_distributed(target = target, cache_path = cache_path)
-  new_hash <- self_hash(target = target, config = config)
+  new_hash <- makefile_hash(target = target, config = config)
   if (!identical(old_hash, new_hash)){
     file <- time_stamp_file(target = target, config = config)
     file_overwrite(file)
   }
   invisible()
+}
+
+makefile_hash <- function(target, config){
+  paste(
+    self_hash(target, config),
+    file_dependency_hash(
+      target = target,
+      config = config,
+      which = "output_files"
+    )
+  )
 }
 
 #' @title Return the default value of the

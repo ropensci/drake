@@ -6,7 +6,7 @@
 
 library(drake)
 library(tidyverse)
-pkgconfig::set_config("drake::strings_in_dots" = "literals") # For convenience
+pkgconfig::set_config("drake::strings_in_dots" = "literals") # New file API
 
 # Your custom code is a bunch of functions.
 
@@ -25,7 +25,7 @@ plan <- drake_plan(
     select(-X__1),
   hist = create_plot(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  rmarkdown::render(
+  report = rmarkdown::render(
     knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
     quiet = TRUE

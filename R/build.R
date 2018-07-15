@@ -136,20 +136,20 @@ announce_build <- function(target, meta, config){
 }
 
 conclude_build <- function(target, value, meta, config){
-  check_processed_file(target, config)
+  assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
-  store_target(target = target, value = value, meta = meta, config = config)
+  store_outputs(target = target, value = value, meta = meta, config = config)
   invisible(value)
 }
 
-check_processed_file <- function(target, config){
-  if (!is_file(target)){
-    return()
-  }
-  if (!file.exists(drake::drake_unquote(target))){
+assert_output_files <- function(target, meta, config){
+  missing_files <- Filter(x = meta$output_files, f = function(x){
+    !file.exists(drake::drake_unquote(x))
+  })
+  if (length(missing_files)){
     drake_warning(
-      "File ", target, " was built or processed,\n",
-      "but the file itself does not exist.",
+      "Missing files for target ", target, ":\n",
+      multiline_message(missing_files),
       config = config
     )
   }

@@ -16,8 +16,8 @@ by \code{\link[=drake_config]{drake_config()}}.}
 \value{
 A list of metadata on a target. Does not include
 the file modification time if the target is a file.
-That piece is provided later in \code{\link[=make]{make()}} by
-\code{drake:::finish_meta}.
+That piece is computed later in \code{\link[=make]{make()}} by
+\code{drake:::store_outputs()}.
 }
 \description{
 The metadata helps determine if the
@@ -27,7 +27,7 @@ is used to compute the metadata of targets.
 \details{
 Target metadata is computed
 with \code{drake_meta()}, and then
-\code{drake:::finish_meta()} completes the metadata
+\code{drake:::store_outputs()} completes the metadata
 after the target is built.
 In other words, the output of \code{drake_meta()} corresponds
 to the state of the target immediately before \code{\link[=make]{make()}}

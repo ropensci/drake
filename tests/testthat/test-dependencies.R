@@ -105,7 +105,7 @@ test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
-  y <- sort(c("\"intermediatefile.rds\"",
+  y <- sort(c("\"intermediatefile.rds\"", "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
     "c", "b", "a", "saveRDS", "\"input.rds\"", "readRDS"))
@@ -166,7 +166,7 @@ test_with_dir("deps_targets()", {
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
   expect_equal(
-    sort(deps_targets(file_store("report.md"), config = config)),
+    sort(deps_targets("report", config = config)),
     sort(
       c(
         "coef_regression2_small", "knit", "large",
@@ -183,7 +183,14 @@ test_with_dir("deps_targets()", {
     sort(c(
       "regression1_large", "regression1_small",
       "regression2_large", "regression2_small",
-      file_store("report.md")
+      "report"
     ))
   )
+  config <- dbug()
+  deps <- sort(deps_targets(config$targets, config))
+  truth <- sort(c(
+    "combined", "saveRDS", "f", "g", "myinput", "\"intermediatefile.rds\"",
+    "nextone", "yourinput", "\"input.rds\"", "readRDS", "drake_target_1"
+  ))
+  expect_equal(deps, truth)
 })

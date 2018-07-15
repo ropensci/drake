@@ -142,32 +142,41 @@ command_trigger <- function(target, meta, config){
 }
 
 depends_trigger <- function(target, meta, config){
-  if (is.null(meta$depends)){
+  if (is.null(meta$dependency_hash)){
     return(FALSE)
   }
-  depends <- get_from_subspace(
+  dependency_hash <- get_from_subspace(
     key = target,
-    subspace = "depends",
+    subspace = "dependency_hash",
     namespace = "meta",
     cache = config$cache
   )
-  !identical(depends, meta$depends)
+  !identical(dependency_hash, meta$dependency_hash)
 }
 
+# We really need a file dependency hash just for all the files.
+# Maybe that's the role of meta$file
 file_trigger <- function(target, meta, config){
-  if (is.null(meta$file) || !is_file(target)){
+  if (!length(target) || !length(config) || !length(meta)){
     return(FALSE)
   }
-  if (!file.exists(drake_unquote(target))){
-    return(TRUE)
+  for (file in meta$output_files){
+    if (!file.exists(drake_unquote(file))){
+      return(TRUE)
+    }
   }
-  tryCatch(
-    !identical(
-      config$cache$get(target, namespace = "kernels"),
-      meta$file
-    ),
-    error = error_false
-  )
+  for (hash_name in c("input_file_hash", "output_file_hash")){
+    old_file_hash <- get_from_subspace(
+      key = target,
+      subspace = hash_name,
+      namespace = "meta",
+      cache = config$cache
+    )
+    if (!identical(old_file_hash, meta[[hash_name]])){
+      return(TRUE)
+    }
+  }
+  FALSE
 }
 
 should_build_target <- function(target, meta = NULL, config){
@@ -184,20 +193,22 @@ should_build_target <- function(target, meta = NULL, config){
   if (trigger == "always"){
     return(TRUE)
   }
-  do_build <- FALSE
   if (trigger %in% triggers_with_command()){
-    do_build <- do_build ||
-      command_trigger(target = target, meta = meta, config = config)
+    if (command_trigger(target = target, meta = meta, config = config)){
+      return(TRUE)
+    }
   }
   if (trigger %in% triggers_with_depends()){
-    do_build <- do_build ||
-      depends_trigger(target = target, meta = meta, config = config)
+    if (depends_trigger(target = target, meta = meta, config = config)){
+      return(TRUE)
+    }
   }
   if (trigger %in% triggers_with_file()){
-    do_build <- do_build ||
-      file_trigger(target = target, meta = meta, config = config)
+    if (file_trigger(target = target, meta = meta, config = config)){
+      return(TRUE)
+    }
   }
-  do_build
+  FALSE
 }
 
 using_default_triggers <- function(config){

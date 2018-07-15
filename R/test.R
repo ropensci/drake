@@ -66,6 +66,7 @@ test_with_dir <- function(desc, ...){
   }
   dir.create(new)
   withr::local_dir(new)
+  withr::local_options(new = list(clustermq.scheduler = "multicore"))
   set_test_backend()
   test_that(desc = desc, ...)
   invisible()

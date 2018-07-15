@@ -48,8 +48,9 @@
 # To skip to the "CHECK AND DEBUG WORKFLOW PLAN" section, just
 # call load_mtcars_example().
 
-library(knitr) # Drake knows you loaded knitr.
+library(knitr) # drake knows you loaded knitr.
 library(drake)
+pkgconfig::set_config("drake::strings_in_dots" = "literals")
 
 clean() # remove any previous drake output
 
@@ -146,7 +147,7 @@ results <- plan_summaries(
 # Drake knows to put report.md in the "target" column when it comes
 # time to make().
 report <- drake_plan(
-  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
+  report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 # Row order doesn't matter in the workflow my_plan.

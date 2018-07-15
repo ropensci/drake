@@ -25,7 +25,7 @@
 #'   this conflict and runs as expected. In other words, [make()]
 #'   automatically removes all self-referential loops in the dependency
 #'   network.
-#' @seealso deps_targets make drake_plan drake_config
+#' @seealso deps_targets deps_files make drake_plan drake_config
 #' @export
 #' @param x a language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
@@ -112,7 +112,15 @@ deps_targets <- function(
   config = read_drake_config(),
   reverse = FALSE
 ){
-  dependencies(targets = targets, config = config, reverse = reverse)
+  c(
+    dependencies(targets = targets, config = config, reverse = reverse),
+    igraph::vertex_attr(
+      graph = config$graph,
+      name = "input_files",
+      index = targets
+    )
+  ) %>%
+    clean_dependency_list
 }
 
 #' @title Return the detailed dependency profile
@@ -162,9 +170,10 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
     current_file_modification_time = suppressWarnings(
       file.mtime(drake::drake_unquote(target))
     ),
-    cached_file_hash = meta$file,
-    current_file_hash = file_hash(target = target, config = config),
-    cached_dependency_hash = meta$depends,
+    cached_file_dependency_hash = meta$file_dependency_hash,
+    current_file_dependency_hash = file_dependency_hash(
+      target = target, config = config),
+    cached_dependency_hash = meta$dependency_hash,
     current_dependency_hash = current_dependency_hash,
     hashes_of_dependencies = hashes_of_dependencies
   )
@@ -188,7 +197,12 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' })
 #' }
 tracked <- function(config){
-  sort(V(config$graph)$name)
+  c(
+    V(config$graph)$name,
+    V(config$graph)$input_files,
+    V(config$graph)$output_files
+  ) %>%
+    clean_dependency_list
 }
 
 dependencies <- function(targets, config, reverse = FALSE){

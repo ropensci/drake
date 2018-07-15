@@ -6,10 +6,13 @@
 #' argument to supply them as character strings.
 #' @details A workflow plan data frame is a data frame
 #' with a `target` column and a `command` column.
-#' Targets are the objects and files that drake generates,
+#' Targets are the R objects that `drake` generates,
 #' and commands are the pieces of R code that produce them.
 #'
-#' To use custom files in your workflow plan,
+#' The commands that return targets may also depend on
+#' external files and create multiple external files.
+#' To signal that you are creating and/or depending on
+#' custom files in your commands,
 #' use the [file_in()], [knitr_in()], and
 #' [file_out()] functions in your commands.
 #' the examples in this help file provide some guidance.
@@ -335,17 +338,14 @@ file_in <- function(...){
 #'   for a full explanation.
 #' @export
 #' @seealso [file_in()], [knitr_in()], [ignore()]
-#' @return A character string, the file path of the file output.
-#' @param path Character string of length 1. File path
-#'   of the file output of a command in your
-#'   workflow plan data frame.
-#' @param ... Do not use. For informative input handling only.
+#' @return A character vector of declared output file paths.
+#' @param ... Character vector of output file paths.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_out("summaries.txt")
+#' file_out("summaries.txt", "output.csv")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
@@ -367,17 +367,7 @@ file_in <- function(...){
 #' # in your report.
 #' })
 #' }
-file_out <- function(path){
-  if (length(path) != 1){
-    warning(
-      "In file_out(), the `path` argument must ",
-      "have length 1. Supplied length = ", length(path), ". ",
-      "using first file output: ", path[1], ".",
-      call. = FALSE
-    )
-  }
-  as.character(path[1])
-}
+file_out <- file_in
 
 #' @title Declare the `knitr`/`rmarkdown` source files
 #'   of a workflow plan command.
