@@ -58,3 +58,33 @@ test_with_dir("responses to intermediate file", {
     clean(destroy = TRUE)
   }
 })
+
+test_with_dir("imported file_in file", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  envir <- dbug_envir(envir)
+  eval(parse(text = "j <- function(x){
+      knitr_in(\"report.Rmd\")
+      file_in(\"a.rds\", \"b.rds\")
+      x + 2 + c + readRDS(file_in(\"c.rds\"))
+    }"),
+    envir = envir
+  )
+  dbug_files()
+  for (file in paste0(letters[1:3], ".rds")){
+    saveRDS(1, file)
+  }
+  load_mtcars_example() # for report.Rmd
+  config <- drake_config(dbug_plan(), envir = envir, verbose = 4)
+  testrun(config)
+  for (file in c("report.Rmd", paste0(letters[1:2], ".rds"))){
+    saveRDS(2, file)
+    testrun(config)
+    expect_equal(sort(justbuilt(config)), sort(c("nextone", "yourinput")))
+  }
+  saveRDS(2, "c.rds")
+  testrun(config)
+  expect_equal(sort(justbuilt(config)), sort(c(
+    "nextone", "yourinput", "combined", "drake_target_1", "final"
+  )))
+})
