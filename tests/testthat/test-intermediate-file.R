@@ -31,17 +31,10 @@ test_with_dir("responses to intermediate file", {
     testrun(config)
     expect_equal(justbuilt(config), sort(config$plan$target))
     expect_equal(outdated(config), character(0))
-
-    # check missing and then replace file exactly as before
     final0 <- readd(final, search = FALSE)
     val <- readRDS("intermediatefile.rds")
     val2 <- readRDS("out2.rds")
     expect_equal(val + 1, val2)
-    unlink("intermediatefile.rds", force = TRUE)
-    saveRDS(val, "intermediatefile.rds")
-    testrun(config)
-    nobuild(config)
-    expect_equal(final0, readd(final, search = FALSE))
 
     # actually change a file
     for (file in c("intermediatefile.rds", "out2.rds")){
@@ -49,6 +42,8 @@ test_with_dir("responses to intermediate file", {
       testrun(config)
       expect_equal(justbuilt(config), "drake_target_1")
       expect_equal(final0, readd(final, search = FALSE))
+      expect_equal(val, readRDS("intermediatefile.rds"))
+      expect_equal(val2, readRDS("out2.rds"))
     }
 
     # break a file
@@ -57,6 +52,8 @@ test_with_dir("responses to intermediate file", {
       testrun(config)
       expect_equal(justbuilt(config), "drake_target_1")
       expect_equal(final0, readd(final, search = FALSE))
+      expect_equal(val, readRDS("intermediatefile.rds"))
+      expect_equal(val2, readRDS("out2.rds"))
     }
     clean(destroy = TRUE)
   }
