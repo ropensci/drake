@@ -1,0 +1,10 @@
+---
+title: "Empty report"
+output:
+  github_document: default
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+Lorem ipsum flotsam jetsam.

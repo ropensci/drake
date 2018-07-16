@@ -1,0 +1,58 @@
+---
+title: "Test Report"
+author: "Will Landau"
+date: "October 3, 2017"
+output: html_document
+---
+
+`Drake` should be able to analyze this report and detect the right dependencies
+using static code analysis on calls to `loadd()` and `readd()`.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```r
+x <- readd(should_not_find)
+```
+
+```{r dry, eval = FALSE}
+x <- readd(should_not_find)
+```
+
+```{r chunk}
+library(drake)
+var <- 10
+var2 <- list(17, var, "ignore", "ignore2")
+
+out <- readd(target1, character_only = dont_detect_this)
+loadd(target2)
+out <- drake::readd(character_only = FALSE, target = target3)
+drake::loadd(target4, list = "target5")
+out <- drake:::readd(target = "target6")
+drake:::loadd(target7, target8)
+drake:::loadd(target9, list = c("target10", "target11"), nothing = to_see)
+loadd(list = c("target12", "target13"))
+
+out <- drasadfke::readd(ignore1)
+drawe::loadd(ig2, ignore3)
+out <- rake:::readd(target_ignore)
+make:::loadd(nothing, to, see, list = "here")
+
+f(readd(target14) + var)
+f(readd(target15) + var) # deliberate repeat
+f(g(drake::readd(target16) + var))
+f(readd(target = "target17", character_only = TRUE) + var)
+g <- function(){
+  f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
+}
+function(){
+  f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
+}
+readd("\"file1\"")
+readd(target = "\"file2\"")
+readd(target = "\"file3\"", character_only = TRUE)
+readd(target = "\"file4\"", character_only = FALSE)
+loadd("\"file5\"")
+loadd(list = "\"file6\"")
+```
