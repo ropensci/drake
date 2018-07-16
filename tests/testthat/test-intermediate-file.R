@@ -6,6 +6,10 @@ test_with_dir("responses to intermediate file", {
   envir <- dbug_envir(envir)
   dbug_files()
   plan <- dbug_plan()
+  plan$command[6] <- wide_deparse(quote({
+    readRDS(file_in("intermediatefile.rds")) +
+    readRDS(file_in("out2.rds"))
+  }))
   command1 <- wide_deparse(quote({
     saveRDS(combined, file_out("intermediatefile.rds"))
     saveRDS(combined + 1, file_out("out2.rds"))
@@ -17,13 +21,9 @@ test_with_dir("responses to intermediate file", {
   }))
   for (command in c(command1, command2)){
     plan$command[1] <- command
-    plan$command[6] <- wide_deparse(quote({
-      readRDS(file_in("intermediatefile.rds")) +
-      readRDS(file_in("out2.rds"))
-    }))
     config <- drake_config(plan = plan, targets = plan$target,
       envir = envir, parallelism = scenario$parallelism,
-      jobs = scenario$jobs, verbose = FALSE,
+      jobs = scenario$jobs, verbose = TRUE,
       session_info = FALSE,
       log_progress = TRUE,
       caching = scenario$caching
@@ -55,6 +55,17 @@ test_with_dir("responses to intermediate file", {
       expect_equal(val, readRDS("intermediatefile.rds"))
       expect_equal(val2, readRDS("out2.rds"))
     }
+
+    # change what out2.rds is supposed to be
+    config$plan$command[1] <- gsub("1", "2", plan$command[1])
+    testrun(config)
+    expect_equal(
+      sort(justbuilt(config)),
+      sort(c("drake_target_1", "final"))
+    )
+    expect_equal(final0 + 1, readd(final, search = FALSE))
+    expect_equal(val, readRDS("intermediatefile.rds"))
+    expect_equal(val2 + 1, readRDS("out2.rds"))
     clean(destroy = TRUE)
   }
 })
