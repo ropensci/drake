@@ -101,7 +101,8 @@ dependency_hash <- function(target, config) {
 file_dependency_hash <- function(
   target,
   config,
-  which = c("input_files", "output_files")
+  which = c("input_files", "output_files"),
+  size_cutoff = rehash_file_size_cutoff
 ){
   which <- match.arg(which)
   files <- unlist(igraph::vertex_attr(
@@ -113,7 +114,8 @@ file_dependency_hash <- function(
     X = sort(files),
     FUN = file_hash,
     FUN.VALUE = character(1),
-    config = config
+    config = config,
+    size_cutoff = size_cutoff
   ) %>%
     digest::digest(algo = config$long_hash_algo)
 }
@@ -153,7 +155,8 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
   do_rehash
 }
 
-file_hash <- function(target, config, size_cutoff = 1e5) {
+file_hash <- function(
+  target, config, size_cutoff = rehash_file_size_cutoff) {
   if (is_file(target)) {
     filename <- drake::drake_unquote(target)
   } else {

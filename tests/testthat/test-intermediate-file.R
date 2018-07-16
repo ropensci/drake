@@ -77,11 +77,14 @@ test_with_dir("imported file_in file", {
   load_mtcars_example() # for report.Rmd
   config <- drake_config(dbug_plan(), envir = envir, verbose = 4)
   testrun(config)
-  for (file in c("report.Rmd", paste0(letters[1:2], ".rds"))){
+  for (file in paste0(letters[1:2], ".rds")){
     saveRDS(2, file)
     testrun(config)
     expect_equal(sort(justbuilt(config)), sort(c("nextone", "yourinput")))
   }
+  write("new content", file = "report.Rmd", append = TRUE)
+  testrun(config)
+  expect_equal(sort(justbuilt(config)), sort(c("nextone", "yourinput")))
   saveRDS(2, "c.rds")
   testrun(config)
   expect_equal(sort(justbuilt(config)), sort(c(

@@ -27,6 +27,8 @@ is_not_file <- function(x){
   !is_file(x)
 }
 
+rehash_file_size_cutoff <- 1e5
+
 braces <- function(x) {
   paste("{\n", x, "\n}")
 }
