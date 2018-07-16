@@ -1,7 +1,7 @@
 drake_context("knitr")
 
-test_with_dir("empty knitr report", {
-  file <- "empty.Rmd"
+test_with_dir("codeless knitr report", {
+  file <- "codeless.Rmd"
   path <- system.file(
     file.path("testing", "knitr", file),
     package = "drake", mustWork = TRUE
@@ -14,16 +14,47 @@ test_with_dir("empty knitr report", {
   ))
   expect_true(file.exists(file))
   expect_equal(
-    deps_code(quote(file_in("empty.Rmd"))),
-    list(file_in = file_store(file))
+    deps_code(quote(knitr_in("codeless.Rmd"))),
+    list(knitr_in = file_store(file))
   )
   expect_silent(
     tmp <- make(
-      drake_plan(x = file_in(file)),
+      drake_plan(
+        x = knitr_in("codeless.Rmd"),
+        strings_in_dots = "literals"
+      ),
       session_info = FALSE,
       cache = storr::storr_environment(),
       verbose = FALSE
     )
+  )
+})
+
+test_with_dir("bad knitr report", {
+  file <- "bad.Rmd"
+  path <- system.file(
+    file.path("testing", "knitr", file),
+    package = "drake", mustWork = TRUE
+  )
+  expect_true(file.copy(
+    from = path,
+    to = getwd(),
+    recursive = TRUE,
+    overwrite = TRUE
+  ))
+  expect_true(file.exists(file))
+  expect_warning(deps_code(quote(knitr_in("bad.Rmd"))))
+  expect_warning(
+    tmp <- make(
+      drake_plan(
+        x = knitr_in("bad.Rmd"),
+        strings_in_dots = "literals"
+      ),
+      session_info = FALSE,
+      cache = storr::storr_environment(),
+      verbose = FALSE
+    ),
+    regexp = "dependencies could not be extracted"
   )
 })
 

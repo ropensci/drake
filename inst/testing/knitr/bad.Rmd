@@ -1,0 +1,12 @@
+---
+title: "Bad report"
+output:
+  github_document: default
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r bad-code-chunk}
+Lorem ipsum flotsam jetsam.
+```
