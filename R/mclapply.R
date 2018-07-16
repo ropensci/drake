@@ -1,4 +1,5 @@
 run_mclapply <- function(config){
+  assert_pkgs("txtq")
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
@@ -52,6 +53,7 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
+  assert_pkgs("txtq")
   on.exit(mc_conclude_workers(config))
   config$queue <- new_priority_queue(config = config)
   if (!identical(config$ensure_workers, FALSE)){
@@ -69,6 +71,7 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
+  assert_pkgs("txtq")
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){

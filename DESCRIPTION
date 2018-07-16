@@ -65,13 +65,10 @@ Imports:
   digest,
   dplyr,
   formatR,
-  future,
-  future.apply,
   fs,
   grDevices,
   igraph,
   knitr,
-  lubridate,
   magrittr,
   parallel,
   pkgconfig,
@@ -86,7 +83,6 @@ Imports:
   testthat,
   tibble,
   tidyselect (>= 0.2.4),
-  txtq,
   utils,
   withr
 Suggests: 
@@ -94,12 +90,16 @@ Suggests:
   callr,
   clustermq,
   DBI,
+  future,
+  future.apply,
   ggplot2,
   ggraph,
+  lubridate,
   MASS,
   methods,
   networkD3,
   RSQLite,
+  txtq,
   rmarkdown,
   visNetwork
 VignetteBuilder: knitr

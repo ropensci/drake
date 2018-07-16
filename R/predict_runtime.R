@@ -203,6 +203,7 @@ predict_load_balancing <- function(
   default_time = 0,
   warn = TRUE
 ){
+  assert_pkgs("lubridate")
   if (!is.null(future_jobs) || !is.null(digits)){
     warning(
       "The `future_jobs` and `digits` arguments ",

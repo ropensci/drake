@@ -21,6 +21,7 @@ test_with_dir("storr_environment is usable", {
 
 test_with_dir("arbitrary storr in-memory cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("lubridate")
   expect_false(file.exists(default_cache_path()))
   parallelism <- default_parallelism()
   jobs <- 1

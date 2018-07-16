@@ -1,4 +1,5 @@
 run_future <- function(config){
+  assert_pkgs("future")
   queue <- new_priority_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...

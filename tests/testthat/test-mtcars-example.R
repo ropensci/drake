@@ -67,6 +67,7 @@ test_with_dir("mtcars example works", {
   expect_equal(sort(ls(envir = e)), coefs)
 
   # build_times() # nolint
+  skip_if_not_installed("lubridate")
   all_times <- build_times()
   expect_true(nrow(all_times) >= nrow(config$plan))
   some_times <- build_times(starts_with("coef"))

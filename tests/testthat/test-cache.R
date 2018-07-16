@@ -129,6 +129,7 @@ test_with_dir("subspaces", {
 })
 
 test_with_dir("cache functions work", {
+  skip_if_not_installed("lubridate")
   # May have been loaded in a globalenv() testing scenario # nolint
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
   rm(list = remove_these, envir = globalenv())

@@ -141,6 +141,7 @@ run_parLapply_staged <- function(config) { # nolint
 }
 
 run_future_lapply_staged <- function(config){
+  assert_pkgs(c("future", "future.apply"))
   prepare_distributed(config = config)
   schedule <- config$schedule
   while (length(V(schedule)$name)){
@@ -163,16 +164,7 @@ run_future_lapply_staged <- function(config){
 }
 
 run_clustermq_staged <- function(config){
-  if (!requireNamespace("clustermq")){
-    # nocov start
-    drake_error(
-      "to use make(parallelism = \"clustermq_staged\"), ",
-      "you must install the clustermq package: ",
-      "https://github.com/mschubert/clustermq.",
-      config = config
-    )
-    # nocov end
-  }
+  assert_pkgs("clustermq")
   schedule <- config$schedule
   workers <- clustermq::workers(n_jobs = config$jobs)
   on.exit(workers$finalize())

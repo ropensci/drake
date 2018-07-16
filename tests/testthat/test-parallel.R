@@ -186,6 +186,8 @@ test_with_dir("null cases for message queues", {
 
 test_with_dir("ensure_workers can be disabled", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("future")
+  skip_if_not_installed("future.apply")
   load_mtcars_example()
   future::plan(future::sequential)
   config <- drake_config(my_plan)
