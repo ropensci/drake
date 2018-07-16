@@ -1,3 +1,4 @@
+Sys.setenv(NOT_CRAN = "true")
 library(testthat)
 devtools::load_all()
 args <- commandArgs(TRUE)
