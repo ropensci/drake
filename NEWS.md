@@ -20,6 +20,7 @@
 - Remove redundant calls to `sanitize_plan()` in `make()`.
 - Change `tracked()` to accept only a `drake_config()` object as an argument. Yes, it is technically a breaking change, but it is only a small break, and it is the correct API choice.
 - Move visualization and hpc package dependencies to "Suggests:" rather than "Imports:" in the `DESCRIPTION` file.
+- Allow processing of codeless `knitr` reports without warnings.
 
 # Version 5.2.1
 

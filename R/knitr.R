@@ -79,14 +79,11 @@ safe_get_tangled_frags <- function(target){
 }
 
 # From https://github.com/duncantl/CodeDepends/blob/master/R/sweave.R#L15
-get_tangled_frags <- function(doc, txt = readLines(doc)) {
-  in.con <- textConnection(txt)
-  out.con <- textConnection("bob", "w", local = TRUE)
-  on.exit({
-    close(in.con)
-    close(out.con)
-  })
-  knitr::knit(in.con, output = out.con, tangle = TRUE, quiet = TRUE)
-  code <- textConnectionValue(out.con)
+get_tangled_frags <- function(doc) {
+  id <- digest::digest(tempfile)
+  con <- textConnection(id, "w", local = TRUE)
+  on.exit(close(con))
+  knitr::knit(doc, output = con, tangle = TRUE, quiet = TRUE)
+  code <- textConnectionValue(con)
   parse(text = code)
 }

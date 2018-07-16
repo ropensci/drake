@@ -1,5 +1,31 @@
-# All deprecated functionality
 drake_context("knitr")
+
+test_with_dir("empty knitr report", {
+  file <- "empty.Rmd"
+  path <- system.file(
+    file.path("testing", "knitr", file),
+    package = "drake", mustWork = TRUE
+  )
+  expect_true(file.copy(
+    from = path,
+    to = getwd(),
+    recursive = TRUE,
+    overwrite = TRUE
+  ))
+  expect_true(file.exists(file))
+  expect_equal(
+    deps_code(quote(file_in("empty.Rmd"))),
+    list(file_in = file_store(file))
+  )
+  expect_silent(
+    tmp <- make(
+      drake_plan(x = file_in(file)),
+      session_info = FALSE,
+      cache = storr::storr_environment(),
+      verbose = FALSE
+    )
+  )
+})
 
 test_with_dir("empty cases", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
@@ -17,7 +43,7 @@ test_with_dir("unparsable pieces of commands are handled correctly", {
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   file <- system.file(
-    file.path("testing", "test.Rmd"),
+    file.path("testing", "knitr", "test.Rmd"),
     package = "drake", mustWork = TRUE
   )
   expect_true(file.copy(
