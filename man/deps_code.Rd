@@ -12,9 +12,7 @@ deps_code(x)
 or imported function to analyze for dependencies.}
 }
 \value{
-A character vector, names of dependencies.
-Files wrapped in escaped double quotes.
-The other names listed are functions or generic R objects.
+Names of dependencies listed by type (object, input file, etc).
 }
 \description{
 Intended for debugging and checking your project.

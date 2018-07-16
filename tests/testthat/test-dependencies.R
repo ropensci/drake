@@ -10,11 +10,12 @@ test_with_dir("unparsable commands are handled correctly", {
 test_with_dir("magrittr dot is ignored", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
-    sort(deps_code("sqrt(x + y + .)")),
+    sort(clean_dependency_list(deps_code("sqrt(x + y + .)"))),
     sort(c("sqrt", "x", "y"))
   )
   expect_equal(
-    sort(deps_code("dplyr::filter(complete.cases(.))")),
+    sort(clean_dependency_list(
+      deps_code("dplyr::filter(complete.cases(.))"))),
     sort(c("complete.cases", "dplyr::filter"))
   )
 })
@@ -55,9 +56,10 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   for (i in names(y)){
     expect_equal(sort(y[[i]]), sort(y0[[i]]) )
   }
-  expect_equal(sort(deps_code(f)), sort(unname(unlist(y))))
   expect_equal(
-    sort(deps_code(cmd)),
+    sort(clean_dependency_list(deps_code(f))), sort(unname(unlist(y))))
+  expect_equal(
+    sort(clean_dependency_list(deps_code(cmd))),
     sort(
       c("coef_regression2_small", "large",
         "\"report.Rmd\"", "small", "\"x\"", "\"y\""
@@ -69,20 +71,21 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
 test_with_dir(
   "deps_code() correctly reports dependencies of functions and commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(deps_code(""), character(0))
+  expect_equal(length(deps_code("")), 0)
   expect_equal(length(command_dependencies(NA)), 0)
   expect_equal(length(command_dependencies(NULL)), 0)
   expect_equal(length(command_dependencies(character(0))), 0)
-  expect_equal(deps_code(base::c), character(0))
-  expect_equal(deps_code(base::list), character(0))
-  expect_equal(deps_code(NA), character(0))
+  expect_equal(clean_dependency_list(deps_code(base::c)), character(0))
+  expect_equal(clean_dependency_list(deps_code(base::list)), character(0))
+  expect_equal(clean_dependency_list(deps_code(NA)), character(0))
   f <- function(x, y) {
     out <- x + y + g(x)
     saveRDS(out, "out.rds")
   }
   expect_false(is_vectorized(f))
   expect_false(is_vectorized("char"))
-  expect_equal(sort(deps_code(f)), sort(c("g", "saveRDS")))
+  expect_equal(
+    sort(clean_dependency_list(deps_code(f))), sort(c("g", "saveRDS")))
   my_plan <- drake_plan(
     x = 1 + some_object,
     my_target = x + readRDS(file_in("tracked_input_file.rds")),
@@ -91,13 +94,18 @@ test_with_dir(
     meta = read.table(file_in("file_in")),
     strings_in_dots = "literals"
   )
-  expect_equal(deps_code(my_plan$command[1]), "some_object")
-  expect_equal(sort(deps_code(my_plan$command[2])),
+  expect_equal(
+    clean_dependency_list(deps_code(my_plan$command[1])), "some_object")
+  expect_equal(sort(
+    clean_dependency_list(deps_code(my_plan$command[2]))),
     sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))
-  expect_equal(sort(deps_code(my_plan$command[3])), sort(c("f", "g", "w",
+  expect_equal(sort(
+    clean_dependency_list(deps_code(my_plan$command[3]))), sort(c("f", "g", "w",
     "x", "y", "z")))
-  expect_equal(sort(deps_code(my_plan$command[4])), sort(c("read.csv")))
-  expect_equal(sort(deps_code(my_plan$command[5])),
+  expect_equal(sort(
+    clean_dependency_list(deps_code(my_plan$command[4]))), sort(c("read.csv")))
+  expect_equal(
+    sort(clean_dependency_list(deps_code(my_plan$command[5]))),
     sort(c("read.table", "\"file_in\"")))
 })
 
@@ -134,8 +142,8 @@ test_with_dir("Vectorized nested functions work", {
   config$envir <- e
   config$plan <- drake_plan(a = f(1:10))
   config$targets <- "a"
-  expect_equal(deps_code(e$f), "g")
-  expect_equal(deps_code(e$g), "y")
+  expect_equal(clean_dependency_list(deps_code(e$f)), "g")
+  expect_equal(clean_dependency_list(deps_code(e$g)), "y")
 
   config <- testrun(config)
   if ("a" %in% ls(config$envir)){
@@ -189,7 +197,7 @@ test_with_dir("deps_targets()", {
   config <- dbug()
   deps <- sort(deps_targets(config$targets, config))
   truth <- sort(c(
-    "combined", "saveRDS", "f", "g", "myinput", "\"intermediatefile.rds\"",
+    "combined", "saveRDS", "f", "g", "myinput",
     "nextone", "yourinput", "\"input.rds\"", "readRDS", "drake_target_1"
   ))
   expect_equal(deps, truth)

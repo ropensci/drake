@@ -37,9 +37,11 @@ test_with_dir("knitr_deps() works", {
   expect_equal(x, character(0))
   load_mtcars_example()
   x <- knitr_deps("report.Rmd")
-  y <- expect_warning(deps_code("knit('report.Rmd')"))
-  z <- expect_warning(deps_code("render('report.Rmd')"))
-  w <- deps_code("funct(knitr_in(report.Rmd))")
+  y <- expect_warning(
+    clean_dependency_list(deps_code("knit('report.Rmd')")))
+  z <- expect_warning(
+    clean_dependency_list(deps_code("render('report.Rmd')")))
+  w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
@@ -97,19 +99,21 @@ test_with_dir("edge cases finding knitr docs", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(find_knitr_doc("knit(a, b)"), "a")
   expect_equal(find_knitr_doc("knit(quiet = TRUE)"), character(0))
-  expect_equal(deps_code("knit(quiet = TRUE)"), "knit")
+  expect_equal(
+    clean_dependency_list(deps_code("knit(quiet = TRUE)")), "knit")
 })
 
 test_with_dir("knitr file deps from commands and functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
-  expect_equal(sort(deps_code("'report.Rmd'")), sort(c(
+  expect_equal(sort(
+    clean_dependency_list(deps_code("'report.Rmd'"))), sort(c(
     "coef_regression2_small", "large", "small"
   )))
   f <- function(x){
     knit(x)
   }
-  expect_equal(deps_code(f), "knit")
+  expect_equal(clean_dependency_list(deps_code(f)), "knit")
 })
 
 test_with_dir("misc knitr", {

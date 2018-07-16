@@ -20,15 +20,9 @@ Files wrapped in escaped double quotes.
 The other names listed are functions or generic R objects.
 }
 \description{
-Intended for debugging and checking your project.
-The dependency structure of the components of your analysis
-decides which targets are built and when.
-}
-\details{
-Unlike \code{\link[=deps_code]{deps_code()}}, \code{deps_targets()} allows you to
-specify a set of targets and get their dependencies. This assumes
-you have an output list from \code{\link[=drake_config]{drake_config()}}. which resolves
-the dependency graph.
+Unlike \code{\link[=deps_code]{deps_code()}}, \code{deps_targets()} just lists
+the jobs that lie upstream of the \code{targets} on the workflow
+graph, and \code{file_out()} files are not included.
 }
 \examples{
 \dontrun{
@@ -42,7 +36,4 @@ deps_targets("regression1_small", config = config)
 deps_targets(c("small", "large"), config = config, reverse = TRUE)
 })
 }
-}
-\seealso{
-deps_code make drake_plan drake_config
 }

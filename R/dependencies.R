@@ -29,9 +29,7 @@
 #' @export
 #' @param x a language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
-#' @return A character vector, names of dependencies.
-#'   Files wrapped in escaped double quotes.
-#'   The other names listed are functions or generic R objects.
+#' @return Names of dependencies listed by type (object, input file, etc).
 #' @examples
 #' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y){
@@ -67,26 +65,20 @@
 #' }
 deps_code <- function(x){
   if (is.function(x)){
-    out <- import_dependencies(x)
+    import_dependencies(x)
   } else if (is_file(x) && file.exists(drake_unquote(x))){
-    out <- knitr_deps(drake_unquote(x))
+    knitr_deps(drake_unquote(x))
   } else if (is.character(x)){
-    out <- command_dependencies(x)
+    command_dependencies(x)
   } else{
-    out <- code_dependencies(x)
+    code_dependencies(x)
   }
-  clean_dependency_list(out)
 }
 
 #' @title List the dependencies of one or more targets
-#' @description Intended for debugging and checking your project.
-#'   The dependency structure of the components of your analysis
-#'   decides which targets are built and when.
-#' @details Unlike [deps_code()], `deps_targets()` allows you to
-#'   specify a set of targets and get their dependencies. This assumes
-#'   you have an output list from [drake_config()]. which resolves
-#'   the dependency graph.
-#' @seealso deps_code make drake_plan drake_config
+#' @description Unlike [deps_code()], `deps_targets()` just lists
+#'   the jobs that lie upstream of the `targets` on the workflow
+#'   graph, and `file_out()` files are not included.
 #' @export
 #' @param targets a character vector of target names
 #' @param config an output list from [drake_config()]
@@ -112,15 +104,7 @@ deps_targets <- function(
   config = read_drake_config(),
   reverse = FALSE
 ){
-  c(
-    dependencies(targets = targets, config = config, reverse = reverse),
-    igraph::vertex_attr(
-      graph = config$graph,
-      name = "input_files",
-      index = targets
-    )
-  ) %>%
-    clean_dependency_list
+  dependencies(targets = targets, config = config, reverse = reverse)
 }
 
 #' @title Return the detailed dependency profile
