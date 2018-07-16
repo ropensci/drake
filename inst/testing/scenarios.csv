@@ -16,7 +16,7 @@ envir,parallelism,jobs,backend,caching
 "global","mclapply",1,,
 "global","mclapply",2,,
 "global","mclapply_staged",9,,
-"local","clustermq_staged",2,,
+"global","clustermq_staged",2,,
 "global","Makefile",2,,
 "global","future_lapply",1,"future::multisession",
 "global","future_lapply_staged",2,"future::multisession",
