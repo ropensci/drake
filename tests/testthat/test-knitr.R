@@ -1,6 +1,7 @@
 drake_context("knitr")
 
 test_with_dir("codeless knitr report", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   file <- "codeless.Rmd"
   path <- system.file(
     file.path("testing", "knitr", file),
@@ -31,6 +32,7 @@ test_with_dir("codeless knitr report", {
 })
 
 test_with_dir("bad knitr report", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   file <- "bad.Rmd"
   path <- system.file(
     file.path("testing", "knitr", file),
