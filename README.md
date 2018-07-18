@@ -611,9 +611,11 @@ The following resources document many known issues and challenges.
 If you are still having trouble, please submit a [new
 issue](https://github.com/ropensci/drake/issues/new) with a bug report
 or feature request, along with a minimal reproducible example where
-appropriate. The GitHub issue tracker is mainly intended for bug reports
-and feature requests. While questions about usage etc. are also highly
-encouraged, you may alternatively wish to post to [Stack
+appropriate.
+
+The GitHub issue tracker is mainly intended for bug reports and feature
+requests. While questions about usage etc. are also highly encouraged,
+you may alternatively wish to post to [Stack
 Overflow](https://stackoverflow.com) and use the [`drake-r-package`
 tag](https://stackoverflow.com/tags/drake-r-package).
 
