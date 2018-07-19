@@ -1,4 +1,4 @@
-# Version 5.2.1.9001
+# Version 5.3.0
 
 - Allow multiple output files per command.
 - Add Sankey diagram visuals: `sankey_drake_graph()` and `render_sankey_drake_graph()`.
