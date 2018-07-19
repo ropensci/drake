@@ -10,7 +10,7 @@
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "5.2.1.9001",
+  "version": "5.3.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -560,9 +560,9 @@
       "sameAs": "https://CRAN.R-project.org/package=withr"
     }
   ],
-  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
+  "releaseNotes": "https://github.com/wlandau/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "379.308KB",
+  "fileSize": "379.117KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
