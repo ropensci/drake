@@ -460,9 +460,15 @@ drake_config <- function(
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- match.arg(arg = trigger, choices = triggers())
   if (is.null(graph)){
-    graph <- build_drake_graph(plan = plan, targets = targets,
-      envir = envir, verbose = verbose, jobs = jobs,
-      sanitize_plan = FALSE, console_log_file = console_log_file)
+    graph <- build_drake_graph(
+      plan = plan,
+      targets = targets,
+      envir = envir,
+      verbose = verbose,
+      jobs = jobs,
+      sanitize_plan = FALSE,
+      console_log_file = console_log_file
+    )
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
   }

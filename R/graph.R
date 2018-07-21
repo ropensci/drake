@@ -51,7 +51,7 @@ build_drake_graph <- function(
   config <- list(verbose = verbose, console_log_file = console_log_file)
   console_many_targets(
     targets = names(imports),
-    pattern = "connect",
+    pattern = "analyze",
     type = "import",
     config = config
   )
@@ -65,7 +65,7 @@ build_drake_graph <- function(
     do.call(what = dplyr::bind_rows)
   console_many_targets(
     targets = plan$target,
-    pattern = "connect",
+    pattern = "analyze",
     type = "target",
     config = config
   )
