@@ -7,7 +7,7 @@ test_with_dir("trigger() function works", {
     condition = 1 + 1,
     command = TRUE,
     depends = FALSE,
-    file = today() == "Tuesday",
+    file = FALSE,
     change = sqrt(!!x)
   )
   z <- list(
