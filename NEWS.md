@@ -1,5 +1,6 @@
 # Version 5.3.1.9000
 
+- Overhaul the interface for triggers.
 - Add a `columns` argument to `evaluate_plan()` so users can evaluate wildcards in columns other than the `command` column of `plan`. 
 - Name the arguments of `target()` so users do not have to (explicitly).
 
