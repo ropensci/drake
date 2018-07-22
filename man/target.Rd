@@ -4,12 +4,36 @@
 \alias{target}
 \title{Define custom columns in a \code{\link[=drake_plan]{drake_plan()}}.}
 \usage{
-target(...)
+target(command = NULL, trigger = NULL, retries = NULL, timeout = NULL,
+  cpu = NULL, elapsed = NULL, priority = NULL, worker = NULL,
+  evaluator = NULL, ...)
 }
 \arguments{
-\item{...}{named arguments specifying fields of the workflow plan.
-Tidy evaluation will be applied to them, so the \code{!!} operator
-is evaluated immediately for expressions and language objects.}
+\item{command}{the command to build the target}
+
+\item{trigger}{the target's trigger}
+
+\item{retries}{number of retries in case of failure}
+
+\item{timeout}{overall timeout (in seconds) for building a target}
+
+\item{cpu}{cpu timeout (seconds) for building a target}
+
+\item{elapsed}{elapsed time (seconds) for building a target}
+
+\item{priority}{integer giving the build priority of a target.
+Given two targets about to be built at the same time,
+the one with the lesser priority (numerically speaking)
+will be built first.}
+
+\item{worker}{the preferred worker to be assigned the target
+(in parallel computing).}
+
+\item{evaluator}{the \code{future} evaluator of the target.
+Not yet supported.}
+
+\item{...}{named arguments specifying non-standard
+fields of the workflow plan.}
 }
 \value{
 A one-row workflow plan data frame with the named
@@ -19,13 +43,16 @@ arguments as columns.
 The \code{target()} function lets you define
 custom columns in a workflow plan data frame, both
 inside and outside calls to \code{\link[=drake_plan]{drake_plan()}}.
+@details Tidy evaluation is applied to the arguments,
+and the \code{!!} operator is evaluated immediately
+for expressions and language objects.
 }
 \examples{
 # Use target() to create your own custom columns in a drake plan.
 # See ?triggers for more on triggers.
 plan <- drake_plan(
   website_data = target(
-    command = download_data("www.your_url.com"),
+    download_data("www.your_url.com"),
     trigger = "always",
     custom_column = 5
   ),
@@ -36,7 +63,7 @@ plan
 # make(plan) # nolint
 # Call target() inside or outside drake_plan().
 target(
-  command = download_data("www.your_url.com"),
+  download_data("www.your_url.com"),
   trigger = "always",
   custom_column = 5
 )
