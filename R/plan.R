@@ -484,21 +484,37 @@ detect_arrow <- function(command){
 
 #' @title Define custom columns in a [drake_plan()].
 #' @description The `target()` function lets you define
-#' custom columns in a workflow plan data frame, both
-#' inside and outside calls to [drake_plan()].
+#'   custom columns in a workflow plan data frame, both
+#'   inside and outside calls to [drake_plan()].
+#'  @details Tidy evaluation is applied to the arguments,
+#'    and the `!!` operator is evaluated immediately
+#'    for expressions and language objects.
 #' @export
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
-#' @param ... named arguments specifying fields of the workflow plan.
-#'   Tidy evaluation will be applied to them, so the `!!` operator
-#'   is evaluated immediately for expressions and language objects.
+#' @param command the command to build the target
+#' @param trigger the target's trigger
+#' @param retries number of retries in case of failure
+#' @param timeout overall timeout (in seconds) for building a target
+#' @param cpu cpu timeout (seconds) for building a target
+#' @param elapsed elapsed time (seconds) for building a target
+#' @param priority integer giving the build priority of a target.
+#'   Given two targets about to be built at the same time,
+#'   the one with the lesser priority (numerically speaking)
+#'   will be built first.
+#' @param worker the preferred worker to be assigned the target
+#'   (in parallel computing).
+#' @param evaluator the `future` evaluator of the target.
+#'   Not yet supported.
+#' @param ... named arguments specifying non-standard
+#'   fields of the workflow plan.
 #' @examples
 #' # Use target() to create your own custom columns in a drake plan.
 #' # See ?triggers for more on triggers.
 #' plan <- drake_plan(
 #'   website_data = target(
-#'     command = download_data("www.your_url.com"),
+#'     download_data("www.your_url.com"),
 #'     trigger = "always",
 #'     custom_column = 5
 #'   ),
@@ -509,12 +525,35 @@ detect_arrow <- function(command){
 #' # make(plan) # nolint
 #' # Call target() inside or outside drake_plan().
 #' target(
-#'   command = download_data("www.your_url.com"),
+#'   download_data("www.your_url.com"),
 #'   trigger = "always",
 #'   custom_column = 5
 #' )
-target <- function(...){
-  out <- rlang::exprs(...)
+target <- function(
+  command = NULL,
+  trigger = NULL,
+  retries = NULL,
+  timeout = NULL,
+  cpu = NULL,
+  elapsed = NULL,
+  priority = NULL,
+  worker = NULL,
+  evaluator = NULL,
+  ...
+){
+  out <- list(
+    command   = rlang::enexpr(command),
+    trigger   = rlang::enexpr(trigger),
+    retries   = rlang::enexpr(retries),
+    timeout   = rlang::enexpr(timeout),
+    cpu       = rlang::enexpr(cpu),
+    elapsed   = rlang::enexpr(elapsed),
+    priority  = rlang::enexpr(priority),
+    worker    = rlang::enexpr(worker),
+    evaluator = rlang::enexpr(evaluator)
+  ) %>%
+    c(rlang::enexprs(...)) %>%
+    select_nonempty
   out[nzchar(names(out))] %>%
     purrr::map(.f = function(x){
       if (is.language(x)){

@@ -412,6 +412,27 @@ test_with_dir("ignore() in imported functions", {
 test_with_dir("custom column interface", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   tidyvar <- 2
+  x <- target(
+    stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
+  y <- tibble::tibble(
+    command = "stop(2)",
+    worker = 2,
+    cpu = 4,
+    custom = "stop()",
+    c2 = 5
+  )
+  expect_equal(x, y)
+  x <- drake_plan(x = target(
+    stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5))
+  y <- tibble::tibble(
+    target = "x",
+    command = "stop(2)",
+    worker = 2,
+    cpu = 4,
+    custom = "stop()",
+    c2 = 5
+  )
+  expect_equal(x, y)
   plan <- drake_plan(
     x = target(
       command = 1 + !!tidyvar,
