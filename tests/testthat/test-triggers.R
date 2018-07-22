@@ -1,6 +1,7 @@
 drake_context("triggers")
 
 test_with_dir("trigger() function works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- 1
   y <- trigger(
     condition = 1 + 1,
@@ -20,6 +21,7 @@ test_with_dir("trigger() function works", {
 })
 
 test_with_dir("can detect trigger deps", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   y <- 1
   today <- function(){
     "Monday"
