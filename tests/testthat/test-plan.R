@@ -509,3 +509,69 @@ test_with_dir("conflicts in wildcard names/values", {
   expect_error(
     evaluate_plan(plan, rules = rules2), regexp = "replacement value")
 })
+
+test_with_dir("bad 'columns' argument to evaluate_plan()", {
+  plan <- drake_plan(
+    x = target("always", cpu = "any"),
+    y = target("any", cpu = "always"),
+    z = target("any", cpu = "any"),
+    strings_in_dots = "literals"
+  )
+  expect_error(
+    evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "target"),
+    regexp = "argument of evaluate_plan"
+  )
+  expect_error(
+    evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "nobodyhere"),
+    regexp = "not in the plan"
+  )
+  expect_equal(
+    plan,
+    evaluate_plan(plan, wildcard = "any", values = 1:2, columns = NULL)
+  )
+})
+
+test_with_dir("'columns' argument to evaluate_plan()", {
+  plan <- drake_plan(
+    x = target("always", cpu = "any"),
+    y = target("any", cpu = "always"),
+    z = target("any", cpu = "any"),
+    strings_in_dots = "literals"
+  )
+  out <- tibble::tibble(
+    target = c("x_1", "x_2", "y_1", "y_2", "z"),
+    command = c(1, 2, rep("any", 3)),
+    cpu = c("any", "any", 1, 2, "any")
+  )
+  expect_equal(
+    evaluate_plan(
+      plan, wildcard = "always", values = 1:2, columns = c("command", "cpu")
+    ),
+    out
+  )
+  out <- tibble::tibble(
+    target = c("x", "y", "z"),
+    command = c(1, rep("any", 2)),
+    cpu = c("any", 2, "any")
+  )
+  expect_equal(
+    evaluate_plan(
+      plan, wildcard = "always", values = 1:2, columns = c("command", "cpu"),
+      expand = FALSE
+    ),
+    out
+  )
+  rules <- list(always = 1:2, any = 3:4)
+  out <- tibble::tibble(
+    target = c(
+      "x_1_3", "x_1_4", "x_2_3", "x_2_4", "y_1_3",
+      "y_1_4", "y_2_3", "y_2_4", "z_3", "z_4"
+    ),
+    command = as.character(c(1, 1, 2, 2, 3, 4, 3, 4, 3, 4)),
+    cpu = as.character(c(3, 4, 3, 4, 1, 1, 2, 2, 3, 4))
+  )
+  expect_equal(
+    evaluate_plan(plan, rules = rules, columns = c("command", "cpu")),
+    out
+  )
+})

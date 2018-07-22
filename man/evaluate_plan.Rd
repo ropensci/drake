@@ -6,7 +6,7 @@
 workflow plan data frame from a template data frame.}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
-  expand = TRUE, rename = expand, trace = FALSE)
+  expand = TRUE, rename = expand, trace = FALSE, columns = "command")
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by
@@ -41,6 +41,9 @@ based on the values supplied for the wildcards
 trace the wildcard expansion process. These new
 columns indicate which targets were evaluated with which
 wildcards.}
+
+\item{columns}{character vector of names of columns
+to look for and evaluate the wildcards.}
 }
 \value{
 A workflow plan data frame with the wildcards evaluated.
@@ -87,6 +90,17 @@ my_plan
 # Except when expand is FALSE.
 x <- drake_plan(draws = rnorm(mean = Mean, sd = Sd))
 evaluate_plan(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
+# You can use wildcards on columns other than "command"
+evaluate_plan(
+  drake_plan(
+    x = target("always", cpu = "any"),
+    y = target("any", cpu = "always"),
+    z = target("any", cpu = "any"),
+    strings_in_dots = "literals"
+  ),
+  rules = list(always = 1:2),
+  columns = c("command", "cpu")
+)
 # With the `trace` argument,
 # you can generate columns that show how the wildcards
 # were evaluated.
