@@ -550,6 +550,17 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     out
   )
   out <- tibble::tibble(
+    target = c("x", "y_1", "y_2", "z"),
+    command = c("always", rep("any", 3)),
+    cpu = c("any", 1, 2, "any")
+  )
+  expect_equal(
+    evaluate_plan(
+      plan, wildcard = "always", values = 1:2, columns = "cpu"
+    ),
+    out
+  )
+  out <- tibble::tibble(
     target = c("x", "y", "z"),
     command = c(1, rep("any", 2)),
     cpu = c("any", 2, "any")
