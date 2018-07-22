@@ -54,12 +54,6 @@ console_target <- function(target, config){
     text <- paste0("file ", text)
   }
   text <- paste("target", text)
-  trigger <- get_trigger(target = target, config = config)
-  if (trigger != "any"){
-    trigger <- get_trigger(target = target, config = config)
-    trigger_text <- color(x = "trigger", color = color_of("trigger"))
-    text <- paste0(text, ": ", trigger_text, " \"", trigger, "\"")
-  }
   finish_console(text = text, pattern = pattern, config = config)
 }
 
@@ -112,16 +106,12 @@ console_up_to_date <- function(config){
     return(invisible())
   }
   any_attempted <- get_attempt_flag(config = config)
-  default_triggers <- using_default_triggers(config)
-  if (!any_attempted && default_triggers && !config$skip_imports){
+  if (!any_attempted && !config$skip_imports){
     console_all_up_to_date(config = config)
     return(invisible())
   }
   if (config$skip_imports){
     console_skipped_imports(config = config)
-  }
-  if (!default_triggers){
-    console_nondefault_triggers(config = config)
   }
 }
 

@@ -1404,6 +1404,30 @@ summaries <- function(
   )
 }
 
+#' @title Deprecated. List the old drake triggers.
+#' @export
+#' @keywords internal
+#' @seealso [drake_plan()], [make()]
+#' @description Triggers are target-level rules
+#' that tell [make()] how to know if a target
+#' is outdated or up to date.
+#' @details Deprecated on 2018-07-22.
+#' @return A character vector with the names of the old triggers.
+#' @examples
+#' # Deprecated. See the trigger() function instead (singular).
+triggers <- function(){
+  warning("to do: deprecate triggers().")
+  c(
+    "any",
+    "always",
+    "command",
+    "depends",
+    "file",
+    "missing"
+  ) %>%
+    sort
+}
+
 #' @title Deprecated function `workflow`
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for [make()] and

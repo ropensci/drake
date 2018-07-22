@@ -7,14 +7,14 @@ test_with_dir("trigger() function works", {
     command = TRUE,
     depends = FALSE,
     file = today() == "Tuesday",
-    value = sqrt(!!x)
+    change = sqrt(!!x)
   )
   z <- list(
     condition = quote(1 + 1),
     command = TRUE,
     depends = FALSE,
-    file = quote(today() == "Tuesday"),
-    value = quote(sqrt(1))
+    file = FALSE,
+    change = quote(sqrt(1))
   )
   expect_equal(y, z)
 })
@@ -28,11 +28,8 @@ test_with_dir("can detect trigger deps", {
     x = target(
       command = 1 + 1,
       trigger = trigger(
-        condition = 1 + 1,
-        command = TRUE,
-        depends = FALSE,
-        file = today() == "Tuesday",
-        value = sqrt(y)
+        condition = sqrt(1 + 1) < y,
+        change = today() == "Tuesday"
       )
     ),
     strings_in_dots = "literals"
@@ -47,6 +44,7 @@ test_with_dir("empty triggers return logical", {
   expect_identical(depends_trigger("x", list(), list()), FALSE)
   expect_identical(command_trigger("x", list(), list()), FALSE)
   expect_identical(file_trigger("x", list(), list()), FALSE)
+  expect_identical(change_trigger("x", list(), list()), FALSE)
 })
 
 test_with_dir("triggers work as expected", {
