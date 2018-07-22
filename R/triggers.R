@@ -1,3 +1,49 @@
+#' @title Set the trigger of a target.
+#' @description Use this function inside a target's command
+#'   in your [drake_plan()]. The target will rebuild if and only if:
+#'   - Any of `command`, `depends`, or `file` is `TRUE`, or
+#'   - `condition` evaluates to `TRUE`, or
+#'   - `change` evaluates to a value different from last time.
+#' @export
+#' @seealso [drake_plan()], [make()]
+#' @return a list of trigger specification details that
+#'   `drake` processes internally when it comes time to decide
+#'   whether to build the target.
+#' @param condition a logical or an R code chunk
+#'   (expression or language object)
+#'   that returns a logical.
+#'   The target will rebuild
+#'   if the code evaluates to `TRUE`.
+#' @param command a logical or an R code chunk
+#'   (expression or language object)
+#'   that returns a logical.
+#'   Whether to rebuild the target if the
+#'   [drake_plan()] command changes.
+#' @param depends a logical or an R code chunk
+#'   (expression or language object)
+#'   that returns a logical.
+#'   Whether to rebuild if a
+#'   non-file dependency changes.
+#' @param file a logical or an R code chunk
+#'   (expression or language object)
+#'   that returns a logical.
+#'   Whether to rebuild the target
+#'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
+#' @param value R code (expression or language object)
+#'   that returns any value. The target will rebuild
+#'   if that value is different from last time
+#'   or not already cached.
+trigger <- function(
+  condition = FALSE,
+  command = TRUE,
+  depends = TRUE,
+  file = TRUE,
+  value = NULL
+){
+  rlang::enexprs(condition, command, depends, file, value) %>%
+    setNames(names(formals(trigger)))
+}
+
 #' @title List the available drake triggers.
 #' @export
 #' @seealso [drake_plan()], [make()]

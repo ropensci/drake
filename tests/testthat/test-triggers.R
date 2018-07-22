@@ -1,5 +1,24 @@
 drake_context("triggers")
 
+test_with_dir("trigger() function works", {
+  x <- 1
+  y <- trigger(
+    condition = 1 + 1,
+    command = TRUE,
+    depends = FALSE,
+    file = today() == "Tuesday",
+    value = sqrt(!!x)
+  )
+  z <- list(
+    condition = quote(1 + 1),
+    command = TRUE,
+    depends = FALSE,
+    file = quote(today() == "Tuesday"),
+    value = quote(sqrt(1))
+  )
+  expect_equal(y, z)
+})
+
 test_with_dir("empty triggers return logical", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_identical(depends_trigger("x", list(), list()), FALSE)
