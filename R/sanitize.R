@@ -13,7 +13,6 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   }
   plan$target <- repair_target_names(plan$target)
   plan <- plan[nzchar(plan$target), ]
-  plan$command[is.na(plan$command)] <- ""
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))
   if (!allow_duplicated_targets) {

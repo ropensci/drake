@@ -225,9 +225,6 @@ command_dependencies <- function(command){
   if (!length(command)){
     return()
   }
-  if (is.na(command)){
-    return()
-  }
   command <- as.character(command)
   deps <- code_dependencies(parse(text = command))
   deps$strings <- NULL
