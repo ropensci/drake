@@ -19,6 +19,29 @@ test_with_dir("trigger() function works", {
   expect_equal(y, z)
 })
 
+test_with_dir("can detect trigger deps", {
+  y <- 1
+  today <- function(){
+    "Monday"
+  }
+  plan <- drake_plan(
+    x = target(
+      command = 1 + 1,
+      trigger = trigger(
+        condition = 1 + 1,
+        command = TRUE,
+        depends = FALSE,
+        file = today() == "Tuesday",
+        value = sqrt(y)
+      )
+    ),
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(
+    plan, session_info = FALSE, cache = storr::storr_environment())
+  expect_equal(sort(dependencies("x", config)), sort(c("today", "sqrt", "y")))
+})
+
 test_with_dir("empty triggers return logical", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_identical(depends_trigger("x", list(), list()), FALSE)

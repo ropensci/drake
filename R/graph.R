@@ -69,24 +69,29 @@ build_drake_graph <- function(
     type = "target",
     config = config
   )
-  commands_deps <- lightly_parallelize(
+  plan_deps <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
-      command_dependencies(command = plan$command[i])
+      out <- command_dependencies(command = plan$command[i])
+      if ("trigger" %in% colnames(plan)){
+        trigger_deps <- command_dependencies(command = plan$trigger[i])
+        out <- merge_lists(out, trigger_deps)
+      }
+      out
     },
     jobs = jobs
   )
   commands_edges <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
-      code_deps_to_edges(target = plan$target[i], deps = commands_deps[[i]])
+      code_deps_to_edges(target = plan$target[i], deps = plan_deps[[i]])
     },
     jobs = jobs
   ) %>%
     do.call(what = dplyr::bind_rows)
-  output_files <- deps_to_igraph_attr(plan, commands_deps, "file_out", jobs)
+  output_files <- deps_to_igraph_attr(plan, plan_deps, "file_out", jobs)
   input_files <- deps_to_igraph_attr(
-    plan, commands_deps, c("file_in", "knitr_in"), jobs)
+    plan, plan_deps, c("file_in", "knitr_in"), jobs)
   commands_edges <- connect_output_files(commands_edges, output_files)
   graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
     igraph::graph_from_data_frame()
@@ -126,11 +131,11 @@ code_deps_to_edges <- function(target, deps){
   }
 }
 
-deps_to_igraph_attr <- function(plan, commands_deps, fields, jobs){
+deps_to_igraph_attr <- function(plan, plan_deps, fields, jobs){
   lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
-      unlist(commands_deps[[i]][fields])
+      unlist(plan_deps[[i]][fields])
     },
     jobs = jobs
   ) %>%

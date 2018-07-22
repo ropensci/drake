@@ -11,9 +11,6 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
       }
     }
   }
-  if ("trigger" %in% colnames(plan)){
-    plan$trigger <- parse_triggers(plan$trigger)
-  }
   plan$target <- repair_target_names(plan$target)
   plan <- plan[nzchar(plan$target), ]
   plan$command[is.na(plan$command)] <- ""
@@ -90,10 +87,4 @@ repair_target_names <- function(x){
   x <- gsub("^_", "", x)
   x[!nzchar(x)] <- "X"
   make.unique(x, sep = "_")
-}
-
-parse_triggers <- function(x){
-  x[is.na(x) | !nzchar(x)] <- "any"
-  assert_legal_triggers(x)
-  x
 }
