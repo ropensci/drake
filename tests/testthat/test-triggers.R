@@ -46,7 +46,3 @@ test_with_dir("empty triggers return logical", {
   expect_identical(file_trigger("x", list(), list()), FALSE)
   expect_identical(change_trigger("x", list(), list()), FALSE)
 })
-
-test_with_dir("global empty trigger works", {
-  
-})

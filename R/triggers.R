@@ -53,6 +53,7 @@ resolve_trigger <- function(target, config){
     )
   }
   if (is.character(trigger)) {
+    trigger <- convert_old_trigger(trigger)
     trigger <- parse(text = trigger)
   }
   eval(trigger, envir = config$envir)

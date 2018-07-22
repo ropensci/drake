@@ -1428,6 +1428,31 @@ triggers <- function(){
     sort
 }
 
+convert_old_trigger <- function(x){
+  if (!(x %in% suppressWarnings(triggers()))){
+    return(x)
+  }
+  warning(
+    "The old trigger interface is deprecated. ",
+    "See the trigger() function (singular) ",
+    "to learn about the new trigger interface.",
+    call. = FALSE
+  )
+  if (identical(x, "any")){
+    "trigger()"
+  } else if (identical(x, "always")){
+    "trigger(condition = TRUE)"
+  } else if (identical(x, "command")){
+    "trigger(command = TRUE, depends = FALSE, file = FALSE)"
+  } else if (identical(x, "depends")){
+    "trigger(command = FALSE, depends = TRUE, file = FALSE)"
+  } else if (identical(x, "file")){
+    "trigger(command = FALSE, depends = FALSE, file = TRUE)"
+  } else if (identical(x, "missing")){
+    "trigger(command = FALSE, depends = FALSE, file = FALSE)"
+  }
+}
+
 #' @title Deprecated function `workflow`
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for [make()] and
