@@ -136,8 +136,12 @@ self_hash <- Vectorize(function(target, config) {
 "target", USE.NAMES = FALSE)
 
 rehash_file <- function(target, config) {
+  file <- drake::drake_unquote(target)
+  if (!file.exists(file)){
+    return(as.character(NA))
+  }
   digest::digest(
-    object = drake::drake_unquote(target),
+    object = file,
     algo = config$long_hash_algo,
     file = TRUE,
     serialize = FALSE
