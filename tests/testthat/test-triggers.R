@@ -13,7 +13,11 @@ test_with_dir("triggers can be expressions", {
   plan <- drake_plan(x = 1)
   plan$trigger <- expression(trigger(condition = TRUE))
   for (i in 1:3) {
-    config <- make(plan)
+    config <- make(
+      plan,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    )
     expect_equal(justbuilt(config), "x")
   }
 })
