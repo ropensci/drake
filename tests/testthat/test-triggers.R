@@ -1,5 +1,23 @@
 drake_context("triggers")
 
+test_with_dir("empty triggers return logical", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_identical(depend_trigger("x", list(), list()), FALSE)
+  expect_identical(command_trigger("x", list(), list()), FALSE)
+  expect_identical(file_trigger("x", list(), list()), FALSE)
+  expect_identical(change_trigger("x", list(), list()), FALSE)
+})
+
+test_with_dir("triggers can be expressions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(x = 1)
+  plan$trigger <- expression(trigger(condition = TRUE))
+  for (i in 1:3) {
+    config <- make(plan)
+    expect_equal(justbuilt(config), "x")
+  }
+})
+
 test_with_dir("trigger() function works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- 1
@@ -54,14 +72,6 @@ test_with_dir("can detect trigger deps", {
   expect_equal(outdated(config), "x")
   make(config = config)
   expect_equal(justbuilt(config), "x")
-})
-
-test_with_dir("empty triggers return logical", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_identical(depend_trigger("x", list(), list()), FALSE)
-  expect_identical(command_trigger("x", list(), list()), FALSE)
-  expect_identical(file_trigger("x", list(), list()), FALSE)
-  expect_identical(change_trigger("x", list(), list()), FALSE)
 })
 
 test_with_dir("triggers can be NA in the plan", {
