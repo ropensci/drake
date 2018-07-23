@@ -94,6 +94,7 @@ test_with_dir("can detect trigger deps", {
 })
 
 test_with_dir("triggers can be NA in the plan", {
+  skip_on_cran()
   expect_silent(
     config <- make(
       drake_plan(x = target(1, NA)),
