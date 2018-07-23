@@ -221,7 +221,7 @@ test_with_dir("force loading a non-back-compatible cache", {
 
 test_with_dir("old trigger interface", {
   skip_on_cran()
-  for (old_trigger in triggers()){
+  for (old_trigger in suppressWarnings(triggers())){
     plan <- drake_plan(x = 1)
     plan$trigger <- old_trigger
     clean()
