@@ -18,6 +18,25 @@ test_with_dir("triggers can be expressions", {
   }
 })
 
+test_with_dir("triggers in plan override make(trigger = whatever)", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  saveRDS(1, "file.rds")
+  plan <- drake_plan(
+    x = readRDS(file_in("file.rds")),
+    y = target(
+      readRDS(file_in("file.rds")),
+      trigger(file = TRUE)
+    ),
+    strings_in_dots = "literals"
+  )
+  config <- make(plan)
+  expect_equal(sort(justbuilt(config)), c("x", "y"))
+  saveRDS(2, "file.rds")
+  expect_equal(sort(outdated(config)), c("x", "y"))
+  config <- make(plan, trigger = trigger(file = FALSE))
+  expect_equal(justbuilt(config), "y")
+})
+
 test_with_dir("trigger() function works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- 1
