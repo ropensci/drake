@@ -22,6 +22,35 @@
 #'  that returns any value. The target will rebuild
 #'   if that value is different from last time
 #'   or not already cached.
+#' @examples
+#' # A trigger is just a set of decision rules
+#' # to decide whether to build a target.
+#' trigger()
+#' # This trigger will build a target on Tuesdays
+#' # and when the value of an online dataset changes.
+#' trigger(condition = today() == "Tuesday", change = get_online_dataset())
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' # You can use a global trigger argument:
+#' # for example, to always run everything.
+#' make(my_plan, trigger = trigger(condition = TRUE))
+#' make(my_plan, trigger = trigger(condition = TRUE))
+#' # You can also define specific triggers for each target.
+#' plan <- drake_plan(
+#'   x = rnorm(15),
+#'   y = target(
+#'     command = x + 1,
+#'     trigger = trigger(depend = FALSE)
+#'   )
+#' )
+#' # Now, when x changes, y will not.
+#' make(plan)
+#' make(plan)
+#' plan$command[1] <- "rnorm(16)" # change x
+#' make(plan)
+#' })
+#' }
 trigger <- function(
   condition = FALSE,
   command = TRUE,

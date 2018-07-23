@@ -1416,7 +1416,15 @@ summaries <- function(
 #' @examples
 #' # Deprecated. See the trigger() function instead (singular).
 triggers <- function(){
-  warning("to do: deprecate triggers().")
+  .Deprecated(
+    "triggers",
+    package = "drake",
+    msg = paste(
+      "drake::triggers() is deprecated",
+      "and the trigger interface has changed.",
+      "See trigger() (singular) for details."
+    )
+  )
   c(
     "any",
     "always",

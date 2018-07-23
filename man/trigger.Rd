@@ -40,6 +40,14 @@ in your \code{\link[=drake_plan]{drake_plan()}}. The target will rebuild if and 
 \item \code{change} evaluates to a value different from last time.
 }
 }
+\examples{
+# A trigger is just a set of conditions for building a target.
+trigger()
+trigger(condition = today() == "Tuesday")
+\dontrun{
+
+}
+}
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
