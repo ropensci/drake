@@ -222,48 +222,21 @@ test_with_dir("make() plays nicely with tibbles", {
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
-test_with_dir("check_plan() finds bad symbols", {
+test_with_dir("plans can have bad symbols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- tibble(
-    target = c("gotcha", "b", "\"targs\"", "a'x'", "b'x'"),
+  x <- tibble::tibble(
+    target = c("a'x'", "b'x'", "_a", "a^", "a*", "a-"),
     command = 1)
-  expect_warning(o <- check_plan(x, verbose = FALSE))
-  x <- tibble(
-    target = c("\"targs\""),
-    command = 1)
-  expect_silent(o <- check_plan(x, verbose = FALSE))
-  x <- tibble(
-    target = c("gotcha", "b", "targs"),
-    command = 1)
-  expect_silent(o <- check_plan(x, verbose = FALSE))
-})
-
-test_with_dir("illegal target names get fixed", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  pl <- tibble(
-    target = c("_a", "a^", "a*", "a-"),
-    command = 1
-  )
-  cache <- storr::storr_environment()
-  expect_warning(
-    con <- make(pl, cache = cache, session_info = FALSE)
-  )
-  expect_equal(
-    sort(con$plan$target),
-    sort(con$targets),
-    sort(cached(cache = cache)),
-    sort(c("a", "a_", "a__1", "a__2"))
-  )
+  y <- drake_config(x)
+  expect_equal(y$plan$target, c("a.x.", "b.x.", "X_a", "a."))
 })
 
 test_with_dir("issue 187 on Github (from Kendon Bell)", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   test <- drake_plan(test = run_it(wc__))
-  out <- expect_warning(
-    evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
-  )
-  out2 <- tibble(
-    target = c("test_1_4", "test_5_8", "test_9_12"),
+  out <- evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
+  out2 <- tibble::tibble(
+    target = c("test_1.4", "test_5.8", "test_9.12"),
     command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)")
   )
   expect_equal(out, out2)
@@ -271,13 +244,13 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 
 test_with_dir("file names with weird characters do not get mangled", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  out <- tibble(
+  out <- tibble::tibble(
     target = c("\"is:a:file\"", "not:a:file"),
     command = as.character(1:2)
   )
-  out2 <- expect_warning(sanitize_plan(out))
-  out3 <- tibble(
-    target = c("\"is:a:file\"", "not_a_file"),
+  out2 <- sanitize_plan(out)
+  out3 <- tibble::tibble(
+    target = c("\"is:a:file\"", "not.a.file"),
     command = as.character(1:2)
   )
   expect_equal(out[1, ], out2[1, ])
@@ -481,13 +454,12 @@ test_with_dir("bind_plans()", {
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_warning(
-    pl <- drake_plan(a = x__, file_out("x__")) %>%
-      evaluate_plan(wildcard = "x__", values = c("b  \n  x y", "a x"))
-  )
+  pl <- drake_plan(a = x__, file_out("x__")) %>%
+    evaluate_plan(wildcard = "x__", values = c("b  \n  x y", "a x"))
   pl2 <- tibble::tibble(
     target = c(
-      "a_b_x_y", "a_a_x", "drake_target_1_b_x_y", "drake_target_1_a_x"),
+      "a_b.....x.y", "a_a.x",
+      "drake_target_1_b.....x.y", "drake_target_1_a.x"),
     command = c(
       "b  \n  x y", "a x", "file_out(\"b  \n  x y\")", "file_out(\"a x\")"
     )

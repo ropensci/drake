@@ -58,7 +58,6 @@ check_drake_config <- function(config) {
   stopifnot(length(config$targets) > 0)
   missing_input_files(config = config)
   assert_standard_columns(config = config)
-  warn_bad_symbols(config$plan$target)
   parallelism_warnings(config = config)
   check_drake_graph(graph = config$graph)
 }
@@ -87,16 +86,6 @@ missing_input_files <- function(config) {
     warning("missing input files:\n", multiline_message(missing_files),
       call. = FALSE)
   invisible(missing_files)
-}
-
-warn_bad_symbols <- function(x) {
-  x <- Filter(x = x, f = is_not_file)
-  bad <- which(!is_parsable(x)) %>% names
-  if (!length(bad))
-    return(invisible())
-  warning("Possibly bad target names:\n", multiline_message(bad),
-    call. = FALSE)
-  invisible()
 }
 
 check_drake_graph <- function(graph){
