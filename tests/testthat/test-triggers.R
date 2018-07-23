@@ -137,6 +137,12 @@ test_with_dir("trigger components react appropriately", {
     verbose = FALSE, caching = caching
   )
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
+  simple_plan <- plan
+  simple_plan$trigger <- NULL
+  simple_config <- make(
+    simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = FALSE, caching = caching
+  )
 
   # Condition trigger
   for (i in 1:2){
@@ -145,6 +151,8 @@ test_with_dir("trigger components react appropriately", {
     expect_equal(sort(justbuilt(config)), "condition")
   }
   saveRDS(FALSE, "condition.rds")
+  expect_equal(outdated(simple_config), character(0))
+  expect_equal(outdated(config), character(0))
   for (i in 1:2){
     make(config = config)
     nobuild(config)
@@ -153,26 +161,33 @@ test_with_dir("trigger components react appropriately", {
   # Change trigger
   saveRDS(2, "change.rds")
   expect_equal(sort(outdated(config)), "change")
+  expect_equal(outdated(simple_config), character(0))
   make(config = config)
   expect_equal(sort(justbuilt(config)), "change")
-  make(config = config)
-  nobuild(config)
+  expect_equal(outdated(config), character(0))
+  expect_equal(outdated(simple_config), character(0))
 
   # File trigger: input files
   saveRDS(2, "file.rds")
   expect_equal(sort(outdated(config)), "file")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "file")
-  make(config = config)
-  nobuild(config)
+  expect_equal(
+    sort(outdated(simple_config)),
+    sort(setdiff(config$plan$target, "file"))
+  )
+  expect_equal(outdated(config), character(0))
 
   # File trigger: knitr files
   writeLines("5678", "report.Rmd")
   expect_equal(sort(outdated(config)), "file")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "file")
-  make(config = config)
-  nobuild(config)
+  expect_equal(
+    sort(outdated(simple_config)),
+    sort(setdiff(config$plan$target, "file"))
+  )
+  expect_equal(outdated(config), character(0))
 
   # File trigger: output files
   for (target in plan$target){
@@ -181,11 +196,27 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(outdated(config)), "file")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "file")
-  make(config = config)
-  nobuild(config)
+  expect_equal(
+    sort(outdated(simple_config)),
+    sort(setdiff(config$plan$target, "file"))
+  )
+  expect_equal(outdated(config), character(0))
+
+  # Done with the change trigger
+  plan <- plan[1:5, ]
+  config <- drake_config(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = FALSE, caching = caching, log_progress = TRUE
+  )
+  simple_plan <- simple_plan[1:5, ]
+  simple_config <- drake_config(
+    simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = FALSE, caching = caching, log_progress = TRUE
+  )
+  make(config = simple_config)
 
   # Command trigger
-  config$plan$command <- paste0("
+  config$plan$command <- simple_config$plan$command <- paste0("
     knitr_in(\"report.Rmd\")
     out <- f(1 + readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
@@ -194,8 +225,13 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(outdated(config)), "command")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "command")
-  make(config = config)
-  nobuild(config)
+  expect_equal(
+    sort(outdated(simple_config)),
+    sort(setdiff(config$plan$target, "command"))
+  )
+  expect_equal(outdated(config), character(0))
+  make(config = simple_config)
+  expect_equal(outdated(config), character(0))
 
   # Depend trigger
   eval(
@@ -207,6 +243,11 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(outdated(config)), "depend")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "depend")
-  make(config = config)
-  nobuild(config)
+  expect_equal(
+    sort(outdated(simple_config)),
+    sort(setdiff(config$plan$target, "depend"))
+  )
+  expect_equal(outdated(config), character(0))
+  make(config = simple_config)
+  expect_equal(outdated(config), character(0))
 })
