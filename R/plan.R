@@ -286,7 +286,11 @@ drake_plan_override <- function(target, field, config){
     if (!length(index)){
       stop("target ", target, " is not in the workflow plan.")
     }
-    return(in_plan[[index]])
+    out <- in_plan[[index]]
+    if (safe_is_na(out)){
+      out <- config[[field]]
+    }
+    out
   }
 }
 

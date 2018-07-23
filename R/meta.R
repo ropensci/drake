@@ -72,28 +72,34 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (is_file(target)) {
     meta$mtime <- file.mtime(drake::drake_unquote(target))
   }
-  trigger <- get_trigger(target = target, config = config)
+  meta$trigger <- resolve_trigger(target = target, config = config)
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),
   # but only after drake decides to actually build the target.
-  if (trigger %in% triggers_with_command()){
+  if (meta$trigger$command){
     meta$command <- get_standardized_command(target = target, config = config)
   }
-  if (trigger %in% triggers_with_depends()){
+  if (meta$trigger$depend){
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
-  if (trigger %in% triggers_with_file()){
+  if (meta$trigger$file){
     meta$input_file_hash <- file_dependency_hash(
       target = target, config = config, which = "input_files")
     meta$output_file_hash <- file_dependency_hash(
       target = target, config = config, which = "output_files")
   }
+  if (!is.null(meta$trigger$change)){
+    meta$trigger$value <- eval(meta$trigger$change, config$envir)
+  }
   meta
 }
 
 dependency_hash <- function(target, config) {
-  dependencies(target, config) %>%
-    sort %>%
+  deps <- dependencies(target, config)
+  if (target %in% config$plan$target){
+    deps <- Filter(x = deps, f = is_not_file)
+  }
+  sort(deps) %>%
     self_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }

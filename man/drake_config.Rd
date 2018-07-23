@@ -15,7 +15,7 @@ drake_config(plan = read_drake_plan(), targets = NULL,
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = Inf,
   cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
-  log_progress = FALSE, graph = NULL, trigger = drake::default_trigger(),
+  log_progress = FALSE, graph = NULL, trigger = drake::trigger(),
   skip_targets = FALSE, skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("worker", "master"), keep_going = FALSE,
@@ -222,8 +222,7 @@ Overrides \code{skip_imports}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.
-Must be in \code{\link[=triggers]{triggers()}}.
-See \link{triggers} for explanations of the choices.}
+See \code{\link[=trigger]{trigger()}} for details.}
 
 \item{skip_targets}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}

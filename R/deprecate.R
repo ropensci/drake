@@ -1404,6 +1404,63 @@ summaries <- function(
   )
 }
 
+#' @title Deprecated. List the old drake triggers.
+#' @export
+#' @keywords internal
+#' @seealso [drake_plan()], [make()]
+#' @description Triggers are target-level rules
+#' that tell [make()] how to know if a target
+#' is outdated or up to date.
+#' @details Deprecated on 2018-07-22.
+#' @return A character vector with the names of the old triggers.
+#' @examples
+#' # Deprecated. See the trigger() function instead (singular).
+triggers <- function(){
+  .Deprecated(
+    "triggers",
+    package = "drake",
+    msg = paste(
+      "drake::triggers() is deprecated",
+      "and the trigger interface has changed.",
+      "See trigger() (singular) for details."
+    )
+  )
+  c(
+    "any",
+    "always",
+    "command",
+    "depends",
+    "file",
+    "missing"
+  ) %>%
+    sort
+}
+
+convert_old_trigger <- function(x){
+  if (!(x %in% suppressWarnings(triggers()))){
+    return(x)
+  }
+  warning(
+    "The old trigger interface is deprecated. ",
+    "See the trigger() function (singular) ",
+    "to learn about the new trigger interface.",
+    call. = FALSE
+  )
+  if (identical(x, "any")){
+    "trigger()"
+  } else if (identical(x, "always")){
+    "trigger(condition = TRUE)"
+  } else if (identical(x, "command")){
+    "trigger(command = TRUE, depend = FALSE, file = FALSE)"
+  } else if (identical(x, "depends")){
+    "trigger(command = FALSE, depend = TRUE, file = FALSE)"
+  } else if (identical(x, "file")){
+    "trigger(command = FALSE, depend = FALSE, file = TRUE)"
+  } else if (identical(x, "missing")){
+    "trigger(command = FALSE, depend = FALSE, file = FALSE)"
+  }
+}
+
 #' @title Deprecated function `workflow`
 #' @description Turns a named collection of command/target pairs into
 #' a workflow plan data frame for [make()] and

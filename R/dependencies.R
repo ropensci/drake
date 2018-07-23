@@ -225,9 +225,6 @@ command_dependencies <- function(command){
   if (!length(command)){
     return()
   }
-  if (is.na(command)){
-    return()
-  }
   command <- as.character(command)
   deps <- code_dependencies(parse(text = command))
   deps$strings <- NULL
@@ -477,6 +474,7 @@ loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
 ignore_fns <- pair_text(drake_prefix, "ignore")
 target_fns <- pair_text(drake_prefix, "target")
+trigger_fns <- pair_text(drake_prefix, "trigger")
 drake_fn_patterns <- c(
   knitr_in_fns,
   file_in_fns,
@@ -484,7 +482,8 @@ drake_fn_patterns <- c(
   loadd_fns,
   readd_fns,
   ignore_fns,
-  target_fns
+  target_fns,
+  trigger_fns
 )
 
 is_knitr_in_call <- function(expr){

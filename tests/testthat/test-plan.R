@@ -436,7 +436,7 @@ test_with_dir("custom column interface", {
   plan <- drake_plan(
     x = target(
       command = 1 + !!tidyvar,
-      trigger = "always",
+      trigger = trigger(condition = TRUE),
       user_column_1 = 1,
       user_column_2 = "some text"
     ),
@@ -450,7 +450,7 @@ test_with_dir("custom column interface", {
   plan0 <- tibble::tibble(
     target = c("x", "y", "z"),
     command = c("1 + 2", "Sys.sleep(\"not a number\")", "rnorm(10)"),
-    trigger = c("always", "any", "any"),
+    trigger = c("trigger(condition = TRUE)", NA, NA),
     user_column_1 = c(1, NA, NA),
     user_column_2 = c("some text", NA, NA),
     col3 = c(NA, "some text", NA)
@@ -466,7 +466,7 @@ test_with_dir("bind_plans()", {
   plan2 <- drake_plan(
     z = target(
       command = download_data(),
-      trigger = "always"
+      trigger = trigger(condition = TRUE)
     ),
     strings_in_dots = "literals"
   )
@@ -474,7 +474,7 @@ test_with_dir("bind_plans()", {
   plan4 <- tibble::tibble(
     target = c("x", "y", "z"),
     command = c("1", "2", "download_data()"),
-    trigger = c("any", "any", "always")
+    trigger = c(NA, NA, "trigger(condition = TRUE)")
   )
   expect_equal(plan3, plan4)
 })

@@ -242,3 +242,38 @@ test_with_dir("misc utils", {
   expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
   empty_hook()
 })
+
+test_with_dir("make(..., skip_imports = TRUE) works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  con <- dbug()
+  verbose <- max(con$jobs) < 2 &&
+    targets_setting(con$parallelism) == "parLapply"
+  suppressMessages(
+    con <- make(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      hook = silencer_hook,
+      skip_imports = TRUE,
+      session_info = FALSE
+    )
+  )
+  expect_equal(
+    sort(cached()),
+    sort(c("\"intermediatefile.rds\"", con$plan$target))
+  )
+
+  # If the imports are already cached, the targets built with
+  # skip_imports = TRUE should be up to date.
+  make(con$plan, verbose = FALSE, envir = con$envir, session_info = FALSE)
+  clean(list = con$plan$target, verbose = FALSE)
+  suppressMessages(
+    con <- make(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      hook = silencer_hook,
+      skip_imports = TRUE, session_info = FALSE
+    )
+  )
+  out <- outdated(con)
+  expect_equal(out, character(0))
+})

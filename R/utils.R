@@ -14,6 +14,10 @@ safe_grepl <- function(pattern, x, ...){
   tryCatch(grepl(pattern, x, ...), error = error_false)
 }
 
+safe_is_na <- function(x){
+  tryCatch(is.na(x), error = error_false, warning = error_false)
+}
+
 is_file <- function(x){
   safe_grepl(pattern = quotes_regex, x = x)
 }

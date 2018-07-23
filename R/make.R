@@ -98,7 +98,7 @@ make <- function(
   force = FALSE,
   return_config = NULL,
   graph = NULL,
-  trigger = drake::default_trigger(),
+  trigger = drake::trigger(),
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   config = NULL,

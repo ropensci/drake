@@ -1,131 +1,94 @@
-#' @title List the available drake triggers.
+#' @title Set the trigger of a target.
+#' @description For details, see the chapter on triggers
+#'   in the user manual:
+#'   <https://ropenscilabs.github.io/drake-manual>
+#' @details Use this function inside a target's command
+#'   in your [drake_plan()]. The target will rebuild if and only if:
+#'   - Any of `command`, `depend`, or `file` is `TRUE`, or
+#'   - `condition` evaluates to `TRUE`, or
+#'   - `change` evaluates to a value different from last time.
 #' @export
 #' @seealso [drake_plan()], [make()]
-#' @description Triggers are target-level rules
-#' that tell [make()] how to know if a target
-#' is outdated or up to date.
-#' @return A character vector with the names of the available triggers.
-#' @details By default, `make()`
-#' builds targets that need updating and
-#' skips over the ones that are already up to date.
-#' In other words, a change in a dependency, workflow plan command,
-#' or file, or the lack of the target itself,
-#'*triggers* the build process for the target.
-#' You can relax this behavior by choosing a trigger for each target.
-#' Set the trigger for each target with a `"trigger"`
-#' column in your workflow plan data frame. The `triggers()`
-#' function lists the available triggers:
-#'
-#' \itemize{
-#'   \item{'any'}{:
-#'     Build the target if any of the other triggers activate (default).
-#'   }
-#'
-#'   \item{'command'}{:
-#'     Build if the workflow plan command has changed since last
-#'     time the target was built. Also built if `missing` is triggered.
-#'   }
-#'
-#'   \item{'depends'}{:
-#'     Build if any of the target's dependencies
-#'     has changed since the last [make()].
-#'     Also build if `missing` is triggered.
-#'   }
-#'
-#'   \item{'file'}{:
-#'     Build if the target is a file and
-#'     that output file is either missing or corrupted.
-#'     Also build if `missing` is triggered.
-#'   }
-#'
-#'   \item{'missing'}{:
-#'     Build if the target itself is missing. Always applies.
-#'   }
-#' }
-#'
+#' @return a list of trigger specification details that
+#'   `drake` processes internally when it comes time to decide
+#'   whether to build the target.
+#' @param condition R code (expression or language object)
+#'   that returns a logical. The target will rebuild
+#'   if the code evaluates to `TRUE`.
+#' @param command logical, whether to rebuild the target if the
+#'   [drake_plan()] command changes.
+#' @param depend logical, whether to rebuild if a
+#'   non-file dependency changes.
+#' @param file logical, whether to rebuild the target
+#'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
+#' @param change R code (expression or language object)
+#'  that returns any value. The target will rebuild
+#'   if that value is different from last time
+#'   or not already cached.
 #' @examples
-#' triggers()
+#' # A trigger is just a set of decision rules
+#' # to decide whether to build a target.
+#' trigger()
+#' # This trigger will build a target on Tuesdays
+#' # and when the value of an online dataset changes.
+#' trigger(condition = today() == "Tuesday", change = get_online_dataset())
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Load drake's canonical example.
-#' my_plan[["trigger"]] <- "command"
-#' # You can have different triggers for different targets.
-#' my_plan[["trigger"]][1] <- "file"
-#' make(my_plan) # Run the project, build the targets.
-#' # Change an imported dependency function.
-#' reg2 <- function(d) {
-#'   d$x3 <- d$x ^ 3
-#'   lm(y ~ x3, data = d)
-#' }
-#' # Nothing changes! To react to `reg2`, you would need the
-#' # "any" or "depends" trigger.
-#' make(my_plan)
-#' # You can use a global trigger if your workflow plan
-#' # does not have a 'trigger' column.
-#' my_plan[["trigger"]] <- NULL # Would override the global trigger.
-#' make(my_plan, trigger = "missing") # Just build missing targets.
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' # You can use a global trigger argument:
+#' # for example, to always run everything.
+#' make(my_plan, trigger = trigger(condition = TRUE))
+#' make(my_plan, trigger = trigger(condition = TRUE))
+#' # You can also define specific triggers for each target.
+#' plan <- drake_plan(
+#'   x = rnorm(15),
+#'   y = target(
+#'     command = x + 1,
+#'     trigger = trigger(depend = FALSE)
+#'   )
+#' )
+#' # Now, when x changes, y will not.
+#' make(plan)
+#' make(plan)
+#' plan$command[1] <- "rnorm(16)" # change x
+#' make(plan)
 #' })
 #' }
-triggers <- function(){
-  c(
-    "any",
-    "always",
-    "command",
-    "depends",
-    "file",
-    "missing"
-  ) %>%
-    sort
+trigger <- function(
+  condition = FALSE,
+  command = TRUE,
+  depend = TRUE,
+  file = TRUE,
+  change = NULL
+){
+  stopifnot(is.logical(command))
+  stopifnot(is.logical(depend))
+  stopifnot(is.logical(file))
+  list(
+    condition = rlang::enexpr(condition),
+    command = command,
+    depend = depend,
+    file = file,
+    change = rlang::enexpr(change)
+  )
 }
 
-#' @title Return the default trigger.
-#' @description Triggers are target-level rules
-#' that tell [make()] how to check if
-#' target is up to date or outdated.
-#' @export
-#' @seealso [triggers()], [make()]
-#' @return A character scalar naming the default trigger.
-#' @examples
-#' default_trigger()
-#' # See ?triggers for more examples.
-default_trigger <- function(){
-  "any"
-}
-
-triggers_with_command <- function(){
-  c("any", "command")
-}
-
-triggers_with_depends <- function(){
-  c("any", "depends")
-}
-
-triggers_with_file <- function(){
-  c("any", "file")
-}
-
-get_trigger <- function(target, config){
+resolve_trigger <- function(target, config){
   plan <- config$plan
   if (!(target %in% plan$target)){
-    return("any")
+    trigger <- quote(trigger(condition = TRUE))
+  } else {
+    trigger <- drake_plan_override(
+      target = target,
+      field = "trigger",
+      config = config
+    )
   }
-  drake_plan_override(
-    target = target,
-    field = "trigger",
-    config = config
-  )
-}
-
-assert_legal_triggers <- function(x){
-  x <- setdiff(x, triggers())
-  if (!length(x)){
-    return(invisible())
+  if (is.character(trigger)) {
+    trigger <- convert_old_trigger(trigger)
+    trigger <- parse(text = trigger)
   }
-  stop(
-    "Illegal triggers found. See triggers() for the legal ones. Illegal:\n",
-    multiline_message(x),
-    call. = FALSE
-  )
+  eval(trigger, envir = config$envir)
 }
 
 command_trigger <- function(target, meta, config){
@@ -141,7 +104,7 @@ command_trigger <- function(target, meta, config){
   !identical(command, meta$command)
 }
 
-depends_trigger <- function(target, meta, config){
+depend_trigger <- function(target, meta, config){
   if (is.null(meta$dependency_hash)){
     return(FALSE)
   }
@@ -179,6 +142,22 @@ file_trigger <- function(target, meta, config){
   FALSE
 }
 
+change_trigger <- function(target, meta, config){
+  if (!length(target) || !length(config) || !length(meta)){
+    return(FALSE)
+  }
+  if (!config$cache$exists(key = target, namespace = "meta")){
+    return(TRUE) # nocov
+  }
+  old_trigger <- get_from_subspace(
+    key = target,
+    subspace = "trigger",
+    namespace = "meta",
+    cache = config$cache
+  )
+  !identical(old_trigger$value, meta$trigger$value)
+}
+
 should_build_target <- function(target, meta = NULL, config){
   if (is.null(meta)){
     meta <- drake_meta(target = target, config = config)
@@ -189,31 +168,28 @@ should_build_target <- function(target, meta = NULL, config){
   if (meta$missing){
     return(TRUE)
   }
-  trigger <- get_trigger(target = target, config = config)
-  if (trigger == "always"){
+  if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
     return(TRUE)
   }
-  if (trigger %in% triggers_with_command()){
+  if (identical(meta$trigger$command, TRUE)){
     if (command_trigger(target = target, meta = meta, config = config)){
       return(TRUE)
     }
   }
-  if (trigger %in% triggers_with_depends()){
-    if (depends_trigger(target = target, meta = meta, config = config)){
+  if (identical(meta$trigger$depend, TRUE)){
+    if (depend_trigger(target = target, meta = meta, config = config)){
       return(TRUE)
     }
   }
-  if (trigger %in% triggers_with_file()){
+  if (identical(meta$trigger$file, TRUE)){
     if (file_trigger(target = target, meta = meta, config = config)){
       return(TRUE)
     }
   }
+  if (!is.null(meta$trigger$change)){
+    if (change_trigger(target = target, meta = meta, config = config)){
+      return(TRUE)
+    }
+  }
   FALSE
-}
-
-using_default_triggers <- function(config){
-  default_plan_triggers <-
-    is.null(config$plan[["trigger"]]) ||
-    all(config$plan[["trigger"]] == default_trigger())
-  default_plan_triggers && config$trigger == default_trigger()
 }
