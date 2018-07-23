@@ -1,5 +1,6 @@
 # Version 5.3.1.9000
 
+- Repair output file checksum operations for distributed backends like `"clustermq_staged"` and `"future_lapply"`.
 - Add a `columns` argument to `evaluate_plan()` so users can evaluate wildcards in columns other than the `command` column of `plan`. 
 - Name the arguments of `target()` so users do not have to (explicitly).
 
