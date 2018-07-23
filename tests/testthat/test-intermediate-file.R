@@ -23,7 +23,7 @@ test_with_dir("responses to intermediate file", {
     plan$command[1] <- command
     config <- drake_config(plan = plan, targets = plan$target,
       envir = envir, parallelism = scenario$parallelism,
-      jobs = scenario$jobs, verbose = TRUE,
+      jobs = scenario$jobs, verbose = FALSE,
       session_info = FALSE,
       log_progress = TRUE,
       caching = scenario$caching
@@ -86,7 +86,7 @@ test_with_dir("imported file_in file", {
     saveRDS(1, file)
   }
   load_mtcars_example() # for report.Rmd
-  config <- drake_config(dbug_plan(), envir = envir, verbose = 4)
+  config <- drake_config(dbug_plan(), envir = envir, verbose = FALSE)
   testrun(config)
   for (file in paste0(letters[1:2], ".rds")){
     saveRDS(2, file)
