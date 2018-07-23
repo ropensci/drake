@@ -1,7 +1,7 @@
 #' @title Set the trigger of a target.
 #' @description Use this function inside a target's command
 #'   in your [drake_plan()]. The target will rebuild if and only if:
-#'   - Any of `command`, `depends`, or `file` is `TRUE`, or
+#'   - Any of `command`, `depend`, or `file` is `TRUE`, or
 #'   - `condition` evaluates to `TRUE`, or
 #'   - `change` evaluates to a value different from last time.
 #' @export
@@ -14,7 +14,7 @@
 #'   if the code evaluates to `TRUE`.
 #' @param command logical, whether to rebuild the target if the
 #'   [drake_plan()] command changes.
-#' @param depends logical, whether to rebuild if a
+#' @param depend logical, whether to rebuild if a
 #'   non-file dependency changes.
 #' @param file logical, whether to rebuild the target
 #'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
@@ -25,17 +25,17 @@
 trigger <- function(
   condition = FALSE,
   command = TRUE,
-  depends = TRUE,
+  depend = TRUE,
   file = TRUE,
   change = NULL
 ){
   stopifnot(is.logical(command))
-  stopifnot(is.logical(depends))
+  stopifnot(is.logical(depend))
   stopifnot(is.logical(file))
   list(
     condition = rlang::enexpr(condition),
     command = command,
-    depends = depends,
+    depend = depend,
     file = file,
     change = rlang::enexpr(change)
   )
@@ -72,7 +72,7 @@ command_trigger <- function(target, meta, config){
   !identical(command, meta$command)
 }
 
-depends_trigger <- function(target, meta, config){
+depend_trigger <- function(target, meta, config){
   if (is.null(meta$dependency_hash)){
     return(FALSE)
   }
@@ -144,8 +144,8 @@ should_build_target <- function(target, meta = NULL, config){
       return(TRUE)
     }
   }
-  if (identical(meta$trigger$depends, TRUE)){
-    if (depends_trigger(target = target, meta = meta, config = config)){
+  if (identical(meta$trigger$depend, TRUE)){
+    if (depend_trigger(target = target, meta = meta, config = config)){
       return(TRUE)
     }
   }

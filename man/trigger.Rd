@@ -4,7 +4,7 @@
 \alias{trigger}
 \title{Set the trigger of a target.}
 \usage{
-trigger(condition = FALSE, command = TRUE, depends = TRUE, file = TRUE,
+trigger(condition = FALSE, command = TRUE, depend = TRUE, file = TRUE,
   change = NULL)
 }
 \arguments{
@@ -15,7 +15,7 @@ if the code evaluates to \code{TRUE}.}
 \item{command}{logical, whether to rebuild the target if the
 \code{\link[=drake_plan]{drake_plan()}} command changes.}
 
-\item{depends}{logical, whether to rebuild if a
+\item{depend}{logical, whether to rebuild if a
 non-file dependency changes.}
 
 \item{file}{logical, whether to rebuild the target
@@ -35,7 +35,7 @@ whether to build the target.
 Use this function inside a target's command
 in your \code{\link[=drake_plan]{drake_plan()}}. The target will rebuild if and only if:
 \itemize{
-\item Any of \code{command}, \code{depends}, or \code{file} is \code{TRUE}, or
+\item Any of \code{command}, \code{depend}, or \code{file} is \code{TRUE}, or
 \item \code{condition} evaluates to \code{TRUE}, or
 \item \code{change} evaluates to a value different from last time.
 }

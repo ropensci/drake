@@ -79,7 +79,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (meta$trigger$command){
     meta$command <- get_standardized_command(target = target, config = config)
   }
-  if (meta$trigger$depends){
+  if (meta$trigger$depend){
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
   if (meta$trigger$file){

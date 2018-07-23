@@ -6,14 +6,14 @@ test_with_dir("trigger() function works", {
   y <- trigger(
     condition = 1 + 1,
     command = TRUE,
-    depends = FALSE,
+    depend = FALSE,
     file = FALSE,
     change = sqrt(!!x)
   )
   z <- list(
     condition = quote(1 + 1),
     command = TRUE,
-    depends = FALSE,
+    depend = FALSE,
     file = FALSE,
     change = quote(sqrt(1))
   )
@@ -32,7 +32,7 @@ test_with_dir("can detect trigger deps", {
         condition = f(FALSE),
         command = FALSE,
         file = FALSE,
-        depends = TRUE,
+        depend = TRUE,
         change = NULL
       )
     ),
@@ -58,7 +58,7 @@ test_with_dir("can detect trigger deps", {
 
 test_with_dir("empty triggers return logical", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_identical(depends_trigger("x", list(), list()), FALSE)
+  expect_identical(depend_trigger("x", list(), list()), FALSE)
   expect_identical(command_trigger("x", list(), list()), FALSE)
   expect_identical(file_trigger("x", list(), list()), FALSE)
   expect_identical(change_trigger("x", list(), list()), FALSE)
@@ -96,32 +96,32 @@ test_with_dir("trigger components react appropriately", {
   plan <- drake_plan(
     missing = target(
       "",
-      trigger(command = FALSE, depends = FALSE, file = FALSE)
+      trigger(command = FALSE, depend = FALSE, file = FALSE)
     ),
     condition = target(
       "",
       trigger(
         condition = readRDS("condition.rds"),
-        command = FALSE, depends = FALSE, file = FALSE
+        command = FALSE, depend = FALSE, file = FALSE
       )
     ),
     command = target(
       "",
-      trigger(command = TRUE, depends = FALSE, file = FALSE)
+      trigger(command = TRUE, depend = FALSE, file = FALSE)
     ),
-    depends = target(
+    depend = target(
       "",
-      trigger(command = FALSE, depends = TRUE, file = FALSE)
+      trigger(command = FALSE, depend = TRUE, file = FALSE)
     ),
     file = target(
       "",
-      trigger(command = FALSE, depends = FALSE, file = TRUE)
+      trigger(command = FALSE, depend = FALSE, file = TRUE)
     ),
     change = target(
       "",
       trigger(
         change = readRDS("change.rds"),
-        command = FALSE, depends = FALSE, file = FALSE
+        command = FALSE, depend = FALSE, file = FALSE
       )
     ),
     strings_in_dots = "literals"
@@ -204,9 +204,9 @@ test_with_dir("trigger components react appropriately", {
     }),
     envir = e
   )
-  expect_equal(sort(outdated(config)), "depends")
+  expect_equal(sort(outdated(config)), "depend")
   make(config = config)
-  expect_equal(sort(justbuilt(config)), "depends")
+  expect_equal(sort(justbuilt(config)), "depend")
   make(config = config)
   nobuild(config)
 })

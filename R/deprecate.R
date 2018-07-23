@@ -1443,13 +1443,13 @@ convert_old_trigger <- function(x){
   } else if (identical(x, "always")){
     "trigger(condition = TRUE)"
   } else if (identical(x, "command")){
-    "trigger(command = TRUE, depends = FALSE, file = FALSE)"
+    "trigger(command = TRUE, depend = FALSE, file = FALSE)"
   } else if (identical(x, "depends")){
-    "trigger(command = FALSE, depends = TRUE, file = FALSE)"
+    "trigger(command = FALSE, depend = TRUE, file = FALSE)"
   } else if (identical(x, "file")){
-    "trigger(command = FALSE, depends = FALSE, file = TRUE)"
+    "trigger(command = FALSE, depend = FALSE, file = TRUE)"
   } else if (identical(x, "missing")){
-    "trigger(command = FALSE, depends = FALSE, file = FALSE)"
+    "trigger(command = FALSE, depend = FALSE, file = FALSE)"
   }
 }
 
