@@ -48,3 +48,15 @@ test_with_dir("empty triggers return logical", {
   expect_identical(file_trigger("x", list(), list()), FALSE)
   expect_identical(change_trigger("x", list(), list()), FALSE)
 })
+
+test_with_dir("triggers can be NA in the plan", {
+  expect_silent(
+    config <- make(
+      drake_plan(x = target(1, NA)),
+      session_info = FALSE,
+      cache = storr::storr_environment(),
+      verbose = FALSE
+    )
+  )
+  expect_equal(justbuilt(config), "x")
+})

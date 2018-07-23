@@ -160,7 +160,7 @@ test_with_dir("console to file", {
       )
       make(
         my_plan, cache = cache, verbose = 4, session_info = FALSE,
-        trigger = "always", console_log_file = "log.txt"
+        trigger = trigger(condition = TRUE), console_log_file = "log.txt"
       )
     },
     type = "message"
