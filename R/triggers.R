@@ -1,5 +1,8 @@
 #' @title Set the trigger of a target.
-#' @description Use this function inside a target's command
+#' @description For details, see the chapter on triggers
+#'   in the user manual:
+#'   <https://ropenscilabs.github.io/drake-manual>
+#' @details Use this function inside a target's command
 #'   in your [drake_plan()]. The target will rebuild if and only if:
 #'   - Any of `command`, `depend`, or `file` is `TRUE`, or
 #'   - `condition` evaluates to `TRUE`, or
