@@ -106,12 +106,17 @@ console_up_to_date <- function(config){
     return(invisible())
   }
   any_attempted <- get_attempt_flag(config = config)
-  if (!any_attempted && !config$skip_imports){
+  custom_triggers <- "trigger" %in% colnames(plan) ||
+    !identical(config$trigger, trigger())
+  if (!any_attempted && !custom_triggers && !config$skip_imports){
     console_all_up_to_date(config = config)
     return(invisible())
   }
   if (config$skip_imports){
     console_skipped_imports(config = config)
+  }
+  if (custom_triggers){
+    console_custom_triggers(config)
   }
 }
 
@@ -131,7 +136,7 @@ console_skipped_imports <- function(config){
     drake_message(config = config)
 }
 
-console_nondefault_triggers <- function(config){
+console_custom_triggers <- function(config){
   color(
     paste(
       "Used non-default triggers.",
