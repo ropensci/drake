@@ -95,8 +95,11 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 }
 
 dependency_hash <- function(target, config) {
-  dependencies(target, config) %>%
-    sort %>%
+  deps <- dependencies(target, config)
+  if (target %in% config$plan$target){
+    deps <- Filter(x = deps, f = is_not_file)
+  }
+  sort(deps) %>%
     self_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }
