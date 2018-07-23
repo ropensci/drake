@@ -115,7 +115,7 @@ change_trigger <- function(target, meta, config){
     return(FALSE)
   }
   if (!config$cache$exists(key = target, namespace = "meta")){
-    return(TRUE)
+    return(TRUE) # nocov
   }
   old_trigger <- get_from_subspace(
     key = target,
