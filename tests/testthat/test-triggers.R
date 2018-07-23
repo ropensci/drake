@@ -163,14 +163,14 @@ test_with_dir("trigger components react appropriately", {
   ")
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching
+    verbose = FALSE, caching = caching, session_info = FALSE
   )
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
   simple_plan <- plan
   simple_plan$trigger <- NULL
   simple_config <- make(
     simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching
+    verbose = FALSE, caching = caching, session_info = FALSE
   )
 
   # Condition trigger
@@ -235,12 +235,14 @@ test_with_dir("trigger components react appropriately", {
   plan <- plan[1:5, ]
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, log_progress = TRUE
+    verbose = FALSE, caching = caching, log_progress = TRUE,
+    session_info = FALSE
   )
   simple_plan <- simple_plan[1:5, ]
   simple_config <- drake_config(
     simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, log_progress = TRUE
+    verbose = FALSE, caching = caching, log_progress = TRUE,
+    session_info = FALSE
   )
   make(config = simple_config)
 

@@ -218,3 +218,34 @@ test_with_dir("force loading a non-back-compatible cache", {
   clean()
   expect_true(length(cached()) == 0)
 })
+
+test_with_dir("old trigger interface", {
+  for (old_trigger in triggers()){
+    plan <- drake_plan(x = 1)
+    plan$trigger <- old_trigger
+    clean()
+    expect_warning(
+      config <- make(
+        plan,
+        session_info = FALSE,
+        cache = storr::storr_environment()
+      ),
+      regexp = "old trigger interface is deprecated"
+    )
+    trigger <- diagnose(x, cache = config$cache)$trigger
+    expect_true(is.list(trigger))
+    expect_equal(trigger$condition, old_trigger == "always")
+    expect_equal(
+      trigger$command,
+      old_trigger %in% c("always", "any", "command")
+    )
+    expect_equal(
+      trigger$file,
+      old_trigger %in% c("always", "any", "file")
+    )
+    expect_equal(
+      trigger$depend,
+      old_trigger %in% c("always", "any", "depends")
+    )
+  }
+})
