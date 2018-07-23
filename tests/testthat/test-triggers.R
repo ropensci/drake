@@ -37,6 +37,28 @@ test_with_dir("triggers in plan override make(trigger = whatever)", {
   expect_equal(justbuilt(config), "y")
 })
 
+test_with_dir("change trigger on a fresh build", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  saveRDS(1, "file.rds")
+  plan <- drake_plan(
+    x = target(1 + 1, trigger(
+      condition = FALSE,
+      command = FALSE,
+      depend = FALSE,
+      file = FALSE,
+      change = readRDS("file.rds"))
+    ),
+    strings_in_dots = "literals"
+  )
+  config <- make(plan, session_info = FALSE)
+  expect_equal(justbuilt(config), "x")
+  config <- make(plan, session_info = FALSE)
+  expect_equal(justbuilt(config), character(0))
+  saveRDS(2, "file.rds")
+  config <- make(plan, session_info = FALSE)
+  expect_equal(justbuilt(config), "x")
+})
+
 test_with_dir("trigger() function works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- 1
