@@ -72,10 +72,7 @@ build_drake_graph <- function(
     type = "target",
     config = config
   )
-  trigger_deps <- merge_lists(
-    code_dependencies(trigger$condition),
-    code_dependencies(trigger$change)
-  )
+  trigger_deps <- global_trigger_deps(trigger)
   plan_deps <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
@@ -314,4 +311,18 @@ drake_subcomponent <- function(...){
   on.exit(igraph::igraph_options(return.vs.es = opt))
   igraph::igraph_options(return.vs.es = TRUE)
   igraph::subcomponent(...)
+}
+
+global_trigger_deps <- function(trigger){
+  trigger <- convert_old_trigger(trigger)
+  if (is.character(trigger)){
+    trigger <- parse(text = trigger)
+  }
+  if (is.language(trigger) || is.expression(trigger)){
+    trigger <- eval(trigger)
+  }
+  merge_lists(
+    code_dependencies(trigger$condition),
+    code_dependencies(trigger$change)
+  )
 }
