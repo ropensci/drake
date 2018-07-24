@@ -2,7 +2,7 @@
 
 Please explain the context and purpose of your contribution and list the changes you made to the code base or documentation.
 
-# Related GitHub issues
+# Related GitHub issues and pull requests
 
 - Ref: #
 

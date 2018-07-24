@@ -95,7 +95,12 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 }
 
 dependency_hash <- function(target, config) {
-  deps <- dependencies(target, config)
+  deps <- dependencies(target, config) %>%
+    setdiff(y = igraph::vertex_attr(
+      graph = config$graph,
+      name = "ignore_changes",
+      index = target
+    )[[1]])
   if (target %in% config$plan$target){
     deps <- Filter(x = deps, f = is_not_file)
   }
@@ -115,7 +120,12 @@ file_dependency_hash <- function(
     graph = config$graph,
     name = which,
     index = target
-  ))
+  )) %>%
+    setdiff(y = igraph::vertex_attr(
+      graph = config$graph,
+      name = "ignore_changes",
+      index = target
+    )[[1]])
   vapply(
     X = sort(files),
     FUN = file_hash,

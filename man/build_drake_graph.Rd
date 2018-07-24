@@ -6,7 +6,8 @@
 \usage{
 build_drake_graph(plan = read_drake_plan(), targets = plan$target,
   envir = parent.frame(), verbose = drake::default_verbose(), jobs = 1,
-  sanitize_plan = FALSE, console_log_file = NULL)
+  sanitize_plan = FALSE, console_log_file = NULL,
+  trigger = drake::trigger())
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -83,6 +84,9 @@ If \code{NULL}, console output will be printed
 to the R console using \code{message()}.
 Otherwise, \code{console_log_file} should be the name of a flat file.
 Console output will be appended to that file.}
+
+\item{trigger}{optional, a global trigger for building targets
+(see \code{\link[=trigger]{trigger()}}).}
 }
 \value{
 An igraph object representing

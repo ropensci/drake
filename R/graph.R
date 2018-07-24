@@ -14,6 +14,8 @@
 #'   and/or `drake:::sanitize_targets()` to sanitize the targets
 #'   (or just get `plan` and `targets` and `graph` from
 #'   [drake_config()]).
+#' @param trigger optional, a global trigger for building targets
+#'   (see [trigger()]).
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -30,7 +32,8 @@ build_drake_graph <- function(
   verbose = drake::default_verbose(),
   jobs = 1,
   sanitize_plan = FALSE,
-  console_log_file = NULL
+  console_log_file = NULL,
+  trigger = drake::trigger()
 ){
   force(envir)
   if (sanitize_plan){
@@ -69,14 +72,19 @@ build_drake_graph <- function(
     type = "target",
     config = config
   )
+  trigger_deps <- global_trigger_deps(trigger)
   plan_deps <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
       out <- command_dependencies(command = plan$command[i])
       if ("trigger" %in% colnames(plan)){
-        trigger_deps <- command_dependencies(command = plan$trigger[i])
-        out <- merge_lists(out, trigger_deps)
+        trigger_deps <- merge_lists(
+          trigger_deps, command_dependencies(command = plan$trigger[i])
+        )
       }
+      ignore_changes <- setdiff(unlist(trigger_deps), unlist(out))
+      out <- merge_lists(out, trigger_deps)
+      out$ignore_changes <- ignore_changes
       out
     },
     jobs = jobs
@@ -89,27 +97,27 @@ build_drake_graph <- function(
     jobs = jobs
   ) %>%
     do.call(what = dplyr::bind_rows)
-  output_files <- deps_to_igraph_attr(plan, plan_deps, "file_out", jobs)
-  input_files <- deps_to_igraph_attr(
-    plan, plan_deps, c("file_in", "knitr_in"), jobs)
-  commands_edges <- connect_output_files(commands_edges, output_files)
+  attrs <- list(
+    output_files = deps_to_igraph_attr(plan, plan_deps, "file_out", jobs),
+    input_files = deps_to_igraph_attr(
+      plan, plan_deps, c("file_in", "knitr_in"), jobs
+    ),
+    ignore_changes = deps_to_igraph_attr(
+      plan, plan_deps, "ignore_changes", jobs
+    )
+  )
+  commands_edges <- connect_output_files(commands_edges, attrs$output_files)
   graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
     igraph::graph_from_data_frame()
-  if (length(output_files)){
-    graph <- igraph::set_vertex_attr(
-      graph = graph,
-      name = "output_files",
-      index = names(output_files),
-      value = output_files
-    )
-  }
-  if (length(input_files)){
-    graph <- igraph::set_vertex_attr(
-      graph = graph,
-      name = "input_files",
-      index = names(input_files),
-      value = input_files
-    )
+  for (attr in names(attrs)){
+    if (length(attrs[[attr]])){
+      graph <- igraph::set_vertex_attr(
+        graph = graph,
+        name = attr,
+        index = names(attrs[[attr]]),
+        value = attrs[[attr]]
+      )
+    }
   }
   prune_drake_graph(graph = graph, to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
@@ -303,4 +311,18 @@ drake_subcomponent <- function(...){
   on.exit(igraph::igraph_options(return.vs.es = opt))
   igraph::igraph_options(return.vs.es = TRUE)
   igraph::subcomponent(...)
+}
+
+global_trigger_deps <- function(trigger){
+  trigger <- convert_old_trigger(trigger)
+  if (is.character(trigger)){
+    trigger <- parse(text = trigger)
+  }
+  if (is.language(trigger) || is.expression(trigger)){
+    trigger <- eval(trigger)
+  }
+  merge_lists(
+    code_dependencies(trigger$condition),
+    code_dependencies(trigger$change)
+  )
 }
