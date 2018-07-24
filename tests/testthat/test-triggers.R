@@ -83,8 +83,10 @@ test_with_dir("trigger() function works", {
   expect_equal(y, z)
 })
 
-test_with_dir("can detect trigger deps", {
+test_with_dir("can detect trigger deps without reacting to them", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  writeLines("123", "knitr.Rmd")
+  saveRDS(1, "file.rds")
   f <- function(x){
     identity(x)
   }
@@ -92,7 +94,10 @@ test_with_dir("can detect trigger deps", {
     x = target(
       command = 1 + 1,
       trigger = trigger(
-        condition = f(FALSE),
+        condition = {
+          knitr_in("knitr.Rmd")
+          f(FALSE) + readRDS(file_in("file.rds"))
+        },
         command = FALSE,
         file = FALSE,
         depend = TRUE,
@@ -104,7 +109,9 @@ test_with_dir("can detect trigger deps", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  expect_equal(dependencies("x", config), "f")
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  expect_true(all(deps %in% igraph::V(config$graph)$name))
+  expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
   make(config = config)
   expect_equal(justbuilt(config), "x")
@@ -114,9 +121,9 @@ test_with_dir("can detect trigger deps", {
   f <- function(x){
     identity(x) || FALSE
   }
-  expect_equal(outdated(config), "x")
+  expect_equal(outdated(config), character(0))
   make(config = config)
-  expect_equal(justbuilt(config), "x")
+  nobuild(config)
 })
 
 test_with_dir("triggers can be NA in the plan", {

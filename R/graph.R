@@ -75,7 +75,9 @@ build_drake_graph <- function(
       out <- command_dependencies(command = plan$command[i])
       if ("trigger" %in% colnames(plan)){
         trigger_deps <- command_dependencies(command = plan$trigger[i])
+        ignore_changes <- setdiff(unlist(trigger_deps), unlist(out))
         out <- merge_lists(out, trigger_deps)
+        out$ignore_changes <- ignore_changes
       }
       out
     },
@@ -89,27 +91,27 @@ build_drake_graph <- function(
     jobs = jobs
   ) %>%
     do.call(what = dplyr::bind_rows)
-  output_files <- deps_to_igraph_attr(plan, plan_deps, "file_out", jobs)
-  input_files <- deps_to_igraph_attr(
-    plan, plan_deps, c("file_in", "knitr_in"), jobs)
-  commands_edges <- connect_output_files(commands_edges, output_files)
+  attrs <- list(
+    output_files = deps_to_igraph_attr(plan, plan_deps, "file_out", jobs),
+    input_files = deps_to_igraph_attr(
+      plan, plan_deps, c("file_in", "knitr_in"), jobs)
+  )
+  if ("trigger" %in% colnames(plan)){
+    attrs$ignore_changes <- deps_to_igraph_attr(
+      plan, plan_deps, "ignore_changes", jobs)
+  }
+  commands_edges <- connect_output_files(commands_edges, attrs$output_files)
   graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
     igraph::graph_from_data_frame()
-  if (length(output_files)){
-    graph <- igraph::set_vertex_attr(
-      graph = graph,
-      name = "output_files",
-      index = names(output_files),
-      value = output_files
-    )
-  }
-  if (length(input_files)){
-    graph <- igraph::set_vertex_attr(
-      graph = graph,
-      name = "input_files",
-      index = names(input_files),
-      value = input_files
-    )
+  for (attr in names(attrs)){
+    if (length(attrs[[attr]])){
+      graph <- igraph::set_vertex_attr(
+        graph = graph,
+        name = attr,
+        index = names(attrs[[attr]]),
+        value = attrs[[attr]]
+      )
+    }
   }
   prune_drake_graph(graph = graph, to = targets, jobs = jobs) %>%
     igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
