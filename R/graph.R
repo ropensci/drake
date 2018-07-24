@@ -14,6 +14,8 @@
 #'   and/or `drake:::sanitize_targets()` to sanitize the targets
 #'   (or just get `plan` and `targets` and `graph` from
 #'   [drake_config()]).
+#' @param trigger optional, a global trigger for building targets
+#'   (see [trigger()]).
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -30,7 +32,8 @@ build_drake_graph <- function(
   verbose = drake::default_verbose(),
   jobs = 1,
   sanitize_plan = FALSE,
-  console_log_file = NULL
+  console_log_file = NULL,
+  trigger = drake::trigger()
 ){
   force(envir)
   if (sanitize_plan){
@@ -69,16 +72,22 @@ build_drake_graph <- function(
     type = "target",
     config = config
   )
+  trigger_deps <- merge_lists(
+    code_dependencies(trigger$condition),
+    code_dependencies(trigger$change)
+  )
   plan_deps <- lightly_parallelize(
     X = seq_len(nrow(plan)),
     FUN = function(i){
       out <- command_dependencies(command = plan$command[i])
       if ("trigger" %in% colnames(plan)){
-        trigger_deps <- command_dependencies(command = plan$trigger[i])
-        ignore_changes <- setdiff(unlist(trigger_deps), unlist(out))
-        out <- merge_lists(out, trigger_deps)
-        out$ignore_changes <- ignore_changes
+        trigger_deps <- merge_lists(
+          trigger_deps, command_dependencies(command = plan$trigger[i])
+        )
       }
+      ignore_changes <- setdiff(unlist(trigger_deps), unlist(out))
+      out <- merge_lists(out, trigger_deps)
+      out$ignore_changes <- ignore_changes
       out
     },
     jobs = jobs
@@ -94,12 +103,12 @@ build_drake_graph <- function(
   attrs <- list(
     output_files = deps_to_igraph_attr(plan, plan_deps, "file_out", jobs),
     input_files = deps_to_igraph_attr(
-      plan, plan_deps, c("file_in", "knitr_in"), jobs)
+      plan, plan_deps, c("file_in", "knitr_in"), jobs
+    ),
+    ignore_changes = deps_to_igraph_attr(
+      plan, plan_deps, "ignore_changes", jobs
+    )
   )
-  if ("trigger" %in% colnames(plan)){
-    attrs$ignore_changes <- deps_to_igraph_attr(
-      plan, plan_deps, "ignore_changes", jobs)
-  }
   commands_edges <- connect_output_files(commands_edges, attrs$output_files)
   graph <- dplyr::bind_rows(imports_edges, commands_edges) %>%
     igraph::graph_from_data_frame()

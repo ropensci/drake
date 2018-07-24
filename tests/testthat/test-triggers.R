@@ -126,6 +126,44 @@ test_with_dir("can detect trigger deps without reacting to them", {
   nobuild(config)
 })
 
+test_with_dir("same, but with global trigger", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  writeLines("123", "knitr.Rmd")
+  saveRDS(1, "file.rds")
+  f <- function(x){
+    identity(x)
+  }
+  plan <- drake_plan(x = 1 + 1)
+  config <- drake_config(
+    plan, session_info = FALSE, cache = storr::storr_environment(),
+    log_progress = TRUE, trigger = trigger(
+      condition = {
+        knitr_in("knitr.Rmd")
+        f(FALSE) + readRDS(file_in("file.rds"))
+      },
+      command = FALSE,
+      file = FALSE,
+      depend = TRUE,
+      change = NULL
+    )
+  )
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  expect_true(all(deps %in% igraph::V(config$graph)$name))
+  expect_equal(sort(dependencies("x", config)), sort(deps))
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(outdated(config), character(0))
+  make(config = config)
+  nobuild(config)
+  f <- function(x){
+    identity(x) || FALSE
+  }
+  expect_equal(outdated(config), character(0))
+  make(config = config)
+  nobuild(config)
+})
+
 test_with_dir("triggers can be NA in the plan", {
   skip_on_cran()
   expect_silent(
