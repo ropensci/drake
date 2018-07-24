@@ -193,6 +193,7 @@ test_with_dir("trigger components react appropriately", {
     verbose = FALSE, caching = caching, session_info = FALSE
   )
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
+  expect_equal(outdated(config), "condition")
   simple_plan <- plan
   simple_plan$trigger <- NULL
   simple_config <- make(
