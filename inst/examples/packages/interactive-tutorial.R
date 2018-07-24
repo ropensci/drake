@@ -38,6 +38,9 @@ library(drake)
 library(dplyr)
 library(ggplot2)
 library(knitr)
+library(rvest)
+
+pkgconfig::set_config("drake::strings_in_dots" = "literals")
 
 # We want to explore the daily downloads from these packages.
 
@@ -47,20 +50,39 @@ package_list <- c(
   "ggplot2"
 )
 
-# We plan to use the cranlogs package.
+# We will use the cranlogs package to get the data.
 # The data frames `older` and `recent` will
 # contain the number of daily downloads for each package
 # from the RStudio CRAN mirror.
+# For the recent data, we will use a custom trigger.
+# That way, drake automatically knows to fetch the recent data
+# when a new CRAN log becomes available.
 
 data_plan <- drake_plan(
-  recent = cran_downloads(packages = package_list, when = "last-month"),
   older = cran_downloads(
     packages = package_list,
     from = "2016-11-01",
     to = "2016-12-01"
   ),
-  strings_in_dots = "literals"
+  recent = target(
+    command = cran_downloads(
+      packages = package_list,
+      when = "last-month"
+    ),
+    trigger = trigger(change = latest_log_date())
+  )
 )
+
+# To find out the latest log date,
+# we scrape the web with the rvest package.
+
+latest_log_date <- function(){
+  read_html("http://cran-logs.rstudio.com/") %>%
+    html_nodes("li:last-of-type") %>%
+    html_nodes("a:last-of-type") %>%
+    html_text() %>%
+    max
+}
 
 # We want to summarize each set of
 # download statistics a couple different ways.
@@ -96,7 +118,7 @@ output_plan <- plan_analyses(
 # in a dynamic knitr report.
 
 report_plan <- drake_plan(
-  knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
+  report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
 )
 
 # And we complete the workflow plan data frame by
@@ -104,19 +126,11 @@ report_plan <- drake_plan(
 # Drake analyzes the plan to figure out the dependency network,
 # so row order does not matter.
 
-whole_plan <- rbind(
+whole_plan <- dplyr::bind_rows(
   data_plan,
   output_plan,
   report_plan
 )
-
-# The latest download data needs to be refreshed every day, so we use
-# triggers to force `recent` to always build.
-# For more on triggers, see the guide on debugging and testing:
-# https://ropenscilabs.github.io/drake-manual/debug.html # nolint
-
-whole_plan$trigger <- "any" # default trigger
-whole_plan$trigger[whole_plan$target == "recent"] <- "always"
 
 # Now, we run the project to download the data and analyze it.
 # The results will be summarized in the knitted report, `report.md`,
@@ -126,22 +140,14 @@ make(whole_plan)
 readd(averages_recent)
 readd(plot_recent)
 
-# Because we used triggers, each make() rebuilds the `recent`
-# data frame to get the latest download numbers for today.
-# If the new data are the same as last time
-# and nothing else changed,
-# drake skips the other targets.
+# Now, subsequent calls to make()
+# will report that everything is up to date
+# unless a new log has been uploaded to http://cran-logs.rstudio.com/
+# since last time.
 
 make(whole_plan)
 
-# To visualize the build behavior, plot the dependency network.
-# Target `recent` and everything depending on it is always
-# out of date because of the `"always"` trigger.
-# If you rerun the project tomorrow,
-# the download counts will have been updated, so make()
-# will refresh `averages_recent`, `plot_recent`, and
-# `'report.md'`. Targets `averages_older` and `plot_older`
-# are unaffected, so drake will skip them.
+# To visualize the build behavior, plot the dependency graph.
 
 config <- drake_config(whole_plan)
 vis_drake_graph(config)

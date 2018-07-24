@@ -9,10 +9,13 @@ package_list <- c(
   "ggplot2"
 )
 
-# We plan to use the cranlogs package.
+# We will use the cranlogs package to get the data.
 # The data frames `older` and `recent` will
 # contain the number of daily downloads for each package
 # from the RStudio CRAN mirror.
+# For the recent data, we will use a custom trigger.
+# That way, drake automatically knows to fetch the recent data
+# when a new CRAN log becomes available.
 
 data_plan <- drake_plan(
   older = cran_downloads(
@@ -25,9 +28,8 @@ data_plan <- drake_plan(
       packages = package_list,
       when = "last-month"
     ),
-    trigger = "always"
-  ),
-  strings_in_dots = "literals"
+    trigger = trigger(change = latest_log_date())
+  )
 )
 
 # The latest download data needs to be refreshed every day,
