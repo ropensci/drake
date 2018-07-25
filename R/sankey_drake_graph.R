@@ -96,9 +96,16 @@ sankey_drake_graph <- function(
 #'   There should be 3 data frames: `nodes`, `edges`,
 #'   and `legend_nodes`.
 #'
-#' @param file Name of HTML file to save the graph.
-#'   If `NULL` or `character(0)`,
-#'   no file is saved and the graph is rendered and displayed within R.
+#' @param file Name of a file to save the graph.
+#'   If `NULL` or `character(0)`, no file is saved and
+#'   the graph is rendered and displayed within R.
+#'   If the file ends in a `.png`, `.jpg`, `.jpeg`, or `.pdf` extension,
+#'   then a static image will be saved. In this case,
+#'   the webshot package and PhantomJS are required:
+#'   `install.packages("webshot"); webshot::install_phantomjs()`.
+#'   If the file does not end in a `.png`, `.jpg`, `.jpeg`, or `.pdf`
+#'   extension, an HTML file will be saved, and you can open the
+#'   interactive graph using a web browser.
 #'
 #' @param selfcontained logical, whether
 #'   to save the `file` as a self-contained
@@ -174,13 +181,23 @@ render_sankey_drake_graph <- function(
     ... = ...
   )
   if (length(file)) {
-    invisible(
+    if (is_image_filename(file)){
+      assert_pkgs("webshot")
+      url <- fs::path_ext_set(tempfile(), "html")
+      networkD3::saveNetwork(
+        network = sankey,
+        file = url,
+        selfcontained = TRUE
+      )
+      webshot::webshot(url = url, file = file)
+    } else {
       networkD3::saveNetwork(
         network = sankey,
         file = file,
         selfcontained = selfcontained
       )
-    )
+    }
+    invisible()
   } else {
     sankey
   }

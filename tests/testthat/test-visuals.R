@@ -13,8 +13,16 @@ test_with_dir("visNetwork graph runs", {
   unlink("Rplots.pdf", force = TRUE)
   file <- "graph.html"
   expect_false(file.exists(file))
-  vis_drake_graph(config = config, file = file)
+  vis_drake_graph(config = config, file = file, selfcontained = TRUE)
   expect_true(file.exists(file))
+  unlink(file, force = TRUE, recursive = TRUE)
+  skip_if_not_installed("webshot")
+  file <- "graph.png"
+  expect_false(file.exists(file))
+  vis_drake_graph(config = config, file = file, selfcontained = FALSE)
+  expect_true(file.exists(file))
+  expect_false(any(grepl("*.html", list.files())))
+  expect_false(any(grepl("*_files", list.files())))
 })
 
 test_with_dir("visNetwork dep graph does not fail if input file is binary", {
@@ -30,7 +38,7 @@ test_with_dir("visNetwork dep graph does not fail if input file is binary", {
   unlink("input.rds", force = TRUE)
 })
 
-test_with_dir("static graphs", {
+test_with_dir("ggraphs", {
   skip_on_cran()
   skip_if_not_installed("ggplot2")
   skip_if_not_installed("ggraph")
@@ -59,4 +67,13 @@ test_with_dir("Sankey diagram runs", {
   expect_false(file.exists(file))
   sankey_drake_graph(config = config, file = file)
   expect_true(file.exists(file))
+  skip_if_not_installed("webshot")
+  unlink(file)
+  unlink("*_files", recursive = TRUE)
+  file <- "graph.png"
+  expect_false(file.exists(file))
+  sankey_drake_graph(config = config, file = file, selfcontained = FALSE)
+  expect_true(file.exists(file))
+  expect_false(any(grepl("*.html", list.files())))
+  expect_false(any(grepl("*_files", list.files())))
 })

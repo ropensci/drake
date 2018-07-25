@@ -97,9 +97,16 @@ vis_drake_graph <- function(
 #'   There should be 3 data frames: `nodes`, `edges`,
 #'   and `legend_nodes`.
 #'
-#' @param file Name of HTML file to save the graph.
-#'   If `NULL` or `character(0)`,
-#'   no file is saved and the graph is rendered and displayed within R.
+#' @param file Name of a file to save the graph.
+#'   If `NULL` or `character(0)`, no file is saved and
+#'   the graph is rendered and displayed within R.
+#'   If the file ends in a `.png`, `.jpg`, `.jpeg`, or `.pdf` extension,
+#'   then a static image will be saved. In this case,
+#'   the webshot package and PhantomJS are required:
+#'   `install.packages("webshot"); webshot::install_phantomjs()`.
+#'   If the file does not end in a `.png`, `.jpg`, `.jpeg`, or `.pdf`
+#'   extension, an HTML file will be saved, and you can open the
+#'   interactive graph using a web browser.
 #'
 #' @param layout name of an igraph layout to use,
 #'   such as 'layout_with_sugiyama'
@@ -111,7 +118,10 @@ vis_drake_graph <- function(
 #'   to save the `file` as a self-contained
 #'   HTML file (with external resources base64 encoded) or a file with
 #'   external resources placed in an adjacent directory. If `TRUE`,
-#'   pandoc is required.
+#'   pandoc is required. The `selfcontained` argument only applies
+#'   to HTML files. In other words, if `file` is a
+#'   PNG, PDF, or JPEG file, for instance,
+#'   the point is moot.
 #'
 #' @param direction an argument to `visNetwork::visHierarchicalLayout()`
 #'   indicating the direction of the graph.
@@ -197,8 +207,15 @@ render_drake_graph <- function(
   if (hover)
     out <- with_hover(out)
   if (length(file)) {
-    visNetwork::visSave(graph = out, file = file,
-      selfcontained = selfcontained)
+    if (is_image_filename(file)){
+      assert_pkgs("webshot")
+      url <- fs::path_ext_set(tempfile(), "html")
+      visNetwork::visSave(graph = out, file = url, selfcontained = TRUE)
+      webshot::webshot(url = url, file = file)
+    } else {
+      visNetwork::visSave(graph = out, file = file,
+        selfcontained = selfcontained)
+    }
     return(invisible())
   }
   out

@@ -13,9 +13,16 @@ render_sankey_drake_graph(graph_info, file = character(0),
 There should be 3 data frames: \code{nodes}, \code{edges},
 and \code{legend_nodes}.}
 
-\item{file}{Name of HTML file to save the graph.
-If \code{NULL} or \code{character(0)},
-no file is saved and the graph is rendered and displayed within R.}
+\item{file}{Name of a file to save the graph.
+If \code{NULL} or \code{character(0)}, no file is saved and
+the graph is rendered and displayed within R.
+If the file ends in a \code{.png}, \code{.jpg}, \code{.jpeg}, or \code{.pdf} extension,
+then a static image will be saved. In this case,
+the webshot package and PhantomJS are required:
+\code{install.packages("webshot"); webshot::install_phantomjs()}.
+If the file does not end in a \code{.png}, \code{.jpg}, \code{.jpeg}, or \code{.pdf}
+extension, an HTML file will be saved, and you can open the
+interactive graph using a web browser.}
 
 \item{selfcontained}{logical, whether
 to save the \code{file} as a self-contained

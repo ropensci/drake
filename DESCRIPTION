@@ -101,7 +101,8 @@ Suggests:
   RSQLite,
   txtq,
   rmarkdown,
-  visNetwork
+  visNetwork,
+  webshot
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.0.1
