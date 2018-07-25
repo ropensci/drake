@@ -8,8 +8,8 @@ init:
         Import-Module '..\appveyor-tool.ps1'
 
 install:
-  ps: Bootstrap
-  cinst: PhantomJS
+  - ps: Bootstrap
+  - cinst PhantomJS
 
 # Adapt as necessary starting from here
 
