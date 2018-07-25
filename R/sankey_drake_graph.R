@@ -183,11 +183,11 @@ render_sankey_drake_graph <- function(
   if (length(file)) {
     if (is_image_filename(file)){
       assert_pkgs("webshot")
-      url <- fs::path_ext_set(tempfile(), "html")
+      url <- file.path(fs::dir_create(tempfile()), "tmp.html")
       networkD3::saveNetwork(
         network = sankey,
         file = url,
-        selfcontained = TRUE
+        selfcontained = FALSE
       )
       webshot::webshot(url = url, file = file)
     } else {

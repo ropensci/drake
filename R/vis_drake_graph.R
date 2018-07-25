@@ -209,8 +209,8 @@ render_drake_graph <- function(
   if (length(file)) {
     if (is_image_filename(file)){
       assert_pkgs("webshot")
-      url <- fs::path_ext_set(tempfile(), "html")
-      visNetwork::visSave(graph = out, file = url, selfcontained = TRUE)
+      url <- file.path(fs::dir_create(tempfile()), "tmp.html")
+      visNetwork::visSave(graph = out, file = url, selfcontained = FALSE)
       webshot::webshot(url = url, file = file)
     } else {
       visNetwork::visSave(graph = out, file = file,

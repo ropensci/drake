@@ -16,6 +16,7 @@ test_with_dir("visNetwork graph runs", {
   vis_drake_graph(config = config, file = file, selfcontained = FALSE)
   expect_true(file.exists(file))
   unlink(file, force = TRUE, recursive = TRUE)
+  unlink("*_files", force = TRUE, recursive = TRUE)
   skip_if_not_installed("webshot")
   file <- "graph.png"
   expect_false(file.exists(file))
@@ -68,8 +69,8 @@ test_with_dir("Sankey diagram runs", {
   sankey_drake_graph(config = config, file = file, selfcontained = FALSE)
   expect_true(file.exists(file))
   skip_if_not_installed("webshot")
-  unlink(file)
-  unlink("*_files", recursive = TRUE)
+  unlink(file, force = TRUE, recursive = TRUE)
+  unlink("*_files", force = TRUE, recursive = TRUE)
   file <- "graph.png"
   expect_false(file.exists(file))
   sankey_drake_graph(config = config, file = file, selfcontained = FALSE)
