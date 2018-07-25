@@ -1,5 +1,7 @@
 # Version 5.3.1.9000
 
+- Enable `vis_drake_graph()` and `sankey_drake_graph()` to save static image files via `webshot`.
+- Deprecate `static_drake_graph()` and `render_static_drake_graph()` in favor of `drake_ggraph()` and `render_drake_ggraph()`.
 - Overhaul the interface for triggers and add new trigger types ("condition" and "change").
 - Repair output file checksum operations for distributed backends like `"clustermq_staged"` and `"future_lapply"`.
 - Add a `columns` argument to `evaluate_plan()` so users can evaluate wildcards in columns other than the `command` column of `plan`. 

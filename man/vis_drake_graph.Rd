@@ -18,15 +18,25 @@ vis_drake_graph(config = drake::read_drake_config(), file = character(0),
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
 You can get one as a return value from \code{\link[=make]{make()}} as well.}
 
-\item{file}{Name of HTML file to save the graph.
-If \code{NULL} or \code{character(0)},
-no file is saved and the graph is rendered and displayed within R.}
+\item{file}{Name of a file to save the graph.
+If \code{NULL} or \code{character(0)}, no file is saved and
+the graph is rendered and displayed within R.
+If the file ends in a \code{.png}, \code{.jpg}, \code{.jpeg}, or \code{.pdf} extension,
+then a static image will be saved. In this case,
+the webshot package and PhantomJS are required:
+\code{install.packages("webshot"); webshot::install_phantomjs()}.
+If the file does not end in a \code{.png}, \code{.jpg}, \code{.jpeg}, or \code{.pdf}
+extension, an HTML file will be saved, and you can open the
+interactive graph using a web browser.}
 
 \item{selfcontained}{logical, whether
 to save the \code{file} as a self-contained
 HTML file (with external resources base64 encoded) or a file with
 external resources placed in an adjacent directory. If \code{TRUE},
-pandoc is required.}
+pandoc is required. The \code{selfcontained} argument only applies
+to HTML files. In other words, if \code{file} is a
+PNG, PDF, or JPEG file, for instance,
+the point is moot.}
 
 \item{build_times}{character string or logical.
 If character, the choices are
@@ -158,5 +168,5 @@ vis_drake_graph(
 }
 \seealso{
 \code{\link[=render_drake_graph]{render_drake_graph()}}, \code{\link[=sankey_drake_graph]{sankey_drake_graph()}},
-\code{\link[=static_drake_graph]{static_drake_graph()}}
+\code{\link[=drake_ggraph]{drake_ggraph()}}
 }
