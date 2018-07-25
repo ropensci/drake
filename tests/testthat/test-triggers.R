@@ -33,11 +33,11 @@ test_with_dir("triggers in plan override make(trigger = whatever)", {
     ),
     strings_in_dots = "literals"
   )
-  config <- make(plan)
+  config <- make(plan, session_info = FALSE)
   expect_equal(sort(justbuilt(config)), c("x", "y"))
   saveRDS(2, "file.rds")
   expect_equal(sort(outdated(config)), c("x", "y"))
-  config <- make(plan, trigger = trigger(file = FALSE))
+  config <- make(plan, trigger = trigger(file = FALSE), session_info = FALSE)
   expect_equal(justbuilt(config), "y")
 })
 
@@ -162,6 +162,112 @@ test_with_dir("same, but with global trigger", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   nobuild(config)
+})
+
+test_with_dir("trigger does not block out command deps", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  writeLines("123", "knitr.Rmd")
+  saveRDS(1, "file.rds")
+  f <- function(x){
+    identity(x)
+  }
+  plan <- drake_plan(
+    x = target(
+      command = {
+        knitr_in("knitr.Rmd")
+        f(FALSE) + readRDS(file_in("file.rds"))
+      },
+      trigger = trigger(
+        condition = {
+          knitr_in("knitr.Rmd")
+          f(FALSE) + readRDS(file_in("file.rds"))
+        },
+        command = FALSE,
+        file = TRUE,
+        depend = TRUE,
+        change = NULL
+      )
+    ),
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(
+    plan, session_info = FALSE, cache = storr::storr_environment(),
+    log_progress = TRUE)
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  expect_true(all(deps %in% igraph::V(config$graph)$name))
+  expect_equal(sort(dependencies("x", config)), sort(deps))
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(outdated(config), character(0))
+  make(config = config)
+  nobuild(config)
+  f <- function(x){
+    identity(x) || FALSE
+  }
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  writeLines("456", "knitr.Rmd")
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  saveRDS(2, "file.rds")
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+})
+
+test_with_dir("same, but with global trigger", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  writeLines("123", "knitr.Rmd")
+  saveRDS(1, "file.rds")
+  f <- function(x){
+    identity(x)
+  }
+  plan <- drake_plan(
+    x = {
+      knitr_in("knitr.Rmd")
+      f(FALSE) + readRDS(file_in("file.rds"))
+    },
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(
+    plan, session_info = FALSE, cache = storr::storr_environment(),
+    log_progress = TRUE, trigger = trigger(
+      condition = {
+        knitr_in("knitr.Rmd")
+        f(FALSE) + readRDS(file_in("file.rds"))
+      },
+      command = FALSE,
+      file = TRUE,
+      depend = TRUE,
+      change = NULL
+    )
+  )
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  expect_true(all(deps %in% igraph::V(config$graph)$name))
+  expect_equal(sort(dependencies("x", config)), sort(deps))
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(outdated(config), character(0))
+  make(config = config)
+  nobuild(config)
+  f <- function(x){
+    identity(x) || FALSE
+  }
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  writeLines("456", "knitr.Rmd")
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  saveRDS(2, "file.rds")
+  expect_equal(outdated(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
 })
 
 test_with_dir("triggers can be NA in the plan", {
