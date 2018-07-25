@@ -9,7 +9,7 @@
 #' `visNetwork::visNetwork(drake::legend_nodes())`.
 #' @export
 #' @seealso [render_sankey_drake_graph()], [vis_drake_graph()],
-#'   [static_drake_graph()]
+#'   [drake_ggraph()]
 #' @return A `visNetwork` graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_sankey_drake_graph
@@ -86,7 +86,7 @@ sankey_drake_graph <- function(
 #' `visNetwork::visNetwork(drake::legend_nodes())`.
 #' @export
 #' @seealso [sankey_drake_graph()], [vis_drake_graph()],
-#'   [static_drake_graph()]
+#'   [drake_ggraph()]
 #' @return A `visNetwork` graph.
 #'
 #' @inheritParams drake_graph_info

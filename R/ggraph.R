@@ -1,24 +1,24 @@
-#' @title Show static graph representation
+#' @title Show a `ggraph`/`ggplot2` representation
 #'   of your drake project.
 #' @description This function requries packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
 #' @seealso [vis_drake_graph()], [sankey_drake_graph()],
-#'   [render_static_drake_graph()]
+#'   [render_drake_ggraph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_graph_info
-#' @inheritParams render_static_drake_graph
+#' @inheritParams render_drake_ggraph
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
-#' static_drake_graph(config) # Save to a file with `ggplot2::ggsave()`.
+#' drake_ggraph(config) # Save to a file with `ggplot2::ggsave()`.
 #' })
 #' }
-static_drake_graph <- function(
+drake_ggraph <- function(
   config = drake::read_drake_config(),
   build_times = "build",
   digits = 3,
@@ -55,7 +55,7 @@ static_drake_graph <- function(
   if (is.null(main)){
     main <- graph_info$default_title
   }
-  render_static_drake_graph(graph_info, main = main)
+  render_drake_ggraph(graph_info, main = main)
 }
 
 #' @title Render a static `ggplot2`/`ggraph` visualization from
@@ -63,7 +63,7 @@ static_drake_graph <- function(
 #' @description This function requries packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
-#' @seealso [vis_drake_graph()], [sankey_drake_graph()], [static_drake_graph()]
+#' @seealso [vis_drake_graph()], [sankey_drake_graph()], [drake_ggraph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_graph_info
@@ -79,13 +79,13 @@ static_drake_graph <- function(
 #' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
 #' config <- drake_config(my_plan) # Internal configuration list
-#' static_drake_graph(config) # Jump straight to the static graph.
+#' drake_ggraph(config) # Jump straight to the static graph.
 #' # Get the node and edge info that vis_drake_graph() just plotted:
 #' graph <- drake_graph_info(config)
-#' render_static_drake_graph(graph)
+#' render_drake_ggraph(graph)
 #' })
 #' }
-render_static_drake_graph <- function(
+render_drake_ggraph <- function(
   graph_info,
   main = graph_info$default_title
 ){

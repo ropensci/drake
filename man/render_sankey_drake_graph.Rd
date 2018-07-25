@@ -75,5 +75,5 @@ render_sankey_drake_graph(graph)
 }
 \seealso{
 \code{\link[=sankey_drake_graph]{sankey_drake_graph()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}},
-\code{\link[=static_drake_graph]{static_drake_graph()}}
+\code{\link[=drake_ggraph]{drake_ggraph()}}
 }
