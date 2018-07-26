@@ -97,3 +97,7 @@ select_nonempty <- function(x){
   )
   x[index]
 }
+
+is_image_filename <- function(x){
+  tolower(fs::path_ext(x)) %in% c("jpg", "jpeg", "pdf", "png")
+}

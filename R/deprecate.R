@@ -1301,6 +1301,33 @@ render_graph <- function(
   )
 }
 
+#' @title Deprecated: render a `ggraph`/`ggplot2` representation
+#'   of your drake project.
+#' @description Use [render_drake_ggraph()] instead.
+#' @details Deprecated on 2018-25-07.
+#' @export
+#' @keywords internal
+#' @seealso [render_drake_ggraph()]
+#' @return A `ggplot2` object, which you can modify with more layers,
+#'   show with `plot()`, or save as a file with `ggsave()`.
+#' @inheritParams render_drake_ggraph
+#' @examples
+#' # See render_drake_ggraph()
+render_static_drake_graph <- function(
+  graph_info,
+  main = graph_info$default_title
+){
+  .Deprecated(
+    "render_static_drake_graph",
+    package = "drake",
+    msg = paste(
+      "render_static_drake_graph() is deprecated.",
+      "Use render_drake_ggraph() instead."
+    )
+  )
+  render_drake_ggraph(graph_info = graph_info, main = main)
+}
+
 #' @title Deprecated function `session`
 #' @description Use [drake_session()] instead
 #' @details Deprecated on 2017-11-12.
@@ -1365,6 +1392,62 @@ parallel_stages <- function(
       "so the parallel_stages() function is moot. ",
       "Drake uses a much better parallel algorithm now."
     )
+  )
+}
+
+#' @title Deprecated: show a `ggraph`/`ggplot2` representation
+#'   of your drake project.
+#' @description Use [drake_ggraph()] instead.
+#' @details Deprecated on 2018-25-07.
+#' @export
+#' @keywords internal
+#' @seealso [drake_ggraph()]
+#' @return A `ggplot2` object, which you can modify with more layers,
+#'   show with `plot()`, or save as a file with `ggsave()`.
+#' @inheritParams drake_ggraph
+#' @examples
+#' # See drake_ggraph()
+static_drake_graph <- function(
+  config = drake::read_drake_config(),
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  split_columns = NULL,
+  main = NULL,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL
+){
+  .Deprecated(
+    "static_drake_graph",
+    package = "drake",
+    msg = paste(
+      "static_drake_graph() is deprecated",
+      "Use drake_ggraph() instead."
+    )
+  )
+  drake_ggraph(
+    config = config,
+    build_times = build_times,
+    digits = digits,
+    targets_only = targets_only,
+    split_columns = split_columns,
+    main = main,
+    from = from,
+    mode = mode,
+    order = order,
+    subset = subset,
+    make_imports = make_imports,
+    from_scratch = from_scratch,
+    full_legend = full_legend,
+    group = group,
+    clusters = clusters
   )
 }
 
