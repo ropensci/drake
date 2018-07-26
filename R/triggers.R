@@ -7,20 +7,24 @@
 #'   - Any of `command`, `depend`, or `file` is `TRUE`, or
 #'   - `condition` evaluates to `TRUE`, or
 #'   - `change` evaluates to a value different from last time.
+#'   There may be a slight efficiency loss if you set complex
+#'   triggers for `change` and/or `condition` because
+#'   `drake` needs to load any required dependencies
+#'   into memory before evaluating these triggers.
 #' @export
 #' @seealso [drake_plan()], [make()]
 #' @return a list of trigger specification details that
 #'   `drake` processes internally when it comes time to decide
 #'   whether to build the target.
-#' @param condition R code (expression or language object)
-#'   that returns a logical. The target will rebuild
-#'   if the code evaluates to `TRUE`.
 #' @param command logical, whether to rebuild the target if the
 #'   [drake_plan()] command changes.
 #' @param depend logical, whether to rebuild if a
 #'   non-file dependency changes.
 #' @param file logical, whether to rebuild the target
 #'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
+#' @param condition R code (expression or language object)
+#'   that returns a logical. The target will rebuild
+#'   if the code evaluates to `TRUE`.
 #' @param change R code (expression or language object)
 #'  that returns any value. The target will rebuild
 #'   if that value is different from last time
@@ -55,20 +59,20 @@
 #' })
 #' }
 trigger <- function(
-  condition = FALSE,
   command = TRUE,
   depend = TRUE,
   file = TRUE,
+  condition = NULL,
   change = NULL
 ){
   stopifnot(is.logical(command))
   stopifnot(is.logical(depend))
   stopifnot(is.logical(file))
   list(
-    condition = rlang::enexpr(condition),
     command = command,
     depend = depend,
     file = file,
+    condition = rlang::enexpr(condition),
     change = rlang::enexpr(change)
   )
 }
@@ -168,7 +172,7 @@ should_build_target <- function(target, meta = NULL, config){
   if (meta$missing){
     return(TRUE)
   }
-  if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
+  if (identical(meta$trigger$condition, TRUE)){
     return(TRUE)
   }
   if (identical(meta$trigger$command, TRUE)){
@@ -186,10 +190,23 @@ should_build_target <- function(target, meta = NULL, config){
       return(TRUE)
     }
   }
+  if (exist_complex_triggers(meta$trigger)){
+    config$pruning_strategy <- "speed"
+    prune_envir(targets = target, config = config)
+  }
+  if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
+    return(TRUE)
+  }
   if (!is.null(meta$trigger$change)){
     if (change_trigger(target = target, meta = meta, config = config)){
       return(TRUE)
     }
   }
   FALSE
+}
+
+exist_complex_triggers <- function(trigger){
+  !is.null(trigger$change) ||
+  !is.null(trigger$condition) ||
+  !is.logical(trigger$condition)
 }

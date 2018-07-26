@@ -4,14 +4,10 @@
 \alias{trigger}
 \title{Set the trigger of a target.}
 \usage{
-trigger(condition = FALSE, command = TRUE, depend = TRUE, file = TRUE,
+trigger(command = TRUE, depend = TRUE, file = TRUE, condition = NULL,
   change = NULL)
 }
 \arguments{
-\item{condition}{R code (expression or language object)
-that returns a logical. The target will rebuild
-if the code evaluates to \code{TRUE}.}
-
 \item{command}{logical, whether to rebuild the target if the
 \code{\link[=drake_plan]{drake_plan()}} command changes.}
 
@@ -20,6 +16,10 @@ non-file dependency changes.}
 
 \item{file}{logical, whether to rebuild the target
 if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.}
+
+\item{condition}{R code (expression or language object)
+that returns a logical. The target will rebuild
+if the code evaluates to \code{TRUE}.}
 
 \item{change}{R code (expression or language object)
 that returns any value. The target will rebuild
@@ -43,6 +43,10 @@ in your \code{\link[=drake_plan]{drake_plan()}}. The target will rebuild if and 
 \item Any of \code{command}, \code{depend}, or \code{file} is \code{TRUE}, or
 \item \code{condition} evaluates to \code{TRUE}, or
 \item \code{change} evaluates to a value different from last time.
+There may be a slight efficiency loss if you set complex
+triggers for \code{change} and/or \code{condition} because
+\code{drake} needs to load any required dependencies
+into memory before evaluating these triggers.
 }
 }
 \examples{

@@ -235,7 +235,11 @@ test_with_dir("old trigger interface", {
     )
     trigger <- diagnose(x, cache = config$cache)$trigger
     expect_true(is.list(trigger))
-    expect_equal(trigger$condition, old_trigger == "always")
+    if (identical(trigger$condition, TRUE)){
+      expect_equal(old_trigger, "always")
+    } else {
+      expect_false(old_trigger == "always")
+    }
     expect_equal(
       trigger$command,
       old_trigger %in% c("always", "any", "command")

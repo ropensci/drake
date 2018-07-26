@@ -67,17 +67,17 @@ test_with_dir("trigger() function works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- 1
   y <- trigger(
-    condition = 1 + 1,
     command = TRUE,
     depend = FALSE,
     file = FALSE,
+    condition = 1 + 1,
     change = sqrt(!!x)
   )
   z <- list(
-    condition = quote(1 + 1),
     command = TRUE,
     depend = FALSE,
     file = FALSE,
+    condition = quote(1 + 1),
     change = quote(sqrt(1))
   )
   expect_equal(y, z)
@@ -281,6 +281,34 @@ test_with_dir("triggers can be NA in the plan", {
     )
   )
   expect_equal(justbuilt(config), "x")
+})
+
+test_with_dir("deps load into memory for complex triggers", {
+  skip_on_cran()
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  plan <- drake_plan(
+    psi_1 = (sqrt(5) + 1) / 2,
+    psi_2 = target(
+      command = (sqrt(5) - 1) / 2,
+      trigger = trigger(condition = psi_1 > 0)
+    ),
+    psi_3 = target(
+      command = 1,
+      trigger = trigger(change = psi_2)
+    ),
+    strings_in_dots = "literals"
+  )
+  for (i in 1:3){
+    make(
+      plan, envir = e, jobs = jobs, parallelism = parallelism,
+      verbose = FALSE, caching = caching, session_info = FALSE
+    )
+    expect_true(all(cached(list = plan$target)))
+  }
 })
 
 test_with_dir("trigger components react appropriately", {

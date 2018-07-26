@@ -546,7 +546,7 @@ target <- function(
   ...
 ){
   out <- list(
-    command   = rlang::enexpr(command),
+    command   = sanitize_cmd_type(rlang::enexpr(command)),
     trigger   = rlang::enexpr(trigger),
     retries   = rlang::enexpr(retries),
     timeout   = rlang::enexpr(timeout),

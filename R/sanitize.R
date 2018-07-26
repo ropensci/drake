@@ -72,3 +72,11 @@ repair_target_names <- function(x){
   x[!is_file(x)] <- make.names(x[!is_file(x)], unique = FALSE)
   x
 }
+
+sanitize_cmd_type <- function(x){
+  if (!is.language(x) && !is.expression(x) && !is.character(x)){
+    wide_deparse(x)
+  } else {
+    x
+  }
+}
