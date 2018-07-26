@@ -190,12 +190,12 @@ should_build_target <- function(target, meta = NULL, config){
       return(TRUE)
     }
   }
-  if (exist_complex_triggers(meta$trigger)){
+  if (!is.null(meta$trigger$condition) && !is.logical(meta$trigger$condition)){
     config$pruning_strategy <- "speed"
     prune_envir(targets = target, config = config)
-  }
-  if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
-    return(TRUE)
+    if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
+      return(TRUE)
+    }
   }
   if (!is.null(meta$trigger$change)){
     if (change_trigger(target = target, meta = meta, config = config)){
@@ -203,10 +203,4 @@ should_build_target <- function(target, meta = NULL, config){
     }
   }
   FALSE
-}
-
-exist_complex_triggers <- function(trigger){
-  !is.null(trigger$change) ||
-  !is.null(trigger$condition) ||
-  !is.logical(trigger$condition)
 }

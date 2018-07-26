@@ -89,6 +89,8 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
       target = target, config = config, which = "output_files")
   }
   if (!is.null(meta$trigger$change)){
+    config$pruning_strategy <- "speed"
+    prune_envir(targets = target, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta
