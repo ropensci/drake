@@ -201,6 +201,30 @@ tracked <- function(config){
 }
 
 dependencies <- function(targets, config, reverse = FALSE){
+  if (reverse){
+    reverse_dependencies(targets = targets, config = config)
+  } else {
+    regular_dependencies(targets = targets, config = config)
+  }
+}
+
+regular_dependencies <- function(targets, config){
+  lightly_parallelize(
+    X = targets,
+    FUN = function(target){
+      deps <- vertex_attr(
+        graph = config$graph,
+        name = "deps",
+        index = target
+      )[[1]]
+      c(deps$globals, deps$namespaced, deps$loadd, deps$readd)
+    },
+    jobs = 1 # Not actually parallelized, just keeping the option open.
+  ) %>%
+    clean_dependency_list
+}
+
+reverse_dependencies <- function(targets, config){
   if (!length(targets)){
     return(character(0))
   }
