@@ -63,22 +63,38 @@ prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
       rm(list = discard_these, envir = config$envir)
     }
   }
-  load_these <- setdiff(target_deps, targets) %>%
-    setdiff(y = already_loaded)
-  load_these <- exclude_unloadable(
-    targets = load_these, config = config, jobs = jobs)
-  if (length(load_these)){
+  setdiff(target_deps, targets) %>%
+    setdiff(y = already_loaded) %>%
+    safe_load(config = config)
+}
+
+safe_load <- function(targets, config){
+  targets <- exclude_unloadable(
+    targets = targets, config = config, jobs = jobs)
+  if (length(targets)){
     if (config$lazy_load == "eager"){
       console_many_targets(
-        load_these,
+        targets,
         pattern = "load",
         config = config
       )
     }
-    loadd(list = load_these, envir = config$envir, cache = config$cache,
-          verbose = FALSE, lazy = config$lazy_load)
+    loadd(
+      list = targets,
+      envir = config$envir,
+      cache = config$cache,
+      verbose = FALSE,
+      lazy = config$lazy_load
+    )
   }
-  invisible()
+  invisible() 
+}
+
+ensure_loaded <- function(targets, config){
+  already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
+    intersect(y = config$plan$target)
+  setdiff(targets, already_loaded) %>%
+    safe_load(config = config)
 }
 
 flexible_get <- function(target, envir) {

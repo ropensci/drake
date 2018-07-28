@@ -89,8 +89,12 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
       target = target, config = config, which = "output_files")
   }
   if (!is.null(meta$trigger$change)){
-    config$pruning_strategy <- "speed"
-    prune_envir(targets = target, config = config)
+    vertex_attr(
+      graph = config$graph,
+      name = "deps",
+      index = target
+    )[[1]]$change %>%
+      ensure_loaded(config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta

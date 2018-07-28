@@ -195,8 +195,12 @@ should_build_target <- function(target, meta = NULL, config){
     }
   }
   if (!is.null(meta$trigger$condition) && !is.logical(meta$trigger$condition)){
-    config$pruning_strategy <- "speed"
-    prune_envir(targets = target, config = config)
+    vertex_attr(
+      graph = config$graph,
+      name = "deps",
+      index = target
+    )[[1]]$condition %>%
+      ensure_loaded(config = config)
     if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
       return(TRUE)
     }
