@@ -96,7 +96,7 @@ parse_trigger <- function(trigger, envir){
     trigger <- convert_old_trigger(trigger)
     trigger <- parse(text = trigger)
   }
-  eval(trigger, envir = envir) 
+  eval(trigger, envir = envir)
 }
 
 command_trigger <- function(target, meta, config){
