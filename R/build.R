@@ -143,7 +143,13 @@ conclude_build <- function(target, value, meta, config){
 }
 
 assert_output_files <- function(target, meta, config){
-  missing_files <- Filter(x = meta$output_files, f = function(x){
+  deps <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
+  files <- sort(unique(deps$file_out))
+  missing_files <- Filter(x = files, f = function(x){
     !file.exists(drake::drake_unquote(x))
   })
   if (length(missing_files)){

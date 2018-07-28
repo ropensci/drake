@@ -46,27 +46,18 @@
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
+  deps <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
   meta <- list(
     name = target,
     target = target,
     imported = !(target %in% config$plan$target),
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_object(list(seed = config$seed, target = target)),
-    output_files = unlist(
-      igraph::vertex_attr(
-        graph = config$graph,
-        name = "output_files",
-        index = target
-      )
-    ),
-    input_files = unlist(
-      igraph::vertex_attr(
-        graph = config$graph,
-        name = "input_files",
-        index = target
-      )
-    )
+    seed = seed_from_object(list(seed = config$seed, target = target))
   )
   # For imported files.
   if (is_file(target)) {
@@ -87,10 +78,8 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
   if (meta$trigger$file){
-    meta$input_file_hash <- file_dependency_hash(
-      target = target, config = config, which = "input_files")
-    meta$output_file_hash <- file_dependency_hash(
-      target = target, config = config, which = "output_files")
+    meta$input_file_hash <- input_file_hash(target = target, config = config)
+    meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)){
     vertex_attr(
@@ -105,7 +94,12 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 }
 
 dependency_hash <- function(target, config) {
-  deps <- dependencies(target, config) %>%
+  deps <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
+  c(deps$globals, deps$namespaced, deps$loadd, deps$readd) %>%
     setdiff(y = igraph::vertex_attr(
       graph = config$graph,
       name = "ignore_changes",
@@ -119,25 +113,40 @@ dependency_hash <- function(target, config) {
     digest::digest(algo = config$long_hash_algo)
 }
 
-file_dependency_hash <- function(
+input_file_hash <- function(
   target,
   config,
-  which = c("input_files", "output_files"),
   size_cutoff = rehash_file_size_cutoff
 ){
-  which <- match.arg(which)
-  files <- unlist(igraph::vertex_attr(
+  deps <- vertex_attr(
     graph = config$graph,
-    name = which,
+    name = "deps",
     index = target
-  )) %>%
-    setdiff(y = igraph::vertex_attr(
-      graph = config$graph,
-      name = "ignore_changes",
-      index = target
-    )[[1]])
+  )[[1]]
+  files <- sort(unique(c(deps$file_in, deps$knitr_in)))
   vapply(
-    X = sort(files),
+    X = files,
+    FUN = file_hash,
+    FUN.VALUE = character(1),
+    config = config,
+    size_cutoff = size_cutoff
+  ) %>%
+    digest::digest(algo = config$long_hash_algo)
+}
+
+output_file_hash <- function(
+  target,
+  config,
+  size_cutoff = rehash_file_size_cutoff
+){
+  deps <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
+  files <- sort(unique(deps$file_out))
+  vapply(
+    X = files,
     FUN = file_hash,
     FUN.VALUE = character(1),
     config = config,

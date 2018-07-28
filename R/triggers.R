@@ -117,7 +117,12 @@ file_trigger <- function(target, meta, config){
   if (!length(target) || !length(config) || !length(meta)){
     return(FALSE)
   }
-  for (file in meta$output_files){
+  file_out <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]$file_out
+  for (file in file_out){
     if (!file.exists(drake_unquote(file))){
       return(TRUE)
     }

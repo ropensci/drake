@@ -179,13 +179,14 @@ mc_get_checksum <- function(target, config){
 }
 
 mc_output_file_checksum <- function(target, config){
-  files <- unlist(igraph::vertex_attr(
+  deps <- vertex_attr(
     graph = config$graph,
-    name = "output_files",
+    name = "deps",
     index = target
-  ))
+  )[[1]]
+  files <- sort(unique(deps$file_out))
   vapply(
-    X = sort(files),
+    X = files,
     FUN = rehash_file,
     FUN.VALUE = character(1),
     config = config

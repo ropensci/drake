@@ -87,7 +87,7 @@ safe_load <- function(targets, config){
       lazy = config$lazy_load
     )
   }
-  invisible() 
+  invisible()
 }
 
 ensure_loaded <- function(targets, config){

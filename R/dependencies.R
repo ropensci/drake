@@ -154,8 +154,11 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
     current_file_modification_time = suppressWarnings(
       file.mtime(drake::drake_unquote(target))
     ),
-    cached_file_dependency_hash = meta$file_dependency_hash,
-    current_file_dependency_hash = file_dependency_hash(
+    cached_input_file_hash = meta$input_file_hash,
+    current_input_file_hash = input_file_hash(
+      target = target, config = config),
+    cached_output_file_hash = meta$output_file_hash,
+    current_output_file_hash = output_file_hash(
       target = target, config = config),
     cached_dependency_hash = meta$dependency_hash,
     current_dependency_hash = current_dependency_hash,
@@ -181,10 +184,18 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' })
 #' }
 tracked <- function(config){
-  c(
-    V(config$graph)$name,
-    V(config$graph)$input_files,
-    V(config$graph)$output_files
+  lightly_parallelize(
+    X = V(config$graph)$name,
+    FUN = function(target){
+      vertex_attr(
+        graph = config$graph,
+        name = "deps",
+        index = target
+      )[[1]] %>%
+        as.list %>%
+        clean_dependency_list
+    },
+    jobs = config$jobs
   ) %>%
     clean_dependency_list
 }

@@ -11,10 +11,14 @@ store_outputs <- function(target, value, meta, config){
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
   if (is.null(meta$input_file_hash)){
-    meta$input_file_hash <- file_dependency_hash(
-      target = target, config = config, which = "input_files")
+    meta$input_file_hash <- input_file_hash(target = target, config = config)
   }
-  for (file in meta$output_files){
+  file_out <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]$file_out
+  for (file in file_out){
     meta$name <- file
     meta$mtime <- file.mtime(drake::drake_unquote(file))
     store_single_output(
@@ -23,9 +27,9 @@ store_outputs <- function(target, value, meta, config){
       config = config
     )
   }
-  if (length(meta$output_files) || is.null(meta$output_file_hash)){
-    meta$output_file_hash <- file_dependency_hash(
-      target = target, config = config, which = "output_files")
+  if (length(file_out) || is.null(file_out)){
+    meta$output_file_hash <- output_file_hash(
+      target = target, config = config)
   }
   meta$name <- target
   store_single_output(
