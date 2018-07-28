@@ -77,20 +77,6 @@ trigger <- function(
   )
 }
 
-resolve_trigger <- function(target, config){
-  plan <- config$plan
-  if (!(target %in% plan$target)){
-    quote(trigger(condition = TRUE))
-  } else {
-    drake_plan_override(
-      target = target,
-      field = "trigger",
-      config = config
-    )
-  }
-  parse_trigger(trigger = trigger, envir = config$envir)
-}
-
 parse_trigger <- function(trigger, envir){
  if (is.character(trigger)) {
     trigger <- convert_old_trigger(trigger)

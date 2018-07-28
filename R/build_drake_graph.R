@@ -229,7 +229,7 @@ bdg_create_graph <- function(args){
         value = deps_attr
       ) %>%
       igraph::set_vertex_attr(
-        name = "triggers",
+        name = "trigger",
         index = names(trigger_attr),
         value = trigger_attr
       ) %>%

@@ -72,7 +72,11 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (is_file(target)) {
     meta$mtime <- file.mtime(drake::drake_unquote(target))
   }
-  meta$trigger <- resolve_trigger(target = target, config = config)
+  meta$trigger <- vertex_attr(
+    graph = config$graph,
+    name = "trigger",
+    index = target
+  )[[1]]
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),
   # but only after drake decides to actually build the target.
