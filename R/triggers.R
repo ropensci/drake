@@ -80,19 +80,23 @@ trigger <- function(
 resolve_trigger <- function(target, config){
   plan <- config$plan
   if (!(target %in% plan$target)){
-    trigger <- quote(trigger(condition = TRUE))
+    quote(trigger(condition = TRUE))
   } else {
-    trigger <- drake_plan_override(
+    drake_plan_override(
       target = target,
       field = "trigger",
       config = config
     )
   }
-  if (is.character(trigger)) {
+  parse_trigger(trigger = trigger, envir = config$envir)
+}
+
+parse_trigger <- function(trigger, envir){
+ if (is.character(trigger)) {
     trigger <- convert_old_trigger(trigger)
     trigger <- parse(text = trigger)
   }
-  eval(trigger, envir = config$envir)
+  eval(trigger, envir = envir) 
 }
 
 command_trigger <- function(target, meta, config){
