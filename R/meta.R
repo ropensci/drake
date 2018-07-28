@@ -105,7 +105,7 @@ dependency_hash <- function(target, config) {
   )[[1]]
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
   if (!(target %in% config$plan$target)){
-    deps <- c(deps, x$file_in, x$knitr_in) 
+    deps <- c(deps, x$file_in, x$knitr_in)
   }
   sort(unique(deps)) %>%
     self_hash(config = config) %>%
