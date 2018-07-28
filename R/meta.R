@@ -63,11 +63,15 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (is_file(target)) {
     meta$mtime <- file.mtime(drake::drake_unquote(target))
   }
-  meta$trigger <- vertex_attr(
-    graph = config$graph,
-    name = "trigger",
-    index = target
-  )[[1]]
+  if (meta$imported){
+    meta$trigger <- trigger(condition = TRUE)
+  } else {
+    meta$trigger <- vertex_attr(
+      graph = config$graph,
+      name = "trigger",
+      index = target
+    )[[1]]
+  }
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),
   # but only after drake decides to actually build the target.
@@ -94,21 +98,16 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 }
 
 dependency_hash <- function(target, config) {
-  deps <- vertex_attr(
+  x <- vertex_attr(
     graph = config$graph,
     name = "deps",
     index = target
   )[[1]]
-  c(deps$globals, deps$namespaced, deps$loadd, deps$readd) %>%
-    setdiff(y = igraph::vertex_attr(
-      graph = config$graph,
-      name = "ignore_changes",
-      index = target
-    )[[1]])
-  if (target %in% config$plan$target){
-    deps <- Filter(x = deps, f = is_not_file)
+  deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
+  if (!(target %in% config$plan$target)){
+    deps <- c(deps, x$file_in, x$knitr_in) 
   }
-  sort(deps) %>%
+  sort(unique(deps)) %>%
     self_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }

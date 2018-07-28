@@ -65,10 +65,10 @@ prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
   }
   setdiff(target_deps, targets) %>%
     setdiff(y = already_loaded) %>%
-    safe_load(config = config)
+    safe_load(config = config, jobs = jobs)
 }
 
-safe_load <- function(targets, config){
+safe_load <- function(targets, config, jobs = 1){
   targets <- exclude_unloadable(
     targets = targets, config = config, jobs = jobs)
   if (length(targets)){

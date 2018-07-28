@@ -145,12 +145,18 @@ clean <- function(
 }
 
 clean_single_target <- function(target, cache, namespaces, graph){
-  deps <- vertex_attr(
-    graph = graph,
-    name = "deps",
-    index = target
-  )[[1]]
-  files <- sort(unique(deps$file_out))
+  files <- character(0)
+  if (is_file(target)){
+    files <- target
+  }
+  if (target %in% igraph::V(graph)$name){
+    deps <- vertex_attr(
+      graph = graph,
+      name = "deps",
+      index = target
+    )[[1]]
+    files <- sort(unique(deps$file_out))
+  }
   unlink(drake_unquote(files), recursive = TRUE, force = TRUE)
   for (namespace in namespaces){
     for (key in c(target, files)){
