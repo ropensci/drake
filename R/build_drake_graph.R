@@ -42,208 +42,200 @@ build_drake_graph <- function(
       call. = FALSE
     )
   }
-  imports <- as.list(envir)
-  unload_conflicts(
-    imports = names(imports),
-    targets = plan$target,
+  list(
+    plan = plan,
+    targets = targets,
     envir = envir,
-    verbose = verbose
-  )
-  import_names <- setdiff(names(imports), targets)
-  imports <- imports[import_names]
-  config <- list(verbose = verbose, console_log_file = console_log_file)
-  console_many_targets(
-    targets = names(imports),
-    pattern = "analyze",
-    type = "import",
-    config = config
-  )
-
-  ####################
-  ### DEPENDENCIES ###
-  ####################
-
-  # Get the dependencies if all the imports.
-  # Each element of import_deps is a list of dependency objects and files
-  # categorized by type (objects, file outputs, file inputs, etc).
-  import_deps <- lightly_parallelize(
-    X = imports,
-    FUN = import_dependencies,
-    jobs = jobs
-  ) %>%
-    setNames(import_names)
-
-  # The procedure for targets is similar.
-  console_many_targets(
-    targets = plan$target,
-    pattern = "analyze",
-    type = "target",
-    config = config
-  )
-
-  # We get most of the targets' dependency information
-  # from their commands.
-  command_deps <- lightly_parallelize(
-    X = plan$command,
-    FUN = command_dependencies,
-    job = jobs
-  ) %>%
-    setNames(plan$target)
-
-  # But targets also depend on whatever code is in the `condition`
-  # and `change` components of the triggers. Below, we parse
-  # the `trigger` argument passed through `make()`
-  # and get the dependency information of the "condition"
-  # and "change" triggers.
-  default_trigger <- parse_trigger(trigger = trigger, envir = envir)
-  default_condition_deps <- code_dependencies(trigger$condition)
-  default_change_deps <- code_dependencies(trigger$change)
-
-  # The user can also give a column of target-specific triggers in the plan.
-  # These should override the `trigger` argument to `make()` if supplied.
-  # But usually, there will be no custom `trigger` column and we should
-  # just use the `trigger` argument to `make()`.
-  if ("trigger" %in% colnames(plan)){
-    trigger <- lightly_parallelize(
-      X = seq_len(nrow(plan)),
-      FUN = function(i){
-        if (!is.na(plan$trigger[i])){
-          parse_trigger(trigger = plan$trigger[i], envir = envir)
-        } else {
-          default_trigger
-        }
-      },
-      jobs = jobs
-    )
-    condition_deps <- lightly_parallelize(
-      X = seq_len(nrow(plan)),
-      FUN = function(i){
-        if (!is.na(plan$trigger[i])){
-          code_dependencies(trigger[[i]]$condition)
-        } else {
-          default_condition_deps
-        }
-      },
-      jobs = jobs
-    )
-    change_deps <- lightly_parallelize(
-      X = seq_len(nrow(plan)),
-      FUN = function(i){
-        if (!is.na(plan$trigger[i])){
-          code_dependencies(trigger[[i]]$change)
-        } else {
-          default_change_deps
-        }
-      },
-      jobs = jobs
-    )
-  } else {
-    trigger <- replicate(default_trigger, n = nrow(plan), simplify = FALSE)
-    condition_deps <- replicate(
-      default_condition_deps,
-      n = nrow(plan),
-      simplify = FALSE
-    )
-    change_deps <- replicate(
-      default_change_deps,
-      n = nrow(plan),
-      simplify = FALSE
-    )
-  }
-  trigger <- setNames(trigger, plan$target)
-  condition_deps <- setNames(condition_deps, plan$target)
-  change_deps <- setNames(change_deps, plan$target)
-
-  #############
-  ### EDGES ###
-  #############
-  
-  # Convert the dependency information from import_deps
-  # into a data frame with columns "from" and "to",
-  # where each edge denotes a dependency relationship between
-  # two imports. This data frame will be used to construct
-  # a large section of our dependency graph, represented by an
-  # 'igraph' object. The directed edges in the graph
-  # dictate the order in which the imports can be processed.
-  import_edges <- lightly_parallelize(
-    X = seq_along(imports),
-    FUN = function(i){
-      code_deps_to_edges(target = import_names[[i]], deps = import_deps[[i]])
-    },
-    jobs = jobs
-  ) %>%
-    do.call(what = dplyr::bind_rows)
-  
-  # The edges for our targets are similar to `import_edges` except that our
-  # dependency information comes from commands and triggers.
-  # The directed edges in the graph
-  # dictate the order in which the targets can be built.
-  target_edges <- lightly_parallelize(
-    X = seq_len(nrow(plan)),
-    FUN = function(i){
-      deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
-        merge_lists(change_deps[[i]])
-      code_deps_to_edges(target = plan$target[i], deps = deps)
-    },
-    jobs = jobs
-  ) %>%
-    do.call(what = dplyr::bind_rows)
-
-  # We're almost ready to construct the graph, but there's one problem:
-  # There may be mentions of file_out() files
-  # in the `from` column of `target_edges`.
-  # We want to convert these file names to the names of the targets
-  # that generate them.
-  target_edges <- connect_output_files(target_edges, command_deps, jobs)
-  edges <- dplyr::bind_rows(import_edges, target_edges)
-
-  ####################
-  ### ATTRIBUTES ###
-  ####################
-  
-  # The triggers and dependency relationships will be
-  # encoded as igraph attributes. Each attribute must have length 1,
-  # so we will convert all our lists to environments.
-  import_deps_attr <- lightly_parallelize(
-    X = import_deps,
-    FUN = list2env,
+    verbose = verbose,
     jobs = jobs,
-    parent = emptyenv(),
-    hash = TRUE
+    console_log_file = console_log_file,
+    trigger = trigger
   ) %>%
-    setNames(names(import_deps))
-  target_deps_attr <- lightly_parallelize(
-    X = seq_len(nrow(plan)),
-    FUN = zip_deps,
-    jobs = jobs,
-    command_deps = command_deps,
-    condition_deps = condition_deps,
-    change_deps = change_deps
-  ) %>%
-    setNames(plan$target)
-  deps_attr <- c(import_deps_attr, target_deps_attr)
-  trigger_attr <- lightly_parallelize(
-    X = trigger,
-    FUN = list2env,
-    jobs = jobs,
-    parent = emptyenv(),
-    hash = TRUE
-  )
+    bdg_prepare_data %>%
+    bdg_analyze_code %>%
+    bdg_analyze_triggers %>%
+    bdg_create_edges %>%
+    bdg_create_attributes %>%
+    bdg_create_graph
+}
 
-  # Now, we can make our graph.
-  graph <- igraph::graph_from_data_frame(edges) %>%
-    igraph::set_vertex_attr(
-      name = "deps",
-      index = names(deps_attr),
-      value = deps_attr
+bdg_prepare_data <- function(args){
+  within(args, {
+    imports <- as.list(envir)
+    unload_conflicts(
+      imports = names(imports),
+      targets = plan$target,
+      envir = envir,
+      verbose = verbose
+    )
+    import_names <- setdiff(names(imports), targets)
+    imports <- imports[import_names]
+    args
+  })
+}
+
+bdg_analyze_code <- function(args){
+  within(args, {
+    console_many_targets(
+      targets = import_names,
+      pattern = "analyze",
+      type = "import",
+      config = args
+    )
+    import_deps <- lightly_parallelize(
+      X = imports,
+      FUN = import_dependencies,
+      jobs = jobs
     ) %>%
-    igraph::set_vertex_attr(
-      name = "trigger",
-      index = names(trigger_attr),
-      value = trigger_attr
+      setNames(import_names)
+    console_many_targets(
+      targets = plan$target,
+      pattern = "analyze",
+      type = "target",
+      config = args
+    )
+    command_deps <- lightly_parallelize(
+      X = plan$command,
+      FUN = command_dependencies,
+      job = jobs
     ) %>%
-    prune_drake_graph(to = targets, jobs = jobs) %>%
-    igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
+      setNames(plan$target)
+    args
+  })
+}
+
+bdg_analyze_triggers <- function(args){
+  within(args, {
+    default_trigger <- parse_trigger(trigger = trigger, envir = envir)
+    default_condition_deps <- code_dependencies(trigger$condition)
+    default_change_deps <- code_dependencies(trigger$change)
+    if ("trigger" %in% colnames(plan)){
+      triggers <- lightly_parallelize(
+        X = seq_len(nrow(plan)),
+        FUN = function(i){
+          if (!is.na(plan$trigger[i])){
+            parse_trigger(trigger = plan$trigger[i], envir = envir)
+          } else {
+            default_trigger
+          }
+        },
+        jobs = jobs
+      )
+      condition_deps <- lightly_parallelize(
+        X = seq_len(nrow(plan)),
+        FUN = function(i){
+          if (!is.na(plan$trigger[i])){
+            code_dependencies(triggers[[i]]$condition)
+          } else {
+            default_condition_deps
+          }
+        },
+        jobs = jobs
+      )
+      change_deps <- lightly_parallelize(
+        X = seq_len(nrow(plan)),
+        FUN = function(i){
+          if (!is.na(plan$trigger[i])){
+            code_dependencies(triggers[[i]]$change)
+          } else {
+            default_change_deps
+          }
+        },
+        jobs = jobs
+      )
+    } else {
+      triggers <- replicate(default_trigger, n = nrow(plan), simplify = FALSE)
+      condition_deps <- replicate(
+        default_condition_deps,
+        n = nrow(plan),
+        simplify = FALSE
+      )
+      change_deps <- replicate(
+        default_change_deps,
+        n = nrow(plan),
+        simplify = FALSE
+      )
+    }
+    triggers <- setNames(triggers, plan$target)
+    condition_deps <- setNames(condition_deps, plan$target)
+    change_deps <- setNames(change_deps, plan$target)
+    args
+  })
+}
+
+bdg_create_edges <- function(args){
+  within(args, {
+    import_edges <- lightly_parallelize(
+      X = seq_along(imports),
+      FUN = function(i){
+        code_deps_to_edges(target = import_names[[i]], deps = import_deps[[i]])
+      },
+      jobs = jobs
+    ) %>%
+      do.call(what = dplyr::bind_rows)
+    target_edges <- lightly_parallelize(
+      X = seq_len(nrow(plan)),
+      FUN = function(i){
+        deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
+          merge_lists(change_deps[[i]])
+        code_deps_to_edges(target = plan$target[i], deps = deps)
+      },
+      jobs = jobs
+    ) %>%
+      do.call(what = dplyr::bind_rows)
+    target_edges <- connect_output_files(target_edges, command_deps, jobs)
+    edges <- dplyr::bind_rows(import_edges, target_edges)
+    args
+  })
+}
+
+bdg_create_attributes <- function(args){
+  within(args, {
+    import_deps_attr <- lightly_parallelize(
+      X = import_deps,
+      FUN = list2env,
+      jobs = jobs,
+      parent = emptyenv(),
+      hash = TRUE
+    ) %>%
+      setNames(names(import_deps))
+    target_deps_attr <- lightly_parallelize(
+      X = seq_len(nrow(plan)),
+      FUN = zip_deps,
+      jobs = jobs,
+      command_deps = command_deps,
+      condition_deps = condition_deps,
+      change_deps = change_deps
+    ) %>%
+      setNames(plan$target)
+    deps_attr <- c(import_deps_attr, target_deps_attr)
+    trigger_attr <- lightly_parallelize(
+      X = triggers,
+      FUN = list2env,
+      jobs = jobs,
+      parent = emptyenv(),
+      hash = TRUE
+    )
+    args
+  })
+}
+
+bdg_create_graph <- function(args){
+  with(args, {
+    igraph::graph_from_data_frame(edges) %>%
+      igraph::set_vertex_attr(
+        name = "deps",
+        index = names(deps_attr),
+        value = deps_attr
+      ) %>%
+      igraph::set_vertex_attr(
+        name = "triggers",
+        index = names(trigger_attr),
+        value = trigger_attr
+      ) %>%
+      prune_drake_graph(to = targets, jobs = jobs) %>%
+      igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
+  })
 }
 
 code_deps_to_edges <- function(target, deps){
