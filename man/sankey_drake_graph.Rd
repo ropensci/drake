@@ -4,10 +4,10 @@
 \alias{sankey_drake_graph}
 \title{Show a Sankey graph of your drake project.}
 \usage{
-sankey_drake_graph(config = drake::read_drake_config(), file = character(0),
-  selfcontained = FALSE, build_times = "build", digits = 3,
-  targets_only = FALSE, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL, make_imports = TRUE,
+sankey_drake_graph(config = drake::read_drake_config(),
+  file = character(0), selfcontained = FALSE, build_times = "build",
+  digits = 3, targets_only = FALSE, from = NULL, mode = c("out",
+  "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, group = NULL, clusters = NULL, ...)
 }
 \arguments{

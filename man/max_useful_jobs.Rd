@@ -4,8 +4,8 @@
 \alias{max_useful_jobs}
 \title{Deprecated function}
 \usage{
-max_useful_jobs(config = drake::read_drake_config(), imports = c("files",
-  "all", "none"), from_scratch = FALSE)
+max_useful_jobs(config = drake::read_drake_config(),
+  imports = c("files", "all", "none"), from_scratch = FALSE)
 }
 \arguments{
 \item{config}{internal configuration list of \code{\link{make}(...)},

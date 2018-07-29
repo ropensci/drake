@@ -6,7 +6,8 @@
 list the \code{storr} cache namespaces
 that store target-level information.}
 \usage{
-target_namespaces(default = storr::storr_environment()$default_namespace)
+
+  target_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \arguments{
 \item{default}{name of the default \code{storr} namespace}

@@ -4,8 +4,8 @@
 \alias{session}
 \title{Deprecated function \code{session}}
 \usage{
-session(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = TRUE)
+session(path = getwd(), search = TRUE, cache = drake::get_cache(path
+  = path, search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{path}{Same as for \code{\link[=drake_session]{drake_session()}}.}
