@@ -110,8 +110,8 @@ bdg_analyze_triggers <- function(args){
   envir <- jobs <- NULL
   within(args, {
     default_trigger <- parse_trigger(trigger = trigger, envir = envir)
-    default_condition_deps <- code_dependencies(default_trigger$condition)
-    default_change_deps <- code_dependencies(default_trigger$change)
+    default_condition_deps <- import_dependencies(default_trigger$condition)
+    default_change_deps <- import_dependencies(default_trigger$change)
     if ("trigger" %in% colnames(plan)){
       triggers <- lightly_parallelize(
         X = seq_len(nrow(plan)),
