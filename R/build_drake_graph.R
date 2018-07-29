@@ -60,6 +60,7 @@ build_drake_graph <- function(
 }
 
 bdg_prepare_data <- function(args){
+  envir <- verbose <- targets <- NULL
   within(args, {
     imports <- as.list(envir)
     unload_conflicts(
@@ -75,6 +76,7 @@ bdg_prepare_data <- function(args){
 }
 
 bdg_analyze_code <- function(args){
+  import_names <- imports <- jobs <- NULL
   within(args, {
     console_many_targets(
       targets = import_names,
@@ -97,7 +99,7 @@ bdg_analyze_code <- function(args){
     command_deps <- lightly_parallelize(
       X = plan$command,
       FUN = command_dependencies,
-      job = jobs
+      jobs = jobs
     ) %>%
       setNames(plan$target)
     args
@@ -105,6 +107,7 @@ bdg_analyze_code <- function(args){
 }
 
 bdg_analyze_triggers <- function(args){
+  envir <- jobs <- NULL
   within(args, {
     default_trigger <- parse_trigger(trigger = trigger, envir = envir)
     default_condition_deps <- code_dependencies(default_trigger$condition)
@@ -164,6 +167,8 @@ bdg_analyze_triggers <- function(args){
 }
 
 bdg_create_edges <- function(args){
+  import_names <- imports <- jobs <- command_deps <- import_deps <-
+    condition_deps <- change_deps <- NULL
   within(args, {
     import_edges <- lightly_parallelize(
       X = seq_along(imports),
@@ -190,6 +195,7 @@ bdg_create_edges <- function(args){
 }
 
 bdg_create_attributes <- function(args){
+  import_deps <- command_deps <- condition_deps <- change_deps <- jobs <- NULL
   within(args, {
     import_deps_attr <- lightly_parallelize(
       X = import_deps,
@@ -221,6 +227,7 @@ bdg_create_attributes <- function(args){
 }
 
 bdg_create_graph <- function(args){
+  edges <- deps_attr <- trigger_attr <- targets <- jobs <- NULL
   with(args, {
     igraph::graph_from_data_frame(edges) %>%
       igraph::set_vertex_attr(

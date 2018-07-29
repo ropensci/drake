@@ -31,7 +31,7 @@ load_mtcars_example() # Load drake's canonical example.
 con <- make(my_plan) # Run the project, build the targets.
 # Get some example dependency profiles of targets.
 dependency_profile("small", config = con)
-dependency_profile(file_store("report.md"), config = con)
+dependency_profile("report", config = con)
 })
 }
 }
