@@ -166,7 +166,9 @@ run_future_lapply_staged <- function(config){
 run_clustermq_staged <- function(config){
   assert_pkgs("clustermq")
   schedule <- config$schedule
-  workers <- clustermq::workers(n_jobs = config$jobs)
+  withr::with_preserve_seed(
+    workers <- clustermq::workers(n_jobs = config$jobs)
+  )
   on.exit(workers$finalize())
   while (length(V(schedule)$name)){
     stage <- next_stage(config = config, schedule = schedule)

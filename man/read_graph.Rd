@@ -4,8 +4,9 @@
 \alias{read_graph}
 \title{Deprecated function \code{read_graph}}
 \usage{
-read_graph(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = 1, ...)
+read_graph(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), verbose = 1, ...)
 }
 \arguments{
 \item{path}{Same as for \code{\link[=read_drake_graph]{read_drake_graph()}}.}

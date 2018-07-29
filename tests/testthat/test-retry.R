@@ -48,6 +48,18 @@ test_with_dir("retries", {
     hook = silencer_hook, session_info = FALSE
   )
   debrief_retries()
+
+  # And the `retries` argument to `make()` should step in
+  # wherever plan$retries has NAs
+  clean(destroy = TRUE)
+  unlink(c("failed_once.txt", "file.rds"))
+  pl$retries <- NA
+  make(
+    pl, parallelism = parallelism, jobs = jobs,
+    envir = e, retries = 10, verbose = FALSE,
+    hook = silencer_hook, session_info = FALSE
+  )
+  debrief_retries()
 })
 
 test_with_dir("timeouts", {

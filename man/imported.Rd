@@ -5,8 +5,8 @@
 \title{List all the imports in the drake cache.}
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(), jobs = 1)
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), verbose = drake::default_verbose(), jobs = 1)
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only

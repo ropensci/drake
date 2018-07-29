@@ -46,33 +46,33 @@
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
+  deps <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
   meta <- list(
     name = target,
     target = target,
     imported = !(target %in% config$plan$target),
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_object(list(seed = config$seed, target = target)),
-    output_files = unlist(
-      igraph::vertex_attr(
-        graph = config$graph,
-        name = "output_files",
-        index = target
-      )
-    ),
-    input_files = unlist(
-      igraph::vertex_attr(
-        graph = config$graph,
-        name = "input_files",
-        index = target
-      )
-    )
+    seed = seed_from_object(list(seed = config$seed, target = target))
   )
   # For imported files.
   if (is_file(target)) {
     meta$mtime <- file.mtime(drake::drake_unquote(target))
   }
-  meta$trigger <- resolve_trigger(target = target, config = config)
+  if (meta$imported){
+    meta$trigger <- trigger(condition = TRUE)
+  } else {
+    meta$trigger <- vertex_attr(
+      graph = config$graph,
+      name = "trigger",
+      index = target
+    )[[1]] %>%
+      as.list
+  }
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),
   # but only after drake decides to actually build the target.
@@ -83,53 +83,70 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
   if (meta$trigger$file){
-    meta$input_file_hash <- file_dependency_hash(
-      target = target, config = config, which = "input_files")
-    meta$output_file_hash <- file_dependency_hash(
-      target = target, config = config, which = "output_files")
+    meta$input_file_hash <- input_file_hash(target = target, config = config)
+    meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)){
-    config$pruning_strategy <- "speed"
-    prune_envir(targets = target, config = config)
+    vertex_attr(
+      graph = config$graph,
+      name = "deps",
+      index = target
+    )[[1]]$change %>%
+      ensure_loaded(config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta
 }
 
 dependency_hash <- function(target, config) {
-  deps <- dependencies(target, config) %>%
-    setdiff(y = igraph::vertex_attr(
-      graph = config$graph,
-      name = "ignore_changes",
-      index = target
-    )[[1]])
-  if (target %in% config$plan$target){
-    deps <- Filter(x = deps, f = is_not_file)
+  x <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
+  deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
+  if (!(target %in% config$plan$target)){
+    deps <- c(deps, x$file_in, x$knitr_in)
   }
-  sort(deps) %>%
+  sort(unique(deps)) %>%
     self_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }
 
-file_dependency_hash <- function(
+input_file_hash <- function(
   target,
   config,
-  which = c("input_files", "output_files"),
   size_cutoff = rehash_file_size_cutoff
 ){
-  which <- match.arg(which)
-  files <- unlist(igraph::vertex_attr(
+  deps <- vertex_attr(
     graph = config$graph,
-    name = which,
+    name = "deps",
     index = target
-  )) %>%
-    setdiff(y = igraph::vertex_attr(
-      graph = config$graph,
-      name = "ignore_changes",
-      index = target
-    )[[1]])
+  )[[1]]
+  files <- sort(unique(c(deps$file_in, deps$knitr_in)))
   vapply(
-    X = sort(files),
+    X = files,
+    FUN = file_hash,
+    FUN.VALUE = character(1),
+    config = config,
+    size_cutoff = size_cutoff
+  ) %>%
+    digest::digest(algo = config$long_hash_algo)
+}
+
+output_file_hash <- function(
+  target,
+  config,
+  size_cutoff = rehash_file_size_cutoff
+){
+  deps <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]
+  files <- sort(unique(deps$file_out))
+  vapply(
+    X = files,
     FUN = file_hash,
     FUN.VALUE = character(1),
     config = config,

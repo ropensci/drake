@@ -78,7 +78,7 @@ deps_code <- function(x){
 #' @title List the dependencies of one or more targets
 #' @description Unlike [deps_code()], `deps_targets()` just lists
 #'   the jobs that lie upstream of the `targets` on the workflow
-#'   graph, and `file_out()` files are not included.
+#'   dependency graph, and `file_out()` files are not included.
 #' @export
 #' @param targets a character vector of target names
 #' @param config an output list from [drake_config()]
@@ -130,7 +130,7 @@ deps_targets <- function(
 #' con <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
 #' dependency_profile("small", config = con)
-#' dependency_profile(file_store("report.md"), config = con)
+#' dependency_profile("report", config = con)
 #' })
 #' }
 dependency_profile <- function(target, config = drake::read_drake_config()){
@@ -154,8 +154,11 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
     current_file_modification_time = suppressWarnings(
       file.mtime(drake::drake_unquote(target))
     ),
-    cached_file_dependency_hash = meta$file_dependency_hash,
-    current_file_dependency_hash = file_dependency_hash(
+    cached_input_file_hash = meta$input_file_hash,
+    current_input_file_hash = input_file_hash(
+      target = target, config = config),
+    cached_output_file_hash = meta$output_file_hash,
+    current_output_file_hash = output_file_hash(
       target = target, config = config),
     cached_dependency_hash = meta$dependency_hash,
     current_dependency_hash = current_dependency_hash,
@@ -181,10 +184,19 @@ dependency_profile <- function(target, config = drake::read_drake_config()){
 #' })
 #' }
 tracked <- function(config){
-  c(
-    V(config$graph)$name,
-    V(config$graph)$input_files,
-    V(config$graph)$output_files
+  lightly_parallelize(
+    X = V(config$graph)$name,
+    FUN = function(target){
+      vertex_attr(
+        graph = config$graph,
+        name = "deps",
+        index = target
+      )[[1]] %>%
+        as.list %>%
+        unlist %>%
+        c(target)
+    },
+    jobs = config$jobs
   ) %>%
     clean_dependency_list
 }

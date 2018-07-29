@@ -5,10 +5,10 @@
 \title{Predict the load balancing of the next call to \code{make()}
 for non-staged parallel backends.}
 \usage{
-predict_load_balancing(config = drake::read_drake_config(), targets = NULL,
-  from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
-  digits = NULL, jobs = 1, known_times = numeric(0), default_time = 0,
-  warn = TRUE)
+predict_load_balancing(config = drake::read_drake_config(),
+  targets = NULL, from_scratch = FALSE, targets_only = FALSE,
+  future_jobs = NULL, digits = NULL, jobs = 1,
+  known_times = numeric(0), default_time = 0, warn = TRUE)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of

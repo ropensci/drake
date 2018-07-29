@@ -178,7 +178,7 @@ test_with_dir("deps_targets()", {
     sort(
       c(
         "coef_regression2_small", "knit", "large",
-        file_store("report.Rmd"), "small"
+        "small", file_store("report.Rmd")
       )
     )
   )
@@ -197,8 +197,8 @@ test_with_dir("deps_targets()", {
   config <- dbug()
   deps <- sort(deps_targets(config$targets, config))
   truth <- sort(c(
-    "combined", "saveRDS", "f", "g", "myinput",
-    "nextone", "yourinput", "\"input.rds\"", "readRDS", "drake_target_1"
+    "combined", "saveRDS", "f", "g", "myinput", file_store("input.rds"),
+    "nextone", "yourinput", "readRDS", "drake_target_1"
   ))
   expect_equal(deps, truth)
 })

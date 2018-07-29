@@ -77,22 +77,12 @@ trigger <- function(
   )
 }
 
-resolve_trigger <- function(target, config){
-  plan <- config$plan
-  if (!(target %in% plan$target)){
-    trigger <- quote(trigger(condition = TRUE))
-  } else {
-    trigger <- drake_plan_override(
-      target = target,
-      field = "trigger",
-      config = config
-    )
-  }
-  if (is.character(trigger)) {
+parse_trigger <- function(trigger, envir){
+ if (is.character(trigger)) {
     trigger <- convert_old_trigger(trigger)
     trigger <- parse(text = trigger)
   }
-  eval(trigger, envir = config$envir)
+  eval(trigger, envir = envir)
 }
 
 command_trigger <- function(target, meta, config){
@@ -127,7 +117,12 @@ file_trigger <- function(target, meta, config){
   if (!length(target) || !length(config) || !length(meta)){
     return(FALSE)
   }
-  for (file in meta$output_files){
+  file_out <- vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]$file_out
+  for (file in file_out){
     if (!file.exists(drake_unquote(file))){
       return(TRUE)
     }
@@ -191,8 +186,12 @@ should_build_target <- function(target, meta = NULL, config){
     }
   }
   if (!is.null(meta$trigger$condition) && !is.logical(meta$trigger$condition)){
-    config$pruning_strategy <- "speed"
-    prune_envir(targets = target, config = config)
+    vertex_attr(
+      graph = config$graph,
+      name = "deps",
+      index = target
+    )[[1]]$condition %>%
+      ensure_loaded(config = config)
     if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
       return(TRUE)
     }

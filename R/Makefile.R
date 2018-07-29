@@ -152,11 +152,7 @@ mk <- function(
 makefile_hash <- function(target, config){
   paste(
     self_hash(target, config),
-    file_dependency_hash(
-      target = target,
-      config = config,
-      which = "output_files"
-    )
+    output_file_hash(target = target, config = config)
   )
 }
 

@@ -1,5 +1,6 @@
 # Version 5.3.1.9000
 
+- Internally refactor the `igraph` attributes of the dependency graph to allow for smarter dependency/memory management during `make()`.
 - Enable `vis_drake_graph()` and `sankey_drake_graph()` to save static image files via `webshot`.
 - Deprecate `static_drake_graph()` and `render_static_drake_graph()` in favor of `drake_ggraph()` and `render_drake_ggraph()`.
 - Overhaul the interface for triggers and add new trigger types ("condition" and "change").
