@@ -144,8 +144,13 @@ test_with_dir("clusters", {
   o2 <- drake_graph_info(config, group = "n__", clusters = "asdfae")
   o3 <- drake_graph_info(config, group = "n__")
   o4 <- drake_graph_info(config, group = "adfe")
-  o1$nodes$label <- o2$nodes$label <- o3$nodes$label <- o4$nodes$label <-
-    NULL
+  for (col in c("label", "deps", "trigger")){
+    o1$nodes[[col]] <-
+      o2$nodes[[col]] <-
+      o3$nodes[[col]] <-
+      o4$nodes[[col]] <-
+      NULL
+  }
   expect_equal(o1$nodes, o2$nodes)
   expect_equal(o1$nodes, o3$nodes)
   expect_equal(o1$nodes, o4$nodes)

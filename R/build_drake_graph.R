@@ -107,13 +107,13 @@ bdg_analyze_code <- function(args){
 bdg_analyze_triggers <- function(args){
   within(args, {
     default_trigger <- parse_trigger(trigger = trigger, envir = envir)
-    default_condition_deps <- code_dependencies(trigger$condition)
-    default_change_deps <- code_dependencies(trigger$change)
+    default_condition_deps <- code_dependencies(default_trigger$condition)
+    default_change_deps <- code_dependencies(default_trigger$change)
     if ("trigger" %in% colnames(plan)){
       triggers <- lightly_parallelize(
         X = seq_len(nrow(plan)),
         FUN = function(i){
-          if (!is.na(plan$trigger[i])){
+          if (!safe_is_na(plan$trigger[i])){
             parse_trigger(trigger = plan$trigger[i], envir = envir)
           } else {
             default_trigger
@@ -124,7 +124,7 @@ bdg_analyze_triggers <- function(args){
       condition_deps <- lightly_parallelize(
         X = seq_len(nrow(plan)),
         FUN = function(i){
-          if (!is.na(plan$trigger[i])){
+          if (!safe_is_na(plan$trigger[i])){
             code_dependencies(triggers[[i]]$condition)
           } else {
             default_condition_deps
@@ -135,7 +135,7 @@ bdg_analyze_triggers <- function(args){
       change_deps <- lightly_parallelize(
         X = seq_len(nrow(plan)),
         FUN = function(i){
-          if (!is.na(plan$trigger[i])){
+          if (!safe_is_na(plan$trigger[i])){
             code_dependencies(triggers[[i]]$change)
           } else {
             default_change_deps

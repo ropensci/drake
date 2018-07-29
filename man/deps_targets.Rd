@@ -22,7 +22,7 @@ The other names listed are functions or generic R objects.
 \description{
 Unlike \code{\link[=deps_code]{deps_code()}}, \code{deps_targets()} just lists
 the jobs that lie upstream of the \code{targets} on the workflow
-graph, and \code{file_out()} files are not included.
+dependency graph, and \code{file_out()} files are not included.
 }
 \examples{
 \dontrun{

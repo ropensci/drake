@@ -70,7 +70,8 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
       graph = config$graph,
       name = "trigger",
       index = target
-    )[[1]]
+    )[[1]] %>%
+      as.list
   }
   # Need to make sure meta includes all these
   # fields at the beginning of build_in_hook(),

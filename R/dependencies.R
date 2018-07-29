@@ -78,7 +78,7 @@ deps_code <- function(x){
 #' @title List the dependencies of one or more targets
 #' @description Unlike [deps_code()], `deps_targets()` just lists
 #'   the jobs that lie upstream of the `targets` on the workflow
-#'   graph, and `file_out()` files are not included.
+#'   dependency graph, and `file_out()` files are not included.
 #' @export
 #' @param targets a character vector of target names
 #' @param config an output list from [drake_config()]
@@ -193,7 +193,8 @@ tracked <- function(config){
         index = target
       )[[1]] %>%
         as.list %>%
-        clean_dependency_list
+        unlist %>%
+        c(target)
     },
     jobs = config$jobs
   ) %>%
@@ -201,30 +202,6 @@ tracked <- function(config){
 }
 
 dependencies <- function(targets, config, reverse = FALSE){
-  if (reverse){
-    reverse_dependencies(targets = targets, config = config)
-  } else {
-    regular_dependencies(targets = targets, config = config)
-  }
-}
-
-regular_dependencies <- function(targets, config){
-  lightly_parallelize(
-    X = targets,
-    FUN = function(target){
-      deps <- vertex_attr(
-        graph = config$graph,
-        name = "deps",
-        index = target
-      )[[1]]
-      c(deps$globals, deps$namespaced, deps$loadd, deps$readd)
-    },
-    jobs = 1 # Not actually parallelized, just keeping the option open.
-  ) %>%
-    clean_dependency_list
-}
-
-reverse_dependencies <- function(targets, config){
   if (!length(targets)){
     return(character(0))
   }
