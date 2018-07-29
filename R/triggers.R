@@ -145,16 +145,11 @@ change_trigger <- function(target, meta, config){
   if (!length(target) || !length(config) || !length(meta)){
     return(FALSE)
   }
-  if (!config$cache$exists(key = target, namespace = "meta")){
-    return(TRUE) # nocov
+  if (!config$cache$exists(key = target, namespace = "change")){
+    return(FALSE) # nocov
   }
-  old_trigger <- get_from_subspace(
-    key = target,
-    subspace = "trigger",
-    namespace = "meta",
-    cache = config$cache
-  )
-  !identical(old_trigger$value, meta$trigger$value)
+  old_value <- config$cache$get(key = target, namespace = "change")
+  !identical(old_value, meta$trigger$value)
 }
 
 should_build_target <- function(target, meta = NULL, config){

@@ -12,10 +12,11 @@ cache_namespaces <- function(
 ){
   c(
     target_namespaces(default = default),
-    "attempt",
-    "config",
-    "progress_values",
-    "session"
+    "attempt",  # attempt flags so drake knows when to print "everything up to date" # nolint
+    "change",   # value returned by the "change" trigger
+    "config",   # elements of the config list
+    "progress", # build progress: in progress, finished, failed, etc.
+    "session"   # session info
   ) %>%
     sort
 }
@@ -38,9 +39,9 @@ cleaned_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ){
   c(
-    default,
-    "kernels",
-    "meta"
+    default,   # the target values themselves
+    "kernels", # reproducibly-tracked representation of targets. watched for changes # nolint
+    "meta"     # watched metadata such as hashes and time stamps
   ) %>%
     sort
 }

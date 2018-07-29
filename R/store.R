@@ -13,6 +13,12 @@ store_outputs <- function(target, value, meta, config){
   if (is.null(meta$input_file_hash)){
     meta$input_file_hash <- input_file_hash(target = target, config = config)
   }
+  if (!is.null(meta$trigger$change)){
+    config$cache$set(
+      key = target, value = meta$trigger$value, namespace = "change"
+    )
+    meta$trigger$value <- NULL
+  }
   file_out <- vertex_attr(
     graph = config$graph,
     name = "deps",
