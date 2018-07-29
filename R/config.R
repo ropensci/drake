@@ -365,12 +365,13 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Construct the master internal configuration list.
-#' con <- drake_config(my_plan)
-#' vis_drake_graph(config)
+#' config <- drake_config(my_plan)
+#' vis_drake_graph(config) # See the dependency graph.
+#' sankey_drake_graph(config) # See the dependency graph.
 #' # These functions are faster than otherwise
 #' # because they use the configuration list.
-#' outdated(config = con) # Which targets are out of date?
-#' missed(config = con) # Which imports are missing?
+#' outdated(config) # Which targets are out of date?
+#' missed(config) # Which imports are missing?
 #' })
 #' }
 drake_config <- function(

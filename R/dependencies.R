@@ -91,10 +91,7 @@ deps_code <- function(x){
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Dependencies of the knitr-generated targets like 'report.md'
-#' # include targets/imports referenced with `readd()` or `loadd()`.
 #' config <- drake_config(my_plan)
-#' deps_targets(file_store("report.md"), config = config)
 #' deps_targets("regression1_small", config = config)
 #' deps_targets(c("small", "large"), config = config, reverse = TRUE)
 #' })
