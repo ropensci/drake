@@ -128,7 +128,7 @@ bdg_analyze_triggers <- function(args){
         X = seq_len(nrow(plan)),
         FUN = function(i){
           if (!safe_is_na(plan$trigger[i])){
-            code_dependencies(triggers[[i]]$condition)
+            import_dependencies(triggers[[i]]$condition)
           } else {
             default_condition_deps
           }
@@ -139,7 +139,7 @@ bdg_analyze_triggers <- function(args){
         X = seq_len(nrow(plan)),
         FUN = function(i){
           if (!safe_is_na(plan$trigger[i])){
-            code_dependencies(triggers[[i]]$change)
+            import_dependencies(triggers[[i]]$change)
           } else {
             default_change_deps
           }
