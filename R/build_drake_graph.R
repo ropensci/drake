@@ -188,8 +188,12 @@ bdg_create_edges <- function(args){
       jobs = jobs
     ) %>%
       do.call(what = dplyr::bind_rows)
-    target_edges <- connect_output_files(target_edges, command_deps, jobs)
-    import_edges$file <- FALSE # mark input/output file connections
+    if (nrow(target_edges) > 0){
+      target_edges <- connect_output_files(target_edges, command_deps, jobs)
+    }
+    if (nrow(import_edges) > 0){
+      import_edges$file <- FALSE # mark input/output file connections
+    }
     edges <- dplyr::bind_rows(import_edges, target_edges)
     args
   })
