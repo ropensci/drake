@@ -50,7 +50,7 @@ cluster_nodes <- function(config){
     new_node$type <- "cluster"
     new_node <- style_nodes(
       config = list(nodes = new_node, font_size = config$font_size))
-    rownames(new_node) <- new_node$label <- new_node$id <-
+    new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
     matching <- config$nodes$id[index]
     new_node$hover_label <- paste(matching, collapse = ", ") %>%
@@ -103,15 +103,16 @@ insert_file_out_edges <- function(edges, file_in_list, file_out_list){
     file_in_edges$to <- as.character(file_in_edges$ind)
     file_in_edges <- file_in_edges[
       file_in_edges$from %in% clean_dependency_list(file_out_list), ]
+    file_in_edges$values <- file_in_edges$ind <- NULL
   }
   if (length(file_out_list)){
     file_out_edges <- utils::stack(file_out_list)
     file_out_edges$from <- as.character(file_out_edges$ind)
     file_out_edges$to <- as.character(file_out_edges$values)
+    file_out_edges$values <- file_out_edges$ind <- NULL
   }
-  edges <- edges[edges$file < 0.5, ] %>%
+  edges <- edges[is.na(edges$file), ] %>%
     dplyr::bind_rows(file_in_edges, file_out_edges)
-  edges$values <- edges$ind <- NULL
   edges[!duplicated(edges), ]
 }
 
