@@ -176,14 +176,14 @@ drake_graph_info <- function(
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
   config$edges <- network_data$edges
+  if (show_output_files){
+    config <- insert_file_outs(config)
+  }
   if (nrow(config$edges)){
     config$edges$arrows <- "to"
   }
   if (length(config$group)){
     config <- cluster_nodes(config)
-  }
-  if (show_output_files){
-    config <- insert_file_outs(config)
   }
   list(
     nodes = as_tibble(config$nodes),

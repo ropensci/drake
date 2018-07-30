@@ -105,7 +105,6 @@ insert_file_out_edges <- function(edges, file_in_list, file_out_list){
   file_out_edges$from <- as.character(file_out_edges$ind)
   file_out_edges$to <- as.character(file_out_edges$values)
   edges <- dplyr::bind_rows(edges, file_in_edges, file_out_edges)
-  edges$arrows <- "to"
   edges$values <- edges$ind <- NULL
   edges[!duplicated(edges), ]
 }
