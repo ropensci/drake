@@ -7,8 +7,8 @@ to throwing \code{storr}-related errors.}
 \usage{
 rescue_cache(targets = NULL, path = getwd(), search = TRUE,
   verbose = drake::default_verbose(), force = FALSE,
-  cache = drake::get_cache(path = path, search = search, verbose =
-  verbose, force = force), jobs = 1, garbage_collection = FALSE)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose,
+  force = force), jobs = 1, garbage_collection = FALSE)
 }
 \arguments{
 \item{targets}{Character vector, names of the targets to rescue.

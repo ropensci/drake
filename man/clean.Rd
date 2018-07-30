@@ -6,8 +6,7 @@
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
   search = TRUE, cache = NULL, verbose = drake::default_verbose(),
-  jobs = 1, force = FALSE, garbage_collection = FALSE,
-  purge = FALSE)
+  jobs = 1, force = FALSE, garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache: as names (symbols),

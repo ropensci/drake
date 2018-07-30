@@ -5,8 +5,7 @@
 \title{Generate a workflow plan data frame for summarizing
 multiple analyses of multiple datasets multiple ways.}
 \usage{
-plan_summaries(plan, analyses, datasets, gather = rep("list",
-  nrow(plan)))
+plan_summaries(plan, analyses, datasets, gather = rep("list", nrow(plan)))
 }
 \arguments{
 \item{plan}{workflow plan data frame with commands for the summaries.

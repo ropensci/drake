@@ -5,9 +5,8 @@
 \title{Get a table that represents the state of the cache.}
 \usage{
 drake_cache_log(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), verbose = drake::default_verbose(), jobs = 1,
-  targets_only = FALSE)
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = drake::default_verbose(), jobs = 1, targets_only = FALSE)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

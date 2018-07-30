@@ -4,10 +4,9 @@
 \alias{loadd}
 \title{Load one or more targets or imports from the drake cache.}
 \usage{
-loadd(..., list = character(0), imported_only = FALSE,
-  path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), namespace = NULL,
-  envir = parent.frame(), jobs = 1,
+loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
+  search = TRUE, cache = drake::get_cache(path = path, search = search,
+  verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
   verbose = drake::default_verbose(), deps = FALSE, lazy = "eager",
   graph = NULL, replace = TRUE, show_source = FALSE)
 }

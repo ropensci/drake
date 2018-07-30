@@ -5,8 +5,8 @@
 \title{Get the drake cache, optionally searching up the file system.}
 \usage{
 get_cache(path = getwd(), search = TRUE,
-  verbose = drake::default_verbose(), force = FALSE,
-  fetch_cache = NULL, console_log_file = NULL)
+  verbose = drake::default_verbose(), force = FALSE, fetch_cache = NULL,
+  console_log_file = NULL)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

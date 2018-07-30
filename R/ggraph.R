@@ -33,7 +33,8 @@ drake_ggraph <- function(
   from_scratch = FALSE,
   full_legend = FALSE,
   group = NULL,
-  clusters = NULL
+  clusters = NULL,
+  show_output_files = TRUE
 ){
   assert_pkgs(c("ggplot2", "ggraph"))
   graph_info <- drake_graph_info(
@@ -50,7 +51,8 @@ drake_ggraph <- function(
     from_scratch = from_scratch,
     full_legend = full_legend,
     group = group,
-    clusters = clusters
+    clusters = clusters,
+    show_output_files = show_output_files
   )
   if (is.null(main)){
     main <- graph_info$default_title

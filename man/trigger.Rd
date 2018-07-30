@@ -4,8 +4,8 @@
 \alias{trigger}
 \title{Set the trigger of a target.}
 \usage{
-trigger(command = TRUE, depend = TRUE, file = TRUE,
-  condition = NULL, change = NULL)
+trigger(command = TRUE, depend = TRUE, file = TRUE, condition = NULL,
+  change = NULL)
 }
 \arguments{
 \item{command}{logical, whether to rebuild the target if the

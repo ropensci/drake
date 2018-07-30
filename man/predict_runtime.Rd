@@ -7,8 +7,8 @@ for non-staged parallel backends.}
 \usage{
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
   from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
-  digits = NULL, jobs = 1, known_times = numeric(0),
-  default_time = 0, warn = TRUE)
+  digits = NULL, jobs = 1, known_times = numeric(0), default_time = 0,
+  warn = TRUE)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of

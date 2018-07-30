@@ -51,6 +51,7 @@ sankey_drake_graph <- function(
   from_scratch = FALSE,
   group = NULL,
   clusters = NULL,
+  show_output_files = TRUE,
   ...
 ){
   assert_pkgs("networkD3")
@@ -66,7 +67,8 @@ sankey_drake_graph <- function(
     make_imports = make_imports,
     from_scratch = from_scratch,
     group = group,
-    clusters = clusters
+    clusters = clusters,
+    show_output_files = show_output_files
   )
   render_sankey_drake_graph(
     graph_info,

@@ -5,8 +5,8 @@
 \title{Create the \code{igraph} dependency network of your project.}
 \usage{
 build_drake_graph(plan = read_drake_plan(), targets = plan$target,
-  envir = parent.frame(), verbose = drake::default_verbose(),
-  jobs = 1, sanitize_plan = FALSE, console_log_file = NULL,
+  envir = parent.frame(), verbose = drake::default_verbose(), jobs = 1,
+  sanitize_plan = FALSE, console_log_file = NULL,
   trigger = drake::trigger())
 }
 \arguments{

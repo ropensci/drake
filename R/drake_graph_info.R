@@ -79,6 +79,9 @@
 #'   These values must be elements of the column of the `nodes` data frame
 #'   that you specify in the `group` argument to `drake_graph_info()`.
 #'
+#' @param show_output_files logical, whether to include
+#'   [file_out()] files in the graph.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -132,7 +135,8 @@ drake_graph_info <- function(
   make_imports = TRUE,
   full_legend = FALSE,
   group = NULL,
-  clusters = NULL
+  clusters = NULL,
+  show_output_files = TRUE
 ) {
   if (!length(V(config$graph)$name)){
     return(null_graph())
@@ -177,6 +181,9 @@ drake_graph_info <- function(
   }
   if (length(config$group)){
     config <- cluster_nodes(config)
+  }
+  if (show_output_files){
+    config <- insert_file_outs(config)
   }
   list(
     nodes = as_tibble(config$nodes),

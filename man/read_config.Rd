@@ -4,9 +4,8 @@
 \alias{read_config}
 \title{Deprecated function \code{read_config}}
 \usage{
-read_config(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), verbose = TRUE)
+read_config(path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
 \item{path}{same as \code{\link[=read_drake_config]{read_drake_config()}}}

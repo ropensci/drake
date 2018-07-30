@@ -50,6 +50,7 @@ vis_drake_graph <- function(
   from_scratch = FALSE,
   group = NULL,
   clusters = NULL,
+  show_output_files = TRUE,
   ...
 ){
   assert_pkgs("visNetwork")
@@ -68,7 +69,8 @@ vis_drake_graph <- function(
     from_scratch = from_scratch,
     full_legend = full_legend,
     group = group,
-    clusters = clusters
+    clusters = clusters,
+    show_output_files = show_output_files
   )
   if (is.null(main)){
     main <- graph_info$default_title
