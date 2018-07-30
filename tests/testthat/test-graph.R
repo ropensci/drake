@@ -323,6 +323,17 @@ test_with_dir("show_output_files", {
   expect_equal(sort(info$nodes$id), sort(paste0("target", 1:2)))
   expect_equal(info$edges$from, "target1")
   expect_equal(info$edges$to, "target2")
+  info <- drake_graph_info(
+    config,
+    show_output_files = TRUE,
+    targets_only = TRUE,
+    group = "status",
+    clusters = "up to date"
+  )
+  expect_equal(
+    sort(info$nodes$id),
+    sort(c(file_store(paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
+  )
 })
 
 # GitHub issue 486
@@ -399,4 +410,15 @@ test_with_dir("same, but with an extra edge not due to files", {
   expect_equal(sort(info$nodes$id), sort(paste0("target", 1:2)))
   expect_equal(info$edges$from, "target1")
   expect_equal(info$edges$to, "target2")
+    info <- drake_graph_info(
+    config,
+    show_output_files = TRUE,
+    targets_only = TRUE,
+    group = "status",
+    clusters = "up to date"
+  )
+  expect_equal(
+    sort(info$nodes$id),
+    sort(c(file_store(paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
+  )
 })
