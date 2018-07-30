@@ -332,7 +332,8 @@ test_with_dir("show_output_files", {
   )
   expect_equal(
     sort(info$nodes$id),
-    sort(c(file_store(paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
+    sort(c(file_store(
+      paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
   )
 })
 
@@ -419,6 +420,7 @@ test_with_dir("same, but with an extra edge not due to files", {
   )
   expect_equal(
     sort(info$nodes$id),
-    sort(c(file_store(paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
+    sort(c(file_store(
+      paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
   )
 })
