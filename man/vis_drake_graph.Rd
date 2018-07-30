@@ -13,7 +13,7 @@ vis_drake_graph(config = drake::read_drake_config(),
   from = NULL, mode = c("out", "in", "all"), order = NULL,
   subset = NULL, ncol_legend = 1, full_legend = FALSE,
   make_imports = TRUE, from_scratch = FALSE, group = NULL,
-  clusters = NULL, ...)
+  clusters = NULL, show_output_files = TRUE, ...)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -130,6 +130,9 @@ you must also supply the \code{clusters} argument.}
 \item{clusters}{optional character vector of values to cluster on.
 These values must be elements of the column of the \code{nodes} data frame
 that you specify in the \code{group} argument to \code{drake_graph_info()}.}
+
+\item{show_output_files}{logical, whether to include
+\code{\link[=file_out]{file_out()}} files in the graph.}
 
 \item{...}{arguments passed to \code{visNetwork()}.}
 }

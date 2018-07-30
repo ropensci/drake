@@ -188,7 +188,12 @@ bdg_create_edges <- function(args){
       jobs = jobs
     ) %>%
       do.call(what = dplyr::bind_rows)
-    target_edges <- connect_output_files(target_edges, command_deps, jobs)
+    if (nrow(target_edges) > 0){
+      target_edges <- connect_output_files(target_edges, command_deps, jobs)
+    }
+    if (nrow(import_edges) > 0){
+      import_edges$file <- FALSE # no input/output file connections here
+    }
     edges <- dplyr::bind_rows(import_edges, target_edges)
     args
   })
@@ -241,7 +246,11 @@ bdg_create_graph <- function(args){
         value = trigger_attr
       ) %>%
       prune_drake_graph(to = targets, jobs = jobs) %>%
-      igraph::simplify(remove.multiple = TRUE, remove.loops = TRUE)
+      igraph::simplify(
+        remove.loops = TRUE,
+        remove.multiple = TRUE,
+        edge.attr.comb = "min"
+      )
   })
 }
 
@@ -267,13 +276,15 @@ connect_output_files <- function(target_edges, command_deps, jobs){
     setNames(nm = names(command_deps)) %>%
     select_nonempty
   if (!length(output_files)){
+    target_edges$file <- FALSE
     return(target_edges)
   }
   output_files <- utils::stack(output_files)
   output_files$ind <- as.character(output_files$ind)
   index <- match(target_edges$from, table = output_files$values)
   target_edges$from[is.finite(index)] <- output_files$ind[na.omit(index)]
-  target_edges
+  target_edges$file <- !is.na(index) # mark input/output file connections
+  target_edges[!duplicated(target_edges), ]
 }
 
 unload_conflicts <- function(imports, targets, envir, verbose){

@@ -50,7 +50,7 @@ cluster_nodes <- function(config){
     new_node$type <- "cluster"
     new_node <- style_nodes(
       config = list(nodes = new_node, font_size = config$font_size))
-    rownames(new_node) <- new_node$label <- new_node$id <-
+    new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
     matching <- config$nodes$id[index]
     new_node$hover_label <- paste(matching, collapse = ", ") %>%
@@ -95,17 +95,65 @@ configure_nodes <- function(config){
   hover_text(config = config)
 }
 
-resolve_levels <- function(config){
-  config$nodes$level <- level <- 0
-  graph <- config$graph
-  while (length(V(graph))){
-    level <- level + 1
-    leaves <- leaf_nodes(graph) %>%
-      intersect(y = config$nodes$id)
-    config$nodes[leaves, "level"] <- level
-    graph <- igraph::delete_vertices(graph = graph, v = leaves)
+insert_file_out_edges <- function(edges, file_in_list, file_out_list){
+  file_in_edges <- file_out_edges <- NULL
+  if (length(file_in_list)){
+    file_in_edges <- utils::stack(file_in_list)
+    file_in_edges$from <- as.character(file_in_edges$values)
+    file_in_edges$to <- as.character(file_in_edges$ind)
+    file_in_edges <- file_in_edges[
+      file_in_edges$from %in% clean_dependency_list(file_out_list), ]
+    file_in_edges$values <- file_in_edges$ind <- NULL
   }
-  config$nodes
+  if (length(file_out_list)){
+    file_out_edges <- utils::stack(file_out_list)
+    file_out_edges$from <- as.character(file_out_edges$ind)
+    file_out_edges$to <- as.character(file_out_edges$values)
+    file_out_edges$values <- file_out_edges$ind <- NULL
+  }
+  edges <- edges[edges$file < 0.5, ] %>%
+    dplyr::bind_rows(file_in_edges, file_out_edges)
+  edges[!duplicated(edges), ]
+}
+
+insert_file_out_nodes <- function(nodes, file_out_list){
+  lapply(seq_along(file_out_list), function(index){
+    old_nodes <- nodes[names(file_out_list)[index], ]
+    files <- file_out_list[[index]]
+    new_nodes <- old_nodes[rep(1, length(files)), ]
+    new_nodes$level <- new_nodes$level + 0.5
+    new_nodes$id <- new_nodes$label <- files
+    new_nodes$type <- "file"
+    new_nodes$shape <- shape_of("file")
+    new_nodes
+  }) %>%
+    do.call(what = dplyr::bind_rows) %>%
+    dplyr::bind_rows(nodes)
+}
+
+insert_file_outs <- function(config){
+  within(config, {
+    file_in_list <- lapply(nodes$deps, function(deps){
+      if (is.null(deps)){
+        return(character(0))
+      }
+      c(deps$file_in, deps$knitr_in)
+    }) %>%
+      setNames(nodes$id) %>%
+      select_nonempty
+    file_out_list <- lapply(nodes$deps, function(deps){
+      if (is.null(deps)){
+        return(character(0))
+      }
+      deps$file_out
+    }) %>%
+      setNames(nodes$id) %>%
+      select_nonempty
+    nodes <- insert_file_out_nodes(nodes, file_out_list)
+    nodes$level <- as.integer(ordered(nodes$level))
+    edges <- insert_file_out_edges(edges, file_in_list, file_out_list)
+    config
+  })
 }
 
 #' @title Return the default title for graph visualizations
@@ -270,17 +318,6 @@ null_graph <- function() {
   )
 }
 
-resolve_graph_outdated <- function(config){
-  if (config$from_scratch){
-    config$outdated <- config$plan$target
-  } else {
-    config$outdated <- outdated(
-      config = config,
-      make_imports = config$make_imports
-    )
-  }
-}
-
 resolve_build_times <- function(build_times){
   if (is.logical(build_times)){
     warning(
@@ -296,6 +333,30 @@ resolve_build_times <- function(build_times){
     }
   }
   build_times
+}
+
+resolve_graph_outdated <- function(config){
+  if (config$from_scratch){
+    config$outdated <- config$plan$target
+  } else {
+    config$outdated <- outdated(
+      config = config,
+      make_imports = config$make_imports
+    )
+  }
+}
+
+resolve_levels <- function(config){
+  config$nodes$level <- level <- 0
+  graph <- config$graph
+  while (length(V(graph))){
+    level <- level + 1
+    leaves <- leaf_nodes(graph) %>%
+      intersect(y = config$nodes$id)
+    config$nodes[leaves, "level"] <- level
+    graph <- igraph::delete_vertices(graph = graph, v = leaves)
+  }
+  config$nodes
 }
 
 style_nodes <- function(config) {

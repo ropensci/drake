@@ -10,7 +10,7 @@ drake_ggraph(config = drake::read_drake_config(),
   split_columns = NULL, main = NULL, from = NULL, mode = c("out",
   "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, full_legend = FALSE, group = NULL,
-  clusters = NULL)
+  clusters = NULL, show_output_files = TRUE)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -83,6 +83,9 @@ you must also supply the \code{clusters} argument.}
 \item{clusters}{optional character vector of values to cluster on.
 These values must be elements of the column of the \code{nodes} data frame
 that you specify in the \code{group} argument to \code{drake_graph_info()}.}
+
+\item{show_output_files}{logical, whether to include
+\code{\link[=file_out]{file_out()}} files in the graph.}
 }
 \value{
 A \code{ggplot2} object, which you can modify with more layers,
