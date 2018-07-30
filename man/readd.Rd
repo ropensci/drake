@@ -5,8 +5,8 @@
 \title{Read and return a drake target/import from the cache.}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  namespace = NULL, verbose = drake::default_verbose(),
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), namespace = NULL, verbose = drake::default_verbose(),
   show_source = FALSE)
 }
 \arguments{

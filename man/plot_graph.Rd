@@ -7,14 +7,15 @@
 plot_graph(plan = read_drake_plan(), targets = plan$target,
   envir = parent.frame(), verbose = 1, hook = default_hook,
   cache = drake::get_cache(verbose = verbose), jobs = 1,
-  parallelism = drake::default_parallelism(), packages = rev(.packages()),
-  prework = character(0), config = NULL, file = character(0),
-  selfcontained = FALSE, build_times = TRUE, digits = 3,
-  targets_only = FALSE, split_columns = FALSE, font_size = 20,
-  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
-  hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, ncol_legend = 1,
-  make_imports = TRUE, from_scratch = FALSE, ...)
+  parallelism = drake::default_parallelism(),
+  packages = rev(.packages()), prework = character(0), config = NULL,
+  file = character(0), selfcontained = FALSE, build_times = TRUE,
+  digits = 3, targets_only = FALSE, split_columns = FALSE,
+  font_size = 20, layout = "layout_with_sugiyama", main = NULL,
+  direction = "LR", hover = TRUE, navigationButtons = TRUE,
+  from = NULL, mode = c("out", "in", "all"), order = NULL,
+  subset = NULL, ncol_legend = 1, make_imports = TRUE,
+  from_scratch = FALSE, ...)
 }
 \arguments{
 \item{plan}{deprecated}

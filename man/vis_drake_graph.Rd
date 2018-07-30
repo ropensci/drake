@@ -5,14 +5,15 @@
 \title{Show an interactive visual network representation
 of your drake project.}
 \usage{
-vis_drake_graph(config = drake::read_drake_config(), file = character(0),
-  selfcontained = FALSE, build_times = "build", digits = 3,
-  targets_only = FALSE, split_columns = NULL, font_size = 20,
-  layout = "layout_with_sugiyama", main = NULL, direction = "LR",
-  hover = TRUE, navigationButtons = TRUE, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, ncol_legend = 1,
-  full_legend = FALSE, make_imports = TRUE, from_scratch = FALSE,
-  group = NULL, clusters = NULL, show_output_files = TRUE, ...)
+vis_drake_graph(config = drake::read_drake_config(),
+  file = character(0), selfcontained = FALSE, build_times = "build",
+  digits = 3, targets_only = FALSE, split_columns = NULL,
+  font_size = 20, layout = "layout_with_sugiyama", main = NULL,
+  direction = "LR", hover = TRUE, navigationButtons = TRUE,
+  from = NULL, mode = c("out", "in", "all"), order = NULL,
+  subset = NULL, ncol_legend = 1, full_legend = FALSE,
+  make_imports = TRUE, from_scratch = FALSE, group = NULL,
+  clusters = NULL, show_output_files = TRUE, ...)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
