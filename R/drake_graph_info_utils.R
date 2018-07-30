@@ -104,7 +104,8 @@ insert_file_out_edges <- function(edges, file_in_list, file_out_list){
   file_out_edges <- utils::stack(file_out_list)
   file_out_edges$from <- as.character(file_out_edges$ind)
   file_out_edges$to <- as.character(file_out_edges$values)
-  edges <- dplyr::bind_rows(edges, file_in_edges, file_out_edges)
+  edges <- edges[edges$file < 0.5, ] %>%
+    dplyr::bind_rows(file_in_edges, file_out_edges)
   edges$values <- edges$ind <- NULL
   edges[!duplicated(edges), ]
 }
