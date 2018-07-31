@@ -66,12 +66,14 @@ edge direction altogether.}
 a neighborhood around \code{from}. Defaults to
 as far as possible. If a target is in the neighborhood, then
 so are all of its custom \code{\link[=file_out]{file_out()}} files if
-\code{show_output_files} is \code{TRUE}. This is to ensure consistent
-behavior between \code{show_output_files = TRUE} and
+\code{show_output_files} is \code{TRUE}.
+That means the actual graph order may be slightly greater than
+you might expect, but this ensures consistency
+between \code{show_output_files = TRUE} and
 \code{show_output_files = FALSE}.}
 
-\item{subset}{Optional character vector of of target/import names.
-Subset of nodes to display in the graph.
+\item{subset}{Optional character vector.
+Subset of targets/imports to display in the graph.
 Applied after \code{from}, \code{mode}, and \code{order}.
 Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,

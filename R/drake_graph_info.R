@@ -29,12 +29,14 @@
 #'   a neighborhood around `from`. Defaults to
 #'   as far as possible. If a target is in the neighborhood, then
 #'   so are all of its custom [file_out()] files if
-#'   `show_output_files` is `TRUE`. This is to ensure consistent
-#'   behavior between `show_output_files = TRUE` and
+#'   `show_output_files` is `TRUE`.
+#'   That means the actual graph order may be slightly greater than
+#'   you might expect, but this ensures consistency
+#'   between `show_output_files = TRUE` and
 #'   `show_output_files = FALSE`.
 #'
-#' @param subset Optional character vector of of target/import names.
-#'   Subset of nodes to display in the graph.
+#' @param subset Optional character vector.
+#'   Subset of targets/imports to display in the graph.
 #'   Applied after `from`, `mode`, and `order`.
 #'   Be advised: edges are only kept for adjacent nodes in `subset`.
 #'   If you do not select all the intermediate nodes,
