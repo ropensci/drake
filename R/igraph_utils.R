@@ -81,7 +81,11 @@ get_neighborhood <- function(graph, from, mode, order){
       nodes = from,
       mode = mode
     ) %>%
-      do.call(what = igraph::union)
+      lapply(FUN = function(graph){
+        igraph::V(graph)$name
+      }) %>%
+      clean_dependency_list %>%
+      subset_graph(graph = graph)
   }
   graph
 }
