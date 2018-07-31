@@ -31,9 +31,12 @@ and \code{"all"} to go both ways and disregard
 edge direction altogether.}
 
 \item{order}{How far to branch out to create
-a neighborhood around \code{from} (measured
-in the number of nodes). Defaults to
-as far as possible.}
+a neighborhood around \code{from}. Defaults to
+as far as possible. If a target is in the neighborhood, then
+so are all of its custom \code{\link[=file_out]{file_out()}} files if
+\code{show_output_files} is \code{TRUE}. This is to ensure consistent
+behavior between \code{show_output_files = TRUE} and
+\code{show_output_files = FALSE}.}
 
 \item{subset}{Optional character vector of of target/import names.
 Subset of nodes to display in the graph.

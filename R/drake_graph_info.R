@@ -26,9 +26,12 @@
 #'   edge direction altogether.
 #'
 #' @param order How far to branch out to create
-#'   a neighborhood around `from` (measured
-#'   in the number of nodes). Defaults to
-#'   as far as possible.
+#'   a neighborhood around `from`. Defaults to
+#'   as far as possible. If a target is in the neighborhood, then
+#'   so are all of its custom [file_out()] files if
+#'   `show_output_files` is `TRUE`. This is to ensure consistent
+#'   behavior between `show_output_files = TRUE` and
+#'   `show_output_files = FALSE`.
 #'
 #' @param subset Optional character vector of of target/import names.
 #'   Subset of nodes to display in the graph.
