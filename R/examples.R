@@ -88,5 +88,6 @@ drake_examples <- function(quiet = TRUE) {
     quiet = quiet
   )
   scan(destfile, what = character(1), quiet = TRUE) %>%
-    fs::path_ext_remove()
+    fs::path_ext_remove() %>%
+    sort()
 }
