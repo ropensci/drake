@@ -46,7 +46,10 @@ drake_example <- function(
     )
     to <- destination
   }
-  url <- file.path("https://wlandau.github.io/drake-examples", paste0(example, ".zip"))
+  url <- file.path(
+    "https://wlandau.github.io/drake-examples",
+    paste0(example, ".zip")
+  )
   zip <- paste0(tempfile(), ".zip")
   downloader::download(url = url, destfile = zip, quiet = quiet)
   utils::unzip(zip, exdir = to, overwrite = overwrite)
