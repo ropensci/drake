@@ -4,9 +4,9 @@ You must obey this repository's [code of conduct](https://github.com/ropensci/dr
 
 # Before posting
 
-The GitHub issue tracker is mainly intended for bug reports and feature requests. While questions about usage etc. are also highly encouraged, you may alternatively wish to post to [Stack Overflow](https://stackoverflow.com) and use the [`drake-r-package` tag](https://stackoverflow.com/tags/drake-r-package).
+The GitHub issue tracker is a great place for general usage questions. However, you may alternatively wish to post to [Stack Overflow](https://stackoverflow.com) and use the [`drake-r-package` tag](https://stackoverflow.com/tags/drake-r-package).
 
-Please search the [known issues](https://github.com/ropensci/drake/issues), both open and closed, including the [frequently-asked questions](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22Frequently+Asked+Question%22). The articles on [cautionary notes and edge cases](https://ropensci.github.io/drake/articles/caution.html) and [debugging and testing drake projects](https://ropensci.github.io/drake/articles/debug.html) may also answer your questions.
+If you do use the issue tracker, please search the [known issues](https://github.com/ropensci/drake/issues) first, both open and closed, including the [frequently-asked questions](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22Frequently+Asked+Question%22). You may also find the answer to your question in the [online manual](https://ropenscilabs.github.io/drake-manual).
 
 When you post, please include a minimal reproducible example of the problem and/or desired behavior, if applicable. The [`reprex` package](https://github.com/tidyverse/reprex) package is particularly nice for this.
 
