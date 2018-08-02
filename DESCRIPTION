@@ -90,6 +90,7 @@ Suggests:
   callr,
   clustermq,
   DBI,
+  downloader,
   future,
   future.apply,
   ggplot2,

@@ -20,6 +20,7 @@ addons:
 r_packages:
   - clustermq
   - covr
+  - downloader
   - forcats
   - ggplot2
   - lintr

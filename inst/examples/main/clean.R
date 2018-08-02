@@ -1,1 +1,0 @@
-drake::clean(destroy = TRUE)

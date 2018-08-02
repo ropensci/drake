@@ -10,14 +10,18 @@ drake_examples()
 Names of all the drake examples.
 }
 \description{
-The \code{'mtcars'} example is
-documented at https://ropenscilabs.github.io/drake-manual/mtcars.html.
+You can find the code files of the examples at
+\url{https://github.com/wlandau/drake-examples}.
+The \code{drake_examples()} function downloads the list of examples
+from \url{https://wlandau.github.io/drake-examples/examples.md},
+so you need an internet connection.
 }
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 drake_examples() # List all the drake examples.
-# Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
+# Sets up the example from
+# https://ropenscilabs.github.io/drake-manual/mtcars.html
 drake_example("mtcars")
 # Sets up the SLURM example.
 drake_example("slurm")
