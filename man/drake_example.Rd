@@ -6,7 +6,7 @@
 \code{drake}-powered project.}
 \usage{
 drake_example(example = "main", to = getwd(), destination = NULL,
-  overwrite = FALSE)
+  overwrite = FALSE, quiet = TRUE)
 }
 \arguments{
 \item{example}{name of the example.
@@ -21,6 +21,10 @@ passed to the \code{exdir} argument of \code{utils::unzip()}.}
 
 \item{overwrite}{Logical, whether to overwrite an existing folder
 with the same name as the drake example.}
+
+\item{quiet}{logical, passed to \code{downloader::download()}
+and thus \code{utils::download.file()}. Whether
+to download quietly or print progress.}
 }
 \value{
 \code{NULL}

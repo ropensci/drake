@@ -20,18 +20,9 @@ suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(dplyr)))
 clean(destroy = TRUE, verbose = FALSE)
 pkgconfig::set_config("drake::strings_in_dots" = "literals")
-dat <- system.file(
-  file.path("examples", "main", "raw_data.xlsx"),
-  package = "drake",
-  mustWork = TRUE
-)
-tmp <- file.copy(from = dat, to = "raw_data.xlsx", overwrite = TRUE)
-rmd <- system.file(
-  file.path("examples", "main", "report.Rmd"),
-  package = "drake",
-  mustWork = TRUE
-)
-tmp <- file.copy(from = rmd, to = "report.Rmd", overwrite = TRUE)
+invisible(drake_example("main", overwrite = TRUE))
+invisible(file.copy("main/raw_data.xlsx", ".", overwrite = TRUE))
+invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
 ```
 
 <center>
@@ -307,12 +298,7 @@ Thanks to [Kirill](https://github.com/krlmlr) for constructing two interactive [
 
 ## Examples
 
-`Drake` also has built-in example projects with code files [available here](https://github.com/ropensci/drake/tree/master/inst/examples). You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. The beginner-oriented examples are listed below. They help you learn `drake`'s main features, and they show one way to organize the files of `drake` projects.
-
-- `main`: `drake`'s main example, based on [Kirill Müller's `drake` pitch](https://krlmlr.github.io/drake-pitch/). This is the most accessible example for beginners.
-- `gsp`: A concrete example using real econometrics data. It explores the relationships between gross state product and other quantities, and it shows off `drake`'s ability to generate lots of reproducibly-tracked tasks with ease.
-- `packages`: A concrete example using data on R package downloads. It demonstrates how `drake` can refresh a project based on new incoming data without restarting everything from scratch.
-- `mtcars`: An old example that demonstrates how to generate large workflow plan data frames using wildcard templating. Use `load_mtcars_example()` to set up the project in your workspace.
+There are multiple `drake`-powered example projects [available here](https://github.com/wlandau/drake-examples), ranging from beginner-friendly stubs to demonstrations of high-performance computing. You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. You can contribute your own example project with a [fork and pull request](https://github.com/wlandau/drake-examples/pulls).
 
 ## Presentations
 
@@ -388,9 +374,9 @@ There are several reasons for R users to prefer `drake` instead.
 
 [Drake](https://github.com/ropensci/drake) overlaps with its direct predecessor, [remake](https://github.com/richfitz/remake). In fact, [drake](https://github.com/ropensci/drake) owes its core ideas to [remake](https://github.com/richfitz/remake) and [Rich Fitzjohn](https://github.com/richfitz/remake). [Remake](https://github.com/richfitz/remake)'s development repository lists several [real-world applications](https://github.com/richfitz/remake/blob/master/README.md#real-world-examples). [Drake](https://github.com/ropensci/drake) surpasses [remake](https://github.com/richfitz/remake) in several important ways, including but not limited to the following.
 
-1. High-performance computing. [Remake](https://github.com/richfitz/remake) has no native parallel computing support. [Drake](https://github.com/ropensci/drake), on the other hand, has a thorough selection of parallel computing technologies and scheduling algorithms. Thanks to [future](github.com/HenrikBengtsson/future), [future.batchtools](github.com/HenrikBengtsson/future.batchtools), and [batchtools](github.com/mllg/batchtools), it is straightforward to configure a [drake](https://github.com/ropensci/drake) project for most popular job schedulers, such as [SLURM](https://github.com/ropensci/drake/tree/master/inst/examples/slurm), [TORQUE](https://github.com/ropensci/drake/tree/master/inst/examples/torque), and the [Sun/Univa Grid Engine](https://github.com/ropensci/drake/tree/master/inst/examples/sge), as well as systems contained in [Docker images](https://github.com/ropensci/drake/tree/master/inst/examples/Docker-psock).
+1. High-performance computing. [Remake](https://github.com/richfitz/remake) has no native parallel computing support. [Drake](https://github.com/ropensci/drake), on the other hand, has a thorough selection of parallel computing technologies and scheduling algorithms. Thanks to [future](github.com/HenrikBengtsson/future), [future.batchtools](github.com/HenrikBengtsson/future.batchtools), and [batchtools](github.com/mllg/batchtools), it is straightforward to configure a [drake](https://github.com/ropensci/drake) project for most popular job schedulers, such as [SLURM](https://slurm.schedmd.com/), [TORQUE](http://www.adaptivecomputing.com/products/torque/), and the [Grid Engine](https://www.oracle.com/technetwork/oem/grid-engine-166852.html), as well as systems contained in [Docker images](https://www.docker.com/).
 1. A friendly interface. In [remake](https://github.com/richfitz/remake), the user must manually write a [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml) configuration file to arrange the steps of a workflow, which leads to some of the same scalability problems as [Make](https://www.gnu.org/software/make/). [Drake](https://github.com/ropensci/drake)'s data-frame-based interface and [wildcard templating functionality](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan) easily generate workflows at scale.
-1. Thorough documentation. [Drake](https://github.com/ropensci/drake) contains [thorough user manual](https://ropenscilabs.github.io/drake-manual/), a [reference website](https://ropensci.github.io/drake/), a [comprehensive README](https://github.com/ropensci/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/ropensci/drake/tree/master/inst/examples) that users can write with `drake::example_drake()`.
+1. Thorough documentation. [Drake](https://github.com/ropensci/drake) contains [thorough user manual](https://ropenscilabs.github.io/drake-manual/), a [reference website](https://ropensci.github.io/drake/), a [comprehensive README](https://github.com/ropensci/drake/blob/master/README.md), examples in the help files of user-side functions, and [accessible example code](https://github.com/wlandau/drake-examples) that users can write with `drake::example_drake()`.
 1. Active maintenance. [Drake](https://github.com/ropensci/drake) is actively developed and maintained, and [issues](https://github.com/ropensci/drake/issues) are usually addressed promptly.
 1. Presence on CRAN. At the time of writing, [drake](https://github.com/ropensci/drake) is [available on CRAN](https://cran.r-project.org/package=drake), but [remake](https://github.com/richfitz/remake) is not.
 
@@ -440,5 +426,5 @@ Credit for images is [attributed here](https://github.com/ropensci/drake/blob/ma
 
 ```{r cleanupfooter, echo = FALSE}
 clean(destroy = TRUE)
-unlink(c("raw_data.xlsx", "report.Rmd"))
+unlink(c("main", "raw_data.xlsx", "report.Rmd"), recursive = TRUE)
 ```

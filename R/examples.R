@@ -18,6 +18,9 @@
 #' @param destination Deprecated, use `to` instead.
 #' @param overwrite Logical, whether to overwrite an existing folder
 #'   with the same name as the drake example.
+#' @param quiet logical, passed to `downloader::download()`
+#'   and thus `utils::download.file()`. Whether
+#'   to download quietly or print progress.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -32,7 +35,8 @@ drake_example <- function(
   example = "main",
   to = getwd(),
   destination = NULL,
-  overwrite = FALSE
+  overwrite = FALSE,
+  quiet = TRUE
 ){
   assert_pkgs("downloader")
   if (!is.null(destination)){
@@ -44,7 +48,7 @@ drake_example <- function(
   }
   url <- file.path("https://wlandau.github.io/drake-examples", paste0(example, ".zip"))
   zip <- paste0(tempfile(), ".zip")
-  downloader::download(url = url, destfile = zip)
+  downloader::download(url = url, destfile = zip, quiet = quiet)
   utils::unzip(zip, exdir = to, overwrite = overwrite)
   invisible()
 }
@@ -58,6 +62,9 @@ drake_example <- function(
 #' @export
 #' @seealso [drake_example()], [make()]
 #' @return Names of all the drake examples.
+#' @param quiet logical, passed to `downloader::download()`
+#'   and thus `utils::download.file()`. Whether
+#'   to download quietly or print progress.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -69,12 +76,13 @@ drake_example <- function(
 #' drake_example("slurm")
 #' })
 #' }
-drake_examples <- function() {
+drake_examples <- function(quiet = TRUE) {
   assert_pkgs("downloader")
   destfile <- tempfile()
   downloader::download(
     url = "https://wlandau.github.io/drake-examples/examples.md",
-    destfile = destfile
+    destfile = destfile,
+    quiet = quiet
   )
   scan(destfile, what = character(1), quiet = TRUE) %>%
     fs::path_ext_remove()

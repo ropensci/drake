@@ -4,7 +4,12 @@
 \alias{drake_examples}
 \title{List the names of all the drake examples.}
 \usage{
-drake_examples()
+drake_examples(quiet = TRUE)
+}
+\arguments{
+\item{quiet}{logical, passed to \code{downloader::download()}
+and thus \code{utils::download.file()}. Whether
+to download quietly or print progress.}
 }
 \value{
 Names of all the drake examples.

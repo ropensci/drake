@@ -31,11 +31,12 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   file.create("x")
   file.create("y")
   path <- system.file(
-    file.path("examples", "mtcars", "report.Rmd"),
+    file.path("rmarkdown", "mtcars.Rmd"),
     package = "drake",
     mustWork = TRUE
   )
-  file.copy(from = path, to = getwd(), overwrite = TRUE)
+  file.copy(
+    from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
   x <- command_dependencies(cmd)
   x0 <- list(
     file_in = "\"x\"", file_out = "\"y\"", loadd = "large",
