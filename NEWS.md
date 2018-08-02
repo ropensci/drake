@@ -1,5 +1,6 @@
 # Version 5.3.1.9000
 
+- Offload `drake`'s code examples to [this repository](https://github.com/wlandau/drake-examples) and make make `drake_example()` and `drake_examples()` download examples from there.
 - Optionally show output files in graph visualizations. See the `show_output_files` argument to `vis_drake_graph()` and friends.
 - Internally refactor the `igraph` attributes of the dependency graph to allow for smarter dependency/memory management during `make()`.
 - Enable `vis_drake_graph()` and `sankey_drake_graph()` to save static image files via `webshot`.
