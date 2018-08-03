@@ -2,33 +2,40 @@
 % Please edit documentation in R/examples.R
 \name{drake_example}
 \alias{drake_example}
-\title{Save the source code files of a drake example.}
+\title{Download and save the code and data files of an example
+\code{drake}-powered project.}
 \usage{
-drake_example(example = drake::drake_examples(), to = getwd(),
-  destination = NULL, overwrite = FALSE)
+drake_example(example = "main", to = getwd(), destination = NULL,
+  overwrite = FALSE, quiet = TRUE)
 }
 \arguments{
 \item{example}{name of the example.
-To see all the available example names,
-run \code{\link[=drake_examples]{drake_examples()}}.}
+The possible values are the names of the folders at
+\url{https://github.com/wlandau/drake-examples}.}
 
-\item{to}{Character scalar, file path, where
-to write the folder containing the code files for the example.}
+\item{to}{Character scalar,
+the folder containing the code files for the example.
+passed to the \code{exdir} argument of \code{utils::unzip()}.}
 
 \item{destination}{Deprecated, use \code{to} instead.}
 
 \item{overwrite}{Logical, whether to overwrite an existing folder
 with the same name as the drake example.}
+
+\item{quiet}{logical, passed to \code{downloader::download()}
+and thus \code{utils::download.file()}. Whether
+to download quietly or print progress.}
 }
 \value{
 \code{NULL}
 }
 \description{
-Copy a folder of code files for a
-drake example to the current working directory.
-Call \code{drake_example("mtcars")} to generate the code files from
-https://ropenscilabs.github.io/drake-manual/mtcars.html.
-To see the names of all the examples, run \code{\link[=drake_examples]{drake_examples()}}.
+The \code{drake_example()} function downloads a
+folder from \url{https://github.com/wlandau/drake-examples}.
+(Really, it downloads one of the zip files listed at
+\url{https://github.com/wlandau/drake-examples/tree/gh-pages}
+and unzips it. Do not include the \code{.zip} extension
+in the \code{example} argument.)
 }
 \examples{
 \dontrun{
@@ -42,6 +49,5 @@ drake_example("slurm")
 }
 }
 \seealso{
-\code{\link[=drake_examples]{drake_examples()}}, \code{\link[=make]{make()}},
-\code{\link[=shell_file]{shell_file()}}, \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}}
+\code{\link[=drake_examples]{drake_examples()}}, \code{\link[=make]{make()}}
 }

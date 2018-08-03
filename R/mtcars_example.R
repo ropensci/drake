@@ -141,7 +141,7 @@ load_mtcars_example <- function(
 
   # Write the R Markdown source for a dynamic knitr report
   report <- system.file(
-    file.path("examples", "mtcars", "report.Rmd"),
+    file.path("rmarkdown", "mtcars.Rmd"),
     package = "drake",
     mustWork = TRUE
   )

@@ -4,7 +4,7 @@
 \alias{example_drake}
 \title{Deprecated function \code{example_drake}}
 \usage{
-example_drake(example = drake::drake_examples(), destination = getwd())
+example_drake(example = "main", destination = getwd())
 }
 \arguments{
 \item{example}{Same as for \code{\link[=drake_example]{drake_example()}}}

@@ -529,7 +529,7 @@ evaluate <- function(
 #' @examples
 #' # See ?drake_example for examples.
 example_drake <- function(
-  example = drake::drake_examples(),
+  example = "main",
   destination = getwd()
 ){
   .Deprecated(

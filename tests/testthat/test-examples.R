@@ -4,14 +4,13 @@ test_with_dir("examples are listed and written", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_examples()
   expect_true(is.character(x) & length(x) > 0)
-  for (i in x){
-    expect_false(file.exists(i))
-    drake_example(i)
-    expect_true(file.exists(i))
-    expect_true(file.info(i)$isdir)
-    unlink(i, recursive = TRUE, force = TRUE)
-  }
-  expect_warning(drake_example(destination = getwd()))
+  example <- "main"
+  expect_false(file.exists(example))
+  drake_example(example)
+  expect_true(file.exists(example))
+  expect_true(file.info(example)$isdir)
+  unlink(example, recursive = TRUE, force = TRUE)
+  expect_warning(drake_example(example, destination = getwd()))
 })
 
 test_with_dir("overwrites of report.Rmd handled correctly", {
