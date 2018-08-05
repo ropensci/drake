@@ -569,8 +569,10 @@ target <- function(
     tibble::as_tibble()
 }
 
+# For pretty printing
 drake_plan_call <- function(plan){
-  target_calls <- purrr::pmap(plan, drake_target_call)
+  target_calls <- purrr::pmap(plan, drake_target_call) %>%
+    setNames(plan$target)
   as.call(c(quote(drake_plan), target_calls))
 }
 
@@ -588,5 +590,5 @@ drake_target_call <- function(...){
   if (!identical(names(args), "command")){
     args$command <- as.call(c(quote(target), args))
   }
-  call("=", target, args$command)
+  args$command
 }
