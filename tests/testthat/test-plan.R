@@ -570,4 +570,3 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   expected <- my_plan[, c("target", "command", "trigger")]
   expect_equal(new_plan, expected)
 })
-
