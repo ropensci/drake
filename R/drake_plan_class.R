@@ -5,12 +5,13 @@
 #' @export
 #' @keywords internal
 #' @param x object to mark as a `drake` plan
+#' @param ... other arguments to the method
 #' @examples
 #' plan <- list(target = "x", command = "get_data()")
 #' class(plan)
 #' plan <- as_drake_plan(plan)
 #' class(plan)
-as_drake_plan <- function(x){
+as_drake_plan <- function(x, ...){
   UseMethod("as_drake_plan")
 }
 
@@ -19,7 +20,6 @@ as_drake_plan_ <- function(x, ...){
 }
 
 #' @export
-#' @rdname as_drake_plan
 `[.drake_plan` <- function(...){
   as_drake_plan_(NextMethod())
 }
