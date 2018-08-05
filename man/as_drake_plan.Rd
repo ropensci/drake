@@ -28,6 +28,8 @@ You can keep them as ordinary data frames.
 \examples{
 plan <- list(target = "x", command = "get_data()")
 class(plan)
+print(plan) # Prints as a list.
 plan <- as_drake_plan(plan)
 class(plan)
+print(plan) # When we have pretty printing, this will look nicer.
 }
