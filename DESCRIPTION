@@ -60,7 +60,6 @@ Depends:
 Imports:
   bindr,
   codetools,
-  crayon,
   evaluate,
   digest,
   dplyr,
@@ -87,6 +86,7 @@ Suggests:
   abind,
   callr,
   clustermq,
+  crayon,
   DBI,
   downloader,
   future,

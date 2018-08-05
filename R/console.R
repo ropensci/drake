@@ -168,9 +168,13 @@ finish_console <- function(text, pattern, config){
 }
 
 drake_message <- function(..., config){
+  text <- paste0(...)
+  if (requireNamespace("crayon", quietly = TRUE)){
+    text <- crayon::strip_style(text)
+  }
   if (!is.null(config$console_log_file)){
     write(
-      x = crayon::strip_style(paste0(...)),
+      x = text,
       file = config$console_log_file,
       append = TRUE
     )
@@ -179,9 +183,13 @@ drake_message <- function(..., config){
 }
 
 drake_warning <- function(..., config){
+  text <- paste0("Warning: ", ...)
+  if (requireNamespace("crayon", quietly = TRUE)){
+    text <- crayon::strip_style(text)
+  }
   if (!is.null(config$console_log_file)){
     write(
-      x = crayon::strip_style(paste0("Warning: ", ...)),
+      x = text,
       sep = "",
       file = config$console_log_file,
       append = TRUE
@@ -191,9 +199,13 @@ drake_warning <- function(..., config){
 }
 
 drake_error <- function(..., config){
+  text <- paste0("Error: ", ...)
+  if (requireNamespace("crayon", quietly = TRUE)){
+    text <- crayon::strip_style(text)
+  }
   if (!is.null(config$console_log_file)){
     write(
-      x = crayon::strip_style(paste0("Error: ", ...)),
+      x = text,
       sep = "",
       file = config$console_log_file,
       append = TRUE

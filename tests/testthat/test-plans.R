@@ -586,5 +586,5 @@ test_with_dir("printing plans", {
   o <- capture.output(print_drake_plan(my_plan))
   o <- paste0(o, collapse = "\n")
   expect_true(grepl("^drake_plan", o))
-  print(my_plan)
+  tmp <- capture.output(print(my_plan))
 })

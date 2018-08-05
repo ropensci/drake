@@ -58,7 +58,7 @@ drake_palette <- function(){
 }
 
 color <- function(x, color) {
-  if (is.null(color)){
+  if (is.null(color) || !requireNamespace("crayon", quietly = TRUE)){
     x
   } else {
     crayon::make_style(color)(x)

@@ -39,7 +39,6 @@
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom bindr populate_env
 #' @importFrom codetools findGlobals
-#' @importFrom crayon make_style
 #' @importFrom digest digest
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
 #' @importFrom evaluate try_capture_stack
