@@ -65,7 +65,7 @@
 #' @importFrom stringi stri_extract_all_regex
 #'   stri_split_fixed stri_trim_both
 #' @importFrom testthat context expect_false expect_true test_dir test_that
-#' @importFrom tibble as_tibble tibble
+#' @importFrom tibble as_tibble new_tibble tibble
 #' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head installed.packages
 #'   packageVersion read.csv sessionInfo stack type.convert unzip write.table

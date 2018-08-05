@@ -1,6 +1,6 @@
 sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   wildcards <- attr(plan, "wildcards")
-  plan <- as_tibble(plan)
+  plan <- as_drake_plan(plan)
   for (field in drake_plan_non_factors()){
     if (!is.null(plan[[field]])){
       if (is.factor(plan[[field]])){
