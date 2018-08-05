@@ -164,7 +164,7 @@ evaluate_plan <- function(
       columns = columns
     )
   } else {
-    plan
+    as_drake_plan(plan)
   }
 }
 
@@ -248,7 +248,7 @@ evaluate_wildcard_rules <- function(
       columns = columns
     )
   }
-  plan
+  as_drake_plan(plan)
 }
 
 check_wildcard_rules <- function(rules){
@@ -302,7 +302,7 @@ check_wildcard_rules <- function(rules){
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
 expand_plan <- function(plan, values = NULL, rename = TRUE){
   if (!length(values)){
-    return(plan)
+    return(as_drake_plan(plan))
   }
   nrows <- nrow(plan)
   repeat_targets <- rep(seq_len(nrows), each = length(values))
@@ -352,7 +352,8 @@ gather_plan <- function(
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  tibble(target = target, command = command)
+  tibble(target = target, command = command) %>%
+    as_drake_plan()
 }
 
 #' @title Write commands to reduce several targets down to one.
@@ -413,7 +414,8 @@ reduce_plan <- function(
     tibble(
       target = pairs$names,
       command = paste0(begin, pairs$odds, op, pairs$evens, end)
-    )
+    ) %>%
+      as_drake_plan()
   } else {
     command <- Reduce(
       x = plan$target,
@@ -421,7 +423,8 @@ reduce_plan <- function(
         paste0(begin, x, op, y, end)
       }
     )
-    tibble(target = target, command = command)
+    tibble(target = target, command = command) %>%
+      as_drake_plan()
   }
 }
 
@@ -594,9 +597,10 @@ plan_summaries <- function(
       )
     })
   target <- command <- NULL
-  bind_rows(gathered, out) %>%
+  dplyr::bind_rows(gathered, out) %>%
     ungroup %>%
-    select(target, command)
+    select(target, command) %>%
+    as_drake_plan()
 }
 
 with_analyses_only <- function(plan){

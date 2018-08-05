@@ -31,7 +31,7 @@ as_drake_plan.data.frame <- as_drake_plan_
 as_drake_plan.list <- as_drake_plan_
 
 #' @export
-as_drake_plan.tibble <- as_drake_plan_
+as_drake_plan.tbl_df <- as_drake_plan_
 
 #' @export
 as.data.frame.drake_plan <- as_drake_plan_
