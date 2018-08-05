@@ -572,9 +572,18 @@ test_with_dir("drake_plan_call() produces the correct calls", {
 })
 
 test_with_dir("drake_plan class", {
+  skip_on_cran()
   expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
   expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
   expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
   load_mtcars_example()
   expect_true(inherits(my_plan, "drake_plan"))
+})
+
+test_with_dir("printing plans", {
+  skip_on_cran()
+  load_mtcars_example()
+  o <- capture.output(print_drake_plan(my_plan))
+  o <- paste0(o, collapse = "\n")
+  expect_true(grepl("^drake_plan", o))
 })

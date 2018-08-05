@@ -102,6 +102,7 @@ Suggests:
   RSQLite,
   txtq,
   rmarkdown,
+  styler,
   visNetwork,
   webshot
 VignetteBuilder: knitr

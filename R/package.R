@@ -58,7 +58,7 @@
 #' @importFrom purrr map_int pmap
 #' @importFrom R6 R6Class
 #' @importFrom R.utils countLines isPackageLoaded withTimeout
-#' @importFrom rlang expr exprs
+#' @importFrom rlang expr expr_text exprs
 #' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames
 #' @importFrom storr storr_environment storr_rds
