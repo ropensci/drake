@@ -341,6 +341,7 @@ promise_load_target <- function(target, cache, namespace, envir, verbose){
 }
 
 bind_load_target <- function(target, cache, namespace, envir, verbose){
+  assert_pkgs("bindr")
   # Allow active bindings to overwrite existing variables.
   if (target %in% ls(envir)){
     message(
