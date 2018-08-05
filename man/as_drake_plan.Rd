@@ -2,9 +2,21 @@
 % Please edit documentation in R/drake_plan_class.R
 \name{as_drake_plan}
 \alias{as_drake_plan}
+\alias{[.drake_plan}
+\alias{as_drake_plan.data.frame}
+\alias{as_drake_plan.list}
+\alias{as_drake_plan.tbl_df}
 \title{Mark a data frame as a \code{drake} workflow plan}
 \usage{
 as_drake_plan(x)
+
+\method{[}{drake_plan}(...)
+
+\method{as_drake_plan}{data.frame}(x, ...)
+
+\method{as_drake_plan}{list}(x, ...)
+
+\method{as_drake_plan}{tbl_df}(x, ...)
 }
 \arguments{
 \item{x}{object to mark as a \code{drake} plan}
