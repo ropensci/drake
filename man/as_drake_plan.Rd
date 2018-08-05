@@ -31,4 +31,3 @@ class(plan)
 plan <- as_drake_plan(plan)
 class(plan)
 }
-\keyword{internal}

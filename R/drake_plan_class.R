@@ -3,7 +3,6 @@
 #'   You do not actually have to mark plans as such.
 #'   You can keep them as ordinary data frames.
 #' @export
-#' @keywords internal
 #' @param x object to mark as a `drake` plan
 #' @param ... other arguments to the method
 #' @examples
