@@ -1,5 +1,5 @@
 print.drake_plan <- function(x, ...){
-  if (requireNamespace("styler")){
+  if (requireNamespace("styler", quietly = TRUE)){
     NextMethod()
     # print_drake_plan(x, ...) # under development # nolint
   } else {
