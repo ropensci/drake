@@ -1,6 +1,7 @@
 drake_context <- function(x){
+  assert_pkgs("testthat")
   ctx <- paste0(get_testing_scenario_name(), ": ", x)
-  context(ctx)
+  testthat::context(ctx)
 }
 
 testrun <- function(config) {
@@ -38,7 +39,8 @@ justbuilt <- function(config) {
 }
 
 nobuild <- function(config) {
-  expect_true(length(justbuilt(config)) < 1)
+  assert_pkgs("testthat")
+  testthat::expect_true(length(justbuilt(config)) < 1)
 }
 
 #' @title Run a unit test in a way that quarantines
@@ -60,6 +62,7 @@ nobuild <- function(config) {
 #' file.exists("world.txt") # FALSE
 #' }
 test_with_dir <- function(desc, ...){
+  assert_pkgs("testthat")
   while (file.exists(new <- tempfile())){
     # Should not reach this part of the loop.
     Sys.sleep(0.01) # nocov
@@ -68,7 +71,7 @@ test_with_dir <- function(desc, ...){
   withr::local_dir(new)
   withr::local_options(new = list(clustermq.scheduler = "multicore"))
   set_test_backend()
-  test_that(desc = desc, ...)
+  testthat::test_that(desc = desc, ...)
   invisible()
 }
 
@@ -86,7 +89,8 @@ set_test_backend <- function(){
 }
 
 unit_test_files <- function(path = getwd()){
-  root <- find_root(criterion = "DESCRIPTION", path = path)
+  assert_pkgs("rprojroot")
+  root <- rprojroot::find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")
 }
 

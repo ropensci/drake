@@ -8,7 +8,7 @@ print.drake_plan <- function(x, ...){
 }
 
 print_drake_plan <- function (x, width = getOption("width"), ...){
-  drake_plan_call(my_plan) %>%
+  drake_plan_call(x) %>%
     rlang::expr_text(width = 70) %>%
     styler::style_text() %>%
     print()

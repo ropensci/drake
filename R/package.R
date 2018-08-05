@@ -59,12 +59,10 @@
 #' @importFrom R6 R6Class
 #' @importFrom R.utils countLines isPackageLoaded withTimeout
 #' @importFrom rlang expr expr_text exprs
-#' @importFrom rprojroot find_root
 #' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom stringi stri_extract_all_regex
 #'   stri_split_fixed stri_trim_both
-#' @importFrom testthat context expect_false expect_true test_dir test_that
 #' @importFrom tibble as_tibble new_tibble tibble
 #' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head installed.packages

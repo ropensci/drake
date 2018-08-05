@@ -86,6 +86,7 @@ test_scenarios <- function(
   skip_criterion = should_skip,
   ...
 ){
+  assert_pkgs("testthat")
   scenarios <- testing_scenarios()
   for (index in seq_along(along.with = scenario_names)){
     scenario_names[index] <- match.arg(
