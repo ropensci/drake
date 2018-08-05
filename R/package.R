@@ -47,7 +47,6 @@
 #'   degree edge edges igraph_opt igraph_options induced_subgraph is_dag
 #'   make_empty_graph plot.igraph set_vertex_attr simplify subcomponent
 #'   topo_sort V vertex vertex_attr
-#' @importFrom knitr knit
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #'   mclapply parLapply stopCluster
