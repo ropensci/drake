@@ -20,8 +20,6 @@ as_drake_plan(x)
 }
 \arguments{
 \item{x}{object to mark as a \code{drake} plan}
-
-\item{...}{other arguments to the method}
 }
 \description{
 Used for pretty printing only (coming soon).

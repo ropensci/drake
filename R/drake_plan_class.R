@@ -5,7 +5,6 @@
 #' @export
 #' @keywords internal
 #' @param x object to mark as a `drake` plan
-#' @param ... other arguments to the method
 #' @examples
 #' plan <- list(target = "x", command = "get_data()")
 #' class(plan)
