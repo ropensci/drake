@@ -173,7 +173,7 @@ drake_graph_info <- function(
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- merge(
     x = network_data$nodes,
-    y = tibble::new_tibble(config$plan),
+    y = config$plan,
     by.x = "id",
     by.y = "target",
     all.x = TRUE
