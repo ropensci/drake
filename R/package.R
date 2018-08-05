@@ -55,7 +55,7 @@
 #' @importFrom parallel clusterCall clusterExport makePSOCKcluster
 #'   mclapply parLapply stopCluster
 #' @importFrom pkgconfig get_config
-#' @importFrom purrr map_int
+#' @importFrom purrr map_int pmap
 #' @importFrom R6 R6Class
 #' @importFrom R.utils countLines isPackageLoaded withTimeout
 #' @importFrom rlang expr exprs

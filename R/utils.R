@@ -98,6 +98,17 @@ select_nonempty <- function(x){
   x[index]
 }
 
+select_valid <- function(x){
+  index <- vapply(
+    X = x,
+    FUN = function(y){
+      length(y) > 0 && !is.na(y)
+    },
+    FUN.VALUE = logical(1)
+  )
+  x[index]
+}
+
 is_image_filename <- function(x){
   tolower(fs::path_ext(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
