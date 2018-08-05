@@ -570,3 +570,11 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   expected <- my_plan[, c("target", "command", "trigger")]
   expect_equal(new_plan, expected)
 })
+
+test_with_dir("drake_plan class", {
+  expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
+  expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
+  expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
+  load_mtcars_example()
+  expect_true(inherits(my_plan, "drake_plan"))
+})
