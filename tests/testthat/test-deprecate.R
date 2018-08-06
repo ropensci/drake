@@ -64,6 +64,7 @@ test_with_dir("drake_plan deprecation", {
   expect_warning(drake::workflow(x = y, file_targets = TRUE))
   expect_warning(drake::workplan(x = y, file_targets = TRUE))
   expect_warning(check(drake_plan(a = 1)))
+  expect_warning(drake_plan(a = 'file', strings_in_dots = NULL)) # nolint
 })
 
 test_with_dir("drake version checks in previous caches", {
