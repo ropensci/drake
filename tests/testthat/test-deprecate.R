@@ -154,6 +154,11 @@ test_with_dir("deprecated arguments", {
 
 test_with_dir("old file API", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
+  on.exit(
+    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
+  )
+  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   expect_warning(x <- drake_plan(
     file.csv = write.csv(mtcars, file = "file.csv"),
     strings_in_dots = "literals",
@@ -170,6 +175,7 @@ test_with_dir("old file API", {
 })
 
 test_with_dir("example template files (deprecated)", {
+  skip_on_cran()
   expect_false(file.exists("slurm_batchtools.tmpl"))
   expect_warning(
     drake_batchtools_tmpl_file("slurm_batchtools.tmpl"),
@@ -180,6 +186,11 @@ test_with_dir("example template files (deprecated)", {
 
 test_with_dir("plan set 1", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
+  on.exit(
+    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
+  )
+  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   for (tidy_evaluation in c(TRUE, FALSE)){
     expect_warning(x <- drake_plan(
       a = c,
