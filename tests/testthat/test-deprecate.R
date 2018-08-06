@@ -117,6 +117,7 @@ test_with_dir("deprecated graphing functions", {
 
 test_with_dir("deprecated example(s)_drake functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("downloader")
   expect_warning(example_drake())
   expect_warning(examples_drake())
 })

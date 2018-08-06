@@ -130,21 +130,27 @@ test_with_dir("edge cases for plans", {
       command = c("1", "b")
     )
   )
-  # too many file outputs
-  expect_warning(expect_equal(
-    drake_plan(a = file_out("file1", "file2")),
+  # multiple file outputs are okay
+  expect_equal(
+    drake_plan(
+      a = file_out("file1", "file2"),
+      strings_in_dots = "literals"
+    ),
     tibble::tibble(
       target = "a",
-      command = "file_out('file1', 'file2')"
+      command = "file_out(\"file1\", \"file2\")"
     )
-  ))
-  expect_warning(expect_equal(
-    drake_plan(a = file_out(c("file1", "file2"))),
+  )
+  expect_equal(
+    drake_plan(
+      a = file_out(c("file1", "file2")),
+      strings_in_dots = "literals"
+    ),
     tibble::tibble(
       target = "a",
-      command = "file_out(c('file1', 'file2'))"
+      command = "file_out(c(\"file1\", \"file2\"))"
     )
-  ))
+  )
 })
 
 test_with_dir("plan set 2", {
@@ -582,6 +588,7 @@ test_with_dir("drake_plan class", {
 
 test_with_dir("printing plans", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   load_mtcars_example()
   o <- capture.output(print_drake_plan(my_plan))
   o <- paste0(o, collapse = "\n")
