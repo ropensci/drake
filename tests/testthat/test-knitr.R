@@ -95,19 +95,24 @@ test_with_dir("knitr_deps() works", {
   expect_warning(expect_equal(x, sort(knitr_deps("\"report.Rmd\""))))
   expect_equal(x, character(0))
   load_mtcars_example()
+  w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
+  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
+  on.exit(
+    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
+  )
+  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   x <- knitr_deps("report.Rmd")
   y <- expect_warning(
     clean_dependency_list(deps_code("knit('report.Rmd')")))
   z <- expect_warning(
     clean_dependency_list(deps_code("render('report.Rmd')")))
-  w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
+  expect_equal(sort(w), sort(c("funct")))
   expect_equal(sort(x), sort(real_deps))
   expect_equal(sort(y), sort(c(real_deps, "knit", "\"report.Rmd\"")))
   expect_equal(sort(z), sort(c(real_deps, "render", "\"report.Rmd\"")))
-  expect_equal(sort(w), sort(c("funct")))
 })
 
 test_with_dir("find_knitr_doc() works", {
