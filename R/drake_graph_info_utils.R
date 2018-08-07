@@ -174,12 +174,14 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
     return(quoted_file)
   }
   tryCatch({
-    readLines(unquoted_file, n = 10, warn = FALSE) %>%
-      paste(collapse = "\n") %>%
-      crop_text(width = hover_text_width)
-  },
-  error = function(e) quoted_file,
-  warning = function(w) quoted_file
+      readLines(unquoted_file, n = 20, warn = FALSE) %>%
+        crop_lines(n = hover_text_lines) %>%
+        crop_text(width = hover_text_width) %>%
+        pad_hover_text() %>%
+        paste(collapse = "\n")
+    },
+    error = function(e) quoted_file,
+    warning = function(w) quoted_file
   )
 },
 "quoted_file")
@@ -206,8 +208,10 @@ function_hover_text <- Vectorize(function(function_name, envir){
     error = function(e) function_name) %>%
     unwrap_function %>%
     deparse %>%
-    paste(collapse = "\n") %>%
-    crop_text(width = hover_text_width)
+    crop_lines(n = hover_text_lines) %>%
+    crop_text(width = hover_text_width) %>%
+    pad_hover_text() %>%
+    paste(collapse = "\n")
 },
 "function_name")
 
@@ -246,7 +250,8 @@ hover_text <- function(config) {
   })
 }
 
-hover_text_width <- 250
+hover_text_width <- 49
+hover_text_lines <- 10
 
 #' @title Create the nodes data frame used in the legend
 #'   of the graph visualizations.
@@ -316,6 +321,19 @@ null_graph <- function() {
     edges = data.frame(from = NA, to = NA),
     main = "Nothing to plot."
   )
+}
+
+pad_hover_text <- function(lines){
+  nc <- nchar(lines)
+  npad <- max(nc) - nc
+  str <- vapply(
+    X = npad,
+    FUN = function(x){
+      paste(rep(" ", x), collapse = "")
+    },
+    FUN.VALUE = character(1)
+  )
+  paste0(lines, str)
 }
 
 resolve_build_times <- function(build_times){

@@ -215,11 +215,20 @@ drake_error <- function(..., config){
 }
 
 crop_text <- Vectorize(function(x, width = getOption("width")) {
-  if (nchar(x) > width)
+  if (nchar(x) > width){
     x <- paste0(substr(x, 1, width - 3), "...")
+  }
   x
 },
 "x", USE.NAMES = FALSE)
+
+crop_lines <- function(x, n = 10) {
+  if (length(x) > n){
+    x <- x[1:(n - 1)]
+    x[n] <- "..."
+  }
+  x
+}
 
 multiline_message <- function(x) {
   n <- 30
