@@ -1,14 +1,15 @@
-# Version 5.3.1.9000
+# Version 5.4.0
 
+- Overhaul the interface for triggers and add new trigger types ("condition" and "change").
 - Offload `drake`'s code examples to [this repository](https://github.com/wlandau/drake-examples) and make make `drake_example()` and `drake_examples()` download examples from there.
 - Optionally show output files in graph visualizations. See the `show_output_files` argument to `vis_drake_graph()` and friends.
+- Repair output file checksum operations for distributed backends like `"clustermq_staged"` and `"future_lapply"`.
 - Internally refactor the `igraph` attributes of the dependency graph to allow for smarter dependency/memory management during `make()`.
 - Enable `vis_drake_graph()` and `sankey_drake_graph()` to save static image files via `webshot`.
 - Deprecate `static_drake_graph()` and `render_static_drake_graph()` in favor of `drake_ggraph()` and `render_drake_ggraph()`.
-- Overhaul the interface for triggers and add new trigger types ("condition" and "change").
-- Repair output file checksum operations for distributed backends like `"clustermq_staged"` and `"future_lapply"`.
 - Add a `columns` argument to `evaluate_plan()` so users can evaluate wildcards in columns other than the `command` column of `plan`. 
 - Name the arguments of `target()` so users do not have to (explicitly).
+- Lay the groundwork for a special pretty print method for workflow plan data frames.
 
 # Version 5.3.0
 
