@@ -1,3 +1,7 @@
+# Version 5.4.0.9000
+
+- Smooth the edges in `vis_drake_graph()` and `render_drake_graph()`.
+
 # Version 5.4.0
 
 - Overhaul the interface for triggers and add new trigger types ("condition" and "change").
