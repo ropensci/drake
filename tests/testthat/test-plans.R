@@ -593,8 +593,8 @@ test_with_dir("printing plans", {
   o <- capture.output(print_drake_plan(my_plan))
   o <- paste0(o, collapse = "\n")
   expect_true(grepl("^drake_plan", o))
-  withr::with_options(
-    list(warnPartialMatchArgs = FALSE),
+  # Warning: partial match of along with along.with. Not drake's fault.
+  suppressWarnings(
     tmp <- capture.output(print(my_plan))
   )
   expect_true(is.character(tmp))
