@@ -2,11 +2,22 @@ drake_context("cache")
 
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- make(drake_plan(a = 1), session_info = FALSE)
+  b <- 1
   expect_error(dependency_profile(
-    target = "notfound", config = config))
-  expect_true(is.list(dependency_profile(
-    target = "a", config = config)))
+    target = a, config = config))
+  config <- make(drake_plan(a = b), session_info = FALSE)
+  expect_false(any(dependency_profile(target = a, config = config)$changed))
+  b <- 2
+  expect_false(any(dependency_profile(target = a, config = config)$changed))
+  config$skip_targets <- TRUE
+  make(config = config)
+  dp <- dependency_profile(target = a, config = config)
+  expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
+  expect_equal(sum(dp$changed), 1)
+  config$plan$command <- "b + c"
+  dp <- dependency_profile(target = a, config = config)
+  expect_true(as.logical(dp[dp$hash == "command", "changed"]))
+  expect_equal(sum(dp$changed), 2)
 })
 
 test_with_dir("Missing cache", {

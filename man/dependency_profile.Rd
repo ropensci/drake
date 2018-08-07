@@ -2,36 +2,56 @@
 % Please edit documentation in R/dependencies.R
 \name{dependency_profile}
 \alias{dependency_profile}
-\title{Return the detailed dependency profile
-of the target.}
+\title{Find out why a target is out of date.}
 \usage{
-dependency_profile(target, config = drake::read_drake_config())
+dependency_profile(target, config = drake::read_drake_config(),
+  character_only = FALSE)
 }
 \arguments{
 \item{target}{name of the target}
 
 \item{config}{configuration list output by
 \code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}}
+
+\item{character_only}{logical, whether to assume \code{target}
+is a character string rather than a symbol}
 }
 \value{
-A list of information that drake takes into account
-when examining the dependencies of the target.
+A data frame of the old hashes and
+new hashes of the data frame, along with
+an indication of which hashes changed since
+the last \code{\link[=make]{make()}}.
 }
 \description{
-Useful for debugging.
-For up to date targets, like elements
-of the returned list should agree: for example,
-\code{cached_dependency_hash} and
-\code{current_dependency_hash}.
+The dependency profile can give you
+a hint as to why a target is out of date.
+It can tell you if
+\itemize{
+\item at least one input file changed,
+\item at least one outupt file changed,
+\item or a non-file dependency changed. For this last part,
+the imports need to be up to date in the cache,
+which you can do with \code{outdated()} or
+\code{make(skip_targets = TRUE)}.
+Unfortunately, \code{dependency_profile()} does not
+currently get more specific than that.
+}
 }
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Load drake's canonical example.
-con <- make(my_plan) # Run the project, build the targets.
+config <- make(my_plan) # Run the project, build the targets.
 # Get some example dependency profiles of targets.
-dependency_profile("small", config = con)
-dependency_profile("report", config = con)
+dependency_profile(small, config = config)
+# Change a dependency.
+simulate <- function(x){}
+# Update the in-memory imports in the cache
+# so dependency_profile can detect changes to them.
+# Changes to targets are already cached.
+make(my_plan, skip_targets = TRUE)
+# The dependency hash changed.
+dependency_profile(small, config = config)
 })
 }
 }

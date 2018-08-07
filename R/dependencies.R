@@ -104,15 +104,22 @@ deps_targets <- function(
   dependencies(targets = targets, config = config, reverse = reverse)
 }
 
-#' @title Return the detailed dependency profile
-#'   of the target.
-#' @description Useful for debugging.
-#' For up to date targets, like elements
-#' of the returned list should agree: for example,
-#' `cached_dependency_hash` and
-#' `current_dependency_hash`.
-#' @return A list of information that drake takes into account
-#'   when examining the dependencies of the target.
+#' @title Find out why a target is out of date.
+#' @description The dependency profile can give you
+#'   a hint as to why a target is out of date.
+#'   It can tell you if
+#'   - at least one input file changed,
+#'   - at least one outupt file changed,
+#'   - or a non-file dependency changed. For this last part,
+#'     the imports need to be up to date in the cache,
+#'     which you can do with `outdated()` or
+#'     `make(skip_targets = TRUE)`.
+#'   Unfortunately, `dependency_profile()` does not
+#'   currently get more specific than that.
+#' @return A data frame of the old hashes and
+#'   new hashes of the data frame, along with
+#'   an indication of which hashes changed since
+#'   the last [make()].
 #' @export
 #' @seealso [diagnose()],
 #'   [deps_code()], [make()],
@@ -120,48 +127,63 @@ deps_targets <- function(
 #' @param target name of the target
 #' @param config configuration list output by
 #'   [drake_config()] or [make()]
+#' @param character_only logical, whether to assume `target`
+#'   is a character string rather than a symbol
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Load drake's canonical example.
-#' con <- make(my_plan) # Run the project, build the targets.
+#' config <- make(my_plan) # Run the project, build the targets.
 #' # Get some example dependency profiles of targets.
-#' dependency_profile("small", config = con)
-#' dependency_profile("report", config = con)
+#' dependency_profile(small, config = config)
+#' # Change a dependency.
+#' simulate <- function(x){}
+#' # Update the in-memory imports in the cache
+#' # so dependency_profile can detect changes to them.
+#' # Changes to targets are already cached.
+#' make(my_plan, skip_targets = TRUE)
+#' # The dependency hash changed.
+#' dependency_profile(small, config = config)
 #' })
 #' }
-dependency_profile <- function(target, config = drake::read_drake_config()){
+dependency_profile <- function(
+  target,
+  config = drake::read_drake_config(),
+  character_only = FALSE
+){
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
   if (!config$cache$exists(key = target, namespace = "meta")){
     stop("no recorded metadata for target ", target, ".")
   }
-  config$plan[["trigger"]] <- NULL
   meta <- config$cache$get(
     key = target, namespace = "meta")
   deps <- dependencies(target, config)
-  hashes_of_dependencies <- self_hash(target = deps, config = config)
-  current_dependency_hash <- digest::digest(hashes_of_dependencies,
-                                            algo = config$long_hash_algo)
-  names(hashes_of_dependencies) <- deps
-  out <- list(
-    cached_command = meta$command,
-    current_command = get_standardized_command(
-      target = target, config = config
+  old_hashes <- meta[c(
+    "command",
+    "dependency_hash",
+    "input_file_hash",
+    "output_file_hash"
+  )] %>%
+    unlist() %>%
+    unname()
+  old_hashes[1] <- digest::digest(old_hashes[1], algo = config$long_hash_algo)
+  new_hashes <- c(
+    digest::digest(
+      get_standardized_command(target, config),
+      algo = config$long_hash_algo
     ),
-    cached_file_modification_time = meta$mtime,
-    current_file_modification_time = suppressWarnings(
-      file.mtime(drake::drake_unquote(target))
-    ),
-    cached_input_file_hash = meta$input_file_hash,
-    current_input_file_hash = input_file_hash(
-      target = target, config = config),
-    cached_output_file_hash = meta$output_file_hash,
-    current_output_file_hash = output_file_hash(
-      target = target, config = config),
-    cached_dependency_hash = meta$dependency_hash,
-    current_dependency_hash = current_dependency_hash,
-    hashes_of_dependencies = hashes_of_dependencies
+    dependency_hash(target, config),
+    input_file_hash(target, config),
+    output_file_hash(target, config)
   )
-  out[!is.na(out)]
+  tibble::tibble(
+    hash = c("command", "depend", "file_in", "file_out"),
+    changed = old_hashes != new_hashes,
+    old_hash = old_hashes,
+    new_hash = new_hashes
+  )
 }
 
 #' @title List the targets and imports
