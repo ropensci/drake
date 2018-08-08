@@ -3,9 +3,11 @@ drake_context("cache")
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   b <- 1
-  expect_error(dependency_profile(
-    target = a, config = config))
   config <- make(drake_plan(a = b), session_info = FALSE)
+  expect_error(
+    dependency_profile(target = missing, config = config),
+    regexp = "no recorded metadata"
+  )
   expect_false(any(dependency_profile(target = a, config = config)$changed))
   b <- 2
   expect_false(any(dependency_profile(target = a, config = config)$changed))
