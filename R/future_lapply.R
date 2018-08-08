@@ -1,5 +1,5 @@
 run_future_lapply <- function(config){
-  assert_pkgs(c("future", "future.apply"))
+  assert_pkgs(c("future", "future.apply", "txtq"))
   prepare_distributed(config = config)
   mc_init_worker_cache(config)
   console_persistent_workers(config)
