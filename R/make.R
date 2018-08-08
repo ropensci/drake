@@ -114,7 +114,8 @@ make <- function(
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE,
-  garbage_collection = FALSE
+  garbage_collection = FALSE,
+  template = list()
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -164,7 +165,8 @@ make <- function(
       makefile_path = makefile_path,
       console_log_file = console_log_file,
       ensure_workers = ensure_workers,
-      garbage_collection = garbage_collection
+      garbage_collection = garbage_collection,
+      template = template
     )
   }
   make_with_config(config = config)

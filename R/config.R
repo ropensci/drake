@@ -360,6 +360,17 @@
 #' @param garbage_collection logical, whether to call `gc()` each time
 #'   a target is built during [make()].
 #'
+#' @param template a named list of values to fill in the `{{ ... }}`
+#'   placeholders in template files (e.g. from [drake_hpc_template_file()]).
+#'   Same as the `template` argument of `clustermq::Q()` and
+#'   `clustermq::workers`.
+#'   Enabled for `clustermq` only (`make(parallelism = "clustermq_staged")`),
+#'   not `future` or `batchtools` so far.
+#'   For more information, see the `clustermq` package:
+#'   <https://github.com/mschubert/clustermq>.
+#'   Some template placeholders such as `{{ job_name }}` and `{{ n_jobs }}`
+#'   cannot be set this way.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -417,7 +428,8 @@ drake_config <- function(
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE,
-  garbage_collection = FALSE
+  garbage_collection = FALSE,
+  template = list()
 ){
   force(envir)
   unlink(console_log_file)
@@ -522,7 +534,8 @@ drake_config <- function(
     ensure_workers = ensure_workers,
     all_targets = all_targets,
     all_imports = all_imports,
-    garbage_collection = garbage_collection
+    garbage_collection = garbage_collection,
+    template = template
   )
 }
 

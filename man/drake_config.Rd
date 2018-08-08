@@ -23,7 +23,8 @@ drake_config(plan = read_drake_plan(), targets = NULL,
   session = NULL, imports_only = NULL,
   pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile", console_log_file = NULL,
-  ensure_workers = TRUE, garbage_collection = FALSE)
+  ensure_workers = TRUE, garbage_collection = FALSE,
+  template = list())
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -374,6 +375,17 @@ This argument only applies to parallel computing with persistent workers
 
 \item{garbage_collection}{logical, whether to call \code{gc()} each time
 a target is built during \code{\link[=make]{make()}}.}
+
+\item{template}{a named list of values to fill in the \code{{{ ... }}}
+placeholders in template files (e.g. from \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}}).
+Same as the \code{template} argument of \code{clustermq::Q()} and
+\code{clustermq::workers}.
+Enabled for \code{clustermq} only (\code{make(parallelism = "clustermq_staged")}),
+not \code{future} or \code{batchtools} so far.
+For more information, see the \code{clustermq} package:
+\url{https://github.com/mschubert/clustermq}.
+Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
+cannot be set this way.}
 }
 \value{
 The master internal configuration list of a project.
