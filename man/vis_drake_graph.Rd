@@ -13,7 +13,7 @@ vis_drake_graph(config = drake::read_drake_config(),
   from = NULL, mode = c("out", "in", "all"), order = NULL,
   subset = NULL, ncol_legend = 1, full_legend = FALSE,
   make_imports = TRUE, from_scratch = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, ...)
+  clusters = NULL, show_output_files = TRUE, collapse = TRUE, ...)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -138,6 +138,11 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
 \item{show_output_files}{logical, whether to include
 \code{\link[=file_out]{file_out()}} files in the graph.}
+
+\item{collapse}{logical, whether to allow nodes to collapse
+if you double click on them.
+Analogous to \code{visNetwork::visOptions(collapse = TRUE)} or
+\code{visNetwork::visOptions(collapse = TRUE)}.}
 
 \item{...}{arguments passed to \code{visNetwork()}.}
 }

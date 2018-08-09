@@ -51,6 +51,7 @@ vis_drake_graph <- function(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
+  collapse = TRUE,
   ...
 ){
   assert_pkgs("visNetwork")
@@ -75,11 +76,20 @@ vis_drake_graph <- function(
   if (is.null(main)){
     main <- graph_info$default_title
   }
-  render_drake_graph(graph_info, file = file, selfcontained = selfcontained,
-    layout = layout, direction = direction,
+  render_drake_graph(
+    graph_info,
+    file = file,
+    selfcontained = selfcontained,
+    layout = layout,
+    direction = direction,
     navigationButtons = navigationButtons, # nolint
-    hover = hover, main = main,
-    ncol_legend = ncol_legend, full_legend = full_legend, ...)
+    hover = hover,
+    main = main,
+    ncol_legend = ncol_legend,
+    full_legend = full_legend,
+    collapse = collapse,
+    ...
+  )
 }
 
 #' @title Render a visualization using the data frames
@@ -143,6 +153,11 @@ vis_drake_graph <- function(
 #' @param ncol_legend number of columns in the legend nodes.
 #'   To remove the legend entirely, set `ncol_legend` to `NULL` or `0`.
 #'
+#' @param collapse logical, whether to allow nodes to collapse
+#'   if you double click on them.
+#'   Analogous to `visNetwork::visOptions(collapse = TRUE)` or
+#'   `visNetwork::visOptions(collapse = TRUE)`.
+#'
 #' @param ... arguments passed to `visNetwork()`.
 #'
 #' @examples
@@ -177,6 +192,7 @@ render_drake_graph <- function(
   main = graph_info$default_title, selfcontained = FALSE,
   navigationButtons = TRUE, # nolint
   ncol_legend = 1,
+  collapse = TRUE,
   ...
 ){
   assert_pkgs("visNetwork")
@@ -190,6 +206,9 @@ render_drake_graph <- function(
     ...
   ) %>%
     visNetwork::visHierarchicalLayout(direction = direction)
+  if (collapse){
+    out <- visNetwork::visOptions(out, collapse = TRUE)
+  }
   if (length(ncol_legend) && ncol_legend > 0){
     out <- visNetwork::visLegend(
       graph = out,
