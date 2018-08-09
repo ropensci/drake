@@ -180,6 +180,9 @@ render_drake_graph <- function(
   ...
 ){
   assert_pkgs("visNetwork")
+  if (!hover){
+    graph_info$nodes$title <- NULL
+  }
   out <- visNetwork::visNetwork(
     nodes = graph_info$nodes,
     edges = graph_info$edges,
@@ -203,11 +206,9 @@ render_drake_graph <- function(
       layout = layout
     )
   }
-  if (navigationButtons) # nolint
-    out <- visNetwork::visInteraction(out,
-      navigationButtons = TRUE) # nolint
-  if (hover)
-    out <- with_hover(out)
+  if (navigationButtons){ # nolint
+    out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
+  }
   if (length(file)) {
     if (is_image_filename(file)){
       assert_pkgs("webshot")
@@ -221,40 +222,4 @@ render_drake_graph <- function(
     return(invisible())
   }
   out
-}
-
-with_hover <- function(x) {
-  visNetwork::visInteraction(x, hover = TRUE) %>%
-    visNetwork::visEvents(hoverNode =
-      "function(e){
-        var label_info = this.body.data.nodes.get({
-          fields: ['label', 'hover_label'],
-          filter: function (item) {
-            return item.id === e.node
-          },
-          returnType :'Array'
-        });
-        this.body.data.nodes.update({
-          id: e.node,
-          label : label_info[0].hover_label,
-          hover_label : label_info[0].label
-        });
-      }"
-    ) %>%
-    visNetwork::visEvents(blurNode =
-      "function(e){
-        var label_info = this.body.data.nodes.get({
-          fields: ['label', 'hover_label'],
-          filter: function (item) {
-            return item.id === e.node
-          },
-          returnType :'Array'
-        });
-        this.body.data.nodes.update({
-          id: e.node,
-          label : label_info[0].hover_label,
-          hover_label : label_info[0].label
-        });
-      }"
-    )
 }

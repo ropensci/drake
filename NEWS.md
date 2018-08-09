@@ -2,6 +2,7 @@
 
 - Smooth the edges in `vis_drake_graph()` and `render_drake_graph()`.
 - Make hover text slightly more readable in in `vis_drake_graph()` and `render_drake_graph()`.
+- Align hover text properly in `vis_drake_graph()` using the "title" node column.
 - Improve `dependency_profile()` show major trigger hashes side-by-side
 to tell the user if the command, a dependency, an input file, or an ouptut file changed since the last `make()`.
 - Choose more appropriate places to check that the `txtq` package is installed.

@@ -1,3 +1,6 @@
+hover_lines <- 10
+hover_width <- 49
+
 append_build_times <- function(config) {
   with(config, {
     time_data <- build_times(
@@ -53,8 +56,8 @@ cluster_nodes <- function(config){
     new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
     matching <- config$nodes$id[index]
-    new_node$hover_label <- paste(matching, collapse = ", ") %>%
-      crop_text(width = hover_text_width)
+    new_node$title <- paste(matching, collapse = ", ") %>%
+      crop_text(width = hover_width)
     config$nodes <- rbind(config$nodes[!index, ], new_node)
     config$edges$from[config$edges$from %in% matching] <- new_node$id
     config$edges$to[config$edges$to %in% matching] <- new_node$id
@@ -175,10 +178,9 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
   }
   tryCatch({
       readLines(unquoted_file, n = 20, warn = FALSE) %>%
-        crop_lines(n = hover_text_lines) %>%
-        crop_text(width = hover_text_width) %>%
-        pad_hover_text() %>%
-        paste(collapse = "\n")
+        crop_lines(n = hover_lines) %>%
+        crop_text(width = hover_width) %>%
+        paste0(collapse = "<br>")
     },
     error = function(e) quoted_file,
     warning = function(w) quoted_file
@@ -208,10 +210,7 @@ function_hover_text <- Vectorize(function(function_name, envir){
     error = function(e) function_name) %>%
     unwrap_function %>%
     deparse %>%
-    crop_lines(n = hover_text_lines) %>%
-    crop_text(width = hover_text_width) %>%
-    pad_hover_text() %>%
-    paste(collapse = "\n")
+    style_hover_text()
 },
 "function_name")
 
@@ -238,20 +237,17 @@ get_raw_node_category_data <- function(config){
 
 hover_text <- function(config) {
   with(config, {
-    nodes$hover_label <- nodes$id
+    nodes$title <- nodes$id
     import_files <- setdiff(files, targets)
-    nodes[import_files, "hover_label"] <-
+    nodes[import_files, "title"] <-
       file_hover_text(quoted_file = import_files, targets = targets)
-    nodes[functions, "hover_label"] <-
+    nodes[functions, "title"] <-
       function_hover_text(function_name = functions, envir = config$envir)
-    nodes[targets, "hover_label"] <-
+    nodes[targets, "title"] <-
       target_hover_text(targets = targets, plan = config$plan)
     nodes
   })
 }
-
-hover_text_width <- 49
-hover_text_lines <- 10
 
 #' @title Create the nodes data frame used in the legend
 #'   of the graph visualizations.
@@ -323,17 +319,14 @@ null_graph <- function() {
   )
 }
 
-pad_hover_text <- function(lines){
-  nc <- nchar(lines)
-  npad <- max(nc) - nc
-  str <- vapply(
-    X = npad,
-    FUN = function(x){
-      paste(rep(" ", x), collapse = "")
-    },
-    FUN.VALUE = character(1)
-  )
-  paste0(lines, str)
+# I would use styler for indentation here,
+# but it adds a lot of processing time
+# for large functions.
+style_hover_text <- function(lines){
+  crop_lines(lines, n = hover_lines) %>%
+    crop_text(width = hover_width) %>%
+    gsub(pattern = " ", replacement = "&nbsp;") %>%
+    paste0(collapse = "<br>")
 }
 
 resolve_build_times <- function(build_times){
@@ -397,9 +390,7 @@ style_nodes <- function(config) {
 target_hover_text <- function(targets, plan) {
   vapply(
     X = plan$command[plan$target %in% targets],
-    FUN = function(text){
-      crop_text(wrap_text(text), width = hover_text_width)
-    },
+    FUN = style_hover_text,
     FUN.VALUE = character(1),
     USE.NAMES = FALSE
   )
