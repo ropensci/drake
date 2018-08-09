@@ -109,8 +109,7 @@ dependency_hash <- function(target, config) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
   sort(unique(deps)) %>%
-    self_hash(config = config) %>%
-    digest::digest(algo = config$long_hash_algo)
+    self_hash(config = config)
 }
 
 input_file_hash <- function(
@@ -130,8 +129,7 @@ input_file_hash <- function(
     FUN.VALUE = character(1),
     config = config,
     size_cutoff = size_cutoff
-  ) %>%
-    digest::digest(algo = config$long_hash_algo)
+  )
 }
 
 output_file_hash <- function(
@@ -151,8 +149,7 @@ output_file_hash <- function(
     FUN.VALUE = character(1),
     config = config,
     size_cutoff = size_cutoff
-  ) %>%
-    digest::digest(algo = config$long_hash_algo)
+  )
 }
 
 self_hash <- Vectorize(function(target, config) {
@@ -162,7 +159,7 @@ self_hash <- Vectorize(function(target, config) {
     as.character(NA)
   }
 },
-"target", USE.NAMES = FALSE)
+"target", USE.NAMES = TRUE)
 
 rehash_file <- function(target, config) {
   file <- drake::drake_unquote(target)
