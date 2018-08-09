@@ -14,12 +14,14 @@ test_with_dir("dependency profile", {
   config$skip_targets <- TRUE
   make(config = config)
   dp <- dependency_profile(target = a, config = config)
-  expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
-  expect_equal(sum(dp$changed), 1)
+  expect_true(
+    all(as.logical(dp[dp$hash == c("_depend_trigger", "b"), "changed"]))
+  )
+  expect_equal(sum(dp$changed), 2)
   config$plan$command <- "b + c"
   dp <- dependency_profile(target = a, config = config)
-  expect_true(as.logical(dp[dp$hash == "command", "changed"]))
-  expect_equal(sum(dp$changed), 2)
+  expect_true(as.logical(dp[dp$hash == "_command_trigger", "changed"]))
+  expect_equal(sum(dp$changed), 3)
 })
 
 test_with_dir("Missing cache", {
