@@ -7,9 +7,11 @@ test_with_dir("visNetwork graph runs", {
   pdf(NULL)
   tmp <- vis_drake_graph(config)
   dev.off()
-  pdf(NULL)
-  tmp <- vis_drake_graph(config, full_legend = FALSE)
-  dev.off()
+  for (hover in c(TRUE, FALSE)){
+    pdf(NULL)
+    tmp <- vis_drake_graph(config, full_legend = FALSE, hover = hover)
+    dev.off()
+  }
   unlink("Rplots.pdf", force = TRUE)
   file <- "graph.html"
   expect_false(file.exists(file))
