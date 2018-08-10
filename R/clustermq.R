@@ -61,6 +61,9 @@ cmq_next_target <- function(config){
 
 cmq_build <- function(target, meta, envir, config){
   config$envir <- envir
+  if (identical(config$garbage_collection, TRUE)){
+    gc()
+  }
   do_prework(config = config, verbose_packages = FALSE)
   build <- just_build(target = target, meta = meta, config = config)
   build$checksum <- mc_output_file_checksum(target, config)
