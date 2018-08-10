@@ -29,15 +29,19 @@ cmq_set_common_data <- function(config){
 cmq_master <- function(config){
   while (cmq_work_remains(config)){
     msg <- config$workers$receive_data() # Usually results in "Interrupted system call".
+    cmq_conclude_job(msg = msg, config = config)
     if (identical(msg$id, "WORKER_UP")){
       config$workers$send_common_data()
     } else if (identical(msg$id, "WORKER_READY")) {
-      cmq_conclude_job(msg = msg, config = config)
-      cmq_send_target(config)
+      if (cmq_work_remains(config)){
+        cmq_send_target(config)
+      } else {
+        config$workers$send_shutdown_worker()
+      }
     } else if (identical(msg$id, "WORKER_DONE")) {
       w$disconnect_worker()
     } else if (identical(msg$id, "WORKER_ERROR")) {
-      stop("worker error")
+      stop("clustermq worker error")
     }
   }
 }
