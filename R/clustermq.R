@@ -5,42 +5,33 @@ run_clustermq <- function(config){
     template = config$template
   )
   on.exit(config$workers$cleanup())
-  cmq_send_data(config)
+  cmq_set_common_data(config)
   config$queue <- new_priority_queue(config = config)
   cmq_master(config)
 }
 
-cmq_exports <- function(config){
+cmq_set_common_data <- function(config){
   export <- list()
   if (identical(config$envir, globalenv())){
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
   export$config <- config
-  export
-}
-
-cmq_send_data <- function(config){
   config$workers$set_common_data(
-    export = cmq_exports(config),
+    export = export,
     fun = function(){},
     const = list(),
     rettype = list(),
     common_seed = config$seed,
     token = "token"
   )
-  msg <- config$workers$receive_data()
-  config$workers$send_common_data()
 }
 
 cmq_master <- function(config){
   while (cmq_work_remains(config)){
-    msg <- tryCatch (
-      config$workers$receive_data(),
-      error = function(e){
-        list(id = "MESSAGE_ERROR") # Just trying again seems to work.
-      }
-    )
-    if (msg$id %in% c("WORKER_READY", "WORKER_UP")) {
+    msg <- config$workers$receive_data() # Usually results in "Interrupted system call".
+    if (identical(msg$id, "WORKER_UP")){
+      config$workers$send_common_data()
+    } else if (identical(msg$id, "WORKER_READY")) {
       cmq_conclude_job(msg = msg, config = config)
       cmq_send_target(config)
     } else if (identical(msg$id, "WORKER_DONE")) {
@@ -78,8 +69,7 @@ cmq_send_target <- function(config){
     env = list(
       target = target,
       meta = meta,
-      envir = config$envir,
-      config = config
+      envir = config$envir
     )
   )
 }
