@@ -239,7 +239,7 @@ run_clustermq_staged <- function(config){
   invisible()
 }
 
-#' @title Build a target using the clustermq backend
+#' @title Build a target using the clustermq_staged backend
 #' @description For internal use only
 #' @export
 #' @keywords internal

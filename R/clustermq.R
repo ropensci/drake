@@ -5,24 +5,44 @@ run_clustermq <- function(config){
     template = config$template
   )
   on.exit(config$workers$cleanup())
-  config$workers$set_common_data(
-    export = list(config = config),
-    fun = NULL,
-    const = list(),
-    rettype = NULL,
-    common_seed = NULL
-  )
-  config$workers$send_common_data()
+  cmq_send_data(config)
   config$queue <- new_priority_queue(config = config)
   cmq_master(config)
 }
 
+cmq_exports <- function(config){
+  export <- list()
+  if (identical(config$envir, globalenv())){
+    export <- as.list(config$envir, all.names = TRUE) # nocov
+  }
+  export$config <- config
+  export
+}
+
+cmq_send_data <- function(config){
+  config$workers$set_common_data(
+    export = cmq_exports(config),
+    fun = function(){},
+    const = list(),
+    rettype = list(),
+    common_seed = config$seed,
+    token = "token"
+  )
+  msg <- config$workers$receive_data()
+  config$workers$send_common_data()
+}
+
 cmq_master <- function(config){
   while (cmq_work_remains(config)){
-    msg <- w$receive_data()
-    if (identical(msg$id, "WORKER_READY")) {
+    msg <- tryCatch (
+      config$workers$receive_data(),
+      error = function(e){
+        list(id = "MESSAGE_ERROR") # Just trying again seems to work.
+      }
+    )
+    if (msg$id %in% c("WORKER_READY", "WORKER_UP")) {
       cmq_conclude_job(msg = msg, config = config)
-      cmq_next_target(config)
+      cmq_send_target(config)
     } else if (identical(msg$id, "WORKER_DONE")) {
       w$disconnect_worker()
     } else if (identical(msg$id, "WORKER_ERROR")) {
@@ -35,7 +55,7 @@ cmq_work_remains <- function(config){
   !config$queue$empty() || config$workers$workers_running > 0
 }
 
-cmq_next_target <- function(config){
+cmq_send_target <- function(config){
   target <- config$queue$pop0()
   if (!length(target)){
     return()
@@ -47,10 +67,15 @@ cmq_next_target <- function(config){
   }
   meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
-  prune_envir(config)
+  prune_envir(targets = target, config = config, jobs = config$jobs_imports)
   config$workers$send_call(
-    cmq_build,
-    list(
+    expr = drake::cmq_build(
+      target = target,
+      meta = meta,
+      envir = envir,
+      config = config
+    ),
+    env = list(
       target = target,
       meta = meta,
       envir = config$envir,
@@ -59,6 +84,15 @@ cmq_next_target <- function(config){
   )
 }
 
+#' @title Build a target using the clustermq backend
+#' @description For internal use only
+#' @export
+#' @keywords internal
+#' @inheritParams drake_build
+#' @param target target name
+#' @param meta list of metadata
+#' @param envir environment with dependencies
+#' @param config [drake_config()] configuration list
 cmq_build <- function(target, meta, envir, config){
   config$envir <- envir
   if (identical(config$garbage_collection, TRUE)){
@@ -72,21 +106,25 @@ cmq_build <- function(target, meta, envir, config){
 
 cmq_conclude_job <- function(msg, config){
   build <- msg$result
+  if (is.null(build)){
+    return()
+  }
   conclude_build(
-    target = target,
+    target = build$target,
     value = build$value,
     meta = build$meta,
     config = config
   )
   revdeps <- dependencies(
-    targets = target,
+    targets = build$target,
     config = config,
     reverse = TRUE
   ) %>%
     intersect(y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
+  set_attempt_flag(key = build$target, config = config)
   mc_wait_checksum(
-    target = target,
+    target = build$target,
     checksum = build$checksum,
     config = config
   )
