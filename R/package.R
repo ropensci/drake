@@ -65,5 +65,5 @@
 #' @importFrom utils capture.output compareVersion head installed.packages
 #'   packageVersion read.csv sessionInfo stack type.convert unzip write.table
 #' @importFrom withr local_dir with_dir with_options with_output_sink
-#'   with_preserve_seed with_seed
+#'   with_seed
 NULL
