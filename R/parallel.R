@@ -1,10 +1,8 @@
 run_parallel_backend <- function(config){
-  withr::with_preserve_seed(
-    get(
-      paste0("run_", config$parallelism),
-      envir = getNamespace("drake")
-    )(config)
-  )
+  get(
+    paste0("run_", config$parallelism),
+    envir = getNamespace("drake")
+  )(config)
 }
 
 parallel_filter <- function(x, f, jobs = 1, ...){
