@@ -1,29 +1,5 @@
 drake_context("cache")
 
-test_with_dir("dependency profile", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  b <- 1
-  config <- make(drake_plan(a = b), session_info = FALSE)
-  expect_error(
-    dependency_profile(target = missing, config = config),
-    regexp = "no recorded metadata"
-  )
-  expect_false(any(dependency_profile(target = a, config = config)$changed))
-  b <- 2
-  expect_false(any(dependency_profile(target = a, config = config)$changed))
-  config$skip_targets <- TRUE
-  make(config = config)
-  dp <- dependency_profile(target = a, config = config)
-  expect_true(
-    all(as.logical(dp[dp$hash == c("_depend_trigger", "b"), "changed"]))
-  )
-  expect_equal(sum(dp$changed), 2)
-  config$plan$command <- "b + c"
-  dp <- dependency_profile(target = a, config = config)
-  expect_true(as.logical(dp[dp$hash == "_command_trigger", "changed"]))
-  expect_equal(sum(dp$changed), 3)
-})
-
 test_with_dir("Missing cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   s <- storr::storr_rds("s")

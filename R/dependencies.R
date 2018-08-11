@@ -167,9 +167,11 @@ dependency_profile <- function(
     by = "ind",
     all = TRUE
   )
+  changed <- out$values.x != out$values.y
+  changed[is.na(changed)] <- TRUE
   tibble::tibble(
     hash = out$ind,
-    changed = out$values.x != out$values.y,
+    changed = changed,
     old = out$values.x,
     new = out$values.y
   )
