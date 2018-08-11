@@ -63,24 +63,28 @@ cmq_send_target <- function(config){
   meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
   prune_envir(targets = target, config = config, jobs = config$jobs_imports)
+  deps <- cmq_deps_list(target = target, config = config)
   config$workers$send_call(
-    expr = drake::cmq_build(target = target, meta = meta, config = config),
-    env = env_send_call(target = target, meta = meta, config = config)
+    expr = drake::cmq_build(
+      target = target,
+      meta = meta,
+      deps = deps,
+      config = config
+    ),
+    env = list(target = target, meta = meta, deps = deps)
   )
 }
 
-env_send_call <- function(target, meta, config){
-  env <- list()
-  if (identical(config$envir, globalenv())){
-    env <- as.list(config$envir, all.names = TRUE) # nocov
-  }
-  
-  
-  
-  env$target <- target
-  env$meta <- meta
-  env$config <- config
-  env
+cmq_deps_list <- function(target, config){
+  deps <- dependencies(targets = target, config = config) %>%
+    intersect(config$plan$target)
+  lapply(
+    X = deps,
+    FUN = function(name){
+      config$envir[[name]]
+    }
+  ) %>%
+    setNames(deps)
 }
 
 #' @title Build a target using the clustermq backend
@@ -90,12 +94,16 @@ env_send_call <- function(target, meta, config){
 #' @inheritParams drake_build
 #' @param target target name
 #' @param meta list of metadata
-#' @param config [drake_config()] configuration list
-cmq_build <- function(target, meta, config){
+#' @param deps named list of target dependencies
+#' @param config a [drake_config()] list
+cmq_build <- function(target, meta, deps, config){
   if (identical(config$garbage_collection, TRUE)){
     gc()
   }
   do_prework(config = config, verbose_packages = FALSE)
+  for (dep in names(deps)){
+    config$envir[[dep]] <- deps[[dep]]
+  }
   build <- just_build(target = target, meta = meta, config = config)
   build$checksum <- mc_output_file_checksum(target, config)
   build

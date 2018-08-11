@@ -4,14 +4,16 @@
 \alias{cmq_build}
 \title{Build a target using the clustermq backend}
 \usage{
-cmq_build(target, meta, config)
+cmq_build(target, meta, deps, config)
 }
 \arguments{
 \item{target}{target name}
 
 \item{meta}{list of metadata}
 
-\item{config}{\code{\link[=drake_config]{drake_config()}} configuration list}
+\item{deps}{named list of target dependencies}
+
+\item{config}{a \code{\link[=drake_config]{drake_config()}} list}
 }
 \description{
 For internal use only
