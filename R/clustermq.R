@@ -5,8 +5,8 @@ run_clustermq <- function(config){
     template = config$template
   )
   on.exit(config$workers$cleanup())
-  cmq_set_common_data(config)
   config$queue <- new_priority_queue(config = config)
+  cmq_set_common_data(config)
   cmq_master(config)
 }
 
@@ -31,7 +31,7 @@ cmq_master <- function(config){
     msg <- config$workers$receive_data() # Usually results in "Interrupted system call".
     cmq_conclude_job(msg = msg, config = config)
     if (identical(msg$id, "WORKER_UP")){
-      config$workers$send_common_data()
+      config$workers$send_common_data() # nolint
     } else if (identical(msg$id, "WORKER_READY")) {
       if (cmq_work_remains(config)){
         cmq_send_target(config)
@@ -64,18 +64,23 @@ cmq_send_target <- function(config){
   announce_build(target = target, meta = meta, config = config)
   prune_envir(targets = target, config = config, jobs = config$jobs_imports)
   config$workers$send_call(
-    expr = drake::cmq_build(
-      target = target,
-      meta = meta,
-      envir = envir,
-      config = config
-    ),
-    env = list(
-      target = target,
-      meta = meta,
-      envir = config$envir
-    )
+    expr = drake::cmq_build(target = target, meta = meta, config = config),
+    env = env_send_call(target = target, meta = meta, config = config)
   )
+}
+
+env_send_call <- function(target, meta, config){
+  env <- list()
+  if (identical(config$envir, globalenv())){
+    env <- as.list(config$envir, all.names = TRUE) # nocov
+  }
+  
+  
+  
+  env$target <- target
+  env$meta <- meta
+  env$config <- config
+  env
 }
 
 #' @title Build a target using the clustermq backend
@@ -85,10 +90,8 @@ cmq_send_target <- function(config){
 #' @inheritParams drake_build
 #' @param target target name
 #' @param meta list of metadata
-#' @param envir environment with dependencies
 #' @param config [drake_config()] configuration list
-cmq_build <- function(target, meta, envir, config){
-  config$envir <- envir
+cmq_build <- function(target, meta, config){
   if (identical(config$garbage_collection, TRUE)){
     gc()
   }
