@@ -117,7 +117,7 @@ cmq_conclude_job <- function(msg, config){
     intersect(y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
   set_attempt_flag(key = build$target, config = config)
-  mc_wait_checksum(
+  mc_wait_outfile_checksum(
     target = build$target,
     checksum = build$checksum,
     config = config
