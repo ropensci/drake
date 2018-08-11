@@ -5,8 +5,8 @@ run_clustermq <- function(config){
     template = config$template
   )
   on.exit(config$workers$cleanup())
-  config$queue <- new_priority_queue(config = config)
   cmq_set_common_data(config)
+  config$queue <- new_priority_queue(config = config)
   cmq_master(config)
 }
 
@@ -18,7 +18,7 @@ cmq_set_common_data <- function(config){
   export$config <- config
   config$workers$set_common_data(
     export = export,
-    fun = function(){},
+    fun = identity,
     const = list(),
     rettype = list(),
     common_seed = config$seed,
@@ -28,7 +28,7 @@ cmq_set_common_data <- function(config){
 
 cmq_master <- function(config){
   while (cmq_work_remains(config)){
-    msg <- config$workers$receive_data() # Usually results in "Interrupted system call".
+    msg <- config$workers$receive_data()
     cmq_conclude_job(msg = msg, config = config)
     if (identical(msg$id, "WORKER_UP")){
       config$workers$send_common_data() # nolint
@@ -41,23 +41,25 @@ cmq_master <- function(config){
     } else if (identical(msg$id, "WORKER_DONE")) {
       w$disconnect_worker()
     } else if (identical(msg$id, "WORKER_ERROR")) {
-      stop("clustermq worker error")
+      stop("clustermq worker error") # nocov
     }
   }
 }
 
 cmq_work_remains <- function(config){
-  !config$queue$empty() || config$workers$workers_running > 0
+  !config$queue$empty()
 }
 
 cmq_send_target <- function(config){
   target <- config$queue$pop0()
   if (!length(target)){
+    config$workers$send_call(expr = Sys.sleep(x), env = list(x = mc_wait))
     return()
   }
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(target = target, meta = meta, config = config)){
     console_skip(target = target, config = config)
+    config$workers$send_call(expr = Sys.sleep(x), env = list(x = mc_wait))
     return()
   }
   meta$start <- proc.time()
