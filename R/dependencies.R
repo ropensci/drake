@@ -161,19 +161,23 @@ dependency_profile <- function(
     output_file_hash = output_file_hash(target, config)
   ) %>%
     one_profile(config = config)
-  out <- merge(
+  both_profiles <- merge(
     x = old_profile,
     y = new_profile,
     by = "ind",
     all = TRUE
   )
-  changed <- out$values.x != out$values.y
+  changed <- both_profiles$values.x != both_profiles$values.y
   changed[is.na(changed)] <- TRUE
-  tibble::tibble(
-    hash = out$ind,
+  out <- tibble::tibble(
+    name = both_profiles$ind,
     changed = changed,
-    old = out$values.x,
-    new = out$values.y
+    old_hash = both_profiles$values.x,
+    new_hash = both_profiles$values.y
+  )
+  dplyr::bind_rows(
+    out[grepl("^_", out$name), ],
+    out[!grepl("^_", out$name), ]
   )
 }
 
