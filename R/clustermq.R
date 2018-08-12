@@ -28,7 +28,7 @@ cmq_set_common_data <- function(config){
 
 cmq_master <- function(config){
   while (cmq_work_remains(config)){
-    msg <- cmq_get_msg(config)
+    msg <- config$workers$receive_data()
     cmq_conclude_job(msg = msg, config = config)
     if (identical(msg$id, "WORKER_UP")){
       config$workers$send_common_data()
@@ -43,16 +43,6 @@ cmq_master <- function(config){
     } else if (identical(msg$id, "WORKER_ERROR")) {
       stop("clustermq worker error") # nocov
     }
-  }
-}
-
-cmq_get_msg <- function(config){
-  while (TRUE){
-    msg <- try(config$workers$receive_data())
-    if (!inherits(msg, "try-error")){
-      return(msg)
-    }
-    Sys.sleep(mc_wait)
   }
 }
 
