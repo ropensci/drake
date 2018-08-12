@@ -28,10 +28,10 @@ cmq_set_common_data <- function(config){
 
 cmq_master <- function(config){
   while (cmq_work_remains(config)){
-    msg <- config$workers$receive_data()
+    msg <- cmq_get_msg(config)
     cmq_conclude_job(msg = msg, config = config)
     if (identical(msg$id, "WORKER_UP")){
-      config$workers$send_common_data() # nolint
+      config$workers$send_common_data()
     } else if (identical(msg$id, "WORKER_READY")) {
       if (cmq_work_remains(config)){
         cmq_send_target(config)
@@ -46,6 +46,16 @@ cmq_master <- function(config){
   }
 }
 
+cmq_get_msg <- function(config){
+  while (TRUE){
+    msg <- try(config$workers$receive_data())
+    if (!inherits(msg, "try-error")){
+      return(msg)
+    }
+    Sys.sleep(mc_wait)
+  }
+}
+
 cmq_work_remains <- function(config){
   !config$queue$empty()
 }
@@ -53,13 +63,13 @@ cmq_work_remains <- function(config){
 cmq_send_target <- function(config){
   target <- config$queue$pop0()
   if (!length(target)){
-    config$workers$send_call(expr = Sys.sleep(x), env = list(x = mc_wait))
+    config$workers$send_wait()
     return()
   }
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(target = target, meta = meta, config = config)){
     console_skip(target = target, config = config)
-    config$workers$send_call(expr = Sys.sleep(x), env = list(x = mc_wait))
+    config$workers$send_wait()
     return()
   }
   meta$start <- proc.time()
