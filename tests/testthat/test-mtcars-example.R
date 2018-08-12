@@ -17,9 +17,6 @@ test_with_dir("mtcars example works", {
   dats <- c("small", "large")
   config$targets <- dats
   con <- testrun(config)
-
-  expect_true(is.list(dependency_profile(
-    target = "small", config = con)))
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
 
   expect_equal(sort(justbuilt(con)), sort(dats))

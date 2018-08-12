@@ -373,7 +373,7 @@ test_with_dir("ignore() in imported functions", {
   expect_equal(justbuilt(config), "x")
   expect_equal(readd(f, cache = cache), f)
   expect_equal(
-    readd(f, cache = cache, namespace = "kernels")[3],
+    unname(readd(f, cache = cache, namespace = "kernels")[3]),
     "    (sqrt(ignore() + 123))"
   )
   f <- function(x){

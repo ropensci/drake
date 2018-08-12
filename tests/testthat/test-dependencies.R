@@ -203,3 +203,40 @@ test_with_dir("deps_targets()", {
   ))
   expect_equal(deps, truth)
 })
+
+test_with_dir("dependency profile", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  b <- 1
+  config <- make(drake_plan(a = b), session_info = FALSE)
+  expect_error(
+    dependency_profile(target = missing, config = config),
+    regexp = "no recorded metadata"
+  )
+  expect_false(any(dependency_profile(target = a, config = config)$changed))
+  b <- 2
+  expect_false(any(dependency_profile(target = a, config = config)$changed))
+  config$skip_targets <- TRUE
+  make(config = config)
+  dp <- dependency_profile(target = a, config = config)
+  expect_true(
+    all(as.logical(dp[dp$name == c("_depend_trigger", "b"), "changed"]))
+  )
+  expect_equal(sum(dp$changed), 2)
+  config$plan$command <- "b + c"
+  dp <- dependency_profile(target = a, config = config)
+  expect_true(as.logical(dp[dp$name == "_command_trigger", "changed"]))
+  expect_equal(sum(dp$changed), 3)
+  config <- drake_config(config$plan)
+  dp <- dependency_profile(target = a, config = config)
+  expect_true("c" %in% dp$name)
+  expect_true(dp$changed[dp$name == "c"])
+  expect_true(is.na(dp$old_hash[dp$name == "c"]))
+  expect_true(is.na(dp$new_hash[dp$name == "c"]))
+  c <- 2
+  make(config = config)
+  dp <- dependency_profile(target = a, config = config)
+  expect_true("c" %in% dp$name)
+  expect_false(dp$changed[dp$name == "c"])
+  expect_false(is.na(dp$old_hash[dp$name == "c"]))
+  expect_false(is.na(dp$new_hash[dp$name == "c"]))
+})

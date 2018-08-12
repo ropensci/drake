@@ -18,24 +18,16 @@ is a character string rather than a symbol}
 }
 \value{
 A data frame of the old hashes and
-new hashes of the data frame, along with
-an indication of which hashes changed since
+new hashes of each dependency and trigger, along with
+a logical column to indicate which hashes changed since
 the last \code{\link[=make]{make()}}.
 }
 \description{
-The dependency profile can give you
-a hint as to why a target is out of date.
-It can tell you if
-\itemize{
-\item at least one input file changed,
-\item at least one outupt file changed,
-\item or a non-file dependency changed. For this last part,
-the imports need to be up to date in the cache,
-which you can do with \code{outdated()} or
-\code{make(skip_targets = TRUE)}.
-Unfortunately, \code{dependency_profile()} does not
-currently get more specific than that.
-}
+The dependency profile can tell you
+why a target is out of date. It tells you the specific
+dependencies that changed since the last \code{\link[=make]{make()}},
+as well as whether any of the built-in \code{\link[=trigger]{trigger()}}s
+(the command, depend, and file triggers) will be activated.
 }
 \examples{
 \dontrun{

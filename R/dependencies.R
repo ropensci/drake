@@ -105,20 +105,14 @@ deps_targets <- function(
 }
 
 #' @title Find out why a target is out of date.
-#' @description The dependency profile can give you
-#'   a hint as to why a target is out of date.
-#'   It can tell you if
-#'   - at least one input file changed,
-#'   - at least one outupt file changed,
-#'   - or a non-file dependency changed. For this last part,
-#'     the imports need to be up to date in the cache,
-#'     which you can do with `outdated()` or
-#'     `make(skip_targets = TRUE)`.
-#'   Unfortunately, `dependency_profile()` does not
-#'   currently get more specific than that.
+#' @description The dependency profile can tell you
+#'   why a target is out of date. It tells you the specific
+#'   dependencies that changed since the last [make()],
+#'   as well as whether any of the built-in [trigger()]s
+#'   (the command, depend, and file triggers) will be activated.
 #' @return A data frame of the old hashes and
-#'   new hashes of the data frame, along with
-#'   an indication of which hashes changed since
+#'   new hashes of each dependency and trigger, along with
+#'   a logical column to indicate which hashes changed since
 #'   the last [make()].
 #' @export
 #' @seealso [diagnose()],
@@ -157,33 +151,55 @@ dependency_profile <- function(
   if (!config$cache$exists(key = target, namespace = "meta")){
     stop("no recorded metadata for target ", target, ".")
   }
-  meta <- config$cache$get(
-    key = target, namespace = "meta")
-  deps <- dependencies(target, config)
-  old_hashes <- meta[c(
-    "command",
-    "dependency_hash",
-    "input_file_hash",
-    "output_file_hash"
-  )] %>%
-    unlist() %>%
-    unname()
-  old_hashes[1] <- digest::digest(old_hashes[1], algo = config$long_hash_algo)
-  new_hashes <- c(
-    digest::digest(
-      get_standardized_command(target, config),
+  old_profile <- config$cache$get(
+    key = target, namespace = "meta") %>%
+    one_profile(config = config)
+  new_profile <- list(
+    command = get_standardized_command(target, config),
+    dependency_hash = dependency_hash(target, config),
+    input_file_hash = input_file_hash(target, config),
+    output_file_hash = output_file_hash(target, config)
+  ) %>%
+    one_profile(config = config)
+  both_profiles <- merge(
+    x = old_profile,
+    y = new_profile,
+    by = "ind",
+    all = TRUE
+  )
+  changed <- both_profiles$values.x != both_profiles$values.y
+  changed[is.na(changed)] <- TRUE
+  out <- tibble::tibble(
+    name = both_profiles$ind,
+    changed = changed,
+    old_hash = both_profiles$values.x,
+    new_hash = both_profiles$values.y
+  )
+  dplyr::bind_rows(
+    out[grepl("^_", out$name), ],
+    out[!grepl("^_", out$name), ]
+  )
+}
+
+one_profile <- function(meta, config){
+  c(
+    `_command_trigger` = digest::digest(
+      meta$command,
       algo = config$long_hash_algo
     ),
-    dependency_hash(target, config),
-    input_file_hash(target, config),
-    output_file_hash(target, config)
-  )
-  tibble::tibble(
-    hash = c("command", "depend", "file_in", "file_out"),
-    changed = old_hashes != new_hashes,
-    old_hash = old_hashes,
-    new_hash = new_hashes
-  )
+    `_depend_trigger` = digest::digest(
+      meta$dependency_hash,
+      algo = config$long_hash_algo
+    ),
+    `_file_trigger` = digest::digest(
+      c(meta$input_file_hash, meta$input_file_hash),
+      algo = config$long_hash_algo
+    ),
+    meta$dependency_hash,
+    meta$input_file_hash,
+    meta$output_file_hash
+  ) %>%
+    utils::stack()
 }
 
 #' @title List the targets and imports
