@@ -6,7 +6,6 @@ run_clustermq <- function(config){
       n_jobs = config$jobs,
       template = config$template
     )
-    on.exit(config$workers$cleanup())
     cmq_set_common_data(config)
     cmq_master(config)
   }
