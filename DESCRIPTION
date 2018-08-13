@@ -106,7 +106,7 @@ Suggests:
   visNetwork,
   webshot
 Remotes:
-  mschubert/clustermq
+  mschubert/clustermq@36d78610129bdb22d9eadfd24018ba23dd07c9d2
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.0
