@@ -1,12 +1,12 @@
 run_clustermq <- function(config){
   assert_pkgs("clustermq")
+  config$queue <- new_priority_queue(config = config, jobs = 1)
   config$workers <- clustermq::workers(
     n_jobs = config$jobs,
     template = config$template
   )
   on.exit(config$workers$cleanup())
   cmq_set_common_data(config)
-  config$queue <- new_priority_queue(config = config)
   cmq_master(config)
 }
 
@@ -64,7 +64,7 @@ cmq_send_target <- function(config){
   }
   meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
-  prune_envir(targets = target, config = config, jobs = config$jobs_imports)
+  prune_envir(targets = target, config = config, jobs = 1)
   deps <- cmq_deps_list(target = target, config = config)
   config$workers$send_call(
     expr = drake::cmq_build(

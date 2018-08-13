@@ -55,7 +55,7 @@ run_mclapply_staged <- function(config){
       set_attempt_flag(key = "_attempt", config = config)
     }
     prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
-    tmp <- mclapply(
+    parallel::mclapply(
       X = stage$targets,
       FUN = function(target){
         build_and_store(
