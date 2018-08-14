@@ -63,6 +63,10 @@ test_with_dir("mtcars example works", {
   e <- new.env(parent = globalenv())
   coefs <- sort(c("coef_regression1_large", "coef_regression1_small",
              "coef_regression2_large", "coef_regression2_small"))
+  
+  expect_error(loadd(not_a_target, envir = e))
+  expect_equal(ls(envir = e), character(0))
+  
   loadd(starts_with("coef"), envir = e)
   expect_equal(sort(ls(envir = e)), coefs)
 

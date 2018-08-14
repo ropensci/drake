@@ -8,6 +8,7 @@
 to tell the user if the command, a dependency, an input file, or an ouptut file changed since the last `make()`.
 - Choose more appropriate places to check that the `txtq` package is installed.
 - Expose the `template` argument of `clustermq` functions (e.g. `Q()` and `workers()`) as an argument of `make()` and `drake_config()`.
+- Fix bug where `loadd(not_a_target)` would load every target in the cache.
 
 # Version 5.4.0
 

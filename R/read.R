@@ -194,7 +194,7 @@ loadd <- function(
   }
   targets <- drake_select(
     cache = cache, ..., namespaces = namespace, list = list)
-  if (!length(targets)){
+  if (!length(targets) && !length(list(...))){
     targets <- cache$list()
   }
   if (imported_only){
