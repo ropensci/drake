@@ -10,13 +10,13 @@ test_with_dir("clustermq parallelism", {
   skip_on_os("windows")
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  jobs <- scenario$jobs
+  jobs <- scenario$jobs # ignoring for now, using 2 jobs
   load_mtcars_example(envir = e)
   for (parallelism in c("clustermq", "clustermq_staged")){
     make(
       e$my_plan,
       parallelism = parallelism,
-      jobs = jobs,
+      jobs = 2,
       envir = e,
       verbose = 4
     )
@@ -25,7 +25,7 @@ test_with_dir("clustermq parallelism", {
     make(
       e$my_plan,
       parallelism = parallelism,
-      jobs = jobs,
+      jobs = 2,
       envir = e,
       verbose = 4
     )
