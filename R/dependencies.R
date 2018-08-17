@@ -243,8 +243,8 @@ nonfile_target_dependencies <- function(targets, config, jobs = 1){
   intersect(out, config$plan$target)
 }
 
-import_dependencies <- function(expr){
-  deps <- code_dependencies(expr)
+import_dependencies <- function(expr, exclude = character(0)){
+  deps <- code_dependencies(expr, exclude = exclude)
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
@@ -252,12 +252,12 @@ import_dependencies <- function(expr){
   deps
 }
 
-command_dependencies <- function(command){
+command_dependencies <- function(command, exclude = character(0)){
   if (!length(command)){
     return()
   }
   command <- as.character(command)
-  deps <- code_dependencies(parse(text = command))
+  deps <- code_dependencies(parse(text = command), exclude = exclude)
   deps$strings <- NULL
 
   # TODO: this block can go away when `drake`
@@ -352,7 +352,7 @@ unwrap_function <- function(funct){
   funct
 }
 
-code_dependencies <- function(expr){
+code_dependencies <- function(expr, exclude = character(0)){
   if (
     !is.function(expr) &&
     !is.expression(expr) &&
@@ -404,6 +404,14 @@ code_dependencies <- function(expr){
   }
   walk(expr)
   results$globals <- intersect(results$globals, find_globals(expr))
+  if (length(exclude) > 0){
+    results <- lapply(
+      X = results,
+      FUN = function(x){
+        setdiff(x, exclude)
+      }
+    )
+  }
   results[purrr::map_int(results, length) > 0]
 }
 

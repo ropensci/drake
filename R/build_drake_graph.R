@@ -85,8 +85,10 @@ bdg_analyze_code <- function(args){
       config = args
     )
     import_deps <- lightly_parallelize(
-      X = imports,
-      FUN = import_dependencies,
+      X = seq_along(imports),
+      FUN = function(i){
+        import_dependencies(expr = imports[[i]], exclude = import_names[[i]])
+      },
       jobs = jobs
     ) %>%
       setNames(import_names)
@@ -97,8 +99,13 @@ bdg_analyze_code <- function(args){
       config = args
     )
     command_deps <- lightly_parallelize(
-      X = plan$command,
-      FUN = command_dependencies,
+      X = seq_len(nrow(plan)),
+      FUN = function(i){
+        command_dependencies(
+          command = plan$command[i],
+          exclude = plan$target[i]
+        )
+      },
       jobs = jobs
     ) %>%
       setNames(plan$target)
@@ -128,7 +135,10 @@ bdg_analyze_triggers <- function(args){
         X = seq_len(nrow(plan)),
         FUN = function(i){
           if (!safe_is_na(plan$trigger[i])){
-            import_dependencies(triggers[[i]]$condition)
+            import_dependencies(
+              expr = triggers[[i]]$condition,
+              exclude = plan$target[i]
+            )
           } else {
             default_condition_deps
           }
@@ -139,7 +149,10 @@ bdg_analyze_triggers <- function(args){
         X = seq_len(nrow(plan)),
         FUN = function(i){
           if (!safe_is_na(plan$trigger[i])){
-            import_dependencies(triggers[[i]]$change)
+            import_dependencies(
+              triggers[[i]]$change,
+              exclude = plan$target[i]
+            )
           } else {
             default_change_deps
           }
