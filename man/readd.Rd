@@ -121,11 +121,6 @@ The cached value of the \code{target}.
 and \code{\link[=loadd]{loadd()}} loads one or more objects from the cache
 into your environment or session. These objects are usually
 targets built by \code{\link[=make]{make()}}.
-
-Loads the object(s) into the
-current workspace (or environment \code{envir} if given). Defaults
-to loading the entire cache if you do not supply anything
-to arguments \code{...} or \code{list}.
 }
 \details{
 There are two uses for the
@@ -157,11 +152,6 @@ your custom (imported) functions or the commands in your \code{\link[=drake_plan
 This create confusion inside \code{\link[=make]{make()}}, which has its own ways of
 interacting with the cache.
 }
-
-\code{loadd()} excludes foreign imports:
-R objects not originally defined in \code{envir}
-when \code{\link[=make]{make()}} last imported them.
-To get these objects, use \code{\link[=readd]{readd()}}.
 }
 \examples{
 \dontrun{

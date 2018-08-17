@@ -93,18 +93,10 @@ readd <- function(
 }
 
 #' @title Load one or more targets or imports from the drake cache.
-#' @description Loads the object(s) into the
-#' current workspace (or environment `envir` if given). Defaults
-#' to loading the entire cache if you do not supply anything
-#' to arguments `...` or `list`.
-#' @details `loadd()` excludes foreign imports:
-#'   R objects not originally defined in `envir`
-#'   when [make()] last imported them.
-#'   To get these objects, use [readd()].
+#' @rdname readd
 #' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
 #' @return `NULL`
-#' @rdname readd
 #'
 #' @inheritParams cached
 #' @inheritParams readd
