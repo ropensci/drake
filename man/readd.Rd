@@ -2,12 +2,20 @@
 % Please edit documentation in R/read.R
 \name{readd}
 \alias{readd}
+\alias{loadd}
 \title{Read and return a drake target/import from the cache.}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =
   verbose), namespace = NULL, verbose = drake::default_verbose(),
   show_source = FALSE)
+
+loadd(..., list = character(0), imported_only = FALSE,
+  path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search, verbose = verbose), namespace = NULL,
+  envir = parent.frame(), jobs = 1,
+  verbose = drake::default_verbose(), deps = FALSE, lazy = "eager",
+  graph = NULL, replace = TRUE, show_source = FALSE)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -50,12 +58,110 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{show_source}{logical, option to show the command
 that produced the target or indicate that the object
 was imported (using \code{\link[=show_source]{show_source()}}).}
+
+\item{...}{targets to load from the cache: as names (symbols),
+character strings, or \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}.}
+
+\item{list}{character vector naming targets to be loaded from the
+cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
+
+\item{imported_only}{logical, whether only imported objects
+should be loaded.}
+
+\item{envir}{environment to load objects into. Defaults to the
+calling environment (current workspace).}
+
+\item{jobs}{number of parallel jobs for loading objects. On
+non-Windows systems, the loading process for multiple objects
+can be lightly parallelized via \code{parallel::mclapply()}.
+just set jobs to be an integer greater than 1. On Windows,
+\code{jobs} is automatically demoted to 1.}
+
+\item{deps}{logical, whether to load any cached
+dependencies of the targets
+instead of the targets themselves.
+This is useful if you know your
+target failed and you want to debug the command in an interactive
+session with the dependencies in your workspace.
+One caveat: to find the dependencies,
+\code{\link[=loadd]{loadd()}} uses information that was stored
+in a \code{\link[=drake_config]{drake_config()}} list and cached
+during the last \code{\link[=make]{make()}}.
+That means you need to have already called \code{\link[=make]{make()}}
+if you set \code{deps} to \code{TRUE}.}
+
+\item{lazy}{either a string or a logical. Choices:
+\itemize{
+\item \code{"eager"}: no lazy loading. The target is loaded right away
+with \code{\link[=assign]{assign()}}.
+\item \code{"promise"}: lazy loading with \code{\link[=delayedAssign]{delayedAssign()}}
+\item \code{"bind"}: lazy loading with active bindings:
+\code{\link[bindr:populate_env]{bindr::populate_env()}}.
+\item \code{TRUE}: same as \code{"promise"}.
+\item \code{FALSE}: same as \code{"eager"}.
+}}
+
+\item{graph}{optional igraph object, representation
+of the workflow network for getting dependencies
+if \code{deps} is \code{TRUE}. If none is supplied,
+it will be read from the cache.}
+
+\item{replace}{logical. If \code{FALSE},
+items already in your environment
+will not be replaced.}
 }
 \value{
 The cached value of the \code{target}.
+
+\code{NULL}
 }
 \description{
-Does not delete the item from the cache.
+\code{\link[=readd]{readd()}} returns an object from the cache,
+and \code{\link[=loadd]{loadd()}} loads one or more objects from the cache
+into your environment or session. These objects are usually
+targets built by \code{\link[=make]{make()}}.
+
+Loads the object(s) into the
+current workspace (or environment \code{envir} if given). Defaults
+to loading the entire cache if you do not supply anything
+to arguments \code{...} or \code{list}.
+}
+\details{
+There are two uses for the
+\code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}} functions:
+\enumerate{
+\item Exploring the results outside the \code{drake}/\code{make()} pipeline.
+When you call \code{\link[=make]{make()}} to run your project,
+\code{drake} puts the targets in a cache, usually a folder called \code{.drake}.
+You may want to inspect the targets afterwards, possibly in an
+interactive R session. However, the files in the \code{.drake} folder
+are organized in a special format created by the
+\href{https://github.com/richfitz/storr}{storr} package,
+which is not exactly human-readable.
+To retrieve a target for manual viewing, use \code{\link[=readd]{readd()}}.
+To load one or more targets into your session, use \code{\link[=loadd]{loadd()}}.
+\item In \code{knitr} / R Markdown reports.
+You can borrow \code{drake} targets in your active code chunks
+if you have the right calls to \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}}.
+These reports can either run outside the \code{drake} pipeline,
+or better yet, as part of the pipeline itself.
+If you call \code{knitr_in("your_report.Rmd")} inside a \code{\link[=drake_plan]{drake_plan()}}
+command, then \code{\link[=make]{make()}} will scan \code{"your_report.Rmd"} for
+calls to \code{loadd()} and \code{readd()} in active code chunks,
+and then treat those loaded targets as dependencies.
+That way, \code{\link[=make]{make()}} will automatically (re)run the report if those
+dependencies change.
+Please do not put calls to \code{\link[=loadd]{loadd()}} or \code{\link[=readd]{readd()}} inside
+your custom (imported) functions or the commands in your \code{\link[=drake_plan]{drake_plan()}}.
+This create confusion inside \code{\link[=make]{make()}}, which has its own ways of
+interacting with the cache.
+}
+
+\code{loadd()} excludes foreign imports:
+R objects not originally defined in \code{envir}
+when \code{\link[=make]{make()}} last imported them.
+To get these objects, use \code{\link[=readd]{readd()}}.
 }
 \examples{
 \dontrun{
@@ -69,9 +175,42 @@ readd("large", character_only = TRUE) # Return 'large' from the cache.
 readd(file_store("report.md"), character_only = TRUE)
 })
 }
+\dontrun{
+test_with_dir("Quarantine side effects.", {
+load_mtcars_example() # Get the code with drake_example("mtcars").
+make(my_plan) # Run the projects, build the targets.
+loadd(small) # Load target 'small' into your workspace.
+small
+# For many targets, you can parallelize loadd()
+# using the 'jobs' argument.
+loadd(list = c("small", "large"), jobs = 2)
+ls()
+# How about tidyselect?
+loadd(starts_with("summ"))
+ls()
+# Load the dependencies of the target, coef_regression2_small
+loadd(coef_regression2_small, deps = TRUE)
+ls()
+# Load all the imported objects/functions.
+# Note: loadd() excludes foreign imports
+# (R objects not originally defined in `envir`
+# when `make()` last imported them).
+loadd(imported_only = TRUE)
+ls()
+# Load all the targets listed in the workflow plan
+# of the previous `make()`.
+# Be sure your computer has enough memory.
+loadd()
+ls()
+# With files, you just get the fingerprint.
+loadd(list = file_store("report.md"))
+ls() # Should include "\\"report.md\\"".
+get(file_store("report.md"))
+})
+}
 }
 \seealso{
-\code{\link[=loadd]{loadd()}}, \code{\link[=cached]{cached()}},
-\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}},
-\code{\link[=make]{make()}}
+\code{\link[=cached]{cached()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
+
+\code{\link[=cached]{cached()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
