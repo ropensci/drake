@@ -289,8 +289,8 @@ test_with_dir("assert_pkg", {
     assert_pkg(
       "CodeDepends",
       version = "9999.9999.9999",
-      install = "BiocManager"
+      install = "BiocManager::install"
     ),
-    regexp = "with BiocManager"
+    regexp = "with BiocManager::install"
   )
 })
