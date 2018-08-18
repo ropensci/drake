@@ -42,7 +42,7 @@ code_to_plan <- function(code){
 
 #' @export
 code_to_plan.character <- function(code){
-  code_to_plan.default(CodeDepends::readScript(path))
+  code_to_plan.default(CodeDepends::readScript(code))
 }
 
 #' @export
