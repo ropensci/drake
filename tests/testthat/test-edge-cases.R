@@ -219,13 +219,6 @@ test_with_dir("GitHub issue 460", {
   make_targets(config)
 })
 
-test_with_dir("assert_pkgs", {
-  skip_on_cran()
-  expect_error(assert_pkgs("_$$$blabla"), regexp = "not installed")
-  expect_error(
-    assert_pkgs(c("digest", "_$$$blabla")), regexp = "not installed")
-})
-
 test_with_dir("warning when file_out() files not produced", {
   skip_on_cran()
   plan <- drake_plan(

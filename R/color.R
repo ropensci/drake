@@ -85,7 +85,7 @@ color_grep <- function(text, pattern, color){
 
 # copied from the gtools package
 col2hex <- function(cname){
-  assert_pkgs("grDevices")
+  assert_pkg("grDevices")
   col_mat <- grDevices::col2rgb(cname)
   grDevices::rgb(
     red = col_mat[1, ] / 255,

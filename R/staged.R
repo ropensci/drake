@@ -141,7 +141,8 @@ run_parLapply_staged <- function(config) { # nolint
 }
 
 run_future_lapply_staged <- function(config){
-  assert_pkgs(c("future", "future.apply"))
+  assert_pkg("future")
+  assert_pkg("future.apply")
   prepare_distributed(config = config)
   schedule <- config$schedule
   while (length(V(schedule)$name)){
@@ -164,7 +165,7 @@ run_future_lapply_staged <- function(config){
 }
 
 run_clustermq_staged <- function(config){
-  assert_pkgs("clustermq")
+  assert_pkg("clustermq")
   schedule <- config$schedule
   workers <- clustermq::workers(
     n_jobs = config$jobs,

@@ -38,7 +38,7 @@ drake_example <- function(
   overwrite = FALSE,
   quiet = TRUE
 ){
-  assert_pkgs("downloader")
+  assert_pkg("downloader")
   if (!is.null(destination)){
     warning(
       "The 'destination' argument of drake_example() is deprecated. ",
@@ -80,7 +80,7 @@ drake_example <- function(
 #' })
 #' }
 drake_examples <- function(quiet = TRUE) {
-  assert_pkgs("downloader")
+  assert_pkg("downloader")
   destfile <- tempfile()
   downloader::download(
     url = "https://wlandau.github.io/drake-examples/examples.md",

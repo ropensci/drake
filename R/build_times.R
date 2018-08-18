@@ -128,7 +128,7 @@ to_build_duration_df <- function(times){
 # we need to round to the nearest second
 # for times longer than a minute.
 to_build_duration <- function(x){
-  assert_pkgs("lubridate")
+  assert_pkg("lubridate")
   round_these <- x >= 60
   x[round_these] <- round(x[round_these], digits = 0)
   lubridate::dseconds(x)
