@@ -55,19 +55,24 @@ reference:
   - '`reduce_plan`'
   - '`plan_analyses`'
   - '`plan_summaries`'
+  - '`code_to_plan`'
+  - '`as_drake_plan`'
 - title: Network graphs and visualization
   contents:
-  - '`build_drake_graph`'
-  - '`drake_palette`'
+  - '`vis_drake_graph`'
+  - '`sankey_drake_graph`'
+  - '`render_drake_graph`'
+  - '`render_sankey_drake_graph`'
+  - '`render_drake_ggraph`'
+  - '`drake_ggraph`'
   - '`drake_graph_info`'
   - '`legend_nodes`'
+  - '`drake_palette`'
   - '`prune_drake_graph`'
-  - '`render_drake_graph`'
-  - '`vis_drake_graph`'
+  - '`build_drake_graph`'
 - title: Debugging and testing
   contents:
   - '`check_plan`'
-  - '`default_trigger`'
   - '`dependency_profile`'
   - '`deps_code`'
   - '`deps_targets`'
@@ -77,7 +82,7 @@ reference:
   - '`missed`'
   - '`outdated`'
   - '`tracked`'
-  - '`triggers`'
+  - '`trigger`'
 - title: High-performance computing
   contents:
   - '`default_Makefile_args`'

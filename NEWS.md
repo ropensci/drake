@@ -11,6 +11,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Improve the help files of `loadd()` and `readd()`, giving specific usage guidance in prose.
 - Bugfix: `loadd(not_a_target)` no longer loads every target in the cache.
 - Bugfix: exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
+- Add a new `code_to_plan()` function to turn R scripts and R Markdown reports into workflow plan data frames.
 
 # Version 5.4.0
 
