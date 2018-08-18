@@ -600,8 +600,9 @@ test_with_dir("printing plans", {
   expect_true(is.character(tmp))
 })
 
-test_with_dir("code_to_plan(), one target target", {
+test_with_dir("code_to_plan(), one target", {
   skip_on_cran()
+  skip_if_not_installed("CodeDepends")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
   expect_equal(plan, tibble(target = "a", command = "1"))
