@@ -19,7 +19,6 @@ addons:
 
 r_packages:
   - BiocManager
-  - CodeDepends
   - clustermq
   - covr
   - downloader
