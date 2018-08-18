@@ -2,29 +2,23 @@
 % Please edit documentation in R/code_to_plan.R
 \name{code_to_plan}
 \alias{code_to_plan}
-\title{Turn an R script file, knitr / R Markdown report, or quoted R code
+\title{Turn an R script file or knitr / R Markdown report
 into a \code{drake} workflow plan data frame.}
 \usage{
-code_to_plan(code)
+code_to_plan(path)
 }
 \arguments{
-\item{code}{If a character vector, \code{code} is a file path to an R script
-or \code{knitr} report. Otherwise, \code{code} should be a language object
-or expression, as returned by \code{quote(x <- 1)}. For more information,
-see Hadley Wickham's Advanced R chapter on expressions:
-\url{http://adv-r.had.co.nz/Expressions.html}.}
+\item{path}{a file path to an R script or \code{knitr} report.}
 }
 \description{
-In your script (or \code{knitr} / R Markdown code chunks,
-or quoted R code), you can assign expressions to variables,
-and \code{code_file_to_plan()} will turn them into commands and targets,
-respectively. The \code{make.R} script demonstrates how this works
-for the script \code{script.R} and the report \code{report.Rmd}.
-The \code{code_to_plan()} function is similar, but it accepts
-quoted code rather than a file.
+In your script or \code{knitr} / R Markdown code chunks,
+you can assign expressions to variables,
+and \code{code_to_plan()} will turn them into commands and targets,
+respectively.
 }
 \details{
-This feature is easy to break, so there are some rules:
+This feature is easy to break, so there are some rules
+for your code file:
 \enumerate{
 \item Stick to ssigning a single expression to a single target at a time.
 For multi-line commands, please enclose the whole command
@@ -39,14 +33,17 @@ The target/command binding should be permanent.
 }
 }
 \examples{
-code_to_plan(quote(x <- 1))
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 drake_example("code_to_plan") # Download some code files to make plans.
 # Read the code and Markdown files in the downloaded "code_to_plan"
 # folder for details.
-code_to_plan("code_to_plan/script.R")
-code_to_plan("code_to_plan/report.Rmd")
+plan <- code_to_plan("code_to_plan/script.R")
+plan2 <- code_to_plan("code_to_plan/report.Rmd")
+identical(plan, plan2) # should be TRUE
+print(plan)
+make(plan)
+readd(discrepancy)
 })
 }
 }

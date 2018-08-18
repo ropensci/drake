@@ -1,15 +1,13 @@
-#' @title Turn an R script file, knitr / R Markdown report, or quoted R code
+#' @title Turn an R script file or knitr / R Markdown report
 #'   into a `drake` workflow plan data frame.
 #' @export
 #' @seealso [drake_plan()], [make()]
-#' @description In your script (or `knitr` / R Markdown code chunks,
-#'   or quoted R code), you can assign expressions to variables,
-#'   and `code_file_to_plan()` will turn them into commands and targets,
-#'   respectively. The `make.R` script demonstrates how this works
-#'   for the script `script.R` and the report `report.Rmd`.
-#'   The `code_to_plan()` function is similar, but it accepts
-#'   quoted code rather than a file.
-#' @details This feature is easy to break, so there are some rules:
+#' @description In your script or `knitr` / R Markdown code chunks,
+#'   you can assign expressions to variables,
+#'   and `code_to_plan()` will turn them into commands and targets,
+#'   respectively.
+#' @details This feature is easy to break, so there are some rules
+#'   for your code file:
 #'   1. Stick to ssigning a single expression to a single target at a time.
 #'     For multi-line commands, please enclose the whole command
 #'     in curly braces.
@@ -20,38 +18,24 @@
 #'     The target/command binding should be permanent.
 #'   3. Keep it simple. Please use the assignment operators rather than 
 #'     `assign()` and similar functions.
-#' @param code If a character vector, `code` is a file path to an R script
-#'   or `knitr` report. Otherwise, `code` should be a language object
-#'   or expression, as returned by `quote(x <- 1)`. For more information,
-#'   see Hadley Wickham's Advanced R chapter on expressions: 
-#'   <http://adv-r.had.co.nz/Expressions.html>.
+#' @param path a file path to an R script or `knitr` report.
 #' @examples
-#' code_to_plan(quote(x <- 1))
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' drake_example("code_to_plan") # Download some code files to make plans.
 #' # Read the code and Markdown files in the downloaded "code_to_plan"
 #' # folder for details.
-#' code_to_plan("code_to_plan/script.R")
-#' code_to_plan("code_to_plan/report.Rmd")
+#' plan <- code_to_plan("code_to_plan/script.R")
+#' plan2 <- code_to_plan("code_to_plan/report.Rmd")
+#' identical(plan, plan2) # should be TRUE
+#' print(plan)
+#' make(plan)
+#' readd(discrepancy)
 #' })
 #' }
-code_to_plan <- function(code){
-  UseMethod("code_to_plan")
-}
-
-#' @export
-code_to_plan.character <- function(code){
-  code_to_plan.default(CodeDepends::readScript(code))
-}
-
-#' @export
-code_to_plan.default <- function(code){
+code_to_plan <- function(path){
   assert_pkg("CodeDepends", install = "BiocManager::install")
-  nodes <- CodeDepends::getInputs(code)
-  if (length(nodes) < 2 || inherits(nodes, "ScriptNodeInfo")){
-    nodes <- list(nodes)
-  }
+  nodes <- CodeDepends::getInputs(CodeDepends::readScript(path))
   lapply(nodes, node_plan) %>%
     do.call(what = dplyr::bind_rows) %>%
     parse_custom_columns() %>%

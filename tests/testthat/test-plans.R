@@ -599,3 +599,35 @@ test_with_dir("printing plans", {
   )
   expect_true(is.character(tmp))
 })
+
+test_with_dir("code_to_plan(), one target target", {
+  skip_on_cran()
+  writeLines("a <- 1", "script.R")
+  plan <- code_to_plan("script.R")
+  expect_equal(plan, tibble(target = "a", command = "1"))
+})
+
+test_with_dir("code_to_plan(), multiple targets", {
+  skip_on_cran()
+  skip_if_not_installed("downloader")
+  drake_example("code_to_plan")
+  plan <- code_to_plan("code_to_plan/script.R")
+  plan2 <- code_to_plan("code_to_plan/report.Rmd")
+  expect_equal(plan, plan2)
+  expect_equal(
+    plan$target,
+    c("data1", "data2", "summary1", "summary2", "discrepancy", "sum1", "sum2")
+  )
+  expect_equal(
+    plan$command[1:4],
+    c("rnorm(10)", "rnorm(20)", "mean(data1)", "median(data2)")
+  )
+  expect_equal(sum(!is.na(plan$trigger)), 1)
+  expect_equal(plan$timeout, c(NA, NA, NA, NA, 100, NA, NA))
+  config <- make(
+    plan, cache = storr::storr_environment(), session_info = FALSE)
+  config <- make(config = config)
+  expect_equal(justbuilt(config), "discrepancy")
+  expect_true(
+    is.numeric(readd(discrepancy, cache = config$cache)))
+})
