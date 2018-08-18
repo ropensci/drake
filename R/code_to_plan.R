@@ -43,16 +43,8 @@ code_to_plan <- function(path){
 }
 
 node_plan <- function(node){
-  code <- node@code
-  if (deparse(code[[1]]) %in% c("->", "->>")){
-    target <- wide_deparse(code[[3]])
-    command <- wide_deparse(code[[2]])
-  } else {
-    target <- wide_deparse(code[[2]])
-    command <- wide_deparse(code[[3]])
-  }
   tibble::tibble(
-    target = target,
-    command = command
+    target = deparse(node@code[[2]]),
+    command = wide_deparse(node@code[[3]])
   )
 }
