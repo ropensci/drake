@@ -36,7 +36,8 @@ drake_ggraph <- function(
   clusters = NULL,
   show_output_files = TRUE
 ){
-  assert_pkgs(c("ggplot2", "ggraph"))
+  assert_pkg("ggplot2")
+  assert_pkg("ggraph")
   graph_info <- drake_graph_info(
     config = config,
     from = from,
@@ -91,7 +92,8 @@ render_drake_ggraph <- function(
   graph_info,
   main = graph_info$default_title
 ){
-  assert_pkgs(c("ggplot2", "ggraph"))
+  assert_pkg("ggplot2")
+  assert_pkg("ggraph")
   graph <- igraph::graph_from_data_frame(
     d = graph_info$edges,
     directed = TRUE,

@@ -54,7 +54,7 @@ vis_drake_graph <- function(
   collapse = TRUE,
   ...
 ){
-  assert_pkgs("visNetwork")
+  assert_pkg("visNetwork")
   graph_info <- drake_graph_info(
     config = config,
     from = from,
@@ -195,7 +195,7 @@ render_drake_graph <- function(
   collapse = TRUE,
   ...
 ){
-  assert_pkgs("visNetwork")
+  assert_pkg("visNetwork")
   if (!hover){
     graph_info$nodes$title <- NULL
   }
@@ -230,7 +230,7 @@ render_drake_graph <- function(
   }
   if (length(file)) {
     if (is_image_filename(file)){
-      assert_pkgs("webshot")
+      assert_pkg("webshot")
       url <- file.path(fs::dir_create(tempfile()), "tmp.html")
       visNetwork::visSave(graph = out, file = url, selfcontained = FALSE)
       webshot::webshot(url = url, file = file)

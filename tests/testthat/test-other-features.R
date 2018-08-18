@@ -277,3 +277,20 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   out <- outdated(con)
   expect_equal(out, character(0))
 })
+
+test_with_dir("assert_pkg", {
+  skip_on_cran()
+  expect_error(assert_pkg("_$$$blabla"), regexp = "not installed")
+  expect_error(
+    assert_pkg("digest", version = "9999.9999.9999"),
+    regexp = "must be version 9999.9999.9999 or greater"
+  )
+  expect_error(
+    assert_pkg(
+      "CodeDepends",
+      version = "9999.9999.9999",
+      install = "BiocManager"
+    ),
+    regexp = "with BiocManager"
+  )
+})

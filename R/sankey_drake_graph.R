@@ -54,7 +54,7 @@ sankey_drake_graph <- function(
   show_output_files = TRUE,
   ...
 ){
-  assert_pkgs("networkD3")
+  assert_pkg("networkD3")
   graph_info <- drake_graph_info(
     config = config,
     from = from,
@@ -151,7 +151,7 @@ render_sankey_drake_graph <- function(
   selfcontained = FALSE,
   ...
 ){
-  assert_pkgs("networkD3")
+  assert_pkg("networkD3")
   nodes <- as.data.frame(graph_info$nodes)
   # Not the best solution for line breaks in labels.
   # There may be reasons for line breaks other than build times.
@@ -184,7 +184,7 @@ render_sankey_drake_graph <- function(
   )
   if (length(file)) {
     if (is_image_filename(file)){
-      assert_pkgs("webshot")
+      assert_pkg("webshot")
       url <- file.path(fs::dir_create(tempfile()), "tmp.html")
       networkD3::saveNetwork(
         network = sankey,
