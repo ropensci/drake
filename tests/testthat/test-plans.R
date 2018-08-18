@@ -609,6 +609,7 @@ test_with_dir("code_to_plan(), one target target", {
 
 test_with_dir("code_to_plan(), multiple targets", {
   skip_on_cran()
+  skip_if_not_installed("CodeDepends")
   skip_if_not_installed("downloader")
   drake_example("code_to_plan")
   plan <- code_to_plan("code_to_plan/script.R")

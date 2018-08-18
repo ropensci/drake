@@ -18,6 +18,8 @@ addons:
       - libzmq3-dev
 
 r_packages:
+  - BiocManager
+  - CodeDepends
   - clustermq
   - covr
   - downloader
@@ -29,6 +31,7 @@ r_packages:
 
 before_script:
   - chmod +x ./pkgdown.sh
+  - Rscript -e 'BiocManager::install("CodeDepends")'
 
 # From Jim Hester, for avoiding timeouts
 script:
