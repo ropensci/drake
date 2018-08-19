@@ -98,6 +98,7 @@ Suggests:
   MASS,
   methods,
   networkD3,
+  prettycode,
   RSQLite,
   rprojroot,
   testthat,

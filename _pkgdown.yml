@@ -56,7 +56,7 @@ reference:
   - '`plan_analyses`'
   - '`plan_summaries`'
   - '`code_to_plan`'
-  - '`as_drake_plan`'
+  - '`drake_plan_source`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'

@@ -584,20 +584,35 @@ test_with_dir("drake_plan class", {
   expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
   load_mtcars_example()
   expect_true(inherits(my_plan, "drake_plan"))
-})
-
-test_with_dir("printing plans", {
-  skip_on_cran()
-  skip_if_not_installed("styler")
   load_mtcars_example()
-  o <- capture.output(print_drake_plan(my_plan))
-  o <- paste0(o, collapse = "\n")
-  expect_true(grepl("^drake_plan", o))
   # Warning: partial match of along with along.with. Not drake's fault.
   suppressWarnings(
     tmp <- capture.output(print(my_plan))
   )
   expect_true(is.character(tmp))
+})
+
+test_with_dir("drake_plan_source()", {
+  skip_on_cran()
+  skip_if_not_installed("styler")
+  plan <- drake::drake_plan(
+    small_data = download_data("https://some_website.com") %>%
+      select_my_columns() %>%
+      munge(),
+    large_data_raw = target(
+      command = download_data("https://lots_of_data.com") %>%
+        select_top_columns,
+      trigger = trigger(
+        change = time_last_modified("https://lots_of_data.com"),
+        command = FALSE,
+        depend = FALSE
+      ),
+      timeout = 1e3
+    ),
+    strings_in_dots = "literals"
+  )
+  x <- drake_plan_source(plan)
+  expect_true(grepl("^drake_plan", x[1]))
 })
 
 test_with_dir("code_to_plan(), one target", {

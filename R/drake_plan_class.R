@@ -3,6 +3,7 @@
 #'   You do not actually have to mark plans as such.
 #'   You can keep them as ordinary data frames.
 #' @export
+#' @keywords internal
 #' @param x object to mark as a `drake` plan
 #' @param ... other arguments to the method
 #' @examples
@@ -36,3 +37,13 @@ as_drake_plan.list <- as_drake_plan_
 #' @export
 #' @rdname as_drake_plan
 as_drake_plan.tbl_df <- as_drake_plan_
+
+#' @export
+print.drake_plan <- function(x, ...){
+  if (requireNamespace("styler", quietly = TRUE)){
+    NextMethod()
+    # print_drake_plan(x, ...) # under development # nolint
+  } else {
+    NextMethod() # nocov
+  }
+}
