@@ -612,7 +612,9 @@ test_with_dir("drake_plan_source()", {
     strings_in_dots = "literals"
   )
   x <- drake_plan_source(plan)
+  y <- capture.output(print(x))
   expect_true(grepl("^drake_plan", x[1]))
+  expect_true(grepl("^drake_plan", y[1]))
 })
 
 test_with_dir("code_to_plan(), one target", {
