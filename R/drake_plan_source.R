@@ -1,4 +1,4 @@
-#' @title Get the code to produce a given workflow plan data frame
+#' @title Show the code required to produce a given workflow plan data frame
 #' @description You supply a plan, and [drake_plan_source()]
 #'   supplies code to generate that plan. If you have the
 #'   [`prettycode` package](https://github.com/r-lib/prettycode),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan_source.R
 \name{drake_plan_source}
 \alias{drake_plan_source}
-\title{Get the code to produce a given workflow plan data frame}
+\title{Show the code required to produce a given workflow plan data frame}
 \usage{
 drake_plan_source(plan)
 }
