@@ -80,7 +80,7 @@ style_recursive <- function(expr, name, append_comma){
   text <- style_recursive_loop(expr)
   head <- character(0)
   if (nzchar(name)){
-    head <- paste(name, "=")
+    head <- paste(name, "= ")
   }
   head <- paste0(head, wide_deparse(expr[[1]]), "(")
   out <- c(head, paste0("  ", text), ")")
