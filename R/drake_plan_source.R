@@ -42,6 +42,16 @@ drake_plan_source <- function(plan){
 }
 
 drake_plan_call <- function(plan){
+  # TODO: when we remove the old file API, remove
+  # this hack that converts to the new file API.
+  plan <- dplyr::bind_rows(
+    plan,
+    data.frame(
+      target = "strings_in_dots",
+      command = "\"literals\"",
+      stringsAsFactors = FALSE
+    )
+  )
   target_calls <- purrr::pmap(plan, drake_target_call) %>%
     setNames(plan$target)
   as.call(c(quote(drake_plan), target_calls))

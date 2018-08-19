@@ -601,7 +601,7 @@ test_with_dir("drake_plan_source()", {
       munge(),
     large_data_raw = target(
       command = download_data("https://lots_of_data.com") %>%
-        select_top_columns,
+        select_top_columns(),
       trigger = trigger(
         change = time_last_modified("https://lots_of_data.com"),
         command = FALSE,
@@ -615,8 +615,9 @@ test_with_dir("drake_plan_source()", {
   y <- capture.output(print(x))
   expect_true(grepl("^drake_plan", x[1]))
   expect_true(grepl("^drake_plan", y[1]))
-  writelines(x, "script.R")
-  
+  writeLines(x, "script.R")
+  plan2 <- source("script.R")$value
+  expect_equal(plan, plan2)
 })
 
 test_with_dir("code_to_plan(), one target", {
