@@ -36,9 +36,8 @@
 drake_plan_source <- function(plan){
   assert_pkg("styler")
   text <- drake_plan_call(plan) %>%
-    rlang::expr_text() %>%
-    styler::style_text(style = drake_plan_source_style)
-  class(text) <- c("drake_plan_source", class(text))
+    style_recursive(name = "", append_comma = FALSE)
+  class(text) <- c("drake_plan_source", "vertical", "character")
   text
 }
 
@@ -67,17 +66,55 @@ drake_target_call <- function(...){
   args[["command"]]
 }
 
-drake_plan_source_style <- function(){
-  styler::create_style_guide(
-    line_break = tibble::lst(add_line_breaks)
-  )
+style_recursive <- function(expr, name, append_comma){
+  text <- style_recursive_loop(expr)
+  head <- character(0)
+  if (nzchar(name)){
+    head <- paste(name, "=")
+  }
+  head <- paste0(head, wide_deparse(expr[[1]]), "(")
+  out <- c(head, paste0("  ", text), ")")
+  if (append_comma){
+    out[length(out)] <- paste0(out[length(out)], ",")
+  }
+  out
 }
 
-add_line_breaks <- function(pd_flat){
-  is_symbol <- pd_flat$token == "SYMBOL_SUB"
-  pd_flat$lag_newlines <- pd_flat$lag_newlines | is_symbol
-  pd_flat$indent <- pd_flat$indent + 2 * is_symbol
-  pd_flat
+style_recursive_loop <- function(expr){
+  args <- expr[-1]
+  text <- character(0)
+  for (i in seq_along(args)){
+    recurse <- is_target_call(args[[i]]) || is_trigger_call(args[[i]])
+    if (recurse){
+      text <- c(
+        text,
+        style_recursive(
+          expr = args[[i]],
+          name = names(args)[i],
+          append_comma = i < length(args)
+        )
+      )
+    } else {
+      text <- c(
+        text,
+        style_leaf(
+          expr = args[[i]],
+          name = names(args)[i],
+          append_comma = i < length(args)
+        )
+      )
+    }
+  }
+  text
+}
+
+style_leaf <- function(name, expr, append_comma){
+  text <- styler::style_text(rlang::expr_text(expr))
+  text[1] <- paste(name, "=", text[1])
+  if (append_comma){
+    text[length(text)] <- paste0(text[length(text)], ",")
+  }
+  text
 }
 
 #' @export

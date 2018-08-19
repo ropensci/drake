@@ -615,6 +615,8 @@ test_with_dir("drake_plan_source()", {
   y <- capture.output(print(x))
   expect_true(grepl("^drake_plan", x[1]))
   expect_true(grepl("^drake_plan", y[1]))
+  writelines(x, "script.R")
+  
 })
 
 test_with_dir("code_to_plan(), one target", {
