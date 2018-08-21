@@ -9,7 +9,7 @@ init:
 
 install:
   - ps: Bootstrap
-  - cinst PhantomJS
+  - cinst PhantomJS --version 2.1.1
 
 # Adapt as necessary starting from here
 
