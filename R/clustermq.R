@@ -23,26 +23,24 @@ cmq_set_common_data <- function(config){
     const = list(),
     rettype = list(),
     common_seed = config$seed,
-    token = "token"
+    token = "set_common_data_token"
   )
 }
 
 cmq_master <- function(config){
+  on.exit(config$workers$finalize())
   while (cmq_work_remains(config) || config$workers$workers_running > 0){
     msg <- config$workers$receive_data()
     cmq_conclude_build(msg = msg, config = config)
-    if (identical(msg$id, "WORKER_UP")){
+    if (!identical(msg$token, "set_common_data_token")){
       config$workers$send_common_data()
-    } else if (identical(msg$id, "WORKER_READY")) {
-      if (cmq_work_remains(config)){
-        cmq_send_target(config)
-      } else {
-        config$workers$send_shutdown_worker()
-      }
-    } else if (identical(msg$id, "WORKER_DONE")) {
-      config$workers$disconnect_worker(msg)
-    } else if (identical(msg$id, "WORKER_ERROR")) {
-      stop("clustermq worker error") # nocov
+    } else if (cmq_work_remains(config)){
+      cmq_send_target(config)
+    } else {
+      config$workers$send_shutdown_worker()
+    }
+    if (config$workers$cleanup()){
+      on.exit()
     }
   }
 }
