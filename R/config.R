@@ -480,7 +480,8 @@ drake_config <- function(
       jobs = jobs,
       sanitize_plan = FALSE,
       console_log_file = console_log_file,
-      trigger = trigger
+      trigger = trigger,
+      cache = cache
     )
   } else {
     graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)

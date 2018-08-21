@@ -35,7 +35,10 @@
 #' }
 code_to_plan <- function(path){
   assert_pkg("CodeDepends", install = "BiocManager::install")
-  nodes <- CodeDepends::getInputs(CodeDepends::readScript(path))
+  # Suppress harmless partial argument match warnings.
+  suppressWarnings(
+    nodes <- CodeDepends::getInputs(CodeDepends::readScript(path))
+  )
   lapply(nodes, node_plan) %>%
     do.call(what = dplyr::bind_rows) %>%
     parse_custom_columns() %>%
