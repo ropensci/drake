@@ -584,18 +584,72 @@ test_with_dir("drake_plan class", {
   expect_true(inherits(as_drake_plan(list(a = 1, b = 2)), "drake_plan"))
   load_mtcars_example()
   expect_true(inherits(my_plan, "drake_plan"))
-})
-
-test_with_dir("printing plans", {
-  skip_on_cran()
-  skip_if_not_installed("styler")
   load_mtcars_example()
-  o <- capture.output(print_drake_plan(my_plan))
-  o <- paste0(o, collapse = "\n")
-  expect_true(grepl("^drake_plan", o))
   # Warning: partial match of along with along.with. Not drake's fault.
   suppressWarnings(
     tmp <- capture.output(print(my_plan))
   )
   expect_true(is.character(tmp))
+})
+
+test_with_dir("drake_plan_source()", {
+  skip_on_cran()
+  skip_if_not_installed("styler")
+  plan <- drake::drake_plan(
+    small_data = download_data("https://some_website.com") %>%
+      select_my_columns() %>%
+      munge(),
+    large_data_raw = target(
+      command = download_data("https://lots_of_data.com") %>%
+        select_top_columns(),
+      trigger = trigger(
+        change = time_last_modified("https://lots_of_data.com"),
+        command = FALSE,
+        depend = FALSE
+      ),
+      timeout = 1e3
+    ),
+    strings_in_dots = "literals"
+  )
+  x <- drake_plan_source(plan)
+  y <- capture.output(print(x))
+  expect_true(grepl("^drake_plan", x[1]))
+  expect_true(grepl("^drake_plan", y[1]))
+  writeLines(x, "script.R")
+  plan2 <- source("script.R")$value
+  expect_equal(plan, plan2)
+})
+
+test_with_dir("code_to_plan(), one target", {
+  skip_on_cran()
+  skip_if_not_installed("CodeDepends")
+  writeLines("a <- 1", "script.R")
+  plan <- code_to_plan("script.R")
+  expect_equal(plan, tibble(target = "a", command = "1"))
+})
+
+test_with_dir("code_to_plan(), multiple targets", {
+  skip_on_cran()
+  skip_if_not_installed("CodeDepends")
+  skip_if_not_installed("downloader")
+  drake_example("code_to_plan")
+  plan <- code_to_plan("code_to_plan/script.R")
+  plan2 <- code_to_plan("code_to_plan/report.Rmd")
+  expect_equal(plan, plan2)
+  expect_equal(
+    plan$target,
+    c("data1", "data2", "summary1", "summary2", "discrepancy", "sum1", "sum2")
+  )
+  expect_equal(
+    plan$command[1:4],
+    c("rnorm(10)", "rnorm(20)", "mean(data1)", "median(data2)")
+  )
+  expect_equal(sum(!is.na(plan$trigger)), 1)
+  expect_equal(plan$timeout, c(NA, NA, NA, NA, 100, NA, NA))
+  config <- make(
+    plan, cache = storr::storr_environment(), session_info = FALSE)
+  config <- make(config = config)
+  expect_equal(justbuilt(config), "discrepancy")
+  expect_true(
+    is.numeric(readd(discrepancy, cache = config$cache)))
 })
