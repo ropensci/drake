@@ -7,6 +7,8 @@ run_clustermq <- function(config){
       template = config$template
     )
     cmq_set_common_data(config)
+    config$counter <- new.env(parent = emptyenv())
+    config$counter$remaining <- config$queue$size()
     cmq_master(config)
   }
 }
@@ -29,12 +31,12 @@ cmq_set_common_data <- function(config){
 
 cmq_master <- function(config){
   on.exit(config$workers$finalize())
-  while (cmq_work_remains(config) || config$workers$workers_running > 0){
+  while (config$counter$remaining > 0){
     msg <- config$workers$receive_data()
     cmq_conclude_build(msg = msg, config = config)
     if (!identical(msg$token, "set_common_data_token")){
       config$workers$send_common_data()
-    } else if (cmq_work_remains(config)){
+    } else if (!config$queue$empty()){
       cmq_send_target(config)
     } else {
       config$workers$send_shutdown_worker()
@@ -43,10 +45,6 @@ cmq_master <- function(config){
       on.exit()
     }
   }
-}
-
-cmq_work_remains <- function(config){
-  !config$queue$empty()
 }
 
 cmq_send_target <- function(config){
@@ -139,4 +137,5 @@ cmq_conclude_target <- function(target, config){
   ) %>%
     intersect(y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
+  config$counter$remaining <- config$counter$remaining - 1
 }
