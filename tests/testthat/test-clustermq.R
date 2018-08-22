@@ -18,7 +18,8 @@ test_with_dir("clustermq parallelism", {
       parallelism = parallelism,
       jobs = 2,
       envir = e,
-      verbose = 4
+      verbose = 4,
+      garbage_collection = TRUE
     )
     config <- drake_config(e$my_plan, envir = e)
     expect_equal(outdated(config), character(0))
