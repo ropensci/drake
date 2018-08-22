@@ -41,9 +41,9 @@ cmq_master <- function(config){
     } else {
       config$workers$send_shutdown_worker()
     }
-    if (config$workers$cleanup()){
-      on.exit()
-    }
+  }
+  if (config$workers$cleanup()){
+    on.exit()
   }
 }
 
