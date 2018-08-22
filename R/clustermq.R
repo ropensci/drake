@@ -54,12 +54,15 @@ cmq_send_target <- function(config){
     return()
   }
   meta <- drake_meta(target = target, config = config)
+  # Target should not even be in the priority queue
+  # nocov start
   if (!should_build_target(target = target, meta = meta, config = config)){
     console_skip(target = target, config = config)
     cmq_conclude_target(target = target, config = config)
     config$workers$send_wait()
     return()
   }
+  # nocov end
   meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
   prune_envir(targets = target, config = config, jobs = 1)

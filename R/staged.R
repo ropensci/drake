@@ -179,11 +179,7 @@ run_future_lapply_staged <- function(config){
 run_clustermq_staged <- function(config){
   assert_pkg("clustermq")
   schedule <- config$schedule
-  workers <- clustermq::workers(
-    n_jobs = config$jobs,
-    template = config$template
-  )
-  on.exit(workers$cleanup())
+  workers <- NULL
   while (length(V(schedule)$name)){
     stage <- next_stage(
       config = config,
@@ -194,7 +190,14 @@ run_clustermq_staged <- function(config){
     if (!length(stage$targets)){
       # Keep in case outdated targets are ever back in the schedule.
       break # nocov
-    } else if (any(stage$targets %in% config$plan$target)){
+    } else if (is.null(workers)){
+      workers <- clustermq::workers(
+        n_jobs = config$jobs,
+        template = config$template
+      )
+      on.exit(workers$cleanup())
+    }
+    if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
     prune_envir(
