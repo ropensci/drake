@@ -77,6 +77,7 @@ build_drake_graph <- function(
 }
 
 bdg_prepare_imports <- function(config){
+  browser()
   console_preprocess(text = "analyze environment", config = config)
   imports <- as.list(config$envir)
   unload_conflicts(
@@ -90,6 +91,7 @@ bdg_prepare_imports <- function(config){
 }
 
 bdg_analyze_imports <- function(config, imports){
+  browser()
   console_many_targets(
     targets = names(imports),
     pattern = "analyze",
@@ -107,6 +109,7 @@ bdg_analyze_imports <- function(config, imports){
 }
 
 bdg_analyze_commands <- function(config){
+  browser()
   console_many_targets(
     targets = config$plan$target,
     pattern = "analyze",
@@ -127,6 +130,7 @@ bdg_analyze_commands <- function(config){
 }
 
 bdg_get_triggers <- function(config){
+  browser()
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze triggers", config = config)
     triggers <- lightly_parallelize(
@@ -151,6 +155,7 @@ bdg_get_triggers <- function(config){
 }
 
 bdg_get_condition_deps <- function(config, triggers){
+  browser()
   default_condition_deps <- import_dependencies(default_trigger$condition)
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze condition triggers", config = config)
@@ -179,6 +184,7 @@ bdg_get_condition_deps <- function(config, triggers){
 }
 
 bdg_get_change_deps <- function(config, triggers){
+  browser()
   default_change_deps <- import_dependencies(default_trigger$change)
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze change triggers", config = config)
@@ -213,6 +219,7 @@ bdg_create_edges <- function(
   condition_deps,
   change_deps
 ){
+  browser()
   console_preprocess(text = "construct graph edges", config = config)
   import_edges <- lightly_parallelize(
     X = seq_along(import_deps),
@@ -248,6 +255,7 @@ bdg_create_attributes <- function(
   condition_deps,
   change_deps
 ){
+  browser()
   console_preprocess(text = "construct vertex attributes", config = config)
   import_deps_attr <- lightly_parallelize(
     X = import_deps,
@@ -278,7 +286,7 @@ bdg_create_attributes <- function(
 }
 
 bdg_create_graph <- function(config, edges, attributes){
-  edges <- deps_attr <- trigger_attr <- targets <- jobs <- NULL
+  browser()
   console_preprocess(text = "construct graph", config = config)
   igraph::graph_from_data_frame(edges) %>%
     igraph::set_vertex_attr(
