@@ -1,6 +1,6 @@
 drake_context("clustermq")
 
-test_with_dir("clustermq_staged parallelism", {
+test_with_dir("clustermq parallelism", {
   skip_on_cran()
   if ("package:clustermq" %in% search()){
     eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
@@ -10,25 +10,29 @@ test_with_dir("clustermq_staged parallelism", {
   skip_on_os("windows")
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-  jobs <- scenario$jobs
+  jobs <- scenario$jobs # ignoring for now, using 2 jobs
   load_mtcars_example(envir = e)
-  make(
-    e$my_plan,
-    parallelism = "clustermq_staged",
-    jobs = jobs,
-    envir = e,
-    verbose = 4
-  )
-  config <- drake_config(e$my_plan, envir = e)
-  expect_equal(outdated(config), character(0))
-  make(
-    e$my_plan,
-    parallelism = "clustermq_staged",
-    jobs = jobs,
-    envir = e,
-    verbose = 4
-  )
-  expect_equal(justbuilt(config), character(0))
+  for (parallelism in c("clustermq", "clustermq_staged")){
+    make(
+      e$my_plan,
+      parallelism = parallelism,
+      jobs = 2,
+      envir = e,
+      verbose = 4,
+      garbage_collection = TRUE
+    )
+    config <- drake_config(e$my_plan, envir = e)
+    expect_equal(outdated(config), character(0))
+    make(
+      e$my_plan,
+      parallelism = parallelism,
+      jobs = 2,
+      envir = e,
+      verbose = 4
+    )
+    expect_equal(justbuilt(config), character(0))
+    clean(destroy = TRUE)
+  }
   if ("package:clustermq" %in% search()){
     eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
   }

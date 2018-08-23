@@ -105,6 +105,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "parLapply_staged"
   )
   distributed <- c(
+    "clustermq",
     "clustermq_staged",
     "future",
     "future_lapply",

@@ -1,4 +1,4 @@
-next_stage <- function(config, schedule) {
+next_stage <- function(config, schedule, jobs) {
   targets <- character(0)
   old_leaves <- NULL
   meta_list <- list()
@@ -14,7 +14,7 @@ next_stage <- function(config, schedule) {
     new_meta <- lightly_parallelize(
       X = new_leaves,
       FUN = drake_meta,
-      jobs = config$jobs_imports,
+      jobs = jobs,
       config = config
     )
     names(new_meta) <- new_leaves
@@ -27,7 +27,7 @@ next_stage <- function(config, schedule) {
           config = config
         )
       },
-      jobs = config$jobs_imports
+      jobs = jobs
     ) %>%
       unlist
     targets <- c(targets, new_leaves[do_build])
@@ -47,7 +47,11 @@ run_mclapply_staged <- function(config){
   config$jobs <- safe_jobs(config$jobs)
   schedule <- config$schedule
   while (length(V(schedule)$name)){
-    stage <- next_stage(config = config, schedule = schedule)
+    stage <- next_stage(
+      config = config,
+      schedule = schedule,
+      jobs = config$jobs
+    )
     schedule <- stage$schedule
     if (!length(stage$targets)){
       break
@@ -55,7 +59,7 @@ run_mclapply_staged <- function(config){
       set_attempt_flag(key = "_attempt", config = config)
     }
     prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
-    tmp <- mclapply(
+    parallel::mclapply(
       X = stage$targets,
       FUN = function(target){
         build_and_store(
@@ -100,7 +104,11 @@ run_parLapply_staged <- function(config) { # nolint
   )
   schedule <- config$schedule
   while (length(V(schedule)$name)){
-    stage <- next_stage(config = config, schedule = schedule)
+    stage <- next_stage(
+      config = config,
+      schedule = schedule,
+      jobs = config$jobs
+    )
     schedule <- stage$schedule
     if (!length(stage$targets)){
       break
@@ -146,7 +154,11 @@ run_future_lapply_staged <- function(config){
   prepare_distributed(config = config)
   schedule <- config$schedule
   while (length(V(schedule)$name)){
-    stage <- next_stage(config = config, schedule = schedule)
+    stage <- next_stage(
+      config = config,
+      schedule = schedule,
+      jobs = config$jobs_imports
+    )
     schedule <- stage$schedule
     if (!length(stage$targets)){
       # Keep in case outdated targets are ever back in the schedule.
@@ -165,26 +177,33 @@ run_future_lapply_staged <- function(config){
 }
 
 run_clustermq_staged <- function(config){
-  assert_pkg("clustermq")
+  assert_pkg("clustermq", version = "0.8.4.99")
   schedule <- config$schedule
-  workers <- clustermq::workers(
-    n_jobs = config$jobs,
-    template = config$template
-  )
-  on.exit(workers$finalize())
+  workers <- NULL
   while (length(V(schedule)$name)){
-    stage <- next_stage(config = config, schedule = schedule)
+    stage <- next_stage(
+      config = config,
+      schedule = schedule,
+      jobs = 1 # config$jobs # nolint
+    )
     schedule <- stage$schedule
     if (!length(stage$targets)){
       # Keep in case outdated targets are ever back in the schedule.
       break # nocov
-    } else if (any(stage$targets %in% config$plan$target)){
+    } else if (is.null(workers)){
+      workers <- clustermq::workers(
+        n_jobs = config$jobs,
+        template = config$template
+      )
+      on.exit(workers$finalize())
+    }
+    if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
     prune_envir(
       targets = stage$targets,
       config = config,
-      jobs = config$jobs_imports
+      jobs = 1 # config$jobs_imports # nolint
     )
     export <- list()
     if (identical(config$envir, globalenv())){
@@ -202,7 +221,7 @@ run_clustermq_staged <- function(config){
           config = config
         )
       },
-      jobs = config$jobs_imports
+      jobs = 1 # config$jobs_imports # nolint
     )
     builds <- clustermq::Q(
       stage$targets,
@@ -234,13 +253,16 @@ run_clustermq_staged <- function(config){
           config = config
         )
       },
-      jobs = config$jobs_imports
+      jobs = 1 # config$jobs_imports # nolint
     )
+  }
+  if (!is.null(workers) && workers$cleanup()){
+    on.exit()
   }
   invisible()
 }
 
-#' @title Build a target using the clustermq backend
+#' @title Build a target using the clustermq_staged backend
 #' @description For internal use only
 #' @export
 #' @keywords internal

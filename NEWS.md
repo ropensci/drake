@@ -1,5 +1,6 @@
 # Version 5.4.0.9000
 
+- Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
 - Smooth the edges in `vis_drake_graph()` and `render_drake_graph()`.
 - Make hover text slightly more readable in in `vis_drake_graph()` and `render_drake_graph()`.
 - Align hover text properly in `vis_drake_graph()` using the "title" node column.

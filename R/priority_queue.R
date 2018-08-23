@@ -1,4 +1,4 @@
-new_priority_queue <- function(config){
+new_priority_queue <- function(config, jobs = config$jobs_imports){
   config$graph <- config$schedule
   targets <- V(config$graph)$name
   if (!length(targets)){
@@ -9,7 +9,7 @@ new_priority_queue <- function(config){
     FUN = function(target){
       length(dependencies(targets = target, config = config))
     },
-    jobs = config$jobs_imports
+    jobs = jobs
   ) %>%
     unlist
   priorities <- rep(Inf, length(targets))

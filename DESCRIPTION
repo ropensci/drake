@@ -107,6 +107,8 @@ Suggests:
   styler,
   visNetwork,
   webshot
+Remotes:
+  mschubert/clustermq@develop
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.0

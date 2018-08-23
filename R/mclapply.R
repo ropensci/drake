@@ -4,7 +4,7 @@ run_mclapply <- function(config){
   }
   assert_pkg("txtq")
   mc_init_worker_cache(config)
-  tmp <- mclapply(
+  parallel::mclapply(
     X = mc_worker_id(c(0, seq_len(config$jobs))),
     FUN = mc_process,
     mc.cores = config$jobs + 1,
