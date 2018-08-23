@@ -65,6 +65,11 @@ build_drake_graph <- function(
 bdg_prepare_imports <- function(args){
   envir <- verbose <- targets <- NULL
   within(args, {
+    console_preprocess(
+      text = "analyze environment",
+      pattern = "analyze",
+      config = args
+    )
     imports <- as.list(envir)
     unload_conflicts(
       imports = names(imports),
@@ -126,6 +131,11 @@ bdg_analyze_commands <- function(args){
 bdg_analyze_triggers <- function(args){
   envir <- jobs <- NULL
   within(args, {
+    console_preprocess(
+      text = "analyze triggers",
+      pattern = "analyze",
+      config = args
+    )
     default_trigger <- parse_trigger(trigger = trigger, envir = envir)
     default_condition_deps <- import_dependencies(default_trigger$condition)
     default_change_deps <- import_dependencies(default_trigger$change)
@@ -193,6 +203,11 @@ bdg_create_edges <- function(args){
   import_names <- imports <- jobs <- command_deps <- import_deps <-
     condition_deps <- change_deps <- NULL
   within(args, {
+    console_preprocess(
+      text = "construct graph edges",
+      pattern = "construct",
+      config = args
+    )
     import_edges <- lightly_parallelize(
       X = seq_along(imports),
       FUN = function(i){
@@ -225,6 +240,11 @@ bdg_create_edges <- function(args){
 bdg_create_attributes <- function(args){
   import_deps <- command_deps <- condition_deps <- change_deps <- jobs <- NULL
   within(args, {
+    console_preprocess(
+      text = "construct vertex attributes",
+      pattern = "construct",
+      config = args
+    )
     import_deps_attr <- lightly_parallelize(
       X = import_deps,
       FUN = list2env,
@@ -257,6 +277,11 @@ bdg_create_attributes <- function(args){
 bdg_create_graph <- function(args){
   edges <- deps_attr <- trigger_attr <- targets <- jobs <- NULL
   with(args, {
+    console_preprocess(
+      text = "construct dependency graph",
+      pattern = "construct",
+      config = args
+    )
     igraph::graph_from_data_frame(edges) %>%
       igraph::set_vertex_attr(
         name = "deps",
