@@ -177,7 +177,7 @@ run_future_lapply_staged <- function(config){
 }
 
 run_clustermq_staged <- function(config){
-  assert_pkg("clustermq")
+  assert_pkg("clustermq", version = "0.8.4.99")
   schedule <- config$schedule
   workers <- NULL
   while (length(V(schedule)$name)){
@@ -195,10 +195,7 @@ run_clustermq_staged <- function(config){
         n_jobs = config$jobs,
         template = config$template
       )
-      on.exit({
-        workers$cleanup()
-        workers$finalize()
-      })
+      on.exit(workers$finalize())
     }
     if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
@@ -258,6 +255,9 @@ run_clustermq_staged <- function(config){
       },
       jobs = 1 # config$jobs_imports # nolint
     )
+  }
+  if (!is.null(workers) && workers$cleanup()){
+    on.exit()
   }
   invisible()
 }
