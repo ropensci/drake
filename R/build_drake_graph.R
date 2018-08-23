@@ -65,15 +65,14 @@ build_drake_graph <- function(
     config$cache,
     config$plan[, c("target", "command")]
   )
-  trigger_plan <- config$plan[, c("target", "trigger")]
+  trigger_cols <- intersect(colnames(config$plan), c("target", "trigger"))
+  trigger_plan <- config$plan[, trigger_cols]
   triggers <- memo_expr(
     bdg_get_triggers(config),
     config$cache,
     trigger_plan,
     config$trigger
   )
-  trigger_cols <- intersect(colnames(config$plan), c("target", "trigger"))
-  trigger_plan <- config$plan[, trigger_cols]
   condition_deps <- memo_expr(
     bdg_get_condition_deps(config, triggers),
     config$cache,
