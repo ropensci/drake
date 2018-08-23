@@ -15,6 +15,7 @@ cache_namespaces <- function(
     "attempt",  # attempt flags so drake knows when to print "everything up to date" # nolint
     "change",   # value returned by the "change" trigger
     "config",   # elements of the config list
+    "memoize",  # for the memoization in build_drake_graph
     "progress", # build progress: in progress, finished, failed, etc.
     "session"   # session info
   ) %>%
