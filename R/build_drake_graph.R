@@ -50,6 +50,7 @@ build_drake_graph <- function(
     envir = envir,
     verbose = verbose,
     jobs = jobs,
+    cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir)
   )
