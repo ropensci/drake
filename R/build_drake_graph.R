@@ -135,7 +135,10 @@ bdg_get_triggers <- function(config){
       X = seq_len(nrow(config$plan)),
       FUN = function(i){
         if (!safe_is_na(config$plan$trigger[i])){
-          parse_trigger(trigger = config$plan$trigger[i], envir = config$envir)
+          parse_trigger(
+            trigger = config$plan$trigger[i],
+            envir = config$envir
+          )
         } else {
           config$trigger
         }
