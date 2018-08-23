@@ -519,3 +519,17 @@ assert_compatible_cache <- function(cache){
     call. = FALSE
   )
 }
+
+# Not true memoization, but still useful in build_drake_graph()
+memo_expr <- function(expr, cache, ...){
+  if (is.null(cache)){
+    return(force(expr))
+  }
+  key <- fastdigest::fastdigest(list(...))
+  if (cache$exists(key = key, namespace = "memoize")){
+    return(cache$get(key = key, namespace = "memoize"))
+  }
+  value <- force(expr)
+  cache$set(key = key, value = value, namespace = "memoize")
+  value
+}
