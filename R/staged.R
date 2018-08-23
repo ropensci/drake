@@ -195,7 +195,10 @@ run_clustermq_staged <- function(config){
         n_jobs = config$jobs,
         template = config$template
       )
-      on.exit(workers$cleanup())
+      on.exit({
+        workers$cleanup()
+        workers$finalize()
+      })
     }
     if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)

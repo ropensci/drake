@@ -30,7 +30,10 @@ cmq_set_common_data <- function(config){
 }
 
 cmq_master <- function(config){
-  on.exit(config$workers$finalize())
+  on.exit({
+    config$workers$cleanup()
+    config$workers$finalize()
+  })
   while (config$counter$remaining > 0){
     msg <- config$workers$receive_data()
     cmq_conclude_build(msg = msg, config = config)
@@ -41,9 +44,6 @@ cmq_master <- function(config){
     } else {
       config$workers$send_shutdown_worker()
     }
-  }
-  if (config$workers$cleanup()){
-    on.exit()
   }
 }
 
