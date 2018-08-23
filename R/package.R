@@ -43,6 +43,7 @@
 #' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
 #' @importFrom fs dir_create file_create path_ext path_ext_remove
+#' @importFrom fastdigest fastdigest
 #' @importFrom future plan
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree edge edges igraph_opt igraph_options induced_subgraph is_dag
