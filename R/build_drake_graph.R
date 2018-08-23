@@ -71,13 +71,13 @@ build_drake_graph <- function(
     import_deps,
     command_deps,
     condition_deps,
-    change_deps
+    change_deps,
+    triggers
   )
   bdg_create_graph(config, edges, attributes)
 }
 
 bdg_prepare_imports <- function(config){
-  browser()
   console_preprocess(text = "analyze environment", config = config)
   imports <- as.list(config$envir)
   unload_conflicts(
@@ -91,7 +91,6 @@ bdg_prepare_imports <- function(config){
 }
 
 bdg_analyze_imports <- function(config, imports){
-  browser()
   console_many_targets(
     targets = names(imports),
     pattern = "analyze",
@@ -109,7 +108,6 @@ bdg_analyze_imports <- function(config, imports){
 }
 
 bdg_analyze_commands <- function(config){
-  browser()
   console_many_targets(
     targets = config$plan$target,
     pattern = "analyze",
@@ -130,7 +128,6 @@ bdg_analyze_commands <- function(config){
 }
 
 bdg_get_triggers <- function(config){
-  browser()
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze triggers", config = config)
     triggers <- lightly_parallelize(
@@ -142,7 +139,7 @@ bdg_get_triggers <- function(config){
           config$trigger
         }
       },
-      jobs = jobs
+      jobs = config$jobs
     )
   } else {
     triggers <- replicate(
@@ -155,8 +152,7 @@ bdg_get_triggers <- function(config){
 }
 
 bdg_get_condition_deps <- function(config, triggers){
-  browser()
-  default_condition_deps <- import_dependencies(default_trigger$condition)
+  default_condition_deps <- import_dependencies(config$trigger$condition)
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze condition triggers", config = config)
     condition_deps <- lightly_parallelize(
@@ -171,21 +167,20 @@ bdg_get_condition_deps <- function(config, triggers){
           default_condition_deps
         }
       },
-      jobs = jobs
+      jobs = config$jobs
     )
   } else {
     condition_deps <- replicate(
       default_condition_deps,
-      n = nrow(plan),
+      n = nrow(config$plan),
       simplify = FALSE
     )
   }
-  setNames(condition_deps, plan$target)
+  setNames(condition_deps, config$plan$target)
 }
 
 bdg_get_change_deps <- function(config, triggers){
-  browser()
-  default_change_deps <- import_dependencies(default_trigger$change)
+  default_change_deps <- import_dependencies(config$trigger$change)
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze change triggers", config = config)
     change_deps <- lightly_parallelize(
@@ -200,16 +195,16 @@ bdg_get_change_deps <- function(config, triggers){
           default_change_deps
         }
       },
-      jobs = jobs
+      jobs = config$jobs
     )
   } else {
     change_deps <- replicate(
       default_change_deps,
-      n = nrow(plan),
+      n = nrow(config$plan),
       simplify = FALSE
     )
   }
-  setNames(change_deps, plan$target)
+  setNames(change_deps, config$plan$target)
 }
 
 bdg_create_edges <- function(
@@ -219,18 +214,20 @@ bdg_create_edges <- function(
   condition_deps,
   change_deps
 ){
-  browser()
   console_preprocess(text = "construct graph edges", config = config)
   import_edges <- lightly_parallelize(
     X = seq_along(import_deps),
     FUN = function(i){
-      code_deps_to_edges(target = names(import_deps)[[i]], deps = import_deps[[i]])
+      code_deps_to_edges(
+        target = names(import_deps)[[i]],
+        deps = import_deps[[i]]
+      )
     },
     jobs = config$jobs
   ) %>%
     do.call(what = dplyr::bind_rows)
   target_edges <- lightly_parallelize(
-    X = seq_len(nrow(plan)),
+    X = seq_len(nrow(config$plan)),
     FUN = function(i){
       deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
         merge_lists(change_deps[[i]])
@@ -240,7 +237,11 @@ bdg_create_edges <- function(
   ) %>%
     do.call(what = dplyr::bind_rows)
   if (nrow(target_edges) > 0){
-    target_edges <- connect_output_files(target_edges, command_deps, config$jobs)
+    target_edges <- connect_output_files(
+      target_edges,
+      command_deps,
+      config$jobs
+    )
   }
   if (nrow(import_edges) > 0){
     import_edges$file <- FALSE # no input/output file connections here
@@ -253,9 +254,9 @@ bdg_create_attributes <- function(
   import_deps,
   command_deps,
   condition_deps,
-  change_deps
+  change_deps,
+  triggers
 ){
-  browser()
   console_preprocess(text = "construct vertex attributes", config = config)
   import_deps_attr <- lightly_parallelize(
     X = import_deps,
@@ -266,7 +267,7 @@ bdg_create_attributes <- function(
   ) %>%
     setNames(names(import_deps))
   target_deps_attr <- lightly_parallelize(
-    X = seq_len(nrow(plan)),
+    X = seq_len(nrow(config$plan)),
     FUN = zip_deps,
     jobs = config$jobs,
     command_deps = command_deps,
@@ -278,15 +279,15 @@ bdg_create_attributes <- function(
   trigger_attr <- lightly_parallelize(
     X = triggers,
     FUN = list2env,
-    jobs = jobs,
+    jobs = config$jobs,
     parent = emptyenv(),
     hash = TRUE
-  )
+  ) %>%
+    setNames(names(triggers))
   list(deps_attr = deps_attr, trigger_attr = trigger_attr)
 }
 
 bdg_create_graph <- function(config, edges, attributes){
-  browser()
   console_preprocess(text = "construct graph", config = config)
   igraph::graph_from_data_frame(edges) %>%
     igraph::set_vertex_attr(
