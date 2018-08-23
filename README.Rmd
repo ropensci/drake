@@ -419,6 +419,7 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Jasper Clarkberg](https://github.com/dapperjapper)
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
+- [Michael Schubert](http://github.com/mschubert)
 
 Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/images/image-credit.md).
 
