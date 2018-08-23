@@ -33,3 +33,4 @@ plan <- as_drake_plan(plan)
 class(plan)
 print(plan) # When we have pretty printing, this will look nicer.
 }
+\keyword{internal}

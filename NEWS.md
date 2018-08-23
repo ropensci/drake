@@ -9,6 +9,11 @@
 to tell the user if the command, a dependency, an input file, or an ouptut file changed since the last `make()`.
 - Choose more appropriate places to check that the `txtq` package is installed.
 - Expose the `template` argument of `clustermq` functions (e.g. `Q()` and `workers()`) as an argument of `make()` and `drake_config()`.
+- Improve the help files of `loadd()` and `readd()`, giving specific usage guidance in prose.
+- Bugfix: `loadd(not_a_target)` no longer loads every target in the cache.
+- Bugfix: exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
+- Add a new `code_to_plan()` function to turn R scripts and R Markdown reports into workflow plan data frames.
+- Add a new `drake_plan_source()` function, which generates lines of code for a `drake_plan()` call. This `drake_plan()` call produces the plan passed to `drake_plan_source()`. The main purpose is visual inspection (we even have syntax highlighting via `prettycode`) but users may also save the output to a script file for the sake of reproducibility or simple reference.
 
 # Version 5.4.0
 

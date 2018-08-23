@@ -49,9 +49,10 @@ cmq_master <- function(config){
 
 cmq_send_target <- function(config){
   target <- config$queue$pop0()
+  # Longer tests will catch this:
   if (!length(target)){
-    config$workers$send_wait()
-    return()
+    config$workers$send_wait() # nocov
+    return() # nocov
   }
   meta <- drake_meta(target = target, config = config)
   # Target should not even be in the priority queue

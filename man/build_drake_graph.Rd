@@ -7,7 +7,7 @@
 build_drake_graph(plan = read_drake_plan(), targets = plan$target,
   envir = parent.frame(), verbose = drake::default_verbose(),
   jobs = 1, sanitize_plan = FALSE, console_log_file = NULL,
-  trigger = drake::trigger())
+  trigger = drake::trigger(), cache = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -87,6 +87,8 @@ Console output will be appended to that file.}
 
 \item{trigger}{optional, a global trigger for building targets
 (see \code{\link[=trigger]{trigger()}}).}
+
+\item{cache}{an optional \code{storr} cache for memoization}
 }
 \value{
 An igraph object representing

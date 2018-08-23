@@ -16,6 +16,7 @@
 #'   [drake_config()]).
 #' @param trigger optional, a global trigger for building targets
 #'   (see [trigger()]).
+#' @param cache an optional `storr` cache for memoization
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -33,7 +34,8 @@ build_drake_graph <- function(
   jobs = 1,
   sanitize_plan = FALSE,
   console_log_file = NULL,
-  trigger = drake::trigger()
+  trigger = drake::trigger(),
+  cache = NULL
 ){
   force(envir)
   if (sanitize_plan){
@@ -51,15 +53,16 @@ build_drake_graph <- function(
     console_log_file = console_log_file,
     trigger = trigger
   ) %>%
-    bdg_prepare_data %>%
-    bdg_analyze_code %>%
-    bdg_analyze_triggers %>%
-    bdg_create_edges %>%
-    bdg_create_attributes %>%
-    bdg_create_graph
+    bdg_prepare_imports() %>%
+    bdg_analyze_imports() %>%
+    bdg_analyze_commands() %>%
+    bdg_analyze_triggers() %>%
+    bdg_create_edges() %>%
+    bdg_create_attributes() %>%
+    bdg_create_graph()
 }
 
-bdg_prepare_data <- function(args){
+bdg_prepare_imports <- function(args){
   envir <- verbose <- targets <- NULL
   within(args, {
     imports <- as.list(envir)
@@ -75,7 +78,7 @@ bdg_prepare_data <- function(args){
   })
 }
 
-bdg_analyze_code <- function(args){
+bdg_analyze_imports <- function(args){
   import_names <- imports <- jobs <- NULL
   within(args, {
     console_many_targets(
@@ -85,11 +88,20 @@ bdg_analyze_code <- function(args){
       config = args
     )
     import_deps <- lightly_parallelize(
-      X = imports,
-      FUN = import_dependencies,
+      X = seq_along(imports),
+      FUN = function(i){
+        import_dependencies(expr = imports[[i]], exclude = import_names[[i]])
+      },
       jobs = jobs
     ) %>%
       setNames(import_names)
+    args
+  })
+}
+
+bdg_analyze_commands <- function(args){
+  plan <- jobs <- NULL
+  within(args, {
     console_many_targets(
       targets = plan$target,
       pattern = "analyze",
@@ -97,8 +109,13 @@ bdg_analyze_code <- function(args){
       config = args
     )
     command_deps <- lightly_parallelize(
-      X = plan$command,
-      FUN = command_dependencies,
+      X = seq_len(nrow(plan)),
+      FUN = function(i){
+        command_dependencies(
+          command = plan$command[i],
+          exclude = plan$target[i]
+        )
+      },
       jobs = jobs
     ) %>%
       setNames(plan$target)
@@ -128,7 +145,10 @@ bdg_analyze_triggers <- function(args){
         X = seq_len(nrow(plan)),
         FUN = function(i){
           if (!safe_is_na(plan$trigger[i])){
-            import_dependencies(triggers[[i]]$condition)
+            import_dependencies(
+              expr = triggers[[i]]$condition,
+              exclude = plan$target[i]
+            )
           } else {
             default_condition_deps
           }
@@ -139,7 +159,10 @@ bdg_analyze_triggers <- function(args){
         X = seq_len(nrow(plan)),
         FUN = function(i){
           if (!safe_is_na(plan$trigger[i])){
-            import_dependencies(triggers[[i]]$change)
+            import_dependencies(
+              triggers[[i]]$change,
+              exclude = plan$target[i]
+            )
           } else {
             default_change_deps
           }
