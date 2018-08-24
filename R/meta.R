@@ -108,7 +108,7 @@ dependency_hash <- function(target, config) {
   if (!(target %in% config$plan$target)){
     deps <- c(deps, x$file_in, x$knitr_in)
   }
-  sort(unique(deps)) %>%
+  sort(as.character(unique(deps))) %>%
     self_hash(config = config) %>%
     digest::digest(algo = config$long_hash_algo)
 }
@@ -123,7 +123,7 @@ input_file_hash <- function(
     name = "deps",
     index = target
   )[[1]]
-  files <- sort(unique(c(deps$file_in, deps$knitr_in)))
+  files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
   vapply(
     X = files,
     FUN = file_hash,
@@ -144,7 +144,7 @@ output_file_hash <- function(
     name = "deps",
     index = target
   )[[1]]
-  files <- sort(unique(deps$file_out))
+  files <- sort(unique(as.character(deps$file_out)))
   vapply(
     X = files,
     FUN = file_hash,

@@ -424,7 +424,16 @@ find_globals <- function(fun){
   if (typeof(fun) != "closure"){
     return(character(0))
   }
-  codetools::findGlobals(fun = unwrap_function(fun), merge = TRUE) %>%
+  fun <- unwrap_function(fun)
+  # The tryCatch statement fixes a strange bug in codetools
+  # for R 3.3.3. I do not understand it.
+  tryCatch(
+    codetools::findGlobals(fun = fun, merge = TRUE),
+    error = function(e){
+      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
+      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
+    }
+  ) %>%
     setdiff(y = c(drake_fn_patterns, ".")) %>%
     Filter(f = is_parsable)
 }

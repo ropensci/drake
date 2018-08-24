@@ -148,7 +148,7 @@ assert_output_files <- function(target, meta, config){
     name = "deps",
     index = target
   )[[1]]
-  files <- sort(unique(deps$file_out))
+  files <- sort(unique(as.character(deps$file_out)))
   missing_files <- Filter(x = files, f = function(x){
     !file.exists(drake::drake_unquote(x))
   })

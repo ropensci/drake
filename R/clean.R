@@ -155,7 +155,7 @@ clean_single_target <- function(target, cache, namespaces, graph){
       name = "deps",
       index = target
     )[[1]]
-    files <- sort(unique(deps$file_out))
+    files <- sort(unique(as.character(deps$file_out)))
   }
   unlink(drake_unquote(files), recursive = TRUE, force = TRUE)
   for (namespace in namespaces){

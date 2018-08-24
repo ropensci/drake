@@ -108,6 +108,7 @@ test_with_dir("deprecated graphing functions", {
   expect_warning(build_drake_graph(pl, sanitize_plan = TRUE))
   con <- drake_config(plan = pl)
   expect_warning(out <- plot_graph(config = con))
+  skip_if_not_installed("ggraph")
   expect_warning(out <- static_drake_graph(config = con))
   expect_true(inherits(out, "gg"))
   df <- drake_graph_info(config = con)
