@@ -55,27 +55,75 @@ build_drake_graph <- function(
     trigger = parse_trigger(trigger = trigger, envir = envir)
   )
   imports <- bdg_prepare_imports(config)
-  import_deps <- bdg_analyze_imports(config, imports)
-  command_deps <- bdg_analyze_commands(config)
-  triggers <- bdg_get_triggers(config)
-  condition_deps <- bdg_get_condition_deps(config, triggers)
-  change_deps <- bdg_get_change_deps(config, triggers)
-  edges <- bdg_create_edges(
-    config,
+  import_deps <- memo_expr(
+    bdg_analyze_imports(config, imports),
+    config$cache,
+    imports
+  )
+  command_deps <- memo_expr(
+    bdg_analyze_commands(config),
+    config$cache,
+    config$plan[, c("target", "command")]
+  )
+  trigger_cols <- intersect(colnames(config$plan), c("target", "trigger"))
+  trigger_plan <- config$plan[, trigger_cols]
+  triggers <- memo_expr(
+    bdg_get_triggers(config),
+    config$cache,
+    trigger_plan,
+    config$trigger
+  )
+  condition_deps <- memo_expr(
+    bdg_get_condition_deps(config, triggers),
+    config$cache,
+    trigger_plan,
+    config$trigger,
+    triggers
+  )
+  change_deps <- memo_expr(
+    bdg_get_change_deps(config, triggers),
+    config$cache,
+    trigger_plan,
+    config$trigger,
+    triggers
+  )
+  edges <- memo_expr(
+    bdg_create_edges(
+      config,
+      import_deps,
+      command_deps,
+      condition_deps,
+      change_deps
+    ),
+    config$cache,
     import_deps,
     command_deps,
     condition_deps,
     change_deps
   )
-  attributes <- bdg_create_attributes(
-    config,
+  attributes <- memo_expr(
+    bdg_create_attributes(
+      config,
+      triggers,
+      import_deps,
+      command_deps,
+      condition_deps,
+      change_deps
+    ),
+    config$cache,
+    triggers,
     import_deps,
     command_deps,
     condition_deps,
-    change_deps,
-    triggers
+    change_deps
   )
-  bdg_create_graph(config, edges, attributes)
+  memo_expr(
+    bdg_create_graph(config, edges, attributes),
+    config$cache,
+    config$targets,
+    edges,
+    attributes
+  )
 }
 
 bdg_prepare_imports <- function(config){
@@ -135,7 +183,10 @@ bdg_get_triggers <- function(config){
       X = seq_len(nrow(config$plan)),
       FUN = function(i){
         if (!safe_is_na(config$plan$trigger[i])){
-          parse_trigger(trigger = config$plan$trigger[i], envir = config$envir)
+          parse_trigger(
+            trigger = config$plan$trigger[i],
+            envir = config$envir
+          )
         } else {
           config$trigger
         }
@@ -228,11 +279,11 @@ bdg_create_edges <- function(
   ) %>%
     do.call(what = dplyr::bind_rows)
   target_edges <- lightly_parallelize(
-    X = seq_len(nrow(config$plan)),
+    X = seq_along(command_deps),
     FUN = function(i){
       deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
         merge_lists(change_deps[[i]])
-      code_deps_to_edges(target = config$plan$target[i], deps = deps)
+      code_deps_to_edges(target = names(command_deps)[i], deps = deps)
     },
     jobs = config$jobs
   ) %>%
@@ -252,11 +303,11 @@ bdg_create_edges <- function(
 
 bdg_create_attributes <- function(
   config,
+  triggers,
   import_deps,
   command_deps,
   condition_deps,
-  change_deps,
-  triggers
+  change_deps
 ){
   console_preprocess(text = "construct vertex attributes", config = config)
   import_deps_attr <- lightly_parallelize(
@@ -268,14 +319,14 @@ bdg_create_attributes <- function(
   ) %>%
     setNames(names(import_deps))
   target_deps_attr <- lightly_parallelize(
-    X = seq_len(nrow(config$plan)),
+    X = seq_along(command_deps),
     FUN = zip_deps,
     jobs = config$jobs,
     command_deps = command_deps,
     condition_deps = condition_deps,
     change_deps = change_deps
   ) %>%
-    setNames(config$plan$target)
+    setNames(names(command_deps))
   deps_attr <- c(import_deps_attr, target_deps_attr)
   trigger_attr <- lightly_parallelize(
     X = triggers,
