@@ -16,7 +16,7 @@ test_with_dir("clustermq parallelism", {
     make(
       e$my_plan,
       parallelism = parallelism,
-      jobs = 2,
+      jobs = jobs,
       envir = e,
       verbose = 4,
       garbage_collection = TRUE
@@ -26,7 +26,7 @@ test_with_dir("clustermq parallelism", {
     make(
       e$my_plan,
       parallelism = parallelism,
-      jobs = 2,
+      jobs = jobs,
       envir = e,
       verbose = 4
     )
