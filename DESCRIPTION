@@ -62,7 +62,6 @@ Imports:
   evaluate,
   digest,
   dplyr,
-  fastdigest,
   formatR,
   fs,
   future,
