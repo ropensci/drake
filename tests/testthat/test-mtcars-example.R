@@ -11,7 +11,7 @@ test_with_dir("mtcars example works", {
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
     jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching)
+    verbose = 4, caching = caching)
   expect_false(file.exists("Makefile"))
 
   dats <- c("small", "large")

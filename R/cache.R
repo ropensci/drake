@@ -525,7 +525,8 @@ memo_expr <- function(expr, cache, ...){
   if (is.null(cache)){
     return(force(expr))
   }
-  key <- fastdigest::fastdigest(list(...))
+  lang <- match.call(expand.dots = FALSE)$expr
+  key <- fastdigest::fastdigest(list(lang, ...))
   if (cache$exists(key = key, namespace = "memoize")){
     return(cache$get(key = key, namespace = "memoize"))
   }

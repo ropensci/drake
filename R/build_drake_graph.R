@@ -120,6 +120,7 @@ build_drake_graph <- function(
   memo_expr(
     bdg_create_graph(config, edges, attributes),
     config$cache,
+    config$targets,
     edges,
     attributes
   )
