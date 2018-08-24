@@ -1,4 +1,4 @@
-# Version 5.4.0.9000
+# Version 5.4.0.9001
 
 - Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
 - Smooth the edges in `vis_drake_graph()` and `render_drake_graph()`.
