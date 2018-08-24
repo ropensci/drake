@@ -8,7 +8,7 @@
 #'   respectively.
 #' @details This feature is easy to break, so there are some rules
 #'   for your code file:
-#'   1. Stick to ssigning a single expression to a single target at a time.
+#'   1. Stick to assigning a single expression to a single target at a time.
 #'     For multi-line commands, please enclose the whole command
 #'     in curly braces.
 #'     Conversely, compound assignment is not supported

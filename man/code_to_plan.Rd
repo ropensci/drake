@@ -20,7 +20,7 @@ respectively.
 This feature is easy to break, so there are some rules
 for your code file:
 \enumerate{
-\item Stick to ssigning a single expression to a single target at a time.
+\item Stick to assigning a single expression to a single target at a time.
 For multi-line commands, please enclose the whole command
 in curly braces.
 Conversely, compound assignment is not supported

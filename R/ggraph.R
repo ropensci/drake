@@ -1,6 +1,6 @@
 #' @title Show a `ggraph`/`ggplot2` representation
 #'   of your drake project.
-#' @description This function requries packages `ggplot2` and `ggraph`.
+#' @description This function requires packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
 #' @seealso [vis_drake_graph()], [sankey_drake_graph()],
@@ -63,7 +63,7 @@ drake_ggraph <- function(
 
 #' @title Render a static `ggplot2`/`ggraph` visualization from
 #'   [drake_graph_info()] output.
-#' @description This function requries packages `ggplot2` and `ggraph`.
+#' @description This function requires packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
 #' @seealso [vis_drake_graph()], [sankey_drake_graph()], [drake_ggraph()]

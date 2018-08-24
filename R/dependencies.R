@@ -109,7 +109,7 @@ deps_targets <- function(
 #'   a hint as to why a target is out of date.
 #'   It can tell you if
 #'   - at least one input file changed,
-#'   - at least one outupt file changed,
+#'   - at least one output file changed,
 #'   - or a non-file dependency changed. For this last part,
 #'     the imports need to be up to date in the cache,
 #'     which you can do with `outdated()` or

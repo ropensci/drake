@@ -28,7 +28,7 @@ a hint as to why a target is out of date.
 It can tell you if
 \itemize{
 \item at least one input file changed,
-\item at least one outupt file changed,
+\item at least one output file changed,
 \item or a non-file dependency changed. For this last part,
 the imports need to be up to date in the cache,
 which you can do with \code{outdated()} or

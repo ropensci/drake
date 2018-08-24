@@ -97,7 +97,7 @@ A \code{ggplot2} object, which you can modify with more layers,
 show with \code{plot()}, or save as a file with \code{ggsave()}.
 }
 \description{
-This function requries packages \code{ggplot2} and \code{ggraph}.
+This function requires packages \code{ggplot2} and \code{ggraph}.
 Install them with \code{install.packages(c("ggplot2", "ggraph"))}.
 }
 \examples{
