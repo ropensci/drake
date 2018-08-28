@@ -29,9 +29,11 @@ get_previous_seed <- function(cache){
 
 # A numeric hash that could be used as a
 # random number generator seed. Generated
-# from an arbitrary object x.
-seed_from_object <- function(x) {
-  hash <- digest::digest(x, algo = "murmur32")
+# from arguments of basic types such as
+# numerics and characters.
+seed_from_basic_types <- function(...) {
+  hash <- paste0(..., collapse = "") %>%
+    digest::digest(algo = "murmur32", serialize = FALSE)
   hexval <- paste0("0x", hash)
   utils::type.convert(hexval) %% .Machine$integer.max
 }
