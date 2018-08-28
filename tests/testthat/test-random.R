@@ -6,11 +6,13 @@ test_with_dir("seed_from_basic_types", {
   s1 <- seed_from_basic_types(seed, "abc")
   s2 <- seed_from_basic_types(seed, "abc")
   s3 <- seed_from_basic_types(seed, "xyz")
-  rnorm(1)
+  seed[length(seed)] <- seed[length(seed)] + 1
   s4 <- seed_from_basic_types(seed, "xyz")
   expect_true(identical(s1, s2))
   expect_false(identical(s1, s3))
   expect_false(identical(s1, s4))
+  expect_false(identical(s2, s4))
+  expect_false(identical(s3, s4))
 })
 
 test_with_dir("Random targets are reproducible", {
