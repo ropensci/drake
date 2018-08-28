@@ -56,15 +56,30 @@ test_with_dir("responses to intermediate file", {
       expect_equal(val2, readRDS("out2.rds"))
     }
 
-    # change what out2.rds is supposed to be
-    config$plan$command[1] <- gsub("1", "2", plan$command[1])
+    # change what intermediatefile.rds is supposed to be
+    config$plan$command[1] <- gsub(
+      "combined,",
+      "combined + 5,",
+      config$plan$command[1]
+    )
     testrun(config)
     expect_equal(
       sort(justbuilt(config)),
       sort(c("drake_target_1", "final"))
     )
-    expect_equal(final0 + 1, readd(final, search = FALSE))
-    expect_equal(val, readRDS("intermediatefile.rds"))
+    expect_equal(final0 + 5, readd(final, search = FALSE))
+    expect_equal(val + 5, readRDS("intermediatefile.rds"))
+    expect_equal(val2, readRDS("out2.rds"))
+
+    # change what out2.rds is supposed to be
+    config$plan$command[1] <- gsub("1", "2", config$plan$command[1])
+    testrun(config)
+    expect_equal(
+      sort(justbuilt(config)),
+      sort(c("drake_target_1", "final"))
+    )
+    expect_equal(final0 + 6, readd(final, search = FALSE))
+    expect_equal(val + 5, readRDS("intermediatefile.rds"))
     expect_equal(val2 + 1, readRDS("out2.rds"))
     clean(destroy = TRUE)
   }

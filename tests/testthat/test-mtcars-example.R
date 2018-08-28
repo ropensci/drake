@@ -39,6 +39,8 @@ test_with_dir("mtcars example works", {
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
   expect_equal(outdated(config), character(0))
+
+  # Change an imported function
   e$reg2 <- function(d) {
     d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d)
@@ -46,12 +48,14 @@ test_with_dir("mtcars example works", {
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  expect_equal(
-    sort(outdated(config = config)),
-    sort(c("report", "coef_regression2_large",
-      "coef_regression2_small", "regression2_large", "regression2_small",
-      "summ_regression2_large", "summ_regression2_small")))
+  to_build <- sort(c(
+    "report", "coef_regression2_large",
+    "coef_regression2_small", "regression2_large", "regression2_small",
+    "summ_regression2_large", "summ_regression2_small"
+  ))
+  expect_equal(sort(outdated(config = config)), to_build)
   testrun(config)
+  expect_equal(sort(justbuilt(config)), to_build)
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
