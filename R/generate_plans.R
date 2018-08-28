@@ -196,8 +196,8 @@ evaluate_single_wildcard <- function(
   if (!any(matches)){
     return(plan)
   }
-  major <- digest::digest(tempfile())
-  minor <- digest::digest(tempfile())
+  major <- make.names(tempfile())
+  minor <- make.names(tempfile())
   plan[[major]] <- seq_len(nrow(plan))
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]

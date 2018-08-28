@@ -57,7 +57,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     imported = !(target %in% config$plan$target),
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_object(list(seed = config$seed, target = target))
+    seed = seed_from_basic_types(config$seed, target)
   )
   # For imported files.
   if (is_file(target)) {
@@ -110,7 +110,8 @@ dependency_hash <- function(target, config) {
   }
   sort(as.character(unique(deps))) %>%
     self_hash(config = config) %>%
-    digest::digest(algo = config$long_hash_algo)
+    paste(collapse = "") %>%
+    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
 }
 
 input_file_hash <- function(
@@ -131,7 +132,8 @@ input_file_hash <- function(
     config = config,
     size_cutoff = size_cutoff
   ) %>%
-    digest::digest(algo = config$long_hash_algo)
+    paste(collapse = "") %>%
+    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
 }
 
 output_file_hash <- function(
@@ -152,7 +154,8 @@ output_file_hash <- function(
     config = config,
     size_cutoff = size_cutoff
   ) %>%
-    digest::digest(algo = config$long_hash_algo)
+    paste(collapse = "") %>%
+    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
 }
 
 self_hash <- Vectorize(function(target, config) {

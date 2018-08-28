@@ -38,7 +38,8 @@ safe_encode <- Vectorize(function(x, hash_algo){
   digest::digest(
     object = x,
     algo = hash_algo,
-    file = FALSE
+    file = FALSE,
+    serialize = FALSE
   )
 },
 "x")

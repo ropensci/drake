@@ -1,6 +1,7 @@
 # Version 5.4.0.9001
 
 - Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
+- Avoid serialization in `digest()` wherever possible. This puts old `drake` projects out of date, but it improves speed.
 - Smooth the edges in `vis_drake_graph()` and `render_drake_graph()`.
 - Make hover text slightly more readable in in `vis_drake_graph()` and `render_drake_graph()`.
 - Align hover text properly in `vis_drake_graph()` using the "title" node column.
