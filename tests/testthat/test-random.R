@@ -1,5 +1,18 @@
 drake_context("reproducible random numbers")
 
+test_with_dir("seed_from_basic_types", {
+  set.seed(0)
+  seed <- .Random.seed # nolint
+  s1 <- seed_from_basic_types(seed, "abc")
+  s2 <- seed_from_basic_types(seed, "abc")
+  s3 <- seed_from_basic_types(seed, "xyz")
+  rnorm(1)
+  s4 <- seed_from_basic_types(seed, "xyz")
+  expect_true(identical(s1, s2))
+  expect_false(identical(s1, s3))
+  expect_false(identical(s1, s4))
+})
+
 test_with_dir("Random targets are reproducible", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
