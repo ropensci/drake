@@ -259,8 +259,8 @@ nonfile_target_dependencies <- function(targets, config, jobs = 1){
   intersect(out, config$plan$target)
 }
 
-import_dependencies <- function(expr){
-  deps <- code_dependencies(expr)
+import_dependencies <- function(expr, exclude = character(0)){
+  deps <- code_dependencies(expr, exclude = exclude)
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
@@ -268,12 +268,12 @@ import_dependencies <- function(expr){
   deps
 }
 
-command_dependencies <- function(command){
+command_dependencies <- function(command, exclude = character(0)){
   if (!length(command)){
     return()
   }
   command <- as.character(command)
-  deps <- code_dependencies(parse(text = command))
+  deps <- code_dependencies(parse(text = command), exclude = exclude)
   deps$strings <- NULL
 
   # TODO: this block can go away when `drake`
@@ -368,7 +368,7 @@ unwrap_function <- function(funct){
   funct
 }
 
-code_dependencies <- function(expr){
+code_dependencies <- function(expr, exclude = character(0)){
   if (
     !is.function(expr) &&
     !is.expression(expr) &&
@@ -420,6 +420,14 @@ code_dependencies <- function(expr){
   }
   walk(expr)
   results$globals <- intersect(results$globals, find_globals(expr))
+  if (length(exclude) > 0){
+    results <- lapply(
+      X = results,
+      FUN = function(x){
+        setdiff(x, exclude)
+      }
+    )
+  }
   results[purrr::map_int(results, length) > 0]
 }
 
@@ -432,7 +440,16 @@ find_globals <- function(fun){
   if (typeof(fun) != "closure"){
     return(character(0))
   }
-  codetools::findGlobals(fun = unwrap_function(fun), merge = TRUE) %>%
+  fun <- unwrap_function(fun)
+  # The tryCatch statement fixes a strange bug in codetools
+  # for R 3.3.3. I do not understand it.
+  tryCatch(
+    codetools::findGlobals(fun = fun, merge = TRUE),
+    error = function(e){
+      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
+      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
+    }
+  ) %>%
     setdiff(y = c(drake_fn_patterns, ".")) %>%
     Filter(f = is_parsable)
 }
@@ -560,6 +577,13 @@ is_ignore_call <- function(expr){
 is_target_call <- function(expr){
   tryCatch(
     wide_deparse(expr[[1]]) %in% target_fns,
+    error = error_false
+  )
+}
+
+is_trigger_call <- function(expr){
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% trigger_fns,
     error = error_false
   )
 }

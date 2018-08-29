@@ -8,7 +8,7 @@ work to a cluster / job scheduler.}
 drake_hpc_template_files()
 }
 \value{
-a character vector of example tempalte files that
+a character vector of example template files that
 you can write with \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}}.
 }
 \description{

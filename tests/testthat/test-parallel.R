@@ -96,6 +96,7 @@ test_with_dir("shell_file() writes correctly", {
 
 test_with_dir("mclapply and lapply", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("txtq")
   config <- dbug()
   config$parallelism <- "parLapply"
   config$jobs <- 1
@@ -188,6 +189,7 @@ test_with_dir("ensure_workers can be disabled", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
   skip_if_not_installed("future.apply")
+  skip_if_not_installed("txtq")
   load_mtcars_example()
   future::plan(future::sequential)
   config <- drake_config(my_plan)

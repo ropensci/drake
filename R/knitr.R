@@ -80,8 +80,8 @@ safe_get_tangled_frags <- function(target){
 
 # From https://github.com/duncantl/CodeDepends/blob/master/R/sweave.R#L15
 get_tangled_frags <- function(doc) {
-  assert_pkgs("knitr")
-  id <- digest::digest(tempfile)
+  assert_pkg("knitr")
+  id <- make.names(tempfile())
   con <- textConnection(id, "w", local = TRUE)
   on.exit(close(con))
   knitr::knit(doc, output = con, tangle = TRUE, quiet = TRUE)

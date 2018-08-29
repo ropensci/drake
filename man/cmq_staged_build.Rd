@@ -2,7 +2,7 @@
 % Please edit documentation in R/staged.R
 \name{cmq_staged_build}
 \alias{cmq_staged_build}
-\title{Build a target using the clustermq backend}
+\title{Build a target using the clustermq_staged backend}
 \usage{
 cmq_staged_build(target, meta_list, config)
 }

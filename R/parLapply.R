@@ -3,7 +3,7 @@ run_parLapply <- function(config) { # nolint
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
-  assert_pkgs("txtq")
+  assert_pkg("txtq")
   console_parLapply(config) # nolint
   config$cluster <- makePSOCKcluster(config$jobs + 1)
   on.exit(stopCluster(cl = config$cluster))

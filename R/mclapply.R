@@ -2,9 +2,9 @@ run_mclapply <- function(config){
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
-  assert_pkgs("txtq")
+  assert_pkg("txtq")
   mc_init_worker_cache(config)
-  tmp <- mclapply(
+  parallel::mclapply(
     X = mc_worker_id(c(0, seq_len(config$jobs))),
     FUN = mc_process,
     mc.cores = config$jobs + 1,
@@ -53,7 +53,7 @@ mc_process <- function(id, config){
 #' @param config `drake_config()` list
 #' @return nothing important
 mc_master <- function(config){
-  assert_pkgs("txtq")
+  assert_pkg("txtq")
   on.exit(mc_conclude_workers(config))
   config$queue <- new_priority_queue(config = config)
   if (!identical(config$ensure_workers, FALSE)){
@@ -71,7 +71,7 @@ mc_master <- function(config){
 }
 
 mc_worker <- function(worker, config){
-  assert_pkgs("txtq")
+  assert_pkg("txtq")
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){

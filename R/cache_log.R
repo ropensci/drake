@@ -181,7 +181,7 @@ drake_cache_log <- function(
 }
 
 single_cache_log <- function(key, cache){
-  hash <- cache$get_hash(key = key)
+  hash <- cache$get_hash(key = key, namespace = "kernels")
   imported <- get_from_subspace(
     key = key,
     subspace = "imported",

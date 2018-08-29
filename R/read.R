@@ -1,8 +1,36 @@
 #' @title Read and return a drake target/import from the cache.
-#' @description Does not delete the item from the cache.
-#' @seealso [loadd()], [cached()],
-#'   [built()], [imported()], [drake_plan()],
-#'   [make()]
+#' @description [readd()] returns an object from the cache,
+#' and [loadd()] loads one or more objects from the cache
+#' into your environment or session. These objects are usually
+#' targets built by [make()].
+#' @details There are two uses for the
+#' [loadd()] and [readd()] functions:
+#' 1. Exploring the results outside the `drake`/`make()` pipeline.
+#'   When you call [make()] to run your project,
+#'   `drake` puts the targets in a cache, usually a folder called `.drake`.
+#'   You may want to inspect the targets afterwards, possibly in an
+#'   interactive R session. However, the files in the `.drake` folder
+#'   are organized in a special format created by the
+#'   [`storr`](https://github.com/richfitz/storr) package,
+#'   which is not exactly human-readable.
+#'   To retrieve a target for manual viewing, use [readd()].
+#'   To load one or more targets into your session, use [loadd()].
+#' 2. In `knitr` / R Markdown reports.
+#'   You can borrow `drake` targets in your active code chunks
+#'   if you have the right calls to [loadd()] and [readd()].
+#'   These reports can either run outside the `drake` pipeline,
+#'   or better yet, as part of the pipeline itself.
+#'   If you call `knitr_in("your_report.Rmd")` inside a [drake_plan()]
+#'   command, then [make()] will scan `"your_report.Rmd"` for
+#'   calls to `loadd()` and `readd()` in active code chunks,
+#'   and then treat those loaded targets as dependencies.
+#'   That way, [make()] will automatically (re)run the report if those
+#'   dependencies change.
+#' Please do not put calls to [loadd()] or [readd()] inside
+#' your custom (imported) functions or the commands in your [drake_plan()].
+#' This create confusion inside [make()], which has its own ways of
+#' interacting with the cache.
+#' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
 #' @return The cached value of the `target`.
 #' @inheritParams cached
@@ -65,16 +93,8 @@ readd <- function(
 }
 
 #' @title Load one or more targets or imports from the drake cache.
-#' @description Loads the object(s) into the
-#' current workspace (or environment `envir` if given). Defaults
-#' to loading the entire cache if you do not supply anything
-#' to arguments `...` or `list`.
-#' @details `loadd()` excludes foreign imports:
-#'   R objects not originally defined in `envir`
-#'   when [make()] last imported them.
-#'   To get these objects, use [readd()].
-#' @seealso [readd()], [cached()], [built()],
-#'   [imported()], [drake_plan()], [make()],
+#' @rdname readd
+#' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
 #' @return `NULL`
 #'
@@ -90,9 +110,6 @@ readd <- function(
 #'
 #' @param imported_only logical, whether only imported objects
 #'   should be loaded.
-#'
-#' @param namespace character scalar,
-#'   name of an optional storr namespace to load from.
 #'
 #' @param envir environment to load objects into. Defaults to the
 #'   calling environment (current workspace).
@@ -194,7 +211,7 @@ loadd <- function(
   }
   targets <- drake_select(
     cache = cache, ..., namespaces = namespace, list = list)
-  if (!length(targets)){
+  if (!length(targets) && !length(list(...))){
     targets <- cache$list()
   }
   if (imported_only){
@@ -341,7 +358,7 @@ promise_load_target <- function(target, cache, namespace, envir, verbose){
 }
 
 bind_load_target <- function(target, cache, namespace, envir, verbose){
-  assert_pkgs("bindr")
+  assert_pkg("bindr")
   # Allow active bindings to overwrite existing variables.
   if (target %in% ls(envir)){
     message(

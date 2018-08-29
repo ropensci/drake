@@ -566,5 +566,5 @@ target <- function(
         x
       }
     }) %>%
-    as_drake_plan()
+    tibble::as_tibble()
 }

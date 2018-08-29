@@ -16,6 +16,7 @@
 #'   [drake_config()]).
 #' @param trigger optional, a global trigger for building targets
 #'   (see [trigger()]).
+#' @param cache an optional `storr` cache for memoization
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -33,7 +34,8 @@ build_drake_graph <- function(
   jobs = 1,
   sanitize_plan = FALSE,
   console_log_file = NULL,
-  trigger = drake::trigger()
+  trigger = drake::trigger(),
+  cache = NULL
 ){
   force(envir)
   if (sanitize_plan){
@@ -42,216 +44,320 @@ build_drake_graph <- function(
       call. = FALSE
     )
   }
-  list(
+  config <- list(
     plan = plan,
     targets = targets,
     envir = envir,
     verbose = verbose,
     jobs = jobs,
+    cache = cache,
     console_log_file = console_log_file,
-    trigger = trigger
+    trigger = parse_trigger(trigger = trigger, envir = envir)
+  )
+  imports <- bdg_prepare_imports(config)
+  import_deps <- memo_expr(
+    bdg_analyze_imports(config, imports),
+    config$cache,
+    imports
+  )
+  command_deps <- memo_expr(
+    bdg_analyze_commands(config),
+    config$cache,
+    config$plan[, c("target", "command")]
+  )
+  trigger_cols <- intersect(colnames(config$plan), c("target", "trigger"))
+  trigger_plan <- config$plan[, trigger_cols]
+  triggers <- memo_expr(
+    bdg_get_triggers(config),
+    config$cache,
+    trigger_plan,
+    config$trigger
+  )
+  condition_deps <- memo_expr(
+    bdg_get_condition_deps(config, triggers),
+    config$cache,
+    trigger_plan,
+    config$trigger,
+    triggers
+  )
+  change_deps <- memo_expr(
+    bdg_get_change_deps(config, triggers),
+    config$cache,
+    trigger_plan,
+    config$trigger,
+    triggers
+  )
+  edges <- memo_expr(
+    bdg_create_edges(
+      config,
+      import_deps,
+      command_deps,
+      condition_deps,
+      change_deps
+    ),
+    config$cache,
+    import_deps,
+    command_deps,
+    condition_deps,
+    change_deps
+  )
+  attributes <- memo_expr(
+    bdg_create_attributes(
+      config,
+      triggers,
+      import_deps,
+      command_deps,
+      condition_deps,
+      change_deps
+    ),
+    config$cache,
+    triggers,
+    import_deps,
+    command_deps,
+    condition_deps,
+    change_deps
+  )
+  memo_expr(
+    bdg_create_graph(config, edges, attributes),
+    config$cache,
+    config$targets,
+    edges,
+    attributes
+  )
+}
+
+bdg_prepare_imports <- function(config){
+  console_preprocess(text = "analyze environment", config = config)
+  imports <- as.list(config$envir)
+  unload_conflicts(
+    imports = names(imports),
+    targets = config$plan$target,
+    envir = config$envir,
+    verbose = config$verbose
+  )
+  import_names <- setdiff(names(imports), config$targets)
+  imports[import_names]
+}
+
+bdg_analyze_imports <- function(config, imports){
+  console_many_targets(
+    targets = names(imports),
+    pattern = "analyze",
+    type = "import",
+    config = config
+  )
+  lightly_parallelize(
+    X = seq_along(imports),
+    FUN = function(i){
+      import_dependencies(expr = imports[[i]], exclude = names(imports)[[i]])
+    },
+    jobs = config$jobs
   ) %>%
-    bdg_prepare_data %>%
-    bdg_analyze_code %>%
-    bdg_analyze_triggers %>%
-    bdg_create_edges %>%
-    bdg_create_attributes %>%
-    bdg_create_graph
+    setNames(names(imports))
 }
 
-bdg_prepare_data <- function(args){
-  envir <- verbose <- targets <- NULL
-  within(args, {
-    imports <- as.list(envir)
-    unload_conflicts(
-      imports = names(imports),
-      targets = plan$target,
-      envir = envir,
-      verbose = verbose
-    )
-    import_names <- setdiff(names(imports), targets)
-    imports <- imports[import_names]
-    args
-  })
+bdg_analyze_commands <- function(config){
+  console_many_targets(
+    targets = config$plan$target,
+    pattern = "analyze",
+    type = "target",
+    config = config
+  )
+  lightly_parallelize(
+    X = seq_len(nrow(config$plan)),
+    FUN = function(i){
+      command_dependencies(
+        command = config$plan$command[i],
+        exclude = config$plan$target[i]
+      )
+    },
+    jobs = config$jobs
+  ) %>%
+    setNames(config$plan$target)
 }
 
-bdg_analyze_code <- function(args){
-  import_names <- imports <- jobs <- NULL
-  within(args, {
-    console_many_targets(
-      targets = import_names,
-      pattern = "analyze",
-      type = "import",
-      config = args
-    )
-    import_deps <- lightly_parallelize(
-      X = imports,
-      FUN = import_dependencies,
-      jobs = jobs
-    ) %>%
-      setNames(import_names)
-    console_many_targets(
-      targets = plan$target,
-      pattern = "analyze",
-      type = "target",
-      config = args
-    )
-    command_deps <- lightly_parallelize(
-      X = plan$command,
-      FUN = command_dependencies,
-      jobs = jobs
-    ) %>%
-      setNames(plan$target)
-    args
-  })
-}
-
-bdg_analyze_triggers <- function(args){
-  envir <- jobs <- NULL
-  within(args, {
-    default_trigger <- parse_trigger(trigger = trigger, envir = envir)
-    default_condition_deps <- import_dependencies(default_trigger$condition)
-    default_change_deps <- import_dependencies(default_trigger$change)
-    if ("trigger" %in% colnames(plan)){
-      triggers <- lightly_parallelize(
-        X = seq_len(nrow(plan)),
-        FUN = function(i){
-          if (!safe_is_na(plan$trigger[i])){
-            parse_trigger(trigger = plan$trigger[i], envir = envir)
-          } else {
-            default_trigger
-          }
-        },
-        jobs = jobs
-      )
-      condition_deps <- lightly_parallelize(
-        X = seq_len(nrow(plan)),
-        FUN = function(i){
-          if (!safe_is_na(plan$trigger[i])){
-            import_dependencies(triggers[[i]]$condition)
-          } else {
-            default_condition_deps
-          }
-        },
-        jobs = jobs
-      )
-      change_deps <- lightly_parallelize(
-        X = seq_len(nrow(plan)),
-        FUN = function(i){
-          if (!safe_is_na(plan$trigger[i])){
-            import_dependencies(triggers[[i]]$change)
-          } else {
-            default_change_deps
-          }
-        },
-        jobs = jobs
-      )
-    } else {
-      triggers <- replicate(default_trigger, n = nrow(plan), simplify = FALSE)
-      condition_deps <- replicate(
-        default_condition_deps,
-        n = nrow(plan),
-        simplify = FALSE
-      )
-      change_deps <- replicate(
-        default_change_deps,
-        n = nrow(plan),
-        simplify = FALSE
-      )
-    }
-    triggers <- setNames(triggers, plan$target)
-    condition_deps <- setNames(condition_deps, plan$target)
-    change_deps <- setNames(change_deps, plan$target)
-    args
-  })
-}
-
-bdg_create_edges <- function(args){
-  import_names <- imports <- jobs <- command_deps <- import_deps <-
-    condition_deps <- change_deps <- NULL
-  within(args, {
-    import_edges <- lightly_parallelize(
-      X = seq_along(imports),
+bdg_get_triggers <- function(config){
+  if ("trigger" %in% colnames(config$plan)){
+    console_preprocess(text = "analyze triggers", config = config)
+    triggers <- lightly_parallelize(
+      X = seq_len(nrow(config$plan)),
       FUN = function(i){
-        code_deps_to_edges(target = import_names[[i]], deps = import_deps[[i]])
+        if (!safe_is_na(config$plan$trigger[i])){
+          parse_trigger(
+            trigger = config$plan$trigger[i],
+            envir = config$envir
+          )
+        } else {
+          config$trigger
+        }
       },
-      jobs = jobs
-    ) %>%
-      do.call(what = dplyr::bind_rows)
-    target_edges <- lightly_parallelize(
-      X = seq_len(nrow(plan)),
-      FUN = function(i){
-        deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
-          merge_lists(change_deps[[i]])
-        code_deps_to_edges(target = plan$target[i], deps = deps)
-      },
-      jobs = jobs
-    ) %>%
-      do.call(what = dplyr::bind_rows)
-    if (nrow(target_edges) > 0){
-      target_edges <- connect_output_files(target_edges, command_deps, jobs)
-    }
-    if (nrow(import_edges) > 0){
-      import_edges$file <- FALSE # no input/output file connections here
-    }
-    edges <- dplyr::bind_rows(import_edges, target_edges)
-    args
-  })
-}
-
-bdg_create_attributes <- function(args){
-  import_deps <- command_deps <- condition_deps <- change_deps <- jobs <- NULL
-  within(args, {
-    import_deps_attr <- lightly_parallelize(
-      X = import_deps,
-      FUN = list2env,
-      jobs = jobs,
-      parent = emptyenv(),
-      hash = TRUE
-    ) %>%
-      setNames(names(import_deps))
-    target_deps_attr <- lightly_parallelize(
-      X = seq_len(nrow(plan)),
-      FUN = zip_deps,
-      jobs = jobs,
-      command_deps = command_deps,
-      condition_deps = condition_deps,
-      change_deps = change_deps
-    ) %>%
-      setNames(plan$target)
-    deps_attr <- c(import_deps_attr, target_deps_attr)
-    trigger_attr <- lightly_parallelize(
-      X = triggers,
-      FUN = list2env,
-      jobs = jobs,
-      parent = emptyenv(),
-      hash = TRUE
+      jobs = config$jobs
     )
-    args
-  })
+  } else {
+    triggers <- replicate(
+      config$trigger,
+      n = nrow(config$plan),
+      simplify = FALSE
+    )
+  }
+  setNames(triggers, config$plan$target)
 }
 
-bdg_create_graph <- function(args){
-  edges <- deps_attr <- trigger_attr <- targets <- jobs <- NULL
-  with(args, {
-    igraph::graph_from_data_frame(edges) %>%
-      igraph::set_vertex_attr(
-        name = "deps",
-        index = names(deps_attr),
-        value = deps_attr
-      ) %>%
-      igraph::set_vertex_attr(
-        name = "trigger",
-        index = names(trigger_attr),
-        value = trigger_attr
-      ) %>%
-      prune_drake_graph(to = targets, jobs = jobs) %>%
-      igraph::simplify(
-        remove.loops = TRUE,
-        remove.multiple = TRUE,
-        edge.attr.comb = "min"
+bdg_get_condition_deps <- function(config, triggers){
+  default_condition_deps <- import_dependencies(config$trigger$condition)
+  if ("trigger" %in% colnames(config$plan)){
+    console_preprocess(text = "analyze condition triggers", config = config)
+    condition_deps <- lightly_parallelize(
+      X = seq_len(nrow(config$plan)),
+      FUN = function(i){
+        if (!safe_is_na(config$plan$trigger[i])){
+          import_dependencies(
+            expr = triggers[[i]]$condition,
+            exclude = config$plan$target[i]
+          )
+        } else {
+          default_condition_deps
+        }
+      },
+      jobs = config$jobs
+    )
+  } else {
+    condition_deps <- replicate(
+      default_condition_deps,
+      n = nrow(config$plan),
+      simplify = FALSE
+    )
+  }
+  setNames(condition_deps, config$plan$target)
+}
+
+bdg_get_change_deps <- function(config, triggers){
+  default_change_deps <- import_dependencies(config$trigger$change)
+  if ("trigger" %in% colnames(config$plan)){
+    console_preprocess(text = "analyze change triggers", config = config)
+    change_deps <- lightly_parallelize(
+      X = seq_len(nrow(config$plan)),
+      FUN = function(i){
+        if (!safe_is_na(config$plan$trigger[i])){
+          import_dependencies(
+            expr = triggers[[i]]$change,
+            exclude = config$plan$target[i]
+          )
+        } else {
+          default_change_deps
+        }
+      },
+      jobs = config$jobs
+    )
+  } else {
+    change_deps <- replicate(
+      default_change_deps,
+      n = nrow(config$plan),
+      simplify = FALSE
+    )
+  }
+  setNames(change_deps, config$plan$target)
+}
+
+bdg_create_edges <- function(
+  config,
+  import_deps,
+  command_deps,
+  condition_deps,
+  change_deps
+){
+  console_preprocess(text = "construct graph edges", config = config)
+  import_edges <- lightly_parallelize(
+    X = seq_along(import_deps),
+    FUN = function(i){
+      code_deps_to_edges(
+        target = names(import_deps)[[i]],
+        deps = import_deps[[i]]
       )
-  })
+    },
+    jobs = config$jobs
+  ) %>%
+    do.call(what = dplyr::bind_rows)
+  target_edges <- lightly_parallelize(
+    X = seq_along(command_deps),
+    FUN = function(i){
+      deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
+        merge_lists(change_deps[[i]])
+      code_deps_to_edges(target = names(command_deps)[i], deps = deps)
+    },
+    jobs = config$jobs
+  ) %>%
+    do.call(what = dplyr::bind_rows)
+  if (nrow(target_edges) > 0){
+    target_edges <- connect_output_files(
+      target_edges,
+      command_deps,
+      config$jobs
+    )
+  }
+  if (nrow(import_edges) > 0){
+    import_edges$file <- FALSE # no input/output file connections here
+  }
+  dplyr::bind_rows(import_edges, target_edges)
+}
+
+bdg_create_attributes <- function(
+  config,
+  triggers,
+  import_deps,
+  command_deps,
+  condition_deps,
+  change_deps
+){
+  console_preprocess(text = "construct vertex attributes", config = config)
+  import_deps_attr <- lightly_parallelize(
+    X = import_deps,
+    FUN = list2env,
+    jobs = config$jobs,
+    parent = emptyenv(),
+    hash = TRUE
+  ) %>%
+    setNames(names(import_deps))
+  target_deps_attr <- lightly_parallelize(
+    X = seq_along(command_deps),
+    FUN = zip_deps,
+    jobs = config$jobs,
+    command_deps = command_deps,
+    condition_deps = condition_deps,
+    change_deps = change_deps
+  ) %>%
+    setNames(names(command_deps))
+  deps_attr <- c(import_deps_attr, target_deps_attr)
+  trigger_attr <- lightly_parallelize(
+    X = triggers,
+    FUN = list2env,
+    jobs = config$jobs,
+    parent = emptyenv(),
+    hash = TRUE
+  ) %>%
+    setNames(names(triggers))
+  list(deps_attr = deps_attr, trigger_attr = trigger_attr)
+}
+
+bdg_create_graph <- function(config, edges, attributes){
+  console_preprocess(text = "construct graph", config = config)
+  igraph::graph_from_data_frame(edges) %>%
+    igraph::set_vertex_attr(
+      name = "deps",
+      index = names(attributes$deps_attr),
+      value = attributes$deps_attr
+    ) %>%
+    igraph::set_vertex_attr(
+      name = "trigger",
+      index = names(attributes$trigger_attr),
+      value = attributes$trigger_attr
+    ) %>%
+    prune_drake_graph(to = config$targets, jobs = config$jobs) %>%
+    igraph::simplify(
+      remove.loops = TRUE,
+      remove.multiple = TRUE,
+      edge.attr.comb = "min"
+    )
 }
 
 code_deps_to_edges <- function(target, deps){

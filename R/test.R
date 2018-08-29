@@ -1,5 +1,5 @@
 drake_context <- function(x){
-  assert_pkgs("testthat")
+  assert_pkg("testthat")
   ctx <- paste0(get_testing_scenario_name(), ": ", x)
   testthat::context(ctx)
 }
@@ -39,7 +39,7 @@ justbuilt <- function(config) {
 }
 
 nobuild <- function(config) {
-  assert_pkgs("testthat")
+  assert_pkg("testthat")
   testthat::expect_true(length(justbuilt(config)) < 1)
 }
 
@@ -62,7 +62,7 @@ nobuild <- function(config) {
 #' file.exists("world.txt") # FALSE
 #' }
 test_with_dir <- function(desc, ...){
-  assert_pkgs("testthat")
+  assert_pkg("testthat")
   while (file.exists(new <- tempfile())){
     # Should not reach this part of the loop.
     Sys.sleep(0.01) # nocov
@@ -89,7 +89,7 @@ set_test_backend <- function(){
 }
 
 unit_test_files <- function(path = getwd()){
-  assert_pkgs("rprojroot")
+  assert_pkg("rprojroot")
   root <- rprojroot::find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")
 }

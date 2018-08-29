@@ -240,3 +240,19 @@ test_with_dir("dependency profile", {
   expect_false(is.na(dp$old_hash[dp$name == "c"]))
   expect_false(is.na(dp$new_hash[dp$name == "c"]))
 })
+
+test_with_dir("self-referential commands and imports", {
+  f <- function(x, ...){
+    dplyr::select(x, f)
+  }
+  x <- data.frame(f = 123)
+  plan <- drake_plan(y = f(x, y))
+  cache <- storr::storr_environment()
+  o <- make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(o), "y")
+  log1 <- drake_cache_log(cache = cache)
+  o <- make(plan, cache = cache, session_info = FALSE)
+  expect_true(nobuild(o))
+  log2 <- drake_cache_log(cache = cache)
+  expect_equal(log1, log2)
+})

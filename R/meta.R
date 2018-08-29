@@ -57,7 +57,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     imported = !(target %in% config$plan$target),
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_object(list(seed = config$seed, target = target))
+    seed = seed_from_basic_types(config$seed, target)
   )
   # For imported files.
   if (is_file(target)) {
@@ -122,7 +122,7 @@ input_file_hash <- function(
     name = "deps",
     index = target
   )[[1]]
-  files <- sort(unique(c(deps$file_in, deps$knitr_in)))
+  files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
   vapply(
     X = files,
     FUN = file_hash,
@@ -142,7 +142,7 @@ output_file_hash <- function(
     name = "deps",
     index = target
   )[[1]]
-  files <- sort(unique(deps$file_out))
+  files <- sort(unique(as.character(deps$file_out)))
   vapply(
     X = files,
     FUN = file_hash,

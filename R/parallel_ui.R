@@ -51,7 +51,7 @@ drake_hpc_template_file <- function(
 #' @seealso [drake_hpc_template_file()],
 #'   [drake_examples()], [drake_example()],
 #'   [shell_file()]
-#' @return a character vector of example tempalte files that
+#' @return a character vector of example template files that
 #'   you can write with [drake_hpc_template_file()].
 #' @examples
 #' \dontrun{
@@ -105,6 +105,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "parLapply_staged"
   )
   distributed <- c(
+    "clustermq",
     "clustermq_staged",
     "future",
     "future_lapply",

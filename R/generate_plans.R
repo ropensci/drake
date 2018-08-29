@@ -164,7 +164,7 @@ evaluate_plan <- function(
       columns = columns
     )
   } else {
-    as_drake_plan(plan)
+    plan
   }
 }
 
@@ -196,8 +196,8 @@ evaluate_single_wildcard <- function(
   if (!any(matches)){
     return(plan)
   }
-  major <- digest::digest(tempfile())
-  minor <- digest::digest(tempfile())
+  major <- make.names(tempfile())
+  minor <- make.names(tempfile())
   plan[[major]] <- seq_len(nrow(plan))
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]
@@ -248,7 +248,7 @@ evaluate_wildcard_rules <- function(
       columns = columns
     )
   }
-  as_drake_plan(plan)
+  plan
 }
 
 check_wildcard_rules <- function(rules){
@@ -302,7 +302,7 @@ check_wildcard_rules <- function(rules){
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
 expand_plan <- function(plan, values = NULL, rename = TRUE){
   if (!length(values)){
-    return(as_drake_plan(plan))
+    return(plan)
   }
   nrows <- nrow(plan)
   repeat_targets <- rep(seq_len(nrows), each = length(values))
@@ -352,8 +352,7 @@ gather_plan <- function(
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  tibble(target = target, command = command) %>%
-    as_drake_plan()
+  tibble(target = target, command = command)
 }
 
 #' @title Write commands to reduce several targets down to one.
@@ -414,8 +413,7 @@ reduce_plan <- function(
     tibble(
       target = pairs$names,
       command = paste0(begin, pairs$odds, op, pairs$evens, end)
-    ) %>%
-      as_drake_plan()
+    )
   } else {
     command <- Reduce(
       x = plan$target,
@@ -423,8 +421,7 @@ reduce_plan <- function(
         paste0(begin, x, op, y, end)
       }
     )
-    tibble(target = target, command = command) %>%
-      as_drake_plan()
+    tibble(target = target, command = command)
   }
 }
 
@@ -599,8 +596,7 @@ plan_summaries <- function(
   target <- command <- NULL
   dplyr::bind_rows(gathered, out) %>%
     ungroup %>%
-    select(target, command) %>%
-    as_drake_plan()
+    select(target, command)
 }
 
 with_analyses_only <- function(plan){

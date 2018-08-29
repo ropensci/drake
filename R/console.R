@@ -68,6 +68,17 @@ console_cache <- function(config){
     finish_console(pattern = "cache", config = config)
 }
 
+console_preprocess <- function(text, config){
+  if (config$verbose < 2){
+    return()
+  }
+  finish_console(
+    text = text,
+    pattern = strsplit(text, " ")[[1]][1],
+    config = config
+  )
+}
+
 console_many_targets <- function(
   targets, pattern, config, color = color_of(pattern), type = "item"
 ){

@@ -7,11 +7,16 @@
 eager_load_target(target, cache, namespace, envir, verbose)
 }
 \arguments{
+\item{target}{If \code{character_only} is \code{TRUE}, then
+\code{target} is a character string naming the object to read.
+Otherwise, \code{target} is an unquoted symbol with the name of the
+object.}
+
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{namespace}{character scalar,
-name of an optional storr namespace to load from.}
+\item{namespace}{optional character string,
+name of the \code{storr} namespace to read from.}
 
 \item{envir}{environment to load objects into. Defaults to the
 calling environment (current workspace).}

@@ -60,10 +60,10 @@
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom stringi stri_extract_all_regex
 #'   stri_split_fixed stri_trim_both
-#' @importFrom tibble as_tibble new_tibble tibble
+#' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head installed.packages
 #'   packageVersion read.csv sessionInfo stack type.convert unzip write.table
 #' @importFrom withr local_dir with_dir with_options with_output_sink
-#'   with_preserve_seed with_seed
+#'   with_seed
 NULL
