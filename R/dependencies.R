@@ -80,7 +80,8 @@ deps_code <- function(x){
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
 #' @export
-#' @param targets a character vector of target names
+#' @param target a symbol denoting a target name, or if `character_only`
+#'   is TRUE, a character scalar denoting a target name.
 #' @param config an output list from [drake_config()]
 #' @param character_only logical, whether to assume target is a character
 #'   string rather than a symbol.
