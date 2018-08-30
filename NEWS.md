@@ -19,6 +19,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Bug fix: avoid `sort(NULL)` because it returns `NA`s on R 3.3.
 - Bug fix: work around mysterious `codetools` failures on R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 - Skip some tests if `txtq` is not installed.
+- Deprecate `deps_targets()` in favor of a `deps_target()` function (singular) that behaves more like `deps_code()`.
 
 # Version 5.4.0
 

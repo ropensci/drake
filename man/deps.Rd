@@ -18,33 +18,13 @@ Files wrapped in single quotes.
 The other names listed are functions or generic R objects.
 }
 \description{
-Deprecated. Use \code{\link[=deps_code]{deps_code()}} or \code{\link[=deps_targets]{deps_targets()}} instead.
+Deprecated. Use \code{\link[=deps_code]{deps_code()}} or \code{\link[=deps_target]{deps_target()}} instead.
 These functions are intended for debugging and checking your project.
 The dependency structure of the components of your analysis
 decides which targets are built and when.
 }
 \details{
-If the argument is a \code{knitr} report
-(for example, \code{file_store("report.Rmd")} or \code{"\"report.Rmd\""})
-the the dependencies of the expected compiled
-output will be given. For example, \code{deps(file_store("report.Rmd"))}
-will return target names found in calls to \code{\link[=loadd]{loadd()}}
-and \code{\link[=readd]{readd()}} in active code chunks.
-These \code{\link[=loadd]{loadd()}}/\code{\link[=readd]{readd()}} targets are needed
-in order to run \code{knit(knitr_in("report.Rmd"))}
-to produce the output file \code{"report.md"}, so technically,
-they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
-
-The \code{\link[=file_store]{file_store()}} function
-alerts \code{drake} utility functions to file names by
-enclosing them in literal double quotes.
-(For example, \code{file_store("report.Rmd")} is just \code{"\"report.Rmd\""}.)
-
-\code{Drake} takes special precautions so that a target/import
-does not depend on itself. For example, \code{deps(f)`` might return}"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
-this conflict and runs as expected. In other words, \code{\link[=make]{make()}}
-automatically removes all self-referential loops in the dependency
-network.
+Deprecated on 2018-05-08.
 }
 \examples{
 # See deps_code() for examples.

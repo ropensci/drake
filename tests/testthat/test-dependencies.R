@@ -170,38 +170,25 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(readd(a), 12:21)
 })
 
-test_with_dir("deps_targets()", {
+test_with_dir("deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
-  expect_equal(
-    sort(deps_targets("report", config = config)),
-    sort(
-      c(
-        "coef_regression2_small", "knit", "large",
-        "small", file_store("report.Rmd")
-      )
-    )
+  d1 <- lapply(deps_target(report, config = config), sort)
+  d2 <- list(
+    knitr_in = file_store("report.Rmd"),
+    file_out = file_store("report.md"),
+    readd = sort(c("coef_regression2_small", "small")),
+    globals = "knit",
+    loadd = sort(c("coef_regression2_small", "large", "small"))
   )
-  expect_equal(
-    sort(deps_targets("regression1_small", config = config)),
-    sort(c("reg1", "small"))
-  )
-  expect_equal(
-    sort(deps_targets(c("small", "large"), config = config, reverse = TRUE)),
-    sort(c(
-      "regression1_large", "regression1_small",
-      "regression2_large", "regression2_small",
-      "report"
-    ))
-  )
-  config <- dbug()
-  deps <- sort(deps_targets(config$targets, config))
-  truth <- sort(c(
-    "combined", "saveRDS", "f", "g", "myinput", file_store("input.rds"),
-    "nextone", "yourinput", "readRDS", "drake_target_1"
-  ))
-  expect_equal(deps, truth)
+  expect_equal(length(d1), length(d2))
+  for (n in names(d2)){
+    expect_equal(d1[[n]], d2[[n]])
+  }
+  d <- deps_target(regression1_small, config = config)
+  expect_equal(length(d), 1)
+  expect_equal(sort(d$globals), sort(c("reg1", "small")))
 })
 
 test_with_dir("self-referential commands and imports", {

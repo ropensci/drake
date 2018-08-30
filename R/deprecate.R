@@ -385,32 +385,11 @@ deprecate_wildcard <- function(plan, old, replacement){
 #' @title Deprecated.
 #'   List the dependencies of a function, workflow plan command,
 #'   or knitr report source file.
-#' @description Deprecated. Use [deps_code()] or [deps_targets()] instead.
+#' @description Deprecated. Use [deps_code()] or [deps_target()] instead.
 #'   These functions are intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
-#' @details If the argument is a `knitr` report
-#'   (for example, `file_store("report.Rmd")` or `"\"report.Rmd\""`)
-#'   the the dependencies of the expected compiled
-#'   output will be given. For example, `deps(file_store("report.Rmd"))`
-#'   will return target names found in calls to [loadd()]
-#'   and [readd()] in active code chunks.
-#'   These [loadd()]/[readd()] targets are needed
-#'   in order to run `knit(knitr_in("report.Rmd"))`
-#'   to produce the output file `"report.md"`, so technically,
-#'   they are dependencies of `"report.md"`, not `"report.Rmd"`.
-#'
-#'   The [file_store()] function
-#'   alerts `drake` utility functions to file names by
-#'   enclosing them in literal double quotes.
-#'   (For example, `file_store("report.Rmd")` is just `"\"report.Rmd\""`.)
-#'
-#'   `Drake` takes special precautions so that a target/import
-#'   does not depend on itself. For example, `deps(f)`` might return
-#'   `"f"` if `f()` is a recursive function, but [make()] just ignores
-#'   this conflict and runs as expected. In other words, [make()]
-#'   automatically removes all self-referential loops in the dependency
-#'   network.
+#' @details Deprecated on 2018-05-08.
 #' @export
 #' @keywords internal
 #' @param x Either a function or a string.
@@ -426,10 +405,45 @@ deps <- function(x){
     package = "drake",
     msg = paste(
       "drake::deps() is deprecated.",
-      "Use deps_code() or deps_targets() instead."
+      "Use deps_code() or deps_target() instead."
     )
   )
   deps_code(x)
+}
+
+#' @title Deprecated.
+#' @description Deprecated. Use [deps_target()] (singular) instead.
+#' @details Deprecated on 2018-08-30.
+#' @export
+#' @keywords internal
+#' @param targets a character vector of target names
+#' @param config an output list from [drake_config()]
+#' @param reverse logical, whether to compute reverse dependencies
+#'   (targets immediately downstream) instead of ordinary dependencies.
+#' @return Names of dependencies listed by type (object, input file, etc).
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' config <- drake_config(my_plan)
+#' deps_targets("regression1_small", config = config)
+#' deps_targets(c("small", "large"), config = config, reverse = TRUE)
+#' })
+#' }
+deps_targets <- function(
+  targets,
+  config = read_drake_config(),
+  reverse = FALSE
+){
+  .Deprecated(
+    "deps_code()",
+    package = "drake",
+    msg = paste(
+      "drake::deps_targets() is deprecated.",
+      "Use deps_target() (singular) instead."
+    )
+  )
+  dependencies(targets = targets, config = config, reverse = reverse)
 }
 
 # Deprecated on 2018-02-15

@@ -26,12 +26,13 @@ test_with_dir("deprecation: future", {
   expect_warning(backend())
 })
 
-test_with_dir("deprecation: make() and config()", {
+test_with_dir("deprecation: make() and config() etc.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(default_system2_args(jobs = 1, verbose = FALSE))
   expect_warning(make(drake_plan(x = 1), return_config = TRUE,
     verbose = FALSE, session_info = FALSE))
-  expect_warning(config(drake_plan(x = 1)))
+  config <- expect_warning(config(drake_plan(x = 1)))
+  expect_warning(deps_targets("x", config), regexp = "deprecated")
 })
 
 test_with_dir("deprecation: cache functions", {

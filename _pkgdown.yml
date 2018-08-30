@@ -75,7 +75,7 @@ reference:
   - '`check_plan`'
   - '`dependency_profile`'
   - '`deps_code`'
-  - '`deps_targets`'
+  - '`deps_target`'
   - '`diagnose`'
   - '`drake_meta`'
   - '`knitr_deps`'

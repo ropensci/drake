@@ -77,5 +77,5 @@ deps_code(file_store("report.Rmd"))
 }
 }
 \seealso{
-deps_targets deps_files make drake_plan drake_config
+deps_target deps_files make drake_plan drake_config
 }

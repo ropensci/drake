@@ -25,7 +25,7 @@
 #'   this conflict and runs as expected. In other words, [make()]
 #'   automatically removes all self-referential loops in the dependency
 #'   network.
-#' @seealso deps_targets deps_files make drake_plan drake_config
+#' @seealso deps_target deps_files make drake_plan drake_config
 #' @export
 #' @param x a language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
@@ -76,32 +76,38 @@ deps_code <- function(x){
 }
 
 #' @title List the dependencies of one or more targets
-#' @description Unlike [deps_code()], `deps_targets()` just lists
-#'   the jobs that lie upstream of the `targets` on the workflow
-#'   dependency graph, and `file_out()` files are not included.
+#' @description Intended for debugging and checking your project.
+#'   The dependency structure of the components of your analysis
+#'   decides which targets are built and when.
 #' @export
 #' @param targets a character vector of target names
 #' @param config an output list from [drake_config()]
-#' @param reverse logical, whether to compute reverse dependencies
-#'   (targets immediately downstream) instead of ordinary dependencies.
-#' @return A character vector, names of dependencies.
-#'   Files wrapped in escaped double quotes.
-#'   The other names listed are functions or generic R objects.
+#' @param character_only logical, whether to assume target is a character
+#'   string rather than a symbol.
+#' @return Names of dependencies listed by type (object, input file, etc).
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
-#' deps_targets("regression1_small", config = config)
-#' deps_targets(c("small", "large"), config = config, reverse = TRUE)
+#' deps_target("regression1_small", config = config)
+#' deps_target(c("small", "large"), config = config, reverse = TRUE)
 #' })
 #' }
-deps_targets <- function(
-  targets,
+deps_target <- function(
+  target,
   config = read_drake_config(),
-  reverse = FALSE
+  character_only = FALSE
 ){
-  dependencies(targets = targets, config = config, reverse = reverse)
+  if (!character_only){
+    target <- as.character(substitute(target))
+  }
+  vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]] %>%
+    as.list()
 }
 
 #' @title Find out why a target is out of date.
