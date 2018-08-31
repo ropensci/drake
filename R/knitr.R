@@ -84,7 +84,10 @@ get_tangled_frags <- function(doc) {
   id <- make.names(tempfile())
   con <- textConnection(id, "w", local = TRUE)
   on.exit(close(con))
-  knitr::knit(doc, output = con, tangle = TRUE, quiet = TRUE)
+  withr::with_options(
+    new = list(knitr.purl.inline = TRUE),
+    code = knitr::knit(doc, output = con, tangle = TRUE, quiet = TRUE)
+  )
   code <- textConnectionValue(con)
   parse(text = code)
 }

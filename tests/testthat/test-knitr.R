@@ -86,7 +86,7 @@ test_with_dir("knitr_deps() works", {
     overwrite = TRUE
   ))
   ans <- sort(c(
-    paste0("target", seq_len(18)),
+    "inline_dep", paste0("target", seq_len(18)),
     file_store(paste0("file", seq_len(6)))
   ))
   expect_equal(sort(knitr_deps("'test.Rmd'")), ans)

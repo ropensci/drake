@@ -5,12 +5,14 @@ date: "October 3, 2017"
 output: html_document
 ---
 
-`Drake` should be able to analyze this report and detect the right dependencies
-using static code analysis on calls to `loadd()` and `readd()`.
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+`drake` should be able to analyze this report and detect the right dependencies
+using static code analysis on calls to `loadd()` and `readd()`.
+
+The value `r readd(inline_dep) %>% broom::tidy() %>% as.tibble %>% pull(p.value) %>% first` was calculated inline.
 
 ```r
 x <- readd(should_not_find)
