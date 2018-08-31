@@ -147,7 +147,11 @@ clean <- function(
 clean_single_target <- function(target, cache, namespaces, graph){
   files <- character(0)
   if (is_file(target)){
-    files <- target
+    if (cache$exists(target, namespace = "meta")){
+      if (!is_imported(target, cache)){
+        files <- target
+      }
+    }
   }
   if (target %in% igraph::V(graph)$name){
     deps <- vertex_attr(

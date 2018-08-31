@@ -1,7 +1,25 @@
 # Version 5.4.0.9001
 
-- Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
+## Breaking changes
+
 - Avoid serialization in `digest()` wherever possible. This puts old `drake` projects out of date, but it improves speed.
+
+## Bug fixes
+
+- Previously, `clean()` deleted input-only files if no targets from the plan were cached. A patch and a unit test are included in this release.
+- `loadd(not_a_target)` no longer loads every target in the cache.
+- Exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
+
+## New features
+
+- Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
+- Expose the `template` argument of `clustermq` functions (e.g. `Q()` and `workers()`) as an argument of `make()` and `drake_config()`.
+- Add a new `code_to_plan()` function to turn R scripts and R Markdown reports into workflow plan data frames.
+- Add a new `drake_plan_source()` function, which generates lines of code for a `drake_plan()` call. This `drake_plan()` call produces the plan passed to `drake_plan_source()`. The main purpose is visual inspection (we even have syntax highlighting via `prettycode`) but users may also save the output to a script file for the sake of reproducibility or simple reference.
+- Deprecate `deps_targets()` in favor of a new `deps_target()` function (singular) that behaves more like `deps_code()`.
+
+## Enhancements
+
 - Smooth the edges in `vis_drake_graph()` and `render_drake_graph()`.
 - Make hover text slightly more readable in in `vis_drake_graph()` and `render_drake_graph()`.
 - Align hover text properly in `vis_drake_graph()` using the "title" node column.
@@ -9,17 +27,11 @@
 - Improve `dependency_profile()` show major trigger hashes side-by-side
 to tell the user if the command, a dependency, an input file, or an ouptut file changed since the last `make()`.
 - Choose more appropriate places to check that the `txtq` package is installed.
-- Expose the `template` argument of `clustermq` functions (e.g. `Q()` and `workers()`) as an argument of `make()` and `drake_config()`.
 - Improve the help files of `loadd()` and `readd()`, giving specific usage guidance in prose.
-- Bugfix: `loadd(not_a_target)` no longer loads every target in the cache.
-- Bugfix: exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
-- Add a new `code_to_plan()` function to turn R scripts and R Markdown reports into workflow plan data frames.
-- Add a new `drake_plan_source()` function, which generates lines of code for a `drake_plan()` call. This `drake_plan()` call produces the plan passed to `drake_plan_source()`. The main purpose is visual inspection (we even have syntax highlighting via `prettycode`) but users may also save the output to a script file for the sake of reproducibility or simple reference.
 - Memoize all the steps of `build_drake_graph()` and print to the console the ones that execute.
 - Bug fix: avoid `sort(NULL)` because it returns `NA`s on R 3.3.
 - Bug fix: work around mysterious `codetools` failures on R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 - Skip some tests if `txtq` is not installed.
-- Deprecate `deps_targets()` in favor of a `deps_target()` function (singular) that behaves more like `deps_code()`.
 
 # Version 5.4.0
 
