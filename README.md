@@ -138,13 +138,6 @@ already up to date. Not every runthrough starts from scratch, and
 completed workflows have tangible evidence of reproducibility. `drake`
 also helps scale up workflows and run steps in parallel.
 
-# Quick intro and demo
-
-See the [beginning of the
-manual](https://ropenscilabs.github.io/drake-manual/) for a 7-minute friendly introduction.
-
-<a href="https://ropenscilabs.github.io/drake-manual/"><img src="https://ropensci.github.io/drake/images/frame.png" alt="frame" align="center" style = "border: none; float: center;" width = "500px"></a>
-
 # What gets done stays done.
 
 Too many data science projects follow a [Sisyphean
