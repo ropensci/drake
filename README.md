@@ -135,14 +135,7 @@ Development
 manager for data-driven tasks. It rebuilds intermediate data objects
 when their dependencies change, and it skips work when the results are
 already up to date. Not every runthrough starts from scratch, and
-completed workflows have tangible evidence of reproducibility. `drake`
-is more scalable than [`knitr`](https://github.com/yihui/knitr), more
-thorough than [memoization](https://github.com/r-lib/memoise), and more
-R-focused than [other pipeline
-toolkits](https://github.com/pditommaso/awesome-pipeline) such as [GNU
-Make](https://www.gnu.org/software/make/),
-[`remake`](https://github.com/richfitz/remake), and
-[snakemake](https://snakemake.readthedocs.io).
+completed workflows have tangible evidence of reproducibility. `drake` also helps scale up workflows and run steps in parallel.
 
 # What gets done stays done.
 
