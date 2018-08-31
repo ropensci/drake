@@ -141,9 +141,7 @@ also helps scale up workflows and run steps in parallel.
 # Quick intro and demo
 
 See the [beginning of the
-manual](https://ropenscilabs.github.io/drake-manual/) for a 7-minute
-beginner-friendly
-introduction.
+manual](https://ropenscilabs.github.io/drake-manual/) for a 7-minute friendly introduction.
 
 <a href="https://ropenscilabs.github.io/drake-manual/"><img src="https://ropensci.github.io/drake/images/frame.png" alt="frame" align="center" style = "border: none; float: center;" width = "500px"></a>
 
