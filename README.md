@@ -135,7 +135,17 @@ Development
 manager for data-driven tasks. It rebuilds intermediate data objects
 when their dependencies change, and it skips work when the results are
 already up to date. Not every runthrough starts from scratch, and
-completed workflows have tangible evidence of reproducibility. `drake` also helps scale up workflows and run steps in parallel.
+completed workflows have tangible evidence of reproducibility. `drake`
+also helps scale up workflows and run steps in parallel.
+
+# Quick intro and demo
+
+See the [beginning of the
+manual](https://ropenscilabs.github.io/drake-manual/) for a 7-minute
+beginner-friendly
+introduction.
+
+<a href="https://ropenscilabs.github.io/drake-manual/"><img src="https://ropensci.github.io/drake/images/frame.png" alt="frame" align="center" style = "border: none; float: center;" width = "500px"></a>
 
 # What gets done stays done.
 
@@ -147,8 +157,7 @@ loop](https://en.wikipedia.org/wiki/Sisyphus):
 3.  Discover an issue.
 4.  Restart from scratch.
 
-Have you ever tried to manually salvage old results for a new
-runthrough? <br>
+It is hard to avoid restarting from scratch. <br>
 
 <center>
 
