@@ -184,7 +184,7 @@ mc_output_file_checksum <- function(target, config){
     name = "deps",
     index = target
   )[[1]]
-  files <- sort(unique(deps$file_out))
+  files <- sort(unique(as.character(deps$file_out)))
   vapply(
     X = files,
     FUN = rehash_file,
