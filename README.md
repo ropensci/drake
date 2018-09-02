@@ -69,7 +69,7 @@ Development
 
 <td align="left">
 
-<a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.2.0-blue.svg" alt="minimal R version"></a>
+<a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.3.0-blue.svg" alt="minimal R version"></a>
 
 </td>
 

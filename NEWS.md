@@ -3,6 +3,7 @@
 ## Breaking changes
 
 - Avoid serialization in `digest()` wherever possible. This puts old `drake` projects out of date, but it improves speed.
+- Require R version >= 3.3.0 rather than >= 3.2.0. Tests and checks still run fine on 3.3.0, but the required version of the `stringi` package no longer compiles on 3.2.0.
 
 ## Bug fixes
 

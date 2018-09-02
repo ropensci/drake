@@ -42,7 +42,7 @@ invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
 </tr>
 <tr class="even">
 <td align="left"><a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a></td>
-<td align="left"><a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.2.0-blue.svg" alt="minimal R version"></a></td>
+<td align="left"><a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.3.0-blue.svg" alt="minimal R version"></a></td>
 <td align="left"><a href="https://travis-ci.org/ropensci/drake"><img src="https://travis-ci.org/ropensci/drake.svg?branch=master" alt="Travis"></a></td>
 </tr>
 <tr class="odd">
