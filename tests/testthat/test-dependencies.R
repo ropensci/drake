@@ -172,6 +172,11 @@ test_with_dir("Vectorized nested functions work", {
 
 test_with_dir("deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
+  on.exit(
+    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
+  )
+  pkgconfig::set_config("drake::strings_in_dots" = "literals")
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
   d1 <- lapply(deps_target(report, config = config), sort)
@@ -180,7 +185,7 @@ test_with_dir("deps_target()", {
     file_out = file_store("report.md"),
     readd = sort(c("coef_regression2_small", "small")),
     globals = "knit",
-    loadd = sort(c("coef_regression2_small", "large", "small"))
+    loadd = "large"
   )
   expect_equal(length(d1), length(d2))
   for (n in names(d2)){
