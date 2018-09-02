@@ -453,7 +453,10 @@ find_globals <- function(fun){
 analyze_loadd <- function(expr){
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
-  unnamed <- code_dependencies(expr[which_unnamed(expr)])
+  unnamed <- list()
+  if (any(is_unnamed <- which_unnamed(expr))){
+    unnamed <- code_dependencies(expr[is_unnamed])
+  }
   out <- c(
     unnamed$globals,
     unnamed$strings,

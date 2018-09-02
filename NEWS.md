@@ -11,6 +11,7 @@
 - Exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
 - Detect inline code dependencies in `knitr_in()` file code chunks.
 - Remove more calls to `sort(NULL)` that caused warnings in R 3.3.3.
+- Fix a bug on R 3.3.3 where `analyze_loadd()` was sometimes quitting with "Error: attempt to set an attribute on NULL".
 
 ## New features
 
