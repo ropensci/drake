@@ -191,7 +191,7 @@ safe_rehash_file <- function(target, config){
 should_rehash_file <- function(filename, new_mtime, old_mtime,
   size_cutoff){
   do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
-  if (is.na(do_rehash)){
+  if (safe_is_na(do_rehash)){
     do_rehash <- TRUE
   }
   do_rehash

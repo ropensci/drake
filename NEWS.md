@@ -10,6 +10,7 @@
 - `loadd(not_a_target)` no longer loads every target in the cache.
 - Exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
 - Detect inline code dependencies in `knitr_in()` file code chunks.
+- Fix a minor glitch where R 3.3.3 complained about `is.na(NULL)`. Now using `safe_is_na()` where input is likely to be `NULL`.
 
 ## New features
 
