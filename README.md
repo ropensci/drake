@@ -151,11 +151,7 @@ loop](https://en.wikipedia.org/wiki/Sisyphus):
 It is hard to avoid restarting from scratch. <br>
 
 <center>
-
-<a href="https://twitter.com/fossilosophy/status/966408174470299648">
 <img src="https://ropensci.github.io/drake/images/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
-</a>
-
 </center>
 
 <br>
