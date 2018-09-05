@@ -136,7 +136,9 @@ manager for data-driven tasks. It rebuilds intermediate data objects
 when their dependencies change, and it skips work when the results are
 already up to date. Not every runthrough starts from scratch, and
 completed workflows have tangible evidence of reproducibility. `drake`
-also helps scale up workflows and run steps in parallel.
+also supports scalability, parallel computing, and a smooth user
+experience when it comes to setting up, deploying, and maintaining data
+science projects.
 
 # What gets done stays done.
 
@@ -148,10 +150,13 @@ loop](https://en.wikipedia.org/wiki/Sisyphus):
 3.  Discover an issue.
 4.  Restart from scratch.
 
-It is hard to avoid restarting from scratch. <br>
+It is hard to avoid restarting from scratch.
+<br>
 
 <center>
+
 <img src="https://ropensci.github.io/drake/images/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
+
 </center>
 
 <br>
