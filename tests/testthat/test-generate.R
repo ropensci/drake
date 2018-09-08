@@ -522,3 +522,111 @@ test_with_dir("make() with wildcard columns", {
   expect_equal(sort(attr(plan, "wildcards")), sort(c("n__", "n___from")))
   expect_equal(sort(attr(con$plan, "wildcards")), sort(c("n__", "n___from")))
 })
+
+test_with_dir("gather_by()", {
+  plan <- evaluate_plan(
+    drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
+    rules = list(
+      m__ = 1:2,
+      n__ = c("a", "b")
+    ),
+    trace = TRUE
+  )
+  x <- gather_by(plan, n___from, prefix = "xyz", gather = "c")
+  y <- tibble::tibble(
+    target = "xyz_y",
+    command = c("c(y_a = y_a, y_b = y_b)"),
+    m__ = as.character(NA),
+    m___from = as.character(NA),
+    n__ = NA,
+    n___from = "y"
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c")
+  y <- tibble::tibble(
+    target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b"),
+    command = c(
+      "c(x_1 = x_1)",
+      "c(x_2 = x_2)",
+      "c(y_a = y_a)",
+      "c(y_b = y_b)"
+    ),
+    m__ = as.character(c(1, 2, NA, NA)),
+    m___from = as.character(NA),
+    n__ = c(NA, NA, "a", "b"),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+})
+
+test_with_dir("gather_by()", {
+  plan <- evaluate_plan(
+    drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
+    rules = list(
+      m__ = 1:4,
+      n__ = c("a", "b")
+    ),
+    trace = TRUE
+  )
+  x <- reduce_by(
+    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")"
+  )
+  y <- tibble::tibble(
+    target = c("xyz_1_x", "xyz_2_x", "xyz_x"),
+    command = c("c(x_1, x_2)", "c(x_3, x_4)", "c(xyz_1, xyz_2)"),
+    m__ = as.character(NA),
+    m___from = rep("x", 3),
+    n__ = as.character(NA),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(
+    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
+    pairwise = FALSE
+  )
+  y <- tibble::tibble(
+    target = "xyz_x",
+    command = "c(c(c(x_1, x_2), x_3), x_4)",
+    m__ = as.character(NA),
+    m___from = "x",
+    n__ = as.character(NA),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(plan, m___from, n___from)
+  y <- tibble::tibble(
+    target = c(
+      "target_1_x_NA",
+      "target_2_x_NA",
+      "target_x_NA",
+      "target_NA_y"
+    ),
+    command = c(
+      "x_1 + x_2",
+      "x_3 + x_4",
+      "target_1 + target_2",
+      "y_a + y_b"
+    ),
+    m__ = as.character(NA),
+    m___from = c(rep("x", 3), NA),
+    n__ = as.character(NA),
+    n___from = c(rep(NA, 3), "y")
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(plan, m___from, n___from, pairwise = FALSE)
+  y <- tibble::tibble(
+    target = c(
+      "target_x_NA",
+      "target_NA_y"
+    ),
+    command = c(
+      "x_1 + x_2 + x_3 + x_4",
+      "y_a + y_b"
+    ),
+    m__ = as.character(NA),
+    m___from = c("x", NA),
+    n__ = as.character(NA),
+    n___from = c(NA, "y")
+  )
+  expect_equal(x, bind_plans(plan, y))
+})
