@@ -47,6 +47,16 @@ test_with_dir("Missing cache", {
   expect_error(assert_cache(s), regexp = "drake cache missing")
 })
 
+test_with_dir("broken cache", {
+  skip_on_cran()
+  make(drake_plan(x = 1), session_info = FALSE)
+  unlink(file.path(".drake", "config"), recursive = TRUE)
+  expect_error(
+    suppressWarnings(make(drake_plan(x = 1), session_info = FALSE)),
+    regexp = "failed to get the storr"
+  )
+})
+
 test_with_dir("Cache namespaces", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- cache_namespaces()

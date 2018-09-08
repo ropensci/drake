@@ -141,7 +141,7 @@ this_cache <- function(
   if (length(fetch_cache) && nzchar(fetch_cache)){
     cache <- eval(parse(text = localize(fetch_cache)))
   } else {
-    cache <- drake_fetch_rds(path)
+    cache <- drake_try_fetch_rds(path = path)
   }
   configure_cache(
     cache = cache,
@@ -153,6 +153,21 @@ this_cache <- function(
     assert_compatible_cache(cache = cache)
   }
   cache
+}
+
+drake_try_fetch_rds <- function(path){
+  out <- try(drake_fetch_rds(path = path), silent = TRUE)
+  if (!inherits(out, "try-error")){
+    return(out)
+  }
+  stop(
+    "drake failed to get the storr::storr_rds() cache at ", path, ". ",
+    "Something is wrong with the file system of the cache. ",
+    "If you downloaded it from an online repository, are you sure ",
+    "all the files were downloaded correctly? ",
+    "If all else fails, remove the folder at ", path, "and try again.",
+    call. = FALSE
+  )
 }
 
 drake_fetch_rds <- function(path){
