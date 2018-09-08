@@ -387,6 +387,7 @@ gather_plan <- function(
 #' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
 #' reduce_by(plan, mu__, mu___from)
 gather_by <- function(plan, ..., prefix = "target", gather = "list"){
+  . <- NULL
   gathered <- dplyr::group_by(plan, ...) %>%
     dplyr::do(gather_plan(plan = ., target = prefix, gather = gather))
   cols <- dplyr::select(gathered, ...)
@@ -502,6 +503,7 @@ reduce_by <- function(
   end = "",
   pairwise = TRUE
 ){
+  . <- NULL
   reduced <- dplyr::group_by(plan, ...) %>%
     dplyr::do(
       reduce_plan(

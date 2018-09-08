@@ -524,6 +524,7 @@ test_with_dir("make() with wildcard columns", {
 })
 
 test_with_dir("gather_by()", {
+  skip_on_cran()
   plan <- evaluate_plan(
     drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
     rules = list(
@@ -559,7 +560,8 @@ test_with_dir("gather_by()", {
   expect_equal(x, bind_plans(plan, y))
 })
 
-test_with_dir("gather_by()", {
+test_with_dir("reduce_by()", {
+  skip_on_cran()
   plan <- evaluate_plan(
     drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
     rules = list(
