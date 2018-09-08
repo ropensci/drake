@@ -69,7 +69,7 @@ dataset_wildcard <- function(){
 #'
 #' @param trace logical, whether to add columns that
 #'   trace the wildcard expansion process. These new
-#'   columns indicate which targets were evaluated with which
+#'   columns indicate which targets were evaluated and with which
 #'   wildcards.
 #'   
 #' @param columns character vector of names of columns
@@ -202,8 +202,10 @@ evaluate_single_wildcard <- function(
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]
   if (expand){
-    matching <- expand_plan(matching, values, rename = rename)
-  } else if (rename){
+    matching <- expand_plan(matching, values, rename = FALSE)
+  }
+  matched_targets <- matching$target
+  if (rename){
     matching$target <- paste(matching$target, values, sep = "_")
   }
   values <- rep(values, length.out = nrow(matching))
@@ -216,6 +218,7 @@ evaluate_single_wildcard <- function(
   }
   if (trace){
     matching[[wildcard]] <- values
+    matching[[paste0(wildcard, "_from")]] <- matched_targets
   }
   rownames(matching) <- NULL
   rownames(plan) <- NULL
@@ -228,7 +231,10 @@ evaluate_single_wildcard <- function(
   if (trace){
     out <- structure(
       out,
-      wildcards = base::union(attr(plan, "wildcards"), wildcard)
+      wildcards = base::union(
+        attr(plan, "wildcards"),
+        c(wildcard, paste0(wildcard, "_from"))
+      )
     )
   }
   sanitize_plan(out, allow_duplicated_targets = TRUE)

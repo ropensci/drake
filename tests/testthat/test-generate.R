@@ -368,10 +368,11 @@ test_with_dir("evaluate_plan() and trace", {
       "c(SIGMA, y)",
       2
     ),
-    MU = as.character(c(NA, 1, 2, NA, NA, NA))
+    MU = as.character(c(NA, 1, 2, NA, NA, NA)),
+    MU_from = as.character(c(NA, "data", "mus", NA, NA, NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), "MU")
+  expect_equal(sort(attr(x, "wildcards")), sort(c("MU", "MU_from")))
   expect_silent(assert_standard_columns(list(plan = x)))
 
   x <- evaluate_plan(
@@ -393,10 +394,11 @@ test_with_dir("evaluate_plan() and trace", {
       "c(2, y)",
       2
     ),
-    SIGMA = as.character(c(NA, 1, NA, NA, 2, NA))
+    SIGMA = as.character(c(NA, 1, NA, NA, 2, NA)),
+    SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), "SIGMA")
+  expect_equal(attr(x, "wildcards"), sort(c("SIGMA", "SIGMA_from")))
 
   x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
   y <- tibble::tibble(
@@ -420,10 +422,11 @@ test_with_dir("evaluate_plan() and trace", {
       "c(SIGMA, y)",
       2
     ),
-    MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA))
+    MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA)),
+    MU_from = as.character(c(NA, "data", "data", "mus", "mus", NA, NA, NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), "MU")
+  expect_equal(sort(attr(x, "wildcards")), sort(c("MU", "MU_from")))
 
   x <- evaluate_plan(
     plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
@@ -445,10 +448,15 @@ test_with_dir("evaluate_plan() and trace", {
       2
     ),
     MU = as.character(c(NA, 1, 2, NA, NA, NA)),
-    SIGMA = as.character(c(NA, 3, NA, NA, 4, NA))
+    MU_from = as.character(c(NA, "data", "mus", NA, NA, NA)),
+    SIGMA = as.character(c(NA, 3, NA, NA, 4, NA)),
+    SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
+  expect_equal(
+    sort(attr(x, "wildcards")),
+    sort(c("MU", "MU_from", "SIGMA", "SIGMA_from"))
+  )
 
   x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
   y <- tibble::tibble(
@@ -479,10 +487,22 @@ test_with_dir("evaluate_plan() and trace", {
       2
     ),
     MU = as.character(c(NA, 1, 1, 2, 2, 1, 2, NA, NA, NA, NA)),
-    SIGMA = as.character(c(NA, 3, 4, 3, 4, NA, NA, NA, 3, 4, NA))
+    MU_from = as.character(
+      c(NA, rep("data", 4), rep("mus", 2), NA, NA, NA, NA)
+    ),
+    SIGMA = as.character(c(NA, 3, 4, 3, 4, NA, NA, NA, 3, 4, NA)),
+    SIGMA_from = as.character(
+      c(
+        NA, rep(c("data_1", "data_2"), each = 2),
+        NA, NA, NA, rep("sigmas", 2), NA
+      )
+    )
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
+  expect_equal(
+    sort(attr(x, "wildcards")),
+    sort(c("MU", "MU_from", "SIGMA", "SIGMA_from"))
+  )
 })
 
 test_with_dir("make() with wildcard columns", {
@@ -493,10 +513,12 @@ test_with_dir("make() with wildcard columns", {
     trace = TRUE
   )
   expect_equal(nrow(plan), 2)
-  expect_true("n__" %in% colnames(plan))
+  for (col in c("n__", "n___from")){
+    expect_true(col %in% colnames(plan))
+  }
   con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
   expect_identical(con$plan, plan)
-  expect_equal(attr(plan, "wildcards"), "n__")
-  expect_equal(attr(con$plan, "wildcards"), "n__")
+  expect_equal(sort(attr(plan, "wildcards")), sort(c("n__", "n___from")))
+  expect_equal(sort(attr(con$plan, "wildcards")), sort(c("n__", "n___from")))
 })

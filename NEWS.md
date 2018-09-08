@@ -17,6 +17,7 @@
 ## New features
 
 - Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
+- `evaluate_plan(trace = TRUE)` now adds a `*_from` column to show the origins of the evaluated targets. Try `evaluate_plan(drake_plan(x = rnorm(n__), y = rexp(n__)), wildcard = "n__", values = 1:2, trace = TRUE)`.
 - Expose the `template` argument of `clustermq` functions (e.g. `Q()` and `workers()`) as an argument of `make()` and `drake_config()`.
 - Add a new `code_to_plan()` function to turn R scripts and R Markdown reports into workflow plan data frames.
 - Add a new `drake_plan_source()` function, which generates lines of code for a `drake_plan()` call. This `drake_plan()` call produces the plan passed to `drake_plan_source()`. The main purpose is visual inspection (we even have syntax highlighting via `prettycode`) but users may also save the output to a script file for the sake of reproducibility or simple reference.
