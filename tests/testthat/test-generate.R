@@ -368,10 +368,11 @@ test_with_dir("evaluate_plan() and trace", {
       "c(SIGMA, y)",
       2
     ),
-    MU = as.character(c(NA, 1, 2, NA, NA, NA))
+    MU = as.character(c(NA, 1, 2, NA, NA, NA)),
+    MU_from = as.character(c(NA, "data", "mus", NA, NA, NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), "MU")
+  expect_equal(sort(attr(x, "wildcards")), sort(c("MU", "MU_from")))
   expect_silent(assert_standard_columns(list(plan = x)))
 
   x <- evaluate_plan(
@@ -393,10 +394,11 @@ test_with_dir("evaluate_plan() and trace", {
       "c(2, y)",
       2
     ),
-    SIGMA = as.character(c(NA, 1, NA, NA, 2, NA))
+    SIGMA = as.character(c(NA, 1, NA, NA, 2, NA)),
+    SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), "SIGMA")
+  expect_equal(attr(x, "wildcards"), sort(c("SIGMA", "SIGMA_from")))
 
   x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
   y <- tibble::tibble(
@@ -420,10 +422,11 @@ test_with_dir("evaluate_plan() and trace", {
       "c(SIGMA, y)",
       2
     ),
-    MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA))
+    MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA)),
+    MU_from = as.character(c(NA, "data", "data", "mus", "mus", NA, NA, NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), "MU")
+  expect_equal(sort(attr(x, "wildcards")), sort(c("MU", "MU_from")))
 
   x <- evaluate_plan(
     plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
@@ -445,10 +448,15 @@ test_with_dir("evaluate_plan() and trace", {
       2
     ),
     MU = as.character(c(NA, 1, 2, NA, NA, NA)),
-    SIGMA = as.character(c(NA, 3, NA, NA, 4, NA))
+    MU_from = as.character(c(NA, "data", "mus", NA, NA, NA)),
+    SIGMA = as.character(c(NA, 3, NA, NA, 4, NA)),
+    SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
+  expect_equal(
+    sort(attr(x, "wildcards")),
+    sort(c("MU", "MU_from", "SIGMA", "SIGMA_from"))
+  )
 
   x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
   y <- tibble::tibble(
@@ -479,10 +487,22 @@ test_with_dir("evaluate_plan() and trace", {
       2
     ),
     MU = as.character(c(NA, 1, 1, 2, 2, 1, 2, NA, NA, NA, NA)),
-    SIGMA = as.character(c(NA, 3, 4, 3, 4, NA, NA, NA, 3, 4, NA))
+    MU_from = as.character(
+      c(NA, rep("data", 4), rep("mus", 2), NA, NA, NA, NA)
+    ),
+    SIGMA = as.character(c(NA, 3, 4, 3, 4, NA, NA, NA, 3, 4, NA)),
+    SIGMA_from = as.character(
+      c(
+        NA, rep(c("data_1", "data_2"), each = 2),
+        NA, NA, NA, rep("sigmas", 2), NA
+      )
+    )
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), c("MU", "SIGMA"))
+  expect_equal(
+    sort(attr(x, "wildcards")),
+    sort(c("MU", "MU_from", "SIGMA", "SIGMA_from"))
+  )
 })
 
 test_with_dir("make() with wildcard columns", {
@@ -493,10 +513,122 @@ test_with_dir("make() with wildcard columns", {
     trace = TRUE
   )
   expect_equal(nrow(plan), 2)
-  expect_true("n__" %in% colnames(plan))
+  for (col in c("n__", "n___from")){
+    expect_true(col %in% colnames(plan))
+  }
   con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
   expect_identical(con$plan, plan)
-  expect_equal(attr(plan, "wildcards"), "n__")
-  expect_equal(attr(con$plan, "wildcards"), "n__")
+  expect_equal(sort(attr(plan, "wildcards")), sort(c("n__", "n___from")))
+  expect_equal(sort(attr(con$plan, "wildcards")), sort(c("n__", "n___from")))
+})
+
+test_with_dir("gather_by()", {
+  skip_on_cran()
+  plan <- evaluate_plan(
+    drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
+    rules = list(
+      m__ = 1:2,
+      n__ = c("a", "b")
+    ),
+    trace = TRUE
+  )
+  x <- gather_by(plan, n___from, prefix = "xyz", gather = "c")
+  y <- tibble::tibble(
+    target = "xyz_y",
+    command = c("c(y_a = y_a, y_b = y_b)"),
+    m__ = as.character(NA),
+    m___from = as.character(NA),
+    n__ = NA,
+    n___from = "y"
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c")
+  y <- tibble::tibble(
+    target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b"),
+    command = c(
+      "c(x_1 = x_1)",
+      "c(x_2 = x_2)",
+      "c(y_a = y_a)",
+      "c(y_b = y_b)"
+    ),
+    m__ = as.character(c(1, 2, NA, NA)),
+    m___from = as.character(NA),
+    n__ = c(NA, NA, "a", "b"),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+})
+
+test_with_dir("reduce_by()", {
+  skip_on_cran()
+  plan <- evaluate_plan(
+    drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
+    rules = list(
+      m__ = 1:4,
+      n__ = c("a", "b")
+    ),
+    trace = TRUE
+  )
+  x <- reduce_by(
+    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")"
+  )
+  y <- tibble::tibble(
+    target = c("xyz_1_x", "xyz_2_x", "xyz_x"),
+    command = c("c(x_1, x_2)", "c(x_3, x_4)", "c(xyz_1, xyz_2)"),
+    m__ = as.character(NA),
+    m___from = rep("x", 3),
+    n__ = as.character(NA),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(
+    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
+    pairwise = FALSE
+  )
+  y <- tibble::tibble(
+    target = "xyz_x",
+    command = "c(c(c(x_1, x_2), x_3), x_4)",
+    m__ = as.character(NA),
+    m___from = "x",
+    n__ = as.character(NA),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(plan, m___from, n___from)
+  y <- tibble::tibble(
+    target = c(
+      "target_1_x_NA",
+      "target_2_x_NA",
+      "target_x_NA",
+      "target_NA_y"
+    ),
+    command = c(
+      "x_1 + x_2",
+      "x_3 + x_4",
+      "target_1 + target_2",
+      "y_a + y_b"
+    ),
+    m__ = as.character(NA),
+    m___from = c(rep("x", 3), NA),
+    n__ = as.character(NA),
+    n___from = c(rep(NA, 3), "y")
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(plan, m___from, n___from, pairwise = FALSE)
+  y <- tibble::tibble(
+    target = c(
+      "target_x_NA",
+      "target_NA_y"
+    ),
+    command = c(
+      "x_1 + x_2 + x_3 + x_4",
+      "y_a + y_b"
+    ),
+    m__ = as.character(NA),
+    m___from = c("x", NA),
+    n__ = as.character(NA),
+    n___from = c(NA, "y")
+  )
+  expect_equal(x, bind_plans(plan, y))
 })

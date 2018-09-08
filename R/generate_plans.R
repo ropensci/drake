@@ -69,7 +69,7 @@ dataset_wildcard <- function(){
 #'
 #' @param trace logical, whether to add columns that
 #'   trace the wildcard expansion process. These new
-#'   columns indicate which targets were evaluated with which
+#'   columns indicate which targets were evaluated and with which
 #'   wildcards.
 #'   
 #' @param columns character vector of names of columns
@@ -202,8 +202,10 @@ evaluate_single_wildcard <- function(
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]
   if (expand){
-    matching <- expand_plan(matching, values, rename = rename)
-  } else if (rename){
+    matching <- expand_plan(matching, values, rename = FALSE)
+  }
+  matched_targets <- matching$target
+  if (rename){
     matching$target <- paste(matching$target, values, sep = "_")
   }
   values <- rep(values, length.out = nrow(matching))
@@ -216,6 +218,7 @@ evaluate_single_wildcard <- function(
   }
   if (trace){
     matching[[wildcard]] <- values
+    matching[[paste0(wildcard, "_from")]] <- matched_targets
   }
   rownames(matching) <- NULL
   rownames(plan) <- NULL
@@ -228,7 +231,10 @@ evaluate_single_wildcard <- function(
   if (trace){
     out <- structure(
       out,
-      wildcards = base::union(attr(plan, "wildcards"), wildcard)
+      wildcards = base::union(
+        attr(plan, "wildcards"),
+        c(wildcard, paste0(wildcard, "_from"))
+      )
     )
   }
   sanitize_plan(out, allow_duplicated_targets = TRUE)
@@ -355,6 +361,44 @@ gather_plan <- function(
   tibble(target = target, command = command)
 }
 
+#' @title Gather multiple groupings of targets
+#' @description Perform several calls to [gather_plan()]
+#'   based on groupings from columns in the plan,
+#'   and then row-bind the new targets to the plan.
+#' @export
+#' @seealso gather_plan, reduce_plan, reduce_by
+#' @inheritParams gather_plan
+#' @param ... Symbols, columns of `plan` to define target groupings
+#'   passed to `dplyr::group_by()`.
+#'   A [gather_plan()] call is applied for each grouping.
+#'   Groupings with all `NA`s in the selector variables are ignored.
+#' @param prefix character, prefix for naming the new targets.
+#'   Suffixes are generated from the values of the columns
+#'   specified in `...`.
+#' @examples
+#' plan <- drake_plan(
+#'   data = get_data(),
+#'   informal_look = inspect_data(data, mu = mu__),
+#'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
+#' )
+#' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+#' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+#' gather_by(plan, mu__, mu___from, prefix = "x")
+#' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
+#' reduce_by(plan, mu__, mu___from)
+gather_by <- function(plan, ..., prefix = "target", gather = "list"){
+  . <- NULL
+  gathered <- dplyr::group_by(plan, ...) %>%
+    dplyr::do(gather_plan(plan = ., target = prefix, gather = gather))
+  cols <- dplyr::select(gathered, ...)
+  suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
+  gathered$target <- paste(gathered$target, suffix, sep = "_")
+  keep <- apply(cols, 1, function(x){
+    !all(is.na(x))
+  })
+  bind_plans(plan, gathered[keep, ])
+}
+
 #' @title Write commands to reduce several targets down to one.
 #' @description Creates a new workflow plan data frame with the
 #'   commands to do a reduction (i.e. to repeatedly apply a binary
@@ -423,6 +467,61 @@ reduce_plan <- function(
     )
     tibble(target = target, command = command)
   }
+}
+
+#' @title Reduce multiple groupings of targets
+#' @description Perform several calls to [reduce_plan()]
+#'   based on groupings from columns in the plan,
+#'   and then row-bind the new targets to the plan.
+#' @export
+#' @seealso reduce_plan, gather_plan, gather_by
+#' @inheritParams reduce_plan
+#' @param ... Symbols, columns of `plan` to define target groupings
+#'   passed to `dplyr::group_by()`.
+#'   A [reduce_plan()] call is applied for each grouping.
+#'   Groupings with all `NA`s in the selector variables are ignored.
+#' @param prefix character, prefix for naming the new targets.
+#'   Suffixes are generated from the values of the columns
+#'   specified in `...`.
+#' @examples
+#' plan <- drake_plan(
+#'   data = get_data(),
+#'   informal_look = inspect_data(data, mu = mu__),
+#'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
+#' )
+#' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+#' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+#' gather_by(plan, mu__, mu___from, prefix = "x")
+#' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
+#' reduce_by(plan, mu__, mu___from)
+reduce_by <- function(
+  plan,
+  ...,
+  prefix = "target",
+  begin = "",
+  op = " + ",
+  end = "",
+  pairwise = TRUE
+){
+  . <- NULL
+  reduced <- dplyr::group_by(plan, ...) %>%
+    dplyr::do(
+      reduce_plan(
+        plan = .,
+        target = prefix,
+        begin = begin,
+        op = op,
+        end = end,
+        pairwise = pairwise
+      )
+    )
+  cols <- dplyr::select(reduced, ...)
+  suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
+  reduced$target <- paste(reduced$target, suffix, sep = "_")
+  keep <- apply(cols, 1, function(x){
+    !all(is.na(x))
+  })
+  bind_plans(plan, reduced[keep, ])
 }
 
 reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){

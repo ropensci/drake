@@ -40,7 +40,7 @@ based on the values supplied for the wildcards
 
 \item{trace}{logical, whether to add columns that
 trace the wildcard expansion process. These new
-columns indicate which targets were evaluated with which
+columns indicate which targets were evaluated and with which
 wildcards.}
 
 \item{columns}{character vector of names of columns
