@@ -90,14 +90,14 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 3.  Discover an issue.
 4.  Restart from scratch.
 
-It is hard to avoid restarting from scratch. <br>
+Ordinarily, it is hard to avoid restarting from scratch. <br>
 
 <center>
 <img src="https://ropensci.github.io/drake/images/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
 </center>
 <br>
 
-With `drake`, you can automatically
+But with `drake`, you can automatically
 
 1.  Launch the parts that changed since last time.
 2.  Skip the rest.
