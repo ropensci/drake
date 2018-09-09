@@ -78,6 +78,8 @@ Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual
 <center>
 <a href="https://ropenscilabs.github.io/drake-manual"> <img src="https://ropensci.github.io/drake/images/video.png" alt="video" align="center" style = "border: none; float: center;"> </a>
 </center>
+<br>
+
 What gets done stays done.
 ==========================
 
