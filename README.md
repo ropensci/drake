@@ -73,7 +73,7 @@ The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" 
 6-minute video
 ==============
 
-See the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) for a short introduction.
+Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) to watch a short introduction.
 
 <center>
 <a href="https://ropenscilabs.github.io/drake-manual"> <img src="https://ropensci.github.io/drake/images/video.png" alt="video" align="center" style = "border: none; float: center;"> </a>
