@@ -161,7 +161,7 @@ clean_single_target <- function(target, cache, namespaces, graph){
     )[[1]]
     files <- sort(unique(as.character(deps$file_out)))
   }
-  unlink(drake_unquote(files), recursive = TRUE, force = TRUE)
+  unlink(drake_unquote(files))
   for (namespace in namespaces){
     for (key in c(target, files)){
       cache$del(key = key, namespace = namespace)
