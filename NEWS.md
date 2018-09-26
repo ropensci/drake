@@ -7,6 +7,7 @@
 
 ## Bug fixes
 
+- In the call to `unlink()` in `clean()`, set `recursive` and `force` to `FALSE`. This should prevent the accidental deletion of whole directories.
 - Previously, `clean()` deleted input-only files if no targets from the plan were cached. A patch and a unit test are included in this release.
 - `loadd(not_a_target)` no longer loads every target in the cache.
 - Exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
