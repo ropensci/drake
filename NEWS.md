@@ -14,6 +14,7 @@
 - Detect inline code dependencies in `knitr_in()` file code chunks.
 - Remove more calls to `sort(NULL)` that caused warnings in R 3.3.3.
 - Fix a bug on R 3.3.3 where `analyze_loadd()` was sometimes quitting with "Error: attempt to set an attribute on NULL".
+- Do not call `digest::digest(file = TRUE)` on directories. Instead, set hashes of directories to `NA`. Users should still not directories as file dependencies.
 
 ## New features
 
