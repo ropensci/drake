@@ -40,7 +40,7 @@ script:
     R CMD build .
     R CMD INSTALL drake*tar.gz
     travis_wait 20 R CMD check drake*tar.gz --no-tests
-    travis_wait 20 Rscript -e 'cov <- covr::package_coverage(); print(cov); covr::codecov(coverage = cov)'
+    travis_wait 20 Rscript -e 'cov <- covr::package_coverage()' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
 
 after_success:
   - Rscript -e 'lintr::lint_package()'
