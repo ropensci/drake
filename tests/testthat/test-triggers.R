@@ -109,7 +109,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -147,7 +147,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -193,7 +193,7 @@ test_with_dir("trigger does not block out command deps", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -245,7 +245,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f", "readRDS")
+  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
