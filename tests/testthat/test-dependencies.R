@@ -163,8 +163,8 @@ test_with_dir("Vectorized nested functions work", {
   config$envir <- e
   config$plan <- drake_plan(a = f(1:10))
   config$targets <- "a"
-  expect_equal(clean_dependency_list(deps_code(e$f)), sort(c("g", "x")))
-  expect_equal(clean_dependency_list(deps_code(e$g)), sort(c("x", "y")))
+  expect_equal(clean_dependency_list(deps_code(e$f)), sort(c("g")))
+  expect_equal(clean_dependency_list(deps_code(e$g)), sort(c("y")))
 
   config <- testrun(config)
   if ("a" %in% ls(config$envir)){
