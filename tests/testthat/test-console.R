@@ -196,12 +196,14 @@ test_with_dir("drake_warning() and drake_error()", {
 
 test_with_dir("show_source()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan <- drake_plan(x = rnorm(15))
+  plan <- drake_plan(x = base::sqrt(15))
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE)
   config <- drake_config(plan, cache = cache)
   expect_message(show_source(x, config), regexp = "command")
-  expect_message(show_source(rnorm, config), regexp = "import")
+  expect_message(
+    show_source("base::sqrt", config, character_only = TRUE), regexp = "import"
+  )
   expect_silent(loadd(x, cache = cache, show_source = FALSE))
   expect_silent(readd(x, cache = cache, show_source = FALSE))
   expect_message(loadd(x, cache = cache, show_source = TRUE))
