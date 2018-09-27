@@ -3,7 +3,12 @@
 #' @description Intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
-#' @details If the argument is a `knitr` report
+#' @details
+#'   The `globals` slot of the output list contains candidate globals only.
+#'   Each global will be treated as an actual dependency if and only if
+#'   it is either a target or an item in the `envir` argument to [make()].
+#'
+#'   If the argument is a `knitr` report
 #'   (for example, `file_store("report.Rmd")` or `"\"report.Rmd\""`)
 #'   the the dependencies of the expected compiled
 #'   output will be given. For example, `deps_code(file_store("report.Rmd"))`
@@ -30,6 +35,9 @@
 #' @param x a language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
 #' @return Names of dependencies listed by type (object, input file, etc).
+#'   The `globals` slot of the output list contains candidate globals only.
+#'   Each global will be treated as an actual dependency if and only if
+#'   it is either a target or an item in the `envir` argument to [make()].
 #' @examples
 #' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y){
@@ -79,6 +87,11 @@ deps_code <- function(x){
 #' @description Intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
+#' @details
+#'   The `globals` slot of the output list contains candidate globals only.
+#'   Each global will be treated as an actual dependency if and only if
+#'   it is either a target or an item in the `envir` argument to [make()].
+#' @seealso deps_code
 #' @export
 #' @param target a symbol denoting a target name, or if `character_only`
 #'   is TRUE, a character scalar denoting a target name.
@@ -86,6 +99,9 @@ deps_code <- function(x){
 #' @param character_only logical, whether to assume target is a character
 #'   string rather than a symbol.
 #' @return Names of dependencies listed by type (object, input file, etc).
+#'   The `globals` slot of the output list contains candidate globals only.
+#'   Each global will be treated as an actual dependency if and only if
+#'   it is either a target or an item in the `envir` argument to [make()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
