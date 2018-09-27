@@ -28,9 +28,11 @@ r_packages:
   - pkgdown
   - readxl
 
+r_github_packages:
+  - mschubert/clustermq
+
 before_script:
   - chmod +x ./pkgdown.sh
-  - Rscript -e 'devtools::install_github("mschubert/clustermq")'
   - Rscript -e 'BiocManager::install("CodeDepends", update = FALSE, ask = FALSE)'
 
 # From Jim Hester, for avoiding timeouts
