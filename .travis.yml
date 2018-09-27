@@ -19,17 +19,14 @@ addons:
 
 r_packages:
   - BiocManager
+  - clustermq
   - covr
-  - devtools
   - downloader
   - forcats
   - ggplot2
   - lintr
   - pkgdown
   - readxl
-
-r_github_packages:
-  - mschubert/clustermq
 
 before_script:
   - chmod +x ./pkgdown.sh
@@ -40,8 +37,8 @@ script:
   - |
     R CMD build .
     R CMD INSTALL drake*tar.gz
-    travis_wait 20 R CMD check drake*tar.gz --no-tests
-    travis_wait 20 Rscript -e 'covr::codecov()'
+    Rscript -e 'devtools::test()'
+    travis_wait 20 R CMD check drake*tar.gz
 
 after_success:
   - Rscript -e 'lintr::lint_package()'
