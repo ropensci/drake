@@ -70,7 +70,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
 })
 
 test_with_dir(
-  "deps_code() correctly reports dependencies of functions and commands", {
+  "deps_code() and deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(length(deps_code("")), 0)
   expect_equal(length(command_dependencies(NA)), 0)
@@ -86,7 +86,9 @@ test_with_dir(
   expect_false(is_vectorized(f))
   expect_false(is_vectorized("char"))
   expect_equal(
-    sort(clean_dependency_list(deps_code(f))), sort(c("g", "saveRDS")))
+    sort(clean_dependency_list(deps_code(f))),
+    sort(c("g", "out", "saveRDS", "x", "y"))
+  )
   my_plan <- drake_plan(
     x = 1 + some_object,
     my_target = x + readRDS(file_in("tracked_input_file.rds")),
@@ -95,11 +97,16 @@ test_with_dir(
     meta = read.table(file_in("file_in")),
     strings_in_dots = "literals"
   )
+  config <- drake_config(
+    my_plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
   expect_equal(
     clean_dependency_list(deps_code(my_plan$command[1])), "some_object")
   expect_equal(sort(
     clean_dependency_list(deps_code(my_plan$command[2]))),
-    sort(c("\"tracked_input_file.rds\"", "readRDS", "x")))
+    sort(c("\"tracked_input_file.rds\"", "x", "readRDS")))
   expect_equal(sort(
     clean_dependency_list(deps_code(my_plan$command[3]))), sort(c("f", "g", "w",
     "x", "y", "z")))
@@ -108,6 +115,19 @@ test_with_dir(
   expect_equal(
     sort(clean_dependency_list(deps_code(my_plan$command[5]))),
     sort(c("read.table", "\"file_in\"")))
+  expect_true(!length(deps_target(x, config)))
+  expect_equal(sort(
+    clean_dependency_list(deps_target(my_target, config))),
+    sort(c("\"tracked_input_file.rds\"", "x")))
+  expect_equal(sort(
+    clean_dependency_list(deps_target(return_value, config))),
+    sort(c("f", "x")))
+  expect_equal(sort(
+    clean_dependency_list(deps_target(botched, config))),
+    character(0))
+  expect_equal(sort(
+    clean_dependency_list(deps_target(meta, config))),
+    sort("\"file_in\""))
 })
 
 test_with_dir("tracked() works", {
@@ -117,7 +137,7 @@ test_with_dir("tracked() works", {
   y <- sort(c("\"intermediatefile.rds\"", "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a", "saveRDS", "\"input.rds\"", "readRDS"))
+    "c", "b", "a",  "\"input.rds\""))
   expect_equal(x, y)
 })
 
@@ -143,8 +163,8 @@ test_with_dir("Vectorized nested functions work", {
   config$envir <- e
   config$plan <- drake_plan(a = f(1:10))
   config$targets <- "a"
-  expect_equal(clean_dependency_list(deps_code(e$f)), "g")
-  expect_equal(clean_dependency_list(deps_code(e$g)), "y")
+  expect_equal(clean_dependency_list(deps_code(e$f)), sort(c("g", "x")))
+  expect_equal(clean_dependency_list(deps_code(e$g)), sort(c("x", "y")))
 
   config <- testrun(config)
   if ("a" %in% ls(config$envir)){
@@ -184,7 +204,6 @@ test_with_dir("deps_target()", {
     knitr_in = file_store("report.Rmd"),
     file_out = file_store("report.md"),
     readd = sort(c("coef_regression2_small", "small")),
-    globals = "knit",
     loadd = "large"
   )
   expect_equal(length(d1), length(d2))

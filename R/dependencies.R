@@ -436,14 +436,13 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL){
   if (!is.null(globals)){
     results$globals <- intersect(results$globals, globals)
   }
-  if (length(exclude) > 0){
-    results <- lapply(
-      X = results,
-      FUN = function(x){
-        setdiff(x, exclude)
-      }
-    )
-  }
+  exclude <- base::union(exclude, ".")
+  results <- lapply(
+    X = results,
+    FUN = function(x){
+      setdiff(x, exclude)
+    }
+  )
   results[purrr::map_int(results, length) > 0]
 }
 
