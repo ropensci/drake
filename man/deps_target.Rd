@@ -18,19 +18,11 @@ string rather than a symbol.}
 }
 \value{
 Names of dependencies listed by type (object, input file, etc).
-The \code{globals} slot of the output list contains candidate globals only.
-Each global will be treated as an actual dependency if and only if
-it is either a target or an item in the \code{envir} argument to \code{\link[=make]{make()}}.
 }
 \description{
 Intended for debugging and checking your project.
 The dependency structure of the components of your analysis
 decides which targets are built and when.
-}
-\details{
-The \code{globals} slot of the output list contains candidate globals only.
-Each global will be treated as an actual dependency if and only if
-it is either a target or an item in the \code{envir} argument to \code{\link[=make]{make()}}.
 }
 \examples{
 \dontrun{
