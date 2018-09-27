@@ -35,7 +35,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   all <- sort(c("\"input.rds\"",
     "\"intermediatefile.rds\"", "drake_target_1", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i", "j",
-    "myinput", "nextone", "readRDS", "saveRDS", "yourinput"))
+    "myinput", "nextone", "yourinput"))
   expect_equal(config$cache$list(), all)
   expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))

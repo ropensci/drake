@@ -34,3 +34,6 @@ deps_target(c("small", "large"), config = config, reverse = TRUE)
 })
 }
 }
+\seealso{
+deps_code
+}

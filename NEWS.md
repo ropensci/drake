@@ -4,6 +4,7 @@
 
 - Avoid serialization in `digest()` wherever possible. This puts old `drake` projects out of date, but it improves speed.
 - Require R version >= 3.3.0 rather than >= 3.2.0. Tests and checks still run fine on 3.3.0, but the required version of the `stringi` package no longer compiles on 3.2.0.
+- Be more discerning in detecting dependencies. In `code_dependencies()`, restrict the possible global variables to the ones mentioned in the new `globals` argument (turned off when `NULL`. In practical workflows, global dependencies are restricted to items in `envir` and proper targets in the plan. In `deps_code()`, the `globals` slot of the output list is now a list of *candidate* globals, not necessarily actual globals (some may not be targets or variables in `envir`).
 
 ## Bug fixes
 

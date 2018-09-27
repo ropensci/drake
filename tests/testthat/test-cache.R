@@ -223,7 +223,7 @@ test_with_dir("cache functions work", {
   # targets and imports
   imports <- sort(c("\"input.rds\"",
     "a", "b", "c", "f", "g",
-    "h", "i", "j", "readRDS", "saveRDS"))
+    "h", "i", "j"))
   builds <- sort(config$plan$target)
   out_files <- "\"intermediatefile.rds\""
   all <- sort(c(builds, imports, out_files))

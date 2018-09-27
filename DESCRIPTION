@@ -59,9 +59,9 @@ Depends:
   R (>= 3.3.0)
 Imports:
   codetools,
-  evaluate,
   digest,
   dplyr,
+  evaluate,
   formatR,
   fs,
   future,
