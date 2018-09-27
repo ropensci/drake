@@ -255,8 +255,8 @@ nonfile_target_dependencies <- function(targets, config, jobs = 1){
   intersect(out, config$plan$target)
 }
 
-import_dependencies <- function(expr, exclude = character(0)){
-  deps <- code_dependencies(expr, exclude = exclude)
+import_dependencies <- function(expr, exclude = character(0), globals = NULL){
+  deps <- code_dependencies(expr, exclude = exclude, globals = globals)
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
@@ -264,12 +264,20 @@ import_dependencies <- function(expr, exclude = character(0)){
   deps
 }
 
-command_dependencies <- function(command, exclude = character(0)){
+command_dependencies <- function(
+  command,
+  exclude = character(0),
+  globals = NULL
+){
   if (!length(command)){
     return()
   }
   command <- as.character(command)
-  deps <- code_dependencies(parse(text = command), exclude = exclude)
+  deps <- code_dependencies(
+    parse(text = command),
+    exclude = exclude,
+    globals = globals
+  )
   deps$strings <- NULL
 
   # TODO: this block can go away when `drake`
@@ -364,7 +372,7 @@ unwrap_function <- function(funct){
   funct
 }
 
-code_dependencies <- function(expr, exclude = character(0)){
+code_dependencies <- function(expr, exclude = character(0), globals = NULL){
   if (
     !is.function(expr) &&
     !is.expression(expr) &&
@@ -386,7 +394,8 @@ code_dependencies <- function(expr, exclude = character(0)){
       }
       walk(body(expr))
     } else if (is.name(expr)) {
-      new_globals <- setdiff(x = wide_deparse(expr), y = drake_fn_patterns)
+      new_globals <- setdiff(x = wide_deparse(expr), y = drake_fn_patterns) %>%
+        Filter(f = is_parsable)
       results$globals <<- c(results$globals, new_globals)
     } else if (is.character(expr)) {
       results$strings <<- c(results$strings, expr)
@@ -415,7 +424,9 @@ code_dependencies <- function(expr, exclude = character(0)){
     }
   }
   walk(expr)
-  results$globals <- intersect(results$globals, find_globals(expr))
+  if (!is.null(globals)){
+    results$globals <- intersect(results$globals, globals)
+  }
   if (length(exclude) > 0){
     results <- lapply(
       X = results,
@@ -425,29 +436,6 @@ code_dependencies <- function(expr, exclude = character(0)){
     )
   }
   results[purrr::map_int(results, length) > 0]
-}
-
-find_globals <- function(fun){
-  if (!is.function(fun)){
-    f <- function(){} # nolint
-    body(f) <- as.call(append(as.list(body(f)), fun))
-    fun <- f
-  }
-  if (typeof(fun) != "closure"){
-    return(character(0))
-  }
-  fun <- unwrap_function(fun)
-  # The tryCatch statement fixes a strange bug in codetools
-  # for R 3.3.3. I do not understand it.
-  tryCatch(
-    codetools::findGlobals(fun = fun, merge = TRUE),
-    error = function(e){
-      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
-      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
-    }
-  ) %>%
-    setdiff(y = c(drake_fn_patterns, ".")) %>%
-    Filter(f = is_parsable)
 }
 
 analyze_loadd <- function(expr){

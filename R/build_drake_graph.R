@@ -52,7 +52,8 @@ build_drake_graph <- function(
     jobs = jobs,
     cache = cache,
     console_log_file = console_log_file,
-    trigger = parse_trigger(trigger = trigger, envir = envir)
+    trigger = parse_trigger(trigger = trigger, envir = envir),
+    globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
   )
   imports <- bdg_prepare_imports(config)
   import_deps <- memo_expr(
@@ -149,7 +150,11 @@ bdg_analyze_imports <- function(config, imports){
   lightly_parallelize(
     X = seq_along(imports),
     FUN = function(i){
-      import_dependencies(expr = imports[[i]], exclude = names(imports)[[i]])
+      import_dependencies(
+        expr = imports[[i]],
+        exclude = names(imports)[[i]],
+        globals = config$globals
+      )
     },
     jobs = config$jobs
   ) %>%
@@ -168,7 +173,8 @@ bdg_analyze_commands <- function(config){
     FUN = function(i){
       command_dependencies(
         command = config$plan$command[i],
-        exclude = config$plan$target[i]
+        exclude = config$plan$target[i],
+        globals = config$globals
       )
     },
     jobs = config$jobs
@@ -204,7 +210,10 @@ bdg_get_triggers <- function(config){
 }
 
 bdg_get_condition_deps <- function(config, triggers){
-  default_condition_deps <- import_dependencies(config$trigger$condition)
+  default_condition_deps <- import_dependencies(
+    config$trigger$condition,
+    globals = config$globals
+  )
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze condition triggers", config = config)
     condition_deps <- lightly_parallelize(
@@ -213,7 +222,8 @@ bdg_get_condition_deps <- function(config, triggers){
         if (!safe_is_na(config$plan$trigger[i])){
           import_dependencies(
             expr = triggers[[i]]$condition,
-            exclude = config$plan$target[i]
+            exclude = config$plan$target[i],
+            globals = config$globals
           )
         } else {
           default_condition_deps
@@ -232,7 +242,10 @@ bdg_get_condition_deps <- function(config, triggers){
 }
 
 bdg_get_change_deps <- function(config, triggers){
-  default_change_deps <- import_dependencies(config$trigger$change)
+  default_change_deps <- import_dependencies(
+    config$trigger$change,
+    globals = config$globals
+  )
   if ("trigger" %in% colnames(config$plan)){
     console_preprocess(text = "analyze change triggers", config = config)
     change_deps <- lightly_parallelize(
@@ -241,7 +254,8 @@ bdg_get_change_deps <- function(config, triggers){
         if (!safe_is_na(config$plan$trigger[i])){
           import_dependencies(
             expr = triggers[[i]]$change,
-            exclude = config$plan$target[i]
+            exclude = config$plan$target[i],
+            globals = config$globals
           )
         } else {
           default_change_deps
