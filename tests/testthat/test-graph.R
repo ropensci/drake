@@ -72,7 +72,7 @@ test_with_dir("Supplied graph is pruned.", {
   graph <- build_drake_graph(my_plan)
   con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
   vertices <- V(con$graph)$name
-  include <- c("small", "simulate", "data.frame", "sample.int", "large")
+  include <- c("small", "simulate", "large")
   exclude <- setdiff(my_plan$target, include)
   expect_true(all(include %in% vertices))
   expect_false(any(exclude %in% vertices))
@@ -155,20 +155,20 @@ test_with_dir("clusters", {
   expect_equal(o1$nodes, o3$nodes)
   expect_equal(o1$nodes, o4$nodes)
   o <- drake_graph_info(config, group = "n__", clusters = "1")
-  expect_equal(nrow(o$nodes), 5)
+  expect_equal(nrow(o$nodes), 3)
   expect_equal(
     sort(o$nodes$id),
-    sort(c("rexp", "rnorm", "x_2", "y_2", "n__: 1"))
+    sort(c("x_2", "y_2", "n__: 1"))
   )
   node <- o$nodes[o$nodes$id == "n__: 1", ]
   expect_equal(node$id, "n__: 1")
   expect_equal(node$type, "cluster")
   expect_equal(node$shape, unname(shape_of("cluster")))
   o <- drake_graph_info(config, group = "n__", clusters = c("1", "2", "bla"))
-  expect_equal(nrow(o$nodes), 4)
+  expect_equal(nrow(o$nodes), 2)
   expect_equal(
     sort(o$nodes$id),
-    sort(c("rexp", "rnorm", "n__: 1", "n__: 2"))
+    sort(c("n__: 1", "n__: 2"))
   )
   for (x in c("n__: 1", "n__: 2")){
     node <- o$nodes[o$nodes$id == x, ]
@@ -178,10 +178,10 @@ test_with_dir("clusters", {
   }
   make(plan, targets = c("x_1", "y_2"), cache = cache, session_info = FALSE)
   o <- drake_graph_info(config, group = "status", clusters = "up to date")
-  expect_equal(nrow(o$nodes), 5)
+  expect_equal(nrow(o$nodes), 3)
   expect_equal(
     sort(o$nodes$id),
-    sort(c("rexp", "rnorm", "x_2", "y_1", "status: up to date"))
+    sort(c("x_2", "y_1", "status: up to date"))
   )
   node <- o$nodes[o$nodes$id == "status: up to date", ]
   expect_equal(node$id, "status: up to date")

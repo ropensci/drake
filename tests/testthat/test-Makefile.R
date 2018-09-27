@@ -43,7 +43,10 @@ test_with_dir("recipe commands", {
 test_with_dir("no Makefile for make_imports()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cached(), character(0))
-  x <- drake_plan(a = ls())
+  f <- function(){
+    return(1)
+  }
+  x <- drake_plan(a = f())
   expect_false(file.exists("Makefile"))
   con <- drake_config(
     x,
@@ -51,7 +54,7 @@ test_with_dir("no Makefile for make_imports()", {
     verbose = FALSE
   )
   make_imports(con)
-  expect_true(cached("ls", verbose = FALSE))
+  expect_true(cached("f", verbose = FALSE))
   expect_false(file.exists("Makefile"))
 })
 
