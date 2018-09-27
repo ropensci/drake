@@ -433,6 +433,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL){
     }
   }
   walk(expr)
+  results$globals <- intersect(results$globals, find_globals(expr))
   if (!is.null(globals)){
     results$globals <- intersect(results$globals, globals)
   }
@@ -444,6 +445,29 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL){
     }
   )
   results[purrr::map_int(results, length) > 0]
+}
+
+find_globals <- function(fun){
+  if (!is.function(fun)){
+    f <- function(){} # nolint
+    body(f) <- as.call(append(as.list(body(f)), fun))
+    fun <- f
+  }
+  if (typeof(fun) != "closure"){
+    return(character(0))
+  }
+  fun <- unwrap_function(fun)
+  # The tryCatch statement fixes a strange bug in codetools
+  # for R 3.3.3. I do not understand it.
+  tryCatch(
+    codetools::findGlobals(fun = fun, merge = TRUE),
+    error = function(e){
+      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
+      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
+    }
+  ) %>%
+    setdiff(y = c(drake_fn_patterns, ".")) %>%
+    Filter(f = is_parsable)
 }
 
 analyze_loadd <- function(expr){

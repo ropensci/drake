@@ -87,7 +87,7 @@ test_with_dir(
   expect_false(is_vectorized("char"))
   expect_equal(
     sort(clean_dependency_list(deps_code(f))),
-    sort(c("g", "out", "saveRDS", "x", "y"))
+    sort(c("g", "saveRDS"))
   )
   my_plan <- drake_plan(
     x = 1 + some_object,
