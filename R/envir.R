@@ -94,6 +94,7 @@ ensure_loaded <- function(targets, config){
   already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
     intersect(y = config$plan$target)
   setdiff(targets, already_loaded) %>%
+    Filter(f = is_not_file) %>%
     safe_load(config = config)
 }
 

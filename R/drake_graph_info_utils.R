@@ -140,7 +140,12 @@ insert_file_outs <- function(config){
       if (is.null(deps)){
         return(character(0))
       }
-      c(deps$file_in, deps$knitr_in)
+      c(
+        deps$file_in,
+        deps$knitr_in,
+        Filter(x = deps$change, f = is_file),
+        Filter(x = deps$condition, f = is_file)
+      )
     }) %>%
       setNames(nodes$id) %>%
       select_nonempty

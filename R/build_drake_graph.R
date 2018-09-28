@@ -421,10 +421,8 @@ unload_conflicts <- function(imports, targets, envir, verbose){
 zip_deps <- function(index, command_deps, condition_deps, change_deps){
   out <- command_deps[[index]]
   out$condition <- unlist(condition_deps[[index]]) %>%
-    Filter(f = is_not_file) %>%
     clean_dependency_list
   out$change <- unlist(change_deps[[index]]) %>%
-    Filter(f = is_not_file) %>%
     clean_dependency_list
   select_nonempty(out) %>%
     list2env(parent = emptyenv(), hash = TRUE)
