@@ -1,6 +1,9 @@
 run_clustermq <- function(config){
   assert_pkg("clustermq", version = "0.8.4.99")
-  config$queue <- new_priority_queue(config = config, jobs = 1)
+  config$queue <- new_priority_queue(
+    config = config,
+    jobs = config$jobs_imports
+  )
   if (!config$queue$empty()){
     config$workers <- clustermq::workers(
       n_jobs = config$jobs,
