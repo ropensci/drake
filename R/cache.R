@@ -521,18 +521,24 @@ assert_compatible_cache <- function(cache){
   if (inherits(err, "try-error")){
     return(invisible())
   }
-  comparison <- compareVersion(old, "4.4.0")
-  if (comparison > 0){
-    return(invisible())
+  if (compareVersion(old, "5.4.0") < 0){
+    warning(
+      "The improvements to speed and reproducibility in drake version 6.0.0 ",
+      "put all targets out of date in projects previously built ",
+      "with drake version 5.4.0 or earlier. Sorry for the inconvenience.",
+      call. = FALSE
+    )
   }
-  current <- packageVersion("drake")
-  path <- cache$driver$path
-  stop(
-    "The project at '", path, "' was previously built by drake ", old, ". ",
-    "You are running drake ", current, ", which is not back-compatible. ",
-    "Run make(..., force = TRUE) to update.",
-    call. = FALSE
-  )
+  if (compareVersion(old, "4.4.0") <= 0){
+    stop(
+      "The project at '", cache$driver$path,
+      "' was previously built by drake ", old, ". ",
+      "You are running drake ", packageVersion("drake"),
+      ", which is not back-compatible. ",
+      "Run make(..., force = TRUE) to update.",
+      call. = FALSE
+    )
+  }
 }
 
 # Not true memoization, but still useful in build_drake_graph()

@@ -82,9 +82,9 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 1. Launch the code.
 2. Wait while it runs.
 3. Discover an issue.
-4. Restart from scratch.
+4. Rerun from scratch.
 
-Ordinarily, it is hard to avoid restarting from scratch.
+Ordinarily, it is hard to avoid rerunning the code from scratch.
 <br>
 
 <center>

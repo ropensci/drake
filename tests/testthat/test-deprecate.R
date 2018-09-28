@@ -230,7 +230,13 @@ test_with_dir("force loading a non-back-compatible cache", {
   load_mtcars_example(force = TRUE)
   config <- drake_config(my_plan, force = TRUE)
   expect_true(length(outdated(config)) > 0)
-  expect_error(make(my_plan, verbose = FALSE, session_info = FALSE))
+  expect_error(
+    expect_warning(
+      make(my_plan, verbose = FALSE, session_info = FALSE),
+      regexp = "inconvenience"
+    ),
+    regexp = "force"
+  )
   make(my_plan, verbose = FALSE, force = TRUE)
   expect_equal(outdated(config), character(0))
   expect_true(length(cached()) > 0)
