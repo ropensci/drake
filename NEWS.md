@@ -1,4 +1,4 @@
-# Version 5.4.0.9001
+# Version 6.0.0
 
 ## Breaking changes
 
@@ -17,6 +17,7 @@
 - Fix a bug on R 3.3.3 where `analyze_loadd()` was sometimes quitting with "Error: attempt to set an attribute on NULL".
 - Do not call `digest::digest(file = TRUE)` on directories. Instead, set hashes of directories to `NA`. Users should still not directories as file dependencies.
 - If files are declared as dependnecies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine. Ref: https://stackoverflow.com/questions/52121537/trigger-notification-from-report-generation-in-r-drake-package
+- Work around mysterious `codetools` failures in R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 
 ## New features
 
@@ -39,8 +40,6 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Choose more appropriate places to check that the `txtq` package is installed.
 - Improve the help files of `loadd()` and `readd()`, giving specific usage guidance in prose.
 - Memoize all the steps of `build_drake_graph()` and print to the console the ones that execute.
-- Bug fix: avoid `sort(NULL)` because it returns `NA`s on R 3.3.
-- Bug fix: work around mysterious `codetools` failures on R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 - Skip some tests if `txtq` is not installed.
 
 # Version 5.4.0
