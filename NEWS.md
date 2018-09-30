@@ -1,3 +1,5 @@
+# Version 6.0.0.9000
+
 # Version 6.0.0
 
 ## Breaking changes
