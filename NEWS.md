@@ -1,5 +1,9 @@
 # Version 6.0.0.9000
 
+## Enhancements
+
+- Improve the documentation of the `seed` argument in `make()` and `drake_config()`.
+
 # Version 6.0.0
 
 ## Breaking changes

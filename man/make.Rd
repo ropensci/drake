@@ -292,11 +292,24 @@ will give you an easy representation of how your results change
 over time as the rest of your project changes. Hopefully,
 this is a step in the right direction for data reproducibility.}
 
-\item{seed}{integer, the root pseudo-random seed to use for your project.
+\item{seed}{integer, the root pseudo-random number generator
+seed to use for your project.
+In \code{\link[=make]{make()}}, \code{drake} generates a unique
+local seed for each target using the global seed
+and the target name. That way, different pseudo-random numbers
+are generated for different targets, and this pseudo-randomness
+is reproducible.
+
 To ensure reproducibility across different R sessions,
 \code{set.seed()} and \code{.Random.seed} are ignored and have no affect on
-\code{drake} workflows. Conversely, \code{make()} does not change \code{.Random.seed},
+\code{drake} workflows. Conversely, \code{make()} does not usually
+change \code{.Random.seed},
 even when pseudo-random numbers are generated.
+The exceptions to this last point are
+\code{make(parallelism = "clustermq")} and
+\code{make(parallelism = "clustermq_staged")},
+because the \code{clustermq} package needs to generate random numbers
+to set up ports and sockets for ZeroMQ.
 
 On the first call to \code{make()} or \code{drake_config()}, \code{drake}
 uses the random number generator seed from the \code{seed} argument.

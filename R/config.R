@@ -275,11 +275,24 @@
 #'   over time as the rest of your project changes. Hopefully,
 #'   this is a step in the right direction for data reproducibility.
 #'
-#' @param seed integer, the root pseudo-random seed to use for your project.
+#' @param seed integer, the root pseudo-random number generator
+#'   seed to use for your project.
+#'   In [make()], `drake` generates a unique
+#'   local seed for each target using the global seed
+#'   and the target name. That way, different pseudo-random numbers
+#'   are generated for different targets, and this pseudo-randomness
+#'   is reproducible.
+#'
 #'   To ensure reproducibility across different R sessions,
 #'   `set.seed()` and `.Random.seed` are ignored and have no affect on
-#'   `drake` workflows. Conversely, `make()` does not change `.Random.seed`,
+#'   `drake` workflows. Conversely, `make()` does not usually
+#'   change `.Random.seed`,
 #'   even when pseudo-random numbers are generated.
+#'   The exceptions to this last point are
+#'   `make(parallelism = "clustermq")` and
+#'   `make(parallelism = "clustermq_staged")`,
+#'   because the `clustermq` package needs to generate random numbers
+#'   to set up ports and sockets for ZeroMQ.
 #'
 #'   On the first call to `make()` or `drake_config()`, `drake`
 #'   uses the random number generator seed from the `seed` argument.
