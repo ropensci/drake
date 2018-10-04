@@ -143,6 +143,7 @@ drake_graph_info <- function(
   clusters = NULL,
   show_output_files = TRUE
 ) {
+  assert_pkg("visNetwork")
   if (!length(V(config$graph)$name)){
     return(null_graph())
   }

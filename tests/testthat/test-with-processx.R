@@ -3,6 +3,7 @@ drake_context("with processx")
 if (!identical(getOption("drake_no_processx"), TRUE)){
   test_with_dir("make(session = callr::r_vanilla)", {
     skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+    skip_if_not_installed("callr")
     con <- dbug()
     con$envir <- dbug_envir(globalenv())
     ls1 <- ls(envir = con$envir)

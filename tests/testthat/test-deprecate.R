@@ -108,6 +108,7 @@ test_with_dir("deprecated graphing functions", {
   expect_warning(build_graph(pl))
   expect_warning(build_drake_graph(pl, sanitize_plan = TRUE))
   con <- drake_config(plan = pl)
+  skip_if_not_installed("visNetwork")
   expect_warning(out <- plot_graph(config = con))
   skip_if_not_installed("ggraph")
   expect_warning(out <- static_drake_graph(config = con))
@@ -127,6 +128,7 @@ test_with_dir("deprecated example(s)_drake functions", {
 
 test_with_dir("deprecate misc utilities", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("visNetwork")
   expect_error(parallel_stages(1), regexp = "parallelism")
   expect_error(rate_limiting_times(1), regexp = "parallelism")
   expect_warning(as_file("x"))
