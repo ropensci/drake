@@ -1,5 +1,9 @@
 # Version 6.0.0.9000
 
+## Bug fixes
+
+- Call `normalizePath()` on the `file` argument to `render_drake_graph()` and `render_sankey_drake_graph()`. That way, static image file paths are written correctly in spite of any tildes. Compensates for https://github.com/wch/webshot.
+
 ## Enhancements
 
 - Improve the documentation of the `seed` argument in `make()` and `drake_config()`.
