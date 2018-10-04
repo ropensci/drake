@@ -117,9 +117,11 @@ plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
 print(plan)
 cache <- storr::storr_environment()
 config <- drake_config(plan, cache = cache)
+\dontrun{
 vis_drake_graph(config, group = "n__", clusters = "1")
 vis_drake_graph(config, group = "n__", clusters = c("1", "2"))
 make(plan, targets = c("x_1", "y_2"), cache = cache)
 # Optionally cluster on columns supplied by `drake_graph_info()$nodes`.
 vis_drake_graph(config, group = "status", clusters = "up to date")
+}
 }

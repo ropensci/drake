@@ -23,14 +23,18 @@
 #'       depend = FALSE
 #'     ),
 #'     timeout = 1e3
-#'   )
+#'   ),
+#'   strings_in_dots = "literals"
 #' )
 #' print(plan)
-#' source <- drake_plan_source(plan)
-#' print(source) # Install the prettycode package for syntax highlighting.
+#' if (requireNamespace("styler", quietly = TRUE)){
+#'   source <- drake_plan_source(plan)
+#'   print(source) # Install the prettycode package for syntax highlighting.
+#' }
 #' \dontrun{
 #' test_with_dir("suppress side effects", {
-#' writeLines(source, "my_script.R") # Save the code to an R script.
+#' file <- tempfile() # Path to an R script to contain the drake_plan() call.
+#' writeLines(source, file) # Save the code to an R script.
 #' })
 #' }
 drake_plan_source <- function(plan){
