@@ -229,7 +229,7 @@ render_drake_graph <- function(
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
   }
   if (length(file)) {
-    file <- normalizePath(file)
+    file <- normalizePath(file, mustWork = FALSE)
     if (is_image_filename(file)){
       assert_pkg("webshot")
       url <- file.path(fs::dir_create(tempfile()), "tmp.html")
