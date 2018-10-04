@@ -3,6 +3,7 @@
 ## Bug fixes
 
 - Call `normalizePath()` on the `file` argument to `render_drake_graph()` and `render_sankey_drake_graph()`. That way, static image file paths are written correctly in spite of any tildes. Compensates for https://github.com/wch/webshot.
+- Skip tests and examples if the required "Suggests" packages are not installed.
 
 ## Enhancements
 
