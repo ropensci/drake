@@ -57,6 +57,7 @@ There are multiple `drake`-powered example projects [available here](https://git
 - [`drake` + cooking with Kirill](https://krlmlr.github.io/slides/drake-sib-zurich)
 - [`drake` + cooking exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html)
 - [Christine Stawitz](https://github.com/cstawitz)'s [R-Ladies Seattle talk on June 25, 2018](https://github.com/cstawitz/RLadies_Sea_drake)
+- [Sina Rüeger](https://github.com/sinarueeger)'s [presentation to the Geneva R Users Group on October 4, 2018](https://sinarueeger.github.io/20181004-geneve-rug) and ([example code](https://github.com/sinarueeger/workflow-example)). The talk broadly focused on tidy workflows and divesity in the R community.
 
 ## Real example projects
 
