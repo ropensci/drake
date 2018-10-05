@@ -534,12 +534,12 @@ request](https://github.com/wlandau/drake-examples/pulls).
   - [Christine Stawitz](https://github.com/cstawitz)’s [R-Ladies Seattle
     talk on
     June 25, 2018](https://github.com/cstawitz/RLadies_Sea_drake).
-  - [Sina Rüeger](https://github.com/sinarueeger)’s [presentation to the
-    Geneva R Users Group on
+  - [Sina Rüeger](https://github.com/sinarueeger)’s [Geneva R Users
+    Group presentation on
     October 4, 2018](https://sinarueeger.github.io/20181004-geneve-rug)
-    and ([example
-    code](https://github.com/sinarueeger/workflow-example)). The talk
-    broadly focused on tidy workflows and divesity in the R community.
+    ([example code](https://github.com/sinarueeger/workflow-example)).
+    The talk broadly focused on tidy workflows and divesity in the R
+    community.
 
 ## Real example projects
 
