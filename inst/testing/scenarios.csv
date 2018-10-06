@@ -5,8 +5,8 @@ envir,parallelism,jobs,backend,caching
 "local","mclapply",1,,
 "local","mclapply",9,,
 "local","mclapply_staged",2,,
-"local","clustermq",2,,
-"local","clustermq_staged",9,,
+"local","clustermq",2,,"master"
+"local","clustermq_staged",9,,"worker"
 "local","Makefile",9,,
 "local","future_lapply",2,"future::multisession",
 "local","future_lapply_staged",1,"future::multisession",
@@ -17,8 +17,8 @@ envir,parallelism,jobs,backend,caching
 "global","mclapply",1,,
 "global","mclapply",2,,
 "global","mclapply_staged",9,,
-"global","clustermq",9,,
-"global","clustermq_staged",2,,
+"global","clustermq",9,,"worker"
+"global","clustermq_staged",2,,"master"
 "global","Makefile",2,,
 "global","future_lapply",1,"future::multisession",
 "global","future_lapply_staged",2,"future::multisession",
