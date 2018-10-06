@@ -1,6 +1,7 @@
 #' @title Build/process a single target or import.
-#' @export
 #' @description Also load the target's dependencies beforehand.
+#' @export
+#' @seealso drake_build
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which

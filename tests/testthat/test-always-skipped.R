@@ -78,4 +78,22 @@ test_with_dir("can keep going in parallel", {
   expect_equal(readd(b), numeric(0))
 })
 
+test_with_dir("drake_debug()", {
+  skip_on_cran()
+  load_mtcars_example()
+  config <- make(my_plan)
+  out <- drake_debug(small, config = config)
+  expect_true(is.data.frame(out))
+  my_plan$command <- lapply(
+    X = as.list(my_plan$command),
+    FUN = function(x){
+      parse(text = x)[[1]]
+    }
+  )
+  clean(destroy = TRUE)
+  config <- make(my_plan)
+  out <- drake_debug(small, config = config)
+  expect_true(is.data.frame(out))
+})
+
 }

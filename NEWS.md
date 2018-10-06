@@ -3,6 +3,7 @@
 ## New features
 
 - Enable the `caching` argument for the `"clustermq"` and `"clustermq_staged"` parallel backends. Now, `make(parallelism = "clustermq", caching = "master")` will do all the caching with the master process, and `make(parallelism = "clustermq", caching = "worker")` will do all the caching with the workers. The same is true for `parallelism = "clustermq_staged"`.
+- Add a new `drake_debug()` function to run a target's command in debug mode. Analogous to `drake_build()`.
 
 ## Bug fixes
 
