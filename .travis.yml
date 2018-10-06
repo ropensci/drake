@@ -43,9 +43,9 @@ script:
     travis_wait 20 Rscript -e 'cov <- covr::package_coverage()' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
 
 after_success:
-  - Rscript -e 'lintr::lint_package()'
   - Rscript pkgdown.R
   - ./pkgdown.sh
+  - Rscript -e 'lintr::lint_package()'
 
 after_failure:
   - find *Rcheck -name '*fail' -print -exec cat '{}' \;
