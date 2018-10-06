@@ -106,7 +106,7 @@ make <- function(
   session_info = TRUE,
   cache_log_file = NULL,
   seed = NULL,
-  caching = "worker",
+  caching = "master",
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,

@@ -434,7 +434,7 @@ drake_config <- function(
   session_info = TRUE,
   cache_log_file = NULL,
   seed = NULL,
-  caching = c("worker", "master"),
+  caching = c("master", "worker"),
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
