@@ -314,8 +314,9 @@ seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
-\item{caching}{character string, only applies to \code{"future"} parallelism.
-Can be either \code{"master"} or \code{"worker"}.
+\item{caching}{character string, only applies to
+\code{"clustermq"} and \code{"future"} parallelism.
+The \code{caching} argument can be either \code{"master"} or \code{"worker"}.
 \itemize{
 \item \code{"master"}: Targets are built by remote workers and sent back to
 the master process. Then, the master process saves them to the

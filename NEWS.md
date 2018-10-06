@@ -1,5 +1,9 @@
 # Version 6.0.0.9000
 
+## New features
+
+- Enable the `caching` argument for `"clustermq"` parallelism. Now, `make(parallelism = "clustermq", caching = "master")` will do all the caching with the master process, and `make(parallelism = "clustermq", caching = "worker")` will do all the caching with the workers.
+
 ## Bug fixes
 
 - Call `path.expand()` on the `file` argument to `render_drake_graph()` and `render_sankey_drake_graph()`. That way, tildes in file paths no longer interfere with the rendering of static image files. Compensates for https://github.com/wch/webshot.
