@@ -180,6 +180,7 @@ run_clustermq_staged <- function(config){
   assert_pkg("clustermq", version = "0.8.4.99")
   schedule <- config$schedule
   workers <- NULL
+  config$cache$flush_cache()
   while (length(V(schedule)$name)){
     stage <- next_stage(
       config = config,
@@ -238,23 +239,37 @@ run_clustermq_staged <- function(config){
       workers = workers,
       export = export
     )
-    lightly_parallelize(
-      X = builds,
-      FUN = function(build){
-        mc_wait_outfile_checksum(
-          target = build$target,
-          checksum = build$checksum,
-          config = config
-        )
-        conclude_build(
-          target = build$target,
-          value = build$value,
-          meta = build$meta,
-          config = config
-        )
-      },
-      jobs = 1 # config$jobs_imports # nolint
-    )
+    if (identical(config$caching, "master")){
+      lightly_parallelize(
+        X = builds,
+        FUN = function(build){
+          mc_wait_outfile_checksum(
+            target = build$target,
+            checksum = build$checksum,
+            config = config
+          )
+          conclude_build(
+            target = build$target,
+            value = build$value,
+            meta = build$meta,
+            config = config
+          )
+        },
+        jobs = 1 # config$jobs_imports # nolint
+      )
+    } else if (identical(config$caching, "worker")){
+      lightly_parallelize(
+        X = builds,
+        FUN = function(build){
+          mc_wait_checksum(
+            target = build$target,
+            checksum = build$checksum,
+            config = config
+          )
+        },
+        jobs = 1 # config$jobs_imports # nolint
+      )
+    }
   }
   if (!is.null(workers) && workers$cleanup()){
     on.exit()
@@ -278,7 +293,16 @@ cmq_staged_build <- function(target, meta_list, config){
     meta = meta_list[[target]],
     config = config
   )
-  build$checksum <- mc_output_file_checksum(target, config)
-  build
+  if (identical(config$caching, "master")){
+    build$checksum <- mc_output_file_checksum(target, config)
+    return(build)
+  }
+  conclude_build(
+    target = build$target,
+    value = build$value,
+    meta = build$meta,
+    config = config
+  )
+  list(target = target, checksum = mc_get_checksum(target, config))
   # nocov end
 }

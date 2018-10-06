@@ -14,6 +14,8 @@ test_with_dir("clustermq parallelism", {
   load_mtcars_example(envir = e)
   for (parallelism in c("clustermq", "clustermq_staged")){
     for (caching in c("master", "worker")){
+      config <- drake_config(e$my_plan, envir = e)
+      expect_equal(length(outdated(config)), nrow(config$plan))
       make(
         e$my_plan,
         parallelism = parallelism,
@@ -23,7 +25,6 @@ test_with_dir("clustermq parallelism", {
         verbose = 4,
         garbage_collection = TRUE
       )
-      config <- drake_config(e$my_plan, envir = e)
       expect_equal(outdated(config), character(0))
       make(
         e$my_plan,
