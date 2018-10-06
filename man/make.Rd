@@ -322,7 +322,7 @@ To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
 \item{caching}{character string, only applies to
-\code{"clustermq"} and \code{"future"} parallelism.
+\code{"clustermq"}, \code{"clustermq_staged"}, and \code{"future"} parallel backends.
 The \code{caching} argument can be either \code{"master"} or \code{"worker"}.
 \itemize{
 \item \code{"master"}: Targets are built by remote workers and sent back to

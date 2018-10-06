@@ -21,6 +21,7 @@ cmq_set_common_data <- function(config){
   if (identical(config$envir, globalenv())){
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
+  config$cache$flush_cache()
   export$config <- config
   config$workers$set_common_data(
     export = export,
@@ -134,7 +135,10 @@ cmq_conclude_build <- function(msg, config){
   cmq_conclude_target(target = build$target, config = config)
   if (identical(config$caching, "worker")){
     mc_wait_checksum(
-      target = build$target, checksum = build$checksum, config = config)
+      target = build$target,
+      checksum = build$checksum,
+      config = config
+    )
     return()
   }
   set_attempt_flag(key = build$target, config = config)

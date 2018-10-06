@@ -305,7 +305,7 @@
 #'   use `clean(destroy = TRUE)`.
 #'
 #' @param caching character string, only applies to
-#'   `"clustermq"` and `"future"` parallelism.
+#'   `"clustermq"`, `"clustermq_staged"`, and `"future"` parallel backends.
 #'   The `caching` argument can be either `"master"` or `"worker"`.
 #'   - `"master"`: Targets are built by remote workers and sent back to
 #'     the master process. Then, the master process saves them to the
