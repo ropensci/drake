@@ -538,7 +538,7 @@ request](https://github.com/wlandau/drake-examples/pulls).
     Group presentation on
     October 4, 2018](https://sinarueeger.github.io/20181004-geneve-rug)
     ([example code](https://github.com/sinarueeger/workflow-example)).
-    The talk broadly focused on tidy workflows and divesity in the R
+    The talk broadly focused on tidy workflows and diversity in the R
     community.
 
 ## Real example projects
