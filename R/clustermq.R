@@ -112,8 +112,18 @@ cmq_build <- function(target, meta, deps, config){
     config$envir[[dep]] <- deps[[dep]]
   }
   build <- just_build(target = target, meta = meta, config = config)
-  build$checksum <- mc_output_file_checksum(target, config)
-  build
+  if (identical(config$caching, "master")){
+    build$checksum <- mc_output_file_checksum(target, config)
+    return(build)
+  }
+  conclude_build(
+    target = build$target,
+    value = build$value,
+    meta = build$meta,
+    config = config
+  )
+  set_attempt_flag(key = build$target, config = config)
+  list(target = target, checksum = mc_get_checksum(target, config))
 }
 
 cmq_conclude_build <- function(msg, config){
@@ -122,6 +132,11 @@ cmq_conclude_build <- function(msg, config){
     return()
   }
   cmq_conclude_target(target = build$target, config = config)
+  if (identical(config$caching, "worker")){
+    mc_wait_checksum(
+      target = build$target, checksum = build$checksum, config = config)
+    return()
+  }
   set_attempt_flag(key = build$target, config = config)
   mc_wait_outfile_checksum(
     target = build$target,

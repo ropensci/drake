@@ -304,8 +304,9 @@
 #'   To reset the random number generator seed for a project,
 #'   use `clean(destroy = TRUE)`.
 #'
-#' @param caching character string, only applies to `"future"` parallelism.
-#'   Can be either `"master"` or `"worker"`.
+#' @param caching character string, only applies to
+#'   `"clustermq"` and `"future"` parallelism.
+#'   The `caching` argument can be either `"master"` or `"worker"`.
 #'   - `"master"`: Targets are built by remote workers and sent back to
 #'     the master process. Then, the master process saves them to the
 #'     cache (`config$cache`, usually a file system `storr`).
