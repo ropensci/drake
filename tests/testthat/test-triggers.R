@@ -5,6 +5,7 @@ test_with_dir("empty triggers return logical", {
   expect_identical(depend_trigger("x", list(), list()), FALSE)
   expect_identical(command_trigger("x", list(), list()), FALSE)
   expect_identical(file_trigger("x", list(), list()), FALSE)
+  expect_identical(condition_trigger("x", list(), list()), FALSE)
   expect_identical(change_trigger("x", list(), list()), FALSE)
 })
 
@@ -20,6 +21,22 @@ test_with_dir("triggers can be expressions", {
     )
     expect_equal(justbuilt(config), "x")
   }
+})
+
+test_with_dir("bad condition trigger", {
+  plan <- drake_plan(x = 1)
+  cache <- storr::storr_environment()
+  make(
+    plan, session_info = FALSE, cache = cache,
+    trigger = trigger(condition = NULL)
+  )
+  expect_error(
+    make(
+      plan, session_info = FALSE, cache = cache,
+      trigger = trigger(condition = NULL)
+    ),
+    regexp = "logical of length 1"
+  )
 })
 
 test_with_dir("triggers in plan override make(trigger = whatever)", {
@@ -86,7 +103,7 @@ test_with_dir("trigger() function works", {
 test_with_dir("can detect trigger deps without reacting to them", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
-  saveRDS(1, "file.rds")
+  saveRDS(0, "file.rds")
   f <- function(x){
     identity(x)
   }
@@ -96,7 +113,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
       trigger = trigger(
         condition = {
           knitr_in("knitr.Rmd")
-          f(FALSE) + readRDS(file_in("file.rds"))
+          f(0) + readRDS(file_in("file.rds"))
         },
         command = FALSE,
         file = FALSE,
@@ -129,7 +146,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
 test_with_dir("same, but with global trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
-  saveRDS(1, "file.rds")
+  saveRDS(0, "file.rds")
   f <- function(x){
     identity(x)
   }
@@ -139,7 +156,7 @@ test_with_dir("same, but with global trigger", {
     log_progress = TRUE, trigger = trigger(
       condition = {
         knitr_in("knitr.Rmd")
-        f(FALSE) + readRDS(file_in("file.rds"))
+        f(0) + readRDS(file_in("file.rds"))
       },
       command = FALSE,
       file = FALSE,
@@ -167,7 +184,7 @@ test_with_dir("same, but with global trigger", {
 test_with_dir("trigger does not block out command deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
-  saveRDS(1, "file.rds")
+  saveRDS(0, "file.rds")
   f <- function(x){
     identity(x)
   }
@@ -175,7 +192,7 @@ test_with_dir("trigger does not block out command deps", {
     x = target(
       command = {
         knitr_in("knitr.Rmd")
-        f(FALSE) + readRDS(file_in("file.rds"))
+        f(0) + readRDS(file_in("file.rds"))
       },
       trigger = trigger(
         condition = {
@@ -221,14 +238,14 @@ test_with_dir("trigger does not block out command deps", {
 test_with_dir("same, but with global trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
-  saveRDS(1, "file.rds")
+  saveRDS(0, "file.rds")
   f <- function(x){
     identity(x)
   }
   plan <- drake_plan(
     x = {
       knitr_in("knitr.Rmd")
-      f(FALSE) + readRDS(file_in("file.rds"))
+      f(0) + readRDS(file_in("file.rds"))
     },
     strings_in_dots = "literals"
   )

@@ -62,7 +62,7 @@ trigger <- function(
   command = TRUE,
   depend = TRUE,
   file = TRUE,
-  condition = NULL,
+  condition = FALSE,
   change = NULL
 ){
   stopifnot(is.logical(command))
@@ -141,6 +141,28 @@ file_trigger <- function(target, meta, config){
   FALSE
 }
 
+condition_trigger <- function(target, meta, config){
+  if (!length(target) || !length(config) || !length(meta)){
+    return(FALSE)
+  }
+  vertex_attr(
+    graph = config$graph,
+    name = "deps",
+    index = target
+  )[[1]]$condition %>%
+    ensure_loaded(config = config)
+  value <- eval(meta$trigger$condition, envir = config$envir) %>%
+    as.logical()
+  if (length(value) != 1){
+    drake_error(
+      "The `condition` trigger must evaluate to a logical of length 1. ",
+      "got `", value, "` for target ", target, ".",
+      config = config
+    )
+  }
+  value
+}
+
 change_trigger <- function(target, meta, config){
   if (!length(target) || !length(config) || !length(meta)){
     return(FALSE)
@@ -156,14 +178,16 @@ should_build_target <- function(target, meta = NULL, config){
   if (is.null(meta)){
     meta <- drake_meta(target = target, config = config)
   }
-  if (meta$imported) {
+  if (meta$imported){
     return(TRUE)
   }
   if (meta$missing){
     return(TRUE)
   }
-  if (identical(meta$trigger$condition, TRUE)){
-    return(TRUE)
+  if (is.logical(meta$trigger$condition)){
+    if (identical(meta$trigger$condition, TRUE)){
+      return(TRUE)
+    }
   }
   if (identical(meta$trigger$command, TRUE)){
     if (command_trigger(target = target, meta = meta, config = config)){
@@ -180,14 +204,9 @@ should_build_target <- function(target, meta = NULL, config){
       return(TRUE)
     }
   }
-  if (!is.null(meta$trigger$condition) && !is.logical(meta$trigger$condition)){
-    vertex_attr(
-      graph = config$graph,
-      name = "deps",
-      index = target
-    )[[1]]$condition %>%
-      ensure_loaded(config = config)
-    if (identical(eval(meta$trigger$condition, envir = config$envir), TRUE)){
+  if (!is.logical(meta$trigger$condition)){
+    value <- condition_trigger(target = target, meta = meta, config = config)
+    if (identical(value, TRUE)){
       return(TRUE)
     }
   }
