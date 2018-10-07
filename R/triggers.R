@@ -164,10 +164,10 @@ condition_trigger <- function(target, meta, config){
       config = config
     )
   }
-  condition_decision(value = value, behavior = meta$trigger$condition_behavior)
+  condition_decision(value = value, mode = meta$trigger$mode)
 }
 
-condition_decision <- function(value, behavior){
+condition_decision <- function(value, mode){
   if (identical(value, TRUE)){
     return(TRUE)
   }
