@@ -507,3 +507,177 @@ test_with_dir("trigger components react appropriately", {
   make(config = simple_config)
   expect_equal(outdated(config), character(0))
 })
+
+test_with_dir("trigger whitelist mode", {
+  skip_on_cran()
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  eval(
+    quote(f <- function(x){
+      1 + x
+    }),
+    envir = e
+  )
+  plan <- drake_plan(y = f(1))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE
+  )
+  expect_equal(justbuilt(config), "y")
+  expect_equal(outdated(config), character(0))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = FALSE, mode = "whitelist")
+  )
+  expect_equal(justbuilt(config), character(0))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = TRUE, mode = "whitelist")
+  )
+  expect_equal(justbuilt(config), "y")
+  eval(
+    quote(f <- function(x){
+      2 + x
+    }),
+    envir = e
+  )
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = FALSE, mode = "whitelist")
+  )
+  expect_equal(justbuilt(config), "y")
+  eval(
+    quote(f <- function(x){
+      3 + x
+    }),
+    envir = e
+  )
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = TRUE, mode = "whitelist")
+  )
+  expect_equal(justbuilt(config), "y")
+})
+
+test_with_dir("trigger blacklist mode", {
+  skip_on_cran()
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  eval(
+    quote(f <- function(x){
+      1 + x
+    }),
+    envir = e
+  )
+  plan <- drake_plan(y = f(1))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE
+  )
+  expect_equal(justbuilt(config), "y")
+  expect_equal(outdated(config), character(0))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = FALSE, mode = "blacklist")
+  )
+  expect_equal(justbuilt(config), character(0))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = TRUE, mode = "blacklist")
+  )
+  expect_equal(justbuilt(config), character(0))
+  eval(
+    quote(f <- function(x){
+      2 + x
+    }),
+    envir = e
+  )
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = FALSE, mode = "blacklist")
+  )
+  expect_equal(justbuilt(config), character(0))
+  eval(
+    quote(f <- function(x){
+      3 + x
+    }),
+    envir = e
+  )
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = TRUE, mode = "blacklist")
+  )
+  expect_equal(justbuilt(config), "y")
+})
+
+test_with_dir("trigger condition mode", {
+  skip_on_cran()
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  eval(
+    quote(f <- function(x){
+      1 + x
+    }),
+    envir = e
+  )
+  plan <- drake_plan(y = f(1))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE
+  )
+  expect_equal(justbuilt(config), "y")
+  expect_equal(outdated(config), character(0))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = FALSE, mode = "condition")
+  )
+  expect_equal(justbuilt(config), character(0))
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = TRUE, mode = "condition")
+  )
+  expect_equal(justbuilt(config), "y")
+  eval(
+    quote(f <- function(x){
+      2 + x
+    }),
+    envir = e
+  )
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = FALSE, mode = "condition")
+  )
+  expect_equal(justbuilt(config), character(0))
+  eval(
+    quote(f <- function(x){
+      3 + x
+    }),
+    envir = e
+  )
+  config <- make(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 4, caching = caching, session_info = FALSE,
+    trigger = trigger(condition = TRUE, mode = "condition")
+  )
+  expect_equal(justbuilt(config), "y")
+})
