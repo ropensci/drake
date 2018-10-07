@@ -95,7 +95,8 @@ test_with_dir("trigger() function works", {
     depend = FALSE,
     file = FALSE,
     condition = quote(1 + 1),
-    change = quote(sqrt(1))
+    change = quote(sqrt(1)),
+    mode = "whitelist"
   )
   expect_equal(y, z)
 })

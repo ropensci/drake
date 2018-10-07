@@ -2,10 +2,11 @@
 % Please edit documentation in R/triggers.R
 \name{trigger}
 \alias{trigger}
-\title{Set the trigger of a target.}
+\title{Customize the decision rules for rebuilding targets}
 \usage{
 trigger(command = TRUE, depend = TRUE, file = TRUE,
-  condition = FALSE, change = NULL)
+  condition = FALSE, change = NULL, mode = c("whitelist",
+  "blacklist", "condition"))
 }
 \arguments{
 \item{command}{logical, whether to rebuild the target if the
@@ -25,6 +26,23 @@ if the code evaluates to \code{TRUE}.}
 that returns any value. The target will rebuild
 if that value is different from last time
 or not already cached.}
+
+\item{mode}{a character scalar equal to \code{"whitelist"} (default) or
+\code{"blacklist"} or \code{"condition"}. With the \code{mode} argument, you can choose
+how the \code{condition} trigger factors into the decision to build
+or skip the target. Here are the options.
+\itemize{
+\item \code{"whitelist"} (default): we \emph{rebuild} the target whenever \code{condition}
+evaluates to \code{TRUE}. Otherwise, we defer to the other triggers.
+This behavior is the same as the decision rule described in the
+"Details" section of this help file.
+\item \code{"blacklist"}: we \emph{skip} the target whenever \code{condition} evaluates
+to \code{FALSE}. Otherwise, we defer to the other triggers.
+\item \code{"condition"}: here, the \code{condition} trigger is the only decider,
+and we ignore all the other triggers. We \emph{rebuild} target whenever
+\code{condition} evaluates to \code{TRUE} and \emph{skip} it whenever \code{condition}
+evaluates to \code{FALSE}.
+}}
 }
 \value{
 a list of trigger specification details that
@@ -32,19 +50,28 @@ a list of trigger specification details that
 whether to build the target.
 }
 \description{
+Use this function inside a target's command
+in your \code{\link[=drake_plan]{drake_plan()}} or the \code{trigger} argument to
+\code{\link[=make]{make()}} or \code{\link[=drake_config]{drake_config()}}.
 For details, see the chapter on triggers
 in the user manual:
 \url{https://ropenscilabs.github.io/drake-manual}
 }
 \details{
-Use this function inside a target's command
-in your \code{\link[=drake_plan]{drake_plan()}}. The target will rebuild if and only if:
+A target always builds if it has not been built before.
+Triggers allow you to customize the conditions
+under which a pre-existing target \emph{re}builds.
+By default, the target will rebuild if and only if:
 \itemize{
 \item Any of \code{command}, \code{depend}, or \code{file} is \code{TRUE}, or
 \item \code{condition} evaluates to \code{TRUE}, or
 \item \code{change} evaluates to a value different from last time.
-There may be a slight efficiency loss if you set complex
-triggers for \code{change} and/or \code{condition} because
+The above steps correspond to the "whitelist" decision rule.
+You can select other decision rules with the \code{mode} argument
+described in this help file.
+On another note, there may be a slight efficiency loss
+if you set complex triggers
+for \code{change} and/or \code{condition} because
 \code{drake} needs to load any required dependencies
 into memory before evaluating these triggers.
 }
