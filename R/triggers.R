@@ -153,7 +153,7 @@ condition_trigger <- function(target, meta, config){
     ensure_loaded(config = config)
   value <- eval(meta$trigger$condition, envir = config$envir) %>%
     as.logical()
-  if (length(value) != 1){
+  if (length(value) != 1 || !is.logical(value)){
     drake_error(
       "The `condition` trigger must evaluate to a logical of length 1. ",
       "got `", value, "` for target ", target, ".",
