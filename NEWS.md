@@ -11,6 +11,7 @@
 
 ## Enhancements
 
+- Stop earlier in `make_targets()` if all the targets are already up to date.
 - Improve the documentation of the `seed` argument in `make()` and `drake_config()`.
 
 # Version 6.0.0
