@@ -4,6 +4,8 @@
 #' @seealso drake_build
 #' @return The value of the target right after it is built.
 #' @inheritParams drake_build
+#' @param verbose logical, whether to print out the target
+#'   you are debugging.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -27,17 +29,24 @@
 #' })
 #' }
 drake_debug <- function(
-  target,
+  target = NULL,
   config = drake::read_drake_config(envir = envir, jobs = jobs),
   character_only = FALSE,
   envir = parent.frame(),
   jobs = 1,
-  replace = FALSE
+  replace = FALSE,
+  verbose = TRUE
 ){
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
   if (!character_only){
     target <- as.character(substitute(target))
+  }
+  if (!length(target)){
+    target <- utils::head(drake::failed(cache = config$cache), n = 1)
+  }
+  if (verbose){
+    message("Building target `", target, "` in debug mode.")
   }
   loadd(
     list = target,
@@ -80,7 +89,7 @@ debug_command_char <- function(command){
 debug_and_run <- function(f){
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
-  debugonce(f)
+  debug(f)
   f()
   # nocov end
 }

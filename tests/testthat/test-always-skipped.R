@@ -81,8 +81,12 @@ test_with_dir("can keep going in parallel", {
 test_with_dir("drake_debug()", {
   skip_on_cran()
   load_mtcars_example()
-  config <- make(my_plan)
-  out <- drake_debug(small, config = config)
+  my_plan$command[2] <- "simulate(48); stop(1234)"
+  config <- drake_config(my_plan)
+  expect_error(make(my_plan), regexp = "1234")
+  expect_error(drake_debug(), regexp = "1234")
+  out <- drake_debug(large, config)
+  out <- drake_debug("large", config, verbose = "false", character_only = TRUE)
   expect_true(is.data.frame(out))
   my_plan$command <- lapply(
     X = as.list(my_plan$command),
@@ -90,10 +94,13 @@ test_with_dir("drake_debug()", {
       parse(text = x)[[1]]
     }
   )
-  clean(destroy = TRUE)
-  config <- make(my_plan)
-  out <- drake_debug(small, config = config)
-  expect_true(is.data.frame(out))
+  for (i in 1:2){
+    clean(destroy = TRUE)
+    load_mtcars_example()
+    config <- make(my_plan)
+    out <- drake_debug(small, config = config)
+    expect_true(is.data.frame(out))
+  }
 })
 
 }

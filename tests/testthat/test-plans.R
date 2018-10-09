@@ -573,7 +573,7 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   my_plan$non_standard_column <- 1234
   pkgconfig::set_config("drake::strings_in_dots" = "literals")
   new_plan <- eval(drake_plan_call(my_plan))
-  expected <- my_plan[, c("target", "command", "trigger")]
+  expected <- my_plan
   expect_equal(new_plan, expected)
 })
 

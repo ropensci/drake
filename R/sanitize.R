@@ -1,5 +1,6 @@
 sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
-  for (field in drake_plan_non_factors()){
+  fields <- intersect(colnames(plan), c("command", "target", "trigger"))
+  for (field in fields){
     if (!is.null(plan[[field]])){
       if (is.factor(plan[[field]])){
          plan[[field]] <- as.character(plan[[field]])
@@ -17,27 +18,6 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
     plan <- handle_duplicated_targets(plan[, cols])
   }
   plan
-}
-
-drake_plan_non_factors <- function(){
-  c(
-    "command",
-    "target",
-    "trigger"
-  )
-}
-
-drake_plan_columns <- function(){
-  c(
-    drake_plan_non_factors(),
-    "cpu",
-    "elapsed",
-    "evaluator",
-    "priority",
-    "retries",
-    "timeout",
-    "worker"
-  )
 }
 
 sanitize_targets <- function(plan, targets){

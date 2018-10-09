@@ -62,7 +62,7 @@ drake_plan_call <- function(plan){
 }
 
 drake_target_call <- function(...){
-  args <- list(...)[drake_plan_columns()] %>%
+  args <- list(...) %>%
     select_valid()
   target <- parse(text = args$target)[[1]]
   args$target <- NULL
