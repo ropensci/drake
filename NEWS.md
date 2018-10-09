@@ -14,6 +14,7 @@
 
 ## Enhancements
 
+- Stop earlier in `make_targets()` if all the targets are already up to date.
 - Improve the documentation of the `seed` argument in `make()` and `drake_config()`.
 - Set the default `caching` argument of `make()` and `drake_config()` to `"master"` rather than `"worker"`. The default option should be the lower-overhead option for small workflows. Users have the option to make a different set of tradeoffs for larger workflows.
 - Allow the `condition` trigger to evaluate to non-logical values as long as those values can be coerced to logicals.
