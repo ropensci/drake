@@ -372,8 +372,6 @@ test_with_dir("evaluate_plan() and trace", {
     MU_from = as.character(c(NA, "data", "mus", NA, NA, NA))
   )
   expect_equal(x, y)
-  expect_equal(sort(attr(x, "wildcards")), sort(c("MU", "MU_from")))
-  expect_silent(assert_standard_columns(list(plan = x)))
 
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
@@ -398,7 +396,6 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
   expect_equal(x, y)
-  expect_equal(attr(x, "wildcards"), sort(c("SIGMA", "SIGMA_from")))
 
   x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
   y <- tibble::tibble(
@@ -426,7 +423,6 @@ test_with_dir("evaluate_plan() and trace", {
     MU_from = as.character(c(NA, "data", "data", "mus", "mus", NA, NA, NA))
   )
   expect_equal(x, y)
-  expect_equal(sort(attr(x, "wildcards")), sort(c("MU", "MU_from")))
 
   x <- evaluate_plan(
     plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
@@ -453,10 +449,6 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
   expect_equal(x, y)
-  expect_equal(
-    sort(attr(x, "wildcards")),
-    sort(c("MU", "MU_from", "SIGMA", "SIGMA_from"))
-  )
 
   x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
   y <- tibble::tibble(
@@ -499,10 +491,6 @@ test_with_dir("evaluate_plan() and trace", {
     )
   )
   expect_equal(x, y)
-  expect_equal(
-    sort(attr(x, "wildcards")),
-    sort(c("MU", "MU_from", "SIGMA", "SIGMA_from"))
-  )
 })
 
 test_with_dir("make() with wildcard columns", {
@@ -519,8 +507,6 @@ test_with_dir("make() with wildcard columns", {
   con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
   expect_identical(con$plan, plan)
-  expect_equal(sort(attr(plan, "wildcards")), sort(c("n__", "n___from")))
-  expect_equal(sort(attr(con$plan, "wildcards")), sort(c("n__", "n___from")))
 })
 
 test_with_dir("gather_by()", {

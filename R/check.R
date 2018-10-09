@@ -57,23 +57,8 @@ check_drake_config <- function(config) {
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
   missing_input_files(config = config)
-  assert_standard_columns(config = config)
   parallelism_warnings(config = config)
   check_drake_graph(graph = config$graph)
-}
-
-assert_standard_columns <- function(config){
-  x <- setdiff(
-    colnames(config$plan),
-    c(drake_plan_columns(), attr(config$plan, "wildcards"))
-  )
-  if (length(x)){
-    warning(
-      "Non-standard columns in workflow plan:\n",
-      multiline_message(x),
-      call. = FALSE
-    )
-  }
 }
 
 missing_input_files <- function(config) {

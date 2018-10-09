@@ -1,5 +1,4 @@
 sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
-  wildcards <- attr(plan, "wildcards")
   for (field in drake_plan_non_factors()){
     if (!is.null(plan[[field]])){
       if (is.factor(plan[[field]])){
@@ -17,7 +16,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   if (!allow_duplicated_targets) {
     plan <- handle_duplicated_targets(plan[, cols])
   }
-  structure(plan, wildcards = wildcards)
+  plan
 }
 
 drake_plan_non_factors <- function(){

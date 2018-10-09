@@ -221,9 +221,6 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
       hook = silencer_hook
     )
   ))
-  y <- drake_plan(x = 1, y = 2)
-  y$bla <- "bluh"
-  expect_warning(make(y, session_info = FALSE, verbose = FALSE))
 })
 
 test_with_dir("targets can be partially specified", {
