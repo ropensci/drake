@@ -46,7 +46,10 @@ run_future <- function(config){
 #' @param config [drake_config()] list
 #' @param protect Names of targets that still need their
 #' dependencies available in `config$envir`.
-drake_future_task <- function(target, meta, config){
+drake_future_task <- function(target, meta, config, protect){
+  if (identical(config$caching, "worker")){
+    prune_envir(targets = target, config = config, downstream = protect)
+  }
   do_prework(config = config, verbose_packages = FALSE)
   if (config$caching == "worker"){
     build_and_store(
@@ -65,14 +68,21 @@ new_worker <- function(id, target, config, protect){
   )){
     return(empty_worker(target = target))
   }
-  prune_envir(targets = target, config = config, downstream = protect)
+  if (identical(config$caching, "master")){
+    prune_envir(targets = target, config = config, downstream = protect)
+  }
   meta$start <- proc.time()
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
   # When we solve #296, the need for such a clumsy workaround
   # should go away.
-  globals <- future_globals(target = target, meta = meta, config = config)
+  globals <- future_globals(
+    target = target,
+    meta = meta,
+    config = config,
+    protect = protect
+  )
   evaluator <- drake_plan_override(
     target = target,
     field = "evaluator",
@@ -85,7 +95,8 @@ new_worker <- function(id, target, config, protect){
       expr = drake_future_task(
         target = DRAKE_GLOBALS__$target,
         meta = DRAKE_GLOBALS__$meta,
-        config = DRAKE_GLOBALS__$config
+        config = DRAKE_GLOBALS__$config,
+        protect = DRAKE_GLOBALS__$protect
       ),
       packages = "drake",
       globals = globals,
@@ -95,12 +106,13 @@ new_worker <- function(id, target, config, protect){
   )
 }
 
-future_globals <- function(target, meta, config){
+future_globals <- function(target, meta, config, protect){
   globals <- list(
     DRAKE_GLOBALS__ = list(
       target = target,
       meta = meta,
-      config = config
+      config = config,
+      protect = protect
     )
   )
   if (identical(config$envir, globalenv())){
