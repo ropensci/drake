@@ -8,53 +8,33 @@ console <- function(imported, target, config) {
   }
 }
 
-console_missing <- function(target, config){
-  if (config$verbose < 3){
+console_generic <- function(target, config, cutoff = 1, pattern = "target"){
+  if (config$verbose < cutoff){
     return()
   }
-  pattern <- "missing"
   text <- target
   if (is_file(target)){
     text <- paste0("file ", text)
   }
   text <- paste(pattern, text)
   finish_console(text = text, pattern = pattern, config = config)
+
+}
+
+console_missing <- function(target, config){
+  console_generic(target, config, 3, "missing")
 }
 
 console_import <- function(target, config){
-  if (config$verbose < 4){
-    return()
-  }
-  pattern <- "import"
-  text <- target
-  if (is_file(target)){
-    text <- paste0("file ", text)
-  }
-  text <- paste(pattern, text)
-  finish_console(text = text, pattern = pattern, config = config)
+  console_generic(target, config, 4, "import")
 }
 
 console_skip <- function(target, config){
-  if (config$verbose < 4){
-    return()
-  }
-  pattern <- "skip"
-  text <- target
-  if (is_file(target)){
-    text <- paste0("file ", text)
-  }
-  text <- paste(pattern, text)
-  finish_console(text = text, pattern = pattern, config = config)
+  console_generic(target, config, 4, "skip")
 }
 
 console_target <- function(target, config){
-  pattern <- "target"
-  text <- target
-  if (is_file(target)){
-    text <- paste0("file ", text)
-  }
-  text <- paste("target", text)
-  finish_console(text = text, pattern = pattern, config = config)
+  console_generic(target, config, 1, "target")
 }
 
 console_cache <- function(config){
