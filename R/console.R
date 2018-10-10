@@ -33,6 +33,10 @@ console_skip <- function(target, config){
   console_generic(target, config, 4, "skip")
 }
 
+console_store <- function(target, config){
+  console_generic(target, config, 4, "store")
+}
+
 console_target <- function(target, config){
   console_generic(target, config, 1, "target")
 }
