@@ -14,6 +14,7 @@ colors <- c(
   unload = "#ff7221",
   trigger = "maroon",
   skip = "skyblue1",
+  store = "skyblue1",
   retry = "forestgreen",
   fail = "red",
   up_to_date = "forestgreen",
