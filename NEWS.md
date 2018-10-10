@@ -20,6 +20,7 @@
 - Allow the `condition` trigger to evaluate to non-logical values as long as those values can be coerced to logicals.
 - Require that the `condition` trigger evaluate to a vector of length 1.
 - Keep non-standard columns in `drake_plan_source()`.
+- `make(verbose = 4)` now prints to the console when a target or import is stored.
 
 # Version 6.0.0
 

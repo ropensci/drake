@@ -61,9 +61,9 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \describe{
 \item{0 or \code{FALSE}:}{print nothing.}
 \item{1 or \code{TRUE}:}{print only targets to build.}
-\item{2:}{in addition, print checks and cache info.}
-\item{3:}{in addition, print any potentially missing items.}
-\item{4:}{in addition, print imports. Full verbosity.}
+\item{2:}{+ checks and cache info.}
+\item{3:}{+ any potentially missing items.}
+\item{4:}{+ imports and writes to the cache.}
 }}
 
 \item{hook}{function with at least one argument.
