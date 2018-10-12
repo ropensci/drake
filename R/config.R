@@ -396,6 +396,7 @@
 #'   The `sleep` argument is a function that takes an argument
 #'   `i` and returns a numeric scalar, the number of seconds to
 #'   supply to `Sys.sleep()` after iteration `i` of checking.
+#'   (Here, `i` starts at 1.)
 #'   If the checking loop does something other than sleeping
 #'   on iteration `i`, then `i` is reset back to 1.
 #'
@@ -404,7 +405,7 @@
 #'   But to avoid consuming too many resources during heavier
 #'   and longer workflows, you might use an exponential
 #'   backoff: say,
-#'   `function(i) { Sys.sleep(0.1 + 120 * pexp(i - 1, rate = 0.01)) }`.
+#'   `function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }`.
 #'
 #' @examples
 #' \dontrun{

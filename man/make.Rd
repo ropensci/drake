@@ -419,6 +419,7 @@ sleeping.
 The \code{sleep} argument is a function that takes an argument
 \code{i} and returns a numeric scalar, the number of seconds to
 supply to \code{Sys.sleep()} after iteration \code{i} of checking.
+(Here, \code{i} starts at 1.)
 If the checking loop does something other than sleeping
 on iteration \code{i}, then \code{i} is reset back to 1.
 
@@ -427,7 +428,7 @@ you might supply something like \code{function(i) 0.01}.
 But to avoid consuming too many resources during heavier
 and longer workflows, you might use an exponential
 backoff: say,
-\code{function(i) { Sys.sleep(0.1 + 120 * pexp(i - 1, rate = 0.01)) }}.}
+\code{function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }}.}
 }
 \value{
 The master internal configuration list, mostly
