@@ -7,9 +7,8 @@
 #' message(drake_tip()) # Print out a tip as a message.
 drake_tip <- function() {
   tips <- c(
-    "Check out the new file API: file_in(), file_out(), knitr_in().
-     Embrace the new API in your R session by calling
-     pkgconfig::set_config(\"drake::strings_in_dots\" = \"literals\")",
+    "map_plan() sets up iterative function calls on a grid of arguments
+     to create a drake plan.",
 
     "Use diagnose() to retrieve diagnostic metadata:
      errors, warnings, messages, commands, runtimes, etc.",
@@ -19,9 +18,6 @@ drake_tip <- function() {
 
     "Check out the reference website (https://ropensci.github.io/drake/)
      and user manual (https://ropenscilabs.github.io/drake-manual/).",
-
-    "Use suppressPackageStartupMessages() to eliminate
-     package startup messages like this one.",
 
     "Drake quickstart:
      load_mtcars_example();

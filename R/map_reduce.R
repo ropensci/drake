@@ -9,8 +9,9 @@
 #' @seealso drake_plan, reduce_by, gather_by, reduce_plan, gather_plan,
 #'   evaluate_plan, expand_plan
 #' @return A workflow plan data frame
-#' @param args a data frame of function arguments. Here,
-#'   the column names should be the names of the arguments
+#' @param args a data frame (or better yet, a `tibble`)
+#'   of function arguments to `fun`.
+#'   Here, the column names should be the names of the arguments
 #'   of `fun`, and each row of `args` corresponds to a
 #'   call to `fun`.
 #' @param fun name of a function to apply the arguments
@@ -31,35 +32,48 @@
 #' # best explain fuel efficiency (in miles per gallon) in the mtcars dataset.
 #' # We write a function that takes the names of two covariates
 #' # and fits them to the response variable (mpg).
-#' my_model_fit <- function(x1, x2){
-#'   lm(as.formula(paste("mpg ~", x1, "+", x2)), data = mtcars)
+#' my_model_fit <- function(x1, x2, data){
+#'   lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
 #' }
 #' # For covariates, we consider all the variables in mtcars except mpg.
 #' covariates <- setdiff(colnames(mtcars), "mpg")
 #' # And we consider all possible combinations of 2 covariates.
-#' args <- as.data.frame(t(combn(covariates, 2)))
+#' args <- tibble::as_tibble(t(combn(covariates, 2)))
 #' colnames(args) <- c("x1", "x2")
 #' head(args)
-#' # For each row of `args`, we want to fit a model using the
-#' # covariates in the row.
-#' # We can formulate this task in terms of a `drake` plan.
+#' str(args)
+#' # Each row in args represents a function call to `my_model_fit()`
+#' # using the values in the row. `my_model_fit()` expects
+#' # `x1` and `x2` to be character strings, so that is how
+#' # we set them in `args`. But what about the `data` argument?
+#' # In general, `data` could be the `mtcars` dataset or an
+#' # unknown upstream target.
+#' # For the "data" column, we need a list of symbols.
+#' # The `syms()` function from the `rlang` package can help us.
+#' args$data <- rlang::syms(rep("mtcars", nrow(args)))
+#' args
+#' # For each row of `args`, we want to call `my_model_fit()` on the
+#' # arguments in the row.
+#' # Let's create a `drake` plan to do that.
 #' plan <- map_plan(args, "my_model_fit")
 #' plan
+#' plan$command[1]
+#' plan$target[1]
 #' # The default target names are ugly, so we can supply
 #' # our own names. You can either set an "id" column in `args`
 #' # or set the `id` argument of `map_plan()`.
 #' args$id <- paste0("fit_", args$x1, "_", args$x2)
-#' plan <- map_plan(args, "my_model_fit")
+#' plan <- map_plan(args, my_model_fit)
 #' plan
 #' # Let's actually fit our models.
-#' # In your own work, you probably will not need to
-#' # create or supply a cache
+#' # In your own work, just call make(plan).
+#' # The special cache just keeps built-in package examples clean.
 #' cache <- storr::storr_environment()
 #' make(plan, verbose = FALSE, cache = cache)
 #' # Let's inspect one of our models.
 #' readd(fit_cyl_disp, cache = cache)
 map_plan <- function(args, fun, id = "id", character_only = FALSE){
-  args <- sanitize_df(args)
+  args <- as_tibble(args)
   if (!character_only){
     fun <- as.character(substitute(fun))
     id <- as.character(substitute(id))
@@ -76,7 +90,7 @@ map_plan <- function(args, fun, id = "id", character_only = FALSE){
   command <- purrr::pmap_chr(
     .l = args,
     .f = function(...){
-      c(as.name(rlang::enexpr(fun)), list(...)) %>%
+      list(as.name(fun), ...) %>%
         as.call() %>%
         rlang::expr_text()
     }

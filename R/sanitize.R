@@ -56,9 +56,3 @@ sanitize_cmd_type <- function(x){
     x
   }
 }
-
-sanitize_df <- function(x){
-  as.data.frame(x, stringsAsFactors = FALSE) %>%
-    lapply(FUN = factor_to_character) %>%
-    as.data.frame(stringsAsFactors = FALSE)
-}

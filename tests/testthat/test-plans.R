@@ -678,3 +678,19 @@ test_with_dir("map_plan() onto a matrix", {
   x <- readd(plan$target[1], character_only = TRUE, cache = cache)
   expect_true(is.numeric(coefficients(x)))
 })
+
+test_with_dir("map_plan() with symbols", {
+  my_model_fit <- function(x1, x2, data){
+    formula <- as.formula(paste("mpg ~", x1, "+", x1))
+    lm(formula, data = data)
+  }
+  covariates <- setdiff(colnames(mtcars), "mpg")
+  args <- tibble::as_tibble(t(combn(covariates, 2)))
+  colnames(args) <- c("x1", "x2")
+  args$data <- rlang::syms(rep("mtcars", nrow(args)))
+  plan <- map_plan(args, my_model_fit)
+  cache <- storr::storr_environment()
+  make(plan, verbose = FALSE, cache = cache)
+  x <- readd(plan$target[1], character_only = TRUE, cache = cache)
+  expect_true(is.numeric(coefficients(x)))
+})
