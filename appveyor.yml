@@ -53,5 +53,4 @@ environment:
     USE_RTOOLS: true
 
   matrix:
-    - R_VERSION: release
-    - R_ARCH: x64
+    - R_VERSION: stable
