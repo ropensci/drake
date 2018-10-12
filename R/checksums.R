@@ -73,11 +73,14 @@ mc_wait_checksum <- function(
   criterion = mc_is_good_checksum
 ){
   i <- 0
-  while (i < timeout / mc_wait){
+  time_left <- timeout
+  while (time_left > 0){
     if (criterion(target, checksum, config)){
       return()
     } else {
-      Sys.sleep(mc_wait)
+      sleep <- config$sleep(i)
+      Sys.sleep(sleep)
+      time_left <- time_left - sleep
     }
     i <- i + 1
   }
