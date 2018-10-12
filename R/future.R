@@ -51,12 +51,19 @@ drake_future_task <- function(target, meta, config, protect){
     prune_envir(targets = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
-  if (config$caching == "worker"){
-    build_and_store(
-      target = target, meta = meta, config = config, announce = FALSE)
-  } else {
-    just_build(target = target, meta = meta, config = config)
+  build <- just_build(target = target, meta = meta, config = config)
+  if (identical(config$caching, "master")){
+    build$checksum <- mc_output_file_checksum(target, config)
+    return(build)
   }
+  conclude_build(
+    target = build$target,
+    value = build$value,
+    meta = build$meta,
+    config = config
+  )
+  set_attempt_flag(key = build$target, config = config)
+  list(target = target, checksum = mc_get_checksum(target, config))
 }
 
 new_worker <- function(id, target, config, protect){
@@ -218,11 +225,21 @@ conclude_worker <- function(worker, config, queue){
   if (is_empty_worker(worker)){
     return(out)
   }
-  set_attempt_flag(key = "_attempt", config = config)
   build <- resolve_worker_value(worker = worker, config = config)
-  if (config$caching == "worker"){
+  if (identical(config$caching, "worker")){
+    mc_wait_checksum(
+      target = build$target,
+      checksum = build$checksum,
+      config = config
+    )
     return(out)
   }
+  set_attempt_flag(key = build$target, config = config)
+  mc_wait_outfile_checksum(
+    target = build$target,
+    checksum = build$checksum,
+    config = config
+  )
   conclude_build(
     target = build$target,
     value = build$value,
