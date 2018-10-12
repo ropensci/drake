@@ -78,13 +78,12 @@ test_with_dir("can gracefully conclude a crashed worker", {
     expect_false(is_empty_worker(worker))
     expect_error(future::value(worker))
     expect_error(
-      expect_warning(
+      suppressWarnings(
         conclude_worker(
           worker = worker,
           config = con,
           queue = new_priority_queue(config = con)
-        ),
-        regexp = "checksum"
+        )
       ),
       regexp = "failed"
     )
