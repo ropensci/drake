@@ -55,7 +55,7 @@
 #' # In your own work, you probably will not need to
 #' # create or supply a cache
 #' cache <- storr::storr_environment()
-#' make(plan, cache = cache)
+#' make(plan, verbose = FALSE, cache = cache)
 #' # Let's inspect one of our models.
 #' readd(fit_cyl_disp, cache = cache)
 map_plan <- function(args, fun, id = "id", character_only = FALSE){
