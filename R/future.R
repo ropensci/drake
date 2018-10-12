@@ -53,7 +53,7 @@ drake_future_task <- function(target, meta, config, protect){
   do_prework(config = config, verbose_packages = FALSE)
   build <- just_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")){
-    build$checksum <- mc_output_file_checksum(target, config)
+    build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)
   }
   conclude_build(
