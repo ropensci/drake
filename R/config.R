@@ -385,6 +385,27 @@
 #'   Some template placeholders such as `{{ job_name }}` and `{{ n_jobs }}`
 #'   cannot be set this way.
 #'
+#' @param sleep In its parallel processing, `drake` uses
+#'   a central master process to check what the parallel
+#'   workers are doing. Between, the master process
+#'   sleeps to avoid throttling.
+#'   The `sleep` argument to `make()` and `drake_config()`
+#'   allows you to customize how much time the master process spends
+#'   sleeping.
+#'
+#'   The `sleep` argument is a function that takes an argument
+#'   `i` and returns a numeric scalar, the number of seconds to
+#'   supply to `Sys.sleep()` after iteration `i` of checking.
+#'   If the checking loop does something other than sleeping
+#'   on iteration `i`, then `i` is reset back to 1.
+#'
+#'   To sleep for the same amount of time between checks,
+#'   you might supply something like `function(i) 0.01`.
+#'   But to avoid consuming too many resources during heavier
+#'   and longer workflows, you might use an exponential
+#'   backoff: say,
+#'   `function(i) { Sys.sleep(0.1 + 120 * pexp(i - 1, rate = 0.01)) }`.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -443,7 +464,8 @@ drake_config <- function(
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
-  template = list()
+  template = list(),
+  sleep = function(i) 0.01
 ){
   force(envir)
   unlink(console_log_file)
@@ -550,7 +572,8 @@ drake_config <- function(
     all_targets = all_targets,
     all_imports = all_imports,
     garbage_collection = garbage_collection,
-    template = template
+    template = template,
+    sleep = sleep
   )
 }
 
