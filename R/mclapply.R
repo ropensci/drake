@@ -59,14 +59,19 @@ mc_master <- function(config){
   if (!identical(config$ensure_workers, FALSE)){
     mc_ensure_workers(config)
   }
+  i <- 1
   while (mc_work_remains(config)){
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
     if (mc_abort_with_errored_workers(config)){
       return() # tested in "test-always-skipped.R" # nocov
     }
+    if (length(config$queue$list0()) > 0){
+      i <- 1
+    }
     mc_assign_ready_targets(config)
-    Sys.sleep(mc_wait)
+    Sys.sleep(config$sleep(i))
+    i <- i + 1
   }
 }
 
@@ -75,8 +80,10 @@ mc_worker <- function(worker, config){
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
   while (TRUE){
+    i <- 1
     while (nrow(msg <- ready_queue$list(1)) < 1){
-      Sys.sleep(mc_wait)
+      Sys.sleep(config$sleep(i))
+      i <- i + 1
     }
     if (identical(msg$message, "done")){
       ready_queue$pop(1)

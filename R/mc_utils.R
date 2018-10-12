@@ -37,8 +37,12 @@ mc_ensure_workers <- function(config){
     },
     FUN.VALUE = character(1)
   )
+  i <- 1
   while (!all(file.exists(paths))){
-    Sys.sleep(mc_wait) # nocov
+    # nocov start
+    Sys.sleep(config$sleep(i))
+    i <- i + 1
+    # nocov end
   }
 }
 
@@ -141,8 +145,12 @@ mc_conclude_workers <- function(config){
 }
 
 mc_get_worker_queue <- function(worker, namespace, config){
+  i <- 1
   while (!config$cache$exists(key = worker, namespace = namespace)){
-    Sys.sleep(mc_wait) # nocov
+    # nocov start
+    Sys.sleep(config$sleep(i))
+    i <- i + 1
+    # nocov end
   }
   txtq::txtq(config$cache$get(key = worker, namespace = namespace))
 }
@@ -176,5 +184,3 @@ mc_abort_with_errored_workers <- function(config){
   }
   FALSE
 }
-
-mc_wait <- 0.01
