@@ -403,8 +403,9 @@ cannot be set this way.}
 
 \item{sleep}{In its parallel processing, \code{drake} uses
 a central master process to check what the parallel
-workers are doing. Between, the master process
-sleeps to avoid throttling.
+workers are doing, and for the affected high-performance
+computing workflows, wait for data to arrive over a network.
+In between loop iterations, the master process sleeps to avoid throttling.
 The \code{sleep} argument to \code{make()} and \code{drake_config()}
 allows you to customize how much time the master process spends
 sleeping.

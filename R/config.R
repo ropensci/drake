@@ -387,8 +387,9 @@
 #'
 #' @param sleep In its parallel processing, `drake` uses
 #'   a central master process to check what the parallel
-#'   workers are doing. Between, the master process
-#'   sleeps to avoid throttling.
+#'   workers are doing, and for the affected high-performance
+#'   computing workflows, wait for data to arrive over a network.
+#'   In between loop iterations, the master process sleeps to avoid throttling.
 #'   The `sleep` argument to `make()` and `drake_config()`
 #'   allows you to customize how much time the master process spends
 #'   sleeping.
