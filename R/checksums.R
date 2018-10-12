@@ -37,6 +37,9 @@ mc_is_good_checksum <- function(target, checksum, config){
     mc_warn_no_checksum(target = target, config = config)
     return(TRUE)
   }
+  if (identical("failed", get_progress_single(target, cache = config$cache))){
+    return(TRUE) # covered with parallel processes # nocov
+  }
   # nocov end
   local_checksum <- mc_get_checksum(target = target, config = config)
   if (!identical(local_checksum, checksum)){
@@ -55,6 +58,9 @@ mc_is_good_outfile_checksum <- function(target, checksum, config){
   if (!length(checksum)){
     mc_warn_no_checksum(target = target, config = config)
     return(TRUE)
+  }
+  if (identical("failed", get_progress_single(target, cache = config$cache))){
+    return(TRUE) # covered with parallel processes # nocov
   }
   identical(checksum, mc_get_outfile_checksum(target = target, config = config))
 }
