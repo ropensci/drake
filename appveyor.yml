@@ -49,8 +49,10 @@ artifacts:
 environment:
   NOT_CRAN: true
   global:
-    WARNINGS_ARE_ERRORS: 1
+    R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
     USE_RTOOLS: true
+    WARNINGS_ARE_ERRORS: 1
 
   matrix:
     - R_VERSION: release
+      arch: x64

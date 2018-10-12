@@ -226,7 +226,7 @@ test_with_dir("checksum functionality", {
   expect_error(
     mc_wait_checksum(
       target = "combined", checksum = bad, config = config, timeout = 0.1))
-  checksum <- mc_output_file_checksum(target = "combined", config = config)
+  checksum <- mc_get_outfile_checksum(target = "combined", config = config)
   expect_silent(
     mc_wait_outfile_checksum(
       target = "combined", checksum = checksum, config = config, timeout = 0.1))

@@ -78,12 +78,14 @@ test_with_dir("can gracefully conclude a crashed worker", {
     expect_false(is_empty_worker(worker))
     expect_error(future::value(worker))
     expect_error(
-      conclude_worker(
-        worker = worker,
-        config = con,
-        queue = new_priority_queue(config = con)
+      suppressWarnings(
+        conclude_worker(
+          worker = worker,
+          config = con,
+          queue = new_priority_queue(config = con)
+        )
       ),
-      regexp = "failed."
+      regexp = "failed"
     )
     meta <- diagnose(myinput)
     expect_true(
