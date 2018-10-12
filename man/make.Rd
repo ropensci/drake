@@ -23,7 +23,7 @@ make(plan = read_drake_plan(), targets = NULL,
   pruning_strategy = c("lookahead", "speed", "memory"),
   makefile_path = "Makefile", console_log_file = NULL,
   ensure_workers = TRUE, garbage_collection = FALSE,
-  template = list())
+  template = list(), sleep = function(i) 0.01)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -407,6 +407,29 @@ For more information, see the \code{clustermq} package:
 \url{https://github.com/mschubert/clustermq}.
 Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
 cannot be set this way.}
+
+\item{sleep}{In its parallel processing, \code{drake} uses
+a central master process to check what the parallel
+workers are doing, and for the affected high-performance
+computing workflows, wait for data to arrive over a network.
+In between loop iterations, the master process sleeps to avoid throttling.
+The \code{sleep} argument to \code{make()} and \code{drake_config()}
+allows you to customize how much time the master process spends
+sleeping.
+
+The \code{sleep} argument is a function that takes an argument
+\code{i} and returns a numeric scalar, the number of seconds to
+supply to \code{Sys.sleep()} after iteration \code{i} of checking.
+(Here, \code{i} starts at 1.)
+If the checking loop does something other than sleeping
+on iteration \code{i}, then \code{i} is reset back to 1.
+
+To sleep for the same amount of time between checks,
+you might supply something like \code{function(i) 0.01}.
+But to avoid consuming too many resources during heavier
+and longer workflows, you might use an exponential
+backoff: say,
+\code{function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }}.}
 }
 \value{
 The master internal configuration list, mostly

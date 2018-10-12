@@ -3,9 +3,11 @@ run_future <- function(config){
   queue <- new_priority_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
+  i <- 1
   while (work_remains(queue = queue, workers = workers, config = config)){
     for (id in seq_along(workers)){
       if (is_idle(workers[[id]])){
+        i <- 1
         # Also calls decrease-key on the queue.
         workers[[id]] <- conclude_worker(
           worker = workers[[id]],
@@ -31,7 +33,8 @@ run_future <- function(config){
         )
       }
     }
-    Sys.sleep(mc_wait)
+    Sys.sleep(config$sleep(i))
+    i <- i + 1
   }
 }
 

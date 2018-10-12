@@ -115,7 +115,8 @@ make <- function(
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
-  template = list()
+  template = list(),
+  sleep = function(i) 0.01
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -166,7 +167,8 @@ make <- function(
       console_log_file = console_log_file,
       ensure_workers = ensure_workers,
       garbage_collection = garbage_collection,
-      template = template
+      template = template,
+      sleep = sleep
     )
   }
   make_with_config(config = config)
