@@ -2,9 +2,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   fields <- intersect(colnames(plan), c("command", "target", "trigger"))
   for (field in fields){
     if (!is.null(plan[[field]])){
-      if (is.factor(plan[[field]])){
-         plan[[field]] <- as.character(plan[[field]])
-      }
+      plan[[field]] <- factor_to_character(plan[[field]])
       if (is.character(plan[[field]])){
         plan[[field]] <- stringi::stri_trim_both(plan[[field]])
       }
@@ -57,4 +55,10 @@ sanitize_cmd_type <- function(x){
   } else {
     x
   }
+}
+
+sanitize_df <- function(x){
+  as.data.frame(x, stringsAsFactors = FALSE) %>%
+    lapply(FUN = factor_to_character) %>%
+    as.data.frame(stringsAsFactors = FALSE)
 }

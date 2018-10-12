@@ -2,6 +2,7 @@
 
 ## New features
 
+- **Add a new `map_plan()` function to easily create a workflow plan data frame to execute a function call over a grid of arguments.**
 - Enable the `caching` argument for the `"clustermq"` and `"clustermq_staged"` parallel backends. Now, `make(parallelism = "clustermq", caching = "master")` will do all the caching with the master process, and `make(parallelism = "clustermq", caching = "worker")` will do all the caching with the workers. The same is true for `parallelism = "clustermq_staged"`.
 - Add a new `drake_debug()` function to run a target's command in debug mode. Analogous to `drake_build()`.
 - Add a `mode` argument to `trigger()` to control how the `condition` trigger factors into the decision to build or skip a target. See the `?trigger` for details.

@@ -123,3 +123,10 @@ select_valid <- function(x){
 is_image_filename <- function(x){
   tolower(fs::path_ext(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
+
+factor_to_character <- function(x){
+  if (is.factor(x)){
+    x <- as.character(x)
+  }
+  x
+}

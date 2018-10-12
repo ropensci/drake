@@ -638,3 +638,43 @@ test_with_dir("code_to_plan(), multiple targets", {
   expect_true(
     is.numeric(readd(discrepancy, cache = config$cache)))
 })
+
+test_with_dir("map_plan()", {
+  f <- function(a, b){
+    a + b
+  }
+  args <- expand.grid(a = 1:2, b = 3:5)
+  plan1 <- map_plan(args = args, fun = f)
+  args$id <- LETTERS[seq_len(nrow(args))]
+  plan2 <- map_plan(args = args, fun = f)
+  args$x <- args$id
+  args$id <- NULL
+  plan3 <- map_plan(args = args, fun = f, id = x)
+  plan4 <- map_plan(args = args, fun = "f", id = "x", character_only = TRUE)
+  expect_equal(plan1$command, plan2$command)
+  expect_equal(plan2, plan3)
+  expect_equal(plan3, plan4)
+  cache <- storr::storr_environment()
+  make(plan2, session_info = FALSE, cache = cache)
+  expect_equal(
+    vapply(
+      args$x, readd, FUN.VALUE = integer(1), USE.NAMES = FALSE,
+      cache = cache, character_only = TRUE
+    ),
+    as.integer(args$a + args$b)
+  )
+})
+
+test_with_dir("map_plan() onto a matrix", {
+  my_model_fit <- function(x1, x2){
+    lm(as.formula(paste("mpg ~", x1, "+", x2)), data = mtcars)
+  }
+  covariates <- setdiff(colnames(mtcars), "mpg")
+  args <- t(combn(covariates, 2))
+  colnames(args) <- c("x1", "x2")
+  plan <- map_plan(args, "my_model_fit")
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  x <- readd(plan$target[1], character_only = TRUE, cache = cache)
+  expect_true(is.numeric(coefficients(x)))
+})

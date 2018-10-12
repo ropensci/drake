@@ -156,3 +156,7 @@ drake_plan(
 # evaluating the !! operator using the environment you provided.
 })
 }
+\seealso{
+map_plan, reduce_by, gather_by, reduce_plan, gather_plan,
+evaluate_plan, expand_plan
+}
