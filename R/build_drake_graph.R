@@ -64,7 +64,8 @@ build_drake_graph <- function(
   command_deps <- memo_expr(
     bdg_analyze_commands(config),
     config$cache,
-    config$plan[, c("target", "command")]
+    config$plan[, c("target", "command")],
+    import_deps
   )
   trigger_cols <- intersect(colnames(config$plan), c("target", "trigger"))
   trigger_plan <- config$plan[, trigger_cols]
@@ -79,14 +80,18 @@ build_drake_graph <- function(
     config$cache,
     trigger_plan,
     config$trigger,
-    triggers
+    triggers,
+    import_deps,
+    command_deps
   )
   change_deps <- memo_expr(
     bdg_get_change_deps(config, triggers),
     config$cache,
     trigger_plan,
     config$trigger,
-    triggers
+    triggers,
+    import_deps,
+    command_deps
   )
   edges <- memo_expr(
     bdg_create_edges(

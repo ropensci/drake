@@ -75,3 +75,17 @@ test_with_dir("responses to imported objects and functions", {
   expect_equal(justbuilt(config), builds)
   expect_false(identical(final0, readd(final, search = FALSE)))
 })
+
+test_with_dir("add a new import", {
+  plan <- drake_plan(a = as.integer(sqrt(4)))
+  cache <- storr::storr_environment()
+  config <- make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(config), "a")
+  expect_equal(readd(a, cache = cache), 2L)
+  sqrt <- function(x){
+    x + 1L
+  }
+  config <- make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(config), "a")
+  expect_equal(readd(a, cache = cache), 5L)
+})

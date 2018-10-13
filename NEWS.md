@@ -10,6 +10,7 @@
 
 ## Bug fixes
 
+- Make commands in the plan are re-analyzed for dependencies when new imports are added (https://github.com/ropensci/drake/issues/548). Was a bug in version 6.0.0 only.
 - Call `path.expand()` on the `file` argument to `render_drake_graph()` and `render_sankey_drake_graph()`. That way, tildes in file paths no longer interfere with the rendering of static image files. Compensates for https://github.com/wch/webshot.
 - Skip tests and examples if the required "Suggests" packages are not installed.
 - Stop checking for non-standard columns. Previously, warnings about non-standard columns were incorrectly triggered by `evaluate_plan(trace = TRUE)` followed by `expand_plan()`, `gather_plan()`, `reduce_plan()`, `gather_by()`, or `reduce_by()`. The more relaxed behavior also gives users more options about how to construct and maintain their workflow plan data frames.
