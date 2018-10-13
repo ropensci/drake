@@ -1,10 +1,8 @@
-#' @title Map a function to a grid of settings to create a plan.
-#' @description Given a function name and a data frame
-#'   of named arguments,
-#'   `map_plan()` creates a workflow plan data frame
-#'   where each target is the result of the function applied
-#'   to the arguments in a row. The idea is similar to
-#'   functions `map_df()` and `pmap()`
+#' @title Create a plan that maps a function to a grid of arguments.
+#' @description `map_plan()` is like `pmap_df()` from the `purrr` package.
+#'   It takes a function name and a grid of arguments, and it
+#'   writes out all the commands calls to apply the function to
+#'   each row of arguments.
 #' @export
 #' @seealso drake_plan, reduce_by, gather_by, reduce_plan, gather_plan,
 #'   evaluate_plan, expand_plan
@@ -25,52 +23,22 @@
 #' @param character_only logical, whether to interpret
 #'   the `fun` and `id` arguments as character scalars or symbols.
 #' @examples
-#' # For a practical example of map_plan() in action,
-#' # see the econometrics exmaple at
-#' # https://ropenscilabs.github.io/drake-manual/gsp.html.
-#' # But for now, let's say we want find out which variables
-#' # best explain fuel efficiency (in miles per gallon) in the mtcars dataset.
-#' # We write a function that takes the names of two covariates
-#' # and fits them to the response variable (mpg).
+#' # For the full tutorial, visit
+#' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
 #' my_model_fit <- function(x1, x2, data){
 #'   lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
 #' }
-#' # For covariates, we consider all the variables in mtcars except mpg.
 #' covariates <- setdiff(colnames(mtcars), "mpg")
-#' # And we consider all possible combinations of 2 covariates.
 #' args <- tibble::as_tibble(t(combn(covariates, 2)))
 #' colnames(args) <- c("x1", "x2")
-#' head(args)
-#' str(args)
-#' # Each row in args represents a function call to `my_model_fit()`
-#' # using the values in the row. `my_model_fit()` expects
-#' # `x1` and `x2` to be character strings, so that is how
-#' # we set them in `args`. But what about the `data` argument?
-#' # In general, `data` could be the `mtcars` dataset or an
-#' # unknown upstream target.
-#' # For the "data" column, we need a list of symbols.
-#' # The `syms()` function from the `rlang` package can help us.
-#' args$data <- rlang::syms(rep("mtcars", nrow(args)))
-#' args
-#' # For each row of `args`, we want to call `my_model_fit()` on the
-#' # arguments in the row.
-#' # Let's create a `drake` plan to do that.
-#' plan <- map_plan(args, "my_model_fit")
-#' plan
-#' plan$command[1]
-#' plan$target[1]
-#' # The default target names are ugly, so we can supply
-#' # our own names. You can either set an "id" column in `args`
-#' # or set the `id` argument of `map_plan()`.
+#' args$data <- "mtcars"
+#' args$data <- rlang::syms(args$data)
 #' args$id <- paste0("fit_", args$x1, "_", args$x2)
+#' args
 #' plan <- map_plan(args, my_model_fit)
 #' plan
-#' # Let's actually fit our models.
-#' # In your own work, just call make(plan).
-#' # The special cache just keeps built-in package examples clean.
 #' cache <- storr::storr_environment()
 #' make(plan, verbose = FALSE, cache = cache)
-#' # Let's inspect one of our models.
 #' readd(fit_cyl_disp, cache = cache)
 map_plan <- function(args, fun, id = "id", character_only = FALSE){
   args <- as_tibble(args)
