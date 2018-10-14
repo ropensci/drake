@@ -651,6 +651,18 @@ test_with_dir("plan_to_code()", {
   expect_true(file.exists("report.md"))
 })
 
+test_with_dir("plan_to_notebook()", {
+  skip_on_cran()
+  expect_false(file.exists("report.md"))
+  load_mtcars_example()
+  my_plan$command <- purrr::map(my_plan$command, rlang::parse_expr)
+  path <- "my_notebook.Rmd"
+  plan_to_notebook(my_plan, path)
+  knitr::knit(path, quiet = TRUE)
+  expect_true(is.numeric(coef_regression2_large))
+  expect_true(file.exists("report.md"))
+})
+
 test_with_dir("map_plan()", {
   skip_on_cran()
   f <- function(a, b){

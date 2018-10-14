@@ -1,11 +1,11 @@
 #' @title Turn an R script file or knitr / R Markdown report
 #'   into a `drake` workflow plan data frame.
 #' @export
-#' @seealso [drake_plan()], [make()], [plan_to_code()]
-#' @description In your script or `knitr` / R Markdown code chunks,
-#'   you can assign expressions to variables,
-#'   and `code_to_plan()` will turn them into commands and targets,
-#'   respectively.
+#' @seealso [drake_plan()], [make()], [plan_to_code()],
+#'   [plan_to_notebook()]
+#' @description `code_to_plan()`, [plan_to_code()], and
+#'   [plan_to_notebook()] together illustrate the relationships
+#'   between `drake` plans, R scripts, and R Markdown documents.
 #' @details This feature is easy to break, so there are some rules
 #'   for your code file:
 #'   1. Stick to assigning a single expression to a single target at a time.

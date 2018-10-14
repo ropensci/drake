@@ -11,10 +11,9 @@ code_to_plan(path)
 \item{path}{a file path to an R script or \code{knitr} report.}
 }
 \description{
-In your script or \code{knitr} / R Markdown code chunks,
-you can assign expressions to variables,
-and \code{code_to_plan()} will turn them into commands and targets,
-respectively.
+\code{code_to_plan()}, \code{\link[=plan_to_code]{plan_to_code()}}, and
+\code{\link[=plan_to_notebook]{plan_to_notebook()}} together illustrate the relationships
+between \code{drake} plans, R scripts, and R Markdown documents.
 }
 \details{
 This feature is easy to break, so there are some rules
@@ -48,5 +47,6 @@ readd(discrepancy)
 }
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}, \code{\link[=plan_to_code]{plan_to_code()}}
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}, \code{\link[=plan_to_code]{plan_to_code()}},
+\code{\link[=plan_to_notebook]{plan_to_notebook()}}
 }
