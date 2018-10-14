@@ -613,54 +613,34 @@ test_with_dir("code_to_plan(), one target", {
   expect_equal(plan, tibble(target = "a", command = "1"))
 })
 
-test_with_dir("code_to_plan(), multiple targets", {
-  skip_on_cran()
-  skip_if_not_installed("CodeDepends")
-  skip_if_not_installed("downloader")
-  drake_example("code_to_plan")
-  plan <- code_to_plan("code_to_plan/script.R")
-  plan2 <- code_to_plan("code_to_plan/report.Rmd")
-  expect_equal(plan, plan2)
-  expect_equal(
-    plan$target,
-    c("data1", "data2", "summary1", "summary2", "discrepancy", "sum1", "sum2")
-  )
-  expect_equal(
-    plan$command[1:4],
-    c("rnorm(10)", "rnorm(20)", "mean(data1)", "median(data2)")
-  )
-  expect_equal(sum(!is.na(plan$trigger)), 1)
-  expect_equal(plan$timeout, c(NA, NA, NA, NA, 100, NA, NA))
-  config <- make(
-    plan, cache = storr::storr_environment(), session_info = FALSE)
-  config <- make(config = config)
-  expect_equal(justbuilt(config), "discrepancy")
-  expect_true(
-    is.numeric(readd(discrepancy, cache = config$cache)))
-})
-
 test_with_dir("plan_to_code()", {
   skip_on_cran()
   expect_false(file.exists("report.md"))
   load_mtcars_example()
+  plan0 <- my_plan
   my_plan$command <- purrr::map(my_plan$command, rlang::parse_expr)
   path <- tempfile()
   plan_to_code(my_plan, path)
   source(path, local = TRUE)
   expect_true(is.numeric(coef_regression2_large))
   expect_true(file.exists("report.md"))
+  plan <- code_to_plan(path)
+  expect_equal(dplyr::arrange(plan, target), dplyr::arrange(plan0, target))
 })
 
 test_with_dir("plan_to_notebook()", {
   skip_on_cran()
   expect_false(file.exists("report.md"))
   load_mtcars_example()
+  plan0 <- my_plan
   my_plan$command <- purrr::map(my_plan$command, rlang::parse_expr)
   path <- "my_notebook.Rmd"
   plan_to_notebook(my_plan, path)
   knitr::knit(path, quiet = TRUE)
   expect_true(is.numeric(coef_regression2_large))
   expect_true(file.exists("report.md"))
+  plan <- code_to_plan(path)
+  expect_equal(dplyr::arrange(plan, target), dplyr::arrange(plan0, target))
 })
 
 test_with_dir("map_plan()", {
