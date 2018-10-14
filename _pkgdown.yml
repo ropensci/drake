@@ -54,6 +54,8 @@ reference:
   - '`ignore`'
   - '`target`'
   - '`code_to_plan`'
+  - '`plan_to_code`'
+  - '`plan_to_notebook`'
   - '`drake_plan_source`'
   - '`evaluate_plan`'
   - '`expand_plan`'
