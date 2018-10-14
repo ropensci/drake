@@ -48,5 +48,5 @@ readd(discrepancy)
 }
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}, \code{\link[=plan_to_code]{plan_to_code()}}
 }

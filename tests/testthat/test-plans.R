@@ -639,7 +639,20 @@ test_with_dir("code_to_plan(), multiple targets", {
     is.numeric(readd(discrepancy, cache = config$cache)))
 })
 
+test_with_dir("plan_to_code()", {
+  skip_on_cran()
+  expect_false(file.exists("report.md"))
+  load_mtcars_example()
+  my_plan$command <- purrr::map(my_plan$command, rlang::parse_expr)
+  path <- tempfile()
+  plan_to_code(my_plan, path)
+  source(path, local = TRUE)
+  expect_true(is.numeric(coef_regression2_large))
+  expect_true(file.exists("report.md"))
+})
+
 test_with_dir("map_plan()", {
+  skip_on_cran()
   f <- function(a, b){
     a + b
   }
@@ -666,6 +679,7 @@ test_with_dir("map_plan()", {
 })
 
 test_with_dir("map_plan() onto a matrix", {
+  skip_on_cran()
   my_model_fit <- function(x1, x2){
     lm(as.formula(paste("mpg ~", x1, "+", x2)), data = mtcars)
   }
@@ -680,6 +694,7 @@ test_with_dir("map_plan() onto a matrix", {
 })
 
 test_with_dir("map_plan() with symbols", {
+  skip_on_cran()
   my_model_fit <- function(x1, x2, data){
     formula <- as.formula(paste("mpg ~", x1, "+", x1))
     lm(formula, data = data)
