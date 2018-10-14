@@ -44,7 +44,9 @@ plan_to_notebook(plan, file)
 # Here is what the script looks like.
 cat(readLines(file), sep = "\\n")
 # Convert back to a drake plan.
-code_to_plan(file)
+if (requireNamespace("CodeDepends")){
+  code_to_plan(file)
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}, \code{\link[=code_to_plan]{code_to_plan()}},

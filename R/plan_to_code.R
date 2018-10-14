@@ -33,7 +33,9 @@
 #' # Here is what the script looks like.
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
-#' code_to_plan(file)
+#' if (requireNamespace("CodeDepends")){
+#'   code_to_plan(file)
+#' }
 plan_to_code <- function(plan, con = stdout()){
   writeLines(text = plan_to_text(plan), con = con)
 }
@@ -71,7 +73,9 @@ plan_to_code <- function(plan, con = stdout()){
 #' # Here is what the script looks like.
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
-#' code_to_plan(file)
+#' if (requireNamespace("CodeDepends")){
+#'   code_to_plan(file)
+#' }
 plan_to_notebook <- function(plan, con){
   c(
     "---",
@@ -89,7 +93,7 @@ plan_to_notebook <- function(plan, con){
 plan_to_text <- function(plan){
   . <- NULL
   order <- drake_config(
-    plan,
+    plan[, c("target", "command")],
     envir = new.env(parent = emptyenv()),
     cache = storr::storr_environment(),
     verbose = FALSE
