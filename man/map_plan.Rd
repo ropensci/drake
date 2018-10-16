@@ -4,7 +4,7 @@
 \alias{map_plan}
 \title{Create a plan that maps a function to a grid of arguments.}
 \usage{
-map_plan(args, fun, id = "id", character_only = FALSE)
+map_plan(args, fun, id = "id", character_only = FALSE, trace = FALSE)
 }
 \arguments{
 \item{args}{a data frame (or better yet, a \code{tibble})
@@ -25,6 +25,11 @@ and a character scalar otherwise.}
 
 \item{character_only}{logical, whether to interpret
 the \code{fun} and \code{id} arguments as character scalars or symbols.}
+
+\item{trace}{logical, whether to append the columns of \code{args}
+to the output workflow plan data frame. The added columns
+help "trace back" the original settings that went into building
+each target. Similar to the \code{trace} argument of \code{\link[=evaluate_plan]{evaluate_plan()}}.}
 }
 \value{
 A workflow plan data frame

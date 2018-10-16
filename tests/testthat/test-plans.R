@@ -658,9 +658,11 @@ test_with_dir("map_plan()", {
   args$id <- NULL
   plan3 <- map_plan(args = args, fun = f, id = x)
   plan4 <- map_plan(args = args, fun = "f", id = "x", character_only = TRUE)
+  plan5 <- map_plan(args = args, fun = f, id = x, trace = TRUE)
   expect_equal(plan1$command, plan2$command)
   expect_equal(plan2, plan3)
   expect_equal(plan3, plan4)
+  expect_equal(dplyr::bind_cols(plan3, args), plan5)
   cache <- storr::storr_environment()
   make(plan2, session_info = FALSE, cache = cache)
   expect_equal(

@@ -22,6 +22,10 @@
 #'   and a character scalar otherwise.
 #' @param character_only logical, whether to interpret
 #'   the `fun` and `id` arguments as character scalars or symbols.
+#' @param trace logical, whether to append the columns of `args`
+#'   to the output workflow plan data frame. The added columns
+#'   help "trace back" the original settings that went into building
+#'   each target. Similar to the `trace` argument of [evaluate_plan()].
 #' @examples
 #' # For the full tutorial, visit
 #' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
@@ -40,15 +44,21 @@
 #' cache <- storr::storr_environment()
 #' make(plan, verbose = FALSE, cache = cache)
 #' readd(fit_cyl_disp, cache = cache)
-map_plan <- function(args, fun, id = "id", character_only = FALSE){
-  args <- as_tibble(args)
+map_plan <- function(
+  args,
+  fun,
+  id = "id",
+  character_only = FALSE,
+  trace = FALSE
+){
+  args <- tibble::as_tibble(args)
   if (!character_only){
     fun <- as.character(substitute(fun))
     id <- as.character(substitute(id))
   }
+  cols <- setdiff(colnames(args), id)
   if (id %in% colnames(args)){
     target <- args[[id]]
-    args <- args[, setdiff(colnames(args), id)]
   } else {
     target <- paste0(
       fun, "_",
@@ -56,15 +66,19 @@ map_plan <- function(args, fun, id = "id", character_only = FALSE){
     )
   }
   command <- purrr::pmap_chr(
-    .l = args,
+    .l = args[, cols],
     .f = function(...){
       list(as.name(fun), ...) %>%
         as.call() %>%
         rlang::expr_text()
     }
   )
-  tibble::tibble(target = target, command = command) %>%
+  out <- tibble::tibble(target = target, command = command) %>%
     sanitize_plan()
+  if (trace){
+    out <- dplyr::bind_cols(out, args)
+  }
+  out
 }
 
 #' @title Write commands to combine several targets into one
