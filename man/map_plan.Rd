@@ -55,6 +55,11 @@ args$id <- paste0("fit_", args$x1, "_", args$x2)
 args
 plan <- map_plan(args, my_model_fit)
 plan
+# Consider `trace = TRUE` to keep the columns from `args`
+# in your plan.
+map_plan(args, my_model_fit, trace = TRUE)
+# And of course, you can execute the plan and
+# inspect your results.
 cache <- storr::storr_environment()
 make(plan, verbose = FALSE, cache = cache)
 readd(fit_cyl_disp, cache = cache)
