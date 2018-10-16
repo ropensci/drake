@@ -27,6 +27,7 @@
 - Require that the `condition` trigger evaluate to a vector of length 1.
 - Keep non-standard columns in `drake_plan_source()`.
 - `make(verbose = 4)` now prints to the console when a target is stored.
+- `gather_by()` and `reduce_by()` now gather/reduce everything if no columns are specified.
 
 # Version 6.0.0
 
