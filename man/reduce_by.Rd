@@ -45,8 +45,11 @@ plan <- drake_plan(
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 gather_by(plan, mu___from, gather = "dplyr::bind_rows")
 gather_by(plan, mu__, mu___from, prefix = "x")
+gather_by(plan) # Gather everything and append a row.
 reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
 reduce_by(plan, mu__, mu___from)
+reduce_by(plan) # Reduce all the targets.
+reduce_by(plan, pairwise = FALSE)
 }
 \seealso{
 drake_plan, map_plan, gather_by, reduce_plan,

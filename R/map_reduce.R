@@ -151,19 +151,28 @@ gather_plan <- function(
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 #' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
 #' gather_by(plan, mu__, mu___from, prefix = "x")
+#' gather_by(plan) # Gather everything and append a row.
 #' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
 #' reduce_by(plan, mu__, mu___from)
+#' reduce_by(plan) # Reduce all the targets.
+#' reduce_by(plan, pairwise = FALSE)
 gather_by <- function(plan, ..., prefix = "target", gather = "list"){
   . <- NULL
   gathered <- dplyr::group_by(plan, ...) %>%
     dplyr::do(gather_plan(plan = ., target = prefix, gather = gather))
   cols <- dplyr::select(gathered, ...)
   suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
-  gathered$target <- paste(gathered$target, suffix, sep = "_")
+  if (length(suffix)){
+    gathered$target <- paste(gathered$target, suffix, sep = "_")
+  }
   keep <- apply(cols, 1, function(x){
     !all(is.na(x))
   })
-  bind_plans(plan, gathered[keep, ])
+  if (ncol(cols)){
+    bind_plans(plan, gathered[keep, ])
+  } else {
+    bind_plans(plan, gathered)
+  }
 }
 
 #' @title Write commands to reduce several targets down to one.
@@ -262,8 +271,11 @@ reduce_plan <- function(
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 #' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
 #' gather_by(plan, mu__, mu___from, prefix = "x")
+#' gather_by(plan) # Gather everything and append a row.
 #' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
 #' reduce_by(plan, mu__, mu___from)
+#' reduce_by(plan) # Reduce all the targets.
+#' reduce_by(plan, pairwise = FALSE)
 reduce_by <- function(
   plan,
   ...,
@@ -287,11 +299,17 @@ reduce_by <- function(
     )
   cols <- dplyr::select(reduced, ...)
   suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
-  reduced$target <- paste(reduced$target, suffix, sep = "_")
+  if (length(suffix)){
+    reduced$target <- paste(reduced$target, suffix, sep = "_")
+  }
   keep <- apply(cols, 1, function(x){
     !all(is.na(x))
   })
-  bind_plans(plan, reduced[keep, ])
+  if (ncol(cols)){
+    bind_plans(plan, reduced[keep, ])
+  } else {
+    bind_plans(plan, reduced)
+  }
 }
 
 reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){

@@ -1,4 +1,4 @@
-drake_context("generate")
+drake_context("wildcards")
 
 test_with_dir("empty generative args", {
   x <- drake_plan(a = 1, b = FUNCTION())
@@ -7,7 +7,7 @@ test_with_dir("empty generative args", {
   expect_equal(expand_plan(x), x)
 })
 
-test_with_dir("evaluate, expand, and gather", {
+test_with_dir("evaluate and expand", {
   df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   expect_equal(m0, df)
@@ -84,20 +84,6 @@ test_with_dir("evaluate, expand, and gather", {
   expect_equal(12, nrow(x5))
   expect_equal(12, length(unique(x5$target)))
   expect_equal(6, length(unique(x5$command)))
-
-  x6 <- gather_plan(x)
-  y <- tibble::tibble(
-    target = "target",
-    command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
-  )
-  expect_equal(x6, y)
-
-  x7 <- gather_plan(x, target = "my_summaries", gather = "rbind")
-  y <- tibble::tibble(
-    target = "my_summaries",
-    command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"
-  )
-  expect_equal(x7, y)
 })
 
 test_with_dir("analyses and summaries", {
@@ -227,116 +213,6 @@ test_with_dir("analyses and summaries", {
   expect_warning(s <- plan_summaries(newtypes, analyses, datasets,
     gather = NULL))
   expect_equal(nrow(s), 8)
-})
-
-test_with_dir("reduce_plan()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  # Non-pairwise reduce
-  x_plan <- evaluate_plan(
-    drake_plan(x = VALUE),
-    wildcard = "VALUE",
-    values = 1:8
-  )
-  x <- reduce_plan(
-    x_plan, target = "x_sum", pairwise = FALSE,
-    begin = "", end = ""
-  )
-  x0 <- tibble::tibble(
-    target = "x_sum",
-    command = paste0(x_plan$target, collapse = " + ")
-  )
-  expect_equal(x, x0)
-  make(rbind(x_plan, x), session_info = FALSE)
-  expect_equal(readd(x_sum), sum(1:8))
-  clean(destroy = TRUE)
-
-  # Pairwise reduce even number of targets
-  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
-  x0 <- tibble(
-    target = c(paste0("x_sum_", 1:6), "x_sum"),
-    command = c(
-      "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
-      "x_sum_1 + x_sum_2", "x_sum_3 + x_sum_4",
-      "x_sum_5 + x_sum_6"
-    )
-  )
-  expect_equal(x, x0)
-  x <- reduce_plan(
-    x_plan, target = "x_sum", pairwise = FALSE,
-    begin = "", end = ""
-  )
-  x0 <- tibble::tibble(
-    target = "x_sum",
-    command = paste0(x_plan$target, collapse = " + ")
-  )
-  expect_equal(x, x0)
-  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
-  x0 <- tibble(
-    target = c(paste0("x_sum_", 1:6), "x_sum"),
-    command = c(
-      "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
-      "x_sum_1 + x_sum_2", "x_sum_3 + x_sum_4",
-      "x_sum_5 + x_sum_6"
-    )
-  )
-  expect_equal(x, x0)
-  make(rbind(x_plan, x), session_info = FALSE)
-  expect_equal(readd(x_sum), sum(1:8))
-  clean(destroy = TRUE)
-
-  # Odd number of targets
-  x_plan <- evaluate_plan(
-    drake_plan(x = VALUE),
-    wildcard = "VALUE",
-    values = 1:9
-  )
-  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
-  x0 <- tibble(
-    target = c(paste0("x_sum_", 1:7), "x_sum"),
-    command = c(
-      "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
-      "x_9 + x_sum_1",
-      "x_sum_2 + x_sum_3", "x_sum_4 + x_sum_5",
-      "x_sum_6 + x_sum_7"
-    )
-  )
-  expect_equal(x, x0)
-  make(rbind(x_plan, x), session_info = FALSE)
-  expect_equal(readd(x_sum), sum(1:9))
-  clean(destroy = TRUE)
-
-  # Arbitrary function in reduction
-  x_plan <- evaluate_plan(
-    drake_plan(x = VALUE),
-    wildcard = "VALUE",
-    values = 1:8
-  )
-  fun <- function(x, y){
-    x ^ 2 - 3 * y
-  }
-  x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE,
-    begin = "fun(", op = ", ", end = ")")
-  x0 <- tibble(
-    target = c(paste0("x_sum_", 1:6), "x_sum"),
-    command = c(
-      "fun(x_1, x_2)", "fun(x_3, x_4)", "fun(x_5, x_6)", "fun(x_7, x_8)",
-      "fun(x_sum_1, x_sum_2)", "fun(x_sum_3, x_sum_4)",
-      "fun(x_sum_5, x_sum_6)"
-    )
-  )
-  expect_equal(x, x0)
-  make(rbind(x_plan, x))
-  out <- fun(
-    fun(
-      fun(1, 2),
-      fun(3, 4)
-    ),
-    fun(
-      fun(5, 6),
-      fun(7, 8)
-    )
-  )
-  expect_equal(readd(x_sum), out)
 })
 
 test_with_dir("evaluate_plan() and trace", {
@@ -507,114 +383,4 @@ test_with_dir("make() with wildcard columns", {
   con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
   expect_identical(con$plan, plan)
-})
-
-test_with_dir("gather_by()", {
-  skip_on_cran()
-  plan <- evaluate_plan(
-    drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
-    rules = list(
-      m__ = 1:2,
-      n__ = c("a", "b")
-    ),
-    trace = TRUE
-  )
-  x <- gather_by(plan, n___from, prefix = "xyz", gather = "c")
-  y <- tibble::tibble(
-    target = "xyz_y",
-    command = c("c(y_a = y_a, y_b = y_b)"),
-    m__ = as.character(NA),
-    m___from = as.character(NA),
-    n__ = NA,
-    n___from = "y"
-  )
-  expect_equal(x, bind_plans(plan, y))
-  x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c")
-  y <- tibble::tibble(
-    target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b"),
-    command = c(
-      "c(x_1 = x_1)",
-      "c(x_2 = x_2)",
-      "c(y_a = y_a)",
-      "c(y_b = y_b)"
-    ),
-    m__ = as.character(c(1, 2, NA, NA)),
-    m___from = as.character(NA),
-    n__ = c(NA, NA, "a", "b"),
-    n___from = as.character(NA)
-  )
-  expect_equal(x, bind_plans(plan, y))
-})
-
-test_with_dir("reduce_by()", {
-  skip_on_cran()
-  plan <- evaluate_plan(
-    drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
-    rules = list(
-      m__ = 1:4,
-      n__ = c("a", "b")
-    ),
-    trace = TRUE
-  )
-  x <- reduce_by(
-    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")"
-  )
-  y <- tibble::tibble(
-    target = c("xyz_1_x", "xyz_2_x", "xyz_x"),
-    command = c("c(x_1, x_2)", "c(x_3, x_4)", "c(xyz_1, xyz_2)"),
-    m__ = as.character(NA),
-    m___from = rep("x", 3),
-    n__ = as.character(NA),
-    n___from = as.character(NA)
-  )
-  expect_equal(x, bind_plans(plan, y))
-  x <- reduce_by(
-    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
-    pairwise = FALSE
-  )
-  y <- tibble::tibble(
-    target = "xyz_x",
-    command = "c(c(c(x_1, x_2), x_3), x_4)",
-    m__ = as.character(NA),
-    m___from = "x",
-    n__ = as.character(NA),
-    n___from = as.character(NA)
-  )
-  expect_equal(x, bind_plans(plan, y))
-  x <- reduce_by(plan, m___from, n___from)
-  y <- tibble::tibble(
-    target = c(
-      "target_1_x_NA",
-      "target_2_x_NA",
-      "target_x_NA",
-      "target_NA_y"
-    ),
-    command = c(
-      "x_1 + x_2",
-      "x_3 + x_4",
-      "target_1 + target_2",
-      "y_a + y_b"
-    ),
-    m__ = as.character(NA),
-    m___from = c(rep("x", 3), NA),
-    n__ = as.character(NA),
-    n___from = c(rep(NA, 3), "y")
-  )
-  expect_equal(x, bind_plans(plan, y))
-  x <- reduce_by(plan, m___from, n___from, pairwise = FALSE)
-  y <- tibble::tibble(
-    target = c(
-      "target_x_NA",
-      "target_NA_y"
-    ),
-    command = c(
-      "x_1 + x_2 + x_3 + x_4",
-      "y_a + y_b"
-    ),
-    m__ = as.character(NA),
-    m___from = c("x", NA),
-    n__ = as.character(NA),
-    n___from = c(NA, "y")
-  )
-  expect_equal(x, bind_plans(plan, y))
 })
