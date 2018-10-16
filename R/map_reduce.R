@@ -41,7 +41,7 @@
 #' args
 #' plan <- map_plan(args, my_model_fit)
 #' plan
-#' # Consider `trace = TRUE` to keep the columns from `args`
+#' # Consider `trace = TRUE` to include the columns in `args`
 #' # in your plan.
 #' map_plan(args, my_model_fit, trace = TRUE)
 #' # And of course, you can execute the plan and
