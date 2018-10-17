@@ -140,6 +140,9 @@ cmq_conclude_build <- function(msg, config){
   if (is.null(build)){
     return()
   }
+  if (inherits(build, "try-error")){
+    stop(attr(build, "condition")$message, call. = FALSE) # nocov
+  }
   cmq_conclude_target(target = build$target, config = config)
   if (identical(config$caching, "worker")){
     mc_wait_checksum(
