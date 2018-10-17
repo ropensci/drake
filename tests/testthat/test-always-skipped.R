@@ -103,4 +103,19 @@ test_with_dir("drake_debug()", {
   }
 })
 
+test_with_dir("clustermq error messages get back to master", {
+  plan <- drake_plan(a = stop(123))
+  options(clustermq.scheduler = "multicore")
+  for (caching in c("worker", "master")){
+    expect_error(
+      make(
+        plan,
+        parallelism = "clustermq",
+        caching = "worker"
+      ),
+      regexp = "123"
+    )
+  }
+})
+
 }
