@@ -655,7 +655,7 @@ store_drake_config <- function(config) {
 parse_jobs <- function(jobs){
   check_jobs(jobs)
   if (length(jobs) < 2){
-    c(imports = jobs, targets = jobs)
+    c(imports = 1, targets = jobs)
   } else {
     jobs
   }
