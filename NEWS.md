@@ -28,6 +28,7 @@
 - Keep non-standard columns in `drake_plan_source()`.
 - `make(verbose = 4)` now prints to the console when a target is stored.
 - `gather_by()` and `reduce_by()` now gather/reduce everything if no columns are specified.
+- Change the default parallelization of the imports. Previously, `make(jobs = 4)` was equivalent to `make(jobs = c(imports = 4, targets = 4))`. Now, `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`. See [issue 553](https://github.com/ropensci/drake/issues/553) for details.
 
 # Version 6.0.0
 

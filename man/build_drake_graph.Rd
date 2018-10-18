@@ -50,28 +50,22 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{+ imports and writes to the cache.}
 }}
 
-\item{jobs}{number of parallel processes or jobs to run.
-See \code{\link[=predict_runtime]{predict_runtime()}}
-to help figure out what the number of jobs should be.
+\item{jobs}{maximum number of parallel workers for processing the targets.
+If you wish to parallelize the imports and preprocessing as well, you can
+use a named numeric vector of length 2, e.g.
+\code{make(jobs = c(imports = 4, targets = 8))}.
+\code{make(jobs = 4)} is equivalent to \code{make(jobs = c(imports = 1, targets = 4))}.
+
 Windows users should not set \code{jobs > 1} if
 \code{parallelism} is \code{"mclapply"} because
 \code{\link[=mclapply]{mclapply()}} is based on forking. Windows users
 who use \code{parallelism = "Makefile"} will need to
 download and install Rtools.
 
-Imports and targets are processed separately, and they usually
-have different parallelism needs. To use at most 2 jobs at a time
-for imports and at most 4 jobs at a time for targets, call
-\code{make(..., jobs = c(imports = 2, targets = 4))}.
-
-If \code{parallelism} is \code{"Makefile"},  Makefile-level parallelism is
-only used for targets in your workflow plan data frame, not imports.  To
-process imported objects and files, drake selects the best parallel backend
-for your system and uses the number of jobs you give to the \code{jobs}
-argument to \code{\link[=make]{make()}}. To use at most 2 jobs for imports and at
-most 4 jobs for targets, run
-\code{make(..., parallelism = "Makefile", jobs = c(imports = 2, targets = 4))} or
-\code{make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")}.}
+You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
+to help decide on an appropriate number of jobs.
+For details, visit
+\url{https://ropenscilabs.github.io/drake-manual/time.html}.}
 
 \item{sanitize_plan}{logical, deprecated. If you must,
 call \code{drake:::sanitize_plan()} to sanitize the plan

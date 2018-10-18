@@ -85,28 +85,22 @@
 #'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/store.html) # nolint
 #'   of the user manual.
 #'
-#' @param jobs number of parallel processes or jobs to run.
-#'   See [predict_runtime()]
-#'   to help figure out what the number of jobs should be.
+#' @param jobs maximum number of parallel workers for processing the targets.
+#'   If you wish to parallelize the imports and preprocessing as well, you can
+#'   use a named numeric vector of length 2, e.g.
+#'   `make(jobs = c(imports = 4, targets = 8))`.
+#'   `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`.
+#'
 #'   Windows users should not set `jobs > 1` if
 #'   `parallelism` is `"mclapply"` because
 #'   [mclapply()] is based on forking. Windows users
 #'   who use `parallelism = "Makefile"` will need to
 #'   download and install Rtools.
 #'
-#'   Imports and targets are processed separately, and they usually
-#'   have different parallelism needs. To use at most 2 jobs at a time
-#'   for imports and at most 4 jobs at a time for targets, call
-#'   `make(..., jobs = c(imports = 2, targets = 4))`.
-#'
-#'   If `parallelism` is `"Makefile"`,  Makefile-level parallelism is
-#'   only used for targets in your workflow plan data frame, not imports.  To
-#'   process imported objects and files, drake selects the best parallel backend
-#'   for your system and uses the number of jobs you give to the `jobs`
-#'   argument to [make()]. To use at most 2 jobs for imports and at
-#'   most 4 jobs for targets, run
-#'   `make(..., parallelism = "Makefile", jobs = c(imports = 2, targets = 4))` or
-#'   `make(..., parallelism = "Makefile", jobs = 2, args = "--jobs=4")`.
+#'   You can experiment with [predict_runtime()]
+#'   to help decide on an appropriate number of jobs.
+#'   For details, visit
+#'   <https://ropenscilabs.github.io/drake-manual/time.html>.
 #'
 #' @param packages character vector packages to load, in the order
 #'   they should be loaded. Defaults to `rev(.packages())`, so you
@@ -654,10 +648,10 @@ store_drake_config <- function(config) {
 
 parse_jobs <- function(jobs){
   check_jobs(jobs)
-  if (length(jobs) < 2){
-    c(imports = 1, targets = jobs)
+  if (length(jobs) < 2L){
+    c(imports = 1L, targets = as.integer(jobs))
   } else {
-    jobs
+    as.integer(jobs)
   }
 }
 
