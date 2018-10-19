@@ -31,6 +31,9 @@ of each step in the reduction}
 new targets, one for each pair/step in the reduction (\code{TRUE}),
 or to do the reduction all in one command.}
 }
+\value{
+a workflow plan data frame
+}
 \description{
 Perform several calls to \code{\link[=reduce_plan]{reduce_plan()}}
 based on groupings from columns in the plan,

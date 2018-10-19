@@ -100,8 +100,7 @@ map_plan <- function(
 #' @param gather function used to gather the targets. Should be
 #'   one of `list(...)`, `c(...)`, `rbind(...)`, or similar.
 #' @param append logical. If `TRUE`, the output will include the
-#'   original rows in `plan` in addition to the row that gathers
-#'   the targetsin `plan`.
+#'   original rows in the `plan` argument.
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
 #' @examples
@@ -155,6 +154,7 @@ gather_plan <- function(
 #' @export
 #' @seealso drake_plan, map_plan, reduce_by, reduce_plan,
 #'   gather_plan, evaluate_plan, expand_plan
+#' @return a workflow plan data frame
 #' @inheritParams gather_plan
 #' @param ... Symbols, columns of `plan` to define target groupings
 #'   passed to `dplyr::group_by()`.
@@ -218,8 +218,7 @@ gather_by <- function(plan, ..., prefix = "target", gather = "list"){
 #'   new targets, one for each pair/step in the reduction (`TRUE`),
 #'   or to do the reduction all in one command.
 #' @param append logical. If `TRUE`, the output will include the
-#'   original rows in `plan` in addition to the row that gathers
-#'   the targetsin `plan`.
+#'   original rows in the `plan` argument.
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
 #' @examples
@@ -290,6 +289,7 @@ reduce_plan <- function(
 #' @export
 #' @seealso drake_plan, map_plan, gather_by, reduce_plan,
 #'   gather_plan, evaluate_plan, expand_plan
+#' @return a workflow plan data frame
 #' @inheritParams reduce_plan
 #' @param ... Symbols, columns of `plan` to define target groupings
 #'   passed to `dplyr::group_by()`.

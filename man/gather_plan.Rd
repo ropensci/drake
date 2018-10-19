@@ -17,8 +17,7 @@ gather_plan(plan = NULL, target = "target", gather = "list",
 one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
 
 \item{append}{logical. If \code{TRUE}, the output will include the
-original rows in \code{plan} in addition to the row that gathers
-the targetsin \code{plan}.
+original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
 }

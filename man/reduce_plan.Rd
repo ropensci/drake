@@ -25,8 +25,7 @@ new targets, one for each pair/step in the reduction (\code{TRUE}),
 or to do the reduction all in one command.}
 
 \item{append}{logical. If \code{TRUE}, the output will include the
-original rows in \code{plan} in addition to the row that gathers
-the targetsin \code{plan}.
+original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
 }

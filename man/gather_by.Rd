@@ -21,6 +21,9 @@ specified in \code{...}.}
 \item{gather}{function used to gather the targets. Should be
 one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
 }
+\value{
+a workflow plan data frame
+}
 \description{
 Perform several calls to \code{\link[=gather_plan]{gather_plan()}}
 based on groupings from columns in the plan,
