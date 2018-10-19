@@ -4,7 +4,8 @@
 \alias{gather_by}
 \title{Gather multiple groupings of targets}
 \usage{
-gather_by(plan, ..., prefix = "target", gather = "list")
+gather_by(plan, ..., prefix = "target", gather = "list",
+  append = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -20,6 +21,11 @@ specified in \code{...}.}
 
 \item{gather}{function used to gather the targets. Should be
 one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
+
+\item{append}{logical. If \code{TRUE}, the output will include the
+original rows in the \code{plan} argument.
+If \code{FALSE}, the output will only include the new
+targets and commands.}
 }
 \value{
 a workflow plan data frame
@@ -37,12 +43,10 @@ plan <- drake_plan(
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+gather_by(plan, mu___from, append = TRUE)
+gather_by(plan, mu___from, append = FALSE)
 gather_by(plan, mu__, mu___from, prefix = "x")
 gather_by(plan) # Gather everything and append a row.
-reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
-reduce_by(plan, mu__, mu___from)
-reduce_by(plan) # Reduce all the targets.
-reduce_by(plan, pairwise = FALSE)
 }
 \seealso{
 drake_plan, map_plan, reduce_by, reduce_plan,

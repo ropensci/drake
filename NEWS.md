@@ -8,7 +8,7 @@
 - Add a `mode` argument to `trigger()` to control how the `condition` trigger factors into the decision to build or skip a target. See the `?trigger` for details.
 - Add a new `sleep` argument to `make()` and `drake_config()` to help the master process consume fewer resources during parallel processing.
 - Enable the `caching` argument for the `"clustermq"` and `"clustermq_staged"` parallel backends. Now, `make(parallelism = "clustermq", caching = "master")` will do all the caching with the master process, and `make(parallelism = "clustermq", caching = "worker")` will do all the caching with the workers. The same is true for `parallelism = "clustermq_staged"`.
-- Add a new `append` argument to `gather_plan()` and `reduce_plan()`. The `append` argument control whether the output includes the original `plan` in addition to the newly generated rows.
+- Add a new `append` argument to `gather_plan()`, `gather_by()`, `reduce_plan()`, and `reduce_by()`. The `append` argument control whether the output includes the original `plan` in addition to the newly generated rows.
 
 ## Bug fixes
 

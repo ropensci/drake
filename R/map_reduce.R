@@ -171,13 +171,17 @@ gather_plan <- function(
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 #' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+#' gather_by(plan, mu___from, append = TRUE)
+#' gather_by(plan, mu___from, append = FALSE)
 #' gather_by(plan, mu__, mu___from, prefix = "x")
 #' gather_by(plan) # Gather everything and append a row.
-#' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
-#' reduce_by(plan, mu__, mu___from)
-#' reduce_by(plan) # Reduce all the targets.
-#' reduce_by(plan, pairwise = FALSE)
-gather_by <- function(plan, ..., prefix = "target", gather = "list"){
+gather_by <- function(
+  plan,
+  ...,
+  prefix = "target",
+  gather = "list",
+  append = TRUE
+){
   . <- NULL
   gathered <- dplyr::group_by(plan, ...) %>%
     dplyr::do(
@@ -192,9 +196,12 @@ gather_by <- function(plan, ..., prefix = "target", gather = "list"){
     !all(is.na(x))
   })
   if (ncol(cols)){
-    bind_plans(plan, gathered[keep, ])
-  } else {
+    gathered <- gathered[keep, ]
+  } 
+  if (append){
     bind_plans(plan, gathered)
+  } else {
+    gathered
   }
 }
 
@@ -305,12 +312,12 @@ reduce_plan <- function(
 #'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-#' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
-#' gather_by(plan, mu__, mu___from, prefix = "x")
-#' gather_by(plan) # Gather everything and append a row.
 #' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
-#' reduce_by(plan, mu__, mu___from)
+#' reduce_by(plan, mu__)
+#' reduce_by(plan, mu__, append = TRUE)
+#' reduce_by(plan, mu__, append = FALSE)
 #' reduce_by(plan) # Reduce all the targets.
+#' reduce_by(plan, append = FALSE)
 #' reduce_by(plan, pairwise = FALSE)
 reduce_by <- function(
   plan,
@@ -319,7 +326,8 @@ reduce_by <- function(
   begin = "",
   op = " + ",
   end = "",
-  pairwise = TRUE
+  pairwise = TRUE,
+  append = TRUE
 ){
   . <- NULL
   reduced <- dplyr::group_by(plan, ...) %>%
@@ -343,9 +351,12 @@ reduce_by <- function(
     !all(is.na(x))
   })
   if (ncol(cols)){
-    bind_plans(plan, reduced[keep, ])
-  } else {
+    reduced <- reduced[keep, ]
+  } 
+  if (append){
     bind_plans(plan, reduced)
+  } else {
+    reduced
   }
 }
 

@@ -5,7 +5,7 @@
 \title{Reduce multiple groupings of targets}
 \usage{
 reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
-  end = "", pairwise = TRUE)
+  end = "", pairwise = TRUE, append = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -30,6 +30,11 @@ of each step in the reduction}
 \item{pairwise}{logical, whether to create multiple
 new targets, one for each pair/step in the reduction (\code{TRUE}),
 or to do the reduction all in one command.}
+
+\item{append}{logical. If \code{TRUE}, the output will include the
+original rows in the \code{plan} argument.
+If \code{FALSE}, the output will only include the new
+targets and commands.}
 }
 \value{
 a workflow plan data frame
@@ -46,12 +51,12 @@ plan <- drake_plan(
   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-gather_by(plan, mu___from, gather = "dplyr::bind_rows")
-gather_by(plan, mu__, mu___from, prefix = "x")
-gather_by(plan) # Gather everything and append a row.
 reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
-reduce_by(plan, mu__, mu___from)
+reduce_by(plan, mu__)
+reduce_by(plan, mu__, append = TRUE)
+reduce_by(plan, mu__, append = FALSE)
 reduce_by(plan) # Reduce all the targets.
+reduce_by(plan, append = FALSE)
 reduce_by(plan, pairwise = FALSE)
 }
 \seealso{

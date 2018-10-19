@@ -212,7 +212,7 @@ test_with_dir("gather_by()", {
     ),
     trace = TRUE
   )
-  x <- gather_by(plan)
+  x <- gather_by(plan, append = TRUE)
   y <- tibble::tibble(
     target = c(plan$target, "target"),
     command = c(
@@ -221,7 +221,9 @@ test_with_dir("gather_by()", {
     )
   )
   expect_equal(x[, c("target", "command")], y)
-  x <- gather_by(plan, n___from, prefix = "xyz", gather = "c")
+  z <- gather_by(plan, append = FALSE)
+  expect_equal(z[, c("target", "command")], y[nrow(y), ])
+  x <- gather_by(plan, n___from, prefix = "xyz", gather = "c", append = TRUE)
   y <- tibble::tibble(
     target = "xyz_y",
     command = c("c(y_a = y_a, y_b = y_b)"),
@@ -231,7 +233,7 @@ test_with_dir("gather_by()", {
     n___from = "y"
   )
   expect_equal(x, bind_plans(plan, y))
-  x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c")
+  x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c", append = TRUE)
   y <- tibble::tibble(
     target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b"),
     command = c(
@@ -258,14 +260,17 @@ test_with_dir("reduce_by()", {
     ),
     trace = TRUE
   )
-  x <- reduce_by(plan, pairwise = FALSE)
+  x <- reduce_by(plan, pairwise = FALSE, append = TRUE)
   y <- tibble::tibble(
     target = c(plan$target, "target"),
     command = c(plan$command, "x_1 + x_2 + x_3 + x_4 + y_a + y_b + z")
   )
   expect_equal(x[, c("target", "command")], y)
+  z <- reduce_by(plan, pairwise = FALSE, append = FALSE)
+  expect_equal(z[, c("target", "command")], y[nrow(y), ])
   x <- reduce_by(
-    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")"
+    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
+    append = TRUE
   )
   y <- tibble::tibble(
     target = c("xyz_1_x", "xyz_2_x", "xyz_x"),
@@ -278,7 +283,7 @@ test_with_dir("reduce_by()", {
   expect_equal(x, bind_plans(plan, y))
   x <- reduce_by(
     plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
-    pairwise = FALSE
+    pairwise = FALSE, append = TRUE
   )
   y <- tibble::tibble(
     target = "xyz_x",
@@ -289,7 +294,7 @@ test_with_dir("reduce_by()", {
     n___from = as.character(NA)
   )
   expect_equal(x, bind_plans(plan, y))
-  x <- reduce_by(plan, m___from, n___from)
+  x <- reduce_by(plan, m___from, n___from, append = TRUE)
   y <- tibble::tibble(
     target = c(
       "target_1_x_NA",
@@ -309,7 +314,7 @@ test_with_dir("reduce_by()", {
     n___from = c(rep(NA, 3), "y")
   )
   expect_equal(x, bind_plans(plan, y))
-  x <- reduce_by(plan, m___from, n___from, pairwise = FALSE)
+  x <- reduce_by(plan, m___from, n___from, pairwise = FALSE, append = TRUE)
   y <- tibble::tibble(
     target = c(
       "target_x_NA",
