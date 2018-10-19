@@ -217,6 +217,11 @@ gather_by <- function(plan, ..., prefix = "target", gather = "list"){
 #' @param pairwise logical, whether to create multiple
 #'   new targets, one for each pair/step in the reduction (`TRUE`),
 #'   or to do the reduction all in one command.
+#' @param append logical. If `TRUE`, the output will include the
+#'   original rows in `plan` in addition to the row that gathers
+#'   the targetsin `plan`.
+#'   If `FALSE`, the output will only include the new
+#'   targets and commands.
 #' @examples
 #' # Workflow plan for datasets:
 #' x_plan <- evaluate_plan(
@@ -225,10 +230,12 @@ gather_by <- function(plan, ..., prefix = "target", gather = "list"){
 #'   values = 1:8
 #' )
 #' # Create a new target from the sum of the others.
-#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE)
+#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = FALSE)
+#' # Optionally include the original rows with `append = TRUE`.
+#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = TRUE)
 #' # For memory efficiency and parallel computing,
 #' # reduce pairwise:
-#' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+#' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE, append = FALSE)
 #' # Optionally define your own function and use it as the
 #' # binary operator in the reduction.
 #' x_plan <- evaluate_plan(
@@ -247,7 +254,8 @@ reduce_plan <- function(
   begin = "",
   op = " + ",
   end = "",
-  pairwise = TRUE
+  pairwise = TRUE,
+  append = FALSE
 ){
   if (pairwise){
     pairs <- reduction_pairs(
@@ -255,7 +263,7 @@ reduce_plan <- function(
       base_name = paste0(target, "_")
     )
     pairs$names[nrow(pairs)] <- target
-    tibble(
+    out <- tibble(
       target = pairs$names,
       command = paste0(begin, pairs$odds, op, pairs$evens, end)
     )
@@ -266,7 +274,12 @@ reduce_plan <- function(
         paste0(begin, x, op, y, end)
       }
     )
-    tibble(target = target, command = command)
+    out <- tibble(target = target, command = command)
+  }
+  if (append){
+    bind_plans(plan, out)
+  } else{
+    out
   }
 }
 

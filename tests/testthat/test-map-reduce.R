@@ -96,13 +96,19 @@ test_with_dir("reduce_plan()", {
   )
   x <- reduce_plan(
     x_plan, target = "x_sum", pairwise = FALSE,
-    begin = "", end = ""
+    begin = "", end = "", append = FALSE
   )
   x0 <- tibble::tibble(
     target = "x_sum",
     command = paste0(x_plan$target, collapse = " + ")
   )
   expect_equal(x, x0)
+  z <- reduce_plan(
+    x_plan, target = "x_sum", pairwise = FALSE,
+    begin = "", end = "", append = TRUE
+  )
+  z0 <- bind_plans(x_plan, x)
+  expect_equal(z, z0)
   make(rbind(x_plan, x), session_info = FALSE)
   expect_equal(readd(x_sum), sum(1:8))
   clean(destroy = TRUE)

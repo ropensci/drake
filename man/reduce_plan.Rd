@@ -5,7 +5,7 @@
 \title{Write commands to reduce several targets down to one.}
 \usage{
 reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
-  end = "", pairwise = TRUE)
+  end = "", pairwise = TRUE, append = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -23,6 +23,12 @@ of each step in the reduction}
 \item{pairwise}{logical, whether to create multiple
 new targets, one for each pair/step in the reduction (\code{TRUE}),
 or to do the reduction all in one command.}
+
+\item{append}{logical. If \code{TRUE}, the output will include the
+original rows in \code{plan} in addition to the row that gathers
+the targetsin \code{plan}.
+If \code{FALSE}, the output will only include the new
+targets and commands.}
 }
 \value{
 A workflow plan data frame that aggregates multiple
@@ -41,10 +47,12 @@ x_plan <- evaluate_plan(
   values = 1:8
 )
 # Create a new target from the sum of the others.
-reduce_plan(x_plan, target = "x_sum", pairwise = FALSE)
+reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = FALSE)
+# Optionally include the original rows with `append = TRUE`.
+reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = TRUE)
 # For memory efficiency and parallel computing,
 # reduce pairwise:
-reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
+reduce_plan(x_plan, target = "x_sum", pairwise = TRUE, append = FALSE)
 # Optionally define your own function and use it as the
 # binary operator in the reduction.
 x_plan <- evaluate_plan(
