@@ -88,9 +88,8 @@ map_plan <- function(
 
 #' @title Write commands to combine several targets into one
 #'   or more overarching targets.
-#' @description Creates a new workflow plan data frame with a single new
-#' target. This new target is a list, vector, or other aggregate of
-#' a collection of existing targets in another workflow plan data frame.
+#' @description Creates a new workflow plan to aggregate
+#'   existing targets in the supplied plan.
 #' @export
 #' @seealso drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
 #'   evaluate_plan, expand_plan
@@ -100,31 +99,53 @@ map_plan <- function(
 #' @param target name of the new aggregated target
 #' @param gather function used to gather the targets. Should be
 #'   one of `list(...)`, `c(...)`, `rbind(...)`, or similar.
+#' @param append logical. If `TRUE`, the output will include the
+#'   original rows in `plan` in addition to the row that gathers
+#'   the targetsin `plan`.
+#'   If `FALSE`, the output will only include the new
+#'   targets and commands.
 #' @examples
 #' # Workflow plan for datasets:
 #' datasets <- drake_plan(
 #'   small = simulate(5),
-#'   large = simulate(50))
+#'   large = simulate(50)
+#' )
 #' # Create a new target that brings the datasets together.
-#' gather_plan(datasets, target = "my_datasets")
+#' gather_plan(datasets, target = "my_datasets", append = FALSE)
 #' # This time, the new target just appends the rows of 'small' and 'large'
 #' # into a single matrix or data frame.
 #' gathered <- gather_plan(
-#'   datasets, target = "aggregated_data", gather = "rbind"
+#'   datasets,
+#'   target = "aggregated_data",
+#'   gather = "rbind",
+#'   append = FALSE
 #' )
 #' gathered
 #' # For the complete workflow plan, row bind the pieces together.
-#' my_plan <- rbind(datasets, gathered)
-#' my_plan
+#' bind_plans(datasets, gathered)
+#' # Alternatively, you can set `append = TRUE` to incorporate
+#' # the new targets automatically.
+#' gather_plan(
+#'   datasets,
+#'   target = "aggregated_data",
+#'   gather = "rbind",
+#'   append = TRUE
+#' )
 gather_plan <- function(
   plan = NULL,
   target = "target",
-  gather = "list"
+  gather = "list",
+  append = FALSE
 ){
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  tibble(target = target, command = command)
+  new_plan <- tibble(target = target, command = command)
+  if (append){
+    bind_plans(plan, new_plan)
+  } else {
+    new_plan
+  }
 }
 
 #' @title Gather multiple groupings of targets
@@ -159,7 +180,9 @@ gather_plan <- function(
 gather_by <- function(plan, ..., prefix = "target", gather = "list"){
   . <- NULL
   gathered <- dplyr::group_by(plan, ...) %>%
-    dplyr::do(gather_plan(plan = ., target = prefix, gather = gather))
+    dplyr::do(
+      gather_plan(plan = ., target = prefix, gather = gather, append = FALSE)
+    )
   cols <- dplyr::select(gathered, ...)
   suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
   if (length(suffix)){

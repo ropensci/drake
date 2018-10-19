@@ -462,11 +462,12 @@ plan_summaries <- function(
       gather_plan(
         .,
         target = summary_type,
-        gather = gather[which(summary_type == plan$target)]
+        gather = gather[which(summary_type == plan$target)],
+        append = FALSE
       )
     })
   target <- command <- NULL
-  dplyr::bind_rows(gathered, out) %>%
+  bind_plans(gathered, out) %>%
     ungroup %>%
     select(target, command)
 }

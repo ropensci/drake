@@ -68,14 +68,17 @@ test_with_dir("gather_plan()", {
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
   expect_equal(m1, df)
   x <- expand_plan(df, values = c("rep1", "rep2"))
-  x6 <- gather_plan(x)
+  x6 <- gather_plan(x, append = FALSE)
   y <- tibble::tibble(
     target = "target",
     command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
   expect_equal(x6, y)
-
-  x7 <- gather_plan(x, target = "my_summaries", gather = "rbind")
+  z <- gather_plan(x, append = TRUE)
+  expect_equal(z, bind_plans(x, y))
+  x7 <- gather_plan(
+    x, target = "my_summaries", gather = "rbind", append = FALSE
+  )
   y <- tibble::tibble(
     target = "my_summaries",
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"

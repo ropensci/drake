@@ -5,7 +5,8 @@
 \title{Write commands to combine several targets into one
 or more overarching targets.}
 \usage{
-gather_plan(plan = NULL, target = "target", gather = "list")
+gather_plan(plan = NULL, target = "target", gather = "list",
+  append = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -14,32 +15,48 @@ gather_plan(plan = NULL, target = "target", gather = "list")
 
 \item{gather}{function used to gather the targets. Should be
 one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
+
+\item{append}{logical. If \code{TRUE}, the output will include the
+original rows in \code{plan} in addition to the row that gathers
+the targetsin \code{plan}.
+If \code{FALSE}, the output will only include the new
+targets and commands.}
 }
 \value{
 A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
-Creates a new workflow plan data frame with a single new
-target. This new target is a list, vector, or other aggregate of
-a collection of existing targets in another workflow plan data frame.
+Creates a new workflow plan to aggregate
+existing targets in the supplied plan.
 }
 \examples{
 # Workflow plan for datasets:
 datasets <- drake_plan(
   small = simulate(5),
-  large = simulate(50))
+  large = simulate(50)
+)
 # Create a new target that brings the datasets together.
-gather_plan(datasets, target = "my_datasets")
+gather_plan(datasets, target = "my_datasets", append = FALSE)
 # This time, the new target just appends the rows of 'small' and 'large'
 # into a single matrix or data frame.
 gathered <- gather_plan(
-  datasets, target = "aggregated_data", gather = "rbind"
+  datasets,
+  target = "aggregated_data",
+  gather = "rbind",
+  append = FALSE
 )
 gathered
 # For the complete workflow plan, row bind the pieces together.
-my_plan <- rbind(datasets, gathered)
-my_plan
+bind_plans(datasets, gathered)
+# Alternatively, you can set `append = TRUE` to incorporate
+# the new targets automatically.
+gather_plan(
+  datasets,
+  target = "aggregated_data",
+  gather = "rbind",
+  append = TRUE
+)
 }
 \seealso{
 drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
