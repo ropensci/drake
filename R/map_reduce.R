@@ -330,7 +330,8 @@ reduce_by <- function(
         begin = begin,
         op = op,
         end = end,
-        pairwise = pairwise
+        pairwise = pairwise,
+        append = FALSE
       )
     )
   cols <- dplyr::select(reduced, ...)
