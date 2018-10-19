@@ -197,7 +197,7 @@ gather_by <- function(
   })
   if (ncol(cols)){
     gathered <- gathered[keep, ]
-  } 
+  }
   if (append){
     bind_plans(plan, gathered)
   } else {
@@ -352,7 +352,7 @@ reduce_by <- function(
   })
   if (ncol(cols)){
     reduced <- reduced[keep, ]
-  } 
+  }
   if (append){
     bind_plans(plan, reduced)
   } else {
