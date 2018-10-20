@@ -5,7 +5,7 @@
 \title{Gather multiple groupings of targets}
 \usage{
 gather_by(plan, ..., prefix = "target", gather = "list",
-  append = TRUE)
+  append = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -42,11 +42,11 @@ plan <- drake_plan(
   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+gather_by(plan, mu___from, gather = "dplyr::bind_rows", append = FALSE)
 gather_by(plan, mu___from, append = TRUE)
 gather_by(plan, mu___from, append = FALSE)
-gather_by(plan, mu__, mu___from, prefix = "x")
-gather_by(plan) # Gather everything and append a row.
+gather_by(plan, mu__, mu___from, prefix = "x", append = FALSE)
+gather_by(plan, append = FALSE) # Gather everything and append a row.
 }
 \seealso{
 drake_plan, map_plan, reduce_by, reduce_plan,

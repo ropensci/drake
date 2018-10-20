@@ -281,3 +281,9 @@ test_with_dir("old trigger interface", {
     )
   }
 })
+
+test_with_dir("append in gather_by() and reduce_by()", {
+  plan <- drake_plan(x = 1)
+  expect_warning(gather_by(plan), regexp = "append")
+  expect_warning(reduce_by(plan), regexp = "append")
+})

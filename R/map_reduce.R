@@ -170,18 +170,22 @@ gather_plan <- function(
 #'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-#' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+#' gather_by(plan, mu___from, gather = "dplyr::bind_rows", append = FALSE)
 #' gather_by(plan, mu___from, append = TRUE)
 #' gather_by(plan, mu___from, append = FALSE)
-#' gather_by(plan, mu__, mu___from, prefix = "x")
-#' gather_by(plan) # Gather everything and append a row.
+#' gather_by(plan, mu__, mu___from, prefix = "x", append = FALSE)
+#' gather_by(plan, append = FALSE) # Gather everything and append a row.
 gather_by <- function(
   plan,
   ...,
   prefix = "target",
   gather = "list",
-  append = TRUE
+  append = NULL
 ){
+  if (is.null(append)){
+    warn_append() # Warning added on 2018-10-18.
+    append <- TRUE # TODO: change to TRUE
+  }
   . <- NULL
   gathered <- dplyr::group_by(plan, ...) %>%
     dplyr::do(
@@ -312,13 +316,14 @@ reduce_plan <- function(
 #'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-#' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
-#' reduce_by(plan, mu__)
+#' reduce_by(
+#'   plan, mu___from, begin = "list(", end = ")", op = ", ", append = FALSE
+#' )
 #' reduce_by(plan, mu__, append = TRUE)
 #' reduce_by(plan, mu__, append = FALSE)
-#' reduce_by(plan) # Reduce all the targets.
+#' reduce_by(plan, append = FALSE) # Reduce all the targets.
 #' reduce_by(plan, append = FALSE)
-#' reduce_by(plan, pairwise = FALSE)
+#' reduce_by(plan, pairwise = FALSE, append = FALSE)
 reduce_by <- function(
   plan,
   ...,
@@ -327,8 +332,12 @@ reduce_by <- function(
   op = " + ",
   end = "",
   pairwise = TRUE,
-  append = TRUE
+  append = NULL
 ){
+  if (is.null(append)){
+    warn_append() # Warning added on 2018-10-18.
+    append <- TRUE # TODO: change to TRUE
+  }
   . <- NULL
   reduced <- dplyr::group_by(plan, ...) %>%
     dplyr::do(
@@ -379,5 +388,14 @@ reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){
     x = new_x,
     pairs = rbind(pairs, new_pairs),
     base_name = base_name
+  )
+}
+
+warn_append <- function(){
+  warning(
+    "Setting `append` to `TRUE`. ",
+    "The default `append` argument to `gather_by()` and `reduce_by()` ",
+    "will change to `FALSE` in a future release of `drake`.",
+    call. = FALSE
   )
 }
