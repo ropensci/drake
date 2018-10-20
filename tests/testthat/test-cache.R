@@ -406,7 +406,6 @@ test_with_dir("cache functions work", {
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
   pdf(NULL)
-  null_graph()
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
   # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint

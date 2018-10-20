@@ -18,6 +18,7 @@
 - Stop checking for non-standard columns. Previously, warnings about non-standard columns were incorrectly triggered by `evaluate_plan(trace = TRUE)` followed by `expand_plan()`, `gather_plan()`, `reduce_plan()`, `gather_by()`, or `reduce_by()`. The more relaxed behavior also gives users more options about how to construct and maintain their workflow plan data frames.
 - Use checksums in `"future"` parallelism to make sure files travel over network file systems before proceeding to downstream targets.
 - Refactor and clean up checksum code.
+- Allow more tests and checks to succeed withtout the optional `visNetwork` package.
 
 ## Enhancements
 

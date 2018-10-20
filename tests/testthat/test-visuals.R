@@ -46,6 +46,7 @@ test_with_dir("ggraphs", {
   skip_on_cran()
   skip_if_not_installed("ggplot2")
   skip_if_not_installed("ggraph")
+  skip_if_not_installed("visNetwork")
   load_mtcars_example()
   config <- drake_config(
     my_plan, cache = storr::storr_environment(), session_info = FALSE)
@@ -62,6 +63,7 @@ test_with_dir("ggraphs", {
 test_with_dir("Sankey diagram runs", {
   skip_on_cran()
   skip_if_not_installed("networkD3")
+  skip_if_not_installed("visNetwork")
   config <- dbug()
   pdf(NULL)
   tmp <- sankey_drake_graph(config)

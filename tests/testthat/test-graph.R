@@ -82,6 +82,7 @@ test_with_dir("Supplied graph is pruned.", {
 test_with_dir("we can generate different visNetwork dependency graphs", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
+  skip_if_not_installed("visNetwork")
   load_mtcars_example()
   config <- drake_config(my_plan)
 

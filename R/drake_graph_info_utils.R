@@ -317,6 +317,7 @@ missing_import <- function(x, envir) {
 }
 
 null_graph <- function() {
+  assert_pkg("visNetwork")
   nodes <- data.frame(id = 1, label = "Nothing to plot.")
   visNetwork::visNetwork(
     nodes = nodes,
