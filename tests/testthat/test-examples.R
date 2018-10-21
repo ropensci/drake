@@ -32,6 +32,7 @@ test_with_dir("main example", {
   for (file in c("raw_data.xlsx", "report.Rmd")){
     expect_true(file.exists(file))
   }
+  expect_warning(load_main_example(overwrite = TRUE), regexp = "Overwriting")
   clean_main_example()
   for (file in c("raw_data.xlsx", "report.Rmd")){
     expect_false(file.exists(file))
