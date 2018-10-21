@@ -76,6 +76,7 @@ blitz_send_target <- function(config){
 #' @inheritParams drake_build
 #' @param deps named list of dependencies
 blitz_build <- function(target, deps = NULL, config){
+  do_prework(config = config, verbose_packages = FALSE)
   for (dep in names(deps)){
     config$envir[[dep]] <- deps[[dep]]
   }
