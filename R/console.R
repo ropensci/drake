@@ -53,7 +53,7 @@ console_cache <- function(config){
 }
 
 console_preprocess <- function(text, config){
-  if (config$verbose < 2){
+  if (!length(config$verbose) || config$verbose < 2){
     return()
   }
   finish_console(

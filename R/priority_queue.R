@@ -1,4 +1,5 @@
 new_priority_queue <- function(config, jobs = config$jobs_imports){
+  console_preprocess(text = "construct priority queue", config = config)
   config$graph <- config$schedule
   targets <- V(config$graph)$name
   if (!length(targets)){
