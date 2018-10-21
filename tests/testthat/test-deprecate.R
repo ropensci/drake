@@ -281,3 +281,12 @@ test_with_dir("old trigger interface", {
     )
   }
 })
+
+test_with_dir("mtcars example", {
+  skip_on_cran()
+  skip_if_not_installed("downloader")
+  expect_warning(
+    load_mtcars_example(report_file = "other_name.Rmd"),
+    regexp = "report_file"
+  )
+})

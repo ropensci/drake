@@ -14,7 +14,10 @@ Defaults to your workspace.
 For an insulated workspace,
 set \code{envir = new.env(parent = globalenv())}.}
 
-\item{report_file}{where to write the report file \code{report.Rmd}.}
+\item{report_file}{where to write the report file. Deprecated.
+In a future release, the report file will always be
+\code{report.Rmd} and will always be written to your
+working directory (current default).}
 
 \item{overwrite}{logical, whether to overwrite an
 existing file \code{report.Rmd}}

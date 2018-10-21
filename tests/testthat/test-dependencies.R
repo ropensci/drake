@@ -31,7 +31,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   file.create("x")
   file.create("y")
   path <- system.file(
-    file.path("rmarkdown", "mtcars.Rmd"),
+    file.path("examples", "mtcars", "report.Rmd"),
     package = "drake",
     mustWork = TRUE
   )

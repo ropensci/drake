@@ -1,0 +1,35 @@
+---
+title: "Final results report for the mtcars example"
+author: You
+output: html_document
+---
+
+# The weight and fuel efficiency of cars
+
+Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` data originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
+
+```{r showmtcars}
+# ?mtcars # more info
+head(mtcars)
+```
+
+Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generated two larger bootstrapped datasets. We called them `small` and `large`.
+
+```{r example_chunk}
+library(drake)
+head(readd(small)) # 48 rows
+loadd(large)       # 64 rows
+head(large)
+```
+
+Then, we fit a couple regression models to the `small` and `large` to try to detect an association between `wt` and `mpg`. Here are the coefficients and p-values from one of the model fits.
+
+```{r second_example_chunk}
+readd(coef_regression2_small)
+```
+
+Since the p-value on `x2` is so small, there may be an association between weight and fuel efficiency after all.
+
+# A note on knitr reports in drake projects.
+
+Because of the calls to `readd()` and `loadd()`, `drake` knows that `small`, `large`, and `coef_regression2_small` are dependencies of this R Markdown report. This dependency relationship is what causes the report to be processed at the very end.
