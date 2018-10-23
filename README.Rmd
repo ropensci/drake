@@ -199,7 +199,7 @@ hist
 
 # Reproducibility with confidence
 
-The R community emphasizes reproducibility. Traditional themes include [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data you say you used.
+The R community emphasizes reproducibility. Traditional themes include [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data you say you used. With the exception of [non-default triggers](https://ropenscilabs.github.io/drake-manual/triggers.html) and [blitz mode](https://ropenscilabs.github.io/drake-manual/hpc.html#blitz-mode), `drake` strives to keep this promise.
 
 ## Evidence
 
