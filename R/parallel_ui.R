@@ -105,18 +105,18 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "parLapply_staged"
   )
   distributed <- c(
-    "hasty",
     "clustermq",
     "clustermq_staged",
     "future",
     "future_lapply",
     "future_lapply_staged",
+    "hasty",
     "Makefile"
   )
   if (distributed_only){
-    distributed
+    sort(distributed)
   } else {
-    c(local, distributed)
+    sort(c(local, distributed))
   }
 }
 

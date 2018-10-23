@@ -27,6 +27,7 @@ reference:
   - '`drake-package`'
   - '`drake_tip`'
 - title: Examples
+  contents:
   - '`drake_example`'
   - '`drake_examples`'
   - '`load_main_example`'
