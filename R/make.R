@@ -226,8 +226,8 @@ global_imports <- function(config){
 #' @inheritParams make_with_config
 make_session <- function(config){
   do_prework(config = config, verbose_packages = config$verbose)
-  if (identical(unname(config$parallelism["targets"]), "blitz")){
-    run_blitz(config = config)
+  if (identical(unname(config$parallelism["targets"]), "hasty")){
+    run_hasty(config = config)
   } else {
     check_drake_config(config = config)
     store_drake_config(config = config)

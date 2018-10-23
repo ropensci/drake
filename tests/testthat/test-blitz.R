@@ -1,6 +1,6 @@
-drake_context("blitz")
+drake_context("hasty")
 
-test_with_dir("blitz parallelism", {
+test_with_dir("hasty parallelism", {
   skip_on_cran()
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
@@ -9,7 +9,7 @@ test_with_dir("blitz parallelism", {
     "utils::write.csv(coef_regression2_large, file = file_out(\"coef.csv\"))"
   expect_false(file.exists("coef.csv"))
   expect_warning(
-    make(e$my_plan, envir = e, parallelism = "blitz"),
+    make(e$my_plan, envir = e, parallelism = "hasty"),
     regexp = "USE AT YOUR OWN RISK"
   )
   expect_true(file.exists("coef.csv"))
@@ -23,7 +23,7 @@ test_with_dir("blitz parallelism", {
   unlink("coef.csv")
   expect_false(file.exists("coef.csv"))
   expect_warning(
-    make(e$my_plan, envir = e, parallelism = "blitz", jobs = 2),
+    make(e$my_plan, envir = e, parallelism = "hasty", jobs = 2),
     regexp = "USE AT YOUR OWN RISK"
   )
   expect_true(file.exists("coef.csv"))
