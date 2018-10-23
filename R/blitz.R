@@ -1,4 +1,5 @@
 run_blitz <- function(config){
+  warn_blitz(config)
   config$graph <- config$schedule <- targets_graph(config = config)
   if (config$jobs_targets > 1L){
     blitz_parallel(config)
@@ -100,4 +101,22 @@ blitz_conclude_build <- function(msg, config){
     intersect(y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
   config$counter$remaining <- config$counter$remaining - 1
+}
+
+warn_blitz <- function(config){
+  msg <- paste(
+    "Blitz mode THROWS AWAY REPRODUCIBILITY to gain speed.",
+    "drake's scientific claims at",
+    "  https://ropensci.github.io/drake/#reproducibility-with-confidence", # nolint
+    "  are NOT VALID IN BLITZ MODE!",
+    "Targets could be out of date even after make(),",
+    "  and you have no way of knowing.",
+    "USE AT YOUR OWN RISK!",
+    "Details: https://ropenscilabs.github.io/drake-manual/hpc.html#blitz-mode", # nolint
+    sep = "\n"
+  )
+  if (requireNamespace("crayon")){
+    msg <- crayon::red(msg)
+  }
+  drake_warning(msg, config = config)
 }
