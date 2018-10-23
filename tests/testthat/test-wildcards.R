@@ -86,6 +86,22 @@ test_with_dir("evaluate and expand", {
   expect_equal(6, length(unique(x5$command)))
 })
 
+test_with_dir("unconventional wildcards", {
+  df <- drake_plan(data = simulate(center = .MU., scale = `{SIGMA}`)) # nolint
+  x0 <- expand_plan(df, values = c("rep1", "rep2"))
+  x <- evaluate_plan(
+    x0, rules = list(.MU. = 1:2, "`{SIGMA}`" = c(0.1, 1)), expand = FALSE # nolint
+  )
+  y <- tibble::tibble(
+    target = c("data_rep1", "data_rep2"),
+    command = c(
+      "simulate(center = 1, scale = 0.1)",
+      "simulate(center = 2, scale = 1)"
+    )
+  )
+  expect_equal(x, y)
+})
+
 test_with_dir("analyses and summaries", {
   datasets <- drake_plan(small = simulate(5), large = simulate(50))
   methods <- drake_plan(
@@ -382,5 +398,4 @@ test_with_dir("make() with wildcard columns", {
   }
   con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
-  expect_identical(con$plan, plan)
-})
+  expect_identical(con$plan, 

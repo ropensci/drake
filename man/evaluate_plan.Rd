@@ -90,12 +90,12 @@ my_plan
 # Any valid symbol will do.
 plan <- drake_plan(
   t  = rt(1000, df = .df.),
-  normal = runif(1000, mean = MEAN, sd = ..sd)
+  normal = runif(1000, mean = `{MEAN}`, sd = ..sd)
 )
 evaluate_plan(
   plan,
   rules = list(
-    MEAN = c(0, 1),
+    "`{MEAN}`" = c(0, 1),
     ..sd = c(3, 4),
     .df. = 5:7
   )

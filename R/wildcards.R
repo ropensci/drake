@@ -103,12 +103,12 @@ dataset_wildcard <- function(){
 #' # Any valid symbol will do.
 #' plan <- drake_plan(
 #'   t  = rt(1000, df = .df.),
-#'   normal = runif(1000, mean = MEAN, sd = ..sd)
+#'   normal = runif(1000, mean = `{MEAN}`, sd = ..sd)
 #' )
 #' evaluate_plan(
 #'   plan,
 #'   rules = list(
-#'     MEAN = c(0, 1),
+#'     "`{MEAN}`" = c(0, 1),
 #'     ..sd = c(3, 4),
 #'     .df. = 5:7
 #'   )
@@ -271,7 +271,7 @@ check_wildcard_rules <- function(rules){
   wildcards <- names(rules)
   all_values <- unlist(rules)
   for (i in seq_along(wildcards)){
-    matches <- grep(wildcards[i], all_values, value = TRUE)
+    matches <- grep(wildcards[i], all_values, fixed = TRUE, value = TRUE)
     if (length(matches)){
       stop(
         "No wildcard name can match the name of any replacement value. ",
@@ -280,7 +280,7 @@ check_wildcard_rules <- function(rules){
         call. = FALSE
       )
     }
-    matches <- grep(wildcards[i], wildcards[-i], value = TRUE)
+    matches <- grep(wildcards[i], wildcards[-i], fixed = TRUE, value = TRUE)
     if (length(matches)){
       stop(
         "The name of a wildcard cannot be a substring ",
