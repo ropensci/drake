@@ -86,6 +86,20 @@ ans
 # For the complete workflow plan, row bind the pieces together.
 my_plan <- rbind(datasets, ans)
 my_plan
+# Wildcards for evaluate_plan() do not need the double-underscore suffix.
+# Any valid symbol will do.
+plan <- drake_plan(
+  t  = rt(1000, df = .df.),
+  normal = runif(1000, mean = MEAN, sd = ..sd)
+)
+evaluate_plan(
+  plan,
+  rules = list(
+    MEAN = c(0, 1),
+    ..sd = c(3, 4),
+    .df. = 5:7
+  )
+)
 # Workflow plans can have multiple wildcards.
 # Each combination of wildcard values will be used
 # Except when expand is FALSE.
