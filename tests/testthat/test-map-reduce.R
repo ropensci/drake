@@ -248,6 +248,20 @@ test_with_dir("gather_by()", {
     n___from = as.character(NA)
   )
   expect_equal(x, bind_plans(plan, y))
+  plan$n___from <- c("x", "x", "y", "y", NA)
+  x <- gather_by(
+    plan,
+    n___from,
+    prefix = "xyz",
+    gather = "c",
+    append = TRUE,
+    filter = n___from == "x"
+  )
+  y <- tibble::tibble(
+    target = c(plan$target, "xyz_x"),
+    command = c(plan$command, "c(x_1 = x_1, x_2 = x_2)")
+  )
+  expect_equal(x[, c("target", "command")], y)
 })
 
 test_with_dir("reduce_by()", {

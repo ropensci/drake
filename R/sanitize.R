@@ -15,7 +15,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   if (!allow_duplicated_targets) {
     plan <- handle_duplicated_targets(plan[, cols])
   }
-  plan
+  arrange_plan_cols(plan)
 }
 
 sanitize_targets <- function(plan, targets){
@@ -55,4 +55,10 @@ sanitize_cmd_type <- function(x){
   } else {
     x
   }
+}
+
+arrange_plan_cols <- function(plan){
+  primary <- c("target", "command")
+  others <- setdiff(colnames(plan), primary)
+  plan[, c(primary, others)]
 }

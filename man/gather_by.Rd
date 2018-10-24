@@ -5,7 +5,7 @@
 \title{Gather multiple groupings of targets}
 \usage{
 gather_by(plan, ..., prefix = "target", gather = "list",
-  append = TRUE)
+  append = TRUE, filter = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -26,6 +26,14 @@ one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
+
+\item{filter}{an expression like you would pass to \code{dplyr::filter()}.
+The rows for which \code{filter} evaluates to \code{TRUE} will be gathered,
+and the rest will be excluded from gathering.
+Why not just call \code{dplyr::filter()} before \code{gather_by()}?
+Because \code{gather_by(append = TRUE, filter = my_column == "my_value")}
+gathers on some targets while including all the original targets
+in the output. See the examples for a demonstration.}
 }
 \value{
 a workflow plan data frame
@@ -47,6 +55,18 @@ gather_by(plan, mu___from, append = TRUE)
 gather_by(plan, mu___from, append = FALSE)
 gather_by(plan, mu__, mu___from, prefix = "x")
 gather_by(plan) # Gather everything and append a row.
+# You can filter out the informal_look_* targets beforehand
+# if you only want the bayes_model_* ones to be gathered.
+# The advantage here is that if you also need `append = TRUE`,
+# only the bayes_model_* targets will be gathered, but
+# the informal_look_* targets will still be included
+# in the output.
+gather_by(
+  plan,
+  mu___from,
+  append = TRUE,
+  filter = mu___from == "bayes_model"
+)
 }
 \seealso{
 drake_plan, map_plan, reduce_by, reduce_plan,

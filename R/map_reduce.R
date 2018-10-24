@@ -163,6 +163,13 @@ gather_plan <- function(
 #' @param prefix character, prefix for naming the new targets.
 #'   Suffixes are generated from the values of the columns
 #'   specified in `...`.
+#' @param filter an expression like you would pass to `dplyr::filter()`.
+#'   The rows for which `filter` evaluates to `TRUE` will be gathered,
+#'   and the rest will be excluded from gathering.
+#'   Why not just call `dplyr::filter()` before `gather_by()`?
+#'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
+#'   gathers on some targets while including all the original targets
+#'   in the output. See the examples for a demonstration.
 #' @examples
 #' plan <- drake_plan(
 #'   data = get_data(),
@@ -175,17 +182,37 @@ gather_plan <- function(
 #' gather_by(plan, mu___from, append = FALSE)
 #' gather_by(plan, mu__, mu___from, prefix = "x")
 #' gather_by(plan) # Gather everything and append a row.
+#' # You can filter out the informal_look_* targets beforehand
+#' # if you only want the bayes_model_* ones to be gathered.
+#' # The advantage here is that if you also need `append = TRUE`,
+#' # only the bayes_model_* targets will be gathered, but
+#' # the informal_look_* targets will still be included
+#' # in the output.
+#' gather_by(
+#'   plan,
+#'   mu___from,
+#'   append = TRUE,
+#'   filter = mu___from == "bayes_model"
+#' )
 gather_by <- function(
   plan,
   ...,
   prefix = "target",
   gather = "list",
-  append = TRUE
+  append = TRUE,
+  filter = TRUE
 ){
   . <- NULL
-  gathered <- dplyr::group_by(plan, ...) %>%
+  filter <- rlang::enquo(filter)
+  gathered <- dplyr::filter(plan, !!filter) %>%
+    dplyr::group_by(...) %>%
     dplyr::do(
-      gather_plan(plan = ., target = prefix, gather = gather, append = FALSE)
+      gather_plan(
+        plan = .,
+        target = prefix,
+        gather = gather,
+        append = FALSE
+      )
     )
   cols <- dplyr::select(gathered, ...)
   suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
@@ -199,10 +226,11 @@ gather_by <- function(
     gathered <- gathered[keep, ]
   }
   if (append){
-    bind_plans(plan, gathered)
+    out <- bind_plans(plan, gathered)
   } else {
-    gathered
+    out <- gathered
   }
+  arrange_plan_cols(out)
 }
 
 #' @title Write commands to reduce several targets down to one.
