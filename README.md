@@ -469,10 +469,10 @@ Much of the R community uses [knitr](https://yihui.name/knitr/) for reproducible
 
 `drake` was designed to manage the entire workflow with [knitr](https://yihui.name/knitr/) reports as targets. The strategy is analogous for [knitr](https://yihui.name/knitr/) reports within [remake](https://github.com/richfitz/remake) projects.
 
-Factual's drake
+Factual's Drake
 ---------------
 
-[Factual's drake](https://github.com/Factual/drake) is similar in concept, but the development effort is completely unrelated to the [drake R package](https://github.com/ropensci/drake).
+[Factual's Drake](https://github.com/Factual/drake) is similar in concept, but the development effort is completely unrelated to the [drake R package](https://github.com/ropensci/drake).
 
 Other pipeline toolkits
 -----------------------
