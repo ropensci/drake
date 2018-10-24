@@ -201,12 +201,16 @@ gather_by <- function(
   prefix = "target",
   gather = "list",
   append = TRUE,
-  filter = TRUE
+  filter = NULL
 ){
   . <- NULL
-  filter <- rlang::enquo(filter)
-  gathered <- dplyr::filter(plan, !!filter) %>%
-    dplyr::group_by(...) %>%
+  if (is.null(substitute(filter))){
+    gathered <- plan
+  } else {
+    filter <- rlang::enquo(filter)
+    gathered <- dplyr::filter(plan, !!filter)
+  }
+  gathered <- dplyr::group_by(gathered, ...) %>%
     dplyr::do(
       gather_plan(
         plan = .,
@@ -378,12 +382,16 @@ reduce_by <- function(
   end = "",
   pairwise = TRUE,
   append = TRUE,
-  filter = TRUE
+  filter = NULL
 ){
   . <- NULL
-  filter <- rlang::enquo(filter)
-  reduced <- dplyr::filter(plan, !!filter) %>%
-    dplyr::group_by(...) %>%
+  if (is.null(substitute(filter))){
+    reduced <- plan
+  } else {
+    filter <- rlang::enquo(filter)
+    reduced <- dplyr::filter(plan, !!filter)
+  }
+  reduced <- dplyr::group_by(reduced, ...) %>%
     dplyr::do(
       reduce_plan(
         plan = .,
