@@ -3,7 +3,9 @@
 language: R
 sudo: false
 cache: packages
-use_bioc: true
+
+bioc_packages:
+  - graph
 
 # Added manually by Will Landau
 branches:
@@ -19,7 +21,6 @@ addons:
       - libzmq3-dev
 
 r_packages:
-  - BiocManager
   - clustermq
   - downloader
   - forcats
@@ -33,7 +34,6 @@ r_github_packages:
 
 before_script:
   - chmod +x ./pkgdown.sh
-  - Rscript -e 'BiocManager::install("CodeDepends", update = FALSE, ask = FALSE)'
 
 # From Jim Hester, for avoiding timeouts
 script:
