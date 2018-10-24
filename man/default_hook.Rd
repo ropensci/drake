@@ -15,6 +15,4 @@ Evaluated code.
 \description{
 Deprecated on 2018-10-24.
 }
-\examples{
-default_hook(NULL)
-}
+\keyword{internal}

@@ -339,10 +339,9 @@ dataframes_graph <- function(
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
+#' @keywords internal
 #' @return Evaluated code.
 #' @param code Placeholder for the code to build a target/import.
-#' @examples
-#' default_hook(NULL)
 default_hook <- function(code){
   .Deprecated(
     "default_hook",
@@ -511,10 +510,9 @@ drake_batchtools_tmpl_file <- function(
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
+#' @keywords internal
 #' @return Evaluated code.
 #' @param code Placeholder for the code to build a target/import.
-#' @examples
-#' empty_hook(NULL)
 empty_hook <- function(code){
   .Deprecated(
     "empty_hook",
@@ -822,10 +820,9 @@ max_useful_jobs <- function(
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
+#' @keywords internal
 #' @return Evaluated code.
 #' @param code Placeholder for the code to build a target/import.
-#' @examples
-#' empty_hook(NULL)
 message_sink_hook <- function(code){
   .Deprecated(
     "message_sink_hook",
@@ -871,10 +868,9 @@ migrate_drake_project <- function(
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
+#' @keywords internal
 #' @return Evaluated code.
 #' @param code Placeholder for the code to build a target/import.
-#' @examples
-#' empty_hook(NULL)
 output_sink_hook <- function(code){
   .Deprecated(
     "output_sink_hook",
@@ -1485,10 +1481,9 @@ parallel_stages <- function(
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
+#' @keywords internal
 #' @return Evaluated code.
 #' @param code Placeholder for the code to build a target/import.
-#' @examples
-#' empty_hook(NULL)
 silencer_hook <- function(code){
   .Deprecated(
     "silencer_hook",
