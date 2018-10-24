@@ -3,6 +3,7 @@
 language: R
 sudo: false
 cache: packages
+use_bioc: true
 
 # Added manually by Will Landau
 branches:
