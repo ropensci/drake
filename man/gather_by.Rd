@@ -50,6 +50,7 @@ plan <- drake_plan(
   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+plan
 gather_by(plan, mu___from, gather = "dplyr::bind_rows")
 gather_by(plan, mu___from, append = TRUE)
 gather_by(plan, mu___from, append = FALSE)

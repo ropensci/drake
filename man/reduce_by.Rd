@@ -59,6 +59,7 @@ plan <- drake_plan(
   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+plan
 reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
 reduce_by(plan, mu__)
 reduce_by(plan, mu__, append = TRUE)

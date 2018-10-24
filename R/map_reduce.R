@@ -177,6 +177,7 @@ gather_plan <- function(
 #'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+#' plan
 #' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
 #' gather_by(plan, mu___from, append = TRUE)
 #' gather_by(plan, mu___from, append = FALSE)
@@ -263,6 +264,7 @@ gather_by <- function(
 #'   wildcard = "VALUE",
 #'   values = 1:8
 #' )
+#' x_plan
 #' # Create a new target from the sum of the others.
 #' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = FALSE)
 #' # Optionally include the original rows with `append = TRUE`.
@@ -347,6 +349,7 @@ reduce_plan <- function(
 #'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+#' plan
 #' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
 #' reduce_by(plan, mu__)
 #' reduce_by(plan, mu__, append = TRUE)

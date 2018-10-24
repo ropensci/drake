@@ -45,6 +45,7 @@ x_plan <- evaluate_plan(
   wildcard = "VALUE",
   values = 1:8
 )
+x_plan
 # Create a new target from the sum of the others.
 reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = FALSE)
 # Optionally include the original rows with `append = TRUE`.
