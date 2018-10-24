@@ -204,7 +204,7 @@ gather_by <- function(
   filter = TRUE
 ){
   . <- NULL
-  filter <- rlang::enexpr(filter)
+  filter <- rlang::enquo(filter)
   gathered <- dplyr::filter(plan, !!filter) %>%
     dplyr::group_by(...) %>%
     dplyr::do(
@@ -381,7 +381,7 @@ reduce_by <- function(
   filter = TRUE
 ){
   . <- NULL
-  filter <- rlang::enexpr(filter)
+  filter <- rlang::enquo(filter)
   reduced <- dplyr::filter(plan, !!filter) %>%
     dplyr::group_by(...) %>%
     dplyr::do(

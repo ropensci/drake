@@ -69,7 +69,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 
 \item{hook}{function with at least one argument.
 The hook is as a wrapper around the code that drake uses
-to build a target (see the body of \code{drake:::build_in_hook()}).
+to build a target.
 Hooks can control the side effects of build behavior.
 For example, to redirect output and error messages to text files,
 you might use the built-in \code{\link[=silencer_hook]{silencer_hook()}}, as in
