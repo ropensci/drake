@@ -62,7 +62,7 @@ run_mclapply_staged <- function(config){
     parallel::mclapply(
       X = stage$targets,
       FUN = function(target){
-        build_and_store(
+        build_store(
           target = target,
           meta = stage$meta_list[[target]],
           config = config
@@ -137,7 +137,7 @@ run_parLapply_staged <- function(config) { # nolint
       cl = config$cluster,
       X = stage$targets,
       fun = function(target){
-        build_and_store(
+        build_store(
           target = target,
           meta = stage$meta_list[[target]],
           config = config

@@ -91,7 +91,7 @@ mc_worker <- function(worker, config){
     }
     target <- msg$title
     out <- try(
-      build_check_store(
+      check_build_store(
         target = target,
         config = config,
         downstream = config$cache$list(namespace = "mc_protect"),

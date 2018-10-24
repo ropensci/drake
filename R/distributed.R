@@ -48,10 +48,10 @@ build_distributed <- function(target, cache_path, check = TRUE){
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   do_prework(config = config, verbose_packages = FALSE)
   if (check){
-    build_check_store(target = target, config = config)
+    check_build_store(target = target, config = config)
   } else {
     prune_envir(targets = target, config = config)
-    build_and_store(target = target, config = config)
+    build_store(target = target, config = config)
   }
   invisible()
 }

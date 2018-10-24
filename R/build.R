@@ -59,10 +59,10 @@ drake_build <- function(
     jobs = jobs,
     replace = replace
   )
-  build_and_store(target = target, config = config)
+  build_store(target = target, config = config)
 }
 
-build_check_store <- function(
+check_build_store <- function(
   target, config, downstream = NULL, announce = TRUE, flag_attempt = FALSE
 ){
   meta <- drake_meta(target = target, config = config)
@@ -82,7 +82,7 @@ build_check_store <- function(
       downstream = downstream
     )
   })
-  value <- build_and_store(target = target, meta = meta, config = config)
+  value <- build_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   if (flag_attempt && target %in% config$plan$target){
     set_attempt_flag(key = target, config = config)
@@ -90,7 +90,7 @@ build_check_store <- function(
   invisible()
 }
 
-build_and_store <- function(target, config, meta = NULL, announce = TRUE){
+build_store <- function(target, config, meta = NULL, announce = TRUE){
   # The environment should have been pruned by now.
   # For staged parallelism, this was already done in bulk
   # for the whole stage.

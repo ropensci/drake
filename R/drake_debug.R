@@ -59,7 +59,7 @@ drake_debug <- function(
   )
   index <- which(config$plan$target == target)
   config$plan$command[[index]] <- debug_command(config$plan$command[[index]])
-  build_and_store(target = target, config = config)
+  build_store(target = target, config = config)
   # nocov end
 }
 
