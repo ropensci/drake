@@ -19,7 +19,8 @@ Authors@R: c(
     family = "Landau",
     given = c("William", "Michael"),
     email = "will.landau@gmail.com",
-    role = c("aut", "cre")
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0003-1878-3253")
   ),
   person(
     family = "Axthelm",
