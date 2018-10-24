@@ -6,6 +6,7 @@ run_hasty <- function(config){
   } else{
     hasty_loop(config)
   }
+  invisible()
 }
 
 hasty_loop <- function(config){
@@ -36,6 +37,7 @@ hasty_parallel <- function(config){
     config$counter$remaining <- config$queue$size()
     hasty_master(config)
   }
+  invisible()
 }
 
 hasty_master <- function(config){

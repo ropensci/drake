@@ -100,6 +100,9 @@ console_up_to_date <- function(config){
   if (!config$verbose){
     return(invisible())
   }
+  if ("hasty" %in% config$parallelism){
+    return(invisible())
+  }
   any_attempted <- get_attempt_flag(config = config)
   custom_triggers <- "trigger" %in% colnames(plan) ||
     !identical(config$trigger, trigger())

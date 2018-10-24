@@ -13,7 +13,7 @@ test_with_dir("hasty parallelism", {
     regexp = "USE AT YOUR OWN RISK"
   )
   expect_true(file.exists("coef.csv"))
-  expect_equal(length(cached()), 0)
+  expect_equal(length(intersect(e$my_plan$target, cached())), 0)
   skip_on_os("windows")
   skip_if_not_installed("clustermq")
   if ("package:clustermq" %in% search()){

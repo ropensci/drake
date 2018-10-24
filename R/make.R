@@ -226,19 +226,15 @@ global_imports <- function(config){
 #' @inheritParams make_with_config
 make_session <- function(config){
   do_prework(config = config, verbose_packages = config$verbose)
-  if (identical(unname(config$parallelism["targets"]), "hasty")){
-    run_hasty(config = config)
-  } else {
-    check_drake_config(config = config)
-    store_drake_config(config = config)
-    initialize_session(config = config)
-    make_with_schedules(config = config)
+  check_drake_config(config = config)
+  store_drake_config(config = config)
+  initialize_session(config = config)
+  make_with_schedules(config = config)
     drake_cache_log_file(
-      file = config$cache_log_file,
-      cache = config$cache,
-      jobs = config$jobs
-    )
-  }
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs
+  )
   remove(
     list = intersect(config$plan$target, ls(envir = config$envir)),
     envir = config$envir
@@ -345,6 +341,10 @@ make_imports <- function(config = drake::read_drake_config()){
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()){
+  if ("hasty" %in% config$parallelism){
+    run_hasty(config)
+    return(invisible(config))
+  }
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
   if (!length(outdated)){
     console_up_to_date(config = config)
