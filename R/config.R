@@ -57,22 +57,9 @@
 #'     \item{4:}{+ imports and writes to the cache.}
 #'   }
 #'
-#' @param hook function with at least one argument.
-#'   The hook is as a wrapper around the code that drake uses
-#'   to build a target.
-#'   Hooks can control the side effects of build behavior.
-#'   For example, to redirect output and error messages to text files,
-#'   you might use the built-in [silencer_hook()], as in
-#'   `make(my_plan, hook = silencer_hook)`.
-#'   The silencer hook is useful for distributed parallelism,
-#'   where the calling R process does not have control over all the
-#'   error and output streams. See also [output_sink_hook()]
-#'   and [message_sink_hook()].
-#'   For your own custom hooks, treat the first argument as the code
-#'   that builds a target, and make sure this argument is actually evaluated.
-#'   Otherwise, the code will not run and none of your targets will build.
-#'   For example, `function(code){force(code)}` is a good hook
-#'   and `function(code){message("Avoiding the code")}` is a bad hook.
+#' @param hook Only applies if `parallelism` is `"hasty"`.
+#'   The hook is as a wrapper around the code that `drake`
+#'   in "hasty" mode uses to build a target.
 #'
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
@@ -417,11 +404,11 @@
 #' })
 #' }
 drake_config <- function(
-  plan = read_drake_plan(),
+  plan = drake::read_drake_plan(),
   targets = NULL,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
-  hook = default_hook,
+  hook = NULL,
   cache = drake::get_cache(
     verbose = verbose, force = force, console_log_file = console_log_file),
   fetch_cache = NULL,

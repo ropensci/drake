@@ -4,12 +4,12 @@
 \alias{make}
 \title{Run your project (build the outdated targets).}
 \usage{
-make(plan = read_drake_plan(), targets = NULL,
+make(plan = drake::read_drake_plan(), targets = NULL,
   envir = parent.frame(), verbose = drake::default_verbose(),
-  hook = default_hook, cache = drake::get_cache(verbose = verbose,
-  force = force, console_log_file = console_log_file),
-  fetch_cache = NULL, parallelism = drake::default_parallelism(),
-  jobs = 1, packages = rev(.packages()), prework = character(0),
+  hook = NULL, cache = drake::get_cache(verbose = verbose, force =
+  force, console_log_file = console_log_file), fetch_cache = NULL,
+  parallelism = drake::default_parallelism(), jobs = 1,
+  packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(),
@@ -66,22 +66,9 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{+ imports and writes to the cache.}
 }}
 
-\item{hook}{function with at least one argument.
-The hook is as a wrapper around the code that drake uses
-to build a target.
-Hooks can control the side effects of build behavior.
-For example, to redirect output and error messages to text files,
-you might use the built-in \code{\link[=silencer_hook]{silencer_hook()}}, as in
-\code{make(my_plan, hook = silencer_hook)}.
-The silencer hook is useful for distributed parallelism,
-where the calling R process does not have control over all the
-error and output streams. See also \code{\link[=output_sink_hook]{output_sink_hook()}}
-and \code{\link[=message_sink_hook]{message_sink_hook()}}.
-For your own custom hooks, treat the first argument as the code
-that builds a target, and make sure this argument is actually evaluated.
-Otherwise, the code will not run and none of your targets will build.
-For example, \code{function(code){force(code)}} is a good hook
-and \code{function(code){message("Avoiding the code")}} is a bad hook.}
+\item{hook}{Only applies if \code{parallelism} is \code{"hasty"}.
+The hook is as a wrapper around the code that \code{drake}
+in "hasty" mode uses to build a target.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}

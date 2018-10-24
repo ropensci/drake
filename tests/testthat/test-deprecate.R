@@ -289,3 +289,11 @@ test_with_dir("mtcars example", {
     regexp = "report_file"
   )
 })
+
+test_with_dir("deprecated hooks", {
+  expect_warning(default_hook(NULL), regexp = "deprecated")
+  expect_warning(empty_hook(NULL), regexp = "deprecated")
+  expect_warning(message_sink_hook(NULL), regexp = "deprecated")
+  expect_warning(output_sink_hook(NULL), regexp = "deprecated")
+  expect_warning(silencer_hook(NULL), regexp = "deprecated")
+})

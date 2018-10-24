@@ -70,11 +70,11 @@
 #' })
 #' }
 make <- function(
-  plan = read_drake_plan(),
+  plan = drake::read_drake_plan(),
   targets = NULL,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
-  hook = default_hook,
+  hook = NULL,
   cache = drake::get_cache(
     verbose = verbose, force = force, console_log_file = console_log_file),
   fetch_cache = NULL,

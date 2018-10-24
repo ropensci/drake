@@ -336,6 +336,22 @@ dataframes_graph <- function(
   )
 }
 
+#' @title Deprecated.
+#' @description Deprecated on 2018-10-24.
+#' @export
+#' @return Evaluated code.
+#' @param code Placeholder for the code to build a target/import.
+#' @examples
+#' default_hook(NULL)
+default_hook <- function(code){
+  .Deprecated(
+    "default_hook",
+    package = "drake",
+    msg = "default_hook() is deprecated."
+  )
+  force(code)
+}
+
 #' @title Deprecated function `default_system2_args`
 #' @description Use [default_Makefile_args()] instead.
 #' @details Deprecated on 2017-10.
@@ -490,6 +506,22 @@ drake_batchtools_tmpl_file <- function(
     )
   )
   drake_hpc_template_file(file = example, to = to, overwrite = overwrite)
+}
+
+#' @title Deprecated.
+#' @description Deprecated on 2018-10-24.
+#' @export
+#' @return Evaluated code.
+#' @param code Placeholder for the code to build a target/import.
+#' @examples
+#' empty_hook(NULL)
+empty_hook <- function(code){
+  .Deprecated(
+    "empty_hook",
+    package = "drake",
+    msg = "empty_hook() is deprecated."
+  )
+  invisible()
 }
 
 #' @title Deprecated function `evaluate`
@@ -787,6 +819,28 @@ max_useful_jobs <- function(
   # nocov end
 }
 
+#' @title Deprecated.
+#' @description Deprecated on 2018-10-24.
+#' @export
+#' @return Evaluated code.
+#' @param code Placeholder for the code to build a target/import.
+#' @examples
+#' empty_hook(NULL)
+message_sink_hook <- function(code){
+  .Deprecated(
+    "message_sink_hook",
+    package = "drake",
+    msg = "message_sink_hook() is deprecated."
+  )
+  message <- file(paste0("message", Sys.getpid(), ".txt"), "w")
+  on.exit({
+    suppressWarnings(sink(type = "message"))
+    close(message)
+  })
+  sink(message, type = "message")
+  code
+}
+
 #' @title Deprecated: reconfigure an old project (built with drake <= 4.4.0)
 #'   to be compatible with later versions of drake.
 #' @export
@@ -813,7 +867,26 @@ migrate_drake_project <- function(
     )
   )
 }
-  
+
+#' @title Deprecated.
+#' @description Deprecated on 2018-10-24.
+#' @export
+#' @return Evaluated code.
+#' @param code Placeholder for the code to build a target/import.
+#' @examples
+#' empty_hook(NULL)
+output_sink_hook <- function(code){
+  .Deprecated(
+    "output_sink_hook",
+    package = "drake",
+    msg = "output_sink_hook() is deprecated."
+  )
+  output <- paste0("output", Sys.getpid(), ".txt")
+  on.exit(suppressWarnings(sink(type = "output")))
+  sink(output, type = "output")
+  code
+}
+
 #' @title Deprecated function `plan`
 #' @description Use [drake_plan()] instead.
 #' @details Deprecated on 2017-10.
@@ -1405,6 +1478,26 @@ parallel_stages <- function(
       "Staged parallelism is removed from drake, ",
       "so the parallel_stages() function is moot. ",
       "drake uses a much better parallel algorithm now."
+    )
+  )
+}
+
+#' @title Deprecated.
+#' @description Deprecated on 2018-10-24.
+#' @export
+#' @return Evaluated code.
+#' @param code Placeholder for the code to build a target/import.
+#' @examples
+#' empty_hook(NULL)
+silencer_hook <- function(code){
+  .Deprecated(
+    "silencer_hook",
+    package = "drake",
+    msg = "silencer_hook() is deprecated."
+  )
+  output_sink_hook(
+    message_sink_hook(
+      code
     )
   )
 }
