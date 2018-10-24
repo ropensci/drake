@@ -1,5 +1,7 @@
 run_hasty <- function(config){
-  warn_hasty(config)
+  if (is.null(config$hook)){
+    warn_hasty(config)
+  }
   config$graph <- config$schedule <- targets_graph(config = config)
   if (config$jobs_targets > 1L){
     hasty_parallel(config)
@@ -106,9 +108,6 @@ hasty_conclude_build <- function(msg, config){
 }
 
 warn_hasty <- function(config){
-  if (!is.null(config$hook)){
-    return()
-  }
   msg <- paste(
     "Hasty mode THROWS AWAY REPRODUCIBILITY to gain speed.",
     "drake's scientific claims at",
