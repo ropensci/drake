@@ -726,7 +726,7 @@ load_basic_example <- function(
 }
 
 #' @title Deprecated function
-#' @description Do not use this function. `Drake`'s parallel algorithm
+#' @description Do not use this function. `drake`'s parallel algorithm
 #'   has changed since version 5.1.2, so `max_useful_jobs()`
 #'   will give you the wrong idea of how many jobs to use. Instead,
 #'   use the [predict_runtime()] function with a sensible value
@@ -759,7 +759,7 @@ max_useful_jobs <- function(
     package = "drake",
     msg = c(
       "Do not use max_useful_jobs(). ",
-      "Drake's parallel scheduling algorithm has changed, ",
+      "drake's parallel scheduling algorithm has changed, ",
       "so max_useful_jobs() will give you the wrong idea about ",
       "how many jobs to assign to `make()`. For a better estimate, ",
       "play around with predict_runtime() with sensible values, ",
@@ -1381,7 +1381,7 @@ session <- function(
 #' @title Defunct function
 #' @description Staged parallelism is removed from drake,
 #' so this function is moot.
-#' Drake uses a much better parallel algorithm now.
+#' drake uses a much better parallel algorithm now.
 #' @details Made defunct on May 4, 2018.
 #' @export
 #' @keywords internal
@@ -1404,7 +1404,7 @@ parallel_stages <- function(
     msg = c(
       "Staged parallelism is removed from drake, ",
       "so the parallel_stages() function is moot. ",
-      "Drake uses a much better parallel algorithm now."
+      "drake uses a much better parallel algorithm now."
     )
   )
 }

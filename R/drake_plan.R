@@ -322,7 +322,7 @@ drake_plan_override <- function(target, field, config){
 #'   )
 #' )
 #' plan
-#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # drake knows "\"mtcars.csv\"" is the first target
 #' # and a dependency of `contents`. See for yourself:
 #' make(plan)
 #' file.exists("mtcars.csv")
@@ -362,7 +362,7 @@ file_in <- function(...){
 #'   )
 #' )
 #' plan
-#' # Drake knows "\"mtcars.csv\"" is the first target
+#' # drake knows "\"mtcars.csv\"" is the first target
 #' # and a dependency of `contents`. See for yourself:
 #' make(plan)
 #' file.exists("mtcars.csv")

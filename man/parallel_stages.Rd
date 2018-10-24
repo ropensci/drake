@@ -23,7 +23,7 @@ targets are divided into parallelizable stages
 \description{
 Staged parallelism is removed from drake,
 so this function is moot.
-Drake uses a much better parallel algorithm now.
+drake uses a much better parallel algorithm now.
 }
 \details{
 Made defunct on May 4, 2018.

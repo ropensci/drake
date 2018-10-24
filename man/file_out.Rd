@@ -34,7 +34,7 @@ suppressWarnings(
   )
 )
 plan
-# Drake knows "\\"mtcars.csv\\"" is the first target
+# drake knows "\\"mtcars.csv\\"" is the first target
 # and a dependency of `contents`. See for yourself:
 make(plan)
 file.exists("mtcars.csv")

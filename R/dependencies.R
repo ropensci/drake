@@ -24,7 +24,7 @@
 #'   enclosing them in literal double quotes.
 #'   (For example, `file_store("report.Rmd")` is just `"\"report.Rmd\""`.)
 #'
-#'   `Drake` takes special precautions so that a target/import
+#'   `drake` takes special precautions so that a target/import
 #'   does not depend on itself. For example, `deps_code(f)`` might return
 #'   `"f"` if `f()` is a recursive function, but [make()] just ignores
 #'   this conflict and runs as expected. In other words, [make()]

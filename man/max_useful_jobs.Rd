@@ -23,7 +23,7 @@ A numeric scalar, the maximum number of useful jobs for
 \code{\link{make}(..., jobs = ...)}.
 }
 \description{
-Do not use this function. \code{Drake}'s parallel algorithm
+Do not use this function. \code{drake}'s parallel algorithm
 has changed since version 5.1.2, so \code{max_useful_jobs()}
 will give you the wrong idea of how many jobs to use. Instead,
 use the \code{\link[=predict_runtime]{predict_runtime()}} function with a sensible value

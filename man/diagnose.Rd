@@ -76,7 +76,7 @@ try(make(bad_plan), silent = FALSE)
 failed() # List the failed targets from the last make() (my_target).
 # List targets that failed at one point or another
 # over the course of the project (my_target).
-# Drake keeps all the error logs.
+# drake keeps all the error logs.
 diagnose()
 # Get the error log, an object of class "error".
 error <- diagnose(my_target)$error # See also warnings and messages.

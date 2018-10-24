@@ -95,7 +95,7 @@ short_hash <- function(
 #' the hash algorithm already chosen for the project
 #' in a previous `make()`. \cr \cr
 #'
-#' Drake uses both a short hash algorithm
+#' drake uses both a short hash algorithm
 #' and a long hash algorithm. The shorter hash has fewer characters,
 #' and it is used to generate the names of internal cache files
 #' and auxiliary files. The decision for short names is important
@@ -163,7 +163,7 @@ default_short_hash_algo <- function(cache = NULL) {
 #' the hash algorithm already chosen for the project
 #' in a previous `make()`. \cr \cr
 #'
-#' Drake uses both a short hash algorithm
+#' drake uses both a short hash algorithm
 #' and a long hash algorithm. The shorter hash has fewer characters,
 #' and it is used to generate the names of internal cache files
 #' and auxiliary files. The decision for short names is important

@@ -542,7 +542,7 @@ read_drake_plan <- function(
 #' digest::digest(.Random.seed) # Fingerprint of the current R session's seed.
 #' make(my_plan, cache = cache) # Run the project, build the targets.
 #' digest::digest(.Random.seed) # Your session's seed did not change.
-#' # Drake uses a hard-coded seed if you do not supply one.
+#' # drake uses a hard-coded seed if you do not supply one.
 #' read_drake_seed(cache = cache)
 #' readd(target2, cache = cache) # Randomly-generated target data.
 #' clean(target2, cache = cache) # Oops, I removed the data!

@@ -23,7 +23,7 @@ the command must look something like
 \code{knit("your_report.Rmd", quiet = TRUE)}.
 }
 \details{
-Drake looks for dependencies in the document by
+drake looks for dependencies in the document by
 analyzing evaluated code chunks for other targets/imports
 mentioned in \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}}.
 }

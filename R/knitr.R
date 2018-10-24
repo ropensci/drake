@@ -10,7 +10,7 @@
 #' `knit("your_report.Rmd")` or
 #' `knit("your_report.Rmd", quiet = TRUE)`.
 #' @return A character vector of the names of dependencies.
-#' @details Drake looks for dependencies in the document by
+#' @details drake looks for dependencies in the document by
 #' analyzing evaluated code chunks for other targets/imports
 #' mentioned in [loadd()] and [readd()].
 #' @param target file path to the file or name of the file target,
@@ -71,7 +71,7 @@ safe_get_tangled_frags <- function(target){
   error = function(e){
     warning(
       "Could not parse file '", file,
-      "'. Drake dependencies could not be extracted from code chunks: ",
+      "'. drake dependencies could not be extracted from code chunks: ",
       conditionMessage(e)
     )
     character(0)

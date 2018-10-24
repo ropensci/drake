@@ -19,7 +19,7 @@ drake_tip <- function() {
     "Check out the reference website (https://ropensci.github.io/drake/)
      and user manual (https://ropenscilabs.github.io/drake-manual/).",
 
-    "Drake quickstart:
+    "drake quickstart:
      load_mtcars_example();
      make(my_plan);
      readd(small)"
