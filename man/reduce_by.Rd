@@ -5,7 +5,7 @@
 \title{Reduce multiple groupings of targets}
 \usage{
 reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
-  end = "", pairwise = TRUE, append = TRUE)
+  end = "", pairwise = TRUE, append = TRUE, filter = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -35,6 +35,14 @@ or to do the reduction all in one command.}
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
+
+\item{filter}{an expression like you would pass to \code{dplyr::filter()}.
+The rows for which \code{filter} evaluates to \code{TRUE} will be gathered,
+and the rest will be excluded from gathering.
+Why not just call \code{dplyr::filter()} before \code{gather_by()}?
+Because \code{gather_by(append = TRUE, filter = my_column == "my_value")}
+gathers on some targets while including all the original targets
+in the output. See the examples for a demonstration.}
 }
 \value{
 a workflow plan data frame
@@ -58,6 +66,18 @@ reduce_by(plan, mu__, append = FALSE)
 reduce_by(plan) # Reduce all the targets.
 reduce_by(plan, append = FALSE)
 reduce_by(plan, pairwise = FALSE)
+# You can filter out the informal_look_* targets beforehand
+# if you only want the bayes_model_* ones to be reduced.
+# The advantage here is that if you also need `append = TRUE`,
+# only the bayes_model_* targets will be reduced, but
+# the informal_look_* targets will still be included
+# in the output.
+reduce_by(
+  plan,
+  mu___from,
+  append = TRUE,
+  filter = mu___from == "bayes_model"
+)
 }
 \seealso{
 drake_plan, map_plan, gather_by, reduce_plan,

@@ -344,4 +344,18 @@ test_with_dir("reduce_by()", {
     n___from = c(NA, "y")
   )
   expect_equal(x, bind_plans(plan, y))
+  plan$from <- c(rep("x", 4), rep("y", 2), NA)
+  x <- reduce_by(
+    plan,
+    from,
+    prefix = "xyz",
+    append = TRUE,
+    pairwise = FALSE,
+    filter = from == "y"
+  )
+  y <- tibble::tibble(
+    target = c(plan$target, "xyz_y"),
+    command = c(plan$command, "y_a + y_b")
+  )
+  expect_equal(x[, c("target", "command")], y)
 })

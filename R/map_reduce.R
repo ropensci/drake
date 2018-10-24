@@ -333,6 +333,13 @@ reduce_plan <- function(
 #' @param prefix character, prefix for naming the new targets.
 #'   Suffixes are generated from the values of the columns
 #'   specified in `...`.
+#' @param filter an expression like you would pass to `dplyr::filter()`.
+#'   The rows for which `filter` evaluates to `TRUE` will be gathered,
+#'   and the rest will be excluded from gathering.
+#'   Why not just call `dplyr::filter()` before `gather_by()`?
+#'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
+#'   gathers on some targets while including all the original targets
+#'   in the output. See the examples for a demonstration.
 #' @examples
 #' plan <- drake_plan(
 #'   data = get_data(),
@@ -347,6 +354,18 @@ reduce_plan <- function(
 #' reduce_by(plan) # Reduce all the targets.
 #' reduce_by(plan, append = FALSE)
 #' reduce_by(plan, pairwise = FALSE)
+#' # You can filter out the informal_look_* targets beforehand
+#' # if you only want the bayes_model_* ones to be reduced.
+#' # The advantage here is that if you also need `append = TRUE`,
+#' # only the bayes_model_* targets will be reduced, but
+#' # the informal_look_* targets will still be included
+#' # in the output.
+#' reduce_by(
+#'   plan,
+#'   mu___from,
+#'   append = TRUE,
+#'   filter = mu___from == "bayes_model"
+#' )
 reduce_by <- function(
   plan,
   ...,
@@ -355,10 +374,13 @@ reduce_by <- function(
   op = " + ",
   end = "",
   pairwise = TRUE,
-  append = TRUE
+  append = TRUE,
+  filter = TRUE
 ){
   . <- NULL
-  reduced <- dplyr::group_by(plan, ...) %>%
+  filter <- rlang::enquo(filter)
+  reduced <- dplyr::filter(plan, !!filter) %>%
+    dplyr::group_by(...) %>%
     dplyr::do(
       reduce_plan(
         plan = .,
@@ -382,10 +404,11 @@ reduce_by <- function(
     reduced <- reduced[keep, ]
   }
   if (append){
-    bind_plans(plan, reduced)
+    out <- bind_plans(plan, reduced)
   } else {
-    reduced
+    out <- reduced
   }
+  arrange_plan_cols(out)
 }
 
 reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){
