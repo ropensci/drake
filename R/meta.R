@@ -73,9 +73,6 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     )[[1]] %>%
       as.list
   }
-  # Need to make sure meta includes all these
-  # fields at the beginning of build_in_hook(),
-  # but only after drake decides to actually build the target.
   if (meta$trigger$command){
     meta$command <- get_standardized_command(target = target, config = config)
   }

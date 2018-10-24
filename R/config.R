@@ -59,7 +59,7 @@
 #'
 #' @param hook function with at least one argument.
 #'   The hook is as a wrapper around the code that drake uses
-#'   to build a target (see the body of `drake:::build_in_hook()`).
+#'   to build a target.
 #'   Hooks can control the side effects of build behavior.
 #'   For example, to redirect output and error messages to text files,
 #'   you might use the built-in [silencer_hook()], as in

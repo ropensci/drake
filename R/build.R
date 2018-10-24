@@ -75,13 +75,11 @@ check_build_store <- function(
     return()
   }
   meta$start <- proc.time()
-  config$hook({
-    prune_envir(
-      targets = target,
-      config = config,
-      downstream = downstream
-    )
-  })
+  prune_envir(
+    targets = target,
+    config = config,
+    downstream = downstream
+  )
   value <- build_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   if (flag_attempt && target %in% config$plan$target){
@@ -95,22 +93,20 @@ build_store <- function(target, config, meta = NULL, announce = TRUE){
   # For staged parallelism, this was already done in bulk
   # for the whole stage.
   # Most of these steps require access to the cache.
-  config$hook({
-    if (is.null(meta)){
-      meta <- drake_meta(target = target, config = config)
-    }
-    meta$start <- proc.time()
-    if (announce){
-      announce_build(target = target, meta = meta, config = config)
-    }
-    build <- just_build(target = target, meta = meta, config = config)
-    conclude_build(
-      target = target,
-      value = build$value,
-      meta = build$meta,
-      config = config
-    )
-  })
+  if (is.null(meta)){
+    meta <- drake_meta(target = target, config = config)
+  }
+  meta$start <- proc.time()
+  if (announce){
+    announce_build(target = target, meta = meta, config = config)
+  }
+  build <- just_build(target = target, meta = meta, config = config)
+  conclude_build(
+    target = target,
+    value = build$value,
+    meta = build$meta,
+    config = config
+  )
 }
 
 just_build <- function(target, meta, config){

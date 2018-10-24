@@ -1,21 +1,19 @@
 one_build <- function(target, meta, config){
   timeouts <- resolve_timeouts(target = target, config = config)
-  config$hook({
-    R.utils::withTimeout(
-      withr::with_seed(
-        meta$seed,
-        run_command(
-          target = target,
-          meta = meta,
-          config = config
-        )
-      ),
-      timeout = timeouts["timeout"],
-      cpu = timeouts["cpu"],
-      elapsed = timeouts["elapsed"],
-      onTimeout = "error"
-    )
-  })
+  R.utils::withTimeout(
+    withr::with_seed(
+      meta$seed,
+      run_command(
+        target = target,
+        meta = meta,
+        config = config
+      )
+    ),
+    timeout = timeouts["timeout"],
+    cpu = timeouts["cpu"],
+    elapsed = timeouts["elapsed"],
+    onTimeout = "error"
+  )
 }
 
 # Borrowed from the rmonad package
