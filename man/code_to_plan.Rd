@@ -32,18 +32,23 @@ The target/command binding should be permanent.
 }
 }
 \examples{
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-drake_example("code_to_plan") # Download some code files to make plans.
-# Read the code and Markdown files in the downloaded "code_to_plan"
-# folder for details.
-plan <- code_to_plan("code_to_plan/script.R")
-plan2 <- code_to_plan("code_to_plan/report.Rmd")
-identical(plan, plan2) # should be TRUE
-print(plan)
-make(plan)
-readd(discrepancy)
-})
+plan <- drake_plan(
+  raw_data = read_excel(file_in("raw_data.xlsx")),
+  data = raw_data \%>\%
+    mutate(Species = fct_inorder(Species)) \%>\%
+    select(-X__1),
+  hist = create_plot(data),
+  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+  strings_in_dots = "literals"
+)
+file <- tempfile()
+# Turn the plan into an R script a the given file path.
+plan_to_code(plan, file)
+# Here is what the script looks like.
+cat(readLines(file), sep = "\\n")
+# Convert back to a drake plan.
+if (requireNamespace("CodeDepends")){
+  code_to_plan(file)
 }
 }
 \seealso{

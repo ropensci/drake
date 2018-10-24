@@ -305,7 +305,7 @@ clean_mtcars_example <- function(){
 #' # Run the project with make(plan).
 #' # Make sure you have these packages installed first:
 #' # dplyr, forcats, ggplot2, readxl, and rmarkdown
-#' # make(plan) # nolint
+#' make(plan) # Build the targets.
 #' readd(hist) # Show the ggplot2 histogram.
 #' # Clean up the example.
 #' clean_main_example()

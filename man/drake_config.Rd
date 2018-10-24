@@ -415,7 +415,7 @@ To sleep for the same amount of time between checks,
 you might supply something like \code{function(i) 0.01}.
 But to avoid consuming too many resources during heavier
 and longer workflows, you might use an exponential
-backoff: say,
+back-off: say,
 \code{function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }}.}
 }
 \value{

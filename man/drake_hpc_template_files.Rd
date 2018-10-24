@@ -24,7 +24,7 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 drake_hpc_template_files()
 # Write a SLURM template file from the SLURM example.
 drake_hpc_template_file("slurm_batchtools.tmpl") # Writes slurm_batchtools.tmpl.
-library(future.batchtools)
+# library(future.batchtools) # nolint
 # future::plan(batchtools_slurm, template = "slurm_batchtools.tmpl") # nolint
 # make(my_plan, parallelism = "future", jobs = 2) # nolint
 })

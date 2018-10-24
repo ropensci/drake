@@ -32,10 +32,8 @@
 #'   print(source) # Install the prettycode package for syntax highlighting.
 #' }
 #' \dontrun{
-#' test_with_dir("suppress side effects", {
 #' file <- tempfile() # Path to an R script to contain the drake_plan() call.
 #' writeLines(source, file) # Save the code to an R script.
-#' })
 #' }
 drake_plan_source <- function(plan){
   assert_pkg("styler")

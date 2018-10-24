@@ -399,7 +399,7 @@
 #'   you might supply something like `function(i) 0.01`.
 #'   But to avoid consuming too many resources during heavier
 #'   and longer workflows, you might use an exponential
-#'   backoff: say,
+#'   back-off: say,
 #'   `function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }`.
 #'
 #' @examples

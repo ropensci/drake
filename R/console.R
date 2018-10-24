@@ -256,20 +256,18 @@ default_verbose <- function(){
 #'   `target` as a symbol (`FALSE`) or character vector
 #'   (`TRUE`).
 #' @examples
-#' \dontrun{
 #' plan <- drake_plan(x = rnorm(15))
-#' make(plan)
-#' config <- drake_config(plan)
+#' cache <- storr::storr_environment() # custom in-memory cache
+#' make(plan, cache = cache)
+#' config <- drake_config(plan, cache = cache)
 #' show_source(x, config)
-#' show_source(rnorm, config)
-#' }
 show_source <- function(target, config, character_only = FALSE){
   if (!character_only){
     target <- as.character(substitute(target))
   }
   cache <- config$cache
   meta <- diagnose(target = target, cache = cache, character_only = TRUE)
-  prefix <- ifelse(is_file(target), "File ", "Object ")
+  prefix <- ifelse(is_file(target), "File ", "Target ")
   if (meta$imported){
     message(prefix, target, " was imported.")
   } else {

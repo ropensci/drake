@@ -38,7 +38,11 @@ files and generic R objects.
   readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
   deps_code(file_store("report.Rmd"))
   config <- drake_config(my_plan)
-  dependency_profile(file_store("report.Rmd"), config = config)
+  dependency_profile(
+    file_store("report.Rmd"),
+    config = config,
+    character_only = TRUE
+  )
   loadd(list = file_store("report.md"))
   get(file_store("report.md"))
   })

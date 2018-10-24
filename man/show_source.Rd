@@ -21,11 +21,9 @@ Show the command that produced a target
 or indicate that the object or file was imported.
 }
 \examples{
-\dontrun{
 plan <- drake_plan(x = rnorm(15))
-make(plan)
-config <- drake_config(plan)
+cache <- storr::storr_environment() # custom in-memory cache
+make(plan, cache = cache)
+config <- drake_config(plan, cache = cache)
 show_source(x, config)
-show_source(rnorm, config)
-}
 }
