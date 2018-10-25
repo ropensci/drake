@@ -37,6 +37,7 @@
 - Add a console message for building the priority queue when `verbose` is at least 2.
 - Condense `load_mtcars_example()`.
 - Disable the `hook` argument for non-hasty parallelism.
+- In `gather_by()` and `reduce_by()`, do not exclude targets with all `NA` gathring variables.
 
 # Version 6.0.0
 

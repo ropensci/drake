@@ -220,12 +220,6 @@ gather_by <- function(
   if (length(suffix) && nzchar(suffix)){
     gathered$target <- paste(gathered$target, suffix, sep = "_")
   }
-  keep <- apply(X = cols, MARGIN = 1, FUN = function(x){
-    !all(is.na(x))
-  })
-  if (ncol(cols)){
-    gathered <- gathered[keep, ]
-  }
   if (append){
     out <- bind_plans(plan, gathered)
   } else {
@@ -399,12 +393,6 @@ reduce_by <- function(
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = "_")
   if (length(suffix) && nzchar(suffix)){
     reduced$target <- paste(reduced$target, suffix, sep = "_")
-  }
-  keep <- apply(X = cols, MARGIN = 1, FUN = function(x){
-    !all(is.na(x))
-  })
-  if (ncol(cols)){
-    reduced <- reduced[keep, ]
   }
   if (append){
     out <- bind_plans(plan, reduced)
