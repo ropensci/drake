@@ -216,11 +216,11 @@ gather_by <- function(
       )
     )
   cols <- dplyr::select(gathered, ...)
-  suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
-  if (length(suffix)){
+  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = "_")
+  if (length(suffix) && nzchar(suffix)){
     gathered$target <- paste(gathered$target, suffix, sep = "_")
   }
-  keep <- apply(cols, 1, function(x){
+  keep <- apply(X = cols, MARGIN = 1, FUN = function(x){
     !all(is.na(x))
   })
   if (ncol(cols)){
@@ -396,11 +396,11 @@ reduce_by <- function(
       )
     )
   cols <- dplyr::select(reduced, ...)
-  suffix <- purrr::pmap_chr(cols, .f = paste, sep = "_")
-  if (length(suffix)){
+  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = "_")
+  if (length(suffix) && nzchar(suffix)){
     reduced$target <- paste(reduced$target, suffix, sep = "_")
   }
-  keep <- apply(cols, 1, function(x){
+  keep <- apply(X = cols, MARGIN = 1, FUN = function(x){
     !all(is.na(x))
   })
   if (ncol(cols)){
