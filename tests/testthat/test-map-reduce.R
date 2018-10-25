@@ -225,26 +225,27 @@ test_with_dir("gather_by()", {
   expect_equal(z[, c("target", "command")], y[nrow(y), ])
   x <- gather_by(plan, n___from, prefix = "xyz", gather = "c", append = TRUE)
   y <- tibble::tibble(
-    target = "xyz_y",
-    command = c("c(y_a = y_a, y_b = y_b)"),
+    target = c("xyz_y", "xyz_NA"),
+    command = c("c(y_a = y_a, y_b = y_b)", "c(x_1 = x_1, x_2 = x_2, z = z)"),
     m__ = as.character(NA),
     m___from = as.character(NA),
     n__ = NA,
-    n___from = "y"
+    n___from = c("y", NA)
   )
   expect_equal(x, bind_plans(plan, y))
   x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c", append = TRUE)
   y <- tibble::tibble(
-    target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b"),
+    target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b", "xyz_NA_NA"),
     command = c(
       "c(x_1 = x_1)",
       "c(x_2 = x_2)",
       "c(y_a = y_a)",
-      "c(y_b = y_b)"
+      "c(y_b = y_b)",
+      "c(z = z)"
     ),
-    m__ = as.character(c(1, 2, NA, NA)),
+    m__ = as.character(c(1, 2, NA, NA, NA)),
     m___from = as.character(NA),
-    n__ = c(NA, NA, "a", "b"),
+    n__ = c(NA, NA, "a", "b", NA),
     n___from = as.character(NA)
   )
   expect_equal(x, bind_plans(plan, y))
@@ -287,10 +288,13 @@ test_with_dir("reduce_by()", {
     append = TRUE
   )
   y <- tibble::tibble(
-    target = c("xyz_1_x", "xyz_2_x", "xyz_x"),
-    command = c("c(x_1, x_2)", "c(x_3, x_4)", "c(xyz_1, xyz_2)"),
+    target = c("xyz_1_x", "xyz_2_x", "xyz_x", "xyz_1_NA", "xyz_NA"),
+    command = c(
+      "c(x_1, x_2)", "c(x_3, x_4)", "c(xyz_1, xyz_2)",
+      "c(y_a, y_b)", "c(z, xyz_1)"
+    ),
     m__ = as.character(NA),
-    m___from = rep("x", 3),
+    m___from = c(rep("x", 3), rep(NA, 2)),
     n__ = as.character(NA),
     n___from = as.character(NA)
   )
@@ -300,10 +304,10 @@ test_with_dir("reduce_by()", {
     pairwise = FALSE, append = TRUE
   )
   y <- tibble::tibble(
-    target = "xyz_x",
-    command = "c(c(c(x_1, x_2), x_3), x_4)",
+    target = c("xyz_x", "xyz_NA"),
+    command = c("c(c(c(x_1, x_2), x_3), x_4)", "c(c(y_a, y_b), z)"),
     m__ = as.character(NA),
-    m___from = "x",
+    m___from = c("x", NA),
     n__ = as.character(NA),
     n___from = as.character(NA)
   )
@@ -332,16 +336,18 @@ test_with_dir("reduce_by()", {
   y <- tibble::tibble(
     target = c(
       "target_x_NA",
-      "target_NA_y"
+      "target_NA_y",
+      "target_NA_NA"
     ),
     command = c(
       "x_1 + x_2 + x_3 + x_4",
-      "y_a + y_b"
+      "y_a + y_b",
+      "z"
     ),
     m__ = as.character(NA),
-    m___from = c("x", NA),
+    m___from = c("x", NA, NA),
     n__ = as.character(NA),
-    n___from = c(NA, "y")
+    n___from = c(NA, "y", NA)
   )
   expect_equal(x, bind_plans(plan, y))
   plan$from <- c(rep("x", 4), rep("y", 2), NA)
