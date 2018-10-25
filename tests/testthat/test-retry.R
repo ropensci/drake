@@ -33,7 +33,7 @@ test_with_dir("retries", {
   make(
     pl, parallelism = parallelism, jobs = jobs,
     envir = e, retries = 10, verbose = FALSE,
-    hook = silencer_hook, session_info = FALSE
+    session_info = FALSE
   )
   debrief_retries()
 
@@ -45,7 +45,7 @@ test_with_dir("retries", {
   make(
     pl, parallelism = parallelism, jobs = jobs,
     envir = e, retries = 0, verbose = FALSE,
-    hook = silencer_hook, session_info = FALSE
+    session_info = FALSE
   )
   debrief_retries()
 
@@ -57,7 +57,7 @@ test_with_dir("retries", {
   make(
     pl, parallelism = parallelism, jobs = jobs,
     envir = e, retries = 10, verbose = FALSE,
-    hook = silencer_hook, session_info = FALSE
+    session_info = FALSE
   )
   debrief_retries()
 })
@@ -66,11 +66,8 @@ test_with_dir("timeouts", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
-
-  # I may figure out how to use hooks to test other backends at some point
   jobs <- scenario$jobs
   parallelism <- scenario$parallelism
-
   pl <- data.frame(target = "x", command = "Sys.sleep(0.25)")
 
   # Should have no errors.
@@ -79,7 +76,6 @@ test_with_dir("timeouts", {
       pl,
       envir = e,
       verbose = FALSE,
-      hook = silencer_hook,
       session_info = FALSE
     )
   )
@@ -93,7 +89,6 @@ test_with_dir("timeouts", {
         pl,
         envir = e,
         verbose = FALSE,
-        hook = silencer_hook,
         timeout = 1e-3,
         retries = 2,
         session_info = FALSE
@@ -113,7 +108,6 @@ test_with_dir("timeouts", {
       plan = pl2,
       envir = e,
       verbose = FALSE,
-      hook = silencer_hook,
       retries = 2
     )
     args[[field]] <- Inf

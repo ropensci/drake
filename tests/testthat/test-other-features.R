@@ -134,7 +134,7 @@ test_with_dir("in_progress() works and errors are handled correctly", {
   expect_equal(in_progress(), character(0))
   bad_plan <- drake_plan(x = function_doesnt_exist())
   expect_error(
-    make(bad_plan, verbose = TRUE, session_info = FALSE), hook = silencer_hook)
+    make(bad_plan, verbose = TRUE, session_info = FALSE))
   expect_equal(failed(), "x")
   expect_equal(in_progress(), character(0))
   expect_is(e <- diagnose(x)$error, "error")
@@ -207,7 +207,7 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
   expect_error(suppressWarnings(check_plan(y, envir = config$envir)))
   suppressWarnings(
     expect_error(
-      make(y, envir = config$envir, hook = silencer_hook,
+      make(y, envir = config$envir,
            session_info = FALSE, verbose = FALSE)))
   suppressWarnings(expect_error(
     check_plan(config$plan, targets = character(0), envir = config$envir)))
@@ -217,8 +217,7 @@ test_with_dir("check_drake_config() via check_plan() and make()", {
       targets = character(0),
       envir = config$envir,
       session_info = FALSE,
-      verbose = FALSE,
-      hook = silencer_hook
+      verbose = FALSE
     )
   ))
 })
@@ -261,7 +260,6 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
     con <- make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
-      hook = silencer_hook,
       skip_imports = TRUE,
       session_info = FALSE
     )
@@ -279,7 +277,6 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
     con <- make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
-      hook = silencer_hook,
       skip_imports = TRUE, session_info = FALSE
     )
   )

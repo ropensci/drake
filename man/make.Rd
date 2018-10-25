@@ -66,9 +66,9 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{+ imports and writes to the cache.}
 }}
 
-\item{hook}{Only applies if \code{parallelism} is \code{"hasty"}.
-The hook is as a wrapper around the code that \code{drake}
-in "hasty" mode uses to build a target.}
+\item{hook}{Deprecated. A future release may support
+individual hooks for specific build phases.
+See \url{https://github.com/ropensci/drake/issues/558}.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}

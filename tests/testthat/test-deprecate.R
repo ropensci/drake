@@ -291,6 +291,15 @@ test_with_dir("mtcars example", {
 })
 
 test_with_dir("deprecated hooks", {
+  expect_warning(
+    make(
+      drake_plan(x = 1),
+      hook = 123,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    ),
+    regexp = "deprecated"
+  )
   expect_warning(default_hook(NULL), regexp = "deprecated")
   expect_warning(empty_hook(NULL), regexp = "deprecated")
   expect_warning(message_sink_hook(NULL), regexp = "deprecated")

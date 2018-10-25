@@ -57,9 +57,9 @@
 #'     \item{4:}{+ imports and writes to the cache.}
 #'   }
 #'
-#' @param hook Only applies if `parallelism` is `"hasty"`.
-#'   The hook is as a wrapper around the code that `drake`
-#'   in "hasty" mode uses to build a target.
+#' @param hook Deprecated. A future release may support
+#'   individual hooks for specific build phases.
+#'   See <https://github.com/ropensci/drake/issues/558>.
 #'
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
@@ -454,9 +454,18 @@ drake_config <- function(
   unlink(console_log_file)
   if (!is.null(imports_only)){
     warning(
-      "Argument imports_only is deprecated. Use skip_targets instead.",
+      "Argument `imports_only`` is deprecated. Use `skip_targets`` instead.",
       call. = FALSE
-    ) # May 4, 2018
+    ) # 2018-05-04 # nolint
+  }
+  if (!is.null(hook)){
+    warning(
+      "Argument `hook` is deprecated. ",
+      "A future release of drake may support specific hooks ",
+      "for specific build phases. ",
+      "See https://github.com/ropensci/drake/issues/558.",
+      call. = FALSE
+    ) # 2018-10-25 # nolint
   }
   plan <- sanitize_plan(plan)
   if (is.null(targets)){

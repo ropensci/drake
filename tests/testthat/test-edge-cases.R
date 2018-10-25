@@ -46,7 +46,6 @@ test_with_dir("can keep going", {
       verbose = FALSE,
       jobs = jobs,
       envir = e,
-      hook = suppressWarnings,
       session_info = FALSE
     )
   )

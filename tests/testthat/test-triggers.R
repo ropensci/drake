@@ -524,23 +524,20 @@ test_with_dir("trigger whitelist mode", {
   plan <- drake_plan(y = f(1))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
-    hook = suppressMessages
+    verbose = 4, caching = caching, session_info = FALSE
   )
   expect_equal(justbuilt(config), "y")
   expect_equal(outdated(config), character(0))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = FALSE, mode = "whitelist"),
-    hook = suppressMessages
+    trigger = trigger(condition = FALSE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), character(0))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = TRUE, mode = "whitelist"),
-    hook = suppressMessages
+    trigger = trigger(condition = TRUE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), "y")
   eval(
@@ -552,8 +549,7 @@ test_with_dir("trigger whitelist mode", {
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = FALSE, mode = "whitelist"),
-    hook = suppressMessages
+    trigger = trigger(condition = FALSE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), "y")
   eval(
@@ -565,8 +561,7 @@ test_with_dir("trigger whitelist mode", {
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = TRUE, mode = "whitelist"),
-    hook = suppressMessages
+    trigger = trigger(condition = TRUE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), "y")
 })
@@ -587,23 +582,20 @@ test_with_dir("trigger blacklist mode", {
   plan <- drake_plan(y = f(1))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
-    hook = suppressMessages
+    verbose = 4, caching = caching, session_info = FALSE
   )
   expect_equal(justbuilt(config), "y")
   expect_equal(outdated(config), character(0))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = FALSE, mode = "blacklist"),
-    hook = suppressMessages
+    trigger = trigger(condition = FALSE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), character(0))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = TRUE, mode = "blacklist"),
-    hook = suppressMessages
+    trigger = trigger(condition = TRUE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), character(0))
   eval(
@@ -615,8 +607,7 @@ test_with_dir("trigger blacklist mode", {
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = FALSE, mode = "blacklist"),
-    hook = suppressMessages
+    trigger = trigger(condition = FALSE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), character(0))
   eval(
@@ -628,8 +619,7 @@ test_with_dir("trigger blacklist mode", {
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = TRUE, mode = "blacklist"),
-    hook = suppressMessages
+    trigger = trigger(condition = TRUE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), "y")
 })
@@ -650,23 +640,20 @@ test_with_dir("trigger condition mode", {
   plan <- drake_plan(y = f(1))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
-    hook = suppressMessages
+    verbose = 4, caching = caching, session_info = FALSE
   )
   expect_equal(justbuilt(config), "y")
   expect_equal(outdated(config), character(0))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = FALSE, mode = "condition"),
-    hook = suppressMessages
+    trigger = trigger(condition = FALSE, mode = "condition")
   )
   expect_equal(justbuilt(config), character(0))
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = TRUE, mode = "condition"),
-    hook = suppressMessages
+    trigger = trigger(condition = TRUE, mode = "condition")
   )
   expect_equal(justbuilt(config), "y")
   eval(
@@ -678,8 +665,7 @@ test_with_dir("trigger condition mode", {
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = FALSE, mode = "condition"),
-    hook = suppressMessages
+    trigger = trigger(condition = FALSE, mode = "condition")
   )
   expect_equal(justbuilt(config), character(0))
   eval(
@@ -691,8 +677,7 @@ test_with_dir("trigger condition mode", {
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 4, caching = caching, session_info = FALSE,
-    trigger = trigger(condition = TRUE, mode = "condition"),
-    hook = suppressMessages
+    trigger = trigger(condition = TRUE, mode = "condition")
   )
   expect_equal(justbuilt(config), "y")
 })

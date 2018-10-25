@@ -113,9 +113,6 @@ just_build <- function(target, meta, config){
   if (meta$imported) {
     process_import(target = target, meta = meta, config = config)
   } else {
-    # build_target() does not require access to the cache.
-    # A custom future-based job scheduler could build with different steps
-    # to write the output to the master process before caching it.
     build_target(
       target = target,
       meta = meta,
