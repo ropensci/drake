@@ -232,7 +232,7 @@ render_drake_graph <- function(
     file <- path.expand(file)
     if (is_image_filename(file)){
       assert_pkg("webshot")
-      url <- file.path(fs::dir_create(tempfile()), "tmp.html")
+      url <- file.path(random_tempdir(), "tmp.html")
       visNetwork::visSave(graph = out, file = url, selfcontained = FALSE)
       webshot::webshot(url = url, file = file)
     } else {

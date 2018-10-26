@@ -42,7 +42,7 @@
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
 #' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
-#' @importFrom fs dir_create file_create is_file path_ext path_ext_remove
+#' @importFrom fs file_create is_file path_ext path_ext_remove
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree edge edges igraph_opt igraph_options induced_subgraph is_dag
 #'   make_empty_graph plot.igraph set_vertex_attr simplify subcomponent

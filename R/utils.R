@@ -94,6 +94,14 @@ padded_scale <- function(x){
   c(r[1] - pad, r[2] + pad)
 }
 
+random_tempdir <- function(){
+  while (file.exists(dir <- tempfile())){
+    Sys.sleep(1e-6) # nocov
+  }
+  dir.create(dir)
+  dir
+}
+
 rehash_file_size_cutoff <- 1e5
 
 safe_grepl <- function(pattern, x, ...){
