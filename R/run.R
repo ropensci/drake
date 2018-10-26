@@ -24,7 +24,7 @@ run_command <- function(target, meta, config){
   capture.output(
     meta$time_command <- system.time(
       withCallingHandlers(
-        value <- evaluate::try_capture_stack(
+        value <- try_stack(
           quoted_code = parsed_command,
           env = config$envir
         ),

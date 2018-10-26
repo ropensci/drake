@@ -40,15 +40,12 @@
 #' @importFrom codetools findGlobals
 #' @importFrom digest digest
 #' @importFrom dplyr bind_rows do group_by mutate n select ungroup
-#' @importFrom evaluate try_capture_stack
 #' @importFrom formatR tidy_source
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree edge edges igraph_opt igraph_options induced_subgraph is_dag
 #'   make_empty_graph plot.igraph set_vertex_attr simplify subcomponent
 #'   topo_sort V vertex vertex_attr
 #' @importFrom magrittr %>%
-#' @importFrom parallel clusterCall clusterExport makePSOCKcluster
-#'   mclapply parLapply stopCluster
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class

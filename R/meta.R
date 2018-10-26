@@ -166,7 +166,7 @@ self_hash <- Vectorize(function(target, config) {
 
 rehash_file <- function(target, config) {
   file <- drake::drake_unquote(target)
-  if (!fs::is_file(file)){
+  if (!file.exists(file) || file.info(file)$isdir){
     return(as.character(NA))
   }
   digest::digest(

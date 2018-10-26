@@ -44,6 +44,7 @@ next_stage <- function(config, schedule, jobs) {
 }
 
 run_mclapply_staged <- function(config){
+  assert_pkg("parallel")
   config$jobs <- safe_jobs(config$jobs)
   schedule <- config$schedule
   while (length(V(schedule)$name)){
@@ -75,28 +76,32 @@ run_mclapply_staged <- function(config){
 }
 
 run_parLapply_staged <- function(config) { # nolint
+  assert_pkg("parallel")
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
   eval(parse(text = "require(drake)"))
   console_parLapply(config) # nolint
-  config$cluster <- makePSOCKcluster(config$jobs)
-  on.exit(stopCluster(cl = config$cluster))
-  clusterExport(
+  config$cluster <- parallel::makePSOCKcluster(config$jobs)
+  on.exit(parallel::stopCluster(cl = config$cluster))
+  parallel::clusterExport(
     cl = config$cluster, varlist = "config",
     envir = environment())
   if (identical(config$envir, globalenv()) || length(config$debug)){
-    clusterExport(
+    parallel::clusterExport(
       cl = config$cluster,
       varlist = ls(globalenv(),
       all.names = TRUE),
       envir = globalenv()
     )
   }
-  clusterCall(cl = config$cluster, fun = function(){
-    eval(parse(text = "require(drake)"))
-  })
-  clusterCall(
+  parallel::clusterCall(
+    cl = config$cluster,
+    fun = function(){
+      eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
+    }
+  )
+  parallel::clusterCall(
     cl = config$cluster,
     fun = do_prework,
     config = config,
@@ -120,7 +125,7 @@ run_parLapply_staged <- function(config) { # nolint
       # Regular unit tests should not modify the global environment.
       # Tests in tests/scenarios/all.R cover these lines.
       # nocov start
-      clusterCall(
+      parallel::clusterCall(
         cl = config$cluster,
         fun = function(targets, config) {
           config$verbose <- FALSE
@@ -133,7 +138,7 @@ run_parLapply_staged <- function(config) { # nolint
       )
       # nocov end
     }
-    tmp <- parLapply(
+    tmp <- parallel::parLapply(
       cl = config$cluster,
       X = stage$targets,
       fun = function(target){
@@ -177,7 +182,7 @@ run_future_lapply_staged <- function(config){
 }
 
 run_clustermq_staged <- function(config){
-  assert_pkg("clustermq", version = "0.8.4.99")
+  assert_pkg("clustermq", version = "0.8.5")
   schedule <- config$schedule
   workers <- NULL
   config$cache$flush_cache()

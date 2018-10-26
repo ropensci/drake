@@ -470,8 +470,8 @@ plan_summaries <- function(
     stop("gather must be NULL or have length 1 or nrow(plan)")
   }
   . <- group_sym <- as.symbol(group)
-  gathered <- group_by(out, !!!group_sym) %>%
-    do({
+  gathered <- dplyr::group_by(out, !!!group_sym) %>%
+    dplyr::do({
       summary_type <- .[[group]][1]
       gather_plan(
         .,
@@ -482,8 +482,8 @@ plan_summaries <- function(
     })
   target <- command <- NULL
   bind_plans(gathered, out) %>%
-    ungroup %>%
-    select(target, command)
+    dplyr::ungroup() %>%
+    dplyr::select(target, command)
 }
 
 with_analyses_only <- function(plan){
