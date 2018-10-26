@@ -52,16 +52,14 @@
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class
-#' @importFrom R.utils countLines isPackageLoaded withTimeout
+#' @importFrom R.utils isPackageLoaded withTimeout
 #' @importFrom rlang enexpr enexprs enquo expr expr_text exprs
-#' @importFrom stats coef complete.cases lm na.omit rnorm rpois runif setNames
+#' @importFrom stats coef complete.cases lm na.omit rnorm runif setNames
 #' @importFrom storr storr_environment storr_rds
-#' @importFrom stringi stri_extract_all_regex
-#'   stri_split_fixed stri_trim_both
+#' @importFrom stringi stri_split_fixed stri_trim_both
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head installed.packages
 #'   packageVersion read.csv sessionInfo stack type.convert unzip write.table
-#' @importFrom withr local_dir with_dir with_options with_output_sink
-#'   with_seed
+#' @importFrom withr local_dir with_options with_output_sink with_seed
 NULL
