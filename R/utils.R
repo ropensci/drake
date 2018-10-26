@@ -65,12 +65,20 @@ factor_to_character <- function(x){
   x
 }
 
+file_extn <- function(x){
+  splitted <- basename(x) %>%
+    strsplit(split = ".", fixed = TRUE) %>%
+    unlist() %>%
+    rev()
+  splitted[1]
+}
+
 is_file <- function(x){
   safe_grepl(pattern = quotes_regex, x = x)
 }
 
 is_image_filename <- function(x){
-  tolower(fs::path_ext(x)) %in% c("jpg", "jpeg", "pdf", "png")
+  tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
 
 is_not_file <- function(x){
