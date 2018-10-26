@@ -568,8 +568,7 @@ drake_config <- function(
 
 add_packages_to_prework <- function(packages, prework) {
   packages <- unique(c("methods", "drake", packages))
-  paste0("if(!R.utils::isPackageLoaded(\"", packages, "\")) require(",
-    packages, ")", sep = "") %>% c(prework)
+  c(paste0("require(", packages, ")", sep = ""), prework)
 }
 
 #' @title Do the prework in the `prework`

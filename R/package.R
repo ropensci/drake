@@ -49,7 +49,7 @@
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class
-#' @importFrom R.utils isPackageLoaded withTimeout
+#' @importFrom R.utils withTimeout
 #' @importFrom rlang enexpr enexprs enquo expr expr_text exprs
 #' @importFrom stats coef complete.cases lm na.omit rnorm runif setNames
 #' @importFrom storr storr_environment storr_rds
