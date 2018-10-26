@@ -23,6 +23,7 @@ test_with_dir("deprecation: examples", {
 
 test_with_dir("deprecation: future", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("future")
   expect_warning(backend())
 })
 

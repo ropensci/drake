@@ -11,7 +11,7 @@
 #' # See ?plan_analyses for examples.
 analyses <- function(plan, datasets){
   .Deprecated(
-    "backend",
+    "analyses",
     package = "drake",
     msg = paste(
       "drake::analyses() is deprecated",
@@ -34,7 +34,7 @@ analyses <- function(plan, datasets){
 #' # See ?file_store for examples.
 as_drake_filename <- function(x){
   .Deprecated(
-    "backend",
+    "as_drake_filename",
     package = "drake",
     msg = paste(
       "drake::as_drake_filename() is deprecated.",
@@ -56,7 +56,7 @@ as_drake_filename <- function(x){
 #' # See ?file_store for examples.
 as_file <- function(x){
   .Deprecated(
-    "backend",
+    "as_file",
     package = "drake",
     msg = paste(
       "drake::as_file() is deprecated",
@@ -100,6 +100,7 @@ backend <- function(...){
       "drake::plan() will be removed."
     )
   )
+  assert_pkg("future")
   future::plan(...)
 }
 
@@ -125,7 +126,7 @@ build_graph <- function(
   jobs = 1
 ){
   .Deprecated(
-    "backend",
+    "build_graph",
     package = "drake",
     msg = paste(
       "drake::build_graph() is deprecated",
