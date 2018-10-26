@@ -12,7 +12,9 @@ extract_filenames <- function(command){
   if (!safe_grepl("'", command, fixed = TRUE)){
     return(character(0))
   }
-  splits <- stringi::stri_split_fixed(command, "'")[[1]]
+  splits <- paste(" ", command, " ") %>%
+    strsplit("'") %>%
+    unlist()
   splits[seq(from = 2, to = length(splits), by = 2)]
 }
 

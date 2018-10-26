@@ -72,7 +72,6 @@ Imports:
   rlang (>= 0.2.0),
   stats,
   storr (>= 1.1.0),
-  stringi,
   tibble,
   tidyselect (>= 0.2.4),
   utils,

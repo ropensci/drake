@@ -4,7 +4,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
     if (!is.null(plan[[field]])){
       plan[[field]] <- factor_to_character(plan[[field]])
       if (is.character(plan[[field]])){
-        plan[[field]] <- stringi::stri_trim_both(plan[[field]])
+        plan[[field]] <- trimws(plan[[field]])
       }
     }
   }

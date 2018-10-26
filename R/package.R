@@ -53,7 +53,6 @@
 #' @importFrom rlang enexpr enexprs enquo expr expr_text exprs
 #' @importFrom stats coef complete.cases lm na.omit rnorm runif setNames
 #' @importFrom storr storr_environment storr_rds
-#' @importFrom stringi stri_split_fixed stri_trim_both
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head installed.packages
