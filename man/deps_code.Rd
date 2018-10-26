@@ -44,7 +44,7 @@ enclosing them in literal double quotes.
 (For example, \code{file_store("report.Rmd")} is just \code{"\"report.Rmd\""}.)
 
 \code{drake} takes special precautions so that a target/import
-does not depend on itself. For example, \code{deps_code(f)`` might return }"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
+does not depend on itself. For example, \code{deps_code(f)`` might return}"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
 this conflict and runs as expected. In other words, \code{\link[=make]{make()}}
 automatically removes all self-referential loops in the dependency
 network.
