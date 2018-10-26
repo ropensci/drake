@@ -36,7 +36,7 @@
 - Change the default parallelization of the imports. Previously, `make(jobs = 4)` was equivalent to `make(jobs = c(imports = 4, targets = 4))`. Now, `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`. See [issue 553](https://github.com/ropensci/drake/issues/553) for details.
 - Add a console message for building the priority queue when `verbose` is at least 2.
 - Condense `load_mtcars_example()`.
-- Disable the `hook` argument for non-hasty parallelism.
+- Deprecate the `hook` argument of `make()` and `drake_config()`.
 - In `gather_by()` and `reduce_by()`, do not exclude targets with all `NA` gathring variables.
 
 # Version 6.0.0
