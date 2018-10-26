@@ -1,7 +1,5 @@
 run_hasty <- function(config){
-  if (is.null(config$hook)){
-    warn_hasty(config)
-  }
+  warn_hasty(config)
   config$graph <- config$schedule <- targets_graph(config = config)
   if (config$jobs_targets > 1L){
     hasty_parallel(config)
@@ -15,12 +13,20 @@ hasty_loop <- function(config){
   targets <- igraph::topo_sort(config$schedule)$name
   for (target in targets){
     console_target(target = target, config = config)
-    config$envir[[target]] <- eval(
-      expr = preprocess_command(target, config),
-      envir = config$envir
-    )
+    config$envir[[target]] <- hasty_build(target, config)
   }
   invisible()
+}
+
+hasty_build <- function(target, config){
+  default_hasty_build(target, config)
+}
+
+default_hasty_build <- function(target, config){
+  eval(
+    expr = preprocess_command(target, config),
+    envir = config$envir
+  )
 }
 
 hasty_parallel <- function(config){
@@ -46,7 +52,7 @@ hasty_master <- function(config){
   on.exit(config$workers$finalize())
   while (config$counter$remaining > 0){
     msg <- config$workers$receive_data()
-    hasty_conclude_build(msg = msg, config = config)
+    conclude_hasty_build(msg = msg, config = config)
     if (!identical(msg$token, "set_common_data_token")){
       config$workers$send_common_data()
     } else if (!config$queue$empty()){
@@ -69,7 +75,11 @@ hasty_send_target <- function(config){
   console_target(target = target, config = config)
   deps <- cmq_deps_list(target = target, config = config)
   config$workers$send_call(
-    expr = drake::hasty_build(target = target, deps = deps, config = config),
+    expr = drake::remote_hasty_build(
+      target = target,
+      deps = deps,
+      config = config
+    ),
     env = list(target = target, deps = deps)
   )
 }
@@ -80,19 +90,16 @@ hasty_send_target <- function(config){
 #' @keywords internal
 #' @inheritParams drake_build
 #' @param deps named list of dependencies
-hasty_build <- function(target, deps = NULL, config){
+remote_hasty_build <- function(target, deps = NULL, config){
   do_prework(config = config, verbose_packages = FALSE)
   for (dep in names(deps)){
     config$envir[[dep]] <- deps[[dep]]
   }
-  value <- eval(
-    expr = preprocess_command(target, config),
-    envir = config$envir
-  )
+  value <- hasty_build(target, config)
   invisible(list(target = target, value = value))
 }
 
-hasty_conclude_build <- function(msg, config){
+conclude_hasty_build <- function(msg, config){
   if (is.null(msg$result)){
     return()
   }

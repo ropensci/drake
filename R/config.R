@@ -460,10 +460,7 @@ drake_config <- function(
   }
   if (!is.null(hook)){
     warning(
-      "Argument `hook` is deprecated. ",
-      "A future release of drake may support specific hooks ",
-      "for specific build phases. ",
-      "See https://github.com/ropensci/drake/issues/558.",
+      "Argument `hook` is deprecated.",
       call. = FALSE
     ) # 2018-10-25 # nolint
   }
