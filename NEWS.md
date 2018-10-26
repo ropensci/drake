@@ -3,7 +3,6 @@
 ## New features
 
 - **Add a new `map_plan()` function to easily create a workflow plan data frame to execute a function call over a grid of arguments.**
-- **Add a hasty mode: `make(parallelism = "hasty")` skips all of `drake`'s expensive caching and checking. All targets run every single time and you are responsible for saving results to custom output files, but almost all the by-target overhead is gone.**
 - Add a new `plan_to_code()` function to turn `drake` plans into generic R scripts. New users can use this function to better understand the relationship between plans and code, and unsatisfied customers can use it to disentangle their projects from `drake` altogether. Similarly, `plan_to_notebook()` generates an R notebook from a `drake` plan.
 - Add a new `drake_debug()` function to run a target's command in debug mode. Analogous to `drake_build()`.
 - Add a `mode` argument to `trigger()` to control how the `condition` trigger factors into the decision to build or skip a target. See the `?trigger` for details.
@@ -12,6 +11,7 @@
 - Add a new `append` argument to `gather_plan()`, `gather_by()`, `reduce_plan()`, and `reduce_by()`. The `append` argument control whether the output includes the original `plan` in addition to the newly generated rows.
 - Add new functions `load_main_example()`, `clean_main_example()`, and `clean_mtcars_example()`.
 - Add a `filter` argument to `gather_by()` and `reduce_by()` in order to restrict what we gather even when `append` is `TRUE`.
+- Add a hasty mode: `make(parallelism = "hasty")` skips all of `drake`'s expensive caching and checking. All targets run every single time and you are responsible for saving results to custom output files, but almost all the by-target overhead is gone.
 
 ## Bug fixes
 
