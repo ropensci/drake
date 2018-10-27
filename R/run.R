@@ -92,6 +92,9 @@ try_stack <- function (quoted_code, env){
   )
 }
 
+# Taken from `R.utils::withTimeout()` and simplified.
+# https://github.com/HenrikBengtsson/R.utils/blob/13e9d000ac9900bfbbdf24096d635da723da76c8/R/withTimeout.R # nolint
+# Copyright Henrik Bengtsson, LGPL >= 2.1.
 with_timeout <- function(expr, cpu, elapsed){
   expr <- substitute(expr)
   envir <- parent.frame()
