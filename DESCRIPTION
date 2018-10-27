@@ -107,5 +107,6 @@ Suggests:
   webshot
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.1.0
+Language: en-US
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.0
