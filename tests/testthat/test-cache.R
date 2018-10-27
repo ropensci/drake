@@ -181,8 +181,7 @@ test_with_dir("cache functions work", {
   if (!file.exists(scratch)){
     dir.create(scratch) # Will move up a level later.
   }
-  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
-  eval(parse(text = "setwd(scratch)"))
+  withr::local_dir(scratch)
   owd <- getwd()
   expect_equal(character(0), cached(search = FALSE), imported(search = FALSE),
     built(search = FALSE))
@@ -329,8 +328,7 @@ test_with_dir("cache functions work", {
     dir.create("searchfrom")
     dir.create(file.path("searchfrom", "here"))
   }
-  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
-  eval(parse(text = "setwd('..')"))
+  withr::local_dir("..")
   expect_equal(getwd(), first_wd)
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
@@ -399,8 +397,7 @@ test_with_dir("cache functions work", {
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
 
-  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
-  eval(parse(text = "setwd(scratch)"))
+  withr::local_dir(scratch)
   pdf(NULL)
   tmp <- read_drake_graph(search = FALSE)
   tmp <- capture.output(dev.off())
@@ -408,8 +405,7 @@ test_with_dir("cache functions work", {
   pdf(NULL)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
-  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
-  eval(parse(text = "setwd('..')"))
+  withr::local_dir("..")
 
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
@@ -439,7 +435,6 @@ test_with_dir("cache functions work", {
   expect_false(file.exists(where))
   expect_silent(drake_gc()) # Cache does not exist
 
-  # Suppress goodpractice::gp(): legitimate need for setwd(). # nolint
-  eval(parse(text = "setwd(scratch)"))
+  withr::local_dir(scratch)
   unlink("searchfrom", recursive = TRUE, force = TRUE)
 })
