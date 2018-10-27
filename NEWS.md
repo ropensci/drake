@@ -1,5 +1,9 @@
 # Version 6.1.0.9000
 
+## Enhancements
+
+- Remove strict dependencies on packages `evaluate`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.
+
 # Version 6.1.0
 
 ## New features

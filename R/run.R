@@ -1,6 +1,6 @@
 one_build <- function(target, meta, config){
   timeouts <- resolve_timeouts(target = target, config = config)
-  R.utils::withTimeout(
+  with_timeout(
     withr::with_seed(
       meta$seed,
       run_command(
@@ -9,10 +9,8 @@ one_build <- function(target, meta, config){
         config = config
       )
     ),
-    timeout = timeouts["timeout"],
-    cpu = timeouts["cpu"],
-    elapsed = timeouts["elapsed"],
-    onTimeout = "error"
+    cpu = timeouts$cpu,
+    elapsed = timeouts$elapsed
   )
 }
 
@@ -92,4 +90,12 @@ try_stack <- function (quoted_code, env){
     ),
     error = identity
   )
+}
+
+with_timeout <- function(expr, cpu, elapsed){
+  expr <- substitute(expr)
+  envir <- parent.frame()
+  setTimeLimit(cpu = cpu, elapsed = elapsed, transient = TRUE)
+  on.exit(setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE))
+  eval(expr, envir = envir)
 }

@@ -49,7 +49,6 @@
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class
-#' @importFrom R.utils withTimeout
 #' @importFrom rlang enexpr enexprs enquo expr expr_text exprs
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom tibble as_tibble tibble
