@@ -151,22 +151,3 @@ standardize_filename <- function(text){
   text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
   text
 }
-
-# Taken directly from the `evaluate::try_capture_stack()`.
-# https://github.com/r-lib/evaluate/blob/b43d54f1ea2fe4296f53316754a28246903cd703/R/traceback.r#L20-L47 # nolint
-# Copyright Hadley Wickham and Yihui Xie, 2008 - 2018. MIT license.
-try_stack <- function (quoted_code, env){
-  capture_calls <- function(e) {
-    e["call"] <- e["call"]
-    e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
-    signalCondition(e)
-  }
-  frame <- sys.nframe()
-  tryCatch(
-    withCallingHandlers(
-      eval(quoted_code, env),
-      error = capture_calls
-    ),
-    error = identity
-  )
-}
