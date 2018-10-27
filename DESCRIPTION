@@ -75,7 +75,7 @@ Imports:
   tidyselect (>= 0.2.4),
   utils,
   withr
-Suggests: 
+Suggests:
   abind,
   bindr,
   callr,

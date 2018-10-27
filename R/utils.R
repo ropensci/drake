@@ -166,7 +166,7 @@ try_stack <- function (quoted_code, env){
     withCallingHandlers(
       eval(quoted_code, env),
       error = capture_calls
-    ), 
+    ),
     error = identity
   )
 }
