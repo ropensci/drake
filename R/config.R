@@ -189,9 +189,7 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force Force `make()` to build your targets even if some
-#'   about your setup is not quite right: for example, if you are using
-#'   a version of drake that is not back compatible with your project's cache.
+#' @param force deprecated
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
@@ -421,7 +419,7 @@ drake_config <- function(
   verbose = drake::default_verbose(),
   hook = NULL,
   cache = drake::get_cache(
-    verbose = verbose, force = force, console_log_file = console_log_file),
+    verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,
@@ -476,6 +474,7 @@ drake_config <- function(
       call. = FALSE
     ) # 2018-10-25 # nolint
   }
+  deprecate_force(force)
   plan <- sanitize_plan(plan)
   if (is.null(targets)){
     targets <- plan$target
@@ -490,15 +489,12 @@ drake_config <- function(
   )
   if (is.null(cache)) {
     cache <- recover_cache(
-      force = force,
       verbose = verbose,
       fetch_cache = fetch_cache,
       console_log_file = console_log_file
     )
   }
-  if (!force){
-    assert_compatible_cache(cache = cache)
-  }
+  assert_compatible_cache(cache = cache)
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(
     cache = cache,

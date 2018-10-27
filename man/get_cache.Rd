@@ -31,9 +31,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{+ imports and writes to the cache.}
 }}
 
-\item{force}{logical, whether to load the cache
-despite any back compatibility issues with the
-running version of drake.}
+\item{force}{deprecated}
 
 \item{fetch_cache}{character vector containing lines of code.
 The purpose of this code is to fetch the \code{storr} cache

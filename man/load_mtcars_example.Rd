@@ -21,8 +21,7 @@ working directory (current default).}
 \item{overwrite}{logical, whether to overwrite an
 existing file \code{report.Rmd}}
 
-\item{force}{logical, whether to force the loading of a
-non-back-compatible cache from a previous version of drake.}
+\item{force}{deprecated}
 }
 \value{
 nothing

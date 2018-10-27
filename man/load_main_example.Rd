@@ -18,8 +18,7 @@ set \code{envir = new.env(parent = globalenv())}.}
 \item{overwrite}{logical, whether to overwrite an
 existing file \code{report.Rmd}}
 
-\item{force}{logical, whether to force the loading of a
-non-back-compatible cache from a previous version of drake.}
+\item{force}{deprecated}
 }
 \value{
 A \code{\link[=drake_config]{drake_config()}} configuration list.

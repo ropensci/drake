@@ -40,9 +40,7 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \item{4:}{+ imports and writes to the cache.}
 }}
 
-\item{force}{logical, whether to load the cache
-despite any back compatibility issues with the
-running version of drake.}
+\item{force}{deprecated}
 
 \item{cache}{a \code{storr} cache object}
 

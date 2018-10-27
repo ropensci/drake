@@ -7,6 +7,7 @@
 ## Enhancements
 
 - Remove strict dependencies on packages `evaluate`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.
+- Deprecate the `force` argument to `make()` and related functions.
 
 # Version 6.1.0
 

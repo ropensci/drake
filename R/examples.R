@@ -122,8 +122,7 @@ drake_examples <- function(quiet = TRUE) {
 #'   working directory (current default).
 #' @param overwrite logical, whether to overwrite an
 #'   existing file `report.Rmd`
-#' @param force logical, whether to force the loading of a
-#'   non-back-compatible cache from a previous version of drake.
+#' @param force deprecated
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -154,6 +153,7 @@ load_mtcars_example <- function(
   overwrite = FALSE,
   force = FALSE
 ){
+  deprecate_force(force)
   if (!is.null(report_file)){
     warning(
       "The `report_file` argument of load_mtcars_example() ",
@@ -294,8 +294,7 @@ clean_mtcars_example <- function(){
 #' @param report_file where to write the report file `report.Rmd`.
 #' @param overwrite logical, whether to overwrite an
 #'   existing file `report.Rmd`
-#' @param force logical, whether to force the loading of a
-#'   non-back-compatible cache from a previous version of drake.
+#' @param force deprecated
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -318,6 +317,7 @@ load_main_example <- function(
   overwrite = FALSE,
   force = FALSE
 ){
+  deprecate_force(force)
   dir <- tempfile()
   drake_example(example = "main", to = dir)
   source(file.path(dir, "main", "R", "setup.R"), local = envir)

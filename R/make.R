@@ -76,7 +76,7 @@ make <- function(
   verbose = drake::default_verbose(),
   hook = NULL,
   cache = drake::get_cache(
-    verbose = verbose, force = force, console_log_file = console_log_file),
+    verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
   jobs = 1,

@@ -367,6 +367,16 @@ default_system2_args <- function(jobs, verbose){
   return(out)
 }
 
+# 2018-10-27 # nolint
+deprecate_force <- function(force){
+  if (!identical(force, FALSE)){
+    warning(
+      "Argument `force` is deprecated.",
+      call. = FALSE
+    )
+  }
+}
+
 # Deprecated ..analysis.. and ..dataset.. on 2017-11-12
 # in favor of analysis__ and dataset__
 deprecate_wildcard <- function(plan, old, replacement){

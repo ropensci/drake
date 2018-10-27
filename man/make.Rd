@@ -6,8 +6,8 @@
 \usage{
 make(plan = drake::read_drake_plan(), targets = NULL,
   envir = parent.frame(), verbose = drake::default_verbose(),
-  hook = NULL, cache = drake::get_cache(verbose = verbose, force =
-  force, console_log_file = console_log_file), fetch_cache = NULL,
+  hook = NULL, cache = drake::get_cache(verbose = verbose,
+  console_log_file = console_log_file), fetch_cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -197,9 +197,7 @@ column in \code{plan}.}
 Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
-\item{force}{Force \code{make()} to build your targets even if some
-about your setup is not quite right: for example, if you are using
-a version of drake that is not back compatible with your project's cache.}
+\item{force}{deprecated}
 
 \item{return_config}{Logical, whether to return the internal list
 of runtime configuration parameters used by \code{make()}.

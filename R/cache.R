@@ -55,9 +55,7 @@ force_cache_path <- function(cache = NULL){
 #'   if available. `NULL` otherwise.
 #' @inheritParams cached
 #' @inheritParams drake_config
-#' @param force logical, whether to load the cache
-#'   despite any back compatibility issues with the
-#'   running version of drake.
+#' @param force deprecated
 #' @param fetch_cache character vector containing lines of code.
 #'   The purpose of this code is to fetch the `storr` cache
 #'   with a command like `storr_rds()` or `storr_dbi()`,
@@ -83,14 +81,17 @@ get_cache <- function(
   fetch_cache = NULL,
   console_log_file = NULL
 ){
+  deprecate_force(force)
   if (search){
     path <- find_cache(path = path)
   } else {
     path <- default_cache_path()
   }
   this_cache(
-    path = path, force = force, verbose = verbose,
-    fetch_cache = fetch_cache, console_log_file = console_log_file
+    path = path,
+    verbose = verbose,
+    fetch_cache = fetch_cache,
+    console_log_file = console_log_file
   )
 }
 
@@ -102,9 +103,7 @@ get_cache <- function(
 #' @inheritParams cached
 #' @inheritParams drake_config
 #' @param path file path of the cache
-#' @param force logical, whether to load the cache
-#'   despite any back compatibility issues with the
-#'   running version of drake.
+#' @param force deprecated
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -119,7 +118,8 @@ get_cache <- function(
 #' })
 #' }
 this_cache <- function(
-  path = drake::default_cache_path(), force = FALSE,
+  path = drake::default_cache_path(),
+  force = FALSE,
   verbose = drake::default_verbose(),
   fetch_cache = NULL,
   console_log_file = NULL
@@ -128,6 +128,7 @@ this_cache <- function(
   if (usual_path_missing & is.null(fetch_cache)){
     return(NULL)
   }
+  deprecate_force(force)
   if (!is.null(path)){
     console_cache(
       config = list(
@@ -149,9 +150,7 @@ this_cache <- function(
     overwrite_hash_algos = FALSE,
     init_common_values = FALSE
   )
-  if (!force){
-    assert_compatible_cache(cache = cache)
-  }
+  assert_compatible_cache(cache = cache)
   cache
 }
 
@@ -296,7 +295,7 @@ recover_cache <- function(
   console_log_file = NULL
 ){
   cache <- this_cache(
-    path = path, force = force, verbose = verbose,
+    path = path, verbose = verbose,
     fetch_cache = fetch_cache, console_log_file = console_log_file
   )
   if (is.null(cache)){
@@ -530,12 +529,13 @@ assert_compatible_cache <- function(cache){
     )
   }
   if (compareVersion(old, "4.4.0") <= 0){
-    stop(
+    warning(
       "The project at '", cache$driver$path,
       "' was previously built by drake ", old, ". ",
       "You are running drake ", packageVersion("drake"),
       ", which is not back-compatible. ",
-      "Run make(..., force = TRUE) to update.",
+      "All targets are out of date in the new version. ",
+      "Sorry for the inconvenience.",
       call. = FALSE
     )
   }

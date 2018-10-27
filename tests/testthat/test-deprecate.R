@@ -222,29 +222,27 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_null(this_cache())
   expect_true(inherits(recover_cache(), "storr"))
   write_v4.3.0_project() # nolint
-  suppressWarnings({
-    expect_error(get_cache())
-    expect_error(this_cache())
-    expect_error(recover_cache())
-  })
-  expect_true(inherits(get_cache(force = TRUE), "storr"))
-  expect_true(inherits(this_cache(force = TRUE), "storr"))
-  expect_true(inherits(recover_cache(force = TRUE), "storr"))
-  load_mtcars_example(force = TRUE)
-  config <- drake_config(my_plan, force = TRUE)
-  expect_true(length(outdated(config)) > 0)
-  expect_error(
-    expect_warning(
-      make(my_plan, verbose = FALSE, session_info = FALSE),
-      regexp = "inconvenience"
-    ),
-    regexp = "force"
+  expect_warning(get_cache(), regexp = "compatible")
+  expect_warning(this_cache(), regexp = "compatible")
+  expect_warning(recover_cache(), regexp = "compatible")
+  expect_warning(
+    expect_true(inherits(get_cache(force = TRUE), "storr")),
+    regexp = "deprecated"
   )
-  make(my_plan, verbose = FALSE, force = TRUE)
-  expect_equal(outdated(config), character(0))
-  expect_true(length(cached()) > 0)
-  clean()
-  expect_true(length(cached()) == 0)
+  expect_warning(
+    expect_true(inherits(this_cache(force = TRUE), "storr")),
+    regexp = "deprecated"
+  )
+  expect_warning(
+    expect_true(inherits(recover_cache(force = TRUE), "storr")),
+    regexp = "compatible"
+  )
+  expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
+  expect_warning(
+    config <- drake_config(my_plan, force = TRUE),
+    regexp = "deprecated"
+  )
+  expect_true(length(outdated(config)) > 0)
 })
 
 test_with_dir("old trigger interface", {
