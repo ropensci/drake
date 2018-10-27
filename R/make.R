@@ -116,7 +116,8 @@ make <- function(
   ensure_workers = TRUE,
   garbage_collection = FALSE,
   template = list(),
-  sleep = function(i) 0.01
+  sleep = function(i) 0.01,
+  hasty_build = drake::default_hasty_build
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -168,7 +169,8 @@ make <- function(
       ensure_workers = ensure_workers,
       garbage_collection = garbage_collection,
       template = template,
-      sleep = sleep
+      sleep = sleep,
+      hasty_build = hasty_build
     )
   }
   make_with_config(config = config)

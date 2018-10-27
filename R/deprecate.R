@@ -68,7 +68,7 @@ as_file <- function(x){
 }
 
 #' @title Deprecated function `backend`
-#' @description Use [future::plan()] instead.
+#' @description Use `future::plan()` instead.
 #' Avoid `drake::plan()`.
 #' @details Deprecated on 2017-11-12.
 #' @export

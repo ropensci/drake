@@ -1,5 +1,9 @@
 # Version 6.1.0.9000
 
+## New features
+
+- Expose a `hasty_build` argument to `make()` and `drake_config()`. Here, the user can set the function that builds targets in "hasty mode" (`make(parallelism = "hasty")`).
+
 ## Enhancements
 
 - Remove strict dependencies on packages `evaluate`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.

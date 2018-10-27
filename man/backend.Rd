@@ -13,7 +13,7 @@ backend(...)
 The same return value as \code{future::plan()}.
 }
 \description{
-Use \code{\link[future:plan]{future::plan()}} instead.
+Use \code{future::plan()} instead.
 Avoid \code{drake::plan()}.
 }
 \details{

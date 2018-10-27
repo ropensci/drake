@@ -152,13 +152,6 @@ reference:
   - '`short_hash`'
   - '`target_namespaces`'
   - '`this_cache`'
-- title: Hooks
-  contents:
-  - '`default_hook`'
-  - '`empty_hook`'
-  - '`message_sink_hook`'
-  - '`output_sink_hook`'
-  - '`silencer_hook`'
 - title: Utilities
   contents:
   - '`drake_quotes`'

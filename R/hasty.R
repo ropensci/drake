@@ -13,15 +13,19 @@ hasty_loop <- function(config){
   targets <- igraph::topo_sort(config$schedule)$name
   for (target in targets){
     console_target(target = target, config = config)
-    config$envir[[target]] <- hasty_build(target, config)
+    config$envir[[target]] <- config$hasty_build(
+      target = target,
+      config = config
+    )
   }
   invisible()
 }
 
-hasty_build <- function(target, config){
-  default_hasty_build(target, config)
-}
-
+#' @title Build a target using "hasty" parallelism
+#' @description For internal use only
+#' @export
+#' @keywords internal
+#' @inheritParams drake_build
 default_hasty_build <- function(target, config){
   eval(
     expr = preprocess_command(target, config),
@@ -84,7 +88,7 @@ hasty_send_target <- function(config){
   )
 }
 
-#' @title Build a target using "hasty" parallelism
+#' @title Build a target on a remote worker using "hasty" parallelism
 #' @description For internal use only
 #' @export
 #' @keywords internal
@@ -95,7 +99,7 @@ remote_hasty_build <- function(target, deps = NULL, config){
   for (dep in names(deps)){
     config$envir[[dep]] <- deps[[dep]]
   }
-  value <- hasty_build(target, config)
+  value <- config$hasty_build(target = target, config = config)
   invisible(list(target = target, value = value))
 }
 
