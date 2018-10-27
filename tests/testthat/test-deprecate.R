@@ -98,7 +98,7 @@ test_with_dir("generative templating deprecation", {
     analyses <- analyses(methods, datasets = datasets))
   summary_types <- drake_plan(
     summ = summary(..analysis..), # nolint
-    coef = coefficients(..analysis..)) # nolint
+    coef = stats::coefficients(..analysis..)) # nolint
   expect_warning(
     summaries(summary_types, analyses, datasets))
 })

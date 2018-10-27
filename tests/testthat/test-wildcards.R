@@ -113,7 +113,7 @@ test_with_dir("analyses and summaries", {
 
   no_analyses <- drake_plan(
     summ = summary(dataset__),
-    coef = coefficients(dataset__)
+    coef = stats::coefficients(dataset__)
   )
   suppressWarnings(
     expect_error(
@@ -123,7 +123,7 @@ test_with_dir("analyses and summaries", {
 
   summary_types <- drake_plan(
     summ = summary(analysis__),
-    coef = coefficients(analysis__)
+    coef = stats::coefficients(analysis__)
   )
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
   x <- tibble(
@@ -142,17 +142,17 @@ test_with_dir("analyses and summaries", {
       "summary(regression1_large)",
       "summary(regression2_small)",
       "summary(regression2_large)",
-      "coefficients(regression1_small)",
-      "coefficients(regression1_large)",
-      "coefficients(regression2_small)",
-      "coefficients(regression2_large)"
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
     )
   )
   expect_equal(results, x)
 
   summary_types <- drake_plan(
     summ = summary(analysis__, dataset__),
-    coef = coefficients(analysis__)
+    coef = stats::coefficients(analysis__)
   )
   results <- plan_summaries(
     summary_types,
@@ -176,10 +176,10 @@ test_with_dir("analyses and summaries", {
       "summary(regression1_large, large)",
       "summary(regression2_small, small)",
       "summary(regression2_large, large)",
-      "coefficients(regression1_small)",
-      "coefficients(regression1_large)",
-      "coefficients(regression2_small)",
-      "coefficients(regression2_large)"
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
     )
   )
   y <- results[-1:-2, ]

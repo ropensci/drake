@@ -23,9 +23,9 @@ test_with_dir("Random targets are reproducible", {
   jobs <- scenario$jobs
 
   data <- drake_plan(
-    x = runif(20),
-    y = runif(20),
-    z = rnorm(20),
+    x = sample.int(n = 200, size = 3),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
     mx = mean(x),
     my = mean(y),
     mz = mean(z)
@@ -72,7 +72,7 @@ test_with_dir("Random targets are reproducible", {
 
   # Change the session's seed
   # and check that y and my are the same as before.
-  tmp <- runif(1)
+  tmp <- sample.int(1)
   clean(y)
   con3 <- make(
     data,
@@ -89,7 +89,7 @@ test_with_dir("Random targets are reproducible", {
 
   # Set the same seed as in the cache
   # and check that things are the same as before.
-  tmp <- runif(1)
+  tmp <- sample.int(1)
   clean(y)
   con4 <- make(
     data,
@@ -107,7 +107,7 @@ test_with_dir("Random targets are reproducible", {
 
   # Change the supplied seed, destroy the cache,
   # and check that the results are different.
-  tmp <- runif(1)
+  tmp <- sample.int(1)
   clean(destroy = TRUE)
   con5 <- make(
     data,

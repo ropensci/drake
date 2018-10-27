@@ -95,7 +95,7 @@ suppressWarnings(
 )
 targets <- built(verbose = FALSE)
 lapply(targets, diagnose, character_only = TRUE, verbose = FALSE) \%>\%
-  setNames(targets) \%>\%
+  set_names(targets) \%>\%
   purrr::map("warnings") \%>\%
   purrr::compact() \%>\%
   unlist

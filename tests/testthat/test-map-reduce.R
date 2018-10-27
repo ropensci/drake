@@ -41,7 +41,7 @@ test_with_dir("map_plan() onto a matrix", {
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE)
   x <- readd(plan$target[1], character_only = TRUE, cache = cache)
-  expect_true(is.numeric(coefficients(x)))
+  expect_true(is.numeric(stats::coefficients(x)))
 })
 
 test_with_dir("map_plan() with symbols", {
@@ -58,7 +58,7 @@ test_with_dir("map_plan() with symbols", {
   cache <- storr::storr_environment()
   make(plan, verbose = FALSE, cache = cache)
   x <- readd(plan$target[1], character_only = TRUE, cache = cache)
-  expect_true(is.numeric(coefficients(x)))
+  expect_true(is.numeric(stats::coefficients(x)))
 })
 
 test_with_dir("gather_plan()", {

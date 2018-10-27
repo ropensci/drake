@@ -536,9 +536,9 @@ read_drake_plan <- function(
 #' cache <- storr::storr_environment() # Just for the examples.
 #' my_plan <- drake_plan(
 #'   target1 = sqrt(1234),
-#'   target2 = rnorm(n = 1, mean = target1)
+#'   target2 = sample.int(n = 12, size = 1) + target1
 #' )
-#' tmp <- runif(1) # Needed to get a .Random.seed, but not for drake.
+#' tmp <- sample.int(1) # Needed to get a .Random.seed, but not for drake.
 #' digest::digest(.Random.seed) # Fingerprint of the current R session's seed.
 #' make(my_plan, cache = cache) # Run the project, build the targets.
 #' digest::digest(.Random.seed) # Your session's seed did not change.
@@ -546,7 +546,7 @@ read_drake_plan <- function(
 #' read_drake_seed(cache = cache)
 #' readd(target2, cache = cache) # Randomly-generated target data.
 #' clean(target2, cache = cache) # Oops, I removed the data!
-#' tmp <- runif(1) # Maybe the R session's seed also changed.
+#' tmp <- sample.int(1) # Maybe the R session's seed also changed.
 #' make(my_plan, cache = cache) # Rebuild target2.
 #' # Same as before:
 #' read_drake_seed(cache = cache)

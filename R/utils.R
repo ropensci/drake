@@ -93,7 +93,7 @@ merge_lists <- function(x, y){
       base::union(x[[name]], y[[name]])
     }
   ) %>%
-    setNames(nm = names)
+    set_names(nm = names)
 }
 
 padded_scale <- function(x){
@@ -140,6 +140,11 @@ select_valid <- function(x){
     FUN.VALUE = logical(1)
   )
   x[index]
+}
+
+set_names <- function(x, nm){
+  names(x) <- nm
+  x
 }
 
 standardize_filename <- function(text){

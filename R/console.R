@@ -256,7 +256,7 @@ default_verbose <- function(){
 #'   `target` as a symbol (`FALSE`) or character vector
 #'   (`TRUE`).
 #' @examples
-#' plan <- drake_plan(x = rnorm(15))
+#' plan <- drake_plan(x = sample.int(15))
 #' cache <- storr::storr_environment() # custom in-memory cache
 #' make(plan, cache = cache)
 #' config <- drake_config(plan, cache = cache)

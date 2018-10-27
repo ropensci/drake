@@ -81,20 +81,29 @@ dataset_wildcard <- function(){
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
 #'   small = simulate(5),
-#'   large = simulate(50))
+#'   large = simulate(50)
+#' )
 #' # Create a template workflow plan for the analyses.
 #' methods <- drake_plan(
 #'   regression1 = reg1(dataset__),
-#'   regression2 = reg2(dataset__))
+#'   regression2 = reg2(dataset__)
+#' )
 #' # Evaluate the wildcards in the template
 #' # to produce the actual part of the workflow plan
 #' # that encodes the analyses of the datasets.
 #' # Create one analysis for each combination of dataset and method.
-#' evaluate_plan(methods, wildcard = "dataset__",
-#'   values = datasets$target)
+#' evaluate_plan(
+#'   methods,
+#'   wildcard = "dataset__",
+#'   values = datasets$target
+#' )
 #' # Only choose some combinations of dataset and analysis method.
-#' ans <- evaluate_plan(methods, wildcard = "dataset__",
-#'   values = datasets$target, expand = FALSE)
+#' ans <- evaluate_plan(
+#'   methods,
+#'   wildcard = "dataset__",
+#'   values = datasets$target,
+#'   expand = FALSE
+#' )
 #' ans
 #' # For the complete workflow plan, row bind the pieces together.
 #' my_plan <- rbind(datasets, ans)
@@ -102,28 +111,26 @@ dataset_wildcard <- function(){
 #' # Wildcards for evaluate_plan() do not need the double-underscore suffix.
 #' # Any valid symbol will do.
 #' plan <- drake_plan(
-#'   t  = rt(1000, df = .df.),
-#'   normal = runif(1000, mean = `{MEAN}`, sd = ..sd)
+#'   numbers = sample.int(n = `{Number}`, size = ..size)
 #' )
 #' evaluate_plan(
 #'   plan,
 #'   rules = list(
-#'     "`{MEAN}`" = c(0, 1),
-#'     ..sd = c(3, 4),
-#'     .df. = 5:7
+#'     "`{Number}`" = c(10, 13),
+#'     ..size = c(3, 4)
 #'   )
 #' )
 #' # Workflow plans can have multiple wildcards.
 #' # Each combination of wildcard values will be used
 #' # Except when expand is FALSE.
-#' x <- drake_plan(draws = rnorm(mean = Mean, sd = Sd))
-#' evaluate_plan(x, rules = list(Mean = 1:3, Sd = c(1, 10)))
+#' x <- drake_plan(draws = sample.int(n = N, size = Size))
+#' evaluate_plan(x, rules = list(N = 10:13, Size = 1:2))
 #' # You can use wildcards on columns other than "command"
 #' evaluate_plan(
 #'   drake_plan(
-#'     x = target("always", cpu = "any"),
-#'     y = target("any", cpu = "always"),
-#'     z = target("any", cpu = "any"),
+#'     x = target("1 + 1", cpu = "any"),
+#'     y = target("sqrt(4)", cpu = "always"),
+#'     z = target("sqrt(16)", cpu = "any"),
 #'     strings_in_dots = "literals"
 #'   ),
 #'   rules = list(always = 1:2),
@@ -132,14 +139,14 @@ dataset_wildcard <- function(){
 #' # With the `trace` argument,
 #' # you can generate columns that show how the wildcards
 #' # were evaluated.
-#' plan <- drake_plan(x = rnorm(n__), y = rexp(n__))
+#' plan <- drake_plan(x = sample.int(n__), y = sqrt(n__))
 #' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
 #' print(plan)
 #' # With the `trace` argument,
 #' # you can generate columns that show how the wildcards
 #' # were evaluated. Then you can visualize the wildcard groups
 #' # as clusters.
-#' plan <- drake_plan(x = rnorm(n__), y = rexp(n__))
+#' plan <- drake_plan(x = sqrt(n__), y = sample.int(n__))
 #' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
 #' print(plan)
 #' cache <- storr::storr_environment()

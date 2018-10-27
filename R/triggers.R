@@ -69,7 +69,7 @@
 #' make(my_plan, trigger = trigger(condition = TRUE))
 #' # You can also define specific triggers for each target.
 #' plan <- drake_plan(
-#'   x = rnorm(15),
+#'   x = sample.int(15),
 #'   y = target(
 #'     command = x + 1,
 #'     trigger = trigger(depend = FALSE)
@@ -78,7 +78,7 @@
 #' # Now, when x changes, y will not.
 #' make(plan)
 #' make(plan)
-#' plan$command[1] <- "rnorm(16)" # change x
+#' plan$command[1] <- "sample.int(16)" # change x
 #' make(plan)
 #' })
 #' }

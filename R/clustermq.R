@@ -96,7 +96,7 @@ cmq_deps_list <- function(target, config){
       config$envir[[name]]
     }
   ) %>%
-    setNames(deps)
+    set_names(deps)
 }
 
 #' @title Build a target using the clustermq backend

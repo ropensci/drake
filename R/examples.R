@@ -180,7 +180,7 @@ load_mtcars_example <- function(
 populate_mtcars_example_envir <- function(envir){
   eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
   eval(parse(text = "suppressPackageStartupMessages(require(knitr))"))
-  mtcars <- NULL
+  mtcars <- lm <- NULL
   local(envir = envir, {
     random_rows <- function(data, n){
       data[sample.int(n = nrow(data), size = n, replace = TRUE), ]

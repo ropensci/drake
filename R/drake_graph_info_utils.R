@@ -148,7 +148,7 @@ insert_file_outs <- function(config){
       ) %>%
         unique()
     }) %>%
-      setNames(nodes$id) %>%
+      set_names(nodes$id) %>%
       select_nonempty
     file_out_list <- lapply(nodes$deps, function(deps){
       if (is.null(deps)){
@@ -156,7 +156,7 @@ insert_file_outs <- function(config){
       }
       deps$file_out
     }) %>%
-      setNames(nodes$id) %>%
+      set_names(nodes$id) %>%
       select_nonempty
     nodes <- insert_file_out_nodes(nodes, file_out_list)
     nodes$level <- as.integer(ordered(nodes$level))

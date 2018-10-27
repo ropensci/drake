@@ -163,7 +163,7 @@ bdg_analyze_imports <- function(config, imports){
     },
     jobs = config$jobs
   ) %>%
-    setNames(names(imports))
+    set_names(names(imports))
 }
 
 bdg_analyze_commands <- function(config){
@@ -184,7 +184,7 @@ bdg_analyze_commands <- function(config){
     },
     jobs = config$jobs
   ) %>%
-    setNames(config$plan$target)
+    set_names(config$plan$target)
 }
 
 bdg_get_triggers <- function(config){
@@ -211,7 +211,7 @@ bdg_get_triggers <- function(config){
       simplify = FALSE
     )
   }
-  setNames(triggers, config$plan$target)
+  set_names(triggers, config$plan$target)
 }
 
 bdg_get_condition_deps <- function(config, triggers){
@@ -243,7 +243,7 @@ bdg_get_condition_deps <- function(config, triggers){
       simplify = FALSE
     )
   }
-  setNames(condition_deps, config$plan$target)
+  set_names(condition_deps, config$plan$target)
 }
 
 bdg_get_change_deps <- function(config, triggers){
@@ -275,7 +275,7 @@ bdg_get_change_deps <- function(config, triggers){
       simplify = FALSE
     )
   }
-  setNames(change_deps, config$plan$target)
+  set_names(change_deps, config$plan$target)
 }
 
 bdg_create_edges <- function(
@@ -336,7 +336,7 @@ bdg_create_attributes <- function(
     parent = emptyenv(),
     hash = TRUE
   ) %>%
-    setNames(names(import_deps))
+    set_names(names(import_deps))
   target_deps_attr <- lightly_parallelize(
     X = seq_along(command_deps),
     FUN = zip_deps,
@@ -345,7 +345,7 @@ bdg_create_attributes <- function(
     condition_deps = condition_deps,
     change_deps = change_deps
   ) %>%
-    setNames(names(command_deps))
+    set_names(names(command_deps))
   deps_attr <- c(import_deps_attr, target_deps_attr)
   trigger_attr <- lightly_parallelize(
     X = triggers,
@@ -354,7 +354,7 @@ bdg_create_attributes <- function(
     parent = emptyenv(),
     hash = TRUE
   ) %>%
-    setNames(names(triggers))
+    set_names(names(triggers))
   list(deps_attr = deps_attr, trigger_attr = trigger_attr)
 }
 
@@ -398,7 +398,7 @@ connect_output_files <- function(target_edges, command_deps, jobs){
     },
     jobs = jobs
   ) %>%
-    setNames(nm = names(command_deps)) %>%
+    set_names(nm = names(command_deps)) %>%
     select_nonempty
   if (!length(output_files)){
     target_edges$file <- FALSE
@@ -407,7 +407,8 @@ connect_output_files <- function(target_edges, command_deps, jobs){
   output_files <- utils::stack(output_files)
   output_files$ind <- as.character(output_files$ind)
   index <- match(target_edges$from, table = output_files$values)
-  target_edges$from[is.finite(index)] <- output_files$ind[na.omit(index)]
+  index_finite <- index[!is.na(index)]
+  target_edges$from[is.finite(index)] <- output_files$ind[index_finite]
   target_edges$file <- !is.na(index) # mark input/output file connections
   target_edges[!duplicated(target_edges), ]
 }

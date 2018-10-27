@@ -1,5 +1,5 @@
 .onAttach <- function(libname, pkgname){
-  verbose <- interactive() & runif(1) < 0.1
+  verbose <- interactive() && (sample.int(n = 10, size = 1) < 1.5)
   f <- ifelse(verbose, invisible, suppressPackageStartupMessages)
   f(drake_tip_message())
   invisible()
