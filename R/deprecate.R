@@ -75,18 +75,6 @@ as_file <- function(x){
 #' @keywords internal
 #' @return The same return value as `future::plan()`.
 #' @param ... Arguments to `future::plan()`.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Choose future's multicore parallel backend.
-#' library(future)
-#' future::plan(multicore) # Instead of backend(). Avoid drake::plan().
-#' # Run the project, build the targets.
-#' # Future knows that you chose the multicore backend.
-#' make(my_plan, parallelism = "future_lapply")
-#' })
-#' }
 backend <- function(...){
   .Deprecated(
     "backend",
