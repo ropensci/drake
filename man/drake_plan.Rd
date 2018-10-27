@@ -92,15 +92,15 @@ For a walkthrough, see
 \item \code{retries}: number of times to retry a target if it fails
 to build the first time.
 \item \code{timeout}: Seconds of overall time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+a timeout on a target.
 Assign target-level timeout times with an optional \code{timeout}
 column in \code{plan}.
 \item \code{cpu}: Seconds of cpu time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+a timeout on a target.
 Assign target-level cpu timeout times with an optional \code{cpu}
 column in \code{plan}.
 \item \code{elapsed}: Seconds of elapsed time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+a timeout on a target.
 Assign target-level elapsed timeout times with an optional \code{elapsed}
 column in \code{plan}.
 \item \code{evaluator}: An experimental column. Each entry is a function

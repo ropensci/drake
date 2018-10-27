@@ -55,5 +55,5 @@
 #' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head installed.packages
 #'   packageVersion read.csv sessionInfo stack type.convert unzip write.table
-#' @importFrom withr local_dir with_options with_output_sink with_seed
+#' @importFrom withr with_options with_output_sink with_seed
 NULL

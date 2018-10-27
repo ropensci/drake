@@ -26,15 +26,15 @@
 #' - `retries`: number of times to retry a target if it fails
 #'   to build the first time.
 #' - `timeout`: Seconds of overall time to allow before imposing
-#'   a timeout on a target. Passed to `R.utils::withTimeout()`.
+#'   a timeout on a target.
 #'   Assign target-level timeout times with an optional `timeout`
 #'   column in `plan`.
 #' - `cpu`: Seconds of cpu time to allow before imposing
-#'   a timeout on a target. Passed to `R.utils::withTimeout()`.
+#'   a timeout on a target.
 #'   Assign target-level cpu timeout times with an optional `cpu`
 #'   column in `plan`.
 #' - `elapsed`: Seconds of elapsed time to allow before imposing
-#'   a timeout on a target. Passed to `R.utils::withTimeout()`.
+#'   a timeout on a target.
 #'   Assign target-level elapsed timeout times with an optional `elapsed`
 #'   column in `plan`.
 #' - `evaluator`: An experimental column. Each entry is a function

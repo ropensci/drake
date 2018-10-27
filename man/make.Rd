@@ -178,17 +178,17 @@ will no longer work if you do that.}
 in \code{plan} and just import objects and files.}
 
 \item{timeout}{Seconds of overall time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+a timeout on a target.
 Assign target-level timeout times with an optional \code{timeout}
 column in \code{plan}.}
 
 \item{cpu}{Seconds of cpu time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+a timeout on a target.
 Assign target-level cpu timeout times with an optional \code{cpu}
 column in \code{plan}.}
 
 \item{elapsed}{Seconds of elapsed time to allow before imposing
-a timeout on a target. Passed to \code{R.utils::withTimeout()}.
+a timeout on a target.
 Assign target-level elapsed timeout times with an optional \code{elapsed}
 column in \code{plan}.}
 

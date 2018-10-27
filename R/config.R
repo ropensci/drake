@@ -171,17 +171,17 @@
 #'   need to know how to load the cache.
 #'
 #' @param timeout Seconds of overall time to allow before imposing
-#'   a timeout on a target. Passed to `R.utils::withTimeout()`.
+#'   a timeout on a target.
 #'   Assign target-level timeout times with an optional `timeout`
 #'   column in `plan`.
 #'
 #' @param cpu Seconds of cpu time to allow before imposing
-#'   a timeout on a target. Passed to `R.utils::withTimeout()`.
+#'   a timeout on a target.
 #'   Assign target-level cpu timeout times with an optional `cpu`
 #'   column in `plan`.
 #'
 #' @param elapsed Seconds of elapsed time to allow before imposing
-#'   a timeout on a target. Passed to `R.utils::withTimeout()`.
+#'   a timeout on a target.
 #'   Assign target-level elapsed timeout times with an optional `elapsed`
 #'   column in `plan`.
 #'
@@ -551,7 +551,6 @@ drake_config <- function(
     session_info = session_info,
     cache_log_file = cache_log_file,
     caching = match.arg(caching),
-    evaluator = future::plan("next"),
     keep_going = keep_going,
     session = session,
     pruning_strategy = pruning_strategy,

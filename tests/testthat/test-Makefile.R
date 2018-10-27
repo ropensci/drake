@@ -164,15 +164,18 @@ test_with_dir("packages are loaded in prework", {
   options(test_drake_option_12345 = "unset")
   expect_equal(getOption("test_drake_option_12345"), "unset")
   config <- dbug()
-  if (R.utils::isPackageLoaded("abind")){
+  try(
     # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
-    eval(parse(text = "detach('package:abind', unload = TRUE)"))
-  }
-  if (R.utils::isPackageLoaded("MASS")){
+    eval(parse(text = "detach('package:abind', unload = TRUE)")),
+    silent = TRUE
+  )
+  try(
     # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
     suppressWarnings(
-      eval(parse(text = "detach('package:MASS', unload = TRUE)")))
-  }
+      eval(parse(text = "detach('package:MASS', unload = TRUE)"))
+    ),
+    silent = TRUE
+  )
   expect_error(abind(1))
   expect_error(deparse(body(lda)))
 
@@ -196,15 +199,18 @@ test_with_dir("packages are loaded in prework", {
   # load packages the usual way
   options(test_drake_option_12345 = "unset")
   expect_equal(getOption("test_drake_option_12345"), "unset")
-  if (R.utils::isPackageLoaded("abind")){
+  try(
     # Suppress goodpractice::gp(): legitimate need for detach()
-    eval(parse(text = "detach('package:abind', unload = TRUE)"))
-  }
-  if (R.utils::isPackageLoaded("MASS")){
+    eval(parse(text = "detach('package:abind', unload = TRUE)")),
+    silent = TRUE
+  )
+  try(
     # Suppress goodpractice::gp(): legitimate need for detach()
     suppressWarnings(
-      eval(parse(text = "detach('package:MASS', unload = TRUE)")))
-  }
+      eval(parse(text = "detach('package:MASS', unload = TRUE)"))
+    ),
+    silent = TRUE
+  )
   expect_error(abind(1))
   expect_error(deparse(body(lda)))
   library(abind)

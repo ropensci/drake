@@ -63,12 +63,14 @@ nobuild <- function(config) {
 #' }
 test_with_dir <- function(desc, ...){
   assert_pkg("testthat")
+  old <- getwd()
+  on.exit(setwd(old))
   while (file.exists(new <- tempfile())){
     # Should not reach this part of the loop.
     Sys.sleep(0.01) # nocov
   }
   dir.create(new)
-  withr::local_dir(new)
+  setwd(new)
   withr::local_options(new = list(clustermq.scheduler = "multicore"))
   set_test_backend()
   testthat::test_that(desc = desc, ...)
