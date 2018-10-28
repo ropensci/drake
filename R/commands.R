@@ -54,31 +54,43 @@ get_standardized_command <- function(target, config) {
     standardize_command
 }
 
-# The old standardization command
-# that relies on formatR.
-# Eventually, we may move to styler,
-# since it is now the preferred option for
-# text tidying.
-# The important thing for drake's standardization of commands
-# is to stay stable here, not to be super correct.
-# If styler's behavior changes a lot, it will
-# put targets out of date.
 standardize_command <- function(x) {
-  x <- ignore_ignore(x) %>%
-    language_to_text
-  formatR::tidy_source(
-    source = NULL,
-    comment = FALSE,
-    blank = FALSE,
-    arrow = TRUE,
-    brace.newline = FALSE,
-    indent = 4,
-    output = FALSE,
-    text = as.character(x),
-    width.cutoff = 119
-  )$text.tidy %>%
-    paste(collapse = "\n") %>%
-    braces
+  ignore_ignore(x) %>%
+    language_to_text() %>%
+    standardize_code()
+}
+
+standardize_code <- function(x){
+  x <- as.character(x)
+  if (!length(x)){
+    return(x)
+  }
+  parsed <- parse(text = x, keep.source = TRUE)
+  info <- utils::getParseData(parsed, includeText = TRUE)
+  lines <- replace_equals(lines = strsplit(x, split = "\n")[[1]], info = info)
+  out <- parse(
+    text = paste0(lines, collapse = "\n"),
+    keep.source = FALSE
+  )[[1]]
+  paste0(deparse(out), collapse = "\n")
+}
+
+replace_equals <- function(lines, info){
+  if (is.null(info)){
+    return(lines)
+  }
+  equals <- info[info$token == "EQ_ASSIGN", ]
+  for (line in unique(equals$line1)){
+    line_info <- equals[equals$line1 == line, ]
+    for (col in sort(line_info$col1, decreasing = TRUE)){
+      lines[line] <- paste0(
+        substr(x = lines[line], start = 0, stop = col - 1),
+        "<-",
+        substr(x = lines[line], start = col + 1, stop = nchar(lines[line]))
+      )
+    }
+  }
+  lines
 }
 
 language_to_text <- function(x){

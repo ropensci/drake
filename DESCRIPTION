@@ -62,7 +62,6 @@ Imports:
   codetools,
   digest,
   dplyr,
-  formatR,
   igraph,
   magrittr,
   pkgconfig,
