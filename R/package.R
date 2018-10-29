@@ -52,7 +52,8 @@
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select
-#' @importFrom utils capture.output compareVersion head installed.packages
-#'   packageVersion read.csv sessionInfo stack type.convert unzip write.table
+#' @importFrom utils capture.output compareVersion getParseData head
+#'   installed.packages packageVersion read.csv sessionInfo stack
+#'   type.convert unzip write.table
 #' @importFrom withr local_dir with_options with_output_sink with_seed
 NULL
