@@ -30,10 +30,6 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   }
 }
 
-braces <- function(x) {
-  paste("{\n", x, "\n}")
-}
-
 clean_dependency_list <- function(x){
   if (!length(x)){
     return(character(0))

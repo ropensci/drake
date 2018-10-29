@@ -96,9 +96,6 @@ standardize_code <- function(x){
 }
 
 replace_equals <- function(lines, info){
-  if (is.null(info)){
-    return(lines)
-  }
   equals <- info[info$token == "EQ_ASSIGN", ]
   for (line in unique(equals$line1)){
     line_info <- equals[equals$line1 == line, ]
