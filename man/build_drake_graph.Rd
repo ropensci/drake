@@ -93,7 +93,7 @@ This function returns an igraph object representing how
 the targets in your workflow plan data frame
 depend on each other.
 (\code{help(package = "igraph")}). To plot this graph, call
-to \code{\link[=plot.igraph]{plot.igraph()}} on your graph. See the online manual
+to \code{plot.igraph()} on your graph. See the online manual
 for enhanced graph visualization functionality.
 }
 \examples{

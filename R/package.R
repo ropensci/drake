@@ -39,11 +39,11 @@
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom codetools findGlobals
 #' @importFrom digest digest
-#' @importFrom dplyr bind_rows do group_by mutate n select ungroup
+#' @importFrom dplyr bind_rows do group_by n select ungroup
 #' @importFrom igraph adjacent_vertices components delete_vertices
-#'   degree edge edges igraph_opt igraph_options induced_subgraph is_dag
-#'   make_empty_graph plot.igraph set_vertex_attr simplify subcomponent
-#'   topo_sort V vertex vertex_attr
+#'   degree igraph_opt igraph_options induced_subgraph is_dag
+#'   make_empty_graph set_vertex_attr simplify subcomponent
+#'   topo_sort V vertex_attr
 #' @importFrom magrittr %>%
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
@@ -52,8 +52,7 @@
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect vars_select
-#' @importFrom utils capture.output compareVersion getParseData head
-#'   installed.packages packageVersion read.csv sessionInfo stack
-#'   type.convert unzip write.table
+#' @importFrom utils capture.output compareVersion head packageVersion
+#'   read.csv sessionInfo stack type.convert unzip write.table
 #' @importFrom withr local_dir with_options with_output_sink with_seed
 NULL
