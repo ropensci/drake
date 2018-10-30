@@ -3,7 +3,7 @@
 #' the targets in your workflow plan data frame
 #' depend on each other.
 #' (`help(package = "igraph")`). To plot this graph, call
-#' to [plot.igraph()] on your graph. See the online manual
+#' to `plot.igraph()` on your graph. See the online manual
 #' for enhanced graph visualization functionality.
 #' @export
 #' @return An igraph object representing
