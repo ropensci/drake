@@ -331,26 +331,25 @@ test_with_dir("ignore() works on its own", {
 
 test_with_dir("standardized commands with ignore()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(standardize_command("sqrt(arg)"), "sqrt(arg)")
   expect_equal(
     standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123))"),
-    "f(sqrt(ignore() + 123))"
+    standardize_command("f(sqrt(ignore() + 123))")
   )
   expect_equal(
     standardize_command("f(sqrt( ignore  (fun(arg) + 7) + 123) )"),
-    "f(sqrt(ignore() + 123))"
+    standardize_command("f(sqrt(ignore() + 123))")
   )
   expect_equal(
     standardize_command(" f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))"),
-    "f(sqrt(ignore() + 123))"
+    standardize_command("f(sqrt(ignore() + 123))")
   )
   expect_equal(
     standardize_command("\tf(sqrt( drake ::: ignore  (fun(arg) + 7) + 123))"),
-    "f(sqrt(ignore() + 123))"
+    standardize_command("f(sqrt(ignore() + 123))")
   )
   expect_equal(
     standardize_command("function(x){(sqrt( ignore(fun(arg) + 7) + 123))}"),
-    "function(x) {\n    (sqrt(ignore() + 123))\n}"
+    standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
   )
   f <- function(x){
     (sqrt( ignore(fun(arg) + 7) + 123))

@@ -81,31 +81,15 @@ language_to_text <- function(x){
 }
 
 standardize_code <- function(x){
-  x <- as.character(x)
-  if (!length(x)){
-    return(x)
-  }
-  parsed <- parse(text = x, keep.source = TRUE)
-  info <- utils::getParseData(parsed, includeText = TRUE)
-  lines <- replace_equals(lines = strsplit(x, split = "\n")[[1]], info = info)
-  out <- parse(
-    text = paste0(lines, collapse = "\n"),
-    keep.source = FALSE
-  )[[1]]
-  paste0(deparse(out), collapse = "\n")
-}
-
-replace_equals <- function(lines, info){
-  equals <- info[info$token == "EQ_ASSIGN", ]
-  for (line in unique(equals$line1)){
-    line_info <- equals[equals$line1 == line, ]
-    for (col in sort(line_info$col1, decreasing = TRUE)){
-      lines[line] <- paste0(
-        substr(x = lines[line], start = 0, stop = col - 1),
-        "<-",
-        substr(x = lines[line], start = col + 1, stop = nchar(lines[line]))
-      )
-    }
-  }
-  lines
+  x <- deparse(parse(text = as.character(x), keep.source = FALSE)) %>%
+    paste(collapse = "\n")
+  info <- parse(text = x, keep.source = TRUE) %>%
+    utils::getParseData(includeText = TRUE)
+  change <- info$token == "LEFT_ASSIGN"
+  info$text[change] <- "="
+  info$token[change] <- "EQ_ASSIGN"
+  info[info$token != "COMMENT" & info$terminal, c("token", "text")] %>%
+    lapply(FUN = paste, collapse = " ") %>%
+    paste(collapse = " >> ") %>%
+    digest::digest(algo = "sha256", serialize = FALSE)
 }
