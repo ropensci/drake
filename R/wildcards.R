@@ -77,6 +77,11 @@ dataset_wildcard <- function(){
 #' @param columns character vector of names of columns
 #'   to look for and evaluate the wildcards.
 #'
+#' @param sep character scalar, separator for the names
+#'   of the new targets generated. For example, in
+#'   `evaluate_plan(drake_plan(x = sqrt(y__)), list(y__ = 1:2), sep = ".")`,
+#'   the names of the new targets are `x.1` and `x.2`.
+#'
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -166,7 +171,8 @@ evaluate_plan <- function(
   expand = TRUE,
   rename = expand,
   trace = FALSE,
-  columns = "command"
+  columns = "command",
+  sep = "_"
 ){
   if (!is.null(rules)){
     check_wildcard_rules(rules)
@@ -176,7 +182,8 @@ evaluate_plan <- function(
       expand = expand,
       rename = rename,
       trace = trace,
-      columns = columns
+      columns = columns,
+      sep = sep
     )
   } else if (!is.null(wildcard) && !is.null(values)){
     evaluate_single_wildcard(
@@ -186,7 +193,8 @@ evaluate_plan <- function(
       expand = expand,
       rename = rename,
       trace = trace,
-      columns = columns
+      columns = columns,
+      sep = sep
     )
   } else {
     plan
@@ -194,7 +202,14 @@ evaluate_plan <- function(
 }
 
 evaluate_single_wildcard <- function(
-  plan, wildcard, values, expand, rename, trace, columns
+  plan,
+  wildcard,
+  values,
+  expand,
+  rename,
+  trace,
+  columns,
+  sep
 ){
   if (!length(columns)){
     return(plan)
@@ -231,7 +246,7 @@ evaluate_single_wildcard <- function(
   }
   matched_targets <- matching$target
   if (rename){
-    matching$target <- paste(matching$target, values, sep = "_")
+    matching$target <- paste(matching$target, values, sep = sep)
   }
   values <- rep(values, length.out = nrow(matching))
   for (col in columns){
@@ -257,7 +272,7 @@ evaluate_single_wildcard <- function(
 }
 
 evaluate_wildcard_rules <- function(
-  plan, rules, expand, rename, trace, columns
+  plan, rules, expand, rename, trace, columns, sep
 ){
   for (index in seq_len(length(rules))){
     plan <- evaluate_single_wildcard(
@@ -267,7 +282,8 @@ evaluate_wildcard_rules <- function(
       expand = expand,
       rename = rename,
       trace = trace,
-      columns = columns
+      columns = columns,
+      sep = sep
     )
   }
   plan
@@ -313,6 +329,9 @@ check_wildcard_rules <- function(rules){
 #'   the names of the new targets.
 #' @param rename logical, whether to rename the targets
 #'   based on the `values`. See the examples for a demo.
+#' @param sep character scalar, delimiter between the original
+#'   target names and the values to append to create the new
+#'   target names. Only relevant when `rename` is `TRUE`.
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -324,7 +343,7 @@ check_wildcard_rules <- function(rules){
 #' # Choose whether to rename the targets based on the values.
 #' expand_plan(datasets, values = 1:3, rename = TRUE)
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
-expand_plan <- function(plan, values = NULL, rename = TRUE){
+expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_"){
   if (!length(values)){
     return(plan)
   }
@@ -334,7 +353,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE){
   values <- as.character(values)
   values <- rep(values, times = nrows)
   if (rename){
-    plan$target <- paste(plan$target, values, sep = "_")
+    plan$target <- paste(plan$target, values, sep = sep)
   }
   rownames(plan) <- NULL
   sanitize_plan(plan, allow_duplicated_targets = TRUE)

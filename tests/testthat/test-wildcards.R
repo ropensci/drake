@@ -14,6 +14,13 @@ test_with_dir("evaluate and expand", {
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
   expect_equal(m1, df)
 
+  x <- expand_plan(df, values = c("rep1", "rep2"), sep = ".")
+  y <- tibble::tibble(
+    target = c("data.rep1", "data.rep2"),
+    command = rep("simulate(center = MU, scale = SIGMA)", 2)
+  )
+  expect_equal(x, y)
+
   x <- expand_plan(df, values = c("rep1", "rep2"))
   y <- tibble::tibble(
     target = c("data_rep1", "data_rep2"),
@@ -29,6 +36,18 @@ test_with_dir("evaluate and expand", {
   )
   expect_equal(x1, y)
   expect_equal(x2, y2)
+
+  x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2, sep = ".")
+  y <- tibble::tibble(
+    target = c("data_rep1.1", "data_rep1.2", "data_rep2.1", "data_rep2.2"),
+    command = c(
+      "simulate(center = 1, scale = SIGMA)",
+      "simulate(center = 2, scale = SIGMA)",
+      "simulate(center = 1, scale = SIGMA)",
+      "simulate(center = 2, scale = SIGMA)"
+    )
+  )
+  expect_equal(x2, y)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
   y <- tibble::tibble(
@@ -69,6 +88,26 @@ test_with_dir("evaluate and expand", {
   )
   expect_equal(x3a, y)
 
+  x3b <- evaluate_plan(
+    x2,
+    wildcard = "SIGMA",
+    values = letters[1:2],
+    expand = FALSE,
+    rename = TRUE,
+    sep = "."
+  )
+  y <- tibble::tibble(
+    target = c(
+      "data_rep1_1.a", "data_rep1_2.b", "data_rep2_1.a", "data_rep2_2.b"),
+    command = c(
+      "simulate(center = 1, scale = a)",
+      "simulate(center = 2, scale = b)",
+      "simulate(center = 1, scale = a)",
+      "simulate(center = 2, scale = b)"
+    )
+  )
+  expect_equal(x3b, y)
+
   x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
                       expand = FALSE)
   y <- tibble::tibble(
@@ -84,6 +123,18 @@ test_with_dir("evaluate and expand", {
   expect_equal(12, nrow(x5))
   expect_equal(12, length(unique(x5$target)))
   expect_equal(6, length(unique(x5$command)))
+
+  x6 <- evaluate_plan(df, rules = list(MU = 0:1, SIGMA = 1:2), sep = ".")
+  y <- tibble::tibble(
+    target = c("data.0.1", "data.0.2", "data.1.1", "data.1.2"),
+    command = c(
+      "simulate(center = 0, scale = 1)",
+      "simulate(center = 0, scale = 2)",
+      "simulate(center = 1, scale = 1)",
+      "simulate(center = 1, scale = 2)"
+    )
+  )
+  expect_equal(x6, y)
 })
 
 test_with_dir("analyses and summaries", {

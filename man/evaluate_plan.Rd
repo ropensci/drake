@@ -7,7 +7,7 @@ workflow plan data frame from a template data frame.}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
   expand = TRUE, rename = expand, trace = FALSE,
-  columns = "command")
+  columns = "command", sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by
@@ -45,6 +45,11 @@ wildcards.}
 
 \item{columns}{character vector of names of columns
 to look for and evaluate the wildcards.}
+
+\item{sep}{character scalar, separator for the names
+of the new targets generated. For example, in
+\code{evaluate_plan(drake_plan(x = sqrt(y__)), list(y__ = 1:2), sep = ".")},
+the names of the new targets are \code{x.1} and \code{x.2}.}
 }
 \value{
 A workflow plan data frame with the wildcards evaluated.
