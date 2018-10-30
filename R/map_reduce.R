@@ -170,6 +170,8 @@ gather_plan <- function(
 #'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
 #'   gathers on some targets while including all the original targets
 #'   in the output. See the examples for a demonstration.
+#' @param sep character scalar, delimiter for creating the names
+#'   of new targets
 #' @examples
 #' plan <- drake_plan(
 #'   data = get_data(),
@@ -201,7 +203,8 @@ gather_by <- function(
   prefix = "target",
   gather = "list",
   append = TRUE,
-  filter = NULL
+  filter = NULL,
+  sep = "_"
 ){
   . <- NULL
   if (is.null(substitute(filter))){
@@ -220,9 +223,9 @@ gather_by <- function(
       )
     )
   cols <- dplyr::select(gathered, ...)
-  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = "_")
+  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)){
-    gathered$target <- paste(gathered$target, suffix, sep = "_")
+    gathered$target <- paste(gathered$target, suffix, sep = sep)
   }
   if (append){
     out <- bind_plans(plan, gathered)
@@ -255,6 +258,7 @@ gather_by <- function(
 #'   original rows in the `plan` argument.
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
+#' @param sep character scalar, delimiter for creating new target names
 #' @examples
 #' # Workflow plan for datasets:
 #' x_plan <- evaluate_plan(
@@ -289,12 +293,13 @@ reduce_plan <- function(
   op = " + ",
   end = "",
   pairwise = TRUE,
-  append = FALSE
+  append = FALSE,
+  sep = "_"
 ){
   if (pairwise){
     pairs <- reduction_pairs(
       x = plan$target,
-      base_name = paste0(target, "_")
+      base_name = paste0(target, sep)
     )
     pairs$names[nrow(pairs)] <- target
     out <- tibble(
@@ -340,6 +345,8 @@ reduce_plan <- function(
 #'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
 #'   gathers on some targets while including all the original targets
 #'   in the output. See the examples for a demonstration.
+#' @param sep character scalar, delimiter for creating the names
+#'   of new targets
 #' @examples
 #' plan <- drake_plan(
 #'   data = get_data(),
@@ -376,7 +383,8 @@ reduce_by <- function(
   end = "",
   pairwise = TRUE,
   append = TRUE,
-  filter = NULL
+  filter = NULL,
+  sep = "_"
 ){
   . <- NULL
   if (is.null(substitute(filter))){
@@ -394,13 +402,14 @@ reduce_by <- function(
         op = op,
         end = end,
         pairwise = pairwise,
-        append = FALSE
+        append = FALSE,
+        sep = sep
       )
     )
   cols <- dplyr::select(reduced, ...)
-  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = "_")
+  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)){
-    reduced$target <- paste(reduced$target, suffix, sep = "_")
+    reduced$target <- paste(reduced$target, suffix, sep = sep)
   }
   if (append){
     out <- bind_plans(plan, reduced)

@@ -3,6 +3,7 @@
 ## New features
 
 - Expose a `hasty_build` argument to `make()` and `drake_config()`. Here, the user can set the function that builds targets in "hasty mode" (`make(parallelism = "hasty")`).
+- Add a `sep` argument to `gather_by()`, `reduce_by()`, `reduce_plan()`, `evaluate_plan()`, `expand_plan()`, `plan_analyses()`, and `plan_summaries()`. Allows the user to set the delimiter for generating new target names.
 
 ## Enhancements
 

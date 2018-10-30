@@ -5,7 +5,7 @@
 \title{Gather multiple groupings of targets}
 \usage{
 gather_by(plan, ..., prefix = "target", gather = "list",
-  append = TRUE, filter = NULL)
+  append = TRUE, filter = NULL, sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -34,6 +34,9 @@ Why not just call \code{dplyr::filter()} before \code{gather_by()}?
 Because \code{gather_by(append = TRUE, filter = my_column == "my_value")}
 gathers on some targets while including all the original targets
 in the output. See the examples for a demonstration.}
+
+\item{sep}{character scalar, delimiter for creating the names
+of new targets}
 }
 \value{
 a workflow plan data frame
