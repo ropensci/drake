@@ -81,7 +81,10 @@ language_to_text <- function(x){
 }
 
 standardize_code <- function(x){
-  x <- deparse(parse(text = as.character(x), keep.source = FALSE)) %>%
+  if (!length(x)){
+    return(as.character(NA))
+  }
+  x <- deparse(parse(text = as.character(x), keep.source = FALSE)[[1]]) %>%
     paste(collapse = "\n")
   info <- parse(text = x, keep.source = TRUE) %>%
     utils::getParseData(includeText = TRUE)
