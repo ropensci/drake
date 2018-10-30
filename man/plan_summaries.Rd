@@ -6,7 +6,7 @@
 multiple analyses of multiple datasets multiple ways.}
 \usage{
 plan_summaries(plan, analyses, datasets, gather = rep("list",
-  nrow(plan)))
+  nrow(plan)), sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame with commands for the summaries.
@@ -22,6 +22,9 @@ or import the datasets.}
 summaries. If not \code{NULL}, the length must be the number of
 rows in the \code{plan}. See the \code{\link[=gather_plan]{gather_plan()}} function
 for more.}
+
+\item{sep}{character scalar, delimiter for creating the
+new target names}
 }
 \value{
 An evaluated workflow plan data frame of instructions

@@ -143,6 +143,23 @@ test_with_dir("analyses and summaries", {
     regression1 = reg1(dataset__),
     regression2 = reg2(dataset__)
   )
+
+  analyses <- plan_analyses(methods, datasets = datasets, sep = ".")
+  x <- tibble(
+    target = c(
+      "regression1.small",
+      "regression1.large",
+      "regression2.small",
+      "regression2.large"
+    ),
+    command = c(
+      "reg1(small)",
+      "reg1(large)",
+      "reg2(small)",
+      "reg2(large)")
+  )
+  expect_equal(analyses, x)
+
   analyses <- plan_analyses(methods, datasets = datasets)
   x <- tibble(
     target = c(
@@ -176,6 +193,38 @@ test_with_dir("analyses and summaries", {
     summ = summary(analysis__),
     coef = stats::coefficients(analysis__)
   )
+
+  results <- plan_summaries(
+    summary_types,
+    analyses,
+    datasets,
+    gather = NULL,
+    sep = "."
+  )
+  x <- tibble(
+    target = c(
+      "summ.regression1_small",
+      "summ.regression1_large",
+      "summ.regression2_small",
+      "summ.regression2_large",
+      "coef.regression1_small",
+      "coef.regression1_large",
+      "coef.regression2_small",
+      "coef.regression2_large"
+    ),
+    command = c(
+      "summary(regression1_small)",
+      "summary(regression1_large)",
+      "summary(regression2_small)",
+      "summary(regression2_large)",
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
+    )
+  )
+  expect_equal(results, x)
+
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
   x <- tibble(
     target = c(
@@ -261,8 +310,14 @@ test_with_dir("analyses and summaries", {
       other = myother(dataset__)
     )
   )
-  expect_warning(s <- plan_summaries(newtypes, analyses, datasets,
-                                     gather = NULL))
+  expect_warning(
+    s <- plan_summaries(
+      newtypes,
+      analyses,
+      datasets,
+      gather = NULL
+    )
+  )
   expect_equal(nrow(s), 8)
 })
 

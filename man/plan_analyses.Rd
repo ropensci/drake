@@ -5,7 +5,7 @@
 \title{Generate a workflow plan data frame to
 analyze multiple datasets using multiple methods of analysis.}
 \usage{
-plan_analyses(plan, datasets)
+plan_analyses(plan, datasets, sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame of analysis methods.
@@ -17,6 +17,9 @@ the commands in the output will include \code{lm(your_dataset_1)},
 
 \item{datasets}{workflow plan data frame with instructions
 to make the datasets.}
+
+\item{sep}{character scalar, delimiter for creating
+the names of new targets}
 }
 \value{
 An evaluated workflow plan data frame of analysis targets.

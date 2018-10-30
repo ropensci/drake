@@ -375,6 +375,8 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_"){
 #'   `lm(your_dataset_2)`, etc.
 #' @param datasets workflow plan data frame with instructions
 #'   to make the datasets.
+#' @param sep character scalar, delimiter for creating
+#'   the names of new targets
 #' @examples
 #' # Create the piece of the workflow plan for the datasets.
 #' datasets <- drake_plan(
@@ -391,7 +393,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_"){
 #' # For the final workflow plan, row bind the pieces together.
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
-plan_analyses <- function(plan, datasets){
+plan_analyses <- function(plan, datasets, sep = "_"){
   plan <- deprecate_wildcard(
     plan = plan,
     old = "..dataset..",
@@ -400,7 +402,8 @@ plan_analyses <- function(plan, datasets){
   evaluate_plan(
     plan,
     wildcard = dataset_wildcard(),
-    values = datasets$target
+    values = datasets$target,
+    sep = sep
   )
 }
 
@@ -424,6 +427,8 @@ plan_analyses <- function(plan, datasets){
 #'   summaries. If not `NULL`, the length must be the number of
 #'   rows in the `plan`. See the [gather_plan()] function
 #'   for more.
+#' @param sep character scalar, delimiter for creating the
+#'   new target names
 #' @examples
 #' # Create the part of the workflow plan data frame for the datasets.
 #' datasets <- drake_plan(
@@ -453,7 +458,8 @@ plan_summaries <- function(
   plan,
   analyses,
   datasets,
-  gather = rep("list", nrow(plan))
+  gather = rep("list", nrow(plan)),
+  sep = "_"
 ){
   plan <- deprecate_wildcard(
     plan = plan,
@@ -467,7 +473,7 @@ plan_summaries <- function(
   )
   plan <- with_analyses_only(plan)
   out <- plan
-  group <- paste(colnames(out), collapse = "_")
+  group <- paste(colnames(out), collapse = sep)
   out[[group]] <- out$target
   if (!any(grepl(analysis_wildcard(), out$command, fixed = TRUE))){
     stop(
@@ -478,13 +484,15 @@ plan_summaries <- function(
   out <- evaluate_plan(
     out,
     wildcard = analysis_wildcard(),
-    values = analyses$target
+    values = analyses$target,
+    sep = sep
   )
   out <- evaluate_plan(
     out,
     wildcard = dataset_wildcard(),
     values = datasets$target,
-    expand = FALSE
+    expand = FALSE,
+    sep = sep
   )
   if (!length(gather)){
     return(out[setdiff(names(out), group)])
