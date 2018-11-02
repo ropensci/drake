@@ -340,6 +340,7 @@ test_with_dir("standardized commands with ignore()", {
     standardize_command("f(sqrt( ignore  (fun(arg) + 7) + 123) )"),
     "{\n f(sqrt(ignore() + 123)) \n}"
   )
+
   expect_equal(
     standardize_command(" f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))"),
     "{\n f(sqrt(ignore() + 123)) \n}"
@@ -360,6 +361,13 @@ test_with_dir("standardized commands with ignore()", {
     attr(b, a) <- NULL
   }
   expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
+})
+
+test_with_dir("can standardize command with other ignored symbols", {
+  expect_equal(
+    standardize_command("function(x){(sqrt( drake_rm(arg) + 123))}"),
+    "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
+  )
 })
 
 test_with_dir("ignore() in imported functions", {

@@ -232,8 +232,10 @@ test_with_dir("self-referential commands and imports", {
 })
 
 test_with_dir("._drake_envir and drake_rm() are not dependencies", {
-  code1 <- quote(drake_rm(x))
-  code2 <- quote(rm(x, envir = ._drake_envir))
-  expect_false("drake_rm" %in% unlist(deps_code(code1)))
-  expect_false("._drake_envir" %in% unlist(deps_code(code2)))
+  deps1 <- deps_code(quote(drake_rm(x)))$globals
+  deps2 <- deps_code(quote(rm(x, envir = ._drake_envir)))$globals
+  deps3 <- deps_code(quote(drake_rm(x)))$globals
+  expect_equal(deps1, NULL)
+  expect_equal(sort(deps2), sort(c("rm", "x")))
+  expect_equal(deps3, NULL)
 })

@@ -419,7 +419,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL){
         new_results <- analyze_file_in(expr)
       } else if (is_file_out_call(expr)){
         new_results <- analyze_file_out(expr)
-      } else if (!is_ignore_call(expr)){
+      } else if (!is_ignored_call(expr)){
         if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
           new_results <- list(
             namespaced = setdiff(wide_deparse(expr), ignored_symbols)
@@ -523,7 +523,7 @@ recurse_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))){
     body(x) <- recurse_ignore(body(x))
   } else if (is_callish(x)){
-    if (is_ignore_call(x)) {
+    if (is_ignored_call(x)) {
       x <- quote(ignore())
     } else {
       x[] <- purrr::map(as.list(x), recurse_ignore)
@@ -549,10 +549,10 @@ pair_text <- function(x, y){
 }
 
 drake_prefix <- c("", "drake::", "drake:::")
-envir_syms <- pair_text(drake_prefix, c("._drake_envir", "drake_rm"))
 file_in_fns <- pair_text(drake_prefix, c("file_in"))
 file_out_fns <- pair_text(drake_prefix, c("file_out"))
-ignore_fns <- pair_text(drake_prefix, "ignore")
+ignored_fns <- pair_text(drake_prefix, c("drake_rm", "ignore"))
+ignored_syms <- "._drake_envir"
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
@@ -560,10 +560,10 @@ target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
 
 ignored_symbols <- c(
-  envir_syms,
   file_in_fns,
   file_out_fns,
-  ignore_fns,
+  ignored_fns,
+  ignored_syms,
   loadd_fns,
   knitr_in_fns,
   readd_fns,
@@ -571,8 +571,8 @@ ignored_symbols <- c(
   trigger_fns
 )
 
-is_knitr_in_call <- function(expr){
-  wide_deparse(expr[[1]]) %in% c(knitr_in_fns)
+is_ignored_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% ignored_fns
 }
 
 is_file_in_call <- function(expr){
@@ -583,16 +583,16 @@ is_file_out_call <- function(expr){
   wide_deparse(expr[[1]]) %in% file_out_fns
 }
 
+is_knitr_in_call <- function(expr){
+  wide_deparse(expr[[1]]) %in% c(knitr_in_fns)
+}
+
 is_loadd_call <- function(expr){
   wide_deparse(expr[[1]]) %in% loadd_fns
 }
 
 is_readd_call <- function(expr){
   wide_deparse(expr[[1]]) %in% readd_fns
-}
-
-is_ignore_call <- function(expr){
-  wide_deparse(expr[[1]]) %in% ignore_fns
 }
 
 is_target_call <- function(expr){
