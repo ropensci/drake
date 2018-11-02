@@ -230,3 +230,10 @@ test_with_dir("self-referential commands and imports", {
   log2 <- drake_cache_log(cache = cache)
   expect_equal(log1, log2)
 })
+
+test_with_dir("._drake_envir and drake_rm() are not dependencies", {
+  code1 <- quote(drake_rm(x))
+  code2 <- quote(rm(x, envir = ._drake_envir))
+  expect_false("drake_rm" %in% unlist(deps_code(code1)))
+  expect_false("._drake_envir" %in% unlist(deps_code(code2)))
+})

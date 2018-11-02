@@ -423,12 +423,12 @@ traversing the entire dependency graph on every \code{\link[=make]{make()}}.
 If none of these options suits your project,
 you can take control. Just set \code{memory_strategy}
 to \code{"speed"} and remove targets in your workflow plan commands
-using the hidden \code{._envir} variable. Example:
+using the hidden \code{._drake_envir} variable. Example:
 drake_plan(
 large_data = get_large_data(),
 clean_data = clean_data(large_data),
 my_plot = {
-rm(list = "large_data", envir = ._envir)
+rm(list = "large_data", envir = ._drake_envir)
 make_my_plot(clean_data)
 }
 )}

@@ -402,7 +402,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL){
       }
       walk(body(expr))
     } else if (is.name(expr)) {
-      new_globals <- setdiff(x = wide_deparse(expr), y = drake_fn_patterns) %>%
+      new_globals <- setdiff(x = wide_deparse(expr), y = ignored_symbols) %>%
         Filter(f = is_parsable)
       results$globals <<- c(results$globals, new_globals)
     } else if (is.character(expr)) {
@@ -422,7 +422,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL){
       } else if (!is_ignore_call(expr)){
         if (wide_deparse(expr[[1]]) %in% c("::", ":::")){
           new_results <- list(
-            namespaced = setdiff(wide_deparse(expr), drake_fn_patterns)
+            namespaced = setdiff(wide_deparse(expr), ignored_symbols)
           )
         } else {
           lapply(X = expr, FUN = walk)
@@ -465,7 +465,7 @@ find_globals <- function(fun){
       codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
     }
   ) %>%
-    setdiff(y = c(drake_fn_patterns, ".")) %>%
+    setdiff(y = c(ignored_symbols, ".")) %>%
     Filter(f = is_parsable)
 }
 
@@ -481,13 +481,13 @@ analyze_loadd <- function(expr){
     unnamed$strings,
     code_dependencies(expr["list"])$strings
   )
-  list(loadd = setdiff(out, drake_fn_patterns))
+  list(loadd = setdiff(out, ignored_symbols))
 }
 
 analyze_readd <- function(expr){
   expr <- match.call(drake::readd, as.call(expr))
   deps <- unlist(code_dependencies(expr["target"])[c("globals", "strings")])
-  list(readd = setdiff(deps, drake_fn_patterns))
+  list(readd = setdiff(deps, ignored_symbols))
 }
 
 analyze_file_in <- function(expr){
@@ -549,21 +549,24 @@ pair_text <- function(x, y){
 }
 
 drake_prefix <- c("", "drake::", "drake:::")
-knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
+envir_syms <- pair_text(drake_prefix, c("._drake_envir", "drake_rm"))
 file_in_fns <- pair_text(drake_prefix, c("file_in"))
 file_out_fns <- pair_text(drake_prefix, c("file_out"))
+ignore_fns <- pair_text(drake_prefix, "ignore")
+knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
-ignore_fns <- pair_text(drake_prefix, "ignore")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
-drake_fn_patterns <- c(
-  knitr_in_fns,
+
+ignored_symbols <- c(
+  envir_syms,
   file_in_fns,
   file_out_fns,
-  loadd_fns,
-  readd_fns,
   ignore_fns,
+  loadd_fns,
+  knitr_in_fns,
+  readd_fns,
   target_fns,
   trigger_fns
 )

@@ -703,7 +703,7 @@ find_knitr_doc <- function(expr, result = character(0)){
                      result = result) %>%
       clean_dependency_list
   }
-  setdiff(result, drake_fn_patterns)
+  setdiff(result, ignored_symbols)
 }
 
 # Deprecated on 2018-02-15

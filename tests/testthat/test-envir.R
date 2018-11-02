@@ -83,7 +83,7 @@ test_with_dir("all memory strategies work", {
   }
 })
 
-test_with_dir("._envir and memory strategies", {
+test_with_dir("._drake_envir and memory strategies", {
   plan <- drake_plan(
     a = {
       i <- 1
@@ -91,7 +91,7 @@ test_with_dir("._envir and memory strategies", {
     },
     b = a,
     c = {
-      saveRDS(ls(envir = ._envir), "ls.rds")
+      saveRDS(ls(envir = ._drake_envir), "ls.rds")
       b
     },
     strings_in_dots = "literals"
@@ -130,11 +130,11 @@ test_with_dir("._envir and memory strategies", {
     },
     b = {
       out <- a
-      rm(a, envir = ._envir)
+      rm(a, envir = ._drake_envir)
       out
     },
     c = {
-      saveRDS(ls(envir = ._envir), "ls.rds")
+      saveRDS(ls(envir = ._drake_envir), "ls.rds")
       b
     },
     strings_in_dots = "literals"
