@@ -75,7 +75,7 @@ check_build_store <- function(
     return()
   }
   meta$start <- proc.time()
-  prune_envir(
+  manage_memory(
     targets = target,
     config = config,
     downstream = downstream
@@ -168,7 +168,7 @@ build_target <- function(target, meta, config){
   ) %>%
     as.numeric
   while (retries <= max_retries){
-    build <- one_build(
+    build <- with_seed_timeout(
       target = target,
       meta = meta,
       config = config

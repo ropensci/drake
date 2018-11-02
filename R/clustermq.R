@@ -71,7 +71,7 @@ cmq_send_target <- function(config){
   meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")){
-    prune_envir(targets = target, config = config, jobs = 1)
+    manage_memory(targets = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
   } else {
     deps <- NULL
@@ -118,7 +118,7 @@ cmq_build <- function(target, meta, deps, config){
       config$envir[[dep]] <- deps[[dep]]
     }
   } else {
-    prune_envir(targets = target, config = config, jobs = 1)
+    manage_memory(targets = target, config = config, jobs = 1)
   }
   build <- just_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")){

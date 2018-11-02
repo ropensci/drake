@@ -305,3 +305,15 @@ test_with_dir("deprecated hooks", {
   expect_warning(output_sink_hook(NULL), regexp = "deprecated")
   expect_warning(silencer_hook(NULL), regexp = "deprecated")
 })
+
+test_with_dir("pruning_strategy", {
+  expect_warning(
+    make(
+      drake_plan(x = 1),
+      pruning_strategy = 123,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    ),
+    regexp = "deprecated"
+  )
+})

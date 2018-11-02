@@ -9,7 +9,7 @@ assign_to_envir <- function(target, value, config){
   invisible()
 }
 
-#' @title Prune the evaluation environment
+#' @title Manage in-memory targets
 #' @description Load targets that you need to build the targets
 #'   and unload the ones you will never need again in the
 #'   current runthrough of the pipeline. This function should
@@ -25,8 +25,8 @@ assign_to_envir <- function(target, value, config){
 #' @param jobs number of jobs for local parallel computing
 #' @examples
 #' # Users should use make().
-prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
-  if (identical(config$pruning_strategy, "lookahead")){
+manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
+  if (identical(config$memory_strategy, "lookahead")){
     if (is.null(downstream)){
       downstream <- downstream_nodes(
         from = targets,
@@ -49,7 +49,7 @@ prune_envir <- function(targets, config, downstream = NULL, jobs = 1){
     config = config,
     jobs = jobs
   )
-  if (!identical(config$pruning_strategy, "speed")){
+  if (!identical(config$memory_strategy, "speed")){
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
       parallel_filter(f = is_not_file, jobs = jobs) %>%
