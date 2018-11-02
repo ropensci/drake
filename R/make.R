@@ -110,14 +110,15 @@ make <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("lookahead", "speed", "memory"),
+  pruning_strategy = NULL,
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build
+  hasty_build = drake::default_hasty_build,
+  memory_strategy = c("speed", "memory", "lookahead")
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -170,7 +171,8 @@ make <- function(
       garbage_collection = garbage_collection,
       template = template,
       sleep = sleep,
-      hasty_build = hasty_build
+      hasty_build = hasty_build,
+      memory_strategy = memory_strategy
     )
   }
   make_with_config(config = config)

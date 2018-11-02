@@ -1,18 +1,21 @@
 drake_context("envir")
 
-test_with_dir("prune_envir() warns if loading missing deps", {
+test_with_dir("manage_memory() warns if loading missing deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  con <- drake_config(drake_plan(a = 1, b = a))
+  con <- drake_config(
+    drake_plan(a = 1, b = a),
+    memory_strategy = "lookahead"
+  )
   expect_warning(
-    prune_envir(targets = "b", config = con),
+    manage_memory(targets = "b", config = con),
     regexp = "unable to load required dependencies"
   )
 })
 
-test_with_dir("prune_envir in full build", {
+test_with_dir("manage_memory in full build", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # drake_plan with lots of nested deps This will fail if
-  # prune_envir() doesn't work.
+  # manage_memory() doesn't work.
   datasets <- drake_plan(x = 1, y = 2, z = 3)
   methods <- drake_plan(
     a = dataset__,
@@ -37,13 +40,14 @@ test_with_dir("prune_envir in full build", {
   )
   plan <- rbind(datasets, analyses, summaries, output)
 
-  # set up a workspace to test prune_envir()
+  # set up a workspace to test manage_memory()
   # set verbose to TRUE to see log of loading
   config <- drake_config(
     plan,
     targets = plan$target,
     envir = new.env(parent = globalenv()),
-    verbose = FALSE
+    verbose = FALSE,
+    memory_strategy = "lookahead"
   )
 
   # actually run
@@ -54,11 +58,11 @@ test_with_dir("prune_envir in full build", {
   # are discarded
   remove(list = ls(config$envir), envir = config$envir)
   expect_equal(ls(config$envir), character(0))
-  prune_envir(datasets$target, config)
+  manage_memory(datasets$target, config)
   expect_equal(ls(config$envir), character(0))
-  prune_envir(analyses$target, config)
+  manage_memory(analyses$target, config)
   expect_equal(ls(config$envir), c("x", "y", "z"))
-  prune_envir("waitforme", config)
+  manage_memory("waitforme", config)
 
   # keep y around for waitformetoo
   expect_equal(
@@ -67,9 +71,9 @@ test_with_dir("prune_envir in full build", {
   )
 })
 
-test_with_dir("all pruning strategies work", {
+test_with_dir("all memory strategies work", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (pruning_strategy in c("lookahead", "speed", "memory")){
+  for (pruning_strategy in c("speed", "memory", "lookahead")){
     envir <- new.env(parent = globalenv())
     cache <- storr::storr_environment()
     load_mtcars_example(envir = envir)

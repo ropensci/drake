@@ -50,7 +50,7 @@ build_distributed <- function(target, cache_path, check = TRUE){
   if (check){
     check_build_store(target = target, config = config)
   } else {
-    prune_envir(targets = target, config = config)
+    manage_memory(targets = target, config = config)
     build_store(target = target, config = config)
   }
   invisible()

@@ -75,7 +75,7 @@ check_build_store <- function(
     return()
   }
   meta$start <- proc.time()
-  prune_envir(
+  manage_memory(
     targets = target,
     config = config,
     downstream = downstream

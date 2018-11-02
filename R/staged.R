@@ -59,7 +59,7 @@ run_mclapply_staged <- function(config){
     } else if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
-    prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
+    manage_memory(targets = stage$targets, config = config, jobs = config$jobs)
     parallel::mclapply(
       X = stage$targets,
       FUN = function(target){
@@ -120,7 +120,7 @@ run_parLapply_staged <- function(config) { # nolint
     } else if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
-    prune_envir(targets = stage$targets, config = config, jobs = config$jobs)
+    manage_memory(targets = stage$targets, config = config, jobs = config$jobs)
     if (identical(config$envir, globalenv())){
       # Regular unit tests should not modify the global environment.
       # Tests in tests/scenarios/all.R cover these lines.
@@ -130,7 +130,7 @@ run_parLapply_staged <- function(config) { # nolint
         fun = function(targets, config) {
           config$verbose <- FALSE
           suppressWarnings(
-            drake::prune_envir(targets = targets, config = config)
+            drake::manage_memory(targets = targets, config = config)
           )
         },
         targets = stage$targets,
@@ -206,7 +206,7 @@ run_clustermq_staged <- function(config){
     if (any(stage$targets %in% config$plan$target)){
       set_attempt_flag(key = "_attempt", config = config)
     }
-    prune_envir(
+    manage_memory(
       targets = stage$targets,
       config = config,
       jobs = 1 # config$jobs_imports # nolint

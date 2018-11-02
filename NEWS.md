@@ -3,12 +3,16 @@
 ## New features
 
 - Expose a `hasty_build` argument to `make()` and `drake_config()`. Here, the user can set the function that builds targets in "hasty mode" (`make(parallelism = "hasty")`).
+- Expose a variable called `._envir` to workflow plan commands. This allows users to manage memory themselves.
 - Add a `sep` argument to `gather_by()`, `reduce_by()`, `reduce_plan()`, `evaluate_plan()`, `expand_plan()`, `plan_analyses()`, and `plan_summaries()`. Allows the user to set the delimiter for generating new target names.
 
 ## Enhancements
 
 - Remove strict dependencies on packages `evaluate`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.
 - Deprecate the `force` argument to `make()` and related functions.
+- Change the name of `prune_envir()` to `manage_memory()`.
+- Change the name of `pruning_strategy` to `memory_strategy`.
+- Change the default value of `memory_strategy` (previously `pruning_strategy` to `"speed"` (previously `"lookahead"`).
 
 # Version 6.1.0
 
