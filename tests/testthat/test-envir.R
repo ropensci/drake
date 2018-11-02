@@ -73,12 +73,12 @@ test_with_dir("manage_memory in full build", {
 
 test_with_dir("all memory strategies work", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (pruning_strategy in c("speed", "memory", "lookahead")){
+  for (memory_strategy in c("speed", "memory", "lookahead")){
     envir <- new.env(parent = globalenv())
     cache <- storr::storr_environment()
     load_mtcars_example(envir = envir)
     make(envir$my_plan, envir = envir, cache = cache,
-         session_info = FALSE, pruning_strategy = pruning_strategy)
+         session_info = FALSE, memory_strategy = memory_strategy)
     expect_true(file_store("report.md") %in% cache$list())
   }
 })
