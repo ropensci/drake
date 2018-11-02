@@ -11,8 +11,8 @@
 - Remove strict dependencies on packages `evaluate`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.
 - Deprecate the `force` argument to `make()` and related functions.
 - Change the name of `prune_envir()` to `manage_memory()`.
-- Change the name of `pruning_strategy` to `memory_strategy`.
-- Change the default value of `memory_strategy` (previously `pruning_strategy` to `"speed"` (previously `"lookahead"`).
+- Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
+- Change the default value of `memory_strategy` (previously `pruning_strategy`) to `"speed"` (previously `"lookahead"`).
 
 # Version 6.1.0
 
