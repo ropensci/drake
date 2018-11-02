@@ -168,7 +168,7 @@ build_target <- function(target, meta, config){
   ) %>%
     as.numeric
   while (retries <= max_retries){
-    build <- one_build(
+    build <- with_seed_timeout(
       target = target,
       meta = meta,
       config = config
