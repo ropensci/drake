@@ -551,7 +551,7 @@ pair_text <- function(x, y){
 drake_prefix <- c("", "drake::", "drake:::")
 file_in_fns <- pair_text(drake_prefix, c("file_in"))
 file_out_fns <- pair_text(drake_prefix, c("file_out"))
-ignored_fns <- pair_text(drake_prefix, c("drake_rm", "ignore"))
+ignored_fns <- pair_text(drake_prefix, c("unload_targets", "ignore"))
 ignored_syms <- "._drake_envir"
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")

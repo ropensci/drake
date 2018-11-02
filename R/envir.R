@@ -131,3 +131,38 @@ exclude_unloadable <- function(targets, config, jobs = jobs){
   }
   setdiff(targets, unloadable)
 }
+
+#' @title Unload targets from memory from inside a command
+#' @description Call this function in commands in your plan
+#'   to avoid using too much computer memory.
+#' @export
+#' @seealso [make()], [drake_plan()], [target()]
+#' @return nothing
+#' @param ... names of targets as symbols
+#' @param list character vector of targets
+#' @examples
+#' plan <- drake_plan(
+#'   large_data_1 = sample.int(1e4),
+#'   large_data_2 = sample.int(1e4),
+#'   subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
+#'   summary = {
+#'     print(ls(envir = ._drake_envir))
+#'     # We don't need large_data_* in memory anymore.
+#'     unload_targets(large_data_1, large_data_2)
+#'     print(ls(envir = ._drake_envir))
+#'     mean(subset)
+#'   },
+#'   strings_in_dots = "literals"
+#' )
+#' make(plan, cache = storr::storr_environment(), session_info = FALSE)
+unload_targets <- function(..., list = character(0)){
+  dots <- vapply(
+    X = match.call(expand.dots = FALSE)$...,
+    FUN = deparse,
+    FUN.VALUE = character(1)
+  )
+  browser()
+  
+  list <- union(list, dots)
+  remove(list = list, envir = ._drake_envir)
+}

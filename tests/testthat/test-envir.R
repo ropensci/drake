@@ -149,3 +149,26 @@ test_with_dir("._drake_envir and memory strategies", {
   expect_true(all(c("b") %in% l))
   expect_false(any(c("a", "i", "out") %in% l))
 })
+
+test_with_dir("unload_targets", {
+  plan <- drake_plan(
+    large_data_1 = sample.int(1e4),
+    large_data_2 = sample.int(1e4),
+    subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
+    summary = {
+      cat(ls(envir = ._drake_envir))
+      targs <- c("large_data_1", "large_data_2")
+      expect_true(all(targs %in% ls(envir = ._drake_envir)))
+      unload_targets(large_data_1, large_data_2)
+      cat(ls(envir = ._drake_envir))
+      expect_false(any(targs %in% ls(envir = ._drake_envir)))
+      mean(subset)
+    },
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+})
