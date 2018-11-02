@@ -82,3 +82,70 @@ test_with_dir("all memory strategies work", {
     expect_true(file_store("report.md") %in% cache$list())
   }
 })
+
+test_with_dir("._envir and memory strategies", {
+  plan <- drake_plan(
+    a = {
+      i <- 1
+      i
+    },
+    b = a,
+    c = {
+      saveRDS(ls(envir = ._envir), "ls.rds")
+      b
+    },
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    memory_strategy = "speed",
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  l <- readRDS("ls.rds")
+  expect_true(all(c("a", "b") %in% l))
+  expect_false(any(c("i") %in% l))
+  make(
+    plan,
+    memory_strategy = "memory",
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  l <- readRDS("ls.rds")
+  expect_true(all(c("b") %in% l))
+  expect_false(any(c("a", "i") %in% l))
+  make(
+    plan,
+    memory_strategy = "lookahead",
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  l <- readRDS("ls.rds")
+  expect_true(all(c("b") %in% l))
+  expect_false(any(c("a", "i") %in% l))
+  plan <- drake_plan(
+    a = {
+      i <- 1
+      i
+    },
+    b = {
+      out <- a
+      rm(a, envir = ._envir)
+      out
+    },
+    c = {
+      saveRDS(ls(envir = ._envir), "ls.rds")
+      b
+    },
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    memory_strategy = "speed",
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  l <- readRDS("ls.rds")
+  expect_true(all(c("b") %in% l))
+  expect_false(any(c("a", "i", "out") %in% l))
+})
