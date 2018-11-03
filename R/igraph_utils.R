@@ -1,7 +1,6 @@
 #' @title Prune the dependency network of your project.
 #' @export
-#' @seealso [build_drake_graph()], [drake_config()],
-#'   [make()]
+#' @seealso [drake_config()], [make()]
 #' @description `igraph` objects are used
 #' internally to represent the dependency network of your workflow.
 #' See `drake_config(my_plan)$graph` from the mtcars example.
@@ -20,8 +19,7 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Build the igraph object representing the workflow dependency network.
-#' # You could also use drake_config(my_plan)$graph
-#' graph <- build_drake_graph(my_plan)
+#' graph <- drake_config(my_plan)$graph
 #' # The default plotting is not the greatest,
 #' # but you will get the idea.
 #' # plot(graph) # nolint

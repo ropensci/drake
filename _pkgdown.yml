@@ -81,7 +81,6 @@ reference:
   - '`legend_nodes`'
   - '`drake_palette`'
   - '`prune_drake_graph`'
-  - '`build_drake_graph`'
 - title: Debugging and testing
   contents:
   - '`check_plan`'

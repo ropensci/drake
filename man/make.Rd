@@ -205,10 +205,7 @@ This argument is deprecated. Now, a configuration list
 is always invisibly returned.}
 
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
-Supplying a pre-built graph could save time.
-The graph is constructed by \code{\link[=build_drake_graph]{build_drake_graph()}}.
-You can also get one from \code{drake_config(my_plan)$graph}.
-Overrides \code{skip_imports}.}
+Supplying a pre-built graph could save time.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.

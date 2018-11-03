@@ -7,7 +7,7 @@
 #'   one for edges, and one for
 #'   the legend nodes. The list also contains the
 #'   default title of the graph.
-#' @seealso [vis_drake_graph()], [build_drake_graph()]
+#' @seealso [vis_drake_graph()]
 #' @param config a [drake_config()] configuration list.
 #'   You can get one as a return value from [make()] as well.
 #'

@@ -541,7 +541,6 @@ assert_compatible_cache <- function(cache){
   }
 }
 
-# Not true memoization, but still useful in build_drake_graph()
 memo_expr <- function(expr, cache, ...){
   if (is.null(cache)){
     return(force(expr))

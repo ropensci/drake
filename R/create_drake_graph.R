@@ -1,49 +1,14 @@
-#' @title Create the `igraph` dependency network of your project.
-#' @description This function returns an igraph object representing how
-#' the targets in your workflow plan data frame
-#' depend on each other.
-#' (`help(package = "igraph")`). To plot this graph, call
-#' to `plot.igraph()` on your graph. See the online manual
-#' for enhanced graph visualization functionality.
-#' @export
-#' @return An igraph object representing
-#'   the workflow plan dependency network.
-#' @inheritParams drake_config
-#' @param sanitize_plan logical, deprecated. If you must,
-#'   call `drake:::sanitize_plan()` to sanitize the plan
-#'   and/or `drake:::sanitize_targets()` to sanitize the targets
-#'   (or just get `plan` and `targets` and `graph` from
-#'   [drake_config()]).
-#' @param trigger optional, a global trigger for building targets
-#'   (see [trigger()]).
-#' @param cache an optional `storr` cache for memoization
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Make the igraph network connecting all the targets and imports.
-#' g <- build_drake_graph(my_plan)
-#' class(g) # "igraph"
-#' })
-#' }
-build_drake_graph <- function(
+create_drake_graph <- function(
   plan = read_drake_plan(),
   targets = plan$target,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
-  sanitize_plan = FALSE,
   console_log_file = NULL,
   trigger = drake::trigger(),
   cache = NULL
 ){
   force(envir)
-  if (sanitize_plan){
-    warning(
-      "The `sanitize_plan` argument to `build_drake_graph()` is deprecated.",
-      call. = FALSE
-    )
-  }
   config <- list(
     plan = plan,
     targets = targets,

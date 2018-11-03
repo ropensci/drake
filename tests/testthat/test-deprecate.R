@@ -107,7 +107,7 @@ test_with_dir("deprecated graphing functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1, b = 2)
   expect_warning(build_graph(pl))
-  expect_warning(build_drake_graph(pl, sanitize_plan = TRUE))
+  expect_warning(build_drake_graph(pl))
   con <- drake_config(plan = pl)
   skip_if_not_installed("visNetwork")
   expect_warning(out <- plot_graph(config = con))

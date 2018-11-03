@@ -193,9 +193,6 @@
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
-#'   The graph is constructed by [build_drake_graph()].
-#'   You can also get one from `drake_config(my_plan)$graph`.
-#'   Overrides `skip_imports`.
 #'
 #' @param trigger Name of the trigger to apply to all targets.
 #'   Ignored if `plan` has a `trigger` column.
@@ -526,13 +523,12 @@ drake_config <- function(
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
   if (is.null(graph)){
-    graph <- build_drake_graph(
+    graph <- create_drake_graph(
       plan = plan,
       targets = targets,
       envir = envir,
       verbose = verbose,
       jobs = jobs,
-      sanitize_plan = FALSE,
       console_log_file = console_log_file,
       trigger = trigger,
       cache = cache
