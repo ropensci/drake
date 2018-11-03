@@ -57,6 +57,7 @@ reference:
   - '`file_store`'
   - '`knitr_in`'
   - '`ignore`'
+  - '`drake_envir`'
   - '`target`'
   - '`code_to_plan`'
   - '`plan_to_code`'

@@ -180,7 +180,7 @@ test_with_dir("drake_envir() depth", {
 })
 
 test_with_dir("drake_envir() in wrong context", {
-  expect_error(
+  expect_warning(
     drake_envir(),
     regexp = "should only be called inside commands"
   )

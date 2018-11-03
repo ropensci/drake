@@ -167,7 +167,7 @@ drake_envir <- function(){
     }
     envir <- parent.frame(n = i)
   }
-  stop(
+  warning(
     "Could not find the environment where drake builds targets. ",
     "drake_envir() should only be called inside commands ",
     "in your workflow plan data frame.",
