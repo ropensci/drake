@@ -165,8 +165,8 @@ build_target <- function(target, meta, config){
     target = target,
     field = "retries",
     config = config
-  ) %>%
-    as.numeric
+  )
+  max_retries <- as.numeric(max_retries)
   while (retries <= max_retries){
     build <- with_seed_timeout(
       target = target,

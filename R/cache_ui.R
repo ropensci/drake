@@ -110,8 +110,8 @@ is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
       cache$exists(key = target, namespace = namespace)
     },
     jobs = jobs
-  ) %>%
-    unlist
+  )
+  inclusion <- unlist(inclusion)
   names(inclusion) <- targets
   inclusion
 }
@@ -151,13 +151,14 @@ built <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  cache$list(namespace = cache$default_namespace) %>%
-    parallel_filter(
-      f = function(target){
-        !is_imported(target = target, cache = cache)
-      },
-      jobs = jobs
-    )
+  out <-cache$list(namespace = cache$default_namespace)
+  parallel_filter(
+    out,
+    f = function(target){
+      !is_imported(target = target, cache = cache)
+    },
+    jobs = jobs
+  )
 }
 
 #' @title List all the imports in the drake cache.
@@ -197,13 +198,14 @@ imported <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  targets <- cache$list(namespace = cache$default_namespace) %>%
-    parallel_filter(
-      f = function(target){
-        is_imported(target = target, cache = cache)
-      },
-      jobs = jobs
-    )
+  targets <- cache$list(namespace = cache$default_namespace)
+  targets <- parallel_filter(
+    targets,
+    f = function(target){
+      is_imported(target = target, cache = cache)
+    },
+    jobs = jobs
+  )
   if (files_only)
     targets <- parallel_filter(targets, f = is_file, jobs = jobs)
   targets
@@ -216,7 +218,7 @@ targets_from_dots <- function(dots, list) {
     stop("... must contain names or character strings", call. = FALSE)
   }
   names <- vapply(dots, as.character, "")
-  targets <- c(names, list) %>% unique
+  targets <- unique(c(names, list))
   standardize_filename(targets)
 }
 

@@ -53,12 +53,12 @@ build_times <- function(
     jobs = 1,
     cache = cache,
     type = type
-  ) %>%
-    parallel_filter(f = is.data.frame, jobs = jobs) %>%
-    do.call(what = rbind) %>%
-    rbind(empty_times()) %>%
-    round_times(digits = digits) %>%
-    to_build_duration_df
+  )
+  out <- parallel_filter(out, f = is.data.frame, jobs = jobs)
+  out <- do.call(what = rbind, args = out)
+  out <- rbind(out, empty_times())
+  out <- round_times(out, digits = digits)
+  out <- to_build_duration_df(out)
   out <- out[order(out$item), ]
   out$type[is.na(out$type)] <- "target"
   if (targets_only){

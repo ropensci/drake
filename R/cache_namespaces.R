@@ -10,7 +10,7 @@
 cache_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ){
-  c(
+  out <- c(
     target_namespaces(default = default),
     "attempt",  # attempt flags so drake knows when to print "everything up to date" # nolint
     "change",   # value returned by the "change" trigger
@@ -18,8 +18,8 @@ cache_namespaces <- function(
     "memoize",  # for the memoization in preprocessing
     "progress", # build progress: in progress, finished, failed, etc.
     "session"   # session info
-  ) %>%
-    sort
+  )
+  sort(out)
 }
 
 #' @title For drake caches,
@@ -39,12 +39,12 @@ cache_namespaces <- function(
 cleaned_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ){
-  c(
+  out <- c(
     default,   # the target values themselves
     "kernels", # reproducibly-tracked representation of targets. watched for changes # nolint
     "meta"     # watched metadata such as hashes and time stamps
-  ) %>%
-    sort
+  )
+  sort(out)
 }
 
 #' @title For drake caches,
@@ -62,20 +62,20 @@ cleaned_namespaces <- function(
 target_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ){
-  c(
+  out <- c(
     cleaned_namespaces(default = default),
     "progress"
-  ) %>%
-    sort
+  )
+  sort(out)
 }
 
 list_multiple_namespaces <- function(cache, namespaces, jobs = 1){
-  lightly_parallelize(
+  out <- lightly_parallelize(
     X = namespaces,
     FUN = function(namespace){
       cache$list(namespace = namespace)
     },
     jobs = jobs
-  ) %>%
-    Reduce(f = base::union)
+  )
+  Reduce(out, f = base::union)
 }
