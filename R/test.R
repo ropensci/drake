@@ -31,11 +31,14 @@ justbuilt <- function(config) {
     jobs = config$jobs
   )
   names(all) <- recorded
-  unlist(all) %>%
-    Filter(f = function(x) x == "finished") %>%
-    names %>%
-    intersect(y = config$plan$target) %>%
-    sort
+  all <- unlist(all)
+  out <- Filter(
+    all,
+    f = function(x){
+      x == "finished"
+    }
+  )
+  sort(intersect(names(out), y = config$plan$target))
 }
 
 nobuild <- function(config) {

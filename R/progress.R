@@ -51,9 +51,7 @@ in_progress <- function(path = getwd(), search = TRUE,
   verbose = drake::default_verbose()
 ){
   prog <- progress(path = path, search = search, cache = cache)
-  which(prog == "in progress") %>%
-    names() %>%
-    as.character()
+  as.character(names(which(prog == "in progress")))
 }
 
 #' @title List the targets that failed in the last call
@@ -89,9 +87,7 @@ failed <- function(path = getwd(), search = TRUE,
   upstream_only = FALSE
 ){
   prog <- progress(path = path, search = search, cache = cache)
-  out <- which(prog == "failed") %>%
-    names() %>%
-    as.character()
+  out <- as.character(names(which(prog == "failed")))
   if (upstream_only){
     graph <- read_drake_graph(cache = cache)
     out <- filter_upstream(targets = out, graph = graph)
@@ -216,8 +212,8 @@ get_progress <- function(targets, cache, jobs){
     FUN = get_progress_single,
     jobs = jobs,
     cache = cache
-  ) %>%
-    unlist
+  )
+  out <- unlist(out)
   names(out) <- targets
   out
 }

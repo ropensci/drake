@@ -172,14 +172,14 @@ condition_trigger <- function(target, meta, config){
     return(FALSE)
   }
   if (is.language(meta$trigger$condition)){
-    vertex_attr(
+    deps <- vertex_attr(
       graph = config$graph,
       name = "deps",
       index = target
-    )[[1]]$condition %>%
-      ensure_loaded(config = config)
-    value <- eval(meta$trigger$condition, envir = config$envir) %>%
-      as.logical()
+    )[[1]]$condition
+    deps <- ensure_loaded(deps, config = config)
+    value <- eval(meta$trigger$condition, envir = config$envir)
+    value <- as.logical(value)
   } else {
     value <- as.logical(meta$trigger$condition)
   }

@@ -23,7 +23,8 @@ drake_tip <- function() {
      load_mtcars_example();
      make(my_plan);
      readd(small)"
-  ) %>% wrap_text
+  )
+  tips <- wrap_text(tips)
   sample(tips, 1)
 }
 
@@ -31,7 +32,10 @@ drake_tip_message <- function() {
   packageStartupMessage(drake_tip())
 }
 
-wrap_text <- Vectorize(function(x) {
-  paste(strwrap(x), collapse = "\n") %>% unname
-},
-"x")
+wrap_text <- Vectorize(
+  function(x) {
+    x <- paste(strwrap(x), collapse = "\n")
+    unname(x)
+  },
+  "x"
+)

@@ -112,8 +112,8 @@ conclude_hasty_build <- function(msg, config){
     targets = msg$result$target,
     config = config,
     reverse = TRUE
-  ) %>%
-    intersect(y = config$queue$list())
+  )
+  revdeps <- intersect(revdeps, config$queue$list())
   config$queue$decrease_key(targets = revdeps)
   config$counter$remaining <- config$counter$remaining - 1
 }

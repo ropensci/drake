@@ -88,15 +88,16 @@ cmq_send_target <- function(config){
 }
 
 cmq_deps_list <- function(target, config){
-  deps <- dependencies(targets = target, config = config) %>%
-    intersect(config$plan$target)
-  lapply(
+  deps <- dependencies(targets = target, config = config)
+  deps <- intersect(deps, config$plan$target)
+  out <- lapply(
     X = deps,
     FUN = function(name){
       config$envir[[name]]
     }
-  ) %>%
-    set_names(deps)
+  )
+  names(out) <- deps
+  out
 }
 
 #' @title Build a target using the clustermq backend
@@ -171,8 +172,8 @@ cmq_conclude_target <- function(target, config){
     targets = target,
     config = config,
     reverse = TRUE
-  ) %>%
-    intersect(y = config$queue$list())
+  )
+  revdeps <- intersect(revdeps, y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
   config$counter$remaining <- config$counter$remaining - 1
 }

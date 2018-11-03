@@ -5,15 +5,16 @@ testing_scenarios <- function(){
   file <- file.path("testing", "scenarios.csv")
   path <- system.file(file, package = "drake", mustWork = TRUE)
   x <- read.csv(path, stringsAsFactors = FALSE)
-  rownames(x) <- paste(
+  rn <- paste(
     x$envir,
     x$parallelism,
     x$jobs,
     x$backend,
     x$caching,
     sep = "_"
-  ) %>%
-    gsub(pattern = "_*$", replacement = "")
+  )
+  rn <- gsub(pattern = "_*$", replacement = "", x = rn)
+  rownames(x) <- rn
   x$backend <- backend_code(x$backend)
   x$envir <- envir_code(x$envir)
   x$caching[!nzchar(x$caching)] <- "worker"

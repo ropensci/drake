@@ -64,7 +64,6 @@ Imports:
   dplyr,
   formatR,
   igraph,
-  magrittr,
   pkgconfig,
   purrr,
   R6,

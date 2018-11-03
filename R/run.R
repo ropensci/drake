@@ -1,5 +1,3 @@
-
-
 with_seed_timeout <- function(target, meta, config){
   timeouts <- resolve_timeouts(target = target, config = config)
   with_timeout(
@@ -85,12 +83,12 @@ resolve_timeouts <- function(target, config){
   timeouts <- lapply(
     X = keys,
     FUN = function(field){
-      drake_plan_override(
+      out <- drake_plan_override(
         target = target,
         field = field,
         config = config
-      ) %>%
-        as.numeric
+      )
+      as.numeric(out)
     }
   )
   names(timeouts) <- keys

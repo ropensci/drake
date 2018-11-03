@@ -122,10 +122,9 @@ str(raw_graph)
 # Use the data frames to plot your own custom visNetwork graph.
 # For example, you can omit the legend nodes
 # and change the direction of the graph.
-library(magrittr)
 library(visNetwork)
-visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) \%>\%
-  visHierarchicalLayout(direction = 'UD')
+graph <- visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges)
+visHierarchicalLayout(graph, direction = 'UD')
 # Optionally visualize clusters.
 config$plan$large_data <- grepl("large", config$plan$target)
 graph <- drake_graph_info(

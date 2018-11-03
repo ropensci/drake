@@ -2,11 +2,12 @@ drake_context("memory cache")
 
 test_with_dir("storr_environment is usable", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- storr_environment(hash_algorithm = "murmur32") %>%
-    configure_cache(
-      long_hash_algo = "sha1",
-      overwrite_hash_algos = TRUE
-    )
+  x <- storr_environment(hash_algorithm = "murmur32")
+  x <- configure_cache(
+    x,
+    long_hash_algo = "sha1",
+    overwrite_hash_algos = TRUE
+  )
   expect_false(file.exists(default_cache_path()))
   expect_equal(short_hash(x), "murmur32")
   expect_equal(long_hash(x), "sha1")

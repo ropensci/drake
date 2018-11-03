@@ -48,8 +48,8 @@ console_cache <- function(config){
   if (is.null(config$cache_path)){
     config$cache_path <- default_cache_path()
   }
-  paste("cache", config$cache_path) %>%
-    finish_console(pattern = "cache", config = config)
+  out <- paste("cache", config$cache_path)
+  finish_console(out, pattern = "cache", config = config)
 }
 
 console_preprocess <- function(text, config){
@@ -74,14 +74,14 @@ console_many_targets <- function(
     return(invisible())
   }
   targets[is_file(targets)] <- paste("file", targets[is_file(targets)])
-  paste0(
+  out <- paste0(
     pattern,
     " ", n, " ", type,
     ifelse(n == 1, "", "s"),
     ": ",
     paste(targets, collapse = ", ")
-  ) %>%
-    finish_console(pattern = pattern, config = config)
+  )
+  finish_console(out, pattern = pattern, config = config)
 }
 
 console_parLapply <- function(config){ # nolint
@@ -116,30 +116,30 @@ console_up_to_date <- function(config){
 }
 
 console_all_up_to_date <- function(config){
-  color("All targets are already up to date.", colors["target"]) %>%
-    drake_message(config = config)
+  out <- color("All targets are already up to date.", colors["target"])
+  drake_message(out, config = config)
 }
 
 console_skipped_imports <- function(config){
-  color(
+  out <- color(
     paste(
       "Skipped the imports.",
       "If some imports are not already cached, targets could be out of date."
     ),
     colors["trigger"]
-  ) %>%
-    drake_message(config = config)
+  )
+  drake_message(out, config = config)
 }
 
 console_custom_triggers <- function(config){
-  color(
+  out <- color(
     paste(
       "Used non-default triggers.",
       "Some targets may not be up to date."
     ),
     colors["trigger"]
-  ) %>%
-    drake_message(config = config)
+  )
+  drake_message(out, config = config)
 }
 
 console_persistent_workers <- function(config){
@@ -157,8 +157,8 @@ finish_console <- function(text, pattern, config){
   if (is.null(config$verbose) || config$verbose < 1){
     return(invisible())
   }
-  msg <- crop_text(x = text) %>%
-   color_grep(pattern = pattern, color = color_of(pattern))
+  msg <- crop_text(x = text)
+  msg <- color_grep(msg, pattern = pattern, color = color_of(pattern))
   drake_message(msg, config = config)
 }
 
@@ -230,7 +230,8 @@ multiline_message <- function(x) {
   if (length(x) > n){
     x <- c(x[1:(n - 1)], "...")
   }
-  paste0("  ", x) %>% paste(collapse = "\n")
+  x <- paste0("  ", x)
+  paste(x, collapse = "\n")
 }
 
 #' @title Default verbosity for `drake`
