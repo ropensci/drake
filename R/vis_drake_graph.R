@@ -204,8 +204,8 @@ render_drake_graph <- function(
     edges = graph_info$edges,
     main = main,
     ...
-  ) %>%
-    visNetwork::visHierarchicalLayout(direction = direction)
+  )
+  out <- visNetwork::visHierarchicalLayout(out, direction = direction)
   if (collapse){
     out <- visNetwork::visOptions(out, collapse = TRUE)
   }
