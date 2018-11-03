@@ -55,8 +55,8 @@ test_with_dir("debug_command()", {
   skip_on_cran()
   txt <- "    f(x + 2) + 2"
   txt2 <- "drake::debug_and_run(function() {\n    f(x + 2) + 2\n})"
-  x <- parse(text = txt)
-  out1 <- debug_command(x[[1]])
+  x <- parse(text = txt)[[1]]
+  out1 <- debug_command(x)
   out2 <- debug_command(txt)
   txt3 <- rlang::expr_text(out1)
   expect_equal(out2, txt2)

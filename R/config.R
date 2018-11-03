@@ -193,9 +193,6 @@
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
-#'   The graph is constructed by [build_drake_graph()].
-#'   You can also get one from `drake_config(my_plan)$graph`.
-#'   Overrides `skip_imports`.
 #'
 #' @param trigger Name of the trigger to apply to all targets.
 #'   Ignored if `plan` has a `trigger` column.
@@ -312,9 +309,21 @@
 #'   but it causes [make()] to populate your workspace/environment
 #'   with the last few targets it builds.
 #'
-#' @param pruning_strategy Character scalar, name of the
-#'   approach that `drake` takes regarding when to unload targets
-#'   from memory. Choices:
+#' @param pruning_strategy deprecated. See `memory_strategy`.
+#'
+#' @param memory_strategy Character scalar, name of the
+#'   strategy `drake` uses to manage targets in memory. For more direct
+#'   control over which targets `drake` keeps in memory, see the
+#'   help file examples of [drake_envir()]. The `memory_strategy` argument
+#'   to `make()` and `drake_config()` is an attempt at an automatic
+#'   catch-all solution. These are the choices.
+#'
+#'   - `"speed"`: Once a target is loaded in memory, just keep it there.
+#'     Maximizes speed, but hogs memory.
+#'   - `"memory"`: For each target, unload everything from memory
+#'     except the target's direct dependencies. Conserves memory,
+#'     but sacrifices speed because each new target needs to reload
+#'     any previously unloaded targets from the cache.
 #'   - `"lookahead"` (default): keep loaded targets in memory until they are
 #'     no longer needed as dependencies in downstream build steps.
 #'     Then, unload them from the environment. This step avoids
@@ -322,12 +331,13 @@
 #'     reads from the cache. However, it requires looking ahead
 #'     in the dependency graph, which could add overhead for every
 #'     target of projects with lots of targets.
-#'   - `"speed"`: Once a target is loaded in memory, just keep it there.
-#'     Maximizes speed, but hogs memory.
-#'   - `"memory"`: For each target, unload everything from memory
-#'     except the target's direct dependencies. Conserves memory,
-#'     but sacrifices speed because each new target needs to reload
-#'     any previously unloaded targets from the cache.
+#'
+#' Each strategy has a weakness.
+#' `"speed"` is memory-hungry, `"memory"` wastes time reloading
+#' targets from storage, and `"lookahead"` wastes time
+#' traversing the entire dependency graph on every [make()]. For a better
+#' compromise and more control, see the examples in the help file
+#' of [drake_envir()].
 #'
 #' @param makefile_path Path to the `Makefile` for
 #'   `make(parallelism = "Makefile")`. If you set this argument to a
@@ -451,20 +461,21 @@ drake_config <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("lookahead", "speed", "memory"),
+  pruning_strategy = NULL,
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build
+  hasty_build = drake::default_hasty_build,
+  memory_strategy = c("speed", "memory", "lookahead")
 ){
   force(envir)
   unlink(console_log_file)
   if (!is.null(imports_only)){
     warning(
-      "Argument `imports_only`` is deprecated. Use `skip_targets`` instead.",
+      "Argument `imports_only` is deprecated. Use `skip_targets` instead.",
       call. = FALSE
     ) # 2018-05-04 # nolint
   }
@@ -473,6 +484,13 @@ drake_config <- function(
       "Argument `hook` is deprecated.",
       call. = FALSE
     ) # 2018-10-25 # nolint
+  }
+  if (!is.null(pruning_strategy)){
+    warning(
+      "Argument `pruning_strategy` is deprecated. ",
+      "Use `memory_strategy` instead.",
+      call. = FALSE
+    ) # 2018-11-01 # nolint
   }
   deprecate_force(force)
   plan <- sanitize_plan(plan)
@@ -505,13 +523,12 @@ drake_config <- function(
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
   if (is.null(graph)){
-    graph <- build_drake_graph(
+    graph <- create_drake_graph(
       plan = plan,
       targets = targets,
       envir = envir,
       verbose = verbose,
       jobs = jobs,
-      sanitize_plan = FALSE,
       console_log_file = console_log_file,
       trigger = trigger,
       cache = cache
@@ -523,7 +540,7 @@ drake_config <- function(
   all_imports <- setdiff(igraph::V(graph)$name, all_targets)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
-  pruning_strategy <- match.arg(pruning_strategy)
+  memory_strategy <- match.arg(memory_strategy)
   list(
     plan = plan,
     targets = targets,
@@ -561,7 +578,7 @@ drake_config <- function(
     caching = match.arg(caching),
     keep_going = keep_going,
     session = session,
-    pruning_strategy = pruning_strategy,
+    memory_strategy = memory_strategy,
     makefile_path = makefile_path,
     console_log_file = console_log_file,
     ensure_workers = ensure_workers,

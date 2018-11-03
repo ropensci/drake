@@ -5,7 +5,7 @@
 \title{Write commands to reduce several targets down to one.}
 \usage{
 reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
-  end = "", pairwise = TRUE, append = FALSE)
+  end = "", pairwise = TRUE, append = FALSE, sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
@@ -28,6 +28,8 @@ or to do the reduction all in one command.}
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
+
+\item{sep}{character scalar, delimiter for creating new target names}
 }
 \value{
 A workflow plan data frame that aggregates multiple

@@ -92,20 +92,55 @@ backend <- function(...){
   future::plan(...)
 }
 
+#' @title Deprecated function `build_drake_graph`
+#' @description Use [drake_config()] instead.
+#' @details Deprecated on 2018-11-02.
+#' @export
+#' @keywords internal
+#' @return an `igraph` object
+#' @inheritParams drake_config
+#' @param sanitize_plan deprecated
+#' @examples
+#' # See ?drake_config for examples.
+build_drake_graph <- function(
+  plan = read_drake_plan(),
+  targets = plan$target,
+  envir = parent.frame(),
+  verbose = drake::default_verbose(),
+  jobs = 1,
+  sanitize_plan = FALSE,
+  console_log_file = NULL,
+  trigger = drake::trigger(),
+  cache = NULL
+){
+  .Deprecated(
+    "build_graph",
+    package = "drake",
+    msg = paste(
+      "drake::build_drake_graph() is deprecated.",
+      "Use drake_config()$graph instead."
+    )
+  )
+  drake_config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    jobs = jobs,
+    console_log_file = console_log_file,
+    trigger = trigger,
+    cache = cache
+  )$graph
+}
+
 #' @title Deprecated function `build_graph`
-#' @description Use [build_drake_graph()] instead.
+#' @description Use [drake_config()] instead.
 #' @details Deprecated on 2017-11-12.
 #' @export
 #' @keywords internal
-#' @seealso [build_drake_graph()]
-#' @return The same return value as [build_drake_graph()].
-#' @param plan Same as for [build_drake_graph()].
-#' @param targets Same as for [build_drake_graph()].
-#' @param envir Same as for [build_drake_graph()].
-#' @param verbose Same as for [build_drake_graph()].
-#' @param jobs Same as for [build_drake_graph()].
+#' @inheritParams drake_config
 #' @examples
-#' # See ?as_drake_filename for examples.
+#' # See ?drake_config for examples.
 build_graph <- function(
   plan = read_drake_plan(),
   targets = plan$target,
@@ -117,15 +152,17 @@ build_graph <- function(
     "build_graph",
     package = "drake",
     msg = paste(
-      "drake::build_graph() is deprecated",
-      "due to possible name conflicts.",
-      "Use build_drake_graph() instead."
+      "drake::build_graph() is deprecated.",
+      "Use drake_config()$graph instead."
     )
   )
-  build_drake_graph(
-    plan = plan, targets = targets, envir = envir, verbose = verbose,
+  drake_config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
     jobs = jobs
-  )
+  )$graph
 }
 
 #' @title Deprecated function `check`
@@ -694,16 +731,22 @@ find_knitr_doc <- function(expr, result = character(0)){
     if (does_knitting){
       result <- doc_of_function_call(expr)
     } else {
-      result <- lapply(as.list(expr), find_knitr_doc,
-                       result = result) %>%
-        clean_dependency_list
+      result <- lapply(
+        as.list(expr),
+        find_knitr_doc,
+        result = result
+      )
+      result <- clean_dependency_list(result)
     }
   } else if (is.recursive(expr)){
-    result <- lapply(as.list(expr), find_knitr_doc,
-                     result = result) %>%
-      clean_dependency_list
+    result <- lapply(
+      as.list(expr),
+      find_knitr_doc,
+      result = result
+    )
+    result <- clean_dependency_list(result)
   }
-  setdiff(result, drake_fn_patterns)
+  setdiff(result, ignored_symbols)
 }
 
 # Deprecated on 2018-02-15
@@ -810,11 +853,11 @@ max_useful_jobs <- function(
     return(0)
   }
   . <- level <- NULL
-  n_per_level <- group_by(nodes, level) %>%
-    dplyr::do({
-      .$nrow <- nrow(.)
-      .
-    })
+  n_per_level <- group_by(nodes, level)
+  n_per_level <- dplyr::do(n_per_level, {
+    .$nrow <- nrow(.)
+    .
+  })
   max(n_per_level$nrow)
   # nocov end
 }
@@ -1612,15 +1655,15 @@ triggers <- function(){
       "See trigger() (singular) for details."
     )
   )
-  c(
+  out <- c(
     "any",
     "always",
     "command",
     "depends",
     "file",
     "missing"
-  ) %>%
-    sort
+  )
+  sort(out)
 }
 
 convert_old_trigger <- function(x){

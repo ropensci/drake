@@ -107,7 +107,7 @@ test_with_dir("deprecated graphing functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1, b = 2)
   expect_warning(build_graph(pl))
-  expect_warning(build_drake_graph(pl, sanitize_plan = TRUE))
+  expect_warning(build_drake_graph(pl))
   con <- drake_config(plan = pl)
   skip_if_not_installed("visNetwork")
   expect_warning(out <- plot_graph(config = con))
@@ -304,4 +304,16 @@ test_with_dir("deprecated hooks", {
   expect_warning(message_sink_hook(NULL), regexp = "deprecated")
   expect_warning(output_sink_hook(NULL), regexp = "deprecated")
   expect_warning(silencer_hook(NULL), regexp = "deprecated")
+})
+
+test_with_dir("pruning_strategy", {
+  expect_warning(
+    make(
+      drake_plan(x = 1),
+      pruning_strategy = 123,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    ),
+    regexp = "deprecated"
+  )
 })

@@ -20,14 +20,14 @@ mc_get_outfile_checksum <- function(target, config){
     index = target
   )[[1]]
   files <- sort(unique(as.character(deps$file_out)))
-  vapply(
+  out <- vapply(
     X = files,
     FUN = rehash_file,
     FUN.VALUE = character(1),
     config = config
-  ) %>%
-    paste(collapse = "") %>%
-    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
+  )
+  out <- paste(out, collapse = "")
+  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
 }
 
 mc_is_good_checksum <- function(target, checksum, config){

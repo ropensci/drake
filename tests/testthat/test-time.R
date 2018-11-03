@@ -82,29 +82,28 @@ test_with_dir("runtime predictions", {
   expect_true(p0 > 4e4 - 10 && p0 < 6e4 + 10)
   testrun(con)
   expect_warning(predict_runtime(con, digits = 1))
-  p1 <- predict_runtime(config = con, jobs = 1) %>%
-    as.numeric
+  p1 <- as.numeric(predict_runtime(config = con, jobs = 1))
   p2 <- predict_runtime(
     config = con,
     jobs = 1,
     default_time = Inf,
     from_scratch = FALSE
-  ) %>%
-    as.numeric
+  )
+  p2 <- as.numeric(p2)
   p3 <- predict_runtime(
     config = con,
     jobs = 1,
     default_time = Inf,
     from_scratch = TRUE
-  ) %>%
-    as.numeric
+  )
+  p3 <- as.numeric(p3)
   p4 <- predict_runtime(
     config = con,
     jobs = 2,
     default_time = Inf,
     from_scratch = TRUE
-  ) %>%
-    as.numeric
+  )
+  p4 <- as.numeric(p4)
   known_times <- c(
     a = 0, b = 0, c = 0, f = 0, g = 0, h = 0, i = 0, j = 0,
     readRDS = 0, saveRDS = 0,
@@ -122,8 +121,8 @@ test_with_dir("runtime predictions", {
     from_scratch = FALSE,
     known_times = known_times,
     targets = targets
-  ) %>%
-    as.numeric
+  )
+  p5 <- as.numeric(p5)
   p6 <- predict_runtime(
     config = con,
     jobs = 1,
@@ -131,8 +130,8 @@ test_with_dir("runtime predictions", {
     from_scratch = TRUE,
     known_times = known_times,
     targets = targets
-  ) %>%
-    as.numeric
+  )
+  p6 <- as.numeric(p6)
   p7 <- predict_runtime(
     config = con,
     jobs = 2,
@@ -140,8 +139,8 @@ test_with_dir("runtime predictions", {
     from_scratch = TRUE,
     known_times = known_times,
     targets = targets
-  ) %>%
-    as.numeric
+  )
+  p7 <- as.numeric(p7)
   con$plan$worker <- 1
   p8 <- predict_runtime(
     config = con,
@@ -150,8 +149,8 @@ test_with_dir("runtime predictions", {
     from_scratch = TRUE,
     known_times = known_times,
     targets = targets
-  ) %>%
-    as.numeric
+  )
+  p8 <- as.numeric(p8)
   expect_true(all(is.finite(c(p1, p2, p3, p4))))
   expect_equal(p5, 0, tolerance = 1e-6)
   expect_equal(p6, 70, tolerance = 1e-6)

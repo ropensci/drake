@@ -51,7 +51,7 @@ run_future <- function(config){
 #' dependencies available in `config$envir`.
 drake_future_task <- function(target, meta, config, protect){
   if (identical(config$caching, "worker")){
-    prune_envir(targets = target, config = config, downstream = protect)
+    manage_memory(targets = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
   build <- just_build(target = target, meta = meta, config = config)
@@ -79,7 +79,7 @@ new_worker <- function(id, target, config, protect){
     return(empty_worker(target = target))
   }
   if (identical(config$caching, "master")){
-    prune_envir(targets = target, config = config, downstream = protect)
+    manage_memory(targets = target, config = config, downstream = protect)
   }
   meta$start <- proc.time()
   config$cache$flush_cache() # Less data to pass this way.
@@ -180,7 +180,7 @@ all_concluded <- function(workers, config){
 }
 
 running_targets <- function(workers, config){
-  lapply(
+  out <- lapply(
     X = workers,
     FUN = function(worker){
       if (is_idle(worker)){
@@ -193,8 +193,8 @@ running_targets <- function(workers, config){
         attr(worker, "target") # nocov
       }
     }
-  ) %>%
-    unlist
+  )
+  unlist(out)
 }
 
 initialize_workers <- function(config){
@@ -213,8 +213,8 @@ decrease_revdep_keys <- function(worker, config, queue){
     targets = target,
     config = config,
     reverse = TRUE
-  ) %>%
-    intersect(y = queue$list())
+  )
+  revdeps <- intersect(revdeps, queue$list())
   queue$decrease_key(targets = revdeps)
 }
 

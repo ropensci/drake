@@ -129,8 +129,8 @@ mc_conclude_target <- function(target, config){
     targets = target,
     config = config,
     reverse = TRUE
-  ) %>%
-    intersect(y = config$queue$list())
+  )
+  revdeps <- intersect(revdeps, config$queue$list())
   config$queue$decrease_key(targets = revdeps)
 }
 

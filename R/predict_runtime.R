@@ -219,8 +219,8 @@ predict_load_balancing <- function(
     config$graph <- targets_graph(config)
   }
   times <- times[times$item %in% V(config$graph)$name, ]
-  untimed <- setdiff(V(config$graph)$name, times$item) %>%
-    setdiff(y = names(known_times))
+  untimed <- setdiff(V(config$graph)$name, times$item)
+  untimed <- setdiff(untimed, names(known_times))
   if (length(untimed)){
     warning(
       "Some targets were never actually timed, ",
@@ -237,17 +237,19 @@ predict_load_balancing <- function(
     config$graph,
     name = "time",
     value = default_time
-  ) %>%
-    igraph::set_vertex_attr(
-      name = "time",
-      index = times$item,
-      value = times$elapsed
-    ) %>%
-    igraph::set_vertex_attr(
-      name = "time",
-      index = names(known_times),
-      value = known_times
-    )
+  )
+  config$graph <- igraph::set_vertex_attr(
+    config$graph,
+    name = "time",
+    index = times$item,
+    value = times$elapsed
+  )
+  config$graph <- igraph::set_vertex_attr(
+    config$graph,
+    name = "time",
+    index = names(known_times),
+    value = known_times
+  )
   if (!from_scratch){
     skip <- setdiff(config$plan$target, outdated(config))
     config$graph <- igraph::set_vertex_attr(

@@ -7,7 +7,7 @@
 #'   one for edges, and one for
 #'   the legend nodes. The list also contains the
 #'   default title of the graph.
-#' @seealso [vis_drake_graph()], [build_drake_graph()]
+#' @seealso [vis_drake_graph()]
 #' @param config a [drake_config()] configuration list.
 #'   You can get one as a return value from [make()] as well.
 #'
@@ -107,10 +107,9 @@
 #' # Use the data frames to plot your own custom visNetwork graph.
 #' # For example, you can omit the legend nodes
 #' # and change the direction of the graph.
-#' library(magrittr)
 #' library(visNetwork)
-#' visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges) %>%
-#'   visHierarchicalLayout(direction = 'UD')
+#' graph <- visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges)
+#' visHierarchicalLayout(graph, direction = 'UD')
 #' # Optionally visualize clusters.
 #' config$plan$large_data <- grepl("large", config$plan$target)
 #' graph <- drake_graph_info(

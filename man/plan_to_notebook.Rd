@@ -31,9 +31,7 @@ packages, imported functions, etc.
 \examples{
 plan <- drake_plan(
   raw_data = read_excel(file_in("raw_data.xlsx")),
-  data = raw_data \%>\%
-    mutate(Species = fct_inorder(Species)) \%>\%
-    select(-X__1),
+  data = raw_data,
   hist = create_plot(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
   strings_in_dots = "literals"

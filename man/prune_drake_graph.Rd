@@ -34,8 +34,7 @@ remove the vertices after \code{to} from the graph.
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 # Build the igraph object representing the workflow dependency network.
-# You could also use drake_config(my_plan)$graph
-graph <- build_drake_graph(my_plan)
+graph <- drake_config(my_plan)$graph
 # The default plotting is not the greatest,
 # but you will get the idea.
 # plot(graph) # nolint
@@ -47,6 +46,5 @@ pruned <- prune_drake_graph(graph = graph, to = c("small", "large"))
 }
 }
 \seealso{
-\code{\link[=build_drake_graph]{build_drake_graph()}}, \code{\link[=drake_config]{drake_config()}},
-\code{\link[=make]{make()}}
+\code{\link[=drake_config]{drake_config()}}, \code{\link[=make]{make()}}
 }

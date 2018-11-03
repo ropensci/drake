@@ -6,8 +6,8 @@ run_parallel_backend <- function(config){
 }
 
 parallel_filter <- function(x, f, jobs = 1, ...){
-  index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...) %>%
-    unlist
+  index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...)
+  index <- unlist(index)
   x[as.logical(index)]
 }
 
@@ -70,9 +70,7 @@ on_windows <- function(){
 }
 
 this_os <- function(){
-  Sys.info()["sysname"] %>%
-    tolower %>%
-    unname
+  unname(tolower(Sys.info()["sysname"]))
 }
 
 parallelism_warnings <- function(config){

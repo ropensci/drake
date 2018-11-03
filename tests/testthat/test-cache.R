@@ -438,3 +438,8 @@ test_with_dir("cache functions work", {
   withr::local_dir(scratch)
   unlink("searchfrom", recursive = TRUE, force = TRUE)
 })
+
+test_with_dir("memo_expr() works without a cache", {
+  x <- "x"
+  expect_equal(memo_expr(x, cache = NULL), x)
+})

@@ -87,9 +87,9 @@ drake_examples <- function(quiet = TRUE) {
     destfile = destfile,
     quiet = quiet
   )
-  scan(destfile, what = character(1), quiet = TRUE) %>%
-    gsub(pattern = "\\.zip$", replacement = "") %>%
-    sort()
+  out <- scan(destfile, what = character(1), quiet = TRUE)
+  out <- gsub(pattern = "\\.zip$", replacement = "", x = out)
+  sort(out)
 }
 
 #' @title Load the mtcars example from `drake_example("mtcars")`

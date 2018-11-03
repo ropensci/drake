@@ -71,7 +71,7 @@ cmq_send_target <- function(config){
   meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")){
-    prune_envir(targets = target, config = config, jobs = 1)
+    manage_memory(targets = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
   } else {
     deps <- NULL
@@ -88,15 +88,16 @@ cmq_send_target <- function(config){
 }
 
 cmq_deps_list <- function(target, config){
-  deps <- dependencies(targets = target, config = config) %>%
-    intersect(config$plan$target)
-  lapply(
+  deps <- dependencies(targets = target, config = config)
+  deps <- intersect(deps, config$plan$target)
+  out <- lapply(
     X = deps,
     FUN = function(name){
       config$envir[[name]]
     }
-  ) %>%
-    set_names(deps)
+  )
+  names(out) <- deps
+  out
 }
 
 #' @title Build a target using the clustermq backend
@@ -118,7 +119,7 @@ cmq_build <- function(target, meta, deps, config){
       config$envir[[dep]] <- deps[[dep]]
     }
   } else {
-    prune_envir(targets = target, config = config, jobs = 1)
+    manage_memory(targets = target, config = config, jobs = 1)
   }
   build <- just_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")){
@@ -171,8 +172,8 @@ cmq_conclude_target <- function(target, config){
     targets = target,
     config = config,
     reverse = TRUE
-  ) %>%
-    intersect(y = config$queue$list())
+  )
+  revdeps <- intersect(revdeps, y = config$queue$list())
   config$queue$decrease_key(targets = revdeps)
   config$counter$remaining <- config$counter$remaining - 1
 }

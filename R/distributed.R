@@ -50,16 +50,17 @@ build_distributed <- function(target, cache_path, check = TRUE){
   if (check){
     check_build_store(target = target, config = config)
   } else {
-    prune_envir(targets = target, config = config)
+    manage_memory(targets = target, config = config)
     build_store(target = target, config = config)
   }
   invisible()
 }
 
 recover_drake_config <- function(cache_path){
-  fetch_cache <- tryCatch(
-    readLines(con = file.path(cache_path, fetch_cache_file)) %>%
-      paste0(collapse = "\n"),
+  fetch_cache <- tryCatch({
+      out <- readLines(con = file.path(cache_path, fetch_cache_file))
+      paste0(out, collapse = "\n")
+    },
     error = error_null
   )
   cache <- this_cache(cache_path, verbose = FALSE, fetch_cache = fetch_cache)

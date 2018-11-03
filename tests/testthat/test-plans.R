@@ -339,6 +339,7 @@ test_with_dir("standardized commands with ignore()", {
     standardize_command("f(sqrt( ignore  (fun(arg) + 7) + 123) )"),
     standardize_command("f(sqrt(ignore() + 123))")
   )
+
   expect_equal(
     standardize_command(" f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))"),
     standardize_command("f(sqrt(ignore() + 123))")
@@ -359,6 +360,13 @@ test_with_dir("standardized commands with ignore()", {
     attr(b, a) <- NULL
   }
   expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
+})
+
+test_with_dir("can standardize command with other ignored symbols", {
+  expect_equal(
+    standardize_command("function(x){(sqrt( drake_envir(arg) + 123))}"),
+    "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
+  )
 })
 
 test_with_dir("ignore() in imported functions", {
@@ -459,8 +467,8 @@ test_with_dir("bind_plans()", {
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  pl <- drake_plan(a = x__, file_out("x__")) %>%
-    evaluate_plan(wildcard = "x__", values = c("b  \n  x y", "a x"))
+  pl <- drake_plan(a = x__, file_out("x__"))
+  pl <- evaluate_plan(pl, wildcard = "x__", values = c("b  \n  x y", "a x"))
   pl2 <- tibble::tibble(
     target = c(
       "a_b.....x.y", "a_a.x",
@@ -580,12 +588,9 @@ test_with_dir("drake_plan_source()", {
   skip_on_cran()
   skip_if_not_installed("styler")
   plan <- drake::drake_plan(
-    small_data = download_data("https://some_website.com") %>%
-      select_my_columns() %>%
-      munge(),
+    small_data = download_data("https://some_website.com"),
     large_data_raw = target(
-      command = download_data("https://lots_of_data.com") %>%
-        select_top_columns(),
+      command = download_data("https://lots_of_data.com"),
       trigger = trigger(
         change = time_last_modified("https://lots_of_data.com"),
         command = FALSE,

@@ -34,24 +34,23 @@ clean_dependency_list <- function(x){
   if (!length(x)){
     return(character(0))
   }
-  x %>%
-    unlist() %>%
-    unname() %>%
-    as.character() %>%
-    unique() %>%
-    sort()
+  x <- unlist(x)
+  x <- unname(x)
+  x <- as.character(x)
+  x <- unique(x)
+  sort(x)
 }
 
 drake_select <- function(
   cache, ..., namespaces = cache$default_namespace, list = character(0)
 ){
-  tidyselect::vars_select(
+  out <- tidyselect::vars_select(
     .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
     ...,
     .strict = FALSE
-  ) %>%
-    unname %>%
-    c(list)
+  )
+  out <- unname(out)
+  union(out, list)
 }
 
 factor_to_character <- function(x){
@@ -62,11 +61,11 @@ factor_to_character <- function(x){
 }
 
 file_extn <- function(x){
-  splitted <- basename(x) %>%
-    strsplit(split = ".", fixed = TRUE) %>%
-    unlist() %>%
-    rev()
-  splitted[1]
+  x <- basename(x)
+  x <- strsplit(x, split = ".", fixed = TRUE)
+  x <- unlist(x)
+  x <- rev(x)
+  x[1]
 }
 
 is_file <- function(x){
@@ -83,13 +82,14 @@ is_not_file <- function(x){
 
 merge_lists <- function(x, y){
   names <- base::union(names(x), names(y))
-  lapply(
+  x <- lapply(
     X = names,
     function(name){
       base::union(x[[name]], y[[name]])
     }
-  ) %>%
-    set_names(nm = names)
+  )
+  names(x) <- names
+  x
 }
 
 padded_scale <- function(x){
@@ -136,11 +136,6 @@ select_valid <- function(x){
     FUN.VALUE = logical(1)
   )
   x[index]
-}
-
-set_names <- function(x, nm){
-  names(x) <- nm
-  x
 }
 
 standardize_filename <- function(text){

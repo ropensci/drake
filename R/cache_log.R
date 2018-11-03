@@ -63,14 +63,16 @@ drake_cache_log_file <- function(
   } else if (identical(file, TRUE)){
     file <- formals(drake_cache_log_file)$file
   }
-  drake_cache_log(
+  out <- drake_cache_log(
     path = path,
     search = search,
     cache = cache,
     verbose = verbose,
     jobs = jobs,
     targets_only = targets_only
-  ) %>% write.table(
+  )
+  write.table(
+    out,
     file = file,
     quote = FALSE,
     row.names = FALSE
@@ -171,9 +173,8 @@ drake_cache_log <- function(
     FUN = single_cache_log,
     jobs = jobs,
     cache = cache
-  ) %>%
-    do.call(what = rbind) %>%
-    as_tibble
+  )
+  out <- tibble::as_tibble(do.call(what = rbind, args = out))
   if (targets_only){
     out <- out[out$type == "target", ]
   }

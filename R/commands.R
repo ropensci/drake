@@ -12,9 +12,9 @@ extract_filenames <- function(command){
   if (!safe_grepl("'", command, fixed = TRUE)){
     return(character(0))
   }
-  splits <- paste(" ", command, " ") %>%
-    strsplit("'") %>%
-    unlist()
+  splits <- paste(" ", command, " ")
+  splits <- strsplit(splits, split = "'")
+  splits <- unlist(splits)
   splits[seq(from = 2, to = length(splits), by = 2)]
 }
 
@@ -26,10 +26,10 @@ extract_filenames <- function(command){
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
 preprocess_command <- function(target, config){
-  text <- config$plan$command[config$plan$target == target] %>%
-    wrap_command
-  parse(text = text, keep.source = FALSE) %>%
-    eval(envir = config$envir)
+  text <- config$plan$command[config$plan$target == target]
+  text <- wrap_command(text)
+  expr <- parse(text = text, keep.source = FALSE)
+  eval(expr, envir = config$envir)
 }
 
 # Use tidy evaluation to complete the contents of a command.
@@ -50,8 +50,8 @@ localize <- function(command) {
 # comments are just standardized away, and drake
 # ignores them. Thus, superfluous builds are not triggered.
 get_standardized_command <- function(target, config) {
-  config$plan$command[config$plan$target == target] %>%
-    standardize_command
+  out <- config$plan$command[config$plan$target == target]
+  standardize_command(out)
 }
 
 standardize_command <- function(x) {

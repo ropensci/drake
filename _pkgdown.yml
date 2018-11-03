@@ -57,6 +57,7 @@ reference:
   - '`file_store`'
   - '`knitr_in`'
   - '`ignore`'
+  - '`drake_envir`'
   - '`target`'
   - '`code_to_plan`'
   - '`plan_to_code`'
@@ -80,7 +81,6 @@ reference:
   - '`legend_nodes`'
   - '`drake_palette`'
   - '`prune_drake_graph`'
-  - '`build_drake_graph`'
 - title: Debugging and testing
   contents:
   - '`check_plan`'

@@ -4,7 +4,7 @@
 \alias{expand_plan}
 \title{Create replicates of targets.}
 \usage{
-expand_plan(plan, values = NULL, rename = TRUE)
+expand_plan(plan, values = NULL, rename = TRUE, sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame}
@@ -14,6 +14,10 @@ the names of the new targets.}
 
 \item{rename}{logical, whether to rename the targets
 based on the \code{values}. See the examples for a demo.}
+
+\item{sep}{character scalar, delimiter between the original
+target names and the values to append to create the new
+target names. Only relevant when \code{rename} is \code{TRUE}.}
 }
 \value{
 An expanded workflow plan data frame (with replicated targets).

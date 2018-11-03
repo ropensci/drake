@@ -130,8 +130,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
 #' @examples
 #' default_parallelism()
 default_parallelism <- function() {
-  ifelse(on_windows(), "parLapply", "mclapply") %>%
-    unname
+  unname(ifelse(on_windows(), "parLapply", "mclapply"))
 }
 
 #' @title Write an example `shell.sh` file required by

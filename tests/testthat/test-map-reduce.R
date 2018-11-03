@@ -221,8 +221,27 @@ test_with_dir("gather_by()", {
     )
   )
   expect_equal(x[, c("target", "command")], y)
+  x <- gather_by(plan, append = TRUE, sep = ".")
+  expect_equal(x[, c("target", "command")], y)
   z <- gather_by(plan, append = FALSE)
   expect_equal(z[, c("target", "command")], y[nrow(y), ])
+  x <- gather_by(
+    plan,
+    n___from,
+    prefix = "xyz",
+    gather = "c",
+    append = TRUE,
+    sep = "."
+  )
+  y <- tibble::tibble(
+    target = c("xyz.y", "xyz.NA"),
+    command = c("c(y_a = y_a, y_b = y_b)", "c(x_1 = x_1, x_2 = x_2, z = z)"),
+    m__ = as.character(NA),
+    m___from = as.character(NA),
+    n__ = NA,
+    n___from = c("y", NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
   x <- gather_by(plan, n___from, prefix = "xyz", gather = "c", append = TRUE)
   y <- tibble::tibble(
     target = c("xyz_y", "xyz_NA"),
@@ -284,7 +303,35 @@ test_with_dir("reduce_by()", {
   z <- reduce_by(plan, pairwise = FALSE, append = FALSE)
   expect_equal(z[, c("target", "command")], y[nrow(y), ])
   x <- reduce_by(
-    plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
+    plan, m___from,
+    prefix = "xyz",
+    op = ", ",
+    begin = "c(",
+    end = ")",
+    append = TRUE,
+    sep = "."
+  )
+  y <- tibble::tibble(
+    target = c("xyz.1.x", "xyz.2.x", "xyz.x", "xyz.1.NA", "xyz.NA"),
+    command = c(
+      "c(x_1, x_2)",
+      "c(x_3, x_4)",
+      "c(xyz.1, xyz.2)",
+      "c(y_a, y_b)",
+      "c(z, xyz.1)"
+    ),
+    m__ = as.character(NA),
+    m___from = c(rep("x", 3), rep(NA, 2)),
+    n__ = as.character(NA),
+    n___from = as.character(NA)
+  )
+  expect_equal(x, bind_plans(plan, y))
+  x <- reduce_by(
+    plan, m___from,
+    prefix = "xyz",
+    op = ", ",
+    begin = "c(",
+    end = ")",
     append = TRUE
   )
   y <- tibble::tibble(

@@ -14,6 +14,13 @@ test_with_dir("evaluate and expand", {
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
   expect_equal(m1, df)
 
+  x <- expand_plan(df, values = c("rep1", "rep2"), sep = ".")
+  y <- tibble::tibble(
+    target = c("data.rep1", "data.rep2"),
+    command = rep("simulate(center = MU, scale = SIGMA)", 2)
+  )
+  expect_equal(x, y)
+
   x <- expand_plan(df, values = c("rep1", "rep2"))
   y <- tibble::tibble(
     target = c("data_rep1", "data_rep2"),
@@ -29,6 +36,18 @@ test_with_dir("evaluate and expand", {
   )
   expect_equal(x1, y)
   expect_equal(x2, y2)
+
+  x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2, sep = ".")
+  y <- tibble::tibble(
+    target = c("data_rep1.1", "data_rep1.2", "data_rep2.1", "data_rep2.2"),
+    command = c(
+      "simulate(center = 1, scale = SIGMA)",
+      "simulate(center = 2, scale = SIGMA)",
+      "simulate(center = 1, scale = SIGMA)",
+      "simulate(center = 2, scale = SIGMA)"
+    )
+  )
+  expect_equal(x2, y)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
   y <- tibble::tibble(
@@ -69,6 +88,26 @@ test_with_dir("evaluate and expand", {
   )
   expect_equal(x3a, y)
 
+  x3b <- evaluate_plan(
+    x2,
+    wildcard = "SIGMA",
+    values = letters[1:2],
+    expand = FALSE,
+    rename = TRUE,
+    sep = "."
+  )
+  y <- tibble::tibble(
+    target = c(
+      "data_rep1_1.a", "data_rep1_2.b", "data_rep2_1.a", "data_rep2_2.b"),
+    command = c(
+      "simulate(center = 1, scale = a)",
+      "simulate(center = 2, scale = b)",
+      "simulate(center = 1, scale = a)",
+      "simulate(center = 2, scale = b)"
+    )
+  )
+  expect_equal(x3b, y)
+
   x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
                       expand = FALSE)
   y <- tibble::tibble(
@@ -84,6 +123,18 @@ test_with_dir("evaluate and expand", {
   expect_equal(12, nrow(x5))
   expect_equal(12, length(unique(x5$target)))
   expect_equal(6, length(unique(x5$command)))
+
+  x6 <- evaluate_plan(df, rules = list(MU = 0:1, SIGMA = 1:2), sep = ".")
+  y <- tibble::tibble(
+    target = c("data.0.1", "data.0.2", "data.1.1", "data.1.2"),
+    command = c(
+      "simulate(center = 0, scale = 1)",
+      "simulate(center = 0, scale = 2)",
+      "simulate(center = 1, scale = 1)",
+      "simulate(center = 1, scale = 2)"
+    )
+  )
+  expect_equal(x6, y)
 })
 
 test_with_dir("analyses and summaries", {
@@ -92,6 +143,23 @@ test_with_dir("analyses and summaries", {
     regression1 = reg1(dataset__),
     regression2 = reg2(dataset__)
   )
+
+  analyses <- plan_analyses(methods, datasets = datasets, sep = ".")
+  x <- tibble(
+    target = c(
+      "regression1.small",
+      "regression1.large",
+      "regression2.small",
+      "regression2.large"
+    ),
+    command = c(
+      "reg1(small)",
+      "reg1(large)",
+      "reg2(small)",
+      "reg2(large)")
+  )
+  expect_equal(analyses, x)
+
   analyses <- plan_analyses(methods, datasets = datasets)
   x <- tibble(
     target = c(
@@ -125,6 +193,38 @@ test_with_dir("analyses and summaries", {
     summ = summary(analysis__),
     coef = stats::coefficients(analysis__)
   )
+
+  results <- plan_summaries(
+    summary_types,
+    analyses,
+    datasets,
+    gather = NULL,
+    sep = "."
+  )
+  x <- tibble(
+    target = c(
+      "summ.regression1_small",
+      "summ.regression1_large",
+      "summ.regression2_small",
+      "summ.regression2_large",
+      "coef.regression1_small",
+      "coef.regression1_large",
+      "coef.regression2_small",
+      "coef.regression2_large"
+    ),
+    command = c(
+      "summary(regression1_small)",
+      "summary(regression1_large)",
+      "summary(regression2_small)",
+      "summary(regression2_large)",
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
+    )
+  )
+  expect_equal(results, x)
+
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
   x <- tibble(
     target = c(
@@ -210,8 +310,14 @@ test_with_dir("analyses and summaries", {
       other = myother(dataset__)
     )
   )
-  expect_warning(s <- plan_summaries(newtypes, analyses, datasets,
-                                     gather = NULL))
+  expect_warning(
+    s <- plan_summaries(
+      newtypes,
+      analyses,
+      datasets,
+      gather = NULL
+    )
+  )
   expect_equal(nrow(s), 8)
 })
 

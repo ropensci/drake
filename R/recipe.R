@@ -75,13 +75,14 @@
 Makefile_recipe <- function( # nolint
   recipe_command = drake::default_recipe_command(),
   target = "your_target",
-  cache_path = drake::default_cache_path()){
-  build_recipe(
+  cache_path = drake::default_cache_path()
+){
+  msg <- build_recipe(
     target = target,
     recipe_command = recipe_command,
     cache_path = cache_path
-  ) %>%
-    message()
+  )
+  message(msg)
 }
 
 #' @title Show the default

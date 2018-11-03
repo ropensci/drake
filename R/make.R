@@ -5,7 +5,7 @@
 #' that is already up to date.
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
-#' @seealso 
+#' @seealso
 #'   [drake_plan()],
 #'   [drake_config()],
 #'   [vis_drake_graph()],
@@ -110,14 +110,15 @@ make <- function(
   keep_going = FALSE,
   session = NULL,
   imports_only = NULL,
-  pruning_strategy = c("lookahead", "speed", "memory"),
+  pruning_strategy = NULL,
   makefile_path = "Makefile",
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build
+  hasty_build = drake::default_hasty_build,
+  memory_strategy = c("speed", "memory", "lookahead")
 ){
   force(envir)
   if (!is.null(return_config)){
@@ -170,7 +171,8 @@ make <- function(
       garbage_collection = garbage_collection,
       template = template,
       sleep = sleep,
-      hasty_build = hasty_build
+      hasty_build = hasty_build,
+      memory_strategy = memory_strategy
     )
   }
   make_with_config(config = config)
@@ -217,8 +219,8 @@ make_with_config <- function(config = drake::read_drake_config()){
 }
 
 global_imports <- function(config){
-  setdiff(V(config$graph)$name, config$plan$target) %>%
-    intersect(ls(envir = globalenv()))
+  out <- setdiff(V(config$graph)$name, config$plan$target)
+  intersect(out, ls(envir = globalenv()))
 }
 
 #' @title Internal function to be called by [make_with_config()]
@@ -237,10 +239,7 @@ make_session <- function(config){
     cache = config$cache,
     jobs = config$jobs
   )
-  remove(
-    list = intersect(config$plan$target, ls(envir = config$envir)),
-    envir = config$envir
-  )
+  conclude_session(config = config)
   return(invisible(config))
 }
 
@@ -353,8 +352,8 @@ make_targets <- function(config = drake::read_drake_config()){
     return(config)
   }
   up_to_date <- setdiff(config$all_targets, outdated)
-  config$schedule <- targets_graph(config = config) %>%
-    igraph::delete_vertices(v = up_to_date)
+  config$schedule <- targets_graph(config = config)
+  config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
   config$jobs <- targets_setting(config$jobs)
   config$parallelism <- targets_setting(config$parallelism)
   run_parallel_backend(config = config)
@@ -373,6 +372,7 @@ make_imports_targets <- function(config){
 
 initialize_session <- function(config){
   init_common_values(config$cache)
+  mark_envir(config$envir)
   if (config$log_progress){
     clear_tmp_namespace(
       cache = config$cache,
@@ -394,4 +394,17 @@ initialize_session <- function(config){
       namespace = "session"
     )
   }
+}
+
+conclude_session <- function(config){
+  unmark_envir(config$envir)
+  suppressWarnings(remove(list = config$plan$target, envir = config$envir))
+}
+
+mark_envir <- function(envir){
+  assign(x = drake_envir_marker, value = TRUE, envir = envir)
+}
+
+unmark_envir <- function(envir){
+  suppressWarnings(remove(list = drake_envir_marker, envir = envir))
 }

@@ -53,8 +53,7 @@ makefile_head <- function(config){
   if (length(config$prepend)){
     cat(config$prepend, "\n", sep = "\n")
   }
-  cache_path <- config$cache_path %>%
-    to_unix_path
+  cache_path <- to_unix_path(config$cache_path)
   cat(cache_macro, "=", cache_path, "\n\n", sep = "")
   cat(
     "all:",
@@ -67,9 +66,9 @@ makefile_rules <- function(config){
   targets <- intersect(config$plan$target, V(config$graph)$name)
   cache_path <- cache_path(config$cache)
   for (target in targets){
-    deps <- dependencies(target, config) %>%
-      intersect(y = config$plan$target) %>%
-      time_stamp_target(config = config)
+    deps <- dependencies(target, config)
+    deps <- intersect(deps, config$plan$target)
+    deps <- time_stamp_target(deps, config = config)
     breaker <- ifelse(length(deps), " \\\n", "\n")
     cat(
       "\n",

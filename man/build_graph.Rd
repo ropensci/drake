@@ -8,29 +8,70 @@ build_graph(plan = read_drake_plan(), targets = plan$target,
   envir = parent.frame(), verbose = 1, jobs = 1)
 }
 \arguments{
-\item{plan}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
+\item{plan}{workflow plan data frame.
+A workflow plan data frame is a data frame
+with a \code{target} column and a \code{command} column.
+(See the details in the \code{\link[=drake_plan]{drake_plan()}} help file
+for descriptions of the optional columns.)
+Targets are the objects and files that drake generates,
+and commands are the pieces of R code that produce them.
+Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow plan
+data frames easily, and see functions \code{\link[=plan_analyses]{plan_analyses()}},
+\code{\link[=plan_summaries]{plan_summaries()}}, \code{\link[=evaluate_plan]{evaluate_plan()}},
+\code{\link[=expand_plan]{expand_plan()}}, and \code{\link[=gather_plan]{gather_plan()}} for
+easy ways to generate large workflow plan data frames.}
 
-\item{targets}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
+\item{targets}{character vector, names of targets to build.
+Dependencies are built too. Together, the \code{plan} and
+\code{targets} comprise the workflow network
+(i.e. the \code{graph} argument).
+Changing either will change the network.}
 
-\item{envir}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
+\item{envir}{environment to use. Defaults to the current
+workspace, so you should not need to worry about this
+most of the time. A deep copy of \code{envir} is made,
+so you don't need to worry about your workspace being modified
+by \code{make}. The deep copy inherits from the global environment.
+Wherever necessary, objects and functions are imported
+from \code{envir} and the global environment and
+then reproducibly tracked as dependencies.}
 
-\item{verbose}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
+\item{verbose}{logical or numeric, control printing to the console.
+Use \code{pkgconfig} to set the default value of \code{verbose}
+for your R session:
+for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
+\describe{
+\item{0 or \code{FALSE}:}{print nothing.}
+\item{1 or \code{TRUE}:}{print only targets to build.}
+\item{2:}{+ checks and cache info.}
+\item{3:}{+ any potentially missing items.}
+\item{4:}{+ imports and writes to the cache.}
+}}
 
-\item{jobs}{Same as for \code{\link[=build_drake_graph]{build_drake_graph()}}.}
-}
-\value{
-The same return value as \code{\link[=build_drake_graph]{build_drake_graph()}}.
+\item{jobs}{maximum number of parallel workers for processing the targets.
+If you wish to parallelize the imports and preprocessing as well, you can
+use a named numeric vector of length 2, e.g.
+\code{make(jobs = c(imports = 4, targets = 8))}.
+\code{make(jobs = 4)} is equivalent to \code{make(jobs = c(imports = 1, targets = 4))}.
+
+Windows users should not set \code{jobs > 1} if
+\code{parallelism} is \code{"mclapply"} because
+\code{\link[=mclapply]{mclapply()}} is based on forking. Windows users
+who use \code{parallelism = "Makefile"} will need to
+download and install Rtools.
+
+You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
+to help decide on an appropriate number of jobs.
+For details, visit
+\url{https://ropenscilabs.github.io/drake-manual/time.html}.}
 }
 \description{
-Use \code{\link[=build_drake_graph]{build_drake_graph()}} instead.
+Use \code{\link[=drake_config]{drake_config()}} instead.
 }
 \details{
 Deprecated on 2017-11-12.
 }
 \examples{
-# See ?as_drake_filename for examples.
-}
-\seealso{
-\code{\link[=build_drake_graph]{build_drake_graph()}}
+# See ?drake_config for examples.
 }
 \keyword{internal}
