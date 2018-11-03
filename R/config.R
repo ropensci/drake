@@ -317,7 +317,7 @@
 #' @param memory_strategy Character scalar, name of the
 #'   strategy `drake` uses to manage targets in memory. For more direct
 #'   control over which targets `drake` keeps in memory, see the
-#'   help file examples of [drake_envir()]. The `memory_strategy` arguemnt
+#'   help file examples of [drake_envir()]. The `memory_strategy` argument
 #'   to `make()` and `drake_config()` is an attempt at an automatic
 #'   catch-all solution. These are the choices.
 #'
