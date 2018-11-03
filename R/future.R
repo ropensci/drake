@@ -180,7 +180,7 @@ all_concluded <- function(workers, config){
 }
 
 running_targets <- function(workers, config){
-  lapply(
+  out <- lapply(
     X = workers,
     FUN = function(worker){
       if (is_idle(worker)){
@@ -193,8 +193,8 @@ running_targets <- function(workers, config){
         attr(worker, "target") # nocov
       }
     }
-  ) %>%
-    unlist
+  )
+  unlist(out)
 }
 
 initialize_workers <- function(config){
@@ -213,8 +213,8 @@ decrease_revdep_keys <- function(worker, config, queue){
     targets = target,
     config = config,
     reverse = TRUE
-  ) %>%
-    intersect(y = queue$list())
+  )
+  revdeps <- intersect(revdeps, queue$list())
   queue$decrease_key(targets = revdeps)
 }
 

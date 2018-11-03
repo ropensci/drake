@@ -31,8 +31,7 @@ knitr_deps <- function(target){
   if (!length(target)){
     return(character(0))
   }
-  knitr_deps_list(target) %>%
-    clean_dependency_list
+  clean_dependency_list(knitr_deps_list(target))
 }
 
 knitr_deps_list <- function(target){
@@ -47,8 +46,8 @@ knitr_deps_list <- function(target){
     "file_out",
     "loadd",
     "readd"
-  ) %>%
-    intersect(y = names(results))
+  )
+  select <- intersect(select, names(results))
   results[select]
 }
 

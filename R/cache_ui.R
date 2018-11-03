@@ -151,7 +151,7 @@ built <- function(
   if (is.null(cache)){
     return(character(0))
   }
-  out <-cache$list(namespace = cache$default_namespace)
+  out <- cache$list(namespace = cache$default_namespace)
   parallel_filter(
     out,
     f = function(target){

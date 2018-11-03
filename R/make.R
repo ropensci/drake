@@ -219,8 +219,8 @@ make_with_config <- function(config = drake::read_drake_config()){
 }
 
 global_imports <- function(config){
-  setdiff(V(config$graph)$name, config$plan$target) %>%
-    intersect(ls(envir = globalenv()))
+  out <- setdiff(V(config$graph)$name, config$plan$target)
+  intersect(out, ls(envir = globalenv()))
 }
 
 #' @title Internal function to be called by [make_with_config()]
@@ -352,8 +352,8 @@ make_targets <- function(config = drake::read_drake_config()){
     return(config)
   }
   up_to_date <- setdiff(config$all_targets, outdated)
-  config$schedule <- targets_graph(config = config) %>%
-    igraph::delete_vertices(v = up_to_date)
+  config$schedule <- targets_graph(config = config)
+  config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
   config$jobs <- targets_setting(config$jobs)
   config$parallelism <- targets_setting(config$parallelism)
   run_parallel_backend(config = config)
