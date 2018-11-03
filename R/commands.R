@@ -55,9 +55,9 @@ get_standardized_command <- function(target, config) {
 }
 
 standardize_command <- function(x) {
-  ignore_ignore(x) %>%
-    language_to_text() %>%
-    standardize_code()
+  x <- ignore_ignore(x)
+  x <- language_to_text(x)
+  standardize_code(x)
 }
 
 language_to_text <- function(x){
@@ -84,15 +84,15 @@ standardize_code <- function(x){
   if (!length(x)){
     return(as.character(NA))
   }
-  x <- deparse(parse(text = as.character(x), keep.source = FALSE)[[1]]) %>%
-    paste(collapse = "\n")
-  info <- parse(text = x, keep.source = TRUE) %>%
-    utils::getParseData(includeText = TRUE)
+  x <- deparse(parse(text = as.character(x), keep.source = FALSE)[[1]])
+  x <- paste(x, collapse = "\n")
+  expr <- parse(text = x, keep.source = TRUE)
+  info <- utils::getParseData(expr, includeText = TRUE)
   change <- info$token == "LEFT_ASSIGN"
   info$text[change] <- "="
   info$token[change] <- "EQ_ASSIGN"
-  info[info$token != "COMMENT" & info$terminal, c("token", "text")] %>%
-    lapply(FUN = paste, collapse = " ") %>%
-    paste(collapse = " >> ") %>%
-    digest::digest(algo = "sha256", serialize = FALSE)
+  out <- info[info$token != "COMMENT" & info$terminal, c("token", "text")]
+  out <- lapply(out, FUN = paste, collapse = " ")
+  out <- paste(out, collapse = " >> ")
+  digest::digest(out, algo = "sha256", serialize = FALSE)
 }
