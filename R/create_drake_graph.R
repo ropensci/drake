@@ -117,7 +117,7 @@ bdg_analyze_imports <- function(config, imports){
     type = "import",
     config = config
   )
-  lightly_parallelize(
+  out <- lightly_parallelize(
     X = seq_along(imports),
     FUN = function(i){
       import_dependencies(
@@ -127,8 +127,9 @@ bdg_analyze_imports <- function(config, imports){
       )
     },
     jobs = config$jobs
-  ) %>%
-    set_names(names(imports))
+  )
+  names(out) <- names(imports)
+  out
 }
 
 bdg_analyze_commands <- function(config){
@@ -138,7 +139,7 @@ bdg_analyze_commands <- function(config){
     type = "target",
     config = config
   )
-  lightly_parallelize(
+  out <- lightly_parallelize(
     X = seq_len(nrow(config$plan)),
     FUN = function(i){
       command_dependencies(
@@ -148,8 +149,9 @@ bdg_analyze_commands <- function(config){
       )
     },
     jobs = config$jobs
-  ) %>%
-    set_names(config$plan$target)
+  )
+  names(out) <- config$plan$target
+  out
 }
 
 bdg_get_triggers <- function(config){
@@ -260,18 +262,18 @@ bdg_create_edges <- function(
       )
     },
     jobs = config$jobs
-  ) %>%
-    do.call(what = dplyr::bind_rows)
+  )
+  import_edges <- do.call(import_edges, what = dplyr::bind_rows)
   target_edges <- lightly_parallelize(
     X = seq_along(command_deps),
     FUN = function(i){
-      deps <- merge_lists(command_deps[[i]], condition_deps[[i]]) %>%
-        merge_lists(change_deps[[i]])
+      deps <- merge_lists(command_deps[[i]], condition_deps[[i]])
+      deps <- merge_lists(deps, change_deps[[i]])
       code_deps_to_edges(target = names(command_deps)[i], deps = deps)
     },
     jobs = config$jobs
-  ) %>%
-    do.call(what = dplyr::bind_rows)
+  )
+  target_edges <- do.call(target_edges, what = dplyr::bind_rows)
   if (nrow(target_edges) > 0){
     target_edges <- connect_output_files(
       target_edges,
@@ -300,8 +302,8 @@ bdg_create_attributes <- function(
     jobs = config$jobs,
     parent = emptyenv(),
     hash = TRUE
-  ) %>%
-    set_names(names(import_deps))
+  )
+  names(import_deps_attr) <- names(import_deps)
   target_deps_attr <- lightly_parallelize(
     X = seq_along(command_deps),
     FUN = zip_deps,
@@ -309,8 +311,8 @@ bdg_create_attributes <- function(
     command_deps = command_deps,
     condition_deps = condition_deps,
     change_deps = change_deps
-  ) %>%
-    set_names(names(command_deps))
+  )
+  names(target_deps_attr) <- names(command_deps)
   deps_attr <- c(import_deps_attr, target_deps_attr)
   trigger_attr <- lightly_parallelize(
     X = triggers,
@@ -318,30 +320,33 @@ bdg_create_attributes <- function(
     jobs = config$jobs,
     parent = emptyenv(),
     hash = TRUE
-  ) %>%
-    set_names(names(triggers))
+  )
+  names(trigger_attr) <- names(triggers)
   list(deps_attr = deps_attr, trigger_attr = trigger_attr)
 }
 
 bdg_create_graph <- function(config, edges, attributes){
   console_preprocess(text = "construct graph", config = config)
-  igraph::graph_from_data_frame(edges) %>%
-    igraph::set_vertex_attr(
-      name = "deps",
-      index = names(attributes$deps_attr),
-      value = attributes$deps_attr
-    ) %>%
-    igraph::set_vertex_attr(
-      name = "trigger",
-      index = names(attributes$trigger_attr),
-      value = attributes$trigger_attr
-    ) %>%
-    prune_drake_graph(to = config$targets, jobs = config$jobs) %>%
-    igraph::simplify(
-      remove.loops = TRUE,
-      remove.multiple = TRUE,
-      edge.attr.comb = "min"
-    )
+  graph <- igraph::graph_from_data_frame(edges)
+  graph <- igraph::set_vertex_attr(
+    graph,
+    name = "deps",
+    index = names(attributes$deps_attr),
+    value = attributes$deps_attr
+  )
+  graph <- igraph::set_vertex_attr(
+    graph,
+    name = "trigger",
+    index = names(attributes$trigger_attr),
+    value = attributes$trigger_attr
+  )
+  graph <- prune_drake_graph(graph, to = config$targets, jobs = config$jobs)
+  igraph::simplify(
+    graph,
+    remove.loops = TRUE,
+    remove.multiple = TRUE,
+    edge.attr.comb = "min"
+  )
 }
 
 code_deps_to_edges <- function(target, deps){
@@ -362,9 +367,9 @@ connect_output_files <- function(target_edges, command_deps, jobs){
       unlist(command_deps[[i]]$file_out)
     },
     jobs = jobs
-  ) %>%
-    set_names(nm = names(command_deps)) %>%
-    select_nonempty
+  )
+  names(output_files) <- names(command_deps)
+  output_files <- select_nonempty(output_files)
   if (!length(output_files)){
     target_edges$file <- FALSE
     return(target_edges)
@@ -391,10 +396,10 @@ unload_conflicts <- function(imports, targets, envir, verbose){
 
 zip_deps <- function(index, command_deps, condition_deps, change_deps){
   out <- command_deps[[index]]
-  out$condition <- unlist(condition_deps[[index]]) %>%
-    clean_dependency_list
-  out$change <- unlist(change_deps[[index]]) %>%
-    clean_dependency_list
-  select_nonempty(out) %>%
-    list2env(parent = emptyenv(), hash = TRUE)
+  out$condition <- unlist(condition_deps[[index]])
+  out$condition <- clean_dependency_list(out$condition)
+  out$change <- unlist(change_deps[[index]])
+  out$change <- clean_dependency_list(out$change)
+  out <- select_nonempty(out)
+  list2env(out, parent = emptyenv(), hash = TRUE)
 }

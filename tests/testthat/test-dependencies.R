@@ -7,7 +7,7 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps_code(x))
 })
 
-test_with_dir("magrittr dot is ignored", {
+test_with_dir("dot symbol is ignored", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
     sort(clean_dependency_list(deps_code("sqrt(x + y + .)"))),

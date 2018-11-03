@@ -45,7 +45,6 @@
 #'   degree igraph_opt igraph_options induced_subgraph is_dag
 #'   make_empty_graph set_vertex_attr simplify subcomponent
 #'   topo_sort V vertex_attr
-#' @importFrom magrittr %>%
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class

@@ -38,8 +38,8 @@ test_with_dir("lazy loading is actually lazy", {
   lazily_loaded <- c("nextone", "yourinput")
   eagerly_loaded <- "combined"
   config <- dbug()
-  unload_these <- c(lazily_loaded, eagerly_loaded) %>%
-    intersect(y = ls(envir = config$envir))
+  unload_these <- c(lazily_loaded, eagerly_loaded)
+  unload_these <- intersect(unload_these, ls(envir = config$envir))
   remove(list = unload_these, envir = config$envir)
   config <- drake_config(
     lazy_load = TRUE,
