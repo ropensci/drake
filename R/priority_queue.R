@@ -11,8 +11,8 @@ new_priority_queue <- function(config, jobs = config$jobs_imports){
       length(dependencies(targets = target, config = config))
     },
     jobs = jobs
-  ) %>%
-    unlist
+  )
+  ndeps <- unlist(ndeps)
   priorities <- rep(Inf, length(targets))
   names(priorities) <- targets
   if ("priority" %in% colnames(config$plan)){

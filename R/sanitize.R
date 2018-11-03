@@ -40,8 +40,7 @@ sanitize_nodes <- function(nodes, choices){
       call. = FALSE
     )
   }
-  intersect(nodes, choices) %>%
-    unique
+  unique(intersect(nodes, choices))
 }
 
 repair_target_names <- function(x){

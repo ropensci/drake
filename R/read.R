@@ -229,8 +229,8 @@ loadd <- function(
       X = targets,
       FUN = cache$exists,
       jobs = jobs
-    ) %>%
-      unlist
+    )
+    exists <- unlist(exists)
     targets <- targets[exists]
   }
   if (!replace){

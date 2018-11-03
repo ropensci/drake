@@ -70,8 +70,8 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
       graph = config$graph,
       name = "trigger",
       index = target
-    )[[1]] %>%
-      as.list
+    )[[1]]
+    meta$trigger <- as.list(meta$trigger)
   }
   if (meta$trigger$command){
     meta$command <- get_standardized_command(target = target, config = config)
@@ -84,12 +84,12 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)){
-    vertex_attr(
+    deps <- vertex_attr(
       graph = config$graph,
       name = "deps",
       index = target
-    )[[1]]$change %>%
-      ensure_loaded(config = config)
+    )[[1]]$change
+    ensure_loaded(deps, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta
@@ -105,10 +105,12 @@ dependency_hash <- function(target, config) {
   if (!(target %in% config$plan$target)){
     deps <- c(deps, x$file_in, x$knitr_in)
   }
-  sort(as.character(unique(deps))) %>%
-    self_hash(config = config) %>%
-    paste(collapse = "") %>%
-    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
+  deps <- as.character(deps)
+  deps <- unique(deps)
+  deps <- sort(deps)
+  out <- self_hash(deps, config)
+  out <- paste(out, collapse = "")
+  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
 }
 
 input_file_hash <- function(
@@ -122,15 +124,15 @@ input_file_hash <- function(
     index = target
   )[[1]]
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
-  vapply(
+  out <- vapply(
     X = files,
     FUN = file_hash,
     FUN.VALUE = character(1),
     config = config,
     size_cutoff = size_cutoff
-  ) %>%
-    paste(collapse = "") %>%
-    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
+  )
+  out <- paste(out, collapse = "")
+  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
 }
 
 output_file_hash <- function(
@@ -144,15 +146,15 @@ output_file_hash <- function(
     index = target
   )[[1]]
   files <- sort(unique(as.character(deps$file_out)))
-  vapply(
+  out <- vapply(
     X = files,
     FUN = file_hash,
     FUN.VALUE = character(1),
     config = config,
     size_cutoff = size_cutoff
-  ) %>%
-    paste(collapse = "") %>%
-    digest::digest(algo = config$long_hash_algo, serialize = FALSE)
+  )
+  out <- paste(out, collapse = "")
+  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
 }
 
 self_hash <- Vectorize(function(target, config) {

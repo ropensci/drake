@@ -3,15 +3,14 @@ first_outdated <- function(config) {
   out <- character(0)
   old_leaves <- NULL
   while (TRUE){
-    new_leaves <- leaf_nodes(graph) %>%
-      setdiff(y = out)
+    new_leaves <- setdiff(leaf_nodes(graph), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = should_build_target,
       jobs = config$jobs,
       config = config
-    ) %>%
-      unlist
+    )
+    do_build <- unlist(do_build)
     out <- c(out, new_leaves[do_build])
     if (all(do_build)){
       break
@@ -84,10 +83,7 @@ outdated <-  function(
     graph = config$graph,
     jobs = config$jobs
   )
-  c(first_targets, later_targets) %>%
-    as.character %>%
-    unique %>%
-    sort
+  sort(unique(as.character(c(first_targets, later_targets))))
 }
 
 #' @title Report any import objects required by your drake_plan
@@ -119,8 +115,8 @@ missed <- function(config = drake::read_drake_config()){
       missing_import(x, envir = config$envir)
     },
     jobs = config$jobs
-  ) %>%
-    as.logical
+  )
+  is_missing <- as.logical(is_missing)
   if (!any(is_missing)){
     return(character(0))
   }

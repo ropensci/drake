@@ -32,8 +32,8 @@ get_previous_seed <- function(cache){
 # from arguments of basic types such as
 # numerics and characters.
 seed_from_basic_types <- function(...) {
-  hash <- paste0(..., collapse = "") %>%
-    digest::digest(algo = "murmur32", serialize = FALSE)
+  x <- paste0(..., collapse = "")
+  hash <- digest::digest(x, algo = "murmur32", serialize = FALSE)
   hexval <- paste0("0x", hash)
   utils::type.convert(hexval) %% .Machine$integer.max
 }

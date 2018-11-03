@@ -3,8 +3,8 @@ next_stage <- function(config, schedule, jobs) {
   old_leaves <- NULL
   meta_list <- list()
   while (TRUE){
-    new_leaves <- leaf_nodes(schedule) %>%
-      setdiff(y = targets)
+    new_leaves <- leaf_nodes(schedule)
+    new_leaves <- setdiff(new_leaves, targets)
     console_many_targets(
       targets = new_leaves,
       pattern = "check",
@@ -28,8 +28,8 @@ next_stage <- function(config, schedule, jobs) {
         )
       },
       jobs = jobs
-    ) %>%
-      unlist
+    )
+    do_build <- unlist(do_build)
     targets <- c(targets, new_leaves[do_build])
     meta_list <- c(meta_list, new_meta[do_build])
     if (all(do_build)){
