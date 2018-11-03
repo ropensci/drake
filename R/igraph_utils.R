@@ -60,10 +60,10 @@ prune_drake_graph <- function(
       drake_subcomponent(graph = graph, v = vertex, mode = "in")$name
     },
     jobs = jobs
-  ) %>%
-    unlist() %>%
-    unique() %>%
-    setdiff(x = igraph::V(graph)$name)
+  )
+  ignore <- unlist(ignore)
+  ignore <- unique(ignore)
+  ignore <- setdiff(igraph::V(graph)$name, ignore)
   delete_vertices(graph = graph, v = ignore)
 }
 
@@ -73,17 +73,19 @@ get_neighborhood <- function(graph, from, mode, order){
   }
   if (length(from)){
     from <- sanitize_nodes(nodes = from, choices = V(graph)$name)
-    graph <- igraph::make_ego_graph(
+    egos <- igraph::make_ego_graph(
       graph = graph,
       order = order,
       nodes = from,
       mode = mode
-    ) %>%
-      lapply(FUN = function(graph){
-        igraph::V(graph)$name
-      }) %>%
-      clean_dependency_list %>%
-      subset_graph(graph = graph)
+    )
+    subset <- lapply(
+      X = egos,
+      FUN = function(graph){
+      igraph::V(graph)$name
+    })
+    subset <- clean_dependency_list(subset)
+    graph <- subset_graph(graph = graph, subset = subset)
   }
   graph
 }
@@ -92,16 +94,14 @@ downstream_nodes <- function(from, graph, jobs){
   if (!length(from)){
     return(character(0))
   }
-  lightly_parallelize(
+  out <- lightly_parallelize(
     X = from,
     FUN = function(node){
       drake_subcomponent(graph, v = node, mode = "out")$name
     },
     jobs = jobs
-  ) %>%
-    unlist() %>%
-    unique() %>%
-    sort()
+  )
+  clean_dependency_list(out)
 }
 
 leaf_nodes <- function(graph){

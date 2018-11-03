@@ -731,14 +731,20 @@ find_knitr_doc <- function(expr, result = character(0)){
     if (does_knitting){
       result <- doc_of_function_call(expr)
     } else {
-      result <- lapply(as.list(expr), find_knitr_doc,
-                       result = result) %>%
-        clean_dependency_list
+      result <- lapply(
+        as.list(expr),
+        find_knitr_doc,
+        result = result
+      )
+      result <- clean_dependency_list(result)
     }
   } else if (is.recursive(expr)){
-    result <- lapply(as.list(expr), find_knitr_doc,
-                     result = result) %>%
-      clean_dependency_list
+    result <- lapply(
+      as.list(expr),
+      find_knitr_doc,
+      result = result
+    )
+    result <- clean_dependency_list(result)
   }
   setdiff(result, ignored_symbols)
 }
@@ -847,11 +853,11 @@ max_useful_jobs <- function(
     return(0)
   }
   . <- level <- NULL
-  n_per_level <- group_by(nodes, level) %>%
-    dplyr::do({
-      .$nrow <- nrow(.)
-      .
-    })
+  n_per_level <- group_by(nodes, level)
+  n_per_level <- dplyr::do(n_per_level, {
+    .$nrow <- nrow(.)
+    .
+  })
   max(n_per_level$nrow)
   # nocov end
 }
@@ -1649,15 +1655,15 @@ triggers <- function(){
       "See trigger() (singular) for details."
     )
   )
-  c(
+  out <- c(
     "any",
     "always",
     "command",
     "depends",
     "file",
     "missing"
-  ) %>%
-    sort
+  )
+  sort(out)
 }
 
 convert_old_trigger <- function(x){
