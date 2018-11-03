@@ -365,7 +365,9 @@ test_with_dir("standardized commands with ignore()", {
 test_with_dir("can standardize command with other ignored symbols", {
   expect_equal(
     standardize_command("function(x){(sqrt( drake_envir(arg) + 123))}"),
-    "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
+    standardize_command(
+      "function(x) {\n    (sqrt(ignore() + 123))\n}"
+    )
   )
 })
 
