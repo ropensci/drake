@@ -178,7 +178,8 @@ bdg_get_triggers <- function(config){
       simplify = FALSE
     )
   }
-  set_names(triggers, config$plan$target)
+  names(triggers) <- config$plan$target
+  triggers
 }
 
 bdg_get_condition_deps <- function(config, triggers){
@@ -210,7 +211,8 @@ bdg_get_condition_deps <- function(config, triggers){
       simplify = FALSE
     )
   }
-  set_names(condition_deps, config$plan$target)
+  names(condition_deps) <- config$plan$target
+  condition_deps
 }
 
 bdg_get_change_deps <- function(config, triggers){
@@ -242,7 +244,8 @@ bdg_get_change_deps <- function(config, triggers){
       simplify = FALSE
     )
   }
-  set_names(change_deps, config$plan$target)
+  names(change_deps) <- config$plan$target
+  change_deps
 }
 
 bdg_create_edges <- function(

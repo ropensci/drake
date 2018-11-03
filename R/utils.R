@@ -142,11 +142,6 @@ select_valid <- function(x){
   x[index]
 }
 
-set_names <- function(x, nm){
-  names(x) <- nm
-  x
-}
-
 standardize_filename <- function(text){
   text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
   text
