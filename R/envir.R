@@ -132,37 +132,45 @@ exclude_unloadable <- function(targets, config, jobs = jobs){
   setdiff(targets, unloadable)
 }
 
-#' @title Unload targets from memory from inside a command
-#' @description Call this function in commands in your plan
-#'   to avoid using too much computer memory.
+#' @title Get the environment where drake builds targets
+#' @description Call this function inside the commands in your plan
+#'   to get the environment where `drake` builds targets.
+#'   That way, you can strategically remove targets from memory
+#'   while [make()] is running. That way, you can limit the
+#'   amount of computer memory you use.
 #' @export
 #' @seealso [make()], [drake_plan()], [target()]
-#' @return nothing
-#' @param ... names of targets as symbols
-#' @param list character vector of targets
+#' @return the environment where `drake` builds targets
 #' @examples
 #' plan <- drake_plan(
 #'   large_data_1 = sample.int(1e4),
 #'   large_data_2 = sample.int(1e4),
 #'   subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
 #'   summary = {
-#'     print(ls(envir = ._drake_envir))
-#'     # We don't need large_data_* in memory anymore.
-#'     unload_targets(large_data_1, large_data_2)
-#'     print(ls(envir = ._drake_envir))
+#'     print(ls(envir = drake_envir()))
+#'     # We don't need the large_data_* targets in memory anymore.
+#'     rm(large_data_1, large_data_2, envir = drake_envir())
+#'     print(ls(envir = drake_envir()))
 #'     mean(subset)
 #'   },
 #'   strings_in_dots = "literals"
 #' )
 #' make(plan, cache = storr::storr_environment(), session_info = FALSE)
-unload_targets <- function(..., list = character(0)){
-  dots <- vapply(
-    X = match.call(expand.dots = FALSE)$...,
-    FUN = deparse,
-    FUN.VALUE = character(1)
+drake_envir <- function(){
+  envir <- environment()
+  for (i in seq_len(getOption("expressions"))){
+    if (identical(envir[[drake_envir_marker]], TRUE)){
+      return(envir)
+    }
+    if (identical(envir, globalenv())){
+      break # nocov
+    }
+    envir <- parent.frame(n = i)
+  }
+  stop(
+    "Could not find the environment where drake builds targets. ",
+    "drake_envir() should only be called inside commands ",
+    "in your workflow plan data frame.",
+    call. = FALSE
   )
-  browser()
-  
-  list <- union(list, dots)
-  remove(list = list, envir = ._drake_envir)
 }

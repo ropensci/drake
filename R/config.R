@@ -315,7 +315,12 @@
 #' @param pruning_strategy deprecated. See `memory_strategy`.
 #'
 #' @param memory_strategy Character scalar, name of the
-#'   strategy `drake` uses to manage targets in memory. Choices:
+#'   strategy `drake` uses to manage targets in memory. For more direct
+#'   control over which targets `drake` keeps in memory, see the
+#'   help file examples of [drake_envir()]. The `memory_strategy` arguemnt
+#'   to `make()` and `drake_config()` is an attempt at an automatic
+#'   catch-all solution. These are the choices.
+#'
 #'   - `"speed"`: Once a target is loaded in memory, just keep it there.
 #'     Maximizes speed, but hogs memory.
 #'   - `"memory"`: For each target, unload everything from memory
@@ -333,19 +338,10 @@
 #' Each strategy has a weakness.
 #' `"speed"` is memory-hungry, `"memory"` wastes time reloading
 #' targets from storage, and `"lookahead"` wastes time
-#' traversing the entire dependency graph on every [make()].
-#' If none of these options suits your project,
-#' you can take control. Just set `memory_strategy`
-#' to `"speed"` and remove targets in your workflow plan commands
-#' using the hidden `._drake_envir` variable. Example:
-#' drake_plan(
-#'   large_data = get_large_data(),
-#'   clean_data = clean_data(large_data),
-#'   my_plot = {
-#'     rm(list = "large_data", envir = ._drake_envir)
-#'     make_my_plot(clean_data)
-#'   }
-#' )
+#' traversing the entire dependency graph on every [make()]. For a better
+#' compromise and more control, see the examples in the help file
+#' of [drake_envir()].
+#'
 #' @param makefile_path Path to the `Makefile` for
 #'   `make(parallelism = "Makefile")`. If you set this argument to a
 #'   non-default value, you are responsible for supplying this same

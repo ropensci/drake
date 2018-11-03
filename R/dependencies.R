@@ -549,10 +549,10 @@ pair_text <- function(x, y){
 }
 
 drake_prefix <- c("", "drake::", "drake:::")
+drake_envir_marker <- "._drake_envir"
 file_in_fns <- pair_text(drake_prefix, c("file_in"))
 file_out_fns <- pair_text(drake_prefix, c("file_out"))
-ignored_fns <- pair_text(drake_prefix, c("unload_targets", "ignore"))
-ignored_syms <- "._drake_envir"
+ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
@@ -560,10 +560,10 @@ target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
 
 ignored_symbols <- c(
+  drake_envir_marker,
   file_in_fns,
   file_out_fns,
   ignored_fns,
-  ignored_syms,
   loadd_fns,
   knitr_in_fns,
   readd_fns,

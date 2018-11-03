@@ -5,7 +5,7 @@
 #' that is already up to date.
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
-#' @seealso 
+#' @seealso
 #'   [drake_plan()],
 #'   [drake_config()],
 #'   [vis_drake_graph()],
@@ -239,10 +239,7 @@ make_session <- function(config){
     cache = config$cache,
     jobs = config$jobs
   )
-  remove(
-    list = intersect(config$plan$target, ls(envir = config$envir)),
-    envir = config$envir
-  )
+  conclude_session(config = config)
   return(invisible(config))
 }
 
@@ -375,6 +372,7 @@ make_imports_targets <- function(config){
 
 initialize_session <- function(config){
   init_common_values(config$cache)
+  mark_envir(config$envir)
   if (config$log_progress){
     clear_tmp_namespace(
       cache = config$cache,
@@ -396,4 +394,17 @@ initialize_session <- function(config){
       namespace = "session"
     )
   }
+}
+
+conclude_session <- function(config){
+  unmark_envir(config$envir)
+  suppressWarnings(remove(list = config$plan$target, envir = config$envir))
+}
+
+mark_envir <- function(envir){
+  assign(x = drake_envir_marker, value = TRUE, envir = envir)
+}
+
+unmark_envir <- function(envir){
+  suppressWarnings(remove(list = drake_envir_marker, envir = envir))
 }

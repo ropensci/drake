@@ -83,7 +83,7 @@ test_with_dir("all memory strategies work", {
   }
 })
 
-test_with_dir("._drake_envir and memory strategies", {
+test_with_dir("drake_envir() and memory strategies", {
   plan <- drake_plan(
     a = {
       i <- 1
@@ -91,7 +91,7 @@ test_with_dir("._drake_envir and memory strategies", {
     },
     b = a,
     c = {
-      saveRDS(ls(envir = ._drake_envir), "ls.rds")
+      saveRDS(ls(envir = drake_envir()), "ls.rds")
       b
     },
     strings_in_dots = "literals"
@@ -130,11 +130,11 @@ test_with_dir("._drake_envir and memory strategies", {
     },
     b = {
       out <- a
-      rm(a, envir = ._drake_envir)
+      rm(a, envir = drake_envir())
       out
     },
     c = {
-      saveRDS(ls(envir = ._drake_envir), "ls.rds")
+      saveRDS(ls(envir = drake_envir()), "ls.rds")
       b
     },
     strings_in_dots = "literals"
@@ -150,25 +150,38 @@ test_with_dir("._drake_envir and memory strategies", {
   expect_false(any(c("a", "i", "out") %in% l))
 })
 
-test_with_dir("unload_targets", {
+test_with_dir("drake_envir() depth", {
+  e <- new.env(parent = globalenv())
   plan <- drake_plan(
     large_data_1 = sample.int(1e4),
     large_data_2 = sample.int(1e4),
     subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
     summary = {
-      cat(ls(envir = ._drake_envir))
       targs <- c("large_data_1", "large_data_2")
-      expect_true(all(targs %in% ls(envir = ._drake_envir)))
-      unload_targets(large_data_1, large_data_2)
-      cat(ls(envir = ._drake_envir))
-      expect_false(any(targs %in% ls(envir = ._drake_envir)))
+      expect_true(all(targs %in% ls(envir = drake_envir())))
+      identity(
+        invisible(
+          invisible(
+            rm(large_data_1, large_data_2, envir = drake_envir())
+          )
+        )
+      )
+      expect_false(any(targs %in% ls(envir = drake_envir())))
       mean(subset)
     },
     strings_in_dots = "literals"
   )
   make(
     plan,
+    envir = e,
     cache = storr::storr_environment(),
     session_info = FALSE
+  )
+})
+
+test_with_dir("drake_envir() in wrong context", {
+  expect_error(
+    drake_envir(),
+    regexp = "should only be called inside commands"
   )
 })
