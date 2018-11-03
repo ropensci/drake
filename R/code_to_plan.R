@@ -22,9 +22,7 @@
 #' @examples
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
-#'   data = raw_data %>%
-#'     mutate(Species = fct_inorder(Species)) %>%
-#'     select(-X__1),
+#'   data = raw_data,
 #'   hist = create_plot(data),
 #'   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
 #'   strings_in_dots = "literals"
@@ -44,10 +42,10 @@ code_to_plan <- function(path){
   suppressWarnings(
     nodes <- CodeDepends::getInputs(CodeDepends::readScript(path))
   )
-  lapply(nodes, node_plan) %>%
-    do.call(what = dplyr::bind_rows) %>%
-    parse_custom_columns() %>%
-    sanitize_plan()
+  out <- lapply(nodes, node_plan)
+  out <- do.call(out, what = dplyr::bind_rows)
+  out <- parse_custom_columns(out)
+  sanitize_plan(out)
 }
 
 node_plan <- function(node){
@@ -79,9 +77,7 @@ node_plan <- function(node){
 #' @examples
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
-#'   data = raw_data %>%
-#'     mutate(Species = fct_inorder(Species)) %>%
-#'     select(-X__1),
+#'   data = raw_data,
 #'   hist = create_plot(data),
 #'   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
 #'   strings_in_dots = "literals"
@@ -119,9 +115,7 @@ plan_to_code <- function(plan, con = stdout()){
 #' @examples
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
-#'   data = raw_data %>%
-#'     mutate(Species = fct_inorder(Species)) %>%
-#'     select(-X__1),
+#'   data = raw_data,
 #'   hist = create_plot(data),
 #'   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
 #'   strings_in_dots = "literals"
@@ -136,7 +130,7 @@ plan_to_code <- function(plan, con = stdout()){
 #'   code_to_plan(file)
 #' }
 plan_to_notebook <- function(plan, con){
-  c(
+  out <- c(
     "---",
     "title: \"My Notebook\"",
     "output: html_notebook",
@@ -145,22 +139,21 @@ plan_to_notebook <- function(plan, con){
     "```{r my_code}",
     plan_to_text(plan),
     "```"
-  ) %>%
-    writeLines(con = con)
+  )
+  writeLines(out, con = con)
 }
 
 plan_to_text <- function(plan){
   . <- NULL
-  order <- drake_config(
+  graph <- drake_config(
     plan[, c("target", "command")],
     envir = new.env(parent = emptyenv()),
     cache = storr::storr_environment(),
     verbose = FALSE
-  )$graph %>%
-    igraph::topo_sort() %>%
-    .$name %>%
-    intersect(y = plan$target) %>%
-    match(table = plan$target)
+  )$graph
+  order <- igraph::topo_sort(graph)$name
+  order <- intersect(order, plan$target)
+  order <- match(order, table = plan$target)
   plan <- plan[order, ]
   if (!is.character(plan$command)){
     plan$command <- purrr::map_chr(plan$command, rlang::expr_text)

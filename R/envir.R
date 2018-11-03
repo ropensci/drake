@@ -42,8 +42,8 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
   } else {
     downstream <- downstream_deps <- NULL
   }
-  already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
-    intersect(y = config$plan$target)
+  already_loaded <- ls(envir = config$envir, all.names = TRUE)
+  already_loaded <- intersect(already_loaded, config$plan$target)
   target_deps <- nonfile_target_dependencies(
     targets = targets,
     config = config,
@@ -51,9 +51,13 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
   )
   if (!identical(config$memory_strategy, "speed")){
     keep_these <- c(target_deps, downstream_deps)
-    discard_these <- setdiff(x = config$plan$target, y = keep_these) %>%
-      parallel_filter(f = is_not_file, jobs = jobs) %>%
-      intersect(y = already_loaded)
+    discard_these <- setdiff(x = config$plan$target, y = keep_these)
+    discard_these <- parallel_filter(
+      discard_these,
+      f = is_not_file,
+      jobs = jobs
+    )
+    discard_these <- intersect(discard_these, already_loaded)
     if (length(discard_these)){
       console_many_targets(
         discard_these,
@@ -63,9 +67,9 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
       rm(list = discard_these, envir = config$envir)
     }
   }
-  setdiff(target_deps, targets) %>%
-    setdiff(y = already_loaded) %>%
-    safe_load(config = config, jobs = jobs)
+  targets <- setdiff(target_deps, targets)
+  targets <- setdiff(targets, already_loaded)
+  safe_load(targets = targets, config = config, jobs = jobs)
 }
 
 safe_load <- function(targets, config, jobs = 1){
@@ -91,18 +95,18 @@ safe_load <- function(targets, config, jobs = 1){
 }
 
 ensure_loaded <- function(targets, config){
-  already_loaded <- ls(envir = config$envir, all.names = TRUE) %>%
-    intersect(y = config$plan$target)
-  setdiff(targets, already_loaded) %>%
-    Filter(f = is_not_file) %>%
-    safe_load(config = config)
+  already_loaded <- ls(envir = config$envir, all.names = TRUE)
+  already_loaded <- intersect(already_loaded, config$plan$target)
+  targets <- setdiff(targets, already_loaded)
+  targets <- Filter(x = targets, f = is_not_file)
+  safe_load(targets = targets, config = config)
 }
 
 flexible_get <- function(target, envir) {
   stopifnot(length(target) == 1)
-  parsed <- parse(text = target) %>%
-    as.call %>%
-    as.list
+  parsed <- parse(text = target)
+  parsed <- as.call(parsed)
+  parsed <- as.list(parsed)
   lang <- parsed[[1]]
   is_namespaced <- length(lang) > 1
   if (!is_namespaced){
