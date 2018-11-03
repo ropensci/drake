@@ -22,12 +22,9 @@ when you print it.
 }
 \examples{
 plan <- drake::drake_plan(
-  small_data = download_data("https://some_website.com") \%>\%
-    select_my_columns() \%>\%
-    munge(),
+  small_data = download_data("https://some_website.com"),
   large_data_raw = target(
-    command = download_data("https://lots_of_data.com") \%>\%
-      select_top_columns,
+    command = download_data("https://lots_of_data.com"),
     trigger = trigger(
       change = time_last_modified("https://lots_of_data.com"),
       command = FALSE,

@@ -56,8 +56,8 @@ cluster_nodes <- function(config){
     new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
     matching <- config$nodes$id[index]
-    new_node$title <- paste(matching, collapse = ", ") %>%
-      crop_text(width = hover_width)
+    new_node$title <- paste(matching, collapse = ", ")
+    new_node$title <- crop_text(new_node$title, width = hover_width)
     config$nodes <- rbind(config$nodes[!index, ], new_node)
     config$edges$from[config$edges$from %in% matching] <- new_node$id
     config$edges$to[config$edges$to %in% matching] <- new_node$id
@@ -114,13 +114,13 @@ insert_file_out_edges <- function(edges, file_in_list, file_out_list){
     file_out_edges$to <- as.character(file_out_edges$values)
     file_out_edges$values <- file_out_edges$ind <- NULL
   }
-  edges <- edges[edges$file < 0.5, ] %>%
-    dplyr::bind_rows(file_in_edges, file_out_edges)
+  edges <- edges[edges$file < 0.5, ]
+  edges <- dplyr::bind_rows(edges, file_in_edges, file_out_edges)
   edges[!duplicated(edges), ]
 }
 
 insert_file_out_nodes <- function(nodes, file_out_list){
-  lapply(seq_along(file_out_list), function(index){
+  out <- lapply(seq_along(file_out_list), function(index){
     old_nodes <- nodes[names(file_out_list)[index], ]
     files <- file_out_list[[index]]
     new_nodes <- old_nodes[rep(1, length(files)), ]
@@ -129,35 +129,41 @@ insert_file_out_nodes <- function(nodes, file_out_list){
     new_nodes$type <- "file"
     new_nodes$shape <- shape_of("file")
     new_nodes
-  }) %>%
-    do.call(what = dplyr::bind_rows) %>%
-    dplyr::bind_rows(nodes)
+  })
+  out <- do.call(out, what = dplyr::bind_rows)
+  dplyr::bind_rows(out, nodes)
 }
 
 insert_file_outs <- function(config){
   within(config, {
-    file_in_list <- lapply(nodes$deps, function(deps){
-      if (is.null(deps)){
-        return(character(0))
+    file_in_list <- lapply(
+      nodes$deps,
+      function(deps){
+        if (is.null(deps)){
+          return(character(0))
+        }
+        out <- c(
+          deps$file_in,
+          deps$knitr_in,
+          Filter(x = deps$change, f = is_file),
+          Filter(x = deps$condition, f = is_file)
+        )
+        unique(out)
       }
-      c(
-        deps$file_in,
-        deps$knitr_in,
-        Filter(x = deps$change, f = is_file),
-        Filter(x = deps$condition, f = is_file)
-      ) %>%
-        unique()
-    }) %>%
-      set_names(nodes$id) %>%
-      select_nonempty
-    file_out_list <- lapply(nodes$deps, function(deps){
-      if (is.null(deps)){
-        return(character(0))
+    )
+    names(file_in_list) <- nodes$id
+    file_in_list <- select_nonempty(file_in_list)
+    file_out_list <- lapply(
+      nodes$deps,
+      function(deps){
+        if (is.null(deps)){
+          return(character(0))
+        }
+        deps$file_out
       }
-      deps$file_out
-    }) %>%
-      set_names(nodes$id) %>%
-      select_nonempty
+    )
+    names(file_out_list) <- nodes$id
+    file_out_list <- select_nonempty(file_out_list)
     nodes <- insert_file_out_nodes(nodes, file_out_list)
     nodes$level <- as.integer(ordered(nodes$level))
     edges <- insert_file_out_edges(edges, file_in_list, file_out_list)
@@ -183,10 +189,10 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
     return(quoted_file)
   }
   tryCatch({
-      readLines(unquoted_file, n = 20, warn = FALSE) %>%
-        crop_lines(n = hover_lines) %>%
-        crop_text(width = hover_width) %>%
-        paste0(collapse = "<br>")
+      x <- readLines(unquoted_file, n = 20, warn = FALSE)
+      x <- crop_lines(x, n = hover_lines)
+      x <- crop_text(x, width = hover_width)
+      paste0(x, collapse = "<br>")
     },
     error = function(e) quoted_file,
     warning = function(w) quoted_file
@@ -211,12 +217,13 @@ filtered_legend_nodes <- function(all_nodes, full_legend, font_size){
 }
 
 function_hover_text <- Vectorize(function(function_name, envir){
-  tryCatch(
+  x <- tryCatch(
     eval(parse(text = function_name), envir = envir),
-    error = function(e) function_name) %>%
-    unwrap_function %>%
-    deparse %>%
-    style_hover_text()
+    error = function(e) function_name
+  )
+  x <- unwrap_function(x)
+  x <- deparse(x)
+  style_hover_text(x)
 },
 "function_name")
 
@@ -330,10 +337,10 @@ null_graph <- function() {
 # but it adds a lot of processing time
 # for large functions.
 style_hover_text <- function(lines){
-  crop_lines(lines, n = hover_lines) %>%
-    crop_text(width = hover_width) %>%
-    gsub(pattern = " ", replacement = "&nbsp;") %>%
-    paste0(collapse = "<br>")
+  x <- crop_lines(lines, n = hover_lines)
+  x <- crop_text(x, width = hover_width)
+  x <- gsub(pattern = " ", replacement = "&nbsp;", x = x)
+  paste0(x, collapse = "<br>")
 }
 
 resolve_build_times <- function(build_times){
@@ -369,8 +376,8 @@ resolve_levels <- function(config){
   graph <- config$graph
   while (length(V(graph))){
     level <- level + 1
-    leaves <- leaf_nodes(graph) %>%
-      intersect(y = config$nodes$id)
+    leaves <- leaf_nodes(graph)
+    leaves <- intersect(leaves, config$nodes$id)
     config$nodes[leaves, "level"] <- level
     graph <- igraph::delete_vertices(graph = graph, v = leaves)
   }

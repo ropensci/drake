@@ -204,8 +204,8 @@ drake_plan <- function(
       plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
     }
   }
-  parse_custom_columns(plan) %>%
-    sanitize_plan
+  plan <- parse_custom_columns(plan)
+  sanitize_plan(plan)
 }
 
 #' @title Row-bind together drake plans
@@ -232,8 +232,8 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...){
-  dplyr::bind_rows(...) %>%
-    sanitize_plan
+  plan <- dplyr::bind_rows(...)
+  sanitize_plan(plan)
 }
 
 handle_duplicated_targets <- function(plan){
@@ -251,8 +251,8 @@ handle_duplicated_targets <- function(plan){
 
 parse_custom_columns <- function(plan){
   . <- NULL # For warnings about undefined global symbols.
-  out <- dplyr::group_by(plan, seq_len(n())) %>%
-    dplyr::do(parse_custom_colums_row(.))
+  out <- dplyr::group_by(plan, seq_len(n()))
+  out <- dplyr::do(out, parse_custom_colums_row(.))
   out[["seq_len(n())"]] <- NULL
   out
 }
@@ -462,12 +462,14 @@ warn_arrows <- function(dots){
   }
   check_these <- purrr::map_lgl(names(dots), function(x){
     !nzchar(x)
-  }) %>%
-    which
-  offending_commands <- lapply(dots[check_these], detect_arrow) %>%
-    Filter(f = function(x){
-      !is.null(x)
-    })
+  })
+  check_these <- which(check_these)
+  offending_commands <- lapply(dots[check_these], detect_arrow)
+  offending_commands <- Filter(
+    offending_commands,
+    f = function(x){
+    !is.null(x)
+  })
   if (length(offending_commands)){
     warning(
       "Use `=` instead of `<-` or `->` ",
@@ -557,16 +559,19 @@ target <- function(
     priority  = rlang::enexpr(priority),
     worker    = rlang::enexpr(worker),
     evaluator = rlang::enexpr(evaluator)
-  ) %>%
-    c(rlang::enexprs(...)) %>%
-    select_nonempty
-  out[nzchar(names(out))] %>%
-    purrr::map(.f = function(x){
+  )
+  out <- c(out, rlang::enexprs(...))
+  out <- select_nonempty(out)
+  out[nzchar(names(out))]
+  out <- purrr::map(
+    .x = out,
+    .f = function(x){
       if (is.language(x)){
         wide_deparse(x)
       } else {
         x
       }
-    }) %>%
-    tibble::as_tibble()
+    }
+  )
+  tibble::as_tibble(out)
 }

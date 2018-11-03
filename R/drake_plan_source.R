@@ -11,12 +11,9 @@
 #' @param plan a workflow plan data frame (see [drake_plan()])
 #' @examples
 #' plan <- drake::drake_plan(
-#'   small_data = download_data("https://some_website.com") %>%
-#'     select_my_columns() %>%
-#'     munge(),
+#'   small_data = download_data("https://some_website.com"),
 #'   large_data_raw = target(
-#'     command = download_data("https://lots_of_data.com") %>%
-#'       select_top_columns,
+#'     command = download_data("https://lots_of_data.com"),
 #'     trigger = trigger(
 #'       change = time_last_modified("https://lots_of_data.com"),
 #'       command = FALSE,
@@ -37,8 +34,8 @@
 #' }
 drake_plan_source <- function(plan){
   assert_pkg("styler")
-  text <- drake_plan_call(plan) %>%
-    style_recursive(name = "", append_comma = FALSE)
+  text <- drake_plan_call(plan)
+  text <- style_recursive(text, name = "", append_comma = FALSE)
   class(text) <- c("drake_plan_source", "vertical", "character")
   text
 }
@@ -54,14 +51,13 @@ drake_plan_call <- function(plan){
       stringsAsFactors = FALSE
     )
   )
-  target_calls <- purrr::pmap(plan, drake_target_call) %>%
-    set_names(plan$target)
+  target_calls <- purrr::pmap(plan, drake_target_call)
+  names(target_calls) <- plan$target
   as.call(c(quote(drake_plan), target_calls))
 }
 
 drake_target_call <- function(...){
-  args <- list(...) %>%
-    select_valid()
+  args <- select_valid(list(...))
   target <- parse(text = args$target)[[1]]
   args$target <- NULL
   if (is.character(args[["command"]])){
