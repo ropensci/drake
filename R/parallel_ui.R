@@ -30,7 +30,7 @@ drake_hpc_template_file <- function(
   file = drake::drake_hpc_template_files(),
   to = getwd(),
   overwrite = FALSE
-){
+) {
   file <- match.arg(file)
   dir <- system.file(
     "hpc_template_files",
@@ -66,7 +66,7 @@ drake_hpc_template_file <- function(
 #' # make(my_plan, parallelism = "future", jobs = 2) # nolint
 #' })
 #' }
-drake_hpc_template_files <- function(){
+drake_hpc_template_files <- function() {
   dir(
     system.file(
       "hpc_template_files",
@@ -113,7 +113,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "hasty",
     "Makefile"
   )
-  if (distributed_only){
+  if (distributed_only) {
     sort(distributed)
   } else {
     sort(c(local, distributed))
@@ -160,9 +160,9 @@ default_parallelism <- function() {
 shell_file <- function(
   path = "shell.sh",
   overwrite = FALSE
-){
+) {
   from <- system.file("shell.sh", package = "drake", mustWork = TRUE)
-  if (file.exists(path) & overwrite){
+  if (file.exists(path) & overwrite) {
     warning("Overwriting file ", path)
   }
   invisible(file.copy(from = from, to = path, copy.mode = TRUE,

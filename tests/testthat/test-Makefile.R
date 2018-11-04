@@ -43,7 +43,7 @@ test_with_dir("recipe commands", {
 test_with_dir("no Makefile for make_imports()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cached(), character(0))
-  f <- function(){
+  f <- function() {
     return(1)
   }
   x <- drake_plan(a = f())

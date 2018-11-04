@@ -19,7 +19,7 @@ test_with_dir("responses to intermediate file", {
     saveRDS(combined + 1, "out2.rds")
     file_out("intermediatefile.rds", "out2.rds")
   }))
-  for (command in c(command1, command2)){
+  for (command in c(command1, command2)) {
     plan$command[1] <- command
     config <- drake_config(plan = plan, targets = plan$target,
       envir = envir, parallelism = scenario$parallelism,
@@ -37,7 +37,7 @@ test_with_dir("responses to intermediate file", {
     expect_equal(val + 1, val2)
 
     # actually change a file
-    for (file in c("intermediatefile.rds", "out2.rds")){
+    for (file in c("intermediatefile.rds", "out2.rds")) {
       saveRDS(sum(val) + 100, file)
       testrun(config)
       expect_equal(justbuilt(config), "drake_target_1")
@@ -47,7 +47,7 @@ test_with_dir("responses to intermediate file", {
     }
 
     # break a file
-    for (file in c("intermediatefile.rds", "out2.rds")){
+    for (file in c("intermediatefile.rds", "out2.rds")) {
       unlink(file, force = TRUE)
       testrun(config)
       expect_equal(justbuilt(config), "drake_target_1")
@@ -89,7 +89,7 @@ test_with_dir("imported file_in file", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   envir <- dbug_envir(envir)
-  eval(parse(text = "j <- function(x){
+  eval(parse(text = "j <- function(x) {
       knitr_in(\"report.Rmd\")
       file_in(\"a.rds\", \"b.rds\")
       x + 2 + c + readRDS(file_in(\"c.rds\"))
@@ -97,13 +97,13 @@ test_with_dir("imported file_in file", {
     envir = envir
   )
   dbug_files()
-  for (file in paste0(letters[1:3], ".rds")){
+  for (file in paste0(letters[1:3], ".rds")) {
     saveRDS(1, file)
   }
   load_mtcars_example() # for report.Rmd
   config <- drake_config(dbug_plan(), envir = envir, verbose = FALSE)
   testrun(config)
-  for (file in paste0(letters[1:2], ".rds")){
+  for (file in paste0(letters[1:2], ".rds")) {
     saveRDS(2, file)
     testrun(config)
     expect_equal(sort(justbuilt(config)), sort(c("nextone", "yourinput")))

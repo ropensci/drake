@@ -20,7 +20,7 @@
 drake_session <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose()
-){
+) {
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
@@ -49,7 +49,7 @@ drake_session <- function(path = getwd(), search = TRUE,
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose()
-){
+) {
   prog <- progress(path = path, search = search, cache = cache)
   as.character(names(which(prog == "in progress")))
 }
@@ -85,10 +85,10 @@ failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose(),
   upstream_only = FALSE
-){
+) {
   prog <- progress(path = path, search = search, cache = cache)
   out <- as.character(names(which(prog == "failed")))
-  if (upstream_only){
+  if (upstream_only) {
     graph <- read_drake_graph(cache = cache)
     out <- filter_upstream(targets = out, graph = graph)
   }
@@ -149,9 +149,9 @@ progress <- function(
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose(),
   jobs = 1
-){
+) {
   # deprecate imported_files_only
-  if (length(imported_files_only)){
+  if (length(imported_files_only)) {
     warning(
       "The imported_files_only argument to progress() is deprecated ",
       "and will be removed the next major release. ",
@@ -160,12 +160,12 @@ progress <- function(
     )
     no_imported_objects <- imported_files_only
   }
-  if (is.null(cache)){
+  if (is.null(cache)) {
     return(character(0))
   }
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
-  if (!length(targets)){
+  if (!length(targets)) {
     return(
       list_progress(
         no_imported_objects = no_imported_objects,
@@ -177,7 +177,7 @@ progress <- function(
   get_progress(targets = targets, cache = cache, jobs = jobs)
 }
 
-list_progress <- function(no_imported_objects, cache, jobs){
+list_progress <- function(no_imported_objects, cache, jobs) {
   all_marked <- cache$list(namespace = "progress")
   all_progress <- get_progress(
     targets = all_marked,
@@ -186,25 +186,25 @@ list_progress <- function(no_imported_objects, cache, jobs){
   )
   abridged_marked <- parallel_filter(
     all_marked,
-    f = function(target){
+    f = function(target) {
       is_built_or_imported_file(target = target, cache = cache)
     },
     jobs = jobs
   )
   abridged_progress <- all_progress[abridged_marked]
-  if (no_imported_objects){
+  if (no_imported_objects) {
     out <- abridged_progress
   } else{
     out <- all_progress
   }
-  if (!length(out)){
+  if (!length(out)) {
     out <- as.character(out)
   }
   return(out)
 }
 
-get_progress <- function(targets, cache, jobs){
-  if (!length(targets)){
+get_progress <- function(targets, cache, jobs) {
+  if (!length(targets)) {
     return(character(0))
   }
   out <- lightly_parallelize(
@@ -218,16 +218,16 @@ get_progress <- function(targets, cache, jobs){
   out
 }
 
-get_progress_single <- function(target, cache){
-  if (cache$exists(key = target, namespace = "progress")){
+get_progress_single <- function(target, cache) {
+  if (cache$exists(key = target, namespace = "progress")) {
     cache$get(key = target, namespace = "progress")
   } else{
     "not built or imported"
   }
 }
 
-set_progress <- function(target, value, config){
-  if (!config$log_progress){
+set_progress <- function(target, value, config) {
+  if (!config$log_progress) {
     return()
   }
   config$cache$duplicate(

@@ -63,7 +63,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (is_file(target)) {
     meta$mtime <- file.mtime(drake::drake_unquote(target))
   }
-  if (meta$imported){
+  if (meta$imported) {
     meta$trigger <- trigger(condition = TRUE)
   } else {
     meta$trigger <- vertex_attr(
@@ -73,17 +73,17 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     )[[1]]
     meta$trigger <- as.list(meta$trigger)
   }
-  if (meta$trigger$command){
+  if (meta$trigger$command) {
     meta$command <- get_standardized_command(target = target, config = config)
   }
-  if (meta$trigger$depend){
+  if (meta$trigger$depend) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
-  if (meta$trigger$file){
+  if (meta$trigger$file) {
     meta$input_file_hash <- input_file_hash(target = target, config = config)
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
-  if (!is.null(meta$trigger$change)){
+  if (!is.null(meta$trigger$change)) {
     deps <- vertex_attr(
       graph = config$graph,
       name = "deps",
@@ -102,7 +102,7 @@ dependency_hash <- function(target, config) {
     index = target
   )[[1]]
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
-  if (!(target %in% config$plan$target)){
+  if (!(target %in% config$plan$target)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
   deps <- as.character(deps)
@@ -117,7 +117,7 @@ input_file_hash <- function(
   target,
   config,
   size_cutoff = rehash_file_size_cutoff
-){
+) {
   deps <- vertex_attr(
     graph = config$graph,
     name = "deps",
@@ -139,7 +139,7 @@ output_file_hash <- function(
   target,
   config,
   size_cutoff = rehash_file_size_cutoff
-){
+) {
   deps <- vertex_attr(
     graph = config$graph,
     name = "deps",
@@ -168,7 +168,7 @@ self_hash <- Vectorize(function(target, config) {
 
 rehash_file <- function(target, config) {
   file <- drake::drake_unquote(target)
-  if (!file.exists(file) || file.info(file)$isdir){
+  if (!file.exists(file) || file.info(file)$isdir) {
     return(as.character(NA))
   }
   digest::digest(
@@ -179,8 +179,8 @@ rehash_file <- function(target, config) {
   )
 }
 
-safe_rehash_file <- function(target, config){
-  if (file.exists(drake_unquote(target))){
+safe_rehash_file <- function(target, config) {
+  if (file.exists(drake_unquote(target))) {
     rehash_file(target = target, config = config)
   } else {
     as.character(NA)
@@ -188,9 +188,9 @@ safe_rehash_file <- function(target, config){
 }
 
 should_rehash_file <- function(filename, new_mtime, old_mtime,
-  size_cutoff){
+  size_cutoff) {
   do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
-  if (safe_is_na(do_rehash)){
+  if (safe_is_na(do_rehash)) {
     do_rehash <- TRUE
   }
   do_rehash
@@ -227,7 +227,7 @@ file_hash <- function(
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
   old_hash_exists <- config$cache$exists(key = target, namespace = "kernels")
-  if (do_rehash || !old_hash_exists){
+  if (do_rehash || !old_hash_exists) {
     rehash_file(target = target, config = config)
   } else {
     config$cache$get(key = target, namespace = "kernels")

@@ -79,14 +79,14 @@ cached <- function(
   verbose = drake::default_verbose(),
   namespace = NULL,
   jobs = 1
-){
-  if (is.null(cache)){
+) {
+  if (is.null(cache)) {
     cache <- get_cache(path = path, search = search, verbose = verbose)
   }
-  if (is.null(cache)){
+  if (is.null(cache)) {
     return(character(0))
   }
-  if (is.null(namespace)){
+  if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
   dots <- match.call(expand.dots = FALSE)$...
@@ -100,13 +100,13 @@ cached <- function(
   }
 }
 
-is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
+is_cached <- function(targets, no_imported_objects, cache, namespace, jobs) {
   if (no_imported_objects)
     targets <- no_imported_objects(
       targets = targets, cache = cache, jobs = jobs)
   inclusion <- lightly_parallelize(
     X = targets,
-    FUN = function(target){
+    FUN = function(target) {
       cache$exists(key = target, namespace = namespace)
     },
     jobs = jobs
@@ -116,9 +116,9 @@ is_cached <- function(targets, no_imported_objects, cache, namespace, jobs){
   inclusion
 }
 
-list_cache <- function(no_imported_objects, cache, namespace, jobs){
+list_cache <- function(no_imported_objects, cache, namespace, jobs) {
   targets <- cache$list(namespace = namespace)
-  if (no_imported_objects){
+  if (no_imported_objects) {
     targets <- no_imported_objects(
       targets = targets, cache = cache, jobs = jobs)
   }
@@ -147,14 +147,14 @@ built <- function(
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose(),
   jobs = 1
-){
-  if (is.null(cache)){
+) {
+  if (is.null(cache)) {
     return(character(0))
   }
   out <- cache$list(namespace = cache$default_namespace)
   parallel_filter(
     out,
-    f = function(target){
+    f = function(target) {
       !is_imported(target = target, cache = cache)
     },
     jobs = jobs
@@ -194,14 +194,14 @@ imported <- function(
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose(),
   jobs = 1
-){
-  if (is.null(cache)){
+) {
+  if (is.null(cache)) {
     return(character(0))
   }
   targets <- cache$list(namespace = cache$default_namespace)
   targets <- parallel_filter(
     targets,
-    f = function(target){
+    f = function(target) {
       is_imported(target = target, cache = cache)
     },
     jobs = jobs
@@ -214,7 +214,7 @@ imported <- function(
 # from base::remove()
 targets_from_dots <- function(dots, list) {
   if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
-    is.character(x), NA, USE.NAMES = FALSE))){
+    is.character(x), NA, USE.NAMES = FALSE))) {
     stop("... must contain names or character strings", call. = FALSE)
   }
   names <- vapply(dots, as.character, "")
@@ -225,7 +225,7 @@ targets_from_dots <- function(dots, list) {
 imported_only <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
-    f = function(target){
+    f = function(target) {
       is_imported(target = target, cache = cache)
     },
     jobs = jobs
@@ -235,7 +235,7 @@ imported_only <- function(targets, cache, jobs) {
 no_imported_objects <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
-    f = function(target){
+    f = function(target) {
       is_built_or_imported_file(target = target, cache = cache)
     },
     jobs = jobs

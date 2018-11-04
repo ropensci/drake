@@ -1,4 +1,4 @@
-is_parsable <- Vectorize(function(x){
+is_parsable <- Vectorize(function(x) {
   tryCatch({
       parse(text = x)
       TRUE
@@ -8,8 +8,8 @@ is_parsable <- Vectorize(function(x){
 },
 "x")
 
-extract_filenames <- function(command){
-  if (!safe_grepl("'", command, fixed = TRUE)){
+extract_filenames <- function(command) {
+  if (!safe_grepl("'", command, fixed = TRUE)) {
     return(character(0))
   }
   splits <- paste(" ", command, " ")
@@ -25,7 +25,7 @@ extract_filenames <- function(command){
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-preprocess_command <- function(target, config){
+preprocess_command <- function(target, config) {
   text <- config$plan$command[config$plan$target == target]
   text <- wrap_command(text)
   expr <- parse(text = text, keep.source = FALSE)
@@ -33,7 +33,7 @@ preprocess_command <- function(target, config){
 }
 
 # Use tidy evaluation to complete the contents of a command.
-wrap_command <- function(command){
+wrap_command <- function(command) {
   paste0("rlang::expr(local({\n", command, "\n}))")
 }
 
@@ -81,19 +81,19 @@ standardize_command <- function(x) {
   braces(x)
 }
 
-language_to_text <- function(x){
-  if (length(x) < 1){
+language_to_text <- function(x) {
+  if (length(x) < 1) {
     return(character(0))
   }
-  if (is.expression(x)){
+  if (is.expression(x)) {
     # TODO: remove the if () clause in some major version bump.
     # The only reason it exists is to avoid invalidating old projects.
-    if (length(x) < 2){
+    if (length(x) < 2) {
       x <- x[[1]]
     }
   }
-  if (is.expression(x) || is.language(x)){
-    for (attribute in c("srcref", "srcfile", "wholeSrcref")){
+  if (is.expression(x) || is.language(x)) {
+    for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
       attr(x = x, which = attribute) <- NULL
     }
     x <- wide_deparse(x)

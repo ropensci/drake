@@ -1,4 +1,4 @@
-mc_get_checksum <- function(target, config){
+mc_get_checksum <- function(target, config) {
   paste(
     safe_get_hash(
       key = target,
@@ -13,7 +13,7 @@ mc_get_checksum <- function(target, config){
   )
 }
 
-mc_get_outfile_checksum <- function(target, config){
+mc_get_outfile_checksum <- function(target, config) {
   deps <- vertex_attr(
     graph = config$graph,
     name = "deps",
@@ -30,19 +30,19 @@ mc_get_outfile_checksum <- function(target, config){
   digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
 }
 
-mc_is_good_checksum <- function(target, checksum, config){
+mc_is_good_checksum <- function(target, checksum, config) {
   # Not actually reached, but may come in handy later.
   # nocov start
-  if (!length(checksum)){
+  if (!length(checksum)) {
     mc_warn_no_checksum(target = target, config = config)
     return(TRUE)
   }
-  if (identical("failed", get_progress_single(target, cache = config$cache))){
+  if (identical("failed", get_progress_single(target, cache = config$cache))) {
     return(TRUE) # covered with parallel processes # nocov
   }
   # nocov end
   local_checksum <- mc_get_checksum(target = target, config = config)
-  if (!identical(local_checksum, checksum)){
+  if (!identical(local_checksum, checksum)) {
     return(FALSE)
   }
   all(
@@ -54,12 +54,12 @@ mc_is_good_checksum <- function(target, checksum, config){
   )
 }
 
-mc_is_good_outfile_checksum <- function(target, checksum, config){
-  if (!length(checksum)){
+mc_is_good_outfile_checksum <- function(target, checksum, config) {
+  if (!length(checksum)) {
     mc_warn_no_checksum(target = target, config = config)
     return(TRUE)
   }
-  if (identical("failed", get_progress_single(target, cache = config$cache))){
+  if (identical("failed", get_progress_single(target, cache = config$cache))) {
     return(TRUE) # covered with parallel processes # nocov
   }
   identical(checksum, mc_get_outfile_checksum(target = target, config = config))
@@ -71,11 +71,11 @@ mc_wait_checksum <- function(
   config,
   timeout = 300,
   criterion = mc_is_good_checksum
-){
+) {
   i <- 0
   time_left <- timeout
-  while (time_left > 0){
-    if (criterion(target, checksum, config)){
+  while (time_left > 0) {
+    if (criterion(target, checksum, config)) {
       return()
     } else {
       sleep <- config$sleep(i)
@@ -91,7 +91,7 @@ mc_wait_checksum <- function(
   )
 }
 
-mc_wait_outfile_checksum <- function(target, checksum, config, timeout = 300){
+mc_wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
   mc_wait_checksum(
     target = target,
     checksum = checksum,
@@ -101,7 +101,7 @@ mc_wait_outfile_checksum <- function(target, checksum, config, timeout = 300){
   )
 }
 
-mc_warn_no_checksum <- function(target, config){
+mc_warn_no_checksum <- function(target, config) {
   drake_warning(
     "No checksum available for target ", target, ".",
     config = config

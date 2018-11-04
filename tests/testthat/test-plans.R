@@ -155,7 +155,7 @@ test_with_dir("edge cases for plans", {
 
 test_with_dir("plan set 2", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (tidy_evaluation in c(TRUE, FALSE)){
+  for (tidy_evaluation in c(TRUE, FALSE)) {
     x <- drake_plan(
       a = c,
       b = "c",
@@ -173,7 +173,7 @@ test_with_dir("plan set 2", {
 
 test_with_dir("plan set 3", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (tidy_evaluation in c(TRUE, FALSE)){
+  for (tidy_evaluation in c(TRUE, FALSE)) {
   expect_warning(x <- drake_plan(
     a = c,
     b = "c",
@@ -189,7 +189,7 @@ test_with_dir("plan set 3", {
 
 test_with_dir("drake_plan() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (tidy_evaluation in c(TRUE, FALSE)){
+  for (tidy_evaluation in c(TRUE, FALSE)) {
     x <- drake_plan(list = c(` a` = 1, `b \t\n` = 2),
                     tidy_evaluation = tidy_evaluation)
     y <- drake_plan(a = 1, b = 2, tidy_evaluation = tidy_evaluation)
@@ -350,14 +350,14 @@ test_with_dir("standardized commands with ignore()", {
     "{\n f(sqrt(ignore() + 123)) \n}"
   )
   expect_equal(
-    standardize_command("function(x){(sqrt( ignore(fun(arg) + 7) + 123))}"),
+    standardize_command("function(x) {(sqrt( ignore(fun(arg) + 7) + 123))}"),
     "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
   )
-  f <- function(x){
+  f <- function(x) {
     (sqrt( ignore(fun(arg) + 7) + 123))
   }
   b <- body(ignore_ignore(f))
-  for (a in names(attributes(b))){
+  for (a in names(attributes(b))) {
     attr(b, a) <- NULL
   }
   expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
@@ -365,14 +365,14 @@ test_with_dir("standardized commands with ignore()", {
 
 test_with_dir("can standardize command with other ignored symbols", {
   expect_equal(
-    standardize_command("function(x){(sqrt( drake_envir(arg) + 123))}"),
+    standardize_command("function(x) {(sqrt( drake_envir(arg) + 123))}"),
     "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
   )
 })
 
 test_with_dir("ignore() in imported functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  f <- function(x){
+  f <- function(x) {
     (sqrt( ignore(sqrt(x) + 7) + 123))
   }
   plan <- drake_plan(x = f(1))
@@ -384,12 +384,12 @@ test_with_dir("ignore() in imported functions", {
     readd(f, cache = cache, namespace = "kernels")[3],
     "    (sqrt(ignore() + 123))"
   )
-  f <- function(x){
+  f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 123))
   }
   config <- make(plan, cache = cache)
   expect_equal(justbuilt(config), character(0))
-  f <- function(x){
+  f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 124))
   }
   config <- make(plan, cache = cache)

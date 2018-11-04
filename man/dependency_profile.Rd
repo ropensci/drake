@@ -45,7 +45,7 @@ config <- make(my_plan) # Run the project, build the targets.
 # Get some example dependency profiles of targets.
 dependency_profile(small, config = config)
 # Change a dependency.
-simulate <- function(x){}
+simulate <- function(x) {}
 # Update the in-memory imports in the cache
 # so dependency_profile can detect changes to them.
 # Changes to targets are already cached.

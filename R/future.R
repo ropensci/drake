@@ -1,12 +1,12 @@
-run_future <- function(config){
+run_future <- function(config) {
   assert_pkg("future")
   queue <- new_priority_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
   i <- 1
-  while (work_remains(queue = queue, workers = workers, config = config)){
-    for (id in seq_along(workers)){
-      if (is_idle(workers[[id]])){
+  while (work_remains(queue = queue, workers = workers, config = config)) {
+    for (id in seq_along(workers)) {
+      if (is_idle(workers[[id]])) {
         i <- 1
         # Also calls decrease-key on the queue.
         workers[[id]] <- conclude_worker(
@@ -16,7 +16,7 @@ run_future <- function(config){
         )
         # Pop the head target only if its priority is 0
         next_target <- queue$pop0()
-        if (!length(next_target)){
+        if (!length(next_target)) {
           # It's hard to make this line run in a small test workflow
           # suitable enough for unit testing, but
           # I did artificially stall targets and verified that this line
@@ -49,13 +49,13 @@ run_future <- function(config){
 #' @param config [drake_config()] list
 #' @param protect Names of targets that still need their
 #' dependencies available in `config$envir`.
-drake_future_task <- function(target, meta, config, protect){
-  if (identical(config$caching, "worker")){
+drake_future_task <- function(target, meta, config, protect) {
+  if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
   build <- just_build(target = target, meta = meta, config = config)
-  if (identical(config$caching, "master")){
+  if (identical(config$caching, "master")) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)
   }
@@ -69,16 +69,16 @@ drake_future_task <- function(target, meta, config, protect){
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
-new_worker <- function(id, target, config, protect){
+new_worker <- function(id, target, config, protect) {
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(
     target = target,
     meta = meta,
     config = config
-  )){
+  )) {
     return(empty_worker(target = target))
   }
-  if (identical(config$caching, "master")){
+  if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
   meta$start <- proc.time()
@@ -116,7 +116,7 @@ new_worker <- function(id, target, config, protect){
   )
 }
 
-future_globals <- function(target, meta, config, protect){
+future_globals <- function(target, meta, config, protect) {
   globals <- list(
     DRAKE_GLOBALS__ = list(
       target = target,
@@ -125,9 +125,9 @@ future_globals <- function(target, meta, config, protect){
       protect = protect
     )
   )
-  if (identical(config$envir, globalenv())){
+  if (identical(config$envir, globalenv())) {
     # Unit tests should not modify global env # nocov
-    if (exists("DRAKE_GLOBALS__", config$envir)){ # nocov # nolint
+    if (exists("DRAKE_GLOBALS__", config$envir)) { # nocov # nolint
       warning( # nocov
         "Do not define an object named `DRAKE_GLOBALS__` ", # nocov
         "in the global environment", # nocov
@@ -139,19 +139,19 @@ future_globals <- function(target, meta, config, protect){
   globals
 }
 
-empty_worker <- function(target){
+empty_worker <- function(target) {
   structure(NA, target = target)
 }
 
-is_empty_worker <- function(worker){
+is_empty_worker <- function(worker) {
   !inherits(worker, "Future")
 }
 
-concluded_worker <- function(){
+concluded_worker <- function() {
   empty_worker(target = NULL)
 }
 
-is_concluded_worker <- function(worker){
+is_concluded_worker <- function(worker) {
   is.null(attr(worker, "target"))
 }
 
@@ -159,31 +159,31 @@ is_concluded_worker <- function(worker){
 # Maybe the job scheduler failed.
 # This should be the responsibility of the `future` package
 # or something lower level.
-is_idle <- function(worker){
+is_idle <- function(worker) {
   is_empty_worker(worker) ||
     is_concluded_worker(worker) ||
     future::resolved(worker)
 }
 
-work_remains <- function(queue, workers, config){
+work_remains <- function(queue, workers, config) {
   !queue$empty() ||
     !all_concluded(workers = workers, config = config)
 }
 
-all_concluded <- function(workers, config){
-  for (worker in workers){
-    if (!is_concluded_worker(worker)){
+all_concluded <- function(workers, config) {
+  for (worker in workers) {
+    if (!is_concluded_worker(worker)) {
       return(FALSE)
     }
   }
   TRUE
 }
 
-running_targets <- function(workers, config){
+running_targets <- function(workers, config) {
   out <- lapply(
     X = workers,
-    FUN = function(worker){
-      if (is_idle(worker)){
+    FUN = function(worker) {
+      if (is_idle(worker)) {
         NULL
       } else {
         # It's hard to make this line run in a small test workflow
@@ -197,16 +197,16 @@ running_targets <- function(workers, config){
   unlist(out)
 }
 
-initialize_workers <- function(config){
+initialize_workers <- function(config) {
   out <- list()
   for (i in seq_len(config$jobs))
     out[[i]] <- empty_worker(target = NA)
   out
 }
 
-decrease_revdep_keys <- function(worker, config, queue){
+decrease_revdep_keys <- function(worker, config, queue) {
   target <- attr(worker, "target")
-  if (!length(target) || safe_is_na(target) || !is.character(target)){
+  if (!length(target) || safe_is_na(target) || !is.character(target)) {
     return()
   }
   revdeps <- dependencies(
@@ -218,18 +218,18 @@ decrease_revdep_keys <- function(worker, config, queue){
   queue$decrease_key(targets = revdeps)
 }
 
-conclude_worker <- function(worker, config, queue){
+conclude_worker <- function(worker, config, queue) {
   decrease_revdep_keys(
     worker = worker,
     queue = queue,
     config = config
   )
   out <- concluded_worker()
-  if (is_empty_worker(worker)){
+  if (is_empty_worker(worker)) {
     return(out)
   }
   build <- resolve_worker_value(worker = worker, config = config)
-  if (identical(config$caching, "worker")){
+  if (identical(config$caching, "worker")) {
     mc_wait_checksum(
       target = build$target,
       checksum = build$checksum,
@@ -256,17 +256,17 @@ conclude_worker <- function(worker, config, queue){
 # I know, it has a return value AND a side effect,
 # but it's hard to think of another clean way
 # to handle crashes.
-resolve_worker_value <- function(worker, config){
+resolve_worker_value <- function(worker, config) {
   tryCatch(
     # Check if the worker crashed.
     future::value(worker),
-    error = function(e){
+    error = function(e) {
       e$message <- paste0(
         "Worker terminated unexpectedly before the target could complete. ",
         "Is something wrong with your system or job scheduler?"
       )
       meta <- list(error = e)
-      if (config$caching == "worker"){
+      if (config$caching == "worker") {
         # Need to store the error if the worker crashed.
         handle_build_exceptions(
           target = attr(worker, "target"),

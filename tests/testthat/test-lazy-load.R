@@ -5,7 +5,7 @@ test_with_dir("no overt errors lazy load for the debug example", {
   config <- dbug()
   config$verbose <- FALSE
   config$lazy_load <- TRUE
-  if ("parLapply" %in% tail(config$parallelism, 1)){
+  if ("parLapply" %in% tail(config$parallelism, 1)) {
     config$jobs <- 1
   }
   expect_equal(sort(outdated(config)), sort(config$plan$target))
@@ -59,12 +59,12 @@ test_with_dir("lazy loading is actually lazy", {
 test_with_dir("active bindings", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  if (identical(globalenv(), config$envir)){
+  if (identical(globalenv(), config$envir)) {
     skip("Testing active bindings on a global environment mangles other tests.") # nolint
   }
   testrun(config)
 
-  if ("final" %in% ls(config$envir)){
+  if ("final" %in% ls(config$envir)) {
     rm(final, envir = config$envir)
   }
   expect_false("final" %in% ls(config$envir))

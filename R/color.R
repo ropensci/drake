@@ -48,7 +48,7 @@ colors <- c(
 #' \dontrun{
 #' # visNetwork::visNetwork(nodes = legend_nodes()) # nolint
 #' }
-drake_palette <- function(){
+drake_palette <- function() {
   out <- lapply(
     sort(names(colors)),
     function(x) {
@@ -60,14 +60,14 @@ drake_palette <- function(){
 }
 
 color <- function(x, color) {
-  if (is.null(color) || !requireNamespace("crayon", quietly = TRUE)){
+  if (is.null(color) || !requireNamespace("crayon", quietly = TRUE)) {
     x
   } else {
     crayon::make_style(color)(x)
   }
 }
 
-color_of <- Vectorize(function(x){
+color_of <- Vectorize(function(x) {
   available <- x %in% names(colors)
   if (!available) {
     x <- "other"
@@ -76,7 +76,7 @@ color_of <- Vectorize(function(x){
 },
 "x", USE.NAMES = FALSE)
 
-color_grep <- function(text, pattern, color){
+color_grep <- function(text, pattern, color) {
   colored_pattern <- color(x = pattern, color = color)
   gsub(
     pattern = paste0("^", pattern, " "),
@@ -86,7 +86,7 @@ color_grep <- function(text, pattern, color){
 }
 
 # copied from the gtools package
-col2hex <- function(cname){
+col2hex <- function(cname) {
   assert_pkg("grDevices")
   col_mat <- grDevices::col2rgb(cname)
   grDevices::rgb(

@@ -454,7 +454,7 @@ outdated(config) # Which targets need to be (re)built?
 make(my_plan, jobs = 2) # Build what needs to be built.
 outdated(config) # Everything is up to date.
 # Change one of your imported function dependencies.
-reg2 = function(d){
+reg2 = function(d) {
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }

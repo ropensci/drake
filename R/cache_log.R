@@ -57,10 +57,10 @@ drake_cache_log_file <- function(
   verbose = drake::default_verbose(),
   jobs = 1,
   targets_only = FALSE
-){
-  if (!length(file) || identical(file, FALSE)){
+) {
+  if (!length(file) || identical(file, FALSE)) {
     return(invisible())
-  } else if (identical(file, TRUE)){
+  } else if (identical(file, TRUE)) {
     file <- formals(drake_cache_log_file)$file
   }
   out <- drake_cache_log(
@@ -158,8 +158,8 @@ drake_cache_log <- function(
   verbose = drake::default_verbose(),
   jobs = 1,
   targets_only = FALSE
-){
-  if (is.null(cache)){
+) {
+  if (is.null(cache)) {
     return(
       tibble(
         hash = character(0),
@@ -175,13 +175,13 @@ drake_cache_log <- function(
     cache = cache
   )
   out <- tibble::as_tibble(dplyr::bind_rows(out))
-  if (targets_only){
+  if (targets_only) {
     out <- out[out$type == "target", ]
   }
   out
 }
 
-single_cache_log <- function(key, cache){
+single_cache_log <- function(key, cache) {
   hash <- cache$get_hash(key = key, namespace = "kernels")
   imported <- get_from_subspace(
     key = key,

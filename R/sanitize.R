@@ -1,9 +1,9 @@
-sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
+sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
   fields <- intersect(colnames(plan), c("command", "target", "trigger"))
-  for (field in fields){
-    if (!is.null(plan[[field]])){
+  for (field in fields) {
+    if (!is.null(plan[[field]])) {
       plan[[field]] <- factor_to_character(plan[[field]])
-      if (is.character(plan[[field]])){
+      if (is.character(plan[[field]])) {
         plan[[field]] <- trimws(plan[[field]])
       }
     }
@@ -18,13 +18,13 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE){
   arrange_plan_cols(plan)
 }
 
-sanitize_targets <- function(plan, targets){
+sanitize_targets <- function(plan, targets) {
   targets <- repair_target_names(targets)
   sanitize_nodes(nodes = targets, choices = plan$target)
 }
 
-sanitize_nodes <- function(nodes, choices){
-  if (!any(nodes %in% choices)){
+sanitize_nodes <- function(nodes, choices) {
+  if (!any(nodes %in% choices)) {
     stop(
       "All import/target names are invalid ",
       "in argument 'targets', 'from', or 'subset' ",
@@ -33,7 +33,7 @@ sanitize_nodes <- function(nodes, choices){
     )
   }
   diffs <- setdiff(nodes, choices)
-  if (length(diffs)){
+  if (length(diffs)) {
     warning(
       "Ignoring imports/targets that were requested but not found:\n",
       multiline_message(diffs),
@@ -43,20 +43,20 @@ sanitize_nodes <- function(nodes, choices){
   unique(intersect(nodes, choices))
 }
 
-repair_target_names <- function(x){
+repair_target_names <- function(x) {
   x[!is_file(x)] <- make.names(x[!is_file(x)], unique = FALSE)
   x
 }
 
-sanitize_cmd_type <- function(x){
-  if (!is.language(x) && !is.expression(x) && !is.character(x)){
+sanitize_cmd_type <- function(x) {
+  if (!is.language(x) && !is.expression(x) && !is.character(x)) {
     wide_deparse(x)
   } else {
     x
   }
 }
 
-arrange_plan_cols <- function(plan){
+arrange_plan_cols <- function(plan) {
   primary <- c("target", "command")
   others <- setdiff(colnames(plan), primary)
   plan[, c(primary, others)]

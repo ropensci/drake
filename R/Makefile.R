@@ -2,7 +2,7 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
   config,
   run = TRUE,
   debug = FALSE
-){
+) {
   prepare_distributed(config = config)
   write_makefile(config = config)
   time_stamps(config = config)
@@ -11,13 +11,13 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
     system2(command = config$command, args = config$args),
     0
   )
-  if (!debug){
+  if (!debug) {
     finish_distributed(config = config)
   }
   return(invisible(config))
 }
 
-write_makefile <- function(config){
+write_makefile <- function(config) {
   assert_no_conflicting_makefile(config)
   with_output_sink(
     new = config$makefile_path,
@@ -28,10 +28,10 @@ write_makefile <- function(config){
   )
 }
 
-assert_no_conflicting_makefile <- function(config){
-  if (file.exists(config$makefile_path)){
+assert_no_conflicting_makefile <- function(config) {
+  if (file.exists(config$makefile_path)) {
     top_lines <- readLines(con = config$makefile_path, n = 2)
-    if (!identical(top_lines, makefile_top_lines)){
+    if (!identical(top_lines, makefile_top_lines)) {
       stop(
         "Makefile at `", config$makefile_path, "` already exists ",
         "and was not created by drake. You must either: \n  (1) ",
@@ -47,10 +47,10 @@ assert_no_conflicting_makefile <- function(config){
   }
 }
 
-makefile_head <- function(config){
+makefile_head <- function(config) {
   cat(makefile_top_lines, sep = "\n")
   cat("\n")
-  if (length(config$prepend)){
+  if (length(config$prepend)) {
     cat(config$prepend, "\n", sep = "\n")
   }
   cache_path <- to_unix_path(config$cache_path)
@@ -62,10 +62,10 @@ makefile_head <- function(config){
   )
 }
 
-makefile_rules <- function(config){
+makefile_rules <- function(config) {
   targets <- intersect(config$plan$target, V(config$graph)$name)
   cache_path <- cache_path(config$cache)
-  for (target in targets){
+  for (target in targets) {
     deps <- dependencies(target, config)
     deps <- intersect(deps, config$plan$target)
     deps <- time_stamp_target(deps, config = config)
@@ -80,7 +80,7 @@ makefile_rules <- function(config){
       breaker,
       sep = ""
     )
-    if (length(deps)){
+    if (length(deps)) {
       cat(deps, sep = breaker)
     }
     this_recipe <- build_recipe(target, config$recipe_command)
@@ -89,15 +89,15 @@ makefile_rules <- function(config){
 }
 
 build_recipe <- function(target, recipe_command,
-  cache_path = NULL){
-  if (is.null(cache_path)){
+  cache_path = NULL) {
+  if (is.null(cache_path)) {
     cache_path <- cache_value_macro
   }
   target <- drake::drake_quotes(
     drake::drake_unquote(target), single = FALSE)
   r_recipe <- paste0("drake::mk(target = ", target,
     ", cache_path = \"", cache_path, "\")")
-  if (!safe_grepl(r_recipe_wildcard(), recipe_command, fixed = TRUE)){
+  if (!safe_grepl(r_recipe_wildcard(), recipe_command, fixed = TRUE)) {
     recipe_command <- paste0(recipe_command, " '",
       r_recipe_wildcard(), "'")
   }
@@ -136,19 +136,19 @@ build_recipe <- function(target, recipe_command,
 mk <- function(
   target = character(0),
   cache_path = drake::default_cache_path()
-){
+) {
   config <- recover_drake_config(cache_path)
   old_hash <- makefile_hash(target = target, config = config)
   build_distributed(target = target, cache_path = cache_path)
   new_hash <- makefile_hash(target = target, config = config)
-  if (!identical(old_hash, new_hash)){
+  if (!identical(old_hash, new_hash)) {
     file <- time_stamp_file(target = target, config = config)
     file_overwrite(file)
   }
   invisible()
 }
 
-makefile_hash <- function(target, config){
+makefile_hash <- function(target, config) {
   paste(
     self_hash(target, config),
     output_file_hash(target = target, config = config)
@@ -169,9 +169,9 @@ makefile_hash <- function(target, config){
 #' @examples
 #' default_Makefile_args(jobs = 2, verbose = FALSE)
 #' default_Makefile_args(jobs = 4, verbose = TRUE)
-default_Makefile_args <- function(jobs, verbose){
+default_Makefile_args <- function(jobs, verbose) {
   out <- paste0("--jobs=", targets_setting(jobs))
-  if (verbose < 1){
+  if (verbose < 1) {
     out <- c(out, "--silent")
   }
   return(out)
@@ -186,7 +186,7 @@ default_Makefile_args <- function(jobs, verbose){
 #' @export
 #' @examples
 #' default_Makefile_command()
-default_Makefile_command <- function(){
+default_Makefile_command <- function() {
   "make"
 }
 
@@ -197,10 +197,10 @@ makefile_top_lines <- c(
   "# Do not run it yourself or modify it by hand."
 )
 
-globalenv_file <- function(cache_path){
+globalenv_file <- function(cache_path) {
   file.path(cache_path, "globalenv.RData")
 }
 
-to_unix_path <- function(x){
+to_unix_path <- function(x) {
   gsub("\\\\", "/", x)
 }

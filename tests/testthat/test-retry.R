@@ -6,16 +6,16 @@ test_with_dir("retries", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
   parallelism <- scenario$parallelism
-  e$f <- function(){
+  e$f <- function() {
     file <- "file.rds"
-    if (!file.exists(file)){
+    if (!file.exists(file)) {
       n <- 0
       saveRDS(0, file)
     } else {
       n <- readRDS(file)
       saveRDS(n + 1, file)
     }
-    if (n < 5){
+    if (n < 5) {
       file.create("failed_once.txt")
       stop("this error is deliberate and expected.")
     }
@@ -24,7 +24,7 @@ test_with_dir("retries", {
   pl <- drake_plan(x = f())
   expect_equal(diagnose(), character(0))
 
-  debrief_retries <- function(){
+  debrief_retries <- function() {
     expect_true(file.exists("failed_once.txt"))
     expect_true(cached(x))
     expect_null(diagnose(x)$error)
@@ -100,7 +100,7 @@ test_with_dir("timeouts", {
   # Should time out too. The workflow plan should override
   # the arguments to make().
   # CPU time should be similar, but testing it is elusive.
-  for (field in c("timeout", "elapsed")){
+  for (field in c("timeout", "elapsed")) {
     clean()
     pl2 <- pl
     pl2[[field]] <- 1e-3

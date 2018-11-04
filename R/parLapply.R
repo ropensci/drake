@@ -13,7 +13,7 @@ run_parLapply <- function(config) { # nolint
     varlist = "config",
     envir = environment()
   )
-  if (identical(config$envir, globalenv())){
+  if (identical(config$envir, globalenv())) {
     # We should not use globalenv() in regular unit tests.
     # drake has other tests for that.
     # nocov start
@@ -24,7 +24,7 @@ run_parLapply <- function(config) { # nolint
     )
     # nocov end
   }
-  parallel::clusterCall(cl = config$cluster, fun = function(){
+  parallel::clusterCall(cl = config$cluster, fun = function() {
     eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
   })
   parallel::clusterCall(

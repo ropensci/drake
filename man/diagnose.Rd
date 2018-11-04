@@ -65,7 +65,7 @@ without an error.
 test_with_dir("Quarantine side effects.", {
 diagnose() # List all the targets with recorded error logs.
 # Define a function doomed to failure.
-f <- function(){
+f <- function() {
   stop("unusual error")
 }
 # Create a workflow plan doomed to failure.

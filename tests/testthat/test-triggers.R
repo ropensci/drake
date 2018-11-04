@@ -105,7 +105,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
-  f <- function(x){
+  f <- function(x) {
     identity(x)
   }
   plan <- drake_plan(
@@ -136,7 +136,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   nobuild(config)
-  f <- function(x){
+  f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated(config), character(0))
@@ -148,7 +148,7 @@ test_with_dir("same, but with global trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
-  f <- function(x){
+  f <- function(x) {
     identity(x)
   }
   plan <- drake_plan(x = 1 + 1)
@@ -174,7 +174,7 @@ test_with_dir("same, but with global trigger", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   nobuild(config)
-  f <- function(x){
+  f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated(config), character(0))
@@ -186,7 +186,7 @@ test_with_dir("trigger does not block out command deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
-  f <- function(x){
+  f <- function(x) {
     identity(x)
   }
   plan <- drake_plan(
@@ -220,7 +220,7 @@ test_with_dir("trigger does not block out command deps", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   nobuild(config)
-  f <- function(x){
+  f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated(config), "x")
@@ -240,7 +240,7 @@ test_with_dir("same, but with global trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
-  f <- function(x){
+  f <- function(x) {
     identity(x)
   }
   plan <- drake_plan(
@@ -272,7 +272,7 @@ test_with_dir("same, but with global trigger", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   nobuild(config)
-  f <- function(x){
+  f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated(config), "x")
@@ -320,7 +320,7 @@ test_with_dir("deps load into memory for complex triggers", {
     ),
     strings_in_dots = "literals"
   )
-  for (i in 1:3){
+  for (i in 1:3) {
     make(
       plan, envir = e, jobs = jobs, parallelism = parallelism,
       verbose = FALSE, caching = caching, session_info = FALSE
@@ -337,7 +337,7 @@ test_with_dir("trigger components react appropriately", {
   parallelism <- scenario$parallelism
   caching <- scenario$caching
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       1 + x
     }),
     envir = e
@@ -399,7 +399,7 @@ test_with_dir("trigger components react appropriately", {
   )
 
   # Condition trigger
-  for (i in 1:2){
+  for (i in 1:2) {
     expect_equal(sort(outdated(config)), "condition")
     make(config = config)
     expect_equal(sort(justbuilt(config)), "condition")
@@ -407,7 +407,7 @@ test_with_dir("trigger components react appropriately", {
   saveRDS(FALSE, "condition.rds")
   expect_equal(outdated(simple_config), character(0))
   expect_equal(outdated(config), character(0))
-  for (i in 1:2){
+  for (i in 1:2) {
     make(config = config)
     nobuild(config)
   }
@@ -444,7 +444,7 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(outdated(config), character(0))
 
   # File trigger: output files
-  for (target in plan$target){
+  for (target in plan$target) {
     saveRDS("1234", paste0("out_", target, ".rds"))
   }
   expect_equal(sort(outdated(config)), "file")
@@ -491,7 +491,7 @@ test_with_dir("trigger components react appropriately", {
 
   # Depend trigger
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       2 + x
     }),
     envir = e
@@ -516,7 +516,7 @@ test_with_dir("trigger whitelist mode", {
   parallelism <- scenario$parallelism
   caching <- scenario$caching
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       1 + x
     }),
     envir = e
@@ -541,7 +541,7 @@ test_with_dir("trigger whitelist mode", {
   )
   expect_equal(justbuilt(config), "y")
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       2 + x
     }),
     envir = e
@@ -553,7 +553,7 @@ test_with_dir("trigger whitelist mode", {
   )
   expect_equal(justbuilt(config), "y")
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       3 + x
     }),
     envir = e
@@ -574,7 +574,7 @@ test_with_dir("trigger blacklist mode", {
   parallelism <- scenario$parallelism
   caching <- scenario$caching
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       1 + x
     }),
     envir = e
@@ -599,7 +599,7 @@ test_with_dir("trigger blacklist mode", {
   )
   expect_equal(justbuilt(config), character(0))
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       2 + x
     }),
     envir = e
@@ -611,7 +611,7 @@ test_with_dir("trigger blacklist mode", {
   )
   expect_equal(justbuilt(config), character(0))
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       3 + x
     }),
     envir = e
@@ -632,7 +632,7 @@ test_with_dir("trigger condition mode", {
   parallelism <- scenario$parallelism
   caching <- scenario$caching
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       1 + x
     }),
     envir = e
@@ -657,7 +657,7 @@ test_with_dir("trigger condition mode", {
   )
   expect_equal(justbuilt(config), "y")
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       2 + x
     }),
     envir = e
@@ -669,7 +669,7 @@ test_with_dir("trigger condition mode", {
   )
   expect_equal(justbuilt(config), character(0))
   eval(
-    quote(f <- function(x){
+    quote(f <- function(x) {
       3 + x
     }),
     envir = e

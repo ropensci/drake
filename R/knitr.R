@@ -27,15 +27,15 @@
 #' try(knitr_deps("'report.md'"), silent = FALSE) # error
 #' })
 #' }
-knitr_deps <- function(target){
-  if (!length(target)){
+knitr_deps <- function(target) {
+  if (!length(target)) {
     return(character(0))
   }
   clean_dependency_list(knitr_deps_list(target))
 }
 
-knitr_deps_list <- function(target){
-  if (!length(target)){
+knitr_deps_list <- function(target) {
+  if (!length(target)) {
     return(list())
   }
   fragments <- safe_get_tangled_frags(target)
@@ -51,12 +51,12 @@ knitr_deps_list <- function(target){
   results[select]
 }
 
-safe_get_tangled_frags <- function(target){
-  if (!length(target)){
+safe_get_tangled_frags <- function(target) {
+  if (!length(target)) {
     return(character(0))
   }
   file <- drake_unquote(target)
-  if (!file.exists(file)){
+  if (!file.exists(file)) {
     warning(
       "knitr/rmarkdown report '", file,
       "' does not exist and cannot be inspected for dependencies.",
@@ -67,7 +67,7 @@ safe_get_tangled_frags <- function(target){
   fragments <- tryCatch({
     get_tangled_frags(file)
   },
-  error = function(e){
+  error = function(e) {
     warning(
       "Could not parse file '", file,
       "'. drake dependencies could not be extracted from code chunks: ",

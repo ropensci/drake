@@ -2,7 +2,7 @@ drake_context("edge cases")
 
 test_with_dir("skip everything", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  f <- function(x){
+  f <- function(x) {
     x
   }
   pl <- drake_plan(a = f(0))
@@ -63,7 +63,7 @@ test_with_dir("failed targets do not become up to date", {
   plan <- drake_plan(
     d = 3,
     a = {
-      if (fail){
+      if (fail) {
         stop("my failure message")
       } else {
         d

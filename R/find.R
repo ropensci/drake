@@ -21,11 +21,11 @@
 find_cache <- function(
   path = getwd(),
   directory = basename(drake::default_cache_path())
-){
-  while (!(directory %in% list.files(path = path, all.files = TRUE))){
+) {
+  while (!(directory %in% list.files(path = path, all.files = TRUE))) {
     path <- dirname(path)
     # If we can search no higher...
-    if (path == dirname(path)){
+    if (path == dirname(path)) {
       return(NULL) # The cache does not exist
     }
   }
@@ -52,9 +52,9 @@ find_cache <- function(
 #' find_cache()
 #' })
 #' }
-find_project <- function(path = getwd()){
+find_project <- function(path = getwd()) {
   cache <- find_cache(path = path)
-  if (is.null(cache)){
+  if (is.null(cache)) {
     return(NULL)
   }
   return(dirname(cache))

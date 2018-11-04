@@ -45,7 +45,7 @@ plan_to_code(plan, file)
 # Here is what the script looks like.
 cat(readLines(file), sep = "\\n")
 # Convert back to a drake plan.
-if (requireNamespace("CodeDepends")){
+if (requireNamespace("CodeDepends")) {
   code_to_plan(file)
 }
 }

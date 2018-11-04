@@ -198,7 +198,7 @@ test_with_dir("plan set 1", {
     pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
   )
   pkgconfig::set_config("drake::strings_in_dots" = "filenames")
-  for (tidy_evaluation in c(TRUE, FALSE)){
+  for (tidy_evaluation in c(TRUE, FALSE)) {
     expect_warning(x <- drake_plan(
       a = c,
       b = "c",
@@ -247,7 +247,7 @@ test_with_dir("force loading a non-back-compatible cache", {
 
 test_with_dir("old trigger interface", {
   skip_on_cran()
-  for (old_trigger in suppressWarnings(triggers())){
+  for (old_trigger in suppressWarnings(triggers())) {
     plan <- drake_plan(x = 1)
     plan$trigger <- old_trigger
     clean()
@@ -261,7 +261,7 @@ test_with_dir("old trigger interface", {
     )
     trigger <- diagnose(x, cache = config$cache)$trigger
     expect_true(is.list(trigger))
-    if (identical(trigger$condition, TRUE)){
+    if (identical(trigger$condition, TRUE)) {
       expect_equal(old_trigger, "always")
     } else {
       expect_false(old_trigger == "always")

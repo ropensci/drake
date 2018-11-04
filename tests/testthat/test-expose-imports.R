@@ -5,13 +5,13 @@ test_with_dir("expose_imports() works", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   evalq(
-    f <- function(x){
+    f <- function(x) {
       g(x)
     },
     envir = envir
   )
   evalq(
-    g <- function(x){
+    g <- function(x) {
       digest(x)
     },
     envir = envir

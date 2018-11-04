@@ -36,7 +36,7 @@ test_with_dir("stress test file hash", {
   make(config = con)
   # Can debug file_hash() to make sure hashing is skipped
   # at the appropriate times.
-  for (file in file_store(c("report.Rmd"))){
+  for (file in file_store(c("report.Rmd"))) {
     expect_true(is.character(file_hash(file, config = con, 0)))
     expect_true(is.character(file_hash(file, config = con, Inf)))
   }

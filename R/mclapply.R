@@ -1,4 +1,4 @@
-run_mclapply <- function(config){
+run_mclapply <- function(config) {
   if (config$jobs < 2 && !length(config$debug)) {
     return(run_loop(config = config))
   }
@@ -25,16 +25,16 @@ run_mclapply <- function(config){
 #' @param id character scalar with the job id
 #' @param config `drake_config()` list
 #' @return nothing important
-mc_process <- function(id, config){
+mc_process <- function(id, config) {
   withCallingHandlers(
     expr = {
-      if (identical(id, mc_worker_id(0))){
+      if (identical(id, mc_worker_id(0))) {
         mc_master(config)
       } else {
         mc_worker(worker = id, config = config)
       }
     },
-    error = function(e){
+    error = function(e) {
       error_process(e = e, id = id, config = config) # nocov
     }
   )
@@ -52,21 +52,21 @@ mc_process <- function(id, config){
 #' @export
 #' @param config `drake_config()` list
 #' @return nothing important
-mc_master <- function(config){
+mc_master <- function(config) {
   assert_pkg("txtq")
   on.exit(mc_conclude_workers(config))
   config$queue <- new_priority_queue(config = config)
-  if (!identical(config$ensure_workers, FALSE)){
+  if (!identical(config$ensure_workers, FALSE)) {
     mc_ensure_workers(config)
   }
   i <- 1
-  while (mc_work_remains(config)){
+  while (mc_work_remains(config)) {
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config)
-    if (mc_abort_with_errored_workers(config)){
+    if (mc_abort_with_errored_workers(config)) {
       return() # tested in "test-always-skipped.R" # nocov
     }
-    if (length(config$queue$list0()) > 0){
+    if (length(config$queue$list0()) > 0) {
       i <- 1
     }
     mc_assign_ready_targets(config)
@@ -75,17 +75,17 @@ mc_master <- function(config){
   }
 }
 
-mc_worker <- function(worker, config){
+mc_worker <- function(worker, config) {
   assert_pkg("txtq")
   ready_queue <- mc_get_ready_queue(worker, config)
   done_queue <- mc_get_done_queue(worker, config)
-  while (TRUE){
+  while (TRUE) {
     i <- 1
-    while (nrow(msg <- ready_queue$list(1)) < 1){
+    while (nrow(msg <- ready_queue$list(1)) < 1) {
       Sys.sleep(config$sleep(i))
       i <- i + 1
     }
-    if (identical(msg$message, "done")){
+    if (identical(msg$message, "done")) {
       ready_queue$pop(1)
       return()
     }
@@ -100,7 +100,7 @@ mc_worker <- function(worker, config){
     )
     # Tested in test-always-skipped.R (multi-process error msgs are annoying).
     # nocov start
-    if (inherits(out, "try-error")){
+    if (inherits(out, "try-error")) {
       config$cache$set(
         key = worker,
         value = paste0(worker, " failed building target ", target, "."),
@@ -120,12 +120,12 @@ warn_mclapply_windows <- function(
   parallelism,
   jobs,
   os = this_os()
-){
+) {
   if (
     "mclapply" %in% parallelism &&
     targets_setting(jobs) > 1 &&
     identical(os, "windows")
-  ){
+  ) {
     warning(
       "Demoting to one job at a time (no parallel computing). ",
       "The mclapply parallel backend does not support ",

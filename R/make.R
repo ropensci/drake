@@ -34,7 +34,7 @@
 #' make(my_plan, jobs = 2) # Build what needs to be built.
 #' outdated(config) # Everything is up to date.
 #' # Change one of your imported function dependencies.
-#' reg2 = function(d){
+#' reg2 = function(d) {
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
@@ -119,16 +119,16 @@ make <- function(
   sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead")
-){
+) {
   force(envir)
-  if (!is.null(return_config)){
+  if (!is.null(return_config)) {
     warning(
       "The return_config argument to make() is deprecated. ",
       "Now, an internal configuration list is always invisibly returned.",
       call. = FALSE
     )
   }
-  if (is.null(config)){
+  if (is.null(config)) {
     config <- drake_config(
       plan = plan,
       targets = targets,
@@ -195,18 +195,18 @@ make <- function(
 #' make_with_config(config = config) # Run the project, build the targets.
 #' })
 #' }
-make_with_config <- function(config = drake::read_drake_config()){
-  if (is.null(config$session)){
+make_with_config <- function(config = drake::read_drake_config()) {
+  if (is.null(config$session)) {
     make_session(config = config)
   } else {
     globals <- global_imports(config)
     args <- as.list(globalenv(), all.names = TRUE)[globals]
     args$config <- config
     config$session(
-      func = function(config, ...){
+      func = function(config, ...) {
         args <- list(...)
         envir <- globalenv()
-        for (var in names(args)){
+        for (var in names(args)) {
           assign(x = var, value = args[[var]], envir = envir)
         }
         drake::make_session(config = config)
@@ -218,7 +218,7 @@ make_with_config <- function(config = drake::read_drake_config()){
   return(invisible(config))
 }
 
-global_imports <- function(config){
+global_imports <- function(config) {
   out <- setdiff(V(config$graph)$name, config$plan$target)
   intersect(out, ls(envir = globalenv()))
 }
@@ -228,7 +228,7 @@ global_imports <- function(config){
 #' @keywords internal
 #' @export
 #' @inheritParams make_with_config
-make_session <- function(config){
+make_session <- function(config) {
   do_prework(config = config, verbose_packages = config$verbose)
   check_drake_config(config = config)
   store_drake_config(config = config)
@@ -243,17 +243,17 @@ make_session <- function(config){
   return(invisible(config))
 }
 
-make_with_schedules <- function(config){
-  if (config$skip_imports && config$skip_targets){
+make_with_schedules <- function(config) {
+  if (config$skip_imports && config$skip_targets) {
     invisible(config)
-  } else if (config$skip_targets){
+  } else if (config$skip_targets) {
     make_imports(config = config)
-  } else if (config$skip_imports){
+  } else if (config$skip_imports) {
     make_targets(config = config)
   } else if (
     (length(unique(config$parallelism)) > 1) ||
     (length(unique(config$jobs)) > 1)
-  ){
+  ) {
     make_imports(config = config)
     make_targets(config = config)
   } else {
@@ -297,7 +297,7 @@ make_with_schedules <- function(config){
 #' make_targets(config = con)
 #' })
 #' }
-make_imports <- function(config = drake::read_drake_config()){
+make_imports <- function(config = drake::read_drake_config()) {
   config$schedule <- imports_graph(config = config)
   config$jobs <- imports_setting(config$jobs)
   config$parallelism <- imports_setting(config$parallelism)
@@ -341,13 +341,13 @@ make_imports <- function(config = drake::read_drake_config()){
 #' make_targets(config = con)
 #' })
 #' }
-make_targets <- function(config = drake::read_drake_config()){
-  if ("hasty" %in% config$parallelism){
+make_targets <- function(config = drake::read_drake_config()) {
+  if ("hasty" %in% config$parallelism) {
     run_hasty(config)
     return(invisible(config))
   }
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  if (!length(outdated)){
+  if (!length(outdated)) {
     console_up_to_date(config = config)
     return(config)
   }
@@ -361,7 +361,7 @@ make_targets <- function(config = drake::read_drake_config()){
   invisible(config)
 }
 
-make_imports_targets <- function(config){
+make_imports_targets <- function(config) {
   config$schedule <- config$graph
   config$parallelism <- config$parallelism[1]
   config$jobs <- max(config$jobs)
@@ -370,24 +370,24 @@ make_imports_targets <- function(config){
   invisible(config)
 }
 
-initialize_session <- function(config){
+initialize_session <- function(config) {
   init_common_values(config$cache)
   mark_envir(config$envir)
-  if (config$log_progress){
+  if (config$log_progress) {
     clear_tmp_namespace(
       cache = config$cache,
       jobs = imports_setting(config$jobs),
       namespace = "progress"
     )
   }
-  for (namespace in c("attempt", "session")){
+  for (namespace in c("attempt", "session")) {
     clear_tmp_namespace(
       cache = config$cache,
       jobs = imports_setting(config$jobs),
       namespace = namespace
     )
   }
-  if (config$session_info){
+  if (config$session_info) {
     config$cache$set(
       key = "sessionInfo",
       value = sessionInfo(),
@@ -396,15 +396,15 @@ initialize_session <- function(config){
   }
 }
 
-conclude_session <- function(config){
+conclude_session <- function(config) {
   unmark_envir(config$envir)
   suppressWarnings(remove(list = config$plan$target, envir = config$envir))
 }
 
-mark_envir <- function(envir){
+mark_envir <- function(envir) {
   assign(x = drake_envir_marker, value = TRUE, envir = envir)
 }
 
-unmark_envir <- function(envir){
+unmark_envir <- function(envir) {
   suppressWarnings(remove(list = drake_envir_marker, envir = envir))
 }

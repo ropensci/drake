@@ -2,7 +2,7 @@ next_stage <- function(config, schedule, jobs) {
   targets <- character(0)
   old_leaves <- NULL
   meta_list <- list()
-  while (TRUE){
+  while (TRUE) {
     new_leaves <- leaf_nodes(schedule)
     new_leaves <- setdiff(new_leaves, targets)
     console_many_targets(
@@ -20,7 +20,7 @@ next_stage <- function(config, schedule, jobs) {
     names(new_meta) <- new_leaves
     do_build <- lightly_parallelize(
       X = new_leaves,
-      FUN = function(target){
+      FUN = function(target) {
         should_build_target(
           target = target,
           meta = new_meta[[target]],
@@ -32,7 +32,7 @@ next_stage <- function(config, schedule, jobs) {
     do_build <- unlist(do_build)
     targets <- c(targets, new_leaves[do_build])
     meta_list <- c(meta_list, new_meta[do_build])
-    if (all(do_build)){
+    if (all(do_build)) {
       break
     } else {
       schedule <- delete_vertices(schedule, v = new_leaves[!do_build])
@@ -43,26 +43,26 @@ next_stage <- function(config, schedule, jobs) {
   list(targets = targets, meta_list = meta_list, schedule = schedule)
 }
 
-run_mclapply_staged <- function(config){
+run_mclapply_staged <- function(config) {
   assert_pkg("parallel")
   config$jobs <- safe_jobs(config$jobs)
   schedule <- config$schedule
-  while (length(V(schedule)$name)){
+  while (length(V(schedule)$name)) {
     stage <- next_stage(
       config = config,
       schedule = schedule,
       jobs = config$jobs
     )
     schedule <- stage$schedule
-    if (!length(stage$targets)){
+    if (!length(stage$targets)) {
       break
-    } else if (any(stage$targets %in% config$plan$target)){
+    } else if (any(stage$targets %in% config$plan$target)) {
       set_attempt_flag(key = "_attempt", config = config)
     }
     manage_memory(targets = stage$targets, config = config, jobs = config$jobs)
     parallel::mclapply(
       X = stage$targets,
-      FUN = function(target){
+      FUN = function(target) {
         build_store(
           target = target,
           meta = stage$meta_list[[target]],
@@ -87,7 +87,7 @@ run_parLapply_staged <- function(config) { # nolint
   parallel::clusterExport(
     cl = config$cluster, varlist = "config",
     envir = environment())
-  if (identical(config$envir, globalenv()) || length(config$debug)){
+  if (identical(config$envir, globalenv()) || length(config$debug)) {
     parallel::clusterExport(
       cl = config$cluster,
       varlist = ls(globalenv(),
@@ -97,7 +97,7 @@ run_parLapply_staged <- function(config) { # nolint
   }
   parallel::clusterCall(
     cl = config$cluster,
-    fun = function(){
+    fun = function() {
       eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
     }
   )
@@ -108,20 +108,20 @@ run_parLapply_staged <- function(config) { # nolint
     verbose_packages = FALSE
   )
   schedule <- config$schedule
-  while (length(V(schedule)$name)){
+  while (length(V(schedule)$name)) {
     stage <- next_stage(
       config = config,
       schedule = schedule,
       jobs = config$jobs
     )
     schedule <- stage$schedule
-    if (!length(stage$targets)){
+    if (!length(stage$targets)) {
       break
-    } else if (any(stage$targets %in% config$plan$target)){
+    } else if (any(stage$targets %in% config$plan$target)) {
       set_attempt_flag(key = "_attempt", config = config)
     }
     manage_memory(targets = stage$targets, config = config, jobs = config$jobs)
-    if (identical(config$envir, globalenv())){
+    if (identical(config$envir, globalenv())) {
       # Regular unit tests should not modify the global environment.
       # Tests in tests/scenarios/all.R cover these lines.
       # nocov start
@@ -141,7 +141,7 @@ run_parLapply_staged <- function(config) { # nolint
     tmp <- parallel::parLapply(
       cl = config$cluster,
       X = stage$targets,
-      fun = function(target){
+      fun = function(target) {
         build_store(
           target = target,
           meta = stage$meta_list[[target]],
@@ -153,22 +153,22 @@ run_parLapply_staged <- function(config) { # nolint
   invisible()
 }
 
-run_future_lapply_staged <- function(config){
+run_future_lapply_staged <- function(config) {
   assert_pkg("future")
   assert_pkg("future.apply")
   prepare_distributed(config = config)
   schedule <- config$schedule
-  while (length(V(schedule)$name)){
+  while (length(V(schedule)$name)) {
     stage <- next_stage(
       config = config,
       schedule = schedule,
       jobs = config$jobs_imports
     )
     schedule <- stage$schedule
-    if (!length(stage$targets)){
+    if (!length(stage$targets)) {
       # Keep in case outdated targets are ever back in the schedule.
       break # nocov
-    } else if (any(stage$targets %in% config$plan$target)){
+    } else if (any(stage$targets %in% config$plan$target)) {
       set_attempt_flag(key = "_attempt", config = config)
     }
     tmp <- future.apply::future_lapply(
@@ -181,29 +181,29 @@ run_future_lapply_staged <- function(config){
   invisible()
 }
 
-run_clustermq_staged <- function(config){
+run_clustermq_staged <- function(config) {
   assert_pkg("clustermq", version = "0.8.5")
   schedule <- config$schedule
   workers <- NULL
   config$cache$flush_cache()
-  while (length(V(schedule)$name)){
+  while (length(V(schedule)$name)) {
     stage <- next_stage(
       config = config,
       schedule = schedule,
       jobs = 1 # config$jobs # nolint
     )
     schedule <- stage$schedule
-    if (!length(stage$targets)){
+    if (!length(stage$targets)) {
       # Keep in case outdated targets are ever back in the schedule.
       break # nocov
-    } else if (is.null(workers)){
+    } else if (is.null(workers)) {
       workers <- clustermq::workers(
         n_jobs = config$jobs,
         template = config$template
       )
       on.exit(workers$finalize())
     }
-    if (any(stage$targets %in% config$plan$target)){
+    if (any(stage$targets %in% config$plan$target)) {
       set_attempt_flag(key = "_attempt", config = config)
     }
     manage_memory(
@@ -212,7 +212,7 @@ run_clustermq_staged <- function(config){
       jobs = 1 # config$jobs_imports # nolint
     )
     export <- list()
-    if (identical(config$envir, globalenv())){
+    if (identical(config$envir, globalenv())) {
       export <- as.list(config$envir, all.names = TRUE) # nocov
     }
     export$config <- config
@@ -220,7 +220,7 @@ run_clustermq_staged <- function(config){
     meta_list <- NULL
     tmp <- lightly_parallelize(
       X = stage$targets,
-      FUN = function(target){
+      FUN = function(target) {
         announce_build(
           target = target,
           meta = stage$meta_list[[target]],
@@ -231,7 +231,7 @@ run_clustermq_staged <- function(config){
     )
     builds <- clustermq::Q(
       stage$targets,
-      fun = function(target){
+      fun = function(target) {
         # This call is actually tested in tests/testthat/test-clustermq.R.
         # nocov start
         drake::cmq_staged_build(
@@ -244,10 +244,10 @@ run_clustermq_staged <- function(config){
       workers = workers,
       export = export
     )
-    if (identical(config$caching, "master")){
+    if (identical(config$caching, "master")) {
       lightly_parallelize(
         X = builds,
-        FUN = function(build){
+        FUN = function(build) {
           mc_wait_outfile_checksum(
             target = build$target,
             checksum = build$checksum,
@@ -262,10 +262,10 @@ run_clustermq_staged <- function(config){
         },
         jobs = 1 # config$jobs_imports # nolint
       )
-    } else if (identical(config$caching, "worker")){
+    } else if (identical(config$caching, "worker")) {
       lightly_parallelize(
         X = builds,
-        FUN = function(build){
+        FUN = function(build) {
           mc_wait_checksum(
             target = build$target,
             checksum = build$checksum,
@@ -276,7 +276,7 @@ run_clustermq_staged <- function(config){
       )
     }
   }
-  if (!is.null(workers) && workers$cleanup()){
+  if (!is.null(workers) && workers$cleanup()) {
     on.exit()
   }
   invisible()
@@ -288,7 +288,7 @@ run_clustermq_staged <- function(config){
 #' @keywords internal
 #' @inheritParams drake_build
 #' @param meta_list list of metadata
-cmq_staged_build <- function(target, meta_list, config){
+cmq_staged_build <- function(target, meta_list, config) {
   # This function is actually tested in tests/testthat/test-clustermq.R.
   # nocov start
   do_prework(config = config, verbose_packages = FALSE)
@@ -298,7 +298,7 @@ cmq_staged_build <- function(target, meta_list, config){
     meta = meta_list[[target]],
     config = config
   )
-  if (identical(config$caching, "master")){
+  if (identical(config$caching, "master")) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)
   }

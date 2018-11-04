@@ -33,10 +33,10 @@
 #' # Here is what the script looks like.
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
-#' if (requireNamespace("CodeDepends")){
+#' if (requireNamespace("CodeDepends")) {
 #'   code_to_plan(file)
 #' }
-code_to_plan <- function(path){
+code_to_plan <- function(path) {
   assert_pkg("CodeDepends", install = "BiocManager::install")
   # Suppress harmless partial argument match warnings.
   suppressWarnings(
@@ -48,7 +48,7 @@ code_to_plan <- function(path){
   sanitize_plan(out)
 }
 
-node_plan <- function(node){
+node_plan <- function(node) {
   tibble::tibble(
     target = deparse(node@code[[2]]),
     command = wide_deparse(node@code[[3]])
@@ -88,10 +88,10 @@ node_plan <- function(node){
 #' # Here is what the script looks like.
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
-#' if (requireNamespace("CodeDepends")){
+#' if (requireNamespace("CodeDepends")) {
 #'   code_to_plan(file)
 #' }
-plan_to_code <- function(plan, con = stdout()){
+plan_to_code <- function(plan, con = stdout()) {
   writeLines(text = plan_to_text(plan), con = con)
 }
 
@@ -126,10 +126,10 @@ plan_to_code <- function(plan, con = stdout()){
 #' # Here is what the script looks like.
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
-#' if (requireNamespace("CodeDepends")){
+#' if (requireNamespace("CodeDepends")) {
 #'   code_to_plan(file)
 #' }
-plan_to_notebook <- function(plan, con){
+plan_to_notebook <- function(plan, con) {
   out <- c(
     "---",
     "title: \"My Notebook\"",
@@ -143,7 +143,7 @@ plan_to_notebook <- function(plan, con){
   writeLines(out, con = con)
 }
 
-plan_to_text <- function(plan){
+plan_to_text <- function(plan) {
   . <- NULL
   graph <- drake_config(
     plan[, c("target", "command")],
@@ -155,11 +155,11 @@ plan_to_text <- function(plan){
   order <- intersect(order, plan$target)
   order <- match(order, table = plan$target)
   plan <- plan[order, ]
-  if (!is.character(plan$command)){
+  if (!is.character(plan$command)) {
     plan$command <- purrr::map_chr(plan$command, rlang::expr_text)
   }
   text <- paste(plan$target, "<-", plan$command)
-  if (requireNamespace("styler")){
+  if (requireNamespace("styler")) {
     text <- styler::style_text(text)
   }
   text

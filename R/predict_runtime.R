@@ -77,7 +77,7 @@ predict_runtime <- function(
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE
-){
+) {
   balance <- predict_load_balancing(
     config = config,
     targets = targets,
@@ -202,9 +202,9 @@ predict_load_balancing <- function(
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE
-){
+) {
   assert_pkg("lubridate")
-  if (!is.null(future_jobs) || !is.null(digits)){
+  if (!is.null(future_jobs) || !is.null(digits)) {
     warning(
       "The `future_jobs` and `digits` arguments ",
       "of predict_runtime() are deprecated.",
@@ -215,13 +215,13 @@ predict_load_balancing <- function(
     config = config,
     targets_only = targets_only
   )
-  if (targets_only){
+  if (targets_only) {
     config$graph <- targets_graph(config)
   }
   times <- times[times$item %in% V(config$graph)$name, ]
   untimed <- setdiff(V(config$graph)$name, times$item)
   untimed <- setdiff(untimed, names(known_times))
-  if (length(untimed)){
+  if (length(untimed)) {
     warning(
       "Some targets were never actually timed, ",
       "And no hypothetical time was specified in `known_times`. ",
@@ -250,7 +250,7 @@ predict_load_balancing <- function(
     index = names(known_times),
     value = known_times
   )
-  if (!from_scratch){
+  if (!from_scratch) {
     skip <- setdiff(config$plan$target, outdated(config))
     config$graph <- igraph::set_vertex_attr(
       config$graph,
@@ -259,7 +259,7 @@ predict_load_balancing <- function(
       value = 0
     )
   }
-  if (!is.null(targets)){
+  if (!is.null(targets)) {
     config$graph <- prune_drake_graph(config$graph, to = targets)
   }
   balance_load(config = config, jobs = jobs)
@@ -267,7 +267,7 @@ predict_load_balancing <- function(
 
 # Taken directly from mc_master()
 # and modified to simulate the workers.
-balance_load <- function(config, jobs){
+balance_load <- function(config, jobs) {
   # Mostly the same setup for mc_master().
   config$cache <- configure_cache(
     cache = storr::storr_environment(),
@@ -278,7 +278,7 @@ balance_load <- function(config, jobs){
   config$queue <- new_priority_queue(config = config)
   mc_init_worker_cache(config)
   workers <- config$cache$list("mc_ready_db")
-  targets <- lapply(workers, function(worker){
+  targets <- lapply(workers, function(worker) {
     character(0)
   })
   total_runtime <- 0
@@ -287,7 +287,7 @@ balance_load <- function(config, jobs){
   names(time_remaining) <- names(targets) <- names(old_targets) <- workers
   lapply(workers, mc_get_ready_queue, config = config)
   lapply(workers, mc_get_done_queue, config = config)
-  while (TRUE){
+  while (TRUE) {
     # Run one iteration of mc_master()
     config <- mc_refresh_queue_lists(config)
     mc_conclude_done_targets(config, wait_for_checksums = FALSE)
@@ -295,9 +295,9 @@ balance_load <- function(config, jobs){
     # List the running targets and their runtimes
     current_targets <- vapply(
       config$mc_ready_queues,
-      function(queue){
+      function(queue) {
         messages <- queue$list(1)
-        if (nrow(messages)){
+        if (nrow(messages)) {
           messages$title[1]
         } else {
           ""
@@ -306,13 +306,13 @@ balance_load <- function(config, jobs){
       FUN.VALUE = character(1)
     )
     is_running <- nzchar(current_targets)
-    if (!any(is_running)){
+    if (!any(is_running)) {
       break
     }
     times <- vapply(
       current_targets,
-      function(target){
-        if (identical(target, "")){
+      function(target) {
+        if (identical(target, "")) {
           0
         } else {
           igraph::vertex_attr(
@@ -338,7 +338,7 @@ balance_load <- function(config, jobs){
     ready_queue <- config$mc_ready_queues[[worker]]
     done_queue <- config$mc_done_queues[[worker]]
     msg <- ready_queue$pop(1)
-    if (nrow(msg) > 0){
+    if (nrow(msg) > 0) {
       target <- msg$title
       targets[[worker]] <- c(targets[[worker]], target)
       done_queue$push(title = target, message = "target")

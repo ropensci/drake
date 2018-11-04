@@ -76,7 +76,7 @@ Makefile_recipe <- function( # nolint
   recipe_command = drake::default_recipe_command(),
   target = "your_target",
   cache_path = drake::default_cache_path()
-){
+) {
   msg <- build_recipe(
     target = target,
     recipe_command = recipe_command,
@@ -94,7 +94,7 @@ Makefile_recipe <- function( # nolint
 #' @return A character scalar with the default recipe command.
 #' @examples
 #' default_recipe_command()
-default_recipe_command <- function(){
+default_recipe_command <- function() {
   paste0("Rscript -e '", r_recipe_wildcard(), "'")
 }
 
@@ -106,6 +106,6 @@ default_recipe_command <- function(){
 #' @return The R recipe wildcard.
 #' @examples
 #' r_recipe_wildcard()
-r_recipe_wildcard <- function(){
+r_recipe_wildcard <- function() {
   "R_RECIPE"
 }

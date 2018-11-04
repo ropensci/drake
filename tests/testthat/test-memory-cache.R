@@ -38,7 +38,7 @@ test_with_dir("arbitrary storr in-memory cache", {
     jobs = jobs,
     verbose = FALSE
   )
-  envir$reg2 <- function(d){
+  envir$reg2 <- function(d) {
     d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d)
   }

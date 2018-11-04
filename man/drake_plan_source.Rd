@@ -35,7 +35,7 @@ plan <- drake::drake_plan(
   strings_in_dots = "literals"
 )
 print(plan)
-if (requireNamespace("styler", quietly = TRUE)){
+if (requireNamespace("styler", quietly = TRUE)) {
   source <- drake_plan_source(plan)
   print(source) # Install the prettycode package for syntax highlighting.
 }

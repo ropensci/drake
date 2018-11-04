@@ -128,10 +128,10 @@ test_with_dir("use two differnt file system caches", {
   parallelism <- scenario$parallelism
   jobs <- scenario$jobs
   envir <- eval(parse(text = scenario$envir))
-  if (targ %in% ls(envir)){
+  if (targ %in% ls(envir)) {
     rm(list = targ, envir = envir)
   }
-  envir$my_function <- function(x){
+  envir$my_function <- function(x) {
     x
   }
   cache <- dbug()$cache

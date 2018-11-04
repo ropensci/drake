@@ -37,9 +37,9 @@ drake_example <- function(
   destination = NULL,
   overwrite = FALSE,
   quiet = TRUE
-){
+) {
   assert_pkg("downloader")
-  if (!is.null(destination)){
+  if (!is.null(destination)) {
     warning(
       "The 'destination' argument of drake_example() is deprecated. ",
       "Use 'to' instead."
@@ -152,20 +152,20 @@ load_mtcars_example <- function(
   report_file = NULL,
   overwrite = FALSE,
   force = FALSE
-){
+) {
   deprecate_force(force)
-  if (!is.null(report_file)){
+  if (!is.null(report_file)) {
     warning(
       "The `report_file` argument of load_mtcars_example() ",
       "is deprecated and will be removed in a future release.",
       call. = FALSE
     )
   }
-  if (is.null(report_file)){
+  if (is.null(report_file)) {
     report_file <- "report.Rmd"
   }
   populate_mtcars_example_envir(envir = envir)
-  if (file.exists(report_file) && overwrite){
+  if (file.exists(report_file) && overwrite) {
     warning("Overwriting file ", report_file, call. = FALSE)
   }
   report_path <- system.file(
@@ -177,25 +177,25 @@ load_mtcars_example <- function(
   invisible()
 }
 
-populate_mtcars_example_envir <- function(envir){
+populate_mtcars_example_envir <- function(envir) {
   eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
   eval(parse(text = "suppressPackageStartupMessages(require(knitr))"))
   mtcars <- lm <- NULL
   local(envir = envir, {
-    random_rows <- function(data, n){
+    random_rows <- function(data, n) {
       data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
     }
-    simulate <- function(n){
+    simulate <- function(n) {
       data <- random_rows(data = mtcars, n = n)
       data.frame(
         x = data$wt,
         y = data$mpg
       )
     }
-    reg1 <- function(d){
+    reg1 <- function(d) {
       lm(y ~ + x, data = d)
     }
-    reg2 <- function(d){
+    reg2 <- function(d) {
       d$x2 <- d$x ^ 2
       lm(y ~ x2, data = d)
     }
@@ -204,7 +204,7 @@ populate_mtcars_example_envir <- function(envir){
   invisible()
 }
 
-mtcars_plan <- function(){
+mtcars_plan <- function() {
   simulate <- reg1 <- dataset__ <- reg2 <- analysis__ <- knit <- NULL
   mtcars <- NULL
   my_datasets <- drake_plan(
@@ -268,7 +268,7 @@ mtcars_plan <- function(){
 #' clean_mtcars_example()
 #' })
 #' }
-clean_mtcars_example <- function(){
+clean_mtcars_example <- function() {
   clean(destroy = TRUE, search = FALSE)
   unlink("report.Rmd")
   invisible()
@@ -298,7 +298,7 @@ clean_mtcars_example <- function(){
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("downloader")){
+#' if (requireNamespace("downloader")) {
 #' # Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
 #' load_main_example() # Get the code: drake_example("main")
 #' # Run the project with make(plan).
@@ -316,7 +316,7 @@ load_main_example <- function(
   report_file = "report.Rmd",
   overwrite = FALSE,
   force = FALSE
-){
+) {
   deprecate_force(force)
   dir <- tempfile()
   drake_example(example = "main", to = dir)
@@ -325,8 +325,8 @@ load_main_example <- function(
     file.path(dir, "main", "R", "plan.R"),
     local = TRUE
   )$value
-  for (file in c("report.Rmd", "raw_data.xlsx")){
-    if (file.exists(file) & overwrite){
+  for (file in c("report.Rmd", "raw_data.xlsx")) {
+    if (file.exists(file) & overwrite) {
       warning("Overwriting file ", file, call. = FALSE)
     }
     file.copy(
@@ -350,7 +350,7 @@ load_main_example <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("downloader")){
+#' if (requireNamespace("downloader")) {
 #' # Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
 #' load_main_example() # Get the code: drake_example("main")
 #' make(plan)
@@ -360,7 +360,7 @@ load_main_example <- function(
 #' }
 #' })
 #' }
-clean_main_example <- function(){
+clean_main_example <- function() {
   clean(destroy = TRUE, search = FALSE)
   unlink(c("report.Rmd", "raw_data.xlsx"))
   invisible()

@@ -25,16 +25,16 @@ test_with_dir("example template files", {
 test_with_dir("main example", {
   skip_on_cran()
   skip_if_not_installed("downloader")
-  for (file in c("raw_data.xlsx", "report.Rmd")){
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }
   load_main_example()
-  for (file in c("raw_data.xlsx", "report.Rmd")){
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_true(file.exists(file))
   }
   expect_warning(load_main_example(overwrite = TRUE), regexp = "Overwriting")
   clean_main_example()
-  for (file in c("raw_data.xlsx", "report.Rmd")){
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }
 })
@@ -145,19 +145,19 @@ test_with_dir("mtcars example works", {
     strings_in_dots = "literals"
   )
   suppressWarnings(con <- drake_config(plan = x))
-  for (target in c("a")){
+  for (target in c("a")) {
     expect_true("small" %in% dependencies(targets = target, config = con))
   }
-  for (target in c("b", "c")){
+  for (target in c("b", "c")) {
     expect_false("small" %in% dependencies(targets = target, config = con))
   }
 
   # clean_mtcars_example() # nolint
-  for (file in c(".drake", "report.Rmd")){
+  for (file in c(".drake", "report.Rmd")) {
     expect_true(file.exists(file))
   }
   clean_mtcars_example()
-  for (file in c(".drake", "report.Rmd")){
+  for (file in c(".drake", "report.Rmd")) {
     expect_false(file.exists(file))
   }
 })

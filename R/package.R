@@ -13,7 +13,7 @@
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build everything.
 #' make(my_plan) # Nothing is done because everything is already up to date.
-#' reg2 = function(d){ # Change one of your functions.
+#' reg2 = function(d) { # Change one of your functions.
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }

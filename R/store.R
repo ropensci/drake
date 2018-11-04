@@ -1,22 +1,22 @@
-store_outputs <- function(target, value, meta, config){
+store_outputs <- function(target, value, meta, config) {
   # Failed targets need to stay invalidated,
   # even when `config$keep_going` is `TRUE`.
-  if (inherits(meta$error, "error")){
+  if (inherits(meta$error, "error")) {
     return()
   }
-  if (!meta$imported){
+  if (!meta$imported) {
     console_store(target = target, config = config)
   }
-  if (is.null(meta$command)){
+  if (is.null(meta$command)) {
     meta$command <- get_standardized_command(target = target, config = config)
   }
-  if (is.null(meta$dependency_hash)){
+  if (is.null(meta$dependency_hash)) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
   }
-  if (is.null(meta$input_file_hash)){
+  if (is.null(meta$input_file_hash)) {
     meta$input_file_hash <- input_file_hash(target = target, config = config)
   }
-  if (!is.null(meta$trigger$change)){
+  if (!is.null(meta$trigger$change)) {
     config$cache$set(
       key = target, value = meta$trigger$value, namespace = "change"
     )
@@ -27,7 +27,7 @@ store_outputs <- function(target, value, meta, config){
     name = "deps",
     index = target
   )[[1]]$file_out
-  for (file in file_out){
+  for (file in file_out) {
     meta$name <- file
     meta$mtime <- file.mtime(drake::drake_unquote(file))
     store_single_output(
@@ -36,7 +36,7 @@ store_outputs <- function(target, value, meta, config){
       config = config
     )
   }
-  if (length(file_out) || is.null(file_out)){
+  if (length(file_out) || is.null(file_out)) {
     meta$output_file_hash <- output_file_hash(
       target = target, config = config)
   }
@@ -81,7 +81,7 @@ store_single_output <- function(target, value, meta, config) {
   )
 }
 
-finalize_storage <- function(target, value, meta, config){
+finalize_storage <- function(target, value, meta, config) {
   meta <- finalize_times(
     target = target,
     meta = meta,
@@ -108,7 +108,7 @@ store_object <- function(target, value, meta, config) {
   )
 }
 
-store_function <- function(target, value, meta, config){
+store_function <- function(target, value, meta, config) {
   config$cache$set(
     key = target,
     value = value,
@@ -116,12 +116,12 @@ store_function <- function(target, value, meta, config){
   )
   # For the kernel of an imported function,
   # we ignore any code wrapped in ignore().
-  if (meta$imported){
+  if (meta$imported) {
     value <- ignore_ignore(value)
   }
   # Unfortunately, vectorization is removed, but this is for the best.
   string <- deparse(unwrap_function(value))
-  if (meta$imported){
+  if (meta$imported) {
     string <- c(string, meta$dependency_hash)
   }
   config$cache$set(
@@ -131,7 +131,7 @@ store_function <- function(target, value, meta, config){
   )
 }
 
-store_failure <- function(target, meta, config){
+store_failure <- function(target, meta, config) {
   set_progress(
     target = target,
     value = "failed",

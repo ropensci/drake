@@ -2,7 +2,7 @@ drake_context("testing")
 
 test_with_dir("test_with_dir() clears out files", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (i in 1:10){
+  for (i in 1:10) {
     expect_silent(
       test_with_dir("test", {
         skip_on_cran()
@@ -66,7 +66,7 @@ test_with_dir("test_scenarios()", {
   wd <- getwd()
   some_outside_object <- 4
   subdir <- "subdir"
-  if (!file.exists(subdir)){
+  if (!file.exists(subdir)) {
     dir.create(subdir)
   }
   file <- file.path(subdir, "test-small.R")
@@ -76,10 +76,10 @@ test_with_dir("test_scenarios()", {
     con = file
   )
 
-  always_skip <- function(...){
+  always_skip <- function(...) {
     TRUE
   }
-  never_skip <- function(...){
+  never_skip <- function(...) {
     FALSE
   }
   log <- capture.output(

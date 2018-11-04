@@ -2,8 +2,8 @@ drake_context("graph")
 
 test_with_dir("Recursive functions are okay", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  factorial <- function(n){
-    if (n == 0){
+  factorial <- function(n) {
+    if (n == 0) {
       1
     } else {
       n * factorial(n - 1)
@@ -140,7 +140,7 @@ test_with_dir("clusters", {
   o2 <- drake_graph_info(config, group = "n__", clusters = "asdfae")
   o3 <- drake_graph_info(config, group = "n__")
   o4 <- drake_graph_info(config, group = "adfe")
-  for (col in c("label", "deps", "trigger")){
+  for (col in c("label", "deps", "trigger")) {
     o1$nodes[[col]] <-
       o2$nodes[[col]] <-
       o3$nodes[[col]] <-
@@ -166,7 +166,7 @@ test_with_dir("clusters", {
     sort(o$nodes$id),
     sort(c("n__: 1", "n__: 2"))
   )
-  for (x in c("n__: 1", "n__: 2")){
+  for (x in c("n__: 1", "n__: 2")) {
     node <- o$nodes[o$nodes$id == x, ]
     expect_equal(node$id, x)
     expect_equal(node$type, "cluster")
@@ -286,13 +286,13 @@ test_with_dir("show_output_files", {
     sort(info$nodes$id),
     sort(c(plan$target, file_store(paste0("out", 1:4, ".txt"))))
   )
-  for (file in paste0("out", 1:2, ".txt")){
+  for (file in paste0("out", 1:2, ".txt")) {
     expect_equal(
       info$nodes[info$nodes$id == file_store(file), ]$status,
       "up to date"
     )
   }
-  for (file in paste0("out", 3:4, ".txt")){
+  for (file in paste0("out", 3:4, ".txt")) {
     expect_equal(
       info$nodes[info$nodes$id == file_store(file), ]$status,
       "outdated"
@@ -373,13 +373,13 @@ test_with_dir("same, but with an extra edge not due to files", {
     sort(info$nodes$id),
     sort(c(plan$target, file_store(paste0("out", 1:4, ".txt"))))
   )
-  for (file in paste0("out", 1:2, ".txt")){
+  for (file in paste0("out", 1:2, ".txt")) {
     expect_equal(
       info$nodes[info$nodes$id == file_store(file), ]$status,
       "up to date"
     )
   }
-  for (file in paste0("out", 3:4, ".txt")){
+  for (file in paste0("out", 3:4, ".txt")) {
     expect_equal(
       info$nodes[info$nodes$id == file_store(file), ]$status,
       "outdated"

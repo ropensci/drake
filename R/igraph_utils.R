@@ -31,15 +31,15 @@
 #' }
 prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
-){
-  if (!inherits(graph, "igraph")){
+) {
+  if (!inherits(graph, "igraph")) {
     stop(
       "supplied graph must be an igraph object",
       call. = FALSE
     )
   }
   unlisted <- setdiff(to, V(graph)$name)
-  if (length(unlisted)){
+  if (length(unlisted)) {
     warning(
       "supplied targets not in the dependency graph:\n",
       multiline_message(unlisted),
@@ -47,7 +47,7 @@ prune_drake_graph <- function(
     )
     to <- setdiff(to, unlisted)
   }
-  if (!length(to)){
+  if (!length(to)) {
     warning(
       "cannot prune graph: no valid destination vertices supplied",
       call. = FALSE
@@ -56,7 +56,7 @@ prune_drake_graph <- function(
   }
   ignore <- lightly_parallelize(
     X = to,
-    FUN = function(vertex){
+    FUN = function(vertex) {
       drake_subcomponent(graph = graph, v = vertex, mode = "in")$name
     },
     jobs = jobs
@@ -67,11 +67,11 @@ prune_drake_graph <- function(
   delete_vertices(graph = graph, v = ignore)
 }
 
-get_neighborhood <- function(graph, from, mode, order){
-  if (!length(order)){
+get_neighborhood <- function(graph, from, mode, order) {
+  if (!length(order)) {
     order <- length(V(graph))
   }
-  if (length(from)){
+  if (length(from)) {
     from <- sanitize_nodes(nodes = from, choices = V(graph)$name)
     egos <- igraph::make_ego_graph(
       graph = graph,
@@ -81,7 +81,7 @@ get_neighborhood <- function(graph, from, mode, order){
     )
     subset <- lapply(
       X = egos,
-      FUN = function(graph){
+      FUN = function(graph) {
       igraph::V(graph)$name
     })
     subset <- clean_dependency_list(subset)
@@ -90,13 +90,13 @@ get_neighborhood <- function(graph, from, mode, order){
   graph
 }
 
-downstream_nodes <- function(from, graph, jobs){
-  if (!length(from)){
+downstream_nodes <- function(from, graph, jobs) {
+  if (!length(from)) {
     return(character(0))
   }
   out <- lightly_parallelize(
     X = from,
-    FUN = function(node){
+    FUN = function(node) {
       drake_subcomponent(graph, v = node, mode = "out")$name
     },
     jobs = jobs
@@ -104,36 +104,36 @@ downstream_nodes <- function(from, graph, jobs){
   clean_dependency_list(out)
 }
 
-leaf_nodes <- function(graph){
+leaf_nodes <- function(graph) {
   is_leaf <- igraph::degree(graph, mode = "in") == 0
   V(graph)[is_leaf]$name
 }
 
-filter_upstream <- function(targets, graph){
+filter_upstream <- function(targets, graph) {
   delete_these <- setdiff(V(graph)$name, targets)
   graph <- delete_vertices(graph = graph, v = delete_these)
   leaf_nodes(graph)
 }
 
-subset_graph <- function(graph, subset){
-  if (!length(subset)){
+subset_graph <- function(graph, subset) {
+  if (!length(subset)) {
     return(graph)
   }
   subset <- intersect(subset, V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
 }
 
-imports_graph <- function(config){
+imports_graph <- function(config) {
   delete_these <- intersect(config$plan$target, V(config$graph)$name)
   delete_vertices(config$graph, v = delete_these)
 }
 
-targets_graph <- function(config){
+targets_graph <- function(config) {
   delete_these <- setdiff(V(config$graph)$name, config$plan$target)
   delete_vertices(config$graph, v = delete_these)
 }
 
-drake_subcomponent <- function(...){
+drake_subcomponent <- function(...) {
   opt <- igraph::igraph_opt("return.vs.es")
   on.exit(igraph::igraph_options(return.vs.es = opt))
   igraph::igraph_options(return.vs.es = TRUE)
