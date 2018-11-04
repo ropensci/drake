@@ -43,7 +43,7 @@ code_to_plan <- function(path){
     nodes <- CodeDepends::getInputs(CodeDepends::readScript(path))
   )
   out <- lapply(nodes, node_plan)
-  out <- do.call(out, what = dplyr::bind_rows)
+  out <- dplyr::bind_rows(out)
   out <- parse_custom_columns(out)
   sanitize_plan(out)
 }

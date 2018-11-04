@@ -55,7 +55,7 @@ build_times <- function(
     type = type
   )
   out <- parallel_filter(out, f = is.data.frame, jobs = jobs)
-  out <- do.call(what = rbind, args = out)
+  out <- dplyr::bind_rows(out)
   out <- rbind(out, empty_times())
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)

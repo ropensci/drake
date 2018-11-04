@@ -266,7 +266,7 @@ bdg_create_edges <- function(
     },
     jobs = config$jobs
   )
-  import_edges <- do.call(import_edges, what = dplyr::bind_rows)
+  import_edges <- dplyr::bind_rows(import_edges)
   target_edges <- lightly_parallelize(
     X = seq_along(command_deps),
     FUN = function(i){
@@ -276,7 +276,7 @@ bdg_create_edges <- function(
     },
     jobs = config$jobs
   )
-  target_edges <- do.call(target_edges, what = dplyr::bind_rows)
+  target_edges <- dplyr::bind_rows(target_edges)
   if (nrow(target_edges) > 0){
     target_edges <- connect_output_files(
       target_edges,

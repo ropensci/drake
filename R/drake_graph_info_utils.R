@@ -130,7 +130,7 @@ insert_file_out_nodes <- function(nodes, file_out_list){
     new_nodes$shape <- shape_of("file")
     new_nodes
   })
-  out <- do.call(out, what = dplyr::bind_rows)
+  out <- dplyr::bind_rows(out)
   dplyr::bind_rows(out, nodes)
 }
 
