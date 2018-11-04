@@ -60,17 +60,15 @@ then reproducibly tracked as dependencies.}
 Use \code{pkgconfig} to set the default value of \code{verbose}
 for your R session:
 for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
-\describe{
-\item{0 or \code{FALSE}:}{print nothing.}
-\item{1 or \code{TRUE}:}{print only targets to build.}
-\item{2:}{+ checks and cache info.}
-\item{3:}{+ any potentially missing items.}
-\item{4:}{+ imports and writes to the cache.}
+\itemize{
+\item \code{0} or \code{FALSE}: print nothing.
+\item \code{1} or \code{TRUE}: print only targets to build.
+\item \code{2}: also print checks and cache info.
+\item \code{3}: also print any potentially missing items.
+\item \code{4}: also print imports and writes to the cache.
 }}
 
-\item{hook}{Deprecated. A future release may support
-individual hooks for specific build phases.
-See \url{https://github.com/ropensci/drake/issues/558}.}
+\item{hook}{Deprecated.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}

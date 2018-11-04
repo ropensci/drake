@@ -49,17 +49,14 @@
 #'   Use `pkgconfig` to set the default value of `verbose` 
 #'   for your R session:
 #'   for example, `pkgconfig::set_config("drake::verbose" = 2)`.
-#'   \describe{
-#'     \item{0 or `FALSE`:}{print nothing.}
-#'     \item{1 or `TRUE`:}{print only targets to build.}
-#'     \item{2:}{+ checks and cache info.}
-#'     \item{3:}{+ any potentially missing items.}
-#'     \item{4:}{+ imports and writes to the cache.}
-#'   }
 #'
-#' @param hook Deprecated. A future release may support
-#'   individual hooks for specific build phases.
-#'   See <https://github.com/ropensci/drake/issues/558>.
+#'   - `0` or `FALSE`: print nothing.
+#'   - `1` or `TRUE`: print only targets to build.
+#'   - `2`: also print checks and cache info.
+#'   - `3`: also print any potentially missing items.
+#'   - `4`: also print imports and writes to the cache.
+#'
+#' @param hook Deprecated.
 #'
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
