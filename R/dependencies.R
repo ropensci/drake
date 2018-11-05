@@ -461,7 +461,7 @@ find_globals <- function(fun) {
       codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
     }
   )
-  setdiff(out, c(ignored_symbols, ignored_globals))
+  setdiff(out, c(ignored_symbols))
 }
 
 analyze_loadd <- function(expr) {
@@ -550,6 +550,7 @@ file_out_fns <- pair_text(drake_prefix, c("file_out"))
 ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
+misc_syms <- "."
 readd_fns <- pair_text(drake_prefix, "readd")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
@@ -561,19 +562,11 @@ ignored_symbols <- c(
   ignored_fns,
   loadd_fns,
   knitr_in_fns,
+  misc_syms,
   readd_fns,
   target_fns,
   trigger_fns
 )
-
-base_operators <- grep(
-  pattern = "^\\[|\\]|[a-zA-Z]",
-  x = ls("package:base"),
-  invert = TRUE,
-  value = TRUE
-)
-
-ignored_globals <- c(base_operators, ".")
 
 is_ignored_call <- function(expr) {
   wide_deparse(expr[[1]]) %in% ignored_fns
