@@ -69,7 +69,7 @@ test_with_dir("empty cases", {
 test_with_dir("unparsable pieces of commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
-  expect_false(is_parsable(x))
+  expect_error(parse(text = x))
   expect_equal(find_knitr_doc(x), character(0))
 })
 

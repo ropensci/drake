@@ -107,10 +107,14 @@ test_with_dir(
     clean_dependency_list(deps_code(my_plan$command[2]))),
     sort(c("\"tracked_input_file.rds\"", "x", "readRDS")))
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[3]))), sort(c("f", "g", "w",
-    "x", "y", "z")))
+    clean_dependency_list(deps_code(my_plan$command[3]))),
+    sort(c("f", "g", "w", "x", "y", "z"))
+  )
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[4]))), sort(c("read.csv")))
+    clean_dependency_list(
+      deps_code(my_plan$command[4]))),
+    sort(c("read.csv"))
+  )
   expect_equal(
     sort(clean_dependency_list(deps_code(my_plan$command[5]))),
     sort(c("read.table", "\"file_in\"")))
@@ -231,10 +235,10 @@ test_with_dir("self-referential commands and imports", {
 })
 
 test_with_dir("._drake_envir and drake_envir() are not dependencies", {
-  deps1 <- deps_code(quote(drake_envir(x)))$globals
+  deps1 <- deps_code(quote(drake_envir()))$globals
   deps2 <- deps_code(quote(rm(x, envir = ._drake_envir)))$globals
-  deps3 <- deps_code(quote(drake_envir(x)))$globals
-  expect_equal(deps1, NULL)
-  expect_equal(sort(deps2), sort(c("rm", "x")))
-  expect_equal(deps3, NULL)
+  expect_false("drake_envir" %in% deps1)
+  expect_false("drake_envir" %in% deps2)
+  expect_false("._drake_envir" %in% deps1)
+  expect_false("._drake_envir" %in% deps2)
 })
