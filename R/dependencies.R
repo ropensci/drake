@@ -426,10 +426,11 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
           lapply(X = expr, FUN = walk)
         }
       }
-      results <<- merge_lists(x = results, y = new_results)
+      results <<- zip_lists(x = results, y = new_results)
     }
   }
   walk(expr)
+  results <- lapply(results, unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
   results$globals <- intersect(results$globals, non_locals)

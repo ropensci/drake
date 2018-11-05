@@ -96,6 +96,18 @@ merge_lists <- function(x, y) {
   x
 }
 
+zip_lists <- function(x, y) {
+  names <- base::union(names(x), names(y))
+  x <- lapply(
+    X = names,
+    function(name) {
+      c(x[[name]], y[[name]])
+    }
+  )
+  names(x) <- names
+  x
+}
+
 padded_scale <- function(x) {
   r <- range(x)
   pad <- 0.2 * (r[2] - r[1])
