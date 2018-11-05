@@ -712,6 +712,15 @@ gather <- function(
 
 # Deprecated on 2018-02-15
 find_knitr_doc <- function(expr, result = character(0)) {
+  is_parsable <- Vectorize(function(x) {
+    tryCatch({
+      parse(text = x)
+      TRUE
+    },
+    error = error_false
+    )
+  },
+  "x")
   if (!length(expr)) {
     return(result)
   }
@@ -746,7 +755,7 @@ find_knitr_doc <- function(expr, result = character(0)) {
     )
     result <- clean_dependency_list(result)
   }
-  setdiff(result, ignored_symbols)
+  setdiff(result, drake_symbols)
 }
 
 # Deprecated on 2018-02-15

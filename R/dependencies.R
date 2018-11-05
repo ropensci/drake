@@ -402,9 +402,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
       }
       walk(body(expr))
     } else if (is.name(expr)) {
-      new_globals <- setdiff(x = wide_deparse(expr), y = ignored_symbols)
-      new_globals <- Filter(new_globals, f = is_parsable)
-      results$globals <<- c(results$globals, new_globals)
+      results$globals <<- c(results$globals, expr)
     } else if (is.character(expr)) {
       results$strings <<- c(results$strings, expr)
     } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
@@ -422,17 +420,20 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
       } else if (!is_ignored_call(expr)) {
         if (wide_deparse(expr[[1]]) %in% c("::", ":::")) {
           new_results <- list(
-            namespaced = setdiff(wide_deparse(expr), ignored_symbols)
+            namespaced = setdiff(wide_deparse(expr), drake_symbols)
           )
         } else {
           lapply(X = expr, FUN = walk)
         }
       }
-      results <<- merge_lists(x = results, y = new_results)
+      results <<- zip_lists(x = results, y = new_results)
     }
   }
   walk(expr)
-  results$globals <- intersect(results$globals, find_globals(expr))
+  results <- lapply(results, unique)
+  results$globals <- as.character(results$globals)
+  non_locals <- find_non_locals(expr)
+  results$globals <- intersect(results$globals, non_locals)
   if (!is.null(globals)) {
     results$globals <- intersect(results$globals, globals)
   }
@@ -446,7 +447,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
   results[purrr::map_int(results, length) > 0]
 }
 
-find_globals <- function(fun) {
+find_non_locals <- function(fun) {
   if (!is.function(fun)) {
     f <- function() {} # nolint
     body(f) <- as.call(append(as.list(body(f)), fun))
@@ -465,8 +466,7 @@ find_globals <- function(fun) {
       codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
     }
   )
-  out <- setdiff(out, c(ignored_symbols, "."))
-  Filter(out, f = is_parsable)
+  setdiff(out, ignored_symbols)
 }
 
 analyze_loadd <- function(expr) {
@@ -481,13 +481,13 @@ analyze_loadd <- function(expr) {
     unnamed$strings,
     code_dependencies(expr["list"])$strings
   )
-  list(loadd = setdiff(out, ignored_symbols))
+  list(loadd = setdiff(out, drake_symbols))
 }
 
 analyze_readd <- function(expr) {
   expr <- match.call(drake::readd, as.call(expr))
   deps <- unlist(code_dependencies(expr["target"])[c("globals", "strings")])
-  list(readd = setdiff(deps, ignored_symbols))
+  list(readd = setdiff(deps, drake_symbols))
 }
 
 analyze_file_in <- function(expr) {
@@ -555,21 +555,34 @@ file_out_fns <- pair_text(drake_prefix, c("file_out"))
 ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
+misc_syms <- "."
 readd_fns <- pair_text(drake_prefix, "readd")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
 
-ignored_symbols <- c(
-  drake_envir_marker,
-  file_in_fns,
-  file_out_fns,
-  ignored_fns,
-  loadd_fns,
-  knitr_in_fns,
-  readd_fns,
-  target_fns,
-  trigger_fns
+drake_symbols <- sort(
+  c(
+    drake_envir_marker,
+    file_in_fns,
+    file_out_fns,
+    ignored_fns,
+    loadd_fns,
+    knitr_in_fns,
+    misc_syms,
+    readd_fns,
+    target_fns,
+    trigger_fns
+  )
 )
+base_symbols <- sort(
+  grep(
+    pattern = "[a-zA-Z]",
+    x = ls("package:base"),
+    value = TRUE,
+    invert = TRUE
+  )
+)
+ignored_symbols <- sort(c(drake_symbols, base_symbols))
 
 is_ignored_call <- function(expr) {
   wide_deparse(expr[[1]]) %in% ignored_fns

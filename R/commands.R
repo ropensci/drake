@@ -1,13 +1,3 @@
-is_parsable <- Vectorize(function(x) {
-  tryCatch({
-      parse(text = x)
-      TRUE
-    },
-    error = error_false
-  )
-},
-"x")
-
 extract_filenames <- function(command) {
   if (!safe_grepl("'", command, fixed = TRUE)) {
     return(character(0))
