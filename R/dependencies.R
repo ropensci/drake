@@ -401,10 +401,6 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
         expr <- function() {} # nolint: curly braces are necessary
       }
       walk(body(expr))
-    } else if (is.name(expr)) {
-      new_globals <- setdiff(x = wide_deparse(expr), y = ignored_symbols)
-      new_globals <- Filter(new_globals, f = is_parsable)
-      results$globals <<- c(results$globals, new_globals)
     } else if (is.character(expr)) {
       results$strings <<- c(results$strings, expr)
     } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
@@ -432,7 +428,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
     }
   }
   walk(expr)
-  results$globals <- intersect(results$globals, find_globals(expr))
+  results$globals <- find_globals(expr)
   if (!is.null(globals)) {
     results$globals <- intersect(results$globals, globals)
   }
@@ -465,8 +461,7 @@ find_globals <- function(fun) {
       codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
     }
   )
-  out <- setdiff(out, c(ignored_symbols, "."))
-  Filter(out, f = is_parsable)
+  setdiff(out, c(ignored_symbols, ignored_globals))
 }
 
 analyze_loadd <- function(expr) {
@@ -570,6 +565,15 @@ ignored_symbols <- c(
   target_fns,
   trigger_fns
 )
+
+base_operators <- grep(
+  pattern = "^\\[|\\]|[a-zA-Z]",
+  x = ls("package:base"),
+  invert = TRUE,
+  value = TRUE
+)
+
+ignored_globals <- c(base_operators, ".")
 
 is_ignored_call <- function(expr) {
   wide_deparse(expr[[1]]) %in% ignored_fns

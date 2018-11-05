@@ -3,7 +3,6 @@ drake_context("dependencies")
 test_with_dir("unparsable commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
-  expect_false(is_parsable(x))
   expect_error(deps_code(x))
 })
 
