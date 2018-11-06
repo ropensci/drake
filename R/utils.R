@@ -73,7 +73,8 @@ file_extn <- function(x) {
 }
 
 is_file <- function(x) {
-  safe_grepl(pattern = quotes_regex, x = x)
+  x <- substr(x = x, start = 0, stop = 1)
+  x == "\"" | x == "'" # TODO: get rid fo the single quote next major release
 }
 
 is_image_filename <- function(x) {
