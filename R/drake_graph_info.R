@@ -171,7 +171,6 @@ drake_graph_info <- function(
       collapse = FALSE
     )
   }
-  config <- get_raw_node_category_data(config)
   config$graph <- get_neighborhood(
     graph = config$graph,
     from = from,
@@ -179,12 +178,17 @@ drake_graph_info <- function(
     order = order
   )
   config$graph <- subset_graph(graph = config$graph, subset = subset)
+  config$imports <- intersect(
+    igraph::V(config$graph)$name,
+    config$all_imports
+  )
   if (targets_only) {
     config$graph <- igraph::delete_vertices(
       graph = config$graph,
-      v = config$all_imports
+      v = config$imports
     )
   }
+  config <- get_raw_node_category_data(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- merge(
     x = network_data$nodes,

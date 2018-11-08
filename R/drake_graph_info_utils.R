@@ -172,7 +172,6 @@ function_hover_text <- Vectorize(function(function_name, envir) {
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)
-  config$imports <- config$all_imports
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
