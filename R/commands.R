@@ -15,9 +15,8 @@ extract_filenames <- function(command) {
 # to protect the user's environment from side effects,
 # and (2) call rlang::expr() to enable tidy evaluation
 # features such as quasiquotation.
-preprocess_command <- function(target, config) {
-  text <- config$plan$command[config$plan$target == target]
-  text <- wrap_command(text)
+preprocess_command <- function(command, config) {
+  text <- wrap_command(command)
   expr <- parse(text = text, keep.source = FALSE)
   eval(expr, envir = config$envir)
 }
@@ -32,16 +31,6 @@ wrap_command <- function(command) {
 # to optionally do all the caching.
 localize <- function(command) {
   paste0("local({\n", command, "\n})")
-}
-
-# This version of the command will be hashed and cached
-# as a dependency. When the command changes nontrivially,
-# drake will react. Otherwise, changes to whitespace or
-# comments are just standardized away, and drake
-# ignores them. Thus, superfluous builds are not triggered.
-get_standardized_command <- function(target, config) {
-  out <- config$plan$command[config$plan$target == target]
-  standardize_command(out)
 }
 
 # The old standardization command

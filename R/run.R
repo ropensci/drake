@@ -56,7 +56,7 @@ with_call_stack <- function (target, config) {
     e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
     signalCondition(e)
   }
-  expr <- preprocess_command(target = target, config = config)
+  expr <- config$ordinances[[target]]$command_build
   frame <- sys.nframe()
   tryCatch(
     withCallingHandlers(

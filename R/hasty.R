@@ -28,7 +28,7 @@ hasty_loop <- function(config) {
 #' @inheritParams drake_build
 default_hasty_build <- function(target, config) {
   eval(
-    expr = preprocess_command(target, config),
+    expr = config$ordinances[[target]]$command_build,
     envir = config$envir
   )
 }

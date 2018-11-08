@@ -129,7 +129,7 @@ cdn_prepare_ordinance <- function(ordinance, config){
     exclude = ordinance$target,
     globals = config$globals
   )
-  ordinance$command_hash <- standardize_command(ordinance$command)
+  ordinance$command_standardized <- standardize_command(ordinance$command)
   ordinance$command_build <- preprocess_command(
     ordinance$command,
     config = config

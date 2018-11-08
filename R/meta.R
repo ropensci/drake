@@ -65,7 +65,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$trigger <- as.list(ordinance$trigger)
   }
   if (meta$trigger$command) {
-    meta$command <- get_standardized_command(target = target, config = config)
+    meta$command <- ordinance$command_standardized
   }
   if (meta$trigger$depend) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
