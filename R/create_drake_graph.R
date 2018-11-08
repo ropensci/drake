@@ -1,5 +1,5 @@
 create_drake_graph <- function(
-  nodes,
+  ordinances,
   targets,
   cache,
   jobs,
@@ -13,10 +13,10 @@ create_drake_graph <- function(
     console_log_file = console_log_file
   )
   edges <- memo_expr(
-    cdg_create_edges(config, nodes, collapse),
+    cdg_create_edges(config, ordinances, collapse),
     cache,
     config,
-    nodes,
+    ordinances,
     collapse
   )
   memo_expr(
@@ -27,10 +27,10 @@ create_drake_graph <- function(
   )
 }
 
-cdg_create_edges <- function(config, nodes, collapse) {
+cdg_create_edges <- function(config, ordinances, collapse) {
   console_preprocess(text = "construct graph edges", config = config)
   edges <- lightly_parallelize(
-    X = nodes,
+    X = ordinances,
     FUN = node_to_edges,
     jobs = config$jobs
   )

@@ -111,7 +111,7 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  config$nodes[[target]]$deps_build
+  config$ordindances[[target]]$deps_build
 }
 
 #' @title Find out why a target is out of date.
@@ -203,7 +203,7 @@ dependency_profile <- function(
 
 #' @title List the targets and imports
 #'   that are reproducibly tracked.
-#' @description In other words, list all the nodes
+#' @description In other words, list all the ordindances
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
@@ -221,7 +221,7 @@ tracked <- function(config) {
   out <- lightly_parallelize(
     X = V(config$graph)$name,
     FUN = function(target) {
-      out <- config$nodes[[target]]$deps_build
+      out <- config$ordindances[[target]]$deps_build
       out <- as.list(out)
       out <- unlist(out)
       c(out, target)

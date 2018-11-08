@@ -154,7 +154,7 @@ clean_single_target <- function(target, cache, namespaces, graph) {
     }
   }
   if (target %in% igraph::V(graph)$name) {
-    deps <- config$nodes[[target]]$deps_build
+    deps <- config$ordinances[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
   unlink(drake_unquote(files))

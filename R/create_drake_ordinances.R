@@ -1,4 +1,4 @@
-create_drake_nodes <- function(
+create_drake_ordinances <- function(
   plan = read_drake_plan(),
   targets = plan$target,
   envir = parent.frame(),
@@ -21,20 +21,20 @@ create_drake_nodes <- function(
     globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
   )
   imports <- cdn_prepare_imports(config)
-  import_nodes <- memo_expr(
+  import_ordinances <- memo_expr(
     cdn_analyze_imports(config, imports),
     config$cache,
     imports
   )
-  command_nodes <- memo_expr(
+  command_ordinances <- memo_expr(
     cdn_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
     config$globals,
-    import_nodes
+    import_ordinances
   )
-  c(import_nodes, command_nodes)
+  c(import_ordinances, command_ordinances)
 }
 
 cdn_prepare_imports <- function(config) {
@@ -96,8 +96,8 @@ cdn_analyze_commands <- function(config) {
     config = config
   )
   config$plan$imported <- FALSE  
-  nodes <- purrr::pmap(.l = config$plan, .f = list)
-  names(nodes) <- config$plan$target
+  ordinances <- purrr::pmap(.l = config$plan, .f = list)
+  names(ordinances) <- config$plan$target
   config$default_condition_deps <- import_dependencies(
     config$trigger$condition,
     globals = config$globals
@@ -107,7 +107,7 @@ cdn_analyze_commands <- function(config) {
     globals = config$globals
   )
   out <- lightly_parallelize(
-    X = nodes,
+    X = ordinances,
     FUN = cdn_prepare_node,
     jobs = config$jobs,
     config = config

@@ -14,7 +14,7 @@ mc_get_checksum <- function(target, config) {
 }
 
 mc_get_outfile_checksum <- function(target, config) {
-  deps <- config$nodes[[target]]$deps_build
+  deps <- config$ordinances[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,

@@ -22,7 +22,7 @@ store_outputs <- function(target, value, meta, config) {
     )
     meta$trigger$value <- NULL
   }
-  file_out <- config$nodes[[target]]$file_out
+  file_out <- config$ordinances[[target]]$file_out
   for (file in file_out) {
     meta$name <- file
     meta$mtime <- file.mtime(drake::drake_unquote(file))
