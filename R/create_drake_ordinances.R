@@ -123,29 +123,32 @@ cdn_analyze_commands <- function(config) {
   out
 }
 
-cdn_prepare_ordinance <- function(node, config){
-  node$deps_build <- command_dependencies(
-    command = node$command,
-    exclude = node$target,
+cdn_prepare_ordinance <- function(ordinance, config){
+  ordinance$deps_build <- command_dependencies(
+    command = ordinance$command,
+    exclude = ordinance$target,
     globals = config$globals
   )
-  node$command_hash <- standardize_command(node$command)
-  node$command_build <- preprocess_command(node$command, config = config)
-  if (is.null(node$trigger)){
-    node$trigger <- config$trigger
-    node$deps_condition <- config$default_condition_deps
-    node$deps_change <- config$default_change_deps
+  ordinance$command_hash <- standardize_command(ordinance$command)
+  ordinance$command_build <- preprocess_command(
+    ordinance$command,
+    config = config
+  )
+  if (is.null(ordinance$trigger)){
+    ordinance$trigger <- config$trigger
+    ordinance$deps_condition <- config$default_condition_deps
+    ordinance$deps_change <- config$default_change_deps
   } else {
-    node$deps_condition <- import_dependencies(
-      node$trigger$condition,
-      exclude = node$target,
+    ordinance$deps_condition <- import_dependencies(
+      ordinance$trigger$condition,
+      exclude = ordinance$target,
       globals = config$globals
     )
-    node$deps_change <- import_dependencies(
-      node$trigger$change,
-      exclude = node$target,
+    ordinance$deps_change <- import_dependencies(
+      ordinance$trigger$change,
+      exclude = ordinance$target,
       globals = config$globals
     )
   }
-  node
+  ordinance
 }

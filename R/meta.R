@@ -46,11 +46,11 @@
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
-  node <- config$ordinances[[target]]
+  ordinance <- config$ordinances[[target]]
   meta <- list(
     name = target,
     target = target,
-    imported = node$imported %||% TRUE,
+    imported = ordinance$imported %||% TRUE,
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
     seed = seed_from_basic_types(config$seed, target)
@@ -62,7 +62,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (meta$imported) {
     meta$trigger <- trigger(condition = TRUE)
   } else {
-    meta$trigger <- as.list(node$trigger)
+    meta$trigger <- as.list(ordinance$trigger)
   }
   if (meta$trigger$command) {
     meta$command <- get_standardized_command(target = target, config = config)
@@ -75,7 +75,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)) {
-    ensure_loaded(node$deps_change, config = config)
+    ensure_loaded(ordinance$deps_change, config = config)
     meta$trigger$value <- eval(meta$deps_change, config$envir)
   }
   meta
