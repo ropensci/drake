@@ -180,9 +180,9 @@ drake_graph_info <- function(
   )
   config$graph <- subset_graph(graph = config$graph, subset = subset)
   if (targets_only) {
-    config$graph <- subset_graph(
+    config$graph <- igraph::delete_vertices(
       graph = config$graph,
-      subset = config$plan$target
+      v = config$all_imports
     )
   }
   network_data <- visNetwork::toVisNetworkData(config$graph)
