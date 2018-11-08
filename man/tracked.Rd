@@ -14,7 +14,7 @@ tracked(config)
 A character vector with the names of reproducibly-tracked targets.
 }
 \description{
-In other words, list all the ordindances
+In other words, list all the ordinances
 in your project's dependency network.
 }
 \examples{
