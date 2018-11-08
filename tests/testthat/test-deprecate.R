@@ -111,6 +111,7 @@ test_with_dir("deprecated graphing functions", {
   con <- drake_config(plan = pl)
   skip_if_not_installed("visNetwork")
   expect_warning(out <- plot_graph(config = con))
+  expect_warning(out <- plot_graph(plan = pl))
   skip_if_not_installed("ggraph")
   expect_warning(out <- static_drake_graph(config = con))
   expect_true(inherits(out, "gg"))

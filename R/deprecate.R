@@ -1128,16 +1128,20 @@ plot_graph <- function(
       "Use vis_drake_graph() instead."
     )
   )
+  if (is.null(config)){
+    config <- drake_config(
+      plan = plan,
+      envir = envir,
+      verbose = verbose,
+      hook = hook,
+      cache = cache,
+      jobs = jobs,
+      parallelism = parallelism,
+      packages = packages,
+      prework = prework
+    )
+  }
   vis_drake_graph(
-    plan = plan,
-    envir = envir,
-    verbose = verbose,
-    hook = hook,
-    cache = cache,
-    jobs = jobs,
-    parallelism = parallelism,
-    packages = packages,
-    prework = prework,
     config = config,
     file = file,
     selfcontained = selfcontained,
