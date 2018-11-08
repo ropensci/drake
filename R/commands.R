@@ -53,9 +53,10 @@ standardize_command <- function(x) {
   braces(x)
 }
 
+# We won't need this function after #563.
 language_to_text <- function(x) {
   if (length(x) < 1) {
-    return(character(0))
+    return(character(0)) # nocov
   }
   if (is.expression(x)) {
     # TODO: remove the if () clause in some major version bump.

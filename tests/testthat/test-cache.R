@@ -18,6 +18,13 @@ test_with_dir("clean() removes the correct files", {
   expect_false(file.exists("d.txt"))
 })
 
+test_with_dir("empty read_drake_plan()", {
+  expect_equal(
+    read_drake_plan(cache = storr::storr_environment()),
+    drake_plan()
+  )
+})
+
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   b <- 1

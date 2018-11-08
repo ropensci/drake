@@ -143,7 +143,7 @@ file_trigger <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
-  file_out <- config$ordinances[[target]]$file_out
+  file_out <- config$ordinances[[target]]$deps_build$file_out
   for (file in file_out) {
     if (!file.exists(drake_unquote(file))) {
       return(TRUE)
