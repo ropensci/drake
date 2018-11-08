@@ -96,6 +96,13 @@ cdn_analyze_commands <- function(config) {
     config = config
   )
   config$plan$imported <- FALSE  
+  if ("trigger" %in% colnames(config$plan)) {
+    config$plan$trigger <- lapply(
+      config$plan$trigger,
+      parse_trigger,
+      envir = config$envir
+    )
+  }
   ordinances <- purrr::pmap(.l = config$plan, .f = list)
   names(ordinances) <- config$plan$target
   config$default_condition_deps <- import_dependencies(
