@@ -79,7 +79,6 @@ collapse_edges <- function(edges) {
 
 cdg_finalize_graph <- function(edges, targets, config) {
   console_preprocess(text = "construct graph", config = config)
-  targets <- c(targets, edges$to[edges$collapse])
   graph <- igraph::graph_from_data_frame(edges[, c("from", "to")])
   graph <- prune_drake_graph(graph, to = targets, jobs = config$jobs)
   igraph::simplify(
