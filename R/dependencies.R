@@ -274,7 +274,7 @@ command_dependencies <- function(
   }
   expr <- command
   if (is.character(command)){
-    expr <- parse(text = command, keep.source = FALSE)[[1]]
+    expr <- parse(text = command, keep.source = FALSE)
   }
   deps <- code_dependencies(
     expr,
