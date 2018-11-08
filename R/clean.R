@@ -127,13 +127,15 @@ clean <- function(
     namespaces <- cleaned_namespaces(default = cache$default_namespace)
   }
   graph <- read_drake_graph(cache = cache)
+  ordinances <- cache$get(key = "ordinances", namespace = "config")
   lightly_parallelize(
     X = targets,
     FUN = clean_single_target,
     jobs = jobs,
     cache = cache,
     namespaces = namespaces,
-    graph = graph
+    graph = graph,
+    ordinances = ordinances
   )
   if (destroy) {
     cache$destroy()
@@ -144,7 +146,13 @@ clean <- function(
   invisible()
 }
 
-clean_single_target <- function(target, cache, namespaces, graph) {
+clean_single_target <- function(
+  target,
+  cache,
+  namespaces,
+  graph,
+  ordinances
+) {
   files <- character(0)
   if (is_file(target)) {
     if (cache$exists(target, namespace = "meta")) {
@@ -154,7 +162,7 @@ clean_single_target <- function(target, cache, namespaces, graph) {
     }
   }
   if (target %in% igraph::V(graph)$name) {
-    deps <- config$ordinances[[target]]$deps_build
+    deps <- ordinances[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
   unlink(drake_unquote(files))
