@@ -195,6 +195,9 @@ drake_graph_info <- function(
   )
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
+  if (show_output_files) {
+    config$nodes <- append_output_file_nodes(config)
+  }
   config$edges <- network_data$edges
   if (nrow(config$edges)) {
     config$edges$arrows <- "to"

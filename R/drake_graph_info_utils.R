@@ -17,6 +17,19 @@ append_build_times <- function(config) {
   })
 }
 
+append_output_file_nodes <- function(config) {
+  with(config, {
+    cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape"))
+    for (target in names(file_out)) {
+      files <- file_out[[target]]
+      for (col in cols) {
+        nodes[files, col] <- nodes[target, col]
+      }
+    }
+    nodes
+  })
+}
+
 can_get_function <- function(x, envir) {
   tryCatch({
     is.function(eval(parse(text = x), envir = envir))
