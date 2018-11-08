@@ -111,12 +111,7 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  out <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
-  as.list(out)
+  config$nodes[[target]]$deps_build
 }
 
 #' @title Find out why a target is out of date.
@@ -226,11 +221,7 @@ tracked <- function(config) {
   out <- lightly_parallelize(
     X = V(config$graph)$name,
     FUN = function(target) {
-      out <- vertex_attr(
-        graph = config$graph,
-        name = "deps",
-        index = target
-      )[[1]]
+      out <- config$nodes[[target]]$deps_build
       out <- as.list(out)
       out <- unlist(out)
       c(out, target)

@@ -154,11 +154,7 @@ clean_single_target <- function(target, cache, namespaces, graph) {
     }
   }
   if (target %in% igraph::V(graph)$name) {
-    deps <- vertex_attr(
-      graph = graph,
-      name = "deps",
-      index = target
-    )[[1]]
+    deps <- config$nodes[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
   unlink(drake_unquote(files))
