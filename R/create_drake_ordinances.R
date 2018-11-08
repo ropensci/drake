@@ -134,7 +134,7 @@ cdn_prepare_ordinance <- function(ordinance, config){
     ordinance$command,
     config = config
   )
-  if (is.null(ordinance$trigger)){
+  if (is.null(ordinance$trigger) || is.na(ordinance$trigger)){
     ordinance$trigger <- config$trigger
     ordinance$deps_condition <- config$default_condition_deps
     ordinance$deps_change <- config$default_change_deps

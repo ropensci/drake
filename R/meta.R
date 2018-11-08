@@ -76,7 +76,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   }
   if (!is.null(meta$trigger$change)) {
     ensure_loaded(ordinance$deps_change, config = config)
-    meta$trigger$value <- eval(meta$deps_change, config$envir)
+    meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta
 }
