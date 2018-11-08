@@ -20,7 +20,7 @@ create_drake_graph <- function(
     collapse
   )
   memo_expr(
-    cdg_finalize_graph(edges, targets, config),
+    cdg_finalize_graph(edges, targets, config, collapse),
     cache,
     edges,
     targets
@@ -77,8 +77,14 @@ collapse_edges <- function(edges) {
   edges
 }
 
-cdg_finalize_graph <- function(edges, targets, config) {
+cdg_finalize_graph <- function(edges, targets, config, collapse) {
   console_preprocess(text = "construct graph", config = config)
+  if (!collapse) {
+    targets <- c(
+      targets,
+      edges$to[edges$collapse & (edges$from %in% targets)]
+    )
+  }
   graph <- igraph::graph_from_data_frame(edges[, c("from", "to")])
   graph <- prune_drake_graph(graph, to = targets, jobs = config$jobs)
   igraph::simplify(

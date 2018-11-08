@@ -75,11 +75,13 @@ check_build_store <- function(
     return()
   }
   meta$start <- proc.time()
-  manage_memory(
-    targets = target,
-    config = config,
-    downstream = downstream
-  )
+  if (!meta$imported) {
+    manage_memory(
+      targets = target,
+      config = config,
+      downstream = downstream
+    )
+  }
   value <- build_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   if (flag_attempt && target %in% config$plan$target) {
