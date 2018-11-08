@@ -127,7 +127,7 @@ clean <- function(
     namespaces <- cleaned_namespaces(default = cache$default_namespace)
   }
   graph <- read_drake_graph(cache = cache)
-  ordinances <- cache$get(key = "ordinances", namespace = "config")
+  ordinances <- read_drake_ordinances(cache = cache)
   lightly_parallelize(
     X = targets,
     FUN = clean_single_target,
