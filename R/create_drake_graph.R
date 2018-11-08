@@ -73,7 +73,7 @@ collapse_edges <- function(edges) {
     to <- edges$to[index]
     edges$from[edges$from == to] <- edges$from[index]
   }
-  edges
+  edges[!edges$collapse, ]
 }
 
 cdg_finalize_graph <- function(edges, targets, config) {

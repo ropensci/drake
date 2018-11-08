@@ -156,6 +156,17 @@ drake_graph_info <- function(
   config$make_imports <- make_imports
   config$group <- group
   config$clusters <- clusters
+  if (show_output_files) {
+    config$graph <- create_drake_graph(
+      ordinances = config$ordinances,
+      targets = config$targets,
+      cache = NULL,
+      jobs = config$jobs,
+      console_log_file = config$console_log_file,
+      verbose = config$verbose,
+      collapse = FALSE
+    )
+  }
   config <- get_raw_node_category_data(config)
   config$graph <- get_neighborhood(
     graph = config$graph,
@@ -181,9 +192,6 @@ drake_graph_info <- function(
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
   config$edges <- network_data$edges
-  if (show_output_files) {
-    config <- insert_file_outs(config)
-  }
   if (nrow(config$edges)) {
     config$edges$arrows <- "to"
     config$edges$smooth <- TRUE
