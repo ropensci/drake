@@ -272,7 +272,7 @@ command_dependencies <- function(
   if (!length(command)) {
     return()
   }
-  command <- as.character(command)
+  if (is.character(command))
   deps <- code_dependencies(
     parse(text = command),
     exclude = exclude,

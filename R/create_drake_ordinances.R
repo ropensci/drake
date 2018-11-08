@@ -124,6 +124,7 @@ cdn_analyze_commands <- function(config) {
 }
 
 cdn_prepare_ordinance <- function(ordinance, config){
+ 
   ordinance$deps_build <- command_dependencies(
     command = ordinance$command,
     exclude = ordinance$target,

@@ -8,22 +8,15 @@ extract_filenames <- function(command) {
   splits[seq(from = 2, to = length(splits), by = 2)]
 }
 
-# This is the version of the command that is
-# actually run in make(), not the version
-# that is cached and treated as a dependency.
-# It needs to (1) wrap the command in a function
-# to protect the user's environment from side effects,
-# and (2) call rlang::expr() to enable tidy evaluation
-# features such as quasiquotation.
+# Get the command ready for tidy eval prep
+# and then pure eval (no side effects).
 preprocess_command <- function(command, config) {
-  text <- wrap_command(command)
-  expr <- parse(text = text, keep.source = FALSE)
-  eval(expr, envir = config$envir)
-}
-
-# Use tidy evaluation to complete the contents of a command.
-wrap_command <- function(command) {
-  paste0("rlang::expr(local({\n", command, "\n}))")
+  if (is.character(command)){
+    command <- parse(text = command)
+  }
+  command <- as.call(c(quote(`{`), command))
+  command <- as.call(c(quote(local), command))
+  as.call(c(quote(rlang::expr), command))
 }
 
 # Can remove once we remove fetch_cache.
