@@ -272,9 +272,12 @@ command_dependencies <- function(
   if (!length(command)) {
     return()
   }
-  if (is.character(command))
+  expr <- command
+  if (is.character(command)){
+    expr <- parse(text = command, keep.source = FALSE)[[1]]
+  }
   deps <- code_dependencies(
-    parse(text = command),
+    expr,
     exclude = exclude,
     globals = globals
   )
@@ -290,6 +293,9 @@ command_dependencies <- function(
   if (use_new_file_api) {
     files <- character(0)
   } else {
+    if (!is.character(command)){
+      command <- wide_deparse(command)
+    }
     files <- extract_filenames(command)
   }
   if (length(files)) {

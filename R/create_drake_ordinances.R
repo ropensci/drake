@@ -95,7 +95,7 @@ cdn_analyze_commands <- function(config) {
     type = "target",
     config = config
   )
-  config$plan$imported <- FALSE  
+  config$plan$imported <- FALSE
   if ("trigger" %in% colnames(config$plan)) {
     config$plan$trigger <- lapply(
       config$plan$trigger,
@@ -124,7 +124,6 @@ cdn_analyze_commands <- function(config) {
 }
 
 cdn_prepare_ordinance <- function(ordinance, config){
- 
   ordinance$deps_build <- command_dependencies(
     command = ordinance$command,
     exclude = ordinance$target,

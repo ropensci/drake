@@ -50,7 +50,7 @@ node_to_edges <- function(node) {
   out <- NULL
   if (length(inputs)) {
     out <- tibble::tibble(from = inputs, to = node$target, collapse = FALSE)
-  } 
+  }
   if (length(file_out)) {
     out <- dplyr::bind_rows(
       out,
