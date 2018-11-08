@@ -108,7 +108,7 @@ cdn_analyze_commands <- function(config) {
   )
   out <- lightly_parallelize(
     X = ordinances,
-    FUN = cdn_prepare_node,
+    FUN = cdn_prepare_ordinance,
     jobs = config$jobs,
     config = config
   )
@@ -116,7 +116,7 @@ cdn_analyze_commands <- function(config) {
   out
 }
 
-cdn_prepare_node <- function(node, config){
+cdn_prepare_ordinance <- function(node, config){
   node$deps_build <- command_dependencies(
     command = node$command,
     exclude = node$target,
