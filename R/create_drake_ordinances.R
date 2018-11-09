@@ -20,14 +20,15 @@ create_drake_ordinances <- function(
     trigger = parse_trigger(trigger = trigger, envir = envir),
     globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
   )
-  imports <- cdn_prepare_imports(config)
+  imports <- cdo_prepare_imports(config)
+  imports_kernel <- cdo_imports_kernel(config, imports)
   import_ordinances <- memo_expr(
-    cdn_analyze_imports(config, imports),
+    cdo_analyze_imports(config, imports),
     config$cache,
-    imports
+    imports_kernel
   )
   command_ordinances <- memo_expr(
-    cdn_analyze_commands(config),
+    cdo_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
@@ -37,10 +38,10 @@ create_drake_ordinances <- function(
   c(import_ordinances, command_ordinances)
 }
 
-cdn_prepare_imports <- function(config) {
+cdo_prepare_imports <- function(config) {
   console_preprocess(text = "analyze environment", config = config)
   imports <- as.list(config$envir)
-  cdn_unload_conflicts(
+  cdo_unload_conflicts(
     imports = names(imports),
     targets = config$plan$target,
     envir = config$envir,
@@ -50,7 +51,7 @@ cdn_prepare_imports <- function(config) {
   imports[import_names]
 }
 
-cdn_unload_conflicts <- function(imports, targets, envir, verbose) {
+cdo_unload_conflicts <- function(imports, targets, envir, verbose) {
   common <- intersect(imports, targets)
   if (verbose & length(common)) {
     message(
@@ -61,7 +62,22 @@ cdn_unload_conflicts <- function(imports, targets, envir, verbose) {
   remove(list = common, envir = envir)
 }
 
-cdn_analyze_imports <- function(config, imports) {
+cdo_imports_kernel <- function(config, imports) {
+  out <- lightly_parallelize(
+    X = imports,
+    FUN = function(x) {
+      if (is.function(x)) {
+        x <- deparse(x)
+      }
+      x
+    },
+    jobs = config$jobs
+  )
+  names(out) <- names(imports)
+  out[sort(names(out))]
+}
+
+cdo_analyze_imports <- function(config, imports) {
   names <-  names(imports)
   console_many_targets(
     targets = names,
@@ -88,7 +104,7 @@ cdn_analyze_imports <- function(config, imports) {
   out
 }
 
-cdn_analyze_commands <- function(config) {
+cdo_analyze_commands <- function(config) {
   console_many_targets(
     targets = config$plan$target,
     pattern = "analyze",
@@ -115,7 +131,7 @@ cdn_analyze_commands <- function(config) {
   )
   out <- lightly_parallelize(
     X = ordinances,
-    FUN = cdn_prepare_ordinance,
+    FUN = cdo_prepare_ordinance,
     jobs = config$jobs,
     config = config
   )
@@ -123,7 +139,7 @@ cdn_analyze_commands <- function(config) {
   out
 }
 
-cdn_prepare_ordinance <- function(ordinance, config){
+cdo_prepare_ordinance <- function(ordinance, config){
   ordinance$deps_build <- command_dependencies(
     command = ordinance$command,
     exclude = ordinance$target,
