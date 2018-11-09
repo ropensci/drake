@@ -99,8 +99,14 @@ check_drake_graph <- function(graph) {
   })
   cycles <- unlist(cycles)
   stop(
-    "Circular workflow: there is a target ",
-    "that ultimately depends on itself. Cycles:\n",
+    "Circular workflow:\n",
+    "  at least one target in your drake plan\n",
+    "  ultimately depends on itself.\n",
+    "If you believe a dependency was detected in error\n",
+    "  (example: https://github.com/ropensci/drake/issues/578)\n",
+    "  then consider using ignore() to mask sections \n",
+    "  of your commands or imported functions.\n",
+    "Cycles:\n",
     multiline_message(cycles)
   )
 }
