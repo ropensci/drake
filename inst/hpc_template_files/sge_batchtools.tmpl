@@ -26,6 +26,10 @@
 ## Use environment variables
 #$ -V
 
+## The name of the job.
+## Job names are target names in make(parallelism = "future").
+#$ -N <%= job.name %>
+
 # You may have to change the following to 'module load R-3.5.1' or similar.
 # Just be sure to name the correct environment module.
 # See 'module avail' or 'module avail R'.
