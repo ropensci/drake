@@ -36,7 +36,7 @@ drake_plan_source <- function(plan) {
   assert_pkg("styler")
   text <- drake_plan_call(plan)
   text <- style_recursive(text, name = "", append_comma = FALSE)
-  class(text) <- c("drake_plan_source", "vertical", "character")
+  class(text) <- c("drake_plan_source", "character")
   text
 }
 
@@ -129,8 +129,6 @@ style_leaf <- function(name, expr, append_comma) {
 print.drake_plan_source <- function(x, ...) {
   if (requireNamespace("prettycode", quietly = TRUE)) {
     x <- prettycode::highlight(x)
-    NextMethod()
-  } else {
-    NextMethod() # nocov
   }
+  cat(x, sep = "\n")
 }

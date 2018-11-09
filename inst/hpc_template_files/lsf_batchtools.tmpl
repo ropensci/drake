@@ -1,0 +1,19 @@
+## Copied from https://github.com/mllg/batchtools/blob/master/inst/templates/lsf-simple.tmpl
+##
+## Default resources can be set in your .batchtools.conf.R by defining the variable
+## 'default.resources' as a named list.
+
+#BSUB-j <%= job.name %>                             # Name of the job
+#BSUB-o <%= log.file %>                             # Output is sent to logfile, stdout + stderr by default
+#BSUB-q <%= resources$queue %>                      # Job queue
+#BSUB-W <%= round(resources$walltime / 60, 1) %>    # Walltime (LSF requires minutes, batchtools uses seconds)
+#BSUB-M <%= resources$memory %>                     # Memory requirements in KBytes; depends on setting LSF_UNIT_FOR_LIMITS in lsf.conf
+
+## Export value of DEBUGME environemnt var to slave
+export DEBUGME=<%= Sys.getenv("DEBUGME") %>
+
+<%= sprintf("export OMP_NUM_THREADS=%i", resources$omp.threads) -%>
+<%= sprintf("export OPENBLAS_NUM_THREADS=%i", resources$blas.threads) -%>
+<%= sprintf("export MKL_NUM_THREADS=%i", resources$blas.threads) -%>
+
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")'

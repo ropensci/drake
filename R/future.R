@@ -110,7 +110,8 @@ new_worker <- function(id, target, config, protect) {
       ),
       packages = "drake",
       globals = globals,
-      evaluator = evaluator
+      evaluator = evaluator,
+      label = target
     ),
     target = target
   )

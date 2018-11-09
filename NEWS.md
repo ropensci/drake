@@ -12,6 +12,7 @@
 - **Large speed boost**: change the default value of `memory_strategy` (previously `pruning_strategy`) to `"speed"` (previously `"lookahead"`).
 - Compute a special data structure in `drake_config()` (`config$ordinances`) just to store the code analysis results. This is an intermediate structure between the workflow plan data frame and the graph. It will help clean up the internals in future development.
 - Improve memoized preprocessing: deparse all the functions in the environment so the memoization does not react so spurious changes in R internals. Related: #345.
+- Use the `label` argument to `future()` inside `make(parallelism = "future")`. That way , job names are target names by default if `job.name` is used correctly in the `batchtools` template file.
 - Remove strict dependencies on packages `evaluate`, `fs`, `future`, `magrittr`, `parallel`, `R.utils`, `stats`, and `stringi`.
 - Deprecate the `force` argument to `make()` and related functions.
 - Change the name of `prune_envir()` to `manage_memory()`.
